@@ -119,16 +119,16 @@ function docIsParent(state, doc) {
 }
 
 function docManageHref(doc, id) {
-  const href = normalizeText(doc && doc.viewer_url) || `/library/?doc=${encodeURIComponent(id)}`;
-  const url = new URL(href, window.location.origin);
+  const href = normalizeText(doc && doc.viewer_url);
+  const sourceUrl = href ? new URL(href, window.location.origin) : null;
+  const targetDocId = normalizeText(sourceUrl && sourceUrl.searchParams.get("doc")) || id;
+  const url = new URL("/docs/", window.location.origin);
+  url.searchParams.set("scope", "library");
   url.searchParams.set("mode", "manage");
-  if (!normalizeText(url.searchParams.get("doc")) && id) {
-    url.searchParams.set("doc", id);
+  if (targetDocId) {
+    url.searchParams.set("doc", targetDocId);
   }
-  if (url.origin === window.location.origin) {
-    return `${url.pathname}${url.search}${url.hash}`;
-  }
-  return url.href;
+  return `${url.pathname}${url.search}`;
 }
 
 function filterCounts(state) {

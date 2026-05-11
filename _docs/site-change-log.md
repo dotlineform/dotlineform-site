@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-11 00:35"
+last_updated: "2026-05-11"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,32 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-11] Scoped Docs Viewer management to `/docs/`
+
+**Status:** implemented
+
+**Area:** Docs Viewer runtime / public payload boundary / management UI
+
+**Summary:**
+Made Docs Viewer management an explicit `/docs/` route capability.
+The public `/library/` and `/analysis/` viewers now render as read-only shells without localhost management configuration or management-only CSS, while `/docs/` can switch between `studio`, `library`, and `analysis` scopes.
+
+**Files changed/docs:**
+
+- `_includes/docs_viewer_shell.html`
+- `docs/index.md`
+- `library/index.md`
+- `analysis/index.md`
+- `assets/js/docs-viewer.js`
+- `assets/css/main.css`
+- `assets/css/docs-viewer-management.css`
+- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+
+**Impact:**
+The public site no longer exposes a useful `?mode=manage` surface on public docs routes.
+Docs Import is now opened from the `/docs/` management toolbar in an embedded modal seeded with the active scope, with full importer ownership still tracked as a follow-up extraction from the existing Studio route.
 
 ## [2026-05-11] Closed the Catalogue JavaScript route consistency pass
 

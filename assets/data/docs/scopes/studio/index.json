@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T23:39:04Z",
+  "generated_at": "2026-05-11T09:22:10Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -238,7 +238,7 @@
       "doc_id": "data-models-library",
       "title": "Library Scope",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-06 20:52",
+      "last_updated": "2026-05-11",
       "parent_id": "library",
       "sort_order": 10,
       "published": true,
@@ -247,7 +247,7 @@
       "source_path": "data-models-library.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-library.json",
-      "content_text_length": 9357
+      "content_text_length": 9368
     },
     {
       "scope": "studio",
@@ -286,7 +286,7 @@
       "doc_id": "docs-viewer-overview",
       "title": "Overview",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 14:36",
+      "last_updated": "2026-05-11",
       "parent_id": "docs-viewer",
       "sort_order": 10,
       "published": true,
@@ -295,7 +295,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 7017
+      "content_text_length": 7182
     },
     {
       "scope": "studio",
@@ -545,7 +545,7 @@
       "doc_id": "user-guide-docs-html-import",
       "title": "Docs Import",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-11",
       "parent_id": "user-guide",
       "sort_order": 20,
       "published": true,
@@ -554,7 +554,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 7726
+      "content_text_length": 7986
     },
     {
       "scope": "studio",
@@ -628,7 +628,7 @@
       "doc_id": "library-documents",
       "title": "Library Documents",
       "added_date": "2026-05-07",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-11",
       "parent_id": "library",
       "sort_order": 20,
       "published": true,
@@ -637,7 +637,7 @@
       "source_path": "library-documents.md",
       "viewer_url": "/docs/?scope=studio&doc=library-documents",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-documents.json",
-      "content_text_length": 1954
+      "content_text_length": 1967
     },
     {
       "scope": "studio",
@@ -788,7 +788,7 @@
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11 00:25",
+      "last_updated": "2026-05-11",
       "parent_id": "studio",
       "sort_order": 20,
       "published": true,
@@ -797,7 +797,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 14150
+      "content_text_length": 14167
     },
     {
       "scope": "studio",
@@ -1016,7 +1016,7 @@
       "doc_id": "docs-viewer-runtime-boundary",
       "title": "Docs Viewer Runtime Boundary",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-10 14:36",
+      "last_updated": "2026-05-11",
       "parent_id": "docs-viewer",
       "sort_order": 30,
       "published": true,
@@ -1025,7 +1025,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 4237
+      "content_text_length": 4987
     },
     {
       "scope": "studio",
@@ -1340,7 +1340,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-10 14:36",
+      "last_updated": "2026-05-11",
       "parent_id": "",
       "sort_order": 40,
       "published": true,
@@ -1349,7 +1349,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 2162
+      "content_text_length": 2561
     },
     {
       "scope": "studio",
@@ -1534,7 +1534,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 18:17",
+      "last_updated": "2026-05-11",
       "parent_id": "docs-viewer",
       "sort_order": 45,
       "published": true,
@@ -1543,7 +1543,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 29471
+      "content_text_length": 29506
     },
     {
       "scope": "studio",
@@ -1762,7 +1762,7 @@
       "doc_id": "studio-ui-rules",
       "title": "Studio UI Rules And Decision Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-11",
       "parent_id": "ui",
       "sort_order": 50,
       "published": true,
@@ -1771,7 +1771,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 167516
+      "content_text_length": 169034
     },
     {
       "scope": "studio",
@@ -2981,7 +2981,7 @@
       "doc_id": "docs-viewer-management",
       "title": "Docs Viewer Management",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-09 23:23",
+      "last_updated": "2026-05-11",
       "parent_id": "change-requests",
       "sort_order": 150,
       "published": true,
@@ -2990,7 +2990,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 26251,
+      "content_text_length": 27039,
       "ui_status": "done"
     },
     {
@@ -3129,7 +3129,7 @@
       "doc_id": "ui-request-docs-viewer-index-drag-undo-task",
       "title": "Docs Viewer Index Drag Undo",
       "added_date": "2026-04-25",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-11",
       "parent_id": "change-requests",
       "sort_order": 180,
       "published": true,
@@ -3138,7 +3138,7 @@
       "source_path": "ui-request-docs-viewer-index-drag-undo-task.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-index-drag-undo-task.json",
-      "content_text_length": 5020,
+      "content_text_length": 5042,
       "ui_status": "done"
     },
     {
@@ -3514,7 +3514,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11 00:35",
+      "last_updated": "2026-05-11",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3523,7 +3523,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 134532
+      "content_text_length": 135506
     },
     {
       "scope": "studio",

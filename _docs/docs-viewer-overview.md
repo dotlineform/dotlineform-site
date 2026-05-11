@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: "Overview"
 added_date: 2026-04-24
-last_updated: "2026-05-10 14:36"
+last_updated: "2026-05-11"
 parent_id: docs-viewer
 sort_order: 10
 ---
@@ -87,17 +87,21 @@ The current viewer URL model is query-based rather than path-segment based.
 Current URL state:
 
 - `doc` selects the active document
+- `scope` selects the active docs scope on `/docs/`
 - `q` activates inline docs search for the current scope
-- `mode=manage` enables local manage mode when the docs-management server is available
+- `mode=manage` enables local manage mode only on `/docs/` when the docs-management server is available
 - `#hash` targets a heading within the rendered document
 
-Studio docs currently normalize onto a canonical scoped URL:
+The local management shell normalizes onto canonical scoped URLs:
 
 - `/docs/?scope=studio&doc=<doc_id>`
+- `/docs/?scope=library&doc=<doc_id>`
+- `/docs/?scope=analysis&doc=<doc_id>`
 
-Library docs currently use:
+Public read-only docs routes use:
 
 - `/library/?doc=<doc_id>`
+- `/analysis/?doc=<doc_id>`
 
 ## Current Runtime Behavior
 

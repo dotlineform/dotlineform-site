@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: "Docs Viewer Runtime Boundary"
 added_date: 2026-03-31
-last_updated: "2026-05-10 14:36"
+last_updated: "2026-05-11"
 parent_id: docs-viewer
 sort_order: 30
 ---
@@ -30,6 +30,7 @@ Current route-shell examples:
 
 - `docs/index.md`
 - `library/index.md`
+- `analysis/index.md`
 
 Current shared implementation:
 
@@ -38,6 +39,7 @@ Current shared implementation:
 - `assets/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the entry controller
 - `assets/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the entry controller
 - `_includes/docs_viewer_shell.html`
+- `assets/css/docs-viewer-management.css` for management-only shell and modal styling
 
 The shell loads the entry controller as an ES module.
 Extracted helper modules must not import the entry controller or mutate its shared state directly.
@@ -46,6 +48,14 @@ Current scope-owned data:
 
 - `assets/data/docs/scopes/studio/`
 - `assets/data/docs/scopes/library/`
+- `assets/data/docs/scopes/analysis/`
+
+Current route capability boundary:
+
+- `/docs/` is the only route shell that enables `?mode=manage`
+- `/docs/` can switch the loaded docs scope with `?scope=studio`, `?scope=library`, or `?scope=analysis`
+- `/library/` and `/analysis/` are public read-only viewer routes and do not render management controls, configure the localhost management server, or load management-only CSS
+- a `mode=manage` query on a public viewer route is normalized away by the shared runtime because those routes cannot perform local writes on the static public site
 
 ## What should stay scope-specific
 
@@ -54,6 +64,8 @@ These are normal route-shell differences and should not force a runtime fork.
 - scope-specific inline search controls or other shell actions
 - different viewer data index URLs
 - different base routes and default docs
+- whether the route shell enables management mode
+- whether the route shell exposes scope switching
 - surrounding page context and navigation state
 - scope-specific copy or small shell-level layout changes
 - distinct source trees and generated JSON artifacts

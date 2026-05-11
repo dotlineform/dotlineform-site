@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs
 added_date: 2026-04-24
-last_updated: "2026-05-10 14:36"
+last_updated: "2026-05-11"
 parent_id: ""
 sort_order: 40
 ---
@@ -26,6 +26,13 @@ The current implementation uses:
 - bookmark record and storage helpers in `assets/js/docs-viewer-favourites.js`
 - shared Docs Viewer settings in `assets/studio/data/studio_config.json`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
+- a management-only stylesheet in `assets/css/docs-viewer-management.css`, loaded only by `/docs/`
+
+Public viewer routes are read-only:
+
+- `/library/` loads the Library scope directly and does not expose `?mode=manage`
+- `/analysis/` loads the Analysis scope directly and does not expose `?mode=manage`
+- `/docs/` is the local management shell and can load `studio`, `library`, or `analysis` through its `scope` query parameter
 
 This section documents the current Docs Viewer implementation as a common module.
 It explains how the shared viewer serves multiple scopes, how the current viewer behaves, and how source docs are organised.

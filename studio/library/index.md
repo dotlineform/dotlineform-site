@@ -24,8 +24,8 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
     <section class="catalogueDashboardColumn">
       <h3>Manage</h3>
       <ul class="catalogueDashboardPills">
-        <li><a href="{{ '/library/?mode=manage&doc=library' | relative_url }}">Library</a></li>
-        <li><a href="{{ '/studio/docs-import/?scope=library' | relative_url }}">Docs Import</a></li>
+        <li><a href="{{ '/docs/?scope=library&mode=manage&doc=library' | relative_url }}">Library</a></li>
+        <li><a href="{{ '/docs/?scope=library&mode=manage&doc=library&import=1' | relative_url }}">Docs Import</a></li>
         <li><a href="{{ '/studio/library-documents/' | relative_url }}">Documents</a></li>
       </ul>
     </section>

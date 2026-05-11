@@ -2,7 +2,7 @@
 doc_id: ui-request-docs-viewer-index-drag-undo-task
 title: Docs Viewer Index Drag Undo
 added_date: 2026-04-25
-last_updated: 2026-05-03
+last_updated: 2026-05-11
 ui_status: done
 parent_id: change-requests
 sort_order: 180
@@ -28,7 +28,7 @@ Refine manage-mode Docs Viewer tree editing so drag/drop can populate any node a
 The feature applies to:
 
 - `/docs/?mode=manage`
-- `/library/?mode=manage`
+- `/docs/?scope=library&mode=manage`
 
 ## Requirements
 
@@ -121,7 +121,7 @@ Codex-run checks:
 
 Manual checks:
 
-- in `/library/?mode=manage`, drag a root doc onto empty Archive and confirm it becomes a child of Archive
+- in `/docs/?scope=library&mode=manage`, drag a root doc onto empty Archive and confirm it becomes a child of Archive
 - use Undo and confirm the doc returns to its prior parent and order
 - drag a doc onto an ordinary node with no children and confirm that ordinary node becomes its parent
 - confirm the target node remains openable as a document after gaining children

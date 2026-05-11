@@ -2,7 +2,7 @@
 doc_id: library-documents
 title: Library Documents
 added_date: 2026-05-07
-last_updated: "2026-05-07"
+last_updated: "2026-05-11"
 parent_id: library
 sort_order: 20
 ---
@@ -52,7 +52,7 @@ Columns:
 `doc_id`, `added_date`, and `title` are sortable columns.
 `viewable` and parent are filter-only attributes.
 
-Both the `doc_id` and `title` links open the Library viewer in manage mode for that document.
+Both the `doc_id` and `title` links open the `/docs/` management shell with `scope=library` for that document.
 
 ## Filters
 

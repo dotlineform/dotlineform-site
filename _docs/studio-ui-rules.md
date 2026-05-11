@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: Studio UI Rules And Decision Log
 added_date: 2026-04-24
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-11"
 parent_id: ui
 sort_order: 50
 ---
@@ -22,6 +22,30 @@ Use this as the single capture surface for Studio UI work:
 - one-off route corrections
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
+
+## UI Rule Log 2026-05-11 / UI-081
+
+- status: adopted
+- route: `/docs/?scope=<scope>&mode=manage`
+- issue: public Docs Viewer routes exposed management URL/state affordances even though the static public site cannot host the local write server.
+- triage: Docs Viewer route capability boundary
+- reasoning: management mode is a local admin capability, while `/library/` and `/analysis/` are public read-only viewers. Keeping management shell, server probing, and management-only CSS out of public routes reduces payload and removes misleading public URL states.
+- outcome: `/docs/` is now the only management shell, and it can switch between `studio`, `library`, and `analysis` scopes. The public `/library/` and `/analysis/` routes do not render management controls or load management-only CSS. Docs Import opens from the `/docs/` management toolbar as a scoped modal.
+- files changed:
+  - `_includes/docs_viewer_shell.html`
+  - `assets/js/docs-viewer.js`
+  - `assets/css/main.css`
+  - `assets/css/docs-viewer-management.css`
+  - `docs/index.md`
+  - `library/index.md`
+  - `analysis/index.md`
+  - `studio/library/index.md`
+  - `assets/studio/js/library-documents.js`
+- local verification:
+  - open `/library/?mode=manage&doc=library` and confirm the URL is normalized to a read-only Library route
+  - open `/analysis/?mode=manage&doc=analysis` and confirm the URL is normalized to a read-only Analysis route
+  - open `/docs/?scope=library&mode=manage&doc=library` and confirm management remains scoped to `/docs/`
+  - open `/docs/?scope=library&mode=manage&doc=library&import=1` and confirm the import modal opens with Library selected
 
 ## Retirement Direction
 

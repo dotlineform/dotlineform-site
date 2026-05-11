@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: "2026-05-09 23:23"
+last_updated: "2026-05-11"
 ui_status: done
 parent_id: change-requests
 sort_order: 150
@@ -18,6 +18,7 @@ Status:
 - Phase 5 implemented: right-click contextual creation for `New Sibling` and `New Child`
 - Phase 6 implemented: hidden-doc review and bulk-backed `Show`
 - Phase 7 implemented: drag/drop into any node plus one-step client-side move Undo
+- Phase 8 implemented: management mode is scoped to `/docs/`, and `/docs/` can manage `studio`, `library`, or `analysis` by changing the active docs scope
 - current follow-on work is optional rather than required for the local management surface
 
 ## Implementation Status
@@ -26,7 +27,9 @@ Implemented now:
 
 - `_docs` flattened for Studio docs management
 - dedicated localhost docs-management server added at `scripts/docs/docs_management_server.py`
-- shared manage mode enabled for both `/docs/` and `/library/` behind `?mode=manage`
+- manage mode enabled only for `/docs/` behind `?mode=manage`
+- `/docs/` can change the active management scope with `?scope=studio`, `?scope=library`, or `?scope=analysis`
+- public `/library/` and `/analysis/` viewer routes remain read-only and do not render management controls, configure the local docs-management server, or load management-only CSS
 - create, archive, delete-preview, and delete-apply implemented
 - drag/drop move implemented for leaf docs only
 - dropping on the upper half of any doc row moves the dragged doc inside that doc as its last child
@@ -75,11 +78,13 @@ Implemented now:
 - when the metadata modal changes `parent_id` to a non-root parent and the user leaves `sort_order` unchanged, the doc appends as the last sibling under the new parent
 - when the metadata modal changes `parent_id` to root, the visible `sort_order` field is respected rather than converted to append
 - metadata edits rebuild docs payloads plus same-scope docs search, except `ui_status`-only edits skip search because status emoji are viewer-only metadata
+- Docs Import is reachable from the `/docs/` management toolbar as an import modal seeded with the active scope; the existing `/studio/docs-import/` route remains the embedded implementation until the importer JavaScript is fully folded into the Docs Viewer package
 
 Not implemented yet:
 
 - dragging any doc with child docs
 - incremental docs-search updates
+- native Docs Viewer import modal implementation without the embedded Studio route
 
 ## Suggested Follow-On Features
 
@@ -203,7 +208,8 @@ Excluded:
 ## Primary Surfaces
 
 - `/docs/`
-- `/library/`
+- `/docs/?scope=library`
+- `/docs/?scope=analysis`
 - shared Docs Viewer shell and runtime
 - local docs-management service, if introduced
 
@@ -214,7 +220,7 @@ Excluded:
 - the feature does not need to be exposed in mobile environments
 - the current shared Docs Viewer model should remain shared unless management mode forces a deeper fork
 - source docs remain file-backed under `_docs`
-- `library` remains part of the same shared runtime, but its source root is already flat under `_docs_library/`
+- `library` and `analysis` remain part of the same shared runtime, but public `/library/` and `/analysis/` are read-only shells
 
 ## Core Questions To Answer
 

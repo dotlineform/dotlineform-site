@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3f0b42f720647a3e21816de42b86a856",
-    "generated_at_utc": "2026-05-10T23:37:14Z",
+    "version": "blake2b-3d0219887aad90dbac836b35185c1c73",
+    "generated_at_utc": "2026-05-11T09:27:53Z",
     "count": 221
   },
   "entries": [
@@ -401,10 +401,10 @@
       "kind": "doc",
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-05-06 20:52",
+      "last_updated": "2026-05-11",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-06 20:52 • Library",
+      "display_meta": "2026-05-11 • Library",
       "search_terms": [
         "data-models-library",
         "data",
@@ -412,14 +412,12 @@
         "library",
         "library scope",
         "scope",
-        "2026-05-06 20:52",
+        "2026-05-11",
         "2026",
         "05",
-        "06",
-        "20",
-        "52"
+        "11"
       ],
-      "search_text": "data-models-library data models library library scope scope 2026-05-06 20:52 2026 05 06 20 52"
+      "search_text": "data-models-library data models library library scope scope 2026-05-11 2026 05 11"
     },
     {
       "id": "llm-dimension",
@@ -475,23 +473,21 @@
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-05-10 14:36",
+      "last_updated": "2026-05-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-10 14:36 • Docs",
+      "display_meta": "2026-05-11 • Docs",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
-        "2026-05-10 14:36",
+        "2026-05-11",
         "2026",
         "05",
-        "10",
-        "14",
-        "36"
+        "11"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview 2026-05-10 14:36 2026 05 10 14 36"
+      "search_text": "docs-viewer-overview docs viewer overview 2026-05-11 2026 05 11"
     },
     {
       "id": "pipeline-use-cases",
@@ -890,10 +886,10 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-11",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-07 • User Guide",
+      "display_meta": "2026-05-11 • User Guide",
       "search_terms": [
         "user-guide-docs-html-import",
         "user",
@@ -903,12 +899,12 @@
         "import",
         "docs import",
         "user guide",
-        "2026-05-07",
+        "2026-05-11",
         "2026",
         "05",
-        "07"
+        "11"
       ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-07 2026 05 07"
+      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-11 2026 05 11"
     },
     {
       "id": "site-request-script-structural-review-docs-management-server",
@@ -1040,21 +1036,21 @@
       "kind": "doc",
       "title": "Library Documents",
       "href": "/docs/?scope=studio&doc=library-documents",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-11",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-07 • Library",
+      "display_meta": "2026-05-11 • Library",
       "search_terms": [
         "library-documents",
         "library",
         "documents",
         "library documents",
-        "2026-05-07",
+        "2026-05-11",
         "2026",
         "05",
-        "07"
+        "11"
       ],
-      "search_text": "library-documents library documents library documents 2026-05-07 2026 05 07"
+      "search_text": "library-documents library documents library documents 2026-05-11 2026 05 11"
     },
     {
       "id": "llm-semantic-enrichment-spec",
@@ -1273,23 +1269,21 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-05-11 00:25",
+      "last_updated": "2026-05-11",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-11 00:25 • Studio",
+      "display_meta": "2026-05-11 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-05-11 00:25",
+        "2026-05-11",
         "2026",
         "05",
-        "11",
-        "00",
-        "25"
+        "11"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-11 00:25 2026 05 11 00 25"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-11 2026 05 11"
     },
     {
       "id": "studio-ui-start",
@@ -1620,10 +1614,10 @@
       "kind": "doc",
       "title": "Docs Viewer Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-05-10 14:36",
+      "last_updated": "2026-05-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-10 14:36 • Docs",
+      "display_meta": "2026-05-11 • Docs",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -1631,14 +1625,12 @@
         "runtime",
         "boundary",
         "docs viewer runtime boundary",
-        "2026-05-10 14:36",
+        "2026-05-11",
         "2026",
         "05",
-        "10",
-        "14",
-        "36"
+        "11"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary 2026-05-10 14:36 2026 05 10 14 36"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary 2026-05-11 2026 05 11"
     },
     {
       "id": "ui-primitive-list",
@@ -2141,20 +2133,18 @@
       "kind": "doc",
       "title": "Docs",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-10 14:36",
-      "display_meta": "2026-05-10 14:36",
+      "last_updated": "2026-05-11",
+      "display_meta": "2026-05-11",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
-        "2026-05-10 14:36",
+        "2026-05-11",
         "2026",
         "05",
-        "10",
-        "14",
-        "36"
+        "11"
       ],
-      "search_text": "docs-viewer docs viewer 2026-05-10 14:36 2026 05 10 14 36"
+      "search_text": "docs-viewer docs viewer 2026-05-11 2026 05 11"
     },
     {
       "id": "site-request-script-structural-review-generate-work-pages",
@@ -2443,10 +2433,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-09 18:17",
+      "last_updated": "2026-05-11",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-09 18:17 • Docs",
+      "display_meta": "2026-05-11 • Docs",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -2454,14 +2444,12 @@
         "management",
         "server",
         "docs management server",
-        "2026-05-09 18:17",
+        "2026-05-11",
         "2026",
         "05",
-        "09",
-        "18",
-        "17"
+        "11"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-09 18:17 2026 05 09 18 17"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-11 2026 05 11"
     },
     {
       "id": "site-request-json-schema-adoption",
@@ -2810,10 +2798,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-11",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-09 16:00 • UI",
+      "display_meta": "2026-05-11 • UI",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -2823,14 +2811,12 @@
         "and",
         "decision",
         "log",
-        "2026-05-09 16:00",
+        "2026-05-11",
         "2026",
         "05",
-        "09",
-        "16",
-        "00"
+        "11"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log 2026-05-11 2026 05 11"
     },
     {
       "id": "tag-aliases",
@@ -3763,10 +3749,10 @@
       "kind": "doc",
       "title": "Catalogue JavaScript Runtime Consistency Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency",
-      "last_updated": "2026-05-11 00:35",
+      "last_updated": "2026-05-11 00:39",
       "parent_id": "site-request-js-config-structural-review",
       "parent_title": "JavaScript And Browser Config Structural Review Request",
-      "display_meta": "2026-05-11 00:35 • JavaScript And Browser Config Structural Review Request",
+      "display_meta": "2026-05-11 00:39 • JavaScript And Browser Config Structural Review Request",
       "search_terms": [
         "site-request-catalogue-js-runtime-consistency",
         "site",
@@ -3783,14 +3769,14 @@
         "config",
         "structural",
         "review",
-        "2026-05-11 00:35",
+        "2026-05-11 00:39",
         "2026",
         "05",
         "11",
         "00",
-        "35"
+        "39"
       ],
-      "search_text": "site-request-catalogue-js-runtime-consistency site request catalogue js runtime consistency catalogue javascript runtime consistency request javascript javascript and browser config structural review request and browser config structural review 2026-05-11 00:35 2026 05 11 00 35"
+      "search_text": "site-request-catalogue-js-runtime-consistency site request catalogue js runtime consistency catalogue javascript runtime consistency request javascript javascript and browser config structural review request and browser config structural review 2026-05-11 00:39 2026 05 11 00 39"
     },
     {
       "id": "css-refactor",
@@ -4731,10 +4717,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-09 23:23",
+      "last_updated": "2026-05-11",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 23:23 • Change Requests",
+      "display_meta": "2026-05-11 • Change Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -4744,13 +4730,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-09 23:23",
+        "2026-05-11",
         "2026",
         "05",
-        "09",
-        "23"
+        "11"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-09 23:23 2026 05 09 23"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-11 2026 05 11"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",
@@ -4961,10 +4946,10 @@
       "kind": "doc",
       "title": "Docs Viewer Index Drag Undo",
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
-      "last_updated": "2026-05-03",
+      "last_updated": "2026-05-11",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-03 • Change Requests",
+      "display_meta": "2026-05-11 • Change Requests",
       "search_terms": [
         "ui-request-docs-viewer-index-drag-undo-task",
         "ui",
@@ -4979,12 +4964,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-03",
+        "2026-05-11",
         "2026",
         "05",
-        "03"
+        "11"
       ],
-      "search_text": "ui-request-docs-viewer-index-drag-undo-task ui request docs viewer index drag undo task docs viewer index drag undo change requests change requests 2026-05-03 2026 05 03"
+      "search_text": "ui-request-docs-viewer-index-drag-undo-task ui request docs viewer index drag undo task docs viewer index drag undo change requests change requests 2026-05-11 2026 05 11"
     },
     {
       "id": "library-semantic-enrichment-spec",
@@ -5603,22 +5588,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-11 00:35",
-      "display_meta": "2026-05-11 00:35",
+      "last_updated": "2026-05-11",
+      "display_meta": "2026-05-11",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-11 00:35",
+        "2026-05-11",
         "2026",
         "05",
-        "11",
-        "00",
-        "35"
+        "11"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-11 00:35 2026 05 11 00 35"
+      "search_text": "site-change-log site change log site change log 2026-05-11 2026 05 11"
     },
     {
       "id": "archive",

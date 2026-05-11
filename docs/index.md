@@ -14,6 +14,8 @@ section: studio-docs
   viewer_base_url=docs_viewer_base_url
   viewer_scope='studio'
   include_scope_param=true
+  allow_scope_query=true
+  allow_management=true
   default_doc_id='site-docs'
   search_index_url=docs_search_index_url
   management_base_url=docs_management_base_url

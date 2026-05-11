@@ -1,3 +1,7 @@
+{%- if include.allow_management -%}
+<link rel="stylesheet" href="{{ '/assets/css/docs-viewer-management.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+{%- endif -%}
+
 <section
   class="docsViewer"
   id="docsViewerRoot"
@@ -5,6 +9,8 @@
   data-viewer-base-url="{{ include.viewer_base_url }}"
   data-viewer-scope="{{ include.viewer_scope | default: '' }}"
   data-include-scope-param="{{ include.include_scope_param | default: false }}"
+  data-allow-management="{{ include.allow_management | default: false }}"
+  data-allow-scope-query="{{ include.allow_scope_query | default: false }}"
   data-default-doc-id="{{ include.default_doc_id | default: '' }}"
   data-search-index-url="{{ include.search_index_url | default: '' }}"
   data-studio-config-url="{{ include.studio_config_url | default: '/assets/studio/data/studio_config.json' | relative_url }}"
@@ -12,6 +18,18 @@
   data-management-base-url="{{ include.management_base_url | default: '' }}"
 >
   <div class="docsViewer__controls">
+    {%- if include.allow_scope_query -%}
+    <div class="docsViewer__scopeRow" id="docsViewerScopeRow">
+      <label class="docsViewer__scopeField" for="docsViewerScopeSelect">
+        <span class="docsViewer__scopeLabel">scope</span>
+        <select class="docsViewer__scopeSelect" id="docsViewerScopeSelect">
+          <option value="studio">studio</option>
+          <option value="library">library</option>
+          <option value="analysis">analysis</option>
+        </select>
+      </label>
+    </div>
+    {%- endif -%}
     {%- if include.search_index_url -%}
     <div class="docsViewer__searchRow">
       <button class="docsViewer__actionButton docsViewer__recentButton" type="button" id="docsViewerRecentButton" aria-pressed="false">recently added</button>
@@ -29,9 +47,11 @@
       </div>
     </div>
     {%- endif -%}
+    {%- if include.allow_management -%}
     <div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>
       <div class="docsViewer__manageActions">
         <button class="docsViewer__actionButton" type="button" id="docsViewerManageRebuildButton">Rebuild docs</button>
+        <button class="docsViewer__actionButton" type="button" id="docsViewerManageImportButton">Import</button>
         <button class="docsViewer__actionButton" type="button" id="docsViewerManageNewButton">New</button>
         <button class="docsViewer__actionButton" type="button" id="docsViewerManageEditButton">Edit</button>
         <button class="docsViewer__actionButton" type="button" id="docsViewerManageArchiveButton">Archive</button>
@@ -44,6 +64,7 @@
       </div>
       <p class="docsViewer__manageNote muted small" id="docsViewerManageNote"></p>
     </div>
+    {%- endif -%}
     <div class="docsViewer__bookmarkRow" id="docsViewerBookmarkRow" hidden></div>
     <p class="docsViewer__status muted small" id="docsViewerStatus">Loading docs...</p>
   </div>
@@ -51,6 +72,7 @@
   <aside class="docsViewer__sidebar" aria-label="Docs index">
     <div class="docsViewer__sidebarInner">
       <div class="docsViewer__sidebarHeader">
+        {%- if include.allow_management -%}
         <button
           class="docsViewer__indexUndoButton"
           type="button"
@@ -65,6 +87,7 @@
             <path d="M5 7c2.8-2.7 7.2-2.8 10.1-0.2 2.9 2.6 3.1 7.1 0.5 10"></path>
           </svg>
         </button>
+        {%- endif -%}
         <button
           class="docsViewer__sidebarToggle"
           type="button"
@@ -80,6 +103,7 @@
       <nav class="docsViewer__nav" id="docsViewerNav" aria-label="Docs tree"></nav>
     </div>
   </aside>
+  {%- if include.allow_management -%}
   <div class="docsViewer__contextMenu" id="docsViewerContextMenu" hidden>
     <button class="docsViewer__contextAction" type="button" data-context-action="open">Open</button>
     <button class="docsViewer__contextAction" type="button" data-context-action="open-vscode">Open In VS Code</button>
@@ -131,6 +155,20 @@
       </form>
     </div>
   </div>
+  <div class="docsViewer__modal" id="docsViewerImportModal" hidden>
+    <div class="docsViewer__modalBackdrop" data-import-close="true"></div>
+    <div class="docsViewer__modalCard docsViewer__modalCard--wide" role="dialog" aria-modal="true" aria-labelledby="docsViewerImportHeading">
+      <div class="docsViewer__modalHeader">
+        <div class="docsViewer__modalHeaderCopy">
+          <h2 class="docsViewer__modalTitle" id="docsViewerImportHeading">Import docs</h2>
+          <p class="docsViewer__modalMeta muted small" id="docsViewerImportScope"></p>
+        </div>
+        <button class="docsViewer__modalClose" type="button" id="docsViewerImportCloseButton" aria-label="Close import">×</button>
+      </div>
+      <iframe class="docsViewer__modalFrame" id="docsViewerImportFrame" title="Docs import" loading="lazy"></iframe>
+    </div>
+  </div>
+  {%- endif -%}
 
   <article class="docsViewer__main" aria-live="polite">
     <div class="docsViewer__meta" id="docsViewerMeta" hidden>

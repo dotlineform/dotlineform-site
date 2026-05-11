@@ -49,11 +49,8 @@ def relative_path(repo_root: Path, path: Path) -> str:
 
 
 def viewer_url_for(scope: str, doc_id: str) -> str:
-    if scope == "studio":
-        return f"/docs/?scope=studio&doc={doc_id}"
-    if scope == "analysis":
-        return f"/analysis/?doc={doc_id}&mode=manage"
-    return f"/library/?doc={doc_id}&mode=manage"
+    normalized_scope = scope if scope in {"studio", "library", "analysis"} else "studio"
+    return f"/docs/?scope={normalized_scope}&doc={doc_id}&mode=manage"
 
 
 def handle_import_source_files(repo_root: Path) -> Dict[str, Any]:

@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: Library Scope
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:52"
+last_updated: "2026-05-11"
 parent_id: library
 sort_order: 10
 ---
@@ -85,7 +85,7 @@ Current content families:
 Current site mapping:
 
 - the nav/tree layer on `/library/`
-- public/default `/library/` hides docs with `viewable: false`; `/library/?mode=manage` can show those generated docs for local management
+- public/default `/library/` hides docs with `viewable: false`; `/docs/?scope=library&mode=manage` can show those generated docs for local management
 - Library document view does not display the `last_updated` metadata row; recently-added still uses `added_date`, and search still uses `last_updated`
 - `/studio/export/` uses `content_text_length` to filter docs whose rendered body has no text after plain-text extraction and title stripping
 

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-09 18:17"
+last_updated: "2026-05-11"
 parent_id: docs-viewer
 sort_order: 45
 ---
@@ -64,7 +64,7 @@ Current behavior:
 - staged source import orchestration for `/studio/docs-import/` is owned by `scripts/docs/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
 - management mutation planners for create, metadata, viewability, move, restore, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
 - structured import/export adapter orchestration remains server-owned for now and is tracked separately from the Docs Management Server restructuring request
-- used by `/docs/?mode=manage`, `/analysis/?mode=manage`, and `/library/?mode=manage`
+- used by `/docs/?scope=studio&mode=manage`, `/docs/?scope=library&mode=manage`, and `/docs/?scope=analysis&mode=manage`
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by `/studio/docs-import/` for staged-file listing and source import writes
 - also used by `/studio/export/` to read the generated Library docs index locally and write configured Library export artifacts

@@ -2,7 +2,7 @@
 doc_id: user-guide-docs-html-import
 title: "Docs Import"
 added_date: 2026-04-24
-last_updated: 2026-05-07
+last_updated: 2026-05-11
 parent_id: user-guide
 sort_order: 20
 ---
@@ -10,7 +10,10 @@ sort_order: 20
 
 Use this page when you have a staged source file that should become a Library, Analysis, or Studio docs source doc.
 
-The Studio route is:
+The import workflow is owned by Docs Viewer management.
+Open it from `/docs/?scope=<scope>&mode=manage` with the `Import` toolbar action.
+
+The current embedded implementation still uses the Studio route:
 
 - `/studio/docs-import/`
 
@@ -50,14 +53,15 @@ The import page:
 
 ## Basic Workflow
 
-1. Open `/studio/docs-import/`.
-2. Choose the staged file.
-3. Choose the publish scope:
+1. Open `/docs/?scope=library&mode=manage` or the matching Docs Viewer management scope.
+2. Click `Import`.
+3. Choose the staged file.
+4. Confirm or change the publish scope:
    - `library` for the public Library viewer
    - `analysis` for the public Analysis viewer
    - `studio` for the Studio docs viewer
-4. For HTML files, decide whether to include obvious prompt/meta blocks.
-5. Click `Import`.
+5. For HTML files, decide whether to include obvious prompt/meta blocks.
+6. Click `Import`.
 
 If the generated import target does not already exist, the importer writes the new Markdown source doc immediately.
 The new source doc's `doc_id` and Markdown filename come from the staged source filename stem.

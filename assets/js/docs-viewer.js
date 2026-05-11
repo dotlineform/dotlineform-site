@@ -28,31 +28,6 @@ import {
   managementReloadPath,
   readAssetVersion
 } from "./docs-viewer-data.js";
-import {
-  applyManagedDocDelete,
-  archiveManagedDoc,
-  createManagedDoc,
-  moveManagedDoc,
-  openManagedDocSource,
-  previewManagedDocDelete,
-  readManagementCapabilities,
-  rebuildManagedDocs,
-  restoreManagedDocMove,
-  scopeSupportsGeneratedDataReads,
-  scopeSupportsGeneratedSearchReads,
-  updateManagedDocMetadata,
-  updateManagedDocsViewability
-} from "./docs-viewer-management-client.js";
-import {
-  canDragDoc,
-  canDropOnDoc,
-  currentDropTargetFromEvent,
-  moveUndoPayloadRecords,
-  moveUndoRecordChanged,
-  normalizeMoveUndoRecords,
-  normalizeSortOrderValue,
-  rowDropPosition
-} from "./docs-viewer-drag-drop.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
@@ -71,6 +46,7 @@ import {
   var statusPills = document.getElementById("docsViewerStatusPills");
   var content = document.getElementById("docsViewerContent");
   var contextMenu = document.getElementById("docsViewerContextMenu");
+  var scopeSelect = document.getElementById("docsViewerScopeSelect");
   var recentButton = document.getElementById("docsViewerRecentButton");
   var searchInput = document.getElementById("docsViewerSearchInput");
   var results = document.getElementById("docsViewerResults");
@@ -79,6 +55,7 @@ import {
   var manageActions = manageRow ? manageRow.querySelector(".docsViewer__manageActions") : null;
   var manageNote = document.getElementById("docsViewerManageNote");
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
+  var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageEditButton = document.getElementById("docsViewerManageEditButton");
   var manageArchiveButton = document.getElementById("docsViewerManageArchiveButton");
@@ -101,7 +78,30 @@ import {
   var metadataCloseButton = document.getElementById("docsViewerMetadataCloseButton");
   var metadataCancelButton = document.getElementById("docsViewerMetadataCancelButton");
   var metadataSaveButton = document.getElementById("docsViewerMetadataSaveButton");
+  var importModal = document.getElementById("docsViewerImportModal");
+  var importFrame = document.getElementById("docsViewerImportFrame");
+  var importScope = document.getElementById("docsViewerImportScope");
+  var importCloseButton = document.getElementById("docsViewerImportCloseButton");
 
+  var allowManagement = root.dataset.allowManagement === "true";
+  var allowScopeQuery = root.dataset.allowScopeQuery === "true";
+  var DOCS_ROUTE_SCOPES = {
+    studio: {
+      indexUrl: "/assets/data/docs/scopes/studio/index.json",
+      searchIndexUrl: "/assets/data/search/studio/index.json",
+      defaultDocId: "site-docs"
+    },
+    library: {
+      indexUrl: "/assets/data/docs/scopes/library/index.json",
+      searchIndexUrl: "/assets/data/search/library/index.json",
+      defaultDocId: "library"
+    },
+    analysis: {
+      indexUrl: "/assets/data/docs/scopes/analysis/index.json",
+      searchIndexUrl: "/assets/data/search/analysis/index.json",
+      defaultDocId: "analysis"
+    }
+  };
   var indexUrl = appendAssetVersion(root.dataset.indexUrl);
   var viewerBaseUrl = root.dataset.viewerBaseUrl || "/docs/";
   var viewerScope = String(root.dataset.viewerScope || "").trim();
@@ -111,8 +111,13 @@ import {
   var searchIndexUrl = appendAssetVersion(root.dataset.searchIndexUrl);
   var studioConfigUrl = String(root.dataset.studioConfigUrl || "").trim();
   var uiTextUrl = String(root.dataset.uiTextUrl || "").trim();
+  var requestedRouteScope = routeScopeFromUrl();
+  if (allowScopeQuery && DOCS_ROUTE_SCOPES[requestedRouteScope]) {
+    applyRouteScopeConfig(requestedRouteScope);
+  }
   var searchEnabled = Boolean(searchInput && results && more && searchIndexUrl);
-  var managementBaseUrl = String(root.dataset.managementBaseUrl || "").trim().replace(/\/+$/, "");
+  var managementBaseUrl = allowManagement ? String(root.dataset.managementBaseUrl || "").trim().replace(/\/+$/, "") : "";
+  var openImportOnLoad = allowManagement && new URLSearchParams(window.location.search).get("import") === "1";
   var SEARCH_BATCH_SIZE = 50;
   var SEARCH_DEBOUNCE_MS = 140;
   var DEFAULT_RECENT_LIMIT = 10;
@@ -130,6 +135,30 @@ import {
   var bookmarkScope = viewerScope || viewerPathname || "docs";
   var sidebarStorageKey = SIDEBAR_STORAGE_PREFIX + bookmarkScope;
   var assetVersion = readAssetVersion(document);
+  var managementModulesRequestPromise = null;
+  var applyManagedDocDelete = null;
+  var archiveManagedDoc = null;
+  var createManagedDoc = null;
+  var moveManagedDoc = null;
+  var openManagedDocSource = null;
+  var previewManagedDocDelete = null;
+  var readManagementCapabilities = null;
+  var rebuildManagedDocs = null;
+  var restoreManagedDocMove = null;
+  var scopeSupportsGeneratedDataReads = function () { return false; };
+  var scopeSupportsGeneratedSearchReads = function () { return false; };
+  var updateManagedDocMetadata = null;
+  var updateManagedDocsViewability = null;
+  var canDragDoc = function () { return false; };
+  var canDropOnDoc = function () { return false; };
+  var currentDropTargetFromEvent = function () { return { targetDocId: "", position: "" }; };
+  var moveUndoPayloadRecords = function () { return []; };
+  var moveUndoRecordChanged = function () { return false; };
+  var normalizeMoveUndoRecords = function () { return []; };
+  var normalizeSortOrderValue = function (value) {
+    return value == null ? "" : String(value).trim();
+  };
+  var rowDropPosition = function () { return ""; };
 
   var state = {
     allDocs: [],
@@ -245,6 +274,73 @@ import {
     };
   }
 
+  function loadManagementModules() {
+    if (!allowManagement) return Promise.resolve(false);
+    if (readManagementCapabilities) return Promise.resolve(true);
+    if (managementModulesRequestPromise) return managementModulesRequestPromise;
+
+    managementModulesRequestPromise = Promise.all([
+      import("./docs-viewer-management-client.js"),
+      import("./docs-viewer-drag-drop.js")
+    ])
+      .then(function (modules) {
+        var managementClient = modules[0];
+        var dragDrop = modules[1];
+        applyManagedDocDelete = managementClient.applyManagedDocDelete;
+        archiveManagedDoc = managementClient.archiveManagedDoc;
+        createManagedDoc = managementClient.createManagedDoc;
+        moveManagedDoc = managementClient.moveManagedDoc;
+        openManagedDocSource = managementClient.openManagedDocSource;
+        previewManagedDocDelete = managementClient.previewManagedDocDelete;
+        readManagementCapabilities = managementClient.readManagementCapabilities;
+        rebuildManagedDocs = managementClient.rebuildManagedDocs;
+        restoreManagedDocMove = managementClient.restoreManagedDocMove;
+        scopeSupportsGeneratedDataReads = managementClient.scopeSupportsGeneratedDataReads;
+        scopeSupportsGeneratedSearchReads = managementClient.scopeSupportsGeneratedSearchReads;
+        updateManagedDocMetadata = managementClient.updateManagedDocMetadata;
+        updateManagedDocsViewability = managementClient.updateManagedDocsViewability;
+        canDragDoc = dragDrop.canDragDoc;
+        canDropOnDoc = dragDrop.canDropOnDoc;
+        currentDropTargetFromEvent = dragDrop.currentDropTargetFromEvent;
+        moveUndoPayloadRecords = dragDrop.moveUndoPayloadRecords;
+        moveUndoRecordChanged = dragDrop.moveUndoRecordChanged;
+        normalizeMoveUndoRecords = dragDrop.normalizeMoveUndoRecords;
+        normalizeSortOrderValue = dragDrop.normalizeSortOrderValue;
+        rowDropPosition = dragDrop.rowDropPosition;
+        return true;
+      })
+      .catch(function (error) {
+        console.warn("docs_viewer: management modules unavailable", error);
+        return false;
+      })
+      .finally(function () {
+        managementModulesRequestPromise = null;
+      });
+
+    return managementModulesRequestPromise;
+  }
+
+  function routeScopeFromUrl() {
+    if (!allowScopeQuery) return viewerScope;
+    var requestedScope = String(new URLSearchParams(window.location.search).get("scope") || "").trim().toLowerCase();
+    return DOCS_ROUTE_SCOPES[requestedScope] ? requestedScope : (viewerScope || "studio");
+  }
+
+  function applyRouteScopeConfig(scope) {
+    var config = DOCS_ROUTE_SCOPES[scope] || DOCS_ROUTE_SCOPES.studio;
+    viewerScope = scope;
+    indexUrl = appendAssetVersion(config.indexUrl);
+    searchIndexUrl = appendAssetVersion(config.searchIndexUrl);
+    defaultRouteDocId = config.defaultDocId;
+    root.dataset.viewerScope = viewerScope;
+    root.dataset.indexUrl = config.indexUrl;
+    root.dataset.searchIndexUrl = config.searchIndexUrl;
+    root.dataset.defaultDocId = defaultRouteDocId;
+    if (scopeSelect) {
+      scopeSelect.value = viewerScope;
+    }
+  }
+
   function getCurrentDocId() {
     return new URLSearchParams(window.location.search).get("doc") || "";
   }
@@ -258,12 +354,17 @@ import {
   }
 
   function getCurrentMode() {
+    if (!allowManagement) return "";
     return new URLSearchParams(window.location.search).get("mode") || "";
   }
 
   function hasCanonicalScopeInUrl() {
     if (!includeScopeParam || !viewerScope) return true;
     return new URLSearchParams(window.location.search).get("scope") === viewerScope;
+  }
+
+  function hasDisallowedModeInUrl() {
+    return !allowManagement && new URLSearchParams(window.location.search).has("mode");
   }
 
   function hasActiveQuery(query) {
@@ -582,6 +683,7 @@ import {
   function statusPillsCanWrite(doc) {
     return Boolean(
       doc &&
+      allowManagement &&
       state.managementMode &&
       state.managementAvailable &&
       !state.managementBusy &&
@@ -1136,7 +1238,7 @@ import {
   }
 
   function managementDragEnabled() {
-    return state.managementMode && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
+    return allowManagement && state.managementMode && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
   }
 
   function dragDropOptions() {
@@ -1160,7 +1262,7 @@ import {
   }
 
   function contextMenuEnabled() {
-    return state.managementMode && state.managementAvailable;
+    return allowManagement && state.managementMode && state.managementAvailable;
   }
 
   function metadataModalOpen() {
@@ -1386,6 +1488,39 @@ import {
     if (target) target.focus();
   }
 
+  function importModalOpen() {
+    return Boolean(importModal && !importModal.hidden);
+  }
+
+  function openImportModal() {
+    if (!allowManagement || !importModal || !importFrame) return;
+    var scope = viewerScope || "library";
+    var url = new URL("/studio/docs-import/", window.location.origin);
+    url.searchParams.set("scope", scope);
+    importFrame.src = url.pathname + url.search;
+    if (importScope) {
+      importScope.textContent = "scope: " + scope;
+    }
+    importModal.hidden = false;
+    if (importCloseButton) {
+      importCloseButton.focus();
+    }
+  }
+
+  function closeImportModal() {
+    if (!importModal) return;
+    if (document.activeElement && importModal.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+    importModal.hidden = true;
+    if (importFrame) {
+      importFrame.removeAttribute("src");
+    }
+    if (manageImportButton) {
+      manageImportButton.focus();
+    }
+  }
+
   function openMetadataModal() {
     var doc = currentSelectedDoc();
     if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) return;
@@ -1447,7 +1582,7 @@ import {
   }
 
   function renderManagementUi() {
-    if (!manageRow) return;
+    if (!allowManagement || !manageRow) return;
 
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
     if (!state.managementMode) {
@@ -1521,6 +1656,9 @@ import {
     );
 
     manageRebuildButton.disabled = state.managementBusy || !state.managementAvailable;
+    if (manageImportButton) {
+      manageImportButton.disabled = state.managementBusy || !state.managementAvailable;
+    }
     manageNewButton.disabled = state.managementBusy || !state.managementAvailable;
     manageEditButton.disabled = !state.managementAvailable || editDisabled;
     manageArchiveButton.disabled = !state.managementAvailable || archiveDisabled;
@@ -1537,7 +1675,7 @@ import {
   }
 
   function checkGeneratedDataReadCapability() {
-    if (!managementBaseUrl) {
+    if (!allowManagement || !managementBaseUrl) {
       state.generatedDataReadChecked = true;
       state.generatedDataReadAvailable = false;
       return Promise.resolve(false);
@@ -1549,8 +1687,17 @@ import {
       return state.generatedDataReadRequestPromise;
     }
 
-    state.generatedDataReadRequestPromise = readManagementCapabilities(managementClientOptions())
+    state.generatedDataReadRequestPromise = loadManagementModules()
+      .then(function (loaded) {
+        if (!loaded || !readManagementCapabilities) return null;
+        return readManagementCapabilities(managementClientOptions());
+      })
       .then(function (payload) {
+        if (!payload) {
+          state.generatedDataReadAvailable = false;
+          state.generatedDataReadChecked = true;
+          return false;
+        }
         state.managementCapabilities = payload.capabilities || null;
         state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(state.managementCapabilities, viewerScope);
         state.generatedDataReadChecked = true;
@@ -1569,6 +1716,7 @@ import {
   }
 
   function initializeManagement() {
+    if (!allowManagement) return;
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
     renderManagementUi();
     if (!state.managementMode) return;
@@ -1581,10 +1729,24 @@ import {
     }
 
     state.managementCapabilityCheckId += 1;
-    checkManagementCapabilities(0, state.managementCapabilityCheckId);
+    loadManagementModules().then(function (loaded) {
+      if (!loaded) {
+        state.managementChecked = true;
+        state.managementAvailable = false;
+        renderManagementUi();
+        return;
+      }
+      checkManagementCapabilities(0, state.managementCapabilityCheckId);
+    });
   }
 
   function checkManagementCapabilities(attempt, checkId) {
+    if (!readManagementCapabilities) {
+      state.managementChecked = true;
+      state.managementAvailable = false;
+      renderManagementUi();
+      return;
+    }
     readManagementCapabilities(managementClientOptions())
       .then(function (payload) {
         if (checkId !== state.managementCapabilityCheckId) return;
@@ -1830,6 +1992,11 @@ import {
       });
   }
 
+  function handleImportDocs() {
+    if (!allowManagement) return;
+    openImportModal();
+  }
+
   function handleArchiveDoc() {
     var doc = currentSelectedDoc();
     if (!doc) return;
@@ -1965,6 +2132,21 @@ import {
     if (targetDocId) {
       loadDoc(targetDocId, { historyMode: "replace", hash: "" });
     }
+  }
+
+  function handleScopeChange() {
+    if (!allowScopeQuery || !scopeSelect) return;
+    var nextScope = String(scopeSelect.value || "").trim().toLowerCase();
+    var config = DOCS_ROUTE_SCOPES[nextScope];
+    if (!config || nextScope === viewerScope) return;
+
+    var url = new URL(viewerBaseUrl, window.location.origin);
+    url.searchParams.set("scope", nextScope);
+    if (getCurrentMode() === MANAGEMENT_MODE) {
+      url.searchParams.set("mode", MANAGEMENT_MODE);
+    }
+    url.searchParams.set("doc", config.defaultDocId);
+    window.location.href = url.pathname + url.search;
   }
 
   function handleMoveDoc(docId, targetDocId, position) {
@@ -2347,6 +2529,14 @@ import {
           return;
         }
       }
+      if (importModalOpen()) {
+        var importCloseTrigger = event.target.closest("[data-import-close]");
+        if (importCloseTrigger) {
+          event.preventDefault();
+          closeImportModal();
+          return;
+        }
+      }
       var toggle = event.target.closest("[data-toggle-doc-id]");
       if (toggle) {
         var toggleDocId = toggle.dataset.toggleDocId;
@@ -2403,6 +2593,12 @@ import {
           setHistory(activeDocId, "", "", "push");
         }
         renderRecentMode();
+      });
+    }
+
+    if (scopeSelect) {
+      scopeSelect.addEventListener("change", function () {
+        handleScopeChange();
       });
     }
 
@@ -2476,6 +2672,13 @@ import {
       manageRebuildButton.addEventListener("click", function () {
         hideContextMenu();
         handleRebuildDocs();
+      });
+    }
+
+    if (manageImportButton) {
+      manageImportButton.addEventListener("click", function () {
+        hideContextMenu();
+        handleImportDocs();
       });
     }
 
@@ -2560,6 +2763,12 @@ import {
       });
     }
 
+    if (importCloseButton) {
+      importCloseButton.addEventListener("click", function () {
+        closeImportModal();
+      });
+    }
+
     if (metadataForm) {
       metadataForm.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -2577,6 +2786,11 @@ import {
       if (event.key === "Escape" && metadataModalOpen()) {
         event.preventDefault();
         closeMetadataModal();
+        return;
+      }
+      if (event.key === "Escape" && importModalOpen()) {
+        event.preventDefault();
+        closeImportModal();
       }
     });
 
@@ -2691,7 +2905,7 @@ import {
     renderBookmarkUi();
     renderManagementUi();
 
-    if (route.corrected || !hasCanonicalScopeInUrl()) {
+    if (route.corrected || !hasCanonicalScopeInUrl() || hasDisallowedModeInUrl()) {
       setHistory(docId, "", query, "replace");
     }
 
@@ -2871,6 +3085,10 @@ import {
 
   window.addEventListener("popstate", function () {
     if (state.docs.length === 0) return;
+    if (allowScopeQuery && routeScopeFromUrl() !== viewerScope) {
+      window.location.reload();
+      return;
+    }
     hideContextMenu();
     cancelSearchDebounce();
     applyCurrentRoute({ historyMode: "none", hash: getCurrentHash() });
@@ -2892,7 +3110,13 @@ import {
   loadViewerConfig();
   initializeBookmarks();
   initializeManagement();
-  loadIndex().catch(function () {});
+  loadIndex()
+    .then(function () {
+      if (openImportOnLoad && getCurrentMode() === MANAGEMENT_MODE) {
+        openImportModal();
+      }
+    })
+    .catch(function () {});
 
   function escapeHtml(value) {
     return String(value || "")
