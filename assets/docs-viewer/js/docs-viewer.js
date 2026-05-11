@@ -353,6 +353,26 @@ import {
     }
   }
 
+  function handleScopeChange() {
+    if (!allowScopeQuery || !scopeSelect) return;
+    var nextScope = String(scopeSelect.value || "").trim().toLowerCase();
+    var config = DOCS_ROUTE_SCOPES[nextScope];
+    if (!config) {
+      scopeSelect.value = viewerScope;
+      return;
+    }
+
+    var url = new URL(viewerBaseUrl, window.location.origin);
+    url.searchParams.set("scope", nextScope);
+    if (state.managementMode || getCurrentMode() === MANAGEMENT_MODE) {
+      url.searchParams.set("mode", MANAGEMENT_MODE);
+    }
+    if (config.defaultDocId) {
+      url.searchParams.set("doc", config.defaultDocId);
+    }
+    window.location.assign(url.pathname + url.search);
+  }
+
   function getCurrentDocId() {
     return new URLSearchParams(window.location.search).get("doc") || "";
   }
