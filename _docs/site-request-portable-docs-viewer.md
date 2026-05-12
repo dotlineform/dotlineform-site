@@ -12,7 +12,7 @@ hidden: false
 
 Status:
 
-- proposed
+- In progress
 
 ## Summary
 
@@ -383,7 +383,72 @@ Acceptance:
 - a downstream Jekyll repo can start local Docs Viewer management with one documented command
 - public/static builds do not need or expose the server
 
-### 10. Build A Minimal Fixture Install
+### 10. Local vs R2 Config And Config Document
+
+Status: proposed.
+
+This slice prepares Docs Viewer configuration for new installs.
+The current dotlineform environment is moving toward R2-backed media for larger media workflows, but a downstream Docs Viewer install cannot be assumed to have R2, credentials, or any remote object store.
+New installs need clear guidance for local repo-owned media saves first.
+
+The current environment already uses `assets/docs/<topic>/...` for repo-local docs assets such as small screenshots and reference images; see [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images).
+That convention is topic-oriented rather than scope-oriented, so the portable Docs Viewer config should define a default local media convention for new installs without breaking existing `/assets/docs/...` references.
+
+This environment also uses `var/docs/import-staging/` as a staging area for media and files that are then manually copied to the configured media location.
+The importer creates wrapper Markdown and reports the expected media path, but it does not upload media.
+Automatic upload to R2 is being developed separately and is currently outside this slice; see [R2 Media Upload Automation Request](/docs/?scope=studio&doc=site-request-r2-media-upload-automation).
+
+Docs Viewer import media config should be able to represent these scenarios:
+
+- `repo_assets`: save imported media into a repo-owned public assets folder and write docs links that resolve locally
+- `staging_manual`: save extracted media into `var/docs/import-staging/` and report the configured media path for manual copying
+- `r2_upload`: future backend for direct upload to R2 once Docs-domain R2 upload support exists
+
+Only `repo_assets` and `staging_manual` need to be operational in this slice.
+`r2_upload` should be represented in config shape and documentation as a future backend, but this slice should not implement Docs-domain R2 upload or handle credentials.
+No other external file stores currently need to be supported, but the config should avoid naming R2 as the only possible remote backend forever.
+
+The config ownership should be explicit:
+
+- source/local write behavior belongs in source-side Docs Viewer config, currently `scripts/docs/docs_scopes.json`, or in a small adjacent local/server config if the settings should not be published
+- generated browser config, currently `assets/docs-viewer/data/docs-viewer-config.json`, should only expose browser-safe read/display settings
+- R2 credentials and other secrets must stay out of tracked config and generated browser config
+- `_config.yml` continues to own site-wide media resolution such as `media_base` for rendered <code>&#91;&#91;media:...&#93;&#93;</code> tokens
+
+Changing media storage mode should not migrate existing files automatically.
+If a site changes mode later, assume existing media files and existing docs links are manually migrated or updated unless a separate migration tool is explicitly built.
+
+The slice should also decide the link semantics for local saves.
+Current remote media uses <code>&#91;&#91;media:...&#93;&#93;</code> tokens that the docs builder resolves against `_config.yml media_base`.
+Repo-local docs assets currently use literal `/assets/docs/...` paths.
+For `repo_assets`, the implementation should either:
+
+- write literal `/assets/docs/<scope-or-topic>/...` links, or
+- extend media-token resolution so <code>&#91;&#91;media:...&#93;&#93;</code> can resolve through a configured local backend
+
+That decision must be documented before implementation begins.
+
+Tasks:
+
+- define the Docs Viewer media storage config shape for `repo_assets`, `staging_manual`, and future `r2_upload`
+- define the default local repo folder convention for new installs, using current Docs Viewer scopes (`studio`, `library`, `analysis`) as examples and avoiding Catalogue ownership language
+- decide and document whether `repo_assets` writes literal `/assets/docs/...` links or uses backend-aware media-token resolution
+- implement only the currently deliverable media-save behavior needed for new installs, expected to be `repo_assets` plus the existing `staging_manual` flow
+- keep direct R2 upload implementation out of scope; document `r2_upload` as a reserved/future mode that must fail closed or be unavailable until the backend exists
+- describe all Docs Viewer config settings in a new focused Docs Viewer Config document, grouped by config file and purpose
+- update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) to point new installs at the config document for setup decisions
+
+Acceptance:
+
+- new installs have clear guidance for configuring local repo-owned media saves without R2
+- current `staging_manual` behavior remains supported and documented
+- config shape can represent future direct R2 upload without exposing credentials or requiring R2 for new installs
+- the implementation does not claim direct R2 upload is complete unless a separate Docs-domain R2 backend is implemented
+- the config options are documented in a new Docs Viewer Config document
+
+### 11. Build A Minimal Fixture Install
+
+Status: deferred until followup dev completed on config and media
 
 The copy boundary should be tested outside dotlineform before it is treated as stable.
 

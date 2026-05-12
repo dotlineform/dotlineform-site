@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T10:42:26Z",
+  "generated_at": "2026-05-12T12:04:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -976,7 +976,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 21668,
+      "content_text_length": 26468,
       "ui_status": "in-progress"
     },
     {
