@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T17:57:57Z",
+  "generated_at": "2026-05-12T18:18:42Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -3188,7 +3188,7 @@
       "source_path": "scripts-build-catalogue-json.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-build-catalogue-json.json",
-      "content_text_length": 10344
+      "content_text_length": 10397
     },
     {
       "scope": "studio",
@@ -3302,7 +3302,7 @@
       "source_path": "config-pipeline-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-pipeline-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-pipeline-json.json",
-      "content_text_length": 2043
+      "content_text_length": 2087
     },
     {
       "scope": "studio",
@@ -3703,7 +3703,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 148199
+      "content_text_length": 148267
     },
     {
       "scope": "studio",

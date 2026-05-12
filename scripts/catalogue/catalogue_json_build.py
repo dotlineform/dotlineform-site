@@ -245,7 +245,7 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
 
 
 def print_thumbnail_only_preview(repo_root: Path, source_dir: Path, *, force: bool) -> None:
-    print("Regenerate catalogue thumbnails for all works and work details.")
+    print("Regenerate catalogue thumbnails for all works, work details, and moments.")
     print("Source mode: canonical JSON")
     print("Thumbnail only: yes")
     print("Primary derivatives: no")
@@ -290,7 +290,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--write", action="store_true", help="Run generation and search rebuild")
     parser.add_argument("--force", action="store_true", help="Force generation and search rewrites even when content versions match")
     parser.add_argument("--media-only", action="store_true", help="Only stage source media and regenerate local image derivatives")
-    parser.add_argument("--thumbnail-only", action="store_true", help="Only regenerate public work and work-detail thumbnails from catalogue JSON sources")
+    parser.add_argument("--thumbnail-only", action="store_true", help="Only regenerate public work, work-detail, and moment thumbnails from catalogue JSON sources")
     parser.add_argument("--changed-fields", action="append", default=[], help="Optional comma-separated source fields for field-aware preview planning")
     parser.add_argument("--record-family", default="", help="Record family for --changed-fields: work, work_detail, series, or moment")
     return parser.parse_args()
@@ -305,7 +305,7 @@ def main() -> None:
     moment_file = str(args.moment_file or "").strip()
     if args.thumbnail_only:
         if any(value for value in (work_id, series_id, moment_file, str(args.detail_uid or "").strip())):
-            raise SystemExit("--thumbnail-only scans all works and work details; do not pass scoped record ids.")
+            raise SystemExit("--thumbnail-only scans all works, work details, and moments; do not pass scoped record ids.")
         if args.changed_fields or args.record_family:
             raise SystemExit("--thumbnail-only does not use field-aware build planning.")
         if args.media_only:

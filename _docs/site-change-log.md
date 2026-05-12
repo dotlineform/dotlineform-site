@@ -21,16 +21,17 @@ Archives:
 
 **Status:** implemented
 
-**Area:** Catalogue media pipeline / public grid thumbnails
+**Area:** Catalogue media pipeline / public index thumbnails
 
 **Summary:**
 Updated the shared thumbnail policy in `_data/pipeline.json` to generate a single `96px` WebP thumbnail at quality `62`.
-Added `./scripts/catalogue/catalogue_json_build.py --thumbnail-only` as a catalogue-wide work/work-detail thumbnail regeneration mode that writes only public thumbnail assets and leaves primary derivatives, staged media, page/json generation, and catalogue search untouched.
+Added `./scripts/catalogue/catalogue_json_build.py --thumbnail-only` as a catalogue-wide work, work-detail, and moment thumbnail regeneration mode that writes only public thumbnail assets and leaves primary derivatives, staged media, page/json generation, and catalogue search untouched.
 Missing source images are reported as skipped records rather than failing the command, so existing thumbnails can remain in place where source media is unavailable.
 
 **Files changed/docs:**
 
 - `_data/pipeline.json`
+- `series/index.md`
 - `_layouts/series.html`
 - `_layouts/work.html`
 - `scripts/catalogue/catalogue_build_media.py`
@@ -40,7 +41,7 @@ Missing source images are reported as skipped records rather than failing the co
 - [Pipeline Config JSON](/docs/?scope=studio&doc=config-pipeline-json)
 
 **Impact:**
-Public catalogue grids no longer advertise a `192w` thumbnail candidate, avoiding retina browser selection of larger thumbnails where the visual gain is marginal.
+Public catalogue grids, including the `/series/` moments mode, no longer advertise a `192w` thumbnail candidate, avoiding retina browser selection of larger thumbnails where the visual gain is marginal.
 Thumbnail policy changes can be applied without regenerating primary media or blocking on a small number of missing local sources.
 
 ## [2026-05-12] Added Thumbnail Quality Preview Studio Tool

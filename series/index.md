@@ -199,7 +199,6 @@ permalink: /series/
     if (!thumbSizes.length) thumbSizes = [96, 192];
     var primaryThumbSize = thumbSizes[0];
     var thumbSrcsetSizes = thumbSizes.slice(0, 2);
-    if (thumbSrcsetSizes.length < 2) thumbSrcsetSizes = [primaryThumbSize, primaryThumbSize];
     var thumbSuffix = String(root.getAttribute('data-thumb-suffix') || 'thumb').trim() || 'thumb';
     var assetFormat = String(root.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
     var seriesIndexUrl = baseurl + '/assets/data/series_index.json';

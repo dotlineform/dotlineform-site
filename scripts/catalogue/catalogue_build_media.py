@@ -534,7 +534,7 @@ def build_thumbnail_only_task(
     projects_base_dir: Path | None = None,
     force: bool = False,
 ) -> Dict[str, Any]:
-    output_paths = thumb_output_paths(repo_root, kind, item_id)
+    output_paths = thumb_output_paths_for_kind(repo_root, kind, item_id)
     task: Dict[str, Any] = {
         "kind": kind,
         "id": item_id,
@@ -611,6 +611,30 @@ def build_catalogue_thumbnail_only_plan(
                 force=force,
             )
         )
+    moment_records = load_moment_metadata_records(source_dir)
+    for moment_id in sorted(moment_records):
+        source_path: Path | None
+        missing_reason: str
+        projects_base_dir: Path | None
+        availability_error: str
+        _, source_path, missing_reason, projects_base_dir, availability_error = resolve_moment_media_source(
+            repo_root,
+            f"{moment_id}.md",
+            metadata=moment_records[moment_id],
+            env=env,
+        )
+        tasks.append(
+            build_thumbnail_only_task(
+                repo_root=repo_root,
+                kind="moment",
+                item_id=moment_id,
+                source_path=source_path,
+                availability_error=availability_error,
+                missing_reason=missing_reason,
+                projects_base_dir=projects_base_dir,
+                force=force,
+            )
+        )
     counts = {
         "pending": sum(1 for task in tasks if task.get("status") == "pending"),
         "current": sum(1 for task in tasks if task.get("status") == "current"),
@@ -640,18 +664,18 @@ def execute_catalogue_thumbnail_only_plan(
             "label": "Regenerate Catalogue Thumbnails",
             "status": "failed",
             "summary": "ffmpeg is required for thumbnail regeneration.",
-            "generated": {"work": [], "work_details": []},
-            "planned": {"work": [], "work_details": []},
-            "current": {"work": [], "work_details": []},
-            "skipped": {"work": [], "work_details": []},
+            "generated": {"work": [], "work_details": [], "moment": []},
+            "planned": {"work": [], "work_details": [], "moment": []},
+            "current": {"work": [], "work_details": [], "moment": []},
+            "skipped": {"work": [], "work_details": [], "moment": []},
             "exit_code": 1,
             "stderr_tail": "ffmpeg not found on PATH",
         }
 
-    generated: Dict[str, list[str]] = {"work": [], "work_details": []}
-    planned: Dict[str, list[str]] = {"work": [], "work_details": []}
-    current: Dict[str, list[str]] = {"work": [], "work_details": []}
-    skipped: Dict[str, list[str]] = {"work": [], "work_details": []}
+    generated: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
+    planned: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
+    current: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
+    skipped: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
     messages: list[str] = []
 
     for task in tasks:

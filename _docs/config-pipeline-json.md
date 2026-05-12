@@ -57,14 +57,14 @@ What stays here:
 
 ## Current Thumbnail Policy
 
-Public catalogue thumbnails use a single configured thumbnail variant:
+Public catalogue index thumbnails use a single configured thumbnail variant:
 
 - size: `96`
 - suffix: `thumb`
 - format: `webp`
 - quality: `62`
 
-The public grid layouts read this policy through `site.data.pipeline`, so they emit only the configured thumbnail candidate instead of allowing browsers to choose a larger `192w` thumbnail for retina displays. Catalogue-wide thumbnail regeneration is handled through:
+The public works, work-detail, and moments index grid layouts read this policy through `site.data.pipeline`, so they emit only the configured thumbnail candidate instead of allowing browsers to choose a larger `192w` thumbnail for retina displays. Catalogue-wide thumbnail regeneration is handled through:
 
 ```bash
 ./scripts/catalogue/catalogue_json_build.py --thumbnail-only --force --write
