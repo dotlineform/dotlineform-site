@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: "2026-05-11 17:50"
+last_updated: "2026-05-12 09:30"
 ui_status: done
 parent_id: change-requests
 sort_order: 150
@@ -21,6 +21,7 @@ Status:
 - Phase 8 implemented: management mode is scoped to `/docs/`, and `/docs/` can manage `studio`, `library`, or `analysis` by changing the active docs scope
 - Phase 9 implemented: Docs Import runs inside the Docs Viewer management modal from the shared importer module
 - Phase 10 implemented: management UI orchestration lives in `assets/docs-viewer/js/docs-viewer-management.js`, loaded only for management-enabled viewer shells
+- Phase 11 implemented: public builds render `/docs/` through the read-only shell; `bin/dev-studio` opts into the management shell with `docs_viewer_management_enabled: true`
 - current follow-on work is optional rather than required for the local management surface
 
 ## Implementation Status
@@ -30,6 +31,8 @@ Implemented now:
 - `_docs` flattened for Studio docs management
 - dedicated localhost docs-management server added at `scripts/docs/docs_management_server.py`
 - manage mode enabled only for `/docs/` behind `?mode=manage`
+- the `/docs/` management shell is enabled only when the Jekyll config sets `docs_viewer_management_enabled: true`
+- public builds leave `docs_viewer_management_enabled` false, so `?mode=manage` does not render management CSS, controls, modal markup, or localhost server configuration
 - `/docs/` can change the active management scope with `?scope=studio`, `?scope=library`, or `?scope=analysis`
 - public `/library/` and `/analysis/` viewer routes remain read-only and do not render management controls, configure the local docs-management server, or load management-only CSS
 - public read-only viewer routes use the shared reader controller without loading the management controller module

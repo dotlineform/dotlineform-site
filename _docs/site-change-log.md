@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-11"
+last_updated: "2026-05-12"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,30 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-12] Disabled Docs Viewer management in public builds
+
+**Status:** implemented
+
+**Area:** Docs Viewer route integration / public runtime boundary
+
+**Summary:**
+The `/docs/` management route adapter now depends on `docs_viewer_management_enabled`.
+Public builds keep that flag false and render `/docs/` with the read-only Docs Viewer shell, so `?mode=manage` no longer emits management CSS, controls, modal markup, localhost write-server configuration, or the management controller load path.
+The local `bin/dev-studio` overlay enables the flag for local management sessions.
+
+**Files changed/docs:**
+
+- `_config.yml`
+- `_config.dev-studio.yml`
+- `_includes/docs_viewer_management_route.html`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- [Docs Viewer Route Creation](/docs/?scope=studio&doc=docs-viewer-route-creation)
+
+**Impact:**
+The public site stays read-only by construction instead of probing a localhost docs-management server that cannot be used from the public origin.
+Local Studio keeps the same management URL shape when served through `bin/dev-studio`.
 
 ## [2026-05-11] Packaged Docs Viewer route adapters
 

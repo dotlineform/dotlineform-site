@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-11 21:55"
+last_updated: "2026-05-12 09:30"
 parent_id: docs-viewer
 sort_order: 15
 ---
@@ -60,6 +60,7 @@ Examples in this repo are:
 
 Use `docs_viewer_readonly_route.html` for public corpus routes such as `/library/` and `/analysis/`.
 Use `docs_viewer_management_route.html` for the local `/docs/` management shell.
+That adapter renders management markup only when `docs_viewer_management_enabled: true`; the public config leaves the flag false, while `_config.dev-studio.yml` enables it for `bin/dev-studio`.
 
 ### Browser Runtime
 
@@ -309,11 +310,13 @@ Read-only canonical URL behavior:
 ### 5. Add The Scope To The Management Shell
 
 The current management shell is `docs/index.md`.
-It renders `/docs/` through `docs_viewer_management_route.html` with:
+In local Studio runs, it renders `/docs/` through `docs_viewer_management_route.html` with:
 
 - `allow_management=true`
 - `allow_scope_query=true`
 - `management_base_url='http://127.0.0.1:8789'`
+
+Public builds keep `docs_viewer_management_enabled: false`, so the same route adapter emits the read-only shell and ignores `mode=manage` without loading management CSS or localhost server configuration.
 
 The management scope selector and browser route map come from `assets/docs-viewer/data/docs-viewer-config.json`.
 Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `assets/docs-viewer/js/docs-viewer.js`.

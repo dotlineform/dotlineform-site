@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T21:00:30Z",
+  "generated_at": "2026-05-12T08:29:20Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -432,7 +432,7 @@
       "doc_id": "docs-viewer-portable-setup",
       "title": "Docs Viewer Portable Setup",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-11 21:55",
+      "last_updated": "2026-05-12 09:30",
       "parent_id": "docs-viewer",
       "sort_order": 15,
       "published": true,
@@ -441,7 +441,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 13306
+      "content_text_length": 13719
     },
     {
       "scope": "studio",
@@ -464,7 +464,7 @@
       "doc_id": "docs-viewer-route-creation",
       "title": "Docs Viewer Route Creation",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-11 22:10",
+      "last_updated": "2026-05-12 09:30",
       "parent_id": "docs-viewer",
       "sort_order": 16,
       "published": true,
@@ -473,7 +473,7 @@
       "source_path": "docs-viewer-route-creation.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-route-creation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-route-creation.json",
-      "content_text_length": 4881
+      "content_text_length": 5058
     },
     {
       "scope": "studio",
@@ -3097,7 +3097,7 @@
       "doc_id": "docs-viewer-management",
       "title": "Docs Viewer Management",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-11 17:50",
+      "last_updated": "2026-05-12 09:30",
       "parent_id": "change-requests",
       "sort_order": 150,
       "published": true,
@@ -3106,7 +3106,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 27640,
+      "content_text_length": 28080,
       "ui_status": "done"
     },
     {
@@ -3662,7 +3662,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-12",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3671,7 +3671,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 142480
+      "content_text_length": 143455
     },
     {
       "scope": "studio",

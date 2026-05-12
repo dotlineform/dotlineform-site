@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-94ae7dc6fb588a156843db38fa3e9cca",
-    "generated_at_utc": "2026-05-11T21:00:30Z",
+    "version": "blake2b-9a74735b04a4bc7dd09497cb9308f981",
+    "generated_at_utc": "2026-05-12T08:29:21Z",
     "count": 226
   },
   "entries": [
@@ -698,10 +698,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-05-11 21:55",
+      "last_updated": "2026-05-12 09:30",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-11 21:55 • Docs",
+      "display_meta": "2026-05-12 09:30 • Docs",
       "search_terms": [
         "docs-viewer-portable-setup",
         "docs",
@@ -709,14 +709,14 @@
         "portable",
         "setup",
         "docs viewer portable setup",
-        "2026-05-11 21:55",
+        "2026-05-12 09:30",
         "2026",
         "05",
-        "11",
-        "21",
-        "55"
+        "12",
+        "09",
+        "30"
       ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup 2026-05-11 21:55 2026 05 11 21 55"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup 2026-05-12 09:30 2026 05 12 09 30"
     },
     {
       "id": "user-guide",
@@ -744,10 +744,10 @@
       "kind": "doc",
       "title": "Docs Viewer Route Creation",
       "href": "/docs/?scope=studio&doc=docs-viewer-route-creation",
-      "last_updated": "2026-05-11 22:10",
+      "last_updated": "2026-05-12 09:30",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-11 22:10 • Docs",
+      "display_meta": "2026-05-12 09:30 • Docs",
       "search_terms": [
         "docs-viewer-route-creation",
         "docs",
@@ -755,14 +755,14 @@
         "route",
         "creation",
         "docs viewer route creation",
-        "2026-05-11 22:10",
+        "2026-05-12 09:30",
         "2026",
         "05",
-        "11",
-        "22",
-        "10"
+        "12",
+        "09",
+        "30"
       ],
-      "search_text": "docs-viewer-route-creation docs viewer route creation docs viewer route creation 2026-05-11 22:10 2026 05 11 22 10"
+      "search_text": "docs-viewer-route-creation docs viewer route creation docs viewer route creation 2026-05-12 09:30 2026 05 12 09 30"
     },
     {
       "id": "scripts-main-pipeline",
@@ -4926,10 +4926,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-11 17:50",
+      "last_updated": "2026-05-12 09:30",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-11 17:50 • Change Requests",
+      "display_meta": "2026-05-12 09:30 • Change Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -4939,14 +4939,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-11 17:50",
+        "2026-05-12 09:30",
         "2026",
         "05",
-        "11",
-        "17",
-        "50"
+        "12",
+        "09",
+        "30"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-12 09:30 2026 05 12 09 30"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",
@@ -5849,20 +5849,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-11",
-      "display_meta": "2026-05-11",
+      "last_updated": "2026-05-12",
+      "display_meta": "2026-05-12",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-11",
+        "2026-05-12",
         "2026",
         "05",
-        "11"
+        "12"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-11 2026 05 11"
+      "search_text": "site-change-log site change log site change log 2026-05-12 2026 05 12"
     },
     {
       "id": "archive",

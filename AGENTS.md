@@ -104,7 +104,7 @@
 - For implementation changes, define proportional targeted verification for both:
   - Codex-run checks
   - manual checks
-- For docs-only or analysis-only changes, keep manual verification lightweight and state when no separate manual check is useful.
+- For docs-only or analysis-only changes, keep manual verification lightweight and state when no separate manual check is useful. Browser smoke tests are only needed when changes have been to the operational site, not when documents have been edited.
 - Manual testing in this repo is expected to be light-touch and pragmatic. There is no formal QA sign-off process.
 - Include changed file paths (and line references when useful) in summaries.
 
