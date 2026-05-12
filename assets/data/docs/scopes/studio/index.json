@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T20:41:43Z",
+  "generated_at": "2026-05-12T21:17:34Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1005,7 +1005,7 @@
       "doc_id": "site-request-docs-viewer-report-components",
       "title": "Docs Viewer Report Components Request",
       "added_date": "2026-05-12",
-      "last_updated": "2026-05-12 21:26",
+      "last_updated": "2026-05-12 22:17",
       "parent_id": "change-requests",
       "sort_order": 29,
       "published": true,
@@ -1015,7 +1015,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-report-components",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-report-components.json",
       "content_text_length": 10192,
-      "ui_status": "in-progress"
+      "ui_status": "done"
     },
     {
       "scope": "studio",

@@ -2,8 +2,8 @@
 doc_id: site-request-docs-viewer-report-components
 title: Docs Viewer Report Components Request
 added_date: 2026-05-12
-last_updated: "2026-05-12 21:26"
-ui_status: in-progress
+last_updated: "2026-05-12 22:17"
+ui_status: done
 parent_id: change-requests
 sort_order: 29
 hidden: false
