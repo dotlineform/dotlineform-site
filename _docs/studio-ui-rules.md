@@ -2,7 +2,7 @@
 doc_id: studio-ui-rules
 title: Studio UI Rules And Decision Log
 added_date: 2026-04-24
-last_updated: "2026-05-11"
+last_updated: "2026-05-12"
 parent_id: ui
 sort_order: 50
 ---
@@ -30,17 +30,16 @@ Use this as the single capture surface for Studio UI work:
 - issue: Docs Import was owned by a standalone Studio page even though it is a Docs Viewer management workflow.
 - triage: modal ownership and route packaging
 - reasoning: import creates Docs Viewer source docs and should be reached from the same management surface that handles create, metadata, viewability, and structure edits. Keeping the old page as the implementation owner forced the modal to embed another route instead of composing the workflow directly.
-- outcome: the Docs Import shell moved into a shared include, `docs-html-import.js` exports an initializer, and the Docs Viewer import modal initializes the importer in place. `/studio/docs-import/` remains a compatibility wrapper around the same include and initializer.
+- outcome: the Docs Import shell moved into a shared include, `assets/docs-viewer/js/docs-html-import.js` exports an initializer, and the Docs Viewer import modal initializes the importer in place. The old `/studio/docs-import/` compatibility wrapper has been retired.
 - files changed:
   - `_includes/docs_viewer_shell.html`
   - `_includes/docs_import_shell.html`
-  - `assets/js/docs-viewer.js`
-  - `assets/studio/js/docs-html-import.js`
-  - `assets/css/docs-viewer-management.css`
-  - `studio/docs-import/index.md`
+  - `assets/docs-viewer/js/docs-viewer.js`
+  - `assets/docs-viewer/js/docs-html-import.js`
+  - `assets/docs-viewer/css/docs-viewer-management.css`
 - local verification:
   - open `/docs/?scope=library&mode=manage&doc=library&import=1` and confirm the modal initializes the importer without an iframe
-  - open `/studio/docs-import/?scope=library` and confirm the compatibility route still initializes the same importer
+  - confirm no `/studio/docs-import/` route is needed for the importer
 
 ## UI Rule Log 2026-05-11 / UI-100
 

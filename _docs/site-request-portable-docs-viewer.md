@@ -2,7 +2,7 @@
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
 added_date: 2026-05-11
-last_updated: "2026-05-11 21:55"
+last_updated: "2026-05-12 10:25"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -147,7 +147,7 @@ Ownership decisions for this slice:
 | Docs Viewer runtime JS | `assets/docs-viewer/js/docs-viewer*.js` | Docs Viewer | Runtime modules live under `assets/docs-viewer/js/`. |
 | Docs Viewer CSS | `assets/docs-viewer/css/docs-viewer-management.css`, `.docsViewer*` rules in `assets/css/main.css` | Docs Viewer | Management CSS lives under `assets/docs-viewer/css/`; public CSS extraction is still a later slice. |
 | Docs Viewer browser config | `scripts/docs/docs_scopes.json`, `assets/studio/data/studio_config.json`, hardcoded route maps | Docs Viewer | Keep `scripts/docs/docs_scopes.json` as source config; add a browser-facing config under `assets/docs-viewer/data/`. |
-| Docs Viewer UI text | `assets/docs-viewer/data/ui-text.json`, Docs Import copy in `assets/studio/data/ui_text/docs-html-import.json` | Docs Viewer | Viewer copy lives under `assets/docs-viewer/data/`; Docs Import copy remains Studio-owned until the import/config slices. |
+| Docs Viewer UI text | `assets/docs-viewer/data/ui-text.json` | Docs Viewer | Viewer and Docs Import copy lives under `assets/docs-viewer/data/`. |
 | Generated docs payloads | `assets/data/docs/scopes/<scope>/...` | Docs Viewer output, consuming site storage | Keep the current output path for compatibility; treat it as generated output, not package source. |
 | Inline docs search | `assets/data/search/<scope>/index.json`, `scripts/search/build_search.rb`, `scripts/search/build_config.json` | Docs Viewer after the search slice | Leave in the search subsystem until Docs search ownership moves in its dedicated slice. |
 | Docs management server | `scripts/docs/docs_management_server.py` and adjacent `scripts/docs/docs_*` modules | Docs Viewer | Keep under `scripts/docs/`; this is already the right domain boundary. |
@@ -344,17 +344,19 @@ Acceptance:
 
 ### 8. Make Docs Import Scope-Config Driven
 
+Status: implemented.
+
 Docs Import now lives inside the Docs Viewer management modal, and its scope picker reads the generated Docs Viewer browser config.
-The remaining import work is ownership and packaging: the import runtime still lives under Studio paths, and the import/media behavior has not been tested as a standalone Docs Viewer package.
+The import runtime and UI text now live under Docs Viewer paths, and imported media token paths derive from scope config.
 
 Tasks:
 
-- make the import modal read configured docs scopes (done for the picker)
-- remove `studio`, `library`, and `analysis` hardcoding from import scope normalization (done for the picker and management result URLs)
-- ensure imported media token paths and target source roots come from scope config
-- keep filename-collision modal behavior intact
-- delete the old `/studio/docs-import/` wrapper as part of the same slice if it still exists
-- remove route defaults, activity-contract references, tests, and docs that assume `/studio/docs-import/` is the user-facing import surface
+- make the import modal read configured docs scopes (done)
+- remove `studio`, `library`, and `analysis` hardcoding from import scope normalization (done)
+- ensure imported media token paths and target source roots come from scope config (done)
+- keep filename-collision modal behavior intact (done)
+- delete the old `/studio/docs-import/` wrapper as part of the same slice if it still exists (already removed)
+- remove route defaults, activity-contract references, tests, and docs that assume `/studio/docs-import/` is the user-facing import surface (done for current contract docs and runtime references)
 
 Acceptance:
 

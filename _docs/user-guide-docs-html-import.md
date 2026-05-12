@@ -2,7 +2,7 @@
 doc_id: user-guide-docs-html-import
 title: "Docs Import"
 added_date: 2026-04-24
-last_updated: "2026-05-11 13:20"
+last_updated: "2026-05-12 10:25"
 parent_id: user-guide
 sort_order: 20
 ---
@@ -27,23 +27,23 @@ This staging directory is repo-local and untracked, so it is a practical place t
 Staged Markdown files should not include predefined front matter.
 The importer creates or preserves the normal Docs Viewer front matter when it writes the target source doc.
 
-For image and downloadable file imports, copy the media file to R2 manually after import.
-The importer creates the wrapper Markdown and reports the expected R2 key, but it does not upload media.
-For inline raster images extracted from HTML or Markdown data URLs, copy the generated staged image file to R2 after import.
+For image and downloadable file imports, copy the media file to the configured media store manually after import.
+The importer creates the wrapper Markdown and reports the expected media path, but it does not upload media.
+For inline raster images extracted from HTML or Markdown data URLs, copy the generated staged image file after import.
 
 ## What The Modal Does
 
 The import modal:
 
 - lists supported staged files from `var/docs/import-staging/`
-- lets you choose whether the imported doc should publish into `library`, `analysis`, or `studio`
+- lets you choose any configured docs scope
 - optionally keeps clearly identifiable prompt/meta blocks for HTML imports
 - converts HTML into a best-attempt Markdown source doc
 - imports staged Markdown as the source body without HTML conversion
 - imports `.txt` files as plain Markdown prose and converts plain URLs to autolinks
 - imports standalone `.svg` files as wrapper docs with sanitized inline SVG
-- imports raster images as wrapper docs that point at `docs/<scope>/img/<filename>` R2 media
-- imports supported downloadable files as wrapper docs that point at `docs/<scope>/files/<filename>` R2 media
+- imports raster images as wrapper docs that point at the configured `<media_path_prefix>/img/<filename>` media path
+- imports supported downloadable files as wrapper docs that point at the configured `<media_path_prefix>/files/<filename>` media path
 - extracts Markdown-image-form inline raster data URLs from HTML and Markdown imports into generated staged media files
 - keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
 - validates the generated Markdown through the current Jekyll docs renderer before write success
@@ -117,7 +117,7 @@ Downloadable file wrappers use:
 - <code>&#91;&#91;media:docs/&lt;scope&gt;/files/&lt;filename&gt;&#93;&#93;</code>
 
 Those tokens resolve against `_config.yml` `media_base` when docs payloads are built.
-The import result shows the expected R2 key so you can copy the source file manually to the matching R2 folder.
+The import result shows the expected media path so you can copy the source file manually to the matching media location.
 
 HTML and Markdown imports also extract inline raster data URLs that appear as Markdown images, such as:
 
@@ -131,8 +131,8 @@ Generated filenames use the final proposed `doc_id` plus an incrementing suffix,
 - `example-doc-image-01.png`
 - `example-doc-image-02.jpg`
 
-The generated Markdown points at the matching docs media token and the result panel lists each staged media path, R2 key, and media token.
-Copy each generated staged image file to the reported R2 key before expecting the rendered doc to display it.
+The generated Markdown points at the matching docs media token and the result panel lists each staged media path, configured media path, and media token.
+Copy each generated staged image file to the reported media path before expecting the rendered doc to display it.
 
 Supported raster image extensions:
 
@@ -171,7 +171,7 @@ After a successful import, the page reports:
 - the original staged source path
 - the viewer link for the imported doc
 - generated staged media paths for inline raster images
-- the expected R2 key and media token for image, file-media, and extracted inline raster imports
+- the expected media path and media token for image, file-media, and extracted inline raster imports
 - any non-routine conversion warnings
 
 ## Route Ready State
@@ -205,7 +205,7 @@ Expect simplified output for:
 - presentation-heavy layout wrappers
 - interactive disclosure UI such as `details/summary`
 - prompt/meta shells
-- source images or downloadable files that have not yet been copied to R2
+- source images or downloadable files that have not yet been copied to the configured media store
 
 Markdown, text, SVG, image-wrapper, and file-wrapper imports bypass the HTML converter.
 They are still validated through the current Jekyll docs renderer before write success.

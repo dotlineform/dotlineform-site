@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-12 09:30"
+last_updated: "2026-05-12 10:25"
 parent_id: docs-viewer
 sort_order: 15
 ---
@@ -36,8 +36,8 @@ It can switch the active scope with the `scope` query parameter.
 ## Files To Copy
 
 These lists are the current copy set, not the desired future package boundary.
-Most reusable Docs Viewer runtime, CSS, and UI text now lives under `assets/docs-viewer/`.
-Remaining paths under `assets/studio/` are interim copy requirements for Studio config and the Docs Import modal only.
+Reusable Docs Viewer runtime, CSS, and UI text now lives under `assets/docs-viewer/`.
+Docs Import is part of that package boundary when management mode is enabled.
 
 ### Viewer Shell
 
@@ -80,12 +80,7 @@ For management mode, also copy:
 
 For Docs Import inside the management modal, also copy:
 
-- `assets/studio/js/docs-html-import.js`
-- `assets/studio/js/studio-activity-context.js`
-- `assets/studio/js/studio-config.js`
-- `assets/studio/js/studio-modal.js`
-- `assets/studio/js/studio-route-state.js`
-- `assets/studio/js/studio-transport.js`
+- `assets/docs-viewer/js/docs-html-import.js`
 
 ### CSS
 
@@ -104,15 +99,12 @@ Copy:
 
 - `assets/docs-viewer/data/docs-viewer-config.json`
 - `assets/docs-viewer/data/ui-text.json`
-- `assets/studio/data/ui_text/docs-html-import.json`
-
-Current issue:
-Docs Import still reads its modal copy from the Studio UI-text file until the import slice moves it under Docs Viewer ownership.
 
 `assets/docs-viewer/data/docs-viewer-config.json` is generated from `scripts/docs/docs_scopes.json`.
 It is required by the browser runtime and now includes the browser-safe Docs Viewer settings such as recently-added limits, hidden-doc styling, hidden-doc emoji, and per-scope UI-status options.
 Each configured scope also carries its Docs Viewer search policy and search index URL in this browser config.
 The viewer does not keep a hardcoded fallback scope list.
+Docs Import copy is nested in `assets/docs-viewer/data/ui-text.json` under `docs_html_import`.
 
 ### Generated Data Outputs
 
@@ -227,6 +219,7 @@ Decide:
 
 - scope id: for example `research`
 - source root: for example `_docs_research`
+- media path prefix: for example `docs/research`
 - generated docs output: `assets/data/docs/scopes/research`
 - generated search output: `assets/data/search/research/index.json`
 - read-only route: for example `/research/`
@@ -251,6 +244,7 @@ Add a scope entry to `scripts/docs/docs_scopes.json`:
 {
   "scope_id": "research",
   "source": "_docs_research",
+  "media_path_prefix": "docs/research",
   "output": "assets/data/docs/scopes/research",
   "viewer_base_url": "/research/",
   "include_scope_param": false,
@@ -390,9 +384,8 @@ Then open:
 /docs/?scope=research&mode=manage&doc=research
 ```
 
-Current hardcoded limitation:
-Docs Import currently normalizes import scopes to `studio`, `library`, or `analysis`.
-A new arbitrary scope needs `scripts/docs/docs_import_source_service.py` updated before import works for that scope.
+Docs Import reads the configured scope list and source roots from `scripts/docs/docs_scopes.json`.
+Imported media token paths use each scope's `media_path_prefix`, so a new arbitrary scope does not require patching the importer for basic create/overwrite imports.
 
 ### 9. Verify The Public Route
 

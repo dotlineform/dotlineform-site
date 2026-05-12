@@ -17,6 +17,33 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-12] Made Docs Import Scope-Config Driven
+
+**Status:** implemented
+
+**Area:** Docs Viewer portability / import ownership
+
+**Summary:**
+Moved the Docs Import browser runtime into `assets/docs-viewer/js/` and moved its UI copy into the Docs Viewer UI-text payload.
+Docs Import now uses the Docs Viewer management client directly, reads the configured scope list from `docs-viewer-config.json`, writes through the Docs Management server for any configured docs scope, and derives media token paths from each scope's `media_path_prefix` in `scripts/docs/docs_scopes.json`.
+
+**Files changed/docs:**
+
+- `assets/docs-viewer/js/docs-html-import.js`
+- `assets/docs-viewer/js/docs-viewer-management.js`
+- `assets/docs-viewer/data/ui-text.json`
+- `scripts/docs/docs_scopes.json`
+- `scripts/docs/docs_scope_config.py`
+- `scripts/docs/docs_html_import.py`
+- `scripts/docs/build_docs.rb`
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+
+**Impact:**
+Docs Import no longer depends on Studio config, Studio transport, or a Studio-owned UI-text file.
+The remaining media handoff is described as a generic configured media path rather than as part of the Docs Viewer core.
+
 ## [2026-05-12] Disabled Docs Viewer management in public builds
 
 **Status:** implemented

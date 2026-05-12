@@ -44,7 +44,7 @@ Scope configuration:
 
 - `scripts/docs/docs_scopes.json`
 
-This config is the shared source of truth for docs scope ids, Markdown source roots, generated output roots, viewer route bases, nested-source policy, updated-date display, unresolved-parent validation policy, and browser-safe Docs Viewer settings.
+This config is the shared source of truth for docs scope ids, Markdown source roots, generated output roots, viewer route bases, imported-media path prefixes, nested-source policy, updated-date display, unresolved-parent validation policy, and browser-safe Docs Viewer settings.
 `./scripts/build_docs.rb`, the docs-management server, the docs HTML importer, and the live rebuild watcher all read the same config.
 
 ## What The Builder Does

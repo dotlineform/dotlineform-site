@@ -355,7 +355,7 @@ export function initDocsViewerManagement(context) {
     if (!importRoot || !importBootStatus || docsImportInitialized) return Promise.resolve();
     if (docsImportRequestPromise) return docsImportRequestPromise;
 
-    docsImportRequestPromise = import("../../studio/js/docs-html-import.js")
+    docsImportRequestPromise = import("./docs-html-import.js")
       .then(function (module) {
         if (!module || typeof module.initDocsHtmlImport !== "function") {
           throw new Error("Docs Import module did not expose initDocsHtmlImport().");
@@ -365,6 +365,8 @@ export function initDocsViewerManagement(context) {
           bootStatus: importBootStatus,
           initialScope: scope || viewerScope(),
           docsViewerConfigUrl: root.dataset.docsViewerConfigUrl || "/assets/docs-viewer/data/docs-viewer-config.json",
+          uiTextUrl: root.dataset.uiTextUrl || "/assets/docs-viewer/data/ui-text.json",
+          managementBaseUrl: context.managementBaseUrl,
           routePath: "/docs/"
         });
       })

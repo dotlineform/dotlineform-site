@@ -7,6 +7,7 @@
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
       "default_doc_id": "site-docs",
+      "media_path_prefix": "docs/studio",
       "index_url": "/assets/data/docs/scopes/studio/index.json",
       "search_index_url": "/assets/data/search/studio/index.json",
       "search": {
@@ -26,6 +27,7 @@
       "viewer_base_url": "/library/",
       "include_scope_param": false,
       "default_doc_id": "library",
+      "media_path_prefix": "docs/library",
       "index_url": "/assets/data/docs/scopes/library/index.json",
       "search_index_url": "/assets/data/search/library/index.json",
       "search": {
@@ -45,6 +47,7 @@
       "viewer_base_url": "/analysis/",
       "include_scope_param": false,
       "default_doc_id": "analysis",
+      "media_path_prefix": "docs/analysis",
       "index_url": "/assets/data/docs/scopes/analysis/index.json",
       "search_index_url": "/assets/data/search/analysis/index.json",
       "search": {

@@ -1,16 +1,6 @@
-import { getStudioText, loadStudioConfigWithText } from "./studio-config.js";
 import {
-  DOCS_MANAGEMENT_ENDPOINTS,
-  postJson,
-  probeDocsManagementHealth
-} from "./studio-transport.js";
-import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
-} from "./studio-route-state.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
-import { createStudioModalHost, renderStudioModalFrame } from "./studio-modal.js";
+  fetchManagementJson
+} from "./docs-viewer-management-client.js";
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -45,6 +35,166 @@ function setStatus(node, state, message) {
   }
 }
 
+function formatText(template, tokens = {}) {
+  let text = String(template || "");
+  Object.keys(tokens).forEach((key) => {
+    text = text.replace(new RegExp(`\\{${key}\\}`, "g"), tokens[key]);
+  });
+  return text;
+}
+
+function configText(config, path, fallback, tokens = {}) {
+  let current = config;
+  String(path || "").split(".").filter(Boolean).forEach((key) => {
+    if (current && Object.prototype.hasOwnProperty.call(current, key)) {
+      current = current[key];
+    } else {
+      current = undefined;
+    }
+  });
+  return formatText(String(current || fallback || ""), tokens);
+}
+
+async function loadDocsViewerText(textUrl = "/assets/docs-viewer/data/ui-text.json") {
+  const response = await fetch(textUrl, {
+    headers: { Accept: "application/json" },
+    cache: "default"
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to load Docs Viewer UI text (${response.status})`);
+  }
+  const payload = await response.json();
+  return payload && typeof payload === "object" && !Array.isArray(payload) ? payload : {};
+}
+
+function createModalHost(options = {}) {
+  const root = options.root || document.body;
+  let host = root.querySelector('[data-studio-modal-host="true"]');
+  if (host) return host;
+
+  host = document.createElement("div");
+  host.setAttribute("data-studio-modal-host", "true");
+  root.appendChild(host);
+  return host;
+}
+
+function renderModalActions(actions = []) {
+  if (!Array.isArray(actions) || !actions.length) return "";
+  return `<div class="tagStudioModal__actions">${actions.map((action, index) => {
+    const label = String(action && action.label ? action.label : `Action ${index + 1}`);
+    const roleAttr = action && action.role ? ` data-role="${escapeHtml(action.role)}"` : "";
+    const disabledAttr = action && action.disabled ? " disabled" : "";
+    return `<button type="button" class="tagStudio__button"${roleAttr}${disabledAttr}>${escapeHtml(label)}</button>`;
+  }).join("")}</div>`;
+}
+
+function renderModalFrame(options = {}) {
+  const modalRole = options.modalRole ? ` data-role="${escapeHtml(options.modalRole)}"` : "";
+  const backdropRole = options.backdropRole ? ` data-role="${escapeHtml(options.backdropRole)}"` : "";
+  const dialogClass = options.dialogClass ? ` ${escapeHtml(options.dialogClass)}` : "";
+  const hiddenAttr = options.hidden === false ? "" : " hidden";
+  const titleId = String(options.titleId || "studioModalTitle");
+  const titleRole = options.titleRole ? ` data-role="${escapeHtml(options.titleRole)}"` : "";
+  const title = String(options.title || "");
+  const bodyHtml = String(options.bodyHtml || "");
+  const actionsHtml = options.actionsHtml || renderModalActions(options.actions || []);
+  return `
+    <div class="tagStudioModal"${modalRole}${hiddenAttr}>
+      <div class="tagStudioModal__backdrop"${backdropRole}></div>
+      <div class="tagStudioModal__dialog${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}">
+        <h3 id="${escapeHtml(titleId)}"${titleRole}>${escapeHtml(title)}</h3>
+        ${bodyHtml}
+        ${actionsHtml}
+      </div>
+    </div>
+  `;
+}
+
+function applyRouteDetail(root, detail = {}) {
+  if (!root) return;
+  if (Object.prototype.hasOwnProperty.call(detail, "route")) {
+    root.dataset.studioRoute = normalizeText(detail.route);
+  }
+  if (Object.prototype.hasOwnProperty.call(detail, "mode")) {
+    root.dataset.studioMode = normalizeText(detail.mode);
+  }
+  if (Object.prototype.hasOwnProperty.call(detail, "service")) {
+    root.dataset.studioService = normalizeText(detail.service);
+  }
+  if (Object.prototype.hasOwnProperty.call(detail, "recordLoaded")) {
+    root.dataset.studioRecordLoaded = detail.recordLoaded ? "true" : "false";
+  }
+}
+
+function initializeRouteState(root, detail = {}) {
+  if (!root) return;
+  applyRouteDetail(root, detail);
+  root.dataset.studioReady = "false";
+  root.dataset.studioBusy = "false";
+}
+
+function setRouteBusy(root, busy, detail = {}) {
+  if (!root) return;
+  applyRouteDetail(root, detail);
+  root.dataset.studioBusy = busy ? "true" : "false";
+}
+
+function setRouteReady(root, ready, detail = {}) {
+  if (!root) return;
+  const nextReady = Boolean(ready);
+  applyRouteDetail(root, detail);
+  root.dataset.studioReady = nextReady ? "true" : "false";
+  root.dispatchEvent(new CustomEvent("studio:ready", {
+    bubbles: true,
+    detail: {
+      ready: nextReady,
+      busy: root.dataset.studioBusy === "true",
+      route: root.dataset.studioRoute || "",
+      mode: root.dataset.studioMode || "",
+      service: root.dataset.studioService || "",
+      recordLoaded: root.dataset.studioRecordLoaded === "true"
+    }
+  }));
+}
+
+function buildActivityContext({
+  pageId,
+  actionId,
+  route,
+  controlId,
+  controlSelector,
+  recordIdField,
+  recordId
+}) {
+  const normalizedActionId = normalizeText(actionId);
+  const normalizedRecordId = normalizeText(recordId);
+  const fallback = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  const randomId = window.crypto && typeof window.crypto.randomUUID === "function"
+    ? window.crypto.randomUUID()
+    : fallback;
+  return {
+    page_id: pageId,
+    action_id: normalizedActionId,
+    route,
+    control_id: controlId,
+    control_selector: controlSelector,
+    correlation_id: `${normalizedActionId}:${normalizedRecordId}:${randomId}`,
+    [recordIdField]: normalizedRecordId
+  };
+}
+
+function managementOptions(state) {
+  return {
+    baseUrl: state.managementBaseUrl,
+    serverNotConfiguredError: configText(
+      state.config || {},
+      "docs_html_import.server_not_configured",
+      "Local docs-management server is not configured."
+    ),
+    fetch: (url, options) => window.fetch(url, options)
+  };
+}
+
 function routeModeForState(state) {
   if (state.resultNode && !state.resultNode.hidden) return "result";
   if (state.warningNode && !state.warningNode.hidden) return "confirm";
@@ -61,11 +211,11 @@ function routeStateDetail(state) {
 }
 
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(state.root, Boolean(state.isRunning), routeStateDetail(state));
+  setRouteBusy(state.root, Boolean(state.isRunning), routeStateDetail(state));
 }
 
 function markRouteReady(state, ready) {
-  setStudioRouteReady(state.root, ready, routeStateDetail(state));
+  setRouteReady(state.root, ready, routeStateDetail(state));
 }
 
 async function loadDocsViewerScopeOptions(configUrl = "/assets/docs-viewer/data/docs-viewer-config.json") {
@@ -112,7 +262,7 @@ function persistSelectedScope(state, scope) {
 }
 
 function viewerLinkHtml(config, href, fallbackLabel) {
-  const label = getStudioText(config, "docs_html_import.result_open_viewer", fallbackLabel || "Open viewer");
+  const label = configText(config, "docs_html_import.result_open_viewer", fallbackLabel || "Open viewer");
   if (!normalizeText(href)) return "";
   return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
 }
@@ -144,12 +294,8 @@ function mediaPlanListHtml(plans, key) {
     .join("<br>");
 }
 
-async function fetchImportFiles() {
-  const response = await fetch(DOCS_MANAGEMENT_ENDPOINTS.importSourceFiles, { cache: "no-store" });
-  const payload = await response.json().catch(() => null);
-  if (!response.ok || !payload || !payload.ok) {
-    throw new Error(payload && payload.error ? payload.error : `HTTP ${response.status}`);
-  }
+async function fetchImportFiles(state) {
+  const payload = await fetchManagementJson("/docs/import-source-files", "GET", undefined, managementOptions(state));
   return Array.isArray(payload.files) ? payload.files : [];
 }
 
@@ -200,7 +346,7 @@ function renderWarnings(state, warnings) {
   }
   setText(
     state.warningsHeading,
-    getStudioText(state.config, "docs_html_import.warnings_heading", "Warnings")
+    configText(state.config, "docs_html_import.warnings_heading", "Warnings")
   );
   state.warningsList.innerHTML = items.map((warning) => `<li>${escapeHtml(warning)}</li>`).join("");
   state.warningsWrap.hidden = false;
@@ -213,18 +359,18 @@ function renderResult(state, payload) {
   setText(
     state.resultTitleNode,
     payload.operation === "overwrite"
-      ? getStudioText(state.config, "docs_html_import.result_operation_overwrite", "Overwrote existing doc")
-      : getStudioText(state.config, "docs_html_import.result_operation_create", "Created new doc")
+      ? configText(state.config, "docs_html_import.result_operation_overwrite", "Overwrote existing doc")
+      : configText(state.config, "docs_html_import.result_operation_create", "Created new doc")
   );
-  setText(state.resultScopeLabelNode, getStudioText(state.config, "docs_html_import.result_scope", "scope"));
-  setText(state.resultDocIdLabelNode, getStudioText(state.config, "docs_html_import.result_doc_id", "doc_id"));
-  setText(state.resultTitleLabelNode, getStudioText(state.config, "docs_html_import.result_title_label", "title"));
-  setText(state.resultSourceLabelNode, getStudioText(state.config, "docs_html_import.result_source", "source"));
-  setText(state.resultViewerLabelNode, getStudioText(state.config, "docs_html_import.result_viewer", "viewer"));
-  setText(state.resultBackupLabelNode, getStudioText(state.config, "docs_html_import.result_backup", "backup"));
-  setText(state.resultMediaSourceLabelNode, getStudioText(state.config, "docs_html_import.result_media_source", "staged media"));
-  setText(state.resultMediaKeyLabelNode, getStudioText(state.config, "docs_html_import.result_media_key", "R2 key"));
-  setText(state.resultMediaTokenLabelNode, getStudioText(state.config, "docs_html_import.result_media_token", "media link"));
+  setText(state.resultScopeLabelNode, configText(state.config, "docs_html_import.result_scope", "scope"));
+  setText(state.resultDocIdLabelNode, configText(state.config, "docs_html_import.result_doc_id", "doc_id"));
+  setText(state.resultTitleLabelNode, configText(state.config, "docs_html_import.result_title_label", "title"));
+  setText(state.resultSourceLabelNode, configText(state.config, "docs_html_import.result_source", "source"));
+  setText(state.resultViewerLabelNode, configText(state.config, "docs_html_import.result_viewer", "viewer"));
+  setText(state.resultBackupLabelNode, configText(state.config, "docs_html_import.result_backup", "backup"));
+  setText(state.resultMediaSourceLabelNode, configText(state.config, "docs_html_import.result_media_source", "staged media"));
+  setText(state.resultMediaKeyLabelNode, configText(state.config, "docs_html_import.result_media_key", "media path"));
+  setText(state.resultMediaTokenLabelNode, configText(state.config, "docs_html_import.result_media_token", "media link"));
   setText(state.resultScopeNode, payload.scope);
   setHtml(state.resultDocIdNode, sourceDocLinkHtml(payload.scope, payload.doc_id));
   setText(state.resultDocTitleNode, payload.title || preview.title || "");
@@ -243,7 +389,7 @@ function renderResult(state, payload) {
     setHtml(state.resultMediaSourceNode, "");
     state.resultMediaSourceRow.hidden = true;
   }
-  const mediaKeyHtml = mediaPlanListHtml(mediaPlans, "r2_key");
+  const mediaKeyHtml = mediaPlanListHtml(mediaPlans, "media_path");
   if (mediaKeyHtml) {
     setHtml(state.resultMediaKeyNode, mediaKeyHtml);
     state.resultMediaKeyRow.hidden = false;
@@ -264,7 +410,7 @@ function renderResult(state, payload) {
   if (preview.source_format === "markdown") {
     setText(
       state.resultCountsNode,
-      getStudioText(
+      configText(
         state.config,
         "docs_html_import.result_markdown_counts",
         "{chars} chars, {links} links, {images} images",
@@ -278,7 +424,7 @@ function renderResult(state, payload) {
   } else {
     setText(
       state.resultCountsNode,
-      getStudioText(
+      configText(
         state.config,
         "docs_html_import.result_summary_counts",
         "{links} links, {images} images, {svg} SVG, {details} details blocks",
@@ -300,18 +446,18 @@ async function openResultSource(state, link) {
   const docId = normalizeText(link && link.dataset ? link.dataset.docId : "");
   if (!scope || !docId) return;
   try {
-    await postJson(DOCS_MANAGEMENT_ENDPOINTS.openSource, {
+    await fetchManagementJson("/docs/open-source", "POST", {
       scope,
       doc_id: docId,
       editor: "vscode"
-    });
+    }, managementOptions(state));
   } catch (error) {
     console.warn("docs_html_import: open source failed", error);
     setStatus(
       state.statusNode,
       "error",
       normalizeText(error && error.message)
-        || getStudioText(state.config, "docs_html_import.result_open_source_failed", "Failed to open source doc.")
+        || configText(state.config, "docs_html_import.result_open_source_failed", "Failed to open source doc.")
     );
   }
 }
@@ -324,11 +470,11 @@ function renderOverwriteWarning(state, payload) {
   state.pendingOverwriteDocId = normalizeText(collision.doc_id);
   setText(
     state.collisionHeadingNode,
-    getStudioText(state.config, "docs_html_import.collision_heading", "Overwrite warning")
+    configText(state.config, "docs_html_import.collision_heading", "Overwrite warning")
   );
   setText(
     state.collisionBodyNode,
-    getStudioText(
+    configText(
       state.config,
       "docs_html_import.collision_body",
       "This import matches an existing doc target. Confirm overwrite to replace the current source while keeping the same doc identity and filename."
@@ -336,7 +482,7 @@ function renderOverwriteWarning(state, payload) {
   );
   setText(
     state.collisionMetaNode,
-    getStudioText(
+    configText(
       state.config,
       "docs_html_import.overwrite_required",
       "Overwrite required: {doc_id} ({title}). Review the warning and confirm if you want to replace it.",
@@ -359,22 +505,22 @@ async function openReplacementDocIdModal(state, payload) {
   const currentDocId = normalizeText(collision.doc_id || preview.proposed_doc_id);
   const inputId = "docsHtmlImportReplacementDocId";
   const statusRole = "filename-conflict-status";
-  const host = createStudioModalHost({ root: state.root });
+  const host = createModalHost({ root: state.root });
 
-  host.innerHTML = renderStudioModalFrame({
+  host.innerHTML = renderModalFrame({
     hidden: false,
-    title: getStudioText(state.config, "docs_html_import.filename_conflict_heading", "File already exists"),
+    title: configText(state.config, "docs_html_import.filename_conflict_heading", "File already exists"),
     modalRole: "docs-import-filename-conflict-modal",
     backdropRole: "filename-conflict-cancel",
     bodyHtml: `
-      <p class="tagStudioModal__label">${escapeHtml(getStudioText(
+      <p class="tagStudioModal__label">${escapeHtml(configText(
         state.config,
         "docs_html_import.filename_conflict_body",
         "A source file named {doc_id}.md already exists. Edit the doc_id to choose a new filename.",
         { doc_id: currentDocId }
       ))}</p>
       <label class="tagStudioField docsHtmlImportPage__modalField" for="${inputId}">
-        <span class="tagStudioField__label">${escapeHtml(getStudioText(state.config, "docs_html_import.replacement_doc_id_label", "doc_id"))}</span>
+        <span class="tagStudioField__label">${escapeHtml(configText(state.config, "docs_html_import.replacement_doc_id_label", "doc_id"))}</span>
         <span class="tagStudioField__control">
           <input class="tagStudio__input" id="${inputId}" type="text" value="${escapeHtml(currentDocId)}">
         </span>
@@ -382,9 +528,9 @@ async function openReplacementDocIdModal(state, payload) {
       <p class="tagStudioForm__status" data-role="${statusRole}"></p>
     `,
     actions: [
-      { role: "filename-conflict-ok", label: getStudioText(state.config, "docs_html_import.filename_conflict_ok_button", "OK") },
-      { role: "filename-conflict-replace", label: getStudioText(state.config, "docs_html_import.filename_conflict_replace_button", "Replace") },
-      { role: "filename-conflict-cancel", label: getStudioText(state.config, "docs_html_import.filename_conflict_cancel_button", "Cancel") }
+      { role: "filename-conflict-ok", label: configText(state.config, "docs_html_import.filename_conflict_ok_button", "OK") },
+      { role: "filename-conflict-replace", label: configText(state.config, "docs_html_import.filename_conflict_replace_button", "Replace") },
+      { role: "filename-conflict-cancel", label: configText(state.config, "docs_html_import.filename_conflict_cancel_button", "Cancel") }
     ]
   });
 
@@ -415,7 +561,7 @@ async function openReplacementDocIdModal(state, payload) {
     const submitReplacement = () => {
       const value = normalizeText(input && input.value);
       if (!value) {
-        setModalStatus(getStudioText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first."));
+        setModalStatus(configText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first."));
         if (input) input.focus();
         return;
       }
@@ -450,7 +596,7 @@ async function openReplacementDocIdModal(state, payload) {
     setStatus(
       state.statusNode,
       "",
-      getStudioText(state.config, "docs_html_import.filename_conflict_cancelled", "Import cancelled.")
+      configText(state.config, "docs_html_import.filename_conflict_cancelled", "Import cancelled.")
     );
     return;
   }
@@ -469,7 +615,7 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "docs_html_import.file_required", "Select a staged file first.")
+      configText(state.config, "docs_html_import.file_required", "Select a staged file first.")
     );
     return;
   }
@@ -487,13 +633,13 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
   state.cancelButton.disabled = true;
   resetImportView(
     state,
-    getStudioText(state.config, "docs_html_import.running_status", "Converting and validating staged source…")
+    configText(state.config, "docs_html_import.running_status", "Converting and validating staged source…")
   );
   state.isRunning = true;
   syncRouteBusyState(state);
 
   try {
-    const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importSource, {
+    const payload = await fetchManagementJson("/docs/import-source", "POST", {
       scope,
       staged_filename: stagedFilename,
       include_prompt_meta: selectedSourceFormat(state) === "html" ? Boolean(state.includePromptMeta.checked) : false,
@@ -501,7 +647,7 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
       confirm_overwrite: confirmOverwrite,
       replacement_doc_id: normalizedReplacementDocId,
       preview_only: false,
-      activity_context: buildStudioActivityContext({
+      activity_context: buildActivityContext({
         pageId: "docs-import",
         actionId: "import-docs-source",
         route: state.routePath || "/docs/",
@@ -510,14 +656,14 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
         recordIdField: "staged_filename",
         recordId: stagedFilename
       })
-    });
+    }, managementOptions(state));
 
     if (payload.preview_only && (payload.replacement_doc_id_required || payload.replacement_title_required)) {
       renderWarnings(state, payload.import_preview && payload.import_preview.warnings);
       setStatus(
         state.statusNode,
         "warn",
-        payload.summary_text || getStudioText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first.")
+        payload.summary_text || configText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first.")
       );
       await openReplacementDocIdModal(state, payload);
       return;
@@ -529,7 +675,7 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
       setStatus(
         state.statusNode,
         "warn",
-        payload.summary_text || getStudioText(state.config, "docs_html_import.overwrite_required", "Overwrite required.")
+        payload.summary_text || configText(state.config, "docs_html_import.overwrite_required", "Overwrite required.")
       );
       return;
     }
@@ -541,7 +687,7 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
     setStatus(
       state.statusNode,
       "error",
-      normalizeText(error && error.message) || getStudioText(state.config, "docs_html_import.import_failed", "Import failed.")
+      normalizeText(error && error.message) || configText(state.config, "docs_html_import.import_failed", "Import failed.")
     );
   } finally {
     state.isRunning = false;
@@ -558,7 +704,7 @@ export async function initDocsHtmlImport(options = {}) {
   if (!bootStatus || !root) return;
   if (root.dataset.docsImportInitialized === "true") return;
   root.dataset.docsImportInitialized = "true";
-  initializeStudioRouteState(root, { route: "docs-import" });
+  initializeRouteState(root, { route: "docs-import" });
 
   const state = {
     bootStatus,
@@ -610,6 +756,7 @@ export async function initDocsHtmlImport(options = {}) {
     pendingOverwriteDocId: "",
     persistScope: options.persistScope !== false,
     routePath: normalizeText(options.routePath) || "/docs/",
+    managementBaseUrl: normalizeText(options.managementBaseUrl) || "http://127.0.0.1:8789",
     serviceAvailable: false,
     isRunning: false,
     files: [],
@@ -666,24 +813,27 @@ export async function initDocsHtmlImport(options = {}) {
   if (requiredNodes.some((node) => !node)) return;
 
   try {
-    state.config = await loadStudioConfigWithText("docs_html_import");
+    state.config = await loadDocsViewerText(options.uiTextUrl || root.dataset.uiTextUrl || "/assets/docs-viewer/data/ui-text.json");
     state.docsScopeIds = await loadDocsViewerScopeOptions(options.docsViewerConfigUrl);
-    const serviceAvailable = await probeDocsManagementHealth();
+    state.managementBaseUrl = normalizeText(options.managementBaseUrl) || "http://127.0.0.1:8789";
+    const serviceAvailable = await fetchManagementJson("/health", "GET", undefined, managementOptions(state))
+      .then(() => true)
+      .catch(() => false);
     state.serviceAvailable = Boolean(serviceAvailable);
 
     setText(
       state.introNode,
-      getStudioText(
+      configText(
         state.config,
         "docs_html_import.intro",
         "Import staged source files into the Studio, Analysis, or Library docs source."
       )
     );
-    setText(state.fileLabelNode, getStudioText(state.config, "docs_html_import.file_label", "staged file"));
-    setText(state.scopeLabelNode, getStudioText(state.config, "docs_html_import.scope_label", "publish into"));
+    setText(state.fileLabelNode, configText(state.config, "docs_html_import.file_label", "staged file"));
+    setText(state.scopeLabelNode, configText(state.config, "docs_html_import.scope_label", "publish into"));
     setText(
       state.includePromptMetaLabelNode,
-      getStudioText(
+      configText(
         state.config,
         "docs_html_import.include_prompt_meta_label",
         "Include obvious prompt/meta blocks"
@@ -691,20 +841,20 @@ export async function initDocsHtmlImport(options = {}) {
     );
     setText(
       state.includePromptMetaHintNode,
-      getStudioText(
+      configText(
         state.config,
         "docs_html_import.include_prompt_meta_hint",
         "When enabled, clearly identifiable prompt/meta sections are kept in simple fenced code blocks."
       )
     );
-    setText(state.runButton, getStudioText(state.config, "docs_html_import.import_button", "Import"));
+    setText(state.runButton, configText(state.config, "docs_html_import.import_button", "Import"));
     setText(
       state.confirmButton,
-      getStudioText(state.config, "docs_html_import.confirm_overwrite_button", "Confirm overwrite")
+      configText(state.config, "docs_html_import.confirm_overwrite_button", "Confirm overwrite")
     );
     setText(
       state.cancelButton,
-      getStudioText(state.config, "docs_html_import.cancel_overwrite_button", "Cancel")
+      configText(state.config, "docs_html_import.cancel_overwrite_button", "Cancel")
     );
     state.scopeSelect.innerHTML = state.docsScopeIds
       .map((scope) => `<option value="${escapeHtml(scope)}">${escapeHtml(scope)}</option>`)
@@ -728,7 +878,7 @@ export async function initDocsHtmlImport(options = {}) {
       setStatus(
         state.statusNode,
         "error",
-        getStudioText(
+        configText(
           state.config,
           "docs_html_import.service_unavailable",
           "Docs management service unavailable. Start bin/dev-studio to run imports."
@@ -738,7 +888,7 @@ export async function initDocsHtmlImport(options = {}) {
       return;
     }
 
-    const files = await fetchImportFiles();
+    const files = await fetchImportFiles(state);
     state.files = files;
     if (!files.length) {
       state.runButton.disabled = true;
@@ -746,7 +896,7 @@ export async function initDocsHtmlImport(options = {}) {
       setStatus(
         state.statusNode,
         "warn",
-        getStudioText(
+        configText(
           state.config,
           "docs_html_import.no_files",
           "No supported staged import files found under var/docs/import-staging/."
@@ -765,7 +915,7 @@ export async function initDocsHtmlImport(options = {}) {
     setStatus(
       state.statusNode,
       "",
-      getStudioText(
+      configText(
         state.config,
         "docs_html_import.idle_status",
         "Select a staged source file and import it into Studio, Analysis, or Library docs."
@@ -777,7 +927,7 @@ export async function initDocsHtmlImport(options = {}) {
       syncSourceFormatControls(state);
       resetImportView(
         state,
-        getStudioText(
+        configText(
           state.config,
           "docs_html_import.idle_status",
           "Select a staged source file and import it into Studio, Analysis, or Library docs."
@@ -812,7 +962,7 @@ export async function initDocsHtmlImport(options = {}) {
       setStatus(
         state.statusNode,
         "",
-        getStudioText(state.config, "docs_html_import.overwrite_cancelled", "Overwrite cancelled.")
+        configText(state.config, "docs_html_import.overwrite_cancelled", "Overwrite cancelled.")
       );
     });
   } catch (error) {
@@ -821,7 +971,7 @@ export async function initDocsHtmlImport(options = {}) {
     setStatus(
       bootStatus,
       "error",
-      getStudioText(state.config || {}, "docs_html_import.load_files_failed", "Failed to load staged import files.")
+      configText(state.config || {}, "docs_html_import.load_files_failed", "Failed to load staged import files.")
     );
     root.hidden = false;
     state.serviceAvailable = false;

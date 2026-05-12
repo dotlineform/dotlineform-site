@@ -2,7 +2,7 @@
 doc_id: site-request-docs-import-source-registry-media
 title: Docs Import Source Registry And Media Support Request
 added_date: 2026-05-07
-last_updated: "2026-05-07 19:31"
+last_updated: "2026-05-12 10:25"
 ui_status: done
 parent_id: change-requests
 sort_order: 205
@@ -17,7 +17,7 @@ Status:
 
 This request tracks the next Docs Import refinement after staged HTML and body-only Markdown support.
 
-The goal is to make `/studio/docs-import/` format-extensible and support standalone visual/media files that should become normal Docs Viewer source docs.
+The goal is to make Docs Import format-extensible and support standalone visual/media files that should become normal Docs Viewer source docs.
 
 The primary additions are:
 
@@ -26,7 +26,7 @@ The primary additions are:
 - standalone SVG import using the same SVG safety rules as HTML import
 - raster image import for JPEG, PNG, WebP, and similar docs-safe image files
 - file-media import for download-style assets
-- wrapper Markdown generation around imported media that points at the expected R2 media location
+- wrapper Markdown generation around imported media that points at the configured docs media path
 
 ## Problem
 
@@ -57,12 +57,12 @@ Make Docs Import a structured source ingestion workflow rather than a collection
 The desired user experience:
 
 1. User puts staged source files under `var/docs/import-staging/`.
-2. `/studio/docs-import/` lists supported files with a visible source format label.
+2. The Docs Viewer management modal lists supported files with a visible source format label.
 3. User chooses a target scope.
 4. User imports one staged source.
 5. The importer creates or overwrites one normal Docs Viewer Markdown source doc.
-6. For image or file media, the importer generates Markdown that points at the expected R2 media key and reports the manual copy action required.
-7. User manually copies the media file to R2, then opens the source doc and adds text around the imported visual or file link.
+6. For image or file media, the importer generates Markdown that points at the configured docs media path and reports the manual copy action required.
+7. User manually copies the media file to the site's configured media store, then opens the source doc and adds text around the imported visual or file link.
 
 ## Proposed Architecture
 
@@ -199,9 +199,9 @@ Initial wrapper body:
 
 ### Raster Images
 
-Raster image import should create a Markdown wrapper doc that points at the expected R2 media location.
+Raster image import should create a Markdown wrapper doc that points at the configured docs media location.
 The importer should not copy images into `assets/docs/...` for this workflow.
-Manual R2 copy remains the publishing step for now.
+Manual media-store copy remains the publishing step for now.
 
 Candidate supported suffixes:
 
@@ -211,7 +211,7 @@ Candidate supported suffixes:
 - `.webp`
 - `.gif`
 
-Initial R2 key pattern:
+Initial media path pattern:
 
 - `docs/<scope>/img/<original-filename>`
 
@@ -232,20 +232,20 @@ Media-plan requirements:
 
 - treat `var/docs/import-staging/` as the only valid local source for the manual copy plan
 - never copy image media into tracked repo paths as part of this workflow
-- report the expected R2 key and resolved Markdown media token before apply
+- report the expected media path and resolved Markdown media token before apply
 - prevent path traversal
-- warn that the image must be manually copied to R2 before the rendered doc can display it
+- warn that the image must be manually copied to the media store before the rendered doc can display it
 - include media plans in dry-run and preview responses before write
 
-The `docs/<scope>/img/` folder structure intentionally mirrors the existing catalogue `works/img/` R2 convention while adding a docs scope segment.
+The `docs/<scope>/img/` folder structure intentionally mirrors the existing catalogue `works/img/` media convention while adding a docs scope segment.
 That keeps Library images under `docs/library/img/` and leaves room for future Studio docs media under `docs/studio/img/`.
 
 ### Linked Files
 
-File-media import should create a Markdown wrapper doc that links to a downloadable file in the expected R2 media location.
+File-media import should create a Markdown wrapper doc that links to a downloadable file in the configured media location.
 This is a separate media class from images, matching the existing catalogue split between `works/img/` and `works/files/`.
 
-Initial R2 key pattern:
+Initial media path pattern:
 
 - `docs/<scope>/files/<original-filename>`
 
@@ -266,8 +266,8 @@ File-media requirements:
 
 - use an explicit allowlist for supported downloadable file extensions
 - keep `.txt` as a source-text importer rather than a file-media import unless deliberately overridden later
-- report the expected R2 key and Markdown link before apply
-- warn that the file must be manually copied to R2 before the rendered link works
+- report the expected media path and Markdown link before apply
+- warn that the file must be manually copied to the media store before the rendered link works
 - avoid embedding files inline unless a future importer explicitly supports that format
 
 Open questions:
@@ -302,25 +302,21 @@ Overwrite remains a separate explicit action for cases where the user intentiona
 
 ## UI Requirements
 
-The Studio page should remain one route:
-
-- `/studio/docs-import/`
-
-The route should:
+The Docs Viewer management modal should:
 
 - show source format in the staged-file option label
 - hide HTML-only controls for formats that do not use them
-- show planned R2 keys and manual-copy requirements for media imports
+- show planned media paths and manual-copy requirements for media imports
 - prompt for a replacement title when the proposed `doc_id` collides with an existing Markdown source stem
 - keep command feedback next to the import controls
-- continue to use config-backed runtime copy from `studio_config.json`
+- use Docs Viewer-owned runtime copy from `assets/docs-viewer/data/ui-text.json`
 
 For media imports, the result panel should show:
 
 - source file
 - generated `doc_id`
 - target Markdown source path
-- expected R2 media key
+- expected media path
 - generated Markdown media token or file link
 - viewer link
 - warnings
@@ -341,7 +337,7 @@ The docs-management service should:
   - source docs under the selected docs scope root
 
 The first implementation should not write imported images or files into repo asset folders.
-It should treat R2 copying as a manual post-import action until a later upload automation request is implemented for docs media.
+It should treat media-store copying as a manual post-import action until a later upload automation request is implemented for docs media.
 
 ## Proposed Implementation Tasks
 
@@ -358,13 +354,13 @@ It should treat R2 copying as a manual post-import action until a later upload a
    Implement SVG title extraction, shared SVG sanitizer/reject rules, wrapper Markdown generation, and tests proving HTML inline SVG and standalone SVG use the same policy.
 
 5. Add raster image importer.
-   Implement R2 media-key planning, wrapper Markdown generation, manual-copy warnings, and tests.
+   Implement media-path planning, wrapper Markdown generation, manual-copy warnings, and tests.
 
 6. Add file-media importer.
-   Implement R2 file-key planning, wrapper Markdown generation, manual-copy warnings, and tests for the first allowed file extensions.
+   Implement file media-path planning, wrapper Markdown generation, manual-copy warnings, and tests for the first allowed file extensions.
 
 7. Update Studio UI.
-   Show format-specific labels, hide irrelevant controls, display planned R2 media keys in result payloads, and prompt for replacement titles on `doc_id` collisions.
+   Show format-specific labels, hide irrelevant controls, display planned media paths in result payloads, and prompt for replacement titles on `doc_id` collisions.
 
 8. Update docs and checks.
    Update the Docs Import user guide, Docs Management Server reference, Studio UI rules, and targeted service tests.
@@ -382,23 +378,23 @@ This request is complete when:
 - raster image imports create a Markdown wrapper doc that points at `[[media:docs/<scope>/img/<filename>]]`
 - file-media imports create a Markdown wrapper doc that points at `[[media:docs/<scope>/files/<filename>]]`
 - duplicate source Markdown stems prompt for a replacement title seeded with the current name, then derive a new non-colliding `doc_id`
-- preview/dry-run responses show planned R2 keys and manual-copy requirements before apply
+- preview/dry-run responses show planned media paths and manual-copy requirements before apply
 - overwrite flows back up affected source docs
-- `/studio/docs-import/` clearly shows format-specific controls and results
+- the Docs Viewer management modal clearly shows format-specific controls and results
 
 ## Benefits
 
 - keeps source-format handling explicit and testable
 - lets standalone ChatGPT-exported visuals become normal editable docs
 - avoids trying to reconstruct unreliable old HTML-to-asset relationships
-- keeps media links aligned with the existing R2-backed `works/img/` and `works/files/` split
+- keeps media links aligned with the existing `works/img/` and `works/files/` split
 - leaves docs media upload automation as a separate concern from source-doc import
 - makes future formats easier to add without growing route-specific branches
 
 ## Risks
 
 - SVG import can introduce security and rendering issues if sanitizer rules are too permissive
-- media links can render broken until the manual R2 copy is completed
+- media links can render broken until the manual media copy is completed
 - duplicate remote filenames can become confusing unless preview reporting is clear
 - a registry refactor touches the existing HTML and Markdown import path, so regression coverage must stay focused
 

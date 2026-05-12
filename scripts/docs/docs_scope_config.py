@@ -17,6 +17,7 @@ SCHEMA_VERSION = "docs_scopes_v1"
 class DocsScopeConfig:
     scope_id: str
     source: Path
+    media_path_prefix: Path
     output: Path
     viewer_base_url: str
     include_scope_param: bool
@@ -91,6 +92,10 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
         configs[scope_id] = DocsScopeConfig(
             scope_id=scope_id,
             source=safe_relative_path(item.get("source"), field=f"scopes[{index}].source"),
+            media_path_prefix=safe_relative_path(
+                item.get("media_path_prefix") or f"docs/{scope_id}",
+                field=f"scopes[{index}].media_path_prefix",
+            ),
             output=safe_relative_path(item.get("output"), field=f"scopes[{index}].output"),
             viewer_base_url=normalize_viewer_base_url(item.get("viewer_base_url")),
             include_scope_param=item.get("include_scope_param") is True,
@@ -115,6 +120,9 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
 
 DOCS_SCOPE_CONFIGS = load_docs_scope_configs()
 SCOPE_ROOTS = {scope: config.source for scope, config in DOCS_SCOPE_CONFIGS.items()}
+MEDIA_PATH_PREFIXES = {
+    scope: config.media_path_prefix for scope, config in DOCS_SCOPE_CONFIGS.items()
+}
 NESTED_SOURCE_SCOPES = {
     scope for scope, config in DOCS_SCOPE_CONFIGS.items() if config.allow_nested_source
 }

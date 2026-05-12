@@ -29,6 +29,7 @@ def load_docs_management_module():
 
 docs_management = load_docs_management_module()
 import docs_import_source_service as import_source_service  # noqa: E402
+import docs_html_import  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 
 
@@ -526,7 +527,7 @@ def test_svg_import_strips_unsafe_content() -> None:
     assert any("script" in warning for warning in payload["import_preview"]["warnings"])
 
 
-def test_image_import_creates_r2_media_plan_wrapper() -> None:
+def test_image_import_creates_media_path_plan_wrapper() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
@@ -553,8 +554,13 @@ def test_image_import_creates_r2_media_plan_wrapper() -> None:
 
     assert payload["ok"] is True
     assert payload["import_preview"]["source_format"] == "image"
-    assert payload["import_preview"]["media_plan"]["r2_key"] == "docs/library/img/reference-image.png"
+    assert payload["import_preview"]["media_plan"]["media_path"] == "docs/library/img/reference-image.png"
     assert "[[media:docs/library/img/reference-image.png]]" in source_text
+
+
+def test_media_path_comes_from_scope_config() -> None:
+    assert docs_html_import.media_path_for("analysis", "img", "diagram.png") == "docs/analysis/img/diagram.png"
+    assert docs_html_import.media_token("analysis", "img", "diagram.png") == "[[media:docs/analysis/img/diagram.png]]"
 
 
 def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
@@ -598,7 +604,7 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
 
     assert payload["ok"] is True
     assert payload["import_preview"]["media_plans"][0]["source_path"] == "inline-diagram-image-01.png"
-    assert payload["import_preview"]["media_plans"][0]["r2_key"] == "docs/library/img/inline-diagram-image-01.png"
+    assert payload["import_preview"]["media_plans"][0]["media_path"] == "docs/library/img/inline-diagram-image-01.png"
     assert payload["inline_media_written"][0]["staging_path"] == "var/docs/import-staging/inline-diagram-image-01.png"
     assert media_bytes == b"inline-png"
     assert "data:image/png;base64" not in source_text
@@ -683,7 +689,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
     assert "[[media:docs/library/img/mixed-inline-image-01.png]]" in source_text
 
 
-def test_file_media_import_creates_r2_file_plan_wrapper() -> None:
+def test_file_media_import_creates_file_media_path_plan_wrapper() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
@@ -710,7 +716,7 @@ def test_file_media_import_creates_r2_file_plan_wrapper() -> None:
 
     assert payload["ok"] is True
     assert payload["import_preview"]["source_format"] == "file"
-    assert payload["import_preview"]["media_plan"]["r2_key"] == "docs/library/files/reference-file.pdf"
+    assert payload["import_preview"]["media_plan"]["media_path"] == "docs/library/files/reference-file.pdf"
     assert "[[media:docs/library/files/reference-file.pdf]]" in source_text
 
 
@@ -988,11 +994,12 @@ def main() -> None:
         test_markdown_import_create_wraps_body_with_generated_front_matter,
         test_text_import_autolinks_plain_urls,
         test_svg_import_strips_unsafe_content,
-        test_image_import_creates_r2_media_plan_wrapper,
+        test_image_import_creates_media_path_plan_wrapper,
+        test_media_path_comes_from_scope_config,
         test_html_import_extracts_inline_png_to_staged_media_plan,
         test_markdown_import_extracts_inline_png_with_incremented_filename,
         test_inline_media_write_skips_invalid_data_urls_before_valid_images,
-        test_file_media_import_creates_r2_file_plan_wrapper,
+        test_file_media_import_creates_file_media_path_plan_wrapper,
         test_import_collision_prompts_for_replacement_doc_id,
         test_library_import_summary_apply_preflight_reports_missing_target_doc,
         test_library_import_summary_apply_creates_backup_and_writes_source,

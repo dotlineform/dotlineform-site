@@ -211,8 +211,8 @@ Import behavior:
 - new Analysis imports write `published: true`, `viewable: false`
 - new Library imports write `published: true`, `viewable: false`
 - preserves blank `parent_id` and appends the new imported doc at the end of the root-level `sort_order`
-- reports `media_plan` for standalone image and file-media imports, including the expected R2 key and generated media token
-- reports `media_plans` for extracted inline raster images, including staged filenames, expected R2 keys, generated media tokens, MIME type, and decoded byte sizes
+- reports `media_plan` for standalone image and file-media imports, including the expected media path and generated media token
+- reports `media_plans` for extracted inline raster images, including staged filenames, expected media paths, generated media tokens, MIME type, and decoded byte sizes
 - reports collision details when the generated import target already matches an existing `doc_id` or source filename stem
 - asks browser callers to provide `replacement_doc_id` for normal collision recovery
 - requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc through the low-level overwrite path

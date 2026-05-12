@@ -85,7 +85,8 @@ Implemented now:
 - when the metadata modal changes `parent_id` to root, the visible `sort_order` field is respected rather than converted to append
 - metadata edits rebuild docs payloads plus same-scope docs search, except `ui_status`-only edits skip search because status emoji are viewer-only metadata
 - Docs Import is reachable from the `/docs/` management toolbar as an import modal seeded with the active scope
-- `assets/studio/js/docs-html-import.js` exports the importer initializer used by the Docs Viewer modal
+- `assets/docs-viewer/js/docs-html-import.js` exports the importer initializer used by the Docs Viewer modal
+- Docs Import reads its scope list, target source roots, and media token path prefixes from the Docs Viewer scope config
 - `assets/docs-viewer/js/docs-viewer-management.js` owns manage-mode toolbar rendering, metadata/import modal behavior, right-click actions, drag/drop, mutation calls, and management capability checks
 - `assets/docs-viewer/js/docs-viewer.js` keeps the reader/search/history controller plus a small management bridge for shared state and lazy controller loading
 

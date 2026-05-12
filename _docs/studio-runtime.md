@@ -148,7 +148,7 @@ Current page controllers:
 - `assets/studio/js/activity-log.js`
 - `assets/studio/js/docs-broken-links.js`
 - `assets/studio/js/studio-audits.js`
-- `assets/studio/js/docs-html-import.js`
+- `assets/docs-viewer/js/docs-html-import.js`
 - `assets/studio/js/bulk-add-work.js`
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/catalogue-status.js`

@@ -20,7 +20,7 @@ from typing import Any, Optional
 
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 
-from docs_scope_config import SCOPE_ROOTS
+from docs_scope_config import MEDIA_PATH_PREFIXES, SCOPE_ROOTS
 
 
 STAGING_REL_DIR = Path("var/docs/import-staging")
@@ -679,7 +679,7 @@ def apply_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], sc
             size_bytes=len(decoded),
         )
         plans.append(plan)
-        warnings.append(f"Copy {filename} to R2 at {plan['r2_key']} before the rendered doc can display it.")
+        warnings.append(f"Copy {filename} to the media path {plan['media_path']} before the rendered doc can display it.")
         return f"![{match.group('alt')}]({plan['media_token']})"
 
     normalized = MARKDOWN_INLINE_RASTER_IMAGE_PATTERN.sub(replace, markdown)
@@ -716,11 +716,12 @@ def retarget_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any],
         if old_token:
             markdown = markdown.replace(old_token, new_plan["media_token"], 1)
         if old_filename != new_filename:
+            old_media_path = media_path_for(scope, "img", old_filename)
             for warning_index, warning in enumerate(warnings):
                 if isinstance(warning, str) and old_filename in warning:
                     warnings[warning_index] = warning.replace(old_filename, new_filename).replace(
-                        f"docs/{scope}/img/{old_filename}",
-                        new_plan["r2_key"],
+                        old_media_path,
+                        new_plan["media_path"],
                     )
         plans[index] = new_plan
     summary["markdown_preview"] = markdown
@@ -789,7 +790,7 @@ def materialize_inline_raster_media(
                 "source_path": filename,
                 "staging_path": (STAGING_REL_DIR / filename).as_posix(),
                 "size_bytes": len(decoded),
-                "r2_key": plan.get("r2_key", ""),
+                "media_path": plan.get("media_path", ""),
                 "media_token": plan.get("media_token", ""),
             }
         )
@@ -1042,15 +1043,25 @@ def build_text_summary(source_text: str, source_filename_stem: str) -> dict[str,
 
 
 def media_token(scope: str, media_class: str, filename: str) -> str:
-    return f"[[media:docs/{scope}/{media_class}/{filename}]]"
+    media_path = media_path_for(scope, media_class, filename)
+    return f"[[media:{media_path}]]"
+
+
+def media_path_prefix_for(scope: str) -> str:
+    normalized_scope = normalize_scope(scope)
+    return MEDIA_PATH_PREFIXES[normalized_scope].as_posix().strip("/")
+
+
+def media_path_for(scope: str, media_class: str, filename: str) -> str:
+    return f"{media_path_prefix_for(scope)}/{media_class}/{filename}"
 
 
 def build_media_plan(scope: str, media_class: str, source_path: Path, title: str) -> dict[str, Any]:
-    r2_key = f"docs/{scope}/{media_class}/{source_path.name}"
+    media_path = media_path_for(scope, media_class, source_path.name)
     return {
         "manual_copy_required": True,
         "source_path": source_path.name,
-        "r2_key": r2_key,
+        "media_path": media_path,
         "media_token": media_token(scope, media_class, source_path.name),
         "title": title,
     }
@@ -1079,7 +1090,7 @@ def build_image_summary(source_path: Path, scope: str) -> dict[str, Any]:
             "repo_local_or_other": 1,
         },
         "warnings": [
-            f"Copy {source_path.name} to R2 at {plan['r2_key']} before the rendered doc can display it."
+            f"Copy {source_path.name} to the media path {plan['media_path']} before the rendered doc can display it."
         ],
         "markdown_preview": markdown,
         "media_plan": plan,
@@ -1109,7 +1120,7 @@ def build_file_media_summary(source_path: Path, scope: str) -> dict[str, Any]:
             "repo_local_or_other": 0,
         },
         "warnings": [
-            f"Copy {source_path.name} to R2 at {plan['r2_key']} before the rendered download link will work."
+            f"Copy {source_path.name} to the media path {plan['media_path']} before the rendered download link will work."
         ],
         "markdown_preview": markdown,
         "media_plan": plan,

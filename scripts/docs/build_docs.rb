@@ -20,6 +20,7 @@ DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v1"
 ScopeConfig = Struct.new(
   :scope_id,
   :source,
+  :media_path_prefix,
   :output,
   :viewer_base_url,
   :include_scope_param,
@@ -635,6 +636,7 @@ def browser_scope_config_payload(scope_configs)
         "viewer_base_url" => normalized_browser_viewer_base_url(config.viewer_base_url),
         "include_scope_param" => config.include_scope_param == true,
         "default_doc_id" => config.default_doc_id,
+        "media_path_prefix" => config.media_path_prefix,
         "index_url" => browser_docs_index_url(config),
         "search_index_url" => browser_search_index_url(config),
         "search" => browser_search_policy_payload(config)
@@ -678,6 +680,10 @@ def load_scope_configs(path = DOCS_SCOPE_CONFIG_PATH)
     ScopeConfig.new(
       scope_id: scope_id,
       source: normalize_scope_config_path(item["source"], "scopes[#{index}].source"),
+      media_path_prefix: normalize_scope_config_path(
+        item["media_path_prefix"] || "docs/#{scope_id}",
+        "scopes[#{index}].media_path_prefix"
+      ),
       output: normalize_scope_config_path(item["output"], "scopes[#{index}].output"),
       viewer_base_url: item["viewer_base_url"].to_s,
       include_scope_param: item["include_scope_param"] == true,

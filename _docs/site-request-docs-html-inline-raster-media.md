@@ -2,7 +2,7 @@
 doc_id: site-request-docs-html-inline-raster-media
 title: Docs HTML Inline Raster Media Request
 added_date: 2026-05-07
-last_updated: "2026-05-07 19:55"
+last_updated: "2026-05-12 10:25"
 ui_status: done
 parent_id: change-requests
 sort_order: 207
@@ -25,7 +25,7 @@ The desired behavior is:
 - detect inline raster image data URLs during import
 - decode each supported inline image into a generated file under `var/docs/import-staging/`
 - replace the inline data URL with a normal docs media token
-- return a list of media plans so the user can manually copy each generated file to R2
+- return a list of media plans so the user can manually copy each generated file to the configured media store
 
 ## Implementation Status
 
@@ -37,7 +37,7 @@ The importer now:
 - returns `media_plans` for extracted inline raster images
 - writes decoded media files to `var/docs/import-staging/` during create or overwrite
 - keeps standalone image and file imports on the existing singular `media_plan` contract
-- shows staged media paths, R2 keys, and media tokens in the Studio result panel
+- shows staged media paths, configured media paths, and media tokens in the Docs Viewer import result panel
 
 ## Problem
 
@@ -50,7 +50,7 @@ Current effect:
 - generated docs JSON can carry the full encoded image payload
 - reviewing a small prose change becomes noisy
 - the existing remote docs media workflow is bypassed
-- the user still has to manually extract the image if they want to move it to R2
+- the user still has to manually extract the image if they want to move it to the configured media store
 
 The importer already counts `data:` image URLs in preview summaries, so the issue is visible but not actionable enough.
 
@@ -68,8 +68,8 @@ The workflow should:
 - avoid hash suffixes for now
 - replace each inline data URL with <code>&#91;&#91;media:docs/&lt;scope&gt;/img/&lt;filename&gt;&#93;&#93;</code>
 - return a `media_plans` array, not only a single `media_plan`
-- report the expected R2 key for each generated file
-- keep manual R2 copying as the handoff step
+- report the expected media path for each generated file
+- keep manual media-store copying as the handoff step
 
 ## Non-Goals
 
@@ -77,7 +77,7 @@ This request should not:
 
 - convert raster PNG/JPEG/WebP/GIF images into SVG
 - trace raster diagrams into vector markup
-- upload media to R2 automatically
+- upload media automatically
 - change the remote media token format
 - inline decoded binary data into tracked repo files
 - treat sanitized inline SVG as raster media
@@ -108,7 +108,7 @@ The preview and write response should include a media plan entry like:
 <pre><code>{
   "manual_copy_required": true,
   "source_path": "beyond-conscious-subconscious-image-01.png",
-  "r2_key": "docs/library/img/beyond-conscious-subconscious-image-01.png",
+  "media_path": "docs/library/img/beyond-conscious-subconscious-image-01.png",
   "media_token": "&#91;&#91;media:docs/library/img/beyond-conscious-subconscious-image-01.png&#93;&#93;",
   "title": "Diagram"
 }</code></pre>
@@ -155,9 +155,9 @@ If implementation needs preview to create files for validation, it must make tha
 The Docs Import result UI should:
 
 - show every generated staged media filename
-- show every expected R2 key
+- show every expected media path
 - show the generated media token
-- clearly state that manual R2 copy is still required
+- clearly state that manual media copy is still required
 - handle both `media_plan` and `media_plans`
 - avoid assuming an imported source has only one media asset
 
@@ -168,7 +168,7 @@ This change should:
 - keep imported Markdown short and reviewable
 - keep generated docs JSON free of large base64 payloads
 - align inline raster images with the existing remote docs media workflow
-- make the manual R2 copy step visible and repeatable
+- make the manual media-copy step visible and repeatable
 - preserve the original image fidelity by decoding the source PNG/JPEG/WebP/GIF bytes directly
 
 ## Risks
@@ -180,7 +180,7 @@ Main risks:
 - filename increments can produce surprising names if old staged files are left behind
 - Studio result rendering may need to handle both singular and plural media-plan contracts during transition
 
-These risks are acceptable if the importer reports planned filenames before write, avoids silent overwrite, and keeps the copy-to-R2 action explicit.
+These risks are acceptable if the importer reports planned filenames before write, avoids silent overwrite, and keeps the manual media-copy action explicit.
 
 ## Likely Files To Change
 
@@ -188,8 +188,8 @@ Implementation will likely touch:
 
 - `scripts/docs/docs_html_import.py`
 - `scripts/docs/docs_management_server.py`
-- `assets/studio/js/docs-html-import.js`
-- `assets/studio/data/studio_config.json`
+- `assets/docs-viewer/js/docs-html-import.js`
+- `assets/docs-viewer/data/ui-text.json`
 - `_docs/user-guide-docs-html-import.md`
 - `_docs/scripts-docs-management-server.md`
 - `_docs/site-request-docs-import-source-registry-media.md`

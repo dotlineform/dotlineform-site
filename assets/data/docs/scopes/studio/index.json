@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T08:29:20Z",
+  "generated_at": "2026-05-12T09:00:35Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -432,7 +432,7 @@
       "doc_id": "docs-viewer-portable-setup",
       "title": "Docs Viewer Portable Setup",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-12 09:30",
+      "last_updated": "2026-05-12 10:25",
       "parent_id": "docs-viewer",
       "sort_order": 15,
       "published": true,
@@ -441,7 +441,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 13719
+      "content_text_length": 13511
     },
     {
       "scope": "studio",
@@ -594,7 +594,7 @@
       "doc_id": "user-guide-docs-html-import",
       "title": "Docs Import",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11 13:20",
+      "last_updated": "2026-05-12 10:25",
       "parent_id": "user-guide",
       "sort_order": 20,
       "published": true,
@@ -603,7 +603,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 8027
+      "content_text_length": 8103
     },
     {
       "scope": "studio",
@@ -830,7 +830,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 14262
+      "content_text_length": 14267
     },
     {
       "scope": "studio",
@@ -967,7 +967,7 @@
       "doc_id": "site-request-portable-docs-viewer",
       "title": "Portable Docs Viewer Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-11 21:55",
+      "last_updated": "2026-05-12 10:25",
       "parent_id": "change-requests",
       "sort_order": 27,
       "published": true,
@@ -976,7 +976,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 21667,
+      "content_text_length": 21524,
       "ui_status": "in-progress"
     },
     {
@@ -1626,7 +1626,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 29528
+      "content_text_length": 29536
     },
     {
       "scope": "studio",
@@ -1845,7 +1845,7 @@
       "doc_id": "studio-ui-rules",
       "title": "Studio UI Rules And Decision Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-12",
       "parent_id": "ui",
       "sort_order": 50,
       "published": true,
@@ -1854,7 +1854,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 170310
+      "content_text_length": 170261
     },
     {
       "scope": "studio",
@@ -2549,7 +2549,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 9397
+      "content_text_length": 9427
     },
     {
       "scope": "studio",
@@ -2629,7 +2629,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 9109
+      "content_text_length": 9087
     },
     {
       "scope": "studio",
@@ -3106,7 +3106,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 28080,
+      "content_text_length": 28204,
       "ui_status": "done"
     },
     {
@@ -3410,7 +3410,7 @@
       "doc_id": "site-request-docs-import-source-registry-media",
       "title": "Docs Import Source Registry And Media Support Request",
       "added_date": "2026-05-07",
-      "last_updated": "2026-05-07 19:31",
+      "last_updated": "2026-05-12 10:25",
       "parent_id": "change-requests",
       "sort_order": 205,
       "published": true,
@@ -3419,7 +3419,7 @@
       "source_path": "site-request-docs-import-source-registry-media.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-import-source-registry-media",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-import-source-registry-media.json",
-      "content_text_length": 13713,
+      "content_text_length": 13800,
       "ui_status": "done"
     },
     {
@@ -3444,7 +3444,7 @@
       "doc_id": "site-request-docs-html-inline-raster-media",
       "title": "Docs HTML Inline Raster Media Request",
       "added_date": "2026-05-07",
-      "last_updated": "2026-05-07 19:55",
+      "last_updated": "2026-05-12 10:25",
       "parent_id": "change-requests",
       "sort_order": 207,
       "published": true,
@@ -3453,7 +3453,7 @@
       "source_path": "site-request-docs-html-inline-raster-media.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-html-inline-raster-media.json",
-      "content_text_length": 6535,
+      "content_text_length": 6642,
       "ui_status": "done"
     },
     {
@@ -3671,7 +3671,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 143455
+      "content_text_length": 144577
     },
     {
       "scope": "studio",

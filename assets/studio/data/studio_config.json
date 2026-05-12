@@ -101,7 +101,6 @@
         "catalogue_field_registry_review": "/assets/studio/data/ui_text/catalogue-field-registry-review.json",
         "catalogue_status": "/assets/studio/data/ui_text/catalogue-status.json",
         "docs_broken_links": "/assets/studio/data/ui_text/docs-broken-links.json",
-        "docs_html_import": "/assets/studio/data/ui_text/docs-html-import.json",
         "library_documents": "/assets/studio/data/ui_text/library-documents.json",
         "project_state": "/assets/studio/data/ui_text/project-state.json",
         "series_tag_editor": "/assets/studio/data/ui_text/series-tag-editor.json",

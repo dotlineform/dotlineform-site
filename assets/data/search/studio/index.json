@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9a74735b04a4bc7dd09497cb9308f981",
-    "generated_at_utc": "2026-05-12T08:29:21Z",
+    "version": "blake2b-e53beabb0fb9facec504507bd4d93928",
+    "generated_at_utc": "2026-05-12T08:57:00Z",
     "count": 226
   },
   "entries": [
@@ -698,10 +698,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-05-12 09:30",
+      "last_updated": "2026-05-12 10:25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-12 09:30 • Docs",
+      "display_meta": "2026-05-12 10:25 • Docs",
       "search_terms": [
         "docs-viewer-portable-setup",
         "docs",
@@ -709,14 +709,14 @@
         "portable",
         "setup",
         "docs viewer portable setup",
-        "2026-05-12 09:30",
+        "2026-05-12 10:25",
         "2026",
         "05",
         "12",
-        "09",
-        "30"
+        "10",
+        "25"
       ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup 2026-05-12 09:30 2026 05 12 09 30"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup 2026-05-12 10:25 2026 05 12 10 25"
     },
     {
       "id": "user-guide",
@@ -963,10 +963,10 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-05-11 13:20",
+      "last_updated": "2026-05-12 10:25",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-11 13:20 • User Guide",
+      "display_meta": "2026-05-12 10:25 • User Guide",
       "search_terms": [
         "user-guide-docs-html-import",
         "user",
@@ -976,14 +976,14 @@
         "import",
         "docs import",
         "user guide",
-        "2026-05-11 13:20",
+        "2026-05-12 10:25",
         "2026",
         "05",
-        "11",
-        "13",
-        "20"
+        "12",
+        "10",
+        "25"
       ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-11 13:20 2026 05 11 13 20"
+      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-12 10:25 2026 05 12 10 25"
     },
     {
       "id": "site-request-script-structural-review-docs-management-server",
@@ -1540,10 +1540,10 @@
       "kind": "doc",
       "title": "Portable Docs Viewer Request",
       "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
-      "last_updated": "2026-05-11 21:55",
+      "last_updated": "2026-05-12 10:25",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-11 21:55 • Change Requests",
+      "display_meta": "2026-05-12 10:25 • Change Requests",
       "search_terms": [
         "site-request-portable-docs-viewer",
         "site",
@@ -1555,14 +1555,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-11 21:55",
+        "2026-05-12 10:25",
         "2026",
         "05",
-        "11",
-        "21",
-        "55"
+        "12",
+        "10",
+        "25"
       ],
-      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-11 21:55 2026 05 11 21 55"
+      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-12 10:25 2026 05 12 10 25"
     },
     {
       "id": "site-request-docs-viewer-config-settings",
@@ -2943,10 +2943,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-12",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-11 • UI",
+      "display_meta": "2026-05-12 • UI",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -2956,12 +2956,12 @@
         "and",
         "decision",
         "log",
-        "2026-05-11",
+        "2026-05-12",
         "2026",
         "05",
-        "11"
+        "12"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log 2026-05-11 2026 05 11"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log 2026-05-12 2026 05 12"
     },
     {
       "id": "tag-aliases",
@@ -5421,10 +5421,10 @@
       "kind": "doc",
       "title": "Docs Import Source Registry And Media Support Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-import-source-registry-media",
-      "last_updated": "2026-05-07 19:31",
+      "last_updated": "2026-05-12 10:25",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-07 19:31 • Change Requests",
+      "display_meta": "2026-05-12 10:25 • Change Requests",
       "search_terms": [
         "site-request-docs-import-source-registry-media",
         "site",
@@ -5440,14 +5440,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-07 19:31",
+        "2026-05-12 10:25",
         "2026",
         "05",
-        "07",
-        "19",
-        "31"
+        "12",
+        "10",
+        "25"
       ],
-      "search_text": "site-request-docs-import-source-registry-media site request docs import source registry media docs import source registry and media support request and support change requests change requests 2026-05-07 19:31 2026 05 07 19 31"
+      "search_text": "site-request-docs-import-source-registry-media site request docs import source registry media docs import source registry and media support request and support change requests change requests 2026-05-12 10:25 2026 05 12 10 25"
     },
     {
       "id": "site-request-r2-media-upload-automation",
@@ -5483,10 +5483,10 @@
       "kind": "doc",
       "title": "Docs HTML Inline Raster Media Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media",
-      "last_updated": "2026-05-07 19:55",
+      "last_updated": "2026-05-12 10:25",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-07 19:55 • Change Requests",
+      "display_meta": "2026-05-12 10:25 • Change Requests",
       "search_terms": [
         "site-request-docs-html-inline-raster-media",
         "site",
@@ -5500,14 +5500,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-07 19:55",
+        "2026-05-12 10:25",
         "2026",
         "05",
-        "07",
-        "19",
-        "55"
+        "12",
+        "10",
+        "25"
       ],
-      "search_text": "site-request-docs-html-inline-raster-media site request docs html inline raster media docs html inline raster media request change requests change requests 2026-05-07 19:55 2026 05 07 19 55"
+      "search_text": "site-request-docs-html-inline-raster-media site request docs html inline raster media docs html inline raster media request change requests change requests 2026-05-12 10:25 2026 05 12 10 25"
     },
     {
       "id": "site-request-studio-unified-activity-log",
