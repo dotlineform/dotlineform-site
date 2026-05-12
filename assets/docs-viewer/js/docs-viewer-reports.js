@@ -1,9 +1,11 @@
-import { mountDocsIndexTableReport } from "./reports/docs-index-table-report.js";
-
 const REPORTS = {
   docs_index_table: {
     defaultAccess: "public",
-    mount: mountDocsIndexTableReport
+    load: function () {
+      return import("./reports/docs-index-table-report.js").then(function (module) {
+        return module.mountDocsIndexTableReport;
+      });
+    }
   }
 };
 
@@ -81,10 +83,14 @@ export function mountDocsViewerReport(context) {
       return true;
     }
     root.innerHTML = '<p class="docsViewerReport__status">Loading report...</p>';
-    return Promise.resolve(report.mount(Object.assign({}, context, {
-      reportRoot: root,
-      reportMeta: meta
-    }))).then(() => true);
+    return report.load().then(function (mount) {
+      return Promise.resolve(mount(Object.assign({}, context, {
+        reportRoot: root,
+        reportMeta: meta
+      }))).then(function () {
+        return true;
+      });
+    });
   }).catch((error) => {
     unavailable(root, error && error.message ? error.message : "Failed to render report.");
     return true;

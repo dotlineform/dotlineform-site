@@ -28,7 +28,6 @@ import {
   managementReloadPath,
   readAssetVersion
 } from "./docs-viewer-data.js";
-import { mountDocsViewerReport } from "./docs-viewer-reports.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
@@ -1102,6 +1101,21 @@ import { mountDocsViewerReport } from "./docs-viewer-reports.js";
     };
   }
 
+  function payloadHasReport(payload) {
+    return Boolean(payload && String(payload.viewer_report || "").trim());
+  }
+
+  function maybeMountDocsViewerReport(doc, payload) {
+    if (!payloadHasReport(payload)) return;
+    import("./docs-viewer-reports.js")
+      .then(function (module) {
+        return module.mountDocsViewerReport(reportContext(doc, payload));
+      })
+      .catch(function (error) {
+        console.warn("docs_viewer: report controller unavailable", error);
+      });
+  }
+
   function isManageOnlyTreeDoc(doc) {
     if (!doc || state.manageOnlyTreeRootIds.size === 0) return false;
     var visited = new Set();
@@ -1473,7 +1487,7 @@ import { mountDocsViewerReport } from "./docs-viewer-reports.js";
     showDocPane();
     renderMeta(doc);
     content.innerHTML = payload.content_html || "";
-    mountDocsViewerReport(reportContext(doc, payload));
+    maybeMountDocsViewerReport(doc, payload);
     document.title = doc.title + " | dotlineform";
     setStatus("", false);
 
