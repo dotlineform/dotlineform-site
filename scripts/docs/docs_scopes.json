@@ -13,7 +13,12 @@
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "show_updated_date": true,
-      "allow_unresolved_parent_ids": false
+      "allow_unresolved_parent_ids": false,
+      "import_media_storage": {
+        "storage_mode": "staging_manual",
+        "repo_assets_path_prefix": "assets/docs/studio",
+        "repo_assets_public_path_prefix": "/assets/docs/studio"
+      }
     },
     {
       "scope_id": "library",
@@ -27,7 +32,12 @@
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "show_updated_date": false,
-      "allow_unresolved_parent_ids": true
+      "allow_unresolved_parent_ids": true,
+      "import_media_storage": {
+        "storage_mode": "staging_manual",
+        "repo_assets_path_prefix": "assets/docs/library",
+        "repo_assets_public_path_prefix": "/assets/docs/library"
+      }
     },
     {
       "scope_id": "analysis",
@@ -41,7 +51,12 @@
       "non_loadable_doc_ids": [],
       "manage_only_tree_root_ids": [],
       "show_updated_date": true,
-      "allow_unresolved_parent_ids": false
+      "allow_unresolved_parent_ids": false,
+      "import_media_storage": {
+        "storage_mode": "staging_manual",
+        "repo_assets_path_prefix": "assets/docs/analysis",
+        "repo_assets_public_path_prefix": "/assets/docs/analysis"
+      }
     }
   ],
   "docs_viewer": {

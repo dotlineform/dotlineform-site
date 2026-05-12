@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T12:09:25Z",
+  "generated_at": "2026-05-12T13:18:29Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -432,7 +432,7 @@
       "doc_id": "docs-viewer-portable-setup",
       "title": "Docs Viewer Portable Setup",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-12 10:25",
+      "last_updated": "2026-05-12 10:55",
       "parent_id": "docs-viewer",
       "sort_order": 15,
       "published": true,
@@ -441,7 +441,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 13919
+      "content_text_length": 14609
     },
     {
       "scope": "studio",
@@ -967,7 +967,7 @@
       "doc_id": "site-request-portable-docs-viewer",
       "title": "Portable Docs Viewer Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-12 10:25",
+      "last_updated": "2026-05-12 10:55",
       "parent_id": "change-requests",
       "sort_order": 27,
       "published": true,
@@ -976,7 +976,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 26866,
+      "content_text_length": 26854,
       "ui_status": "in-progress"
     },
     {
@@ -1683,7 +1683,7 @@
       "doc_id": "config",
       "title": "Config",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-12 10:55",
       "parent_id": "architecture",
       "sort_order": 50,
       "published": true,
@@ -1692,7 +1692,7 @@
       "source_path": "config.md",
       "viewer_url": "/docs/?scope=studio&doc=config",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config.json",
-      "content_text_length": 1110
+      "content_text_length": 1342
     },
     {
       "scope": "studio",
@@ -1903,6 +1903,22 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-live-rebuild-watcher.json",
       "content_text_length": 4719
+    },
+    {
+      "scope": "studio",
+      "doc_id": "config-docs-viewer",
+      "title": "Docs Viewer Config",
+      "added_date": "2026-05-12",
+      "last_updated": "2026-05-12 10:55",
+      "parent_id": "config",
+      "sort_order": 55,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-docs-viewer.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-docs-viewer",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/config-docs-viewer.json",
+      "content_text_length": 4855
     },
     {
       "scope": "studio",

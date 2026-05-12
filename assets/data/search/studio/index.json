@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1bbfbbf491a3bcaaa93b7767ff164861",
-    "generated_at_utc": "2026-05-12T10:42:33Z",
-    "count": 226
+    "version": "blake2b-2ab9e3503d00628f45239e403766ed38",
+    "generated_at_utc": "2026-05-12T13:13:51Z",
+    "count": 227
   },
   "entries": [
     {
@@ -698,10 +698,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-05-12 10:25",
+      "last_updated": "2026-05-12 10:55",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-12 10:25 • Docs",
+      "display_meta": "2026-05-12 10:55 • Docs",
       "search_terms": [
         "docs-viewer-portable-setup",
         "docs",
@@ -709,14 +709,14 @@
         "portable",
         "setup",
         "docs viewer portable setup",
-        "2026-05-12 10:25",
+        "2026-05-12 10:55",
         "2026",
         "05",
         "12",
         "10",
-        "25"
+        "55"
       ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup 2026-05-12 10:25 2026 05 12 10 25"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup 2026-05-12 10:55 2026 05 12 10 55"
     },
     {
       "id": "user-guide",
@@ -1540,10 +1540,10 @@
       "kind": "doc",
       "title": "Portable Docs Viewer Request",
       "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
-      "last_updated": "2026-05-12 10:25",
+      "last_updated": "2026-05-12 10:55",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-12 10:25 • Change Requests",
+      "display_meta": "2026-05-12 10:55 • Change Requests",
       "search_terms": [
         "site-request-portable-docs-viewer",
         "site",
@@ -1555,14 +1555,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-12 10:25",
+        "2026-05-12 10:55",
         "2026",
         "05",
         "12",
         "10",
-        "25"
+        "55"
       ],
-      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-12 10:25 2026 05 12 10 25"
+      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-12 10:55 2026 05 12 10 55"
     },
     {
       "id": "site-request-docs-viewer-config-settings",
@@ -2689,21 +2689,21 @@
       "kind": "doc",
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-12 10:55",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-11 14:10 • Architecture",
+      "display_meta": "2026-05-12 10:55 • Architecture",
       "search_terms": [
         "config",
         "architecture",
-        "2026-05-11 14:10",
+        "2026-05-12 10:55",
         "2026",
         "05",
-        "11",
-        "14",
-        "10"
+        "12",
+        "10",
+        "55"
       ],
-      "search_text": "config architecture 2026-05-11 14:10 2026 05 11 14 10"
+      "search_text": "config architecture 2026-05-12 10:55 2026 05 12 10 55"
     },
     {
       "id": "scripts-generate-work-pages",
@@ -3035,6 +3035,30 @@
         "17"
       ],
       "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-05-09 18:17 2026 05 09 18 17"
+    },
+    {
+      "id": "config-docs-viewer",
+      "kind": "doc",
+      "title": "Docs Viewer Config",
+      "href": "/docs/?scope=studio&doc=config-docs-viewer",
+      "last_updated": "2026-05-12 10:55",
+      "parent_id": "config",
+      "parent_title": "Config",
+      "display_meta": "2026-05-12 10:55 • Config",
+      "search_terms": [
+        "config-docs-viewer",
+        "config",
+        "docs",
+        "viewer",
+        "docs viewer config",
+        "2026-05-12 10:55",
+        "2026",
+        "05",
+        "12",
+        "10",
+        "55"
+      ],
+      "search_text": "config-docs-viewer config docs viewer docs viewer config 2026-05-12 10:55 2026 05 12 10 55"
     },
     {
       "id": "site-request-analysis-doc-viewer",

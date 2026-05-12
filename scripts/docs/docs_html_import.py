@@ -20,7 +20,7 @@ from typing import Any, Optional
 
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 
-from docs_scope_config import MEDIA_PATH_PREFIXES, SCOPE_ROOTS
+from docs_scope_config import IMPORT_MEDIA_CONFIGS, MEDIA_PATH_PREFIXES, SCOPE_ROOTS
 
 
 STAGING_REL_DIR = Path("var/docs/import-staging")
@@ -679,7 +679,10 @@ def apply_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], sc
             size_bytes=len(decoded),
         )
         plans.append(plan)
-        warnings.append(f"Copy {filename} to the media path {plan['media_path']} before the rendered doc can display it.")
+        if plan["manual_copy_required"]:
+            warnings.append(
+                f"Copy {filename} to the media path {plan['media_path']} before the rendered doc can display it."
+            )
         return f"![{match.group('alt')}]({plan['media_token']})"
 
     normalized = MARKDOWN_INLINE_RASTER_IMAGE_PATTERN.sub(replace, markdown)
@@ -754,44 +757,101 @@ def materialize_inline_raster_media(
     import_preview: dict[str, Any],
     include_prompt_meta: bool,
 ) -> list[dict[str, Any]]:
-    plans = import_preview.get("media_plans")
-    if not isinstance(plans, list) or not plans:
+    plans: list[dict[str, Any]] = []
+    raw_plans = import_preview.get("media_plans")
+    if isinstance(raw_plans, list):
+        plans.extend(plan for plan in raw_plans if isinstance(plan, dict))
+    raw_plan = import_preview.get("media_plan")
+    if isinstance(raw_plan, dict):
+        plans.append(raw_plan)
+    if not plans:
         return []
 
-    raw_markdown = raw_markdown_for_inline_media(source_path, include_prompt_meta=include_prompt_meta)
-    valid_matches: list[tuple[re.Match[str], bytes]] = []
-    for match in MARKDOWN_INLINE_RASTER_IMAGE_PATTERN.finditer(raw_markdown):
-        try:
-            decoded = base64.b64decode(match.group("data"), validate=True)
-        except (binascii.Error, ValueError):
-            continue
-        valid_matches.append((match, decoded))
+    inline_plans = [plan for plan in plans if plan.get("source") == "inline_data_url"]
+    source_file_plans = [plan for plan in plans if plan.get("source") != "inline_data_url"]
+    valid_inline_matches: list[tuple[re.Match[str], bytes]] = []
+    if inline_plans:
+        raw_markdown = raw_markdown_for_inline_media(source_path, include_prompt_meta=include_prompt_meta)
+        for match in MARKDOWN_INLINE_RASTER_IMAGE_PATTERN.finditer(raw_markdown):
+            try:
+                decoded = base64.b64decode(match.group("data"), validate=True)
+            except (binascii.Error, ValueError):
+                continue
+            valid_inline_matches.append((match, decoded))
 
-    if len(valid_matches) < len(plans):
-        raise RuntimeError("Inline media extraction plan no longer matches the staged source.")
+        if len(valid_inline_matches) < len(inline_plans):
+            raise RuntimeError("Inline media extraction plan no longer matches the staged source.")
 
-    staging_root = (repo_root / STAGING_REL_DIR).resolve()
-    staging_root.mkdir(parents=True, exist_ok=True)
     written: list[dict[str, Any]] = []
-    for plan, (_, decoded) in zip(plans, valid_matches):
-        if not isinstance(plan, dict):
-            continue
+    for plan, (_, decoded) in zip(inline_plans, valid_inline_matches):
         filename = str(plan.get("source_path") or "").strip()
         if not filename or Path(filename).name != filename:
             raise ValueError(f"Invalid inline media filename: {filename!r}")
-        target_path = (staging_root / filename).resolve()
-        if not target_path.is_relative_to(staging_root):
-            raise ValueError(f"Inline media filename escapes staging root: {filename!r}")
+        if plan.get("storage_mode") == "repo_assets":
+            target_rel = Path(str(plan.get("repo_asset_path") or ""))
+            if not str(target_rel) or target_rel.name != filename:
+                raise ValueError(f"Invalid inline media repo asset path: {target_rel.as_posix()!r}")
+            scope = normalize_scope(str(import_preview.get("scope")))
+            target_root = (repo_root / IMPORT_MEDIA_CONFIGS[scope].repo_assets_path_prefix).resolve()
+            target_path = (repo_root / target_rel).resolve()
+            if not target_path.is_relative_to(target_root):
+                raise ValueError(f"Inline media target escapes repo assets root: {target_rel.as_posix()!r}")
+        elif plan.get("storage_mode") == "staging_manual":
+            target_root = (repo_root / STAGING_REL_DIR).resolve()
+            target_path = (target_root / filename).resolve()
+            if not target_path.is_relative_to(target_root):
+                raise ValueError(f"Inline media filename escapes staging root: {filename!r}")
+        else:
+            raise ValueError("Docs Import media storage mode is not available for inline media writes.")
         if target_path.exists():
-            raise FileExistsError(f"Inline media target already exists: {STAGING_REL_DIR / filename}")
+            relative_target = target_path.relative_to(repo_root.resolve()).as_posix()
+            raise FileExistsError(f"Inline media target already exists: {relative_target}")
+        target_path.parent.mkdir(parents=True, exist_ok=True)
         target_path.write_bytes(decoded)
         written.append(
             {
                 "source_path": filename,
-                "staging_path": (STAGING_REL_DIR / filename).as_posix(),
+                "staging_path": plan.get("staging_path", ""),
                 "size_bytes": len(decoded),
                 "media_path": plan.get("media_path", ""),
                 "media_token": plan.get("media_token", ""),
+                "media_link": plan.get("media_link", plan.get("media_token", "")),
+                "repo_asset_path": plan.get("repo_asset_path", ""),
+                "public_path": plan.get("public_path", ""),
+                "storage_mode": plan.get("storage_mode", ""),
+            }
+        )
+    for plan in source_file_plans:
+        if plan.get("storage_mode") != "repo_assets":
+            continue
+        filename = str(plan.get("source_path") or "").strip()
+        if not filename or Path(filename).name != filename:
+            raise ValueError(f"Invalid source media filename: {filename!r}")
+        if filename != source_path.name:
+            raise ValueError(f"Source media filename {filename!r} does not match staged source {source_path.name!r}")
+        target_rel = Path(str(plan.get("repo_asset_path") or ""))
+        if not str(target_rel) or target_rel.name != filename:
+            raise ValueError(f"Invalid source media repo asset path: {target_rel.as_posix()!r}")
+        scope = normalize_scope(str(import_preview.get("scope")))
+        target_root = (repo_root / IMPORT_MEDIA_CONFIGS[scope].repo_assets_path_prefix).resolve()
+        target_path = (repo_root / target_rel).resolve()
+        if not target_path.is_relative_to(target_root):
+            raise ValueError(f"Source media target escapes repo assets root: {target_rel.as_posix()!r}")
+        if target_path.exists():
+            raise FileExistsError(f"Source media target already exists: {target_rel.as_posix()}")
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_path, target_path)
+        written.append(
+            {
+                "source_path": filename,
+                "staging_path": relative_path(repo_root, source_path),
+                "size_bytes": target_path.stat().st_size,
+                "media_path": plan.get("media_path", ""),
+                "media_token": plan.get("media_token", ""),
+                "media_link": plan.get("media_link", plan.get("media_token", "")),
+                "repo_asset_path": plan.get("repo_asset_path", ""),
+                "public_path": plan.get("public_path", ""),
+                "storage_mode": plan.get("storage_mode", ""),
             }
         )
     return written
@@ -1056,14 +1116,57 @@ def media_path_for(scope: str, media_class: str, filename: str) -> str:
     return f"{media_path_prefix_for(scope)}/{media_class}/{filename}"
 
 
+def repo_asset_rel_path_for(scope: str, media_class: str, filename: str) -> str:
+    normalized_scope = normalize_scope(scope)
+    config = IMPORT_MEDIA_CONFIGS[normalized_scope]
+    return (config.repo_assets_path_prefix / media_class / filename).as_posix()
+
+
+def repo_asset_public_path_for(scope: str, media_class: str, filename: str) -> str:
+    normalized_scope = normalize_scope(scope)
+    config = IMPORT_MEDIA_CONFIGS[normalized_scope]
+    return f"{config.repo_assets_public_path_prefix}/{media_class}/{filename}"
+
+
+def media_link_for(scope: str, media_class: str, filename: str) -> str:
+    normalized_scope = normalize_scope(scope)
+    config = IMPORT_MEDIA_CONFIGS[normalized_scope]
+    if config.storage_mode == "repo_assets":
+        return repo_asset_public_path_for(normalized_scope, media_class, filename)
+    if config.storage_mode == "staging_manual":
+        return media_token(normalized_scope, media_class, filename)
+    raise ValueError(
+        f"Docs Import media storage mode {config.storage_mode!r} is reserved for a future backend "
+        "and is not available yet."
+    )
+
+
 def build_media_plan(scope: str, media_class: str, source_path: Path, title: str) -> dict[str, Any]:
-    media_path = media_path_for(scope, media_class, source_path.name)
+    normalized_scope = normalize_scope(scope)
+    config = IMPORT_MEDIA_CONFIGS[normalized_scope]
+    link = media_link_for(normalized_scope, media_class, source_path.name)
+    if config.storage_mode == "repo_assets":
+        media_path = repo_asset_rel_path_for(normalized_scope, media_class, source_path.name)
+    else:
+        media_path = media_path_for(normalized_scope, media_class, source_path.name)
     return {
-        "manual_copy_required": True,
+        "storage_mode": config.storage_mode,
+        "manual_copy_required": config.storage_mode != "repo_assets",
         "source_path": source_path.name,
         "media_path": media_path,
-        "media_token": media_token(scope, media_class, source_path.name),
+        "media_token": link,
+        "media_link": link,
         "title": title,
+        "repo_asset_path": (
+            repo_asset_rel_path_for(normalized_scope, media_class, source_path.name)
+            if config.storage_mode == "repo_assets"
+            else ""
+        ),
+        "public_path": (
+            repo_asset_public_path_for(normalized_scope, media_class, source_path.name)
+            if config.storage_mode == "repo_assets"
+            else ""
+        ),
     }
 
 
@@ -1071,6 +1174,11 @@ def build_image_summary(source_path: Path, scope: str) -> dict[str, Any]:
     title = humanize(source_path.stem) or "Imported Image"
     plan = build_media_plan(scope, "img", source_path, title)
     markdown = f"# {title}\n\n![{title}]({plan['media_token']})"
+    warnings = []
+    if plan["manual_copy_required"]:
+        warnings.append(
+            f"Copy {source_path.name} to the media path {plan['media_path']} before the rendered doc can display it."
+        )
     return {
         "title": title,
         "title_source": "filename",
@@ -1089,9 +1197,7 @@ def build_image_summary(source_path: Path, scope: str) -> dict[str, Any]:
             "data_urls": 0,
             "repo_local_or_other": 1,
         },
-        "warnings": [
-            f"Copy {source_path.name} to the media path {plan['media_path']} before the rendered doc can display it."
-        ],
+        "warnings": warnings,
         "markdown_preview": markdown,
         "media_plan": plan,
     }
@@ -1101,6 +1207,11 @@ def build_file_media_summary(source_path: Path, scope: str) -> dict[str, Any]:
     title = humanize(source_path.stem) or "Imported File"
     plan = build_media_plan(scope, "files", source_path, title)
     markdown = f"# {title}\n\n[Download {title}]({plan['media_token']})"
+    warnings = []
+    if plan["manual_copy_required"]:
+        warnings.append(
+            f"Copy {source_path.name} to the media path {plan['media_path']} before the rendered download link will work."
+        )
     return {
         "title": title,
         "title_source": "filename",
@@ -1119,9 +1230,7 @@ def build_file_media_summary(source_path: Path, scope: str) -> dict[str, Any]:
             "data_urls": 0,
             "repo_local_or_other": 0,
         },
-        "warnings": [
-            f"Copy {source_path.name} to the media path {plan['media_path']} before the rendered download link will work."
-        ],
+        "warnings": warnings,
         "markdown_preview": markdown,
         "media_plan": plan,
     }

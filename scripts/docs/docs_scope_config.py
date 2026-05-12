@@ -14,6 +14,14 @@ SCHEMA_VERSION = "docs_scopes_v1"
 
 
 @dataclass(frozen=True)
+class DocsImportMediaConfig:
+    storage_mode: str
+    media_path_prefix: Path
+    repo_assets_path_prefix: Path
+    repo_assets_public_path_prefix: str
+
+
+@dataclass(frozen=True)
 class DocsScopeConfig:
     scope_id: str
     source: Path
@@ -27,6 +35,10 @@ class DocsScopeConfig:
     manage_only_tree_root_ids: tuple[str, ...]
     show_updated_date: bool
     allow_unresolved_parent_ids: bool
+    import_media_storage: DocsImportMediaConfig
+
+
+SUPPORTED_IMPORT_MEDIA_STORAGE_MODES = {"repo_assets", "staging_manual", "r2_upload"}
 
 
 def default_repo_root() -> Path:
@@ -65,6 +77,52 @@ def normalize_doc_id(value: Any, *, field: str) -> str:
     return text
 
 
+def normalize_public_path_prefix(value: Any, *, fallback: str, field: str) -> str:
+    text = str(value or "").strip() or fallback
+    if not text.startswith("/"):
+        text = f"/{text}"
+    if ".." in Path(text.lstrip("/")).parts:
+        raise ValueError(f"docs scope config field {field} must not contain parent path segments")
+    return text.rstrip("/")
+
+
+def normalize_import_media_storage(
+    item: dict[str, Any],
+    *,
+    scope_id: str,
+    media_path_prefix: Path,
+    index: int,
+) -> DocsImportMediaConfig:
+    raw = item.get("import_media_storage")
+    if raw is None:
+        raw = {}
+    if not isinstance(raw, dict):
+        raise ValueError(f"docs scope config scopes[{index}].import_media_storage must be an object")
+
+    storage_mode = str(raw.get("storage_mode") or "staging_manual").strip()
+    if storage_mode not in SUPPORTED_IMPORT_MEDIA_STORAGE_MODES:
+        supported = ", ".join(sorted(SUPPORTED_IMPORT_MEDIA_STORAGE_MODES))
+        raise ValueError(
+            f"docs scope config scopes[{index}].import_media_storage.storage_mode "
+            f"must be one of: {supported}"
+        )
+    repo_assets_path_prefix = safe_relative_path(
+        raw.get("repo_assets_path_prefix") or f"assets/docs/{scope_id}",
+        field=f"scopes[{index}].import_media_storage.repo_assets_path_prefix",
+    )
+    public_path_prefix = normalize_public_path_prefix(
+        raw.get("repo_assets_public_path_prefix"),
+        fallback=f"/{repo_assets_path_prefix.as_posix().strip('/')}",
+        field=f"scopes[{index}].import_media_storage.repo_assets_public_path_prefix",
+    )
+    return DocsImportMediaConfig(
+        storage_mode=storage_mode,
+        media_path_prefix=media_path_prefix,
+        repo_assets_path_prefix=repo_assets_path_prefix,
+        repo_assets_public_path_prefix=public_path_prefix,
+    )
+
+
 def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScopeConfig]:
     root = repo_root or default_repo_root()
     config_path = root / CONFIG_REL_PATH
@@ -89,13 +147,14 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             raise ValueError(f"docs scope config scopes[{index}].scope_id is required")
         if scope_id in configs:
             raise ValueError(f"docs scope config scope_id {scope_id!r} is duplicated")
+        media_path_prefix = safe_relative_path(
+            item.get("media_path_prefix") or f"docs/{scope_id}",
+            field=f"scopes[{index}].media_path_prefix",
+        )
         configs[scope_id] = DocsScopeConfig(
             scope_id=scope_id,
             source=safe_relative_path(item.get("source"), field=f"scopes[{index}].source"),
-            media_path_prefix=safe_relative_path(
-                item.get("media_path_prefix") or f"docs/{scope_id}",
-                field=f"scopes[{index}].media_path_prefix",
-            ),
+            media_path_prefix=media_path_prefix,
             output=safe_relative_path(item.get("output"), field=f"scopes[{index}].output"),
             viewer_base_url=normalize_viewer_base_url(item.get("viewer_base_url")),
             include_scope_param=item.get("include_scope_param") is True,
@@ -114,6 +173,12 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             ),
             show_updated_date=item.get("show_updated_date") is not False,
             allow_unresolved_parent_ids=item.get("allow_unresolved_parent_ids") is True,
+            import_media_storage=normalize_import_media_storage(
+                item,
+                scope_id=scope_id,
+                media_path_prefix=media_path_prefix,
+                index=index,
+            ),
         )
     return configs
 
@@ -122,6 +187,9 @@ DOCS_SCOPE_CONFIGS = load_docs_scope_configs()
 SCOPE_ROOTS = {scope: config.source for scope, config in DOCS_SCOPE_CONFIGS.items()}
 MEDIA_PATH_PREFIXES = {
     scope: config.media_path_prefix for scope, config in DOCS_SCOPE_CONFIGS.items()
+}
+IMPORT_MEDIA_CONFIGS = {
+    scope: config.import_media_storage for scope, config in DOCS_SCOPE_CONFIGS.items()
 }
 NESTED_SOURCE_SCOPES = {
     scope for scope, config in DOCS_SCOPE_CONFIGS.items() if config.allow_nested_source

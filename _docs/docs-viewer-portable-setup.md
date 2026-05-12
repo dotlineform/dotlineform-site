@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-12 10:25"
+last_updated: "2026-05-12 10:55"
 parent_id: docs-viewer
 sort_order: 15
 ---
@@ -167,6 +167,7 @@ Optional adjacent docs tools:
 The management server is local-only and should bind to loopback.
 It is not part of the public static site.
 Generated-data reads, source writes, import targets, and rebuild commands use `scripts/docs/docs_scopes.json` as the docs scope contract.
+For the full config split and media-storage choices, see [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer).
 
 ## Source Docs Required Shape
 
@@ -221,6 +222,7 @@ Decide:
 - scope id: for example `research`
 - source root: for example `_docs_research`
 - media path prefix: for example `docs/research`
+- import media storage: usually `repo_assets` for a new portable install without remote media
 - generated docs output: `assets/data/docs/scopes/research`
 - generated search output: `assets/data/search/research/index.json`
 - read-only route: for example `/research/`
@@ -254,7 +256,12 @@ Add a scope entry to `scripts/docs/docs_scopes.json`:
   "non_loadable_doc_ids": [],
   "manage_only_tree_root_ids": [],
   "show_updated_date": false,
-  "allow_unresolved_parent_ids": true
+  "allow_unresolved_parent_ids": true,
+  "import_media_storage": {
+    "storage_mode": "repo_assets",
+    "repo_assets_path_prefix": "assets/docs/research",
+    "repo_assets_public_path_prefix": "/assets/docs/research"
+  }
 }
 ```
 
@@ -262,6 +269,8 @@ Use `include_scope_param: false` for a public route that only ever reads one sco
 Use `include_scope_param: true` only when the configured route should publish links with an explicit scope query.
 
 Running `./scripts/build_docs.rb --write` updates `assets/docs-viewer/data/docs-viewer-config.json` from this source config.
+`repo_assets` makes Docs Import copy imported images and files below `assets/docs/research/` and write literal `/assets/docs/research/...` links.
+Use `staging_manual` instead when imported media should stay in `var/docs/import-staging/` until you manually copy it to the configured `media_path_prefix`.
 
 ### 4. Add The Read-Only Route
 
@@ -389,7 +398,8 @@ Then open:
 ```
 
 Docs Import reads the configured scope list and source roots from `scripts/docs/docs_scopes.json`.
-Imported media token paths use each scope's `media_path_prefix`, so a new arbitrary scope does not require patching the importer for basic create/overwrite imports.
+Imported media behavior follows each scope's `import_media_storage` settings.
+New portable installs should usually start with `repo_assets`; existing remote-token workflows can keep `staging_manual` and `media_path_prefix`.
 
 ### 9. Verify The Public Route
 

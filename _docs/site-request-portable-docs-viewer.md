@@ -2,7 +2,7 @@
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
 added_date: 2026-05-11
-last_updated: "2026-05-12 10:25"
+last_updated: "2026-05-12 10:55"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 27
@@ -385,7 +385,7 @@ Acceptance:
 
 ### 10. Local vs R2 Config And Config Document
 
-Status: proposed.
+Status: implemented.
 
 This slice prepares Docs Viewer configuration for new installs.
 The current dotlineform environment is moving toward R2-backed media for larger media workflows, but a downstream Docs Viewer install cannot be assumed to have R2, credentials, or any remote object store.
@@ -404,8 +404,8 @@ Docs Viewer import media config should be able to represent these scenarios:
 - `staging_manual`: save extracted media into `var/docs/import-staging/` and report the configured media path for manual copying
 - `r2_upload`: future backend for direct upload to R2 once Docs-domain R2 upload support exists
 
-Only `repo_assets` and `staging_manual` need to be operational in this slice.
-`r2_upload` should be represented in config shape and documentation as a future backend, but this slice should not implement Docs-domain R2 upload or handle credentials.
+Only `repo_assets` and `staging_manual` are operational in this slice.
+`r2_upload` is represented in config shape and documentation as a future backend, but this slice does not implement Docs-domain R2 upload or handle credentials.
 No other external file stores currently need to be supported, but the config should avoid naming R2 as the only possible remote backend forever.
 
 The config ownership should be explicit:
@@ -445,13 +445,13 @@ Example `staging_manual` or future `r2_upload` output:
 
 Tasks:
 
-- define the Docs Viewer media storage config shape for `repo_assets`, `staging_manual`, and future `r2_upload`
-- define the default local repo folder convention for new installs, using current Docs Viewer scopes (`studio`, `library`, `analysis`) as examples and avoiding Catalogue ownership language
-- document that `repo_assets` writes literal `/assets/docs/<scope>/...` links while `staging_manual` and future `r2_upload` use media tokens
-- implement only the currently deliverable media-save behavior needed for new installs, expected to be `repo_assets` plus the existing `staging_manual` flow
-- keep direct R2 upload implementation out of scope; document `r2_upload` as a reserved/future mode that must fail closed or be unavailable until the backend exists
-- describe all Docs Viewer config settings in a new focused Docs Viewer Config document, grouped by config file and purpose
-- update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) to point new installs at the config document for setup decisions
+- define the Docs Viewer media storage config shape for `repo_assets`, `staging_manual`, and future `r2_upload` (done)
+- define the default local repo folder convention for new installs, using current Docs Viewer scopes (`studio`, `library`, `analysis`) as examples and avoiding Catalogue ownership language (done)
+- document that `repo_assets` writes literal `/assets/docs/<scope>/...` links while `staging_manual` and future `r2_upload` use media tokens (done)
+- implement only the currently deliverable media-save behavior needed for new installs, expected to be `repo_assets` plus the existing `staging_manual` flow (done)
+- keep direct R2 upload implementation out of scope; document `r2_upload` as a reserved/future mode that must fail closed or be unavailable until the backend exists (done)
+- describe all Docs Viewer config settings in a new focused Docs Viewer Config document, grouped by config file and purpose (done)
+- update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) to point new installs at the config document for setup decisions (done)
 
 Acceptance:
 
@@ -463,7 +463,7 @@ Acceptance:
 
 ### 11. Build A Minimal Fixture Install
 
-Status: deferred until followup dev completed on config and media
+Status: proposed.
 
 The copy boundary should be tested outside dotlineform before it is treated as stable.
 
