@@ -421,18 +421,33 @@ If a site changes mode later, assume existing media files and existing docs link
 The slice should also decide the link semantics for local saves.
 Current remote media uses <code>&#91;&#91;media:...&#93;&#93;</code> tokens that the docs builder resolves against `_config.yml media_base`.
 Repo-local docs assets currently use literal `/assets/docs/...` paths.
-For `repo_assets`, the implementation should either:
+Decision:
 
-- write literal `/assets/docs/<scope-or-topic>/...` links, or
-- extend media-token resolution so <code>&#91;&#91;media:...&#93;&#93;</code> can resolve through a configured local backend
+- `repo_assets` writes literal public paths under `/assets/docs/<scope>/...`
+- `staging_manual` keeps writing <code>&#91;&#91;media:...&#93;&#93;</code> tokens and reports the configured media path for manual copying
+- future `r2_upload` should also use <code>&#91;&#91;media:...&#93;&#93;</code> tokens, with upload handled by the future backend
 
-That decision must be documented before implementation begins.
+Recommended local folder convention for new installs:
+
+- `assets/docs/<scope>/img/<filename>`
+- `assets/docs/<scope>/files/<filename>`
+
+Example `repo_assets` output:
+
+```md
+![Example](/assets/docs/library/img/example.png)
+[Download Example](/assets/docs/library/files/example.pdf)
+```
+
+Example `staging_manual` or future `r2_upload` output:
+
+<pre><code>![Example](&#91;&#91;media:docs/library/img/example.png&#93;&#93;)</code></pre>
 
 Tasks:
 
 - define the Docs Viewer media storage config shape for `repo_assets`, `staging_manual`, and future `r2_upload`
 - define the default local repo folder convention for new installs, using current Docs Viewer scopes (`studio`, `library`, `analysis`) as examples and avoiding Catalogue ownership language
-- decide and document whether `repo_assets` writes literal `/assets/docs/...` links or uses backend-aware media-token resolution
+- document that `repo_assets` writes literal `/assets/docs/<scope>/...` links while `staging_manual` and future `r2_upload` use media tokens
 - implement only the currently deliverable media-save behavior needed for new installs, expected to be `repo_assets` plus the existing `staging_manual` flow
 - keep direct R2 upload implementation out of scope; document `r2_upload` as a reserved/future mode that must fail closed or be unavailable until the backend exists
 - describe all Docs Viewer config settings in a new focused Docs Viewer Config document, grouped by config file and purpose
