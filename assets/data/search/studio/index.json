@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e53beabb0fb9facec504507bd4d93928",
-    "generated_at_utc": "2026-05-12T08:57:00Z",
+    "version": "blake2b-1bbfbbf491a3bcaaa93b7767ff164861",
+    "generated_at_utc": "2026-05-12T10:42:33Z",
     "count": 226
   },
   "entries": [
@@ -884,10 +884,10 @@
       "kind": "doc",
       "title": "Dev Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-05-09 21:45",
+      "last_updated": "2026-05-12 10:50",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-09 21:45 • Servers",
+      "display_meta": "2026-05-12 10:50 • Servers",
       "search_terms": [
         "scripts-dev-studio",
         "scripts",
@@ -896,14 +896,14 @@
         "dev studio runner",
         "runner",
         "servers",
-        "2026-05-09 21:45",
+        "2026-05-12 10:50",
         "2026",
         "05",
-        "09",
-        "21",
-        "45"
+        "12",
+        "10",
+        "50"
       ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-09 21:45 2026 05 09 21 45"
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-12 10:50 2026 05 12 10 50"
     },
     {
       "id": "site-request-docs-build-incremental",
@@ -2578,10 +2578,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-11 • Docs",
+      "display_meta": "2026-05-12 • Docs",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -2589,12 +2589,12 @@
         "management",
         "server",
         "docs management server",
-        "2026-05-11",
+        "2026-05-12",
         "2026",
         "05",
-        "11"
+        "12"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-11 2026 05 11"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-05-12 2026 05 12"
     },
     {
       "id": "site-request-json-schema-adoption",

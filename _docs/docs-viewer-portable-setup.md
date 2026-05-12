@@ -166,6 +166,7 @@ Optional adjacent docs tools:
 
 The management server is local-only and should bind to loopback.
 It is not part of the public static site.
+Generated-data reads, source writes, import targets, and rebuild commands use `scripts/docs/docs_scopes.json` as the docs scope contract.
 
 ## Source Docs Required Shape
 
@@ -377,6 +378,9 @@ In this repo the normal path is through the Studio dev runner; standalone usage 
 ```sh
 ./scripts/docs/docs_management_server.py --port 8789
 ```
+
+This standalone server start is the portable local-management entrypoint.
+It requires a project root with `_config.yml`, configured docs scopes in `scripts/docs/docs_scopes.json`, the Docs Viewer build/search scripts, and the Python/Ruby dependencies used by those scripts.
 
 Then open:
 

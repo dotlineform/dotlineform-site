@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T09:00:35Z",
+  "generated_at": "2026-05-12T10:42:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -441,7 +441,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 13511
+      "content_text_length": 13919
     },
     {
       "scope": "studio",
@@ -545,7 +545,7 @@
       "doc_id": "scripts-dev-studio",
       "title": "Dev Studio Runner",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-09 21:45",
+      "last_updated": "2026-05-12 10:50",
       "parent_id": "servers",
       "sort_order": 20,
       "published": true,
@@ -554,7 +554,7 @@
       "source_path": "scripts-dev-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json",
-      "content_text_length": 7624
+      "content_text_length": 7886
     },
     {
       "scope": "studio",
@@ -976,7 +976,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 21524,
+      "content_text_length": 21668,
       "ui_status": "in-progress"
     },
     {
@@ -1617,7 +1617,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-12",
       "parent_id": "docs-viewer",
       "sort_order": 45,
       "published": true,
@@ -1626,7 +1626,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 29536
+      "content_text_length": 30663
     },
     {
       "scope": "studio",
@@ -3671,7 +3671,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 144577
+      "content_text_length": 145615
     },
     {
       "scope": "studio",

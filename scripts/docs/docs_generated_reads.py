@@ -9,18 +9,27 @@ from pathlib import Path
 from typing import Any, Dict
 from urllib.parse import urlparse
 
+from docs_scope_config import DOCS_SCOPE_CONFIGS
+
 
 SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 
 
+def generated_docs_output_root(repo_root: Path, scope: str) -> Path:
+    config = DOCS_SCOPE_CONFIGS.get(scope)
+    if config is None:
+        raise ValueError(f"unsupported docs scope: {scope}")
+    return repo_root / config.output
+
+
 def generated_docs_index_path(repo_root: Path, scope: str) -> Path:
-    return repo_root / "assets" / "data" / "docs" / "scopes" / scope / "index.json"
+    return generated_docs_output_root(repo_root, scope) / "index.json"
 
 
 def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path:
     if not SAFE_DOC_ID_PATTERN.match(doc_id):
         raise ValueError("doc_id contains unsupported characters")
-    return repo_root / "assets" / "data" / "docs" / "scopes" / scope / "by-id" / f"{doc_id}.json"
+    return generated_docs_output_root(repo_root, scope) / "by-id" / f"{doc_id}.json"
 
 
 def generated_search_index_path(repo_root: Path, scope: str) -> Path:
@@ -71,7 +80,8 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
     if record is None:
         raise FileNotFoundError(f"generated doc payload for {doc_id} not found")
 
-    expected_url = f"/assets/data/docs/scopes/{scope}/by-id/{doc_id}.json"
+    expected_path = (DOCS_SCOPE_CONFIGS[scope].output / "by-id" / f"{doc_id}.json").as_posix()
+    expected_url = f"/{expected_path}"
     content_url = str(record.get("content_url") or "").strip()
     if content_url and urlparse(content_url).path != expected_url:
         raise RuntimeError(f"generated docs index for {scope} has an unexpected payload path for {doc_id}")

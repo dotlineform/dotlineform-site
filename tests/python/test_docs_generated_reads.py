@@ -7,6 +7,7 @@ import json
 import sys
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -138,6 +139,35 @@ def test_generated_doc_payload_allows_external_content_url_with_expected_path() 
     assert payload["doc_id"] == "child"
 
 
+def test_generated_doc_paths_use_scope_config_output() -> None:
+    original_configs = generated_reads.DOCS_SCOPE_CONFIGS
+    generated_reads.DOCS_SCOPE_CONFIGS = {
+        **original_configs,
+        "research": SimpleNamespace(output=Path("custom/generated/research")),
+    }
+    try:
+        with tempfile.TemporaryDirectory() as temp_path:
+            repo_root = Path(temp_path)
+            docs = [
+                {
+                    "doc_id": "research",
+                    "content_url": "/custom/generated/research/by-id/research.json",
+                }
+            ]
+            write_json(repo_root / "custom/generated/research/index.json", {"docs": docs})
+            write_json(repo_root / "custom/generated/research/by-id/research.json", {"doc_id": "research"})
+
+            assert (
+                generated_reads.generated_docs_index_path(repo_root, "research")
+                == repo_root / "custom/generated/research/index.json"
+            )
+            payload = generated_reads.read_generated_doc_payload(repo_root, "research", "research")
+    finally:
+        generated_reads.DOCS_SCOPE_CONFIGS = original_configs
+
+    assert payload["doc_id"] == "research"
+
+
 def test_read_generated_json_reports_invalid_json() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         path = Path(temp_path) / "index.json"
@@ -157,6 +187,7 @@ def main() -> None:
     test_generated_doc_payload_requires_index_record()
     test_generated_doc_payload_rejects_unexpected_content_url()
     test_generated_doc_payload_allows_external_content_url_with_expected_path()
+    test_generated_doc_paths_use_scope_config_output()
     test_read_generated_json_reports_invalid_json()
     print("Docs generated-read tests OK")
 

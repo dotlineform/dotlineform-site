@@ -50,6 +50,48 @@ DOCS_MANAGEMENT_PID=""
 AUDIT_SERVICE_PID=""
 DOCS_WATCHER_PID=""
 STARTUP_DOC_SCOPES=()
+DOCS_SCOPE_IDS=()
+
+load_docs_scope_ids() {
+  local scope_id
+  DOCS_SCOPE_IDS=()
+  while IFS= read -r scope_id; do
+    if [ -n "$scope_id" ]; then
+      DOCS_SCOPE_IDS+=("$scope_id")
+    fi
+  done < <("$PYTHON_BIN" - <<'PY'
+import json
+from pathlib import Path
+
+payload = json.loads(Path("scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
+if payload.get("schema_version") != "docs_scopes_v1":
+    raise SystemExit("Invalid docs scope config: expected docs_scopes_v1")
+scopes = payload.get("scopes")
+if not isinstance(scopes, list):
+    raise SystemExit("Invalid docs scope config: expected scopes array")
+for item in scopes:
+    if isinstance(item, dict):
+        scope_id = str(item.get("scope_id") or "").strip().lower()
+        if scope_id:
+            print(scope_id)
+PY
+)
+  if [ "${#DOCS_SCOPE_IDS[@]}" -eq 0 ]; then
+    echo "ERROR: No docs scopes found in scripts/docs/docs_scopes.json" >&2
+    exit 1
+  fi
+}
+
+docs_scope_supported() {
+  local candidate="$1"
+  local scope
+  for scope in "${DOCS_SCOPE_IDS[@]}"; do
+    if [ "$scope" = "$candidate" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
 
 parse_startup_doc_scopes() {
   local raw="$1"
@@ -71,19 +113,16 @@ parse_startup_doc_scopes() {
       continue
     fi
 
-    case "$normalized" in
-      studio|library|analysis)
-        if [[ "$seen_scopes" != *" $normalized "* ]]; then
-          STARTUP_DOC_SCOPES+=("$normalized")
-          seen_scopes="$seen_scopes$normalized "
-        fi
-        ;;
-      *)
-        echo "ERROR: Unsupported DOCS_STARTUP_REBUILD_SCOPES entry: $token" >&2
-        echo "Use a comma-separated list of: studio, library, analysis" >&2
-        exit 1
-        ;;
-    esac
+    if ! docs_scope_supported "$normalized"; then
+      echo "ERROR: Unsupported DOCS_STARTUP_REBUILD_SCOPES entry: $token" >&2
+      echo "Use a comma-separated list of configured docs scopes: ${DOCS_SCOPE_IDS[*]}" >&2
+      exit 1
+    fi
+
+    if [[ "$seen_scopes" != *" $normalized "* ]]; then
+      STARTUP_DOC_SCOPES+=("$normalized")
+      seen_scopes="$seen_scopes$normalized "
+    fi
   done
 }
 
@@ -168,6 +207,7 @@ cleanup() {
 
 trap cleanup EXIT INT TERM
 
+load_docs_scope_ids
 parse_startup_doc_scopes "$DOCS_STARTUP_REBUILD_SCOPES"
 
 echo "Starting Studio development services from $ROOT_DIR"
@@ -184,7 +224,7 @@ else
   echo "Startup docs rebuild scopes: none"
 fi
 if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
-  echo "Docs Live Watcher: enabled (_docs + _docs_library + _docs_analysis)"
+  echo "Docs Live Watcher: enabled (configured docs scopes: ${DOCS_SCOPE_IDS[*]})"
 else
   echo "Docs Live Watcher: disabled"
 fi
@@ -213,16 +253,9 @@ if [ "${#STARTUP_DOC_SCOPES[@]}" -eq 0 ]; then
   echo "Skipping startup docs/docs-search rebuilds"
 else
   for scope in "${STARTUP_DOC_SCOPES[@]}"; do
-    if [ "$scope" = "studio" ]; then
-      scope_label="Studio"
-    elif [ "$scope" = "analysis" ]; then
-      scope_label="Analysis"
-    else
-      scope_label="Library"
-    fi
-    echo "Building $scope_label docs viewer data"
+    echo "Building docs viewer data for scope: $scope"
     "$BUNDLE_BIN" exec ruby scripts/build_docs.rb --scope "$scope" --write
-    echo "Building $scope_label docs search data"
+    echo "Building docs search data for scope: $scope"
     "$BUNDLE_BIN" exec ruby scripts/build_search.rb --scope "$scope" --write
   done
 fi

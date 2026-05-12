@@ -365,16 +365,18 @@ Acceptance:
 
 ### 9. Consolidate Local Management Server Packaging
 
+Status: implemented.
+
 The local server is already docs-specific but still feels like a collection of repo scripts.
 
 Tasks:
 
-- define the minimal server file set
-- keep loopback binding and write allowlists explicit
-- make generated-data reads, source writes, backups, rebuilds, and import endpoints use the same scope config
-- define a project-local way to start the server outside `bin/dev-studio`
-- document required Python/Ruby/Jekyll assumptions for downstream projects
-- remove server configuration branches that only support retired import/search routes
+- define the minimal server file set (done)
+- keep loopback binding and write allowlists explicit (done)
+- make generated-data reads, source writes, backups, rebuilds, and import endpoints use the same scope config (done)
+- define a project-local way to start the server outside `bin/dev-studio` (done)
+- document required Python/Ruby/Jekyll assumptions for downstream projects (done)
+- remove server configuration branches that only support retired import/search routes (done for active packaging docs; no runtime-only retired branch was left in this slice)
 
 Acceptance:
 

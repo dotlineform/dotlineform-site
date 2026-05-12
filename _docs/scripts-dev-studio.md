@@ -2,7 +2,7 @@
 doc_id: scripts-dev-studio
 title: Dev Studio Runner
 added_date: 2026-04-22
-last_updated: "2026-05-09 21:45"
+last_updated: "2026-05-12 10:50"
 parent_id: servers
 sort_order: 20
 ---
@@ -67,7 +67,7 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   default: `8790`
 - `DOCS_STARTUP_REBUILD_SCOPES`
   default: blank
-  accepted values: `studio`, `library`, `analysis`, or comma-separated combinations
+  accepted values: configured docs scope ids from `scripts/docs/docs_scopes.json`, or comma-separated combinations
 - `DOCS_WATCH_ENABLED`
   default: `1`
 - `DOCS_WATCH_POLL_SECONDS`
@@ -95,7 +95,10 @@ export DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8
 ```
 
 Keeping `DOCS_STARTUP_REBUILD_SCOPES=""` in `var/local/site.env` is a valid reminder that startup docs/docs-search rebuilds are intentionally off.
-To run a startup rebuild locally, edit that value to `studio`, `library`, `analysis`, or a comma-separated combination before starting the runner.
+To run a startup rebuild locally, edit that value to a configured docs scope id such as `studio`, `library`, `analysis`, or a comma-separated combination before starting the runner.
+
+The runner reads valid docs scope ids from `scripts/docs/docs_scopes.json`.
+Adding a new docs scope there makes it eligible for startup docs/docs-search rebuilds without editing `bin/dev-studio`.
 
 ## Startup Sequence
 

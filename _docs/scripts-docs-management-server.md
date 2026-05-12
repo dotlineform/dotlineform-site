@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-11"
+last_updated: "2026-05-12"
 parent_id: docs-viewer
 sort_order: 45
 ---
@@ -19,6 +19,24 @@ Script:
 - `--port 8789`: override port
 - `--repo-root /path/to/dotlineform-site`: override root auto-detection by parent-searching for `_config.yml`
 - `--dry-run`: validate and return responses without writing source docs
+
+## Standalone Local Start
+
+`bin/dev-studio` is the normal integrated runner in this repo.
+For a Docs Viewer install that only needs the local management server, start this script directly from the project root:
+
+```bash
+./scripts/docs/docs_management_server.py --port 8789
+```
+
+The server expects the project to provide:
+
+- a Jekyll `_config.yml` at the repo root
+- `scripts/docs/docs_scopes.json` with at least one configured docs scope
+- Python dependencies needed by the docs import/export helpers
+- Ruby, Bundler, and Jekyll for rebuild commands reached through `./scripts/build_docs.rb` and `./scripts/build_search.rb`
+
+Downstream installs can run the server without starting the broader Studio services as long as their management route points at this loopback server and their configured docs scopes have generated payloads.
 
 ## Endpoints And Behavior
 
@@ -64,7 +82,7 @@ Current behavior:
 - staged source import orchestration for the Docs Viewer import modal is owned by `scripts/docs/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
 - management mutation planners for create, metadata, viewability, move, restore, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
 - structured import/export adapter orchestration remains server-owned for now and is tracked separately from the Docs Management Server restructuring request
-- used by `/docs/?scope=studio&mode=manage`, `/docs/?scope=library&mode=manage`, and `/docs/?scope=analysis&mode=manage`
+- used by `/docs/?scope=<scope>&mode=manage` for configured docs scopes
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by the `/docs/` management import modal for staged-file listing and source import writes
 - also used by `/studio/export/` to read the generated Library docs index locally and write configured Library export artifacts
@@ -119,11 +137,11 @@ Compatibility aliases:
 
 Generated-read behavior:
 
-- `scope` must be `studio`, `analysis`, or `library`
+- `scope` must be one of the configured scope ids in `scripts/docs/docs_scopes.json`
 - responses return the raw generated JSON unchanged
 - all JSON responses include `Cache-Control: no-store`
-- index reads resolve only `assets/data/docs/scopes/<scope>/index.json`
-- payload reads require a safe `doc_id`, require that `doc_id` to be present in the generated scope index, and then resolve only `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
+- index reads resolve only the configured scope output path plus `index.json`
+- payload reads require a safe `doc_id`, require that `doc_id` to be present in the generated scope index, and then resolve only the configured scope output path plus `by-id/<doc_id>.json`
 - payload reads allow non-viewable docs when those docs are present in the generated index, because local manage mode needs to inspect and update non-viewable docs
 - search reads resolve only `assets/data/search/<scope>/index.json`
 - missing scope, unsupported scope, missing generated files, and non-indexed payload ids return validation or 404 errors rather than filesystem paths chosen by the browser
@@ -141,7 +159,7 @@ Generated-read behavior:
 
 Request behavior:
 
-- `scope` must be `studio`, `analysis`, or `library`
+- `scope` must be one of the configured scope ids in `scripts/docs/docs_scopes.json`
 - `title` defaults to `New Doc` when omitted or blank
 - new docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
 - new Studio docs write `published: true`, `viewable: true`
@@ -186,7 +204,7 @@ Supported source formats:
 
 Import behavior:
 
-- `scope` must be `studio`, `analysis`, or `library`
+- `scope` must be one of the configured scope ids in `scripts/docs/docs_scopes.json`
 - `staged_filename` must resolve inside `var/docs/import-staging/`
 - accepts the supported staged source formats listed above
 - parses full staged HTML files through the shared converter
@@ -236,7 +254,7 @@ Import behavior:
 
 Rebuild behavior:
 
-- `scope` must be `studio`, `analysis`, or `library`
+- `scope` must be one of the configured scope ids in `scripts/docs/docs_scopes.json`
 - rebuilds generated docs payloads for the requested scope
 - rebuilds the docs-search artifact for the requested scope
 - is intended for local manage mode rather than the public hosted site
@@ -595,10 +613,11 @@ Apply behavior:
 
 - binds to loopback only
 - CORS allows loopback origins only
-- write targets are allowlisted to:
+- docs source write targets are allowlisted through `scripts/docs/docs_scopes.json`; in this repo the configured source roots are:
   - `_docs/*.md`
   - `_docs_analysis/**/*.md`
   - `_docs_library/*.md`
+- non-source write targets are allowlisted to:
   - `var/docs/backups/`
   - `var/studio/export-import/<data-domain>/exports/`
   - `var/studio/export-import/<data-domain>/import-preview/`
@@ -613,6 +632,7 @@ Apply behavior:
 ## Operational Notes
 
 - `bin/dev-studio` starts this service on `http://127.0.0.1:8789`
+- standalone local management starts with `./scripts/docs/docs_management_server.py --port 8789`
 - the shared Docs Viewer probes `GET /capabilities` for generated-data reads on normal local loads and for write capability when `?mode=manage` is present
 - if the local service is unavailable, the viewer falls back to static generated JSON for normal public-style reads; manage mode stays read-only and shows a manage-mode unavailable message
 - successful source writes now leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the server

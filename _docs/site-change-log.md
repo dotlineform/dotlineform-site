@@ -17,6 +17,30 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-12] Consolidated Docs Management Server Packaging
+
+**Status:** implemented
+
+**Area:** Docs Viewer portability / local management server
+
+**Summary:**
+The local Docs Management server packaging is now documented as a portable loopback server boundary with a standalone project-local start command.
+Generated docs-index and payload reads now resolve through each scope's configured output path in `scripts/docs/docs_scopes.json`, and `bin/dev-studio` validates `DOCS_STARTUP_REBUILD_SCOPES` from that same scope config instead of a hardcoded scope list.
+
+**Files changed/docs:**
+
+- `bin/dev-studio`
+- `scripts/docs/docs_generated_reads.py`
+- `tests/python/test_docs_generated_reads.py`
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+
+**Impact:**
+A downstream Docs Viewer install has one documented local-management server command, while public/static builds continue to avoid exposing the server.
+Adding a new configured docs scope no longer requires editing `bin/dev-studio` for startup docs/docs-search rebuild eligibility.
+
 ## [2026-05-12] Made Docs Import Scope-Config Driven
 
 **Status:** implemented
