@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T13:18:29Z",
+  "generated_at": "2026-05-12T17:57:57Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2945,6 +2945,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "thumbnail-quality-page",
+      "title": "Thumbnail Quality Page",
+      "added_date": "2026-05-12",
+      "last_updated": "2026-05-12",
+      "parent_id": "catalogue",
+      "sort_order": 125,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "thumbnail-quality-page.md",
+      "viewer_url": "/docs/?scope=studio&doc=thumbnail-quality-page",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/thumbnail-quality-page.json",
+      "content_text_length": 2293
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-catalogue-series-unified-editor",
       "title": "Catalogue Series Unified Editor",
       "added_date": "2026-04-29",
@@ -3163,7 +3179,7 @@
       "doc_id": "scripts-build-catalogue-json",
       "title": "Scoped JSON Catalogue Build",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-12 18:45",
       "parent_id": "catalogue",
       "sort_order": 150,
       "published": true,
@@ -3172,7 +3188,7 @@
       "source_path": "scripts-build-catalogue-json.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-build-catalogue-json.json",
-      "content_text_length": 8842
+      "content_text_length": 10344
     },
     {
       "scope": "studio",
@@ -3277,7 +3293,7 @@
       "doc_id": "config-pipeline-json",
       "title": "Pipeline Config JSON",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-12 18:45",
       "parent_id": "catalogue",
       "sort_order": 170,
       "published": true,
@@ -3286,7 +3302,7 @@
       "source_path": "config-pipeline-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-pipeline-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-pipeline-json.json",
-      "content_text_length": 1514
+      "content_text_length": 2043
     },
     {
       "scope": "studio",
@@ -3687,7 +3703,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 145615
+      "content_text_length": 148199
     },
     {
       "scope": "studio",

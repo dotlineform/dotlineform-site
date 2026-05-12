@@ -1,6 +1,6 @@
 const DEFAULT_STUDIO_CONFIG = {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-05-10T22:25:58Z",
+  "updated_at_utc": "2026-05-12T00:00:00Z",
   "paths": {
     "routes": {
       "studio_home": "/studio/",
@@ -11,6 +11,7 @@ const DEFAULT_STUDIO_CONFIG = {
       "catalogue_field_registry_review": "/studio/catalogue-field-registry/",
       "docs_broken_links": "/studio/docs-broken-links/",
       "project_state": "/studio/project-state/",
+      "thumbnail_quality": "/studio/thumbnail-quality/",
       "docs_html_import": "/docs/?mode=manage&import=1",
       "library_documents": "/studio/library-documents/",
       "data_export": "/studio/export/",
@@ -53,7 +54,8 @@ const DEFAULT_STUDIO_CONFIG = {
         "catalogue_lookup_series_base": "/assets/studio/data/catalogue_lookup/series/",
         "catalogue_field_registry": "/assets/studio/data/catalogue_field_registry.json",
         "export_import_adapters": "/assets/studio/data/export_import_adapters.json",
-        "library_export_configs": "/assets/studio/data/library_export_configs.json"
+        "library_export_configs": "/assets/studio/data/library_export_configs.json",
+        "thumbnail_quality_preview": "/assets/studio/data/thumbnail_quality_preview.json"
       },
       "site": {
         "series_index": "/assets/data/series_index.json",
@@ -103,6 +105,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "docs_broken_links": "/assets/studio/data/ui_text/docs-broken-links.json",
         "library_documents": "/assets/studio/data/ui_text/library-documents.json",
         "project_state": "/assets/studio/data/ui_text/project-state.json",
+        "thumbnail_quality": "/assets/studio/data/ui_text/thumbnail-quality.json",
         "series_tag_editor": "/assets/studio/data/ui_text/series-tag-editor.json",
         "series_tags": "/assets/studio/data/ui_text/series-tags.json",
         "site_series_index": "/assets/studio/data/ui_text/site-series-index.json",

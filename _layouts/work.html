@@ -148,6 +148,9 @@ layout: default
     data-work-title="{{ wid | escape }}"
     data-baseurl="{{ site.baseurl | default: '' }}"
     data-thumb-work-details-base="{{ details_thumb_base_out | escape }}"
+    data-detail-thumb-sizes="{{ detail_thumb_sizes | jsonify | escape }}"
+    data-detail-thumb-suffix="{{ thumb_suffix | escape }}"
+    data-asset-format="{{ asset_format | escape }}"
     data-media-files-works-base="{{ works_files_base_out | escape }}"
     data-enable-hash-scroll="{{ site.enable_details_hash_scroll | default: true }}"
     hidden
@@ -499,7 +502,6 @@ layout: default
     detailThumbSizes = runtime.normalizePositiveSizes(detailThumbSizes, [96, 192]);
     var detailThumbPrimarySize = detailThumbSizes[0];
     var detailThumbSrcset = detailThumbSizes.slice(0, 2);
-    if (detailThumbSrcset.length < 2) detailThumbSrcset = [detailThumbPrimarySize, detailThumbPrimarySize];
     var detailThumbSuffix = String(section.getAttribute('data-detail-thumb-suffix') || 'thumb').trim() || 'thumb';
     var assetFormat = String(section.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
     var pageSize = 60;

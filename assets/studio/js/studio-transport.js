@@ -38,6 +38,7 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   previewMoment: "http://127.0.0.1:8788/catalogue/moment/preview",
   saveMoment: "http://127.0.0.1:8788/catalogue/moment/save",
   projectStateReport: "http://127.0.0.1:8788/catalogue/project-state-report",
+  thumbnailQualityPreview: "http://127.0.0.1:8788/catalogue/thumbnail-quality-preview",
   read: "http://127.0.0.1:8788/catalogue/read",
   health: "http://127.0.0.1:8788/health"
 });

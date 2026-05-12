@@ -48,6 +48,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
   <p><a href="{{ '/studio/activity/' | relative_url }}">Activity</a></p>
   <p><a href="{{ '/studio/audits/' | relative_url }}">Audits</a></p>
   <p><a href="{{ '/studio/project-state/' | relative_url }}">Project State</a></p>
+  <p><a href="{{ '/studio/thumbnail-quality/' | relative_url }}">Thumbnail Quality</a></p>
   <p><a href="{{ '/studio/docs-broken-links/' | relative_url }}">Docs broken links</a></p>
 </section>
 

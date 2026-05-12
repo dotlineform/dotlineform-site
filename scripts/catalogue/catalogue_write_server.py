@@ -105,6 +105,7 @@ from catalogue.project_state_report import (  # noqa: E402
     build_project_state_report,
     resolve_projects_base_dir,
 )
+from media.build_thumbnail_quality_preview import build_preview as build_thumbnail_quality_preview  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
 from catalogue.series_ids import normalize_series_id  # noqa: E402
 from catalogue import catalogue_activity as activity  # noqa: E402
@@ -679,6 +680,7 @@ class Handler(BaseHTTPRequestHandler):
         routes.MOMENT_PREVIEW_PATH: "_handle_moment_preview",
         routes.MOMENT_SAVE_PATH: "_handle_moment_save",
         routes.PROJECT_STATE_REPORT_PATH: "_handle_project_state_report",
+        routes.THUMBNAIL_QUALITY_PREVIEW_PATH: "_handle_thumbnail_quality_preview",
     }
 
     def _request_path(self) -> str:
@@ -2941,6 +2943,24 @@ class Handler(BaseHTTPRequestHandler):
                     )
                 ],
             )
+        self._send_json(HTTPStatus.OK, payload, allowed)
+
+    def _handle_thumbnail_quality_preview(self, allowed: Optional[str]) -> None:
+        self._read_json_body()
+        payload = build_thumbnail_quality_preview(
+            self.server.repo_root,
+            env=runtime_env(repo_root=self.server.repo_root),
+            write=not self.server.dry_run,
+        )
+        payload["dry_run"] = self.server.dry_run
+        self.server.log_event(
+            "thumbnail_quality_preview",
+            {
+                "source_count": payload.get("source_count"),
+                "data_path": payload.get("data_path"),
+                "dry_run": self.server.dry_run,
+            },
+        )
         self._send_json(HTTPStatus.OK, payload, allowed)
 
     def _send_json(self, status: HTTPStatus, payload: Dict[str, Any], allowed: Optional[str] = None) -> None:

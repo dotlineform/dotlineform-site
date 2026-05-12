@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2ab9e3503d00628f45239e403766ed38",
-    "generated_at_utc": "2026-05-12T13:13:51Z",
-    "count": 227
+    "version": "blake2b-d0676bf9c9697b4fd7c0801e40934e47",
+    "generated_at_utc": "2026-05-12T17:55:18Z",
+    "count": 228
   },
   "entries": [
     {
@@ -4687,6 +4687,29 @@
       "search_text": "scripts-srcset-builder scripts srcset builder srcset builder catalogue 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
+      "id": "thumbnail-quality-page",
+      "kind": "doc",
+      "title": "Thumbnail Quality Page",
+      "href": "/docs/?scope=studio&doc=thumbnail-quality-page",
+      "last_updated": "2026-05-12",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-12 • Catalogue",
+      "search_terms": [
+        "thumbnail-quality-page",
+        "thumbnail",
+        "quality",
+        "page",
+        "thumbnail quality page",
+        "catalogue",
+        "2026-05-12",
+        "2026",
+        "05",
+        "12"
+      ],
+      "search_text": "thumbnail-quality-page thumbnail quality page thumbnail quality page catalogue 2026-05-12 2026 05 12"
+    },
+    {
       "id": "site-request-catalogue-series-unified-editor",
       "kind": "doc",
       "title": "Catalogue Series Unified Editor",
@@ -5026,10 +5049,10 @@
       "kind": "doc",
       "title": "Scoped JSON Catalogue Build",
       "href": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-12 18:45",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-09 21:28 • Catalogue",
+      "display_meta": "2026-05-12 18:45 • Catalogue",
       "search_terms": [
         "scripts-build-catalogue-json",
         "scripts",
@@ -5038,14 +5061,14 @@
         "json",
         "scoped json catalogue build",
         "scoped",
-        "2026-05-09 21:28",
+        "2026-05-12 18:45",
         "2026",
         "05",
-        "09",
-        "21",
-        "28"
+        "12",
+        "18",
+        "45"
       ],
-      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-12 18:45 2026 05 12 18 45"
     },
     {
       "id": "config-search-policy-json",
@@ -5206,10 +5229,10 @@
       "kind": "doc",
       "title": "Pipeline Config JSON",
       "href": "/docs/?scope=studio&doc=config-pipeline-json",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-12 18:45",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-09 21:28 • Catalogue",
+      "display_meta": "2026-05-12 18:45 • Catalogue",
       "search_terms": [
         "config-pipeline-json",
         "config",
@@ -5217,14 +5240,14 @@
         "json",
         "pipeline config json",
         "catalogue",
-        "2026-05-09 21:28",
+        "2026-05-12 18:45",
         "2026",
         "05",
-        "09",
-        "21",
-        "28"
+        "12",
+        "18",
+        "45"
       ],
-      "search_text": "config-pipeline-json config pipeline json pipeline config json catalogue 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "config-pipeline-json config pipeline json pipeline config json catalogue 2026-05-12 18:45 2026 05 12 18 45"
     },
     {
       "id": "ui-request-docs-viewer-index-drag-undo-task",

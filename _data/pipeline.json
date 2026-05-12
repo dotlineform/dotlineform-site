@@ -41,7 +41,7 @@
       "preferred_width": 1600
     },
     "thumb": {
-      "sizes": [96, 192],
+      "sizes": [96],
       "suffix": "thumb",
       "output_subdir": "thumb"
     },
@@ -56,7 +56,7 @@
     "codec": "libwebp",
     "preset": "photo",
     "primary_quality": 82,
-    "thumb_quality": 78,
+    "thumb_quality": 62,
     "compression_level": 6
   }
 }

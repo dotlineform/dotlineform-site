@@ -1,0 +1,2117 @@
+{
+  "ok": true,
+  "schema": "thumbnail_quality_preview_v1",
+  "generated_at_utc": "2026-05-12T16:17:22Z",
+  "source_dir": "$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview",
+  "source_count": 10,
+  "baseline": {
+    "label": "current pipeline",
+    "settings": {
+      "size": 192,
+      "codec": "libwebp",
+      "preset": "photo",
+      "quality": 78,
+      "compression_level": 6,
+      "ffmpeg_args": [
+        "-c:v",
+        "libwebp",
+        "-preset",
+        "photo",
+        "-q:v",
+        "78",
+        "-compression_level",
+        "6"
+      ],
+      "scale_filter": "scale/crop 192x192 lanczos"
+    }
+  },
+  "variants": [
+    {
+      "id": "q70-192",
+      "label": "q70 192",
+      "settings": {
+        "size": 192,
+        "codec": "libwebp",
+        "preset": "photo",
+        "quality": 70,
+        "compression_level": 6,
+        "ffmpeg_args": [
+          "-c:v",
+          "libwebp",
+          "-preset",
+          "photo",
+          "-q:v",
+          "70",
+          "-compression_level",
+          "6"
+        ],
+        "scale_filter": "scale/crop 192x192 lanczos"
+      }
+    },
+    {
+      "id": "q62-192",
+      "label": "q62 192",
+      "settings": {
+        "size": 192,
+        "codec": "libwebp",
+        "preset": "photo",
+        "quality": 62,
+        "compression_level": 6,
+        "ffmpeg_args": [
+          "-c:v",
+          "libwebp",
+          "-preset",
+          "photo",
+          "-q:v",
+          "62",
+          "-compression_level",
+          "6"
+        ],
+        "scale_filter": "scale/crop 192x192 lanczos"
+      }
+    },
+    {
+      "id": "q54-192",
+      "label": "q54 192",
+      "settings": {
+        "size": 192,
+        "codec": "libwebp",
+        "preset": "photo",
+        "quality": 54,
+        "compression_level": 6,
+        "ffmpeg_args": [
+          "-c:v",
+          "libwebp",
+          "-preset",
+          "photo",
+          "-q:v",
+          "54",
+          "-compression_level",
+          "6"
+        ],
+        "scale_filter": "scale/crop 192x192 lanczos"
+      }
+    },
+    {
+      "id": "q62-160",
+      "label": "q62 160",
+      "settings": {
+        "size": 160,
+        "codec": "libwebp",
+        "preset": "photo",
+        "quality": 62,
+        "compression_level": 6,
+        "ffmpeg_args": [
+          "-c:v",
+          "libwebp",
+          "-preset",
+          "photo",
+          "-q:v",
+          "62",
+          "-compression_level",
+          "6"
+        ],
+        "scale_filter": "scale/crop 160x160 lanczos"
+      }
+    },
+    {
+      "id": "q62-96",
+      "label": "q62 96",
+      "settings": {
+        "size": 96,
+        "codec": "libwebp",
+        "preset": "photo",
+        "quality": 62,
+        "compression_level": 6,
+        "ffmpeg_args": [
+          "-c:v",
+          "libwebp",
+          "-preset",
+          "photo",
+          "-q:v",
+          "62",
+          "-compression_level",
+          "6"
+        ],
+        "scale_filter": "scale/crop 96x96 lanczos"
+      }
+    },
+    {
+      "id": "q54-96",
+      "label": "q54 96",
+      "settings": {
+        "size": 96,
+        "codec": "libwebp",
+        "preset": "photo",
+        "quality": 54,
+        "compression_level": 6,
+        "ffmpeg_args": [
+          "-c:v",
+          "libwebp",
+          "-preset",
+          "photo",
+          "-q:v",
+          "54",
+          "-compression_level",
+          "6"
+        ],
+        "scale_filter": "scale/crop 96x96 lanczos"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "source_name": "00420.jpg",
+      "source_display": "$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/00420.jpg",
+      "baseline": {
+        "variant_id": "current",
+        "label": "current",
+        "url": "/assets/studio/img/thumbnail-quality/01-00420-current.webp",
+        "path": "assets/studio/img/thumbnail-quality/01-00420-current.webp",
+        "size_bytes": 17522,
+        "size_label": "17.1 KB",
+        "settings": {
+          "size": 192,
+          "codec": "libwebp",
+          "preset": "photo",
+          "quality": 78,
+          "compression_level": 6,
+          "ffmpeg_args": [
+            "-c:v",
+            "libwebp",
+            "-preset",
+            "photo",
+            "-q:v",
+            "78",
+            "-compression_level",
+            "6"
+          ],
+          "scale_filter": "scale/crop 192x192 lanczos"
+        }
+      },
+      "variants": [
+        {
+          "variant_id": "q70-192",
+          "label": "q70 192",
+          "url": "/assets/studio/img/thumbnail-quality/01-00420-q70-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/01-00420-q70-192.webp",
+          "size_bytes": 16076,
+          "size_label": "15.7 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 70,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "70",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-192",
+          "label": "q62 192",
+          "url": "/assets/studio/img/thumbnail-quality/01-00420-q62-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/01-00420-q62-192.webp",
+          "size_bytes": 15310,
+          "size_label": "15.0 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-192",
+          "label": "q54 192",
+          "url": "/assets/studio/img/thumbnail-quality/01-00420-q54-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/01-00420-q54-192.webp",
+          "size_bytes": 14598,
+          "size_label": "14.3 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-160",
+          "label": "q62 160",
+          "url": "/assets/studio/img/thumbnail-quality/01-00420-q62-160.webp",
+          "path": "assets/studio/img/thumbnail-quality/01-00420-q62-160.webp",
+          "size_bytes": 10638,
+          "size_label": "10.4 KB",
+          "settings": {
+            "size": 160,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 160x160 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-96",
+          "label": "q62 96",
+          "url": "/assets/studio/img/thumbnail-quality/01-00420-q62-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/01-00420-q62-96.webp",
+          "size_bytes": 3662,
+          "size_label": "3.6 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-96",
+          "label": "q54 96",
+          "url": "/assets/studio/img/thumbnail-quality/01-00420-q54-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/01-00420-q54-96.webp",
+          "size_bytes": 3420,
+          "size_label": "3.3 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        }
+      ]
+    },
+    {
+      "source_name": "00463.jpg",
+      "source_display": "$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/00463.jpg",
+      "baseline": {
+        "variant_id": "current",
+        "label": "current",
+        "url": "/assets/studio/img/thumbnail-quality/02-00463-current.webp",
+        "path": "assets/studio/img/thumbnail-quality/02-00463-current.webp",
+        "size_bytes": 16196,
+        "size_label": "15.8 KB",
+        "settings": {
+          "size": 192,
+          "codec": "libwebp",
+          "preset": "photo",
+          "quality": 78,
+          "compression_level": 6,
+          "ffmpeg_args": [
+            "-c:v",
+            "libwebp",
+            "-preset",
+            "photo",
+            "-q:v",
+            "78",
+            "-compression_level",
+            "6"
+          ],
+          "scale_filter": "scale/crop 192x192 lanczos"
+        }
+      },
+      "variants": [
+        {
+          "variant_id": "q70-192",
+          "label": "q70 192",
+          "url": "/assets/studio/img/thumbnail-quality/02-00463-q70-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/02-00463-q70-192.webp",
+          "size_bytes": 14872,
+          "size_label": "14.5 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 70,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "70",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-192",
+          "label": "q62 192",
+          "url": "/assets/studio/img/thumbnail-quality/02-00463-q62-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/02-00463-q62-192.webp",
+          "size_bytes": 14230,
+          "size_label": "13.9 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-192",
+          "label": "q54 192",
+          "url": "/assets/studio/img/thumbnail-quality/02-00463-q54-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/02-00463-q54-192.webp",
+          "size_bytes": 13630,
+          "size_label": "13.3 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-160",
+          "label": "q62 160",
+          "url": "/assets/studio/img/thumbnail-quality/02-00463-q62-160.webp",
+          "path": "assets/studio/img/thumbnail-quality/02-00463-q62-160.webp",
+          "size_bytes": 10940,
+          "size_label": "10.7 KB",
+          "settings": {
+            "size": 160,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 160x160 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-96",
+          "label": "q62 96",
+          "url": "/assets/studio/img/thumbnail-quality/02-00463-q62-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/02-00463-q62-96.webp",
+          "size_bytes": 4494,
+          "size_label": "4.4 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-96",
+          "label": "q54 96",
+          "url": "/assets/studio/img/thumbnail-quality/02-00463-q54-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/02-00463-q54-96.webp",
+          "size_bytes": 4352,
+          "size_label": "4.2 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        }
+      ]
+    },
+    {
+      "source_name": "00545.jpg",
+      "source_display": "$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/00545.jpg",
+      "baseline": {
+        "variant_id": "current",
+        "label": "current",
+        "url": "/assets/studio/img/thumbnail-quality/03-00545-current.webp",
+        "path": "assets/studio/img/thumbnail-quality/03-00545-current.webp",
+        "size_bytes": 3758,
+        "size_label": "3.7 KB",
+        "settings": {
+          "size": 192,
+          "codec": "libwebp",
+          "preset": "photo",
+          "quality": 78,
+          "compression_level": 6,
+          "ffmpeg_args": [
+            "-c:v",
+            "libwebp",
+            "-preset",
+            "photo",
+            "-q:v",
+            "78",
+            "-compression_level",
+            "6"
+          ],
+          "scale_filter": "scale/crop 192x192 lanczos"
+        }
+      },
+      "variants": [
+        {
+          "variant_id": "q70-192",
+          "label": "q70 192",
+          "url": "/assets/studio/img/thumbnail-quality/03-00545-q70-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/03-00545-q70-192.webp",
+          "size_bytes": 3142,
+          "size_label": "3.1 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 70,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "70",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-192",
+          "label": "q62 192",
+          "url": "/assets/studio/img/thumbnail-quality/03-00545-q62-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/03-00545-q62-192.webp",
+          "size_bytes": 2866,
+          "size_label": "2.8 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-192",
+          "label": "q54 192",
+          "url": "/assets/studio/img/thumbnail-quality/03-00545-q54-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/03-00545-q54-192.webp",
+          "size_bytes": 2574,
+          "size_label": "2.5 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-160",
+          "label": "q62 160",
+          "url": "/assets/studio/img/thumbnail-quality/03-00545-q62-160.webp",
+          "path": "assets/studio/img/thumbnail-quality/03-00545-q62-160.webp",
+          "size_bytes": 2222,
+          "size_label": "2.2 KB",
+          "settings": {
+            "size": 160,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 160x160 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-96",
+          "label": "q62 96",
+          "url": "/assets/studio/img/thumbnail-quality/03-00545-q62-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/03-00545-q62-96.webp",
+          "size_bytes": 1172,
+          "size_label": "1.1 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-96",
+          "label": "q54 96",
+          "url": "/assets/studio/img/thumbnail-quality/03-00545-q54-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/03-00545-q54-96.webp",
+          "size_bytes": 1072,
+          "size_label": "1.0 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        }
+      ]
+    },
+    {
+      "source_name": "00581.jpg",
+      "source_display": "$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/00581.jpg",
+      "baseline": {
+        "variant_id": "current",
+        "label": "current",
+        "url": "/assets/studio/img/thumbnail-quality/04-00581-current.webp",
+        "path": "assets/studio/img/thumbnail-quality/04-00581-current.webp",
+        "size_bytes": 19644,
+        "size_label": "19.2 KB",
+        "settings": {
+          "size": 192,
+          "codec": "libwebp",
+          "preset": "photo",
+          "quality": 78,
+          "compression_level": 6,
+          "ffmpeg_args": [
+            "-c:v",
+            "libwebp",
+            "-preset",
+            "photo",
+            "-q:v",
+            "78",
+            "-compression_level",
+            "6"
+          ],
+          "scale_filter": "scale/crop 192x192 lanczos"
+        }
+      },
+      "variants": [
+        {
+          "variant_id": "q70-192",
+          "label": "q70 192",
+          "url": "/assets/studio/img/thumbnail-quality/04-00581-q70-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/04-00581-q70-192.webp",
+          "size_bytes": 17708,
+          "size_label": "17.3 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 70,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "70",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-192",
+          "label": "q62 192",
+          "url": "/assets/studio/img/thumbnail-quality/04-00581-q62-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/04-00581-q62-192.webp",
+          "size_bytes": 16524,
+          "size_label": "16.1 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-192",
+          "label": "q54 192",
+          "url": "/assets/studio/img/thumbnail-quality/04-00581-q54-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/04-00581-q54-192.webp",
+          "size_bytes": 15646,
+          "size_label": "15.3 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-160",
+          "label": "q62 160",
+          "url": "/assets/studio/img/thumbnail-quality/04-00581-q62-160.webp",
+          "path": "assets/studio/img/thumbnail-quality/04-00581-q62-160.webp",
+          "size_bytes": 11558,
+          "size_label": "11.3 KB",
+          "settings": {
+            "size": 160,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 160x160 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-96",
+          "label": "q62 96",
+          "url": "/assets/studio/img/thumbnail-quality/04-00581-q62-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/04-00581-q62-96.webp",
+          "size_bytes": 3834,
+          "size_label": "3.7 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-96",
+          "label": "q54 96",
+          "url": "/assets/studio/img/thumbnail-quality/04-00581-q54-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/04-00581-q54-96.webp",
+          "size_bytes": 3600,
+          "size_label": "3.5 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        }
+      ]
+    },
+    {
+      "source_name": "00764.jpg",
+      "source_display": "$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/00764.jpg",
+      "baseline": {
+        "variant_id": "current",
+        "label": "current",
+        "url": "/assets/studio/img/thumbnail-quality/05-00764-current.webp",
+        "path": "assets/studio/img/thumbnail-quality/05-00764-current.webp",
+        "size_bytes": 17764,
+        "size_label": "17.3 KB",
+        "settings": {
+          "size": 192,
+          "codec": "libwebp",
+          "preset": "photo",
+          "quality": 78,
+          "compression_level": 6,
+          "ffmpeg_args": [
+            "-c:v",
+            "libwebp",
+            "-preset",
+            "photo",
+            "-q:v",
+            "78",
+            "-compression_level",
+            "6"
+          ],
+          "scale_filter": "scale/crop 192x192 lanczos"
+        }
+      },
+      "variants": [
+        {
+          "variant_id": "q70-192",
+          "label": "q70 192",
+          "url": "/assets/studio/img/thumbnail-quality/05-00764-q70-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/05-00764-q70-192.webp",
+          "size_bytes": 16144,
+          "size_label": "15.8 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 70,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "70",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-192",
+          "label": "q62 192",
+          "url": "/assets/studio/img/thumbnail-quality/05-00764-q62-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/05-00764-q62-192.webp",
+          "size_bytes": 15272,
+          "size_label": "14.9 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-192",
+          "label": "q54 192",
+          "url": "/assets/studio/img/thumbnail-quality/05-00764-q54-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/05-00764-q54-192.webp",
+          "size_bytes": 14588,
+          "size_label": "14.2 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-160",
+          "label": "q62 160",
+          "url": "/assets/studio/img/thumbnail-quality/05-00764-q62-160.webp",
+          "path": "assets/studio/img/thumbnail-quality/05-00764-q62-160.webp",
+          "size_bytes": 11122,
+          "size_label": "10.9 KB",
+          "settings": {
+            "size": 160,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 160x160 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-96",
+          "label": "q62 96",
+          "url": "/assets/studio/img/thumbnail-quality/05-00764-q62-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/05-00764-q62-96.webp",
+          "size_bytes": 4152,
+          "size_label": "4.1 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-96",
+          "label": "q54 96",
+          "url": "/assets/studio/img/thumbnail-quality/05-00764-q54-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/05-00764-q54-96.webp",
+          "size_bytes": 3968,
+          "size_label": "3.9 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        }
+      ]
+    },
+    {
+      "source_name": "00879.jpg",
+      "source_display": "$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/00879.jpg",
+      "baseline": {
+        "variant_id": "current",
+        "label": "current",
+        "url": "/assets/studio/img/thumbnail-quality/06-00879-current.webp",
+        "path": "assets/studio/img/thumbnail-quality/06-00879-current.webp",
+        "size_bytes": 8986,
+        "size_label": "8.8 KB",
+        "settings": {
+          "size": 192,
+          "codec": "libwebp",
+          "preset": "photo",
+          "quality": 78,
+          "compression_level": 6,
+          "ffmpeg_args": [
+            "-c:v",
+            "libwebp",
+            "-preset",
+            "photo",
+            "-q:v",
+            "78",
+            "-compression_level",
+            "6"
+          ],
+          "scale_filter": "scale/crop 192x192 lanczos"
+        }
+      },
+      "variants": [
+        {
+          "variant_id": "q70-192",
+          "label": "q70 192",
+          "url": "/assets/studio/img/thumbnail-quality/06-00879-q70-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/06-00879-q70-192.webp",
+          "size_bytes": 7550,
+          "size_label": "7.4 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 70,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "70",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-192",
+          "label": "q62 192",
+          "url": "/assets/studio/img/thumbnail-quality/06-00879-q62-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/06-00879-q62-192.webp",
+          "size_bytes": 6852,
+          "size_label": "6.7 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-192",
+          "label": "q54 192",
+          "url": "/assets/studio/img/thumbnail-quality/06-00879-q54-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/06-00879-q54-192.webp",
+          "size_bytes": 6220,
+          "size_label": "6.1 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-160",
+          "label": "q62 160",
+          "url": "/assets/studio/img/thumbnail-quality/06-00879-q62-160.webp",
+          "path": "assets/studio/img/thumbnail-quality/06-00879-q62-160.webp",
+          "size_bytes": 5442,
+          "size_label": "5.3 KB",
+          "settings": {
+            "size": 160,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 160x160 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-96",
+          "label": "q62 96",
+          "url": "/assets/studio/img/thumbnail-quality/06-00879-q62-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/06-00879-q62-96.webp",
+          "size_bytes": 2628,
+          "size_label": "2.6 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-96",
+          "label": "q54 96",
+          "url": "/assets/studio/img/thumbnail-quality/06-00879-q54-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/06-00879-q54-96.webp",
+          "size_bytes": 2448,
+          "size_label": "2.4 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        }
+      ]
+    },
+    {
+      "source_name": "00886.jpg",
+      "source_display": "$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/00886.jpg",
+      "baseline": {
+        "variant_id": "current",
+        "label": "current",
+        "url": "/assets/studio/img/thumbnail-quality/07-00886-current.webp",
+        "path": "assets/studio/img/thumbnail-quality/07-00886-current.webp",
+        "size_bytes": 12464,
+        "size_label": "12.2 KB",
+        "settings": {
+          "size": 192,
+          "codec": "libwebp",
+          "preset": "photo",
+          "quality": 78,
+          "compression_level": 6,
+          "ffmpeg_args": [
+            "-c:v",
+            "libwebp",
+            "-preset",
+            "photo",
+            "-q:v",
+            "78",
+            "-compression_level",
+            "6"
+          ],
+          "scale_filter": "scale/crop 192x192 lanczos"
+        }
+      },
+      "variants": [
+        {
+          "variant_id": "q70-192",
+          "label": "q70 192",
+          "url": "/assets/studio/img/thumbnail-quality/07-00886-q70-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/07-00886-q70-192.webp",
+          "size_bytes": 10588,
+          "size_label": "10.3 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 70,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "70",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-192",
+          "label": "q62 192",
+          "url": "/assets/studio/img/thumbnail-quality/07-00886-q62-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/07-00886-q62-192.webp",
+          "size_bytes": 9792,
+          "size_label": "9.6 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-192",
+          "label": "q54 192",
+          "url": "/assets/studio/img/thumbnail-quality/07-00886-q54-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/07-00886-q54-192.webp",
+          "size_bytes": 9014,
+          "size_label": "8.8 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-160",
+          "label": "q62 160",
+          "url": "/assets/studio/img/thumbnail-quality/07-00886-q62-160.webp",
+          "path": "assets/studio/img/thumbnail-quality/07-00886-q62-160.webp",
+          "size_bytes": 7226,
+          "size_label": "7.1 KB",
+          "settings": {
+            "size": 160,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 160x160 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-96",
+          "label": "q62 96",
+          "url": "/assets/studio/img/thumbnail-quality/07-00886-q62-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/07-00886-q62-96.webp",
+          "size_bytes": 2874,
+          "size_label": "2.8 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-96",
+          "label": "q54 96",
+          "url": "/assets/studio/img/thumbnail-quality/07-00886-q54-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/07-00886-q54-96.webp",
+          "size_bytes": 2664,
+          "size_label": "2.6 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        }
+      ]
+    },
+    {
+      "source_name": "01052.jpg",
+      "source_display": "$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/01052.jpg",
+      "baseline": {
+        "variant_id": "current",
+        "label": "current",
+        "url": "/assets/studio/img/thumbnail-quality/08-01052-current.webp",
+        "path": "assets/studio/img/thumbnail-quality/08-01052-current.webp",
+        "size_bytes": 16932,
+        "size_label": "16.5 KB",
+        "settings": {
+          "size": 192,
+          "codec": "libwebp",
+          "preset": "photo",
+          "quality": 78,
+          "compression_level": 6,
+          "ffmpeg_args": [
+            "-c:v",
+            "libwebp",
+            "-preset",
+            "photo",
+            "-q:v",
+            "78",
+            "-compression_level",
+            "6"
+          ],
+          "scale_filter": "scale/crop 192x192 lanczos"
+        }
+      },
+      "variants": [
+        {
+          "variant_id": "q70-192",
+          "label": "q70 192",
+          "url": "/assets/studio/img/thumbnail-quality/08-01052-q70-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/08-01052-q70-192.webp",
+          "size_bytes": 14890,
+          "size_label": "14.5 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 70,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "70",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-192",
+          "label": "q62 192",
+          "url": "/assets/studio/img/thumbnail-quality/08-01052-q62-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/08-01052-q62-192.webp",
+          "size_bytes": 13734,
+          "size_label": "13.4 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-192",
+          "label": "q54 192",
+          "url": "/assets/studio/img/thumbnail-quality/08-01052-q54-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/08-01052-q54-192.webp",
+          "size_bytes": 12838,
+          "size_label": "12.5 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-160",
+          "label": "q62 160",
+          "url": "/assets/studio/img/thumbnail-quality/08-01052-q62-160.webp",
+          "path": "assets/studio/img/thumbnail-quality/08-01052-q62-160.webp",
+          "size_bytes": 9952,
+          "size_label": "9.7 KB",
+          "settings": {
+            "size": 160,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 160x160 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-96",
+          "label": "q62 96",
+          "url": "/assets/studio/img/thumbnail-quality/08-01052-q62-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/08-01052-q62-96.webp",
+          "size_bytes": 4128,
+          "size_label": "4.0 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-96",
+          "label": "q54 96",
+          "url": "/assets/studio/img/thumbnail-quality/08-01052-q54-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/08-01052-q54-96.webp",
+          "size_bytes": 3868,
+          "size_label": "3.8 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        }
+      ]
+    },
+    {
+      "source_name": "01326.jpg",
+      "source_display": "$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/01326.jpg",
+      "baseline": {
+        "variant_id": "current",
+        "label": "current",
+        "url": "/assets/studio/img/thumbnail-quality/09-01326-current.webp",
+        "path": "assets/studio/img/thumbnail-quality/09-01326-current.webp",
+        "size_bytes": 724,
+        "size_label": "724 B",
+        "settings": {
+          "size": 192,
+          "codec": "libwebp",
+          "preset": "photo",
+          "quality": 78,
+          "compression_level": 6,
+          "ffmpeg_args": [
+            "-c:v",
+            "libwebp",
+            "-preset",
+            "photo",
+            "-q:v",
+            "78",
+            "-compression_level",
+            "6"
+          ],
+          "scale_filter": "scale/crop 192x192 lanczos"
+        }
+      },
+      "variants": [
+        {
+          "variant_id": "q70-192",
+          "label": "q70 192",
+          "url": "/assets/studio/img/thumbnail-quality/09-01326-q70-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/09-01326-q70-192.webp",
+          "size_bytes": 622,
+          "size_label": "622 B",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 70,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "70",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-192",
+          "label": "q62 192",
+          "url": "/assets/studio/img/thumbnail-quality/09-01326-q62-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/09-01326-q62-192.webp",
+          "size_bytes": 592,
+          "size_label": "592 B",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-192",
+          "label": "q54 192",
+          "url": "/assets/studio/img/thumbnail-quality/09-01326-q54-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/09-01326-q54-192.webp",
+          "size_bytes": 554,
+          "size_label": "554 B",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-160",
+          "label": "q62 160",
+          "url": "/assets/studio/img/thumbnail-quality/09-01326-q62-160.webp",
+          "path": "assets/studio/img/thumbnail-quality/09-01326-q62-160.webp",
+          "size_bytes": 526,
+          "size_label": "526 B",
+          "settings": {
+            "size": 160,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 160x160 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-96",
+          "label": "q62 96",
+          "url": "/assets/studio/img/thumbnail-quality/09-01326-q62-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/09-01326-q62-96.webp",
+          "size_bytes": 352,
+          "size_label": "352 B",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-96",
+          "label": "q54 96",
+          "url": "/assets/studio/img/thumbnail-quality/09-01326-q54-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/09-01326-q54-96.webp",
+          "size_bytes": 324,
+          "size_label": "324 B",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        }
+      ]
+    },
+    {
+      "source_name": "01442.jpg",
+      "source_display": "$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/01442.jpg",
+      "baseline": {
+        "variant_id": "current",
+        "label": "current",
+        "url": "/assets/studio/img/thumbnail-quality/10-01442-current.webp",
+        "path": "assets/studio/img/thumbnail-quality/10-01442-current.webp",
+        "size_bytes": 18954,
+        "size_label": "18.5 KB",
+        "settings": {
+          "size": 192,
+          "codec": "libwebp",
+          "preset": "photo",
+          "quality": 78,
+          "compression_level": 6,
+          "ffmpeg_args": [
+            "-c:v",
+            "libwebp",
+            "-preset",
+            "photo",
+            "-q:v",
+            "78",
+            "-compression_level",
+            "6"
+          ],
+          "scale_filter": "scale/crop 192x192 lanczos"
+        }
+      },
+      "variants": [
+        {
+          "variant_id": "q70-192",
+          "label": "q70 192",
+          "url": "/assets/studio/img/thumbnail-quality/10-01442-q70-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/10-01442-q70-192.webp",
+          "size_bytes": 17178,
+          "size_label": "16.8 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 70,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "70",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-192",
+          "label": "q62 192",
+          "url": "/assets/studio/img/thumbnail-quality/10-01442-q62-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/10-01442-q62-192.webp",
+          "size_bytes": 16250,
+          "size_label": "15.9 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-192",
+          "label": "q54 192",
+          "url": "/assets/studio/img/thumbnail-quality/10-01442-q54-192.webp",
+          "path": "assets/studio/img/thumbnail-quality/10-01442-q54-192.webp",
+          "size_bytes": 15428,
+          "size_label": "15.1 KB",
+          "settings": {
+            "size": 192,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 192x192 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-160",
+          "label": "q62 160",
+          "url": "/assets/studio/img/thumbnail-quality/10-01442-q62-160.webp",
+          "path": "assets/studio/img/thumbnail-quality/10-01442-q62-160.webp",
+          "size_bytes": 11376,
+          "size_label": "11.1 KB",
+          "settings": {
+            "size": 160,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 160x160 lanczos"
+          }
+        },
+        {
+          "variant_id": "q62-96",
+          "label": "q62 96",
+          "url": "/assets/studio/img/thumbnail-quality/10-01442-q62-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/10-01442-q62-96.webp",
+          "size_bytes": 3782,
+          "size_label": "3.7 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 62,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "62",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        },
+        {
+          "variant_id": "q54-96",
+          "label": "q54 96",
+          "url": "/assets/studio/img/thumbnail-quality/10-01442-q54-96.webp",
+          "path": "assets/studio/img/thumbnail-quality/10-01442-q54-96.webp",
+          "size_bytes": 3554,
+          "size_label": "3.5 KB",
+          "settings": {
+            "size": 96,
+            "codec": "libwebp",
+            "preset": "photo",
+            "quality": 54,
+            "compression_level": 6,
+            "ffmpeg_args": [
+              "-c:v",
+              "libwebp",
+              "-preset",
+              "photo",
+              "-q:v",
+              "54",
+              "-compression_level",
+              "6"
+            ],
+            "scale_filter": "scale/crop 96x96 lanczos"
+          }
+        }
+      ]
+    }
+  ],
+  "planned_outputs": [
+    "assets/studio/img/thumbnail-quality/01-00420-current.webp",
+    "assets/studio/img/thumbnail-quality/01-00420-q70-192.webp",
+    "assets/studio/img/thumbnail-quality/01-00420-q62-192.webp",
+    "assets/studio/img/thumbnail-quality/01-00420-q54-192.webp",
+    "assets/studio/img/thumbnail-quality/01-00420-q62-160.webp",
+    "assets/studio/img/thumbnail-quality/01-00420-q62-96.webp",
+    "assets/studio/img/thumbnail-quality/01-00420-q54-96.webp",
+    "assets/studio/img/thumbnail-quality/02-00463-current.webp",
+    "assets/studio/img/thumbnail-quality/02-00463-q70-192.webp",
+    "assets/studio/img/thumbnail-quality/02-00463-q62-192.webp",
+    "assets/studio/img/thumbnail-quality/02-00463-q54-192.webp",
+    "assets/studio/img/thumbnail-quality/02-00463-q62-160.webp",
+    "assets/studio/img/thumbnail-quality/02-00463-q62-96.webp",
+    "assets/studio/img/thumbnail-quality/02-00463-q54-96.webp",
+    "assets/studio/img/thumbnail-quality/03-00545-current.webp",
+    "assets/studio/img/thumbnail-quality/03-00545-q70-192.webp",
+    "assets/studio/img/thumbnail-quality/03-00545-q62-192.webp",
+    "assets/studio/img/thumbnail-quality/03-00545-q54-192.webp",
+    "assets/studio/img/thumbnail-quality/03-00545-q62-160.webp",
+    "assets/studio/img/thumbnail-quality/03-00545-q62-96.webp",
+    "assets/studio/img/thumbnail-quality/03-00545-q54-96.webp",
+    "assets/studio/img/thumbnail-quality/04-00581-current.webp",
+    "assets/studio/img/thumbnail-quality/04-00581-q70-192.webp",
+    "assets/studio/img/thumbnail-quality/04-00581-q62-192.webp",
+    "assets/studio/img/thumbnail-quality/04-00581-q54-192.webp",
+    "assets/studio/img/thumbnail-quality/04-00581-q62-160.webp",
+    "assets/studio/img/thumbnail-quality/04-00581-q62-96.webp",
+    "assets/studio/img/thumbnail-quality/04-00581-q54-96.webp",
+    "assets/studio/img/thumbnail-quality/05-00764-current.webp",
+    "assets/studio/img/thumbnail-quality/05-00764-q70-192.webp",
+    "assets/studio/img/thumbnail-quality/05-00764-q62-192.webp",
+    "assets/studio/img/thumbnail-quality/05-00764-q54-192.webp",
+    "assets/studio/img/thumbnail-quality/05-00764-q62-160.webp",
+    "assets/studio/img/thumbnail-quality/05-00764-q62-96.webp",
+    "assets/studio/img/thumbnail-quality/05-00764-q54-96.webp",
+    "assets/studio/img/thumbnail-quality/06-00879-current.webp",
+    "assets/studio/img/thumbnail-quality/06-00879-q70-192.webp",
+    "assets/studio/img/thumbnail-quality/06-00879-q62-192.webp",
+    "assets/studio/img/thumbnail-quality/06-00879-q54-192.webp",
+    "assets/studio/img/thumbnail-quality/06-00879-q62-160.webp",
+    "assets/studio/img/thumbnail-quality/06-00879-q62-96.webp",
+    "assets/studio/img/thumbnail-quality/06-00879-q54-96.webp",
+    "assets/studio/img/thumbnail-quality/07-00886-current.webp",
+    "assets/studio/img/thumbnail-quality/07-00886-q70-192.webp",
+    "assets/studio/img/thumbnail-quality/07-00886-q62-192.webp",
+    "assets/studio/img/thumbnail-quality/07-00886-q54-192.webp",
+    "assets/studio/img/thumbnail-quality/07-00886-q62-160.webp",
+    "assets/studio/img/thumbnail-quality/07-00886-q62-96.webp",
+    "assets/studio/img/thumbnail-quality/07-00886-q54-96.webp",
+    "assets/studio/img/thumbnail-quality/08-01052-current.webp",
+    "assets/studio/img/thumbnail-quality/08-01052-q70-192.webp",
+    "assets/studio/img/thumbnail-quality/08-01052-q62-192.webp",
+    "assets/studio/img/thumbnail-quality/08-01052-q54-192.webp",
+    "assets/studio/img/thumbnail-quality/08-01052-q62-160.webp",
+    "assets/studio/img/thumbnail-quality/08-01052-q62-96.webp",
+    "assets/studio/img/thumbnail-quality/08-01052-q54-96.webp",
+    "assets/studio/img/thumbnail-quality/09-01326-current.webp",
+    "assets/studio/img/thumbnail-quality/09-01326-q70-192.webp",
+    "assets/studio/img/thumbnail-quality/09-01326-q62-192.webp",
+    "assets/studio/img/thumbnail-quality/09-01326-q54-192.webp",
+    "assets/studio/img/thumbnail-quality/09-01326-q62-160.webp",
+    "assets/studio/img/thumbnail-quality/09-01326-q62-96.webp",
+    "assets/studio/img/thumbnail-quality/09-01326-q54-96.webp",
+    "assets/studio/img/thumbnail-quality/10-01442-current.webp",
+    "assets/studio/img/thumbnail-quality/10-01442-q70-192.webp",
+    "assets/studio/img/thumbnail-quality/10-01442-q62-192.webp",
+    "assets/studio/img/thumbnail-quality/10-01442-q54-192.webp",
+    "assets/studio/img/thumbnail-quality/10-01442-q62-160.webp",
+    "assets/studio/img/thumbnail-quality/10-01442-q62-96.webp",
+    "assets/studio/img/thumbnail-quality/10-01442-q54-96.webp"
+  ],
+  "data_path": "assets/studio/data/thumbnail_quality_preview.json"
+}

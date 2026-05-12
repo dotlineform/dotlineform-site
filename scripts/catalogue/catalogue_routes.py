@@ -31,6 +31,7 @@ DELETE_APPLY_PATH = "/catalogue/delete-apply"
 PUBLICATION_PREVIEW_PATH = "/catalogue/publication-preview"
 PUBLICATION_APPLY_PATH = "/catalogue/publication-apply"
 PROJECT_STATE_REPORT_PATH = "/catalogue/project-state-report"
+THUMBNAIL_QUALITY_PREVIEW_PATH = "/catalogue/thumbnail-quality-preview"
 
 POST_PATHS = (
     WORK_CREATE_PATH,
@@ -61,6 +62,7 @@ POST_PATHS = (
     MOMENT_PREVIEW_PATH,
     MOMENT_SAVE_PATH,
     PROJECT_STATE_REPORT_PATH,
+    THUMBNAIL_QUALITY_PREVIEW_PATH,
 )
 
 OPTIONS_PATHS = (*POST_PATHS, CATALOGUE_READ_PATH)

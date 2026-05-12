@@ -231,9 +231,82 @@ def test_execute_local_media_plan_dry_run_suppresses_writes() -> None:
     assert not asset_thumb.exists()
 
 
+def test_thumbnail_only_plan_skips_missing_sources_without_failing() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        repo_root = root / "repo"
+        source_dir = repo_root / "assets/studio/data/catalogue"
+        projects_base = root / "projects"
+        source_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/alpha/alpha.jpg"
+        source_image.parent.mkdir(parents=True, exist_ok=True)
+        source_image.write_bytes(b"source")
+        write_source_fixture(source_dir)
+
+        plan = media.build_catalogue_thumbnail_only_plan(
+            repo_root,
+            source_dir=source_dir,
+            env=projects_env(projects_base),
+            force=True,
+        )
+
+    assert plan["counts"] == {"pending": 1, "current": 0, "skipped": 2}
+    assert plan["tasks"][0]["status"] == "pending"
+    assert plan["tasks"][0]["pending_outputs"] == [
+        {
+            "size": 96,
+            "path": "assets/works/img/00001-thumb-96.webp",
+            "absolute_path": str((repo_root / "assets/works/img/00001-thumb-96.webp").resolve()),
+        }
+    ]
+    assert plan["tasks"][1]["status"] == "skipped"
+    assert plan["tasks"][1]["reason"] == "project folder is missing"
+    assert plan["tasks"][2]["status"] == "skipped"
+    assert plan["tasks"][2]["kind"] == "work_details"
+    assert plan["tasks"][2]["reason"] == "configured source media file is missing"
+
+
+def test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        repo_root = root / "repo"
+        source_dir = repo_root / "assets/studio/data/catalogue"
+        projects_base = root / "projects"
+        source_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/alpha/alpha.jpg"
+        source_image.parent.mkdir(parents=True, exist_ok=True)
+        source_image.write_bytes(b"source")
+        write_source_fixture(source_dir)
+
+        def fake_thumb(src: Path, size: int, dest: Path) -> tuple[int, str]:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(f"{src.name}:{size}".encode("utf-8"))
+            return 0, ""
+
+        result = media.execute_catalogue_thumbnail_only_plan(
+            repo_root,
+            source_dir=source_dir,
+            write=True,
+            env=projects_env(projects_base),
+            force=True,
+            thumb_runner=fake_thumb,
+        )
+        asset_thumb = repo_root / "assets/works/img/00001-thumb-96.webp"
+        staged_root = repo_root / "var/catalogue/media"
+        asset_thumb_bytes = asset_thumb.read_bytes()
+        staged_root_exists = staged_root.exists()
+
+    assert result["status"] == "completed"
+    assert result["generated"] == {"work": ["00001"], "work_details": []}
+    assert result["skipped"] == {"work": ["00002"], "work_details": ["00001-001"]}
+    assert "2 skipped" in result["summary"]
+    assert asset_thumb_bytes == b"alpha.jpg:96"
+    assert not staged_root_exists
+
+
 if __name__ == "__main__":
     test_resolves_work_detail_sources_and_missing_metadata_reasons()
     test_local_media_plan_reports_pending_current_blocked_and_unavailable_states()
     test_media_readiness_distinguishes_pending_and_missing_metadata()
     test_execute_local_media_plan_dry_run_suppresses_writes()
+    test_thumbnail_only_plan_skips_missing_sources_without_failing()
+    test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips()
     print("catalogue build media checks passed")

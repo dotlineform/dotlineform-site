@@ -17,6 +17,59 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-12] Switched Public Thumbnails To q62 96px
+
+**Status:** implemented
+
+**Area:** Catalogue media pipeline / public grid thumbnails
+
+**Summary:**
+Updated the shared thumbnail policy in `_data/pipeline.json` to generate a single `96px` WebP thumbnail at quality `62`.
+Added `./scripts/catalogue/catalogue_json_build.py --thumbnail-only` as a catalogue-wide work/work-detail thumbnail regeneration mode that writes only public thumbnail assets and leaves primary derivatives, staged media, page/json generation, and catalogue search untouched.
+Missing source images are reported as skipped records rather than failing the command, so existing thumbnails can remain in place where source media is unavailable.
+
+**Files changed/docs:**
+
+- `_data/pipeline.json`
+- `_layouts/series.html`
+- `_layouts/work.html`
+- `scripts/catalogue/catalogue_build_media.py`
+- `scripts/catalogue/catalogue_json_build.py`
+- `tests/python/test_catalogue_build_media.py`
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [Pipeline Config JSON](/docs/?scope=studio&doc=config-pipeline-json)
+
+**Impact:**
+Public catalogue grids no longer advertise a `192w` thumbnail candidate, avoiding retina browser selection of larger thumbnails where the visual gain is marginal.
+Thumbnail policy changes can be applied without regenerating primary media or blocking on a small number of missing local sources.
+
+## [2026-05-12] Added Thumbnail Quality Preview Studio Tool
+
+**Status:** implemented
+
+**Area:** Studio catalogue media / thumbnail optimisation
+
+**Summary:**
+Added `/studio/thumbnail-quality/` as a local comparison surface for thumbnail filesize and visual-quality tradeoffs.
+The page reads generated comparison data from `assets/studio/data/thumbnail_quality_preview.json`, displays source-image rows with current pipeline output plus lower-quality variants, and exposes a `Refresh` command backed by the Catalogue Write Server.
+The generator reads source images from `$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/` and writes isolated Studio preview assets without changing production thumbnail folders.
+
+**Files changed/docs:**
+
+- `scripts/media/build_thumbnail_quality_preview.py`
+- `scripts/catalogue/catalogue_routes.py`
+- `scripts/catalogue/catalogue_write_server.py`
+- `studio/thumbnail-quality/index.md`
+- `assets/studio/js/thumbnail-quality.js`
+- `assets/studio/css/studio.css`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/data/ui_text/thumbnail-quality.json`
+- [Thumbnail Quality Page](/docs/?scope=studio&doc=thumbnail-quality-page)
+
+**Impact:**
+Thumbnail settings can now be judged from source-derived previews before changing production `srcset` dimensions or compression quality.
+The refresh path is explicit and local-only, so preview regeneration remains separate from catalogue publishing and remote media upload.
+
 ## [2026-05-12] Consolidated Docs Management Server Packaging
 
 **Status:** implemented

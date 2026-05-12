@@ -2,7 +2,7 @@
 doc_id: scripts-build-catalogue-json
 title: Scoped JSON Catalogue Build
 added_date: 2026-04-18
-last_updated: "2026-05-09 21:28"
+last_updated: "2026-05-12 18:45"
 parent_id: catalogue
 sort_order: 150
 ---
@@ -56,6 +56,18 @@ Refresh only local image derivatives for one work detail:
 
 ```bash
 ./scripts/catalogue/catalogue_json_build.py --work-id 00001 --detail-uid 00001-003 --media-only --force --write
+```
+
+Preview catalogue-wide public thumbnail regeneration for works and work details:
+
+```bash
+./scripts/catalogue/catalogue_json_build.py --thumbnail-only --force
+```
+
+Regenerate only public thumbnails for all works and work details:
+
+```bash
+./scripts/catalogue/catalogue_json_build.py --thumbnail-only --force --write
 ```
 
 Include an additional series when membership changed and the previous series page also needs rebuild:
@@ -145,6 +157,8 @@ Force behavior:
 - `--force` remains available for intentional full rewrites, passes force through to catalogue search, and forces local media derivative regeneration
 - already-published records do not get a refreshed `published_date` unless they transition from `draft` to `published`
 - `--media-only` stops after source-image staging and local image derivative generation; it does not regenerate page/json payloads or catalogue search
+- `--thumbnail-only` is catalogue-wide for works and work details, writes only public thumbnail assets, does not stage source media, does not generate primary derivatives, does not regenerate page/json payloads, and does not rebuild catalogue search
+- missing or unresolved work/work-detail source images are reported as skipped records in `--thumbnail-only`; they do not fail the command
 
 The helper does not:
 
@@ -167,6 +181,23 @@ Work, work-detail, and moment image generation uses the source-image metadata in
   - `assets/works/img/`
   - `assets/work_details/img/`
   - `assets/moments/img/`
+
+## Thumbnail-Only Regeneration
+
+`--thumbnail-only` is a focused migration/maintenance mode for the public catalogue grid thumbnails. It scans all work and work-detail source records from canonical JSON, resolves source image paths with the same `DOTLINEFORM_PROJECTS_BASE_DIR` rules as local media generation, and writes only the configured thumbnail variants directly into:
+
+- `assets/works/img/`
+- `assets/work_details/img/`
+
+This mode intentionally skips:
+
+- source-image staging under `var/catalogue/media/`
+- primary derivative generation
+- moment thumbnails
+- page/json generation
+- catalogue search rebuilds
+
+Use `--force` when the thumbnail encoding policy changed and existing thumbnail mtimes still look current. Records with missing metadata or missing source files are listed as skipped so existing thumbnails for those records can remain in place.
 
 The staged primary derivatives are the local handoff point for the remote media publishing step.
 Use [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2) to preview or upload those primary derivatives after local generation.

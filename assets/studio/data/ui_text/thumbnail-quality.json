@@ -1,0 +1,18 @@
+{
+  "heading": "thumbnail quality",
+  "settings_heading": "settings",
+  "series_heading": "series gallery comparison",
+  "series_context": "q62 96 thumbnails shown with the live series gallery layout.",
+  "context": "Compare current and lower-quality thumbnail encodes from source images.",
+  "loading": "loading thumbnail quality preview...",
+  "refresh_button": "Refresh",
+  "refreshing": "Refreshing thumbnail previews...",
+  "refresh_success": "Thumbnail previews refreshed.",
+  "refresh_error": "Refresh failed: {error}",
+  "server_unavailable": "Start the catalogue service to refresh.",
+  "loaded_status": "{count} source images. Generated {generated_at}.",
+  "empty_state": "No source images found.",
+  "load_error": "Thumbnail quality preview data is not available.",
+  "current_label": "current",
+  "source_label": "source"
+}
