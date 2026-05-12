@@ -17,6 +17,34 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-12] Added Docs Viewer Report Components
+
+**Status:** implemented
+
+**Area:** Docs Viewer / Library document review
+
+**Summary:**
+Added a Docs Viewer report mount point backed by `viewer_report` metadata in generated doc payloads.
+The first report module, `docs_index_table`, renders scope-aware generated-docs tables with filter buttons, sortable columns, route-backed report state, and Docs Viewer row links.
+Library Documents now uses that report in `/docs/` manage mode with `viewer_report_scope: library`, so the Library dashboard can link to the report-backed doc instead of the separate Studio route as the primary review surface.
+
+**Files changed/docs:**
+
+- `scripts/docs/build_docs.rb`
+- `_includes/docs_viewer_shell.html`
+- `assets/docs-viewer/js/docs-viewer.js`
+- `assets/docs-viewer/js/docs-viewer-reports.js`
+- `assets/docs-viewer/js/reports/docs-index-table-report.js`
+- `assets/docs-viewer/css/docs-viewer-reports.css`
+- `studio/library/index.md`
+- [Library Documents](/docs/?scope=studio&doc=library-documents)
+- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
+- [Docs Viewer Report Components Request](/docs/?scope=studio&doc=site-request-docs-viewer-report-components)
+
+**Impact:**
+Report-backed docs stay normal Docs Viewer documents for navigation, movement, visibility, and bookmarks while the document pane can host a reusable report component.
+The report access contract keeps management reports out of public read-only contexts and leaves config/source writes, imports, exports, and rebuild commands outside this report framework.
+
 ## [2026-05-12] Switched Public Thumbnails To q62 96px
 
 **Status:** implemented

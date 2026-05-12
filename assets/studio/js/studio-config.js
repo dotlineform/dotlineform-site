@@ -13,7 +13,7 @@ const DEFAULT_STUDIO_CONFIG = {
       "project_state": "/studio/project-state/",
       "thumbnail_quality": "/studio/thumbnail-quality/",
       "docs_html_import": "/docs/?mode=manage&import=1",
-      "library_documents": "/studio/library-documents/",
+      "library_documents": "/docs/?scope=studio&mode=manage&doc=library-documents",
       "data_export": "/studio/export/",
       "data_import": "/studio/import/",
       "catalogue_status": "/studio/catalogue-status/",

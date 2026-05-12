@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: "Overview"
 added_date: 2026-04-24
-last_updated: "2026-05-11 17:50"
+last_updated: "2026-05-12"
 parent_id: docs-viewer
 sort_order: 10
 ---
@@ -74,6 +74,8 @@ Current helper modules:
 - `assets/docs-viewer/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
 - `assets/docs-viewer/js/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering
 - `assets/docs-viewer/js/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers
+- `assets/docs-viewer/js/docs-viewer-reports.js` owns report lookup and access checks
+- `assets/docs-viewer/js/reports/docs-index-table-report.js` owns the reusable docs-index table report
 
 This runtime is shared across the current docs scopes.
 It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and switches between document and search modes.
@@ -92,6 +94,7 @@ Current URL state:
 - `scope` selects the active docs scope on `/docs/`
 - `q` activates inline docs search for the current scope
 - `mode=manage` enables local manage mode only on `/docs/` when the docs-management server is available
+- `report_sort`, `report_dir`, and `report_filter` hold state for report-backed document panes
 - `#hash` targets a heading within the rendered document
 
 The local management shell normalizes onto canonical scoped URLs:
@@ -147,6 +150,15 @@ Current recently-added behavior:
 - the runtime sorts current-scope viewable docs by `added_date` descending, then title ascending
 - the list is capped by `docs_viewer.recently_added_limit` in `assets/studio/data/studio_config.json`
 - list metadata uses `added_date` and, when available, parent title in the form `date • parent`
+
+Current report behavior:
+
+- docs source front matter can opt into a report with `viewer_report`
+- `viewer_report_scope` selects the generated docs scope the report reads; if omitted, the current viewer scope is used
+- `viewer_report_access` gates reports to public, manage, or local-only contexts
+- report-backed docs remain normal docs in the index, so `parent_id`, `sort_order`, visibility, bookmarks, and management moves still work normally
+- the first report is `docs_index_table`, a scope-aware generated-docs table with filter buttons, sortable columns, and Docs Viewer row links
+- the Library Documents review now uses `viewer_report: docs_index_table` with `viewer_report_scope: library`
 
 Current visibility behavior:
 

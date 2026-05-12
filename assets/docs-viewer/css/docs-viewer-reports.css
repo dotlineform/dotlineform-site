@@ -1,0 +1,166 @@
+/* assets/docs-viewer/css/docs-viewer-reports.css */
+
+.docsViewerReport{
+  display: grid;
+  gap: var(--docs-viewer-space-3);
+  max-width: min(100%, 98ch);
+  margin-top: var(--docs-viewer-space-4);
+}
+
+.docsViewerReport__toolbar{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.docsViewerReport__filters{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.docsViewerReport__filter,
+.docsViewerReport__sortButton{
+  appearance: none;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: 999px;
+  color: var(--docs-viewer-text);
+  background: var(--docs-viewer-panel);
+  font: inherit;
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-snug);
+  cursor: pointer;
+}
+
+.docsViewerReport__filter{
+  padding: 0.34rem 0.68rem;
+}
+
+.docsViewerReport__filter[aria-pressed="true"],
+.docsViewerReport__sortButton[data-state="active"]{
+  border-color: var(--docs-viewer-border-strong);
+  background: var(--docs-viewer-panel-2);
+}
+
+.docsViewerReport__filter:hover,
+.docsViewerReport__sortButton:hover{
+  background: var(--docs-viewer-panel-2);
+}
+
+.docsViewerReport__filter:focus-visible,
+.docsViewerReport__sortButton:focus-visible,
+.docsViewerReport__cellLink:focus-visible{
+  outline: 2px solid var(--docs-viewer-border-strong);
+  outline-offset: 2px;
+}
+
+.docsViewerReport__status{
+  margin: 0;
+  color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-snug);
+}
+
+.docsViewerReport__table{
+  display: grid;
+  gap: 0;
+  min-width: 0;
+}
+
+.docsViewerReport__head,
+.docsViewerReport__row{
+  display: grid;
+  grid-template-columns: minmax(13rem, 18rem) 7.5rem 4.8rem 4.5rem minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: start;
+}
+
+.docsViewerReport[data-report-columns="1"] .docsViewerReport__head,
+.docsViewerReport[data-report-columns="1"] .docsViewerReport__row{
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.docsViewerReport__head{
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--docs-viewer-border);
+}
+
+.docsViewerReport__headLabel{
+  color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-snug);
+}
+
+.docsViewerReport__sortButton{
+  justify-self: start;
+  max-width: 100%;
+  padding: 0.2rem 0.55rem;
+  text-align: left;
+}
+
+.docsViewerReport__rows{
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.docsViewerReport__row{
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--docs-viewer-border);
+}
+
+.docsViewerReport__cellLink{
+  min-width: 0;
+  color: var(--docs-viewer-link);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.docsViewerReport__cellLink:hover{
+  color: var(--docs-viewer-link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.docsViewerReport__cellMeta{
+  min-width: 0;
+  color: var(--docs-viewer-muted);
+  font-size: var(--docs-viewer-font-small);
+  line-height: var(--docs-viewer-line-snug);
+  overflow-wrap: anywhere;
+}
+
+.docsViewerReport__title{
+  font-weight: 700;
+}
+
+.docsViewerReport__viewable{
+  display: inline-block;
+  justify-self: start;
+  margin-top: 0.35rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: 999px;
+  background: transparent;
+}
+
+.docsViewerReport__viewable.is-viewable{
+  border-color: var(--docs-viewer-link);
+  background: var(--docs-viewer-link);
+}
+
+@media (max-width: 820px){
+  .docsViewerReport__head,
+  .docsViewerReport__row{
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .docsViewerReport__row{
+    gap: 0.22rem;
+  }
+}

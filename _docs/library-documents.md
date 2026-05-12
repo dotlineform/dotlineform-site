@@ -5,41 +5,36 @@ added_date: 2026-05-07
 last_updated: "2026-05-11"
 parent_id: library
 sort_order: 20
+viewer_report: docs_index_table
+viewer_report_scope: library
+viewer_report_access: manage
+viewer_report_preset: library_documents_admin
 ---
 # Library Documents
 
-Route:
+Viewer report:
 
-- `/studio/library-documents/`
+- `docs_index_table`
 
 Purpose:
 
-- review generated Library Docs Viewer records in a dense sortable list
+- review generated Library Docs Viewer records in a dense sortable list inside the Docs Viewer document pane
 
 ## Data Source
 
-The page reads the generated Library docs index:
+The report reads the generated Library docs index:
 
 - `assets/data/docs/scopes/library/index.json`
 
-The path is resolved through `studio_config.json` via the `docs.scopes.library.index` data path.
-On the normal local Studio dev origin, the page tries the docs-management generated-index endpoint first because the dev Jekyll config excludes generated docs assets.
-Static builds read the generated JSON asset first, then fall back to `GET /docs/generated/index?scope=library`.
+The report uses `viewer_report_scope: library`, so it reads Library docs even though this request document lives in the Studio docs scope.
+When local generated-data reads are available, the report can read the generated Library index through the docs-management service.
+Otherwise, it reads the static generated JSON asset.
 
 ## UI Contract
 
-The page uses the shared dense list primitive:
+The report uses Docs Viewer-owned report styles and behavior.
 
-- `tagStudioList`
-- `tagStudioList--dense`
-- `tagStudioList__head`
-- `tagStudioList__sortBtn`
-- `tagStudioList__sortIndicator`
-- `tagStudioList__rows`
-- `tagStudioList__row`
-- `tagStudioList__cellLink`
-- `tagStudioList__cellTitle`
-- `tagStudioList__cellMeta`
+It does not depend on Studio route state or Studio list primitives.
 
 Columns:
 
@@ -64,18 +59,17 @@ The page exposes two independent filter pills:
 `viewable` shows records where `viewable` is `true`.
 `parent` shows records whose `doc_id` appears as another record's `parent_id` in the same generated Library index.
 
-## Route Ready State
+## Availability
 
-The route root `#libraryDocumentsRoot` follows the shared Studio route-ready contract:
+The report is manage-only:
 
-- `data-studio-ready` is `false` while the config and Library docs index load, then `true` after rows or an error state render
-- `data-studio-busy` is `true` during the initial load and `false` after render
-- `data-studio-mode` is `list` when documents are available and `empty` when no records can be rendered
-- `data-studio-record-loaded` is `true` when at least one document row is loaded
+- `viewer_report_access: manage`
+
+If this document is opened in a public read-only Docs Viewer route, the document pane should show an unavailable state rather than rendering the management report.
 
 ## Files
 
-- `studio/library-documents/index.md`
-- `assets/studio/js/library-documents.js`
-- `assets/studio/css/studio.css`
-- `assets/studio/data/studio_config.json`
+- `_docs/library-documents.md`
+- `assets/docs-viewer/js/docs-viewer-reports.js`
+- `assets/docs-viewer/js/reports/docs-index-table-report.js`
+- `assets/docs-viewer/css/docs-viewer-reports.css`

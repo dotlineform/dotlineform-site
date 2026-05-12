@@ -28,6 +28,7 @@ import {
   managementReloadPath,
   readAssetVersion
 } from "./docs-viewer-data.js";
+import { mountDocsViewerReport } from "./docs-viewer-reports.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
@@ -186,9 +187,11 @@ import {
       setTimeout: function (resolve, delayMs) {
         return window.setTimeout(resolve, delayMs);
       },
-      checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
+      checkGeneratedDataReadCapability: function () {
+        return checkGeneratedDataReadCapability(settings.viewerScope || viewerScope);
+      },
       scopeSupportsGeneratedSearchReads: function () {
-        return scopeGeneratedCapability(state.managementCapabilities || {}, viewerScope, "generated_search_reads");
+        return scopeGeneratedCapability(state.managementCapabilities || {}, settings.viewerScope || viewerScope, "generated_search_reads");
       }
     }, settings);
   }
@@ -219,13 +222,17 @@ import {
       });
   }
 
-  function checkGeneratedDataReadCapability() {
+  function checkGeneratedDataReadCapability(scope) {
+    var targetScope = String(scope || viewerScope || "").trim();
     if (!generatedBaseUrl) {
       state.generatedDataReadChecked = true;
       state.generatedDataReadAvailable = false;
       return Promise.resolve(false);
     }
     if (state.generatedDataReadChecked) {
+      if (state.managementCapabilities && targetScope) {
+        return Promise.resolve(scopeGeneratedCapability(state.managementCapabilities, targetScope, "generated_data_reads"));
+      }
       return Promise.resolve(state.generatedDataReadAvailable);
     }
     if (state.generatedDataReadRequestPromise) {
@@ -242,7 +249,7 @@ import {
         state.managementCapabilities = payload.capabilities || null;
         state.generatedDataReadAvailable = scopeGeneratedCapability(state.managementCapabilities, viewerScope, "generated_data_reads");
         state.generatedDataReadChecked = true;
-        return state.generatedDataReadAvailable;
+        return scopeGeneratedCapability(state.managementCapabilities, targetScope || viewerScope, "generated_data_reads");
       })
       .catch(function () {
         state.generatedDataReadAvailable = false;
@@ -1051,6 +1058,50 @@ import {
     return url.pathname + url.search + url.hash;
   }
 
+  function viewerUrlForScope(scope, docId, options) {
+    var targetScope = String(scope || viewerScope || "").trim().toLowerCase();
+    var targetConfig = state.scopeConfigsById.get(targetScope);
+    var useManage = Boolean(options && options.manage && allowManagement);
+    var url = new URL(useManage ? (routeViewerBaseUrl || viewerBaseUrl || "/docs/") : ((targetConfig && targetConfig.viewerBaseUrl) || viewerBaseUrl), window.location.origin);
+    if (useManage) {
+      url.searchParams.set("scope", targetScope);
+      url.searchParams.set("mode", MANAGEMENT_MODE);
+    } else if (targetConfig && targetConfig.includeScopeParam && targetScope) {
+      url.searchParams.set("scope", targetScope);
+    }
+    url.searchParams.set("doc", docId);
+    return url.pathname + url.search;
+  }
+
+  function fetchDocsIndexForScope(scope) {
+    var targetScope = String(scope || viewerScope || "").trim().toLowerCase();
+    var targetConfig = state.scopeConfigsById.get(targetScope);
+    if (!targetConfig || !targetConfig.indexUrl) {
+      return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
+    }
+    return fetchIndexWithRetry(dataRequestOptions({
+      indexUrl: appendAssetVersion(targetConfig.indexUrl),
+      viewerScope: targetScope,
+      reloadNonce: "",
+      reloadExpectedDocId: ""
+    }));
+  }
+
+  function reportContext(doc, payload) {
+    return {
+      allowManagement: allowManagement,
+      checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
+      content: content,
+      doc: doc,
+      fetchDocsIndex: fetchDocsIndexForScope,
+      managementMode: state.managementMode,
+      payload: payload,
+      setStatus: setStatus,
+      viewerScope: viewerScope,
+      viewerUrlForScope: viewerUrlForScope
+    };
+  }
+
   function isManageOnlyTreeDoc(doc) {
     if (!doc || state.manageOnlyTreeRootIds.size === 0) return false;
     var visited = new Set();
@@ -1422,6 +1473,7 @@ import {
     showDocPane();
     renderMeta(doc);
     content.innerHTML = payload.content_html || "";
+    mountDocsViewerReport(reportContext(doc, payload));
     document.title = doc.title + " | dotlineform";
     setStatus("", false);
 
@@ -1521,6 +1573,9 @@ import {
     var url = new URL(anchor.href, window.location.href);
     if (url.origin !== window.location.origin) return null;
     if (url.pathname !== viewerPathname) return null;
+    var scope = String(url.searchParams.get("scope") || "").trim();
+    if (includeScopeParam && scope && scope !== viewerScope) return null;
+    if (allowManagement && String(url.searchParams.get("mode") || "") !== getCurrentMode()) return null;
 
     var docId = url.searchParams.get("doc");
     if (!docId) return null;

@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: "2026-05-11"
+last_updated: "2026-05-12"
 parent_id: ""
 sort_order: 20
 ---
@@ -24,7 +24,7 @@ The current Studio shell is organized around domain dashboards:
 The public site nav remains user-facing and separate from this admin layer. Public `Works` and public `Library` routes do not become Studio routes.
 There is no standalone Studio Search dashboard. Catalogue search configuration or review pages belong under the Catalogue dashboard; Docs Viewer search metrics or configuration belong in `/docs/` manage mode.
 
-The Library dashboard includes `/studio/library-documents/` for reviewing generated Library document records, `/studio/export/` for running configured exports from generated Library Docs Viewer data, and `/studio/import/` for generating preview Markdown from staged Library import data.
+The Library dashboard links to the Library Documents report inside `/docs/` manage mode for reviewing generated Library document records, `/studio/export/` for running configured exports from generated Library Docs Viewer data, and `/studio/import/` for generating preview Markdown from staged Library import data.
 Those pages depend on the docs-management local service for file writes; when the service is unavailable, command execution stays unavailable.
 Export pattern definitions live in `assets/studio/data/library_export_configs.json`, not in route code or `studio_config.json`.
 
@@ -87,7 +87,6 @@ Current workflow/detail routes:
 - `/studio/audits/`
 - `/studio/catalogue-field-registry/`
 - `/studio/docs-broken-links/`
-- `/studio/library-documents/`
 - `/studio/export/`
 - `/studio/import/`
 - `/studio/catalogue-status/`

@@ -49,6 +49,10 @@ DocRecord = Struct.new(
   :source_path,
   :viewer_url,
   :content_url,
+  :viewer_report,
+  :viewer_report_scope,
+  :viewer_report_access,
+  :viewer_report_preset,
   :body_markdown,
   keyword_init: true
 )
@@ -168,6 +172,10 @@ class DocsDataBuilder
       published = true
       hidden = hidden_front_matter_value(front_matter)
       viewable = !hidden
+      viewer_report = normalize_optional_string(front_matter["viewer_report"])
+      viewer_report_scope = normalize_optional_string(front_matter["viewer_report_scope"])
+      viewer_report_access = normalize_optional_string(front_matter["viewer_report_access"])
+      viewer_report_preset = normalize_optional_string(front_matter["viewer_report_preset"])
 
       DocRecord.new(
         scope_id: @scope_id,
@@ -185,6 +193,10 @@ class DocsDataBuilder
         source_path: relative_path,
         viewer_url: viewer_url_for(doc_id),
         content_url: content_url_for(doc_id),
+        viewer_report: viewer_report,
+        viewer_report_scope: viewer_report_scope,
+        viewer_report_access: viewer_report_access,
+        viewer_report_preset: viewer_report_preset,
         body_markdown: body_markdown
       )
     end
@@ -248,6 +260,10 @@ class DocsDataBuilder
     value.to_s.strip
   end
 
+  def normalize_optional_string(value)
+    value.to_s.strip
+  end
+
   def viewer_url_for(doc_id, anchor = nil)
     query_pairs = []
     query_pairs << "scope=#{CGI.escape(@scope_id)}" if @include_scope_param && !@scope_id.empty?
@@ -303,6 +319,7 @@ class DocsDataBuilder
     }
     entry["summary"] = doc.summary unless doc.summary.empty?
     entry["ui_status"] = doc.ui_status unless doc.ui_status.empty?
+    add_report_metadata(entry, doc)
     entry
   end
 
@@ -328,7 +345,15 @@ class DocsDataBuilder
     }
     entry["summary"] = doc.summary unless doc.summary.empty?
     entry["ui_status"] = doc.ui_status unless doc.ui_status.empty?
+    add_report_metadata(entry, doc)
     entry
+  end
+
+  def add_report_metadata(entry, doc)
+    entry["viewer_report"] = doc.viewer_report unless doc.viewer_report.empty?
+    entry["viewer_report_scope"] = doc.viewer_report_scope unless doc.viewer_report_scope.empty?
+    entry["viewer_report_access"] = doc.viewer_report_access unless doc.viewer_report_access.empty?
+    entry["viewer_report_preset"] = doc.viewer_report_preset unless doc.viewer_report_preset.empty?
   end
 
   def plain_text_from_rendered_html(content_html, title:)

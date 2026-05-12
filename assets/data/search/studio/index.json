@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d0676bf9c9697b4fd7c0801e40934e47",
-    "generated_at_utc": "2026-05-12T17:55:18Z",
-    "count": 228
+    "version": "blake2b-ae3a823b764b178617cbe9cfc1bcdfd6",
+    "generated_at_utc": "2026-05-12T20:41:43Z",
+    "count": 229
   },
   "entries": [
     {
@@ -475,23 +475,21 @@
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-05-11 17:50",
+      "last_updated": "2026-05-12",
       "parent_id": "docs-viewer",
       "parent_title": "Docs",
-      "display_meta": "2026-05-11 17:50 • Docs",
+      "display_meta": "2026-05-12 • Docs",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
-        "2026-05-11 17:50",
+        "2026-05-12",
         "2026",
         "05",
-        "11",
-        "17",
-        "50"
+        "12"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "docs-viewer-overview docs viewer overview 2026-05-12 2026 05 12"
     },
     {
       "id": "pipeline-use-cases",
@@ -1309,16 +1307,16 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-11",
-      "display_meta": "2026-05-11",
+      "last_updated": "2026-05-12",
+      "display_meta": "2026-05-12",
       "search_terms": [
         "studio",
-        "2026-05-11",
+        "2026-05-12",
         "2026",
         "05",
-        "11"
+        "12"
       ],
-      "search_text": "studio 2026-05-11 2026 05 11"
+      "search_text": "studio 2026-05-12 2026 05 12"
     },
     {
       "id": "studio-runtime",
@@ -1594,6 +1592,36 @@
         "52"
       ],
       "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and change requests change requests 2026-05-11 19:52 2026 05 11 19 52"
+    },
+    {
+      "id": "site-request-docs-viewer-report-components",
+      "kind": "doc",
+      "title": "Docs Viewer Report Components Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-report-components",
+      "last_updated": "2026-05-12 21:26",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-12 21:26 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-report-components",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "report",
+        "components",
+        "docs viewer report components request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-12 21:26",
+        "2026",
+        "05",
+        "12",
+        "21",
+        "26"
+      ],
+      "search_text": "site-request-docs-viewer-report-components site request docs viewer report components docs viewer report components request change requests change requests 2026-05-12 21:26 2026 05 12 21 26"
     },
     {
       "id": "analytics",
@@ -2276,20 +2304,18 @@
       "kind": "doc",
       "title": "Docs",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-11 22:10",
-      "display_meta": "2026-05-11 22:10",
+      "last_updated": "2026-05-12",
+      "display_meta": "2026-05-12",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
-        "2026-05-11 22:10",
+        "2026-05-12",
         "2026",
         "05",
-        "11",
-        "22",
-        "10"
+        "12"
       ],
-      "search_text": "docs-viewer docs viewer 2026-05-11 22:10 2026 05 11 22 10"
+      "search_text": "docs-viewer docs viewer 2026-05-12 2026 05 12"
     },
     {
       "id": "site-request-script-structural-review-generate-work-pages",
@@ -5796,20 +5822,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-09 21:05",
-      "display_meta": "2026-05-09 21:05",
+      "last_updated": "2026-05-12",
+      "display_meta": "2026-05-12",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-09 21:05",
+        "2026-05-12",
         "2026",
         "05",
-        "09",
-        "21"
+        "12"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-09 21:05 2026 05 09 21"
+      "search_text": "change-requests change requests change requests 2026-05-12 2026 05 12"
     },
     {
       "id": "library-import-export-v2",
