@@ -28,6 +28,7 @@
   - known risks or blockers
   - exact next slice to start
 - If a slice is growing beyond the remaining context budget, stop at a clean checkpoint rather than pushing into an interruption-prone state.
+- Before a long thread reaches context limit, produce a handoff note: changed files, decisions made, remaining tasks, commands run, and known risks.
 
 ## Studio UI Guidance
 
