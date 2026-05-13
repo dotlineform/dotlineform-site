@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c3179a695a809b759d23b8453a878ade",
-    "generated_at_utc": "2026-05-13T16:43:16Z",
+    "version": "blake2b-d7d1f8e74042aa1b4e73e801bdad65a4",
+    "generated_at_utc": "2026-05-13T18:40:39Z",
     "count": 232
   },
   "entries": [
@@ -1761,10 +1761,10 @@
       "kind": "doc",
       "title": "Catalogue Lookup Invalidation Request",
       "href": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-13",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
+      "display_meta": "2026-05-13 • Change Requests",
       "search_terms": [
         "site-request-catalogue-lookup-invalidation",
         "site",
@@ -1776,12 +1776,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-02",
+        "2026-05-13",
         "2026",
         "05",
-        "02"
+        "13"
       ],
-      "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request change requests change requests 2026-05-02 2026 05 02"
+      "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request change requests change requests 2026-05-13 2026 05 13"
     },
     {
       "id": "catalogue-work-editor",

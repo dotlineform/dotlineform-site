@@ -65,8 +65,8 @@ The current implementation can serve allowlisted catalogue source and lookup pay
 - `scripts/catalogue/catalogue_activity.py` owns catalogue-specific Studio Activity profiles, activity context normalization, activity row construction, and activity response-count bookkeeping.
 - `scripts/catalogue/catalogue_cleanup.py` owns generated public-artifact cleanup discovery, cleanup-scope allowlist checks, generated JSON cleanup payload mutation including moment index cleanup, and cleanup file deletion helpers used by delete and unpublish transactions.
 - `scripts/catalogue/catalogue_delete_plans.py` owns delete preview construction, delete affected-record calculation, delete validation preflight, draft-series primary-work cleanup planning for work deletes, and delete apply plan construction.
-- `scripts/catalogue/catalogue_invalidation.py` owns catalogue lookup invalidation and moment-build invalidation constants, registries, and pure field-to-artifact helper functions.
-- `scripts/catalogue/catalogue_lookup_refresh.py` owns full and focused Studio catalogue lookup refresh execution, result payload shape, artifact labels, written counts, and written path reporting.
+- `scripts/catalogue/catalogue_invalidation.py` owns the remaining moment-build invalidation helper.
+- `scripts/catalogue/catalogue_lookup_refresh.py` owns registry-derived Studio lookup refresh planning, full and focused lookup refresh execution, result payload shape, artifact labels, written counts, and written path reporting.
 - `scripts/catalogue/catalogue_publication.py` owns publication preview planning, target-record normalization, publication blockers, affected-record calculation, build impact planning, series publish bootstrap planning, publication source payload construction, unpublish cleanup orchestration, and publication build backup orchestration.
 - `scripts/catalogue/catalogue_prose_import.py` owns staged catalogue prose import target normalization, Markdown validation, preview payloads, and draft moment source import application helpers.
 - `scripts/catalogue/catalogue_save_build.py` owns common save-time public-build response decisions for work, work-detail, series, and moment saves, including `build_requested`, `build_skipped`, no-public-artifact skip payloads, and the build runner call.
@@ -386,10 +386,10 @@ Apply behavior:
 Current behavior after successful canonical writes:
 
 - the server refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`
-- `POST /catalogue/work/save` now uses the invalidation registry for the first live incremental slice
-- when the changed work fields stay within the locked `single-record` first-pass set, the server rewrites only `works/<work_id>.json`
-- when work changes resolve to `targeted-multi-record`, the server rewrites only the focused derived payload set needed for those fields
-- `POST /catalogue/work-detail/save` and `POST /catalogue/series/save` now also use focused incremental refresh where their dependency set is explicit
+- single work, work-detail, and series saves first use the catalogue field registry to decide whether `studio-lookup` is affected
+- `scripts/catalogue/catalogue_lookup_refresh.py` derives the precise lookup write set from current serializer dependencies in `scripts/catalogue/catalogue_lookup.py`
+- when the changed fields affect only the focused lookup record, the server rewrites only that record file
+- when changes affect search payloads or related summaries, the server rewrites only the focused derived payload set needed for those fields
 - other writes still use a full lookup refresh
 
 Why the current refresh is broad:
@@ -414,21 +414,14 @@ Why the current refresh is broad:
 Follow-on direction:
 
 - keep full lookup refresh as the fallback for complex cases
-- add field-based invalidation for obvious quick wins where only one record or a small known dependency set changes
-- the canonical invalidation registry lives in `scripts/catalogue/catalogue_invalidation.py`
-- keep that registry in Python code unless a second consumer appears that justifies a shared JSON/config contract
-- the current dependency mapping now also explicitly includes moment build invalidation, with `title`, `date`, and `date_display` treated as the fields that currently affect both moment runtime data and catalogue search
-- the current registry maps detail and series fields to their actual derived outputs:
-  - detail fields can affect `work_details/<detail_uid>.json`, `work_detail_search.json`, and related work lookup records
+- keep the catalogue field registry as the authority for whether a changed field affects `studio-lookup`
+- keep serializer field descriptors beside the lookup payload builders, so lookup precision follows the payload contract instead of a second field-to-invalidation registry
+- the current moment-build dependency mapping remains separate because moment save artifacts are runtime/search outputs, not Studio lookup payloads
   - series fields can affect `series/<series_id>.json`, `series_search.json`, and related work lookup records where `series_summary` embeds the series title
   - work-owned `downloads` and `links` changes refresh the focused work lookup record through the work-save path
 - refresh execution lives in `scripts/catalogue/catalogue_lookup_refresh.py`, which calls the existing `scripts/catalogue/catalogue_lookup.py` builders and writers and returns the Studio-facing `lookup_refresh` result payload shape
-- the locked first live incremental slice is narrower than the full registry:
-  - start with `POST /catalogue/work/save` only
-  - allow incremental writes only for work fields currently classified as `single-record`
-  - work `title`, `year_display`, `status`, and `series_ids` now use the targeted-multi-record path rather than `full`
-  - detail and series saves now also use targeted incremental refresh where their dependency set is explicit
-  - keep parent/id move-style cases on `full` fallback until later tasks
+- single work, work-detail, and series saves all use registry-derived lookup refresh planning
+- keep parent/id move-style or mixed-class cases on `full` fallback until later tasks
 - changed work-save responses now include `lookup_refresh.mode` so the UI and local operators can tell whether the server used `single-record`, `targeted-multi-record`, or `full`
 - changed detail/series save responses now include the same `lookup_refresh` metadata
 - changed moment-save responses include `moment_build_invalidation` instead of `lookup_refresh`; moment publication and delete flows do not emit or perform Studio lookup refresh work

@@ -35,6 +35,37 @@ SCHEMAS = {
     "meta": "studio_catalogue_lookup_meta_v1",
 }
 
+WORK_SEARCH_FIELDS = frozenset({"work_id", "title", "year_display", "status", "series_ids"})
+SERIES_MEMBER_WORK_FIELDS = frozenset({"work_id", "title", "year_display", "status", "series_ids"})
+WORK_DETAIL_WORK_SUMMARY_FIELDS = frozenset({"title"})
+
+WORK_DETAIL_SEARCH_FIELDS = frozenset({
+    "detail_uid",
+    "work_id",
+    "detail_id",
+    "title",
+    "section_id",
+    "section_title",
+    "sort_order",
+    "details_subfolder",
+    "project_filename",
+    "status",
+})
+WORK_DETAIL_PARENT_WORK_FIELDS = frozenset({
+    "work_id",
+    "detail_id",
+    "title",
+    "section_id",
+    "section_title",
+    "sort_order",
+    "details_subfolder",
+    "project_filename",
+    "status",
+})
+
+SERIES_SEARCH_FIELDS = frozenset({"series_id", "title", "status", "primary_work_id"})
+WORK_SERIES_SUMMARY_FIELDS = frozenset({"title"})
+
 
 def normalize_optional_int(value: Any) -> int | None:
     text = normalize_text(value)
@@ -54,6 +85,54 @@ def build_resolved_work_detail_record(record: Mapping[str, Any], section_resolut
         if value is not None and value != "":
             detail_payload[field] = value
     return detail_payload
+
+
+def build_work_search_item(work_id: str, record: Mapping[str, Any]) -> Dict[str, Any]:
+    return {
+        "work_id": work_id,
+        "title": normalize_text(record.get("title")),
+        "year_display": normalize_text(record.get("year_display")),
+        "status": normalize_text(record.get("status")),
+        "series_ids": list(record.get("series_ids", [])) if isinstance(record.get("series_ids"), list) else [],
+    }
+
+
+def build_series_member_work_item(work_id: str, record: Mapping[str, Any]) -> Dict[str, Any]:
+    return {
+        "work_id": work_id,
+        "title": normalize_text(record.get("title")),
+        "year_display": normalize_text(record.get("year_display")),
+        "status": normalize_text(record.get("status")),
+        "series_ids": list(record.get("series_ids", [])) if isinstance(record.get("series_ids"), list) else [],
+    }
+
+
+def build_series_search_item(series_id: str, record: Mapping[str, Any]) -> Dict[str, Any]:
+    return {
+        "series_id": series_id,
+        "title": normalize_text(record.get("title")),
+        "status": normalize_text(record.get("status")),
+        "primary_work_id": normalize_text(record.get("primary_work_id")),
+    }
+
+
+def build_work_detail_search_item(
+    detail_uid: str,
+    record: Mapping[str, Any],
+    section_resolution: Mapping[str, Any],
+) -> Dict[str, Any]:
+    return {
+        "detail_uid": detail_uid,
+        "work_id": normalize_text(record.get("work_id")),
+        "detail_id": normalize_text(record.get("detail_id")),
+        "title": normalize_text(record.get("title")),
+        "section_id": normalize_text(section_resolution.get("section_id")),
+        "section_title": normalize_text(section_resolution.get("section_title")),
+        "sort_order": normalize_text(section_resolution.get("sort_order")),
+        "details_subfolder": normalize_text(section_resolution.get("details_subfolder")),
+        "project_filename": normalize_text(record.get("project_filename")),
+        "status": normalize_text(record.get("status")),
+    }
 
 
 def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> Dict[str, Any]:
@@ -169,15 +248,7 @@ def build_series_lookup_payload(records: CatalogueSourceRecords, series_id: str)
         series_ids = work_record.get("series_ids", [])
         if not isinstance(series_ids, list) or series_id not in series_ids:
             continue
-        members.append(
-            {
-                "work_id": work_id,
-                "title": normalize_text(work_record.get("title")),
-                "year_display": normalize_text(work_record.get("year_display")),
-                "status": normalize_text(work_record.get("status")),
-                "series_ids": list(series_ids),
-            }
-        )
+        members.append(build_series_member_work_item(work_id, work_record))
     members.sort(key=lambda item: item["work_id"])
 
     return {
@@ -192,15 +263,7 @@ def build_series_lookup_payload(records: CatalogueSourceRecords, series_id: str)
 def build_work_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]:
     items = []
     for work_id, record in records.works.items():
-        items.append(
-            {
-                "work_id": work_id,
-                "title": normalize_text(record.get("title")),
-                "year_display": normalize_text(record.get("year_display")),
-                "status": normalize_text(record.get("status")),
-                "series_ids": list(record.get("series_ids", [])) if isinstance(record.get("series_ids"), list) else [],
-            }
-        )
+        items.append(build_work_search_item(work_id, record))
     items.sort(key=lambda item: item["work_id"])
     return {
         "header": {
@@ -214,14 +277,7 @@ def build_work_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]
 def build_series_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]:
     items = []
     for series_id, record in records.series.items():
-        items.append(
-            {
-                "series_id": series_id,
-                "title": normalize_text(record.get("title")),
-                "status": normalize_text(record.get("status")),
-                "primary_work_id": normalize_text(record.get("primary_work_id")),
-            }
-        )
+        items.append(build_series_search_item(series_id, record))
     items.sort(key=lambda item: item["series_id"])
     return {
         "header": {
@@ -234,16 +290,9 @@ def build_series_search_payload(records: CatalogueSourceRecords) -> Dict[str, An
 
 def build_work_detail_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]:
     items = []
+    section_resolution_by_uid = build_detail_section_resolution_by_uid(records.work_details)
     for detail_uid, record in records.work_details.items():
-        items.append(
-            {
-                "detail_uid": detail_uid,
-                "work_id": normalize_text(record.get("work_id")),
-                "detail_id": normalize_text(record.get("detail_id")),
-                "title": normalize_text(record.get("title")),
-                "status": normalize_text(record.get("status")),
-            }
-        )
+        items.append(build_work_detail_search_item(detail_uid, record, section_resolution_by_uid.get(detail_uid, {})))
     items.sort(key=lambda item: item["detail_uid"])
     return {
         "header": {
@@ -271,19 +320,7 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
     for detail_uid, record in records.work_details.items():
         work_id = normalize_text(record.get("work_id"))
         section_resolution = section_resolution_by_uid.get(detail_uid, {})
-        detail_item = {
-            "detail_uid": detail_uid,
-            "work_id": work_id,
-            "detail_id": normalize_text(record.get("detail_id")),
-            "title": normalize_text(record.get("title")),
-            "section_id": normalize_text(section_resolution.get("section_id")),
-            "section_title": normalize_text(section_resolution.get("section_title")),
-            "sort_order": normalize_text(section_resolution.get("sort_order")),
-            "details_subfolder": normalize_text(section_resolution.get("details_subfolder")),
-            "project_filename": normalize_text(record.get("project_filename")),
-            "status": normalize_text(record.get("status")),
-        }
-        detail_search_items.append(detail_item)
+        detail_search_items.append(build_work_detail_search_item(detail_uid, record, section_resolution))
 
         work_record = records.works.get(work_id) or {}
         work_details_by_uid[detail_uid] = {
@@ -298,40 +335,17 @@ def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str
         }
 
     for work_id, record in records.works.items():
-        work_search_items.append(
-            {
-                "work_id": work_id,
-                "title": normalize_text(record.get("title")),
-                "year_display": normalize_text(record.get("year_display")),
-                "status": normalize_text(record.get("status")),
-                "series_ids": list(record.get("series_ids", [])) if isinstance(record.get("series_ids"), list) else [],
-            }
-        )
+        work_search_items.append(build_work_search_item(work_id, record))
         works_by_id[work_id] = build_work_lookup_payload(records, work_id)
 
     for series_id, record in records.series.items():
-        series_search_items.append(
-            {
-                "series_id": series_id,
-                "title": normalize_text(record.get("title")),
-                "status": normalize_text(record.get("status")),
-                "primary_work_id": normalize_text(record.get("primary_work_id")),
-            }
-        )
+        series_search_items.append(build_series_search_item(series_id, record))
         members = []
         for work_id, work_record in records.works.items():
             series_ids = work_record.get("series_ids", [])
             if not isinstance(series_ids, list) or series_id not in series_ids:
                 continue
-            members.append(
-                {
-                    "work_id": work_id,
-                    "title": normalize_text(work_record.get("title")),
-                    "year_display": normalize_text(work_record.get("year_display")),
-                    "status": normalize_text(work_record.get("status")),
-                    "series_ids": list(series_ids),
-                }
-            )
+            members.append(build_series_member_work_item(work_id, work_record))
         members.sort(key=lambda item: item["work_id"])
         series_by_id[series_id] = {
             "header": {

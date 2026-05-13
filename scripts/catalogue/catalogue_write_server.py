@@ -221,26 +221,6 @@ def allowed_origin(origin: str) -> Optional[str]:
     return f"{parsed.scheme}://{parsed.hostname}:{parsed.port}"
 
 
-def locked_first_pass_work_fields() -> set[str]:
-    return {
-        "published_date",
-        "project_folder",
-        "project_subfolder",
-        "project_filename",
-        "year",
-        "medium_type",
-        "medium_caption",
-        "duration",
-        "height_cm",
-        "width_cm",
-        "depth_cm",
-        "storage_location",
-        "notes",
-        "provenance",
-        "artist",
-    }
-
-
 def normalize_moment_id_value(value: Any) -> str:
     text = str(value or "").strip()
     if not text:
@@ -879,21 +859,6 @@ class Handler(BaseHTTPRequestHandler):
         build_plan: Dict[str, Any] = {}
         lookup_refresh_payload: Dict[str, Any] = {}
         if changed:
-            invalidation_result = invalidation.work_lookup_invalidation_for_fields(fields_changed)
-            locked_fields = locked_first_pass_work_fields()
-            use_single_record_lookup_refresh = (
-                invalidation_result["class"] == invalidation.LOOKUP_INVALIDATION_SINGLE_RECORD
-                and set(fields_changed).issubset(locked_fields)
-            )
-            lookup_refresh_payload = {
-                "mode": "single-record" if use_single_record_lookup_refresh else (
-                    "targeted-multi-record" if invalidation_result["class"] == invalidation.LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD else "full"
-                ),
-                "invalidation_class": invalidation_result["class"],
-                "artifacts": invalidation_result["artifacts"],
-                "unknown_fields": invalidation_result["unknown_fields"],
-            }
-            response_payload["lookup_refresh"] = lookup_refresh_payload
             build_plan = field_aware_build_plan(
                 self.server.field_registry,
                 record_family="work",
@@ -906,6 +871,18 @@ class Handler(BaseHTTPRequestHandler):
                 },
             )
             response_payload["build_plan"] = build_plan
+            lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
+                record_family="work",
+                changed_field_names=fields_changed,
+                build_plan=build_plan,
+            )
+            lookup_refresh_payload = {
+                "mode": lookup_plan["mode"],
+                "invalidation_class": lookup_plan["class"],
+                "artifacts": lookup_plan["artifacts"],
+                "unknown_fields": lookup_plan["unknown_fields"],
+            }
+            response_payload["lookup_refresh"] = lookup_refresh_payload
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = changed
@@ -931,9 +908,9 @@ class Handler(BaseHTTPRequestHandler):
         if changed and not self.server.dry_run:
             refresh_result = self._refresh_lookup_payloads_for_work_change(
                 work_id,
-                fields_changed,
                 current_record,
                 updated_record,
+                build_plan,
             )
             response_payload["lookup_refresh"] = {
                 "mode": refresh_result["mode"],
@@ -1763,16 +1740,6 @@ class Handler(BaseHTTPRequestHandler):
         build_plan: Dict[str, Any] = {}
         lookup_refresh_payload: Dict[str, Any] = {}
         if changed:
-            invalidation_result = invalidation.detail_lookup_invalidation_for_fields(fields_changed)
-            lookup_refresh_payload = {
-                "mode": "targeted-multi-record" if invalidation_result["class"] == invalidation.LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD else (
-                    "single-record" if invalidation_result["class"] == invalidation.LOOKUP_INVALIDATION_SINGLE_RECORD else "full"
-                ),
-                "invalidation_class": invalidation_result["class"],
-                "artifacts": invalidation_result["artifacts"],
-                "unknown_fields": invalidation_result["unknown_fields"],
-            }
-            response_payload["lookup_refresh"] = lookup_refresh_payload
             build_plan = field_aware_build_plan(
                 self.server.field_registry,
                 record_family="work_detail",
@@ -1785,6 +1752,18 @@ class Handler(BaseHTTPRequestHandler):
                 },
             )
             response_payload["build_plan"] = build_plan
+            lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
+                record_family="work_detail",
+                changed_field_names=fields_changed,
+                build_plan=build_plan,
+            )
+            lookup_refresh_payload = {
+                "mode": lookup_plan["mode"],
+                "invalidation_class": lookup_plan["class"],
+                "artifacts": lookup_plan["artifacts"],
+                "unknown_fields": lookup_plan["unknown_fields"],
+            }
+            response_payload["lookup_refresh"] = lookup_refresh_payload
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = changed
@@ -1811,9 +1790,9 @@ class Handler(BaseHTTPRequestHandler):
         if changed and not self.server.dry_run:
             refresh_result = self._refresh_lookup_payloads_for_detail_change(
                 detail_uid,
-                fields_changed,
                 current_record,
                 updated_record,
+                build_plan,
             )
             response_payload["lookup_refresh"] = {
                 "mode": refresh_result["mode"],
@@ -1988,22 +1967,6 @@ class Handler(BaseHTTPRequestHandler):
         build_plan: Dict[str, Any] = {}
         lookup_refresh_payload: Dict[str, Any] = {}
         if changed:
-            invalidation_result = invalidation.series_lookup_invalidation_for_fields(series_changed_fields)
-            if changed_work_ids:
-                invalidation_result = {
-                    "class": invalidation.LOOKUP_INVALIDATION_FULL,
-                    "artifacts": ["full_lookup_refresh"],
-                    "unknown_fields": [],
-                }
-            lookup_refresh_payload = {
-                "mode": "targeted-multi-record" if invalidation_result["class"] == invalidation.LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD else (
-                    "single-record" if invalidation_result["class"] == invalidation.LOOKUP_INVALIDATION_SINGLE_RECORD else "full"
-                ),
-                "invalidation_class": invalidation_result["class"],
-                "artifacts": invalidation_result["artifacts"],
-                "unknown_fields": invalidation_result["unknown_fields"],
-            }
-            response_payload["lookup_refresh"] = lookup_refresh_payload
             if changed_work_ids:
                 build_plan = full_fallback_build_plan(
                     self.server.field_registry,
@@ -2025,6 +1988,18 @@ class Handler(BaseHTTPRequestHandler):
                     },
                 )
             response_payload["build_plan"] = build_plan
+            lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
+                record_family="series",
+                changed_field_names=series_changed_fields,
+                build_plan=build_plan,
+            )
+            lookup_refresh_payload = {
+                "mode": lookup_plan["mode"],
+                "invalidation_class": lookup_plan["class"],
+                "artifacts": lookup_plan["artifacts"],
+                "unknown_fields": lookup_plan["unknown_fields"],
+            }
+            response_payload["lookup_refresh"] = lookup_refresh_payload
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = changed
@@ -2055,6 +2030,7 @@ class Handler(BaseHTTPRequestHandler):
                 changed_work_ids,
                 current_series_record,
                 updated_series_record,
+                build_plan,
             )
             response_payload["lookup_refresh"] = {
                 "mode": refresh_result["mode"],
@@ -2987,22 +2963,23 @@ class Handler(BaseHTTPRequestHandler):
     def _refresh_lookup_payloads_for_work_change(
         self,
         work_id: str,
-        fields_changed: list[str],
         current_record: Mapping[str, Any],
         updated_record: Mapping[str, Any],
+        build_plan: Mapping[str, Any],
     ) -> Dict[str, Any]:
-        invalidation_result = invalidation.work_lookup_invalidation_for_fields(fields_changed)
-        locked_fields = locked_first_pass_work_fields()
+        lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
+            record_family="work",
+            changed_field_names=list(build_plan.get("fields") or []),
+            build_plan=build_plan,
+        )
         result = lookup_refresh.work_change_lookup_refresh(
             self.server.source_dir,
             self.server.lookup_dir,
             self.server.repo_root,
             work_id=work_id,
-            fields_changed=fields_changed,
             current_record=current_record,
             updated_record=updated_record,
-            invalidation_result=invalidation_result,
-            locked_single_record_fields=locked_fields,
+            lookup_plan=lookup_plan,
         )
         self.server.log_event(
             "catalogue_lookup_refresh",
@@ -3019,18 +2996,22 @@ class Handler(BaseHTTPRequestHandler):
     def _refresh_lookup_payloads_for_detail_change(
         self,
         detail_uid: str,
-        fields_changed: list[str],
         current_record: Mapping[str, Any],
         updated_record: Mapping[str, Any],
+        build_plan: Mapping[str, Any],
     ) -> Dict[str, Any]:
-        invalidation_result = invalidation.detail_lookup_invalidation_for_fields(fields_changed)
+        lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
+            record_family="work_detail",
+            changed_field_names=list(build_plan.get("fields") or []),
+            build_plan=build_plan,
+        )
         result = lookup_refresh.detail_change_lookup_refresh(
             self.server.source_dir,
             self.server.lookup_dir,
             self.server.repo_root,
             detail_uid=detail_uid,
             updated_record=updated_record,
-            invalidation_result=invalidation_result,
+            lookup_plan=lookup_plan,
         )
         self.server.log_event(
             "catalogue_lookup_refresh",
@@ -3051,20 +3032,19 @@ class Handler(BaseHTTPRequestHandler):
         changed_work_ids: list[str],
         current_record: Mapping[str, Any],
         updated_record: Mapping[str, Any],
+        build_plan: Mapping[str, Any],
     ) -> Dict[str, Any]:
-        invalidation_result = invalidation.series_lookup_invalidation_for_fields(fields_changed)
-        if changed_work_ids:
-            invalidation_result = {
-                "class": invalidation.LOOKUP_INVALIDATION_FULL,
-                "artifacts": ["full_lookup_refresh"],
-                "unknown_fields": [],
-            }
+        lookup_plan = lookup_refresh.derive_lookup_refresh_plan(
+            record_family="series",
+            changed_field_names=list(build_plan.get("fields") or fields_changed),
+            build_plan=build_plan,
+        )
         result = lookup_refresh.series_change_lookup_refresh(
             self.server.source_dir,
             self.server.lookup_dir,
             self.server.repo_root,
             series_id=series_id,
-            invalidation_result=invalidation_result,
+            lookup_plan=lookup_plan,
         )
         self.server.log_event(
             "catalogue_lookup_refresh",

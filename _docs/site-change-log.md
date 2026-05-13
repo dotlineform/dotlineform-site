@@ -17,6 +17,31 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-13] Moved Catalogue Lookup Planning To The Field Registry
+
+**Status:** implemented
+
+**Area:** Catalogue Studio lookup / field registry
+
+**Summary:**
+Single work, work-detail, and series saves now use the catalogue field registry as the authority for whether a changed field affects `studio-lookup`.
+`scripts/catalogue/catalogue_lookup_refresh.py` derives the exact lookup files to rewrite from serializer dependency descriptors in `scripts/catalogue/catalogue_lookup.py`, so the old duplicate work/detail/series invalidation registries have been removed from `scripts/catalogue/catalogue_invalidation.py`.
+
+**Files changed/docs:**
+
+- `scripts/catalogue/catalogue_lookup.py`
+- `scripts/catalogue/catalogue_lookup_refresh.py`
+- `scripts/catalogue/catalogue_write_server.py`
+- `scripts/catalogue/catalogue_invalidation.py`
+- `tests/python/test_catalogue_lookup_refresh.py`
+- `tests/python/test_catalogue_invalidation.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
+
+**Impact:**
+Fields such as work `project_subfolder` now stay on the one-record lookup refresh path without needing a second invalidation registry entry.
+Full lookup refresh remains the fallback for unknown or mixed registry dependency classes.
+
 ## [2026-05-13] Extracted Documents Data Sharing Adapter
 
 **Status:** implemented
@@ -1979,6 +2004,8 @@ Completed the first implementation slice of the script structural review by movi
 **Impact:**
 `scripts/catalogue_invalidation.py` now owns the field-to-derived-artifact registries and pure invalidation helpers.
 The write server now calls those helpers through the `invalidation.*` namespace, so endpoint behavior and response payloads remain stable while the module boundary becomes clearer.
+
+Superseded note: the 2026-05-13 registry-derived lookup planning change later removed the work/detail/series lookup registries from this module. `scripts/catalogue_invalidation.py` now remains only for moment-build invalidation metadata.
 
 ## [2026-05-08] Added script structural review request
 

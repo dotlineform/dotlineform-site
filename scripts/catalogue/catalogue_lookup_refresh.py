@@ -6,6 +6,13 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from catalogue.catalogue_lookup import (
+    SERIES_MEMBER_WORK_FIELDS,
+    SERIES_SEARCH_FIELDS,
+    WORK_DETAIL_PARENT_WORK_FIELDS,
+    WORK_DETAIL_SEARCH_FIELDS,
+    WORK_DETAIL_WORK_SUMMARY_FIELDS,
+    WORK_SEARCH_FIELDS,
+    WORK_SERIES_SUMMARY_FIELDS,
     build_and_write_catalogue_lookup,
     build_series_lookup_payload,
     build_series_search_payload,
@@ -24,7 +31,12 @@ from catalogue.catalogue_source import (
     records_from_json_source,
     slug_id,
 )
-from catalogue import catalogue_invalidation as invalidation
+
+
+LOOKUP_REFRESH_NONE = "none"
+LOOKUP_REFRESH_SINGLE_RECORD = "single-record"
+LOOKUP_REFRESH_TARGETED_MULTI_RECORD = "targeted-multi-record"
+LOOKUP_REFRESH_FULL = "full"
 
 
 def rel_path(repo_root: Path, path: Path) -> str:
@@ -34,10 +46,87 @@ def rel_path(repo_root: Path, path: Path) -> str:
         return path.name
 
 
-def _with_invalidation(result: dict[str, Any], invalidation_result: Mapping[str, Any]) -> dict[str, Any]:
-    result["invalidation_class"] = invalidation_result["class"]
-    result["unknown_fields"] = list(invalidation_result.get("unknown_fields") or [])
+def _with_lookup_plan(result: dict[str, Any], lookup_plan: Mapping[str, Any]) -> dict[str, Any]:
+    result["invalidation_class"] = lookup_plan["class"]
+    result["unknown_fields"] = list(lookup_plan.get("unknown_fields") or [])
     return result
+
+
+def _changed_field_set(changed_field_names: list[str]) -> set[str]:
+    return {str(field).strip() for field in changed_field_names if str(field).strip()}
+
+
+def _lookup_artifacts_for_fields(record_family: str, changed_fields: set[str]) -> set[str]:
+    if record_family == "work":
+        artifacts = {"work_record"}
+        if changed_fields.intersection(WORK_SEARCH_FIELDS):
+            artifacts.add("work_search")
+        if changed_fields.intersection(SERIES_MEMBER_WORK_FIELDS):
+            artifacts.add("related_series_records")
+        if changed_fields.intersection(WORK_DETAIL_WORK_SUMMARY_FIELDS):
+            artifacts.add("related_work_detail_records")
+        return artifacts
+    if record_family == "work_detail":
+        artifacts = {"work_detail_record"}
+        if changed_fields.intersection(WORK_DETAIL_SEARCH_FIELDS):
+            artifacts.add("work_detail_search")
+        if changed_fields.intersection(WORK_DETAIL_PARENT_WORK_FIELDS):
+            artifacts.add("related_work_records")
+        return artifacts
+    if record_family == "series":
+        artifacts = {"series_record"}
+        if changed_fields.intersection(SERIES_SEARCH_FIELDS):
+            artifacts.add("series_search")
+        if changed_fields.intersection(WORK_SERIES_SUMMARY_FIELDS):
+            artifacts.add("related_work_records")
+        return artifacts
+    return set()
+
+
+def derive_lookup_refresh_plan(
+    *,
+    record_family: str,
+    changed_field_names: list[str],
+    build_plan: Mapping[str, Any],
+) -> dict[str, Any]:
+    changed_fields = _changed_field_set(changed_field_names)
+    registry_artifacts = {str(artifact) for artifact in build_plan.get("artifacts") or [] if str(artifact)}
+    unknown_fields = list(build_plan.get("unknown_fields") or [])
+    if not changed_fields or "studio-lookup" not in registry_artifacts:
+        return {
+            "class": LOOKUP_REFRESH_NONE,
+            "mode": LOOKUP_REFRESH_NONE,
+            "artifacts": [],
+            "fields": sorted(changed_fields),
+            "unknown_fields": unknown_fields,
+        }
+    if bool(build_plan.get("fallback")):
+        return {
+            "class": LOOKUP_REFRESH_FULL,
+            "mode": LOOKUP_REFRESH_FULL,
+            "artifacts": ["full_lookup_refresh"],
+            "fields": sorted(changed_fields),
+            "unknown_fields": unknown_fields,
+        }
+
+    artifacts = _lookup_artifacts_for_fields(record_family, changed_fields)
+    if not artifacts:
+        return {
+            "class": LOOKUP_REFRESH_NONE,
+            "mode": LOOKUP_REFRESH_NONE,
+            "artifacts": [],
+            "fields": sorted(changed_fields),
+            "unknown_fields": unknown_fields,
+        }
+
+    mode = LOOKUP_REFRESH_SINGLE_RECORD if len(artifacts) == 1 else LOOKUP_REFRESH_TARGETED_MULTI_RECORD
+    return {
+        "class": mode,
+        "mode": mode,
+        "artifacts": sorted(artifacts),
+        "fields": sorted(changed_fields),
+        "unknown_fields": unknown_fields,
+    }
 
 
 def full_lookup_refresh(source_dir: Path, lookup_dir: Path, repo_root: Path) -> dict[str, Any]:
@@ -71,25 +160,28 @@ def work_change_lookup_refresh(
     repo_root: Path,
     *,
     work_id: str,
-    fields_changed: list[str],
     current_record: Mapping[str, Any],
     updated_record: Mapping[str, Any],
-    invalidation_result: Mapping[str, Any],
-    locked_single_record_fields: set[str],
+    lookup_plan: Mapping[str, Any],
 ) -> dict[str, Any]:
-    artifacts = list(invalidation_result["artifacts"])
-    use_single_record_lookup_refresh = (
-        invalidation_result["class"] == invalidation.LOOKUP_INVALIDATION_SINGLE_RECORD
-        and set(fields_changed).issubset(locked_single_record_fields)
-    )
-    if use_single_record_lookup_refresh:
-        return _with_invalidation(
+    artifacts = list(lookup_plan["artifacts"])
+    if lookup_plan["class"] == LOOKUP_REFRESH_NONE:
+        return {
+            "mode": "none",
+            "artifacts": [],
+            "written_count": 0,
+            "written_paths": [],
+            "invalidation_class": lookup_plan["class"],
+            "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
+        }
+    if lookup_plan["class"] == LOOKUP_REFRESH_SINGLE_RECORD:
+        return _with_lookup_plan(
             work_lookup_record_refresh(source_dir, lookup_dir, repo_root, work_id),
-            invalidation_result,
+            lookup_plan,
         )
 
-    if invalidation_result["class"] != invalidation.LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD:
-        return _with_invalidation(full_lookup_refresh(source_dir, lookup_dir, repo_root), invalidation_result)
+    if lookup_plan["class"] != LOOKUP_REFRESH_TARGETED_MULTI_RECORD:
+        return _with_lookup_plan(full_lookup_refresh(source_dir, lookup_dir, repo_root), lookup_plan)
 
     source_records = records_from_json_source(source_dir)
     written_paths: list[str] = []
@@ -153,8 +245,8 @@ def work_change_lookup_refresh(
         "artifacts": sorted(artifacts),
         "written_count": len(written_paths),
         "written_paths": written_paths,
-        "invalidation_class": invalidation_result["class"],
-        "unknown_fields": list(invalidation_result.get("unknown_fields") or []),
+        "invalidation_class": lookup_plan["class"],
+        "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
     }
 
 
@@ -165,10 +257,19 @@ def detail_change_lookup_refresh(
     *,
     detail_uid: str,
     updated_record: Mapping[str, Any],
-    invalidation_result: Mapping[str, Any],
+    lookup_plan: Mapping[str, Any],
 ) -> dict[str, Any]:
-    artifacts = list(invalidation_result["artifacts"])
-    if invalidation_result["class"] == invalidation.LOOKUP_INVALIDATION_SINGLE_RECORD:
+    artifacts = list(lookup_plan["artifacts"])
+    if lookup_plan["class"] == LOOKUP_REFRESH_NONE:
+        return {
+            "mode": "none",
+            "artifacts": [],
+            "written_count": 0,
+            "written_paths": [],
+            "invalidation_class": lookup_plan["class"],
+            "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
+        }
+    if lookup_plan["class"] == LOOKUP_REFRESH_SINGLE_RECORD:
         source_records = records_from_json_source(source_dir)
         written_path = write_detail_lookup_payload(
             lookup_dir,
@@ -180,12 +281,12 @@ def detail_change_lookup_refresh(
             "artifacts": ["work_detail_record"],
             "written_count": 1,
             "written_paths": [rel_path(repo_root, written_path)],
-            "invalidation_class": invalidation_result["class"],
-            "unknown_fields": list(invalidation_result.get("unknown_fields") or []),
+            "invalidation_class": lookup_plan["class"],
+            "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
         }
 
-    if invalidation_result["class"] != invalidation.LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD:
-        return _with_invalidation(full_lookup_refresh(source_dir, lookup_dir, repo_root), invalidation_result)
+    if lookup_plan["class"] != LOOKUP_REFRESH_TARGETED_MULTI_RECORD:
+        return _with_lookup_plan(full_lookup_refresh(source_dir, lookup_dir, repo_root), lookup_plan)
 
     source_records = records_from_json_source(source_dir)
     written_paths: list[str] = []
@@ -228,8 +329,8 @@ def detail_change_lookup_refresh(
         "artifacts": sorted(artifacts),
         "written_count": len(written_paths),
         "written_paths": written_paths,
-        "invalidation_class": invalidation_result["class"],
-        "unknown_fields": list(invalidation_result.get("unknown_fields") or []),
+        "invalidation_class": lookup_plan["class"],
+        "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
     }
 
 
@@ -239,10 +340,19 @@ def series_change_lookup_refresh(
     repo_root: Path,
     *,
     series_id: str,
-    invalidation_result: Mapping[str, Any],
+    lookup_plan: Mapping[str, Any],
 ) -> dict[str, Any]:
-    artifacts = list(invalidation_result["artifacts"])
-    if invalidation_result["class"] == invalidation.LOOKUP_INVALIDATION_SINGLE_RECORD:
+    artifacts = list(lookup_plan["artifacts"])
+    if lookup_plan["class"] == LOOKUP_REFRESH_NONE:
+        return {
+            "mode": "none",
+            "artifacts": [],
+            "written_count": 0,
+            "written_paths": [],
+            "invalidation_class": lookup_plan["class"],
+            "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
+        }
+    if lookup_plan["class"] == LOOKUP_REFRESH_SINGLE_RECORD:
         source_records = records_from_json_source(source_dir)
         written_path = write_series_lookup_payload(
             lookup_dir,
@@ -254,12 +364,12 @@ def series_change_lookup_refresh(
             "artifacts": ["series_record"],
             "written_count": 1,
             "written_paths": [rel_path(repo_root, written_path)],
-            "invalidation_class": invalidation_result["class"],
-            "unknown_fields": list(invalidation_result.get("unknown_fields") or []),
+            "invalidation_class": lookup_plan["class"],
+            "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
         }
 
-    if invalidation_result["class"] != invalidation.LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD:
-        return _with_invalidation(full_lookup_refresh(source_dir, lookup_dir, repo_root), invalidation_result)
+    if lookup_plan["class"] != LOOKUP_REFRESH_TARGETED_MULTI_RECORD:
+        return _with_lookup_plan(full_lookup_refresh(source_dir, lookup_dir, repo_root), lookup_plan)
 
     source_records = records_from_json_source(source_dir)
     written_paths: list[str] = []
@@ -305,6 +415,6 @@ def series_change_lookup_refresh(
         "artifacts": sorted(artifacts),
         "written_count": len(written_paths),
         "written_paths": written_paths,
-        "invalidation_class": invalidation_result["class"],
-        "unknown_fields": list(invalidation_result.get("unknown_fields") or []),
+        "invalidation_class": lookup_plan["class"],
+        "unknown_fields": list(lookup_plan.get("unknown_fields") or []),
     }

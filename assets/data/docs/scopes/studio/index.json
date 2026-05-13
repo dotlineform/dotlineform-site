@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T16:42:35Z",
+  "generated_at": "2026-05-13T18:41:45Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -101,7 +101,7 @@
       "source_path": "site-request-script-structural-review-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-catalogue-write-server.json",
-      "content_text_length": 26926,
+      "content_text_length": 27471,
       "ui_status": "done"
     },
     {
@@ -1104,7 +1104,7 @@
       "doc_id": "site-request-catalogue-lookup-invalidation",
       "title": "Catalogue Lookup Invalidation Request",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-02",
+      "last_updated": "2026-05-13",
       "parent_id": "change-requests",
       "sort_order": 30,
       "published": true,
@@ -1113,7 +1113,7 @@
       "source_path": "site-request-catalogue-lookup-invalidation.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-lookup-invalidation.json",
-      "content_text_length": 16344,
+      "content_text_length": 16842,
       "ui_status": "done"
     },
     {
@@ -1421,7 +1421,7 @@
       "source_path": "scripts-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server.json",
-      "content_text_length": 33738
+      "content_text_length": 33096
     },
     {
       "scope": "studio",
@@ -3012,7 +3012,7 @@
       "source_path": "scripts-catalogue-source.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-source",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-source.json",
-      "content_text_length": 4159
+      "content_text_length": 4220
     },
     {
       "scope": "studio",
@@ -3776,7 +3776,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 151450
+      "content_text_length": 152862
     },
     {
       "scope": "studio",

@@ -90,7 +90,7 @@ This module is the shared source-data helper for current JSON source records. Wo
 
 `scripts/catalogue/catalogue_source.py` owns source field order, shared catalogue id-list and detail-uid normalization, source normalization, and omit-empty serialization for work, work-detail, and series records.
 
-The field registry at `assets/studio/data/catalogue_field_registry.json` owns build dependency planning only. It does not drive source serialization.
+The field registry at `assets/studio/data/catalogue_field_registry.json` owns changed-field dependency planning for public build work and Studio lookup refresh selection. It does not drive source serialization.
 
 When adding a source field:
 

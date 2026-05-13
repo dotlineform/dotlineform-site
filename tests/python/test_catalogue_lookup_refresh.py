@@ -13,10 +13,9 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from catalogue.catalogue_field_registry import field_aware_build_plan, load_catalogue_field_registry  # noqa: E402
 from catalogue.catalogue_source import CatalogueSourceRecords, write_source_record_payloads  # noqa: E402
-from catalogue import catalogue_invalidation as invalidation  # noqa: E402
 from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
-from catalogue import catalogue_write_server  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -74,6 +73,32 @@ def fixture_paths(tmp: str) -> tuple[Path, Path, Path, CatalogueSourceRecords]:
     return repo_root, source_dir, lookup_dir, records
 
 
+def lookup_plan_for(
+    records: CatalogueSourceRecords,
+    *,
+    record_family: str,
+    changed_fields: list[str],
+    current_record: dict,
+    updated_record: dict,
+) -> dict:
+    build_plan = field_aware_build_plan(
+        load_catalogue_field_registry(REPO_ROOT),
+        record_family=record_family,
+        operation="metadata_update",
+        changed_field_names=changed_fields,
+        context={
+            "source_records": records,
+            "current_record": current_record,
+            "updated_record": updated_record,
+        },
+    )
+    return lookup_refresh.derive_lookup_refresh_plan(
+        record_family=record_family,
+        changed_field_names=changed_fields,
+        build_plan=build_plan,
+    )
+
+
 def test_full_refresh_reports_all_lookup_artifacts() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         repo_root, source_dir, lookup_dir, _records = fixture_paths(tmp)
@@ -92,18 +117,22 @@ def test_work_single_record_refresh_reports_work_record() -> None:
         repo_root, source_dir, lookup_dir, records = fixture_paths(tmp)
         current_record = records.works["00001"]
         updated_record = dict(current_record, notes="After")
-        invalidation_result = invalidation.work_lookup_invalidation_for_fields(["notes"])
+        lookup_plan = lookup_plan_for(
+            records,
+            record_family="work",
+            changed_fields=["notes"],
+            current_record=current_record,
+            updated_record=updated_record,
+        )
 
         result = lookup_refresh.work_change_lookup_refresh(
             source_dir,
             lookup_dir,
             repo_root,
             work_id="00001",
-            fields_changed=["notes"],
             current_record=current_record,
             updated_record=updated_record,
-            invalidation_result=invalidation_result,
-            locked_single_record_fields={"notes"},
+            lookup_plan=lookup_plan,
         )
 
     assert_equal(result["mode"], "single-record", "work single mode")
@@ -114,7 +143,7 @@ def test_work_single_record_refresh_reports_work_record() -> None:
         ["assets/studio/data/catalogue_lookup/works/00001.json"],
         "work single paths",
     )
-    assert_equal(result["invalidation_class"], invalidation.LOOKUP_INVALIDATION_SINGLE_RECORD, "work single class")
+    assert_equal(result["invalidation_class"], lookup_refresh.LOOKUP_REFRESH_SINGLE_RECORD, "work single class")
 
 
 def test_work_project_subfolder_refresh_is_single_record() -> None:
@@ -122,25 +151,45 @@ def test_work_project_subfolder_refresh_is_single_record() -> None:
         repo_root, source_dir, lookup_dir, records = fixture_paths(tmp)
         current_record = records.works["00001"]
         updated_record = dict(current_record, project_folder="alpha", project_subfolder="ink", project_filename="alpha.jpg")
-        invalidation_result = invalidation.work_lookup_invalidation_for_fields(["project_subfolder"])
+        lookup_plan = lookup_plan_for(
+            records,
+            record_family="work",
+            changed_fields=["project_subfolder"],
+            current_record=current_record,
+            updated_record=updated_record,
+        )
 
         result = lookup_refresh.work_change_lookup_refresh(
             source_dir,
             lookup_dir,
             repo_root,
             work_id="00001",
-            fields_changed=["project_subfolder"],
             current_record=current_record,
             updated_record=updated_record,
-            invalidation_result=invalidation_result,
-            locked_single_record_fields=catalogue_write_server.locked_first_pass_work_fields(),
+            lookup_plan=lookup_plan,
         )
 
-    assert_equal(invalidation_result["unknown_fields"], [], "project_subfolder unknown fields")
-    assert "project_subfolder" in catalogue_write_server.BULK_WORK_EDITABLE_FIELDS
+    assert_equal(lookup_plan["unknown_fields"], [], "project_subfolder unknown fields")
     assert_equal(result["mode"], "single-record", "project_subfolder mode")
     assert_equal(result["artifacts"], ["work_record"], "project_subfolder artifacts")
     assert_equal(result["written_count"], 1, "project_subfolder written count")
+
+
+def test_unknown_registry_field_uses_full_lookup_fallback() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        _repo_root, _source_dir, _lookup_dir, records = fixture_paths(tmp)
+        current_record = records.works["00001"]
+        lookup_plan = lookup_plan_for(
+            records,
+            record_family="work",
+            changed_fields=["unknown_work_field"],
+            current_record=current_record,
+            updated_record=dict(current_record, unknown_work_field="value"),
+        )
+
+    assert_equal(lookup_plan["mode"], "full", "unknown field mode")
+    assert_equal(lookup_plan["artifacts"], ["full_lookup_refresh"], "unknown field artifacts")
+    assert_equal(lookup_plan["unknown_fields"], ["unknown_work_field"], "unknown field list")
 
 
 def test_work_targeted_refresh_reports_related_artifacts() -> None:
@@ -148,18 +197,22 @@ def test_work_targeted_refresh_reports_related_artifacts() -> None:
         repo_root, source_dir, lookup_dir, records = fixture_paths(tmp)
         current_record = records.works["00001"]
         updated_record = dict(current_record, title="Alpha Updated")
-        invalidation_result = invalidation.work_lookup_invalidation_for_fields(["title"])
+        lookup_plan = lookup_plan_for(
+            records,
+            record_family="work",
+            changed_fields=["title"],
+            current_record=current_record,
+            updated_record=updated_record,
+        )
 
         result = lookup_refresh.work_change_lookup_refresh(
             source_dir,
             lookup_dir,
             repo_root,
             work_id="00001",
-            fields_changed=["title"],
             current_record=current_record,
             updated_record=updated_record,
-            invalidation_result=invalidation_result,
-            locked_single_record_fields=set(),
+            lookup_plan=lookup_plan,
         )
 
     assert_equal(result["mode"], "targeted-multi-record", "work targeted mode")
@@ -177,7 +230,13 @@ def test_detail_targeted_refresh_reports_detail_and_parent_work() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         repo_root, source_dir, lookup_dir, records = fixture_paths(tmp)
         updated_record = dict(records.work_details["00001-001"], sort_order=2)
-        invalidation_result = invalidation.detail_lookup_invalidation_for_fields(["sort_order"])
+        lookup_plan = lookup_plan_for(
+            records,
+            record_family="work_detail",
+            changed_fields=["sort_order"],
+            current_record=records.work_details["00001-001"],
+            updated_record=updated_record,
+        )
 
         result = lookup_refresh.detail_change_lookup_refresh(
             source_dir,
@@ -185,27 +244,34 @@ def test_detail_targeted_refresh_reports_detail_and_parent_work() -> None:
             repo_root,
             detail_uid="00001-001",
             updated_record=updated_record,
-            invalidation_result=invalidation_result,
+            lookup_plan=lookup_plan,
         )
 
     assert_equal(result["mode"], "targeted-multi-record", "detail targeted mode")
-    assert_equal(result["artifacts"], ["related_work_records", "work_detail_record"], "detail targeted artifacts")
-    assert_equal(result["written_count"], 2, "detail targeted written count")
+    assert_equal(result["artifacts"], ["related_work_records", "work_detail_record", "work_detail_search"], "detail targeted artifacts")
+    assert_equal(result["written_count"], 3, "detail targeted written count")
     assert "assets/studio/data/catalogue_lookup/work_details/00001-001.json" in result["written_paths"]
+    assert "assets/studio/data/catalogue_lookup/work_detail_search.json" in result["written_paths"]
     assert "assets/studio/data/catalogue_lookup/works/00001.json" in result["written_paths"]
 
 
 def test_series_targeted_refresh_reports_series_search_and_member_works() -> None:
     with tempfile.TemporaryDirectory() as tmp:
-        repo_root, source_dir, lookup_dir, _records = fixture_paths(tmp)
-        invalidation_result = invalidation.series_lookup_invalidation_for_fields(["title"])
+        repo_root, source_dir, lookup_dir, records = fixture_paths(tmp)
+        lookup_plan = lookup_plan_for(
+            records,
+            record_family="series",
+            changed_fields=["title"],
+            current_record=records.series["009"],
+            updated_record=dict(records.series["009"], title="Series Updated"),
+        )
 
         result = lookup_refresh.series_change_lookup_refresh(
             source_dir,
             lookup_dir,
             repo_root,
             series_id="009",
-            invalidation_result=invalidation_result,
+            lookup_plan=lookup_plan,
         )
 
     assert_equal(result["mode"], "targeted-multi-record", "series targeted mode")
@@ -223,6 +289,8 @@ def test_series_targeted_refresh_reports_series_search_and_member_works() -> Non
 def main() -> None:
     test_full_refresh_reports_all_lookup_artifacts()
     test_work_single_record_refresh_reports_work_record()
+    test_work_project_subfolder_refresh_is_single_record()
+    test_unknown_registry_field_uses_full_lookup_fallback()
     test_work_targeted_refresh_reports_related_artifacts()
     test_detail_targeted_refresh_reports_detail_and_parent_work()
     test_series_targeted_refresh_reports_series_search_and_member_works()

@@ -2,7 +2,7 @@
 doc_id: site-request-catalogue-lookup-invalidation
 title: Catalogue Lookup Invalidation Request
 added_date: 2026-04-22
-last_updated: 2026-05-02
+last_updated: 2026-05-13
 ui_status: done
 parent_id: change-requests
 sort_order: 30
@@ -16,6 +16,13 @@ Status:
 ## Summary
 
 This change request tracks follow-on work to stop the catalogue write server from refreshing the full derived lookup corpus after every successful catalogue write, while still preserving the current full-refresh path for complex or uncertain cases.
+
+Current implementation note:
+
+- the catalogue field registry is the authority for whether a changed field affects `studio-lookup`
+- `scripts/catalogue/catalogue_lookup_refresh.py` derives exact lookup artifacts from serializer dependency descriptors in `scripts/catalogue/catalogue_lookup.py`
+- the old work/detail/series lookup invalidation registries in `scripts/catalogue/catalogue_invalidation.py` have been removed
+- `scripts/catalogue/catalogue_invalidation.py` now remains only for moment-build invalidation response metadata
 
 The preferred direction is not "incremental everywhere". It is:
 
@@ -341,8 +348,8 @@ Current Task 5 progress:
 
 Implemented outcome:
 
-- `POST /catalogue/work/save` now routes through the work invalidation registry
-- locked first-pass `single-record` work-field saves use focused `works/<work_id>.json` refresh
+- `POST /catalogue/work/save` now routes through registry-derived lookup planning
+- `single-record` work-field saves use focused `works/<work_id>.json` refresh
 - `targeted-multi-record` work-field saves now use focused writers for:
   - `work_search.json`
   - related `series/<series_id>.json`

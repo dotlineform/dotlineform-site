@@ -36,11 +36,12 @@ The write server should remain the catalogue local-service HTTP and endpoint orc
 
 ### Slice 1: catalogue invalidation rules
 
-Status: implemented.
+Status: superseded for Studio lookup planning; still active for moment-build invalidation.
 
 The first implementation slice extracted lookup and moment-build invalidation constants, registries, and helper functions from `scripts/catalogue/catalogue_write_server.py` into `scripts/catalogue/catalogue_invalidation.py`.
-The write server now references those helpers through the `invalidation.*` namespace, so endpoint behavior and response payloads remain unchanged while helper ownership stays visible.
-`tests/python/test_catalogue_invalidation.py` pins representative work, detail, series, and moment invalidation outcomes directly against the extracted module.
+The Studio lookup field registries from that slice were later removed. Single work, work-detail, and series saves now use the catalogue field registry to decide whether `studio-lookup` is affected, then `scripts/catalogue/catalogue_lookup_refresh.py` derives the precise lookup write set from serializer dependency descriptors in `scripts/catalogue/catalogue_lookup.py`.
+`scripts/catalogue/catalogue_invalidation.py` remains only for the moment-build invalidation helper used by moment save response metadata.
+`tests/python/test_catalogue_invalidation.py` now pins that moment helper, while `tests/python/test_catalogue_lookup_refresh.py` pins registry-derived lookup planning for work, detail, and series saves.
 
 Benefits:
 
@@ -51,7 +52,7 @@ Benefits:
 Risks:
 
 - the new module is still catalogue-specific, so it should not become a shared local-service utility
-- future changes must keep lookup rule ownership in `scripts/catalogue/catalogue_invalidation.py` rather than reintroducing registry edits in the HTTP server
+- future changes must keep Studio lookup selection owned by the catalogue field registry and serializer-derived lookup planning rather than reintroducing field-to-lookup registries in the HTTP server
 
 ### Slice 2: catalogue activity helpers
 
@@ -187,7 +188,7 @@ Risks:
 Status: implemented.
 
 The eighth implementation slice extracted lookup refresh execution helpers from `scripts/catalogue/catalogue_write_server.py` into `scripts/catalogue/catalogue_lookup_refresh.py`.
-The new module owns full lookup refresh execution, focused work/detail/series refresh writes, result payload shape, artifact labels, written counts, and written path reporting.
+The new module owns registry-derived lookup refresh planning, full lookup refresh execution, focused work/detail/series refresh writes, result payload shape, artifact labels, written counts, and written path reporting.
 The write server still decides when a refresh runs, inserts `lookup_refresh` into endpoint responses, writes local service log rows, and appends Studio Activity rows.
 `tests/python/test_catalogue_lookup_refresh.py` pins representative full, work, detail, and series refresh result payloads directly against the extracted module.
 The focused lookup refresh test is included in the `quick` run-checks profile.
@@ -195,7 +196,7 @@ The focused lookup refresh test is included in the `quick` run-checks profile.
 Benefits:
 
 - reduces repeated handler body logic without moving source-write transactions
-- completes the extraction path started by `scripts/catalogue/catalogue_invalidation.py`
+- completes the refresh execution extraction path while leaving field selection with the catalogue field registry
 - gives refresh execution a focused module owner that can be tested without HTTP routing
 - keeps `scripts/catalogue/catalogue_lookup.py` as the payload builder/writer owner instead of duplicating lookup construction
 
