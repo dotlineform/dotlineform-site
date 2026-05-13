@@ -1,0 +1,39 @@
+{
+  "schema": "docs_viewer_reports_v1",
+  "reports": [
+    {
+      "report_id": "docs_index_table",
+      "title": "Docs Index Table",
+      "description": "Displays a sortable Docs Viewer index table for a selected docs scope.",
+      "default_access": "public",
+      "loader_id": "docs_index_table",
+      "presets": [
+        {
+          "preset_id": "library_documents_admin",
+          "title": "Library Documents Admin",
+          "description": "Management report for reviewing Library documents by title, doc_id, and hidden status.",
+          "default_scope": "library",
+          "columns": ["title", "doc_id", "hidden"],
+          "filters": ["hidden"],
+          "sortable": ["title", "doc_id", "hidden"]
+        },
+        {
+          "preset_id": "az_index",
+          "title": "A-Z Index",
+          "description": "Single-column alphabetical title index.",
+          "columns": ["title"],
+          "filters": [],
+          "sortable": ["title"]
+        }
+      ]
+    },
+    {
+      "report_id": "reports_list",
+      "title": "Reports List",
+      "description": "Displays the configured Docs Viewer report metadata from the report registry.",
+      "default_access": "public",
+      "loader_id": "reports_list",
+      "presets": []
+    }
+  ]
+}

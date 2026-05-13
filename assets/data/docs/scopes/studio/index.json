@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T08:22:13Z",
+  "generated_at": "2026-05-13T09:33:44Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -432,7 +432,7 @@
       "doc_id": "docs-viewer-portable-setup",
       "title": "Docs Viewer Portable Setup",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-12 10:55",
+      "last_updated": "2026-05-13 10:05",
       "parent_id": "docs-viewer",
       "sort_order": 15,
       "published": true,
@@ -441,7 +441,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 14609
+      "content_text_length": 15089
     },
     {
       "scope": "studio",
@@ -474,6 +474,24 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-route-creation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-route-creation.json",
       "content_text_length": 5058
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer-reports",
+      "title": "Docs Viewer Reports",
+      "added_date": "2026-05-13",
+      "last_updated": "2026-05-13 10:18",
+      "parent_id": "docs-viewer",
+      "sort_order": 17,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-reports.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-reports",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-reports.json",
+      "content_text_length": 4651,
+      "viewer_report": "reports_list",
+      "viewer_report_access": "public"
     },
     {
       "scope": "studio",
@@ -1442,9 +1460,9 @@
     {
       "scope": "studio",
       "doc_id": "docs-viewer",
-      "title": "Docs",
+      "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-12",
+      "last_updated": "2026-05-13 09:48",
       "parent_id": "",
       "sort_order": 40,
       "published": true,
@@ -1453,7 +1471,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 3265
+      "content_text_length": 3435
     },
     {
       "scope": "studio",

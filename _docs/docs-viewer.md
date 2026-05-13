@@ -1,10 +1,11 @@
 ---
 doc_id: docs-viewer
-title: Docs
+title: Docs Viewer
 added_date: 2026-04-24
-last_updated: "2026-05-12"
+last_updated: "2026-05-13 09:48"
 parent_id: ""
 sort_order: 40
+hidden: false
 ---
 # Docs Viewer
 
@@ -24,7 +25,8 @@ The current implementation uses:
 - pure tree and visibility helpers in `assets/docs-viewer/js/docs-viewer-tree.js`
 - pure inline-search and recently-added helpers in `assets/docs-viewer/js/docs-viewer-search.js`
 - bookmark record and storage helpers in `assets/docs-viewer/js/docs-viewer-favourites.js`
-- report registry and access checks in `assets/docs-viewer/js/docs-viewer-reports.js`
+- browser-visible report metadata in `assets/data/docs/reports.json`
+- report module allowlist and access checks in `assets/docs-viewer/js/docs-viewer-reports.js`
 - the first report module in `assets/docs-viewer/js/reports/docs-index-table-report.js`
 - shared Docs Viewer settings in `assets/studio/data/studio_config.json`
 - Docs Viewer UI text in `assets/docs-viewer/data/ui-text.json`
@@ -54,6 +56,7 @@ Those boundaries are intentional:
 ## Documents
 
 - [Overview](/docs/?scope=studio&doc=docs-viewer-overview) explains the shared route-shell, include, runtime, and URL/state model.
+- [Reports](/docs/?scope=studio&doc=docs-viewer-reports) describes the report component purpose, source metadata, JSON registry, and report module allowlist.
 - [Docs Viewer Report Components Request](/docs/?scope=studio&doc=site-request-docs-viewer-report-components) records the report component design and first Library Documents use case.
 - [Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) records what currently needs copying into another Jekyll project and how to add a Library-style scope with a management route and read-only route.
 - [Route Creation](/docs/?scope=studio&doc=docs-viewer-route-creation) explains the route-creation model and the options for public read-only, committed local-only, and uncommitted local-only scopes.

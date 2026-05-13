@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-12 10:55"
+last_updated: "2026-05-13 10:05"
 parent_id: docs-viewer
 sort_order: 15
 ---
@@ -71,6 +71,8 @@ Copy the shared viewer runtime files:
 - `assets/docs-viewer/js/docs-viewer-tree.js`
 - `assets/docs-viewer/js/docs-viewer-search.js`
 - `assets/docs-viewer/js/docs-viewer-favourites.js`
+- `assets/docs-viewer/js/docs-viewer-reports.js`
+- `assets/docs-viewer/js/reports/`
 
 For management mode, also copy:
 
@@ -88,6 +90,7 @@ Copy:
 
 - `assets/docs-viewer/css/docs-viewer-management.css`
 - `assets/docs-viewer/css/docs-viewer.css`
+- `assets/docs-viewer/css/docs-viewer-reports.css`
 
 The host site should still load its own base stylesheet for tokens, prose rules, responsive media defaults, and the `.content` contract used by generated docs HTML.
 The viewer include now loads Docs Viewer-owned CSS for the shell, controls, index, search, results, bookmarks, status pills, management surfaces, and the transitional Docs Import form/control primitives.
@@ -99,12 +102,16 @@ Copy:
 
 - `assets/docs-viewer/data/docs-viewer-config.json`
 - `assets/docs-viewer/data/ui-text.json`
+- `assets/data/docs/reports.json`
 
 `assets/docs-viewer/data/docs-viewer-config.json` is generated from `scripts/docs/docs_scopes.json`.
 It is required by the browser runtime and now includes the browser-safe Docs Viewer settings such as recently-added limits, hidden-doc styling, hidden-doc emoji, and per-scope UI-status options.
 Each configured scope also carries its Docs Viewer search policy and search index URL in this browser config.
 The viewer does not keep a hardcoded fallback scope list.
 Docs Import copy is nested in `assets/docs-viewer/data/ui-text.json` under `docs_html_import`.
+`assets/data/docs/reports.json` is the browser-visible report metadata registry.
+It lists report ids, titles, descriptions, access defaults, and presets.
+The executable report module allowlist remains in `assets/docs-viewer/js/docs-viewer-reports.js`, so changing the JSON alone cannot make the viewer import an arbitrary module.
 
 ### Generated Data Outputs
 

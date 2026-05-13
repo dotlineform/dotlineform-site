@@ -62,6 +62,7 @@ import {
   var viewerPathname = new URL(viewerBaseUrl, window.location.origin).pathname;
   var searchIndexUrl = appendAssetVersion(root.dataset.searchIndexUrl);
   var uiTextUrl = String(root.dataset.uiTextUrl || "").trim();
+  var reportRegistryUrl = String(root.dataset.reportRegistryUrl || "").trim();
   var managementBaseUrl = allowManagement ? String(root.dataset.managementBaseUrl || "").trim().replace(/\/+$/, "") : "";
   var generatedBaseUrl = String(root.dataset.generatedBaseUrl || "").trim().replace(/\/+$/, "") || managementBaseUrl;
   var openImportOnLoad = allowManagement && new URLSearchParams(window.location.search).get("import") === "1";
@@ -1095,6 +1096,7 @@ import {
       fetchDocsIndex: fetchDocsIndexForScope,
       managementMode: state.managementMode,
       payload: payload,
+      reportRegistryUrl: reportRegistryUrl,
       setStatus: setStatus,
       viewerScope: viewerScope,
       viewerUrlForScope: viewerUrlForScope
