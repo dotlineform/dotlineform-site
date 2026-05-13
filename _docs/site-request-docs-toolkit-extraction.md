@@ -2,7 +2,8 @@
 doc_id: site-request-docs-toolkit-extraction
 title: Docs Toolkit Extraction Request
 added_date: "2026-05-05"
-last_updated: "2026-05-06"
+last_updated: "2026-05-13 21:07"
+ui_status: closed
 parent_id: change-requests
 sort_order: 26
 ---
@@ -10,143 +11,128 @@ sort_order: 26
 
 Status:
 
-- proposed
+- closed
 
 ## Summary
 
-Explore whether the Docs Viewer, generated docs/search pipeline, local docs-management server, and scope-aware export/import workflow should become a reusable docs toolkit that other repositories or local installs can track from a master version.
+This request is closed as a broad extraction proposal.
+Its original question was whether the Docs Viewer, generated docs/search pipeline, local docs-management server, and export/import workflow should become one reusable docs toolkit.
 
-The current repo should stay the first consumer while the reusable boundary is tested.
-The goal of this request is to define the product boundary, update model, configuration contract, and open questions before any extraction work starts.
+That combined boundary is no longer the current direction.
+The work has split into clearer, narrower surfaces:
 
-## Problem
+- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer) tracks the active Docs Viewer portability work.
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) is the current install and copy guide.
+- [Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing) describes the shared prepare/review/apply workflow that replaced the old import/export framing.
+- [Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec) records the Data Sharing adapter, endpoint, registry, row, and portability boundaries.
+- [Import/Export Historical Notes](/docs/?scope=studio&doc=import-export) keeps the old terminology only as archive context.
 
-The docs viewer and export/import workflow are becoming a useful local operating surface, not only a site feature.
-They combine:
+No separate implementation request should be opened from this document unless a later decision intentionally packages these surfaces together again.
 
-- a static docs reader with scope-aware generated payloads
-- generated search indexes
-- local read/write server capabilities
-- export, staging, preview, and import flows
-- UI primitives and composition patterns for command results
+## Current Decision
 
-That combination could be useful in other repos, but the implementation is currently mixed with dotlineform-specific routes, config, styling, and Studio workflow assumptions.
+Do not extract a single combined docs toolkit at this stage.
 
-Copying files into another repo would create an unmanaged fork.
-Any reused install needs a way to track a master version, receive fixes, and keep local project-specific config separate from reusable core behavior.
+Use these boundaries instead:
 
-## Goals
+- Docs Viewer core: read-only viewer, generated docs data, inline docs search, local management shell, Docs Import, route adapters, config, UI text, CSS, and local docs-management server.
+- Documents Data Sharing adapter: optional document package preparation, returned-package review, and document apply behavior for Docs Viewer corpora.
+- Studio Data Sharing module: Studio-owned shell, adapter registry, local service dispatch, lifecycle states, confirmations, status presentation, and activity context.
+- Non-document adapters: domain-owned implementations such as Analytics tags, with their own source parsing, validation, backups, review rows, writes, and apply actions.
 
-- Define the reusable boundary for a first docs toolkit version.
-- Identify which code and docs stay project-local.
-- Choose a pragmatic master-version and install-tracking model.
-- Define the configuration and lifecycle contracts needed by downstream installs.
-- Preserve the current local/public split: local write workflows can use a loopback server, while public builds remain static.
-- Keep dotlineform as a real downstream consumer so extraction decisions are tested against existing workflows.
+This split keeps Docs Viewer portable without forcing every downstream docs install to accept Studio Data Sharing or non-document data workflows.
+It also keeps Data Sharing extensible without making the shared shell learn document-specific or tag-specific semantics.
 
-## Non-Goals
+## What Moved Elsewhere
 
-- Do not extract or package the system as part of this request.
-- Do not redesign the docs viewer UI unless the extraction boundary requires a small interface cleanup.
-- Do not generalize Catalogue, Library, or Analytics domain logic beyond the common export/import workflow shell.
-- Do not require every downstream repo to use Jekyll in the long term, although Jekyll can be the first supported adapter.
-- Do not solve hosted multi-user editing. The write workflows remain local-first unless a later request changes that boundary.
+The original extraction request included several areas that now have more precise homes.
 
-## Candidate Reusable Components
+Docs Viewer portability moved to:
 
-- Docs Viewer shell include, runtime, and route adapter contract.
-- Docs index and payload builders.
-- Docs search builder and generated search data contract.
-- Local docs-management server generated-data reads.
-- Export/import workflow shell: scope config, staging folder discovery, preview generation, result summary, and reopenable command result behavior.
-- Shared UI primitives and composition patterns needed by the workflow.
-- Smoke checks for static docs, local server reads, and export/import result display.
-- Reference docs for install, configuration, update, and lifecycle contracts.
+- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
+- [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer)
 
-## Candidate Project-Local Components
+Data Sharing moved to:
 
-- Source content roots and scope definitions.
-- Route placement and site layout integration.
-- Visual theme overrides and image choices.
-- Studio dashboard structure and domain navigation.
-- Catalogue, Library, Analytics, and tag-registry-specific data semantics.
-- Per-scope export/import configs and preview/apply implementations.
-- Any project-specific write allowlists.
+- [Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing)
+- [Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec)
+- [Data Sharing Adapters](/docs/?scope=studio&doc=config-data-sharing-adapters)
 
-## Master Version Model
+Historical import/export language moved to:
 
-The first model should prefer traceable source control over early packaging.
+- [Import/Export Historical Notes](/docs/?scope=studio&doc=import-export)
+- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
+- [Studio Data Sharing Module Implementation Request](/docs/?scope=studio&doc=site-request-studio-import-export-module)
 
-Candidate approach:
+## Still-Relevant Details
 
-- Create or designate an upstream shared docs toolkit repo as the master source.
-- Track releases with version tags, a change log, and migration notes.
-- Install into downstream repos with Git subtree or Git submodule first.
-- Keep downstream repos responsible for project-local config, routes, and theme adapters.
-- Add package-manager distribution only after the file boundary and config contract have settled.
+The following points from the original request remain useful, but they now belong to narrower follow-up work rather than this broad proposal.
 
-### Install Shape Options
+### Upstream And Version Tracking
 
-Git subtree:
+If Docs Viewer becomes a reusable upstream project, prefer traceable source control before package-manager distribution.
 
-- Better for repos that want vendored files in-tree and simple deployment.
-- Easier to patch locally, but local patches need discipline to upstream.
-- Works well if the reusable surface is mostly static assets, scripts, and docs.
+Candidate model:
 
-Git submodule:
+- create or designate an upstream shared Docs Viewer repo as the master source
+- track releases with version tags, a change log, and migration notes
+- install into downstream repos with Git subtree or Git submodule while the boundary is still settling
+- keep downstream repos responsible for project-local content, routes, theme adapters, and local config
+- consider package-manager distribution only after the file boundary, command shape, and config contract have stabilized in at least one fixture install
 
-- Clearer separation from project-local files.
-- Easier to see the exact upstream revision.
-- Adds operational friction for clone, update, and local editing.
+This belongs to the remaining fixture/upstream work in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer), not to a combined toolkit request.
 
-Package distribution:
+### Fixture Validation
 
-- Cleaner for mature runtime libraries and command-line tools.
-- Probably premature until the split between assets, scripts, server code, and docs is stable.
-- May require more than one package if the toolkit keeps JavaScript, Python, and Ruby pieces.
+The next useful portability test is a minimal downstream Jekyll fixture:
 
-## Open Questions
+- install the Docs Viewer file set outside dotlineform
+- add one read-only docs corpus
+- add `/docs/` management for that corpus
+- verify search, import initialization, create/edit/move, generated-data reads, and public-route read-only behavior
+- record hidden dotlineform assumptions back into the portable Docs Viewer request
 
-- What is the smallest useful first extraction boundary?
-- Should the master version be split by concern, or remain one toolkit repo until the contracts settle?
-- Should Jekyll be the only v0 adapter, or should the route/build interfaces be framework-neutral from the start?
-- Which language owns the command-line entry points if the toolkit contains JavaScript runtime assets, Ruby builders, and Python local server code?
-- How should downstream config describe scopes, source roots, generated output paths, search output paths, and export/import staging folders?
-- How should project-local write allowlists be declared and audited?
-- What is the stable import lifecycle contract: staged file discovery, preview generation, preview result selection, apply action, backups, and result reporting?
-- Which UI primitives and composition patterns belong in the toolkit, and which should stay in the consuming site's design system?
-- How should the toolkit expose theme variables without imposing a visual identity?
-- How should downstream installs receive migrations for generated data shape changes?
-- How should upstream changes be tested against dotlineform and at least one minimal fixture repo?
-- Should dotlineform be converted into a downstream consumer only after a separate prototype repo proves the boundary?
-- What license and visibility model is appropriate if the upstream repo starts from project-specific code?
+### Data Sharing Portability
 
-## Investigation Tasks
+Data Sharing can become portable later, but it should not be bundled into Docs Viewer core by default.
 
-1. Inventory current files and classify them as reusable core, adapter, or dotlineform-local.
-2. Define the v0 product boundary for the docs toolkit.
-3. Draft a config schema covering docs scopes, generated payloads, search, local server capabilities, and export/import workflows.
-4. Prototype a minimal downstream install using either subtree or submodule.
-5. Define update and migration workflow, including how downstream repos record the tracked upstream version.
-6. Define verification checks that run in upstream and downstream contexts.
-7. Decide whether to create a separate implementation request for extraction.
+Open decisions for a future Data Sharing portability request:
 
-## Acceptance Criteria
+- whether the Studio Data Sharing shell is reusable outside this Studio UI
+- whether the documents adapter should ship as an optional companion to Docs Viewer
+- how a downstream project declares adapter registries, write allowlists, backup roots, package roots, and activity context
+- whether non-document adapters belong in a shared package or remain project-local examples
+- how package migration notes should handle registry schema changes and adapter response contracts
 
-This request can move from proposed to ready when it has:
+### License And Visibility
 
-- a written extraction boundary
-- a recommended install-tracking model
-- a list of files or modules to extract, adapt, or keep local
-- a candidate config schema
-- a migration and update plan
-- a risk assessment for dotlineform as the first downstream consumer
-- a follow-up implementation request if extraction is approved
+If an upstream Docs Viewer or Data Sharing package is created from dotlineform source, decide first:
+
+- whether the upstream should be public or private
+- what license applies to reusable code, docs, and example config
+- which dotlineform-specific content, paths, and branding must stay out of the upstream
+- how local-only write services and example configs should document loopback binding, path allowlists, and credential handling
+
+## Closed Acceptance
+
+This request is closed because its original acceptance criteria have been superseded or satisfied elsewhere:
+
+- extraction boundary: split into Portable Docs Viewer, optional documents Data Sharing adapter, Studio Data Sharing shell, and domain adapters
+- install guidance: tracked in [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
+- config contract: tracked in Docs Viewer config and Data Sharing adapter config docs
+- import/export lifecycle: renamed and clarified as Data Sharing prepare, list returned, review, and apply
+- migration/update questions: retained above for future upstream or fixture work
+- implementation plan: active work belongs to [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer) and future Data Sharing-specific requests
 
 ## Related Docs
 
+- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
 - [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
-- [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
-- [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)
-- [Library Import Export V2](/docs/?scope=studio&doc=library-import-export-v2)
-- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
+- [Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing)
+- [Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec)
+- [Data Sharing Adapters](/docs/?scope=studio&doc=config-data-sharing-adapters)
+- [Import/Export Historical Notes](/docs/?scope=studio&doc=import-export)

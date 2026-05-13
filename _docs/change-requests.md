@@ -2,7 +2,7 @@
 doc_id: change-requests
 title: Change Requests
 added_date: 2026-04-28
-last_updated: "2026-05-12"
+last_updated: "2026-05-13 21:07"
 parent_id: ""
 sort_order: 220
 ---
@@ -34,7 +34,6 @@ Those still belong in the owning reference docs and change logs.
 - [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)
 - [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
 - [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)
-- [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)
 - [Docs Viewer Report Components Request](/docs/?scope=studio&doc=site-request-docs-viewer-report-components)
 - [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
 - [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
@@ -57,6 +56,7 @@ Those still belong in the owning reference docs and change logs.
 
 ## Completed Requests
 
+- [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)
 - [Studio Data Sharing Module Implementation Request](/docs/?scope=studio&doc=site-request-studio-import-export-module)
 - [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
 - [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)

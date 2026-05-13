@@ -2,10 +2,10 @@
 doc_id: site-request-local-docs-data-server-reads
 title: Local Docs Data Server Reads Request
 added_date: "2026-05-03 21:56"
-last_updated: "2026-05-11"
-ui_status: "done"
-parent_id: change-requests
-sort_order: 25
+last_updated: 2026-05-11
+ui_status: done
+parent_id: archive
+sort_order: 290
 ---
 # Local Docs Data Server Reads Request
 
