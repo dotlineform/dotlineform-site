@@ -9941,7 +9941,8 @@
         "140"
       ],
       "project_folder": "wa",
-      "project_filename": "ink/wa (4).jpg",
+      "project_subfolder": "ink",
+      "project_filename": "wa (4).jpg",
       "title": "wa (4)",
       "width_cm": 24.3,
       "height_cm": 33.2,
@@ -9966,7 +9967,8 @@
         "140"
       ],
       "project_folder": "wa",
-      "project_filename": "ink/wa (7).jpg",
+      "project_subfolder": "ink",
+      "project_filename": "wa (7).jpg",
       "title": "wa (7)",
       "width_cm": 24.3,
       "height_cm": 33.2,
@@ -9991,7 +9993,8 @@
         "140"
       ],
       "project_folder": "wa",
-      "project_filename": "ink/wa (3).jpg",
+      "project_subfolder": "ink",
+      "project_filename": "wa (3).jpg",
       "title": "wa (3)",
       "width_cm": 24.3,
       "height_cm": 33.2,
@@ -10016,7 +10019,8 @@
         "140"
       ],
       "project_folder": "wa",
-      "project_filename": "ink/wa (2).jpg",
+      "project_subfolder": "ink",
+      "project_filename": "wa (2).jpg",
       "title": "wa (2)",
       "width_cm": 24.3,
       "height_cm": 33.2,
@@ -10041,7 +10045,8 @@
         "140"
       ],
       "project_folder": "wa",
-      "project_filename": "ink/wa.jpg",
+      "project_subfolder": "ink",
+      "project_filename": "wa.jpg",
       "title": "wa",
       "width_cm": 24,
       "height_cm": 27,
