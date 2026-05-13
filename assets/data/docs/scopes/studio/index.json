@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T15:59:42Z",
+  "generated_at": "2026-05-13T16:11:07Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -142,7 +142,7 @@
       "title": "Docs Export",
       "added_date": "2026-05-03 15:05",
       "last_updated": "2026-05-13 16:13",
-      "parent_id": "import-export",
+      "parent_id": "scripts",
       "sort_order": 10,
       "published": true,
       "hidden": false,
@@ -150,7 +150,7 @@
       "source_path": "scripts-docs-export.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-export.json",
-      "content_text_length": 7059
+      "content_text_length": 7089
     },
     {
       "scope": "studio",
@@ -248,7 +248,7 @@
       "source_path": "data-models-library.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-library.json",
-      "content_text_length": 9397
+      "content_text_length": 9406
     },
     {
       "scope": "studio",
@@ -597,7 +597,7 @@
       "title": "Docs Import",
       "added_date": "2026-05-03 20:25",
       "last_updated": "2026-05-13 16:13",
-      "parent_id": "import-export",
+      "parent_id": "scripts",
       "sort_order": 20,
       "published": true,
       "hidden": false,
@@ -605,7 +605,7 @@
       "source_path": "scripts-docs-import.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-import.json",
-      "content_text_length": 6461
+      "content_text_length": 6457
     },
     {
       "scope": "studio",
@@ -836,7 +836,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 5047
+      "content_text_length": 5046
     },
     {
       "scope": "studio",
@@ -956,8 +956,8 @@
       "doc_id": "site-request-export-import-adapters",
       "title": "Export Import Adapter Boundary Request",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-06 12:30",
-      "parent_id": "change-requests",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "archive",
       "sort_order": 27,
       "published": true,
       "hidden": false,
@@ -965,7 +965,7 @@
       "source_path": "site-request-export-import-adapters.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-export-import-adapters",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-export-import-adapters.json",
-      "content_text_length": 31358,
+      "content_text_length": 31545,
       "ui_status": "done"
     },
     {
@@ -1355,7 +1355,7 @@
       "source_path": "site-request-studio-ready-state-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-ready-state-contract.json",
-      "content_text_length": 9663,
+      "content_text_length": 9777,
       "ui_status": "done"
     },
     {
@@ -1673,7 +1673,7 @@
       "doc_id": "config",
       "title": "Config",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-12 10:55",
+      "last_updated": "2026-05-13 18:15",
       "parent_id": "architecture",
       "sort_order": 50,
       "published": true,
@@ -1682,7 +1682,7 @@
       "source_path": "config.md",
       "viewer_url": "/docs/?scope=studio&doc=config",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config.json",
-      "content_text_length": 1339
+      "content_text_length": 1355
     },
     {
       "scope": "studio",
@@ -1703,10 +1703,10 @@
     {
       "scope": "studio",
       "doc_id": "import-export",
-      "title": "Import/Export",
+      "title": "Import/Export Historical Notes",
       "added_date": "2026-05-06 18:39",
-      "last_updated": "2026-05-13",
-      "parent_id": "",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "archive",
       "sort_order": 50,
       "published": true,
       "hidden": false,
@@ -1714,7 +1714,7 @@
       "source_path": "import-export.md",
       "viewer_url": "/docs/?scope=studio&doc=import-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/import-export.json",
-      "content_text_length": 388
+      "content_text_length": 510
     },
     {
       "scope": "studio",
@@ -1738,7 +1738,7 @@
       "title": "Library Export Configs",
       "added_date": "2026-05-03 14:15",
       "last_updated": "2026-05-06 21:14",
-      "parent_id": "import-export",
+      "parent_id": "config",
       "sort_order": 50,
       "published": true,
       "hidden": false,
@@ -1746,7 +1746,7 @@
       "source_path": "config-library-export-configs.md",
       "viewer_url": "/docs/?scope=studio&doc=config-library-export-configs",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-library-export-configs.json",
-      "content_text_length": 9632
+      "content_text_length": 9656
     },
     {
       "scope": "studio",
@@ -1835,7 +1835,7 @@
       "doc_id": "studio-ui-rules",
       "title": "Studio UI Rules And Decision Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-12",
+      "last_updated": "2026-05-13",
       "parent_id": "ui",
       "sort_order": 50,
       "published": true,
@@ -1844,7 +1844,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 170261
+      "content_text_length": 170488
     },
     {
       "scope": "studio",
@@ -1964,7 +1964,7 @@
       "doc_id": "config-data-sharing-adapters",
       "title": "Data Sharing Adapters",
       "added_date": "2026-05-06 11:35",
-      "last_updated": "2026-05-13 17:30",
+      "last_updated": "2026-05-13 18:15",
       "parent_id": "config",
       "sort_order": 60,
       "published": true,
@@ -1973,7 +1973,7 @@
       "source_path": "config-data-sharing-adapters.md",
       "viewer_url": "/docs/?scope=studio&doc=config-data-sharing-adapters",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-data-sharing-adapters.json",
-      "content_text_length": 2803
+      "content_text_length": 3093
     },
     {
       "scope": "studio",
@@ -2498,7 +2498,7 @@
       "doc_id": "scripts",
       "title": "Scripts",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-09 22:35",
+      "last_updated": "2026-05-13 18:15",
       "parent_id": "site-docs",
       "sort_order": 80,
       "published": true,
@@ -2507,7 +2507,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 7788
+      "content_text_length": 7873
     },
     {
       "scope": "studio",
@@ -2635,7 +2635,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 9226
+      "content_text_length": 9283
     },
     {
       "scope": "studio",
@@ -2668,7 +2668,23 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 3915
+      "content_text_length": 4174
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-data-sharing-technical-spec",
+      "title": "Studio Data Sharing Technical Spec",
+      "added_date": "2026-05-13 18:15",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "studio",
+      "sort_order": 99,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-data-sharing-technical-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-data-sharing-technical-spec.json",
+      "content_text_length": 6828
     },
     {
       "scope": "studio",
@@ -2708,7 +2724,7 @@
       "doc_id": "config-studio-config-js",
       "title": "Studio Config Loader JS",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-13 18:15",
       "parent_id": "studio",
       "sort_order": 100,
       "published": true,
@@ -2717,7 +2733,7 @@
       "source_path": "config-studio-config-js.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-js",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-js.json",
-      "content_text_length": 2594
+      "content_text_length": 2611
     },
     {
       "scope": "studio",
@@ -2882,7 +2898,7 @@
       "source_path": "ui-pattern-reopenable-command-result.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-reopenable-command-result.json",
-      "content_text_length": 2769
+      "content_text_length": 2782
     },
     {
       "scope": "studio",
@@ -3542,7 +3558,7 @@
       "source_path": "library-export-ui.md",
       "viewer_url": "/docs/?scope=studio&doc=library-export-ui",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-export-ui.json",
-      "content_text_length": 1550,
+      "content_text_length": 1644,
       "ui_status": "done"
     },
     {
@@ -3601,8 +3617,8 @@
       "doc_id": "site-request-studio-import-export-module",
       "title": "Studio Data Sharing Module Implementation Request",
       "added_date": "2026-05-13",
-      "last_updated": "2026-05-13 17:58",
-      "parent_id": "change-requests",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "archive",
       "sort_order": 212,
       "published": true,
       "hidden": false,
@@ -3610,8 +3626,8 @@
       "source_path": "site-request-studio-import-export-module.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-import-export-module",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-import-export-module.json",
-      "content_text_length": 19253,
-      "ui_status": "in-progress"
+      "content_text_length": 19391,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -3627,7 +3643,7 @@
       "source_path": "change-requests.md",
       "viewer_url": "/docs/?scope=studio&doc=change-requests",
       "content_url": "/assets/data/docs/scopes/studio/by-id/change-requests.json",
-      "content_text_length": 1841
+      "content_text_length": 1891
     },
     {
       "scope": "studio",
@@ -3660,7 +3676,7 @@
       "source_path": "library-import-ui.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import-ui",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import-ui.json",
-      "content_text_length": 1368,
+      "content_text_length": 1465,
       "ui_status": "done"
     },
     {

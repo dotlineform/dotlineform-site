@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b570cac00fc57d25f2328b6082401705",
-    "generated_at_utc": "2026-05-13T15:59:42Z",
-    "count": 230
+    "version": "blake2b-003fcf9c88698c0f2008c138aa08cd74",
+    "generated_at_utc": "2026-05-13T16:11:08Z",
+    "count": 231
   },
   "entries": [
     {
@@ -237,24 +237,22 @@
       "title": "Docs Export",
       "href": "/docs/?scope=studio&doc=scripts-docs-export",
       "last_updated": "2026-05-13 16:13",
-      "parent_id": "import-export",
-      "parent_title": "Import/Export",
-      "display_meta": "2026-05-13 16:13 • Import/Export",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-05-13 16:13 • Scripts",
       "search_terms": [
         "scripts-docs-export",
         "scripts",
         "docs",
         "export",
         "docs export",
-        "import/export",
-        "import",
         "2026-05-13 16:13",
         "2026",
         "05",
         "13",
         "16"
       ],
-      "search_text": "scripts-docs-export scripts docs export docs export import/export import 2026-05-13 16:13 2026 05 13 16"
+      "search_text": "scripts-docs-export scripts docs export docs export 2026-05-13 16:13 2026 05 13 16"
     },
     {
       "id": "user-guide-docs-images",
@@ -962,24 +960,22 @@
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=scripts-docs-import",
       "last_updated": "2026-05-13 16:13",
-      "parent_id": "import-export",
-      "parent_title": "Import/Export",
-      "display_meta": "2026-05-13 16:13 • Import/Export",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-05-13 16:13 • Scripts",
       "search_terms": [
         "scripts-docs-import",
         "scripts",
         "docs",
         "import",
         "docs import",
-        "import/export",
-        "export",
         "2026-05-13 16:13",
         "2026",
         "05",
         "13",
         "16"
       ],
-      "search_text": "scripts-docs-import scripts docs import docs import import/export export 2026-05-13 16:13 2026 05 13 16"
+      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-13 16:13 2026 05 13 16"
     },
     {
       "id": "user-guide-docs-html-import",
@@ -1518,10 +1514,10 @@
       "kind": "doc",
       "title": "Export Import Adapter Boundary Request",
       "href": "/docs/?scope=studio&doc=site-request-export-import-adapters",
-      "last_updated": "2026-05-06 12:30",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-06 12:30 • Change Requests",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-13 18:15 • Archive",
       "search_terms": [
         "site-request-export-import-adapters",
         "site",
@@ -1532,17 +1528,15 @@
         "export import adapter boundary request",
         "adapter",
         "boundary",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-06 12:30",
+        "archive",
+        "2026-05-13 18:15",
         "2026",
         "05",
-        "06",
-        "12",
-        "30"
+        "13",
+        "18",
+        "15"
       ],
-      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary change requests change requests 2026-05-06 12:30 2026 05 06 12 30"
+      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary archive 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "library",
@@ -2666,21 +2660,21 @@
       "kind": "doc",
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config",
-      "last_updated": "2026-05-12 10:55",
+      "last_updated": "2026-05-13 18:15",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-12 10:55 • Architecture",
+      "display_meta": "2026-05-13 18:15 • Architecture",
       "search_terms": [
         "config",
         "architecture",
-        "2026-05-12 10:55",
+        "2026-05-13 18:15",
         "2026",
         "05",
-        "12",
-        "10",
-        "55"
+        "13",
+        "18",
+        "15"
       ],
-      "search_text": "config architecture 2026-05-12 10:55 2026 05 12 10 55"
+      "search_text": "config architecture 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "scripts-generate-work-pages",
@@ -2711,21 +2705,28 @@
     {
       "id": "import-export",
       "kind": "doc",
-      "title": "Import/Export",
+      "title": "Import/Export Historical Notes",
       "href": "/docs/?scope=studio&doc=import-export",
-      "last_updated": "2026-05-13",
-      "display_meta": "2026-05-13",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-13 18:15 • Archive",
       "search_terms": [
         "import-export",
         "import",
         "export",
-        "import/export",
-        "2026-05-13",
+        "import/export historical notes",
+        "historical",
+        "notes",
+        "archive",
+        "2026-05-13 18:15",
         "2026",
         "05",
-        "13"
+        "13",
+        "18",
+        "15"
       ],
-      "search_text": "import-export import export import/export 2026-05-13 2026 05 13"
+      "search_text": "import-export import export import/export historical notes historical notes archive 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "config-jekyll-site-config",
@@ -2759,9 +2760,9 @@
       "title": "Library Export Configs",
       "href": "/docs/?scope=studio&doc=config-library-export-configs",
       "last_updated": "2026-05-06 21:14",
-      "parent_id": "import-export",
-      "parent_title": "Import/Export",
-      "display_meta": "2026-05-06 21:14 • Import/Export",
+      "parent_id": "config",
+      "parent_title": "Config",
+      "display_meta": "2026-05-06 21:14 • Config",
       "search_terms": [
         "config-library-export-configs",
         "config",
@@ -2769,8 +2770,6 @@
         "export",
         "configs",
         "library export configs",
-        "import/export",
-        "import",
         "2026-05-06 21:14",
         "2026",
         "05",
@@ -2778,7 +2777,7 @@
         "21",
         "14"
       ],
-      "search_text": "config-library-export-configs config library export configs library export configs import/export import 2026-05-06 21:14 2026 05 06 21 14"
+      "search_text": "config-library-export-configs config library export configs library export configs 2026-05-06 21:14 2026 05 06 21 14"
     },
     {
       "id": "site-request-moments-prose-source-model",
@@ -2918,10 +2917,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-05-12",
+      "last_updated": "2026-05-13",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-12 • UI",
+      "display_meta": "2026-05-13 • UI",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -2931,12 +2930,12 @@
         "and",
         "decision",
         "log",
-        "2026-05-12",
+        "2026-05-13",
         "2026",
         "05",
-        "12"
+        "13"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log 2026-05-12 2026 05 12"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log 2026-05-13 2026 05 13"
     },
     {
       "id": "tag-aliases",
@@ -3114,10 +3113,10 @@
       "kind": "doc",
       "title": "Data Sharing Adapters",
       "href": "/docs/?scope=studio&doc=config-data-sharing-adapters",
-      "last_updated": "2026-05-13 17:30",
+      "last_updated": "2026-05-13 18:15",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-13 17:30 • Config",
+      "display_meta": "2026-05-13 18:15 • Config",
       "search_terms": [
         "config-data-sharing-adapters",
         "config",
@@ -3125,14 +3124,14 @@
         "sharing",
         "adapters",
         "data sharing adapters",
-        "2026-05-13 17:30",
+        "2026-05-13 18:15",
         "2026",
         "05",
         "13",
-        "17",
-        "30"
+        "18",
+        "15"
       ],
-      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters 2026-05-13 17:30 2026 05 13 17 30"
+      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "scripts-delete-work",
@@ -3968,23 +3967,23 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-05-09 22:35",
+      "last_updated": "2026-05-13 18:15",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-05-09 22:35 • Site Docs",
+      "display_meta": "2026-05-13 18:15 • Site Docs",
       "search_terms": [
         "scripts",
         "site docs",
         "site",
         "docs",
-        "2026-05-09 22:35",
+        "2026-05-13 18:15",
         "2026",
         "05",
-        "09",
-        "22",
-        "35"
+        "13",
+        "18",
+        "15"
       ],
-      "search_text": "scripts site docs site docs 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "scripts site docs site docs 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "search-build-pipeline",
@@ -4236,6 +4235,32 @@
         "30"
       ],
       "search_text": "studio-data-sharing studio data sharing studio data sharing 2026-05-13 17:30 2026 05 13 17 30"
+    },
+    {
+      "id": "studio-data-sharing-technical-spec",
+      "kind": "doc",
+      "title": "Studio Data Sharing Technical Spec",
+      "href": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-13 18:15 • Studio",
+      "search_terms": [
+        "studio-data-sharing-technical-spec",
+        "studio",
+        "data",
+        "sharing",
+        "technical",
+        "spec",
+        "studio data sharing technical spec",
+        "2026-05-13 18:15",
+        "2026",
+        "05",
+        "13",
+        "18",
+        "15"
+      ],
+      "search_text": "studio-data-sharing-technical-spec studio data sharing technical spec studio data sharing technical spec 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "site-request-field-aware-build-scoping",
@@ -5739,10 +5764,10 @@
       "kind": "doc",
       "title": "Studio Data Sharing Module Implementation Request",
       "href": "/docs/?scope=studio&doc=site-request-studio-import-export-module",
-      "last_updated": "2026-05-13 17:58",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-13 17:58 • Change Requests",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-13 18:15 • Archive",
       "search_terms": [
         "site-request-studio-import-export-module",
         "site",
@@ -5755,17 +5780,15 @@
         "data",
         "sharing",
         "implementation",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-13 17:58",
+        "archive",
+        "2026-05-13 18:15",
         "2026",
         "05",
         "13",
-        "17",
-        "58"
+        "18",
+        "15"
       ],
-      "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation change requests change requests 2026-05-13 17:58 2026 05 13 17 58"
+      "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation archive 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "change-requests",

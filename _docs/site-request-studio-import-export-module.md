@@ -2,9 +2,9 @@
 doc_id: site-request-studio-import-export-module
 title: Studio Data Sharing Module Implementation Request
 added_date: 2026-05-13
-last_updated: "2026-05-13 17:58"
-ui_status: in-progress
-parent_id: change-requests
+last_updated: "2026-05-13 18:15"
+ui_status: done
+parent_id: archive
 sort_order: 212
 hidden: false
 ---
@@ -12,8 +12,9 @@ hidden: false
 
 Status:
 
-- In progress
-- Slice 6 tags package preparation implemented
+- Done
+- Slice 7 cleanup and technical spec consolidation implemented
+- Durable implementation details moved to [Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing), [Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec), and [Data Sharing Adapters](/docs/?scope=studio&doc=config-data-sharing-adapters)
 
 ## Summary
 
@@ -375,7 +376,7 @@ Acceptance checks:
 
 ### Slice 7: cleanup and technical spec consolidation
 
-Status: planned.
+Status: implemented.
 
 Remove temporary implementation artifacts and consolidate durable documentation.
 

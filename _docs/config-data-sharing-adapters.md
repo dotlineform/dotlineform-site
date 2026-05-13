@@ -2,7 +2,7 @@
 doc_id: config-data-sharing-adapters
 title: Data Sharing Adapters
 added_date: "2026-05-06 11:35"
-last_updated: "2026-05-13 17:30"
+last_updated: "2026-05-13 18:15"
 parent_id: config
 sort_order: 60
 ---
@@ -28,8 +28,8 @@ The first non-document adapter is:
 - `adapter_id: "analytics-tags"`
 - `module: "analytics.tags"`
 
-The tags adapter is active for `list_returned`, `review`, and `apply`.
-Tags `prepare` remains planned until the package-preparation slice wires outbound tags package generation.
+The tags adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
+Tags `prepare` exposes source-derived package profiles for tag registry, tag aliases, tag assignments, and combined tags bundles.
 
 ## Operations
 
@@ -82,10 +82,12 @@ Under that root, Library currently uses:
 
 Future folder changes should update this config instead of adding route-level folder decisions.
 
-The active tags review/apply workflow uses the same folder shape under `var/studio/data-sharing/tags/`.
+The active tags prepare/review/apply workflow uses the same folder shape under `var/studio/data-sharing/tags/`.
+Tags package preparation writes outbound packages under `var/studio/data-sharing/tags/exports/`.
 
 ## Related Runtime
 
 - `scripts/studio/data_sharing_adapters.py` validates duplicate dispatch, canonical operation names, status values, and safe relative paths before resolving adapters.
-- `scripts/docs/docs_management_server.py` uses the resolved adapter before running package preparation, returned-package listing, review, or apply behavior.
+- `scripts/studio/data_sharing_service.py` uses the resolved adapter before running package preparation, returned-package listing, review, or apply behavior.
+- `scripts/docs/docs_management_server.py` hosts the loopback HTTP endpoints and delegates Data Sharing dispatch to `scripts/studio/data_sharing_service.py`.
 - `assets/studio/js/studio-transport.js` defines the service endpoints used by the browser.

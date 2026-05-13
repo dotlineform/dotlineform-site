@@ -3,7 +3,7 @@ doc_id: scripts-docs-import
 title: Docs Import
 added_date: "2026-05-03 20:25"
 last_updated: "2026-05-13 16:13"
-parent_id: import-export
+parent_id: scripts
 sort_order: 20
 ---
 # Docs Import
@@ -16,7 +16,7 @@ Script:
 
 ## Scope
 
-`docs_import.py` is the staged data parser and Markdown preview renderer for [Library Import v1](/docs/?scope=studio&doc=library-import).
+`docs_import.py` is the staged returned-package parser and Markdown review renderer for the Library documents Data Sharing workflow.
 
 It reads local JSON or JSONL files manually copied under the Library import staging root and returns a structured JSON report.
 It does not mutate source Markdown, generated docs payloads, exports, or config files.
@@ -60,15 +60,11 @@ Implemented now:
 - uses the staged-file timestamp suffix for preview filenames when present, otherwise the current preview-generation time
 - supports deterministic relationship-tree preview filenames based on the staged filename plus timestamp suffix
 - writes front-matter-like matched-config, staged-only, and preview-metadata sections for human review rather than source parsing
-- is callable through the documents Data Sharing adapter for staged-file listing and preview generation
+- is callable through the documents Data Sharing adapter for returned-package listing and review generation
 - is exposed through the `/studio/data-sharing/review/` page for local preview generation
 - supports staged data workflow scopes `library`, `catalogue`, and `analytics`; Library remains the only scope with implemented source-write apply actions
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
 - reports unknown current `doc_id`, unpublished current records, missing current payloads, missing parents, unpublished parents, and parent records with missing payloads
-
-Not implemented yet:
-
-- source apply workflows
 
 ## Commands
 

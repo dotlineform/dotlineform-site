@@ -2,7 +2,7 @@
 doc_id: config-studio-config-js
 title: Studio Config Loader JS
 added_date: 2026-04-01
-last_updated: "2026-05-11 14:10"
+last_updated: "2026-05-13 18:15"
 parent_id: studio
 sort_order: 100
 ---
@@ -30,8 +30,8 @@ Current direct importers include:
 - `assets/studio/js/tag-groups.js`
 - `assets/studio/js/studio-works.js`
 - `assets/studio/js/activity.js`
-- `assets/studio/js/data-export.js`
-- `assets/studio/js/data-import.js`
+- `assets/studio/js/data-sharing-prepare.js`
+- `assets/studio/js/data-sharing-review.js`
 
 Its exported helpers are also used indirectly through:
 

@@ -13,7 +13,8 @@ Status:
 
 - Implemented
 
-These UI refinements apply to the page `/studio/import/`.
+These archived UI refinements applied to the historical `/studio/import/` page.
+The current returned-package review route is `/studio/data-sharing/review/`.
 
 ## Text and messages
 

@@ -57,8 +57,7 @@ Read this section in this order:
    - **[Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
    - **[Library Documents](/docs/?scope=studio&doc=library-documents)**
    - **[Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing)**
-   - **[Library Export v1](/docs/?scope=studio&doc=library-export)**
-   - **[Library Import v1](/docs/?scope=studio&doc=library-import)**
+   - **[Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec)**
 	   - **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
 	   - **[Project State Page](/docs/?scope=studio&doc=project-state-page)**
    - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**

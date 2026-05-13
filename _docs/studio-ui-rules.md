@@ -2,13 +2,15 @@
 doc_id: studio-ui-rules
 title: Studio UI Rules And Decision Log
 added_date: 2026-04-24
-last_updated: "2026-05-12"
+last_updated: "2026-05-13"
 parent_id: ui
 sort_order: 50
 ---
 # Studio UI Rules And Decision Log
 
 This document is the working record for Studio UI issues, decisions, and permanent standards that emerge from real fixes.
+Older decision-log entries may reference historical route or module names from the time of the change.
+Current Data Sharing routes and module names are documented in [Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing) and [Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec).
 
 Use it to separate:
 

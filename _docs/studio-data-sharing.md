@@ -15,21 +15,24 @@ Routes:
 - `/studio/data-sharing/review/`
 
 Studio Data Sharing is the shared shell for preparing outbound share packages and reviewing returned packages from supported Studio data domains.
-It defaults to the Library data domain and exposes Tags as a named workflow scope for returned-package listing, review, and confirmed apply.
+It defaults to the Library data domain and exposes Tags as a named workflow scope for package preparation, returned-package listing, review, and confirmed apply.
+
+The durable architecture contract is recorded in [Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec).
 
 ## Current Scope
 
 Library is the implemented documents data domain.
-Tags are implemented for returned-package listing, review, and confirmed apply through the Analytics tags adapter.
-Tags package preparation remains planned for a later slice.
+Tags are implemented for package preparation, returned-package listing, review, and confirmed apply through the Analytics tags adapter.
 
 The prepare page:
 
 - loads enabled Library sharing profiles from `assets/studio/data/library_export_configs.json`
+- loads enabled Tags sharing profiles from `assets/studio/data/data_sharing_adapters.json`
 - reads the generated Library docs index through the docs-management local service
 - renders a selectable hierarchical document list in Docs Viewer order
 - supports JSON and JSONL target formats according to each profile
 - posts the selected profile, format, and document ids to the local docs-management service
+- can prepare tag registry, tag aliases, tag assignments, or a combined tags bundle
 - displays the output package path, counts, warnings, and errors returned by the service
 
 The review page:
@@ -65,7 +68,7 @@ The page shells load:
 - `scripts/analytics/tags_data_sharing_adapter.py`
 
 The documents adapter wrapper owns the implemented Library config set, source index, document tree selection, field mapping, returned-package review, summary apply, and hierarchy apply behavior.
-The Analytics tags adapter owns tag registry, alias, and assignment returned-package review and apply behavior, using existing Analytics tag planners and backup/write helpers.
+The Analytics tags adapter owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior, using existing Analytics tag planners and backup/write helpers.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
 Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.
 The docs-management server hosts the loopback HTTP process and supplies backup, log, and rebuild dependencies, but Data Sharing route ownership and shared adapter dispatch live under `scripts/studio/`.

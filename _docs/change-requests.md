@@ -36,7 +36,6 @@ Those still belong in the owning reference docs and change logs.
 - [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)
 - [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)
 - [Docs Viewer Report Components Request](/docs/?scope=studio&doc=site-request-docs-viewer-report-components)
-- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
 - [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
 - [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
 - [Moments Prose Source Model Request](/docs/?scope=studio&doc=site-request-moments-prose-source-model)
@@ -58,6 +57,8 @@ Those still belong in the owning reference docs and change logs.
 
 ## Completed Requests
 
+- [Studio Data Sharing Module Implementation Request](/docs/?scope=studio&doc=site-request-studio-import-export-module)
+- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
 - [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
 - [R2 Media Upload Automation Request](/docs/?scope=studio&doc=site-request-r2-media-upload-automation)
 - [Docs HTML Inline Raster Media Request](/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media)

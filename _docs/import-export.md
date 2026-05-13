@@ -1,17 +1,23 @@
 ---
 doc_id: import-export
-title: Import/Export
+title: Import/Export Historical Notes
 added_date: "2026-05-06 18:39"
-last_updated: "2026-05-13"
-parent_id: ""
+last_updated: "2026-05-13 18:15"
+parent_id: archive
 sort_order: 50
 published: true
 viewable: true
 ---
-# Import/Export
+# Import/Export Historical Notes
 
-Data can be exported as JSON files for external editing (typically by an LLM).
+This page is archived.
+The current shared workflow is [Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing), with the durable architecture contract in [Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec).
 
-A generic page handles the shared UI for supported data domains. Library records use `/studio/export/?scope=library` and `/studio/import/?scope=library`.
+Current Studio routes are:
 
-Data extraction and import is handled by _adapters_ which are config-driven client and server-side functions that ensure data is correctly structured and saved.
+- `/studio/data-sharing/`
+- `/studio/data-sharing/prepare/`
+- `/studio/data-sharing/review/`
+
+Older import/export terminology in this repo described generated JSON files copied out for external editing and staged JSON/JSONL files returned for review.
+Those decisions have been carried forward into the Data Sharing docs and adapter registry.

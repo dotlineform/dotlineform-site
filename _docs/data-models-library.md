@@ -150,7 +150,7 @@ Current model:
 Current consumers:
 
 - `/studio/data-sharing/prepare/`
-- `POST /docs/export` on the docs-management server
+- `POST /data-sharing/prepare` on the docs-management server
 - `./scripts/docs/docs_export.py`
 
 Current limits:

@@ -70,7 +70,8 @@ Adopted routes:
 - `/studio/catalogue-field-registry/`
 - `/studio/docs-broken-links/`
 - `/docs/?mode=manage&import=1`
-- `/studio/import/`
+- `/studio/data-sharing/prepare/`
+- `/studio/data-sharing/review/`
 - `/studio/audits/`
 - `/studio/project-state/`
 - `/studio/analytics/series-tag-editor/`
@@ -96,7 +97,7 @@ Enforcement helper:
 
 The page also exposes:
 
-- `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment|activity|bulk-add-work|activity|catalogue-status|catalogue-field-registry|docs-broken-links|docs-import|data-import|studio-audits|project-state|series-tag-editor|series-tags|studio-works|tag-aliases|tag-groups|tag-registry|studio-home|studio-catalogue|studio-library|studio-analytics|studio-search|studio-ui-catalogue|studio-ui-catalogue-button|studio-ui-catalogue-input|studio-ui-catalogue-list|studio-ui-catalogue-panel"`
+- `data-studio-route="catalogue-work|catalogue-work-detail|catalogue-series|catalogue-moment|activity|bulk-add-work|activity|catalogue-status|catalogue-field-registry|docs-broken-links|docs-import|data-sharing-prepare|data-sharing-review|studio-audits|project-state|series-tag-editor|series-tags|studio-works|tag-aliases|tag-groups|tag-registry|studio-home|studio-catalogue|studio-library|studio-analytics|studio-search|studio-ui-catalogue|studio-ui-catalogue-button|studio-ui-catalogue-input|studio-ui-catalogue-list|studio-ui-catalogue-panel"`
 - `data-studio-mode="empty|single|bulk|new|import|list|registry|idle|preview|results|confirm|result|summary|session|edit|dashboard|landing|reference"`
 - `data-studio-service="available|unavailable"`
 - `data-studio-record-loaded="true|false"`
@@ -118,8 +119,8 @@ Primary async or service-backed Studio routes:
 - [x] `/studio/catalogue-work/` root `#catalogueWorkRoot`
 - [x] `/studio/docs-broken-links/` root `#docsBrokenLinksRoot`
 - [x] `/docs/?mode=manage&import=1` import modal root `#docsHtmlImportRoot`
-- [x] `/studio/export/` root `#dataExportRoot`
-- [x] `/studio/import/` root `#dataImportRoot`
+- [x] `/studio/data-sharing/prepare/` root `#dataSharingPrepareRoot`
+- [x] `/studio/data-sharing/review/` root `#dataSharingReviewRoot`
 - [x] `/studio/audits/` root `#studioAuditsRoot`
 - [x] `/studio/project-state/` root `#projectStateRoot`
 - [x] `/studio/analytics/series-tag-editor/` root `#seriesTagEditorRoot`

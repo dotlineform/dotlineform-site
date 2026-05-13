@@ -2,9 +2,9 @@
 doc_id: site-request-export-import-adapters
 title: Export Import Adapter Boundary Request
 added_date: 2026-05-05
-last_updated: "2026-05-06 12:30"
+last_updated: "2026-05-13 18:15"
 ui_status: done
-parent_id: change-requests
+parent_id: archive
 sort_order: 27
 ---
 # Export Import Adapter Boundary Request
@@ -12,6 +12,9 @@ sort_order: 27
 Status:
 
 - implemented
+- archived after Data Sharing technical spec consolidation
+
+Current implementation details now live in [Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing), [Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec), and [Data Sharing Adapters](/docs/?scope=studio&doc=config-data-sharing-adapters).
 
 ## Summary
 

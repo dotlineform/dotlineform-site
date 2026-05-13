@@ -2,7 +2,7 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: "2026-05-09 22:35"
+last_updated: "2026-05-13 18:15"
 parent_id: site-docs
 sort_order: 80
 ---
@@ -37,9 +37,9 @@ The current script surface is organized by owner:
 
 - `scripts/catalogue/` owns catalogue source models, lookup/build planning, generation, publication/delete/prose workflows, validation/export utilities, and the catalogue write service.
 - `scripts/analytics/` owns tag metadata services and helpers as the first Analytics metadata layer over catalogue works and series.
-- `scripts/docs/` owns Docs Viewer build, import/export, live rebuild, generated-read, and docs-management behavior.
+- `scripts/docs/` owns Docs Viewer build, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.
 - `scripts/search/` owns search build configuration and the search builder implementation.
-- `scripts/studio/` owns non-domain-specific Studio runtime services such as audit and backup-retention services.
+- `scripts/studio/` owns non-domain-specific Studio runtime services such as audit, backup-retention, and Data Sharing dispatch services.
 - `scripts/checks/` owns standalone audits and verification commands.
 - `scripts/media/` owns media derivation and remote media publishing commands.
 - top-level `scripts/` is reserved for stable wrappers and shared infrastructure modules.
@@ -97,9 +97,9 @@ Catalogue/runtime maintenance:
 - `./scripts/catalogue/verify_catalogue_field_registry.py`
   - verifies representative field-aware catalogue build plans without writing files
 - `./scripts/docs/docs_export.py`
-  - exports generated Docs Viewer data through source-controlled export configs into `var/studio/export-import/<scope>/exports/`; also powers the Studio Library export service path
+  - prepares generated Docs Viewer data through source-controlled sharing profiles into `var/studio/data-sharing/<scope>/exports/`; also powers the Studio Library Data Sharing prepare service path
 - `./scripts/docs/docs_import.py`
-  - parses staged Library import JSON/JSONL files under `var/studio/export-import/library/import-staging/` and returns a read-only structured report
+  - parses staged Library returned-package JSON/JSONL files under `var/studio/data-sharing/library/import-staging/` and returns a structured review report
 - `./scripts/catalogue/validate_catalogue_source.py`
   - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`; `--target-media-section-schema` verifies migrated detail section fields
 - `./scripts/catalogue/migrate_catalogue_media_sections.py`

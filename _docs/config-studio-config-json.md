@@ -124,19 +124,19 @@ The package preparation page reads:
 - `paths.data.docs.scopes.library.index`
 - `paths.data.ui_text.data_sharing_prepare`
 
-The export config file owns export pattern definitions.
+The Library sharing profile config file owns document package pattern definitions.
 `studio_config.json` only owns browser-facing route, payload, and scoped UI-copy lookup for the Studio page.
-The page runs exports through the fixed docs-management transport endpoint `POST /docs/export`, which is configured in `assets/studio/js/studio-transport.js` rather than in `studio_config.json`.
+The page runs package preparation through the fixed Data Sharing transport endpoint `POST /data-sharing/prepare`, which is configured in `assets/studio/js/studio-transport.js` rather than in `studio_config.json`.
 Adapter dispatch belongs in `assets/studio/data/data_sharing_adapters.json`.
 Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.
 The scoped data-sharing-prepare payload keys `format_label`, `format_json`, `format_jsonl`, `format_required`, and `result_format_label` control output-format selector and result-modal copy.
 The scoped data-sharing-prepare payload keys `filter_show_all`, `filter_no_content`, and `filter_not_viewable` control the list-filter pill labels.
 The scoped data-sharing-prepare payload keys `result_title`, `result_close`, `result_files_label`, the `count_*` labels, `warnings_heading`, and `issues_heading` control the result modal copy shown after an package preparation run.
 
-Do not add export field mappings, output formats, or selection defaults to `studio_config.json`.
-Those belong in `assets/studio/data/library_export_configs.json` so the CLI, service endpoint, and Studio UI all run the same pattern.
+Do not add Data Sharing field mappings, output formats, or selection defaults to `studio_config.json`.
+Those belong in the active adapter or sharing profile config so the CLI, service endpoint, and Studio UI all run the same pattern.
 
-## Data import page
+## Data Sharing review page
 
 The returned package review page reads:
 
@@ -145,10 +145,10 @@ The returned package review page reads:
 - `paths.data.ui_text.data_sharing_review`
 
 The scoped data-sharing-review payload owns browser-facing labels, status messages, selection copy, preview/apply result modal titles and count labels, the preview `results` reopen button, summary-apply confirmation modal copy, and hierarchy-apply confirmation modal copy.
-The fixed docs-management transport endpoints for staged-file listing, preview generation, and apply live in `assets/studio/js/studio-transport.js`.
+The fixed docs-management transport endpoints for returned-package listing, review generation, and apply live in `assets/studio/js/studio-transport.js`.
 Adapter dispatch belongs in `assets/studio/data/data_sharing_adapters.json`.
 Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.
-Import parsing rules, export-pattern matching, output formats, and source-write validation do not belong in `studio_config.json`; they belong in the docs import/export scripts and docs-management service.
+Returned-package parsing rules, sharing-profile matching, output formats, and source-write validation do not belong in `studio_config.json`; they belong in the Data Sharing adapters and local service.
 
 Retired Studio routes should not keep active route keys or UI text. For example, series create copy belongs in `assets/studio/data/ui_text/catalogue-series-editor.json` because create mode now lives at `/studio/catalogue-series/?mode=new`.
 

@@ -3,7 +3,7 @@ doc_id: config-library-export-configs
 title: Library Export Configs
 added_date: "2026-05-03 14:15"
 last_updated: "2026-05-06 21:14"
-parent_id: import-export
+parent_id: config
 sort_order: 50
 ---
 # Library Export Configs
@@ -18,14 +18,14 @@ Schema file:
 
 ## Scope
 
-`library_export_configs.json` defines saved export patterns for the Library export workflow.
+`library_export_configs.json` defines saved sharing profiles for the Library package-preparation workflow.
 
 The first active data domain is Library.
 The schema keeps the scope field as an array so the same export engine can later support other document-backed scopes, but non-Library domains must still be enabled through `assets/studio/data/data_sharing_adapters.json`.
 
 The config is source-controlled project configuration.
 The Studio UI lists existing configs and uses them to drive selection behavior, but it should not create or edit config definitions in v1.
-Running configs from Studio uses the local docs-management export endpoint.
+Running configs from Studio uses the local Data Sharing package-preparation endpoint.
 
 ## Usage Model
 

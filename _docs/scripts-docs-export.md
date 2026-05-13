@@ -3,7 +3,7 @@ doc_id: scripts-docs-export
 title: Docs Export
 added_date: "2026-05-03 15:05"
 last_updated: "2026-05-13 16:13"
-parent_id: import-export
+parent_id: scripts
 sort_order: 10
 ---
 # Docs Export
@@ -16,7 +16,7 @@ Script:
 
 ## Scope
 
-`docs_export.py` is the read-only export engine for Docs Viewer export configs.
+`docs_export.py` is the read-only package-preparation engine for Docs Viewer sharing profiles.
 
 It reads generated Docs Viewer artifacts and source-controlled export configs, then writes an ephemeral export file under `var/studio/data-sharing/<scope>/exports/`.
 It does not mutate source Markdown, generated docs payloads, or config files.
@@ -37,7 +37,7 @@ Export metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable p
 
 ## Runtime Contract
 
-The script is the shared export engine for both CLI runs and the Studio docs-management endpoint.
+The script is the documents-adapter package engine for both CLI runs and the Studio Data Sharing service endpoint.
 It is intentionally source-read-only: the only write it performs is the generated export artifact when `--write` is passed or when the local service calls it in write mode.
 
 Inputs:
@@ -54,7 +54,7 @@ Outputs:
 - no file in dry-run mode
 - one JSON or JSONL export file in write mode
 
-Export artifacts are local working files.
+Share packages are local working files.
 They are ignored by git, may be deleted, and should be reproduced from generated Docs Viewer data plus the selected config and document selection.
 
 ## Current Capability
