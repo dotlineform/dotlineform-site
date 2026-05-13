@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check the data import Studio route."""
+"""Smoke-check the data sharing review Studio route."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright
 
 
-ROOT_SELECTOR = "#dataImportRoot"
+ROOT_SELECTOR = "#dataSharingReviewRoot"
 
 
 class QuietStaticHandler(SimpleHTTPRequestHandler):
@@ -58,7 +58,7 @@ def wait_for_studio_route_ready(page, root_selector: str, timeout_ms: int) -> di
 
 
 def assert_ready_contract(attrs: dict[str, str]) -> None:
-    if attrs["route"] != "data-import":
+    if attrs["route"] != "data-sharing-review":
         raise AssertionError(f"unexpected route attribute: {attrs['route']!r}")
     if attrs["ready"] != "true":
         raise AssertionError(f"route did not become ready: {attrs!r}")
@@ -73,13 +73,13 @@ def assert_ready_contract(attrs: dict[str, str]) -> None:
 
 
 def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, object]:
-    preview_disabled = page.locator("#dataImportPreview").evaluate("button => button.disabled")
-    select_all_disabled = page.locator("#dataImportSelectAll").evaluate("button => button.disabled")
-    clear_disabled = page.locator("#dataImportClear").evaluate("button => button.disabled")
-    update_summary_disabled = page.locator("#dataImportUpdateSummary").evaluate("button => button.disabled")
-    apply_hierarchy_disabled = page.locator("#dataImportApplyHierarchy").evaluate("button => button.disabled")
-    file_option_count = page.locator("#dataImportFileSelect option").count()
-    list_exists = page.locator("#dataImportList").count() == 1
+    preview_disabled = page.locator("#dataSharingReviewRun").evaluate("button => button.disabled")
+    select_all_disabled = page.locator("#dataSharingReviewSelectAll").evaluate("button => button.disabled")
+    clear_disabled = page.locator("#dataSharingReviewClear").evaluate("button => button.disabled")
+    update_summary_disabled = page.locator("#dataSharingReviewUpdateSummary").evaluate("button => button.disabled")
+    apply_hierarchy_disabled = page.locator("#dataSharingReviewApplyHierarchy").evaluate("button => button.disabled")
+    file_option_count = page.locator("#dataSharingReviewFileSelect option").count()
+    list_exists = page.locator("#dataSharingReviewList").count() == 1
     if not list_exists:
         raise AssertionError("preview list shell is missing")
     if expect_unavailable_service and not preview_disabled:
@@ -100,11 +100,11 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
 
 
 def assert_unsupported_adapter_state(page, expected_status: str) -> dict[str, object]:
-    preview_disabled = page.locator("#dataImportPreview").evaluate("button => button.disabled")
-    update_summary_disabled = page.locator("#dataImportUpdateSummary").evaluate("button => button.disabled")
-    apply_hierarchy_disabled = page.locator("#dataImportApplyHierarchy").evaluate("button => button.disabled")
-    file_select_disabled = page.locator("#dataImportFileSelect").evaluate("select => select.disabled")
-    status_text = page.locator("#dataImportStatus").text_content()
+    preview_disabled = page.locator("#dataSharingReviewRun").evaluate("button => button.disabled")
+    update_summary_disabled = page.locator("#dataSharingReviewUpdateSummary").evaluate("button => button.disabled")
+    apply_hierarchy_disabled = page.locator("#dataSharingReviewApplyHierarchy").evaluate("button => button.disabled")
+    file_select_disabled = page.locator("#dataSharingReviewFileSelect").evaluate("select => select.disabled")
+    status_text = page.locator("#dataSharingReviewStatus").text_content()
     if status_text != expected_status:
         raise AssertionError(f"unexpected unsupported-adapter status: {status_text!r}")
     if not preview_disabled or not update_summary_disabled or not apply_hierarchy_disabled or not file_select_disabled:
@@ -127,11 +127,11 @@ def install_mock_docs_service(page) -> None:
             payload = {
                 "ok": True,
                 "scope": "library",
-                "staging_root": "var/studio/export-import/library/import-staging",
+                "staging_root": "var/studio/data-sharing/library/import-staging",
                 "files": [
                     {
                         "filename": "summaries.jsonl",
-                        "path": "var/studio/export-import/library/import-staging/summaries.jsonl",
+                        "path": "var/studio/data-sharing/library/import-staging/summaries.jsonl",
                         "format": "jsonl",
                         "size_bytes": 512,
                         "modified_utc": "2026-05-04T12:00:00Z",
@@ -142,7 +142,7 @@ def install_mock_docs_service(page) -> None:
             payload = {
                 "ok": True,
                 "scope": "library",
-                "summary_text": "Generated 3 Library import preview files.",
+                "summary_text": "Generated 3 Library returned package review files.",
                 "detected_import_type": "parent_child_relationships",
                 "source_export_id": "library-parent-child-relationships",
                 "generated_at": "2026-05-04T12:05:00Z",
@@ -187,18 +187,18 @@ def install_mock_docs_service(page) -> None:
                 ],
                 "preview_files": [
                     {
-                        "path": "var/studio/export-import/library/import-preview/relationships-tree.md",
+                        "path": "var/studio/data-sharing/library/import-preview/relationships-tree.md",
                         "record_count": 3,
                         "kind": "relationship_tree",
                     },
                     {
-                        "path": "var/studio/export-import/library/import-preview/alpha-20260504-120500.md",
+                        "path": "var/studio/data-sharing/library/import-preview/alpha-20260504-120500.md",
                         "record_index": 1,
                         "doc_id": "alpha",
                         "kind": "document",
                     },
                     {
-                        "path": "var/studio/export-import/library/import-preview/beta-20260504-120500.md",
+                        "path": "var/studio/data-sharing/library/import-preview/beta-20260504-120500.md",
                         "record_index": 2,
                         "doc_id": "beta",
                         "kind": "document",
@@ -289,18 +289,18 @@ def install_mock_docs_service(page) -> None:
 
 
 def assert_mock_preview_flow(page) -> dict[str, object]:
-    page.locator("#dataImportPreview").click()
-    page.wait_for_selector("[data-data-import-preview]", timeout=5000)
+    page.locator("#dataSharingReviewRun").click()
+    page.wait_for_selector("[data-data-sharing-review-preview]", timeout=5000)
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     preview_modal_title = page.locator("#studioModalTitle").text_content()
-    preview_count_labels = page.locator(".dataImportResultModal__counts dt").evaluate_all(
+    preview_count_labels = page.locator(".dataSharingReviewResultModal__counts dt").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    preview_count_values = page.locator(".dataImportResultModal__counts dd").evaluate_all(
+    preview_count_values = page.locator(".dataSharingReviewResultModal__counts dd").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    preview_issue_text = " ".join(page.locator(".dataImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
-    if preview_modal_title != "Import preview":
+    preview_issue_text = " ".join(page.locator(".dataSharingReviewResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
+    if preview_modal_title != "Returned package review":
         raise AssertionError(f"unexpected preview result modal title: {preview_modal_title!r}")
     if preview_count_labels != ["records", "parsed", "malformed", "warnings", "errors"]:
         raise AssertionError(f"unexpected preview count labels: {preview_count_labels!r}")
@@ -310,23 +310,23 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"preview warning missing from modal issues: {preview_issue_text!r}")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
-    result_button = page.locator("#dataImportResults")
+    result_button = page.locator("#dataSharingReviewResults")
     if result_button.is_hidden() or result_button.text_content() != "results":
         raise AssertionError("preview results button should be visible after successful preview status")
     result_button.click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     reopened_title = page.locator("#studioModalTitle").text_content()
-    reopened_summary = page.locator(".dataImportResultModal__summary").text_content()
-    if reopened_title != "Import preview" or reopened_summary != "Generated 3 Library import preview files.":
+    reopened_summary = page.locator(".dataSharingReviewResultModal__summary").text_content()
+    if reopened_title != "Returned package review" or reopened_summary != "Generated 3 Library returned package review files.":
         raise AssertionError(f"unexpected reopened results modal: {reopened_title!r}, {reopened_summary!r}")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
-    rows = page.locator("[data-data-import-preview]").count()
-    titles = page.locator(".dataImportList__title").evaluate_all("nodes => nodes.map(node => node.textContent)")
-    depths = page.locator("[data-data-import-preview]").evaluate_all(
-        "nodes => nodes.map(node => Number(node.dataset.dataImportDepth || 0))"
+    rows = page.locator("[data-data-sharing-review-preview]").count()
+    titles = page.locator(".dataSharingReviewList__title").evaluate_all("nodes => nodes.map(node => node.textContent)")
+    depths = page.locator("[data-data-sharing-review-preview]").evaluate_all(
+        "nodes => nodes.map(node => Number(node.dataset.dataSharingReviewDepth || 0))"
     )
-    meta = page.locator(".dataImportList__meta").evaluate_all("nodes => nodes.map(node => node.textContent)")
+    meta = page.locator(".dataSharingReviewList__meta").evaluate_all("nodes => nodes.map(node => node.textContent)")
     if rows != 4:
         raise AssertionError(f"expected four preview rows, found {rows}")
     if titles != ["Relationship tree", "Library", "Alpha", "Beta"]:
@@ -335,43 +335,43 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"unexpected hierarchy depths: {depths!r}")
     if "not in current Library" not in meta[-1]:
         raise AssertionError(f"unknown current-Library state was not surfaced: {meta!r}")
-    page.locator("#dataImportSelectAll").click()
-    selection = page.locator("#dataImportSelectionSummary").text_content()
+    page.locator("#dataSharingReviewSelectAll").click()
+    selection = page.locator("#dataSharingReviewSelectionSummary").text_content()
     if selection != "4 previews selected.":
         raise AssertionError(f"unexpected selection summary: {selection!r}")
-    update_summary_disabled = page.locator("#dataImportUpdateSummary").evaluate("button => button.disabled")
-    apply_hierarchy_disabled = page.locator("#dataImportApplyHierarchy").evaluate("button => button.disabled")
+    update_summary_disabled = page.locator("#dataSharingReviewUpdateSummary").evaluate("button => button.disabled")
+    apply_hierarchy_disabled = page.locator("#dataSharingReviewApplyHierarchy").evaluate("button => button.disabled")
     if update_summary_disabled or apply_hierarchy_disabled:
         raise AssertionError("summary and hierarchy apply should enable for selected document previews")
-    page.locator("#dataImportUpdateSummary").click()
+    page.locator("#dataSharingReviewUpdateSummary").click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     modal_title = page.locator("#studioModalTitle").text_content()
     if modal_title != "Update summaries?":
         raise AssertionError(f"unexpected summary apply modal title: {modal_title!r}")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
-    cancelled_status = page.locator("#dataImportStatus").text_content()
+    cancelled_status = page.locator("#dataSharingReviewStatus").text_content()
     if cancelled_status != "Summary update cancelled.":
         raise AssertionError(f"unexpected cancelled status: {cancelled_status!r}")
-    page.locator("#dataImportUpdateSummary").click()
+    page.locator("#dataSharingReviewUpdateSummary").click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function(
         "selector => document.querySelector(selector)?.textContent === 'Updated 2 Library summary update(s).'",
-        arg="#dataImportStatus",
+        arg="#dataSharingReviewStatus",
         timeout=5000,
     )
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     summary_modal_title = page.locator("#studioModalTitle").text_content()
-    summary_count_labels = page.locator(".dataImportResultModal__counts dt").evaluate_all(
+    summary_count_labels = page.locator(".dataSharingReviewResultModal__counts dt").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    summary_count_values = page.locator(".dataImportResultModal__counts dd").evaluate_all(
+    summary_count_values = page.locator(".dataSharingReviewResultModal__counts dd").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    applied_status = page.locator("#dataImportStatus").text_content()
-    summary = page.locator(".dataImportResultModal__summary").text_content()
-    issue_text = " ".join(page.locator(".dataImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
+    applied_status = page.locator("#dataSharingReviewStatus").text_content()
+    summary = page.locator(".dataSharingReviewResultModal__summary").text_content()
+    issue_text = " ".join(page.locator(".dataSharingReviewResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
     if applied_status != "Updated 2 Library summary update(s).":
         raise AssertionError(f"unexpected applied status: {applied_status!r}")
     if summary_modal_title != "Summary update complete":
@@ -386,35 +386,35 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"summary apply skipped row missing from issues: {issue_text!r}")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
-    page.locator("#dataImportApplyHierarchy").click()
+    page.locator("#dataSharingReviewApplyHierarchy").click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     hierarchy_modal_title = page.locator("#studioModalTitle").text_content()
     if hierarchy_modal_title != "Update hierarchy?":
         raise AssertionError(f"unexpected hierarchy apply modal title: {hierarchy_modal_title!r}")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
-    hierarchy_cancelled_status = page.locator("#dataImportStatus").text_content()
+    hierarchy_cancelled_status = page.locator("#dataSharingReviewStatus").text_content()
     if hierarchy_cancelled_status != "Hierarchy update cancelled.":
         raise AssertionError(f"unexpected hierarchy cancelled status: {hierarchy_cancelled_status!r}")
-    page.locator("#dataImportApplyHierarchy").click()
+    page.locator("#dataSharingReviewApplyHierarchy").click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function(
         "selector => document.querySelector(selector)?.textContent === 'Updated 1 Library hierarchy change(s).'",
-        arg="#dataImportStatus",
+        arg="#dataSharingReviewStatus",
         timeout=5000,
     )
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     hierarchy_result_title = page.locator("#studioModalTitle").text_content()
-    hierarchy_count_labels = page.locator(".dataImportResultModal__counts dt").evaluate_all(
+    hierarchy_count_labels = page.locator(".dataSharingReviewResultModal__counts dt").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    hierarchy_count_values = page.locator(".dataImportResultModal__counts dd").evaluate_all(
+    hierarchy_count_values = page.locator(".dataSharingReviewResultModal__counts dd").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
     )
-    hierarchy_status = page.locator("#dataImportStatus").text_content()
-    hierarchy_summary = page.locator(".dataImportResultModal__summary").text_content()
-    hierarchy_issue_text = " ".join(page.locator(".dataImportResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
+    hierarchy_status = page.locator("#dataSharingReviewStatus").text_content()
+    hierarchy_summary = page.locator(".dataSharingReviewResultModal__summary").text_content()
+    hierarchy_issue_text = " ".join(page.locator(".dataSharingReviewResultModal__issues li").evaluate_all("nodes => nodes.map(node => node.textContent)"))
     if hierarchy_result_title != "Hierarchy update complete":
         raise AssertionError(f"unexpected hierarchy result modal title: {hierarchy_result_title!r}")
     if hierarchy_count_labels != ["changed", "unchanged", "skipped", "warnings", "errors"]:
@@ -442,7 +442,7 @@ def main() -> int:
     parser.add_argument("--site-root", help="Serve a built site root on a temporary local HTTP server.")
     parser.add_argument("--block-docs-service", action="store_true")
     parser.add_argument("--mock-docs-service", action="store_true")
-    parser.add_argument("--route-path", default="/studio/import/")
+    parser.add_argument("--route-path", default="/studio/data-sharing/review/")
     parser.add_argument("--expect-unsupported", default="")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()

@@ -24,7 +24,7 @@ Current responsibilities include:
 - scope-specific Docs Viewer UI status emoji definitions
 - the route and feed path for the current Studio activity page
 - route and data paths for catalogue status, unified activity, project-state reporting, and catalogue editor pages
-- route and data paths for the shared Studio data export/import pages
+- route and data paths for the shared Studio package preparation/import pages
 - scoped UI-text bundle paths under `paths.data.ui_text`, including the Docs Viewer-owned path under `assets/docs-viewer/data/`
 - the Studio Audits route path and scoped UI-text bundle path
 - catalogue UI options such as the Studio series-type dropdown values
@@ -54,8 +54,8 @@ Current direct consumers of that loader include:
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/project-state.js`
 - `assets/studio/js/studio-audits.js`
-- `assets/studio/js/data-export.js`
-- `assets/studio/js/data-import.js`
+- `assets/studio/js/data-sharing-prepare.js`
+- `assets/studio/js/data-sharing-review.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
@@ -65,7 +65,7 @@ It also feeds shared path resolution used by:
 
 - `assets/studio/js/studio-data.js`
 
-The active data-domain list and capability status come from `assets/studio/data/export_import_adapters.json`.
+The active data-domain list and capability status come from `assets/studio/data/data_sharing_adapters.json`.
 Per-domain export configs and import apply contracts still live in the owning workflow docs and service code.
 
 ## When it is read
@@ -96,8 +96,8 @@ Current bundles:
 - `catalogue-series-editor.json`
 - `catalogue-moment-editor.json`
 - `catalogue-status.json`
-- `data-import.json`
-- `data-export.json`
+- `data-sharing-review.json`
+- `data-sharing-prepare.json`
 - `docs-broken-links.json`
 - `docs-viewer.json`
 - `library-documents.json`
@@ -116,37 +116,37 @@ If a domain needs behavior, place that behavior in the owning runtime module and
 
 ## Data export page
 
-The data export page reads:
+The package preparation page reads:
 
-- `paths.routes.data_export`
-- `paths.data.studio.export_import_adapters`
+- `paths.routes.data_sharing_prepare`
+- `paths.data.studio.data_sharing_adapters`
 - `paths.data.studio.library_export_configs`
 - `paths.data.docs.scopes.library.index`
-- `paths.data.ui_text.data_export`
+- `paths.data.ui_text.data_sharing_prepare`
 
 The export config file owns export pattern definitions.
 `studio_config.json` only owns browser-facing route, payload, and scoped UI-copy lookup for the Studio page.
 The page runs exports through the fixed docs-management transport endpoint `POST /docs/export`, which is configured in `assets/studio/js/studio-transport.js` rather than in `studio_config.json`.
-Adapter dispatch belongs in `assets/studio/data/export_import_adapters.json`.
+Adapter dispatch belongs in `assets/studio/data/data_sharing_adapters.json`.
 Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.
-The scoped data-export payload keys `format_label`, `format_json`, `format_jsonl`, `format_required`, and `result_format_label` control output-format selector and result-modal copy.
-The scoped data-export payload keys `filter_show_all`, `filter_no_content`, and `filter_not_viewable` control the list-filter pill labels.
-The scoped data-export payload keys `result_title`, `result_close`, `result_files_label`, the `count_*` labels, `warnings_heading`, and `issues_heading` control the result modal copy shown after an export run.
+The scoped data-sharing-prepare payload keys `format_label`, `format_json`, `format_jsonl`, `format_required`, and `result_format_label` control output-format selector and result-modal copy.
+The scoped data-sharing-prepare payload keys `filter_show_all`, `filter_no_content`, and `filter_not_viewable` control the list-filter pill labels.
+The scoped data-sharing-prepare payload keys `result_title`, `result_close`, `result_files_label`, the `count_*` labels, `warnings_heading`, and `issues_heading` control the result modal copy shown after an package preparation run.
 
 Do not add export field mappings, output formats, or selection defaults to `studio_config.json`.
 Those belong in `assets/studio/data/library_export_configs.json` so the CLI, service endpoint, and Studio UI all run the same pattern.
 
 ## Data import page
 
-The data import page reads:
+The returned package review page reads:
 
-- `paths.routes.data_import`
-- `paths.data.studio.export_import_adapters`
-- `paths.data.ui_text.data_import`
+- `paths.routes.data_sharing_review`
+- `paths.data.studio.data_sharing_adapters`
+- `paths.data.ui_text.data_sharing_review`
 
-The scoped data-import payload owns browser-facing labels, status messages, selection copy, preview/apply result modal titles and count labels, the preview `results` reopen button, summary-apply confirmation modal copy, and hierarchy-apply confirmation modal copy.
+The scoped data-sharing-review payload owns browser-facing labels, status messages, selection copy, preview/apply result modal titles and count labels, the preview `results` reopen button, summary-apply confirmation modal copy, and hierarchy-apply confirmation modal copy.
 The fixed docs-management transport endpoints for staged-file listing, preview generation, and apply live in `assets/studio/js/studio-transport.js`.
-Adapter dispatch belongs in `assets/studio/data/export_import_adapters.json`.
+Adapter dispatch belongs in `assets/studio/data/data_sharing_adapters.json`.
 Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.
 Import parsing rules, export-pattern matching, output formats, and source-write validation do not belong in `studio_config.json`; they belong in the docs import/export scripts and docs-management service.
 

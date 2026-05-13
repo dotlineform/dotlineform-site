@@ -27,16 +27,16 @@ Current source and generated artifacts:
   - `assets/studio/data/library_export_configs.json`
   - `assets/studio/data/library_export_configs.schema.json`
 - export/import adapter dispatch:
-  - `assets/studio/data/export_import_adapters.json`
-  - `assets/studio/data/export_import_adapters.schema.json`
+  - `assets/studio/data/data_sharing_adapters.json`
+  - `assets/studio/data/data_sharing_adapters.schema.json`
 - local generated export artifacts:
-  - `var/studio/export-import/library/exports/<export_id>-<timestamp>.json`
-  - `var/studio/export-import/library/exports/<export_id>-<timestamp>.jsonl`
+  - `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.json`
+  - `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.jsonl`
 - local import staging artifacts:
-  - `var/studio/export-import/library/import-staging/<filename>.json`
-  - `var/studio/export-import/library/import-staging/<filename>.jsonl`
+  - `var/studio/data-sharing/library/import-staging/<filename>.json`
+  - `var/studio/data-sharing/library/import-staging/<filename>.jsonl`
 - local import preview artifacts:
-  - `var/studio/export-import/library/import-preview/<filename>.md`
+  - `var/studio/data-sharing/library/import-preview/<filename>.md`
 
 Current public route:
 
@@ -87,7 +87,7 @@ Current site mapping:
 - the nav/tree layer on `/library/`
 - public/default `/library/` hides docs with `viewable: false`; `/docs/?scope=library&mode=manage` can show those generated docs for local management
 - Library document view does not display the `last_updated` metadata row; recently-added still uses `added_date`, and search still uses `last_updated`
-- `/studio/export/` uses `content_text_length` to filter docs whose rendered body has no text after plain-text extraction and title stripping
+- `/studio/data-sharing/prepare/` uses `content_text_length` to filter docs whose rendered body has no text after plain-text extraction and title stripping
 
 ### `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 
@@ -136,8 +136,8 @@ Config files:
 
 Generated output:
 
-- `var/studio/export-import/library/exports/<export_id>-<timestamp>.json`
-- `var/studio/export-import/library/exports/<export_id>-<timestamp>.jsonl`
+- `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.json`
+- `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.jsonl`
 
 Current model:
 
@@ -149,7 +149,7 @@ Current model:
 
 Current consumers:
 
-- `/studio/export/`
+- `/studio/data-sharing/prepare/`
 - `POST /docs/export` on the docs-management server
 - `./scripts/docs/docs_export.py`
 
@@ -166,12 +166,12 @@ Library import files are local working artifacts copied into a staging folder fo
 
 Staged input:
 
-- `var/studio/export-import/library/import-staging/<filename>.json`
-- `var/studio/export-import/library/import-staging/<filename>.jsonl`
+- `var/studio/data-sharing/library/import-staging/<filename>.json`
+- `var/studio/data-sharing/library/import-staging/<filename>.jsonl`
 
 Preview output:
 
-- `var/studio/export-import/library/import-preview/<filename>.md`
+- `var/studio/data-sharing/library/import-preview/<filename>.md`
 
 Current model:
 
@@ -193,7 +193,7 @@ Current consumers:
 - `GET /docs/import/files` on the docs-management server
 - `POST /docs/import/preview` on the docs-management server
 - `POST /docs/import/apply` on the docs-management server
-- `/studio/import/`
+- `/studio/data-sharing/review/`
 
 Current limits:
 

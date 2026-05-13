@@ -2,7 +2,7 @@
 doc_id: site-request-studio-import-export-module
 title: Studio Data Sharing Module Implementation Request
 added_date: 2026-05-13
-last_updated: "2026-05-13 11:49"
+last_updated: "2026-05-13 12:35"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -13,7 +13,7 @@ hidden: false
 Status:
 
 - In progress
-- Plan agreed, next: slice 0
+- Slice 0 implementation started
 
 ## Summary
 
@@ -207,7 +207,7 @@ Earlier planning and review documents should be archived after their decisions h
 
 ### Slice 0: terminology cutover without behavior change
 
-Status: planned.
+Status: in progress.
 
 Apply Data Sharing terminology to the existing implementation before changing architecture.
 This is a significant rename-only slice and should not change user-visible behavior beyond labels, route names, and terminology.

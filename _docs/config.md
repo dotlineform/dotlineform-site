@@ -21,8 +21,8 @@ Checked-in configuration artifacts that the current site and build scripts load 
 - build-owned search source-family config in `scripts/search/build_config.json`
 - Library export config patterns in `assets/studio/data/library_export_configs.json`
 - Library export config schema in `assets/studio/data/library_export_configs.schema.json`
-- export/import adapter dispatch in `assets/studio/data/export_import_adapters.json`
-- export/import adapter schema in `assets/studio/data/export_import_adapters.schema.json`
+- export/import adapter dispatch in `assets/studio/data/data_sharing_adapters.json`
+- export/import adapter schema in `assets/studio/data/data_sharing_adapters.schema.json`
 
 Key documents:
 
@@ -34,7 +34,7 @@ Key documents:
 6. **[Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)**
 7. **[Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json)**
 8. **[Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)**
-9. **[Export Import Adapters](/docs/?scope=studio&doc=config-export-import-adapters)**
+9. **[Data Sharing Adapters](/docs/?scope=studio&doc=config-data-sharing-adapters)**
 
 Related subsystem docs:
 

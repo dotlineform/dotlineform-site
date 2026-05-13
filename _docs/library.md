@@ -11,7 +11,7 @@ sort_order: 27
 - [Library](/library/?doc=library) is a Docs Viewer page on the public-facing site but it is a distinct data domain from Catalogue
 - Library administration is split across owning Studio and Docs Viewer surfaces rather than a standalone Studio Library dashboard.
 - [Library Documents](/docs/?scope=studio&doc=library-documents) lists generated Library document records for review.
-- Data import/export for Library records uses `/studio/import/?scope=library` and `/studio/export/?scope=library`.
+- Data import/export for Library records uses `/studio/data-sharing/review/?scope=library` and `/studio/data-sharing/prepare/?scope=library`.
 
 ## Dependencies
 

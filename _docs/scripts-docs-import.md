@@ -25,8 +25,8 @@ The same engine is used by the docs-management local service for Studio integrat
 
 Current input path:
 
-- `var/studio/export-import/library/import-staging/<filename>.json`
-- `var/studio/export-import/library/import-staging/<filename>.jsonl`
+- `var/studio/data-sharing/library/import-staging/<filename>.json`
+- `var/studio/data-sharing/library/import-staging/<filename>.jsonl`
 
 Current lookup paths:
 
@@ -36,13 +36,13 @@ Current lookup paths:
 Current outputs:
 
 - a structured JSON report on stdout
-- optional Markdown previews under `var/studio/export-import/library/import-preview/`
+- optional Markdown previews under `var/studio/data-sharing/library/import-preview/`
 
 ## Current Capability
 
 Implemented now:
 
-- enforces that parsed files stay under `var/studio/export-import/library/import-staging/`
+- enforces that parsed files stay under `var/studio/data-sharing/library/import-staging/`
 - reads `.json` and `.jsonl`
 - parses JSON envelope exports with a `documents` array
 - parses JSON arrays of document-like records
@@ -55,13 +55,13 @@ Implemented now:
 - annotates each normalized record with current Library existence, publication, viewability, payload, and parent state
 - renders one Markdown-style preview per parsed document
 - renders one additional whole-tree Markdown preview file whenever staged relationship metadata is available
-- writes previews only under `var/studio/export-import/library/import-preview/`
+- writes previews only under `var/studio/data-sharing/library/import-preview/`
 - supports timestamped document preview filenames based on `doc_id`, duplicate record index fallback, and missing-id fallback
 - uses the staged-file timestamp suffix for preview filenames when present, otherwise the current preview-generation time
 - supports deterministic relationship-tree preview filenames based on the staged filename plus timestamp suffix
 - writes front-matter-like matched-config, staged-only, and preview-metadata sections for human review rather than source parsing
 - is callable through docs-management endpoints for staged-file listing and preview generation
-- is exposed through the `/studio/import/` page for local preview generation
+- is exposed through the `/studio/data-sharing/review/` page for local preview generation
 - supports staged data workflow scopes `library`, `catalogue`, and `analytics`; Library remains the only scope with implemented source-write apply actions
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
 - reports unknown current `doc_id`, unpublished current records, missing current payloads, missing parents, unpublished parents, and parent records with missing payloads
@@ -142,11 +142,11 @@ It blocks only concerns that prevent useful parsing:
 - unsupported file extension
 - unreadable or missing staged file
 - invalid JSON or JSONL
-- staged path outside `var/studio/export-import/library/import-staging/`
+- staged path outside `var/studio/data-sharing/library/import-staging/`
 
 Record-level problems are warnings when the file can still be inspected.
 Current-Library lookup warnings do not block parsing.
-Preview writes are limited to `var/studio/export-import/library/import-preview/`.
+Preview writes are limited to `var/studio/data-sharing/library/import-preview/`.
 Apply-time freshness checks belong to later Library import tasks.
 
 ## Verification
@@ -171,7 +171,7 @@ The parser and service checks run in the `docs` profile:
 ./scripts/run_checks.py --profile docs
 ```
 
-The Studio page shell, unavailable-service route behavior, mocked preview flow, mocked summary-apply confirmation flow, and mocked hierarchy-apply confirmation flow are covered by `tests/smoke/data_import.py`.
+The Studio page shell, unavailable-service route behavior, mocked preview flow, mocked summary-apply confirmation flow, and mocked hierarchy-apply confirmation flow are covered by `tests/smoke/data_sharing_review.py`.
 That smoke check runs in the `studio-smoke` profile after a temporary Jekyll build:
 
 ```bash

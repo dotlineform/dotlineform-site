@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check the data export Studio route."""
+"""Smoke-check the data sharing prepare Studio route."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from threading import Thread
 from playwright.sync_api import sync_playwright
 
 
-ROOT_SELECTOR = "#dataExportRoot"
+ROOT_SELECTOR = "#dataSharingPrepareRoot"
 EXPECTED_CONFIG_IDS = {
     "library-parent-child-relationships",
     "library-document-summaries",
@@ -62,7 +62,7 @@ def wait_for_studio_route_ready(page, root_selector: str, timeout_ms: int) -> di
 
 
 def assert_ready_contract(attrs: dict[str, str]) -> None:
-    if attrs["route"] != "data-export":
+    if attrs["route"] != "data-sharing-prepare":
         raise AssertionError(f"unexpected route attribute: {attrs['route']!r}")
     if attrs["ready"] != "true":
         raise AssertionError(f"route did not become ready: {attrs!r}")
@@ -78,20 +78,20 @@ def assert_ready_contract(attrs: dict[str, str]) -> None:
 
 def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, object]:
     config_ids = set(
-        page.locator("#dataExportConfigSelect option").evaluate_all(
+        page.locator("#dataSharingPrepareConfigSelect option").evaluate_all(
             "options => options.map(option => option.value)"
         )
     )
     missing_config_ids = EXPECTED_CONFIG_IDS.difference(config_ids)
     if missing_config_ids:
-        raise AssertionError(f"missing export config ids: {sorted(missing_config_ids)!r}")
+        raise AssertionError(f"missing sharing profile ids: {sorted(missing_config_ids)!r}")
 
-    doc_ids = page.locator("[data-data-export-doc]").evaluate_all(
-        "rows => rows.map(row => row.getAttribute('data-data-export-doc'))"
+    doc_ids = page.locator("[data-data-sharing-prepare-doc]").evaluate_all(
+        "rows => rows.map(row => row.getAttribute('data-data-sharing-prepare-doc'))"
     )
     if not doc_ids:
-        raise AssertionError("Data export document list is empty")
-    run_disabled = page.locator("#dataExportRun").evaluate("button => button.disabled")
+        raise AssertionError("Data Sharing prepare document list is empty")
+    run_disabled = page.locator("#dataSharingPrepareRun").evaluate("button => button.disabled")
     if expect_unavailable_service and not run_disabled:
         raise AssertionError("run button should be disabled when docs-management service is unavailable")
 
@@ -108,7 +108,7 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
 
 
 def format_controls(page) -> list[dict[str, object]]:
-    return page.locator("input[name='dataExportFormat']").evaluate_all(
+    return page.locator("input[name='dataSharingPrepareFormat']").evaluate_all(
         """inputs => inputs.map(input => ({
             value: input.value,
             checked: input.checked,
@@ -127,30 +127,30 @@ def assert_format_controls(page) -> dict[str, str]:
     if not initial["jsonl"]["disabled"]:
         raise AssertionError(f"parent-child config should disable JSONL: {initial!r}")
 
-    page.locator("#dataExportConfigSelect").select_option("library-full-document-content")
+    page.locator("#dataSharingPrepareConfigSelect").select_option("library-full-document-content")
     page.wait_for_function(
         """() => {
-            const jsonl = document.querySelector("input[name='dataExportFormat'][value='jsonl']");
-            const json = document.querySelector("input[name='dataExportFormat'][value='json']");
+            const jsonl = document.querySelector("input[name='dataSharingPrepareFormat'][value='jsonl']");
+            const json = document.querySelector("input[name='dataSharingPrepareFormat'][value='json']");
             return jsonl && json && jsonl.checked && !jsonl.disabled && !json.disabled;
         }"""
     )
     full_content = by_value()
 
-    page.locator("#dataExportConfigSelect").select_option("library-document-summaries")
+    page.locator("#dataSharingPrepareConfigSelect").select_option("library-document-summaries")
     page.wait_for_function(
         """() => {
-            const jsonl = document.querySelector("input[name='dataExportFormat'][value='jsonl']");
-            const json = document.querySelector("input[name='dataExportFormat'][value='json']");
+            const jsonl = document.querySelector("input[name='dataSharingPrepareFormat'][value='jsonl']");
+            const json = document.querySelector("input[name='dataSharingPrepareFormat'][value='json']");
             return jsonl && json && jsonl.checked && !jsonl.disabled && !json.disabled;
         }"""
     )
 
-    page.locator("#dataExportConfigSelect").select_option("library-parent-child-relationships")
+    page.locator("#dataSharingPrepareConfigSelect").select_option("library-parent-child-relationships")
     page.wait_for_function(
         """() => {
-            const jsonl = document.querySelector("input[name='dataExportFormat'][value='jsonl']");
-            const json = document.querySelector("input[name='dataExportFormat'][value='json']");
+            const jsonl = document.querySelector("input[name='dataSharingPrepareFormat'][value='jsonl']");
+            const json = document.querySelector("input[name='dataSharingPrepareFormat'][value='json']");
             return jsonl && json && json.checked && !json.disabled && jsonl.disabled;
         }"""
     )
@@ -161,24 +161,24 @@ def assert_format_controls(page) -> dict[str, str]:
 
 
 def assert_filter_flow(page, total_docs: int) -> dict[str, int]:
-    filter_keys = page.locator("[data-data-export-filter]").evaluate_all(
-        "buttons => buttons.map(button => button.getAttribute('data-data-export-filter'))"
+    filter_keys = page.locator("[data-data-sharing-prepare-filter]").evaluate_all(
+        "buttons => buttons.map(button => button.getAttribute('data-data-sharing-prepare-filter'))"
     )
     expected_keys = ["all", "no_content", "not_viewable"]
     if filter_keys != expected_keys:
-        raise AssertionError(f"unexpected data export filters: {filter_keys!r}")
+        raise AssertionError(f"unexpected data sharing prepare filters: {filter_keys!r}")
 
-    counts = page.locator("[data-data-export-doc]").evaluate_all(
+    counts = page.locator("[data-data-sharing-prepare-doc]").evaluate_all(
         """rows => ({
             all: rows.length,
-            no_content: rows.filter(row => row.dataset.dataExportNoContent === "true").length,
-            not_viewable: rows.filter(row => row.dataset.dataExportViewable === "false").length
+            no_content: rows.filter(row => row.dataset.dataSharingPrepareNoContent === "true").length,
+            not_viewable: rows.filter(row => row.dataset.dataSharingPrepareViewable === "false").length
         })"""
     )
     if counts["all"] != total_docs:
         raise AssertionError(f"show all count mismatch: {counts!r}; total={total_docs!r}")
 
-    filter_labels = page.locator("[data-data-export-filter]").evaluate_all(
+    filter_labels = page.locator("[data-data-sharing-prepare-filter]").evaluate_all(
         "buttons => buttons.map(button => button.textContent.trim())"
     )
     for key, label in zip(expected_keys, filter_labels):
@@ -186,30 +186,30 @@ def assert_filter_flow(page, total_docs: int) -> dict[str, int]:
             raise AssertionError(f"filter {key!r} label lacks count {counts[key]!r}: {label!r}")
 
     def assert_filter(key: str, row_attribute: str, row_value: str, expected_count: int) -> None:
-        page.locator(f"[data-data-export-filter='{key}']").click()
+        page.locator(f"[data-data-sharing-prepare-filter='{key}']").click()
         page.wait_for_function(
             """([attr, expected]) => {
                 const expectedValue = attr[1];
                 const attrName = attr[0];
-                const rows = Array.from(document.querySelectorAll("[data-data-export-doc]"));
+                const rows = Array.from(document.querySelectorAll("[data-data-sharing-prepare-doc]"));
                 return rows.length === expected && rows.every(row => row.getAttribute(attrName) === expectedValue);
             }""",
             arg=[[row_attribute, row_value], expected_count],
         )
-        page.locator("#dataExportSelectAll").click()
-        checked_count = page.locator("[data-data-export-doc] input[type='checkbox']:checked").count()
+        page.locator("#dataSharingPrepareSelectAll").click()
+        checked_count = page.locator("[data-data-sharing-prepare-doc] input[type='checkbox']:checked").count()
         if checked_count != expected_count:
             raise AssertionError(f"select all selected {checked_count} rows for {key}, expected {expected_count}")
-        page.locator("#dataExportClear").click()
-        checked_after_clear = page.locator("[data-data-export-doc] input[type='checkbox']:checked").count()
+        page.locator("#dataSharingPrepareClear").click()
+        checked_after_clear = page.locator("[data-data-sharing-prepare-doc] input[type='checkbox']:checked").count()
         if checked_after_clear != 0:
             raise AssertionError(f"clear left {checked_after_clear} selected rows for {key}")
 
-    assert_filter("no_content", "data-data-export-no-content", "true", counts["no_content"])
-    assert_filter("not_viewable", "data-data-export-viewable", "false", counts["not_viewable"])
-    page.locator("[data-data-export-filter='all']").click()
+    assert_filter("no_content", "data-data-sharing-prepare-no-content", "true", counts["no_content"])
+    assert_filter("not_viewable", "data-data-sharing-prepare-viewable", "false", counts["not_viewable"])
+    page.locator("[data-data-sharing-prepare-filter='all']").click()
     page.wait_for_function(
-        "expected => document.querySelectorAll('[data-data-export-doc]').length === expected",
+        "expected => document.querySelectorAll('[data-data-sharing-prepare-doc]').length === expected",
         arg=total_docs,
     )
     return counts
@@ -234,7 +234,7 @@ def main() -> int:
             page = browser.new_page()
             if args.block_docs_service:
                 page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
-            page.goto(route_url(base_url, "/studio/export/"), wait_until="domcontentloaded")
+            page.goto(route_url(base_url, "/studio/data-sharing/prepare/"), wait_until="domcontentloaded")
             attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
             assert_ready_contract(attrs)
             if args.block_docs_service and attrs["service"] != "unavailable":

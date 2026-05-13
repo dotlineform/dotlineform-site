@@ -45,7 +45,7 @@ BASE_CONFIG = {
                 "include_export_metadata": True,
             },
             "output": {
-                "path_pattern": "var/studio/export-import/{scope}/exports/{export_id}-{timestamp}.jsonl",
+                "path_pattern": "var/studio/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl",
                 "timestamp_format": "%Y%m%d-%H%M%S",
             },
             "selection": {
@@ -201,7 +201,7 @@ def test_unknown_config_returns_structured_validation_report() -> None:
 
 def test_jsonl_config_requires_jsonl_output_extension() -> None:
     config = copy.deepcopy(BASE_CONFIG)
-    config["configs"][0]["output"]["path_pattern"] = "var/studio/export-import/{scope}/exports/{export_id}-{timestamp}.json"
+    config["configs"][0]["output"]["path_pattern"] = "var/studio/data-sharing/{scope}/exports/{export_id}-{timestamp}.json"
     with make_repo(config) as temp:
         report = run_export(Path(temp))
     assert report["ok"] is False
@@ -227,7 +227,7 @@ def test_written_jsonl_output_is_deterministic_for_fixed_run_time() -> None:
 
     assert first_report["ok"] is True
     assert first_report["output_file"] == (
-        "var/studio/export-import/library/exports/library-document-summaries-20260503-161507.jsonl"
+        "var/studio/data-sharing/library/exports/library-document-summaries-20260503-161507.jsonl"
     )
     assert first_text == second_text
     rows = [json.loads(line) for line in first_text.splitlines()]
@@ -252,7 +252,7 @@ def test_document_rows_json_format_override_writes_json_array() -> None:
     assert report["ok"] is True, report
     assert report["target_format"] == "json"
     assert report["output_file"] == (
-        "var/studio/export-import/library/exports/library-document-summaries-20260503-161507.json"
+        "var/studio/data-sharing/library/exports/library-document-summaries-20260503-161507.json"
     )
     assert isinstance(payload, list)
     assert [row["doc_id"] for row in payload] == ["library", "child-with-summary"]
@@ -428,7 +428,7 @@ def test_repo_representative_library_exports_dry_run_successfully() -> None:
         assert report["counts"]["exported"] > 0
         assert report["counts"]["failed"] == 0
         assert report["output_written"] is False
-        assert report["output_file"].startswith(f"var/studio/export-import/library/exports/{case['config_id']}-")
+        assert report["output_file"].startswith(f"var/studio/data-sharing/library/exports/{case['config_id']}-")
         assert report["output_file"].endswith(f".{case['target_format']}")
 
 

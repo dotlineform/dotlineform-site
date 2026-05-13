@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://dotlineform.com/schemas/export_import_adapters.schema.json",
+  "$id": "https://dotlineform.com/schemas/data_sharing_adapters.schema.json",
   "title": "Export/import adapter registry",
   "type": "object",
   "required": ["schema_version", "dispatch", "adapters"],
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "const": "export_import_adapters_v1"
+      "const": "data_sharing_adapters_v1"
     },
     "dispatch": {
       "type": "array",

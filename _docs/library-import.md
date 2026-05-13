@@ -32,7 +32,7 @@ Current implementation note:
 
 - Library import is the first active import data domain.
 - The browser sends `data_domain: "library"` to neutral docs-management import endpoints.
-- `assets/studio/data/export_import_adapters.json` maps Library staged-file listing, preview, summary apply, and hierarchy apply to the active `documents` adapter.
+- `assets/studio/data/data_sharing_adapters.json` maps Library staged-file listing, preview, summary apply, and hierarchy apply to the active `documents` adapter.
 - Catalogue and Analytics are visible only as future adapter stubs until their own parser, preview, validation, and apply contracts exist.
 
 ## Spec
@@ -76,18 +76,18 @@ Both workflows can use the docs-management local service, but they should keep s
 The v1 staging root is:
 
 ```text
-var/studio/export-import/library/import-staging/
+var/studio/data-sharing/library/import-staging/
 ```
 
 The v1 preview root is:
 
 ```text
-var/studio/export-import/library/import-preview/
+var/studio/data-sharing/library/import-preview/
 ```
 
 These artifacts are local working files.
 They should be ignored by git, safe to delete, and reproducible from the staged data file plus the current import renderer.
-The folder roots are declared in `assets/studio/data/export_import_adapters.json`; route code and browser modules should not introduce separate workflow folder decisions.
+The folder roots are declared in `assets/studio/data/data_sharing_adapters.json`; route code and browser modules should not introduce separate workflow folder decisions.
 
 Preview output is document-centric.
 Each parsed document should produce one Markdown-style preview file.
@@ -117,7 +117,7 @@ review_note: Keep this staged-only value visible.
 preview_metadata
 import_type: document_summary
 preview_generated_at: 2026-05-03T20:01:00Z
-source_file: var/studio/export-import/library/import-staging/library-document-summaries-20260503-200000.jsonl
+source_file: var/studio/data-sharing/library/import-staging/library-document-summaries-20260503-200000.jsonl
 ---
 ```
 
@@ -218,7 +218,7 @@ Diagnostics should stay in the Studio report; v1 should not write a separate mac
 The intended v1 Studio page is likely:
 
 ```text
-/studio/import/
+/studio/data-sharing/review/
 ```
 
 The page should:
@@ -260,8 +260,8 @@ Potential later apply flows:
 
 ## V1 Decisions
 
-- staging root: `var/studio/export-import/library/import-staging/`
-- preview root: `var/studio/export-import/library/import-preview/`
+- staging root: `var/studio/data-sharing/library/import-staging/`
+- preview root: `var/studio/data-sharing/library/import-preview/`
 - output shape: one Markdown preview file per imported document
 - relationship output shape: one additional Markdown preview file showing the whole imported candidate tree whenever relationship metadata is available
 - index files: none in v1
@@ -277,13 +277,13 @@ Potential later apply flows:
 - full content semantics: readable inspection preview only, not a source-content replacement
 - relationship semantics: candidate tree preview only
 - source freshness comparison against `source_last_updated`: deferred
-- entry link: expose Library Import as `/studio/import/?scope=library`
+- entry link: expose Library Import as `/studio/data-sharing/review/?scope=library`
 
 ## Remaining Open Questions
 
 - What exact preview filename should be used for duplicate or missing `doc_id` records?
 - Should unknown metadata be rendered in a small human-readable metadata section in each preview, or only in the Studio report?
-- How much UI should the early `/studio/import/` page expose before preview generation exists?
+- How much UI should the early `/studio/data-sharing/review/` page expose before preview generation exists?
 
 ## Initial Likely Tasks
 
@@ -293,10 +293,10 @@ Confirm the staging root, preview root, per-document preview filename convention
 
 Expected outputs:
 
-- staging root `var/studio/export-import/library/import-staging/`
-- preview root under `var/studio/export-import/library/import-preview/`
-- one preview file per imported document under `var/studio/export-import/library/import-preview/`
-- one whole-tree preview file under `var/studio/export-import/library/import-preview/` whenever relationship metadata is available
+- staging root `var/studio/data-sharing/library/import-staging/`
+- preview root under `var/studio/data-sharing/library/import-preview/`
+- one preview file per imported document under `var/studio/data-sharing/library/import-preview/`
+- one whole-tree preview file under `var/studio/data-sharing/library/import-preview/` whenever relationship metadata is available
 - preview filename convention based primarily on `doc_id` plus the staged-file timestamp suffix, with a current preview-generation time fallback
 - front-matter-like matched-config, staged-only, and preview-metadata sections
 - docs-management allowlist rules for read/write paths
@@ -308,7 +308,7 @@ Implement a parser that reads staged `.json` and `.jsonl` files, detects support
 The parser should not write source docs.
 
 Status: implemented in `./scripts/docs/docs_import.py`.
-The parser reads only from `var/studio/export-import/library/import-staging/`, supports JSON envelopes, JSON arrays, and JSONL document rows, detects the three v1 Library export families or minimal document records, preserves unknown file and record metadata in the report, and treats malformed records as warnings where parsing can continue.
+The parser reads only from `var/studio/data-sharing/library/import-staging/`, supports JSON envelopes, JSON arrays, and JSONL document rows, detects the three v1 Library export families or minimal document records, preserves unknown file and record metadata in the report, and treats malformed records as warnings where parsing can continue.
 It does not render Markdown previews or write any output files.
 
 ### Task 3. Add Report Issues And Current-Library Lookup
@@ -337,7 +337,7 @@ Source-file provenance and diagnostics should remain in the Studio report.
 
 Status: implemented in `./scripts/docs/docs_import.py`.
 The parser can now render Markdown preview files with `--write-previews`.
-Imports write one file per parsed document under `var/studio/export-import/library/import-preview/`, using `<doc_id>-<timestamp>.md`, `<doc_id>-record-<n>-<timestamp>.md` for duplicate ids, and `record-<n>-<timestamp>.md` for missing ids.
+Imports write one file per parsed document under `var/studio/data-sharing/library/import-preview/`, using `<doc_id>-<timestamp>.md`, `<doc_id>-record-<n>-<timestamp>.md` for duplicate ids, and `record-<n>-<timestamp>.md` for missing ids.
 The timestamp comes from the staged filename suffix when present, otherwise from the current preview-generation time.
 When relationship metadata is available, imports also write one whole-tree Markdown file based on the staged filename, such as `relationships-tree-20260503-204000.md`.
 Preview files include front-matter-like matched-config, staged-only, and preview-metadata sections plus readable Markdown sections for relevant warnings, summaries, headings, source text, or candidate relationship trees.
@@ -375,10 +375,10 @@ The page can ship first as a staged-file listing and then grow preview generatio
 
 Status note:
 
-- implemented at `/studio/import/`
-- reachable at `/studio/import/?scope=library`
+- implemented at `/studio/data-sharing/review/`
+- reachable at `/studio/data-sharing/review/?scope=library`
 - defaults to `scope=library`, with a scope selector for `library`, `catalogue`, and `analytics`
-- reads selectable data domains and unavailable-state messages from `assets/studio/data/export_import_adapters.json`
+- reads selectable data domains and unavailable-state messages from `assets/studio/data/data_sharing_adapters.json`
 - loads staged `.json` and `.jsonl` files through `GET /docs/import/files?data_domain=library`
 - runs preview generation through `POST /docs/import/preview` for supported staged JSON/JSONL files
 - uses the same compact command/list shell as the data export page
@@ -401,7 +401,7 @@ Status note:
 
 Add links to the Library Import route from active Library entry points once the page route exists.
 
-Status: implemented, then superseded by direct `/studio/import/?scope=library` access after the `/studio/library/` dashboard was retired.
+Status: implemented, then superseded by direct `/studio/data-sharing/review/?scope=library` access after the `/studio/library/` dashboard was retired.
 
 ### Task 8. Add Verification
 
@@ -424,7 +424,7 @@ Add focused tests for:
 
 Parser and renderer coverage for JSONL parsing, JSON envelope parsing, minimal JSON rows, unknown metadata preservation, malformed record reporting, current-Library lookup reporting, per-document preview output, relationship whole-tree preview output for relationship and non-relationship imports, deterministic staged-timestamp preview paths, invalid JSONL blocking, and staged/preview path allowlisting is implemented in `tests/python/test_docs_import.py`.
 Local service handler coverage for staged-file listing, preview writing, dry-run preview reporting, non-Library scope rejection, summary-apply missing target docs, backup creation, skipped rows, hierarchy missing target docs, hierarchy backup creation, unknown parent warnings, partial selections, no-write dry runs, and source write output is implemented in `tests/python/test_docs_import_service.py`.
-A light Studio smoke test for the page shell and unavailable-service behavior is implemented in `tests/smoke/data_import.py`.
+A light Studio smoke test for the page shell and unavailable-service behavior is implemented in `tests/smoke/data_sharing_review.py`.
 The `docs` profile in `./scripts/run_checks.py` runs the parser and local service checks.
 The `studio-smoke` profile builds the site to a temporary Jekyll destination and runs data import route smokes with the docs-management service blocked and with mocked Library preview, summary-apply, and hierarchy-apply responses.
 

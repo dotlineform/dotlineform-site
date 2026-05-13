@@ -32,7 +32,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
     </article>
   </section>
 
-  <section class="catalogueDashboardRoutes catalogueDashboardRoutes--three" aria-label="Catalogue links">
+  <section class="catalogueDashboardRoutes" aria-label="Catalogue links">
     <section class="catalogueDashboardColumn">
       <h3>Edit</h3>
       <ul class="catalogueDashboardPills">
@@ -50,13 +50,6 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
         <li><a href="{{ '/studio/studio-works/' | relative_url }}">works</a></li>
         <li><a href="{{ '/studio/project-state/' | relative_url }}">projects</a></li>
         <li><a href="{{ '/catalogue/search/' | relative_url }}">search</a></li>
-      </ul>
-    </section>
-    <section class="catalogueDashboardColumn">
-      <h3>Data</h3>
-      <ul class="catalogueDashboardPills">
-        <li><a href="{{ '/studio/export/?scope=catalogue' | relative_url }}">export</a></li>
-        <li><a href="{{ '/studio/import/?scope=catalogue' | relative_url }}">import</a></li>
       </ul>
     </section>
   </section>

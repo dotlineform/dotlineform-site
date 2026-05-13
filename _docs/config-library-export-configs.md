@@ -21,7 +21,7 @@ Schema file:
 `library_export_configs.json` defines saved export patterns for the Library export workflow.
 
 The first active data domain is Library.
-The schema keeps the scope field as an array so the same export engine can later support other document-backed scopes, but non-Library domains must still be enabled through `assets/studio/data/export_import_adapters.json`.
+The schema keeps the scope field as an array so the same export engine can later support other document-backed scopes, but non-Library domains must still be enabled through `assets/studio/data/data_sharing_adapters.json`.
 
 The config is source-controlled project configuration.
 The Studio UI lists existing configs and uses them to drive selection behavior, but it should not create or edit config definitions in v1.
@@ -122,8 +122,8 @@ Document-row configs may support JSONL and JSON when both are declared in `targe
 `output.path_pattern` must stay under:
 
 ```text
-var/studio/export-import/{scope}/exports/{export_id}-{timestamp}.json
-var/studio/export-import/{scope}/exports/{export_id}-{timestamp}.jsonl
+var/studio/data-sharing/{scope}/exports/{export_id}-{timestamp}.json
+var/studio/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl
 ```
 
 The placeholders are resolved by the export engine.

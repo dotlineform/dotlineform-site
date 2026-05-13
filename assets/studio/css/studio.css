@@ -1166,76 +1166,76 @@ span.tagStudio__input--readonlyDisplay {
   padding-left: 1.1rem;
 }
 
-.dataImportPage__panel {
+.dataSharingReviewPage__panel {
   display: grid;
   gap: 0.8rem;
 }
 
-.dataImportPage__summary,
-.dataImportPage__selectionSummary,
-.dataImportResultModal__issues ul {
+.dataSharingReviewPage__summary,
+.dataSharingReviewPage__selectionSummary,
+.dataSharingReviewResultModal__issues ul {
   margin: 0;
 }
 
-.dataImportPage__selectionSummary {
+.dataSharingReviewPage__selectionSummary {
   color: var(--muted, var(--studio-muted-body));
   font-size: var(--font-small);
 }
 
-.dataImportPage__controls {
+.dataSharingReviewPage__controls {
   display: grid;
   grid-template-columns: minmax(8rem, 0.32fr) minmax(0, 0.68fr) minmax(0, 1fr);
   gap: 0.5rem 0.65rem;
   align-items: end;
 }
 
-.dataImportPage__scopeField,
-.dataImportPage__field {
+.dataSharingReviewPage__scopeField,
+.dataSharingReviewPage__field {
   min-inline-size: 0;
   width: 100%;
 }
 
-.dataImportPage__scopeField .tagStudioField__control,
-.dataImportPage__field .tagStudioField__control {
+.dataSharingReviewPage__scopeField .tagStudioField__control,
+.dataSharingReviewPage__field .tagStudioField__control {
   width: 100%;
 }
 
-.dataImportPage__scopeField .tagStudioField__control > .tagStudio__input,
-.dataImportPage__field .tagStudioField__control > .tagStudio__input {
+.dataSharingReviewPage__scopeField .tagStudioField__control > .tagStudio__input,
+.dataSharingReviewPage__field .tagStudioField__control > .tagStudio__input {
   flex: 1 1 auto;
   width: 100%;
 }
 
-.dataImportPage__commandButtons {
+.dataSharingReviewPage__commandButtons {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem 0.65rem;
   align-items: center;
 }
 
-.dataImportPage__statusRow {
+.dataSharingReviewPage__statusRow {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 0.55rem;
   align-items: center;
 }
 
-.dataImportPage__statusRow > .tagStudio__status {
+.dataSharingReviewPage__statusRow > .tagStudio__status {
   margin: 0;
 }
 
-.dataImportPage__resultButton[hidden] {
+.dataSharingReviewPage__resultButton[hidden] {
   display: none;
 }
 
-.dataImportPage__listActions {
+.dataSharingReviewPage__listActions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   align-items: center;
 }
 
-.dataImportResultModal__counts {
+.dataSharingReviewResultModal__counts {
   display: grid;
   grid-template-columns: max-content minmax(2rem, max-content);
   column-gap: 0.7rem;
@@ -1244,16 +1244,16 @@ span.tagStudio__input--readonlyDisplay {
   margin: 0;
 }
 
-.dataImportResultModal__counts > div {
+.dataSharingReviewResultModal__counts > div {
   display: contents;
 }
 
-.dataImportResultModal__counts > div:last-child dt,
-.dataImportResultModal__counts > div:last-child dd {
+.dataSharingReviewResultModal__counts > div:last-child dt,
+.dataSharingReviewResultModal__counts > div:last-child dd {
   border-bottom: 0;
 }
 
-.dataImportResultModal__counts dt {
+.dataSharingReviewResultModal__counts dt {
   margin: 0;
   border-bottom: 1px solid var(--line, var(--studio-line));
   padding-block: 0.3rem;
@@ -1262,7 +1262,7 @@ span.tagStudio__input--readonlyDisplay {
   text-transform: lowercase;
 }
 
-.dataImportResultModal__counts dd {
+.dataSharingReviewResultModal__counts dd {
   margin: 0;
   border-bottom: 1px solid var(--line, var(--studio-line));
   padding-block: 0.3rem;
@@ -1270,67 +1270,67 @@ span.tagStudio__input--readonlyDisplay {
   text-align: right;
 }
 
-.dataImportResultModal__issues {
+.dataSharingReviewResultModal__issues {
   display: grid;
   gap: 0.5rem;
   padding-top: 0.5rem;
 }
 
-.dataImportResultModal__issues > h4 {
+.dataSharingReviewResultModal__issues > h4 {
   margin: 0;
 }
 
-.dataImportResultModal__issues ul {
+.dataSharingReviewResultModal__issues ul {
   padding-left: 1.1rem;
   font-size: var(--font-small);
 }
 
-.dataImportList__meta {
+.dataSharingReviewList__meta {
   color: var(--muted, var(--studio-muted));
   font-size: var(--font-caption);
 }
 
-.dataImportList__row {
+.dataSharingReviewList__row {
   grid-template-columns: minmax(0, 1fr);
 }
 
-.dataImportList__label {
+.dataSharingReviewList__label {
   display: grid;
   grid-template-columns: 1rem minmax(0, 0.42fr) minmax(0, 0.58fr);
   gap: 0.5rem;
   align-items: center;
   min-width: 0;
-  padding-left: calc(var(--data-import-depth, 0) * 1.15rem);
+  padding-left: calc(var(--data-sharing-review-depth, 0) * 1.15rem);
 }
 
-.dataImportList__checkbox {
+.dataSharingReviewList__checkbox {
   width: 1rem;
   height: 1rem;
   margin: 0;
 }
 
-.dataImportList__title,
-.dataImportList__meta {
+.dataSharingReviewList__title,
+.dataSharingReviewList__meta {
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
-.dataImportList__row--tree .dataImportList__title {
+.dataSharingReviewList__row--tree .dataSharingReviewList__title {
   font-weight: 600;
 }
 
-.dataExportPage__panel {
+.dataSharingPreparePage__panel {
   display: grid;
   gap: 0.8rem;
 }
 
-.dataExportPage__selectionSummary {
+.dataSharingPreparePage__selectionSummary {
   margin: 0;
   color: var(--muted, var(--studio-muted-body));
   font-size: var(--font-small);
 }
 
-.dataExportPage__controls {
+.dataSharingPreparePage__controls {
   display: grid;
   grid-template-columns: minmax(8rem, max-content) minmax(12rem, 24rem) auto;
   gap: 0.5rem 0.65rem;
@@ -1338,12 +1338,12 @@ span.tagStudio__input--readonlyDisplay {
   justify-content: start;
 }
 
-.dataExportPage__scopeField,
-.dataExportPage__field {
+.dataSharingPreparePage__scopeField,
+.dataSharingPreparePage__field {
   min-inline-size: 0;
 }
 
-.dataExportPage__format {
+.dataSharingPreparePage__format {
   display: inline-grid;
   grid-template-columns: max-content max-content;
   gap: 0.4rem;
@@ -1353,30 +1353,30 @@ span.tagStudio__input--readonlyDisplay {
   border: 0;
 }
 
-.dataExportPage__format legend {
+.dataSharingPreparePage__format legend {
   padding: 0;
   color: var(--muted, var(--studio-muted));
   font-size: var(--font-small);
 }
 
-.dataExportPage__formatOptions {
+.dataSharingPreparePage__formatOptions {
   display: inline-flex;
   flex-wrap: wrap;
   gap: 0.35rem;
 }
 
-.dataExportPage__formatOption input {
+.dataSharingPreparePage__formatOption input {
   position: absolute;
   opacity: 0;
   pointer-events: none;
 }
 
-.dataExportPage__formatOption input:disabled + span {
+.dataSharingPreparePage__formatOption input:disabled + span {
   cursor: not-allowed;
   opacity: 0.45;
 }
 
-.dataExportPage__toggle {
+.dataSharingPreparePage__toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -1385,66 +1385,66 @@ span.tagStudio__input--readonlyDisplay {
   font-size: var(--font-small);
 }
 
-.dataExportPage__toggle[hidden] {
+.dataSharingPreparePage__toggle[hidden] {
   display: none;
 }
 
-.dataExportPage__listActions {
+.dataSharingPreparePage__listActions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   align-items: center;
 }
 
-.dataExportPage__filterPills {
+.dataSharingPreparePage__filterPills {
   display: contents;
 }
 
-.dataExportModal__details,
-.dataExportModal__counts {
+.dataSharingPrepareModal__details,
+.dataSharingPrepareModal__counts {
   display: grid;
   gap: 0.35rem;
   margin: 0;
 }
 
-.dataExportModal__counts {
+.dataSharingPrepareModal__counts {
   margin-top: 0.7rem;
 }
 
-.dataExportModal__countRow {
+.dataSharingPrepareModal__countRow {
   display: grid;
   grid-template-columns: minmax(6rem, 0.35fr) minmax(0, 1fr);
   gap: 0.5rem;
   align-items: baseline;
 }
 
-.dataExportModal__countRow dt {
+.dataSharingPrepareModal__countRow dt {
   margin: 0;
   color: var(--muted, var(--studio-muted));
   font-size: var(--font-caption);
   text-transform: lowercase;
 }
 
-.dataExportModal__countRow dd {
+.dataSharingPrepareModal__countRow dd {
   margin: 0;
   overflow-wrap: anywhere;
 }
 
-.dataExportModal__files {
+.dataSharingPrepareModal__files {
   display: grid;
   gap: 0.35rem;
   margin-top: 0.85rem;
 }
 
-.dataExportModal__files > span,
-.dataExportModal__issues > h4 {
+.dataSharingPrepareModal__files > span,
+.dataSharingPrepareModal__issues > h4 {
   margin: 0;
   color: var(--muted, var(--studio-muted));
   font-size: var(--font-caption);
   text-transform: lowercase;
 }
 
-.dataExportModal__fileList {
+.dataSharingPrepareModal__fileList {
   min-height: 5rem;
   resize: vertical;
   font-family: var(--font-mono, monospace);
@@ -1452,48 +1452,48 @@ span.tagStudio__input--readonlyDisplay {
   white-space: pre;
 }
 
-.dataExportModal__issues {
+.dataSharingPrepareModal__issues {
   display: grid;
   gap: 0.35rem;
   margin-top: 0.85rem;
 }
 
-.dataExportModal__issues ul {
+.dataSharingPrepareModal__issues ul {
   margin: 0;
   padding-left: 1.1rem;
 }
 
-.dataExportList__row {
+.dataSharingPrepareList__row {
   grid-template-columns: minmax(0, 1fr);
 }
 
-.dataExportList__label {
+.dataSharingPrepareList__label {
   display: grid;
   grid-template-columns: 1rem 0.55rem minmax(0, 1fr);
   gap: 0.5rem;
   align-items: center;
   min-width: 0;
-  padding-left: calc(var(--data-export-depth, 0) * 1.15rem);
+  padding-left: calc(var(--data-sharing-prepare-depth, 0) * 1.15rem);
 }
 
-.dataExportList__checkbox {
+.dataSharingPrepareList__checkbox {
   width: 1rem;
   height: 1rem;
   margin: 0;
 }
 
-.dataExportList__viewable {
+.dataSharingPrepareList__viewable {
   width: 0.42rem;
   height: 0.42rem;
   border-radius: 999px;
   background: transparent;
 }
 
-.dataExportList__viewable.is-viewable {
+.dataSharingPrepareList__viewable.is-viewable {
   background: var(--studio-success);
 }
 
-.dataExportList__title {
+.dataSharingPrepareList__title {
   min-width: 0;
   overflow-wrap: anywhere;
 }
@@ -3434,8 +3434,8 @@ button.tagStudioList__cellLink {
     gap: 0.35rem 0.7rem;
   }
 
-  .dataImportPage__controls,
-  .dataExportPage__controls {
+  .dataSharingReviewPage__controls,
+  .dataSharingPreparePage__controls {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -3448,20 +3448,20 @@ button.tagStudioList__cellLink {
     flex: 1 1 100%;
   }
 
-  .dataImportPage__controls {
+  .dataSharingReviewPage__controls {
     grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
   }
 
-  .dataExportPage__toggle {
+  .dataSharingPreparePage__toggle {
     grid-column: auto;
   }
 
-  .dataImportList__label {
+  .dataSharingReviewList__label {
     grid-template-columns: 1rem minmax(0, 1fr);
   }
 
-  .dataImportList__meta {
+  .dataSharingReviewList__meta {
     grid-column: 2;
   }
 

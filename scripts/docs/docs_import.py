@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 
-WORKFLOW_ROOT = Path("var/studio/export-import")
+WORKFLOW_ROOT = Path("var/studio/data-sharing")
 STAGING_DIR_NAME = "import-staging"
 PREVIEW_DIR_NAME = "import-preview"
 DOCS_SCOPES_ROOT = Path("assets/data/docs/scopes")
@@ -1145,9 +1145,9 @@ def parse_staged_import(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Parse staged Docs Viewer import data and optionally write Markdown previews.")
     parser.add_argument("--scope", default="library", help="Docs Viewer scope to import")
-    parser.add_argument("--file", required=True, help="Staged JSON or JSONL filename under var/studio/export-import/<scope>/import-staging/")
+    parser.add_argument("--file", required=True, help="Staged JSON or JSONL filename under var/studio/data-sharing/<scope>/import-staging/")
     parser.add_argument("--repo-root", default="", help="Override repo root")
-    parser.add_argument("--write-previews", action="store_true", help="Write Markdown previews under var/studio/export-import/<scope>/import-preview/")
+    parser.add_argument("--write-previews", action="store_true", help="Write Markdown previews under var/studio/data-sharing/<scope>/import-preview/")
     parser.add_argument("--no-records", action="store_true", help="Omit normalized records from the printed report")
     return parser.parse_args()
 

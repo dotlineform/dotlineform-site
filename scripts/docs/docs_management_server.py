@@ -63,7 +63,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
 from docs_export import build_export, parse_doc_ids as parse_export_doc_ids  # noqa: E402
-from export_import_adapters import AdapterResolution, resolve_adapter  # noqa: E402
+from studio.data_sharing_adapters import AdapterResolution, resolve_adapter  # noqa: E402
 import docs_activity  # noqa: E402
 import docs_generated_reads  # noqa: E402
 import docs_management_routes as routes  # noqa: E402

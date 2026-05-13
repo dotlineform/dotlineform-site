@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Focused checks for export/import adapter registry dispatch."""
+"""Focused checks for Data Sharing adapter registry dispatch."""
 
 from __future__ import annotations
 
@@ -11,16 +11,16 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-ADAPTERS_PATH = REPO_ROOT / "scripts" / "docs" / "export_import_adapters.py"
+ADAPTERS_PATH = REPO_ROOT / "scripts" / "studio" / "data_sharing_adapters.py"
 
 
 def load_adapters_module():
     scripts_docs_dir = ADAPTERS_PATH.parent
     if str(scripts_docs_dir) not in sys.path:
         sys.path.insert(0, str(scripts_docs_dir))
-    spec = importlib.util.spec_from_file_location("export_import_adapters", ADAPTERS_PATH)
+    spec = importlib.util.spec_from_file_location("data_sharing_adapters", ADAPTERS_PATH)
     if spec is None or spec.loader is None:
-        raise RuntimeError("Could not load export_import_adapters.py")
+        raise RuntimeError("Could not load data_sharing_adapters.py")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
@@ -37,7 +37,7 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
 
 def registry_payload() -> dict[str, object]:
     return {
-        "schema_version": "export_import_adapters_v1",
+        "schema_version": "data_sharing_adapters_v1",
         "dispatch": [
             {"data_domain": "library", "operation": "export", "adapter_id": "documents"},
             {"data_domain": "catalogue", "operation": "export", "adapter_id": "catalogue"},
@@ -54,9 +54,9 @@ def registry_payload() -> dict[str, object]:
                         "scope": "library",
                         "status": "active",
                         "paths": {
-                            "export_root": "var/studio/export-import/library/exports",
-                            "staging_root": "var/studio/export-import/library/import-staging",
-                            "preview_root": "var/studio/export-import/library/import-preview",
+                            "export_root": "var/studio/data-sharing/library/exports",
+                            "staging_root": "var/studio/data-sharing/library/import-staging",
+                            "preview_root": "var/studio/data-sharing/library/import-preview",
                             "source_root": "_docs_library",
                         },
                         "sources": {
@@ -84,9 +84,9 @@ def registry_payload() -> dict[str, object]:
                         "scope": "catalogue",
                         "status": "stub",
                         "paths": {
-                            "export_root": "var/studio/export-import/catalogue/exports",
-                            "staging_root": "var/studio/export-import/catalogue/import-staging",
-                            "preview_root": "var/studio/export-import/catalogue/import-preview",
+                            "export_root": "var/studio/data-sharing/catalogue/exports",
+                            "staging_root": "var/studio/data-sharing/catalogue/import-staging",
+                            "preview_root": "var/studio/data-sharing/catalogue/import-preview",
                             "source_root": "assets/studio/data/catalogue",
                         },
                         "sources": {

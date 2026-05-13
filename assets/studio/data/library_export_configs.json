@@ -15,7 +15,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/studio/export-import/{scope}/exports/{export_id}-{timestamp}.json",
+        "path_pattern": "var/studio/data-sharing/{scope}/exports/{export_id}-{timestamp}.json",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {
@@ -127,7 +127,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/studio/export-import/{scope}/exports/{export_id}-{timestamp}.jsonl",
+        "path_pattern": "var/studio/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {
@@ -214,7 +214,7 @@
         "include_export_metadata": true
       },
       "output": {
-        "path_pattern": "var/studio/export-import/{scope}/exports/{export_id}-{timestamp}.jsonl",
+        "path_pattern": "var/studio/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl",
         "timestamp_format": "%Y%m%d-%H%M%S"
       },
       "selection": {

@@ -85,8 +85,8 @@ Current behavior:
 - used by `/docs/?scope=<scope>&mode=manage` for configured docs scopes
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by the `/docs/` management import modal for staged-file listing and source import writes
-- also used by `/studio/export/` to read the generated Library docs index locally and write configured Library export artifacts
-- also used by `/studio/import/` to list staged JSON/JSONL data files, write Markdown previews, apply selected Library summary updates, and apply selected Library hierarchy updates
+- also used by `/studio/data-sharing/prepare/` to read the generated Library docs index locally and write configured Library export artifacts
+- also used by `/studio/data-sharing/review/` to list staged JSON/JSONL data files, write Markdown previews, apply selected Library summary updates, and apply selected Library hierarchy updates
 - appends unified Studio activity rows for covered docs import/export/import-apply and broken-links audit actions when valid activity context is supplied
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
 - creates, archives, and deletes source docs under the current scope root
@@ -290,7 +290,7 @@ Broken-links behavior:
 
 Export behavior:
 
-- `data_domain` must resolve through `assets/studio/data/export_import_adapters.json`; the first implemented domain is `library`
+- `data_domain` must resolve through `assets/studio/data/data_sharing_adapters.json`; the first implemented domain is `library`
 - stub adapters and planned capabilities fail closed before the endpoint runs document-specific export behavior
 - `config_id` must resolve in the adapter-declared export config file
 - `target_format` may be `json`, `jsonl`, or omitted; omitted uses the config's default `target.format`
@@ -320,7 +320,7 @@ Runtime role:
 
 Import file listing behavior:
 
-- `data_domain` must resolve exactly one adapter through `assets/studio/data/export_import_adapters.json`
+- `data_domain` must resolve exactly one adapter through `assets/studio/data/data_sharing_adapters.json`
 - the first implementation maps `data_domain=library` to the `documents` adapter
 - stub adapters and planned capabilities fail closed before the endpoint runs document-specific import behavior
 - lists staged `.json` and `.jsonl` files under the adapter-declared staging root
@@ -619,8 +619,8 @@ Apply behavior:
   - `_docs_library/*.md`
 - non-source write targets are allowlisted to:
   - `var/docs/backups/`
-  - `var/studio/export-import/<data-domain>/exports/`
-  - `var/studio/export-import/<data-domain>/import-preview/`
+  - `var/studio/data-sharing/<data-domain>/exports/`
+  - `var/studio/data-sharing/<data-domain>/import-preview/`
   - `var/docs/logs/`
   - `var/docs/watch-suppressions/`
 - timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch
@@ -646,9 +646,9 @@ Export/import adapter behavior is covered by focused checks:
 - `tests/python/test_docs_export.py` verifies the Library export engine and service-facing output contracts.
 - `tests/python/test_docs_import.py` verifies staged Library import parsing, preview rendering, and path allowlists.
 - `tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, backups, and confirmation gates.
-- `tests/python/test_export_import_adapters.py` verifies active adapter resolution and future stub rejection.
+- `tests/python/test_data_sharing_adapters.py` verifies active adapter resolution and future stub rejection.
 - `tests/python/test_docs_activity.py` verifies Docs Management Studio Activity helper suppression, record groups, source refs, and warning status behavior.
-- `tests/smoke/data_import.py` verifies the Studio import route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
+- `tests/smoke/data_sharing_review.py` verifies the Studio import route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
 
 The `docs` profile runs the parser, service, and adapter checks.
 The `studio-smoke` profile builds a temporary site and runs the Studio import route smokes.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Config-driven dispatch for Studio export/import adapters."""
+"""Config-driven dispatch for Studio Data Sharing adapters."""
 
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ from pathlib import Path
 from typing import Any
 
 
-REGISTRY_REL_PATH = Path("assets/studio/data/export_import_adapters.json")
-SCHEMA_VERSION = "export_import_adapters_v1"
+REGISTRY_REL_PATH = Path("assets/studio/data/data_sharing_adapters.json")
+SCHEMA_VERSION = "data_sharing_adapters_v1"
 
 
 def normalize_id(value: Any) -> str:
@@ -96,13 +96,13 @@ def capability_records(adapter: dict[str, Any]) -> list[dict[str, Any]]:
 
 def load_registry(repo_root: Path, config_path: str | Path | None = None) -> dict[str, Any]:
     path = repo_root / (Path(config_path) if config_path else REGISTRY_REL_PATH)
-    payload = read_json_object(path, "export/import adapter registry")
+    payload = read_json_object(path, "Data Sharing adapter registry")
     if payload.get("schema_version") != SCHEMA_VERSION:
-        raise ValueError(f"export/import adapter registry schema_version must be {SCHEMA_VERSION}")
+        raise ValueError(f"Data Sharing adapter registry schema_version must be {SCHEMA_VERSION}")
     if not isinstance(payload.get("dispatch"), list):
-        raise ValueError("export/import adapter registry dispatch must be an array")
+        raise ValueError("Data Sharing adapter registry dispatch must be an array")
     if not isinstance(payload.get("adapters"), list):
-        raise ValueError("export/import adapter registry adapters must be an array")
+        raise ValueError("Data Sharing adapter registry adapters must be an array")
     return payload
 
 
@@ -129,9 +129,9 @@ def resolve_adapter(
         and normalize_id(item.get("operation")) == resolved_operation
     ]
     if not matches:
-        raise ValueError(f"no export/import adapter configured for {resolved_data_domain}/{resolved_operation}")
+        raise ValueError(f"no Data Sharing adapter configured for {resolved_data_domain}/{resolved_operation}")
     if len(matches) > 1:
-        raise ValueError(f"multiple export/import adapters configured for {resolved_data_domain}/{resolved_operation}")
+        raise ValueError(f"multiple Data Sharing adapters configured for {resolved_data_domain}/{resolved_operation}")
 
     adapter_id = normalize_id(matches[0].get("adapter_id"))
     adapters = [

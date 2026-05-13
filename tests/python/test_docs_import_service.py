@@ -37,7 +37,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
     (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
-    (root / "var/studio/export-import/library/import-staging").mkdir(parents=True, exist_ok=True)
+    (root / "var/studio/data-sharing/library/import-staging").mkdir(parents=True, exist_ok=True)
     index_path = root / "assets/data/docs/scopes/library/index.json"
     index_path.parent.mkdir(parents=True, exist_ok=True)
     docs = [
@@ -71,7 +71,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
                             "include_export_metadata": True,
                         },
                         "output": {
-                            "path_pattern": "var/studio/export-import/{scope}/exports/{export_id}-{timestamp}.jsonl",
+                            "path_pattern": "var/studio/data-sharing/{scope}/exports/{export_id}-{timestamp}.jsonl",
                             "timestamp_format": "%Y%m%d-%H%M%S",
                         },
                         "selection": {
@@ -109,11 +109,11 @@ def make_repo() -> tempfile.TemporaryDirectory:
         + "\n",
         encoding="utf-8",
     )
-    adapter_path = root / "assets/studio/data/export_import_adapters.json"
+    adapter_path = root / "assets/studio/data/data_sharing_adapters.json"
     adapter_path.write_text(
         json.dumps(
             {
-                "schema_version": "export_import_adapters_v1",
+                "schema_version": "data_sharing_adapters_v1",
                 "dispatch": [
                     {"data_domain": "library", "operation": "export", "adapter_id": "documents"},
                     {"data_domain": "library", "operation": "import_files", "adapter_id": "documents"},
@@ -131,9 +131,9 @@ def make_repo() -> tempfile.TemporaryDirectory:
                                 "label": "Library",
                                 "scope": "library",
                                 "paths": {
-                                    "export_root": "var/studio/export-import/library/exports",
-                                    "staging_root": "var/studio/export-import/library/import-staging",
-                                    "preview_root": "var/studio/export-import/library/import-preview",
+                                    "export_root": "var/studio/data-sharing/library/exports",
+                                    "staging_root": "var/studio/data-sharing/library/import-staging",
+                                    "preview_root": "var/studio/data-sharing/library/import-preview",
                                     "source_root": "_docs_library",
                                 },
                                 "sources": {
@@ -166,7 +166,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
 
 
 def write_staged(root: Path, filename: str, payload: object, scope: str = "library") -> None:
-    path = root / "var/studio/export-import" / scope / "import-staging" / filename
+    path = root / "var/studio/data-sharing" / scope / "import-staging" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     if filename.endswith(".jsonl"):
         rows = payload if isinstance(payload, list) else [payload]
@@ -238,12 +238,12 @@ def test_library_import_files_lists_json_and_jsonl_only() -> None:
         root = Path(temp)
         write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha"}])
         write_staged(root, "relationships.json", {"documents": []})
-        (root / "var/studio/export-import/library/import-staging/notes.txt").write_text("ignore\n", encoding="utf-8")
+        (root / "var/studio/data-sharing/library/import-staging/notes.txt").write_text("ignore\n", encoding="utf-8")
         payload = docs_management.handle_documents_import_files(root, "library")
 
     assert payload["ok"] is True
     assert payload["scope"] == "library"
-    assert payload["staging_root"] == "var/studio/export-import/library/import-staging"
+    assert payload["staging_root"] == "var/studio/data-sharing/library/import-staging"
     assert [item["filename"] for item in payload["files"]] == ["relationships.json", "summaries.jsonl"]
     assert [item["format"] for item in payload["files"]] == ["json", "jsonl"]
 
@@ -261,15 +261,15 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
             {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl"},
             dry_run=False,
         )
-        preview_paths = sorted((root / "var/studio/export-import/library/import-preview").glob("alpha-*.md"))
-        tree_paths = sorted((root / "var/studio/export-import/library/import-preview").glob("summaries-tree-*.md"))
+        preview_paths = sorted((root / "var/studio/data-sharing/library/import-preview").glob("alpha-*.md"))
+        tree_paths = sorted((root / "var/studio/data-sharing/library/import-preview").glob("summaries-tree-*.md"))
         preview_text = preview_paths[0].read_text(encoding="utf-8")
 
     assert payload["ok"] is True
     assert payload["preview_written"] is True
     assert len(preview_paths) == 1
     assert len(tree_paths) == 1
-    assert f"var/studio/export-import/library/import-preview/{preview_paths[0].name}" in [
+    assert f"var/studio/data-sharing/library/import-preview/{preview_paths[0].name}" in [
         item["path"] for item in payload["preview_files"]
     ]
     assert payload["summary_text"] == "Generated 2 Library import preview files."
@@ -285,11 +285,11 @@ def test_library_import_preview_dry_run_reports_without_writing() -> None:
             {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl"},
             dry_run=True,
         )
-        preview_exists = list((root / "var/studio/export-import/library/import-preview").glob("alpha-*.md"))
+        preview_exists = list((root / "var/studio/data-sharing/library/import-preview").glob("alpha-*.md"))
 
     assert payload["ok"] is True
     assert payload["preview_written"] is False
-    assert payload["preview_files"][0]["path"].startswith("var/studio/export-import/library/import-preview/alpha-")
+    assert payload["preview_files"][0]["path"].startswith("var/studio/data-sharing/library/import-preview/alpha-")
     assert payload["preview_files"][0]["path"].endswith(".md")
     assert payload["summary_text"] == "Validated 1 Library import preview file without writing."
     assert preview_exists == []
@@ -310,7 +310,7 @@ def test_documents_import_rejects_unconfigured_data_domain() -> None:
         else:
             raise AssertionError("unconfigured data domain should fail closed")
 
-    assert "no export/import adapter configured for catalogue/import_preview" in message
+    assert "no Data Sharing adapter configured for catalogue/import_preview" in message
 
 
 def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:

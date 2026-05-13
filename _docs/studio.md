@@ -18,14 +18,15 @@ The current Studio shell is organized around active admin entry points:
 
 - `Catalogue`
 - `Analytics`
+- `Data Sharing`
 - `Docs`
 
 The public site nav remains user-facing and separate from this admin layer. Public `Works` and public `Library` routes do not become Studio routes.
 There is no standalone Studio Search dashboard. Catalogue search configuration or review pages belong under the Catalogue dashboard; Docs Viewer search metrics or configuration belong in `/docs/` manage mode.
 
-Library workflows now live with their owning surfaces: Library document management and Docs Import are inside `/docs/` manage mode, generated Library document review is the [Library Documents](/docs/?scope=studio&doc=library-documents) report, and Library data import/export use `/studio/import/?scope=library` and `/studio/export/?scope=library`.
+Library workflows now live with their owning surfaces: Library document management and Docs Import are inside `/docs/` manage mode, generated Library document review is the [Library Documents](/docs/?scope=studio&doc=library-documents) report, and Library package preparation/review starts from `/studio/data-sharing/`.
 Those write-capable pages depend on the docs-management local service; when the service is unavailable, command execution stays unavailable.
-Export pattern definitions live in `assets/studio/data/library_export_configs.json`, not in route code or `studio_config.json`.
+Sharing profile definitions live in `assets/studio/data/library_export_configs.json`, not in route code or `studio_config.json`.
 
 ## Route Ready State
 
@@ -55,8 +56,7 @@ Read this section in this order:
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
    - **[Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
    - **[Library Documents](/docs/?scope=studio&doc=library-documents)**
-   - **[Studio Data Export](/docs/?scope=studio&doc=studio-data-export)**
-   - **[Studio Data Import](/docs/?scope=studio&doc=studio-data-import)**
+   - **[Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing)**
    - **[Library Export v1](/docs/?scope=studio&doc=library-export)**
    - **[Library Import v1](/docs/?scope=studio&doc=library-import)**
 	   - **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
@@ -77,6 +77,7 @@ Current Studio landing routes:
 - `/studio/`
 - `/studio/catalogue/`
 - `/studio/analytics/`
+- `/studio/data-sharing/`
 - `/docs/`
 
 Current workflow/detail routes:
@@ -85,8 +86,8 @@ Current workflow/detail routes:
 - `/studio/audits/`
 - `/studio/catalogue-field-registry/`
 - `/studio/docs-broken-links/`
-- `/studio/export/`
-- `/studio/import/`
+- `/studio/data-sharing/prepare/`
+- `/studio/data-sharing/review/`
 - `/studio/catalogue-status/`
 - `/studio/project-state/`
 - `/studio/bulk-add-work/`

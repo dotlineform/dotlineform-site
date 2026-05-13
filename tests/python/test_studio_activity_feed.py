@@ -51,14 +51,14 @@ def write_context_contract(repo_root: Path) -> None:
         json.dumps(
             {
                 "pages": {
-                    "data-export": {
-                        "label": "data export",
-                        "route": "/studio/export/",
+                    "data-sharing-prepare": {
+                        "label": "data sharing prepare",
+                        "route": "/studio/data-sharing/prepare/",
                         "actions": {
-                            "export-data": {
-                                "label": "export data",
-                                "control_id": "dataExportRun",
-                                "control_selector": "#dataExportRun",
+                            "prepare-share-package": {
+                                "label": "prepare share package",
+                                "control_id": "dataSharingPrepareRun",
+                                "control_selector": "#dataSharingPrepareRun",
                                 "endpoint": "/docs/export",
                                 "record_id_field": "export_id",
                             }
@@ -66,8 +66,8 @@ def write_context_contract(repo_root: Path) -> None:
                     }
                 },
                 "script_purposes": {
-                    "export-data": {
-                        "label": "export data",
+                    "prepare-share-package": {
+                        "label": "prepare share package",
                     }
                 },
             }
@@ -143,18 +143,18 @@ def test_context_normalizer_validates_contract_action() -> None:
         context = studio_activity.normalize_activity_context_from_contract(
             repo_root,
             {
-                "page_id": "data-export",
-                "action_id": "export-data",
-                "route": "/studio/export/",
-                "control_id": "dataExportRun",
-                "control_selector": "#dataExportRun",
+                "page_id": "data-sharing-prepare",
+                "action_id": "prepare-share-package",
+                "route": "/studio/data-sharing/prepare/",
+                "control_id": "dataSharingPrepareRun",
+                "control_selector": "#dataSharingPrepareRun",
                 "correlation_id": "export:test",
                 "export_id": "library:missing-summary",
             },
             endpoint="/docs/export",
             record_id="library:missing-summary",
         )
-        if context["action_id"] != "export-data":
+        if context["action_id"] != "prepare-share-package":
             raise AssertionError("action id was not preserved")
         if context["export_id"] != "library:missing-summary":
             raise AssertionError("record id was not preserved")
@@ -163,11 +163,11 @@ def test_context_normalizer_validates_contract_action() -> None:
             studio_activity.normalize_activity_context_from_contract(
                 repo_root,
                 {
-                    "page_id": "data-export",
-                    "action_id": "export-data",
-                    "route": "/studio/export/",
-                    "control_id": "dataExportRun",
-                    "control_selector": "#dataExportRun",
+                    "page_id": "data-sharing-prepare",
+                    "action_id": "prepare-share-package",
+                    "route": "/studio/data-sharing/prepare/",
+                    "control_id": "dataSharingPrepareRun",
+                    "control_selector": "#dataSharingPrepareRun",
                     "correlation_id": "export:test",
                     "export_id": "library:missing-summary",
                 },

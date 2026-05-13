@@ -28,14 +28,14 @@ def write_activity_contract(repo_root: Path) -> None:
         json.dumps(
             {
                 "pages": {
-                    "data-export": {
-                        "label": "data export",
-                        "route": "/studio/export/",
+                    "data-sharing-prepare": {
+                        "label": "data sharing prepare",
+                        "route": "/studio/data-sharing/prepare/",
                         "actions": {
-                            "export-data": {
-                                "label": "export data",
-                                "control_id": "dataExportRun",
-                                "control_selector": "#dataExportRun",
+                            "prepare-share-package": {
+                                "label": "prepare share package",
+                                "control_id": "dataSharingPrepareRun",
+                                "control_selector": "#dataSharingPrepareRun",
                                 "endpoint": routes.EXPORT_PATH,
                                 "record_id_field": "export_id",
                             }
@@ -54,14 +54,14 @@ def write_activity_contract(repo_root: Path) -> None:
                             }
                         },
                     },
-                    "data-import": {
-                        "label": "data import",
-                        "route": "/studio/import/",
+                    "data-sharing-review": {
+                        "label": "data sharing review",
+                        "route": "/studio/data-sharing/review/",
                         "actions": {
-                            "update-import-summaries": {
-                                "label": "update import summaries",
-                                "control_id": "dataImportUpdateSummary",
-                                "control_selector": "#dataImportUpdateSummary",
+                            "apply-returned-summaries": {
+                                "label": "apply returned summaries",
+                                "control_id": "dataSharingReviewUpdateSummary",
+                                "control_selector": "#dataSharingReviewUpdateSummary",
                                 "endpoint": routes.IMPORT_APPLY_PATH,
                                 "record_id_field": "staged_filename",
                             }
@@ -82,7 +82,7 @@ def write_activity_contract(repo_root: Path) -> None:
                     },
                 },
                 "script_purposes": {
-                    "export-data": {"label": "export data"},
+                    "prepare-share-package": {"label": "prepare share package"},
                     "import-source-data": {"label": "import source data"},
                     "update-docs-source": {"label": "update docs source"},
                     "run-audit": {"label": "run audit"},
@@ -107,11 +107,11 @@ def export_body() -> dict[str, object]:
         "config_id": "library-document-summaries",
         "doc_ids": ["library", "longform", "notes"],
         "activity_context": {
-            "page_id": "data-export",
-            "action_id": "export-data",
-            "route": "/studio/export/",
-            "control_id": "dataExportRun",
-            "control_selector": "#dataExportRun",
+            "page_id": "data-sharing-prepare",
+            "action_id": "prepare-share-package",
+            "route": "/studio/data-sharing/prepare/",
+            "control_id": "dataSharingPrepareRun",
+            "control_selector": "#dataSharingPrepareRun",
             "correlation_id": "export:library",
             "export_id": "library:library-document-summaries",
         },
@@ -150,7 +150,7 @@ def test_docs_export_activity_writes_compact_doc_ids() -> None:
             "output_written": True,
             "data_domain": "library",
             "config_id": "library-document-summaries",
-            "output_file": "var/studio/export-import/library/exports/export.jsonl",
+            "output_file": "var/studio/data-sharing/library/exports/export.jsonl",
             "counts": {"exported": 3, "failed": 0},
             "issue_counts": {"warnings": 0},
         }
@@ -200,11 +200,11 @@ def import_apply_body(confirm: bool) -> dict[str, object]:
         "staged_filename": "summaries.jsonl",
         "confirm": confirm,
         "activity_context": {
-            "page_id": "data-import",
-            "action_id": "update-import-summaries",
-            "route": "/studio/import/",
-            "control_id": "dataImportUpdateSummary",
-            "control_selector": "#dataImportUpdateSummary",
+            "page_id": "data-sharing-review",
+            "action_id": "apply-returned-summaries",
+            "route": "/studio/data-sharing/review/",
+            "control_id": "dataSharingReviewUpdateSummary",
+            "control_selector": "#dataSharingReviewUpdateSummary",
             "correlation_id": "import-apply:summaries",
             "staged_filename": "summaries.jsonl",
         },

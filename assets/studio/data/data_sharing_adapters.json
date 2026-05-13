@@ -1,5 +1,5 @@
 {
-  "schema_version": "export_import_adapters_v1",
+  "schema_version": "data_sharing_adapters_v1",
   "dispatch": [
     {
       "data_domain": "library",
@@ -69,9 +69,9 @@
           "scope": "library",
           "status": "active",
           "paths": {
-            "export_root": "var/studio/export-import/library/exports",
-            "staging_root": "var/studio/export-import/library/import-staging",
-            "preview_root": "var/studio/export-import/library/import-preview",
+            "export_root": "var/studio/data-sharing/library/exports",
+            "staging_root": "var/studio/data-sharing/library/import-staging",
+            "preview_root": "var/studio/data-sharing/library/import-preview",
             "source_root": "_docs_library"
           },
           "sources": {
@@ -118,9 +118,9 @@
           "scope": "catalogue",
           "status": "stub",
           "paths": {
-            "export_root": "var/studio/export-import/catalogue/exports",
-            "staging_root": "var/studio/export-import/catalogue/import-staging",
-            "preview_root": "var/studio/export-import/catalogue/import-preview",
+            "export_root": "var/studio/data-sharing/catalogue/exports",
+            "staging_root": "var/studio/data-sharing/catalogue/import-staging",
+            "preview_root": "var/studio/data-sharing/catalogue/import-preview",
             "source_root": "assets/studio/data/catalogue"
           },
           "sources": {
@@ -162,9 +162,9 @@
           "scope": "analytics",
           "status": "stub",
           "paths": {
-            "export_root": "var/studio/export-import/analytics/exports",
-            "staging_root": "var/studio/export-import/analytics/import-staging",
-            "preview_root": "var/studio/export-import/analytics/import-preview",
+            "export_root": "var/studio/data-sharing/analytics/exports",
+            "staging_root": "var/studio/data-sharing/analytics/import-staging",
+            "preview_root": "var/studio/data-sharing/analytics/import-preview",
             "source_root": "_docs_analysis"
           },
           "sources": {

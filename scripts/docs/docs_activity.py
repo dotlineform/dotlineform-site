@@ -116,7 +116,7 @@ def maybe_attach_docs_export_activity(repo_root: Path, body: Dict[str, Any], pay
         body,
         payload,
         endpoint=routes.EXPORT_PATH,
-        script_purpose_id="export-data",
+        script_purpose_id="prepare-share-package",
         record_id=(
             f"{payload.get('data_domain') or body.get('data_domain')}:"
             f"{payload.get('config_id') or body.get('config_id')}"

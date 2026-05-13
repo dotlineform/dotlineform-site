@@ -24,7 +24,7 @@ import {
   workflowDomainFromUrl,
   workflowDomainIsActive,
   workflowDomainsForOperation
-} from "./export-import-adapters.js";
+} from "./data-sharing-adapters.js";
 
 const DEFAULT_SCOPE = "library";
 const WORKFLOW_SCOPES = [
@@ -81,7 +81,7 @@ function workflowScopeFromUrl(domains = WORKFLOW_SCOPES) {
 
 function scopeLabel(state, scope = state.scope) {
   const item = workflowDomainForKey(state.workflowScopes, scope) || WORKFLOW_SCOPES[0];
-  if (item.labelKey) return getStudioText(state.config, `data_export.${item.labelKey}`, item.fallback);
+  if (item.labelKey) return getStudioText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback);
   return normalizeText(item.label) || item.fallback || scope;
 }
 
@@ -93,7 +93,7 @@ function scopeTitle(state, scope = state.scope) {
 function renderScopeSelect(state) {
   state.scopeSelect.innerHTML = state.workflowScopes.map((item) => {
     const label = item.labelKey
-      ? getStudioText(state.config, `data_export.${item.labelKey}`, item.fallback)
+      ? getStudioText(state.config, `data_sharing_prepare.${item.labelKey}`, item.fallback)
       : (normalizeText(item.label) || item.fallback);
     const selected = item.key === state.scope ? " selected" : "";
     return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
@@ -113,8 +113,8 @@ function updateScopeUrl(scope, domains = WORKFLOW_SCOPES) {
 }
 
 async function loadAdapterRegistry(config) {
-  const registryPath = getStudioDataPath(config, "export_import_adapters")
-    || "/assets/studio/data/export_import_adapters.json";
+  const registryPath = getStudioDataPath(config, "data_sharing_adapters")
+    || "/assets/studio/data/data_sharing_adapters.json";
   return loadJson(registryPath);
 }
 
@@ -123,8 +123,8 @@ function scopeUnavailableMessage(state) {
   return normalizeText(domain && domain.message)
     || getStudioText(
       state.config,
-      "data_export.scope_unsupported",
-      "{scope_label} export is not implemented yet.",
+      "data_sharing_prepare.scope_unsupported",
+      "{scope_label} package preparation is not implemented yet.",
       { scope_label: scopeTitle(state) }
     );
 }
@@ -132,7 +132,7 @@ function scopeUnavailableMessage(state) {
 function routeStateDetail(state) {
   if (state && state.root) state.root.dataset.studioScope = state.scope;
   return {
-    route: "data-export",
+    route: "data-sharing-prepare",
     mode: "selection",
     service: state.serviceAvailable ? "available" : "unavailable",
     recordLoaded: Boolean(state.docs.length)
@@ -270,8 +270,8 @@ function syncCheckboxStates(state) {
   const visibleSelected = new Set(
     selectableDocIds(state, { visibleOnly: true }).filter((docId) => state.selectedIds.has(docId))
   );
-  state.listNode.querySelectorAll("[data-data-export-doc]").forEach((row) => {
-    const docId = normalizeText(row.getAttribute("data-data-export-doc"));
+  state.listNode.querySelectorAll("[data-data-sharing-prepare-doc]").forEach((row) => {
+    const docId = normalizeText(row.getAttribute("data-data-sharing-prepare-doc"));
     const checkbox = row.querySelector("input[type='checkbox']");
     if (!(checkbox instanceof HTMLInputElement)) return;
     const subtreeIds = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesCurrentFilters(state, id));
@@ -295,8 +295,8 @@ function updateSelectionSummary(state) {
     getStudioText(
       state.config,
       count === 1
-        ? "data_export.selection_summary_one"
-        : "data_export.selection_summary",
+        ? "data_sharing_prepare.selection_summary_one"
+        : "data_sharing_prepare.selection_summary",
       count === 1 ? "1 document selected." : "{count} documents selected.",
       { count }
     )
@@ -317,9 +317,9 @@ function renderListFilters(state) {
   state.filterNode.innerHTML = LIST_FILTERS.map((filter) => {
     const count = Number(counts[filter.key] || 0);
     const active = state.listFilter === filter.key;
-    const label = getStudioText(state.config, `data_export.${filter.labelKey}`, filter.fallback, { count });
+    const label = getStudioText(state.config, `data_sharing_prepare.${filter.labelKey}`, filter.fallback, { count });
     return `
-      <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-data-export-filter="${escapeHtml(filter.key)}" data-state="${active ? "active" : ""}" aria-pressed="${active ? "true" : "false"}">
+      <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-data-sharing-prepare-filter="${escapeHtml(filter.key)}" data-state="${active ? "active" : ""}" aria-pressed="${active ? "true" : "false"}">
         ${escapeHtml(label)}
       </button>
     `;
@@ -362,10 +362,10 @@ function renderFormatOptions(state) {
   state.formatOptionsNode.innerHTML = FORMAT_OPTIONS.map((format) => {
     const supported = supportedFormats.includes(format.key);
     const checked = state.targetFormat === format.key;
-    const label = getStudioText(state.config, `data_export.${format.labelKey}`, format.fallback);
+    const label = getStudioText(state.config, `data_sharing_prepare.${format.labelKey}`, format.fallback);
     return `
-      <label class="dataExportPage__formatOption">
-        <input type="radio" name="dataExportFormat" value="${escapeHtml(format.key)}"${checked ? " checked" : ""}${supported ? "" : " disabled"}>
+      <label class="dataSharingPreparePage__formatOption">
+        <input type="radio" name="dataSharingPrepareFormat" value="${escapeHtml(format.key)}"${checked ? " checked" : ""}${supported ? "" : " disabled"}>
         <span class="tagStudio__keyPill tagStudioFilters__groupBtn" data-state="${checked ? "active" : ""}" aria-disabled="${supported ? "false" : "true"}">${escapeHtml(label)}</span>
       </label>
     `;
@@ -399,8 +399,8 @@ function updateStatus(state) {
       "error",
       getStudioText(
         state.config,
-        "data_export.no_config",
-        "No enabled {scope_label} export configs found.",
+        "data_sharing_prepare.no_config",
+        "No enabled {scope_label} sharing profiles found.",
         { scope_label: scopeTitle(state) }
       )
     );
@@ -413,8 +413,8 @@ function updateStatus(state) {
       "error",
       getStudioText(
         state.config,
-        "data_export.docs_index_unavailable",
-        "No generated {scope_label} data index is available for this export scope.",
+        "data_sharing_prepare.docs_index_unavailable",
+        "No generated {scope_label} data index is available for this sharing profile.",
         { scope_label: scopeTitle(state) }
       )
     );
@@ -427,8 +427,8 @@ function updateStatus(state) {
       "error",
       getStudioText(
         state.config,
-        "data_export.service_unavailable",
-        "Docs management service unavailable. Start bin/dev-studio to run exports."
+        "data_sharing_prepare.service_unavailable",
+        "Docs management service unavailable. Start bin/dev-studio to prepare packages."
       )
     );
     state.runButton.disabled = true;
@@ -440,7 +440,7 @@ function updateStatus(state) {
     "",
     getStudioText(
       state.config,
-      "data_export.idle_status",
+      "data_sharing_prepare.idle_status",
       ""
     )
   );
@@ -461,11 +461,11 @@ function renderDocRow(state, doc) {
   const viewable = doc.viewable === true;
   const noContent = docHasNoContent(doc);
   return `
-    <li class="tagStudioList__row tagStudioList__row--center dataExportList__row" data-data-export-doc="${escapeHtml(docId)}" data-data-export-viewable="${viewable ? "true" : "false"}" data-data-export-no-content="${noContent ? "true" : "false"}" style="--data-export-depth: ${depth};">
-      <label class="dataExportList__label">
-        <input class="dataExportList__checkbox" type="checkbox" value="${escapeHtml(docId)}">
-        <span class="dataExportList__viewable${viewable ? " is-viewable" : ""}" aria-label="${viewable ? "viewable" : ""}"></span>
-        <span class="dataExportList__title">${escapeHtml(title)}</span>
+    <li class="tagStudioList__row tagStudioList__row--center dataSharingPrepareList__row" data-data-sharing-prepare-doc="${escapeHtml(docId)}" data-data-sharing-prepare-viewable="${viewable ? "true" : "false"}" data-data-sharing-prepare-no-content="${noContent ? "true" : "false"}" style="--data-sharing-prepare-depth: ${depth};">
+      <label class="dataSharingPrepareList__label">
+        <input class="dataSharingPrepareList__checkbox" type="checkbox" value="${escapeHtml(docId)}">
+        <span class="dataSharingPrepareList__viewable${viewable ? " is-viewable" : ""}" aria-label="${viewable ? "viewable" : ""}"></span>
+        <span class="dataSharingPrepareList__title">${escapeHtml(title)}</span>
       </label>
     </li>
   `;
@@ -477,10 +477,10 @@ function renderDocList(state) {
     .filter((doc) => visibleDocIds.has(normalizeText(doc.doc_id)))
     .map((doc) => renderDocRow(state, doc));
   state.listNode.innerHTML = rows.length
-    ? `<ul class="tagStudioList__rows dataExportList__rows">${rows.join("")}</ul>`
+    ? `<ul class="tagStudioList__rows dataSharingPrepareList__rows">${rows.join("")}</ul>`
     : `<p class="tagStudio__status">${escapeHtml(getStudioText(
       state.config,
-      "data_export.empty_state",
+      "data_sharing_prepare.empty_state",
       "No matching {scope_label} documents.",
       { scope_label: scopeTitle(state) }
     ))}</p>`;
@@ -514,14 +514,14 @@ function outputFiles(payload) {
 function countRows(state, counts) {
   const safeCounts = counts && typeof counts === "object" ? counts : {};
   const rows = [
-    ["selected", "data_export.count_selected", "selected", Number(safeCounts.selected || 0)],
-    ["exported", "data_export.count_exported", "exported", Number(safeCounts.exported || 0)],
-    ["skipped", "data_export.count_skipped", "skipped", Number(safeCounts.skipped || 0)],
-    ["failed", "data_export.count_failed", "failed", Number(safeCounts.failed || 0)],
-    ["truncated", "data_export.count_truncated", "truncated", Number(safeCounts.truncated || 0)]
+    ["selected", "data_sharing_prepare.count_selected", "selected", Number(safeCounts.selected || 0)],
+    ["exported", "data_sharing_prepare.count_exported", "packaged", Number(safeCounts.exported || 0)],
+    ["skipped", "data_sharing_prepare.count_skipped", "skipped", Number(safeCounts.skipped || 0)],
+    ["failed", "data_sharing_prepare.count_failed", "failed", Number(safeCounts.failed || 0)],
+    ["truncated", "data_sharing_prepare.count_truncated", "truncated", Number(safeCounts.truncated || 0)]
   ];
   return rows.map(([key, textKey, fallback, count]) => `
-    <div class="dataExportModal__countRow" data-count-key="${escapeHtml(key)}">
+    <div class="dataSharingPrepareModal__countRow" data-count-key="${escapeHtml(key)}">
       <dt>${escapeHtml(getStudioText(state.config, textKey, fallback))}</dt>
       <dd>${escapeHtml(documentLabel(count))}</dd>
     </div>
@@ -535,11 +535,11 @@ function issueList(state, warnings, errors) {
   if (!items.length) return "";
   const heading = getStudioText(
     state.config,
-    errorItems.length ? "data_export.issues_heading" : "data_export.warnings_heading",
+    errorItems.length ? "data_sharing_prepare.issues_heading" : "data_sharing_prepare.warnings_heading",
     errorItems.length ? "Issues" : "Warnings"
   );
   return `
-    <div class="dataExportModal__issues">
+    <div class="dataSharingPrepareModal__issues">
       <h4>${escapeHtml(heading)}</h4>
       <ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
     </div>
@@ -549,38 +549,38 @@ function issueList(state, warnings, errors) {
 function showResultModal(state, payload, failed = false) {
   const files = outputFiles(payload);
   const fileText = files.join("\n");
-  const fileLabel = getStudioText(state.config, "data_export.result_files_label", "files created");
-  const emptyFiles = getStudioText(state.config, "data_export.result_files_empty", "No files created.");
-  const formatLabel = getStudioText(state.config, "data_export.result_format_label", "format");
+  const fileLabel = getStudioText(state.config, "data_sharing_prepare.result_files_label", "files created");
+  const emptyFiles = getStudioText(state.config, "data_sharing_prepare.result_files_empty", "No files created.");
+  const formatLabel = getStudioText(state.config, "data_sharing_prepare.result_format_label", "format");
   const targetFormat = normalizeText(payload?.target_format).toUpperCase();
   const bodyHtml = `
-    <dl class="dataExportModal__details">
-      <div class="dataExportModal__countRow" data-detail-key="format">
+    <dl class="dataSharingPrepareModal__details">
+      <div class="dataSharingPrepareModal__countRow" data-detail-key="format">
         <dt>${escapeHtml(formatLabel)}</dt>
         <dd>${escapeHtml(targetFormat || "n/a")}</dd>
       </div>
     </dl>
-    <dl class="dataExportModal__counts">
+    <dl class="dataSharingPrepareModal__counts">
       ${countRows(state, payload?.counts)}
     </dl>
-    <label class="dataExportModal__files">
+    <label class="dataSharingPrepareModal__files">
       <span>${escapeHtml(fileLabel)}</span>
-      <textarea class="tagStudio__input dataExportModal__fileList" readonly rows="${Math.max(1, files.length)}">${escapeHtml(fileText || emptyFiles)}</textarea>
+      <textarea class="tagStudio__input dataSharingPrepareModal__fileList" readonly rows="${Math.max(1, files.length)}">${escapeHtml(fileText || emptyFiles)}</textarea>
     </label>
     ${issueList(state, payload?.warnings, payload?.errors)}
   `;
-  const closeRole = "data-export-modal-close";
+  const closeRole = "data-sharing-prepare-modal-close";
   state.modalHost.innerHTML = renderStudioModalFrame({
     hidden: false,
-    modalRole: "data-export-result-modal",
+    modalRole: "data-sharing-prepare-result-modal",
     backdropRole: closeRole,
-    titleId: "dataExportResultModalTitle",
+    titleId: "dataSharingPrepareResultModalTitle",
     title: failed
-      ? getStudioText(state.config, "data_export.result_title_failed", "Export failed")
-      : getStudioText(state.config, "data_export.result_title", "Export result"),
+      ? getStudioText(state.config, "data_sharing_prepare.result_title_failed", "Package preparation failed")
+      : getStudioText(state.config, "data_sharing_prepare.result_title", "Package result"),
     bodyHtml,
     actions: [
-      { role: closeRole, label: getStudioText(state.config, "data_export.result_close", "Close") }
+      { role: closeRole, label: getStudioText(state.config, "data_sharing_prepare.result_close", "Close") }
     ]
   });
   state.modalHost.querySelectorAll(`[data-role="${closeRole}"]`).forEach((node) => {
@@ -604,15 +604,15 @@ function setDocAndDescendantSelection(state, docId, selected) {
 function handleListChange(state, event) {
   const target = event.target;
   if (!(target instanceof HTMLInputElement)) return;
-  const row = target.closest("[data-data-export-doc]");
-  const docId = normalizeText(row ? row.getAttribute("data-data-export-doc") : "");
+  const row = target.closest("[data-data-sharing-prepare-doc]");
+  const docId = normalizeText(row ? row.getAttribute("data-data-sharing-prepare-doc") : "");
   if (!docId) return;
   setDocAndDescendantSelection(state, docId, target.checked);
   syncCheckboxStates(state);
   updateSelectionSummary(state);
 }
 
-async function runExport(state) {
+async function runPreparePackage(state) {
   if (!state.serviceAvailable || state.isRunning) return;
   if (!workflowDomainIsActive(state.workflowScopes, state.scope)) {
     updateStatus(state);
@@ -629,7 +629,7 @@ async function runExport(state) {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "data_export.format_required", "Select a supported export format.")
+      getStudioText(state.config, "data_sharing_prepare.format_required", "Select a supported package format.")
     );
     return;
   }
@@ -640,7 +640,7 @@ async function runExport(state) {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "data_export.selection_required", "Select at least one document.")
+      getStudioText(state.config, "data_sharing_prepare.selection_required", "Select at least one document.")
     );
     return;
   }
@@ -652,7 +652,7 @@ async function runExport(state) {
   setStatus(
     state.statusNode,
     "",
-    getStudioText(state.config, "data_export.status_running", "Running Data export...")
+    getStudioText(state.config, "data_sharing_prepare.status_running", "Running Data Sharing prepare...")
   );
 
   try {
@@ -664,11 +664,11 @@ async function runExport(state) {
       select_all: selectAll,
       missing_summary_only: state.missingSummaryOnlyWrap.hidden ? null : Boolean(state.missingSummaryOnly.checked),
       activity_context: buildStudioActivityContext({
-        pageId: "data-export",
-        actionId: "export-data",
-        route: "/studio/export/",
-        controlId: "dataExportRun",
-        controlSelector: "#dataExportRun",
+        pageId: "data-sharing-prepare",
+        actionId: "prepare-share-package",
+        route: "/studio/data-sharing/prepare/",
+        controlId: "dataSharingPrepareRun",
+        controlSelector: "#dataSharingPrepareRun",
         recordIdField: "export_id",
         recordId: `${state.scope}:${configId}`
       })
@@ -677,7 +677,7 @@ async function runExport(state) {
     setStatus(
       state.statusNode,
       "success",
-      payload.summary_text || getStudioText(state.config, "data_export.status_success", "Export completed.")
+      payload.summary_text || getStudioText(state.config, "data_sharing_prepare.status_success", "Package prepared.")
     );
   } catch (error) {
     const payload = error && error.payload ? error.payload : {};
@@ -686,7 +686,7 @@ async function runExport(state) {
       state.statusNode,
       "error",
       normalizeText(error && error.message)
-        || getStudioText(state.config, "data_export.status_failed", "Export failed.")
+        || getStudioText(state.config, "data_sharing_prepare.status_failed", "Package preparation failed.")
     );
   } finally {
     state.isRunning = false;
@@ -696,32 +696,32 @@ async function runExport(state) {
 }
 
 async function init() {
-  const bootStatus = document.getElementById("dataExportBootStatus");
-  const root = document.getElementById("dataExportRoot");
+  const bootStatus = document.getElementById("dataSharingPrepareBootStatus");
+  const root = document.getElementById("dataSharingPrepareRoot");
   if (!bootStatus || !root) return;
-  initializeStudioRouteState(root, { route: "data-export", mode: "selection" });
+  initializeStudioRouteState(root, { route: "data-sharing-prepare", mode: "selection" });
 
   const state = {
     bootStatus,
     root,
     scope: workflowScopeFromUrl(),
     workflowScopes: WORKFLOW_SCOPES,
-    scopeLabelNode: document.getElementById("dataExportScopeLabel"),
-    scopeSelect: document.getElementById("dataExportScopeSelect"),
-    configLabelNode: document.getElementById("dataExportConfigLabel"),
-    configSelect: document.getElementById("dataExportConfigSelect"),
-    missingSummaryOnlyWrap: document.getElementById("dataExportMissingSummaryWrap"),
-    missingSummaryOnly: document.getElementById("dataExportMissingSummaryOnly"),
-    missingSummaryLabelNode: document.getElementById("dataExportMissingSummaryLabel"),
-    formatLabelNode: document.getElementById("dataExportFormatLabel"),
-    formatOptionsNode: document.getElementById("dataExportFormatOptions"),
-    filterNode: document.getElementById("dataExportListFilters"),
-    selectAllButton: document.getElementById("dataExportSelectAll"),
-    clearButton: document.getElementById("dataExportClear"),
-    statusNode: document.getElementById("dataExportStatus"),
-    selectionSummary: document.getElementById("dataExportSelectionSummary"),
-    listNode: document.getElementById("dataExportList"),
-    runButton: document.getElementById("dataExportRun"),
+    scopeLabelNode: document.getElementById("dataSharingPrepareScopeLabel"),
+    scopeSelect: document.getElementById("dataSharingPrepareScopeSelect"),
+    configLabelNode: document.getElementById("dataSharingPrepareConfigLabel"),
+    configSelect: document.getElementById("dataSharingPrepareConfigSelect"),
+    missingSummaryOnlyWrap: document.getElementById("dataSharingPrepareMissingSummaryWrap"),
+    missingSummaryOnly: document.getElementById("dataSharingPrepareMissingSummaryOnly"),
+    missingSummaryLabelNode: document.getElementById("dataSharingPrepareMissingSummaryLabel"),
+    formatLabelNode: document.getElementById("dataSharingPrepareFormatLabel"),
+    formatOptionsNode: document.getElementById("dataSharingPrepareFormatOptions"),
+    filterNode: document.getElementById("dataSharingPrepareListFilters"),
+    selectAllButton: document.getElementById("dataSharingPrepareSelectAll"),
+    clearButton: document.getElementById("dataSharingPrepareClear"),
+    statusNode: document.getElementById("dataSharingPrepareStatus"),
+    selectionSummary: document.getElementById("dataSharingPrepareSelectionSummary"),
+    listNode: document.getElementById("dataSharingPrepareList"),
+    runButton: document.getElementById("dataSharingPrepareRun"),
     modalHost: null,
     config: null,
     exportConfigs: [],
@@ -760,7 +760,7 @@ async function init() {
 
   try {
     markBusy(state, true);
-    state.config = await loadStudioConfigWithText("data_export");
+    state.config = await loadStudioConfigWithText("data_sharing_prepare");
     const adapterRegistry = await loadAdapterRegistry(state.config);
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "export", WORKFLOW_SCOPES);
     state.scope = workflowScopeFromUrl(state.workflowScopes);
@@ -781,7 +781,7 @@ async function init() {
       try {
         docsIndexPayload = await loadJson(docsIndexReadPath);
       } catch (error) {
-        console.warn("data_export: docs index load failed", state.scope, error);
+        console.warn("data_sharing_prepare: docs index load failed", state.scope, error);
         state.docsIndexError = true;
       }
     }
@@ -792,19 +792,19 @@ async function init() {
     state.depthById = docsTree.depthById;
     state.docsById = new Map(state.docs.map((doc) => [normalizeText(doc.doc_id), doc]));
 
-    setText(state.scopeLabelNode, getStudioText(state.config, "data_export.scope_label", "scope"));
-    setText(state.configLabelNode, getStudioText(state.config, "data_export.config_label", "export pattern"));
+    setText(state.scopeLabelNode, getStudioText(state.config, "data_sharing_prepare.scope_label", "scope"));
+    setText(state.configLabelNode, getStudioText(state.config, "data_sharing_prepare.config_label", "sharing profile"));
     setText(
       state.missingSummaryLabelNode,
-      getStudioText(state.config, "data_export.missing_summary_label", "missing summaries only")
+      getStudioText(state.config, "data_sharing_prepare.missing_summary_label", "missing summaries only")
     );
-    setText(state.formatLabelNode, getStudioText(state.config, "data_export.format_label", "format"));
-    setText(state.selectAllButton, getStudioText(state.config, "data_export.select_all", "Select all"));
-    setText(state.clearButton, getStudioText(state.config, "data_export.clear", "Clear"));
-    setText(state.runButton, getStudioText(state.config, "data_export.run_button", "Run export"));
+    setText(state.formatLabelNode, getStudioText(state.config, "data_sharing_prepare.format_label", "format"));
+    setText(state.selectAllButton, getStudioText(state.config, "data_sharing_prepare.select_all", "Select all"));
+    setText(state.clearButton, getStudioText(state.config, "data_sharing_prepare.clear", "Clear"));
+    setText(state.runButton, getStudioText(state.config, "data_sharing_prepare.run_button", "Prepare package"));
     state.runButton.title = getStudioText(
       state.config,
-      "data_export.run_disabled_title",
+      "data_sharing_prepare.run_disabled_title",
       "Requires the local docs-management service."
     );
 
@@ -815,7 +815,7 @@ async function init() {
     state.configSelect.addEventListener("change", () => syncConfigOptions(state));
     state.formatOptionsNode.addEventListener("change", (event) => {
       const target = event.target;
-      if (!(target instanceof HTMLInputElement) || target.name !== "dataExportFormat") return;
+      if (!(target instanceof HTMLInputElement) || target.name !== "dataSharingPrepareFormat") return;
       state.targetFormat = normalizeText(target.value);
       renderFormatOptions(state);
       updateStatus(state);
@@ -828,10 +828,10 @@ async function init() {
     });
     state.filterNode.addEventListener("click", (event) => {
       const button = event.target && event.target.closest
-        ? event.target.closest("[data-data-export-filter]")
+        ? event.target.closest("[data-data-sharing-prepare-filter]")
         : null;
       if (!button) return;
-      const filter = normalizeText(button.getAttribute("data-data-export-filter"));
+      const filter = normalizeText(button.getAttribute("data-data-sharing-prepare-filter"));
       if (!LIST_FILTERS.some((item) => item.key === filter)) return;
       state.listFilter = filter;
       renderListFilters(state);
@@ -850,14 +850,14 @@ async function init() {
     });
     state.listNode.addEventListener("change", (event) => handleListChange(state, event));
     state.runButton.addEventListener("click", () => {
-      runExport(state).catch((error) => console.warn("data_export: unexpected run failure", error));
+      runPreparePackage(state).catch((error) => console.warn("data_sharing_prepare: unexpected run failure", error));
     });
 
     root.hidden = false;
     bootStatus.hidden = true;
     markReady(state, true);
   } catch (error) {
-    console.warn("data_export: load failed", error);
+    console.warn("data_sharing_prepare: load failed", error);
     root.hidden = false;
     bootStatus.hidden = true;
     setStatus(
@@ -865,8 +865,8 @@ async function init() {
       "error",
       getStudioText(
         state.config,
-        "data_export.load_failed",
-        "Failed to load {scope_label} export data.",
+        "data_sharing_prepare.load_failed",
+        "Failed to load {scope_label} package data.",
         { scope_label: state.config ? scopeTitle(state) : "Library" }
       )
     );

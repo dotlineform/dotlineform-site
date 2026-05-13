@@ -17,7 +17,7 @@ import {
   workflowDomainFromUrl,
   workflowDomainIsActive,
   workflowDomainsForOperation
-} from "./export-import-adapters.js";
+} from "./data-sharing-adapters.js";
 
 const DEFAULT_SCOPE = "library";
 const WORKFLOW_SCOPES = [
@@ -65,7 +65,7 @@ function scopeSupportsSourceApply(state) {
 
 function scopeLabel(state, scope = state.scope) {
   const item = workflowDomainForKey(state.workflowScopes, scope) || WORKFLOW_SCOPES[0];
-  if (item.labelKey) return getStudioText(state.config, `data_import.${item.labelKey}`, item.fallback);
+  if (item.labelKey) return getStudioText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
   return normalizeText(item.label) || item.fallback || scope;
 }
 
@@ -77,7 +77,7 @@ function scopeTitle(state, scope = state.scope) {
 function renderScopeSelect(state) {
   state.scopeSelect.innerHTML = state.workflowScopes.map((item) => {
     const label = item.labelKey
-      ? getStudioText(state.config, `data_import.${item.labelKey}`, item.fallback)
+      ? getStudioText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback)
       : (normalizeText(item.label) || item.fallback);
     const selected = item.key === state.scope ? " selected" : "";
     return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
@@ -105,8 +105,8 @@ async function loadJson(path) {
 }
 
 async function loadAdapterRegistry(config) {
-  const registryPath = getStudioDataPath(config, "export_import_adapters")
-    || "/assets/studio/data/export_import_adapters.json";
+  const registryPath = getStudioDataPath(config, "data_sharing_adapters")
+    || "/assets/studio/data/data_sharing_adapters.json";
   return loadJson(registryPath);
 }
 
@@ -115,8 +115,8 @@ function scopeUnavailableMessage(state) {
   return normalizeText(domain && domain.message)
     || getStudioText(
       state.config,
-      "data_import.scope_unsupported",
-      "{scope_label} import is not implemented yet.",
+      "data_sharing_review.scope_unsupported",
+      "{scope_label} returned-package review is not implemented yet.",
       { scope_label: scopeTitle(state) }
     );
 }
@@ -131,7 +131,7 @@ function routeModeForState(state) {
 function routeStateDetail(state) {
   if (state && state.root) state.root.dataset.studioScope = state.scope;
   return {
-    route: "data-import",
+    route: "data-sharing-review",
     mode: routeModeForState(state),
     service: state.serviceAvailable ? "available" : "unavailable",
     recordLoaded: Boolean(state.files && state.files.length)
@@ -176,7 +176,7 @@ function countRowsHtml(rows) {
   const items = Array.isArray(rows) ? rows : [];
   if (!items.length) return "";
   return `
-    <dl class="dataImportResultModal__counts">
+    <dl class="dataSharingReviewResultModal__counts">
       ${items.map((row) => `
         <div>
           <dt>${escapeHtml(row.label)}</dt>
@@ -190,9 +190,9 @@ function countRowsHtml(rows) {
 function issuesHtml(state, issues) {
   const items = issueItems(issues);
   if (!items.length) return "";
-  const heading = getStudioText(state.config, "data_import.issues_heading", "Issues");
+  const heading = getStudioText(state.config, "data_sharing_review.issues_heading", "Issues");
   return `
-    <div class="dataImportResultModal__issues">
+    <div class="dataSharingReviewResultModal__issues">
       <h4>${escapeHtml(heading)}</h4>
       <ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
     </div>
@@ -201,7 +201,7 @@ function issuesHtml(state, issues) {
 
 function showResultModal(state, { title, summary, countRows, issues }) {
   const summaryHtml = normalizeText(summary)
-    ? `<p class="tagStudioModal__label dataImportResultModal__summary">${escapeHtml(summary)}</p>`
+    ? `<p class="tagStudioModal__label dataSharingReviewResultModal__summary">${escapeHtml(summary)}</p>`
     : "";
   const bodyHtml = `
     ${summaryHtml}
@@ -212,8 +212,8 @@ function showResultModal(state, { title, summary, countRows, issues }) {
     root: state.root,
     title,
     bodyHtml,
-    closeLabel: getStudioText(state.config, "data_import.result_close_button", "Close")
-  }).catch((error) => console.warn("data_import: result modal failed", error));
+    closeLabel: getStudioText(state.config, "data_sharing_review.result_close_button", "Close")
+  }).catch((error) => console.warn("data_sharing_review: result modal failed", error));
 }
 
 function hideResultButton(state) {
@@ -272,15 +272,15 @@ function rowMetaParts(state, { docId, duplicate, currentLibrary }) {
   const parts = [];
   parts.push(
     docId
-      || getStudioText(state.config, "data_import.missing_doc_id", "missing doc_id")
+      || getStudioText(state.config, "data_sharing_review.missing_doc_id", "missing doc_id")
   );
   if (duplicate) {
-    parts.push(getStudioText(state.config, "data_import.duplicate_doc_id", "duplicate doc_id"));
+    parts.push(getStudioText(state.config, "data_sharing_review.duplicate_doc_id", "duplicate doc_id"));
   }
   if (currentLibrary && currentLibrary.exists === false) {
     parts.push(getStudioText(
       state.config,
-      "data_import.not_current_scope",
+      "data_sharing_review.not_current_scope",
       "not in current {scope_label}",
       { scope_label: scopeTitle(state) }
     ));
@@ -308,7 +308,7 @@ function buildDocumentRows(state, payload, previewLookup) {
       kind: normalizeText(previewFile && previewFile.kind) || "document",
       path,
       title: normalizeText(record && record.title)
-        || getStudioText(state.config, "data_import.missing_title", "missing title"),
+        || getStudioText(state.config, "data_sharing_review.missing_title", "missing title"),
       meta: rowMetaParts(state, { docId, duplicate, currentLibrary }).join(" · "),
       depth: 0
     };
@@ -350,7 +350,7 @@ function buildTreeRows(state, previewLookup) {
     const count = Number(item.record_count || 0);
     const countText = getStudioText(
       state.config,
-      "data_import.relationship_tree_count",
+      "data_sharing_review.relationship_tree_count",
       "{count} records",
       { count }
     );
@@ -363,7 +363,7 @@ function buildTreeRows(state, previewLookup) {
       duplicate: false,
       kind: "relationship_tree",
       path,
-      title: getStudioText(state.config, "data_import.relationship_tree_title", "Relationship tree"),
+      title: getStudioText(state.config, "data_sharing_review.relationship_tree_title", "Relationship tree"),
       meta: countText,
       depth: 0
     };
@@ -379,13 +379,13 @@ function buildPreviewRows(state, payload) {
 
 function renderPreviewRow(row) {
   const depth = Math.max(0, Number(row.depth || 0));
-  const treeClass = row.type === "relationship_tree" ? " dataImportList__row--tree" : "";
+  const treeClass = row.type === "relationship_tree" ? " dataSharingReviewList__row--tree" : "";
   return `
-    <li class="tagStudioList__row tagStudioList__row--center dataImportList__row${treeClass}" data-data-import-preview="${escapeHtml(row.id)}" data-data-import-depth="${depth}" style="--data-import-depth: ${depth};">
-      <label class="dataImportList__label">
-        <input class="dataImportList__checkbox" type="checkbox" value="${escapeHtml(row.id)}">
-        <span class="dataImportList__title">${escapeHtml(row.title)}</span>
-        ${row.meta ? `<span class="dataImportList__meta">${escapeHtml(row.meta)}</span>` : ""}
+    <li class="tagStudioList__row tagStudioList__row--center dataSharingReviewList__row${treeClass}" data-data-sharing-review-preview="${escapeHtml(row.id)}" data-data-sharing-review-depth="${depth}" style="--data-sharing-review-depth: ${depth};">
+      <label class="dataSharingReviewList__label">
+        <input class="dataSharingReviewList__checkbox" type="checkbox" value="${escapeHtml(row.id)}">
+        <span class="dataSharingReviewList__title">${escapeHtml(row.title)}</span>
+        ${row.meta ? `<span class="dataSharingReviewList__meta">${escapeHtml(row.meta)}</span>` : ""}
       </label>
     </li>
   `;
@@ -395,13 +395,13 @@ function renderPreviewList(state) {
   if (!state.previewRows.length) {
     const emptyState = getStudioText(
       state.config,
-      "data_import.empty_state",
+      "data_sharing_review.empty_state",
       "Generate a preview to list staged documents."
     );
     state.listNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(emptyState)}</p>`;
     return;
   }
-  state.listNode.innerHTML = `<ul class="tagStudioList__rows dataImportList__rows">${state.previewRows.map(renderPreviewRow).join("")}</ul>`;
+  state.listNode.innerHTML = `<ul class="tagStudioList__rows dataSharingReviewList__rows">${state.previewRows.map(renderPreviewRow).join("")}</ul>`;
   syncPreviewCheckboxes(state);
 }
 
@@ -416,8 +416,8 @@ function selectedDocumentRecordIndices(state) {
 }
 
 function syncPreviewCheckboxes(state) {
-  state.listNode.querySelectorAll("[data-data-import-preview]").forEach((row) => {
-    const rowId = normalizeText(row.getAttribute("data-data-import-preview"));
+  state.listNode.querySelectorAll("[data-data-sharing-review-preview]").forEach((row) => {
+    const rowId = normalizeText(row.getAttribute("data-data-sharing-review-preview"));
     const checkbox = row.querySelector("input[type='checkbox']");
     if (!(checkbox instanceof HTMLInputElement)) return;
     checkbox.checked = state.selectedPreviewIds.has(rowId);
@@ -431,8 +431,8 @@ function updateSelectionSummary(state) {
     getStudioText(
       state.config,
       count === 1
-        ? "data_import.selection_summary_one"
-        : "data_import.selection_summary",
+        ? "data_sharing_review.selection_summary_one"
+        : "data_sharing_review.selection_summary",
       count === 1 ? "1 preview selected." : "{count} previews selected.",
       { count }
     )
@@ -443,8 +443,8 @@ function updateSelectionSummary(state) {
 function handlePreviewListChange(state, event) {
   const target = event.target;
   if (!(target instanceof HTMLInputElement)) return;
-  const row = target.closest("[data-data-import-preview]");
-  const rowId = normalizeText(row ? row.getAttribute("data-data-import-preview") : "");
+  const row = target.closest("[data-data-sharing-review-preview]");
+  const rowId = normalizeText(row ? row.getAttribute("data-data-sharing-review-preview") : "");
   if (!rowId) return;
   if (target.checked) {
     state.selectedPreviewIds.add(rowId);
@@ -458,23 +458,23 @@ function previewCountRows(state, counts) {
   const safeCounts = counts && typeof counts === "object" ? counts : {};
   return [
     {
-      label: getStudioText(state.config, "data_import.count_records", "records"),
+      label: getStudioText(state.config, "data_sharing_review.count_records", "records"),
       value: Number(safeCounts.records || 0)
     },
     {
-      label: getStudioText(state.config, "data_import.count_parsed", "parsed"),
+      label: getStudioText(state.config, "data_sharing_review.count_parsed", "parsed"),
       value: Number(safeCounts.parsed_records || 0)
     },
     {
-      label: getStudioText(state.config, "data_import.count_malformed", "malformed"),
+      label: getStudioText(state.config, "data_sharing_review.count_malformed", "malformed"),
       value: Number(safeCounts.malformed_records || 0)
     },
     {
-      label: getStudioText(state.config, "data_import.count_warnings", "warnings"),
+      label: getStudioText(state.config, "data_sharing_review.count_warnings", "warnings"),
       value: Number(safeCounts.warnings || 0)
     },
     {
-      label: getStudioText(state.config, "data_import.count_errors", "errors"),
+      label: getStudioText(state.config, "data_sharing_review.count_errors", "errors"),
       value: Number(safeCounts.errors || 0)
     }
   ];
@@ -484,8 +484,8 @@ function renderResult(state, payload, failed = false) {
   const result = {
     title: getStudioText(
       state.config,
-      failed ? "data_import.result_title_failed" : "data_import.result_title",
-      failed ? "Import preview failed" : "Import preview"
+      failed ? "data_sharing_review.result_title_failed" : "data_sharing_review.result_title",
+      failed ? "Returned package review failed" : "Returned package review"
     ),
     summary: normalizeText(payload.summary_text || ""),
     countRows: previewCountRows(state, payload.counts),
@@ -530,7 +530,7 @@ async function runPreview(state) {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "data_import.file_required", "Select a staged data file first.")
+      getStudioText(state.config, "data_sharing_review.file_required", "Select a staged data file first.")
     );
     return;
   }
@@ -543,7 +543,7 @@ async function runPreview(state) {
   setStatus(
     state.statusNode,
     "",
-    getStudioText(state.config, "data_import.running_status", "Generating import previews...")
+    getStudioText(state.config, "data_sharing_review.running_status", "Generating returned package reviews...")
   );
 
   try {
@@ -552,7 +552,7 @@ async function runPreview(state) {
       staged_filename: file.filename
     });
     renderResult(state, payload, false);
-    const successMessage = payload.summary_text || getStudioText(state.config, "data_import.status_success", "Import previews generated.");
+    const successMessage = payload.summary_text || getStudioText(state.config, "data_sharing_review.status_success", "Returned package reviews generated.");
     setStatus(
       state.statusNode,
       "success",
@@ -566,7 +566,7 @@ async function runPreview(state) {
     setStatus(
       state.statusNode,
       "error",
-      normalizeText(error && error.message) || getStudioText(state.config, "data_import.status_failed", "Import preview failed.")
+      normalizeText(error && error.message) || getStudioText(state.config, "data_sharing_review.status_failed", "Returned package review failed.")
     );
   } finally {
     state.isRunning = false;
@@ -579,7 +579,7 @@ function applyCountsText(state, counts) {
   const safeCounts = counts && typeof counts === "object" ? counts : {};
   return getStudioText(
     state.config,
-    "data_import.summary_apply_counts",
+    "data_sharing_review.summary_apply_counts",
     "{updates} updates; {skipped} skipped; {errors} errors.",
     {
       updates: Number(safeCounts.updates || 0),
@@ -593,15 +593,15 @@ function applyCountRows(state, counts) {
   const safeCounts = counts && typeof counts === "object" ? counts : {};
   return [
     {
-      label: getStudioText(state.config, "data_import.count_updates", "updates"),
+      label: getStudioText(state.config, "data_sharing_review.count_updates", "updates"),
       value: Number(safeCounts.updates || 0)
     },
     {
-      label: getStudioText(state.config, "data_import.count_skipped", "skipped"),
+      label: getStudioText(state.config, "data_sharing_review.count_skipped", "skipped"),
       value: Number(safeCounts.skipped || 0)
     },
     {
-      label: getStudioText(state.config, "data_import.count_errors", "errors"),
+      label: getStudioText(state.config, "data_sharing_review.count_errors", "errors"),
       value: Number(safeCounts.errors || 0)
     }
   ];
@@ -611,7 +611,7 @@ function hierarchyCountsText(state, counts) {
   const safeCounts = counts && typeof counts === "object" ? counts : {};
   return getStudioText(
     state.config,
-    "data_import.hierarchy_apply_counts",
+    "data_sharing_review.hierarchy_apply_counts",
     "{changed} changed; {unchanged} unchanged; {skipped} skipped; {warnings} warnings; {errors} errors.",
     {
       changed: Number(safeCounts.changed || safeCounts.updates || 0),
@@ -627,23 +627,23 @@ function hierarchyCountRows(state, counts) {
   const safeCounts = counts && typeof counts === "object" ? counts : {};
   return [
     {
-      label: getStudioText(state.config, "data_import.count_changed", "changed"),
+      label: getStudioText(state.config, "data_sharing_review.count_changed", "changed"),
       value: Number(safeCounts.changed || safeCounts.updates || 0)
     },
     {
-      label: getStudioText(state.config, "data_import.count_unchanged", "unchanged"),
+      label: getStudioText(state.config, "data_sharing_review.count_unchanged", "unchanged"),
       value: Number(safeCounts.unchanged || 0)
     },
     {
-      label: getStudioText(state.config, "data_import.count_skipped", "skipped"),
+      label: getStudioText(state.config, "data_sharing_review.count_skipped", "skipped"),
       value: Number(safeCounts.skipped || 0)
     },
     {
-      label: getStudioText(state.config, "data_import.count_warnings", "warnings"),
+      label: getStudioText(state.config, "data_sharing_review.count_warnings", "warnings"),
       value: Number(safeCounts.warnings || 0)
     },
     {
-      label: getStudioText(state.config, "data_import.count_errors", "errors"),
+      label: getStudioText(state.config, "data_sharing_review.count_errors", "errors"),
       value: Number(safeCounts.errors || 0)
     }
   ];
@@ -679,7 +679,7 @@ function renderSummaryApplyResult(state, payload) {
   const countsValue = applyCountsText(state, payload && payload.counts);
   const summary = normalizeText(payload && payload.summary_text);
   showResultModal(state, {
-    title: getStudioText(state.config, "data_import.summary_apply_result_title", "Summary update complete"),
+    title: getStudioText(state.config, "data_sharing_review.summary_apply_result_title", "Summary update complete"),
     summary: `${summary} ${countsValue}`.trim(),
     countRows: applyCountRows(state, payload && payload.counts),
     issues: applyIssues(payload || {}, "summary apply")
@@ -690,7 +690,7 @@ function renderHierarchyApplyResult(state, payload) {
   const countsValue = hierarchyCountsText(state, payload && payload.counts);
   const summary = normalizeText(payload && payload.summary_text);
   showResultModal(state, {
-    title: getStudioText(state.config, "data_import.hierarchy_apply_result_title", "Hierarchy update complete"),
+    title: getStudioText(state.config, "data_sharing_review.hierarchy_apply_result_title", "Hierarchy update complete"),
     summary: `${summary} ${countsValue}`.trim(),
     countRows: hierarchyCountRows(state, payload && payload.counts),
     issues: applyIssues(payload || {}, "hierarchy apply")
@@ -711,7 +711,7 @@ async function runSummaryApply(state) {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "data_import.summary_apply_selection_required", "Select at least one document preview.")
+      getStudioText(state.config, "data_sharing_review.summary_apply_selection_required", "Select at least one document preview.")
     );
     return;
   }
@@ -722,7 +722,7 @@ async function runSummaryApply(state) {
   setStatus(
     state.statusNode,
     "",
-    getStudioText(state.config, "data_import.summary_apply_preflight_status", "Checking selected summaries...")
+    getStudioText(state.config, "data_sharing_review.summary_apply_preflight_status", "Checking selected summaries...")
   );
 
   try {
@@ -742,24 +742,24 @@ async function runSummaryApply(state) {
 
     const confirm = await openConfirmDetailModal({
       root: state.root,
-      title: getStudioText(state.config, "data_import.summary_apply_confirm_title", "Update summaries?"),
+      title: getStudioText(state.config, "data_sharing_review.summary_apply_confirm_title", "Update summaries?"),
       body: [
         preflight.summary_text || countsTextValue,
         countsTextValue,
         getStudioText(
           state.config,
-          "data_import.summary_apply_confirm_body",
+          "data_sharing_review.summary_apply_confirm_body",
           "This will back up and update selected Library source files."
         )
       ],
-      primaryLabel: getStudioText(state.config, "data_import.summary_apply_confirm_ok", "OK"),
-      cancelLabel: getStudioText(state.config, "data_import.summary_apply_confirm_cancel", "Cancel")
+      primaryLabel: getStudioText(state.config, "data_sharing_review.summary_apply_confirm_ok", "OK"),
+      cancelLabel: getStudioText(state.config, "data_sharing_review.summary_apply_confirm_cancel", "Cancel")
     });
     if (!confirm.confirmed) {
       setStatus(
         state.statusNode,
         "",
-        getStudioText(state.config, "data_import.summary_apply_cancelled", "Summary update cancelled.")
+        getStudioText(state.config, "data_sharing_review.summary_apply_cancelled", "Summary update cancelled.")
       );
       return;
     }
@@ -767,7 +767,7 @@ async function runSummaryApply(state) {
     setStatus(
       state.statusNode,
       "",
-      getStudioText(state.config, "data_import.summary_apply_running_status", "Updating selected summaries...")
+      getStudioText(state.config, "data_sharing_review.summary_apply_running_status", "Updating selected summaries...")
     );
     const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
       data_domain: state.scope,
@@ -776,11 +776,11 @@ async function runSummaryApply(state) {
       record_indices: recordIndices,
       confirm: true,
       activity_context: buildStudioActivityContext({
-        pageId: "data-import",
-        actionId: "update-import-summaries",
-        route: "/studio/import/",
-        controlId: "dataImportUpdateSummary",
-        controlSelector: "#dataImportUpdateSummary",
+        pageId: "data-sharing-review",
+        actionId: "apply-returned-summaries",
+        route: "/studio/data-sharing/review/",
+        controlId: "dataSharingReviewUpdateSummary",
+        controlSelector: "#dataSharingReviewUpdateSummary",
         recordIdField: "staged_filename",
         recordId: stagedFilename
       })
@@ -789,12 +789,12 @@ async function runSummaryApply(state) {
     setStatus(
       state.statusNode,
       "success",
-      applied.summary_text || getStudioText(state.config, "data_import.summary_apply_success", "Summaries updated.")
+      applied.summary_text || getStudioText(state.config, "data_sharing_review.summary_apply_success", "Summaries updated.")
     );
   } catch (error) {
     const payload = error && error.payload ? error.payload : {};
     const message = normalizeText(payload.summary_text) || normalizeText(error && error.message)
-      || getStudioText(state.config, "data_import.summary_apply_failed", "Summary update failed.");
+      || getStudioText(state.config, "data_sharing_review.summary_apply_failed", "Summary update failed.");
     renderSummaryApplyResult(state, { ...payload, summary_text: message });
     setStatus(state.statusNode, "error", message);
   } finally {
@@ -813,7 +813,7 @@ async function runHierarchyApply(state) {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "data_import.summary_apply_selection_required", "Select at least one document preview.")
+      getStudioText(state.config, "data_sharing_review.summary_apply_selection_required", "Select at least one document preview.")
     );
     return;
   }
@@ -824,7 +824,7 @@ async function runHierarchyApply(state) {
   setStatus(
     state.statusNode,
     "",
-    getStudioText(state.config, "data_import.hierarchy_apply_preflight_status", "Checking selected hierarchy changes...")
+    getStudioText(state.config, "data_sharing_review.hierarchy_apply_preflight_status", "Checking selected hierarchy changes...")
   );
 
   try {
@@ -844,24 +844,24 @@ async function runHierarchyApply(state) {
 
     const confirm = await openConfirmDetailModal({
       root: state.root,
-      title: getStudioText(state.config, "data_import.hierarchy_apply_confirm_title", "Update hierarchy?"),
+      title: getStudioText(state.config, "data_sharing_review.hierarchy_apply_confirm_title", "Update hierarchy?"),
       body: [
         preflight.summary_text || countsTextValue,
         countsTextValue,
         getStudioText(
           state.config,
-          "data_import.hierarchy_apply_confirm_body",
+          "data_sharing_review.hierarchy_apply_confirm_body",
           "This will back up and update selected Library source parent ids."
         )
       ],
-      primaryLabel: getStudioText(state.config, "data_import.hierarchy_apply_confirm_ok", "OK"),
-      cancelLabel: getStudioText(state.config, "data_import.hierarchy_apply_confirm_cancel", "Cancel")
+      primaryLabel: getStudioText(state.config, "data_sharing_review.hierarchy_apply_confirm_ok", "OK"),
+      cancelLabel: getStudioText(state.config, "data_sharing_review.hierarchy_apply_confirm_cancel", "Cancel")
     });
     if (!confirm.confirmed) {
       setStatus(
         state.statusNode,
         "",
-        getStudioText(state.config, "data_import.hierarchy_apply_cancelled", "Hierarchy update cancelled.")
+        getStudioText(state.config, "data_sharing_review.hierarchy_apply_cancelled", "Hierarchy update cancelled.")
       );
       return;
     }
@@ -869,7 +869,7 @@ async function runHierarchyApply(state) {
     setStatus(
       state.statusNode,
       "",
-      getStudioText(state.config, "data_import.hierarchy_apply_running_status", "Updating selected hierarchy...")
+      getStudioText(state.config, "data_sharing_review.hierarchy_apply_running_status", "Updating selected hierarchy...")
     );
     const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
       data_domain: state.scope,
@@ -878,11 +878,11 @@ async function runHierarchyApply(state) {
       record_indices: recordIndices,
       confirm: true,
       activity_context: buildStudioActivityContext({
-        pageId: "data-import",
-        actionId: "update-import-hierarchy",
-        route: "/studio/import/",
-        controlId: "dataImportApplyHierarchy",
-        controlSelector: "#dataImportApplyHierarchy",
+        pageId: "data-sharing-review",
+        actionId: "apply-returned-hierarchy",
+        route: "/studio/data-sharing/review/",
+        controlId: "dataSharingReviewApplyHierarchy",
+        controlSelector: "#dataSharingReviewApplyHierarchy",
         recordIdField: "staged_filename",
         recordId: stagedFilename
       })
@@ -891,12 +891,12 @@ async function runHierarchyApply(state) {
     setStatus(
       state.statusNode,
       "success",
-      applied.summary_text || getStudioText(state.config, "data_import.hierarchy_apply_success", "Hierarchy updated.")
+      applied.summary_text || getStudioText(state.config, "data_sharing_review.hierarchy_apply_success", "Hierarchy updated.")
     );
   } catch (error) {
     const payload = error && error.payload ? error.payload : {};
     const message = normalizeText(payload.summary_text) || normalizeText(error && error.message)
-      || getStudioText(state.config, "data_import.hierarchy_apply_failed", "Hierarchy update failed.");
+      || getStudioText(state.config, "data_sharing_review.hierarchy_apply_failed", "Hierarchy update failed.");
     renderHierarchyApplyResult(state, { ...payload, summary_text: message });
     setStatus(state.statusNode, "error", message);
   } finally {
@@ -907,10 +907,10 @@ async function runHierarchyApply(state) {
 }
 
 async function init() {
-  const bootStatus = document.getElementById("dataImportBootStatus");
-  const root = document.getElementById("dataImportRoot");
+  const bootStatus = document.getElementById("dataSharingReviewBootStatus");
+  const root = document.getElementById("dataSharingReviewRoot");
   if (!bootStatus || !root) return;
-  initializeStudioRouteState(root, { route: "data-import", mode: "selection" });
+  initializeStudioRouteState(root, { route: "data-sharing-review", mode: "selection" });
 
   const state = {
     bootStatus,
@@ -919,19 +919,19 @@ async function init() {
     workflowScopes: WORKFLOW_SCOPES,
     summaryApplyScopes: WORKFLOW_SCOPES,
     hierarchyApplyScopes: WORKFLOW_SCOPES,
-    scopeLabelNode: document.getElementById("dataImportScopeLabel"),
-    scopeSelect: document.getElementById("dataImportScopeSelect"),
-    fileLabelNode: document.getElementById("dataImportFileLabel"),
-    fileSelect: document.getElementById("dataImportFileSelect"),
-    previewButton: document.getElementById("dataImportPreview"),
-    statusNode: document.getElementById("dataImportStatus"),
-    resultButton: document.getElementById("dataImportResults"),
-    selectionSummary: document.getElementById("dataImportSelectionSummary"),
-    selectAllButton: document.getElementById("dataImportSelectAll"),
-    clearButton: document.getElementById("dataImportClear"),
-    listNode: document.getElementById("dataImportList"),
-    updateSummaryButton: document.getElementById("dataImportUpdateSummary"),
-    applyHierarchyButton: document.getElementById("dataImportApplyHierarchy"),
+    scopeLabelNode: document.getElementById("dataSharingReviewScopeLabel"),
+    scopeSelect: document.getElementById("dataSharingReviewScopeSelect"),
+    fileLabelNode: document.getElementById("dataSharingReviewFileLabel"),
+    fileSelect: document.getElementById("dataSharingReviewFileSelect"),
+    previewButton: document.getElementById("dataSharingReviewRun"),
+    statusNode: document.getElementById("dataSharingReviewStatus"),
+    resultButton: document.getElementById("dataSharingReviewResults"),
+    selectionSummary: document.getElementById("dataSharingReviewSelectionSummary"),
+    selectAllButton: document.getElementById("dataSharingReviewSelectAll"),
+    clearButton: document.getElementById("dataSharingReviewClear"),
+    listNode: document.getElementById("dataSharingReviewList"),
+    updateSummaryButton: document.getElementById("dataSharingReviewUpdateSummary"),
+    applyHierarchyButton: document.getElementById("dataSharingReviewApplyHierarchy"),
     config: null,
     files: [],
     previewRows: [],
@@ -959,7 +959,7 @@ async function init() {
   if (requiredNodes.some((node) => !node)) return;
 
   try {
-    state.config = await loadStudioConfigWithText("data_import");
+    state.config = await loadStudioConfigWithText("data_sharing_review");
     const adapterRegistry = await loadAdapterRegistry(state.config);
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "import_files", WORKFLOW_SCOPES);
     state.summaryApplyScopes = workflowDomainsForOperation(adapterRegistry, "summary_apply", []);
@@ -968,34 +968,34 @@ async function init() {
     renderScopeSelect(state);
     state.serviceAvailable = Boolean(await probeDocsManagementHealth());
 
-    setText(state.scopeLabelNode, getStudioText(state.config, "data_import.scope_label", "scope"));
-    setText(state.fileLabelNode, getStudioText(state.config, "data_import.file_label", "staged file"));
-    setText(state.previewButton, getStudioText(state.config, "data_import.preview_button", "Generate preview"));
-    setText(state.resultButton, getStudioText(state.config, "data_import.result_button", "results"));
-    setText(state.selectAllButton, getStudioText(state.config, "data_import.select_all", "select all"));
-    setText(state.clearButton, getStudioText(state.config, "data_import.clear", "clear"));
+    setText(state.scopeLabelNode, getStudioText(state.config, "data_sharing_review.scope_label", "scope"));
+    setText(state.fileLabelNode, getStudioText(state.config, "data_sharing_review.file_label", "staged file"));
+    setText(state.previewButton, getStudioText(state.config, "data_sharing_review.preview_button", "Review package"));
+    setText(state.resultButton, getStudioText(state.config, "data_sharing_review.result_button", "results"));
+    setText(state.selectAllButton, getStudioText(state.config, "data_sharing_review.select_all", "select all"));
+    setText(state.clearButton, getStudioText(state.config, "data_sharing_review.clear", "clear"));
     setText(
       state.updateSummaryButton,
-      getStudioText(state.config, "data_import.update_summary_button", "Update summary")
+      getStudioText(state.config, "data_sharing_review.update_summary_button", "Update summary")
     );
     setText(
       state.applyHierarchyButton,
-      getStudioText(state.config, "data_import.apply_hierarchy_button", "Apply hierarchy")
+      getStudioText(state.config, "data_sharing_review.apply_hierarchy_button", "Apply hierarchy")
     );
     state.updateSummaryButton.title = getStudioText(
       state.config,
-      "data_import.update_summary_title",
+      "data_sharing_review.update_summary_title",
       "Update selected document summaries from the staged file."
     );
     state.applyHierarchyButton.title = getStudioText(
       state.config,
-      "data_import.apply_hierarchy_title",
+      "data_sharing_review.apply_hierarchy_title",
       "Update selected document parent ids from the staged file."
     );
     if (!scopeSupportsSourceApply(state)) {
       const unsupportedApplyTitle = getStudioText(
         state.config,
-        "data_import.apply_unsupported_title",
+        "data_sharing_review.apply_unsupported_title",
         "{scope_label} source apply actions are not implemented yet.",
         { scope_label: scopeTitle(state) }
       );
@@ -1025,8 +1025,8 @@ async function init() {
         "error",
         getStudioText(
           state.config,
-          "data_import.service_unavailable",
-          "Docs management service unavailable. Start bin/dev-studio to run {scope_label} imports.",
+          "data_sharing_review.service_unavailable",
+          "Docs management service unavailable. Start bin/dev-studio to review {scope_label} returned packages.",
           { scope_label: scopeLabel(state) }
         )
       );
@@ -1042,8 +1042,8 @@ async function init() {
         "warn",
         getStudioText(
           state.config,
-          "data_import.no_files",
-          "No staged {scope_label} data files found under var/studio/export-import/{scope}/import-staging/.",
+          "data_sharing_review.no_files",
+          "No staged {scope_label} data files found under var/studio/data-sharing/{scope}/import-staging/.",
           { scope_label: scopeLabel(state), scope: state.scope }
         )
       );
@@ -1061,7 +1061,7 @@ async function init() {
       "",
       getStudioText(
         state.config,
-        "data_import.idle_status",
+        "data_sharing_review.idle_status",
         "Select a staged {scope_label} data file and generate previews.",
         { scope_label: scopeLabel(state) }
       )
@@ -1078,7 +1078,7 @@ async function init() {
         "",
         getStudioText(
           state.config,
-          "data_import.idle_status",
+          "data_sharing_review.idle_status",
           "Select a staged {scope_label} data file and generate previews.",
           { scope_label: scopeLabel(state) }
         )
@@ -1086,7 +1086,7 @@ async function init() {
       syncRouteBusyState(state);
     });
     state.previewButton.addEventListener("click", () => {
-      runPreview(state).catch((error) => console.warn("data_import: unexpected preview failure", error));
+      runPreview(state).catch((error) => console.warn("data_sharing_review: unexpected preview failure", error));
     });
     state.resultButton.addEventListener("click", () => {
       if (state.lastImportResult) showResultModal(state, state.lastImportResult);
@@ -1103,13 +1103,13 @@ async function init() {
     });
     state.listNode.addEventListener("change", (event) => handlePreviewListChange(state, event));
     state.updateSummaryButton.addEventListener("click", () => {
-      runSummaryApply(state).catch((error) => console.warn("data_import: unexpected summary apply failure", error));
+      runSummaryApply(state).catch((error) => console.warn("data_sharing_review: unexpected summary apply failure", error));
     });
     state.applyHierarchyButton.addEventListener("click", () => {
-      runHierarchyApply(state).catch((error) => console.warn("data_import: unexpected hierarchy apply failure", error));
+      runHierarchyApply(state).catch((error) => console.warn("data_sharing_review: unexpected hierarchy apply failure", error));
     });
   } catch (error) {
-    console.warn("data_import: init failed", error);
+    console.warn("data_sharing_review: init failed", error);
     root.hidden = false;
     bootStatus.hidden = true;
     state.serviceAvailable = false;
@@ -1118,8 +1118,8 @@ async function init() {
       "error",
       getStudioText(
         state.config || {},
-        "data_import.load_failed",
-        "Failed to load {scope_label} import data.",
+        "data_sharing_review.load_failed",
+        "Failed to load {scope_label} returned package data.",
         { scope_label: state.config ? scopeTitle(state) : "Library" }
       )
     );

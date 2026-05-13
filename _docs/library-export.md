@@ -28,7 +28,7 @@ Current implementation note:
 
 - Library export is the first active export/import data domain.
 - The browser sends `data_domain: "library"` to the neutral docs-management export endpoint.
-- `assets/studio/data/export_import_adapters.json` maps Library export to the active `documents` adapter.
+- `assets/studio/data/data_sharing_adapters.json` maps Library export to the active `documents` adapter.
 - Catalogue and Analytics appear only as future adapter stubs until their own record contracts and service behavior are implemented.
 
 The implementation should ship a narrow v1 and then iterate from real export runs.
@@ -281,13 +281,13 @@ They should be safe to delete and reproducible from canonical Docs Viewer source
 Expected first output pattern:
 
 ```text
-var/studio/export-import/<scope>/exports/<export_id>-<timestamp>.json
+var/studio/data-sharing/<scope>/exports/<export_id>-<timestamp>.json
 ```
 
 JSONL configs use the same flat scope directory and filename timestamp pattern:
 
 ```text
-var/studio/export-import/<scope>/exports/<export_id>-<timestamp>.jsonl
+var/studio/data-sharing/<scope>/exports/<export_id>-<timestamp>.jsonl
 ```
 
 Filename timestamps use the local runtime timezone so Studio output paths match the operator's clock.
@@ -413,7 +413,7 @@ Export reports should include:
 
 The Library export v1 runtime has three entry points around one shared export engine:
 
-- Studio page: `/studio/export/`
+- Studio page: `/studio/data-sharing/prepare/`
 - local service endpoint: `POST /docs/export` on `./scripts/docs/docs_management_server.py`
 - CLI: `./scripts/docs/docs_export.py`
 
@@ -437,9 +437,9 @@ They are not canonical source, are ignored by git, and should be reproducible fr
 The first supported output layouts are:
 
 ```text
-var/studio/export-import/library/exports/library-parent-child-relationships-<timestamp>.json
-var/studio/export-import/library/exports/library-document-summaries-<timestamp>.jsonl
-var/studio/export-import/library/exports/library-full-document-content-<timestamp>.jsonl
+var/studio/data-sharing/library/exports/library-parent-child-relationships-<timestamp>.json
+var/studio/data-sharing/library/exports/library-document-summaries-<timestamp>.jsonl
+var/studio/data-sharing/library/exports/library-full-document-content-<timestamp>.jsonl
 ```
 
 Document-row configs that declare both formats can also write `.json` files containing one JSON array of row objects.
@@ -482,7 +482,7 @@ Status: implemented in `./scripts/docs/docs_export.py`, including config-driven 
 
 Create a Library-scope Studio page that lists export configs, supports hierarchical document selection, and prepares the selected config/doc ids for the export service.
 
-Status: implemented at `/studio/export/`. The page defaults to `scope=library`, exposes a scope selector for `library`, `catalogue`, and `analytics`, loads enabled export configs for the selected scope, reads the generated docs index for configured docs-backed scopes, renders a hierarchical checkbox list in Docs Viewer order, includes generated non-viewable docs, marks viewable docs with a green dot, filters the list by all/no-content/not-viewable states, and runs exports through the local service endpoint using `data_domain` for adapter dispatch.
+Status: implemented at `/studio/data-sharing/prepare/`. The page defaults to `scope=library`, exposes a scope selector for `library`, `catalogue`, and `analytics`, loads enabled export configs for the selected scope, reads the generated docs index for configured docs-backed scopes, renders a hierarchical checkbox list in Docs Viewer order, includes generated non-viewable docs, marks viewable docs with a green dot, filters the list by all/no-content/not-viewable states, and runs exports through the local service endpoint using `data_domain` for adapter dispatch.
 
 Catalogue and Analytics are now valid UI workflow scopes, but they do not yet have enabled export configs or source data adapters.
 Their config shape, source indexes, record shapes, and import actions remain future design work.
@@ -511,4 +511,4 @@ Status: implemented across this doc, [Docs Export](/docs/?scope=studio&doc=scrip
 Add targeted checks for config loading, deterministic output, selected-doc resolution, and representative Library exports.
 Add a light Studio smoke test once the UI exists.
 
-Status: implemented in `tests/python/test_docs_export.py`, `tests/smoke/data_export.py`, and the `docs` profile in `./scripts/run_checks.py`.
+Status: implemented in `tests/python/test_docs_export.py`, `tests/smoke/data_sharing_prepare.py`, and the `docs` profile in `./scripts/run_checks.py`.

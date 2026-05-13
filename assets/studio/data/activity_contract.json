@@ -748,48 +748,48 @@
         }
       }
     },
-    "data-export": {
-      "label": "data export",
-      "route": "/studio/export/",
+    "data-sharing-prepare": {
+      "label": "data sharing prepare",
+      "route": "/studio/data-sharing/prepare/",
       "actions": {
-        "export-data": {
-          "label": "export data",
+        "prepare-share-package": {
+          "label": "prepare share package",
           "status": "v1-target",
-          "control_id": "dataExportRun",
-          "control_selector": "#dataExportRun",
-          "control_label": "Run export",
+          "control_id": "dataSharingPrepareRun",
+          "control_selector": "#dataSharingPrepareRun",
+          "control_label": "Prepare package",
           "endpoint": "/docs/export",
-          "record_family": "data_export",
+          "record_family": "share_package",
           "record_id_field": "export_id",
           "no_change_activity": "skip",
           "report_forced_rewrites": true,
-          "notes": "Covers writing configured docs export artifacts. Selection/filter changes remain excluded.",
+          "notes": "Covers writing configured docs share-package artifacts. Selection/filter changes remain excluded.",
           "script_purposes": [
             {
-              "id": "export-data",
+              "id": "prepare-share-package",
               "optional": false,
-              "when": "the export service writes an output artifact"
+              "when": "the Data Sharing service writes an outbound package"
             }
           ]
         }
       }
     },
-    "data-import": {
-      "label": "data import",
-      "route": "/studio/import/",
+    "data-sharing-review": {
+      "label": "data sharing review",
+      "route": "/studio/data-sharing/review/",
       "actions": {
-        "update-import-summaries": {
-          "label": "update import summaries",
+        "apply-returned-summaries": {
+          "label": "apply returned summaries",
           "status": "v1-target",
-          "control_id": "dataImportUpdateSummary",
-          "control_selector": "#dataImportUpdateSummary",
+          "control_id": "dataSharingReviewUpdateSummary",
+          "control_selector": "#dataSharingReviewUpdateSummary",
           "control_label": "Update summaries",
           "endpoint": "/docs/import/apply",
           "record_family": "docs_import",
           "record_id_field": "staged_filename",
           "no_change_activity": "skip",
           "report_forced_rewrites": true,
-          "notes": "Covers confirmed summary-field writes from the data import workflow. Preflight remains excluded.",
+          "notes": "Covers confirmed summary-field writes from returned package review. Preflight remains excluded.",
           "script_purposes": [
             {
               "id": "update-docs-source",
@@ -798,18 +798,18 @@
             }
           ]
         },
-        "update-import-hierarchy": {
-          "label": "update import hierarchy",
+        "apply-returned-hierarchy": {
+          "label": "apply returned hierarchy",
           "status": "v1-target",
-          "control_id": "dataImportApplyHierarchy",
-          "control_selector": "#dataImportApplyHierarchy",
+          "control_id": "dataSharingReviewApplyHierarchy",
+          "control_selector": "#dataSharingReviewApplyHierarchy",
           "control_label": "Update hierarchy",
           "endpoint": "/docs/import/apply",
           "record_family": "docs_import",
           "record_id_field": "staged_filename",
           "no_change_activity": "skip",
           "report_forced_rewrites": true,
-          "notes": "Covers confirmed parent-id writes from the data import workflow. Preflight remains excluded.",
+          "notes": "Covers confirmed parent-id writes from returned package review. Preflight remains excluded.",
           "script_purposes": [
             {
               "id": "update-docs-source",
@@ -1238,12 +1238,12 @@
         "Updated docs source records for {record_id}"
       ]
     },
-    "export-data": {
-      "label": "export data",
+    "prepare-share-package": {
+      "label": "prepare share package",
       "status": "v1-target",
-      "artifact_families": ["export-file"],
+      "artifact_families": ["share-package"],
       "detail_templates": [
-        "Exported data to {path}"
+        "Prepared share package at {path}"
       ]
     },
     "run-audit": {

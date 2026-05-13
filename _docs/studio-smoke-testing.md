@@ -143,8 +143,8 @@ Adopted routes:
 - `/studio/` with `#studioHomeRoot`
 - `/studio/audits/` with `#studioAuditsRoot`
 - `/studio/catalogue/` with `#studioCatalogueDashboardRoot`
-- `/studio/export/` with `#dataExportRoot`
-- `/studio/import/` with `#dataImportRoot`
+- `/studio/data-sharing/prepare/` with `#dataSharingPrepareRoot`
+- `/studio/data-sharing/review/` with `#dataSharingReviewRoot`
 - `/studio/analytics/` with `#studioAnalyticsDashboardRoot`
 - `/studio/ui-catalogue/` with `#studioUiCatalogueRoot`
 - `/studio/ui-catalogue/button/` with `#studioUiCatalogueButtonRoot`
