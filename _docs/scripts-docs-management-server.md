@@ -87,7 +87,7 @@ Current behavior:
 - also used by the `/docs/` management import modal for staged-file listing and source import writes
 - also used by `/studio/data-sharing/prepare/` to read the generated Library docs index locally and write configured Library export artifacts
 - also used by `/studio/data-sharing/review/` to list staged JSON/JSONL data files, write Markdown previews, apply selected Library summary updates, and apply selected Library hierarchy updates
-- appends unified Studio activity rows for covered docs import/export/import-apply and broken-links audit actions when valid activity context is supplied
+- appends unified activity rows for covered docs import, Data Sharing package/apply, and broken-links audit actions when valid activity context is supplied
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`

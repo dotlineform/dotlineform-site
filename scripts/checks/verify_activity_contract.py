@@ -132,8 +132,13 @@ def verify_pages(contract: Mapping[str, Any], purpose_ids: set[str]) -> set[str]
             fail(f"page {page_id} must be an object")
         require_text(page, "label", f"page {page_id}")
         route = require_text(page, "route", f"page {page_id}")
-        if not route.startswith("/studio/"):
+        surface = str(page.get("surface") or "studio").strip().lower()
+        if surface not in {"studio", "docs"}:
+            fail(f"page {page_id} surface must be studio or docs")
+        if surface == "studio" and not route.startswith("/studio/"):
             fail(f"page {page_id} route must be a Studio route")
+        if surface == "docs" and not route.startswith("/docs/"):
+            fail(f"page {page_id} route must be a Docs Viewer route")
         actions = require_mapping(page, "actions", f"page {page_id}")
         if not actions:
             fail(f"page {page_id} actions must not be empty")

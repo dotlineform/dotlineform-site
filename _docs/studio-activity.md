@@ -2,7 +2,7 @@
 doc_id: studio-activity
 title: Studio Activity
 added_date: 2026-05-08
-last_updated: "2026-05-08 19:25"
+last_updated: "2026-05-13"
 parent_id: studio
 sort_order: 53
 ---
@@ -12,10 +12,11 @@ This document describes the Studio page at `/studio/activity/`.
 
 ## Purpose
 
-The page is the v1 unified activity report for Studio actions.
+The page is the v1 unified activity report for local authoring actions.
 It lists script-level activity rows while preserving the page and button action that initiated them.
 
-Current coverage includes catalogue editor save/create/delete/publication actions plus Batch C import/export/report/audit/utility actions: workbook import apply, moment import apply, project-state report generation, docs source import, data export/import apply, docs broken-links audit, Studio audits, series tag saves/imports, tag registry writes, and tag alias writes.
+Current coverage includes catalogue editor save/create/delete/publication actions plus Batch C import/export/report/audit/utility actions: workbook import apply, moment import apply, project-state report generation, docs source import, Data Sharing package/apply actions, docs broken-links audit, Studio audits, series tag saves/imports, tag registry writes, and tag alias writes.
+Most initiating pages live under `/studio/`; Docs source import is a Docs Viewer manage-mode activity and is recorded with `surface: "docs"` in `assets/studio/data/activity_contract.json`.
 The retired split source-side and build-side report pages have been removed; this is the only active Studio activity report.
 
 ## Route Ready State

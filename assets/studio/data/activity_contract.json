@@ -724,6 +724,7 @@
     },
     "docs-import": {
       "label": "docs import",
+      "surface": "docs",
       "route": "/docs/",
       "actions": {
         "import-docs-source": {
