@@ -13,12 +13,12 @@ Endpoints:
   GET /capabilities
   GET /docs/import-source-files
   GET /docs/import-html-files
-  GET /docs/import/files
   POST /docs/import-source
   POST /docs/import-html
-  POST /docs/export
-  POST /docs/import/preview
-  POST /docs/import/apply
+  GET /data-sharing/returned-packages
+  POST /data-sharing/prepare
+  POST /data-sharing/review
+  POST /data-sharing/apply
   POST /docs/rebuild
   POST /docs/broken-links
   POST /docs/open-source
@@ -36,8 +36,8 @@ Security constraints:
   - Binds to 127.0.0.1 only.
   - CORS allows only http://localhost:* and http://127.0.0.1:*.
   - Writes only allowlisted Markdown docs under _docs/, _docs_library/, and _docs_analysis/.
-  - Writes export artifacts only under the resolved adapter export root.
-  - Writes import preview artifacts only under the resolved adapter preview root.
+  - Writes share package artifacts only under the resolved adapter outbound root.
+  - Writes returned-package review artifacts only under the resolved adapter review root.
   - Creates timestamped backup bundles under var/docs/backups/.
   - Writes minimal local logs under var/docs/logs/.
 """
@@ -63,7 +63,8 @@ if str(SCRIPTS_DIR) not in sys.path:
 from script_logging import append_script_log  # noqa: E402
 from docs_broken_links import audit_docs_broken_links  # noqa: E402
 from docs_export import build_export, parse_doc_ids as parse_export_doc_ids  # noqa: E402
-from studio.data_sharing_adapters import AdapterResolution, resolve_adapter  # noqa: E402
+from studio.data_sharing_adapters import AdapterResolution  # noqa: E402
+from studio import data_sharing_routes, data_sharing_service  # noqa: E402
 import docs_activity  # noqa: E402
 import docs_generated_reads  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
@@ -372,8 +373,13 @@ def handle_broken_links(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
     return payload
 
 
-def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), "prepare")
+def handle_docs_export(
+    repo_root: Path,
+    body: Dict[str, Any],
+    dry_run: bool,
+    adapter: Optional[AdapterResolution] = None,
+) -> Dict[str, Any]:
+    adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, body.get("data_domain"), "prepare"))
     scope = source_model.normalize_scope(adapter.scope)
     config_id = str(body.get("config_id") or "").strip()
     if not config_id:
@@ -438,14 +444,22 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
 
 
 def resolve_documents_adapter(repo_root: Path, data_domain: Any, operation: str) -> AdapterResolution:
-    adapter = resolve_adapter(repo_root, data_domain=data_domain, operation=operation)
+    adapter = data_sharing_service.resolve_for_service(repo_root, data_domain, operation)
+    return require_documents_adapter(adapter)
+
+
+def require_documents_adapter(adapter: AdapterResolution) -> AdapterResolution:
     if str(adapter.adapter.get("module") or "").strip() != "documents":
         raise ValueError(f"adapter {adapter.adapter_id!r} is not implemented by the documents service")
     return adapter
 
 
-def handle_documents_import_files(repo_root: Path, data_domain: Any) -> Dict[str, Any]:
-    adapter = resolve_documents_adapter(repo_root, data_domain, "list_returned")
+def handle_documents_import_files(
+    repo_root: Path,
+    data_domain: Any,
+    adapter: Optional[AdapterResolution] = None,
+) -> Dict[str, Any]:
+    adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, data_domain, "list_returned"))
     scope = source_model.normalize_scope(adapter.scope)
     staging_root = adapter.path("returned_package_staging_root")
     files = list_staged_import_files(repo_root, scope, staging_root=staging_root)
@@ -469,11 +483,16 @@ def handle_documents_import_files(repo_root: Path, data_domain: Any) -> Dict[str
     }
 
 
-def handle_documents_import_preview(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+def handle_documents_import_preview(
+    repo_root: Path,
+    body: Dict[str, Any],
+    dry_run: bool,
+    adapter: Optional[AdapterResolution] = None,
+) -> Dict[str, Any]:
     operation = str(body.get("operation") or "review").strip()
     if operation != "review":
         raise ValueError("operation must be review")
-    adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), "review")
+    adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, body.get("data_domain"), "review"))
     scope = source_model.normalize_scope(adapter.scope)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     if not staged_filename:
@@ -878,17 +897,33 @@ def handle_documents_import_hierarchy_apply(
     return payload
 
 
-def handle_documents_import_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+def handle_documents_import_apply(
+    repo_root: Path,
+    body: Dict[str, Any],
+    dry_run: bool,
+    adapter: Optional[AdapterResolution] = None,
+) -> Dict[str, Any]:
     operation = str(body.get("operation") or "").strip()
     if operation != "apply":
         raise ValueError("operation must be apply")
     apply_action = str(body.get("apply_action") or "").strip()
     if apply_action not in {"summary_apply", "hierarchy_apply"}:
         raise ValueError("apply_action must be summary_apply or hierarchy_apply")
-    adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), operation)
+    adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, body.get("data_domain"), operation))
     if apply_action == "summary_apply":
         return handle_documents_import_summary_apply(repo_root, body, dry_run, adapter)
     return handle_documents_import_hierarchy_apply(repo_root, body, dry_run, adapter)
+
+
+DATA_SHARING_HANDLERS = {
+    "documents": data_sharing_service.DataSharingAdapterHandlers(
+        module="documents",
+        prepare=handle_docs_export,
+        list_returned=handle_documents_import_files,
+        review=handle_documents_import_preview,
+        apply=handle_documents_import_apply,
+    )
+}
 
 
 def import_source_dependencies() -> import_source_service.ImportSourceDependencies:
@@ -989,17 +1024,17 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         routes.GENERATED_SEARCH_ALT_PATH: "_handle_generated_search_get",
         routes.IMPORT_SOURCE_FILES_PATH: "_handle_import_source_files_get",
         routes.IMPORT_HTML_FILES_PATH: "_handle_import_source_files_get",
-        routes.IMPORT_FILES_PATH: "_handle_import_files_get",
+        data_sharing_routes.RETURNED_PACKAGES_PATH: "_handle_data_sharing_returned_packages_get",
     }
 
     POST_HANDLERS: Dict[str, str] = {
         routes.OPEN_SOURCE_PATH: "_handle_open_source_post",
         routes.BROKEN_LINKS_PATH: "_handle_broken_links_post",
-        routes.EXPORT_PATH: "_handle_export_post",
+        data_sharing_routes.PREPARE_PATH: "_handle_data_sharing_prepare_post",
         routes.IMPORT_SOURCE_PATH: "_handle_import_source_post",
         routes.IMPORT_HTML_PATH: "_handle_import_source_post",
-        routes.IMPORT_PREVIEW_PATH: "_handle_import_preview_post",
-        routes.IMPORT_APPLY_PATH: "_handle_import_apply_post",
+        data_sharing_routes.REVIEW_PATH: "_handle_data_sharing_review_post",
+        data_sharing_routes.APPLY_PATH: "_handle_data_sharing_apply_post",
         routes.UPDATE_METADATA_PATH: "_handle_update_metadata_post",
         routes.UPDATE_VIEWABILITY_PATH: "_handle_update_viewability_post",
         routes.UPDATE_VIEWABILITY_BULK_PATH: "_handle_update_viewability_bulk_post",
@@ -1011,6 +1046,7 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         routes.DELETE_PREVIEW_PATH: "_handle_delete_preview_post",
         routes.DELETE_APPLY_PATH: "_handle_delete_apply_post",
     }
+    OPTIONS_PATHS = (*routes.OPTIONS_PATHS, *data_sharing_routes.OPTIONS_PATHS)
 
     @property
     def app(self) -> Dict[str, Any]:
@@ -1021,7 +1057,7 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self) -> None:  # noqa: N802
         request_path = self._request_path()
-        if request_path not in routes.OPTIONS_PATHS:
+        if request_path not in self.OPTIONS_PATHS:
             self.send_response(HTTPStatus.NOT_FOUND)
             self.end_headers()
             return
@@ -1072,9 +1108,14 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
     def _handle_import_source_files_get(self) -> None:
         write_response(self, HTTPStatus.OK, import_source_service.handle_import_source_files(self.app["repo_root"]))
 
-    def _handle_import_files_get(self) -> None:
+    def _handle_data_sharing_returned_packages_get(self) -> None:
         data_domain = query_param(self, "data_domain")
-        write_response(self, HTTPStatus.OK, handle_documents_import_files(self.app["repo_root"], data_domain))
+        payload = data_sharing_service.list_returned_packages(
+            self.app["repo_root"],
+            data_domain,
+            DATA_SHARING_HANDLERS,
+        )
+        write_response(self, HTTPStatus.OK, payload)
 
     def do_GET(self) -> None:  # noqa: N802
         try:
@@ -1099,8 +1140,8 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         docs_activity.maybe_attach_broken_links_activity(repo_root, body, payload)
         return HTTPStatus.OK, payload
 
-    def _handle_export_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
-        payload = handle_docs_export(repo_root, body, dry_run)
+    def _handle_data_sharing_prepare_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = data_sharing_service.prepare_package(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
         docs_activity.maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
 
@@ -1109,12 +1150,12 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         docs_activity.maybe_attach_import_source_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK, payload
 
-    def _handle_import_preview_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
-        payload = handle_documents_import_preview(repo_root, body, dry_run)
+    def _handle_data_sharing_review_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = data_sharing_service.review_returned_package(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
 
-    def _handle_import_apply_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
-        payload = handle_documents_import_apply(repo_root, body, dry_run)
+    def _handle_data_sharing_apply_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = data_sharing_service.apply_returned_changes(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
         docs_activity.maybe_attach_documents_import_apply_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
 

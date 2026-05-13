@@ -341,6 +341,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Verify Data Sharing adapter dispatch and future stub rejection.",
         ),
         CheckCommand(
+            "data-sharing-service-tests",
+            (sys.executable, "tests/python/test_data_sharing_service.py"),
+            "Verify Studio Data Sharing service gateway dispatch and neutral route names.",
+        ),
+        CheckCommand(
             "docs-import-tests",
             (sys.executable, "tests/python/test_docs_import.py"),
             "Verify staged Library import parsing and preview rendering.",

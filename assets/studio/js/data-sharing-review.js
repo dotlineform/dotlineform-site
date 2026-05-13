@@ -1,9 +1,9 @@
 import { getStudioDataPath, getStudioText, loadStudioConfigWithText } from "./studio-config.js";
 import {
-  DOCS_MANAGEMENT_ENDPOINTS,
+  DATA_SHARING_ENDPOINTS,
   getJson,
   postJson,
-  probeDocsManagementHealth
+  probeDataSharingHealth
 } from "./studio-transport.js";
 import {
   initializeStudioRouteState,
@@ -516,7 +516,7 @@ function syncApplyActionState(state) {
 }
 
 async function loadImportFiles(scope) {
-  const url = `${DOCS_MANAGEMENT_ENDPOINTS.importFiles}?data_domain=${encodeURIComponent(scope)}`;
+  const url = `${DATA_SHARING_ENDPOINTS.returnedPackages}?data_domain=${encodeURIComponent(scope)}`;
   const payload = await getJson(url);
   return Array.isArray(payload.files) ? payload.files : [];
 }
@@ -546,7 +546,7 @@ async function runPreview(state) {
   );
 
   try {
-    const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importPreview, {
+    const payload = await postJson(DATA_SHARING_ENDPOINTS.review, {
       data_domain: state.scope,
       operation: "review",
       staged_filename: file.filename
@@ -726,7 +726,7 @@ async function runSummaryApply(state) {
   );
 
   try {
-    const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
+    const preflight = await postJson(DATA_SHARING_ENDPOINTS.apply, {
       data_domain: state.scope,
       operation: "apply",
       apply_action: "summary_apply",
@@ -770,7 +770,7 @@ async function runSummaryApply(state) {
       "",
       getStudioText(state.config, "data_sharing_review.summary_apply_running_status", "Updating selected summaries...")
     );
-    const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
+    const applied = await postJson(DATA_SHARING_ENDPOINTS.apply, {
       data_domain: state.scope,
       operation: "apply",
       apply_action: "summary_apply",
@@ -830,7 +830,7 @@ async function runHierarchyApply(state) {
   );
 
   try {
-    const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
+    const preflight = await postJson(DATA_SHARING_ENDPOINTS.apply, {
       data_domain: state.scope,
       operation: "apply",
       apply_action: "hierarchy_apply",
@@ -874,7 +874,7 @@ async function runHierarchyApply(state) {
       "",
       getStudioText(state.config, "data_sharing_review.hierarchy_apply_running_status", "Updating selected hierarchy...")
     );
-    const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
+    const applied = await postJson(DATA_SHARING_ENDPOINTS.apply, {
       data_domain: state.scope,
       operation: "apply",
       apply_action: "hierarchy_apply",
@@ -970,7 +970,7 @@ async function init() {
     state.hierarchyApplyScopes = workflowDomainsForOperation(adapterRegistry, "apply", []);
     state.scope = workflowScopeFromUrl(state.workflowScopes);
     renderScopeSelect(state);
-    state.serviceAvailable = Boolean(await probeDocsManagementHealth());
+    state.serviceAvailable = Boolean(await probeDataSharingHealth());
 
     setText(state.scopeLabelNode, getStudioText(state.config, "data_sharing_review.scope_label", "scope"));
     setText(state.fileLabelNode, getStudioText(state.config, "data_sharing_review.file_label", "staged file"));

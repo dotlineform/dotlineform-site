@@ -2,7 +2,7 @@
 doc_id: site-request-studio-import-export-module
 title: Studio Data Sharing Module Implementation Request
 added_date: 2026-05-13
-last_updated: "2026-05-13 13:20"
+last_updated: "2026-05-13 16:01"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -13,7 +13,7 @@ hidden: false
 Status:
 
 - In progress
-- Slice 1 adapter contract implemented
+- Slice 2 shared service gateway cutover implemented
 
 ## Summary
 
@@ -271,14 +271,14 @@ Acceptance checks:
 
 ### Slice 2: shared service gateway cutover
 
-Status: planned.
+Status: implemented.
 
 Extract shared data sharing dispatch out of `scripts/docs/docs_management_server.py` into a Studio-owned data sharing service module.
 
 Implementation targets:
 
-- new shared service owner, for example `scripts/studio/data_sharing_service.py`
-- neutral data sharing route constants
+- new shared service owner: `scripts/studio/data_sharing_service.py`
+- neutral data sharing route constants: `scripts/studio/data_sharing_routes.py`
 - removal of old route ownership from docs-management once the service cutover is complete
 
 Acceptance checks:

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 import docs_management_routes as routes
+from studio import data_sharing_routes
 from docs_source_model import normalize_scope
 from studio_activity import (
     append_studio_activity,
@@ -115,7 +116,7 @@ def maybe_attach_docs_export_activity(repo_root: Path, body: Dict[str, Any], pay
         repo_root,
         body,
         payload,
-        endpoint=routes.EXPORT_PATH,
+        endpoint=data_sharing_routes.PREPARE_PATH,
         script_purpose_id="prepare-share-package",
         record_id=(
             f"{payload.get('data_domain') or body.get('data_domain')}:"
@@ -173,7 +174,7 @@ def maybe_attach_documents_import_apply_activity(repo_root: Path, body: Dict[str
         repo_root,
         body,
         payload,
-        endpoint=routes.IMPORT_APPLY_PATH,
+        endpoint=data_sharing_routes.APPLY_PATH,
         script_purpose_id="update-docs-source",
         record_id=str(body.get("staged_filename") or "").strip(),
         record_groups={"docs": doc_ids},

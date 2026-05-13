@@ -59,7 +59,7 @@ def write_context_contract(repo_root: Path) -> None:
                                 "label": "prepare share package",
                                 "control_id": "dataSharingPrepareRun",
                                 "control_selector": "#dataSharingPrepareRun",
-                                "endpoint": "/docs/export",
+                                "endpoint": "/data-sharing/prepare",
                                 "record_id_field": "export_id",
                             }
                         },
@@ -151,7 +151,7 @@ def test_context_normalizer_validates_contract_action() -> None:
                 "correlation_id": "export:test",
                 "export_id": "library:missing-summary",
             },
-            endpoint="/docs/export",
+            endpoint="/data-sharing/prepare",
             record_id="library:missing-summary",
         )
         if context["action_id"] != "prepare-share-package":
@@ -171,7 +171,7 @@ def test_context_normalizer_validates_contract_action() -> None:
                     "correlation_id": "export:test",
                     "export_id": "library:missing-summary",
                 },
-                endpoint="/docs/import/apply",
+                endpoint="/data-sharing/apply",
                 record_id="library:missing-summary",
             )
         except ValueError as exc:

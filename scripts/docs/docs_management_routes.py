@@ -12,15 +12,11 @@ GENERATED_SEARCH_PATH = "/docs/search"
 GENERATED_SEARCH_ALT_PATH = "/docs/generated/search"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
 IMPORT_HTML_FILES_PATH = "/docs/import-html-files"
-IMPORT_FILES_PATH = "/docs/import/files"
 
 OPEN_SOURCE_PATH = "/docs/open-source"
 BROKEN_LINKS_PATH = "/docs/broken-links"
-EXPORT_PATH = "/docs/export"
 IMPORT_SOURCE_PATH = "/docs/import-source"
 IMPORT_HTML_PATH = "/docs/import-html"
-IMPORT_PREVIEW_PATH = "/docs/import/preview"
-IMPORT_APPLY_PATH = "/docs/import/apply"
 UPDATE_METADATA_PATH = "/docs/update-metadata"
 UPDATE_VIEWABILITY_PATH = "/docs/update-viewability"
 UPDATE_VIEWABILITY_BULK_PATH = "/docs/update-viewability-bulk"
@@ -43,17 +39,13 @@ GET_PATHS = (
     GENERATED_SEARCH_ALT_PATH,
     IMPORT_SOURCE_FILES_PATH,
     IMPORT_HTML_FILES_PATH,
-    IMPORT_FILES_PATH,
 )
 
 POST_PATHS = (
     OPEN_SOURCE_PATH,
     BROKEN_LINKS_PATH,
-    EXPORT_PATH,
     IMPORT_SOURCE_PATH,
     IMPORT_HTML_PATH,
-    IMPORT_PREVIEW_PATH,
-    IMPORT_APPLY_PATH,
     UPDATE_METADATA_PATH,
     UPDATE_VIEWABILITY_PATH,
     UPDATE_VIEWABILITY_BULK_PATH,

@@ -14,6 +14,7 @@ if str(SCRIPTS_DOCS_DIR) not in sys.path:
 
 import docs_management_routes as routes  # noqa: E402
 import docs_management_server  # noqa: E402
+from studio import data_sharing_routes  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -36,13 +37,20 @@ def test_post_routes_are_unique() -> None:
 
 
 def test_options_routes_are_get_and_post_routes() -> None:
-    assert_no_duplicates(routes.OPTIONS_PATHS, "OPTIONS_PATHS")
+    all_get_paths = (*routes.GET_PATHS, *data_sharing_routes.GET_PATHS)
+    all_post_paths = (*routes.POST_PATHS, *data_sharing_routes.POST_PATHS)
+    assert_no_duplicates(docs_management_server.DocsManagementHandler.OPTIONS_PATHS, "OPTIONS_PATHS")
     assert_equal(set(routes.OPTIONS_PATHS), {*routes.GET_PATHS, *routes.POST_PATHS}, "OPTIONS_PATHS")
+    assert_equal(
+        set(docs_management_server.DocsManagementHandler.OPTIONS_PATHS),
+        {*all_get_paths, *all_post_paths},
+        "handler OPTIONS_PATHS",
+    )
 
 
 def test_handler_dispatch_covers_each_get_route() -> None:
     dispatch = docs_management_server.DocsManagementHandler.GET_HANDLERS
-    assert_equal(set(dispatch), set(routes.GET_PATHS), "GET_HANDLERS route keys")
+    assert_equal(set(dispatch), {*routes.GET_PATHS, *data_sharing_routes.GET_PATHS}, "GET_HANDLERS route keys")
     for route_path, handler_name in dispatch.items():
         handler = getattr(docs_management_server.DocsManagementHandler, handler_name, None)
         if handler is None:
@@ -51,7 +59,7 @@ def test_handler_dispatch_covers_each_get_route() -> None:
 
 def test_handler_dispatch_covers_each_post_route() -> None:
     dispatch = docs_management_server.DocsManagementHandler.POST_HANDLERS
-    assert_equal(set(dispatch), set(routes.POST_PATHS), "POST_HANDLERS route keys")
+    assert_equal(set(dispatch), {*routes.POST_PATHS, *data_sharing_routes.POST_PATHS}, "POST_HANDLERS route keys")
     for route_path, handler_name in dispatch.items():
         handler = getattr(docs_management_server.DocsManagementHandler, handler_name, None)
         if handler is None:

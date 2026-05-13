@@ -123,7 +123,7 @@ def install_mock_docs_service(page) -> None:
         parsed = urlparse(route.request.url)
         if parsed.path == "/health":
             payload = {"ok": True}
-        elif parsed.path == "/docs/import/files":
+        elif parsed.path == "/data-sharing/returned-packages":
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -138,7 +138,7 @@ def install_mock_docs_service(page) -> None:
                     }
                 ],
             }
-        elif parsed.path == "/docs/import/preview":
+        elif parsed.path == "/data-sharing/review":
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -205,7 +205,7 @@ def install_mock_docs_service(page) -> None:
                     }
                 ],
             }
-        elif parsed.path == "/docs/import/apply":
+        elif parsed.path == "/data-sharing/apply":
             request_body = {}
             try:
                 post_data_json = route.request.post_data_json

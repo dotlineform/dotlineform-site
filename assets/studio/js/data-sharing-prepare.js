@@ -1,7 +1,8 @@
 import {
+  DATA_SHARING_ENDPOINTS,
   DOCS_MANAGEMENT_ENDPOINTS,
   postJson,
-  probeDocsManagementHealth
+  probeDataSharingHealth
 } from "./studio-transport.js";
 import {
   getDocsScopeDataPath,
@@ -655,7 +656,7 @@ async function runPreparePackage(state) {
   );
 
   try {
-    const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.exportDocs, {
+    const payload = await postJson(DATA_SHARING_ENDPOINTS.prepare, {
       data_domain: state.scope,
       config_id: configId,
       target_format: targetFormat,
@@ -764,7 +765,7 @@ async function init() {
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "prepare", WORKFLOW_SCOPES);
     state.scope = workflowScopeFromUrl(state.workflowScopes);
     renderScopeSelect(state);
-    state.serviceAvailable = Boolean(await probeDocsManagementHealth());
+    state.serviceAvailable = Boolean(await probeDataSharingHealth());
     if (workflowDomainIsActive(state.workflowScopes, state.scope)) {
       const exportConfigPath = getStudioDataPath(state.config, "library_export_configs")
         || "/assets/studio/data/library_export_configs.json";

@@ -2,7 +2,7 @@
 doc_id: studio-data-sharing
 title: Studio Data Sharing
 added_date: 2026-05-06
-last_updated: "2026-05-13 13:20"
+last_updated: "2026-05-13 16:01"
 parent_id: studio
 sort_order: 98
 ---
@@ -38,6 +38,13 @@ The review page:
 - displays parsed records, warnings, and review rows
 - can apply selected summary or hierarchy changes after confirmation
 
+The local service gateway uses neutral Data Sharing endpoints:
+
+- `GET /data-sharing/returned-packages`
+- `POST /data-sharing/prepare`
+- `POST /data-sharing/review`
+- `POST /data-sharing/apply`
+
 ## Runtime
 
 The page shells load:
@@ -47,10 +54,13 @@ The page shells load:
 - `assets/studio/js/data-sharing-adapters.js`
 - `assets/studio/data/data_sharing_adapters.json`
 - `assets/studio/data/library_export_configs.json`
+- `scripts/studio/data_sharing_routes.py`
+- `scripts/studio/data_sharing_service.py`
 
 The documents adapter still owns the implemented Library config set, source index, document tree selection, field mapping, review rows, and apply behavior.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
 Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.
+The docs-management server hosts the loopback HTTP process for now, but Data Sharing route ownership and adapter dispatch live under `scripts/studio/`.
 
 ## Activity
 
@@ -69,3 +79,4 @@ The retained smoke entry points are:
 
 - `tests/smoke/data_sharing_prepare.py`
 - `tests/smoke/data_sharing_review.py`
+- `tests/python/test_data_sharing_service.py`

@@ -46,17 +46,21 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
 const DOCS_MANAGEMENT_ENDPOINTS = Object.freeze({
   health: "http://127.0.0.1:8789/health",
   brokenLinks: "http://127.0.0.1:8789/docs/broken-links",
-  exportDocs: "http://127.0.0.1:8789/docs/export",
   generatedIndex: "http://127.0.0.1:8789/docs/generated/index",
   generatedSearch: "http://127.0.0.1:8789/docs/generated/search",
   importSource: "http://127.0.0.1:8789/docs/import-source",
   importSourceFiles: "http://127.0.0.1:8789/docs/import-source-files",
   importHtml: "http://127.0.0.1:8789/docs/import-html",
   importHtmlFiles: "http://127.0.0.1:8789/docs/import-html-files",
-  importFiles: "http://127.0.0.1:8789/docs/import/files",
-  importPreview: "http://127.0.0.1:8789/docs/import/preview",
-  importApply: "http://127.0.0.1:8789/docs/import/apply",
   openSource: "http://127.0.0.1:8789/docs/open-source"
+});
+
+const DATA_SHARING_ENDPOINTS = Object.freeze({
+  health: "http://127.0.0.1:8789/health",
+  prepare: "http://127.0.0.1:8789/data-sharing/prepare",
+  returnedPackages: "http://127.0.0.1:8789/data-sharing/returned-packages",
+  review: "http://127.0.0.1:8789/data-sharing/review",
+  apply: "http://127.0.0.1:8789/data-sharing/apply"
 });
 
 const AUDIT_SERVICE_ENDPOINTS = Object.freeze({
@@ -67,6 +71,7 @@ const AUDIT_SERVICE_ENDPOINTS = Object.freeze({
 
 export {
   AUDIT_SERVICE_ENDPOINTS,
+  DATA_SHARING_ENDPOINTS,
   DOCS_MANAGEMENT_ENDPOINTS,
   STUDIO_WRITE_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS
@@ -82,6 +87,10 @@ export async function probeCatalogueHealth(timeoutMs = 500) {
 
 export async function probeDocsManagementHealth(timeoutMs = 500) {
   return probeHealth(DOCS_MANAGEMENT_ENDPOINTS.health, timeoutMs);
+}
+
+export async function probeDataSharingHealth(timeoutMs = 500) {
+  return probeHealth(DATA_SHARING_ENDPOINTS.health, timeoutMs);
 }
 
 export async function probeAuditServiceHealth(timeoutMs = 500) {

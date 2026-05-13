@@ -18,6 +18,7 @@ for path in (SCRIPTS_DOCS_DIR, SCRIPTS_DIR):
 
 import docs_activity  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
+from studio import data_sharing_routes  # noqa: E402
 import studio_activity  # noqa: E402
 
 
@@ -36,7 +37,7 @@ def write_activity_contract(repo_root: Path) -> None:
                                 "label": "prepare share package",
                                 "control_id": "dataSharingPrepareRun",
                                 "control_selector": "#dataSharingPrepareRun",
-                                "endpoint": routes.EXPORT_PATH,
+                                "endpoint": data_sharing_routes.PREPARE_PATH,
                                 "record_id_field": "export_id",
                             }
                         },
@@ -62,7 +63,7 @@ def write_activity_contract(repo_root: Path) -> None:
                                 "label": "apply returned summaries",
                                 "control_id": "dataSharingReviewUpdateSummary",
                                 "control_selector": "#dataSharingReviewUpdateSummary",
-                                "endpoint": routes.IMPORT_APPLY_PATH,
+                                "endpoint": data_sharing_routes.APPLY_PATH,
                                 "record_id_field": "staged_filename",
                             }
                         },
