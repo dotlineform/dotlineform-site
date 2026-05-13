@@ -21,6 +21,7 @@ import {
 } from "./studio-modal.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
+  workflowCapabilityForOperation,
   workflowDomainForKey,
   workflowDomainFromUrl,
   workflowDomainIsActive,
@@ -73,6 +74,14 @@ function setStatus(node, state, message) {
 function documentLabel(count) {
   const safeCount = Number(count || 0);
   return safeCount === 1 ? "1 document" : `${safeCount} documents`;
+}
+
+function countLabel(count, unit = "document") {
+  const safeCount = Number(count || 0);
+  const normalizedUnit = normalizeText(unit) || "document";
+  if (normalizedUnit === "record") return safeCount === 1 ? "1 record" : `${safeCount} records`;
+  if (normalizedUnit === "file") return safeCount === 1 ? "1 file" : `${safeCount} files`;
+  return documentLabel(safeCount);
 }
 
 function workflowScopeFromUrl(domains = WORKFLOW_SCOPES) {
@@ -133,9 +142,9 @@ function routeStateDetail(state) {
   if (state && state.root) state.root.dataset.studioScope = state.scope;
   return {
     route: "data-sharing-prepare",
-    mode: "selection",
+    mode: prepareSelectionModel(state),
     service: state.serviceAvailable ? "available" : "unavailable",
-    recordLoaded: Boolean(state.docs.length)
+    recordLoaded: Boolean(state.docs.length || state.exportConfigs.length)
   };
 }
 
@@ -168,6 +177,21 @@ function enabledConfigsForScope(payload, scope) {
     const scopes = Array.isArray(config.scopes) ? config.scopes : [];
     return scopes.includes(scope);
   });
+}
+
+function prepareSelectionModel(state) {
+  return normalizeText(state?.prepareCapability?.capability?.selection_model) || "documents";
+}
+
+function usesDocumentSelection(state) {
+  return prepareSelectionModel(state) === "documents";
+}
+
+function prepareProfilesForCapability(capabilityInfo) {
+  const profiles = Array.isArray(capabilityInfo?.capability?.sharing_profiles)
+    ? capabilityInfo.capability.sharing_profiles
+    : [];
+  return profiles.filter((profile) => profile && profile.enabled !== false);
 }
 
 function buildVisibleDocs(indexPayload) {
@@ -282,6 +306,10 @@ function syncCheckboxStates(state) {
 }
 
 function applySelectionFilter(state) {
+  if (!usesDocumentSelection(state)) {
+    state.selectedIds.clear();
+    return;
+  }
   const allowedIds = new Set(selectableDocIds(state));
   state.selectedIds.forEach((docId) => {
     if (!allowedIds.has(docId)) state.selectedIds.delete(docId);
@@ -289,6 +317,17 @@ function applySelectionFilter(state) {
 }
 
 function updateSelectionSummary(state) {
+  if (!usesDocumentSelection(state)) {
+    setText(
+      state.selectionSummary,
+      getStudioText(
+        state.config,
+        "data_sharing_prepare.selection_not_required",
+        "No record selection required."
+      )
+    );
+    return;
+  }
   const count = state.selectedIds.size;
   setText(
     state.selectionSummary,
@@ -313,6 +352,13 @@ function listFilterCounts(state) {
 }
 
 function renderListFilters(state) {
+  const actions = state.filterNode.closest(".dataSharingPreparePage__listActions");
+  if (!usesDocumentSelection(state)) {
+    if (actions) actions.hidden = true;
+    state.filterNode.innerHTML = "";
+    return;
+  }
+  if (actions) actions.hidden = false;
   const counts = listFilterCounts(state);
   state.filterNode.innerHTML = LIST_FILTERS.map((filter) => {
     const count = Number(counts[filter.key] || 0);
@@ -376,7 +422,7 @@ function syncConfigOptions(state) {
   const config = selectedConfig(state);
   const selection = config && typeof config.selection === "object" ? config.selection : {};
   const supportsMissing = Boolean(selection.supports_missing_summary_only);
-  state.missingSummaryOnlyWrap.hidden = !supportsMissing;
+  state.missingSummaryOnlyWrap.hidden = !usesDocumentSelection(state) || !supportsMissing;
   state.missingSummaryOnly.checked = supportsMissing && Boolean(selection.default_missing_summary_only);
   state.targetFormat = defaultFormatForConfig(config);
   renderFormatOptions(state);
@@ -407,7 +453,7 @@ function updateStatus(state) {
     state.runButton.disabled = true;
     return;
   }
-  if (state.docsIndexError) {
+  if (usesDocumentSelection(state) && state.docsIndexError) {
     setStatus(
       state.statusNode,
       "error",
@@ -472,6 +518,15 @@ function renderDocRow(state, doc) {
 }
 
 function renderDocList(state) {
+  if (!usesDocumentSelection(state)) {
+    state.listNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(getStudioText(
+      state.config,
+      "data_sharing_prepare.profile_only_empty_state",
+      "This profile packages the selected data family."
+    ))}</p>`;
+    updateSelectionSummary(state);
+    return;
+  }
   const visibleDocIds = new Set(selectableDocIds(state, { visibleOnly: true }));
   const rows = state.docs
     .filter((doc) => visibleDocIds.has(normalizeText(doc.doc_id)))
@@ -511,8 +566,9 @@ function outputFiles(payload) {
   return files;
 }
 
-function countRows(state, counts) {
+function countRows(state, counts, payload) {
   const safeCounts = counts && typeof counts === "object" ? counts : {};
+  const unit = normalizeText(payload?.count_unit) || "document";
   const rows = [
     ["selected", "data_sharing_prepare.count_selected", "selected", Number(safeCounts.selected || 0)],
     ["exported", "data_sharing_prepare.count_exported", "packaged", Number(safeCounts.exported || 0)],
@@ -523,7 +579,7 @@ function countRows(state, counts) {
   return rows.map(([key, textKey, fallback, count]) => `
     <div class="dataSharingPrepareModal__countRow" data-count-key="${escapeHtml(key)}">
       <dt>${escapeHtml(getStudioText(state.config, textKey, fallback))}</dt>
-      <dd>${escapeHtml(documentLabel(count))}</dd>
+      <dd>${escapeHtml(countLabel(count, unit))}</dd>
     </div>
   `).join("");
 }
@@ -561,7 +617,7 @@ function showResultModal(state, payload, failed = false) {
       </div>
     </dl>
     <dl class="dataSharingPrepareModal__counts">
-      ${countRows(state, payload?.counts)}
+      ${countRows(state, payload?.counts, payload)}
     </dl>
     <label class="dataSharingPrepareModal__files">
       <span>${escapeHtml(fileLabel)}</span>
@@ -634,9 +690,9 @@ async function runPreparePackage(state) {
     return;
   }
   const selection = config && typeof config.selection === "object" ? config.selection : {};
-  const selectAll = normalizeText(selection.mode) === "all_matching";
+  const selectAll = usesDocumentSelection(state) && normalizeText(selection.mode) === "all_matching";
   const docIds = selectAll ? [] : Array.from(state.selectedIds);
-  if (!selectAll && !docIds.length) {
+  if (usesDocumentSelection(state) && !selectAll && !docIds.length) {
     setStatus(
       state.statusNode,
       "error",
@@ -662,7 +718,9 @@ async function runPreparePackage(state) {
       target_format: targetFormat,
       doc_ids: docIds,
       select_all: selectAll,
-      missing_summary_only: state.missingSummaryOnlyWrap.hidden ? null : Boolean(state.missingSummaryOnly.checked),
+      missing_summary_only: usesDocumentSelection(state) && !state.missingSummaryOnlyWrap.hidden
+        ? Boolean(state.missingSummaryOnly.checked)
+        : null,
       activity_context: buildStudioActivityContext({
         pageId: "data-sharing-prepare",
         actionId: "prepare-share-package",
@@ -734,7 +792,8 @@ async function init() {
     targetFormat: "",
     docsIndexError: false,
     serviceAvailable: false,
-    isRunning: false
+    isRunning: false,
+    prepareCapability: null
   };
 
   const requiredNodes = [
@@ -764,17 +823,22 @@ async function init() {
     const adapterRegistry = await loadAdapterRegistry(state.config);
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "prepare", WORKFLOW_SCOPES);
     state.scope = workflowScopeFromUrl(state.workflowScopes);
+    state.prepareCapability = workflowCapabilityForOperation(adapterRegistry, "prepare", state.scope);
     renderScopeSelect(state);
     state.serviceAvailable = Boolean(await probeDataSharingHealth());
     if (workflowDomainIsActive(state.workflowScopes, state.scope)) {
-      const exportConfigPath = getStudioDataPath(state.config, "library_export_configs")
-        || "/assets/studio/data/library_export_configs.json";
-      const exportConfigPayload = await loadJson(exportConfigPath);
+      const capabilityProfiles = prepareProfilesForCapability(state.prepareCapability);
+      const exportConfigPayload = capabilityProfiles.length
+        ? { configs: capabilityProfiles }
+        : await loadJson(
+          getStudioDataPath(state.config, "library_export_configs")
+            || "/assets/studio/data/library_export_configs.json"
+        );
       state.exportConfigs = enabledConfigsForScope(exportConfigPayload, state.scope);
     }
 
     let docsIndexPayload = { docs: [] };
-    if (workflowDomainIsActive(state.workflowScopes, state.scope) && state.exportConfigs.length) {
+    if (usesDocumentSelection(state) && workflowDomainIsActive(state.workflowScopes, state.scope) && state.exportConfigs.length) {
       const docsIndexPath = getDocsScopeDataPath(state.config, state.scope, "index")
         || `/assets/data/docs/scopes/${encodeURIComponent(state.scope)}/index.json`;
       const docsIndexReadPath = state.serviceAvailable ? docsGeneratedIndexUrl(state.scope) : docsIndexPath;

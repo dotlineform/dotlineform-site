@@ -25,6 +25,13 @@ LogEvent = Callable[[Path, str, Dict[str, Any]], None]
 
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 TAG_WRITE_SOURCE_REFS = [{"kind": "log", "path": "var/docs/logs/docs_management_server.log"}]
+SUPPORTED_PREPARE_FORMATS = {"json"}
+TAG_PREPARE_PROFILES: Dict[str, Dict[str, Any]] = {
+    "tag-registry": {"family": "registry", "label": "Tag registry"},
+    "tag-aliases": {"family": "aliases", "label": "Tag aliases"},
+    "tag-assignments": {"family": "assignments", "label": "Tag assignments"},
+    "tags-bundle": {"family": "bundle", "label": "Combined tags bundle"},
+}
 
 
 @dataclass(frozen=True)
@@ -81,6 +88,23 @@ def resolve_staging_root(repo_root: Path, adapter: AdapterResolution) -> Path:
     return (repo_root / adapter.path("returned_package_staging_root")).resolve()
 
 
+def resolve_outbound_root(repo_root: Path, adapter: AdapterResolution) -> Path:
+    return (repo_root / adapter.path("outbound_package_root")).resolve()
+
+
+def resolve_outbound_package_path(repo_root: Path, adapter: AdapterResolution, config_id: str, target_format: str) -> Path:
+    if not tag_source_model.SLUG_RE.fullmatch(config_id):
+        raise ValueError("config_id must be slug-safe")
+    if target_format not in SUPPORTED_PREPARE_FORMATS:
+        raise ValueError("target_format must be json")
+    timestamp = dt.datetime.now(dt.timezone.utc).astimezone().strftime("%Y%m%d-%H%M%S")
+    outbound_root = resolve_outbound_root(repo_root, adapter)
+    path = (outbound_root / f"{config_id}-{timestamp}.{target_format}").resolve()
+    if path != outbound_root and outbound_root not in path.parents:
+        raise ValueError(f"output file must stay under {adapter.path('outbound_package_root')}")
+    return path
+
+
 def resolve_staged_path(repo_root: Path, adapter: AdapterResolution, staged_filename: str) -> Path:
     filename = normalize_text(staged_filename)
     if not filename:
@@ -114,6 +138,11 @@ def read_jsonl_file(path: Path) -> list[Any]:
         except json.JSONDecodeError as exc:
             raise ValueError(f"invalid returned package JSONL on line {line_number}: {exc.msg}") from exc
     return records
+
+
+def write_json_file(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def normalize_mode(value: Any) -> str:
@@ -174,10 +203,378 @@ def load_series_index(repo_root: Path, adapter: AdapterResolution) -> Dict[str, 
     return tag_source_model.load_series_index(path)
 
 
+def load_source_json(repo_root: Path, adapter: AdapterResolution, source_key: str, fallback: Path) -> Dict[str, Any]:
+    sources = adapter.domain.get("sources") if isinstance(adapter.domain.get("sources"), dict) else {}
+    rel_path = sources.get(source_key) or fallback.as_posix()
+    path = (repo_root / safe_relative_path(rel_path, field=f"sources.{source_key}")).resolve()
+    return read_json_file(path) if path.exists() else {}
+
+
+def load_works_index(repo_root: Path, adapter: AdapterResolution) -> Dict[str, Any]:
+    return load_source_json(repo_root, adapter, "works", Path("assets/data/works_index.json"))
+
+
 def issue(level: str, code: str, message: str, record_index: int | None = None) -> Dict[str, Any]:
     payload: Dict[str, Any] = {"level": level, "code": code, "message": message}
     if record_index is not None:
         payload["record_index"] = record_index
+    return payload
+
+
+def prepare_profiles(adapter: AdapterResolution) -> Dict[str, Dict[str, Any]]:
+    profiles = adapter.capability.get("sharing_profiles")
+    if not isinstance(profiles, list):
+        return dict(TAG_PREPARE_PROFILES)
+    out: Dict[str, Dict[str, Any]] = {}
+    for profile in profiles:
+        if not isinstance(profile, dict):
+            continue
+        profile_id = normalize_text(profile.get("id"))
+        family = normalize_text(profile.get("family"))
+        if profile_id and family in {"registry", "aliases", "assignments", "bundle"}:
+            out[profile_id] = {
+                "family": family,
+                "label": normalize_text(profile.get("label")) or TAG_PREPARE_PROFILES.get(profile_id, {}).get("label") or profile_id,
+            }
+    return out or dict(TAG_PREPARE_PROFILES)
+
+
+def source_files(repo_root: Path, adapter: AdapterResolution, family: str) -> Dict[str, str]:
+    keys = {
+        "registry": ["tag_registry"],
+        "aliases": ["tag_aliases"],
+        "assignments": ["tag_assignments", "series", "works"],
+        "bundle": ["tag_registry", "tag_aliases", "tag_assignments", "series", "works"],
+    }.get(family, [])
+    sources = adapter.domain.get("sources") if isinstance(adapter.domain.get("sources"), dict) else {}
+    targets = adapter.domain.get("source_write_targets") if isinstance(adapter.domain.get("source_write_targets"), dict) else {}
+    files: Dict[str, str] = {}
+    for key in keys:
+        rel_path = sources.get(key) or targets.get(key)
+        if rel_path:
+            files[key] = safe_relative_path(rel_path, field=f"sources.{key}").as_posix()
+    return files
+
+
+def package_metadata(
+    *,
+    adapter: AdapterResolution,
+    config_id: str,
+    family: str,
+    generated_at_utc: str,
+    source_paths: Dict[str, str],
+    counts: Dict[str, int],
+) -> Dict[str, Any]:
+    return {
+        "schema_version": "tags_data_sharing_package_v1",
+        "data_domain": adapter.data_domain,
+        "adapter_id": adapter.adapter_id,
+        "scope": adapter.scope,
+        "config_id": config_id,
+        "package_family": family,
+        "generated_at_utc": generated_at_utc,
+        "source_paths": source_paths,
+        "counts": counts,
+        "returned_package_hints": {
+            "registry": ["tags"],
+            "aliases": ["aliases"],
+            "assignments": ["series"],
+        },
+    }
+
+
+def count_assignment_works(assignments_payload: Mapping[str, Any]) -> int:
+    series_obj = assignments_payload.get("series") if isinstance(assignments_payload.get("series"), dict) else {}
+    count = 0
+    for row in series_obj.values():
+        if not isinstance(row, dict):
+            continue
+        works = row.get("works") if isinstance(row.get("works"), dict) else {}
+        count += len(works)
+    return count
+
+
+def tag_ids_from_registry(registry_payload: Mapping[str, Any]) -> list[str]:
+    tags = registry_payload.get("tags") if isinstance(registry_payload.get("tags"), list) else []
+    return sorted({normalize_text(item.get("tag_id")) for item in tags if isinstance(item, dict) and normalize_text(item.get("tag_id"))})
+
+
+def alias_keys_from_payload(aliases_payload: Mapping[str, Any]) -> list[str]:
+    aliases = aliases_payload.get("aliases") if isinstance(aliases_payload.get("aliases"), dict) else {}
+    return sorted(normalize_text(key) for key in aliases.keys() if normalize_text(key))
+
+
+def series_ids_from_assignments(assignments_payload: Mapping[str, Any]) -> list[str]:
+    series = assignments_payload.get("series") if isinstance(assignments_payload.get("series"), dict) else {}
+    return sorted(normalize_text(key) for key in series.keys() if normalize_text(key))
+
+
+def work_ids_from_assignments(assignments_payload: Mapping[str, Any]) -> list[str]:
+    series = assignments_payload.get("series") if isinstance(assignments_payload.get("series"), dict) else {}
+    work_ids: set[str] = set()
+    for row in series.values():
+        if not isinstance(row, dict):
+            continue
+        works = row.get("works") if isinstance(row.get("works"), dict) else {}
+        for work_id in works.keys():
+            text = normalize_text(work_id)
+            if text:
+                work_ids.add(text)
+    return sorted(work_ids)
+
+
+def build_registry_package(repo_root: Path, adapter: AdapterResolution, config_id: str, generated_at_utc: str) -> tuple[Dict[str, Any], Dict[str, int], Dict[str, list[str]]]:
+    registry = load_current_registry(repo_root, adapter)
+    counts = {"tags": len(registry.get("tags", []) if isinstance(registry.get("tags"), list) else [])}
+    payload = {
+        "package_metadata": package_metadata(
+            adapter=adapter,
+            config_id=config_id,
+            family="registry",
+            generated_at_utc=generated_at_utc,
+            source_paths=source_files(repo_root, adapter, "registry"),
+            counts=counts,
+        ),
+        "policy": copy.deepcopy(registry.get("policy") if isinstance(registry.get("policy"), dict) else {}),
+        "tags": copy.deepcopy(registry.get("tags") if isinstance(registry.get("tags"), list) else []),
+    }
+    return payload, counts, {"tags": tag_ids_from_registry(registry)}
+
+
+def build_aliases_package(repo_root: Path, adapter: AdapterResolution, config_id: str, generated_at_utc: str) -> tuple[Dict[str, Any], Dict[str, int], Dict[str, list[str]]]:
+    aliases = load_current_aliases(repo_root, adapter)
+    aliases_obj = aliases.get("aliases") if isinstance(aliases.get("aliases"), dict) else {}
+    tag_ids = sorted(
+        {
+            normalize_text(tag_id)
+            for entry in aliases_obj.values()
+            if isinstance(entry, dict)
+            for tag_id in (entry.get("tags") if isinstance(entry.get("tags"), list) else [])
+            if normalize_text(tag_id)
+        }
+    )
+    counts = {"aliases": len(aliases_obj), "tags": len(tag_ids)}
+    payload = {
+        "package_metadata": package_metadata(
+            adapter=adapter,
+            config_id=config_id,
+            family="aliases",
+            generated_at_utc=generated_at_utc,
+            source_paths=source_files(repo_root, adapter, "aliases"),
+            counts=counts,
+        ),
+        "aliases": copy.deepcopy(aliases_obj),
+    }
+    return payload, counts, {"aliases": alias_keys_from_payload(aliases), "tags": tag_ids}
+
+
+def build_assignments_package(repo_root: Path, adapter: AdapterResolution, config_id: str, generated_at_utc: str) -> tuple[Dict[str, Any], Dict[str, int], Dict[str, list[str]]]:
+    assignments = load_current_assignments(repo_root, adapter)
+    series = assignments.get("series") if isinstance(assignments.get("series"), dict) else {}
+    series_index = load_series_index(repo_root, adapter)
+    works_index = load_works_index(repo_root, adapter)
+    counts = {"series": len(series), "works": count_assignment_works(assignments)}
+    payload = {
+        "package_metadata": package_metadata(
+            adapter=adapter,
+            config_id=config_id,
+            family="assignments",
+            generated_at_utc=generated_at_utc,
+            source_paths=source_files(repo_root, adapter, "assignments"),
+            counts=counts,
+        ),
+        "series": copy.deepcopy(series),
+        "catalogue_context": {
+            "series_index_header": copy.deepcopy(series_index.get("header") if isinstance(series_index.get("header"), dict) else {}),
+            "works_index_header": copy.deepcopy(works_index.get("header") if isinstance(works_index.get("header"), dict) else {}),
+            "series_work_membership": {
+                series_id: sorted(work_ids)
+                for series_id, work_ids in sorted(tag_source_model.build_series_work_membership(series_index).items())
+            },
+        },
+    }
+    return payload, counts, {"series": series_ids_from_assignments(assignments), "works": work_ids_from_assignments(assignments)}
+
+
+def merge_counts(*items: Mapping[str, int]) -> Dict[str, int]:
+    out: Dict[str, int] = {}
+    for item in items:
+        for key, value in item.items():
+            out[key] = out.get(key, 0) + int(value or 0)
+    return out
+
+
+def merge_groups(*items: Mapping[str, list[str]]) -> Dict[str, list[str]]:
+    merged: Dict[str, set[str]] = {}
+    for groups in items:
+        for key, values in groups.items():
+            merged.setdefault(key, set()).update(normalize_text(value) for value in values if normalize_text(value))
+    return {key: sorted(values) for key, values in merged.items() if values}
+
+
+def build_bundle_package(repo_root: Path, adapter: AdapterResolution, config_id: str, generated_at_utc: str) -> tuple[Dict[str, Any], Dict[str, int], Dict[str, list[str]]]:
+    registry_payload, registry_counts, registry_groups = build_registry_package(repo_root, adapter, config_id, generated_at_utc)
+    aliases_payload, aliases_counts, aliases_groups = build_aliases_package(repo_root, adapter, config_id, generated_at_utc)
+    assignments_payload, assignments_counts, assignments_groups = build_assignments_package(repo_root, adapter, config_id, generated_at_utc)
+    counts = merge_counts(registry_counts, aliases_counts, assignments_counts)
+    payload = {
+        "package_metadata": package_metadata(
+            adapter=adapter,
+            config_id=config_id,
+            family="bundle",
+            generated_at_utc=generated_at_utc,
+            source_paths=source_files(repo_root, adapter, "bundle"),
+            counts=counts,
+        ),
+        "families": {
+            "registry": {key: value for key, value in registry_payload.items() if key != "package_metadata"},
+            "aliases": {key: value for key, value in aliases_payload.items() if key != "package_metadata"},
+            "assignments": {key: value for key, value in assignments_payload.items() if key != "package_metadata"},
+        },
+    }
+    return payload, counts, merge_groups(registry_groups, aliases_groups, assignments_groups)
+
+
+def count_record_total(family: str, counts: Mapping[str, int]) -> int:
+    if family == "registry":
+        return int(counts.get("tags") or 0)
+    if family == "aliases":
+        return int(counts.get("aliases") or 0)
+    if family == "assignments":
+        return int(counts.get("series") or 0)
+    return int(counts.get("tags") or 0) + int(counts.get("aliases") or 0) + int(counts.get("series") or 0)
+
+
+def attach_prepare_activity(
+    repo_root: Path,
+    body: Mapping[str, Any],
+    payload: Dict[str, Any],
+    *,
+    record_groups: Mapping[str, Any],
+    detail_items: list[str],
+    status: str,
+) -> None:
+    raw_context = body.get("activity_context")
+    if not raw_context:
+        return
+    try:
+        activity_context = normalize_activity_context_from_contract(
+            repo_root,
+            raw_context,
+            endpoint=data_sharing_routes.PREPARE_PATH,
+            record_id=f"{payload.get('data_domain')}:{payload.get('config_id')}",
+            record_id_field="export_id",
+        )
+        if not activity_context:
+            return
+        payload["activity_context"] = activity_context
+        append_studio_activity(
+            repo_root,
+            studio_activity_entry(
+                activity_context,
+                script_purpose_id="prepare-share-package",
+                now_utc=str(payload.get("updated_at_utc") or utc_now()),
+                status=status,
+                record_groups=record_groups,
+                detail_items=detail_items,
+                source_refs=TAG_WRITE_SOURCE_REFS,
+            ),
+        )
+        payload["activity_log"] = {"written_count": 1}
+    except Exception as exc:  # noqa: BLE001
+        payload["activity_log"] = {"written_count": 0, "error": str(exc)}
+
+
+def prepare_package(
+    repo_root: Path,
+    body: Dict[str, Any],
+    dry_run: bool,
+    adapter: Optional[AdapterResolution] = None,
+    dependencies: Optional[TagsDataSharingDependencies] = None,
+) -> Dict[str, Any]:
+    adapter = require_tags_adapter(adapter or resolve_tags_adapter(repo_root, body.get("data_domain"), "prepare"))
+    config_id = normalize_text(body.get("config_id"))
+    profiles = prepare_profiles(adapter)
+    profile = profiles.get(config_id)
+    if profile is None:
+        raise ValueError(f"Unknown tags sharing profile: {config_id}")
+    family = normalize_text(profile.get("family"))
+    target_format = normalize_text(body.get("target_format") or "json").lower()
+    if not target_format:
+        target_format = "json"
+    output_path = resolve_outbound_package_path(repo_root, adapter, config_id, target_format)
+    now_utc = utc_now()
+
+    if family == "registry":
+        package_payload, family_counts, groups = build_registry_package(repo_root, adapter, config_id, now_utc)
+    elif family == "aliases":
+        package_payload, family_counts, groups = build_aliases_package(repo_root, adapter, config_id, now_utc)
+    elif family == "assignments":
+        package_payload, family_counts, groups = build_assignments_package(repo_root, adapter, config_id, now_utc)
+    else:
+        package_payload, family_counts, groups = build_bundle_package(repo_root, adapter, config_id, now_utc)
+
+    record_total = count_record_total(family, family_counts)
+    relative_output = relative_path(repo_root, output_path)
+    counts = {
+        "selected": record_total,
+        "exported": record_total,
+        "skipped": 0,
+        "failed": 0,
+        "truncated": 0,
+        **family_counts,
+    }
+    if not dry_run:
+        write_json_file(output_path, package_payload)
+    payload: Dict[str, Any] = {
+        "ok": True,
+        "data_domain": adapter.data_domain,
+        "adapter_id": adapter.adapter_id,
+        "scope": adapter.scope,
+        "config_id": config_id,
+        "tag_family": family,
+        "target_format": target_format,
+        "output_file": relative_output,
+        "output_files": [relative_output],
+        "counts": counts,
+        "count_unit": "record",
+        "warnings": [],
+        "errors": [],
+        "issue_counts": {"errors": 0, "warnings": 0},
+        "dry_run": dry_run,
+        "updated_at_utc": now_utc,
+        "output_written": not dry_run,
+        "summary_text": (
+            f"{'Validated' if dry_run else 'Prepared'} {profile['label']} package "
+            f"with {record_total} record(s){' without writing' if dry_run else ''}."
+        ),
+    }
+    if not dry_run:
+        attach_prepare_activity(
+            repo_root,
+            body,
+            payload,
+            record_groups={**groups, "files": [relative_output]},
+            detail_items=[
+                str(payload["summary_text"]),
+                f"Data family: {family}.",
+                f"Output file: {relative_output}.",
+            ],
+            status="completed",
+        )
+    if dependencies is not None:
+        dependencies.log_event(
+            repo_root,
+            "tags-data-sharing-prepare",
+            {
+                "family": family,
+                "config_id": config_id,
+                "dry_run": dry_run,
+                "output_written": bool(payload.get("output_written")),
+                "output_file": relative_output,
+                "counts": counts,
+            },
+        )
     return payload
 
 
@@ -840,8 +1237,12 @@ def handlers_for(
     def apply_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: AdapterResolution) -> Dict[str, Any]:
         return apply_returned_changes(repo_root, body, dry_run, adapter, dependencies_factory())
 
+    def prepare_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: AdapterResolution) -> Dict[str, Any]:
+        return prepare_package(repo_root, body, dry_run, adapter, dependencies_factory())
+
     return data_sharing_service.DataSharingAdapterHandlers(
         module="analytics.tags",
+        prepare=prepare_handler,
         list_returned=list_handler,
         review=review_handler,
         apply=apply_handler,

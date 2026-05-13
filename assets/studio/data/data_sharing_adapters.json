@@ -283,11 +283,68 @@
       "capabilities": [
         {
           "operation": "prepare",
-          "status": "planned",
-          "message": "Tags package preparation is not implemented yet.",
-          "selection_model": "records",
+          "status": "active",
+          "selection_model": "none",
           "input_formats": [],
           "output_formats": ["json"],
+          "sharing_profiles": [
+            {
+              "id": "tag-registry",
+              "label": "Tag registry",
+              "enabled": true,
+              "scopes": ["tags"],
+              "family": "registry",
+              "target": {
+                "format": "json",
+                "supported_formats": ["json"]
+              },
+              "selection": {
+                "mode": "none"
+              }
+            },
+            {
+              "id": "tag-aliases",
+              "label": "Tag aliases",
+              "enabled": true,
+              "scopes": ["tags"],
+              "family": "aliases",
+              "target": {
+                "format": "json",
+                "supported_formats": ["json"]
+              },
+              "selection": {
+                "mode": "none"
+              }
+            },
+            {
+              "id": "tag-assignments",
+              "label": "Tag assignments",
+              "enabled": true,
+              "scopes": ["tags"],
+              "family": "assignments",
+              "target": {
+                "format": "json",
+                "supported_formats": ["json"]
+              },
+              "selection": {
+                "mode": "none"
+              }
+            },
+            {
+              "id": "tags-bundle",
+              "label": "Combined tags bundle",
+              "enabled": true,
+              "scopes": ["tags"],
+              "family": "bundle",
+              "target": {
+                "format": "json",
+                "supported_formats": ["json"]
+              },
+              "selection": {
+                "mode": "none"
+              }
+            }
+          ],
           "path_contract": {
             "output_root": "outbound_package_root"
           },

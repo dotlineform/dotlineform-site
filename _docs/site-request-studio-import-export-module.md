@@ -2,7 +2,7 @@
 doc_id: site-request-studio-import-export-module
 title: Studio Data Sharing Module Implementation Request
 added_date: 2026-05-13
-last_updated: "2026-05-13 17:30"
+last_updated: "2026-05-13 17:58"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -13,7 +13,7 @@ hidden: false
 Status:
 
 - In progress
-- Slice 5 tags adapter review and apply implemented
+- Slice 6 tags package preparation implemented
 
 ## Summary
 
@@ -356,7 +356,7 @@ Acceptance checks:
 
 ### Slice 6: tags package preparation
 
-Status: planned.
+Status: implemented.
 
 Add package preparation support for tag registry, aliases, and assignments once tags review/apply behavior is stable.
 

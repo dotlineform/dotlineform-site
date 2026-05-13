@@ -52,7 +52,7 @@ def test_gateway_dispatches_active_documents_adapter() -> None:
     assert calls[0]["dry_run"] is True
 
 
-def test_gateway_fails_stub_adapter_with_registry_message() -> None:
+def test_gateway_fails_active_adapter_without_registered_handler() -> None:
     try:
         data_sharing_service.review_returned_package(
             REPO_ROOT,
@@ -65,7 +65,7 @@ def test_gateway_fails_stub_adapter_with_registry_message() -> None:
     else:
         raise AssertionError("expected ValueError")
 
-    assert "adapter 'analytics-tags' is stub" in message
+    assert "adapter 'analytics-tags' module 'analytics.tags' has no registered Data Sharing service" in message
 
 
 def test_gateway_fails_active_unregistered_adapter_module() -> None:
@@ -140,7 +140,7 @@ def test_gateway_fails_active_unregistered_adapter_module() -> None:
 def main() -> None:
     test_neutral_data_sharing_routes_use_data_sharing_namespace()
     test_gateway_dispatches_active_documents_adapter()
-    test_gateway_fails_stub_adapter_with_registry_message()
+    test_gateway_fails_active_adapter_without_registered_handler()
     test_gateway_fails_active_unregistered_adapter_module()
 
 

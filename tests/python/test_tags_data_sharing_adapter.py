@@ -30,6 +30,7 @@ def make_registry_payload() -> dict[str, object]:
     return {
         "schema_version": "data_sharing_adapters_v2",
         "dispatch": [
+            {"data_domain": "tags", "operation": "prepare", "adapter_id": "analytics-tags"},
             {"data_domain": "tags", "operation": "list_returned", "adapter_id": "analytics-tags"},
             {"data_domain": "tags", "operation": "review", "adapter_id": "analytics-tags"},
             {"data_domain": "tags", "operation": "apply", "adapter_id": "analytics-tags"},
@@ -70,6 +71,38 @@ def make_registry_payload() -> dict[str, object]:
                     }
                 },
                 "capabilities": [
+                    {
+                        "operation": "prepare",
+                        "status": "active",
+                        "selection_model": "none",
+                        "input_formats": [],
+                        "output_formats": ["json"],
+                        "sharing_profiles": [
+                            {
+                                "id": "tag-registry",
+                                "label": "Tag registry",
+                                "enabled": True,
+                                "scopes": ["tags"],
+                                "family": "registry",
+                                "target": {"format": "json", "supported_formats": ["json"]},
+                                "selection": {"mode": "none"},
+                            },
+                            {
+                                "id": "tags-bundle",
+                                "label": "Combined tags bundle",
+                                "enabled": True,
+                                "scopes": ["tags"],
+                                "family": "bundle",
+                                "target": {"format": "json", "supported_formats": ["json"]},
+                                "selection": {"mode": "none"},
+                            },
+                        ],
+                        "path_contract": {"output_root": "outbound_package_root"},
+                        "activity": {
+                            "script_purpose": "data-sharing-prepare",
+                            "record_groups": ["tags", "aliases", "series", "works", "files"],
+                        },
+                    },
                     {
                         "operation": "list_returned",
                         "status": "active",
@@ -142,6 +175,20 @@ def write_activity_contract(root: Path) -> None:
         root / "assets/studio/data/activity_contract.json",
         {
             "pages": {
+                "data-sharing-prepare": {
+                    "label": "data sharing prepare",
+                    "route": "/studio/data-sharing/prepare/",
+                    "actions": {
+                        "prepare-share-package": {
+                            "label": "prepare share package",
+                            "endpoint": "/data-sharing/prepare",
+                            "route": "/studio/data-sharing/prepare/",
+                            "control_id": "dataSharingPrepareRun",
+                            "control_selector": "#dataSharingPrepareRun",
+                            "record_id_field": "export_id",
+                        }
+                    },
+                },
                 "data-sharing-review": {
                     "label": "data sharing review",
                     "route": "/studio/data-sharing/review/",
@@ -157,7 +204,10 @@ def write_activity_contract(root: Path) -> None:
                     },
                 }
             },
-            "script_purposes": {"save-tag-data": {"label": "save tag data"}},
+            "script_purposes": {
+                "prepare-share-package": {"label": "prepare share package"},
+                "save-tag-data": {"label": "save tag data"},
+            },
         },
     )
 
@@ -236,6 +286,63 @@ def test_list_returned_packages_finds_json_files() -> None:
 
     assert payload["ok"] is True
     assert [item["filename"] for item in payload["files"]] == ["registry.json"]
+
+
+def test_prepare_registry_package_dry_run_does_not_write() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+
+        payload = adapter.prepare_package(
+            root,
+            {"data_domain": "tags", "config_id": "tag-registry", "target_format": "json"},
+            dry_run=True,
+            dependencies=dependencies(),
+        )
+
+        output_path = root / payload["output_file"]
+
+    assert payload["ok"] is True
+    assert payload["output_written"] is False
+    assert payload["tag_family"] == "registry"
+    assert payload["counts"]["tags"] == 3
+    assert not output_path.exists()
+
+
+def test_prepare_bundle_package_writes_under_outbound_root_and_activity() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+
+        payload = adapter.prepare_package(
+            root,
+            {
+                "data_domain": "tags",
+                "config_id": "tags-bundle",
+                "target_format": "json",
+                "activity_context": {
+                    "correlation_id": "test-tags-prepare",
+                    "page_id": "data-sharing-prepare",
+                    "action_id": "prepare-share-package",
+                    "route": "/studio/data-sharing/prepare/",
+                    "control_id": "dataSharingPrepareRun",
+                    "control_selector": "#dataSharingPrepareRun",
+                    "export_id": "tags:tags-bundle",
+                },
+            },
+            dry_run=False,
+            dependencies=dependencies(),
+        )
+        output_path = root / payload["output_file"]
+        package = read_json(output_path)
+        activity_line = (root / "var/studio/activity/activity_log.jsonl").read_text(encoding="utf-8").splitlines()[-1]
+        activity = json.loads(activity_line)
+
+    assert payload["ok"] is True
+    assert payload["output_written"] is True
+    assert payload["output_file"].startswith("var/studio/data-sharing/tags/exports/tags-bundle-")
+    assert package["package_metadata"]["package_family"] == "bundle"
+    assert set(package["families"]) == {"registry", "aliases", "assignments"}
+    assert activity["record_groups"]["files"]["sample_ids"] == [payload["output_file"]]
+    assert activity["record_groups"]["tags"]["sample_ids"] == ["subject:stone", "subject:trees", "subject:water"]
 
 
 def test_registry_review_and_confirmed_apply_use_backups() -> None:
@@ -462,6 +569,8 @@ def test_assignments_confirmed_apply_writes_backup_and_activity_groups() -> None
 def main() -> None:
     tests = [
         test_list_returned_packages_finds_json_files,
+        test_prepare_registry_package_dry_run_does_not_write,
+        test_prepare_bundle_package_writes_under_outbound_root_and_activity,
         test_registry_review_and_confirmed_apply_use_backups,
         test_aliases_review_and_preflight_validate_without_writing,
         test_assignments_review_reports_applicable_conflict_invalid_and_missing,

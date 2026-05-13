@@ -106,6 +106,8 @@ def maybe_attach_broken_links_activity(repo_root: Path, body: Dict[str, Any], pa
 def maybe_attach_docs_export_activity(repo_root: Path, body: Dict[str, Any], payload: Dict[str, Any], dry_run: bool) -> None:
     if dry_run or not payload.get("output_written"):
         return
+    if str(payload.get("adapter_id") or "").strip() not in {"", "documents"}:
+        return
     counts = payload.get("counts") if isinstance(payload.get("counts"), dict) else {}
     issue_counts = payload.get("issue_counts") if isinstance(payload.get("issue_counts"), dict) else {}
     output_file = str(payload.get("output_file") or "").strip()
