@@ -68,6 +68,7 @@ export function initDocsViewerManagement(context) {
   var importCloseButton = document.getElementById("docsViewerImportCloseButton");
   var docsImportRequestPromise = null;
   var docsImportInitialized = false;
+  var metadataModalResolve = null;
 
   function viewerScope() {
     return context.viewerScope();
@@ -147,6 +148,13 @@ export function initDocsViewerManagement(context) {
       contextMenu.hidden = true;
       contextMenu.style.left = "";
       contextMenu.style.top = "";
+    }
+  }
+
+  function setManagementBusy(busy) {
+    state.managementBusy = Boolean(busy);
+    if (root) {
+      root.dataset.managementBusy = state.managementBusy ? "true" : "false";
     }
   }
 
@@ -336,7 +344,7 @@ export function initDocsViewerManagement(context) {
     }
   }
 
-  function closeMetadataModal() {
+  function closeMetadataModal(result) {
     if (!metadataModal) return;
     if (document.activeElement && metadataModal.contains(document.activeElement)) {
       document.activeElement.blur();
@@ -346,6 +354,11 @@ export function initDocsViewerManagement(context) {
     state.metadataEditingDocId = "";
     var restoreDocId = state.metadataRestoreFocusId;
     state.metadataRestoreFocusId = "";
+    if (metadataModalResolve) {
+      var resolve = metadataModalResolve;
+      metadataModalResolve = null;
+      resolve(result || null);
+    }
     if (!restoreDocId || !nav) return;
     var target = nav.querySelector('[data-doc-row-id="' + context.cssEscape(restoreDocId) + '"] .docsViewer__navLink');
     if (target) target.focus();
@@ -414,7 +427,9 @@ export function initDocsViewerManagement(context) {
 
   function openMetadataModal() {
     var doc = currentSelectedDoc();
-    if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) return;
+    if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) {
+      return Promise.resolve(null);
+    }
     hideContextMenu();
     state.metadataEditingDocId = doc.doc_id;
     state.metadataRestoreFocusId = doc.doc_id;
@@ -434,6 +449,9 @@ export function initDocsViewerManagement(context) {
     window.requestAnimationFrame(function () {
       metadataTitleInput.focus();
       metadataTitleInput.select();
+    });
+    return new Promise(function (resolve) {
+      metadataModalResolve = resolve;
     });
   }
 
@@ -649,7 +667,7 @@ export function initDocsViewerManagement(context) {
     var title = String(titleInput || "").trim() || "New Doc";
     var currentDoc = currentSelectedDoc();
 
-    state.managementBusy = true;
+    setManagementBusy(true);
     setManagementMessage("Creating doc...", false);
     context.setStatus("Creating doc...", false);
 
@@ -666,7 +684,7 @@ export function initDocsViewerManagement(context) {
         context.setStatus(error.message || "Create failed.", true);
       })
       .finally(function () {
-        state.managementBusy = false;
+        setManagementBusy(false);
         renderManagementUi();
       });
   }
@@ -688,7 +706,7 @@ export function initDocsViewerManagement(context) {
       payload.after_doc_id = baseDoc.doc_id;
     }
 
-    state.managementBusy = true;
+    setManagementBusy(true);
     hideContextMenu();
     setManagementMessage("Creating doc...", false);
     context.setStatus("Creating doc...", false);
@@ -703,19 +721,19 @@ export function initDocsViewerManagement(context) {
         context.setStatus(error.message || "Create failed.", true);
       })
       .finally(function () {
-        state.managementBusy = false;
+        setManagementBusy(false);
         renderManagementUi();
       });
   }
 
-  function handleEditMetadataSubmit() {
+  function metadataPayloadFromModal() {
     var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) return;
+    if (!doc || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) return null;
 
     var title = String(metadataTitleInput.value || "").trim();
     if (!title) {
       metadataTitleInput.focus();
-      return;
+      return null;
     }
 
     var parentId = resolveMetadataParentId(doc);
@@ -723,7 +741,7 @@ export function initDocsViewerManagement(context) {
       setManagementMessage(state.managementText.metadataParentInvalid, true);
       context.setStatus(state.managementText.metadataParentInvalid, true);
       metadataParentInput.focus();
-      return;
+      return null;
     }
     var originalParentId = String(doc.parent_id || "").trim();
     var originalSortOrderText = normalizeSortOrderValue(doc.sort_order);
@@ -732,14 +750,14 @@ export function initDocsViewerManagement(context) {
       setManagementMessage("sort_order must be zero or greater.", true);
       context.setStatus("sort_order must be zero or greater.", true);
       metadataSortOrderInput.focus();
-      return;
+      return null;
     }
     var payloadSortOrder = sortOrderText;
     if (parentId && parentId !== originalParentId && sortOrderText === originalSortOrderText) {
       payloadSortOrder = "append";
     }
     var selectedStatus = String(metadataStatusInput.value || "").trim();
-    var payload = {
+    return {
       doc_id: doc.doc_id,
       title: title,
       summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
@@ -748,23 +766,35 @@ export function initDocsViewerManagement(context) {
       parent_id: parentId,
       sort_order: payloadSortOrder
     };
+  }
 
-    state.managementBusy = true;
-    setManagementMessage("Saving metadata for " + doc.title + "...", false);
-    context.setStatus("Saving metadata for " + doc.title + "...", false);
+  function confirmMetadataModal() {
+    var payload = metadataPayloadFromModal();
+    if (!payload) return;
+    closeMetadataModal(payload);
+  }
+
+  function handleEditMetadataSave(payload) {
+    if (!payload) return;
+    var doc = state.docsById.get(payload.doc_id);
+    var title = doc && doc.title ? doc.title : payload.title;
+
+    setManagementBusy(true);
+    renderManagementUi();
+    setManagementMessage("Saving metadata for " + title + "...", false);
+    context.setStatus("Saving metadata for " + title + "...", false);
 
     updateManagedDocMetadata(payload, managementClientOptions())
       .then(function (response) {
-        closeMetadataModal();
         setManagementMessage(response.summary_text || "Metadata saved.", false);
-        return reloadDocsIndex(doc.doc_id, response.summary_text || "Metadata saved.");
+        return reloadDocsIndex(payload.doc_id, response.summary_text || "Metadata saved.");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Metadata update failed.", true);
         context.setStatus(error.message || "Metadata update failed.", true);
       })
       .finally(function () {
-        state.managementBusy = false;
+        setManagementBusy(false);
         renderManagementUi();
       });
   }
@@ -790,7 +820,7 @@ export function initDocsViewerManagement(context) {
     var nextStatus = context.currentStatusValue(doc) === selectedStatus ? "" : selectedStatus;
     var savingText = context.formatText(state.managementText.statusPillSaving, { title: doc.title });
 
-    state.managementBusy = true;
+    setManagementBusy(true);
     setManagementMessage(savingText, false);
     context.setStatus(savingText, false);
     context.renderStatusPills();
@@ -807,14 +837,14 @@ export function initDocsViewerManagement(context) {
         context.setStatus(failedText, true);
       })
       .finally(function () {
-        state.managementBusy = false;
+        setManagementBusy(false);
         renderManagementUi();
         context.renderStatusPills();
       });
   }
 
   function handleRebuildDocs() {
-    state.managementBusy = true;
+    setManagementBusy(true);
     setManagementMessage("Rebuilding docs...", false);
     context.setStatus("Rebuilding docs...", false);
 
@@ -829,7 +859,7 @@ export function initDocsViewerManagement(context) {
         context.setStatus(error.message || "Docs rebuild failed.", true);
       })
       .finally(function () {
-        state.managementBusy = false;
+        setManagementBusy(false);
         renderManagementUi();
       });
   }
@@ -839,7 +869,7 @@ export function initDocsViewerManagement(context) {
     if (!doc) return;
     if (!window.confirm("Archive " + doc.title + "?")) return;
 
-    state.managementBusy = true;
+    setManagementBusy(true);
     setManagementMessage("Archiving " + doc.title + "...", false);
     context.setStatus("Archiving " + doc.title + "...", false);
 
@@ -853,7 +883,7 @@ export function initDocsViewerManagement(context) {
         context.setStatus(error.message || "Archive failed.", true);
       })
       .finally(function () {
-        state.managementBusy = false;
+        setManagementBusy(false);
         renderManagementUi();
       });
   }
@@ -884,7 +914,7 @@ export function initDocsViewerManagement(context) {
     var doc = currentSelectedDoc();
     if (!doc) return;
 
-    state.managementBusy = true;
+    setManagementBusy(true);
     setManagementMessage("Checking delete impact for " + doc.title + "...", false);
     context.setStatus("Checking delete impact for " + doc.title + "...", false);
 
@@ -916,7 +946,7 @@ export function initDocsViewerManagement(context) {
         context.setStatus(error.message || "Delete failed.", true);
       })
       .finally(function () {
-        state.managementBusy = false;
+        setManagementBusy(false);
         renderManagementUi();
       });
   }
@@ -927,7 +957,7 @@ export function initDocsViewerManagement(context) {
     var targetDocIds = viewabilityTargetDocIds(doc);
     if (!targetDocIds) return;
 
-    state.managementBusy = true;
+    setManagementBusy(true);
     var countText = targetDocIds.length === 1 ? doc.title : targetDocIds.length + " docs";
     setManagementMessage("Showing " + countText + "...", false);
     context.setStatus("Showing " + countText + "...", false);
@@ -942,7 +972,7 @@ export function initDocsViewerManagement(context) {
         context.setStatus(error.message || "Viewability update failed.", true);
       })
       .finally(function () {
-        state.managementBusy = false;
+        setManagementBusy(false);
         renderManagementUi();
       });
   }
@@ -977,7 +1007,7 @@ export function initDocsViewerManagement(context) {
     var targetDoc = state.docsById.get(targetDocId);
     if (!movingDoc || !targetDoc) return;
 
-    state.managementBusy = true;
+    setManagementBusy(true);
     clearDragState();
     setManagementMessage("Moving " + movingDoc.title + "...", false);
     context.setStatus("Moving " + movingDoc.title + "...", false);
@@ -1014,7 +1044,7 @@ export function initDocsViewerManagement(context) {
         context.setStatus(error.message || "Move failed.", true);
       })
       .finally(function () {
-        state.managementBusy = false;
+        setManagementBusy(false);
         renderManagementUi();
       });
   }
@@ -1033,7 +1063,7 @@ export function initDocsViewerManagement(context) {
       return;
     }
 
-    state.managementBusy = true;
+    setManagementBusy(true);
     hideContextMenu();
     setManagementMessage(state.managementText.undoMoveStatus, false);
     context.setStatus(state.managementText.undoMoveStatus, false);
@@ -1049,7 +1079,7 @@ export function initDocsViewerManagement(context) {
         context.setStatus(error.message || "Undo failed.", true);
       })
       .finally(function () {
-        state.managementBusy = false;
+        setManagementBusy(false);
         renderManagementUi();
       });
   }
@@ -1059,7 +1089,7 @@ export function initDocsViewerManagement(context) {
     var doc = state.docsById.get(docId);
     if (!doc) return;
 
-    state.managementBusy = true;
+    setManagementBusy(true);
     hideContextMenu();
     setManagementMessage("Opening source for " + doc.title + "...", false);
     context.setStatus("Opening source for " + doc.title + "...", false);
@@ -1074,7 +1104,7 @@ export function initDocsViewerManagement(context) {
         context.setStatus(error.message || "Open source failed.", true);
       })
       .finally(function () {
-        state.managementBusy = false;
+        setManagementBusy(false);
         renderManagementUi();
       });
   }
@@ -1285,7 +1315,9 @@ export function initDocsViewerManagement(context) {
       });
     }
     if (manageEditButton) {
-      manageEditButton.addEventListener("click", openMetadataModal);
+      manageEditButton.addEventListener("click", function () {
+        openMetadataModal().then(handleEditMetadataSave);
+      });
     }
     if (manageArchiveButton) {
       manageArchiveButton.addEventListener("click", function () {
@@ -1344,7 +1376,7 @@ export function initDocsViewerManagement(context) {
     if (metadataForm) {
       metadataForm.addEventListener("submit", function (event) {
         event.preventDefault();
-        handleEditMetadataSubmit();
+        confirmMetadataModal();
       });
     }
     if (metadataStatusInput) {

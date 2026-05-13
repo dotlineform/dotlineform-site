@@ -474,6 +474,14 @@
   outline: none;
 }
 
+.docsViewer[data-management-busy="true"],
+.docsViewer[data-management-busy="true"] button,
+.docsViewer[data-management-busy="true"] input,
+.docsViewer[data-management-busy="true"] select,
+.docsViewer[data-management-busy="true"] textarea{
+  cursor: progress;
+}
+
 .docsViewer__modal{
   position: fixed;
   inset: 0;
