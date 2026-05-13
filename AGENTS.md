@@ -4,6 +4,18 @@
 - consider whether edits are implied by the current request. If the request is analysis-only, exploratory, uses words like 'check' or 'confirm', or includes a '?', do not make edits without asking first.
 - when edits are implied, briefly state the intended change set and ask for confirmation before editing unless the request is trivial.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
+- do not rebuild doc payloads.
+
+## Project Priorities and Tradeoffs
+
+- This is a personal project. The user is effectively fulfilling developer, tester, and product roles together.
+- Optimize for decisions that help the user understand:
+- clean and elegant UI design
+- organized, maintainable code
+- evolving or uncertain requirements
+- best practice and where compromise is justified
+- how Codex should best be used to implement requirements
+- When discussing options, explain tradeoffs in a way that helps the user decide and iterate requirements, not just implement the first possible solution.
 
 ## Context and Batching
 
@@ -17,6 +29,13 @@
   - exact next slice to start
 - If a slice is growing beyond the remaining context budget, stop at a clean checkpoint rather than pushing into an interruption-prone state.
 
+## Studio UI Guidance
+
+- `_docs/studio-ui-start.md` is the first-stop Studio UI implementation checklist. Use it first for Studio UI work, then follow its links into the longer reference docs as needed.
+- `_docs/ui-framework.md` defines the site-wide UI interaction defaults plus the docs-viewer and public-search UI
+- Prefer extending shared `tagStudio*` primitives over borrowing another page's namespace or creating one-off patterns.
+- Keep UI shell concerns separate from application logic, validation, and mutation behavior.
+
 ## Runtime and Paths
 
 - Use `/Users/dlf/miniconda3/bin/python3` for all Python commands.
@@ -27,23 +46,6 @@
 - In repo docs and command examples, prefer the shortest project-local script form unless explicitly needed:
   - use `./scripts/...` rather than `python3 scripts/...`
   - only mention workbook paths for the configured Studio bulk-import workflow
-
-## Codex Cloud / Codespaces Runtime Contract
-
-- Treat local and cloud sessions as one workflow with the same command shapes and validation steps.
-- In cloud sessions, keep repo docs and examples machine-agnostic (no user-specific absolute paths).
-- Required shared env vars for media/generation flows:
-  - `DOTLINEFORM_PROJECTS_BASE_DIR`
-- Optional shared env var:
-  - `MAKE_SRCSET_JOBS`
-- Keep remote media credentials out of tracked files; use platform secret stores for values such as:
-  - `R2_ACCOUNT_ID`
-  - `R2_ACCESS_KEY_ID`
-  - `R2_SECRET_ACCESS_KEY`
-  - `R2_BUCKET`
-  - `R2_ENDPOINT`
-- Before reporting environment issues in Codex Cloud or Codespaces, run a version check pass for Python, Ruby, Bundler, and Jekyll.
-- Use dry-run generator commands first in cloud sessions unless an explicit write run was requested.
 
 ## Ruby / Jekyll Toolchain
 
@@ -74,6 +76,15 @@
 - Prefer dry-run behavior for generators unless explicitly asked to write.
 - Do not delete generated or source files unless explicitly requested.
 
+## Verification
+
+- For implementation changes, define proportional targeted verification for both:
+  - Codex-run checks
+  - manual checks
+- For docs-only or analysis-only changes, keep manual verification lightweight and state when no separate manual check is useful. Browser smoke tests are only needed when changes have been to the operational site, not when documents have been edited.
+- Manual testing in this repo is expected to be light-touch and pragmatic. There is no formal QA sign-off process.
+- Include changed file paths (and line references when useful) in summaries.
+
 ## Validation Checklist
 
 - After changing Python scripts, run a syntax check with the configured interpreter.
@@ -101,12 +112,6 @@
 - For Studio Playwright smoke tests, follow `_docs/studio-smoke-testing.md`: wait for the route root to be visible and for route-specific loaded status before interacting; for controls below async-rendered lists, scroll into view and verify `document.elementFromPoint()` resolves to the target or a child before pointer clicking; use DOM activation only for setup-only actions, not for the behavior being tested.
 - Use `_docs/testing.md` and `./scripts/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions. Do not run broad profiles by default for every change; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
 - When `./scripts/run_checks.py` is used, report the profiles, pass/fail result, and `var/test-runs/.../summary.md` path in the final response.
-- For implementation changes, define proportional targeted verification for both:
-  - Codex-run checks
-  - manual checks
-- For docs-only or analysis-only changes, keep manual verification lightweight and state when no separate manual check is useful. Browser smoke tests are only needed when changes have been to the operational site, not when documents have been edited.
-- Manual testing in this repo is expected to be light-touch and pragmatic. There is no formal QA sign-off process.
-- Include changed file paths (and line references when useful) in summaries.
 
 ## Security and Sanitization
 
@@ -144,38 +149,40 @@
   - refactors
 - For trivial or mechanical edits, a short summary is enough.
 
-## Studio UI Guidance
+## Studio Documentation and Search
 
-- `_docs/studio-ui-start.md` is the first-stop Studio UI implementation checklist. Use it first for Studio UI work, then follow its links into the longer reference docs as needed.
-- `_docs/ui-framework.md` defines the site-wide UI interaction defaults plus the docs-viewer and public-search UI
-- Prefer extending shared `tagStudio*` primitives over borrowing another page's namespace or creating one-off patterns.
-- Keep UI shell concerns separate from application logic, validation, and mutation behavior.
-
-## Project Priorities and Tradeoffs
-
-- This is a personal project. The user is effectively fulfilling developer, tester, and product roles together.
-- Optimize for decisions that help the user understand:
-- clean and elegant UI design
-- organized, maintainable code
-- evolving or uncertain requirements
-- best practice and where compromise is justified
-- how Codex should best be used to implement requirements
-- When discussing options, explain tradeoffs in a way that helps the user decide and iterate requirements, not just implement the first possible solution.
-
-## Studio Documentation
-
-- Docs source is now flat under `_docs/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders in _docs/.
+- Docs source is flat under `_docs/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders in _docs/.
 - The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not `_docs/` directly.
 - If `bin/dev-studio` or docs-watch is already running and expected to regenerate the payloads, do not rebuild doc payloads.
+- When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
 - Prefer explicit scope for docs search rebuilds:
   - `./scripts/build_search.rb --scope studio --write`
   - `./scripts/build_search.rb --scope library --write`
 - Do not treat all-scope rebuilds as the default path; use them only when the task intentionally spans both corpora.
+- When search behaviour, schema, ranking, normalization, UI, build flow, validation, or architecture changes materially, update the relevant child docs under `_docs/search.md` in the same change.
+
+## Change Log
+
 - `_docs/site-change-log.md` is the central change log. Only record changes when UI, build flow, validation, or architecture changes are significant and meaningful. Simple UI changes or minor code changes do not need change log entries. If in doubt, ask if a change log entry is required.
 - For meaningful search changes, update `_docs/search-change-log.md` in the same change set as part of normal close-out.
-- When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
 - Keep raw repo file paths for unpublished docs, literal output paths, and non-doc files such as scripts, JSON artifacts, `README.md`, or `AGENTS.md`.
 - Script-specific references for command usage, flags, outputs, and operational notes need to be documented under the parent doc for the scope that own the change, these are top level folders in Docs Viewer. Where a script or functionality crosses scopes (e.g. Catalogue + Library) then it is described under Studio parent. When a script of funmctionality applies across the site, it is described under Site parent.
 - Update the owning runtime, UI, or script doc when behavior, dependencies, or build/write responsibilities changed; do not spread partial schema notes across multiple sections.
-- When features are implemented or changed, update docs in the same change.
-- When search behaviour, schema, ranking, normalization, UI, build flow, validation, or architecture changes materially, update the relevant child docs under `_docs/search.md` in the same change.
+- When features are implemented or changed, update the associated docs in the same change.
+
+## Codex Cloud / Codespaces Runtime Contract
+
+- Treat local and cloud sessions as one workflow with the same command shapes and validation steps.
+- In cloud sessions, keep repo docs and examples machine-agnostic (no user-specific absolute paths).
+- Required shared env vars for media/generation flows:
+  - `DOTLINEFORM_PROJECTS_BASE_DIR`
+- Optional shared env var:
+  - `MAKE_SRCSET_JOBS`
+- Keep remote media credentials out of tracked files; use platform secret stores for values such as:
+  - `R2_ACCOUNT_ID`
+  - `R2_ACCESS_KEY_ID`
+  - `R2_SECRET_ACCESS_KEY`
+  - `R2_BUCKET`
+  - `R2_ENDPOINT`
+- Before reporting environment issues in Codex Cloud or Codespaces, run a version check pass for Python, Ruby, Bundler, and Jekyll.
+- Use dry-run generator commands first in cloud sessions unless an explicit write run was requested.
