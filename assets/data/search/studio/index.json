@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ae3a823b764b178617cbe9cfc1bcdfd6",
-    "generated_at_utc": "2026-05-12T20:41:43Z",
+    "version": "blake2b-8b5cbb8e3a0422a34bf294d58ebe6154",
+    "generated_at_utc": "2026-05-13T08:22:14Z",
     "count": 229
   },
   "entries": [
@@ -1113,21 +1113,21 @@
       "kind": "doc",
       "title": "Library Documents",
       "href": "/docs/?scope=studio&doc=library-documents",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-13",
       "parent_id": "library",
       "parent_title": "Library",
-      "display_meta": "2026-05-11 • Library",
+      "display_meta": "2026-05-13 • Library",
       "search_terms": [
         "library-documents",
         "library",
         "documents",
         "library documents",
-        "2026-05-11",
+        "2026-05-13",
         "2026",
         "05",
-        "11"
+        "13"
       ],
-      "search_text": "library-documents library documents library documents 2026-05-11 2026 05 11"
+      "search_text": "library-documents library documents library documents 2026-05-13 2026 05 13"
     },
     {
       "id": "llm-semantic-enrichment-spec",

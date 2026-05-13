@@ -1,8 +1,8 @@
 const PRESETS = {
   library_documents_admin: {
-    columns: ["doc_id", "added_date", "parent", "viewable", "title"],
-    filters: ["viewable", "parent"],
-    sortable: ["doc_id", "added_date", "title"],
+    columns: ["title", "doc_id", "hidden"],
+    filters: ["hidden"],
+    sortable: ["title", "doc_id", "hidden"],
     defaultSort: "doc_id",
     defaultDir: "asc",
     linkMode: "manage"
@@ -39,6 +39,10 @@ function docIsViewable(doc) {
   return doc && doc.viewable === true;
 }
 
+function docIsHidden(doc) {
+  return !docIsViewable(doc);
+}
+
 function buildParentIdSet(docs) {
   const ids = new Set(docs.map(docId).filter(Boolean));
   const parentIds = new Set();
@@ -55,13 +59,12 @@ function docIsParent(state, doc) {
 
 function filterCounts(state) {
   return {
-    viewable: state.docs.filter((doc) => docIsViewable(doc)).length,
-    parent: state.docs.filter((doc) => docIsParent(state, doc)).length
+    hidden: state.docs.filter((doc) => docIsHidden(doc)).length
   };
 }
 
 function docMatchesFilters(state, doc) {
-  if (state.activeFilters.has("viewable") && !docIsViewable(doc)) return false;
+  if (state.activeFilters.has("hidden") && !docIsHidden(doc)) return false;
   if (state.activeFilters.has("parent") && !docIsParent(state, doc)) return false;
   return true;
 }
@@ -75,6 +78,9 @@ function compareDocs(state, a, b) {
   } else if (state.sortKey === "title") {
     av = docTitle(a);
     bv = docTitle(b);
+  } else if (state.sortKey === "hidden") {
+    av = docIsHidden(a) ? "1" : "0";
+    bv = docIsHidden(b) ? "1" : "0";
   } else {
     av = docId(a);
     bv = docId(b);
@@ -153,11 +159,6 @@ function renderFilters(state) {
   state.filtersNode.hidden = state.preset.filters.length === 0;
 }
 
-function sortLabel(state, key, label) {
-  if (state.sortKey !== key) return label;
-  return `${label} ${state.sortDir}`;
-}
-
 function appendHeaderCell(state, row, column) {
   const label = column === "doc_id" ? "doc_id" : column.replace(/_/g, " ");
   if (state.preset.sortable.includes(column)) {
@@ -165,7 +166,12 @@ function appendHeaderCell(state, row, column) {
     button.type = "button";
     button.className = "docsViewerReport__sortButton";
     button.dataset.reportSort = column;
-    button.textContent = sortLabel(state, column, label);
+    button.textContent = label;
+    const indicator = document.createElement("span");
+    indicator.className = "docsViewerReport__sortIndicator";
+    indicator.setAttribute("aria-hidden", "true");
+    indicator.textContent = state.sortKey === column ? (state.sortDir === "asc" ? "▲" : "▼") : "";
+    button.appendChild(indicator);
     if (state.sortKey === column) button.dataset.state = "active";
     row.appendChild(button);
     return;
@@ -188,6 +194,8 @@ function appendDataCell(state, row, doc, column) {
     cell.className = "docsViewerReport__viewable" + (docIsViewable(doc) ? " is-viewable" : "");
     cell.setAttribute("aria-label", docIsViewable(doc) ? "viewable" : "not viewable");
     row.appendChild(cell);
+  } else if (column === "hidden") {
+    appendTextCell(row, "docsViewerReport__cellMeta docsViewerReport__hidden", docIsHidden(doc) ? "hidden" : "");
   } else {
     appendLinkCell(row, state, "docsViewerReport__cellLink docsViewerReport__title", doc, docTitle(doc));
   }

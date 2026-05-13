@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T21:17:34Z",
+  "generated_at": "2026-05-13T08:22:13Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -677,7 +677,7 @@
       "doc_id": "library-documents",
       "title": "Library Documents",
       "added_date": "2026-05-07",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-13",
       "parent_id": "library",
       "sort_order": 20,
       "published": true,
@@ -686,7 +686,7 @@
       "source_path": "library-documents.md",
       "viewer_url": "/docs/?scope=studio&doc=library-documents",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-documents.json",
-      "content_text_length": 1625,
+      "content_text_length": 1397,
       "viewer_report": "docs_index_table",
       "viewer_report_scope": "library",
       "viewer_report_access": "manage",

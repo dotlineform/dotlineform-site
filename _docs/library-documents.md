@@ -2,7 +2,7 @@
 doc_id: library-documents
 title: Library Documents
 added_date: 2026-05-07
-last_updated: "2026-05-11"
+last_updated: "2026-05-13"
 parent_id: library
 sort_order: 20
 viewer_report: docs_index_table
@@ -38,26 +38,21 @@ It does not depend on Studio route state or Studio list primitives.
 
 Columns:
 
-- `doc_id`
-- `added_date`
-- parent indicator
-- `viewable`
 - `title`
+- `doc_id`
+- `hidden`
 
-`doc_id`, `added_date`, and `title` are sortable columns.
-`viewable` and parent are filter-only attributes.
+All displayed columns are sortable.
 
 Both the `doc_id` and `title` links open the `/docs/` management shell with `scope=library` for that document.
 
 ## Filters
 
-The page exposes two independent filter pills:
+The page exposes one filter pill:
 
-- `viewable`
-- `parent`
+- `hidden`
 
-`viewable` shows records where `viewable` is `true`.
-`parent` shows records whose `doc_id` appears as another record's `parent_id` in the same generated Library index.
+`hidden` shows records where `viewable` is `false`.
 
 ## Availability
 
