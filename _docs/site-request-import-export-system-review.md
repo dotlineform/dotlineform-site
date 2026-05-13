@@ -2,16 +2,24 @@
 doc_id: site-request-import-export-system-review
 title: Import/Export System Review Request
 added_date: 2026-05-09
-last_updated: "2026-05-09 15:47"
-parent_id: change-requests
-sort_order: 211
-viewable: true
+last_updated: "2026-05-13 11:48"
+ui_status: done
+parent_id: archive
+sort_order: 260
+hidden: false
 ---
 # Import/Export System Review Request
 
 Status:
 
-- planned
+- closed
+
+## Closeout
+
+This review is closed as an architecture decision and handoff.
+
+The docs-management server cleanup is now complete through Slice 8, and Docs Viewer management has also completed the follow-on scoped management and local/import packaging work recorded in [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management).
+Implementation ownership has moved to [Studio Data Sharing Module Implementation Request](/docs/?scope=studio&doc=site-request-studio-import-export-module), which defines the separate portable Data Sharing module, the optional Docs Viewer documents adapter, and the tags adapter path.
 
 ## Summary
 
