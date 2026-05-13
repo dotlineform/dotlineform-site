@@ -27,6 +27,10 @@ WORK_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
         "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
         "artifacts": ["work_record"],
     },
+    "project_subfolder": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_record"],
+    },
     "project_filename": {
         "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
         "artifacts": ["work_record"],

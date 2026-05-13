@@ -125,6 +125,7 @@ BULK_WORK_EDITABLE_FIELDS = {
     "status",
     "published_date",
     "project_folder",
+    "project_subfolder",
     "project_filename",
     "title",
     "year",
@@ -224,6 +225,7 @@ def locked_first_pass_work_fields() -> set[str]:
     return {
         "published_date",
         "project_folder",
+        "project_subfolder",
         "project_filename",
         "year",
         "medium_type",

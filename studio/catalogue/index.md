@@ -49,7 +49,6 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
         <li><a href="{{ '/studio/catalogue-status/' | relative_url }}">drafts</a></li>
         <li><a href="{{ '/studio/studio-works/' | relative_url }}">works</a></li>
         <li><a href="{{ '/studio/project-state/' | relative_url }}">projects</a></li>
-        <li><a href="{{ '/catalogue/search/' | relative_url }}">search</a></li>
       </ul>
     </section>
   </section>

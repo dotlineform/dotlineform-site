@@ -28,13 +28,6 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-analytics
 
   <section class="catalogueDashboardRoutes" aria-label="Analytics links">
     <section class="catalogueDashboardColumn">
-      <h3>Data</h3>
-      <ul class="catalogueDashboardPills">
-        <li><a href="{{ '/docs/?scope=analysis&mode=manage&doc=analysis&import=1' | relative_url }}">docs import</a></li>
-        <li><a href="{{ '/docs/?scope=studio&doc=new-pipeline-refine-analytics' | relative_url }}">plan</a></li>
-      </ul>
-    </section>
-    <section class="catalogueDashboardColumn">
       <h3>Tags</h3>
       <ul class="catalogueDashboardPills">
         <li><a href="{{ '/studio/analytics/tag-registry/' | relative_url }}">registry</a></li>

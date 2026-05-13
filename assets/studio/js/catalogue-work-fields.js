@@ -198,6 +198,7 @@ function buildWorkRecordFromDraft(draft, options = {}) {
     : normalizeText(draft.published_date) || null;
   record.series_ids = parseSeriesIds(draft.series_ids);
   record.project_folder = normalizeText(draft.project_folder) || null;
+  record.project_subfolder = normalizeText(draft.project_subfolder) || null;
   record.project_filename = normalizeText(draft.project_filename) || null;
   record.title = normalizeText(draft.title) || null;
   record.year = normalizeText(draft.year) ? Number(draft.year) : null;

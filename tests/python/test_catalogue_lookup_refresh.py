@@ -16,6 +16,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from catalogue.catalogue_source import CatalogueSourceRecords, write_source_record_payloads  # noqa: E402
 from catalogue import catalogue_invalidation as invalidation  # noqa: E402
 from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
+from catalogue import catalogue_write_server  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -114,6 +115,32 @@ def test_work_single_record_refresh_reports_work_record() -> None:
         "work single paths",
     )
     assert_equal(result["invalidation_class"], invalidation.LOOKUP_INVALIDATION_SINGLE_RECORD, "work single class")
+
+
+def test_work_project_subfolder_refresh_is_single_record() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        repo_root, source_dir, lookup_dir, records = fixture_paths(tmp)
+        current_record = records.works["00001"]
+        updated_record = dict(current_record, project_folder="alpha", project_subfolder="ink", project_filename="alpha.jpg")
+        invalidation_result = invalidation.work_lookup_invalidation_for_fields(["project_subfolder"])
+
+        result = lookup_refresh.work_change_lookup_refresh(
+            source_dir,
+            lookup_dir,
+            repo_root,
+            work_id="00001",
+            fields_changed=["project_subfolder"],
+            current_record=current_record,
+            updated_record=updated_record,
+            invalidation_result=invalidation_result,
+            locked_single_record_fields=catalogue_write_server.locked_first_pass_work_fields(),
+        )
+
+    assert_equal(invalidation_result["unknown_fields"], [], "project_subfolder unknown fields")
+    assert "project_subfolder" in catalogue_write_server.BULK_WORK_EDITABLE_FIELDS
+    assert_equal(result["mode"], "single-record", "project_subfolder mode")
+    assert_equal(result["artifacts"], ["work_record"], "project_subfolder artifacts")
+    assert_equal(result["written_count"], 1, "project_subfolder written count")
 
 
 def test_work_targeted_refresh_reports_related_artifacts() -> None:
