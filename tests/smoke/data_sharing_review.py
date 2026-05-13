@@ -76,44 +76,40 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     preview_disabled = page.locator("#dataSharingReviewRun").evaluate("button => button.disabled")
     select_all_disabled = page.locator("#dataSharingReviewSelectAll").evaluate("button => button.disabled")
     clear_disabled = page.locator("#dataSharingReviewClear").evaluate("button => button.disabled")
-    update_summary_disabled = page.locator("#dataSharingReviewUpdateSummary").evaluate("button => button.disabled")
-    apply_hierarchy_disabled = page.locator("#dataSharingReviewApplyHierarchy").evaluate("button => button.disabled")
+    apply_action_disabled = page.locator("[data-data-sharing-apply-action]").evaluate_all(
+        "buttons => buttons.map(button => button.disabled)"
+    )
     file_option_count = page.locator("#dataSharingReviewFileSelect option").count()
     list_exists = page.locator("#dataSharingReviewList").count() == 1
     if not list_exists:
         raise AssertionError("preview list shell is missing")
     if expect_unavailable_service and not preview_disabled:
         raise AssertionError("preview button should be disabled when docs-management service is unavailable")
-    if not update_summary_disabled:
-        raise AssertionError("update summary should stay disabled until document previews are selected")
-    if not apply_hierarchy_disabled:
-        raise AssertionError("apply hierarchy should stay disabled until its service contract exists")
+    if any(not disabled for disabled in apply_action_disabled):
+        raise AssertionError("apply actions should stay disabled until review rows are selected")
     return {
         "file_option_count": file_option_count,
         "preview_disabled": bool(preview_disabled),
         "select_all_disabled": bool(select_all_disabled),
         "clear_disabled": bool(clear_disabled),
-        "update_summary_disabled": bool(update_summary_disabled),
-        "apply_hierarchy_disabled": bool(apply_hierarchy_disabled),
+        "apply_action_disabled": apply_action_disabled,
         "list_exists": list_exists,
     }
 
 
 def assert_unsupported_adapter_state(page, expected_status: str) -> dict[str, object]:
     preview_disabled = page.locator("#dataSharingReviewRun").evaluate("button => button.disabled")
-    update_summary_disabled = page.locator("#dataSharingReviewUpdateSummary").evaluate("button => button.disabled")
-    apply_hierarchy_disabled = page.locator("#dataSharingReviewApplyHierarchy").evaluate("button => button.disabled")
+    apply_action_count = page.locator("[data-data-sharing-apply-action]").count()
     file_select_disabled = page.locator("#dataSharingReviewFileSelect").evaluate("select => select.disabled")
     status_text = page.locator("#dataSharingReviewStatus").text_content()
     if status_text != expected_status:
         raise AssertionError(f"unexpected unsupported-adapter status: {status_text!r}")
-    if not preview_disabled or not update_summary_disabled or not apply_hierarchy_disabled or not file_select_disabled:
+    if not preview_disabled or apply_action_count != 0 or not file_select_disabled:
         raise AssertionError("future adapter controls should be disabled")
     return {
         "status": status_text,
         "preview_disabled": bool(preview_disabled),
-        "update_summary_disabled": bool(update_summary_disabled),
-        "apply_hierarchy_disabled": bool(apply_hierarchy_disabled),
+        "apply_action_count": apply_action_count,
         "file_select_disabled": bool(file_select_disabled),
     }
 
@@ -203,6 +199,56 @@ def install_mock_docs_service(page) -> None:
                         "doc_id": "beta",
                         "kind": "document",
                     }
+                ],
+                "review_rows": [
+                    {
+                        "id": "relationship-tree",
+                        "type": "relationship_tree",
+                        "title": "Relationship tree",
+                        "meta": "3 records",
+                        "record_index": None,
+                        "selectable": False,
+                        "issues": [],
+                        "depth": 0,
+                    },
+                    {
+                        "id": "library-record-1",
+                        "type": "document",
+                        "title": "Library",
+                        "meta": "library",
+                        "record_index": 0,
+                        "selectable": True,
+                        "issues": [],
+                        "depth": 0,
+                    },
+                    {
+                        "id": "alpha-record-2",
+                        "type": "document",
+                        "title": "Alpha",
+                        "meta": "alpha",
+                        "record_index": 1,
+                        "selectable": True,
+                        "issues": [],
+                        "depth": 1,
+                    },
+                    {
+                        "id": "beta-record-3",
+                        "type": "document",
+                        "title": "Beta",
+                        "meta": "not in current Library",
+                        "record_index": 2,
+                        "selectable": True,
+                        "issues": [
+                            {
+                                "level": "warning",
+                                "code": "unknown_doc_id",
+                                "message": "record doc_id is not in the current Library index: beta",
+                                "record_index": 2,
+                                "doc_id": "beta",
+                            }
+                        ],
+                        "depth": 2,
+                    },
                 ],
             }
         elif parsed.path == "/data-sharing/apply":
@@ -322,7 +368,8 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
     rows = page.locator("[data-data-sharing-review-preview]").count()
-    titles = page.locator(".dataSharingReviewList__title").evaluate_all("nodes => nodes.map(node => node.textContent)")
+    types = page.locator(".dataSharingReviewList__type").evaluate_all("nodes => nodes.map(node => node.textContent)")
+    titles = page.locator(".dataSharingReviewList__titleText").evaluate_all("nodes => nodes.map(node => node.textContent)")
     depths = page.locator("[data-data-sharing-review-preview]").evaluate_all(
         "nodes => nodes.map(node => Number(node.dataset.dataSharingReviewDepth || 0))"
     )
@@ -331,13 +378,15 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"expected four preview rows, found {rows}")
     if titles != ["Relationship tree", "Library", "Alpha", "Beta"]:
         raise AssertionError(f"unexpected preview row titles: {titles!r}")
+    if types != ["relationship_tree", "document", "document", "document"]:
+        raise AssertionError(f"unexpected preview row types: {types!r}")
     if depths != [0, 0, 1, 2]:
         raise AssertionError(f"unexpected hierarchy depths: {depths!r}")
     if "not in current Library" not in meta[-1]:
         raise AssertionError(f"unknown current-Library state was not surfaced: {meta!r}")
     page.locator("#dataSharingReviewSelectAll").click()
     selection = page.locator("#dataSharingReviewSelectionSummary").text_content()
-    if selection != "4 previews selected.":
+    if selection != "3 previews selected.":
         raise AssertionError(f"unexpected selection summary: {selection!r}")
     update_summary_disabled = page.locator("#dataSharingReviewUpdateSummary").evaluate("button => button.disabled")
     apply_hierarchy_disabled = page.locator("#dataSharingReviewApplyHierarchy").evaluate("button => button.disabled")

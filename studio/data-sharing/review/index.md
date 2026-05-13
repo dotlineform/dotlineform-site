@@ -30,10 +30,8 @@ studio_page_doc: /docs/?scope=studio&doc=studio-data-sharing
           <select class="tagStudio__input" id="dataSharingReviewFileSelect"></select>
         </span>
       </label>
-      <div class="dataSharingReviewPage__commandButtons">
+      <div class="dataSharingReviewPage__commandButtons" id="dataSharingReviewApplyActions" aria-label="Returned package apply actions">
         <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="dataSharingReviewRun"></button>
-        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="dataSharingReviewUpdateSummary" disabled></button>
-        <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="dataSharingReviewApplyHierarchy" disabled></button>
       </div>
     </div>
 

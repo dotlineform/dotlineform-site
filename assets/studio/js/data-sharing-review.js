@@ -13,6 +13,7 @@ import {
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import { openConfirmDetailModal, openNoticeModal } from "./studio-modal.js";
 import {
+  workflowCapabilityForOperation,
   workflowDomainForKey,
   workflowDomainFromUrl,
   workflowDomainIsActive,
@@ -58,8 +59,7 @@ function workflowScopeFromUrl(domains = WORKFLOW_SCOPES) {
 }
 
 function scopeSupportsSourceApply(state) {
-  return workflowDomainIsActive(state.summaryApplyScopes, state.scope)
-    || workflowDomainIsActive(state.hierarchyApplyScopes, state.scope);
+  return state.applyActions.some((action) => action.status === "active");
 }
 
 function scopeLabel(state, scope = state.scope) {
@@ -73,6 +73,50 @@ function scopeTitle(state, scope = state.scope) {
   return label ? label.charAt(0).toUpperCase() + label.slice(1) : scope;
 }
 
+function normalizeId(value) {
+  return normalizeText(value).toLowerCase();
+}
+
+function actionUi(action) {
+  return action && action.ui && typeof action.ui === "object" ? action.ui : {};
+}
+
+function actionResult(action) {
+  return action && action.result && typeof action.result === "object" ? action.result : {};
+}
+
+function normalizeApplyAction(action, index) {
+  if (!action || typeof action !== "object") return null;
+  const id = normalizeText(action.id);
+  if (!id) return null;
+  const ui = actionUi(action);
+  return {
+    ...action,
+    id,
+    status: normalizeId(action.status) || "active",
+    label: normalizeText(action.label) || id,
+    controlId: normalizeText(ui.control_id) || `dataSharingReviewApplyAction${index + 1}`,
+    controlSelector: normalizeText(ui.control_selector) || "",
+    activityActionId: normalizeText(ui.activity_action_id) || `apply-returned-${id.replace(/_/g, "-")}`,
+    selectionRequiredMessage: normalizeText(ui.selection_required_message),
+    preflightStatus: normalizeText(ui.preflight_status),
+    runningStatus: normalizeText(ui.running_status),
+    cancelledStatus: normalizeText(ui.cancelled_status),
+    successStatus: normalizeText(ui.success_status),
+    failedStatus: normalizeText(ui.failed_status),
+    unavailableTitle: normalizeText(ui.unavailable_title),
+    noChangeCountKey: normalizeText(ui.no_change_count_key),
+    resultTitle: normalizeText(actionResult(action).title),
+    countText: normalizeText(actionResult(action).count_text),
+    countRows: Array.isArray(actionResult(action).count_rows) ? actionResult(action).count_rows : []
+  };
+}
+
+function applyActionsForCapability(capability) {
+  const rawActions = Array.isArray(capability && capability.apply_actions) ? capability.apply_actions : [];
+  return rawActions.map(normalizeApplyAction).filter(Boolean);
+}
+
 function renderScopeSelect(state) {
   state.scopeSelect.innerHTML = state.workflowScopes.map((item) => {
     const label = item.labelKey
@@ -81,6 +125,28 @@ function renderScopeSelect(state) {
     const selected = item.key === state.scope ? " selected" : "";
     return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
   }).join("");
+}
+
+function renderApplyActions(state) {
+  state.applyButtons.clear();
+  state.applyActionContainer.querySelectorAll("[data-data-sharing-apply-action]").forEach((node) => node.remove());
+  const actions = state.applyActions.length
+    ? state.applyActions
+    : [];
+  actions.forEach((action) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "tagStudio__button tagStudio__button--defaultWidth";
+    button.id = action.controlId;
+    button.dataset.dataSharingApplyAction = action.id;
+    button.textContent = action.label;
+    button.disabled = true;
+    button.title = action.status === "active"
+      ? normalizeText(action.title)
+      : (action.unavailableTitle || scopeUnavailableMessage(state));
+    state.applyActionContainer.appendChild(button);
+    state.applyButtons.set(action.id, button);
+  });
 }
 
 function updateScopeUrl(scope, domains = WORKFLOW_SCOPES) {
@@ -227,7 +293,8 @@ function maybeShowResultButton(state, summary) {
 }
 
 function previewRowId(item, index) {
-  return normalizeText(item && item.path)
+  return normalizeText(item && item.id)
+    || normalizeText(item && item.path)
     || normalizeText(item && item.doc_id)
     || `preview-${index + 1}`;
 }
@@ -309,7 +376,9 @@ function buildDocumentRows(state, payload, previewLookup) {
       title: normalizeText(record && record.title)
         || getStudioText(state.config, "data_sharing_review.missing_title", "missing title"),
       meta: rowMetaParts(state, { docId, duplicate, currentLibrary }).join(" · "),
-      depth: 0
+      depth: 0,
+      selectable: true,
+      issues: Array.isArray(record && record.issues) ? record.issues : []
     };
   });
 }
@@ -364,26 +433,59 @@ function buildTreeRows(state, previewLookup) {
       path,
       title: getStudioText(state.config, "data_sharing_review.relationship_tree_title", "Relationship tree"),
       meta: countText,
-      depth: 0
+      depth: 0,
+      selectable: false,
+      issues: []
     };
   });
 }
 
 function buildPreviewRows(state, payload) {
+  const genericRows = Array.isArray(payload && payload.review_rows) ? payload.review_rows : [];
+  if (genericRows.length) {
+    return genericRows.map((row, index) => normalizeReviewRow(state, row, index)).filter(Boolean);
+  }
   const previewLookup = previewFilesByRecord(payload && payload.preview_files);
   const treeRows = buildTreeRows(state, previewLookup);
   const documentRows = orderDocumentRows(buildDocumentRows(state, payload, previewLookup));
   return [...treeRows, ...documentRows];
 }
 
+function normalizeReviewRow(state, row, index) {
+  if (!row || typeof row !== "object") return null;
+  const recordIndex = Number.isInteger(row.record_index) ? row.record_index : null;
+  const issueTexts = issueItems(row.issues);
+  const metaParts = [
+    normalizeText(row.meta),
+    recordIndex === null
+      ? ""
+      : getStudioText(state.config, "data_sharing_review.record_index_meta", "row {record_index}", { record_index: recordIndex + 1 }),
+    issueTexts.length
+      ? getStudioText(state.config, "data_sharing_review.row_issues_meta", "{count} issue(s)", { count: issueTexts.length })
+      : ""
+  ].filter(Boolean);
+  return {
+    id: previewRowId(row, index),
+    type: normalizeText(row.type) || getStudioText(state.config, "data_sharing_review.row_type_record", "record"),
+    title: normalizeText(row.title) || getStudioText(state.config, "data_sharing_review.missing_title", "missing title"),
+    meta: metaParts.join(" · "),
+    recordIndex,
+    selectable: row.selectable !== false && Number.isInteger(recordIndex),
+    issues: Array.isArray(row.issues) ? row.issues : [],
+    depth: Math.max(0, Number(row.depth || 0))
+  };
+}
+
 function renderPreviewRow(row) {
   const depth = Math.max(0, Number(row.depth || 0));
   const treeClass = row.type === "relationship_tree" ? " dataSharingReviewList__row--tree" : "";
+  const disabled = row.selectable === false ? " disabled" : "";
+  const checkedValue = row.selectable === false ? " aria-disabled=\"true\"" : "";
   return `
     <li class="tagStudioList__row tagStudioList__row--center dataSharingReviewList__row${treeClass}" data-data-sharing-review-preview="${escapeHtml(row.id)}" data-data-sharing-review-depth="${depth}" style="--data-sharing-review-depth: ${depth};">
       <label class="dataSharingReviewList__label">
-        <input class="dataSharingReviewList__checkbox" type="checkbox" value="${escapeHtml(row.id)}">
-        <span class="dataSharingReviewList__title">${escapeHtml(row.title)}</span>
+        <input class="dataSharingReviewList__checkbox" type="checkbox" value="${escapeHtml(row.id)}"${disabled}${checkedValue}>
+        <span class="dataSharingReviewList__title"><span class="dataSharingReviewList__type">${escapeHtml(row.type)}</span><span class="dataSharingReviewList__titleText">${escapeHtml(row.title)}</span></span>
         ${row.meta ? `<span class="dataSharingReviewList__meta">${escapeHtml(row.meta)}</span>` : ""}
       </label>
     </li>
@@ -405,12 +507,15 @@ function renderPreviewList(state) {
 }
 
 function selectablePreviewIds(state) {
-  return state.previewRows.map((row) => row.id).filter(Boolean);
+  return state.previewRows
+    .filter((row) => row.selectable !== false)
+    .map((row) => row.id)
+    .filter(Boolean);
 }
 
-function selectedDocumentRecordIndices(state) {
+function selectedRecordIndices(state) {
   return state.previewRows
-    .filter((row) => state.selectedPreviewIds.has(row.id) && row.type === "document" && Number.isInteger(row.recordIndex))
+    .filter((row) => state.selectedPreviewIds.has(row.id) && row.selectable !== false && Number.isInteger(row.recordIndex))
     .map((row) => row.recordIndex);
 }
 
@@ -504,15 +609,18 @@ function setControlsDisabled(state, disabled) {
   state.previewButton.disabled = disabled || !state.serviceAvailable || !state.files.length;
   state.selectAllButton.disabled = disabled || !state.previewRows.length;
   state.clearButton.disabled = disabled || !state.previewRows.length;
-  state.updateSummaryButton.disabled = disabled || !supportsApply || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
-  state.applyHierarchyButton.disabled = disabled || !supportsApply || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
+  state.applyButtons.forEach((button, actionId) => {
+    const action = state.applyActions.find((item) => item.id === actionId);
+    button.disabled = disabled || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || !selectedRecordIndices(state).length;
+  });
 }
 
 function syncApplyActionState(state) {
-  if (!state.updateSummaryButton || !state.applyHierarchyButton) return;
   const supportsApply = scopeSupportsSourceApply(state);
-  state.updateSummaryButton.disabled = state.isRunning || !supportsApply || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
-  state.applyHierarchyButton.disabled = state.isRunning || !supportsApply || !state.serviceAvailable || !selectedDocumentRecordIndices(state).length;
+  state.applyButtons.forEach((button, actionId) => {
+    const action = state.applyActions.find((item) => item.id === actionId);
+    button.disabled = state.isRunning || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || !selectedRecordIndices(state).length;
+  });
 }
 
 async function loadImportFiles(scope) {
@@ -575,80 +683,6 @@ async function runPreview(state) {
   }
 }
 
-function applyCountsText(state, counts) {
-  const safeCounts = counts && typeof counts === "object" ? counts : {};
-  return getStudioText(
-    state.config,
-    "data_sharing_review.summary_apply_counts",
-    "{updates} updates; {skipped} skipped; {errors} errors.",
-    {
-      updates: Number(safeCounts.updates || 0),
-      skipped: Number(safeCounts.skipped || 0),
-      errors: Number(safeCounts.errors || 0)
-    }
-  );
-}
-
-function applyCountRows(state, counts) {
-  const safeCounts = counts && typeof counts === "object" ? counts : {};
-  return [
-    {
-      label: getStudioText(state.config, "data_sharing_review.count_updates", "updates"),
-      value: Number(safeCounts.updates || 0)
-    },
-    {
-      label: getStudioText(state.config, "data_sharing_review.count_skipped", "skipped"),
-      value: Number(safeCounts.skipped || 0)
-    },
-    {
-      label: getStudioText(state.config, "data_sharing_review.count_errors", "errors"),
-      value: Number(safeCounts.errors || 0)
-    }
-  ];
-}
-
-function hierarchyCountsText(state, counts) {
-  const safeCounts = counts && typeof counts === "object" ? counts : {};
-  return getStudioText(
-    state.config,
-    "data_sharing_review.hierarchy_apply_counts",
-    "{changed} changed; {unchanged} unchanged; {skipped} skipped; {warnings} warnings; {errors} errors.",
-    {
-      changed: Number(safeCounts.changed || safeCounts.updates || 0),
-      unchanged: Number(safeCounts.unchanged || 0),
-      skipped: Number(safeCounts.skipped || 0),
-      warnings: Number(safeCounts.warnings || 0),
-      errors: Number(safeCounts.errors || 0)
-    }
-  );
-}
-
-function hierarchyCountRows(state, counts) {
-  const safeCounts = counts && typeof counts === "object" ? counts : {};
-  return [
-    {
-      label: getStudioText(state.config, "data_sharing_review.count_changed", "changed"),
-      value: Number(safeCounts.changed || safeCounts.updates || 0)
-    },
-    {
-      label: getStudioText(state.config, "data_sharing_review.count_unchanged", "unchanged"),
-      value: Number(safeCounts.unchanged || 0)
-    },
-    {
-      label: getStudioText(state.config, "data_sharing_review.count_skipped", "skipped"),
-      value: Number(safeCounts.skipped || 0)
-    },
-    {
-      label: getStudioText(state.config, "data_sharing_review.count_warnings", "warnings"),
-      value: Number(safeCounts.warnings || 0)
-    },
-    {
-      label: getStudioText(state.config, "data_sharing_review.count_errors", "errors"),
-      value: Number(safeCounts.errors || 0)
-    }
-  ];
-}
-
 function applyIssues(payload, fallbackPrefix) {
   const errors = Array.isArray(payload && payload.errors) ? payload.errors : [];
   const warnings = Array.isArray(payload && payload.warnings) ? payload.warnings : [];
@@ -675,147 +709,86 @@ function applyIssues(payload, fallbackPrefix) {
   ];
 }
 
-function renderSummaryApplyResult(state, payload) {
-  const countsValue = applyCountsText(state, payload && payload.counts);
-  const summary = normalizeText(payload && payload.summary_text);
-  showResultModal(state, {
-    title: getStudioText(state.config, "data_sharing_review.summary_apply_result_title", "Summary update complete"),
-    summary: `${summary} ${countsValue}`.trim(),
-    countRows: applyCountRows(state, payload && payload.counts),
-    issues: applyIssues(payload || {}, "summary apply")
-  });
-}
-
-function renderHierarchyApplyResult(state, payload) {
-  const countsValue = hierarchyCountsText(state, payload && payload.counts);
-  const summary = normalizeText(payload && payload.summary_text);
-  showResultModal(state, {
-    title: getStudioText(state.config, "data_sharing_review.hierarchy_apply_result_title", "Hierarchy update complete"),
-    summary: `${summary} ${countsValue}`.trim(),
-    countRows: hierarchyCountRows(state, payload && payload.counts),
-    issues: applyIssues(payload || {}, "hierarchy apply")
-  });
-}
-
 function selectedFileName(state) {
   const file = selectedFile(state);
   return normalizeText(file && file.filename);
 }
 
-async function runSummaryApply(state) {
-  if (!state.serviceAvailable || state.isRunning) return;
-  hideResultButton(state);
-  const stagedFilename = selectedFileName(state);
-  const recordIndices = selectedDocumentRecordIndices(state);
-  if (!stagedFilename || !recordIndices.length) {
-    setStatus(
-      state.statusNode,
-      "error",
-      getStudioText(state.config, "data_sharing_review.summary_apply_selection_required", "Select at least one document preview.")
-    );
-    return;
-  }
-
-  state.isRunning = true;
-  setControlsDisabled(state, true);
-  syncRouteBusyState(state);
-  setStatus(
-    state.statusNode,
-    "",
-    getStudioText(state.config, "data_sharing_review.summary_apply_preflight_status", "Checking selected summaries...")
-  );
-
-  try {
-    const preflight = await postJson(DATA_SHARING_ENDPOINTS.apply, {
-      data_domain: state.scope,
-      operation: "apply",
-      apply_action: "summary_apply",
-      staged_filename: stagedFilename,
-      record_indices: recordIndices,
-      confirm: false
-    });
-    const countsTextValue = applyCountsText(state, preflight.counts);
-    if (!preflight.ok || Number(preflight.counts && preflight.counts.updates || 0) < 1) {
-      setStatus(state.statusNode, preflight.ok ? "warn" : "error", preflight.summary_text || countsTextValue);
-      renderSummaryApplyResult(state, preflight);
-      return;
-    }
-
-    const confirm = await openConfirmDetailModal({
-      root: state.root,
-      title: getStudioText(state.config, "data_sharing_review.summary_apply_confirm_title", "Update summaries?"),
-      body: [
-        preflight.summary_text || countsTextValue,
-        countsTextValue,
-        getStudioText(
-          state.config,
-          "data_sharing_review.summary_apply_confirm_body",
-          "This will back up and update selected Library source files."
-        )
-      ],
-      primaryLabel: getStudioText(state.config, "data_sharing_review.summary_apply_confirm_ok", "OK"),
-      cancelLabel: getStudioText(state.config, "data_sharing_review.summary_apply_confirm_cancel", "Cancel")
-    });
-    if (!confirm.confirmed) {
-      setStatus(
-        state.statusNode,
-        "",
-        getStudioText(state.config, "data_sharing_review.summary_apply_cancelled", "Summary update cancelled.")
-      );
-      return;
-    }
-
-    setStatus(
-      state.statusNode,
-      "",
-      getStudioText(state.config, "data_sharing_review.summary_apply_running_status", "Updating selected summaries...")
-    );
-    const applied = await postJson(DATA_SHARING_ENDPOINTS.apply, {
-      data_domain: state.scope,
-      operation: "apply",
-      apply_action: "summary_apply",
-      staged_filename: stagedFilename,
-      record_indices: recordIndices,
-      confirm: true,
-      activity_context: buildStudioActivityContext({
-        pageId: "data-sharing-review",
-        actionId: "apply-returned-summaries",
-        route: "/studio/data-sharing/review/",
-        controlId: "dataSharingReviewUpdateSummary",
-        controlSelector: "#dataSharingReviewUpdateSummary",
-        recordIdField: "staged_filename",
-        recordId: stagedFilename
-      })
-    });
-    renderSummaryApplyResult(state, applied);
-    setStatus(
-      state.statusNode,
-      "success",
-      applied.summary_text || getStudioText(state.config, "data_sharing_review.summary_apply_success", "Summaries updated.")
-    );
-  } catch (error) {
-    const payload = error && error.payload ? error.payload : {};
-    const message = normalizeText(payload.summary_text) || normalizeText(error && error.message)
-      || getStudioText(state.config, "data_sharing_review.summary_apply_failed", "Summary update failed.");
-    renderSummaryApplyResult(state, { ...payload, summary_text: message });
-    setStatus(state.statusNode, "error", message);
-  } finally {
-    state.isRunning = false;
-    setControlsDisabled(state, false);
-    syncRouteBusyState(state);
-  }
+function countValue(counts, row) {
+  const safeCounts = counts && typeof counts === "object" ? counts : {};
+  const key = normalizeText(row && row.key);
+  if (!key) return "";
+  const fallbackKey = normalizeText(row && row.fallback_key);
+  return Number(safeCounts[key] || (fallbackKey ? safeCounts[fallbackKey] : 0) || 0);
 }
 
-async function runHierarchyApply(state) {
+function actionCountRows(action, counts) {
+  if (!action.countRows.length) {
+    const safeCounts = counts && typeof counts === "object" ? counts : {};
+    return Object.keys(safeCounts).map((key) => ({
+      label: key.replace(/_/g, " "),
+      value: Number(safeCounts[key] || 0)
+    }));
+  }
+  return action.countRows.map((row) => ({
+    label: normalizeText(row && row.label) || normalizeText(row && row.key),
+    value: countValue(counts, row)
+  })).filter((row) => row.label);
+}
+
+function actionCountsText(action, counts) {
+  const template = normalizeText(action.countText);
+  if (!template) return "";
+  const safeCounts = counts && typeof counts === "object" ? counts : {};
+  return template.replace(/\{([^}]+)\}/g, (_match, key) => String(Number(safeCounts[normalizeText(key)] || 0)));
+}
+
+function actionChangeCount(action, counts) {
+  const safeCounts = counts && typeof counts === "object" ? counts : {};
+  const key = action.noChangeCountKey || (action.countRows[0] && normalizeText(action.countRows[0].key)) || "updates";
+  return Number(safeCounts[key] || 0);
+}
+
+function renderApplyActionResult(state, action, payload) {
+  const countsValue = actionCountsText(action, payload && payload.counts);
+  const summary = normalizeText(payload && payload.summary_text);
+  showResultModal(state, {
+    title: action.resultTitle || getStudioText(state.config, "data_sharing_review.apply_result_title", "Apply complete"),
+    summary: `${summary} ${countsValue}`.trim(),
+    countRows: actionCountRows(action, payload && payload.counts),
+    issues: applyIssues(payload || {}, action.id)
+  });
+}
+
+function actionConfirmation(action) {
+  return action && action.confirmation && typeof action.confirmation === "object" ? action.confirmation : {};
+}
+
+function actionActivityContext(state, action, stagedFilename) {
+  const controlSelector = normalizeText(action.controlSelector) || `#${action.controlId}`;
+  return buildStudioActivityContext({
+    pageId: "data-sharing-review",
+    actionId: action.activityActionId,
+    route: "/studio/data-sharing/review/",
+    controlId: action.controlId,
+    controlSelector,
+    recordIdField: "staged_filename",
+    recordId: stagedFilename
+  });
+}
+
+async function runApplyAction(state, actionId) {
   if (!state.serviceAvailable || state.isRunning) return;
+  const action = state.applyActions.find((item) => item.id === actionId);
+  if (!action || action.status !== "active") return;
   hideResultButton(state);
   const stagedFilename = selectedFileName(state);
-  const recordIndices = selectedDocumentRecordIndices(state);
+  const recordIndices = selectedRecordIndices(state);
   if (!stagedFilename || !recordIndices.length) {
     setStatus(
       state.statusNode,
       "error",
-      getStudioText(state.config, "data_sharing_review.summary_apply_selection_required", "Select at least one document preview.")
+      action.selectionRequiredMessage || getStudioText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
     );
     return;
   }
@@ -826,45 +799,42 @@ async function runHierarchyApply(state) {
   setStatus(
     state.statusNode,
     "",
-    getStudioText(state.config, "data_sharing_review.hierarchy_apply_preflight_status", "Checking selected hierarchy changes...")
+    action.preflightStatus || getStudioText(state.config, "data_sharing_review.apply_preflight_status", "Checking selected rows...")
   );
 
   try {
     const preflight = await postJson(DATA_SHARING_ENDPOINTS.apply, {
       data_domain: state.scope,
       operation: "apply",
-      apply_action: "hierarchy_apply",
+      apply_action: action.id,
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: false
     });
-    const countsTextValue = hierarchyCountsText(state, preflight.counts);
-    if (!preflight.ok || Number(preflight.counts && (preflight.counts.changed || preflight.counts.updates) || 0) < 1) {
+    const countsTextValue = actionCountsText(action, preflight.counts);
+    if (!preflight.ok || actionChangeCount(action, preflight.counts) < 1) {
       setStatus(state.statusNode, preflight.ok ? "warn" : "error", preflight.summary_text || countsTextValue);
-      renderHierarchyApplyResult(state, preflight);
+      renderApplyActionResult(state, action, preflight);
       return;
     }
 
+    const confirmation = actionConfirmation(action);
     const confirm = await openConfirmDetailModal({
       root: state.root,
-      title: getStudioText(state.config, "data_sharing_review.hierarchy_apply_confirm_title", "Update hierarchy?"),
+      title: normalizeText(confirmation.title) || getStudioText(state.config, "data_sharing_review.apply_confirm_title", "Apply returned changes?"),
       body: [
         preflight.summary_text || countsTextValue,
         countsTextValue,
-        getStudioText(
-          state.config,
-          "data_sharing_review.hierarchy_apply_confirm_body",
-          "This will back up and update selected Library source parent ids."
-        )
-      ],
-      primaryLabel: getStudioText(state.config, "data_sharing_review.hierarchy_apply_confirm_ok", "OK"),
-      cancelLabel: getStudioText(state.config, "data_sharing_review.hierarchy_apply_confirm_cancel", "Cancel")
+        normalizeText(confirmation.body)
+      ].filter(Boolean),
+      primaryLabel: normalizeText(confirmation.primary_label) || getStudioText(state.config, "data_sharing_review.apply_confirm_ok", "OK"),
+      cancelLabel: normalizeText(confirmation.cancel_label) || getStudioText(state.config, "data_sharing_review.apply_confirm_cancel", "Cancel")
     });
     if (!confirm.confirmed) {
       setStatus(
         state.statusNode,
         "",
-        getStudioText(state.config, "data_sharing_review.hierarchy_apply_cancelled", "Hierarchy update cancelled.")
+        action.cancelledStatus || getStudioText(state.config, "data_sharing_review.apply_cancelled", "Apply cancelled.")
       );
       return;
     }
@@ -872,36 +842,28 @@ async function runHierarchyApply(state) {
     setStatus(
       state.statusNode,
       "",
-      getStudioText(state.config, "data_sharing_review.hierarchy_apply_running_status", "Updating selected hierarchy...")
+      action.runningStatus || getStudioText(state.config, "data_sharing_review.apply_running_status", "Applying selected changes...")
     );
     const applied = await postJson(DATA_SHARING_ENDPOINTS.apply, {
       data_domain: state.scope,
       operation: "apply",
-      apply_action: "hierarchy_apply",
+      apply_action: action.id,
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: true,
-      activity_context: buildStudioActivityContext({
-        pageId: "data-sharing-review",
-        actionId: "apply-returned-hierarchy",
-        route: "/studio/data-sharing/review/",
-        controlId: "dataSharingReviewApplyHierarchy",
-        controlSelector: "#dataSharingReviewApplyHierarchy",
-        recordIdField: "staged_filename",
-        recordId: stagedFilename
-      })
+      activity_context: actionActivityContext(state, action, stagedFilename)
     });
-    renderHierarchyApplyResult(state, applied);
+    renderApplyActionResult(state, action, applied);
     setStatus(
       state.statusNode,
       "success",
-      applied.summary_text || getStudioText(state.config, "data_sharing_review.hierarchy_apply_success", "Hierarchy updated.")
+      applied.summary_text || action.successStatus || getStudioText(state.config, "data_sharing_review.apply_success", "Changes applied.")
     );
   } catch (error) {
     const payload = error && error.payload ? error.payload : {};
     const message = normalizeText(payload.summary_text) || normalizeText(error && error.message)
-      || getStudioText(state.config, "data_sharing_review.hierarchy_apply_failed", "Hierarchy update failed.");
-    renderHierarchyApplyResult(state, { ...payload, summary_text: message });
+      || action.failedStatus || getStudioText(state.config, "data_sharing_review.apply_failed", "Apply failed.");
+    renderApplyActionResult(state, action, { ...payload, summary_text: message });
     setStatus(state.statusNode, "error", message);
   } finally {
     state.isRunning = false;
@@ -921,21 +883,22 @@ async function init() {
     root,
     scope: workflowScopeFromUrl(),
     workflowScopes: WORKFLOW_SCOPES,
-    summaryApplyScopes: WORKFLOW_SCOPES,
-    hierarchyApplyScopes: WORKFLOW_SCOPES,
+    adapterRegistry: null,
+    applyCapability: null,
+    applyActions: [],
+    applyButtons: new Map(),
     scopeLabelNode: document.getElementById("dataSharingReviewScopeLabel"),
     scopeSelect: document.getElementById("dataSharingReviewScopeSelect"),
     fileLabelNode: document.getElementById("dataSharingReviewFileLabel"),
     fileSelect: document.getElementById("dataSharingReviewFileSelect"),
     previewButton: document.getElementById("dataSharingReviewRun"),
+    applyActionContainer: document.getElementById("dataSharingReviewApplyActions"),
     statusNode: document.getElementById("dataSharingReviewStatus"),
     resultButton: document.getElementById("dataSharingReviewResults"),
     selectionSummary: document.getElementById("dataSharingReviewSelectionSummary"),
     selectAllButton: document.getElementById("dataSharingReviewSelectAll"),
     clearButton: document.getElementById("dataSharingReviewClear"),
     listNode: document.getElementById("dataSharingReviewList"),
-    updateSummaryButton: document.getElementById("dataSharingReviewUpdateSummary"),
-    applyHierarchyButton: document.getElementById("dataSharingReviewApplyHierarchy"),
     config: null,
     files: [],
     previewRows: [],
@@ -951,25 +914,27 @@ async function init() {
     state.fileLabelNode,
     state.fileSelect,
     state.previewButton,
+    state.applyActionContainer,
     state.statusNode,
     state.resultButton,
     state.selectionSummary,
     state.selectAllButton,
     state.clearButton,
-    state.listNode,
-    state.updateSummaryButton,
-    state.applyHierarchyButton
+    state.listNode
   ];
   if (requiredNodes.some((node) => !node)) return;
 
   try {
     state.config = await loadStudioConfigWithText("data_sharing_review");
     const adapterRegistry = await loadAdapterRegistry(state.config);
+    state.adapterRegistry = adapterRegistry;
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "list_returned", WORKFLOW_SCOPES);
-    state.summaryApplyScopes = workflowDomainsForOperation(adapterRegistry, "apply", []);
-    state.hierarchyApplyScopes = workflowDomainsForOperation(adapterRegistry, "apply", []);
     state.scope = workflowScopeFromUrl(state.workflowScopes);
+    state.applyCapability = workflowCapabilityForOperation(adapterRegistry, "apply", state.scope);
+    state.applyActions = applyActionsForCapability(state.applyCapability && state.applyCapability.capability)
+      .filter((action) => action.status === "active");
     renderScopeSelect(state);
+    renderApplyActions(state);
     state.serviceAvailable = Boolean(await probeDataSharingHealth());
 
     setText(state.scopeLabelNode, getStudioText(state.config, "data_sharing_review.scope_label", "scope"));
@@ -978,24 +943,6 @@ async function init() {
     setText(state.resultButton, getStudioText(state.config, "data_sharing_review.result_button", "results"));
     setText(state.selectAllButton, getStudioText(state.config, "data_sharing_review.select_all", "select all"));
     setText(state.clearButton, getStudioText(state.config, "data_sharing_review.clear", "clear"));
-    setText(
-      state.updateSummaryButton,
-      getStudioText(state.config, "data_sharing_review.update_summary_button", "Update summary")
-    );
-    setText(
-      state.applyHierarchyButton,
-      getStudioText(state.config, "data_sharing_review.apply_hierarchy_button", "Apply hierarchy")
-    );
-    state.updateSummaryButton.title = getStudioText(
-      state.config,
-      "data_sharing_review.update_summary_title",
-      "Update selected document summaries from the staged file."
-    );
-    state.applyHierarchyButton.title = getStudioText(
-      state.config,
-      "data_sharing_review.apply_hierarchy_title",
-      "Update selected document parent ids from the staged file."
-    );
     if (!scopeSupportsSourceApply(state)) {
       const unsupportedApplyTitle = getStudioText(
         state.config,
@@ -1003,8 +950,9 @@ async function init() {
         "{scope_label} source apply actions are not implemented yet.",
         { scope_label: scopeTitle(state) }
       );
-      state.updateSummaryButton.title = unsupportedApplyTitle;
-      state.applyHierarchyButton.title = unsupportedApplyTitle;
+      state.applyButtons.forEach((button) => {
+        button.title = unsupportedApplyTitle;
+      });
     }
     renderPreviewList(state);
     updateSelectionSummary(state);
@@ -1106,11 +1054,11 @@ async function init() {
       updateSelectionSummary(state);
     });
     state.listNode.addEventListener("change", (event) => handlePreviewListChange(state, event));
-    state.updateSummaryButton.addEventListener("click", () => {
-      runSummaryApply(state).catch((error) => console.warn("data_sharing_review: unexpected summary apply failure", error));
-    });
-    state.applyHierarchyButton.addEventListener("click", () => {
-      runHierarchyApply(state).catch((error) => console.warn("data_sharing_review: unexpected hierarchy apply failure", error));
+    state.applyActionContainer.addEventListener("click", (event) => {
+      const target = event.target instanceof Element ? event.target.closest("[data-data-sharing-apply-action]") : null;
+      if (!(target instanceof HTMLButtonElement)) return;
+      const actionId = normalizeText(target.dataset.dataSharingApplyAction);
+      runApplyAction(state, actionId).catch((error) => console.warn("data_sharing_review: unexpected apply failure", error));
     });
   } catch (error) {
     console.warn("data_sharing_review: init failed", error);

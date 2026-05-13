@@ -1315,6 +1315,14 @@ span.tagStudio__input--readonlyDisplay {
   overflow-wrap: anywhere;
 }
 
+.dataSharingReviewList__type {
+  display: inline-block;
+  margin-right: 0.35rem;
+  color: var(--muted, var(--studio-muted));
+  font-size: var(--font-caption);
+  text-transform: lowercase;
+}
+
 .dataSharingReviewList__row--tree .dataSharingReviewList__title {
   font-weight: 600;
 }

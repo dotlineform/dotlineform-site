@@ -15,6 +15,7 @@ function capabilityRecord(item) {
   const operation = normalizeId(item.operation);
   if (!operation) return null;
   return {
+    ...item,
     operation,
     status: normalizeId(item.status) || "active",
     message: normalizeText(item.message)
@@ -61,6 +62,32 @@ export function workflowDomainsForOperation(registry, operation, fallbackDomains
     });
   });
   return domains.length ? domains : fallbackDomains;
+}
+
+export function workflowCapabilityForOperation(registry, operation, domainKey) {
+  const targetOperation = normalizeId(operation);
+  const targetDomain = normalizeId(domainKey);
+  const adapters = Array.isArray(registry && registry.adapters) ? registry.adapters : [];
+  for (const adapter of adapters) {
+    if (!adapter || typeof adapter !== "object") continue;
+    const capabilities = Array.isArray(adapter.capabilities) ? adapter.capabilities.map(capabilityRecord).filter(Boolean) : [];
+    const capability = capabilities.find((item) => item.operation === targetOperation);
+    if (!capability) continue;
+    const dataDomains = adapter.data_domains && typeof adapter.data_domains === "object" ? adapter.data_domains : {};
+    const domain = dataDomains[targetDomain];
+    if (!domain || typeof domain !== "object") continue;
+    return {
+      adapter,
+      adapterId: normalizeText(adapter.id),
+      adapterLabel: normalizeText(adapter.label),
+      capability,
+      dataDomain: targetDomain,
+      domain,
+      status: capabilityStatus(adapter, domain, capability),
+      message: normalizeText(capability.message)
+    };
+  }
+  return null;
 }
 
 export function workflowDomainFromUrl(domains, defaultDomain) {

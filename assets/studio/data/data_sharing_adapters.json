@@ -141,9 +141,41 @@
               "id": "summary_apply",
               "label": "Update summaries",
               "status": "active",
+              "ui": {
+                "control_id": "dataSharingReviewUpdateSummary",
+                "control_selector": "#dataSharingReviewUpdateSummary",
+                "activity_action_id": "apply-returned-summaries",
+                "selection_required_message": "Select at least one document preview.",
+                "preflight_status": "Checking selected summaries...",
+                "running_status": "Updating selected summaries...",
+                "success_status": "Summaries updated.",
+                "failed_status": "Summary update failed.",
+                "cancelled_status": "Summary update cancelled.",
+                "no_change_count_key": "updates"
+              },
               "confirmation": {
                 "title": "Update summaries?",
-                "body": "This will back up and update selected Library source files."
+                "body": "This will back up and update selected Library source files.",
+                "primary_label": "OK",
+                "cancel_label": "Cancel"
+              },
+              "result": {
+                "title": "Summary update complete",
+                "count_text": "{updates} updates; {skipped} skipped; {errors} errors.",
+                "count_rows": [
+                  {
+                    "key": "updates",
+                    "label": "updates"
+                  },
+                  {
+                    "key": "skipped",
+                    "label": "skipped"
+                  },
+                  {
+                    "key": "errors",
+                    "label": "errors"
+                  }
+                ]
               },
               "activity": {
                 "script_purpose": "data-sharing-apply",
@@ -154,9 +186,50 @@
               "id": "hierarchy_apply",
               "label": "Apply hierarchy",
               "status": "active",
+              "ui": {
+                "control_id": "dataSharingReviewApplyHierarchy",
+                "control_selector": "#dataSharingReviewApplyHierarchy",
+                "activity_action_id": "apply-returned-hierarchy",
+                "selection_required_message": "Select at least one document preview.",
+                "preflight_status": "Checking selected hierarchy changes...",
+                "running_status": "Updating selected hierarchy...",
+                "success_status": "Hierarchy updated.",
+                "failed_status": "Hierarchy update failed.",
+                "cancelled_status": "Hierarchy update cancelled.",
+                "no_change_count_key": "changed"
+              },
               "confirmation": {
                 "title": "Update hierarchy?",
-                "body": "This will back up and update selected Library source parent ids."
+                "body": "This will back up and update selected Library source parent ids.",
+                "primary_label": "OK",
+                "cancel_label": "Cancel"
+              },
+              "result": {
+                "title": "Hierarchy update complete",
+                "count_text": "{changed} changed; {unchanged} unchanged; {skipped} skipped; {warnings} warnings; {errors} errors.",
+                "count_rows": [
+                  {
+                    "key": "changed",
+                    "fallback_key": "updates",
+                    "label": "changed"
+                  },
+                  {
+                    "key": "unchanged",
+                    "label": "unchanged"
+                  },
+                  {
+                    "key": "skipped",
+                    "label": "skipped"
+                  },
+                  {
+                    "key": "warnings",
+                    "label": "warnings"
+                  },
+                  {
+                    "key": "errors",
+                    "label": "errors"
+                  }
+                ]
               },
               "activity": {
                 "script_purpose": "data-sharing-apply",
