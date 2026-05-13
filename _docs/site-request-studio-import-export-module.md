@@ -2,7 +2,7 @@
 doc_id: site-request-studio-import-export-module
 title: Studio Data Sharing Module Implementation Request
 added_date: 2026-05-13
-last_updated: "2026-05-13 16:01"
+last_updated: "2026-05-13 16:13"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -13,7 +13,7 @@ hidden: false
 Status:
 
 - In progress
-- Slice 2 shared service gateway cutover implemented
+- Slice 3 documents adapter wrapper implemented
 
 ## Summary
 
@@ -291,7 +291,7 @@ Acceptance checks:
 
 ### Slice 3: documents adapter wrapper
 
-Status: planned.
+Status: implemented.
 
 Move Library document package behavior behind the documents adapter wrapper.
 

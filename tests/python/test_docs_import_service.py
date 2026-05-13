@@ -28,9 +28,45 @@ def load_docs_management_module():
 
 
 docs_management = load_docs_management_module()
+documents_data_sharing_adapter = sys.modules["documents_data_sharing_adapter"]
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_html_import  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
+
+
+def handle_documents_import_files(root: Path, data_domain: str) -> dict[str, object]:
+    return documents_data_sharing_adapter.list_returned_packages(
+        root,
+        data_domain,
+        dependencies=docs_management.documents_data_sharing_dependencies(),
+    )
+
+
+def handle_documents_import_preview(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
+    return documents_data_sharing_adapter.review_returned_package(
+        root,
+        body,
+        dry_run,
+        dependencies=docs_management.documents_data_sharing_dependencies(),
+    )
+
+
+def handle_documents_import_apply(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
+    return documents_data_sharing_adapter.apply_returned_changes(
+        root,
+        body,
+        dry_run,
+        dependencies=docs_management.documents_data_sharing_dependencies(),
+    )
+
+
+def handle_docs_export(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
+    return documents_data_sharing_adapter.prepare_package(
+        root,
+        body,
+        dry_run,
+        dependencies=docs_management.documents_data_sharing_dependencies(),
+    )
 
 
 def make_repo() -> tempfile.TemporaryDirectory:
@@ -304,7 +340,7 @@ def test_library_import_files_lists_json_and_jsonl_only() -> None:
         write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha"}])
         write_staged(root, "relationships.json", {"documents": []})
         (root / "var/studio/data-sharing/library/import-staging/notes.txt").write_text("ignore\n", encoding="utf-8")
-        payload = docs_management.handle_documents_import_files(root, "library")
+        payload = handle_documents_import_files(root, "library")
 
     assert payload["ok"] is True
     assert payload["scope"] == "library"
@@ -321,7 +357,7 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
             "summaries.jsonl",
             [{"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "summary": "Preview summary."}],
         )
-        payload = docs_management.handle_documents_import_preview(
+        payload = handle_documents_import_preview(
             root,
             {"data_domain": "library", "operation": "review", "staged_filename": "summaries.jsonl"},
             dry_run=False,
@@ -345,7 +381,7 @@ def test_library_import_preview_dry_run_reports_without_writing() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha"}])
-        payload = docs_management.handle_documents_import_preview(
+        payload = handle_documents_import_preview(
             root,
             {"data_domain": "library", "operation": "review", "staged_filename": "summaries.jsonl"},
             dry_run=True,
@@ -365,7 +401,7 @@ def test_documents_import_rejects_unconfigured_data_domain() -> None:
         root = Path(temp)
         write_staged(root, "works.jsonl", [{"doc_id": "work-1", "title": "Work 1"}], scope="catalogue")
         try:
-            docs_management.handle_documents_import_preview(
+            handle_documents_import_preview(
                 root,
                 {"data_domain": "catalogue", "staged_filename": "works.jsonl"},
                 dry_run=True,
@@ -381,7 +417,7 @@ def test_documents_import_rejects_unconfigured_data_domain() -> None:
 def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
     with make_repo() as temp:
         root = Path(temp)
-        singular = docs_management.handle_docs_export(
+        singular = handle_docs_export(
             root,
             {
                 "data_domain": "library",
@@ -392,7 +428,7 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
             },
             dry_run=True,
         )
-        plural = docs_management.handle_docs_export(
+        plural = handle_docs_export(
             root,
             {
                 "data_domain": "library",
@@ -845,7 +881,7 @@ def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> 
                 {"doc_id": "missing", "title": "Missing", "summary": "Missing summary."},
             ],
         )
-        payload = docs_management.handle_documents_import_apply(
+        payload = handle_documents_import_apply(
             root,
             {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
             dry_run=True,
@@ -877,7 +913,7 @@ def test_library_import_summary_apply_creates_backup_and_writes_source() -> None
                 },
             )
             write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
-            payload = docs_management.handle_documents_import_apply(
+            payload = handle_documents_import_apply(
                 root,
                 {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0], "confirm": True},
                 dry_run=False,
@@ -914,7 +950,7 @@ def test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows()
                 {"doc_id": "library", "title": "Library"},
             ],
         )
-        payload = docs_management.handle_documents_import_apply(
+        payload = handle_documents_import_apply(
             root,
             {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
             dry_run=True,
@@ -939,7 +975,7 @@ def test_library_import_hierarchy_apply_preflight_reports_missing_target_doc() -
                 {"doc_id": "missing", "title": "Missing", "parent_id": "library"},
             ],
         )
-        payload = docs_management.handle_documents_import_apply(
+        payload = handle_documents_import_apply(
             root,
             {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
             dry_run=True,
@@ -978,7 +1014,7 @@ def test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order(
                     {"doc_id": "alpha", "title": "Alpha", "parent_id": ""},
                 ],
             )
-            payload = docs_management.handle_documents_import_apply(
+            payload = handle_documents_import_apply(
                 root,
                 {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [1], "confirm": True},
                 dry_run=False,
@@ -1006,7 +1042,7 @@ def test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_wri
         root = Path(temp)
         write_library_doc(root, "alpha.md", {"doc_id": "alpha", "title": "Alpha", "parent_id": "library"})
         write_staged(root, "hierarchy.jsonl", [{"doc_id": "alpha", "title": "Alpha", "parent_id": "external-root"}])
-        payload = docs_management.handle_documents_import_apply(
+        payload = handle_documents_import_apply(
             root,
             {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0], "confirm": True},
             dry_run=True,
@@ -1034,7 +1070,7 @@ def test_library_import_hierarchy_apply_reports_unchanged_and_skipped_rows() -> 
                 {"doc_id": "library", "title": "Library", "parent_id": "library"},
             ],
         )
-        payload = docs_management.handle_documents_import_apply(
+        payload = handle_documents_import_apply(
             root,
             {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
             dry_run=True,

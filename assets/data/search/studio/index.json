@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4434af4a35134326cccddfb97e0d4f02",
-    "generated_at_utc": "2026-05-13T12:28:09Z",
-    "count": 231
+    "version": "blake2b-b7caff9bfc6e7e337713097d29dcd71c",
+    "generated_at_utc": "2026-05-13T15:15:07Z",
+    "count": 230
   },
   "entries": [
     {
@@ -236,10 +236,10 @@
       "kind": "doc",
       "title": "Docs Export",
       "href": "/docs/?scope=studio&doc=scripts-docs-export",
-      "last_updated": "2026-05-06 20:13",
+      "last_updated": "2026-05-13 16:13",
       "parent_id": "import-export",
       "parent_title": "Import/Export",
-      "display_meta": "2026-05-06 20:13 • Import/Export",
+      "display_meta": "2026-05-13 16:13 • Import/Export",
       "search_terms": [
         "scripts-docs-export",
         "scripts",
@@ -248,14 +248,13 @@
         "docs export",
         "import/export",
         "import",
-        "2026-05-06 20:13",
+        "2026-05-13 16:13",
         "2026",
         "05",
-        "06",
-        "20",
-        "13"
+        "13",
+        "16"
       ],
-      "search_text": "scripts-docs-export scripts docs export docs export import/export import 2026-05-06 20:13 2026 05 06 20 13"
+      "search_text": "scripts-docs-export scripts docs export docs export import/export import 2026-05-13 16:13 2026 05 13 16"
     },
     {
       "id": "user-guide-docs-images",
@@ -962,10 +961,10 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-05-06 20:13",
+      "last_updated": "2026-05-13 16:13",
       "parent_id": "import-export",
       "parent_title": "Import/Export",
-      "display_meta": "2026-05-06 20:13 • Import/Export",
+      "display_meta": "2026-05-13 16:13 • Import/Export",
       "search_terms": [
         "scripts-docs-import",
         "scripts",
@@ -974,14 +973,13 @@
         "docs import",
         "import/export",
         "export",
-        "2026-05-06 20:13",
+        "2026-05-13 16:13",
         "2026",
         "05",
-        "06",
-        "20",
-        "13"
+        "13",
+        "16"
       ],
-      "search_text": "scripts-docs-import scripts docs import docs import import/export export 2026-05-06 20:13 2026 05 06 20 13"
+      "search_text": "scripts-docs-import scripts docs import docs import import/export export 2026-05-13 16:13 2026 05 13 16"
     },
     {
       "id": "user-guide-docs-html-import",
@@ -1957,32 +1955,6 @@
       "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
-      "id": "studio-data-export",
-      "kind": "doc",
-      "title": "Studio Data Export",
-      "href": "/docs/?scope=studio&doc=studio-data-export",
-      "last_updated": "2026-05-08 19:25",
-      "parent_id": "import-export",
-      "parent_title": "Import/Export",
-      "display_meta": "2026-05-08 19:25 • Import/Export",
-      "search_terms": [
-        "studio-data-export",
-        "studio",
-        "data",
-        "export",
-        "studio data export",
-        "import/export",
-        "import",
-        "2026-05-08 19:25",
-        "2026",
-        "05",
-        "08",
-        "19",
-        "25"
-      ],
-      "search_text": "studio-data-export studio data export studio data export import/export import 2026-05-08 19:25 2026 05 08 19 25"
-    },
-    {
       "id": "studio-ui-framework",
       "kind": "doc",
       "title": "Studio UI Framework",
@@ -2475,32 +2447,6 @@
       "search_text": "sorting-architecture sorting architecture sorting architecture 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
-      "id": "studio-data-import",
-      "kind": "doc",
-      "title": "Studio Data Import",
-      "href": "/docs/?scope=studio&doc=studio-data-import",
-      "last_updated": "2026-05-08 19:25",
-      "parent_id": "import-export",
-      "parent_title": "Import/Export",
-      "display_meta": "2026-05-08 19:25 • Import/Export",
-      "search_terms": [
-        "studio-data-import",
-        "studio",
-        "data",
-        "import",
-        "studio data import",
-        "import/export",
-        "export",
-        "2026-05-08 19:25",
-        "2026",
-        "05",
-        "08",
-        "19",
-        "25"
-      ],
-      "search_text": "studio-data-import studio data import studio data import import/export export 2026-05-08 19:25 2026 05 08 19 25"
-    },
-    {
       "id": "studio-smoke-testing",
       "kind": "doc",
       "title": "Studio Smoke Testing",
@@ -2606,10 +2552,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-12",
+      "last_updated": "2026-05-13 16:13",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-12 • Docs Viewer",
+      "display_meta": "2026-05-13 16:13 • Docs Viewer",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -2619,12 +2565,13 @@
         "docs management server",
         "docs viewer",
         "viewer",
-        "2026-05-12",
+        "2026-05-13 16:13",
         "2026",
         "05",
-        "12"
+        "13",
+        "16"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-12 2026 05 12"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-13 16:13 2026 05 13 16"
     },
     {
       "id": "site-request-json-schema-adoption",
@@ -3020,23 +2967,21 @@
       "kind": "doc",
       "title": "Studio Activity",
       "href": "/docs/?scope=studio&doc=studio-activity",
-      "last_updated": "2026-05-08 19:25",
+      "last_updated": "2026-05-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-08 19:25 • Studio",
+      "display_meta": "2026-05-13 • Studio",
       "search_terms": [
         "studio-activity",
         "studio",
         "activity",
         "studio activity",
-        "2026-05-08 19:25",
+        "2026-05-13",
         "2026",
         "05",
-        "08",
-        "19",
-        "25"
+        "13"
       ],
-      "search_text": "studio-activity studio activity studio activity 2026-05-08 19:25 2026 05 08 19 25"
+      "search_text": "studio-activity studio activity studio activity 2026-05-13 2026 05 13"
     },
     {
       "id": "scripts-docs-live-rebuild-watcher",
@@ -3165,6 +3110,30 @@
       "search_text": "css-primitives css primitives css primitives ui 2026-05-06 20:00 2026 05 06 20 00"
     },
     {
+      "id": "config-data-sharing-adapters",
+      "kind": "doc",
+      "title": "Data Sharing Adapters",
+      "href": "/docs/?scope=studio&doc=config-data-sharing-adapters",
+      "last_updated": "2026-05-13 13:20",
+      "parent_id": "config",
+      "parent_title": "Config",
+      "display_meta": "2026-05-13 13:20 • Config",
+      "search_terms": [
+        "config-data-sharing-adapters",
+        "config",
+        "data",
+        "sharing",
+        "adapters",
+        "data sharing adapters",
+        "2026-05-13 13:20",
+        "2026",
+        "05",
+        "13",
+        "20"
+      ],
+      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters 2026-05-13 13:20 2026 05 13 20"
+    },
+    {
       "id": "scripts-delete-work",
       "kind": "doc",
       "title": "Delete Work",
@@ -3186,32 +3155,6 @@
         "01"
       ],
       "search_text": "scripts-delete-work scripts delete work delete work archive 2026-05-01 2026 05 01"
-    },
-    {
-      "id": "config-export-import-adapters",
-      "kind": "doc",
-      "title": "Export Import Adapters",
-      "href": "/docs/?scope=studio&doc=config-export-import-adapters",
-      "last_updated": "2026-05-06 21:14",
-      "parent_id": "import-export",
-      "parent_title": "Import/Export",
-      "display_meta": "2026-05-06 21:14 • Import/Export",
-      "search_terms": [
-        "config-export-import-adapters",
-        "config",
-        "export",
-        "import",
-        "adapters",
-        "export import adapters",
-        "import/export",
-        "2026-05-06 21:14",
-        "2026",
-        "05",
-        "06",
-        "21",
-        "14"
-      ],
-      "search_text": "config-export-import-adapters config export import adapters export import adapters import/export 2026-05-06 21:14 2026 05 06 21 14"
     },
     {
       "id": "scripts-run-checks",
@@ -4268,6 +4211,29 @@
         "02"
       ],
       "search_text": "site-request-work-owned-files-links site request work owned files links work-owned files and links request and change requests change requests 2026-05-02 2026 05 02"
+    },
+    {
+      "id": "studio-data-sharing",
+      "kind": "doc",
+      "title": "Studio Data Sharing",
+      "href": "/docs/?scope=studio&doc=studio-data-sharing",
+      "last_updated": "2026-05-13 16:13",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-13 16:13 • Studio",
+      "search_terms": [
+        "studio-data-sharing",
+        "studio",
+        "data",
+        "sharing",
+        "studio data sharing",
+        "2026-05-13 16:13",
+        "2026",
+        "05",
+        "13",
+        "16"
+      ],
+      "search_text": "studio-data-sharing studio data sharing studio data sharing 2026-05-13 16:13 2026 05 13 16"
     },
     {
       "id": "site-request-field-aware-build-scoping",
@@ -5771,10 +5737,10 @@
       "kind": "doc",
       "title": "Studio Data Sharing Module Implementation Request",
       "href": "/docs/?scope=studio&doc=site-request-studio-import-export-module",
-      "last_updated": "2026-05-13 11:49",
+      "last_updated": "2026-05-13 16:13",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-13 11:49 • Change Requests",
+      "display_meta": "2026-05-13 16:13 • Change Requests",
       "search_terms": [
         "site-request-studio-import-export-module",
         "site",
@@ -5790,14 +5756,13 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-13 11:49",
+        "2026-05-13 16:13",
         "2026",
         "05",
         "13",
-        "11",
-        "49"
+        "16"
       ],
-      "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation change requests change requests 2026-05-13 11:49 2026 05 13 11 49"
+      "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation change requests change requests 2026-05-13 16:13 2026 05 13 16"
     },
     {
       "id": "change-requests",

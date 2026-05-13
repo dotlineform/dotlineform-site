@@ -17,6 +17,29 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-13] Extracted Documents Data Sharing Adapter
+
+**Status:** implemented
+
+**Area:** Studio Data Sharing / Docs Viewer
+
+**Summary:**
+Moved Library package preparation, returned-package listing, Markdown review generation, summary apply, and hierarchy apply behavior behind `scripts/docs/documents_data_sharing_adapter.py`.
+The docs-management server still hosts the loopback HTTP process, but it now supplies logging, backup, and rebuild dependencies to the documents adapter instead of owning the document Data Sharing workflow directly.
+
+**Files changed/docs:**
+
+- `scripts/docs/documents_data_sharing_adapter.py`
+- `scripts/docs/docs_management_server.py`
+- [Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+
+**Impact:**
+The implemented Library workflow keeps the same local routes and response contracts while making document-specific behavior adapter-owned.
+This leaves the shared Data Sharing gateway ready for later non-document adapters such as Analytics tags.
+
 ## [2026-05-13] Retired Studio Library Dashboard
 
 **Status:** implemented

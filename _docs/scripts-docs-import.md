@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: Docs Import
 added_date: "2026-05-03 20:25"
-last_updated: "2026-05-06 20:13"
+last_updated: "2026-05-13 16:13"
 parent_id: import-export
 sort_order: 20
 ---
@@ -60,7 +60,7 @@ Implemented now:
 - uses the staged-file timestamp suffix for preview filenames when present, otherwise the current preview-generation time
 - supports deterministic relationship-tree preview filenames based on the staged filename plus timestamp suffix
 - writes front-matter-like matched-config, staged-only, and preview-metadata sections for human review rather than source parsing
-- is callable through docs-management endpoints for staged-file listing and preview generation
+- is callable through the documents Data Sharing adapter for staged-file listing and preview generation
 - is exposed through the `/studio/data-sharing/review/` page for local preview generation
 - supports staged data workflow scopes `library`, `catalogue`, and `analytics`; Library remains the only scope with implemented source-write apply actions
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
@@ -117,7 +117,7 @@ The script prints a JSON report with:
 - `preview_files`
 - `preview_written`
 
-The docs-management endpoint returns this same report shape from `POST /docs/import/preview` after adapter dispatch.
+The Data Sharing review endpoint returns this same report shape from `POST /data-sharing/review` after adapter dispatch.
 
 `counts` includes:
 
@@ -164,7 +164,7 @@ Service handler checks live in:
 tests/python/test_docs_import_service.py
 ```
 
-They cover staged-file listing, preview writing, dry-run preview reporting, non-Library scope rejection, the docs-management summary-apply contract for missing target docs, backup creation, skipped rows, and source write output, and the hierarchy-apply contract for missing target docs, backup creation, unknown parent warnings, partial selections, no-write dry runs, and preserved `sort_order`.
+They cover documents adapter staged-file listing, preview writing, dry-run preview reporting, non-Library domain rejection, the summary-apply contract for missing target docs, backup creation, skipped rows, and source write output, and the hierarchy-apply contract for missing target docs, backup creation, unknown parent warnings, partial selections, no-write dry runs, and preserved `sort_order`.
 The parser and service checks run in the `docs` profile:
 
 ```bash

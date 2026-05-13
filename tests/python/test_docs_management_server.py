@@ -290,7 +290,7 @@ def test_json_responses_are_not_cached() -> None:
 
 def test_docs_export_request_passes_target_format() -> None:
     calls: list[dict[str, object]] = []
-    original_build_export = docs_management_server.build_export
+    original_build_export = docs_management_server.documents_data_sharing_adapter.build_export
 
     def fake_build_export(**kwargs):
         calls.append(kwargs)
@@ -303,11 +303,11 @@ def test_docs_export_request_passes_target_format() -> None:
             "issue_counts": {"errors": 0, "warnings": 0},
         }
 
-    docs_management_server.build_export = fake_build_export
+    docs_management_server.documents_data_sharing_adapter.build_export = fake_build_export
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
-            result = docs_management_server.handle_docs_export(
+            result = docs_management_server.documents_data_sharing_adapter.prepare_package(
                 repo_root,
                 {
                     "data_domain": "library",
@@ -318,9 +318,10 @@ def test_docs_export_request_passes_target_format() -> None:
                     "target_format": "json",
                 },
                 dry_run=True,
+                dependencies=docs_management_server.documents_data_sharing_dependencies(),
             )
     finally:
-        docs_management_server.build_export = original_build_export
+        docs_management_server.documents_data_sharing_adapter.build_export = original_build_export
 
     assert result["ok"] is True
     assert result["target_format"] == "json"

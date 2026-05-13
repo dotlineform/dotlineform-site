@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-13 13:20"
+last_updated: "2026-05-13 16:13"
 parent_id: docs-viewer
 sort_order: 45
 ---
@@ -52,12 +52,12 @@ Exposed endpoints:
 - `GET /docs/search`
 - `GET /docs/import-source-files`
 - `GET /docs/import-html-files`
-- `GET /docs/import/files`
 - `POST /docs/import-source`
 - `POST /docs/import-html`
-- `POST /docs/export`
-- `POST /docs/import/preview`
-- `POST /docs/import/apply`
+- `GET /data-sharing/returned-packages`
+- `POST /data-sharing/prepare`
+- `POST /data-sharing/review`
+- `POST /data-sharing/apply`
 - `POST /docs/broken-links`
 - `POST /docs/rebuild`
 - `POST /docs/open-source`
@@ -81,12 +81,12 @@ Current behavior:
 - docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `scripts/docs/docs_write_rebuild.py`
 - staged source import orchestration for the Docs Viewer import modal is owned by `scripts/docs/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
 - management mutation planners for create, metadata, viewability, move, restore, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
-- structured import/export adapter orchestration remains server-owned for now and is tracked separately from the Docs Management Server restructuring request
+- Data Sharing HTTP endpoints are hosted here for now, with neutral route constants and shared dispatch owned by `scripts/studio/` and Library document behavior owned by `scripts/docs/documents_data_sharing_adapter.py`
 - used by `/docs/?scope=<scope>&mode=manage` for configured docs scopes
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
 - also used by the `/docs/` management import modal for staged-file listing and source import writes
-- also used by `/studio/data-sharing/prepare/` to read the generated Library docs index locally and write configured Library export artifacts
-- also used by `/studio/data-sharing/review/` to list staged JSON/JSONL data files, write Markdown previews, apply selected Library summary updates, and apply selected Library hierarchy updates
+- also used by `/studio/data-sharing/prepare/` to dispatch Library package preparation to the documents Data Sharing adapter
+- also used by `/studio/data-sharing/review/` to dispatch staged-file listing, Markdown review generation, summary apply, and hierarchy apply to the documents Data Sharing adapter
 - appends unified activity rows for covered docs import, Data Sharing package/apply, and broken-links audit actions when valid activity context is supplied
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
 - creates, archives, and deletes source docs under the current scope root
@@ -101,8 +101,8 @@ Current behavior:
 Unified activity coverage:
 
 - `POST /docs/import-source` writes `import source data` rows after a source doc is created or overwritten; preview, replacement-required, and confirmation-only responses are excluded
-- `POST /docs/export` writes `export data` rows only when an export artifact is written
-- `POST /docs/import/apply` writes `update docs source` rows only for confirmed summary or hierarchy apply writes
+- `POST /data-sharing/prepare` writes package-preparation rows only when an outbound package artifact is written
+- `POST /data-sharing/apply` writes update rows only for confirmed summary or hierarchy apply writes
 - `POST /docs/broken-links` writes `run audit` rows with checked and broken-link counts
 
 Search update behavior:
@@ -275,7 +275,7 @@ Broken-links behavior:
 - does not write source docs or generated outputs
 - is intended for the Studio audit page and terminal-backed local maintenance
 
-`POST /docs/export` expects:
+`POST /data-sharing/prepare` expects:
 
 ```json
 {
@@ -298,7 +298,7 @@ Prepare behavior:
 - `select_all: true` asks the export engine to select every doc matching the config filters
 - `missing_summary_only` may be `true`, `false`, or `null`; unsupported configs ignore `true`
 - unsupported config/format combinations return the export engine's structured validation report without writing
-- the endpoint calls `./scripts/docs/docs_export.py`'s shared package-preparation engine in-process
+- the endpoint dispatches to `scripts/docs/documents_data_sharing_adapter.py`, which calls `./scripts/docs/docs_export.py`'s shared package-preparation engine in-process
 - output paths are validated by the package-preparation engine and must stay under the adapter-declared outbound package root
 - normal server mode writes the package file and returns `output_written: true`
 - server `--dry-run` mode validates and reports the target path without writing
@@ -312,7 +312,7 @@ Runtime role:
 - config-defined paths are resolved and allowlisted by the shared export engine
 - generated package files are local working artifacts for Studio reporting or manual external use
 
-`GET /docs/import/files` accepts:
+`GET /data-sharing/returned-packages` accepts:
 
 ```text
 ?data_domain=library
@@ -327,7 +327,7 @@ Import file listing behavior:
 - returns filename, repo-relative path, format, size, and modified time
 - does not parse or log file content
 
-`POST /docs/import/preview` expects:
+`POST /data-sharing/review` expects:
 
 ```json
 {
@@ -341,7 +341,7 @@ Import preview behavior:
 - `data_domain` must resolve exactly one adapter with `review` capability
 - stub adapters and planned capabilities fail closed before the endpoint runs document-specific preview behavior
 - `staged_filename` must resolve inside the adapter-declared staging root
-- parses the staged data file through `./scripts/docs/docs_import.py`
+- dispatches to `scripts/docs/documents_data_sharing_adapter.py`, which parses the staged data file through `./scripts/docs/docs_import.py`
 - loads current generated docs index and payload state through the shared import engine for the adapter-declared docs scope
 - writes Markdown previews under the adapter-declared preview root in normal server mode
 - reports planned preview paths without writing when the server runs with `--dry-run`
@@ -356,7 +356,7 @@ Runtime role:
 - generated preview files are local working artifacts for Studio review
 - unconfigured data domains fail closed instead of falling back to document parsing
 
-`POST /docs/import/apply` expects for summary updates:
+`POST /data-sharing/apply` expects for summary updates:
 
 ```json
 {
@@ -392,7 +392,7 @@ Runtime role:
 - it does not apply full content, `parent_id`, `sort_order`, or other relationship changes
 - backups use the existing docs-management backup root so Studio backup retention can manage them with the other docs source-write backups
 
-`POST /docs/import/apply` expects for hierarchy updates:
+`POST /data-sharing/apply` expects for hierarchy updates:
 
 ```json
 {

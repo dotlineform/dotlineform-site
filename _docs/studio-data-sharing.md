@@ -2,7 +2,7 @@
 doc_id: studio-data-sharing
 title: Studio Data Sharing
 added_date: 2026-05-06
-last_updated: "2026-05-13 16:01"
+last_updated: "2026-05-13 16:13"
 parent_id: studio
 sort_order: 98
 ---
@@ -56,11 +56,12 @@ The page shells load:
 - `assets/studio/data/library_export_configs.json`
 - `scripts/studio/data_sharing_routes.py`
 - `scripts/studio/data_sharing_service.py`
+- `scripts/docs/documents_data_sharing_adapter.py`
 
-The documents adapter still owns the implemented Library config set, source index, document tree selection, field mapping, review rows, and apply behavior.
+The documents adapter wrapper owns the implemented Library config set, source index, document tree selection, field mapping, returned-package review, summary apply, and hierarchy apply behavior.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
 Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.
-The docs-management server hosts the loopback HTTP process for now, but Data Sharing route ownership and adapter dispatch live under `scripts/studio/`.
+The docs-management server hosts the loopback HTTP process and supplies backup, log, and rebuild dependencies, but Data Sharing route ownership and shared adapter dispatch live under `scripts/studio/`.
 
 ## Activity
 
@@ -80,3 +81,4 @@ The retained smoke entry points are:
 - `tests/smoke/data_sharing_prepare.py`
 - `tests/smoke/data_sharing_review.py`
 - `tests/python/test_data_sharing_service.py`
+- `tests/python/test_docs_import_service.py`

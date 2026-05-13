@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T12:30:26Z",
+  "generated_at": "2026-05-13T15:15:03Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -141,7 +141,7 @@
       "doc_id": "scripts-docs-export",
       "title": "Docs Export",
       "added_date": "2026-05-03 15:05",
-      "last_updated": "2026-05-06 20:13",
+      "last_updated": "2026-05-13 16:13",
       "parent_id": "import-export",
       "sort_order": 10,
       "published": true,
@@ -150,7 +150,7 @@
       "source_path": "scripts-docs-export.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-export.json",
-      "content_text_length": 7022
+      "content_text_length": 7059
     },
     {
       "scope": "studio",
@@ -248,7 +248,7 @@
       "source_path": "data-models-library.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-library.json",
-      "content_text_length": 9368
+      "content_text_length": 9397
     },
     {
       "scope": "studio",
@@ -596,7 +596,7 @@
       "doc_id": "scripts-docs-import",
       "title": "Docs Import",
       "added_date": "2026-05-03 20:25",
-      "last_updated": "2026-05-06 20:13",
+      "last_updated": "2026-05-13 16:13",
       "parent_id": "import-export",
       "sort_order": 20,
       "published": true,
@@ -605,7 +605,7 @@
       "source_path": "scripts-docs-import.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-import.json",
-      "content_text_length": 6431
+      "content_text_length": 6461
     },
     {
       "scope": "studio",
@@ -836,7 +836,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 5028
+      "content_text_length": 5047
     },
     {
       "scope": "studio",
@@ -982,7 +982,7 @@
       "source_path": "library.md",
       "viewer_url": "/docs/?scope=studio&doc=library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library.json",
-      "content_text_length": 547
+      "content_text_length": 574
     },
     {
       "scope": "studio",
@@ -1227,22 +1227,6 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-config-and-save-flow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-config-and-save-flow.json",
       "content_text_length": 11753
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio-data-export",
-      "title": "Studio Data Export",
-      "added_date": "2026-05-06",
-      "last_updated": "2026-05-08 19:25",
-      "parent_id": "import-export",
-      "sort_order": 30,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-data-export.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-data-export",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-data-export.json",
-      "content_text_length": 1750
     },
     {
       "scope": "studio",
@@ -1555,22 +1539,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-data-import",
-      "title": "Studio Data Import",
-      "added_date": "2026-05-06",
-      "last_updated": "2026-05-08 19:25",
-      "parent_id": "import-export",
-      "sort_order": 40,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-data-import.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-data-import",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-data-import.json",
-      "content_text_length": 1931
-    },
-    {
-      "scope": "studio",
       "doc_id": "studio-smoke-testing",
       "title": "Studio Smoke Testing",
       "added_date": "2026-05-01",
@@ -1583,7 +1551,7 @@
       "source_path": "studio-smoke-testing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-smoke-testing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-smoke-testing.json",
-      "content_text_length": 7469
+      "content_text_length": 7511
     },
     {
       "scope": "studio",
@@ -1639,7 +1607,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-12",
+      "last_updated": "2026-05-13 16:13",
       "parent_id": "docs-viewer",
       "sort_order": 45,
       "published": true,
@@ -1648,7 +1616,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 30663
+      "content_text_length": 31262
     },
     {
       "scope": "studio",
@@ -1714,7 +1682,7 @@
       "source_path": "config.md",
       "viewer_url": "/docs/?scope=studio&doc=config",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config.json",
-      "content_text_length": 1342
+      "content_text_length": 1339
     },
     {
       "scope": "studio",
@@ -1778,7 +1746,7 @@
       "source_path": "config-library-export-configs.md",
       "viewer_url": "/docs/?scope=studio&doc=config-library-export-configs",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-library-export-configs.json",
-      "content_text_length": 9635
+      "content_text_length": 9632
     },
     {
       "scope": "studio",
@@ -1899,7 +1867,7 @@
       "doc_id": "studio-activity",
       "title": "Studio Activity",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-08 19:25",
+      "last_updated": "2026-05-13",
       "parent_id": "studio",
       "sort_order": 53,
       "published": true,
@@ -1908,7 +1876,7 @@
       "source_path": "studio-activity.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-activity",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-activity.json",
-      "content_text_length": 2371
+      "content_text_length": 2575
     },
     {
       "scope": "studio",
@@ -1993,6 +1961,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "config-data-sharing-adapters",
+      "title": "Data Sharing Adapters",
+      "added_date": "2026-05-06 11:35",
+      "last_updated": "2026-05-13 13:20",
+      "parent_id": "config",
+      "sort_order": 60,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-data-sharing-adapters.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-data-sharing-adapters",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/config-data-sharing-adapters.json",
+      "content_text_length": 2700
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-delete-work",
       "title": "Delete Work",
       "added_date": "2026-04-18",
@@ -2006,22 +1990,6 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-delete-work",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-delete-work.json",
       "content_text_length": 420
-    },
-    {
-      "scope": "studio",
-      "doc_id": "config-export-import-adapters",
-      "title": "Export Import Adapters",
-      "added_date": "2026-05-06 11:35",
-      "last_updated": "2026-05-06 21:14",
-      "parent_id": "import-export",
-      "sort_order": 60,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "config-export-import-adapters.md",
-      "viewer_url": "/docs/?scope=studio&doc=config-export-import-adapters",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/config-export-import-adapters.json",
-      "content_text_length": 2780
     },
     {
       "scope": "studio",
@@ -2667,7 +2635,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 9087
+      "content_text_length": 9226
     },
     {
       "scope": "studio",
@@ -2685,6 +2653,22 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-work-owned-files-links.json",
       "content_text_length": 11906,
       "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-data-sharing",
+      "title": "Studio Data Sharing",
+      "added_date": "2026-05-06",
+      "last_updated": "2026-05-13 16:13",
+      "parent_id": "studio",
+      "sort_order": 98,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-data-sharing.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-data-sharing.json",
+      "content_text_length": 3222
     },
     {
       "scope": "studio",
@@ -3389,7 +3373,7 @@
       "source_path": "library-export.md",
       "viewer_url": "/docs/?scope=studio&doc=library-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-export.json",
-      "content_text_length": 22290,
+      "content_text_length": 22321,
       "ui_status": "done"
     },
     {
@@ -3439,7 +3423,7 @@
       "source_path": "library-import.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import.json",
-      "content_text_length": 23759,
+      "content_text_length": 23831,
       "ui_status": "done"
     },
     {
@@ -3617,7 +3601,7 @@
       "doc_id": "site-request-studio-import-export-module",
       "title": "Studio Data Sharing Module Implementation Request",
       "added_date": "2026-05-13",
-      "last_updated": "2026-05-13 11:49",
+      "last_updated": "2026-05-13 16:13",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3626,7 +3610,7 @@
       "source_path": "site-request-studio-import-export-module.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-import-export-module",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-import-export-module.json",
-      "content_text_length": 19180,
+      "content_text_length": 19242,
       "ui_status": "in-progress"
     },
     {
@@ -3760,7 +3744,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 150496
+      "content_text_length": 151450
     },
     {
       "scope": "studio",

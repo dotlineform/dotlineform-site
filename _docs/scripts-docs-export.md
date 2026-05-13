@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: Docs Export
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-06 20:13"
+last_updated: "2026-05-13 16:13"
 parent_id: import-export
 sort_order: 10
 ---
@@ -218,5 +218,5 @@ Warnings report non-blocking context:
 
 The static config schema remains documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
 
-The Studio page runs the same export engine through the docs-management local endpoint `POST /docs/export`.
-That endpoint first resolves `data_domain` and `operation` through `assets/studio/data/data_sharing_adapters.json`, then writes under the adapter-declared export root and returns the same report shape used by the CLI.
+The Studio page runs the same export engine through the Data Sharing endpoint `POST /data-sharing/prepare`.
+The local service first resolves `data_domain` and `operation` through `assets/studio/data/data_sharing_adapters.json`, then dispatches to the documents adapter, writes under the adapter-declared export root, and returns the same report shape used by the CLI.
