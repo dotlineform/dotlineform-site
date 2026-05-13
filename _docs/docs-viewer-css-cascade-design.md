@@ -2,9 +2,9 @@
 doc_id: docs-viewer-css-cascade-design
 title: Docs Viewer CSS Cascade Design
 added_date: 2026-05-11
-last_updated: "2026-05-11 20:05"
+last_updated: "2026-05-13 20:20"
 parent_id: docs-viewer
-sort_order: 25
+sort_order: 80
 hidden: false
 ---
 # Docs Viewer CSS Cascade Design

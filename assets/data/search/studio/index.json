@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d7d1f8e74042aa1b4e73e801bdad65a4",
-    "generated_at_utc": "2026-05-13T18:40:39Z",
+    "version": "blake2b-f8a78d34a4f168d85c074ddd0653577b",
+    "generated_at_utc": "2026-05-13T19:20:30Z",
     "count": 232
   },
   "entries": [
@@ -291,36 +291,6 @@
         "45"
       ],
       "search_text": "site-request-js-config-structural-review-docs-viewer-inventory site request js config structural review docs viewer inventory docs viewer function inventory function docs viewer boundary spec slice boundary spec slice 2026-05-10 14:45 2026 05 10 14 45"
-    },
-    {
-      "id": "scripts-docs-export",
-      "kind": "doc",
-      "title": "Documents Package Preparation Script",
-      "href": "/docs/?scope=studio&doc=scripts-docs-export",
-      "last_updated": "2026-05-13 18:45",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 18:45 • Docs Viewer",
-      "search_terms": [
-        "scripts-docs-export",
-        "scripts",
-        "docs",
-        "export",
-        "documents package preparation script",
-        "documents",
-        "package",
-        "preparation",
-        "script",
-        "docs viewer",
-        "viewer",
-        "2026-05-13 18:45",
-        "2026",
-        "05",
-        "13",
-        "18",
-        "45"
-      ],
-      "search_text": "scripts-docs-export scripts docs export documents package preparation script documents package preparation script docs viewer viewer 2026-05-13 18:45 2026 05 13 18 45"
     },
     {
       "id": "site-request-field-aware-build-scoping-inventory",
@@ -721,31 +691,6 @@
       "search_text": "generic-llm-helper-pattern generic llm helper pattern generic llm helper pattern 2026-04-16 2026 04 16"
     },
     {
-      "id": "docs-viewer-portable-setup",
-      "kind": "doc",
-      "title": "Docs Viewer Portable Setup",
-      "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-05-13 10:05",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 10:05 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-portable-setup",
-        "docs",
-        "viewer",
-        "portable",
-        "setup",
-        "docs viewer portable setup",
-        "docs viewer",
-        "2026-05-13 10:05",
-        "2026",
-        "05",
-        "13",
-        "10"
-      ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup docs viewer 2026-05-13 10:05 2026 05 13 10"
-    },
-    {
       "id": "user-guide",
       "kind": "doc",
       "title": "User Guide",
@@ -765,57 +710,6 @@
         "49"
       ],
       "search_text": "user-guide user guide user guide 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
-      "id": "docs-viewer-route-creation",
-      "kind": "doc",
-      "title": "Docs Viewer Route Creation",
-      "href": "/docs/?scope=studio&doc=docs-viewer-route-creation",
-      "last_updated": "2026-05-12 09:30",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-12 09:30 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-route-creation",
-        "docs",
-        "viewer",
-        "route",
-        "creation",
-        "docs viewer route creation",
-        "docs viewer",
-        "2026-05-12 09:30",
-        "2026",
-        "05",
-        "12",
-        "09",
-        "30"
-      ],
-      "search_text": "docs-viewer-route-creation docs viewer route creation docs viewer route creation docs viewer 2026-05-12 09:30 2026 05 12 09 30"
-    },
-    {
-      "id": "docs-viewer-reports",
-      "kind": "doc",
-      "title": "Docs Viewer Reports",
-      "href": "/docs/?scope=studio&doc=docs-viewer-reports",
-      "last_updated": "2026-05-13 10:18",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 10:18 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-reports",
-        "docs",
-        "viewer",
-        "reports",
-        "docs viewer reports",
-        "docs viewer",
-        "2026-05-13 10:18",
-        "2026",
-        "05",
-        "13",
-        "10",
-        "18"
-      ],
-      "search_text": "docs-viewer-reports docs viewer reports docs viewer reports docs viewer 2026-05-13 10:18 2026 05 13 10 18"
     },
     {
       "id": "scripts-main-pipeline",
@@ -1115,34 +1009,33 @@
       "search_text": "site-request-js-config-structural-review-docs-viewer-extraction-plan site request js config structural review docs viewer extraction plan docs viewer extraction plan docs viewer boundary spec slice boundary spec slice 2026-05-10 15:18 2026 05 10 15 18"
     },
     {
-      "id": "scripts-docs-import",
+      "id": "scripts-docs-export",
       "kind": "doc",
-      "title": "Documents Returned Package Script",
-      "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-05-13 18:45",
+      "title": "Documents Package Preparation Script",
+      "href": "/docs/?scope=studio&doc=scripts-docs-export",
+      "last_updated": "2026-05-13 20:20",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 18:45 • Docs Viewer",
+      "display_meta": "2026-05-13 20:20 • Docs Viewer",
       "search_terms": [
-        "scripts-docs-import",
+        "scripts-docs-export",
         "scripts",
         "docs",
-        "import",
-        "documents returned package script",
+        "export",
+        "documents package preparation script",
         "documents",
-        "returned",
         "package",
+        "preparation",
         "script",
         "docs viewer",
         "viewer",
-        "2026-05-13 18:45",
+        "2026-05-13 20:20",
         "2026",
         "05",
         "13",
-        "18",
-        "45"
+        "20"
       ],
-      "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-05-13 18:45 2026 05 13 18 45"
+      "search_text": "scripts-docs-export scripts docs export documents package preparation script documents package preparation script docs viewer viewer 2026-05-13 20:20 2026 05 13 20"
     },
     {
       "id": "ui-primitive-input",
@@ -1339,30 +1232,6 @@
       "search_text": "new-pipeline-source-model new pipeline source model source model archive 2026-05-02 2026 05 02"
     },
     {
-      "id": "docs-viewer-source-organisation",
-      "kind": "doc",
-      "title": "Source Organisation",
-      "href": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
-      "last_updated": "2026-04-26",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-04-26 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-source-organisation",
-        "docs",
-        "viewer",
-        "source",
-        "organisation",
-        "source organisation",
-        "docs viewer",
-        "2026-04-26",
-        "2026",
-        "04",
-        "26"
-      ],
-      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-04-26 2026 04 26"
-    },
-    {
       "id": "studio",
       "kind": "doc",
       "title": "Studio",
@@ -1490,32 +1359,6 @@
         "49"
       ],
       "search_text": "catalogue 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
-      "id": "docs-viewer-css-cascade-design",
-      "kind": "doc",
-      "title": "Docs Viewer CSS Cascade Design",
-      "href": "/docs/?scope=studio&doc=docs-viewer-css-cascade-design",
-      "last_updated": "2026-05-11 20:05",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-11 20:05 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-css-cascade-design",
-        "docs",
-        "viewer",
-        "css",
-        "cascade",
-        "design",
-        "docs viewer css cascade design",
-        "docs viewer",
-        "2026-05-11 20:05",
-        "2026",
-        "05",
-        "11",
-        "20"
-      ],
-      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design docs viewer css cascade design docs viewer 2026-05-11 20:05 2026 05 11 20"
     },
     {
       "id": "site-request-local-docs-data-server-reads",
@@ -1834,30 +1677,29 @@
       "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media archive 2026-05-01 2026 05 01"
     },
     {
-      "id": "docs-viewer-runtime-boundary",
+      "id": "docs-viewer-portable-setup",
       "kind": "doc",
-      "title": "Docs Viewer Runtime Boundary",
-      "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-05-11 17:50",
+      "title": "Docs Viewer Portable Setup",
+      "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
+      "last_updated": "2026-05-13 10:05",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-11 17:50 • Docs Viewer",
+      "display_meta": "2026-05-13 10:05 • Docs Viewer",
       "search_terms": [
-        "docs-viewer-runtime-boundary",
+        "docs-viewer-portable-setup",
         "docs",
         "viewer",
-        "runtime",
-        "boundary",
-        "docs viewer runtime boundary",
+        "portable",
+        "setup",
+        "docs viewer portable setup",
         "docs viewer",
-        "2026-05-11 17:50",
+        "2026-05-13 10:05",
         "2026",
         "05",
-        "11",
-        "17",
-        "50"
+        "13",
+        "10"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup docs viewer 2026-05-13 10:05 2026 05 13 10"
     },
     {
       "id": "ui-primitive-list",
@@ -2160,33 +2002,6 @@
       "search_text": "search 2026-05-11 2026 05 11"
     },
     {
-      "id": "docs-viewer-draft-publishing-spec",
-      "kind": "doc",
-      "title": "Viewability Workflow Spec",
-      "href": "/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec",
-      "last_updated": "2026-04-25",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-04-25 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-draft-publishing-spec",
-        "docs",
-        "viewer",
-        "draft",
-        "publishing",
-        "spec",
-        "viewability workflow spec",
-        "viewability",
-        "workflow",
-        "docs viewer",
-        "2026-04-25",
-        "2026",
-        "04",
-        "25"
-      ],
-      "search_text": "docs-viewer-draft-publishing-spec docs viewer draft publishing spec viewability workflow spec viewability workflow docs viewer 2026-04-25 2026 04 25"
-    },
-    {
       "id": "site-request-studio-ready-state-contract",
       "kind": "doc",
       "title": "Studio Ready State Contract Request",
@@ -2350,6 +2165,32 @@
         "48"
       ],
       "search_text": "docs-viewer docs viewer docs viewer 2026-05-13 09:48 2026 05 13 09 48"
+    },
+    {
+      "id": "docs-viewer-route-creation",
+      "kind": "doc",
+      "title": "Docs Viewer Route Creation",
+      "href": "/docs/?scope=studio&doc=docs-viewer-route-creation",
+      "last_updated": "2026-05-12 09:30",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-12 09:30 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-route-creation",
+        "docs",
+        "viewer",
+        "route",
+        "creation",
+        "docs viewer route creation",
+        "docs viewer",
+        "2026-05-12 09:30",
+        "2026",
+        "05",
+        "12",
+        "09",
+        "30"
+      ],
+      "search_text": "docs-viewer-route-creation docs viewer route creation docs viewer route creation docs viewer 2026-05-12 09:30 2026 05 12 09 30"
     },
     {
       "id": "site-request-script-structural-review-generate-work-pages",
@@ -2606,32 +2447,6 @@
       "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and change requests change requests 2026-05-02 2026 05 02"
     },
     {
-      "id": "scripts-docs-management-server",
-      "kind": "doc",
-      "title": "Docs Management Server",
-      "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-13 16:13",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 16:13 • Docs Viewer",
-      "search_terms": [
-        "scripts-docs-management-server",
-        "scripts",
-        "docs",
-        "management",
-        "server",
-        "docs management server",
-        "docs viewer",
-        "viewer",
-        "2026-05-13 16:13",
-        "2026",
-        "05",
-        "13",
-        "16"
-      ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-13 16:13 2026 05 13 16"
-    },
-    {
       "id": "site-request-json-schema-adoption",
       "kind": "doc",
       "title": "JSON Schema Adoption Request",
@@ -2739,6 +2554,31 @@
         "15"
       ],
       "search_text": "config architecture 2026-05-13 18:15 2026 05 13 18 15"
+    },
+    {
+      "id": "docs-viewer-reports",
+      "kind": "doc",
+      "title": "Docs Viewer Reports",
+      "href": "/docs/?scope=studio&doc=docs-viewer-reports",
+      "last_updated": "2026-05-13 10:18",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-13 10:18 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-reports",
+        "docs",
+        "viewer",
+        "reports",
+        "docs viewer reports",
+        "docs viewer",
+        "2026-05-13 10:18",
+        "2026",
+        "05",
+        "13",
+        "10",
+        "18"
+      ],
+      "search_text": "docs-viewer-reports docs viewer reports docs viewer reports docs viewer 2026-05-13 10:18 2026 05 13 10 18"
     },
     {
       "id": "scripts-generate-work-pages",
@@ -3047,34 +2887,6 @@
       "search_text": "studio-activity studio activity studio activity 2026-05-13 2026 05 13"
     },
     {
-      "id": "scripts-docs-live-rebuild-watcher",
-      "kind": "doc",
-      "title": "Docs Live Rebuild Watcher",
-      "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
-      "last_updated": "2026-05-09 18:17",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-09 18:17 • Docs Viewer",
-      "search_terms": [
-        "scripts-docs-live-rebuild-watcher",
-        "scripts",
-        "docs",
-        "live",
-        "rebuild",
-        "watcher",
-        "docs live rebuild watcher",
-        "docs viewer",
-        "viewer",
-        "2026-05-09 18:17",
-        "2026",
-        "05",
-        "09",
-        "18",
-        "17"
-      ],
-      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher docs viewer viewer 2026-05-09 18:17 2026 05 09 18 17"
-    },
-    {
       "id": "config-docs-viewer",
       "kind": "doc",
       "title": "Docs Viewer Config",
@@ -3219,6 +3031,36 @@
         "01"
       ],
       "search_text": "scripts-delete-work scripts delete work delete work archive 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "scripts-docs-import",
+      "kind": "doc",
+      "title": "Documents Returned Package Script",
+      "href": "/docs/?scope=studio&doc=scripts-docs-import",
+      "last_updated": "2026-05-13 18:45",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-13 18:45 • Docs Viewer",
+      "search_terms": [
+        "scripts-docs-import",
+        "scripts",
+        "docs",
+        "import",
+        "documents returned package script",
+        "documents",
+        "returned",
+        "package",
+        "script",
+        "docs viewer",
+        "viewer",
+        "2026-05-13 18:45",
+        "2026",
+        "05",
+        "13",
+        "18",
+        "45"
+      ],
+      "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-05-13 18:45 2026 05 13 18 45"
     },
     {
       "id": "scripts-run-checks",
@@ -3479,32 +3321,6 @@
       "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan archive 2026-05-11 2026 05 11"
     },
     {
-      "id": "docs-broken-links",
-      "kind": "doc",
-      "title": "Docs Broken Links",
-      "href": "/docs/?scope=studio&doc=docs-broken-links",
-      "last_updated": "2026-05-06 20:22",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-06 20:22 • Docs Viewer",
-      "search_terms": [
-        "docs-broken-links",
-        "docs",
-        "broken",
-        "links",
-        "docs broken links",
-        "docs viewer",
-        "viewer",
-        "2026-05-06 20:22",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "22"
-      ],
-      "search_text": "docs-broken-links docs broken links docs broken links docs viewer viewer 2026-05-06 20:22 2026 05 06 20 22"
-    },
-    {
       "id": "catalogue-field-registry-review",
       "kind": "doc",
       "title": "Catalogue Field Registry",
@@ -3722,6 +3538,30 @@
       "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit site docs docs 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
+      "id": "docs-viewer-source-organisation",
+      "kind": "doc",
+      "title": "Source Organisation",
+      "href": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
+      "last_updated": "2026-04-26",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-04-26 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-source-organisation",
+        "docs",
+        "viewer",
+        "source",
+        "organisation",
+        "source organisation",
+        "docs viewer",
+        "2026-04-26",
+        "2026",
+        "04",
+        "26"
+      ],
+      "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-04-26 2026 04 26"
+    },
+    {
       "id": "scripts-audit-studio-ready-state",
       "kind": "doc",
       "title": "Studio Ready-State Audit",
@@ -3767,34 +3607,6 @@
         "49"
       ],
       "search_text": "ui-catalogue ui catalogue ui catalogue 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
-      "id": "scripts-docs-broken-links",
-      "kind": "doc",
-      "title": "Docs Broken Links Audit",
-      "href": "/docs/?scope=studio&doc=scripts-docs-broken-links",
-      "last_updated": "2026-05-06 20:37",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-06 20:37 • Docs Viewer",
-      "search_terms": [
-        "scripts-docs-broken-links",
-        "scripts",
-        "docs",
-        "broken",
-        "links",
-        "docs broken links audit",
-        "audit",
-        "docs viewer",
-        "viewer",
-        "2026-05-06 20:37",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "37"
-      ],
-      "search_text": "scripts-docs-broken-links scripts docs broken links docs broken links audit audit docs viewer viewer 2026-05-06 20:37 2026 05 06 20 37"
     },
     {
       "id": "ui-audits",
@@ -3993,6 +3805,32 @@
       "search_text": "dimension-visualisation-projection dimension visualisation projection dimension visualisation projection table table analytics 2026-05-06 20:54 2026 05 06 20 54"
     },
     {
+      "id": "docs-viewer-css-cascade-design",
+      "kind": "doc",
+      "title": "Docs Viewer CSS Cascade Design",
+      "href": "/docs/?scope=studio&doc=docs-viewer-css-cascade-design",
+      "last_updated": "2026-05-11 20:05",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-11 20:05 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-css-cascade-design",
+        "docs",
+        "viewer",
+        "css",
+        "cascade",
+        "design",
+        "docs viewer css cascade design",
+        "docs viewer",
+        "2026-05-11 20:05",
+        "2026",
+        "05",
+        "11",
+        "20"
+      ],
+      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design docs viewer css cascade design docs viewer 2026-05-11 20:05 2026 05 11 20"
+    },
+    {
       "id": "site-request-js-payload-runtime-cleanup",
       "kind": "doc",
       "title": "JavaScript Payload And Runtime Cleanup Request",
@@ -4099,32 +3937,6 @@
       "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
-      "id": "scripts-docs-builder",
-      "kind": "doc",
-      "title": "Docs Viewer Builder",
-      "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-05-11 20:22",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-11 20:22 • Docs Viewer",
-      "search_terms": [
-        "scripts-docs-builder",
-        "scripts",
-        "docs",
-        "builder",
-        "docs viewer builder",
-        "viewer",
-        "docs viewer",
-        "2026-05-11 20:22",
-        "2026",
-        "05",
-        "11",
-        "20",
-        "22"
-      ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-11 20:22 2026 05 11 20 22"
-    },
-    {
       "id": "design",
       "kind": "doc",
       "title": "Design",
@@ -4172,6 +3984,32 @@
         "10"
       ],
       "search_text": "search-studio-v1-index-shape search studio v1 index shape docs scope index shape docs scope 2026-05-11 14:10 2026 05 11 14 10"
+    },
+    {
+      "id": "docs-viewer-runtime-boundary",
+      "kind": "doc",
+      "title": "Docs Viewer Runtime Boundary",
+      "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
+      "last_updated": "2026-05-11 17:50",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-11 17:50 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-runtime-boundary",
+        "docs",
+        "viewer",
+        "runtime",
+        "boundary",
+        "docs viewer runtime boundary",
+        "docs viewer",
+        "2026-05-11 17:50",
+        "2026",
+        "05",
+        "11",
+        "17",
+        "50"
+      ],
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "experimental-dimension-framework",
@@ -4401,6 +4239,33 @@
       "search_text": "tiered-dimension-policy tiered dimension policy tiered dimension policy analytics 2026-05-06 20:54 2026 05 06 20 54"
     },
     {
+      "id": "docs-viewer-draft-publishing-spec",
+      "kind": "doc",
+      "title": "Viewability Workflow Spec",
+      "href": "/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec",
+      "last_updated": "2026-04-25",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-04-25 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-draft-publishing-spec",
+        "docs",
+        "viewer",
+        "draft",
+        "publishing",
+        "spec",
+        "viewability workflow spec",
+        "viewability",
+        "workflow",
+        "docs viewer",
+        "2026-04-25",
+        "2026",
+        "04",
+        "25"
+      ],
+      "search_text": "docs-viewer-draft-publishing-spec docs viewer draft publishing spec viewability workflow spec viewability workflow docs viewer 2026-04-25 2026 04 25"
+    },
+    {
       "id": "site-request-catalogue-compatibility-cleanup",
       "kind": "doc",
       "title": "Compatibility Cleanup",
@@ -4569,6 +4434,32 @@
       "search_text": "data-flow data flow data flow catalogue 2026-05-11 14:10 2026 05 11 14 10"
     },
     {
+      "id": "scripts-docs-management-server",
+      "kind": "doc",
+      "title": "Docs Management Server",
+      "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
+      "last_updated": "2026-05-13 16:13",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-13 16:13 • Docs Viewer",
+      "search_terms": [
+        "scripts-docs-management-server",
+        "scripts",
+        "docs",
+        "management",
+        "server",
+        "docs management server",
+        "docs viewer",
+        "viewer",
+        "2026-05-13 16:13",
+        "2026",
+        "05",
+        "13",
+        "16"
+      ],
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-13 16:13 2026 05 13 16"
+    },
+    {
       "id": "search-incremental-orchestration-plan",
       "kind": "doc",
       "title": "Incremental Search Orchestration Plan",
@@ -4698,6 +4589,34 @@
       "search_text": "ui-pattern-column-links ui pattern column links column links pattern ui catalogue catalogue 2026-05-13 2026 05 13"
     },
     {
+      "id": "scripts-docs-live-rebuild-watcher",
+      "kind": "doc",
+      "title": "Docs Live Rebuild Watcher",
+      "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
+      "last_updated": "2026-05-09 18:17",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-09 18:17 • Docs Viewer",
+      "search_terms": [
+        "scripts-docs-live-rebuild-watcher",
+        "scripts",
+        "docs",
+        "live",
+        "rebuild",
+        "watcher",
+        "docs live rebuild watcher",
+        "docs viewer",
+        "viewer",
+        "2026-05-09 18:17",
+        "2026",
+        "05",
+        "09",
+        "18",
+        "17"
+      ],
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher docs viewer viewer 2026-05-09 18:17 2026 05 09 18 17"
+    },
+    {
       "id": "scripts-srcset-builder",
       "kind": "doc",
       "title": "Srcset Builder",
@@ -4797,6 +4716,32 @@
         "28"
       ],
       "search_text": "scripts-catalogue-source scripts catalogue source catalogue source utilities utilities 2026-05-09 21:28 2026 05 09 21 28"
+    },
+    {
+      "id": "docs-broken-links",
+      "kind": "doc",
+      "title": "Docs Broken Links",
+      "href": "/docs/?scope=studio&doc=docs-broken-links",
+      "last_updated": "2026-05-06 20:22",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-06 20:22 • Docs Viewer",
+      "search_terms": [
+        "docs-broken-links",
+        "docs",
+        "broken",
+        "links",
+        "docs broken links",
+        "docs viewer",
+        "viewer",
+        "2026-05-06 20:22",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "22"
+      ],
+      "search_text": "docs-broken-links docs broken links docs broken links docs viewer viewer 2026-05-06 20:22 2026 05 06 20 22"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",
@@ -4927,6 +4872,34 @@
       "search_text": "site-request-catalogue-unified-editor-cleanup site request catalogue unified editor cleanup catalogue unified editor cleanup request change requests change requests 2026-05-03 2026 05 03"
     },
     {
+      "id": "scripts-docs-broken-links",
+      "kind": "doc",
+      "title": "Docs Broken Links Audit",
+      "href": "/docs/?scope=studio&doc=scripts-docs-broken-links",
+      "last_updated": "2026-05-06 20:37",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-06 20:37 • Docs Viewer",
+      "search_terms": [
+        "scripts-docs-broken-links",
+        "scripts",
+        "docs",
+        "broken",
+        "links",
+        "docs broken links audit",
+        "audit",
+        "docs viewer",
+        "viewer",
+        "2026-05-06 20:37",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "37"
+      ],
+      "search_text": "scripts-docs-broken-links scripts docs broken links docs broken links audit audit docs viewer viewer 2026-05-06 20:37 2026 05 06 20 37"
+    },
+    {
       "id": "ui-request-docs-viewer-favourites-task",
       "kind": "doc",
       "title": "Docs Viewer Favourites",
@@ -5003,6 +4976,32 @@
         "11"
       ],
       "search_text": "search-change-log search change log search change log 2026-05-11 2026 05 11"
+    },
+    {
+      "id": "scripts-docs-builder",
+      "kind": "doc",
+      "title": "Docs Viewer Builder",
+      "href": "/docs/?scope=studio&doc=scripts-docs-builder",
+      "last_updated": "2026-05-11 20:22",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-11 20:22 • Docs Viewer",
+      "search_terms": [
+        "scripts-docs-builder",
+        "scripts",
+        "docs",
+        "builder",
+        "docs viewer builder",
+        "viewer",
+        "docs viewer",
+        "2026-05-11 20:22",
+        "2026",
+        "05",
+        "11",
+        "20",
+        "22"
+      ],
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-11 20:22 2026 05 11 20 22"
     },
     {
       "id": "docs-viewer-management",

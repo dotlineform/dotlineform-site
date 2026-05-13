@@ -822,10 +822,21 @@ import {
     );
   }
 
+  function statusPillsCanRender(doc) {
+    return Boolean(
+      doc &&
+      allowManagement &&
+      state.managementMode &&
+      state.managementAvailable &&
+      state.uiStatuses.length > 0 &&
+      !state.searchRouteActive
+    );
+  }
+
   function renderStatusPills() {
     if (!statusPills) return;
     var doc = state.docsById.get(state.selectedDocId);
-    var canShow = Boolean(doc) && state.uiStatuses.length > 0 && !state.searchRouteActive;
+    var canShow = statusPillsCanRender(doc);
     statusPills.hidden = !canShow;
     if (!canShow) {
       statusPills.innerHTML = "";

@@ -584,6 +584,13 @@
   max-width: 100%;
 }
 
+.docsViewer__fieldInput,
+.docsViewer__fieldInput:-webkit-autofill{
+  color: var(--docs-viewer-text, var(--text, #111));
+  -webkit-text-fill-color: var(--docs-viewer-text, var(--text, #111));
+  caret-color: var(--docs-viewer-text, var(--text, #111));
+}
+
 select.docsViewer__fieldInput{
   height: 2rem;
   min-height: 2rem;

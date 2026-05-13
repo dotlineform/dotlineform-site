@@ -1,12 +1,11 @@
 ---
 doc_id: docs-viewer-draft-publishing-spec
-title: "Viewability Workflow Spec"
+title: Viewability Workflow Spec
 added_date: 2026-04-24
-last_updated: 2026-04-25
+last_updated: "2026-05-13 20:20"
 parent_id: docs-viewer
-sort_order: 35
+sort_order: 100
 ---
-
 # Viewability Workflow Spec
 
 ## Purpose

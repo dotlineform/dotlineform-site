@@ -2,9 +2,9 @@
 doc_id: scripts-docs-export
 title: Documents Package Preparation Script
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-13 18:45"
+last_updated: "2026-05-13 20:20"
 parent_id: docs-viewer
-sort_order: 10
+sort_order: 20
 ---
 # Documents Package Preparation Script
 
