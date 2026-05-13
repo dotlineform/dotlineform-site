@@ -2,7 +2,7 @@
 doc_id: config-data-sharing-adapters
 title: Data Sharing Adapters
 added_date: "2026-05-06 11:35"
-last_updated: "2026-05-13"
+last_updated: "2026-05-13 13:20"
 parent_id: config
 sort_order: 60
 ---
@@ -14,7 +14,7 @@ Config files:
 - `assets/studio/data/data_sharing_adapters.schema.json`
 
 `data_sharing_adapters.json` is the source-controlled dispatch registry for Studio Data Sharing workflows.
-Requests provide a `data_domain` and `operation`.
+Requests provide a `data_domain` and canonical `operation`.
 The registry maps that pair to exactly one adapter id.
 
 ## Current Mapping
@@ -22,18 +22,49 @@ The registry maps that pair to exactly one adapter id.
 The implemented adapter is `documents`.
 It maps `data_domain: "library"` to the Library Docs Viewer source and generated data paths.
 
-Configured operations remain behavior-compatible with the existing Library documents adapter for this terminology slice.
-The registry also names future `catalogue` and `analytics` adapter extension points.
-Those adapters are marked `status: "stub"` and their capabilities are marked `planned`.
+The registry also names the first non-document adapter contract:
+
+- `data_domain: "tags"`
+- `adapter_id: "analytics-tags"`
+- `module: "analytics.tags"`
+
+The tags adapter is marked `status: "stub"` and its capabilities are marked `planned` until the later tags review/apply and package-preparation slices wire it to the Analytics tag owners.
+
+## Operations
+
+The v2 registry uses only these shared operation names:
+
+- `prepare`
+- `list_returned`
+- `review`
+- `apply`
+
+Adapter-specific apply variants live under the `apply` capability's `apply_actions` list.
+For the documents adapter, the current actions are `summary_apply` and `hierarchy_apply`.
+Do not add new registry-level operations such as `export`, `import_files`, `import_preview`, `summary_apply`, or `hierarchy_apply`.
+
+## Capability Metadata
+
+Each capability declares:
+
+- `status`: `active`, `planned`, `stub`, or `disabled`
+- `selection_model`: `documents`, `records`, `file_only`, or `none`
+- supported `input_formats` and `output_formats`
+- `path_contract` keys that point into the domain path block
+- `activity` metadata with script purpose and record groups
+
+The `review` capability also declares the shared review-row presentation fields.
+The `apply` capability declares confirmation requirements and per-action confirmation/activity metadata.
 
 ## Path Ownership
 
 The registry owns workflow paths that the shared Data Sharing shell needs for dispatch:
 
-- `paths.export_root`
-- `paths.staging_root`
-- `paths.preview_root`
+- `paths.outbound_package_root`
+- `paths.returned_package_staging_root`
+- `paths.review_output_root`
 - `paths.source_root`
+- `paths.backup_root`
 
 The first Library mapping uses a data-domain-first workflow root:
 
@@ -49,13 +80,10 @@ Under that root, Library currently uses:
 
 Future folder changes should update this config instead of adding route-level folder decisions.
 
-Catalogue and Analytics stubs already reserve the same folder shape:
-
-- `var/studio/data-sharing/catalogue/`
-- `var/studio/data-sharing/analytics/`
+The tags stub reserves the same folder shape under `var/studio/data-sharing/tags/`.
 
 ## Related Runtime
 
-- `scripts/studio/data_sharing_adapters.py` loads and resolves this registry for the docs-management service.
+- `scripts/studio/data_sharing_adapters.py` validates duplicate dispatch, canonical operation names, status values, and safe relative paths before resolving adapters.
 - `scripts/docs/docs_management_server.py` uses the resolved adapter before running package preparation, returned-package listing, review, or apply behavior.
 - `assets/studio/js/studio-transport.js` defines the service endpoints used by the browser.

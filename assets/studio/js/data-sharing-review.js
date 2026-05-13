@@ -22,8 +22,7 @@ import {
 const DEFAULT_SCOPE = "library";
 const WORKFLOW_SCOPES = [
   { key: "library", labelKey: "scope_library", fallback: "library" },
-  { key: "catalogue", labelKey: "scope_catalogue", fallback: "catalogue" },
-  { key: "analytics", labelKey: "scope_analytics", fallback: "analytics" }
+  { key: "tags", labelKey: "scope_tags", fallback: "tags" }
 ];
 
 function normalizeText(value) {
@@ -549,6 +548,7 @@ async function runPreview(state) {
   try {
     const payload = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importPreview, {
       data_domain: state.scope,
+      operation: "review",
       staged_filename: file.filename
     });
     renderResult(state, payload, false);
@@ -728,7 +728,8 @@ async function runSummaryApply(state) {
   try {
     const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
       data_domain: state.scope,
-      operation: "summary_apply",
+      operation: "apply",
+      apply_action: "summary_apply",
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: false
@@ -771,7 +772,8 @@ async function runSummaryApply(state) {
     );
     const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
       data_domain: state.scope,
-      operation: "summary_apply",
+      operation: "apply",
+      apply_action: "summary_apply",
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: true,
@@ -830,7 +832,8 @@ async function runHierarchyApply(state) {
   try {
     const preflight = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
       data_domain: state.scope,
-      operation: "hierarchy_apply",
+      operation: "apply",
+      apply_action: "hierarchy_apply",
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: false
@@ -873,7 +876,8 @@ async function runHierarchyApply(state) {
     );
     const applied = await postJson(DOCS_MANAGEMENT_ENDPOINTS.importApply, {
       data_domain: state.scope,
-      operation: "hierarchy_apply",
+      operation: "apply",
+      apply_action: "hierarchy_apply",
       staged_filename: stagedFilename,
       record_indices: recordIndices,
       confirm: true,
@@ -961,9 +965,9 @@ async function init() {
   try {
     state.config = await loadStudioConfigWithText("data_sharing_review");
     const adapterRegistry = await loadAdapterRegistry(state.config);
-    state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "import_files", WORKFLOW_SCOPES);
-    state.summaryApplyScopes = workflowDomainsForOperation(adapterRegistry, "summary_apply", []);
-    state.hierarchyApplyScopes = workflowDomainsForOperation(adapterRegistry, "hierarchy_apply", []);
+    state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "list_returned", WORKFLOW_SCOPES);
+    state.summaryApplyScopes = workflowDomainsForOperation(adapterRegistry, "apply", []);
+    state.hierarchyApplyScopes = workflowDomainsForOperation(adapterRegistry, "apply", []);
     state.scope = workflowScopeFromUrl(state.workflowScopes);
     renderScopeSelect(state);
     state.serviceAvailable = Boolean(await probeDocsManagementHealth());

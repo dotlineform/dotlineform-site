@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://dotlineform.com/schemas/data_sharing_adapters.schema.json",
-  "title": "Export/import adapter registry",
+  "title": "Data Sharing adapter registry",
   "type": "object",
   "required": ["schema_version", "dispatch", "adapters"],
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "const": "data_sharing_adapters_v1"
+      "const": "data_sharing_adapters_v2"
     },
     "dispatch": {
       "type": "array",
@@ -22,8 +22,7 @@
             "minLength": 1
           },
           "operation": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/$defs/operation"
           },
           "adapter_id": {
             "type": "string",
@@ -37,7 +36,7 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "module", "label", "data_domains", "capabilities"],
+        "required": ["id", "module", "label", "status", "portability", "data_domains", "capabilities"],
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -53,15 +52,25 @@
             "minLength": 1
           },
           "status": {
-            "type": "string",
-            "enum": ["active", "stub"]
+            "$ref": "#/$defs/status"
+          },
+          "portability": {
+            "type": "object",
+            "required": ["package"],
+            "additionalProperties": false,
+            "properties": {
+              "package": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           },
           "data_domains": {
             "type": "object",
             "minProperties": 1,
             "additionalProperties": {
               "type": "object",
-              "required": ["label", "scope", "paths", "sources", "config"],
+              "required": ["label", "scope", "status", "selection_model", "paths", "source_write_targets", "sources", "config"],
               "additionalProperties": false,
               "properties": {
                 "label": {
@@ -73,30 +82,22 @@
                   "minLength": 1
                 },
                 "status": {
-                  "type": "string",
-                  "enum": ["active", "stub"]
+                  "$ref": "#/$defs/status"
+                },
+                "selection_model": {
+                  "$ref": "#/$defs/selection_model"
                 },
                 "paths": {
-                  "type": "object",
-                  "required": ["export_root", "staging_root", "preview_root", "source_root"],
-                  "additionalProperties": {
-                    "type": "string",
-                    "minLength": 1
-                  }
+                  "$ref": "#/$defs/path_object"
+                },
+                "source_write_targets": {
+                  "$ref": "#/$defs/path_object"
                 },
                 "sources": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string",
-                    "minLength": 1
-                  }
+                  "$ref": "#/$defs/path_object"
                 },
                 "config": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string",
-                    "minLength": 1
-                  }
+                  "$ref": "#/$defs/path_object"
                 }
               }
             }
@@ -105,33 +106,157 @@
             "type": "array",
             "minItems": 1,
             "items": {
-              "oneOf": [
-                {
+              "type": "object",
+              "required": ["operation", "status", "selection_model", "input_formats", "output_formats", "path_contract", "activity"],
+              "additionalProperties": false,
+              "properties": {
+                "operation": {
+                  "$ref": "#/$defs/operation"
+                },
+                "status": {
+                  "$ref": "#/$defs/status"
+                },
+                "message": {
                   "type": "string",
                   "minLength": 1
                 },
-                {
+                "selection_model": {
+                  "$ref": "#/$defs/selection_model"
+                },
+                "input_formats": {
+                  "$ref": "#/$defs/string_array"
+                },
+                "output_formats": {
+                  "$ref": "#/$defs/string_array"
+                },
+                "path_contract": {
                   "type": "object",
-                  "required": ["operation", "status"],
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "review_rows": {
+                  "type": "object",
+                  "required": ["fields"],
                   "additionalProperties": false,
                   "properties": {
-                    "operation": {
-                      "type": "string",
-                      "minLength": 1
-                    },
-                    "status": {
-                      "type": "string",
-                      "enum": ["active", "planned", "unsupported"]
-                    },
-                    "message": {
-                      "type": "string",
-                      "minLength": 1
+                    "fields": {
+                      "$ref": "#/$defs/string_array"
                     }
                   }
+                },
+                "requires_confirmation": {
+                  "type": "boolean"
+                },
+                "apply_actions": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "required": ["id", "label", "status", "confirmation", "activity"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "status": {
+                        "$ref": "#/$defs/status"
+                      },
+                      "confirmation": {
+                        "type": "object",
+                        "required": ["title", "body"],
+                        "additionalProperties": false,
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "body": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      },
+                      "activity": {
+                        "$ref": "#/$defs/activity"
+                      }
+                    }
+                  }
+                },
+                "activity": {
+                  "$ref": "#/$defs/activity"
                 }
-              ]
+              }
             }
           }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "operation": {
+      "type": "string",
+      "enum": ["prepare", "list_returned", "review", "apply"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "planned", "stub", "disabled"]
+    },
+    "selection_model": {
+      "type": "string",
+      "enum": ["documents", "records", "file_only", "none"]
+    },
+    "string_array": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "path_value": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/path_value"
+          }
+        }
+      ]
+    },
+    "path_object": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/path_value"
+      }
+    },
+    "activity": {
+      "type": "object",
+      "required": ["script_purpose", "record_groups"],
+      "additionalProperties": false,
+      "properties": {
+        "script_purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "record_groups": {
+          "$ref": "#/$defs/string_array"
         }
       }
     }

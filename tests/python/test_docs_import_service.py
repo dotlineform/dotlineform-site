@@ -113,28 +113,35 @@ def make_repo() -> tempfile.TemporaryDirectory:
     adapter_path.write_text(
         json.dumps(
             {
-                "schema_version": "data_sharing_adapters_v1",
+                "schema_version": "data_sharing_adapters_v2",
                 "dispatch": [
-                    {"data_domain": "library", "operation": "export", "adapter_id": "documents"},
-                    {"data_domain": "library", "operation": "import_files", "adapter_id": "documents"},
-                    {"data_domain": "library", "operation": "import_preview", "adapter_id": "documents"},
-                    {"data_domain": "library", "operation": "summary_apply", "adapter_id": "documents"},
-                    {"data_domain": "library", "operation": "hierarchy_apply", "adapter_id": "documents"},
+                    {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
+                    {"data_domain": "library", "operation": "list_returned", "adapter_id": "documents"},
+                    {"data_domain": "library", "operation": "review", "adapter_id": "documents"},
+                    {"data_domain": "library", "operation": "apply", "adapter_id": "documents"},
                 ],
                 "adapters": [
                     {
                         "id": "documents",
                         "module": "documents",
                         "label": "Documents",
+                        "status": "active",
+                        "portability": {"package": "docs-viewer-documents-data-sharing"},
                         "data_domains": {
                             "library": {
                                 "label": "Library",
                                 "scope": "library",
+                                "status": "active",
+                                "selection_model": "documents",
                                 "paths": {
-                                    "export_root": "var/studio/data-sharing/library/exports",
-                                    "staging_root": "var/studio/data-sharing/library/import-staging",
-                                    "preview_root": "var/studio/data-sharing/library/import-preview",
+                                    "outbound_package_root": "var/studio/data-sharing/library/exports",
+                                    "returned_package_staging_root": "var/studio/data-sharing/library/import-staging",
+                                    "review_output_root": "var/studio/data-sharing/library/import-preview",
                                     "source_root": "_docs_library",
+                                    "backup_root": "var/docs/backups",
+                                },
+                                "source_write_targets": {
+                                    "documents": "_docs_library",
                                 },
                                 "sources": {
                                     "docs_index": "assets/data/docs/scopes/library/index.json",
@@ -142,16 +149,74 @@ def make_repo() -> tempfile.TemporaryDirectory:
                                     "source_root": "_docs_library",
                                 },
                                 "config": {
-                                    "export_configs_path": "assets/studio/data/library_export_configs.json",
+                                    "sharing_profiles_path": "assets/studio/data/library_export_configs.json",
                                 },
                             }
                         },
                         "capabilities": [
-                            "export",
-                            "import_files",
-                            "import_preview",
-                            "summary_apply",
-                            "hierarchy_apply",
+                            {
+                                "operation": "prepare",
+                                "status": "active",
+                                "selection_model": "documents",
+                                "input_formats": [],
+                                "output_formats": ["json", "jsonl"],
+                                "path_contract": {"output_root": "outbound_package_root"},
+                                "activity": {"script_purpose": "data-sharing-prepare", "record_groups": ["documents"]},
+                            },
+                            {
+                                "operation": "list_returned",
+                                "status": "active",
+                                "selection_model": "none",
+                                "input_formats": ["json", "jsonl"],
+                                "output_formats": [],
+                                "path_contract": {"staging_root": "returned_package_staging_root"},
+                                "activity": {"script_purpose": "data-sharing-list-returned", "record_groups": ["files"]},
+                            },
+                            {
+                                "operation": "review",
+                                "status": "active",
+                                "selection_model": "file_only",
+                                "input_formats": ["json", "jsonl"],
+                                "output_formats": ["markdown"],
+                                "path_contract": {
+                                    "staging_root": "returned_package_staging_root",
+                                    "review_output_root": "review_output_root",
+                                },
+                                "review_rows": {
+                                    "fields": ["id", "type", "title", "meta", "record_index", "selectable", "record_groups", "issues"],
+                                },
+                                "activity": {"script_purpose": "data-sharing-review", "record_groups": ["documents", "files"]},
+                            },
+                            {
+                                "operation": "apply",
+                                "status": "active",
+                                "selection_model": "records",
+                                "input_formats": ["json", "jsonl"],
+                                "output_formats": [],
+                                "path_contract": {
+                                    "staging_root": "returned_package_staging_root",
+                                    "source_root": "source_root",
+                                    "backup_root": "backup_root",
+                                },
+                                "requires_confirmation": True,
+                                "apply_actions": [
+                                    {
+                                        "id": "summary_apply",
+                                        "label": "Update summaries",
+                                        "status": "active",
+                                        "confirmation": {"title": "Update summaries?", "body": "Update summaries."},
+                                        "activity": {"script_purpose": "data-sharing-apply", "record_groups": ["documents"]},
+                                    },
+                                    {
+                                        "id": "hierarchy_apply",
+                                        "label": "Apply hierarchy",
+                                        "status": "active",
+                                        "confirmation": {"title": "Update hierarchy?", "body": "Update hierarchy."},
+                                        "activity": {"script_purpose": "data-sharing-apply", "record_groups": ["documents"]},
+                                    },
+                                ],
+                                "activity": {"script_purpose": "data-sharing-apply", "record_groups": ["documents"]},
+                            },
                         ],
                     }
                 ],
@@ -258,7 +323,7 @@ def test_library_import_preview_writes_when_not_dry_run() -> None:
         )
         payload = docs_management.handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl"},
+            {"data_domain": "library", "operation": "review", "staged_filename": "summaries.jsonl"},
             dry_run=False,
         )
         preview_paths = sorted((root / "var/studio/data-sharing/library/import-preview").glob("alpha-*.md"))
@@ -282,7 +347,7 @@ def test_library_import_preview_dry_run_reports_without_writing() -> None:
         write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha"}])
         payload = docs_management.handle_documents_import_preview(
             root,
-            {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl"},
+            {"data_domain": "library", "operation": "review", "staged_filename": "summaries.jsonl"},
             dry_run=True,
         )
         preview_exists = list((root / "var/studio/data-sharing/library/import-preview").glob("alpha-*.md"))
@@ -310,7 +375,7 @@ def test_documents_import_rejects_unconfigured_data_domain() -> None:
         else:
             raise AssertionError("unconfigured data domain should fail closed")
 
-    assert "no Data Sharing adapter configured for catalogue/import_preview" in message
+    assert "no Data Sharing adapter configured for catalogue/review" in message
 
 
 def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
@@ -339,8 +404,8 @@ def test_docs_export_summary_text_uses_context_aware_document_plural() -> None:
             dry_run=True,
         )
 
-    assert singular["summary_text"].startswith("Validated export 1 document to ")
-    assert plural["summary_text"].startswith("Validated export 2 documents to ")
+    assert singular["summary_text"].startswith("Validated package 1 document to ")
+    assert plural["summary_text"].startswith("Validated package 2 documents to ")
 
 
 def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
@@ -782,7 +847,7 @@ def test_library_import_summary_apply_preflight_reports_missing_target_doc() -> 
         )
         payload = docs_management.handle_documents_import_apply(
             root,
-            {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
+            {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
             dry_run=True,
         )
 
@@ -814,7 +879,7 @@ def test_library_import_summary_apply_creates_backup_and_writes_source() -> None
             write_staged(root, "summaries.jsonl", [{"doc_id": "alpha", "title": "Alpha", "summary": "New summary."}])
             payload = docs_management.handle_documents_import_apply(
                 root,
-                {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0], "confirm": True},
+                {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0], "confirm": True},
                 dry_run=False,
             )
             source_text = (root / "_docs_library/alpha.md").read_text(encoding="utf-8")
@@ -851,7 +916,7 @@ def test_library_import_summary_apply_skips_unchanged_and_missing_summary_rows()
         )
         payload = docs_management.handle_documents_import_apply(
             root,
-            {"data_domain": "library", "operation": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
+            {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl", "record_indices": [0, 1]},
             dry_run=True,
         )
 
@@ -876,7 +941,7 @@ def test_library_import_hierarchy_apply_preflight_reports_missing_target_doc() -
         )
         payload = docs_management.handle_documents_import_apply(
             root,
-            {"data_domain": "library", "operation": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
+            {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
             dry_run=True,
         )
 
@@ -915,7 +980,7 @@ def test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order(
             )
             payload = docs_management.handle_documents_import_apply(
                 root,
-                {"data_domain": "library", "operation": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [1], "confirm": True},
+                {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [1], "confirm": True},
                 dry_run=False,
             )
             alpha_text = (root / "_docs_library/alpha.md").read_text(encoding="utf-8")
@@ -943,7 +1008,7 @@ def test_library_import_hierarchy_apply_allows_unknown_parent_and_dry_run_no_wri
         write_staged(root, "hierarchy.jsonl", [{"doc_id": "alpha", "title": "Alpha", "parent_id": "external-root"}])
         payload = docs_management.handle_documents_import_apply(
             root,
-            {"data_domain": "library", "operation": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0], "confirm": True},
+            {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0], "confirm": True},
             dry_run=True,
         )
         source_text = (root / "_docs_library/alpha.md").read_text(encoding="utf-8")
@@ -971,7 +1036,7 @@ def test_library_import_hierarchy_apply_reports_unchanged_and_skipped_rows() -> 
         )
         payload = docs_management.handle_documents_import_apply(
             root,
-            {"data_domain": "library", "operation": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
+            {"data_domain": "library", "operation": "apply", "apply_action": "hierarchy_apply", "staged_filename": "hierarchy.jsonl", "record_indices": [0, 1]},
             dry_run=True,
         )
 

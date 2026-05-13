@@ -373,7 +373,7 @@ def handle_broken_links(repo_root: Path, body: Dict[str, Any]) -> Dict[str, Any]
 
 
 def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), "export")
+    adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), "prepare")
     scope = source_model.normalize_scope(adapter.scope)
     config_id = str(body.get("config_id") or "").strip()
     if not config_id:
@@ -399,9 +399,9 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
         select_all=select_all,
         missing_summary_only=missing_summary_only,
         write=not dry_run,
-        config_path=adapter.config_path("export_configs_path").as_posix(),
+        config_path=adapter.config_path("sharing_profiles_path").as_posix(),
         target_format=target_format or None,
-        output_root=adapter.path("export_root"),
+        output_root=adapter.path("outbound_package_root"),
     )
     report["data_domain"] = adapter.data_domain
     report["adapter_id"] = adapter.adapter_id
@@ -426,7 +426,7 @@ def handle_docs_export(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> 
         },
     )
     if report.get("ok"):
-        action = "Validated export" if dry_run else "Exported"
+        action = "Validated package" if dry_run else "Prepared package"
         suffix = " without writing." if dry_run else "."
         exported_count = int(report.get("counts", {}).get("exported") or 0)
         document_word = "document" if exported_count == 1 else "documents"
@@ -445,9 +445,9 @@ def resolve_documents_adapter(repo_root: Path, data_domain: Any, operation: str)
 
 
 def handle_documents_import_files(repo_root: Path, data_domain: Any) -> Dict[str, Any]:
-    adapter = resolve_documents_adapter(repo_root, data_domain, "import_files")
+    adapter = resolve_documents_adapter(repo_root, data_domain, "list_returned")
     scope = source_model.normalize_scope(adapter.scope)
-    staging_root = adapter.path("staging_root")
+    staging_root = adapter.path("returned_package_staging_root")
     files = list_staged_import_files(repo_root, scope, staging_root=staging_root)
     log_event(
         repo_root,
@@ -470,7 +470,10 @@ def handle_documents_import_files(repo_root: Path, data_domain: Any) -> Dict[str
 
 
 def handle_documents_import_preview(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), "import_preview")
+    operation = str(body.get("operation") or "review").strip()
+    if operation != "review":
+        raise ValueError("operation must be review")
+    adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), "review")
     scope = source_model.normalize_scope(adapter.scope)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     if not staged_filename:
@@ -480,14 +483,14 @@ def handle_documents_import_preview(repo_root: Path, body: Dict[str, Any], dry_r
         repo_root=repo_root,
         scope=scope,
         staged_file=staged_filename,
-        staging_root=adapter.path("staging_root"),
+        staging_root=adapter.path("returned_package_staging_root"),
     )
     report = render_markdown_previews(
         repo_root=repo_root,
         scope=scope,
         report=report,
         write=not dry_run,
-        preview_root=adapter.path("preview_root"),
+        preview_root=adapter.path("review_output_root"),
     )
     report["data_domain"] = adapter.data_domain
     report["adapter_id"] = adapter.adapter_id
@@ -608,7 +611,7 @@ def handle_documents_import_summary_apply(
         repo_root=repo_root,
         scope=scope,
         staged_file=staged_filename,
-        staging_root=adapter.path("staging_root"),
+        staging_root=adapter.path("returned_package_staging_root"),
     )
     docs = source_model.load_scope_docs(repo_root, scope)
     docs_by_id = {doc.doc_id: doc for doc in docs}
@@ -747,7 +750,7 @@ def handle_documents_import_hierarchy_apply(
         repo_root=repo_root,
         scope=scope,
         staged_file=staged_filename,
-        staging_root=adapter.path("staging_root"),
+        staging_root=adapter.path("returned_package_staging_root"),
     )
     docs = source_model.load_scope_docs(repo_root, scope)
     docs_by_id = {doc.doc_id: doc for doc in docs}
@@ -877,10 +880,13 @@ def handle_documents_import_hierarchy_apply(
 
 def handle_documents_import_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     operation = str(body.get("operation") or "").strip()
-    if operation not in {"summary_apply", "hierarchy_apply"}:
-        raise ValueError("operation must be summary_apply or hierarchy_apply")
+    if operation != "apply":
+        raise ValueError("operation must be apply")
+    apply_action = str(body.get("apply_action") or "").strip()
+    if apply_action not in {"summary_apply", "hierarchy_apply"}:
+        raise ValueError("apply_action must be summary_apply or hierarchy_apply")
     adapter = resolve_documents_adapter(repo_root, body.get("data_domain"), operation)
-    if operation == "summary_apply":
+    if apply_action == "summary_apply":
         return handle_documents_import_summary_apply(repo_root, body, dry_run, adapter)
     return handle_documents_import_hierarchy_apply(repo_root, body, dry_run, adapter)
 

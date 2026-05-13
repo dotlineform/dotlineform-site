@@ -215,7 +215,7 @@ def install_mock_docs_service(page) -> None:
                 if callable(post_data):
                     post_data = post_data()
                 request_body = json.loads(post_data or "{}")
-            if request_body.get("operation") == "hierarchy_apply":
+            if request_body.get("operation") == "apply" and request_body.get("apply_action") == "hierarchy_apply":
                 payload = {
                     "ok": True,
                     "scope": "library",

@@ -1,60 +1,45 @@
 {
-  "schema_version": "data_sharing_adapters_v1",
+  "schema_version": "data_sharing_adapters_v2",
   "dispatch": [
     {
       "data_domain": "library",
-      "operation": "export",
+      "operation": "prepare",
       "adapter_id": "documents"
     },
     {
       "data_domain": "library",
-      "operation": "import_files",
+      "operation": "list_returned",
       "adapter_id": "documents"
     },
     {
       "data_domain": "library",
-      "operation": "import_preview",
+      "operation": "review",
       "adapter_id": "documents"
     },
     {
       "data_domain": "library",
-      "operation": "summary_apply",
+      "operation": "apply",
       "adapter_id": "documents"
     },
     {
-      "data_domain": "library",
-      "operation": "hierarchy_apply",
-      "adapter_id": "documents"
+      "data_domain": "tags",
+      "operation": "prepare",
+      "adapter_id": "analytics-tags"
     },
     {
-      "data_domain": "catalogue",
-      "operation": "export",
-      "adapter_id": "catalogue"
+      "data_domain": "tags",
+      "operation": "list_returned",
+      "adapter_id": "analytics-tags"
     },
     {
-      "data_domain": "catalogue",
-      "operation": "import_files",
-      "adapter_id": "catalogue"
+      "data_domain": "tags",
+      "operation": "review",
+      "adapter_id": "analytics-tags"
     },
     {
-      "data_domain": "catalogue",
-      "operation": "import_preview",
-      "adapter_id": "catalogue"
-    },
-    {
-      "data_domain": "analytics",
-      "operation": "export",
-      "adapter_id": "analytics"
-    },
-    {
-      "data_domain": "analytics",
-      "operation": "import_files",
-      "adapter_id": "analytics"
-    },
-    {
-      "data_domain": "analytics",
-      "operation": "import_preview",
-      "adapter_id": "analytics"
+      "data_domain": "tags",
+      "operation": "apply",
+      "adapter_id": "analytics-tags"
     }
   ],
   "adapters": [
@@ -63,16 +48,24 @@
       "module": "documents",
       "label": "Documents",
       "status": "active",
+      "portability": {
+        "package": "docs-viewer-documents-data-sharing"
+      },
       "data_domains": {
         "library": {
           "label": "Library",
           "scope": "library",
           "status": "active",
+          "selection_model": "documents",
           "paths": {
-            "export_root": "var/studio/data-sharing/library/exports",
-            "staging_root": "var/studio/data-sharing/library/import-staging",
-            "preview_root": "var/studio/data-sharing/library/import-preview",
-            "source_root": "_docs_library"
+            "outbound_package_root": "var/studio/data-sharing/library/exports",
+            "returned_package_staging_root": "var/studio/data-sharing/library/import-staging",
+            "review_output_root": "var/studio/data-sharing/library/import-preview",
+            "source_root": "_docs_library",
+            "backup_root": "var/docs/backups"
+          },
+          "source_write_targets": {
+            "documents": "_docs_library"
           },
           "sources": {
             "docs_index": "assets/data/docs/scopes/library/index.json",
@@ -80,117 +73,248 @@
             "source_root": "_docs_library"
           },
           "config": {
-            "export_configs_path": "assets/studio/data/library_export_configs.json"
+            "sharing_profiles_path": "assets/studio/data/library_export_configs.json"
           }
         }
       },
       "capabilities": [
         {
-          "operation": "export",
-          "status": "active"
+          "operation": "prepare",
+          "status": "active",
+          "selection_model": "documents",
+          "input_formats": [],
+          "output_formats": ["json", "jsonl"],
+          "path_contract": {
+            "output_root": "outbound_package_root"
+          },
+          "activity": {
+            "script_purpose": "data-sharing-prepare",
+            "record_groups": ["documents"]
+          }
         },
         {
-          "operation": "import_files",
-          "status": "active"
+          "operation": "list_returned",
+          "status": "active",
+          "selection_model": "none",
+          "input_formats": ["json", "jsonl"],
+          "output_formats": [],
+          "path_contract": {
+            "staging_root": "returned_package_staging_root"
+          },
+          "activity": {
+            "script_purpose": "data-sharing-list-returned",
+            "record_groups": ["files"]
+          }
         },
         {
-          "operation": "import_preview",
-          "status": "active"
+          "operation": "review",
+          "status": "active",
+          "selection_model": "file_only",
+          "input_formats": ["json", "jsonl"],
+          "output_formats": ["markdown"],
+          "path_contract": {
+            "staging_root": "returned_package_staging_root",
+            "review_output_root": "review_output_root"
+          },
+          "review_rows": {
+            "fields": ["id", "type", "title", "meta", "record_index", "selectable", "record_groups", "issues"]
+          },
+          "activity": {
+            "script_purpose": "data-sharing-review",
+            "record_groups": ["documents", "files"]
+          }
         },
         {
-          "operation": "summary_apply",
-          "status": "active"
-        },
-        {
-          "operation": "hierarchy_apply",
-          "status": "active"
+          "operation": "apply",
+          "status": "active",
+          "selection_model": "records",
+          "input_formats": ["json", "jsonl"],
+          "output_formats": [],
+          "path_contract": {
+            "staging_root": "returned_package_staging_root",
+            "source_root": "source_root",
+            "backup_root": "backup_root"
+          },
+          "requires_confirmation": true,
+          "apply_actions": [
+            {
+              "id": "summary_apply",
+              "label": "Update summaries",
+              "status": "active",
+              "confirmation": {
+                "title": "Update summaries?",
+                "body": "This will back up and update selected Library source files."
+              },
+              "activity": {
+                "script_purpose": "data-sharing-apply",
+                "record_groups": ["documents"]
+              }
+            },
+            {
+              "id": "hierarchy_apply",
+              "label": "Apply hierarchy",
+              "status": "active",
+              "confirmation": {
+                "title": "Update hierarchy?",
+                "body": "This will back up and update selected Library source parent ids."
+              },
+              "activity": {
+                "script_purpose": "data-sharing-apply",
+                "record_groups": ["documents"]
+              }
+            }
+          ],
+          "activity": {
+            "script_purpose": "data-sharing-apply",
+            "record_groups": ["documents"]
+          }
         }
       ]
     },
     {
-      "id": "catalogue",
-      "module": "catalogue",
-      "label": "Catalogue",
+      "id": "analytics-tags",
+      "module": "analytics.tags",
+      "label": "Tags",
       "status": "stub",
+      "portability": {
+        "package": "analytics-tags-data-sharing"
+      },
       "data_domains": {
-        "catalogue": {
-          "label": "Catalogue",
-          "scope": "catalogue",
+        "tags": {
+          "label": "Tags",
+          "scope": "tags",
           "status": "stub",
+          "selection_model": "records",
           "paths": {
-            "export_root": "var/studio/data-sharing/catalogue/exports",
-            "staging_root": "var/studio/data-sharing/catalogue/import-staging",
-            "preview_root": "var/studio/data-sharing/catalogue/import-preview",
-            "source_root": "assets/studio/data/catalogue"
+            "outbound_package_root": "var/studio/data-sharing/tags/exports",
+            "returned_package_staging_root": "var/studio/data-sharing/tags/import-staging",
+            "review_output_root": "var/studio/data-sharing/tags/import-preview",
+            "source_root": "assets/studio/data",
+            "backup_root": "var/studio/data-sharing/tags/backups"
+          },
+          "source_write_targets": {
+            "tag_registry": "assets/studio/data/tag_registry.json",
+            "tag_aliases": "assets/studio/data/tag_aliases.json",
+            "tag_assignments": "assets/studio/data/tag_assignments.json"
           },
           "sources": {
-            "source_root": "assets/studio/data/catalogue",
-            "works": "assets/studio/data/catalogue/works.json",
-            "work_details": "assets/studio/data/catalogue/work_details.json",
+            "tag_registry": "assets/studio/data/tag_registry.json",
+            "tag_aliases": "assets/studio/data/tag_aliases.json",
+            "tag_assignments": "assets/studio/data/tag_assignments.json",
             "series": "assets/studio/data/catalogue/series.json",
-            "moments": "assets/studio/data/catalogue/moments.json"
+            "works": "assets/studio/data/catalogue/works.json"
           },
           "config": {}
         }
       },
       "capabilities": [
         {
-          "operation": "export",
+          "operation": "prepare",
           "status": "planned",
-          "message": "Catalogue export is not implemented yet."
-        },
-        {
-          "operation": "import_files",
-          "status": "planned",
-          "message": "Catalogue import staging is not implemented yet."
-        },
-        {
-          "operation": "import_preview",
-          "status": "planned",
-          "message": "Catalogue import preview is not implemented yet."
-        }
-      ]
-    },
-    {
-      "id": "analytics",
-      "module": "analytics",
-      "label": "Analytics",
-      "status": "stub",
-      "data_domains": {
-        "analytics": {
-          "label": "Analytics",
-          "scope": "analytics",
-          "status": "stub",
-          "paths": {
-            "export_root": "var/studio/data-sharing/analytics/exports",
-            "staging_root": "var/studio/data-sharing/analytics/import-staging",
-            "preview_root": "var/studio/data-sharing/analytics/import-preview",
-            "source_root": "_docs_analysis"
+          "message": "Tags package preparation is not implemented yet.",
+          "selection_model": "records",
+          "input_formats": [],
+          "output_formats": ["json"],
+          "path_contract": {
+            "output_root": "outbound_package_root"
           },
-          "sources": {
-            "source_root": "_docs_analysis",
-            "docs_index": "assets/data/docs/scopes/analysis/index.json",
-            "docs_payload_root": "assets/data/docs/scopes/analysis/by-id",
-            "search_index": "assets/data/search/analysis/index.json"
+          "activity": {
+            "script_purpose": "data-sharing-prepare",
+            "record_groups": ["tags", "aliases", "series", "works", "files"]
+          }
+        },
+        {
+          "operation": "list_returned",
+          "status": "planned",
+          "message": "Tags returned package staging is not implemented yet.",
+          "selection_model": "none",
+          "input_formats": ["json", "jsonl"],
+          "output_formats": [],
+          "path_contract": {
+            "staging_root": "returned_package_staging_root"
           },
-          "config": {}
-        }
-      },
-      "capabilities": [
-        {
-          "operation": "export",
-          "status": "planned",
-          "message": "Analytics export is not implemented yet."
+          "activity": {
+            "script_purpose": "data-sharing-list-returned",
+            "record_groups": ["files"]
+          }
         },
         {
-          "operation": "import_files",
+          "operation": "review",
           "status": "planned",
-          "message": "Analytics import staging is not implemented yet."
+          "message": "Tags returned package review is not implemented yet.",
+          "selection_model": "file_only",
+          "input_formats": ["json", "jsonl"],
+          "output_formats": ["json"],
+          "path_contract": {
+            "staging_root": "returned_package_staging_root",
+            "review_output_root": "review_output_root"
+          },
+          "review_rows": {
+            "fields": ["id", "type", "title", "meta", "record_index", "selectable", "record_groups", "issues"]
+          },
+          "activity": {
+            "script_purpose": "data-sharing-review",
+            "record_groups": ["tags", "aliases", "series", "works", "files"]
+          }
         },
         {
-          "operation": "import_preview",
+          "operation": "apply",
           "status": "planned",
-          "message": "Analytics import preview is not implemented yet."
+          "message": "Tags apply is not implemented yet.",
+          "selection_model": "records",
+          "input_formats": ["json", "jsonl"],
+          "output_formats": [],
+          "path_contract": {
+            "staging_root": "returned_package_staging_root",
+            "source_root": "source_root",
+            "backup_root": "backup_root"
+          },
+          "requires_confirmation": true,
+          "apply_actions": [
+            {
+              "id": "registry_apply",
+              "label": "Apply tag registry changes",
+              "status": "planned",
+              "confirmation": {
+                "title": "Apply tag registry changes?",
+                "body": "This will back up and update the Studio tag registry."
+              },
+              "activity": {
+                "script_purpose": "data-sharing-apply",
+                "record_groups": ["tags", "files"]
+              }
+            },
+            {
+              "id": "aliases_apply",
+              "label": "Apply tag alias changes",
+              "status": "planned",
+              "confirmation": {
+                "title": "Apply tag alias changes?",
+                "body": "This will back up and update Studio tag aliases."
+              },
+              "activity": {
+                "script_purpose": "data-sharing-apply",
+                "record_groups": ["aliases", "tags", "files"]
+              }
+            },
+            {
+              "id": "assignments_apply",
+              "label": "Apply tag assignment changes",
+              "status": "planned",
+              "confirmation": {
+                "title": "Apply tag assignment changes?",
+                "body": "This will back up and update Studio tag assignments."
+              },
+              "activity": {
+                "script_purpose": "data-sharing-apply",
+                "record_groups": ["series", "works", "tags", "files"]
+              }
+            }
+          ],
+          "activity": {
+            "script_purpose": "data-sharing-apply",
+            "record_groups": ["tags", "aliases", "series", "works", "files"]
+          }
         }
       ]
     }

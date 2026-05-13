@@ -81,24 +81,32 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     write_json(
         repo_root / "assets/studio/data/data_sharing_adapters.json",
         {
-            "schema_version": "data_sharing_adapters_v1",
+            "schema_version": "data_sharing_adapters_v2",
             "dispatch": [
-                {"data_domain": "library", "operation": "export", "adapter_id": "documents"},
+                {"data_domain": "library", "operation": "prepare", "adapter_id": "documents"},
             ],
             "adapters": [
                 {
                     "id": "documents",
                     "module": "documents",
                     "label": "Documents",
+                    "status": "active",
+                    "portability": {"package": "docs-viewer-documents-data-sharing"},
                     "data_domains": {
                         "library": {
                             "label": "Library",
                             "scope": "library",
+                            "status": "active",
+                            "selection_model": "documents",
                             "paths": {
-                                "export_root": "var/studio/data-sharing/library/exports",
-                                "staging_root": "var/studio/data-sharing/library/import-staging",
-                                "preview_root": "var/studio/data-sharing/library/import-preview",
+                                "outbound_package_root": "var/studio/data-sharing/library/exports",
+                                "returned_package_staging_root": "var/studio/data-sharing/library/import-staging",
+                                "review_output_root": "var/studio/data-sharing/library/import-preview",
                                 "source_root": "_docs_library",
+                                "backup_root": "var/docs/backups",
+                            },
+                            "source_write_targets": {
+                                "documents": "_docs_library",
                             },
                             "sources": {
                                 "docs_index": "assets/data/docs/scopes/library/index.json",
@@ -106,11 +114,21 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                                 "source_root": "_docs_library",
                             },
                             "config": {
-                                "export_configs_path": "assets/studio/data/library_export_configs.json",
+                                "sharing_profiles_path": "assets/studio/data/library_export_configs.json",
                             },
                         }
                     },
-                    "capabilities": ["export"],
+                    "capabilities": [
+                        {
+                            "operation": "prepare",
+                            "status": "active",
+                            "selection_model": "documents",
+                            "input_formats": [],
+                            "output_formats": ["json", "jsonl"],
+                            "path_contract": {"output_root": "outbound_package_root"},
+                            "activity": {"script_purpose": "data-sharing-prepare", "record_groups": ["documents"]},
+                        }
+                    ],
                 }
             ],
         },

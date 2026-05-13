@@ -29,8 +29,7 @@ import {
 const DEFAULT_SCOPE = "library";
 const WORKFLOW_SCOPES = [
   { key: "library", labelKey: "scope_library", fallback: "library" },
-  { key: "catalogue", labelKey: "scope_catalogue", fallback: "catalogue" },
-  { key: "analytics", labelKey: "scope_analytics", fallback: "analytics" }
+  { key: "tags", labelKey: "scope_tags", fallback: "tags" }
 ];
 const LIST_FILTERS = [
   { key: "all", labelKey: "filter_show_all", fallback: "show all [{count}]" },
@@ -762,7 +761,7 @@ async function init() {
     markBusy(state, true);
     state.config = await loadStudioConfigWithText("data_sharing_prepare");
     const adapterRegistry = await loadAdapterRegistry(state.config);
-    state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "export", WORKFLOW_SCOPES);
+    state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "prepare", WORKFLOW_SCOPES);
     state.scope = workflowScopeFromUrl(state.workflowScopes);
     renderScopeSelect(state);
     state.serviceAvailable = Boolean(await probeDocsManagementHealth());

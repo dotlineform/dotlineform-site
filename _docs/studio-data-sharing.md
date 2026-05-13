@@ -2,7 +2,7 @@
 doc_id: studio-data-sharing
 title: Studio Data Sharing
 added_date: 2026-05-06
-last_updated: "2026-05-13"
+last_updated: "2026-05-13 13:20"
 parent_id: studio
 sort_order: 98
 ---
@@ -15,11 +15,12 @@ Routes:
 - `/studio/data-sharing/review/`
 
 Studio Data Sharing is the shared shell for preparing outbound share packages and reviewing returned packages from supported Studio data domains.
-It defaults to the Library data domain and can expose Catalogue and Analytics as named workflow scopes when those adapters are present in `assets/studio/data/data_sharing_adapters.json`.
+It defaults to the Library data domain and can expose Tags as a named workflow scope when the planned Analytics tags adapter is present in `assets/studio/data/data_sharing_adapters.json`.
 
 ## Current Scope
 
 Library is the only implemented data domain in this slice.
+Tags are visible as a planned/stub data domain for the adapter contract, but tag package preparation, review, and apply behavior remain unavailable until later slices.
 
 The prepare page:
 
@@ -48,6 +49,8 @@ The page shells load:
 - `assets/studio/data/library_export_configs.json`
 
 The documents adapter still owns the implemented Library config set, source index, document tree selection, field mapping, review rows, and apply behavior.
+The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
+Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.
 
 ## Activity
 

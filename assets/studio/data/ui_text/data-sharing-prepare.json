@@ -1,8 +1,7 @@
 {
   "scope_label": "scope",
   "scope_library": "library",
-  "scope_catalogue": "catalogue",
-  "scope_analytics": "analytics",
+  "scope_tags": "tags",
   "config_label": "sharing profile",
   "missing_summary_label": "missing summaries only",
   "format_label": "format",

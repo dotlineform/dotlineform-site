@@ -2,7 +2,7 @@
 doc_id: site-request-studio-import-export-module
 title: Studio Data Sharing Module Implementation Request
 added_date: 2026-05-13
-last_updated: "2026-05-13 12:35"
+last_updated: "2026-05-13 13:20"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -13,7 +13,7 @@ hidden: false
 Status:
 
 - In progress
-- Slice 0 implementation started
+- Slice 1 adapter contract implemented
 
 ## Summary
 
@@ -250,7 +250,7 @@ Acceptance checks:
 
 ### Slice 1: adapter contract
 
-Status: planned.
+Status: implemented.
 
 Define the v2 adapter contract in docs and tests after the terminology cutover.
 
