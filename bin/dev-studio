@@ -32,6 +32,7 @@ CATALOGUE_WRITE_PORT="${CATALOGUE_WRITE_PORT:-8788}"
 DOCS_MANAGEMENT_PORT="${DOCS_MANAGEMENT_PORT:-8789}"
 AUDIT_SERVICE_PORT="${AUDIT_SERVICE_PORT:-8790}"
 DOCS_STARTUP_REBUILD_SCOPES="${DOCS_STARTUP_REBUILD_SCOPES:-}"
+CATALOGUE_STARTUP_LOOKUP_REBUILD="${CATALOGUE_STARTUP_LOOKUP_REBUILD:-off}"
 DOCS_WATCH_ENABLED="${DOCS_WATCH_ENABLED:-1}"
 DOCS_WATCH_POLL_SECONDS="${DOCS_WATCH_POLL_SECONDS:-1.0}"
 DOCS_WATCH_DEBOUNCE_SECONDS="${DOCS_WATCH_DEBOUNCE_SECONDS:-1.0}"
@@ -223,6 +224,14 @@ if [ "${#STARTUP_DOC_SCOPES[@]}" -gt 0 ]; then
 else
   echo "Startup docs rebuild scopes: none"
 fi
+case "$CATALOGUE_STARTUP_LOOKUP_REBUILD" in
+  1|on|true|yes)
+    echo "Startup catalogue lookup rebuild: enabled"
+    ;;
+  *)
+    echo "Startup catalogue lookup rebuild: disabled"
+    ;;
+esac
 if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
   echo "Docs Live Watcher: enabled (configured docs scopes: ${DOCS_SCOPE_IDS[*]})"
 else
@@ -259,8 +268,15 @@ else
     "$BUNDLE_BIN" exec ruby scripts/build_search.rb --scope "$scope" --write
   done
 fi
-echo "Building catalogue lookup data"
-"$PYTHON_BIN" scripts/catalogue/export_catalogue_lookup.py --write
+case "$CATALOGUE_STARTUP_LOOKUP_REBUILD" in
+  1|on|true|yes)
+    echo "Building catalogue lookup data"
+    "$PYTHON_BIN" scripts/catalogue/export_catalogue_lookup.py --write
+    ;;
+  *)
+    echo "Skipping startup catalogue lookup rebuild"
+    ;;
+esac
 echo
 echo "Press Ctrl+C to stop all processes."
 echo

@@ -21,7 +21,7 @@ bin/dev-studio
 For a new local session, it is the simplest way to:
 
 - optionally refresh one or both docs/docs-search scopes before startup
-- refresh the derived catalogue lookup payloads used by the catalogue editors
+- optionally refresh the derived catalogue lookup payloads used by the catalogue editors
 - start the Jekyll site
 - start the local Studio write services used by the current admin UI
 - keep docs source edits synced into same-scope docs payloads and docs search while the runner is active
@@ -68,6 +68,9 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 - `DOCS_STARTUP_REBUILD_SCOPES`
   default: blank
   accepted values: configured docs scope ids from `scripts/docs/docs_scopes.json`, or comma-separated combinations
+- `CATALOGUE_STARTUP_LOOKUP_REBUILD`
+  default: `off`
+  accepted enabled values: `1`, `on`, `true`, or `yes`
 - `DOCS_WATCH_ENABLED`
   default: `1`
 - `DOCS_WATCH_POLL_SECONDS`
@@ -85,6 +88,7 @@ Example:
 
 ```bash
 export DOCS_STARTUP_REBUILD_SCOPES=""
+export CATALOGUE_STARTUP_LOOKUP_REBUILD=off
 export JEKYLL_PORT=4001
 export TAG_WRITE_PORT=8797
 export CATALOGUE_WRITE_PORT=8798
@@ -96,6 +100,9 @@ export DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8
 
 Keeping `DOCS_STARTUP_REBUILD_SCOPES=""` in `var/local/site.env` is a valid reminder that startup docs/docs-search rebuilds are intentionally off.
 To run a startup rebuild locally, edit that value to a configured docs scope id such as `studio`, `library`, `analysis`, or a comma-separated combination before starting the runner.
+
+Keeping `CATALOGUE_STARTUP_LOOKUP_REBUILD=off` in `var/local/site.env` skips the full derived catalogue lookup export during normal startup.
+Set it to `1`, `on`, `true`, or `yes` when startup should refresh `assets/studio/data/catalogue_lookup/` before the write server starts.
 
 The runner reads valid docs scope ids from `scripts/docs/docs_scopes.json`.
 Adding a new docs scope there makes it eligible for startup docs/docs-search rebuilds without editing `bin/dev-studio`.
@@ -120,9 +127,13 @@ After that preflight, `bin/dev-studio` runs the startup write steps below:
    - `./scripts/build_docs.rb --scope <scope> --write`
    - `./scripts/build_search.rb --scope <scope> --write`
    for each listed docs scope
-3. `./scripts/catalogue/export_catalogue_lookup.py --write`
+3. if `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled, it runs:
+   - `./scripts/catalogue/export_catalogue_lookup.py --write`
 
-That means a fresh `bin/dev-studio` run always updates:
+That means a default `bin/dev-studio` run skips startup docs/docs-search rebuilds and startup catalogue lookup export.
+The catalogue write server still refreshes derived lookup payloads after catalogue writes.
+
+If `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled, startup also updates:
 
 - derived catalogue lookup JSON under `assets/studio/data/catalogue_lookup/`
 
@@ -223,6 +234,7 @@ At startup the runner prints quick links for:
 - Docs Management Server
 - Audit Service
 - startup docs rebuild scopes
+- startup catalogue lookup rebuild status
 - Docs Live Watcher status
 - Backup retention status
 - Series Tag Editor:
@@ -250,7 +262,8 @@ If any one of the child processes exits unexpectedly, the runner stops monitorin
 
 - run `./scripts/catalogue/catalogue_json_build.py`
 - rebuild any docs/docs-search scope on startup unless `DOCS_STARTUP_REBUILD_SCOPES` is set
-- rebuild catalogue or public search artifacts on startup
+- rebuild catalogue lookup artifacts on startup unless `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled
+- rebuild public search artifacts on startup
 - start a separate frontend asset server
 
 If you disable the watcher or want an explicit manual rebuild, use:
