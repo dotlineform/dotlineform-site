@@ -24,11 +24,12 @@ The durable architecture contract is recorded in [Studio Data Sharing Technical 
 
 Library is the implemented documents data domain.
 Tags are implemented for package preparation, returned-package listing, review, and confirmed apply through the Analytics tags adapter.
+The page scope selector presents this as Analytics; the internal data domain remains `tags`.
 
 The prepare page:
 
 - loads enabled Library sharing profiles from `assets/studio/data/library_export_configs.json`
-- loads enabled Tags sharing profiles from `assets/studio/data/data_sharing_adapters.json`
+- loads enabled Analytics tag sharing profiles from `assets/studio/data/data_sharing_adapters.json`
 - reads the generated Library docs index through the docs-management local service
 - renders a selectable hierarchical document list in Docs Viewer order
 - supports JSON and JSONL target formats according to each profile

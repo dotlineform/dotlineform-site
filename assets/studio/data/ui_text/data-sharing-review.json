@@ -1,7 +1,7 @@
 {
   "scope_label": "scope",
   "scope_library": "library",
-  "scope_tags": "tags",
+  "scope_tags": "analytics",
   "file_label": "staged file",
   "preview_button": "Review package",
   "select_all": "select all",

@@ -25,8 +25,12 @@ It maps `data_domain: "library"` to the Library Docs Viewer source and generated
 The first non-document adapter is:
 
 - `data_domain: "tags"`
+- UI scope: `Analytics`
 - `adapter_id: "analytics-tags"`
 - `module: "analytics.tags"`
+
+The data domain stays `tags` so future Analytics workflows do not inherit tag-specific assumptions.
+The Studio Data Sharing scope selector presents that domain as Analytics because the user-facing Studio scope is Analytics, while the sharing profile selector names the tag-specific package families.
 
 The tags adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
 Tags `prepare` exposes source-derived package profiles for tag registry, tag aliases, tag assignments, and combined tags bundles.

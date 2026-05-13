@@ -17,6 +17,7 @@ import {
   workflowDomainForKey,
   workflowDomainFromUrl,
   workflowDomainIsActive,
+  workflowScopeParamForKey,
   workflowDomainsForOperation
 } from "./data-sharing-adapters.js";
 
@@ -152,11 +153,12 @@ function renderApplyActions(state) {
 function updateScopeUrl(scope, domains = WORKFLOW_SCOPES) {
   const nextScope = normalizeText(scope).toLowerCase();
   if (!domains.some((item) => item.key === nextScope)) return;
+  const scopeParam = workflowScopeParamForKey(domains, nextScope);
   const url = new URL(window.location.href);
   if (nextScope === DEFAULT_SCOPE) {
     url.searchParams.delete("scope");
   } else {
-    url.searchParams.set("scope", nextScope);
+    url.searchParams.set("scope", scopeParam);
   }
   window.location.href = url.toString();
 }

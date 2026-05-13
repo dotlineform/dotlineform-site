@@ -52,8 +52,10 @@ export function workflowDomainsForOperation(registry, operation, fallbackDomains
       if (!domain || typeof domain !== "object") return;
       const domainKey = normalizeId(key);
       if (!domainKey || domains.some((item) => item.key === domainKey)) return;
+      const scopeKey = normalizeId(domain.scope) || domainKey;
       domains.push({
         key: domainKey,
+        scope: scopeKey,
         label: normalizeText(domain.label) || domainKey,
         fallback: normalizeText(domain.label) || domainKey,
         status: capabilityStatus(adapter, domain, capability),
@@ -94,7 +96,8 @@ export function workflowDomainFromUrl(domains, defaultDomain) {
   const params = new URLSearchParams(window.location.search);
   const requested = normalizeId(params.get("scope"));
   const items = Array.isArray(domains) ? domains : [];
-  if (items.some((item) => item.key === requested)) return requested;
+  const match = items.find((item) => item.key === requested || normalizeId(item.scope) === requested);
+  if (match) return match.key;
   return defaultDomain;
 }
 
@@ -107,4 +110,9 @@ export function workflowDomainForKey(domains, key) {
 export function workflowDomainIsActive(domains, key) {
   const domain = workflowDomainForKey(domains, key);
   return normalizeId(domain && domain.status) === "active";
+}
+
+export function workflowScopeParamForKey(domains, key) {
+  const domain = workflowDomainForKey(domains, key);
+  return normalizeId(domain && domain.scope) || normalizeId(domain && domain.key) || normalizeId(key);
 }

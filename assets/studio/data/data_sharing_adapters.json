@@ -254,8 +254,8 @@
       },
       "data_domains": {
         "tags": {
-          "label": "Tags",
-          "scope": "tags",
+          "label": "Analytics",
+          "scope": "analytics",
           "status": "active",
           "selection_model": "records",
           "paths": {

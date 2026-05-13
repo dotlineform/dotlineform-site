@@ -139,6 +139,10 @@ Module identity: `analytics.tags`
 Current domain:
 
 - `data_domain: "tags"`
+- UI scope: `Analytics`
+
+The user-facing scope is Analytics because tag data belongs to the Analytics Studio area.
+The adapter data domain remains `tags` so future Analytics scoring or registry workflows do not inherit tag-specific dispatch behavior.
 
 The tags adapter owns:
 

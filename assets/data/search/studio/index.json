@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0b1364df1270924a7eb5b8675f1d40a8",
-    "generated_at_utc": "2026-05-13T16:28:10Z",
+    "version": "blake2b-c3179a695a809b759d23b8453a878ade",
+    "generated_at_utc": "2026-05-13T16:43:16Z",
     "count": 232
   },
   "entries": [
@@ -4355,10 +4355,10 @@
       "kind": "doc",
       "title": "Studio Config Loader JS",
       "href": "/docs/?scope=studio&doc=config-studio-config-js",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-13 18:15",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-11 14:10 • Studio",
+      "display_meta": "2026-05-13 18:15 • Studio",
       "search_terms": [
         "config-studio-config-js",
         "config",
@@ -4366,14 +4366,14 @@
         "js",
         "studio config loader js",
         "loader",
-        "2026-05-11 14:10",
+        "2026-05-13 18:15",
         "2026",
         "05",
-        "11",
-        "14",
-        "10"
+        "13",
+        "18",
+        "15"
       ],
-      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-11 14:10 2026 05 11 14 10"
+      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "tiered-dimension-policy",
