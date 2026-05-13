@@ -2,7 +2,7 @@
 doc_id: config-data-sharing-adapters
 title: Data Sharing Adapters
 added_date: "2026-05-06 11:35"
-last_updated: "2026-05-13 13:20"
+last_updated: "2026-05-13 17:30"
 parent_id: config
 sort_order: 60
 ---
@@ -19,16 +19,17 @@ The registry maps that pair to exactly one adapter id.
 
 ## Current Mapping
 
-The implemented adapter is `documents`.
+The implemented adapters are `documents` and `analytics-tags`.
 It maps `data_domain: "library"` to the Library Docs Viewer source and generated data paths.
 
-The registry also names the first non-document adapter contract:
+The first non-document adapter is:
 
 - `data_domain: "tags"`
 - `adapter_id: "analytics-tags"`
 - `module: "analytics.tags"`
 
-The tags adapter is marked `status: "stub"` and its capabilities are marked `planned` until the later tags review/apply and package-preparation slices wire it to the Analytics tag owners.
+The tags adapter is active for `list_returned`, `review`, and `apply`.
+Tags `prepare` remains planned until the package-preparation slice wires outbound tags package generation.
 
 ## Operations
 
@@ -41,6 +42,7 @@ The v2 registry uses only these shared operation names:
 
 Adapter-specific apply variants live under the `apply` capability's `apply_actions` list.
 For the documents adapter, the current actions are `summary_apply` and `hierarchy_apply`.
+For the tags adapter, the current actions are `registry_apply`, `aliases_apply`, and `assignments_apply`.
 Do not add new registry-level operations such as `export`, `import_files`, `import_preview`, `summary_apply`, or `hierarchy_apply`.
 
 ## Capability Metadata
@@ -80,7 +82,7 @@ Under that root, Library currently uses:
 
 Future folder changes should update this config instead of adding route-level folder decisions.
 
-The tags stub reserves the same folder shape under `var/studio/data-sharing/tags/`.
+The active tags review/apply workflow uses the same folder shape under `var/studio/data-sharing/tags/`.
 
 ## Related Runtime
 

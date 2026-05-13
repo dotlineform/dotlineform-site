@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-bd8a1cb0226d200ddce685b0adce1a3b",
-    "generated_at_utc": "2026-05-13T15:31:24Z",
+    "version": "blake2b-1233d7934dae756dac9ac838a03dd955",
+    "generated_at_utc": "2026-05-13T15:44:57Z",
     "count": 230
   },
   "entries": [
@@ -3114,10 +3114,10 @@
       "kind": "doc",
       "title": "Data Sharing Adapters",
       "href": "/docs/?scope=studio&doc=config-data-sharing-adapters",
-      "last_updated": "2026-05-13 13:20",
+      "last_updated": "2026-05-13 17:30",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-13 13:20 • Config",
+      "display_meta": "2026-05-13 17:30 • Config",
       "search_terms": [
         "config-data-sharing-adapters",
         "config",
@@ -3125,13 +3125,14 @@
         "sharing",
         "adapters",
         "data sharing adapters",
-        "2026-05-13 13:20",
+        "2026-05-13 17:30",
         "2026",
         "05",
         "13",
-        "20"
+        "17",
+        "30"
       ],
-      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters 2026-05-13 13:20 2026 05 13 20"
+      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters 2026-05-13 17:30 2026 05 13 17 30"
     },
     {
       "id": "scripts-delete-work",
@@ -4217,23 +4218,24 @@
       "kind": "doc",
       "title": "Studio Data Sharing",
       "href": "/docs/?scope=studio&doc=studio-data-sharing",
-      "last_updated": "2026-05-13 16:13",
+      "last_updated": "2026-05-13 17:30",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-13 16:13 • Studio",
+      "display_meta": "2026-05-13 17:30 • Studio",
       "search_terms": [
         "studio-data-sharing",
         "studio",
         "data",
         "sharing",
         "studio data sharing",
-        "2026-05-13 16:13",
+        "2026-05-13 17:30",
         "2026",
         "05",
         "13",
-        "16"
+        "17",
+        "30"
       ],
-      "search_text": "studio-data-sharing studio data sharing studio data sharing 2026-05-13 16:13 2026 05 13 16"
+      "search_text": "studio-data-sharing studio data sharing studio data sharing 2026-05-13 17:30 2026 05 13 17 30"
     },
     {
       "id": "site-request-field-aware-build-scoping",
@@ -5737,10 +5739,10 @@
       "kind": "doc",
       "title": "Studio Data Sharing Module Implementation Request",
       "href": "/docs/?scope=studio&doc=site-request-studio-import-export-module",
-      "last_updated": "2026-05-13 16:27",
+      "last_updated": "2026-05-13 17:30",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-13 16:27 • Change Requests",
+      "display_meta": "2026-05-13 17:30 • Change Requests",
       "search_terms": [
         "site-request-studio-import-export-module",
         "site",
@@ -5756,14 +5758,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-13 16:27",
+        "2026-05-13 17:30",
         "2026",
         "05",
         "13",
-        "16",
-        "27"
+        "17",
+        "30"
       ],
-      "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation change requests change requests 2026-05-13 16:27 2026 05 13 16 27"
+      "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation change requests change requests 2026-05-13 17:30 2026 05 13 17 30"
     },
     {
       "id": "change-requests",

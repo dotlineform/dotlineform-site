@@ -2,7 +2,7 @@
 doc_id: site-request-studio-import-export-module
 title: Studio Data Sharing Module Implementation Request
 added_date: 2026-05-13
-last_updated: "2026-05-13 16:27"
+last_updated: "2026-05-13 17:30"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 212
@@ -13,7 +13,7 @@ hidden: false
 Status:
 
 - In progress
-- Slice 4 generic UI presentation contract implemented
+- Slice 5 tags adapter review and apply implemented
 
 ## Summary
 
@@ -331,7 +331,7 @@ Acceptance checks:
 
 ### Slice 5: tags adapter review and apply
 
-Status: planned.
+Status: implemented.
 
 Add the first real non-document adapter by wiring existing tag planners into the shared Data Sharing module.
 

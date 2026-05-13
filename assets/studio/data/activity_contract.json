@@ -818,6 +818,66 @@
               "when": "selected source docs receive imported hierarchy changes"
             }
           ]
+        },
+        "apply-returned-tag-registry": {
+          "label": "apply returned tag registry",
+          "status": "v1-target",
+          "control_id": "dataSharingReviewApplyTagRegistry",
+          "control_selector": "#dataSharingReviewApplyTagRegistry",
+          "control_label": "Apply tag registry changes",
+          "endpoint": "/data-sharing/apply",
+          "record_family": "tag_registry",
+          "record_id_field": "staged_filename",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers confirmed tag registry writes from returned package review. Preflight remains excluded.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "selected returned tag registry rows update tag data"
+            }
+          ]
+        },
+        "apply-returned-tag-aliases": {
+          "label": "apply returned tag aliases",
+          "status": "v1-target",
+          "control_id": "dataSharingReviewApplyTagAliases",
+          "control_selector": "#dataSharingReviewApplyTagAliases",
+          "control_label": "Apply tag alias changes",
+          "endpoint": "/data-sharing/apply",
+          "record_family": "tag_aliases",
+          "record_id_field": "staged_filename",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers confirmed tag alias writes from returned package review. Preflight remains excluded.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "selected returned tag alias rows update alias data"
+            }
+          ]
+        },
+        "apply-returned-tag-assignments": {
+          "label": "apply returned tag assignments",
+          "status": "v1-target",
+          "control_id": "dataSharingReviewApplyTagAssignments",
+          "control_selector": "#dataSharingReviewApplyTagAssignments",
+          "control_label": "Apply tag assignment changes",
+          "endpoint": "/data-sharing/apply",
+          "record_family": "tag_assignments",
+          "record_id_field": "staged_filename",
+          "no_change_activity": "skip",
+          "report_forced_rewrites": true,
+          "notes": "Covers confirmed tag assignment writes from returned package review. Preflight remains excluded.",
+          "script_purposes": [
+            {
+              "id": "save-tag-data",
+              "optional": false,
+              "when": "selected returned tag assignment rows update assignment data"
+            }
+          ]
         }
       }
     },

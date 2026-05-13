@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T15:31:24Z",
+  "generated_at": "2026-05-13T15:44:57Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1964,7 +1964,7 @@
       "doc_id": "config-data-sharing-adapters",
       "title": "Data Sharing Adapters",
       "added_date": "2026-05-06 11:35",
-      "last_updated": "2026-05-13 13:20",
+      "last_updated": "2026-05-13 17:30",
       "parent_id": "config",
       "sort_order": 60,
       "published": true,
@@ -1973,7 +1973,7 @@
       "source_path": "config-data-sharing-adapters.md",
       "viewer_url": "/docs/?scope=studio&doc=config-data-sharing-adapters",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-data-sharing-adapters.json",
-      "content_text_length": 2700
+      "content_text_length": 2803
     },
     {
       "scope": "studio",
@@ -2659,7 +2659,7 @@
       "doc_id": "studio-data-sharing",
       "title": "Studio Data Sharing",
       "added_date": "2026-05-06",
-      "last_updated": "2026-05-13 16:13",
+      "last_updated": "2026-05-13 17:30",
       "parent_id": "studio",
       "sort_order": 98,
       "published": true,
@@ -2668,7 +2668,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 3222
+      "content_text_length": 3915
     },
     {
       "scope": "studio",
@@ -3601,7 +3601,7 @@
       "doc_id": "site-request-studio-import-export-module",
       "title": "Studio Data Sharing Module Implementation Request",
       "added_date": "2026-05-13",
-      "last_updated": "2026-05-13 16:27",
+      "last_updated": "2026-05-13 17:30",
       "parent_id": "change-requests",
       "sort_order": 212,
       "published": true,
@@ -3610,7 +3610,7 @@
       "source_path": "site-request-studio-import-export-module.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-import-export-module",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-import-export-module.json",
-      "content_text_length": 19253,
+      "content_text_length": 19254,
       "ui_status": "in-progress"
     },
     {

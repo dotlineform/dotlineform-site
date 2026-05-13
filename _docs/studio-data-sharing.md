@@ -2,7 +2,7 @@
 doc_id: studio-data-sharing
 title: Studio Data Sharing
 added_date: 2026-05-06
-last_updated: "2026-05-13 16:13"
+last_updated: "2026-05-13 17:30"
 parent_id: studio
 sort_order: 98
 ---
@@ -15,12 +15,13 @@ Routes:
 - `/studio/data-sharing/review/`
 
 Studio Data Sharing is the shared shell for preparing outbound share packages and reviewing returned packages from supported Studio data domains.
-It defaults to the Library data domain and can expose Tags as a named workflow scope when the planned Analytics tags adapter is present in `assets/studio/data/data_sharing_adapters.json`.
+It defaults to the Library data domain and exposes Tags as a named workflow scope for returned-package listing, review, and confirmed apply.
 
 ## Current Scope
 
-Library is the only implemented data domain in this slice.
-Tags are visible as a planned/stub data domain for the adapter contract, but tag package preparation, review, and apply behavior remain unavailable until later slices.
+Library is the implemented documents data domain.
+Tags are implemented for returned-package listing, review, and confirmed apply through the Analytics tags adapter.
+Tags package preparation remains planned for a later slice.
 
 The prepare page:
 
@@ -37,6 +38,10 @@ The review page:
 - generates Markdown review artifacts for the selected package
 - displays parsed records, warnings, and review rows
 - can apply selected summary or hierarchy changes after confirmation
+- lists returned Tags `.json` and `.jsonl` package files from the configured staging root
+- validates tag registry, tag aliases, and tag assignments returned packages without writing
+- reports tag assignment applicable rows, conflicts, missing series, and invalid work rows
+- can apply selected tag registry, alias, or applicable assignment rows after confirmation
 
 The local service gateway uses neutral Data Sharing endpoints:
 
@@ -57,8 +62,10 @@ The page shells load:
 - `scripts/studio/data_sharing_routes.py`
 - `scripts/studio/data_sharing_service.py`
 - `scripts/docs/documents_data_sharing_adapter.py`
+- `scripts/analytics/tags_data_sharing_adapter.py`
 
 The documents adapter wrapper owns the implemented Library config set, source index, document tree selection, field mapping, returned-package review, summary apply, and hierarchy apply behavior.
+The Analytics tags adapter owns tag registry, alias, and assignment returned-package review and apply behavior, using existing Analytics tag planners and backup/write helpers.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
 Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.
 The docs-management server hosts the loopback HTTP process and supplies backup, log, and rebuild dependencies, but Data Sharing route ownership and shared adapter dispatch live under `scripts/studio/`.
@@ -71,6 +78,7 @@ Successful write runs attach Studio Activity context with:
 - prepare action id: `prepare-share-package`
 - review page id: `data-sharing-review`
 - review action ids: `apply-returned-summaries` and `apply-returned-hierarchy`
+- tags review action ids: `apply-returned-tag-registry`, `apply-returned-tag-aliases`, and `apply-returned-tag-assignments`
 
 Selection changes, filter changes, review-only previews, and unavailable-service states are not written to Studio Activity.
 
@@ -82,3 +90,4 @@ The retained smoke entry points are:
 - `tests/smoke/data_sharing_review.py`
 - `tests/python/test_data_sharing_service.py`
 - `tests/python/test_docs_import_service.py`
+- `tests/python/test_tags_data_sharing_adapter.py`

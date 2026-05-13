@@ -248,7 +248,7 @@
       "id": "analytics-tags",
       "module": "analytics.tags",
       "label": "Tags",
-      "status": "stub",
+      "status": "active",
       "portability": {
         "package": "analytics-tags-data-sharing"
       },
@@ -256,7 +256,7 @@
         "tags": {
           "label": "Tags",
           "scope": "tags",
-          "status": "stub",
+          "status": "active",
           "selection_model": "records",
           "paths": {
             "outbound_package_root": "var/studio/data-sharing/tags/exports",
@@ -274,8 +274,8 @@
             "tag_registry": "assets/studio/data/tag_registry.json",
             "tag_aliases": "assets/studio/data/tag_aliases.json",
             "tag_assignments": "assets/studio/data/tag_assignments.json",
-            "series": "assets/studio/data/catalogue/series.json",
-            "works": "assets/studio/data/catalogue/works.json"
+            "series": "assets/data/series_index.json",
+            "works": "assets/data/works_index.json"
           },
           "config": {}
         }
@@ -298,8 +298,7 @@
         },
         {
           "operation": "list_returned",
-          "status": "planned",
-          "message": "Tags returned package staging is not implemented yet.",
+          "status": "active",
           "selection_model": "none",
           "input_formats": ["json", "jsonl"],
           "output_formats": [],
@@ -313,8 +312,7 @@
         },
         {
           "operation": "review",
-          "status": "planned",
-          "message": "Tags returned package review is not implemented yet.",
+          "status": "active",
           "selection_model": "file_only",
           "input_formats": ["json", "jsonl"],
           "output_formats": ["json"],
@@ -332,8 +330,7 @@
         },
         {
           "operation": "apply",
-          "status": "planned",
-          "message": "Tags apply is not implemented yet.",
+          "status": "active",
           "selection_model": "records",
           "input_formats": ["json", "jsonl"],
           "output_formats": [],
@@ -347,39 +344,175 @@
             {
               "id": "registry_apply",
               "label": "Apply tag registry changes",
-              "status": "planned",
+              "status": "active",
+              "ui": {
+                "control_id": "dataSharingReviewApplyTagRegistry",
+                "control_selector": "#dataSharingReviewApplyTagRegistry",
+                "activity_action_id": "apply-returned-tag-registry",
+                "selection_required_message": "Select at least one tag registry row.",
+                "preflight_status": "Checking selected tag registry changes...",
+                "running_status": "Updating tag registry...",
+                "success_status": "Tag registry updated.",
+                "failed_status": "Tag registry update failed.",
+                "cancelled_status": "Tag registry update cancelled.",
+                "no_change_count_key": "changed"
+              },
               "confirmation": {
                 "title": "Apply tag registry changes?",
-                "body": "This will back up and update the Studio tag registry."
+                "body": "This will back up and update the Studio tag registry.",
+                "primary_label": "OK",
+                "cancel_label": "Cancel"
+              },
+              "result": {
+                "title": "Tag registry update complete",
+                "count_text": "{added} added; {overwritten} overwritten; {removed} removed; {unchanged} unchanged; {skipped} skipped; {errors} errors.",
+                "count_rows": [
+                  {
+                    "key": "added",
+                    "label": "added"
+                  },
+                  {
+                    "key": "overwritten",
+                    "label": "overwritten"
+                  },
+                  {
+                    "key": "removed",
+                    "label": "removed"
+                  },
+                  {
+                    "key": "unchanged",
+                    "label": "unchanged"
+                  },
+                  {
+                    "key": "skipped",
+                    "label": "skipped"
+                  },
+                  {
+                    "key": "errors",
+                    "label": "errors"
+                  }
+                ]
               },
               "activity": {
-                "script_purpose": "data-sharing-apply",
+                "script_purpose": "save-tag-data",
                 "record_groups": ["tags", "files"]
               }
             },
             {
               "id": "aliases_apply",
               "label": "Apply tag alias changes",
-              "status": "planned",
+              "status": "active",
+              "ui": {
+                "control_id": "dataSharingReviewApplyTagAliases",
+                "control_selector": "#dataSharingReviewApplyTagAliases",
+                "activity_action_id": "apply-returned-tag-aliases",
+                "selection_required_message": "Select at least one tag alias row.",
+                "preflight_status": "Checking selected tag alias changes...",
+                "running_status": "Updating tag aliases...",
+                "success_status": "Tag aliases updated.",
+                "failed_status": "Tag aliases update failed.",
+                "cancelled_status": "Tag aliases update cancelled.",
+                "no_change_count_key": "changed"
+              },
               "confirmation": {
                 "title": "Apply tag alias changes?",
-                "body": "This will back up and update Studio tag aliases."
+                "body": "This will back up and update Studio tag aliases.",
+                "primary_label": "OK",
+                "cancel_label": "Cancel"
+              },
+              "result": {
+                "title": "Tag alias update complete",
+                "count_text": "{added} added; {overwritten} overwritten; {removed} removed; {unchanged} unchanged; {skipped} skipped; {errors} errors.",
+                "count_rows": [
+                  {
+                    "key": "added",
+                    "label": "added"
+                  },
+                  {
+                    "key": "overwritten",
+                    "label": "overwritten"
+                  },
+                  {
+                    "key": "removed",
+                    "label": "removed"
+                  },
+                  {
+                    "key": "unchanged",
+                    "label": "unchanged"
+                  },
+                  {
+                    "key": "skipped",
+                    "label": "skipped"
+                  },
+                  {
+                    "key": "errors",
+                    "label": "errors"
+                  }
+                ]
               },
               "activity": {
-                "script_purpose": "data-sharing-apply",
+                "script_purpose": "save-tag-data",
                 "record_groups": ["aliases", "tags", "files"]
               }
             },
             {
               "id": "assignments_apply",
               "label": "Apply tag assignment changes",
-              "status": "planned",
+              "status": "active",
+              "ui": {
+                "control_id": "dataSharingReviewApplyTagAssignments",
+                "control_selector": "#dataSharingReviewApplyTagAssignments",
+                "activity_action_id": "apply-returned-tag-assignments",
+                "selection_required_message": "Select at least one applicable tag assignment row.",
+                "preflight_status": "Checking selected tag assignment changes...",
+                "running_status": "Updating tag assignments...",
+                "success_status": "Tag assignments updated.",
+                "failed_status": "Tag assignments update failed.",
+                "cancelled_status": "Tag assignments update cancelled.",
+                "no_change_count_key": "changed"
+              },
               "confirmation": {
                 "title": "Apply tag assignment changes?",
-                "body": "This will back up and update Studio tag assignments."
+                "body": "This will back up and update Studio tag assignments.",
+                "primary_label": "OK",
+                "cancel_label": "Cancel"
+              },
+              "result": {
+                "title": "Tag assignment update complete",
+                "count_text": "{applied_series} applied; {skipped_series} skipped; {overwritten_series} overwritten; {conflict_count} conflicts; {invalid_count} invalid; {missing_count} missing; {errors} errors.",
+                "count_rows": [
+                  {
+                    "key": "applied_series",
+                    "label": "applied"
+                  },
+                  {
+                    "key": "skipped_series",
+                    "label": "skipped"
+                  },
+                  {
+                    "key": "overwritten_series",
+                    "label": "overwritten"
+                  },
+                  {
+                    "key": "conflict_count",
+                    "label": "conflicts"
+                  },
+                  {
+                    "key": "invalid_count",
+                    "label": "invalid"
+                  },
+                  {
+                    "key": "missing_count",
+                    "label": "missing"
+                  },
+                  {
+                    "key": "errors",
+                    "label": "errors"
+                  }
+                ]
               },
               "activity": {
-                "script_purpose": "data-sharing-apply",
+                "script_purpose": "save-tag-data",
                 "record_groups": ["series", "works", "tags", "files"]
               }
             }

@@ -66,6 +66,7 @@ from studio import data_sharing_routes, data_sharing_service  # noqa: E402
 import docs_activity  # noqa: E402
 import docs_generated_reads  # noqa: E402
 import documents_data_sharing_adapter  # noqa: E402
+from analytics import tags_data_sharing_adapter  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
@@ -375,8 +376,15 @@ def documents_data_sharing_dependencies() -> documents_data_sharing_adapter.Docu
     )
 
 
+def tags_data_sharing_dependencies() -> tags_data_sharing_adapter.TagsDataSharingDependencies:
+    return tags_data_sharing_adapter.TagsDataSharingDependencies(
+        log_event=log_event,
+    )
+
+
 DATA_SHARING_HANDLERS = {
-    "documents": documents_data_sharing_adapter.handlers_for(documents_data_sharing_dependencies)
+    "documents": documents_data_sharing_adapter.handlers_for(documents_data_sharing_dependencies),
+    "analytics.tags": tags_data_sharing_adapter.handlers_for(tags_data_sharing_dependencies),
 }
 
 
