@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T19:20:30Z",
+  "generated_at": "2026-05-13T19:32:01Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -523,23 +523,6 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json",
       "content_text_length": 7886
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-docs-build-incremental",
-      "title": "Docs Build Incremental Request",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-05-02",
-      "parent_id": "change-requests",
-      "sort_order": 20,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "site-request-docs-build-incremental.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-build-incremental.json",
-      "content_text_length": 13337,
-      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -3777,6 +3760,23 @@
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
       "content_text_length": 152862
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-build-incremental",
+      "title": "Docs Build Incremental Request",
+      "added_date": "2026-04-22",
+      "last_updated": "2026-05-13 20:31",
+      "parent_id": "archive",
+      "sort_order": 280,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-build-incremental.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-build-incremental.json",
+      "content_text_length": 13337,
+      "ui_status": "done"
     },
     {
       "scope": "studio",

@@ -2,10 +2,11 @@
 doc_id: site-request-docs-build-incremental
 title: Docs Build Incremental Request
 added_date: 2026-04-22
-last_updated: 2026-05-02
+last_updated: "2026-05-13 20:31"
 ui_status: done
-parent_id: change-requests
-sort_order: 20
+parent_id: archive
+sort_order: 280
+hidden: false
 ---
 # Docs Build Incremental Request
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f8a78d34a4f168d85c074ddd0653577b",
-    "generated_at_utc": "2026-05-13T19:20:30Z",
+    "version": "blake2b-877e4e6be6858aecc14151dbc29fef92",
+    "generated_at_utc": "2026-05-13T19:32:01Z",
     "count": 232
   },
   "entries": [
@@ -851,33 +851,6 @@
         "50"
       ],
       "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-12 10:50 2026 05 12 10 50"
-    },
-    {
-      "id": "site-request-docs-build-incremental",
-      "kind": "doc",
-      "title": "Docs Build Incremental Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
-      "last_updated": "2026-05-02",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
-      "search_terms": [
-        "site-request-docs-build-incremental",
-        "site",
-        "request",
-        "docs",
-        "build",
-        "incremental",
-        "docs build incremental request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-02",
-        "2026",
-        "05",
-        "02"
-      ],
-      "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "user-guide-docs-html-import",
@@ -6025,6 +5998,33 @@
         "13"
       ],
       "search_text": "site-change-log site change log site change log 2026-05-13 2026 05 13"
+    },
+    {
+      "id": "site-request-docs-build-incremental",
+      "kind": "doc",
+      "title": "Docs Build Incremental Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
+      "last_updated": "2026-05-13 20:31",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-13 20:31 • Archive",
+      "search_terms": [
+        "site-request-docs-build-incremental",
+        "site",
+        "request",
+        "docs",
+        "build",
+        "incremental",
+        "docs build incremental request",
+        "archive",
+        "2026-05-13 20:31",
+        "2026",
+        "05",
+        "13",
+        "20",
+        "31"
+      ],
+      "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request archive 2026-05-13 20:31 2026 05 13 20 31"
     },
     {
       "id": "archive",
