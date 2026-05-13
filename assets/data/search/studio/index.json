@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b7caff9bfc6e7e337713097d29dcd71c",
-    "generated_at_utc": "2026-05-13T15:15:07Z",
+    "version": "blake2b-bd8a1cb0226d200ddce685b0adce1a3b",
+    "generated_at_utc": "2026-05-13T15:31:24Z",
     "count": 230
   },
   "entries": [
@@ -5737,10 +5737,10 @@
       "kind": "doc",
       "title": "Studio Data Sharing Module Implementation Request",
       "href": "/docs/?scope=studio&doc=site-request-studio-import-export-module",
-      "last_updated": "2026-05-13 16:13",
+      "last_updated": "2026-05-13 16:27",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-13 16:13 • Change Requests",
+      "display_meta": "2026-05-13 16:27 • Change Requests",
       "search_terms": [
         "site-request-studio-import-export-module",
         "site",
@@ -5756,13 +5756,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-13 16:13",
+        "2026-05-13 16:27",
         "2026",
         "05",
         "13",
-        "16"
+        "16",
+        "27"
       ],
-      "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation change requests change requests 2026-05-13 16:13 2026 05 13 16"
+      "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation change requests change requests 2026-05-13 16:27 2026 05 13 16 27"
     },
     {
       "id": "change-requests",
