@@ -1,12 +1,12 @@
 ---
 doc_id: scripts-docs-export
-title: Docs Export
+title: Documents Package Preparation Script
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-13 16:13"
-parent_id: scripts
+last_updated: "2026-05-13 18:45"
+parent_id: docs-viewer
 sort_order: 10
 ---
-# Docs Export
+# Documents Package Preparation Script
 
 Script:
 
@@ -16,9 +16,9 @@ Script:
 
 ## Scope
 
-`docs_export.py` is the read-only package-preparation engine for Docs Viewer sharing profiles.
+`docs_export.py` is the read-only package-preparation engine used by the documents Data Sharing adapter.
 
-It reads generated Docs Viewer artifacts and source-controlled export configs, then writes an ephemeral export file under `var/studio/data-sharing/<scope>/exports/`.
+It reads generated Docs Viewer artifacts and source-controlled Library sharing profiles, then writes an ephemeral share package under `var/studio/data-sharing/<scope>/exports/`.
 It does not mutate source Markdown, generated docs payloads, or config files.
 
 Current input paths:
@@ -33,48 +33,48 @@ Current output pattern:
 - `var/studio/data-sharing/<scope>/exports/<export_id>-<timestamp>.jsonl`
 
 The filename timestamp is formatted in the local runtime timezone.
-Export metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance.
+Package metadata `generated_at` remains UTC (`YYYY-MM-DDTHH:MM:SSZ`) for stable provenance.
 
 ## Runtime Contract
 
-The script is the documents-adapter package engine for both CLI runs and the Studio Data Sharing service endpoint.
-It is intentionally source-read-only: the only write it performs is the generated export artifact when `--write` is passed or when the local service calls it in write mode.
+The script is the documents-adapter package engine for both CLI runs and the Studio Data Sharing `prepare` endpoint.
+It is intentionally source-read-only: the only write it performs is the generated package artifact when `--write` is passed or when the local service calls it in write mode.
 
 Inputs:
 
-- a config id from `assets/studio/data/library_export_configs.json`
+- a sharing profile id from `assets/studio/data/library_export_configs.json`
 - a Docs Viewer scope, currently Library in v1
 - explicit document ids or `--all`
-- an optional `--format json|jsonl` override when the selected config declares that format in `target.supported_formats`
-- an optional missing-summary override for configs that support it
+- an optional `--format json|jsonl` override when the selected profile declares that format in `target.supported_formats`
+- an optional missing-summary override for profiles that support it
 
 Outputs:
 
 - a structured JSON report on stdout
 - no file in dry-run mode
-- one JSON or JSONL export file in write mode
+- one JSON or JSONL share package in write mode
 
 Share packages are local working files.
-They are ignored by git, may be deleted, and should be reproduced from generated Docs Viewer data plus the selected config and document selection.
+They are ignored by git, may be deleted, and should be reproduced from generated Docs Viewer data plus the selected profile and document selection.
 
 ## Current Capability
 
 Implemented now:
 
-- loads a selected export config by `id`
-- validates that the config is enabled for the requested scope
+- loads a selected sharing profile by `id`
+- validates that the profile is enabled for the requested scope
 - loads generated Docs Viewer index data for the requested scope
 - resolves selected `doc_id` values
-- supports all-matching configs
-- expands selected descendants when the config requests it
-- excludes archived docs when the config requests it
-- excludes unpublished docs when the config requests it
-- includes generated but non-viewable docs when the config requests it
-- supports missing-summary filtering for configs that allow it
+- supports all-matching profiles
+- expands selected descendants when the profile requests it
+- excludes archived docs when the profile requests it
+- excludes unpublished docs when the profile requests it
+- includes generated but non-viewable docs when the profile requests it
+- supports missing-summary filtering for profiles that allow it
 - maps supported document fields into configured output paths
 - computes parent, ancestor, and child relationship fields from the generated index
 - extracts heading lists from rendered per-doc payload HTML
-- extracts deterministic plain-text `source_text` from rendered per-doc payload HTML when a content export config requests it
+- extracts deterministic plain-text `source_text` from rendered per-doc payload HTML when a content package profile requests it
 - preserves paragraphs, headings, list items, and quoted text in `source_text`
 - omits code blocks when the selected field mapping includes `omit_code_blocks`
 - truncates `source_text` when the selected field mapping includes `truncate_chars`
@@ -84,7 +84,7 @@ Implemented now:
 - writes JSON arrays for document-row configs when `json` is selected
 - returns a structured JSON report
 
-The `library-full-document-content` config explicitly includes `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` alongside `source_text`.
+The `library-full-document-content` sharing profile explicitly includes `parent_id`, `parent_title`, `ancestor_ids`, `ancestor_titles`, `child_ids`, and `child_titles` alongside `source_text`.
 Relationship data is therefore controlled by config, not by a separate CLI or Studio UI option.
 
 Not implemented yet:
@@ -120,7 +120,7 @@ Use all matching docs for whole-corpus relationship review:
 ./scripts/docs/docs_export.py --scope library --config-id library-parent-child-relationships --all
 ```
 
-Export explicit documents for configs that require selected ids:
+Prepare explicit documents for profiles that require selected ids:
 
 ```bash
 ./scripts/docs/docs_export.py --scope library --config-id library-document-summaries --doc-id library
@@ -146,13 +146,13 @@ Write a document-row export as JSON instead of its JSONL default when the config
 
 ## Verification
 
-Focused export checks live in:
+Focused package-preparation checks live in:
 
 ```bash
 tests/python/test_docs_export.py
 ```
 
-They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output for a fixed run time, JSON format overrides for document-row exports, unsupported format overrides, and representative dry-runs for the three v1 Library export configs.
+They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output for a fixed run time, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the three v1 Library sharing profiles.
 The same check runs in the `docs` profile:
 
 ```bash
@@ -190,16 +190,16 @@ The script prints a JSON report with:
 
 The command exits with:
 
-- `0` when the export is valid
+- `0` when the package is valid
 - `1` for command/runtime failures
-- `2` when the export config and selection load but validation errors prevent output
+- `2` when the sharing profile and selection load but validation errors prevent output
 
 ## Validation Boundary
 
 The engine validates runtime concerns that the static config schema cannot know:
 
 - selected config id exists
-- config is enabled for the requested scope
+- sharing profile is enabled for the requested scope
 - selected docs exist
 - archive and publication filters are applied
 - required mapped fields are present
@@ -212,11 +212,11 @@ Warnings report non-blocking context:
 
 - expected skipped-doc filters
 - ignored `doc_ids` when `select_all` is true
-- ignored `missing_summary_only` on unsupported configs
+- ignored `missing_summary_only` on unsupported profiles
 - truncation
 - deferred `max_total_chars` enforcement
 
-The static config schema remains documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
+The static sharing profile schema remains documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
 
-The Studio page runs the same export engine through the Data Sharing endpoint `POST /data-sharing/prepare`.
+The Studio page runs the same documents package engine through the Data Sharing endpoint `POST /data-sharing/prepare`.
 The local service first resolves `data_domain` and `operation` through `assets/studio/data/data_sharing_adapters.json`, then dispatches to the documents adapter, writes under the adapter-declared export root, and returns the same report shape used by the CLI.

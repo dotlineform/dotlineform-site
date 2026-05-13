@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-003fcf9c88698c0f2008c138aa08cd74",
-    "generated_at_utc": "2026-05-13T16:11:08Z",
-    "count": 231
+    "version": "blake2b-0b1364df1270924a7eb5b8675f1d40a8",
+    "generated_at_utc": "2026-05-13T16:28:10Z",
+    "count": 232
   },
   "entries": [
     {
@@ -232,29 +232,6 @@
       "search_text": "data-models data models data models architecture 2026-05-06 21:10 2026 05 06 21 10"
     },
     {
-      "id": "scripts-docs-export",
-      "kind": "doc",
-      "title": "Docs Export",
-      "href": "/docs/?scope=studio&doc=scripts-docs-export",
-      "last_updated": "2026-05-13 16:13",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-13 16:13 • Scripts",
-      "search_terms": [
-        "scripts-docs-export",
-        "scripts",
-        "docs",
-        "export",
-        "docs export",
-        "2026-05-13 16:13",
-        "2026",
-        "05",
-        "13",
-        "16"
-      ],
-      "search_text": "scripts-docs-export scripts docs export docs export 2026-05-13 16:13 2026 05 13 16"
-    },
-    {
       "id": "user-guide-docs-images",
       "kind": "doc",
       "title": "Docs Images And Assets",
@@ -314,6 +291,36 @@
         "45"
       ],
       "search_text": "site-request-js-config-structural-review-docs-viewer-inventory site request js config structural review docs viewer inventory docs viewer function inventory function docs viewer boundary spec slice boundary spec slice 2026-05-10 14:45 2026 05 10 14 45"
+    },
+    {
+      "id": "scripts-docs-export",
+      "kind": "doc",
+      "title": "Documents Package Preparation Script",
+      "href": "/docs/?scope=studio&doc=scripts-docs-export",
+      "last_updated": "2026-05-13 18:45",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-13 18:45 • Docs Viewer",
+      "search_terms": [
+        "scripts-docs-export",
+        "scripts",
+        "docs",
+        "export",
+        "documents package preparation script",
+        "documents",
+        "package",
+        "preparation",
+        "script",
+        "docs viewer",
+        "viewer",
+        "2026-05-13 18:45",
+        "2026",
+        "05",
+        "13",
+        "18",
+        "45"
+      ],
+      "search_text": "scripts-docs-export scripts docs export documents package preparation script documents package preparation script docs viewer viewer 2026-05-13 18:45 2026 05 13 18 45"
     },
     {
       "id": "site-request-field-aware-build-scoping-inventory",
@@ -581,6 +588,30 @@
         "19"
       ],
       "search_text": "site-docs site docs site docs 2026-05-09 12:19 2026 05 09 12 19"
+    },
+    {
+      "id": "studio-data-sharing",
+      "kind": "doc",
+      "title": "Studio Data Sharing",
+      "href": "/docs/?scope=studio&doc=studio-data-sharing",
+      "last_updated": "2026-05-13 17:17",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-13 17:17 • Data Sharing",
+      "search_terms": [
+        "studio-data-sharing",
+        "studio",
+        "data",
+        "sharing",
+        "studio data sharing",
+        "data sharing",
+        "2026-05-13 17:17",
+        "2026",
+        "05",
+        "13",
+        "17"
+      ],
+      "search_text": "studio-data-sharing studio data sharing studio data sharing data sharing 2026-05-13 17:17 2026 05 13 17"
     },
     {
       "id": "site-request-js-config-structural-review-module-versioning",
@@ -955,29 +986,6 @@
       "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request change requests change requests 2026-05-02 2026 05 02"
     },
     {
-      "id": "scripts-docs-import",
-      "kind": "doc",
-      "title": "Docs Import",
-      "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-05-13 16:13",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-05-13 16:13 • Scripts",
-      "search_terms": [
-        "scripts-docs-import",
-        "scripts",
-        "docs",
-        "import",
-        "docs import",
-        "2026-05-13 16:13",
-        "2026",
-        "05",
-        "13",
-        "16"
-      ],
-      "search_text": "scripts-docs-import scripts docs import docs import 2026-05-13 16:13 2026 05 13 16"
-    },
-    {
       "id": "user-guide-docs-html-import",
       "kind": "doc",
       "title": "Docs Import",
@@ -1105,6 +1113,36 @@
         "18"
       ],
       "search_text": "site-request-js-config-structural-review-docs-viewer-extraction-plan site request js config structural review docs viewer extraction plan docs viewer extraction plan docs viewer boundary spec slice boundary spec slice 2026-05-10 15:18 2026 05 10 15 18"
+    },
+    {
+      "id": "scripts-docs-import",
+      "kind": "doc",
+      "title": "Documents Returned Package Script",
+      "href": "/docs/?scope=studio&doc=scripts-docs-import",
+      "last_updated": "2026-05-13 18:45",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-13 18:45 • Docs Viewer",
+      "search_terms": [
+        "scripts-docs-import",
+        "scripts",
+        "docs",
+        "import",
+        "documents returned package script",
+        "documents",
+        "returned",
+        "package",
+        "script",
+        "docs viewer",
+        "viewer",
+        "2026-05-13 18:45",
+        "2026",
+        "05",
+        "13",
+        "18",
+        "45"
+      ],
+      "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-05-13 18:45 2026 05 13 18 45"
     },
     {
       "id": "ui-primitive-input",
@@ -1339,6 +1377,32 @@
         "13"
       ],
       "search_text": "studio 2026-05-13 2026 05 13"
+    },
+    {
+      "id": "studio-data-sharing-technical-spec",
+      "kind": "doc",
+      "title": "Studio Data Sharing Technical Spec",
+      "href": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
+      "last_updated": "2026-05-13 17:17",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-13 17:17 • Data Sharing",
+      "search_terms": [
+        "studio-data-sharing-technical-spec",
+        "studio",
+        "data",
+        "sharing",
+        "technical",
+        "spec",
+        "studio data sharing technical spec",
+        "data sharing",
+        "2026-05-13 17:17",
+        "2026",
+        "05",
+        "13",
+        "17"
+      ],
+      "search_text": "studio-data-sharing-technical-spec studio data sharing technical spec studio data sharing technical spec data sharing 2026-05-13 17:17 2026 05 13 17"
     },
     {
       "id": "studio-runtime",
@@ -4213,54 +4277,25 @@
       "search_text": "site-request-work-owned-files-links site request work owned files links work-owned files and links request and change requests change requests 2026-05-02 2026 05 02"
     },
     {
-      "id": "studio-data-sharing",
+      "id": "data-sharing",
       "kind": "doc",
-      "title": "Studio Data Sharing",
-      "href": "/docs/?scope=studio&doc=studio-data-sharing",
-      "last_updated": "2026-05-13 17:30",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-13 17:30 • Studio",
+      "title": "Data Sharing",
+      "href": "/docs/?scope=studio&doc=data-sharing",
+      "last_updated": "2026-05-13 17:16",
+      "display_meta": "2026-05-13 17:16",
       "search_terms": [
-        "studio-data-sharing",
-        "studio",
+        "data-sharing",
         "data",
         "sharing",
-        "studio data sharing",
-        "2026-05-13 17:30",
+        "data sharing",
+        "2026-05-13 17:16",
         "2026",
         "05",
         "13",
         "17",
-        "30"
+        "16"
       ],
-      "search_text": "studio-data-sharing studio data sharing studio data sharing 2026-05-13 17:30 2026 05 13 17 30"
-    },
-    {
-      "id": "studio-data-sharing-technical-spec",
-      "kind": "doc",
-      "title": "Studio Data Sharing Technical Spec",
-      "href": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
-      "last_updated": "2026-05-13 18:15",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-13 18:15 • Studio",
-      "search_terms": [
-        "studio-data-sharing-technical-spec",
-        "studio",
-        "data",
-        "sharing",
-        "technical",
-        "spec",
-        "studio data sharing technical spec",
-        "2026-05-13 18:15",
-        "2026",
-        "05",
-        "13",
-        "18",
-        "15"
-      ],
-      "search_text": "studio-data-sharing-technical-spec studio data sharing technical spec studio data sharing technical spec 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "data-sharing data sharing data sharing 2026-05-13 17:16 2026 05 13 17 16"
     },
     {
       "id": "site-request-field-aware-build-scoping",
@@ -4557,33 +4592,6 @@
         "50"
       ],
       "search_text": "search-incremental-orchestration-plan search incremental orchestration plan incremental search orchestration plan 2026-05-11 12:50 2026 05 11 12 50"
-    },
-    {
-      "id": "scripts-publish-media-to-r2",
-      "kind": "doc",
-      "title": "Publish Media To R2",
-      "href": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
-      "last_updated": "2026-05-09 22:35",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-09 22:35 • Studio",
-      "search_terms": [
-        "scripts-publish-media-to-r2",
-        "scripts",
-        "publish",
-        "media",
-        "to",
-        "r2",
-        "publish media to r2",
-        "studio",
-        "2026-05-09 22:35",
-        "2026",
-        "05",
-        "09",
-        "22",
-        "35"
-      ],
-      "search_text": "scripts-publish-media-to-r2 scripts publish media to r2 publish media to r2 studio 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "ui-pattern-reopenable-command-result",
@@ -5332,6 +5340,33 @@
         "12"
       ],
       "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec archive 2026-05-06 18:12 2026 05 06 18 12"
+    },
+    {
+      "id": "scripts-publish-media-to-r2",
+      "kind": "doc",
+      "title": "Publish Media To R2",
+      "href": "/docs/?scope=studio&doc=scripts-publish-media-to-r2",
+      "last_updated": "2026-05-13 17:18",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-13 17:18 • Catalogue",
+      "search_terms": [
+        "scripts-publish-media-to-r2",
+        "scripts",
+        "publish",
+        "media",
+        "to",
+        "r2",
+        "publish media to r2",
+        "catalogue",
+        "2026-05-13 17:18",
+        "2026",
+        "05",
+        "13",
+        "17",
+        "18"
+      ],
+      "search_text": "scripts-publish-media-to-r2 scripts publish media to r2 publish media to r2 catalogue 2026-05-13 17:18 2026 05 13 17 18"
     },
     {
       "id": "catalogue-moment-editor",

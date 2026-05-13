@@ -1,0 +1,15 @@
+{
+  "scope": "studio",
+  "doc_id": "data-sharing",
+  "title": "Data Sharing",
+  "added_date": "2026-05-13 17:16",
+  "last_updated": "2026-05-13 17:16",
+  "parent_id": "",
+  "sort_order": 99,
+  "published": true,
+  "hidden": false,
+  "viewable": true,
+  "source_path": "data-sharing.md",
+  "viewer_url": "/docs/?scope=studio&doc=data-sharing",
+  "content_html": "<h1 id=\"data-sharing\">Data Sharing</h1>\n"
+}

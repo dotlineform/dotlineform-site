@@ -66,3 +66,5 @@ Those boundaries are intentional:
 - [Docs Viewer Favourites Spec](/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec) captures the current shared bookmark/favourites request for `/docs/` and `/library/`.
 - [Docs Viewer Favourites Task](/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task) breaks that request into implementation work.
 - [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management) records the management-mode contract for local create/archive/delete, structure edits, and draft viewability operations.
+- [Documents Package Preparation Script](/docs/?scope=studio&doc=scripts-docs-export) documents the `docs_export.py` engine used by the documents Data Sharing adapter.
+- [Documents Returned Package Script](/docs/?scope=studio&doc=scripts-docs-import) documents the `docs_import.py` parser and Markdown review renderer used by the documents Data Sharing adapter.

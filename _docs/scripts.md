@@ -127,10 +127,10 @@ Catalogue/runtime maintenance:
   Audit Studio or Library docs links for missing targets.
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
   Run the local Docs Viewer create/archive/delete service with explicit write allowlists.
-- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
-  Export generated Docs Viewer data through configured export patterns.
-- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
-  Parse staged Library import data without writing source or preview files.
+- [Documents Package Preparation Script](/docs/?scope=studio&doc=scripts-docs-export)
+  Prepare generated Docs Viewer data through configured documents Data Sharing profiles.
+- [Documents Returned Package Script](/docs/?scope=studio&doc=scripts-docs-import)
+  Parse staged Library returned packages and render Markdown review artifacts without writing source files.
 - [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
 - [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2)

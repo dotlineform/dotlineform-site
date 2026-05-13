@@ -1,12 +1,12 @@
 ---
 doc_id: scripts-docs-import
-title: Docs Import
+title: Documents Returned Package Script
 added_date: "2026-05-03 20:25"
-last_updated: "2026-05-13 16:13"
-parent_id: scripts
+last_updated: "2026-05-13 18:45"
+parent_id: docs-viewer
 sort_order: 20
 ---
-# Docs Import
+# Documents Returned Package Script
 
 Script:
 
@@ -16,12 +16,12 @@ Script:
 
 ## Scope
 
-`docs_import.py` is the staged returned-package parser and Markdown review renderer for the Library documents Data Sharing workflow.
+`docs_import.py` is the staged returned-package parser and Markdown review renderer used by the documents Data Sharing adapter.
 
-It reads local JSON or JSONL files manually copied under the Library import staging root and returns a structured JSON report.
-It does not mutate source Markdown, generated docs payloads, exports, or config files.
-When `--write-previews` is passed, it writes Markdown previews under the Library import preview root.
-The same engine is used by the docs-management local service for Studio integration.
+It reads local JSON or JSONL files manually copied under the Library returned-package staging root and returns a structured JSON report.
+It does not mutate source Markdown, generated docs payloads, share packages, or config files.
+When `--write-previews` is passed, it writes Markdown review artifacts under the Library review output root.
+The same engine is used by the documents adapter when `/studio/data-sharing/review/` calls `POST /data-sharing/review`.
 
 Current input path:
 
@@ -36,7 +36,7 @@ Current lookup paths:
 Current outputs:
 
 - a structured JSON report on stdout
-- optional Markdown previews under `var/studio/data-sharing/library/import-preview/`
+- optional Markdown review artifacts under `var/studio/data-sharing/library/import-preview/`
 
 ## Current Capability
 
@@ -44,49 +44,42 @@ Implemented now:
 
 - enforces that parsed files stay under `var/studio/data-sharing/library/import-staging/`
 - reads `.json` and `.jsonl`
-- parses JSON envelope exports with a `documents` array
+- parses JSON package envelopes with a `documents` array
 - parses JSON arrays of document-like records
-- parses JSONL document-row exports
-- detects the three v1 Library export families when export metadata is present
+- parses JSONL document-row packages
+- detects the three v1 Library package families when package metadata is present
 - falls back to structural detection for relationship, summary, full-content, and minimal document records
 - normalizes `doc_id`, title, parent id, headings, relationship lists, and known metadata into a stable record shape
 - preserves unknown file-level metadata and unknown record-level metadata in the report
 - loads the current generated Library docs index and generated payload filenames
 - annotates each normalized record with current Library existence, publication, viewability, payload, and parent state
-- renders one Markdown-style preview per parsed document
-- renders one additional whole-tree Markdown preview file whenever staged relationship metadata is available
-- writes previews only under `var/studio/data-sharing/library/import-preview/`
-- supports timestamped document preview filenames based on `doc_id`, duplicate record index fallback, and missing-id fallback
-- uses the staged-file timestamp suffix for preview filenames when present, otherwise the current preview-generation time
-- supports deterministic relationship-tree preview filenames based on the staged filename plus timestamp suffix
+- renders one Markdown-style review artifact per parsed document
+- renders one additional whole-tree Markdown review artifact whenever staged relationship metadata is available
+- writes review artifacts only under `var/studio/data-sharing/library/import-preview/`
+- supports timestamped document review filenames based on `doc_id`, duplicate record index fallback, and missing-id fallback
+- uses the staged-file timestamp suffix for review filenames when present, otherwise the current review-generation time
+- supports deterministic relationship-tree review filenames based on the staged filename plus timestamp suffix
 - writes front-matter-like matched-config, staged-only, and preview-metadata sections for human review rather than source parsing
 - is callable through the documents Data Sharing adapter for returned-package listing and review generation
-- is exposed through the `/studio/data-sharing/review/` page for local preview generation
-- supports staged data workflow scopes `library`, `catalogue`, and `analytics`; Library remains the only scope with implemented source-write apply actions
+- is exposed through the `/studio/data-sharing/review/` page for local returned-package review
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
 - reports unknown current `doc_id`, unpublished current records, missing current payloads, missing parents, unpublished parents, and parent records with missing payloads
 
 ## Commands
 
-Parse a staged Library summary export:
+Parse a staged Library summary package:
 
 ```bash
 ./scripts/docs/docs_import.py --scope library --file library-document-summaries.jsonl
 ```
 
-Write Markdown previews for a staged Library summary export:
+Write Markdown review artifacts for a staged Library summary package:
 
 ```bash
 ./scripts/docs/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
 ```
 
-Write previews for a future Catalogue staged export shape:
-
-```bash
-./scripts/docs/docs_import.py --scope catalogue --file works.jsonl --write-previews
-```
-
-Parse a staged Library relationships export and omit normalized records from the printed report:
+Parse a staged Library relationships package and omit normalized records from the printed report:
 
 ```bash
 ./scripts/docs/docs_import.py --scope library --file library-parent-child-relationships.json --no-records
@@ -113,7 +106,7 @@ The script prints a JSON report with:
 - `preview_files`
 - `preview_written`
 
-The Data Sharing review endpoint returns this same report shape from `POST /data-sharing/review` after adapter dispatch.
+The Data Sharing review endpoint returns this same report shape from `POST /data-sharing/review` after documents-adapter dispatch.
 
 `counts` includes:
 
@@ -142,8 +135,8 @@ It blocks only concerns that prevent useful parsing:
 
 Record-level problems are warnings when the file can still be inspected.
 Current-Library lookup warnings do not block parsing.
-Preview writes are limited to `var/studio/data-sharing/library/import-preview/`.
-Apply-time freshness checks belong to later Library import tasks.
+Review writes are limited to `var/studio/data-sharing/library/import-preview/`.
+Apply-time freshness checks belong to the documents adapter apply actions.
 
 ## Verification
 
@@ -153,14 +146,14 @@ Focused parser checks live in:
 tests/python/test_docs_import.py
 ```
 
-They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary preview output, full-content preview output, relationship whole-tree preview output for relationship and non-relationship imports, staged-timestamp preview filenames, dry-run preview reporting, invalid JSONL blocking, and staged/preview path allowlisting.
+They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary review output, full-content review output, relationship whole-tree review output for relationship and non-relationship packages, staged-timestamp review filenames, dry-run review reporting, invalid JSONL blocking, and staging/review path allowlisting.
 Service handler checks live in:
 
 ```bash
 tests/python/test_docs_import_service.py
 ```
 
-They cover documents adapter staged-file listing, preview writing, dry-run preview reporting, non-Library domain rejection, the summary-apply contract for missing target docs, backup creation, skipped rows, and source write output, and the hierarchy-apply contract for missing target docs, backup creation, unknown parent warnings, partial selections, no-write dry runs, and preserved `sort_order`.
+They cover documents adapter returned-package listing, review writing, dry-run review reporting, non-Library domain rejection, the summary-apply contract for missing target docs, backup creation, skipped rows, and source write output, and the hierarchy-apply contract for missing target docs, backup creation, unknown parent warnings, partial selections, no-write dry runs, and preserved `sort_order`.
 The parser and service checks run in the `docs` profile:
 
 ```bash
