@@ -23,16 +23,13 @@
   data-management-base-url="{{ include.management_base_url | default: '' }}"
 >
   <div class="docsViewer__controls">
-    {%- if include.allow_scope_query -%}
-    <div class="docsViewer__scopeRow" id="docsViewerScopeRow">
-      <label class="docsViewer__scopeField" for="docsViewerScopeSelect">
-        <span class="docsViewer__scopeLabel">scope</span>
-        <select class="docsViewer__scopeSelect" id="docsViewerScopeSelect"></select>
-      </label>
-    </div>
-    {%- endif -%}
     {%- unless include.enable_search == false -%}
     <div class="docsViewer__searchRow">
+      {%- if include.allow_scope_query -%}
+      <label class="docsViewer__scopeField" for="docsViewerScopeSelect" aria-label="Docs scope">
+        <select class="docsViewer__scopeSelect" id="docsViewerScopeSelect"></select>
+      </label>
+      {%- endif -%}
       <button class="docsViewer__actionButton docsViewer__recentButton" type="button" id="docsViewerRecentButton" aria-pressed="false">recently added</button>
       <div class="docsViewer__search">
         <label class="visually-hidden" for="docsViewerSearchInput">{{ include.search_aria_label | default: 'Search docs' }}</label>
@@ -46,25 +43,75 @@
           aria-label="{{ include.search_aria_label | default: 'Search docs' }}"
         >
       </div>
+      {%- if include.allow_management -%}
+      <div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>
+        <div class="docsViewer__manageActions">
+          <div class="docsViewer__actionsMenuHost">
+            <button
+              class="docsViewer__actionButton"
+              type="button"
+              id="docsViewerManageActionsButton"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="docsViewerManageActionsMenu"
+            >Actions</button>
+            <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageRebuildButton">Rebuild docs</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageImportButton">Import</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewButton">New</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageEditButton">Edit</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageArchiveButton">Archive</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageDeleteButton">Delete</button>
+            </div>
+          </div>
+          <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton">Show</button>
+          <label class="docsViewer__draftToggle">
+            <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox">
+            <span class="docsViewer__draftLabel">hidden</span>
+          </label>
+        </div>
+      </div>
+      {%- endif -%}
     </div>
     {%- endunless -%}
-    {%- if include.allow_management -%}
-    <div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>
-      <div class="docsViewer__manageActions">
-        <button class="docsViewer__actionButton" type="button" id="docsViewerManageRebuildButton">Rebuild docs</button>
-        <button class="docsViewer__actionButton" type="button" id="docsViewerManageImportButton">Import</button>
-        <button class="docsViewer__actionButton" type="button" id="docsViewerManageNewButton">New</button>
-        <button class="docsViewer__actionButton" type="button" id="docsViewerManageEditButton">Edit</button>
-        <button class="docsViewer__actionButton" type="button" id="docsViewerManageArchiveButton">Archive</button>
-        <button class="docsViewer__actionButton" type="button" id="docsViewerManageDeleteButton">Delete</button>
-        <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton">Show</button>
-        <label class="docsViewer__draftToggle">
-          <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox">
-          <span class="docsViewer__draftLabel">hidden</span>
-        </label>
+    {%- if include.allow_scope_query and include.enable_search == false -%}
+    <div class="docsViewer__searchRow">
+      <label class="docsViewer__scopeField" for="docsViewerScopeSelect" aria-label="Docs scope">
+        <select class="docsViewer__scopeSelect" id="docsViewerScopeSelect"></select>
+      </label>
+      {%- if include.allow_management -%}
+      <div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>
+        <div class="docsViewer__manageActions">
+          <div class="docsViewer__actionsMenuHost">
+            <button
+              class="docsViewer__actionButton"
+              type="button"
+              id="docsViewerManageActionsButton"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="docsViewerManageActionsMenu"
+            >Actions</button>
+            <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageRebuildButton">Rebuild docs</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageImportButton">Import</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewButton">New</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageEditButton">Edit</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageArchiveButton">Archive</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageDeleteButton">Delete</button>
+            </div>
+          </div>
+          <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton">Show</button>
+          <label class="docsViewer__draftToggle">
+            <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox">
+            <span class="docsViewer__draftLabel">hidden</span>
+          </label>
+        </div>
       </div>
-      <p class="docsViewer__manageNote muted small" id="docsViewerManageNote"></p>
+      {%- endif -%}
     </div>
+    {%- endif -%}
+    {%- if include.allow_management -%}
+    <p class="docsViewer__manageNote muted small" id="docsViewerManageNote"></p>
     {%- endif -%}
     <div class="docsViewer__bookmarkRow" id="docsViewerBookmarkRow" hidden></div>
     <p class="docsViewer__status muted small" id="docsViewerStatus">Loading docs...</p>

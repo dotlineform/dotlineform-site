@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: "2026-05-12 09:30"
+last_updated: "2026-05-13 22:25"
 ui_status: done
 parent_id: change-requests
 sort_order: 150
@@ -62,6 +62,9 @@ Implemented now:
   - `New Sibling`
   - `New Child`
 - `Edit` is available for the current doc in the manage toolbar
+- `Rebuild docs`, `Import`, `New`, `Edit`, `Archive`, and `Delete` are grouped under the top-row `Actions` menu
+- `Actions`, `Show`, and `show hidden` sit in the search/control row so hidden-doc review controls stay quick to reach
+- the management message row appears only for active progress, blocked/unavailable states, validation failures, and write errors; routine success messages are cleared after the viewer reloads
 - metadata edit opens in a modal and currently supports:
   - `title`
   - `summary`
@@ -76,9 +79,9 @@ Implemented now:
 - `draft` is a configured `ui_status` option rather than a special modal-only status
 - `hidden` is edited independently through a metadata checkbox
 - the metadata parent control is a searchable text field; `Root` resolves to blank `parent_id`, and selected parent suggestions resolve back to their source `doc_id`
-- configured `ui_status` values also render as compact document status pills beside the bookmark control
-- status pills are read-only outside available manage mode
-- in available manage mode, status pill clicks write immediately through the metadata endpoint without changing `hidden`, and reload the docs payload
+- configured `ui_status` values are available from a compact tag-menu button beside the bookmark control
+- the tag menu is hidden outside available manage mode
+- in available manage mode, status menu choices write immediately through the metadata endpoint without changing `hidden`, and reload the docs payload
 - title edits do not mutate `doc_id` or filename
 - metadata edits validate parentage and reject self-parent or descendant-parent cycles
 - when the metadata modal changes `parent_id` to a non-root parent and the user leaves `sort_order` unchanged, the doc appends as the last sibling under the new parent

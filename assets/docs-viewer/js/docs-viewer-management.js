@@ -35,6 +35,8 @@ export function initDocsViewerManagement(context) {
   var manageRow = document.getElementById("docsViewerManageRow");
   var manageActions = manageRow ? manageRow.querySelector(".docsViewer__manageActions") : null;
   var manageNote = document.getElementById("docsViewerManageNote");
+  var manageActionsButton = document.getElementById("docsViewerManageActionsButton");
+  var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
@@ -148,6 +150,22 @@ export function initDocsViewerManagement(context) {
       contextMenu.hidden = true;
       contextMenu.style.left = "";
       contextMenu.style.top = "";
+    }
+  }
+
+  function hideManageActionsMenu() {
+    if (!manageActionsMenu || !manageActionsButton) return;
+    manageActionsMenu.hidden = true;
+    manageActionsButton.setAttribute("aria-expanded", "false");
+  }
+
+  function toggleManageActionsMenu() {
+    if (!manageActionsMenu || !manageActionsButton || manageActionsButton.disabled) return;
+    if (manageActionsMenu.hidden) {
+      manageActionsMenu.hidden = false;
+      manageActionsButton.setAttribute("aria-expanded", "true");
+    } else {
+      hideManageActionsMenu();
     }
   }
 
@@ -496,6 +514,7 @@ export function initDocsViewerManagement(context) {
     state.managementMode = context.getCurrentMode() === context.MANAGEMENT_MODE;
     if (!state.managementMode) {
       manageRow.hidden = true;
+      hideManageActionsMenu();
       if (indexUndoButton) {
         indexUndoButton.hidden = true;
       }
@@ -505,6 +524,9 @@ export function initDocsViewerManagement(context) {
     manageRow.hidden = false;
     if (manageActions) {
       manageActions.hidden = !state.managementChecked || !state.managementAvailable;
+      if (manageActions.hidden) {
+        hideManageActionsMenu();
+      }
     }
 
     if (manageNote) {
@@ -565,6 +587,12 @@ export function initDocsViewerManagement(context) {
     );
 
     manageRebuildButton.disabled = state.managementBusy || !state.managementAvailable;
+    if (manageActionsButton) {
+      manageActionsButton.disabled = state.managementBusy || !state.managementAvailable;
+      if (manageActionsButton.disabled) {
+        hideManageActionsMenu();
+      }
+    }
     if (manageImportButton) {
       manageImportButton.disabled = state.managementBusy || !state.managementAvailable;
     }
@@ -649,7 +677,7 @@ export function initDocsViewerManagement(context) {
     }
 
     return context.loadIndex().then(function () {
-      context.setStatus(summaryText ? summaryText : "", false);
+      context.setStatus("", false);
       renderManagementUi();
     });
   }
@@ -676,8 +704,8 @@ export function initDocsViewerManagement(context) {
       after_doc_id: currentDoc ? currentDoc.doc_id : ""
     }, managementClientOptions())
       .then(function (payload) {
-        setManagementMessage(payload.summary_text || "Doc created.", false);
-        return reloadDocsIndex(payload.doc_id, payload.summary_text || "Doc created.");
+        setManagementMessage("", false);
+        return reloadDocsIndex(payload.doc_id, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Create failed.", true);
@@ -713,8 +741,8 @@ export function initDocsViewerManagement(context) {
 
     createManagedDoc(payload, managementClientOptions())
       .then(function (response) {
-        setManagementMessage(response.summary_text || "Doc created.", false);
-        return reloadDocsIndex(response.doc_id, response.summary_text || "Doc created.");
+        setManagementMessage("", false);
+        return reloadDocsIndex(response.doc_id, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Create failed.", true);
@@ -786,8 +814,8 @@ export function initDocsViewerManagement(context) {
 
     updateManagedDocMetadata(payload, managementClientOptions())
       .then(function (response) {
-        setManagementMessage(response.summary_text || "Metadata saved.", false);
-        return reloadDocsIndex(payload.doc_id, response.summary_text || "Metadata saved.");
+        setManagementMessage("", false);
+        return reloadDocsIndex(payload.doc_id, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Metadata update failed.", true);
@@ -827,9 +855,8 @@ export function initDocsViewerManagement(context) {
 
     updateManagedDocMetadata(metadataPayloadForStatus(doc, nextStatus), managementClientOptions())
       .then(function (response) {
-        var savedText = response.summary_text || state.managementText.statusPillSaved;
-        setManagementMessage(savedText, false);
-        return reloadDocsIndex(doc.doc_id, savedText);
+        setManagementMessage("", false);
+        return reloadDocsIndex(doc.doc_id, "");
       })
       .catch(function (error) {
         var failedText = error.message || state.managementText.statusPillFailed;
@@ -851,8 +878,8 @@ export function initDocsViewerManagement(context) {
     rebuildManagedDocs(managementClientOptions())
       .then(function (payload) {
         var targetDocId = state.selectedDocId || context.defaultRouteDocId() || context.defaultDocId();
-        setManagementMessage(payload.summary_text || "Docs rebuilt.", false);
-        return reloadDocsIndex(targetDocId, payload.summary_text || "Docs rebuilt.");
+        setManagementMessage("", false);
+        return reloadDocsIndex(targetDocId, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Docs rebuild failed.", true);
@@ -875,8 +902,8 @@ export function initDocsViewerManagement(context) {
 
     archiveManagedDoc(doc.doc_id, managementClientOptions())
       .then(function (payload) {
-        setManagementMessage(payload.summary_text || "Doc archived.", false);
-        return reloadDocsIndex(payload.doc_id, payload.summary_text || "Doc archived.");
+        setManagementMessage("", false);
+        return reloadDocsIndex(payload.doc_id, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Archive failed.", true);
@@ -964,8 +991,8 @@ export function initDocsViewerManagement(context) {
 
     updateManagedDocsViewability(targetDocIds, false, managementClientOptions())
       .then(function (payload) {
-        setManagementMessage(payload.summary_text || "Doc shown.", false);
-        return reloadDocsIndex(doc.doc_id, payload.summary_text || "Doc shown.");
+        setManagementMessage("", false);
+        return reloadDocsIndex(doc.doc_id, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Viewability update failed.", true);
@@ -1071,8 +1098,8 @@ export function initDocsViewerManagement(context) {
     restoreManagedDocMove(focusDocId, moveUndoPayloadRecords(undoRecords), managementClientOptions())
       .then(function (response) {
         state.moveUndo = null;
-        setManagementMessage(response.summary_text || "Move undone.", false);
-        return reloadDocsIndex(response.doc_id || focusDocId, response.summary_text || "Move undone.");
+        setManagementMessage("", false);
+        return reloadDocsIndex(response.doc_id || focusDocId, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Undo failed.", true);
@@ -1139,6 +1166,7 @@ export function initDocsViewerManagement(context) {
     state.managementText.metadataParentRootOption = context.getConfigText(config, "docs_viewer.metadata_parent_root_option", state.managementText.metadataParentRootOption);
     state.managementText.metadataParentInvalid = context.getConfigText(config, "docs_viewer.metadata_parent_invalid", state.managementText.metadataParentInvalid);
     state.managementText.docHiddenEmoji = String(context.getConfigValue(config, "docs_viewer.doc_hidden_emoji") || state.managementText.docHiddenEmoji);
+    state.managementText.statusMenuLabel = context.getConfigText(config, "docs_viewer.status_menu_label", state.managementText.statusMenuLabel);
     state.managementText.statusPillSetLabel = context.getConfigText(config, "docs_viewer.status_pill_set_label", state.managementText.statusPillSetLabel);
     state.managementText.statusPillClearLabel = context.getConfigText(config, "docs_viewer.status_pill_clear_label", state.managementText.statusPillClearLabel);
     state.managementText.statusPillReadonlyLabel = context.getConfigText(config, "docs_viewer.status_pill_readonly_label", state.managementText.statusPillReadonlyLabel);
@@ -1162,6 +1190,9 @@ export function initDocsViewerManagement(context) {
     if (contextMenu && !event.target.closest("#docsViewerContextMenu")) {
       hideContextMenu();
     }
+    if (manageActionsMenu && !event.target.closest(".docsViewer__manageActions")) {
+      hideManageActionsMenu();
+    }
     if (metadataModalOpen()) {
       var closeTrigger = event.target.closest("[data-metadata-close]");
       if (closeTrigger) {
@@ -1182,6 +1213,11 @@ export function initDocsViewerManagement(context) {
   }
 
   function handleDocumentKeydown(event) {
+    if (event.key === "Escape" && manageActionsMenu && !manageActionsMenu.hidden) {
+      event.preventDefault();
+      hideManageActionsMenu();
+      return true;
+    }
     if (event.key === "Escape" && metadataModalOpen()) {
       event.preventDefault();
       closeMetadataModal();
@@ -1296,13 +1332,20 @@ export function initDocsViewerManagement(context) {
     if (manageRebuildButton) {
       manageRebuildButton.addEventListener("click", function () {
         hideContextMenu();
+        hideManageActionsMenu();
         handleRebuildDocs();
       });
     }
     if (manageImportButton) {
       manageImportButton.addEventListener("click", function () {
         hideContextMenu();
+        hideManageActionsMenu();
         openImportModal();
+      });
+    }
+    if (manageActionsButton) {
+      manageActionsButton.addEventListener("click", function () {
+        toggleManageActionsMenu();
       });
     }
     if (indexUndoButton) {
@@ -1311,23 +1354,27 @@ export function initDocsViewerManagement(context) {
     if (manageNewButton) {
       manageNewButton.addEventListener("click", function () {
         hideContextMenu();
+        hideManageActionsMenu();
         handleCreateDoc();
       });
     }
     if (manageEditButton) {
       manageEditButton.addEventListener("click", function () {
+        hideManageActionsMenu();
         openMetadataModal().then(handleEditMetadataSave);
       });
     }
     if (manageArchiveButton) {
       manageArchiveButton.addEventListener("click", function () {
         hideContextMenu();
+        hideManageActionsMenu();
         handleArchiveDoc();
       });
     }
     if (manageDeleteButton) {
       manageDeleteButton.addEventListener("click", function () {
         hideContextMenu();
+        hideManageActionsMenu();
         handleDeleteDoc();
       });
     }

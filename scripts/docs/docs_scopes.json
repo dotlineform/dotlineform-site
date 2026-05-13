@@ -84,6 +84,16 @@
           "ui_status": "in-progress",
           "label": "In progress",
           "emoji": "🔄"
+        },
+        {
+          "ui_status": "paused",
+          "label": "Paused",
+          "emoji": "⏸️"
+        },
+        {
+          "ui_status": "deferred",
+          "label": "Deferred",
+          "emoji": "😴"
         }
       ],
       "library": [

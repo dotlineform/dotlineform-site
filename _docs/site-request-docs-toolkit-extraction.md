@@ -1,17 +1,19 @@
 ---
 doc_id: site-request-docs-toolkit-extraction
 title: Docs Toolkit Extraction Request
-added_date: "2026-05-05"
+added_date: 2026-05-05
 last_updated: "2026-05-13 21:07"
-ui_status: closed
-parent_id: change-requests
-sort_order: 26
+ui_status: deferred
+parent_id: archive
+sort_order: 300
+hidden: false
 ---
 # Docs Toolkit Extraction Request
 
 Status:
 
 - closed
+- see section 'still relevant details' for potential future packaging work
 
 ## Summary
 

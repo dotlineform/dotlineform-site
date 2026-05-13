@@ -212,13 +212,6 @@
   gap: 0.65rem;
 }
 
-.docsViewer__scopeRow{
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.65rem;
-}
-
 .docsViewer__scopeField{
   display: inline-flex;
   align-items: center;
@@ -228,18 +221,15 @@
   line-height: var(--docs-viewer-line-snug);
 }
 
-.docsViewer__scopeLabel{
-  color: var(--docs-viewer-muted);
-}
-
 .docsViewer__scopeSelect{
   box-sizing: border-box;
-  min-height: 2rem;
+  height: 2.3rem;
+  min-height: 2.3rem;
   border: 1px solid var(--docs-viewer-border);
   border-radius: 999px;
   background: var(--docs-viewer-panel);
   color: var(--docs-viewer-text);
-  padding: 0.28rem 0.7rem;
+  padding: 0.45rem 2rem 0.45rem 0.85rem;
   font: inherit;
   font-size: var(--docs-viewer-font-small);
   line-height: var(--docs-viewer-line-snug);
@@ -263,6 +253,7 @@
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
+  height: 2.3rem;
   border: 1px solid var(--docs-viewer-border);
   border-radius: 999px;
   padding: 0.48rem 0.72rem;
@@ -281,6 +272,8 @@
 }
 
 .docsViewer__actionButton{
+  box-sizing: border-box;
+  height: 2.3rem;
   min-height: 2.3rem;
   padding: 0.45rem 0.85rem;
   border: 1px solid var(--docs-viewer-border);
@@ -412,18 +405,20 @@
 }
 
 .docsViewer__statusPills{
+  position: relative;
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.28rem;
 }
 
 .docsViewer__statusPills[hidden]{
   display: none;
 }
 
-.docsViewer__statusPill{
+.docsViewer__statusPill,
+.docsViewer__statusMenuToggle,
+.docsViewer__statusMenuItem{
   box-sizing: border-box;
   width: 2rem;
   min-width: 2rem;
@@ -441,28 +436,60 @@
   cursor: pointer;
 }
 
-.docsViewer__statusPill:hover{
+.docsViewer__statusPill:hover,
+.docsViewer__statusMenuToggle:hover,
+.docsViewer__statusMenuItem:hover{
   background: var(--docs-viewer-panel-2);
 }
 
-.docsViewer__statusPill:focus-visible{
+.docsViewer__statusPill:focus-visible,
+.docsViewer__statusMenuToggle:focus-visible,
+.docsViewer__statusMenuItem:focus-visible{
   outline: 2px solid var(--docs-viewer-border-strong);
   outline-offset: 2px;
 }
 
-.docsViewer__statusPill[disabled]{
+.docsViewer__statusPill[disabled],
+.docsViewer__statusMenuToggle[disabled],
+.docsViewer__statusMenuItem[disabled]{
   cursor: default;
 }
 
-.docsViewer__statusPill:not(.is-active) .docsViewer__statusPillEmoji{
+.docsViewer__statusPill:not(.is-active) .docsViewer__statusPillEmoji,
+.docsViewer__statusMenuItem:not(.is-active) .docsViewer__statusPillEmoji{
   filter: grayscale(1);
   opacity: 0.38;
 }
 
-.docsViewer__statusPill.is-active{
+.docsViewer__statusMenuItem:not(.is-active):hover .docsViewer__statusPillEmoji,
+.docsViewer__statusMenuItem:not(.is-active):focus-visible .docsViewer__statusPillEmoji{
+  filter: none;
+  opacity: 1;
+}
+
+.docsViewer__statusPill.is-active,
+.docsViewer__statusMenuItem.is-active{
   border-color: var(--docs-viewer-border-strong);
   background: var(--docs-viewer-panel-2);
   box-shadow: inset 0 0 0 1px var(--docs-viewer-border-strong);
+}
+
+.docsViewer__statusMenu{
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.35rem;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: 999px;
+  background: var(--docs-viewer-panel);
+  box-shadow: 0 0.35rem 1rem color-mix(in srgb, var(--docs-viewer-text) 14%, transparent);
+}
+
+.docsViewer__statusMenu[hidden]{
+  display: none;
 }
 
 .docsViewer__bookmarkPill{

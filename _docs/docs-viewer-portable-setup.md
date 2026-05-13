@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-13 20:20"
+last_updated: "2026-05-13 21:30"
 parent_id: docs-viewer
 sort_order: 30
 ---
@@ -93,7 +93,7 @@ Copy:
 - `assets/docs-viewer/css/docs-viewer-reports.css`
 
 The host site should still load its own base stylesheet for tokens, prose rules, responsive media defaults, and the `.content` contract used by generated docs HTML.
-The viewer include now loads Docs Viewer-owned CSS for the shell, controls, index, search, results, bookmarks, status pills, management surfaces, and the transitional Docs Import form/control primitives.
+The viewer include now loads Docs Viewer-owned CSS for the shell, controls, index, search, results, bookmarks, status menu, management surfaces, and the transitional Docs Import form/control primitives.
 Management mode no longer loads `assets/studio/css/studio.css`.
 
 ### Config And UI Text
@@ -331,7 +331,7 @@ Public builds keep `docs_viewer_management_enabled: false`, so the same route ad
 
 The management scope selector and browser route map come from `assets/docs-viewer/data/docs-viewer-config.json`.
 Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `assets/docs-viewer/js/docs-viewer.js`.
-If the new scope needs UI-status pills, add the status options to the `docs_viewer.ui_statuses_by_scope` section in `scripts/docs/docs_scopes.json`, then rerun the docs build so `assets/docs-viewer/data/docs-viewer-config.json` is regenerated.
+If the new scope needs UI-status menu options, add them to the `docs_viewer.ui_statuses_by_scope` section in `scripts/docs/docs_scopes.json`, then rerun the docs build so `assets/docs-viewer/data/docs-viewer-config.json` is regenerated.
 
 Management route adapter inputs:
 

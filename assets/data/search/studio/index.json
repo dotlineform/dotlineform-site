@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-15f4d2f2be19e73285a9cf6292e18174",
-    "generated_at_utc": "2026-05-13T20:08:46Z",
-    "count": 232
+    "version": "blake2b-cf6c527bf1e204681b1c369ad1d19872",
+    "generated_at_utc": "2026-05-13T21:28:05Z",
+    "count": 233
   },
   "entries": [
     {
@@ -1334,35 +1334,6 @@
       "search_text": "catalogue 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
-      "id": "site-request-docs-toolkit-extraction",
-      "kind": "doc",
-      "title": "Docs Toolkit Extraction Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-toolkit-extraction",
-      "last_updated": "2026-05-13 21:07",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-13 21:07 • Change Requests",
-      "search_terms": [
-        "site-request-docs-toolkit-extraction",
-        "site",
-        "request",
-        "docs",
-        "toolkit",
-        "extraction",
-        "docs toolkit extraction request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-13 21:07",
-        "2026",
-        "05",
-        "13",
-        "21",
-        "07"
-      ],
-      "search_text": "site-request-docs-toolkit-extraction site request docs toolkit extraction docs toolkit extraction request change requests change requests 2026-05-13 21:07 2026 05 13 21 07"
-    },
-    {
       "id": "site-request-export-import-adapters",
       "kind": "doc",
       "title": "Export Import Adapter Boundary Request",
@@ -1546,33 +1517,6 @@
       "search_text": "site-request-js-config-structural-review-catalogue-editor-boundary site request js config structural review catalogue editor boundary catalogue editor boundary spec slice spec slice javascript and browser config structural review request javascript and browser 2026-05-10 15:36 2026 05 10 15 36"
     },
     {
-      "id": "site-request-catalogue-lookup-invalidation",
-      "kind": "doc",
-      "title": "Catalogue Lookup Invalidation Request",
-      "href": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
-      "last_updated": "2026-05-13",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-13 • Change Requests",
-      "search_terms": [
-        "site-request-catalogue-lookup-invalidation",
-        "site",
-        "request",
-        "catalogue",
-        "lookup",
-        "invalidation",
-        "catalogue lookup invalidation request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-13",
-        "2026",
-        "05",
-        "13"
-      ],
-      "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request change requests change requests 2026-05-13 2026 05 13"
-    },
-    {
       "id": "catalogue-work-editor",
       "kind": "doc",
       "title": "Catalogue Work Editor",
@@ -1627,10 +1571,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-13 21:30",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 20:20 • Docs Viewer",
+      "display_meta": "2026-05-13 21:30 • Docs Viewer",
       "search_terms": [
         "docs-viewer-portable-setup",
         "docs",
@@ -1639,13 +1583,14 @@
         "setup",
         "docs viewer portable setup",
         "docs viewer",
-        "2026-05-13 20:20",
+        "2026-05-13 21:30",
         "2026",
         "05",
         "13",
-        "20"
+        "21",
+        "30"
       ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup docs viewer 2026-05-13 20:20 2026 05 13 20"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup docs viewer 2026-05-13 21:30 2026 05 13 21 30"
     },
     {
       "id": "ui-primitive-list",
@@ -2390,6 +2335,33 @@
         "02"
       ],
       "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and change requests change requests 2026-05-02 2026 05 02"
+    },
+    {
+      "id": "doc-ui-status",
+      "kind": "doc",
+      "title": "Doc UI Status",
+      "href": "/docs/?scope=studio&doc=doc-ui-status",
+      "last_updated": "2026-05-13 21:41",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-13 21:41 • Docs Viewer",
+      "search_terms": [
+        "doc-ui-status",
+        "doc",
+        "ui",
+        "status",
+        "doc ui status",
+        "docs viewer",
+        "docs",
+        "viewer",
+        "2026-05-13 21:41",
+        "2026",
+        "05",
+        "13",
+        "21",
+        "41"
+      ],
+      "search_text": "doc-ui-status doc ui status doc ui status docs viewer docs viewer 2026-05-13 21:41 2026 05 13 21 41"
     },
     {
       "id": "site-request-json-schema-adoption",
@@ -4948,10 +4920,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-12 09:30",
+      "last_updated": "2026-05-13 22:25",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-12 09:30 • Change Requests",
+      "display_meta": "2026-05-13 22:25 • Change Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -4961,14 +4933,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-12 09:30",
+        "2026-05-13 22:25",
         "2026",
         "05",
-        "12",
-        "09",
-        "30"
+        "13",
+        "22",
+        "25"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-12 09:30 2026 05 12 09 30"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-13 22:25 2026 05 13 22 25"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",
@@ -5812,6 +5784,33 @@
       "search_text": "library-import-export-v2 library import export v2 library export/import v2 archive 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
+      "id": "site-request-catalogue-lookup-invalidation",
+      "kind": "doc",
+      "title": "Catalogue Lookup Invalidation Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
+      "last_updated": "2026-05-13",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-13 • Change Requests",
+      "search_terms": [
+        "site-request-catalogue-lookup-invalidation",
+        "site",
+        "request",
+        "catalogue",
+        "lookup",
+        "invalidation",
+        "catalogue lookup invalidation request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-13",
+        "2026",
+        "05",
+        "13"
+      ],
+      "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request change requests change requests 2026-05-13 2026 05 13"
+    },
+    {
       "id": "library-import-ui",
       "kind": "doc",
       "title": "Library Import - UI refinements",
@@ -6039,6 +6038,33 @@
         "49"
       ],
       "search_text": "archive 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
+      "id": "site-request-docs-toolkit-extraction",
+      "kind": "doc",
+      "title": "Docs Toolkit Extraction Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-toolkit-extraction",
+      "last_updated": "2026-05-13 21:07",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-13 21:07 • Archive",
+      "search_terms": [
+        "site-request-docs-toolkit-extraction",
+        "site",
+        "request",
+        "docs",
+        "toolkit",
+        "extraction",
+        "docs toolkit extraction request",
+        "archive",
+        "2026-05-13 21:07",
+        "2026",
+        "05",
+        "13",
+        "21",
+        "07"
+      ],
+      "search_text": "site-request-docs-toolkit-extraction site request docs toolkit extraction docs toolkit extraction request archive 2026-05-13 21:07 2026 05 13 21 07"
     }
   ]
 }

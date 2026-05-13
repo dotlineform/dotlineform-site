@@ -5,7 +5,8 @@ added_date: 2026-04-22
 last_updated: 2026-05-13
 ui_status: done
 parent_id: change-requests
-sort_order: 30
+sort_order: 222
+hidden: false
 ---
 # Catalogue Lookup Invalidation Request
 

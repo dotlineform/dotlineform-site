@@ -644,11 +644,11 @@ select.docsViewer__fieldInput--listbox{
 }
 
 .docsViewer__manageRow{
+  flex: 0 0 auto;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.65rem 0.9rem;
+  gap: 0.55rem;
 }
 
 .docsViewer__manageRow[hidden]{
@@ -657,9 +657,63 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewer__manageActions{
   display: flex;
-  flex-wrap: wrap;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 0.55rem;
+}
+
+.docsViewer__actionsMenuHost{
+  position: relative;
+  display: inline-flex;
+}
+
+.docsViewer__actionsMenu{
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  min-width: 11rem;
+  max-width: min(22rem, calc(100vw - 1rem));
+  padding: 0.3rem;
+  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-radius: 0.85rem;
+  background: var(--docs-viewer-panel, var(--panel, #fff));
+  box-shadow: 0 10px 25px color-mix(in srgb, var(--docs-viewer-text, var(--text, #111)) 12%, transparent);
+}
+
+.docsViewer__actionsMenu[hidden]{
+  display: none;
+}
+
+.docsViewer__actionMenuItem{
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 0.6rem;
+  padding: 0.48rem 0.65rem;
+  background: transparent;
+  color: var(--docs-viewer-text, var(--text, #111));
+  font: inherit;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
+  text-align: left;
+  cursor: pointer;
+}
+
+.docsViewer__actionMenuItem:hover,
+.docsViewer__actionMenuItem:focus-visible{
+  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
+  outline: none;
+}
+
+.docsViewer__actionMenuItem:disabled{
+  color: var(--docs-viewer-muted, var(--muted, #555));
+  cursor: not-allowed;
+}
+
+.docsViewer__actionMenuItem:disabled:hover{
+  background: transparent;
 }
 
 .docsViewer__draftToggle{
@@ -683,7 +737,7 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewer__manageNote{
   margin: 0;
-  flex: 1 1 18rem;
+  width: 100%;
 }
 
 .docsViewer__manageNote.is-error{

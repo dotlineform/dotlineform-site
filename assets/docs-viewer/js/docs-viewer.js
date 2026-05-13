@@ -114,6 +114,7 @@ import {
     viewerConfigRequestPromise: null,
     uiStatuses: [],
     uiStatusByValue: new Map(),
+    statusMenuOpen: false,
     bookmarks: [],
     bookmarksLoaded: false,
     bookmarkSupport: Boolean(window.indexedDB),
@@ -148,6 +149,7 @@ import {
       metadataParentRootOption: "Root",
       metadataParentInvalid: "Select a parent from the search field suggestions or enter Root.",
       docHiddenEmoji: "🚫",
+      statusMenuLabel: "Document status",
       statusPillSetLabel: "Set status: {label}",
       statusPillClearLabel: "Clear status: {label}",
       statusPillReadonlyLabel: "Status: {label}",
@@ -663,6 +665,7 @@ import {
     state.managementText.statusPillSetLabel = getConfigText(config, "docs_viewer.status_pill_set_label", state.managementText.statusPillSetLabel);
     state.managementText.statusPillClearLabel = getConfigText(config, "docs_viewer.status_pill_clear_label", state.managementText.statusPillClearLabel);
     state.managementText.statusPillReadonlyLabel = getConfigText(config, "docs_viewer.status_pill_readonly_label", state.managementText.statusPillReadonlyLabel);
+    state.managementText.statusMenuLabel = getConfigText(config, "docs_viewer.status_menu_label", state.managementText.statusMenuLabel);
     state.managementText.statusPillSaving = getConfigText(config, "docs_viewer.status_pill_saving", state.managementText.statusPillSaving);
     state.managementText.statusPillSaved = getConfigText(config, "docs_viewer.status_pill_saved", state.managementText.statusPillSaved);
     state.managementText.statusPillFailed = getConfigText(config, "docs_viewer.status_pill_failed", state.managementText.statusPillFailed);
@@ -840,25 +843,36 @@ import {
     statusPills.hidden = !canShow;
     if (!canShow) {
       statusPills.innerHTML = "";
+      state.statusMenuOpen = false;
       return;
     }
 
     var activeStatus = currentStatusValue(doc);
     var canWrite = statusPillsCanWrite(doc);
-    statusPills.innerHTML = state.uiStatuses.map(function (statusConfig) {
+    var activeStatusConfig = activeStatus ? state.uiStatusByValue.get(activeStatus) : null;
+    var menuLabel = activeStatusConfig
+      ? formatText(state.managementText.statusPillReadonlyLabel, { label: activeStatusConfig.label, title: doc.title })
+      : state.managementText.statusMenuLabel;
+    var menuItems = state.uiStatuses.map(function (statusConfig) {
       var selected = statusConfig.ui_status === activeStatus;
       var labelTemplate = canWrite
         ? (selected ? state.managementText.statusPillClearLabel : state.managementText.statusPillSetLabel)
         : state.managementText.statusPillReadonlyLabel;
       var label = formatText(labelTemplate, { label: statusConfig.label, title: doc.title });
-      var className = "docsViewer__statusPill" + (selected ? " is-active" : "");
+      var className = "docsViewer__statusMenuItem" + (selected ? " is-active" : "");
       return (
-        '<button type="button" class="' + className + '" data-ui-status="' + escapeHtml(statusConfig.ui_status) + '" aria-pressed="' + (selected ? "true" : "false") + '" aria-label="' + escapeHtml(label) + '" title="' + escapeHtml(label) + '"' + (canWrite ? "" : " disabled") + '>' +
+        '<button type="button" role="menuitemradio" class="' + className + '" data-ui-status="' + escapeHtml(statusConfig.ui_status) + '" aria-checked="' + (selected ? "true" : "false") + '" aria-label="' + escapeHtml(label) + '" title="' + escapeHtml(label) + '"' + (canWrite ? "" : " disabled") + '>' +
           '<span class="docsViewer__statusPillEmoji" aria-hidden="true">' + escapeHtml(statusConfig.emoji) + '</span>' +
           '<span class="visually-hidden">' + escapeHtml(statusConfig.label) + '</span>' +
         '</button>'
       );
     }).join("");
+    statusPills.innerHTML = (
+      '<button type="button" class="docsViewer__statusMenuToggle" data-ui-status-menu-toggle="true" aria-expanded="' + (state.statusMenuOpen ? "true" : "false") + '" aria-label="' + escapeHtml(menuLabel) + '" title="' + escapeHtml(menuLabel) + '"' + (canWrite ? "" : " disabled") + '>🏷️</button>' +
+      '<div class="docsViewer__statusMenu" role="menu"' + (state.statusMenuOpen && canWrite ? "" : " hidden") + ">" +
+        menuItems +
+      "</div>"
+    );
   }
 
   function renderBookmarkRow() {
@@ -1486,6 +1500,7 @@ import {
   }
 
   function renderPayload(doc, payload, hash) {
+    state.statusMenuOpen = false;
     state.selectedDocId = doc.doc_id;
     renderSidebar();
     renderBookmarkUi();
@@ -1742,16 +1757,37 @@ import {
 
     if (statusPills) {
       statusPills.addEventListener("click", function (event) {
+        var toggle = event.target.closest("[data-ui-status-menu-toggle]");
+        if (toggle) {
+          event.preventDefault();
+          event.stopPropagation();
+          if (toggle.disabled) return;
+          state.statusMenuOpen = !state.statusMenuOpen;
+          renderStatusPills();
+          return;
+        }
         var button = event.target.closest("[data-ui-status]");
         if (!button) return;
         event.preventDefault();
+        event.stopPropagation();
+        state.statusMenuOpen = false;
         if (managementController) {
           managementController.handleStatusPillClick(button.dataset.uiStatus);
         }
       });
     }
 
+    document.addEventListener("click", function (event) {
+      if (!state.statusMenuOpen || !statusPills || statusPills.contains(event.target)) return;
+      state.statusMenuOpen = false;
+      renderStatusPills();
+    });
+
     document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && state.statusMenuOpen) {
+        state.statusMenuOpen = false;
+        renderStatusPills();
+      }
       if (managementController && managementController.handleDocumentKeydown(event)) {
         return;
       }
