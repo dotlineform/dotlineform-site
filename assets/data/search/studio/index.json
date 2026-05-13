@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-021e981952d54492500696934c951455",
-    "generated_at_utc": "2026-05-13T12:04:57Z",
+    "version": "blake2b-4434af4a35134326cccddfb97e0d4f02",
+    "generated_at_utc": "2026-05-13T12:28:09Z",
     "count": 231
   },
   "entries": [
@@ -5800,36 +5800,6 @@
       "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation change requests change requests 2026-05-13 11:49 2026 05 13 11 49"
     },
     {
-      "id": "site-request-analytics-tag-route-cleanup",
-      "kind": "doc",
-      "title": "Analytics Tag Route Cleanup Request",
-      "href": "/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup",
-      "last_updated": "2026-05-09 16:00",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 16:00 • Change Requests",
-      "search_terms": [
-        "site-request-analytics-tag-route-cleanup",
-        "site",
-        "request",
-        "analytics",
-        "tag",
-        "route",
-        "cleanup",
-        "analytics tag route cleanup request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-09 16:00",
-        "2026",
-        "05",
-        "09",
-        "16",
-        "00"
-      ],
-      "search_text": "site-request-analytics-tag-route-cleanup site request analytics tag route cleanup analytics tag route cleanup request change requests change requests 2026-05-09 16:00 2026 05 09 16 00"
-    },
-    {
       "id": "change-requests",
       "kind": "doc",
       "title": "Change Requests",
@@ -5983,6 +5953,33 @@
         "48"
       ],
       "search_text": "site-request-import-export-system-review site request import export system review import/export system review request archive 2026-05-13 11:48 2026 05 13 11 48"
+    },
+    {
+      "id": "site-request-analytics-tag-route-cleanup",
+      "kind": "doc",
+      "title": "Analytics Tag Route Cleanup Request",
+      "href": "/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup",
+      "last_updated": "2026-05-13 13:28",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-13 13:28 • Archive",
+      "search_terms": [
+        "site-request-analytics-tag-route-cleanup",
+        "site",
+        "request",
+        "analytics",
+        "tag",
+        "route",
+        "cleanup",
+        "analytics tag route cleanup request",
+        "archive",
+        "2026-05-13 13:28",
+        "2026",
+        "05",
+        "13",
+        "28"
+      ],
+      "search_text": "site-request-analytics-tag-route-cleanup site request analytics tag route cleanup analytics tag route cleanup request archive 2026-05-13 13:28 2026 05 13 28"
     },
     {
       "id": "site-change-log",

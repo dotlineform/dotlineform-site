@@ -2,10 +2,10 @@
 doc_id: site-request-analytics-tag-route-cleanup
 title: Analytics Tag Route Cleanup Request
 added_date: 2026-05-09
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-13 13:28"
 ui_status: done
-parent_id: change-requests
-sort_order: 213
+parent_id: archive
+sort_order: 270
 viewable: true
 ---
 # Analytics Tag Route Cleanup Request

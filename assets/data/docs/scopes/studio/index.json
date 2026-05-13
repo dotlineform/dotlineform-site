@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T12:22:02Z",
+  "generated_at": "2026-05-13T12:30:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -3626,25 +3626,8 @@
       "source_path": "site-request-studio-import-export-module.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-import-export-module",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-import-export-module.json",
-      "content_text_length": 19149,
+      "content_text_length": 19180,
       "ui_status": "in-progress"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-analytics-tag-route-cleanup",
-      "title": "Analytics Tag Route Cleanup Request",
-      "added_date": "2026-05-09",
-      "last_updated": "2026-05-09 16:00",
-      "parent_id": "change-requests",
-      "sort_order": 213,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "site-request-analytics-tag-route-cleanup.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-analytics-tag-route-cleanup.json",
-      "content_text_length": 5443,
-      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -3744,6 +3727,23 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-import-export-system-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-import-export-system-review.json",
       "content_text_length": 6241,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-analytics-tag-route-cleanup",
+      "title": "Analytics Tag Route Cleanup Request",
+      "added_date": "2026-05-09",
+      "last_updated": "2026-05-13 13:28",
+      "parent_id": "archive",
+      "sort_order": 270,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-analytics-tag-route-cleanup.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-analytics-tag-route-cleanup.json",
+      "content_text_length": 5443,
       "ui_status": "done"
     },
     {

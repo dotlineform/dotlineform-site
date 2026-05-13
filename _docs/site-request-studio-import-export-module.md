@@ -12,7 +12,8 @@ hidden: false
 
 Status:
 
-- planned
+- In progress
+- Plan agreed, next: slice 0
 
 ## Summary
 
