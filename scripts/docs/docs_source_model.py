@@ -315,7 +315,6 @@ def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> s
             updated_front_matter.pop(key, None)
         else:
             updated_front_matter[key] = value
-    updated_front_matter["last_updated"] = timestamp
     return format_source(updated_front_matter, doc.body)
 
 
@@ -325,7 +324,6 @@ def rewrite_doc_placement_source(doc: ScopeDoc, parent_id: str, sort_order: Opti
     updated_front_matter["added_date"] = str(
         updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
     ).strip()
-    updated_front_matter["last_updated"] = timestamp
     updated_front_matter["parent_id"] = parent_id
     if sort_order is None:
         updated_front_matter.pop("sort_order", None)

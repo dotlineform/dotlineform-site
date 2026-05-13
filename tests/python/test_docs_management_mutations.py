@@ -71,6 +71,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "target",
             "title": "Target",
+            "last_updated": "2026-05-01 10:00",
             "sort_order": 20,
             "summary": "old summary",
             "ui_status": "ready",
@@ -96,6 +97,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "sibling",
             "title": "Sibling",
+            "last_updated": "2026-05-02 11:00",
             "sort_order": 30,
             "published": True,
             "viewable": False,
@@ -149,6 +151,7 @@ def test_metadata_plan_keeps_child_search_target_for_title_changes() -> None:
     assert plan.backup_metadata["from_title"] == "Target"
     assert plan.search_doc_ids == ["target", "target-child"]
     assert "title: Renamed Target" in plan.source_writes[0].text
+    assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
 
 
 def test_metadata_status_only_plan_suppresses_search_target() -> None:
@@ -168,6 +171,7 @@ def test_metadata_status_only_plan_suppresses_search_target() -> None:
 
     assert plan.response["changes"]["status_changed"] is True
     assert plan.search_doc_ids == []
+    assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
 
 
 def test_metadata_hidden_plan_writes_hidden_and_removes_legacy_viewable() -> None:
@@ -270,6 +274,22 @@ def test_archive_plan_preserves_already_archived_noop() -> None:
     assert plan.response["summary_text"] == "archive is the archive parent and was not changed."
 
 
+def test_archive_plan_preserves_last_updated_for_tree_metadata_change() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        plan = mutations.plan_archive(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_id": "sibling",
+            },
+        )
+
+    assert plan.source_writes
+    assert 'last_updated: "2026-05-02 11:00"' in plan.source_writes[0].text
+    assert "parent_id: archive" in plan.source_writes[0].text
+
+
 def test_delete_preview_preserves_child_blocker_and_inbound_warning() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -313,6 +333,7 @@ def main() -> None:
         test_move_plan_returns_undo_records_and_only_searches_moved_doc,
         test_restore_move_plan_deduplicates_records_and_searches_changed_docs,
         test_archive_plan_preserves_already_archived_noop,
+        test_archive_plan_preserves_last_updated_for_tree_metadata_change,
         test_delete_preview_preserves_child_blocker_and_inbound_warning,
         test_delete_apply_plan_selects_backup_doc_delete_path_and_search_target,
     ]

@@ -46,7 +46,7 @@ Implemented now:
 - drag/drop moves normalize the destination sibling set into sparse unique `sort_order` values so reorder actions have a visible effect even when previous sibling orders collided
 - create-after-selected uses sparse `sort_order` increments without renumbering siblings
 - create, move, archive, delete, and metadata edits rebuild docs payloads plus same-scope docs search
-- docs-management writes new `added_date` and changed `last_updated` values in `YYYY-MM-DD HH:MM` form; existing date-only docs remain valid and do not need migration
+- docs-management writes `added_date` and `last_updated` values in `YYYY-MM-DD HH:MM` form for new or content-imported docs; metadata-only changes preserve existing `last_updated` values so the field reflects content freshness rather than tree/status/summary churn
 - Library create/import defaults to `published: true`, `hidden: true`; Studio create/import defaults to `published: true`, `hidden: false`
 - generated docs data keeps a compatibility `viewable` field computed as `!hidden`
 - manage mode uses a checked-by-default `show hidden` checkbox so hidden docs remain visible for review

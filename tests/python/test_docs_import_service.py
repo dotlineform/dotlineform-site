@@ -934,6 +934,7 @@ def test_library_import_summary_apply_creates_backup_and_writes_source() -> None
     assert backup_source_exists
     assert manifest["operation"] == "documents-summary-apply"
     assert manifest["metadata"]["updated_doc_ids"] == ["alpha"]
+    assert "last_updated: 2026-05-01" in source_text
     assert "summary: New summary." in source_text
 
 
@@ -1032,6 +1033,7 @@ def test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order(
     assert payload["backup_dir"].startswith("var/docs/backups/")
     assert manifest["operation"] == "documents-hierarchy-apply"
     assert manifest["metadata"]["updated_doc_ids"] == ["alpha"]
+    assert "last_updated: 2026-05-01" in alpha_text
     assert 'parent_id: ""' in alpha_text
     assert "sort_order: 30" in alpha_text
     assert "parent_id: external-root" not in library_text

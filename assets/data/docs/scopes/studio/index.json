@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T19:32:01Z",
+  "generated_at": "2026-05-13T19:42:39Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -3143,7 +3143,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 28204,
+      "content_text_length": 28300,
       "ui_status": "done"
     },
     {

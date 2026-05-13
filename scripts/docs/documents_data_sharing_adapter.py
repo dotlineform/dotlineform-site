@@ -452,7 +452,6 @@ def apply_summary_updates(
         updated_front_matter["added_date"] = str(
             updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
         ).strip()
-        updated_front_matter["last_updated"] = timestamp
         updated_front_matter["summary"] = summary
         rewritten_sources[doc_id] = source_model.format_source(updated_front_matter, target.body)
         rewrite_docs.append(target)
@@ -594,7 +593,6 @@ def apply_hierarchy_updates(
         updated_front_matter["added_date"] = str(
             updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
         ).strip()
-        updated_front_matter["last_updated"] = timestamp
         updated_front_matter["parent_id"] = parent_id
         rewritten_sources[doc_id] = source_model.format_source(updated_front_matter, target.body)
         rewrite_docs.append(target)

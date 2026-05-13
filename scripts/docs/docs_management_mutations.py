@@ -258,7 +258,6 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
     ).strip()
     updated_front_matter["title"] = title
-    updated_front_matter["last_updated"] = timestamp
     if summary_was_provided:
         if summary:
             updated_front_matter["summary"] = summary
@@ -748,7 +747,6 @@ def plan_archive(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPla
     updated_front_matter["added_date"] = str(
         updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
     ).strip()
-    updated_front_matter["last_updated"] = timestamp
     updated_front_matter["parent_id"] = "archive"
     updated_front_matter["sort_order"] = next_order
 

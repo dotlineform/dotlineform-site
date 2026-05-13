@@ -182,7 +182,7 @@ def test_move_placement_normalizes_inside_and_after_positions() -> None:
     ]
 
 
-def test_source_rewrite_preserves_added_date_updates_last_updated_and_removes_blank_sort_order() -> None:
+def test_source_rewrite_preserves_doc_dates_and_removes_blank_sort_order() -> None:
     original_timestamp = source_model.current_doc_timestamp
     source_model.current_doc_timestamp = lambda: "2026-05-09 13:00"
     try:
@@ -198,11 +198,12 @@ def test_source_rewrite_preserves_added_date_updates_last_updated_and_removes_bl
         source_model.current_doc_timestamp = original_timestamp
 
     assert "added_date: 2026-01-01" in metadata_text
-    assert 'last_updated: "2026-05-09 13:00"' in metadata_text
+    assert 'last_updated: "2026-01-02 09:00"' in metadata_text
     assert "title: Updated" in metadata_text
     assert "hidden: true" in metadata_text
     assert "viewable:" not in metadata_text
     assert "parent_id: \"\"" in placement_text
+    assert 'last_updated: "2026-01-02 09:00"' in placement_text
     assert "sort_order:" not in placement_text
 
 
@@ -224,7 +225,7 @@ def main() -> None:
         test_sort_order_and_child_helpers_are_stable,
         test_descendant_helper_handles_cycles_without_looping,
         test_move_placement_normalizes_inside_and_after_positions,
-        test_source_rewrite_preserves_added_date_updates_last_updated_and_removes_blank_sort_order,
+        test_source_rewrite_preserves_doc_dates_and_removes_blank_sort_order,
         test_ensure_unique_stem_checks_existing_stems_and_doc_ids,
     ]
     for test in tests:
