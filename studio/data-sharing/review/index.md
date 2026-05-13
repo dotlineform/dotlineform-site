@@ -32,6 +32,22 @@ studio_page_doc: /docs/?scope=studio&doc=studio-data-sharing
       </label>
       <div class="dataSharingReviewPage__commandButtons" id="dataSharingReviewApplyActions" aria-label="Returned package apply actions">
         <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="dataSharingReviewRun"></button>
+        <div class="dataSharingReviewPage__actionsMenuHost">
+          <button
+            type="button"
+            class="tagStudio__button tagStudio__button--defaultWidth"
+            id="dataSharingReviewActionsButton"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-controls="dataSharingReviewActionsMenu"
+          ></button>
+          <div
+            class="dataSharingReviewPage__actionsMenu"
+            id="dataSharingReviewActionsMenu"
+            role="menu"
+            hidden
+          ></div>
+        </div>
       </div>
     </div>
 

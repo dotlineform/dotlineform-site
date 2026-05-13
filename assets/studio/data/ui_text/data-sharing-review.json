@@ -4,6 +4,7 @@
   "scope_tags": "analytics",
   "file_label": "staged file",
   "preview_button": "Review package",
+  "actions_button": "Actions",
   "select_all": "select all",
   "clear": "clear",
   "update_summary_button": "Update summary",

@@ -1213,6 +1213,57 @@ span.tagStudio__input--readonlyDisplay {
   align-items: center;
 }
 
+.dataSharingReviewPage__actionsMenuHost {
+  position: relative;
+  display: inline-flex;
+}
+
+.dataSharingReviewPage__actionsMenu {
+  position: fixed;
+  z-index: 30;
+  min-width: 11rem;
+  max-width: min(22rem, calc(100vw - 1rem));
+  padding: 0.3rem;
+  border: 1px solid var(--line, var(--studio-line));
+  border-radius: 0.85rem;
+  background: var(--panel, var(--studio-panel, #fff));
+  box-shadow: 0 10px 25px color-mix(in srgb, var(--text, var(--studio-text, #111)) 12%, transparent);
+}
+
+.dataSharingReviewPage__actionsMenu[hidden] {
+  display: none;
+}
+
+.dataSharingReviewPage__actionMenuItem {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 0.6rem;
+  padding: 0.48rem 0.65rem;
+  background: transparent;
+  color: var(--text, var(--studio-text, #111));
+  font: inherit;
+  font-size: var(--font-small);
+  line-height: var(--line-snug, 1.25);
+  text-align: left;
+  cursor: pointer;
+}
+
+.dataSharingReviewPage__actionMenuItem:hover,
+.dataSharingReviewPage__actionMenuItem:focus-visible {
+  background: var(--panel-2, var(--studio-panel-soft, #f6f6f6));
+  outline: none;
+}
+
+.dataSharingReviewPage__actionMenuItem:disabled {
+  color: var(--muted, var(--studio-muted));
+  cursor: not-allowed;
+}
+
+.dataSharingReviewPage__actionMenuItem:disabled:hover {
+  background: transparent;
+}
+
 .dataSharingReviewPage__statusRow {
   display: flex;
   flex-wrap: wrap;

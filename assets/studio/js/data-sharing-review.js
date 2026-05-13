@@ -128,26 +128,66 @@ function renderScopeSelect(state) {
   }).join("");
 }
 
+function hideApplyActionsMenu(state) {
+  if (!state || !state.applyActionMenu || !state.actionMenuButton) return;
+  state.applyActionMenu.hidden = true;
+  state.applyActionMenu.style.left = "";
+  state.applyActionMenu.style.top = "";
+  state.applyActionMenu.style.minWidth = "";
+  state.actionMenuButton.setAttribute("aria-expanded", "false");
+}
+
+function positionApplyActionsMenu(state) {
+  if (!state || !state.applyActionMenu || !state.actionMenuButton) return;
+  const triggerRect = state.actionMenuButton.getBoundingClientRect();
+  state.applyActionMenu.style.left = "0px";
+  state.applyActionMenu.style.top = "0px";
+  state.applyActionMenu.style.minWidth = `${Math.max(triggerRect.width, 176)}px`;
+  const menuRect = state.applyActionMenu.getBoundingClientRect();
+  const maxLeft = Math.max(8, window.innerWidth - menuRect.width - 8);
+  const maxTop = Math.max(8, window.innerHeight - menuRect.height - 8);
+  state.applyActionMenu.style.left = `${Math.min(triggerRect.left, maxLeft)}px`;
+  state.applyActionMenu.style.top = `${Math.min(triggerRect.bottom + 6, maxTop)}px`;
+}
+
+function showApplyActionsMenu(state) {
+  if (!state || !state.applyActionMenu || !state.actionMenuButton || state.actionMenuButton.disabled) return;
+  if (!state.applyButtons.size) return;
+  state.applyActionMenu.hidden = false;
+  state.actionMenuButton.setAttribute("aria-expanded", "true");
+  positionApplyActionsMenu(state);
+}
+
+function toggleApplyActionsMenu(state) {
+  if (!state || !state.applyActionMenu || state.applyActionMenu.hidden) {
+    showApplyActionsMenu(state);
+    return;
+  }
+  hideApplyActionsMenu(state);
+}
+
 function renderApplyActions(state) {
   state.applyButtons.clear();
-  state.applyActionContainer.querySelectorAll("[data-data-sharing-apply-action]").forEach((node) => node.remove());
+  state.applyActionMenu.innerHTML = "";
   const actions = state.applyActions.length
     ? state.applyActions
     : [];
   actions.forEach((action) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "tagStudio__button tagStudio__button--defaultWidth";
+    button.className = "dataSharingReviewPage__actionMenuItem";
     button.id = action.controlId;
+    button.setAttribute("role", "menuitem");
     button.dataset.dataSharingApplyAction = action.id;
     button.textContent = action.label;
     button.disabled = true;
     button.title = action.status === "active"
       ? normalizeText(action.title)
       : (action.unavailableTitle || scopeUnavailableMessage(state));
-    state.applyActionContainer.appendChild(button);
+    state.applyActionMenu.appendChild(button);
     state.applyButtons.set(action.id, button);
   });
+  hideApplyActionsMenu(state);
 }
 
 function updateScopeUrl(scope, domains = WORKFLOW_SCOPES) {
@@ -607,22 +647,39 @@ function renderResult(state, payload, failed = false) {
 
 function setControlsDisabled(state, disabled) {
   const supportsApply = scopeSupportsSourceApply(state);
+  const selectedRecordCount = selectedRecordIndices(state).length;
+  const disableApplyMenu = disabled || !supportsApply || !state.serviceAvailable || !state.applyButtons.size;
   state.fileSelect.disabled = disabled || !state.files.length;
   state.previewButton.disabled = disabled || !state.serviceAvailable || !state.files.length;
   state.selectAllButton.disabled = disabled || !state.previewRows.length;
   state.clearButton.disabled = disabled || !state.previewRows.length;
+  state.actionMenuButton.disabled = disableApplyMenu;
+  if (disableApplyMenu) hideApplyActionsMenu(state);
   state.applyButtons.forEach((button, actionId) => {
     const action = state.applyActions.find((item) => item.id === actionId);
-    button.disabled = disabled || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || !selectedRecordIndices(state).length;
+    const disabledForSelection = !selectedRecordCount;
+    button.disabled = disabled || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || disabledForSelection;
+    button.title = disabledForSelection
+      ? (action && action.selectionRequiredMessage) || getStudioText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
+      : normalizeText(action && action.title);
   });
 }
 
 function syncApplyActionState(state) {
   const supportsApply = scopeSupportsSourceApply(state);
+  const selectedRecordCount = selectedRecordIndices(state).length;
+  const disableApplyMenu = state.isRunning || !supportsApply || !state.serviceAvailable || !state.applyButtons.size;
+  state.actionMenuButton.disabled = disableApplyMenu;
+  if (disableApplyMenu) hideApplyActionsMenu(state);
   state.applyButtons.forEach((button, actionId) => {
     const action = state.applyActions.find((item) => item.id === actionId);
-    button.disabled = state.isRunning || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || !selectedRecordIndices(state).length;
+    const disabledForSelection = !selectedRecordCount;
+    button.disabled = state.isRunning || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || disabledForSelection;
+    button.title = disabledForSelection
+      ? (action && action.selectionRequiredMessage) || getStudioText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
+      : normalizeText(action && action.title);
   });
+  if (state.applyActionMenu && !state.applyActionMenu.hidden) positionApplyActionsMenu(state);
 }
 
 async function loadImportFiles(scope) {
@@ -895,6 +952,8 @@ async function init() {
     fileSelect: document.getElementById("dataSharingReviewFileSelect"),
     previewButton: document.getElementById("dataSharingReviewRun"),
     applyActionContainer: document.getElementById("dataSharingReviewApplyActions"),
+    actionMenuButton: document.getElementById("dataSharingReviewActionsButton"),
+    applyActionMenu: document.getElementById("dataSharingReviewActionsMenu"),
     statusNode: document.getElementById("dataSharingReviewStatus"),
     resultButton: document.getElementById("dataSharingReviewResults"),
     selectionSummary: document.getElementById("dataSharingReviewSelectionSummary"),
@@ -917,6 +976,8 @@ async function init() {
     state.fileSelect,
     state.previewButton,
     state.applyActionContainer,
+    state.actionMenuButton,
+    state.applyActionMenu,
     state.statusNode,
     state.resultButton,
     state.selectionSummary,
@@ -942,6 +1003,7 @@ async function init() {
     setText(state.scopeLabelNode, getStudioText(state.config, "data_sharing_review.scope_label", "scope"));
     setText(state.fileLabelNode, getStudioText(state.config, "data_sharing_review.file_label", "staged file"));
     setText(state.previewButton, getStudioText(state.config, "data_sharing_review.preview_button", "Review package"));
+    setText(state.actionMenuButton, getStudioText(state.config, "data_sharing_review.actions_button", "Actions"));
     setText(state.resultButton, getStudioText(state.config, "data_sharing_review.result_button", "results"));
     setText(state.selectAllButton, getStudioText(state.config, "data_sharing_review.select_all", "select all"));
     setText(state.clearButton, getStudioText(state.config, "data_sharing_review.clear", "clear"));
@@ -1042,6 +1104,19 @@ async function init() {
     state.previewButton.addEventListener("click", () => {
       runPreview(state).catch((error) => console.warn("data_sharing_review: unexpected preview failure", error));
     });
+    state.actionMenuButton.addEventListener("click", () => {
+      toggleApplyActionsMenu(state);
+    });
+    document.addEventListener("click", (event) => {
+      const target = event.target instanceof Node ? event.target : null;
+      if (!target || state.applyActionContainer.contains(target)) return;
+      hideApplyActionsMenu(state);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") hideApplyActionsMenu(state);
+    });
+    window.addEventListener("scroll", () => hideApplyActionsMenu(state), { passive: true });
+    window.addEventListener("resize", () => hideApplyActionsMenu(state));
     state.resultButton.addEventListener("click", () => {
       if (state.lastImportResult) showResultModal(state, state.lastImportResult);
     });
@@ -1060,6 +1135,7 @@ async function init() {
       const target = event.target instanceof Element ? event.target.closest("[data-data-sharing-apply-action]") : null;
       if (!(target instanceof HTMLButtonElement)) return;
       const actionId = normalizeText(target.dataset.dataSharingApplyAction);
+      hideApplyActionsMenu(state);
       runApplyAction(state, actionId).catch((error) => console.warn("data_sharing_review: unexpected apply failure", error));
     });
   } catch (error) {
