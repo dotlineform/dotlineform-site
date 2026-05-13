@@ -1,7 +1,4 @@
-import {
-  getDocsScopeDataPath,
-  loadStudioConfig
-} from "./studio-config.js";
+import { loadStudioConfig } from "./studio-config.js";
 import { loadStudioLookupJson } from "./studio-data.js";
 import {
   initializeStudioRouteState,
@@ -9,9 +6,7 @@ import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 import {
-  DOCS_MANAGEMENT_ENDPOINTS,
-  probeCatalogueHealth,
-  probeDocsManagementHealth
+  probeCatalogueHealth
 } from "./studio-transport.js";
 
 function dashboardRouteDetail(root) {
@@ -28,17 +23,6 @@ async function loadJson(url) {
     throw new Error(`HTTP ${response.status}`);
   }
   return response.json();
-}
-
-function docsGeneratedIndexUrl(scope) {
-  const url = new URL(DOCS_MANAGEMENT_ENDPOINTS.generatedIndex);
-  url.searchParams.set("scope", scope);
-  return url.href;
-}
-
-function docsIndexReadUrl(config, scope, docsServerAvailable) {
-  if (docsServerAvailable) return docsGeneratedIndexUrl(scope);
-  return getDocsScopeDataPath(config, scope, "index") || `/assets/data/docs/scopes/${scope}/index.json`;
 }
 
 function setMetric(name, value) {
@@ -66,10 +50,9 @@ async function initStudioDashboard() {
     }
     return;
   }
-  const [config, catalogueServerAvailable, docsServerAvailable] = await Promise.all([
+  const [config, catalogueServerAvailable] = await Promise.all([
     loadStudioConfig().catch(() => null),
-    probeCatalogueHealth().catch(() => false),
-    probeDocsManagementHealth().catch(() => false)
+    probeCatalogueHealth().catch(() => false)
   ]);
   const catalogueReadOptions = { cache: "no-store", catalogueServerAvailable };
 
@@ -87,10 +70,6 @@ async function initStudioDashboard() {
     (catalogueServerAvailable && config ? loadStudioLookupJson(config, "catalogue_moments", catalogueReadOptions) : Promise.resolve(null)).then((payload) => {
       const count = Number(payload?.header?.count || 0) || Object.keys(payload?.moments || {}).length;
       if (payload) setMetric("moments-count", formatNumber(count));
-    }),
-    loadJson(docsIndexReadUrl(config, "library", docsServerAvailable)).then((payload) => {
-      const count = Array.isArray(payload?.docs) ? payload.docs.length : 0;
-      setMetric("library-doc-count", formatNumber(count));
     }),
     loadJson("/assets/studio/data/tag_registry.json").then((payload) => {
       const tags = Array.isArray(payload?.tags) ? payload.tags.length : 0;

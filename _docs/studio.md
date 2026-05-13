@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: "2026-05-12"
+last_updated: "2026-05-13"
 parent_id: ""
 sort_order: 20
 ---
@@ -14,18 +14,17 @@ Studio is a site-owned admin toolset, not a separate app. Each page is rendered 
 
 Studio is a local service-backed workspace. The live `.com` routes may render the page shells, but catalogue editing and mutable catalogue review data require `bin/dev-studio` and the localhost services it starts. When a required local service is unavailable, Studio pages should make that state visible and disable affected controls rather than reading stale static editor data.
 
-The current Studio shell is organized around domain dashboards:
+The current Studio shell is organized around active admin entry points:
 
 - `Catalogue`
-- `Library`
 - `Analytics`
 - `Docs`
 
 The public site nav remains user-facing and separate from this admin layer. Public `Works` and public `Library` routes do not become Studio routes.
 There is no standalone Studio Search dashboard. Catalogue search configuration or review pages belong under the Catalogue dashboard; Docs Viewer search metrics or configuration belong in `/docs/` manage mode.
 
-The Library dashboard links to the Library Documents report inside `/docs/` manage mode for reviewing generated Library document records, `/studio/export/` for running configured exports from generated Library Docs Viewer data, and `/studio/import/` for generating preview Markdown from staged Library import data.
-Those pages depend on the docs-management local service for file writes; when the service is unavailable, command execution stays unavailable.
+Library workflows now live with their owning surfaces: Library document management and Docs Import are inside `/docs/` manage mode, generated Library document review is the [Library Documents](/docs/?scope=studio&doc=library-documents) report, and Library data import/export use `/studio/import/?scope=library` and `/studio/export/?scope=library`.
+Those write-capable pages depend on the docs-management local service; when the service is unavailable, command execution stays unavailable.
 Export pattern definitions live in `assets/studio/data/library_export_configs.json`, not in route code or `studio_config.json`.
 
 ## Route Ready State
@@ -33,7 +32,7 @@ Export pattern definitions live in `assets/studio/data/library_export_configs.js
 Studio landing and dashboard routes expose the shared route-ready contract:
 
 - `/studio/` uses `#studioHomeRoot` with `data-studio-mode="landing"` and static ready state
-- `/studio/catalogue/`, `/studio/library/`, and `/studio/analytics/` use dashboard roots with `data-studio-mode="dashboard"`
+- `/studio/catalogue/` and `/studio/analytics/` use dashboard roots with `data-studio-mode="dashboard"`
 - dashboard routes set `data-studio-busy="true"` while lightweight metric hydration runs, then mark ready after metric reads settle
 - these routes are framework markers for future dashboard behavior; they do not imply a formal dashboard test suite
 
@@ -77,7 +76,6 @@ Current Studio landing routes:
 
 - `/studio/`
 - `/studio/catalogue/`
-- `/studio/library/`
 - `/studio/analytics/`
 - `/docs/`
 

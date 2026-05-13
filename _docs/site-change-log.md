@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-12"
+last_updated: "2026-05-13"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,31 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-13] Retired Studio Library Dashboard
+
+**Status:** implemented
+
+**Area:** Studio navigation / Library workflows
+
+**Summary:**
+Removed the standalone `/studio/library/` dashboard after its links moved to owning surfaces.
+Library document management and Docs Import live in `/docs/` manage mode, Library Documents review lives in the report-backed Docs Viewer document, and Library data import/export use the scoped shared data routes.
+
+**Files changed/docs:**
+
+- `studio/library/index.md`
+- `studio/index.md`
+- `_includes/studio_header_nav.html`
+- `assets/studio/js/studio-dashboard.js`
+- `_data/studio_panel_images.json`
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Library](/docs/?scope=studio&doc=library)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+
+**Impact:**
+Studio no longer presents Library as a separate dashboard domain, and the shared dashboard script no longer probes the docs-management server solely to hydrate a Library document count.
+Library workflows remain reachable from their direct owner routes.
 
 ## [2026-05-12] Added Docs Viewer Report Components
 

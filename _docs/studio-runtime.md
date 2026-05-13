@@ -2,7 +2,7 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: "2026-05-11"
+last_updated: "2026-05-13"
 parent_id: studio
 sort_order: 20
 ---
@@ -20,7 +20,6 @@ All Studio pages use:
 The Studio route shell now provides the shared admin-facing navigation model. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
 
 - `Catalogue`
-- `Library`
 - `Analytics`
 - `Docs`
 
@@ -62,7 +61,6 @@ Current route inventory:
 
 - `studio/index.md`
 - `studio/catalogue/index.md`
-- `studio/library/index.md`
 - `studio/analytics/index.md`
 - `studio/catalogue-status/index.md`
 - `studio/activity/index.md`

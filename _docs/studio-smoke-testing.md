@@ -2,7 +2,7 @@
 doc_id: studio-smoke-testing
 title: Studio Smoke Testing
 added_date: 2026-05-01
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-13"
 parent_id: studio
 sort_order: 40
 ---
@@ -143,7 +143,6 @@ Adopted routes:
 - `/studio/` with `#studioHomeRoot`
 - `/studio/audits/` with `#studioAuditsRoot`
 - `/studio/catalogue/` with `#studioCatalogueDashboardRoot`
-- `/studio/library/` with `#studioLibraryDashboardRoot`
 - `/studio/export/` with `#dataExportRoot`
 - `/studio/import/` with `#dataImportRoot`
 - `/studio/analytics/` with `#studioAnalyticsDashboardRoot`

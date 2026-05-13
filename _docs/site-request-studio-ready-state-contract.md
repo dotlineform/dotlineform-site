@@ -134,7 +134,7 @@ Lower-priority dashboard, landing, and reference routes:
 - [x] `/studio/` root `#studioHomeRoot`
 - [x] `/studio/analytics/` root `#studioAnalyticsDashboardRoot`
 - [x] `/studio/catalogue/` root `#studioCatalogueDashboardRoot`
-- [x] `/studio/library/` root `#studioLibraryDashboardRoot`
+- [x] `/studio/library/` root `#studioLibraryDashboardRoot` retired with the Library dashboard
 - [x] `/studio/ui-catalogue/` root `#studioUiCatalogueRoot`
 - [x] `/studio/ui-catalogue/button/` root `#studioUiCatalogueButtonRoot`
 - [x] `/studio/ui-catalogue/input/` root `#studioUiCatalogueInputRoot`

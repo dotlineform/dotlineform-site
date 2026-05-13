@@ -127,8 +127,8 @@ Deliverables:
 
 Delivered:
 
-1. Defined the domain dashboard routes under `/studio/catalogue/`, `/studio/library/`, and `/studio/analytics/`.
-2. Implemented the Studio-domain top nav as `Catalogue`, `Library`, `Analytics`, and `Docs`.
+1. Defined the domain dashboard routes under `/studio/catalogue/`, `/studio/library/`, and `/studio/analytics/`; `/studio/library/` was later retired after its links moved to owning routes.
+2. Implemented the Studio-domain top nav as `Catalogue`, `Library`, `Analytics`, and `Docs`; the Library nav item was later removed with the retired dashboard.
 3. Replaced the old `/studio/` route list with domain landing panels.
 4. Added landing dashboards for active Studio domains with workflow links, guidance links, and lightweight metrics.
 5. Implemented the first Catalogue dashboard with work/series/status/activity/build entry points and workflow summary copy.

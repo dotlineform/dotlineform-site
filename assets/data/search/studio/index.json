@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6b5be1e6d7164aef5cf582f2fe6d7da6",
-    "generated_at_utc": "2026-05-13T09:22:37Z",
+    "version": "blake2b-c51ab1273209ec467371af427edf9481",
+    "generated_at_utc": "2026-05-13T10:08:29Z",
     "count": 230
   },
   "entries": [
@@ -1335,37 +1335,37 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-12",
-      "display_meta": "2026-05-12",
+      "last_updated": "2026-05-13",
+      "display_meta": "2026-05-13",
       "search_terms": [
         "studio",
-        "2026-05-12",
+        "2026-05-13",
         "2026",
         "05",
-        "12"
+        "13"
       ],
-      "search_text": "studio 2026-05-12 2026 05 12"
+      "search_text": "studio 2026-05-13 2026 05 13"
     },
     {
       "id": "studio-runtime",
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-11 • Studio",
+      "display_meta": "2026-05-13 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-05-11",
+        "2026-05-13",
         "2026",
         "05",
-        "11"
+        "13"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-11 2026 05 11"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-13 2026 05 13"
     },
     {
       "id": "studio-ui-start",
@@ -1551,16 +1551,16 @@
       "kind": "doc",
       "title": "Library",
       "href": "/docs/?scope=studio&doc=library",
-      "last_updated": "2026-05-07",
-      "display_meta": "2026-05-07",
+      "last_updated": "2026-05-13",
+      "display_meta": "2026-05-13",
       "search_terms": [
         "library",
-        "2026-05-07",
+        "2026-05-13",
         "2026",
         "05",
-        "07"
+        "13"
       ],
-      "search_text": "library 2026-05-07 2026 05 07"
+      "search_text": "library 2026-05-13 2026 05 13"
     },
     {
       "id": "site-request-portable-docs-viewer",
@@ -1627,10 +1627,10 @@
       "kind": "doc",
       "title": "Docs Viewer Report Components Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-report-components",
-      "last_updated": "2026-05-12 21:26",
+      "last_updated": "2026-05-12 22:17",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-12 21:26 • Change Requests",
+      "display_meta": "2026-05-12 22:17 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-report-components",
         "site",
@@ -1643,14 +1643,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-12 21:26",
+        "2026-05-12 22:17",
         "2026",
         "05",
         "12",
-        "21",
-        "26"
+        "22",
+        "17"
       ],
-      "search_text": "site-request-docs-viewer-report-components site request docs viewer report components docs viewer report components request change requests change requests 2026-05-12 21:26 2026 05 12 21 26"
+      "search_text": "site-request-docs-viewer-report-components site request docs viewer report components docs viewer report components request change requests change requests 2026-05-12 22:17 2026 05 12 22 17"
     },
     {
       "id": "analytics",
@@ -2535,24 +2535,22 @@
       "kind": "doc",
       "title": "Studio Smoke Testing",
       "href": "/docs/?scope=studio&doc=studio-smoke-testing",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-09 16:00 • Studio",
+      "display_meta": "2026-05-13 • Studio",
       "search_terms": [
         "studio-smoke-testing",
         "studio",
         "smoke",
         "testing",
         "studio smoke testing",
-        "2026-05-09 16:00",
+        "2026-05-13",
         "2026",
         "05",
-        "09",
-        "16",
-        "00"
+        "13"
       ],
-      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-13 2026 05 13"
     },
     {
       "id": "studio-ui-conformance",
@@ -2798,21 +2796,19 @@
       "kind": "doc",
       "title": "Import/Export",
       "href": "/docs/?scope=studio&doc=import-export",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
+      "last_updated": "2026-05-13",
+      "display_meta": "2026-05-13",
       "search_terms": [
         "import-export",
         "import",
         "export",
         "import/export",
-        "2026-05-06 20:49",
+        "2026-05-13",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "13"
       ],
-      "search_text": "import-export import export import/export 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "import-export import export import/export 2026-05-13 2026 05 13"
     },
     {
       "id": "config-jekyll-site-config",
@@ -4710,10 +4706,10 @@
       "kind": "doc",
       "title": "Column Links Pattern",
       "href": "/docs/?scope=studio&doc=ui-pattern-column-links",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-13",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-11 • UI Catalogue",
+      "display_meta": "2026-05-13 • UI Catalogue",
       "search_terms": [
         "ui-pattern-column-links",
         "ui",
@@ -4723,12 +4719,12 @@
         "column links pattern",
         "ui catalogue",
         "catalogue",
-        "2026-05-11",
+        "2026-05-13",
         "2026",
         "05",
-        "11"
+        "13"
       ],
-      "search_text": "ui-pattern-column-links ui pattern column links column links pattern ui catalogue catalogue 2026-05-11 2026 05 11"
+      "search_text": "ui-pattern-column-links ui pattern column links column links pattern ui catalogue catalogue 2026-05-13 2026 05 13"
     },
     {
       "id": "scripts-srcset-builder",
@@ -5964,20 +5960,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-12",
-      "display_meta": "2026-05-12",
+      "last_updated": "2026-05-13",
+      "display_meta": "2026-05-13",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-12",
+        "2026-05-13",
         "2026",
         "05",
-        "12"
+        "13"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-12 2026 05 12"
+      "search_text": "site-change-log site change log site change log 2026-05-13 2026 05 13"
     },
     {
       "id": "archive",

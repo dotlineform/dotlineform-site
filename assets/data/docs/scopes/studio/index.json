@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T09:33:44Z",
+  "generated_at": "2026-05-13T10:08:29Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -52,7 +52,7 @@
       "source_path": "site-request-studio-unified-activity-log-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-unified-activity-log-inventory.json",
-      "content_text_length": 21587,
+      "content_text_length": 21568,
       "ui_status": "done"
     },
     {
@@ -827,7 +827,7 @@
       "doc_id": "studio",
       "title": "Studio",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-12",
+      "last_updated": "2026-05-13",
       "parent_id": "",
       "sort_order": 20,
       "published": true,
@@ -836,14 +836,14 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 5079
+      "content_text_length": 5028
     },
     {
       "scope": "studio",
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-13",
       "parent_id": "studio",
       "sort_order": 20,
       "published": true,
@@ -852,7 +852,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 14267
+      "content_text_length": 14235
     },
     {
       "scope": "studio",
@@ -973,7 +973,7 @@
       "doc_id": "library",
       "title": "Library",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-13",
       "parent_id": "",
       "sort_order": 27,
       "published": true,
@@ -982,7 +982,7 @@
       "source_path": "library.md",
       "viewer_url": "/docs/?scope=studio&doc=library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library.json",
-      "content_text_length": 360
+      "content_text_length": 547
     },
     {
       "scope": "studio",
@@ -1388,7 +1388,7 @@
       "source_path": "site-request-studio-ready-state-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-ready-state-contract.json",
-      "content_text_length": 9628,
+      "content_text_length": 9663,
       "ui_status": "done"
     },
     {
@@ -1591,7 +1591,7 @@
       "doc_id": "studio-smoke-testing",
       "title": "Studio Smoke Testing",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-13",
       "parent_id": "studio",
       "sort_order": 40,
       "published": true,
@@ -1600,7 +1600,7 @@
       "source_path": "studio-smoke-testing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-smoke-testing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-smoke-testing.json",
-      "content_text_length": 7519
+      "content_text_length": 7469
     },
     {
       "scope": "studio",
@@ -1754,7 +1754,7 @@
       "doc_id": "import-export",
       "title": "Import/Export",
       "added_date": "2026-05-06 18:39",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-13",
       "parent_id": "",
       "sort_order": 50,
       "published": true,
@@ -1763,7 +1763,7 @@
       "source_path": "import-export.md",
       "viewer_url": "/docs/?scope=studio&doc=import-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/import-export.json",
-      "content_text_length": 369
+      "content_text_length": 388
     },
     {
       "scope": "studio",
@@ -1877,7 +1877,7 @@
       "source_path": "studio-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-implementation-plan.json",
-      "content_text_length": 52190
+      "content_text_length": 52332
     },
     {
       "scope": "studio",
@@ -2955,7 +2955,7 @@
       "doc_id": "ui-pattern-column-links",
       "title": "Column Links Pattern",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-13",
       "parent_id": "ui-catalogue",
       "sort_order": 120,
       "published": true,
@@ -2964,7 +2964,7 @@
       "source_path": "ui-pattern-column-links.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-column-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-column-links.json",
-      "content_text_length": 1977
+      "content_text_length": 2064
     },
     {
       "scope": "studio",
@@ -3456,7 +3456,7 @@
       "source_path": "library-import.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import.json",
-      "content_text_length": 23728,
+      "content_text_length": 23759,
       "ui_status": "done"
     },
     {
@@ -3733,7 +3733,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-12",
+      "last_updated": "2026-05-13",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3742,7 +3742,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 149621
+      "content_text_length": 150496
     },
     {
       "scope": "studio",

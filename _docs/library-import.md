@@ -242,7 +242,7 @@ Current Studio UI behavior:
 - result modal counts use a vertical label/value stack, with issue messages below the counts
 - document rows show the document title and document-oriented metadata only; generated preview file paths stay out of the list
 
-The Library dashboard should link to the shared data import route under the existing `Data` column, beneath the export link.
+Active Library entry points should link directly to the shared data import route with `?scope=library`.
 The page can be created early as a staged-file listing before preview generation exists.
 Once previews are available, the list should focus on document rows rather than generated file paths.
 
@@ -277,7 +277,7 @@ Potential later apply flows:
 - full content semantics: readable inspection preview only, not a source-content replacement
 - relationship semantics: candidate tree preview only
 - source freshness comparison against `source_last_updated`: deferred
-- dashboard link: add Library Import below export under the Library dashboard `Data` column once the route exists
+- entry link: expose Library Import as `/studio/import/?scope=library`
 
 ## Remaining Open Questions
 
@@ -376,7 +376,7 @@ The page can ship first as a staged-file listing and then grow preview generatio
 Status note:
 
 - implemented at `/studio/import/`
-- listed from the `/studio/library/` dashboard under Data
+- reachable at `/studio/import/?scope=library`
 - defaults to `scope=library`, with a scope selector for `library`, `catalogue`, and `analytics`
 - reads selectable data domains and unavailable-state messages from `assets/studio/data/export_import_adapters.json`
 - loads staged `.json` and `.jsonl` files through `GET /docs/import/files?data_domain=library`
@@ -397,11 +397,11 @@ Status note:
 - keeps the route disabled when the docs-management local service is unavailable
 - does not apply full content or future `sort_order` changes to canonical Library source
 
-### Task 7. Link From Library Dashboard
+### Task 7. Link From Library Entry Points
 
-Add the Library Import route under the Library dashboard `Data` column below `export` once the page route exists.
+Add links to the Library Import route from active Library entry points once the page route exists.
 
-Status: implemented.
+Status: implemented, then superseded by direct `/studio/import/?scope=library` access after the `/studio/library/` dashboard was retired.
 
 ### Task 8. Add Verification
 
