@@ -39,12 +39,12 @@ Re-run this inventory after material Studio or Docs Viewer JavaScript refactors.
 
 Measured on 2026-05-14.
 
-- Browser JavaScript files under `assets/`: 98
-- Total browser JavaScript lines under `assets/`: 35,492
+- Browser JavaScript files under `assets/`: 99
+- Total browser JavaScript lines under `assets/`: 35,571
 - Files over the 1,000-line review threshold: 6
 - Files in the 900-1,000 line watch band: 5
-- Over-threshold raw size total: 352.3 KiB
-- Over-threshold gzip size total: 68.1 KiB
+- Over-threshold raw size total: 346.8 KiB
+- Over-threshold gzip size total: 67.1 KiB
 
 The over-threshold set is still maintenance-driven more than transfer-driven.
 No route loads all over-threshold files together.
@@ -56,8 +56,8 @@ No route loads all over-threshold files together.
 | `assets/docs-viewer/js/docs-viewer-management.js` | 1,892 | 69.5 KiB | 11.8 KiB | mixed Docs Viewer management controller | high | low | Dynamically loaded only for management mode. Management markup helpers for status pills, metadata parent/status controls, and settings warnings now live in `assets/docs-viewer/js/docs-viewer-management-render.js`. The controller still owns metadata modal, settings modal, import modal boot, drag/drop, context menu, and write orchestration. Next cleanup should split modal view-models or write-action orchestration behind management-only helpers. |
 | `assets/studio/js/tag-studio.js` | 1,886 | 63.2 KiB | 13.0 KiB | mixed route controller | high | low | Continue the Tag Editor split by moving render groups, popup behavior, and modal/save orchestration behind route-local helpers. |
 | `assets/studio/js/tag-aliases.js` | 1,708 | 62.3 KiB | 11.2 KiB | mixed route controller | high | low | Existing domain/save/service split is useful but incomplete. Next cleanup should target modal view-models and list rendering before more alias workflow is added. |
-| `assets/docs-viewer/js/docs-viewer.js` | 1,673 | 55.5 KiB | 11.6 KiB | mixed shared viewer runtime controller | high | medium | Still the top cleanup target for read-only route payload. Bookmark state, storage, rendering, and events now live in `assets/docs-viewer/js/docs-viewer-bookmarks.js`; sidebar/nav/meta rendering and trail display now live in `assets/docs-viewer/js/docs-viewer-sidebar.js`; result-row and bookmark-row markup helpers live in `assets/docs-viewer/js/docs-viewer-render.js`; status-pill markup and events stay behind the lazy management-controller boundary. The entry controller still owns route state, content loading, search orchestration, reports entry, and management dynamic-loading. |
 | `assets/studio/js/tag-registry.js` | 1,625 | 58.3 KiB | 11.1 KiB | mixed route controller | high | low | Existing domain/save/service split is useful but incomplete. Next cleanup should target modal view-models, delete-impact rendering, and import-result rendering. |
+| `assets/docs-viewer/js/docs-viewer.js` | 1,497 | 50.0 KiB | 10.7 KiB | mixed shared viewer runtime controller | high | medium | Still the top cleanup target for read-only route payload. Bookmark state, storage, rendering, and events now live in `assets/docs-viewer/js/docs-viewer-bookmarks.js`; sidebar/nav/meta rendering and trail display now live in `assets/docs-viewer/js/docs-viewer-sidebar.js`; search loading, recent/search result rendering, result batching, and debounced search input binding now live in `assets/docs-viewer/js/docs-viewer-search-controller.js`; result-row and bookmark-row markup helpers live in `assets/docs-viewer/js/docs-viewer-render.js`; status-pill markup and events stay behind the lazy management-controller boundary. The entry controller still owns route state, content loading, reports entry, and management dynamic-loading. |
 | `assets/studio/js/data-sharing-review.js` | 1,163 | 43.4 KiB | 9.3 KiB | mixed route controller | medium | low | Newly over threshold relative to the older inventory. It owns staged package listing, preview rendering, apply confirmation, result rendering, and workflow-scope state. Split preview/result rendering or apply-action orchestration if it grows further. |
 
 ## Watch Band

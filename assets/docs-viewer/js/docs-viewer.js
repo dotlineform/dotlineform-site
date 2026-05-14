@@ -6,9 +6,6 @@ import {
   normalizeDocIdSet
 } from "./docs-viewer-tree.js";
 import {
-  collectRecentDocs,
-  collectSearchMatches,
-  normalizeSearchEntries,
   normalizeSearchText
 } from "./docs-viewer-search.js";
 import {
@@ -23,10 +20,11 @@ import {
   readAssetVersion
 } from "./docs-viewer-data.js";
 import {
-  escapeHtml,
-  renderRecentEntry,
-  renderSearchEntry
+  escapeHtml
 } from "./docs-viewer-render.js";
+import {
+  initDocsViewerSearchController
+} from "./docs-viewer-search-controller.js";
 import {
   initDocsViewerSidebarRenderer
 } from "./docs-viewer-sidebar.js";
@@ -201,6 +199,32 @@ import {
     viewerTargetDocId: viewerTargetDocId,
     viewerUrl: viewerUrl
   });
+  var searchController = initDocsViewerSearchController({
+    applyCurrentRoute: applyCurrentRoute,
+    cancelSearchDebounce: cancelSearchDebounce,
+    dataRequestOptions: dataRequestOptions,
+    defaultDocId: defaultDocId,
+    hideContextMenu: hideContextMenu,
+    hideDocPane: hideDocPane,
+    hasActiveQuery: hasActiveQuery,
+    more: more,
+    recentButton: recentButton,
+    resolveDocId: resolveDocId,
+    results: results,
+    searchBatchSize: SEARCH_BATCH_SIZE,
+    searchDebounceMs: SEARCH_DEBOUNCE_MS,
+    searchIndexUrl: function () { return searchIndexUrl; },
+    searchInput: searchInput,
+    setHistory: setHistory,
+    setRecentModeActive: setRecentModeActive,
+    setStatus: setStatus,
+    showRecentPane: showRecentPane,
+    showSearchPane: showSearchPane,
+    state: state,
+    viewerScope: function () { return viewerScope; },
+    viewerTargetDocId: viewerTargetDocId,
+    viewerUrl: viewerUrl
+  });
 
   function dataRequestOptions(overrides) {
     var settings = overrides || {};
@@ -350,14 +374,6 @@ import {
       });
 
     return managementControllerRequestPromise;
-  }
-
-  function searchIsEnabled() {
-    return Boolean(searchInput && results && more && searchIndexUrl);
-  }
-
-  function searchControlsAvailable() {
-    return Boolean(searchInput && results && more);
   }
 
   function normalizeBrowserScopeConfig(rawScope) {
@@ -999,19 +1015,6 @@ import {
     return sidebarRenderer.buildTrail(docId);
   }
 
-  function displayRecentMetaForDoc(doc) {
-    if (!doc) return "";
-    var parts = [];
-    var addedDate = String(doc.added_date || doc.last_updated || "").trim();
-    if (addedDate) parts.push(addedDate);
-    if (doc.parent_id) {
-      var parent = state.docsById.get(doc.parent_id);
-      var parentTitle = parent ? String(parent.title || "").trim() : "";
-      if (parentTitle) parts.push(parentTitle);
-    }
-    return parts.join(" • ");
-  }
-
   function expandTrail(docId) {
     sidebarRenderer.expandTrail(docId);
   }
@@ -1279,24 +1282,6 @@ import {
       });
     }
 
-    if (recentButton) {
-      recentButton.addEventListener("click", function () {
-        hideContextMenu();
-        cancelSearchDebounce();
-        var activeDocId = state.selectedDocId || resolveDocId().docId || defaultDocId();
-        state.searchQuery = "";
-        state.searchRouteActive = false;
-        state.searchVisibleCount = SEARCH_BATCH_SIZE;
-        if (searchInput) {
-          searchInput.value = "";
-        }
-        if (activeDocId) {
-          setHistory(activeDocId, "", "", "push");
-        }
-        renderRecentMode();
-      });
-    }
-
     if (scopeSelect) {
       scopeSelect.addEventListener("change", function () {
         handleScopeChange();
@@ -1313,45 +1298,7 @@ import {
       }
     });
 
-    if (searchControlsAvailable()) {
-      more.addEventListener("click", function (event) {
-        var button = event.target.closest("button[data-role='more']");
-        if (!button) return;
-        state.searchVisibleCount += SEARCH_BATCH_SIZE;
-        renderSearchMode();
-      });
-
-      searchInput.addEventListener("input", function () {
-        var nextQuery = String(searchInput.value || "").trim();
-        var nextModeActive = Boolean(normalizeSearchText(nextQuery));
-        var previousModeActive = state.searchRouteActive;
-        var activeDocId = state.selectedDocId || resolveDocId().docId || "";
-
-        cancelSearchDebounce();
-        setRecentModeActive(false);
-        state.searchQuery = nextQuery;
-        state.searchVisibleCount = SEARCH_BATCH_SIZE;
-
-        if (!activeDocId) {
-          return;
-        }
-
-        if (!nextModeActive) {
-          state.searchRouteActive = false;
-          setHistory(activeDocId, "", "", previousModeActive ? "replace" : "none");
-          applyCurrentRoute({ historyMode: "none", hash: "" });
-          return;
-        }
-
-        state.searchRouteActive = true;
-        setHistory(activeDocId, "", nextQuery, previousModeActive ? "replace" : "push");
-        renderSearchPendingState();
-        state.searchDebounceId = window.setTimeout(function () {
-          state.searchDebounceId = null;
-          applyCurrentRoute({ historyMode: "none", hash: "" });
-        }, SEARCH_DEBOUNCE_MS);
-      });
-    }
+    searchController.bind();
   }
 
   function resolveDocId() {
@@ -1457,139 +1404,16 @@ import {
       });
   }
 
-  function loadSearchEntries() {
-    if (!searchIsEnabled()) {
-      return Promise.reject(new Error("Search unavailable."));
-    }
-    if (state.searchLoaded) {
-      return Promise.resolve(state.searchEntries);
-    }
-    if (state.searchRequestPromise) {
-      return state.searchRequestPromise;
-    }
-
-    state.searchRequestPromise = fetchPreferredGeneratedJson(
-      searchIndexUrl,
-      "Failed to load search data",
-      managementReloadPath("/docs/generated/search", { scope: viewerScope }),
-      dataRequestOptions({ useSearchCapability: true })
-    )
-      .then(function (payload) {
-        state.searchEntries = normalizeSearchEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
-        state.searchLoaded = true;
-        return state.searchEntries;
-      })
-      .catch(function (error) {
-        state.searchLoaded = false;
-        throw error;
-      })
-      .finally(function () {
-        state.searchRequestPromise = null;
-      });
-
-    return state.searchRequestPromise;
-  }
-
-  function renderSearchResultEntry(entry) {
-    return renderSearchEntry(entry, viewerUrl(viewerTargetDocId(entry.id), "", ""));
-  }
-
-  function renderRecentResultEntry(doc) {
-    return renderRecentEntry(doc, displayRecentMetaForDoc(doc), viewerUrl(viewerTargetDocId(doc.doc_id), "", ""));
-  }
-
   function renderRecentMode() {
-    if (!searchIsEnabled()) return;
-    showRecentPane();
-    document.title = "Recently Added | dotlineform";
-    var recentDocs = collectRecentDocs(state.docs.filter(isDocViewable), state.recentLimit);
-    if (!recentDocs.length) {
-      setStatus("No recently added docs.", false);
-      results.innerHTML = "";
-      more.innerHTML = "";
-      more.hidden = true;
-      return;
-    }
-
-    setStatus(recentDocs.length === 1 ? "1 recently added doc" : recentDocs.length + " recently added docs", false);
-    results.innerHTML = recentDocs.map(renderRecentResultEntry).join("");
-    more.innerHTML = "";
-    more.hidden = true;
+    searchController.renderRecentMode();
   }
 
   function renderSearchPendingState() {
-    if (!searchIsEnabled() || !hasActiveQuery()) return;
-    setRecentModeActive(false);
-    showSearchPane();
-    setStatus(state.searchLoaded ? "Searching..." : "Loading search index...", false);
-    results.innerHTML = "";
-    more.innerHTML = "";
-    more.hidden = true;
-    document.title = "Search | dotlineform";
+    searchController.renderSearchPendingState();
   }
 
   function renderSearchMode() {
-    if (!searchIsEnabled()) {
-      setStatus("Search unavailable.", true);
-      hideDocPane();
-      results.hidden = true;
-      more.hidden = true;
-      return;
-    }
-
-    var query = normalizeSearchText(state.searchQuery);
-    if (!query) {
-      return;
-    }
-
-    showSearchPane();
-    setRecentModeActive(false);
-    document.title = "Search | dotlineform";
-
-    if (!state.searchLoaded) {
-      renderSearchPendingState();
-      loadSearchEntries()
-        .then(function () {
-          if (hasActiveQuery()) {
-            renderSearchMode();
-          }
-        })
-        .catch(function (error) {
-          if (!hasActiveQuery()) return;
-          setStatus(error.message || "Failed to load search data.", true);
-          results.innerHTML = "";
-          more.innerHTML = "";
-          more.hidden = true;
-        });
-      return;
-    }
-
-    var matches = collectSearchMatches(state.searchEntries, query);
-    if (!matches.length) {
-      setStatus("No results.", false);
-      results.innerHTML = "";
-      more.innerHTML = "";
-      more.hidden = true;
-      return;
-    }
-
-    var visible = matches.slice(0, state.searchVisibleCount);
-    setStatus(matches.length === 1
-      ? "1 result"
-      : matches.length > visible.length
-        ? "Showing " + visible.length + " of " + matches.length + " results"
-        : matches.length + " results",
-    false);
-    results.innerHTML = visible.map(function (match) {
-      return renderSearchResultEntry(match.entry);
-    }).join("");
-    if (matches.length > visible.length) {
-      more.hidden = false;
-      more.innerHTML = '<button type="button" class="docsViewer__moreBtn" data-role="more">more</button>';
-    } else {
-      more.hidden = true;
-      more.innerHTML = "";
-    }
+    searchController.renderSearchMode();
   }
 
   window.addEventListener("popstate", function () {

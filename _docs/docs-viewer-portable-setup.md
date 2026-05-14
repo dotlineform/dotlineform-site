@@ -71,6 +71,7 @@ Copy the shared viewer runtime files:
 - `assets/docs-viewer/js/docs-viewer-tree.js`
 - `assets/docs-viewer/js/docs-viewer-sidebar.js`
 - `assets/docs-viewer/js/docs-viewer-search.js`
+- `assets/docs-viewer/js/docs-viewer-search-controller.js`
 - `assets/docs-viewer/js/docs-viewer-bookmarks.js`
 - `assets/docs-viewer/js/docs-viewer-favourites.js`
 - `assets/docs-viewer/js/docs-viewer-render.js`
