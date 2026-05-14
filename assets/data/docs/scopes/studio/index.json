@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T09:20:29Z",
+  "generated_at": "2026-05-14T10:03:34Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -982,6 +982,23 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-copy-draft-media",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-copy-draft-media.json",
       "content_text_length": 498
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-new-scope-button",
+      "title": "Docs Viewer New Scope Button Request",
+      "added_date": "2026-05-14",
+      "last_updated": "2026-05-14",
+      "parent_id": "change-requests",
+      "sort_order": 30,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-new-scope-button.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-new-scope-button.json",
+      "content_text_length": 11610,
+      "ui_status": "draft"
     },
     {
       "scope": "studio",
@@ -3593,23 +3610,6 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-import-export-module.json",
       "content_text_length": 19391,
       "ui_status": "done"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-docs-viewer-new-scope-button",
-      "title": "Docs Viewer New Scope Button Request",
-      "added_date": "2026-05-14",
-      "last_updated": "2026-05-14",
-      "parent_id": "change-requests",
-      "sort_order": 213,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "site-request-docs-viewer-new-scope-button.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-new-scope-button.json",
-      "content_text_length": 6742,
-      "ui_status": "draft"
     },
     {
       "scope": "studio",
