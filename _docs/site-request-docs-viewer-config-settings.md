@@ -12,7 +12,7 @@ hidden: false
 
 Status:
 
-- proposed
+- In progress
 
 ## Summary
 
