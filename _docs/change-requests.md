@@ -2,7 +2,7 @@
 doc_id: change-requests
 title: Change Requests
 added_date: 2026-04-28
-last_updated: "2026-05-13 21:07"
+last_updated: "2026-05-14"
 parent_id: ""
 sort_order: 220
 ---
@@ -29,6 +29,7 @@ Those still belong in the owning reference docs and change logs.
 ## Current Requests
 
 - [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization)
+- [Docs Viewer New Scope Button Request](/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button)
 - [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)
 - [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup)
 - [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)
