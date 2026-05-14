@@ -69,22 +69,22 @@ async function loadDocsViewerText(textUrl = "/assets/docs-viewer/data/ui-text.js
 
 function createModalHost(options = {}) {
   const root = options.root || document.body;
-  let host = root.querySelector('[data-studio-modal-host="true"]');
+  let host = root.querySelector('[data-docs-viewer-modal-host="true"]');
   if (host) return host;
 
   host = document.createElement("div");
-  host.setAttribute("data-studio-modal-host", "true");
+  host.setAttribute("data-docs-viewer-modal-host", "true");
   root.appendChild(host);
   return host;
 }
 
 function renderModalActions(actions = []) {
   if (!Array.isArray(actions) || !actions.length) return "";
-  return `<div class="tagStudioModal__actions">${actions.map((action, index) => {
+  return `<div class="docsViewerImportModal__actions">${actions.map((action, index) => {
     const label = String(action && action.label ? action.label : `Action ${index + 1}`);
     const roleAttr = action && action.role ? ` data-role="${escapeHtml(action.role)}"` : "";
     const disabledAttr = action && action.disabled ? " disabled" : "";
-    return `<button type="button" class="tagStudio__button"${roleAttr}${disabledAttr}>${escapeHtml(label)}</button>`;
+    return `<button type="button" class="docsViewerImport__button"${roleAttr}${disabledAttr}>${escapeHtml(label)}</button>`;
   }).join("")}</div>`;
 }
 
@@ -93,15 +93,15 @@ function renderModalFrame(options = {}) {
   const backdropRole = options.backdropRole ? ` data-role="${escapeHtml(options.backdropRole)}"` : "";
   const dialogClass = options.dialogClass ? ` ${escapeHtml(options.dialogClass)}` : "";
   const hiddenAttr = options.hidden === false ? "" : " hidden";
-  const titleId = String(options.titleId || "studioModalTitle");
+  const titleId = String(options.titleId || "docsViewerImportModalTitle");
   const titleRole = options.titleRole ? ` data-role="${escapeHtml(options.titleRole)}"` : "";
   const title = String(options.title || "");
   const bodyHtml = String(options.bodyHtml || "");
   const actionsHtml = options.actionsHtml || renderModalActions(options.actions || []);
   return `
-    <div class="tagStudioModal"${modalRole}${hiddenAttr}>
-      <div class="tagStudioModal__backdrop"${backdropRole}></div>
-      <div class="tagStudioModal__dialog${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}">
+    <div class="docsViewerImportModal"${modalRole}${hiddenAttr}>
+      <div class="docsViewerImportModal__backdrop"${backdropRole}></div>
+      <div class="docsViewerImportModal__dialog${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}">
         <h3 id="${escapeHtml(titleId)}"${titleRole}>${escapeHtml(title)}</h3>
         ${bodyHtml}
         ${actionsHtml}
@@ -513,19 +513,19 @@ async function openReplacementDocIdModal(state, payload) {
     modalRole: "docs-import-filename-conflict-modal",
     backdropRole: "filename-conflict-cancel",
     bodyHtml: `
-      <p class="tagStudioModal__label">${escapeHtml(configText(
+      <p class="docsViewerImportModal__label">${escapeHtml(configText(
         state.config,
         "docs_html_import.filename_conflict_body",
         "A source file named {doc_id}.md already exists. Edit the doc_id to choose a new filename.",
         { doc_id: currentDocId }
       ))}</p>
-      <label class="tagStudioField docsHtmlImportPage__modalField" for="${inputId}">
-        <span class="tagStudioField__label">${escapeHtml(configText(state.config, "docs_html_import.replacement_doc_id_label", "doc_id"))}</span>
-        <span class="tagStudioField__control">
-          <input class="tagStudio__input" id="${inputId}" type="text" value="${escapeHtml(currentDocId)}">
+      <label class="docsViewerImport__field docsViewerImport__modalField" for="${inputId}">
+        <span class="docsViewerImport__fieldLabel">${escapeHtml(configText(state.config, "docs_html_import.replacement_doc_id_label", "doc_id"))}</span>
+        <span class="docsViewerImport__fieldControl">
+          <input class="docsViewerImport__input" id="${inputId}" type="text" value="${escapeHtml(currentDocId)}">
         </span>
       </label>
-      <p class="tagStudioForm__status" data-role="${statusRole}"></p>
+      <p class="docsViewerImport__status" data-role="${statusRole}"></p>
     `,
     actions: [
       { role: "filename-conflict-ok", label: configText(state.config, "docs_html_import.filename_conflict_ok_button", "OK") },

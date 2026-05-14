@@ -1,91 +1,79 @@
-.docsViewer .tagStudioPage{
-  --studio-radius-sm: 0.35rem;
-  --studio-radius-md: 0.45rem;
-  --studio-radius-lg: 0.5rem;
-  --studio-surface-padding-md: 0.6rem;
-  --studio-surface-padding-lg: 0.9rem;
-  --studio-control-height: 2rem;
-  --studio-button-height-sm: 2rem;
-  --studio-button-width-sm: 5.75rem;
-  --studio-surface: var(--docs-viewer-panel, var(--panel, #fff));
-  --studio-surface-subtle: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
-  --studio-line: var(--docs-viewer-border, var(--border, #d8d8d8));
-  --studio-line-strong: var(--docs-viewer-border-strong, var(--border-strong, #aaa));
-  --studio-line-input: var(--docs-viewer-border, var(--border, #d8d8d8));
-  --studio-muted: var(--docs-viewer-muted, var(--muted, #555));
-  --studio-muted-body: var(--docs-viewer-muted, var(--muted, #555));
-  --studio-default-value: color-mix(in srgb, var(--docs-viewer-muted, var(--muted, #555)) 78%, transparent);
-  --studio-focus: var(--docs-viewer-border-strong, var(--border-strong, #777));
-  --studio-focus-ring: color-mix(in srgb, var(--docs-viewer-border-strong, var(--border-strong, #777)) 18%, transparent);
-  --studio-success: #1d6a3b;
-  --studio-warn: #9d5a00;
-  --studio-danger: #a22a2a;
+.docsViewerImport{
+  --docs-viewer-import-radius-sm: 0.35rem;
+  --docs-viewer-import-radius-md: 0.45rem;
+  --docs-viewer-import-radius-lg: 0.5rem;
+  --docs-viewer-import-control-height: 2rem;
+  --docs-viewer-import-button-width: 5.75rem;
+  --docs-viewer-import-default-value: color-mix(in srgb, var(--docs-viewer-muted, var(--muted, #555)) 78%, transparent);
+  --docs-viewer-import-focus-ring: color-mix(in srgb, var(--docs-viewer-border-strong, var(--border-strong, #777)) 18%, transparent);
+  --docs-viewer-import-success: #1d6a3b;
+  --docs-viewer-import-warn: #9d5a00;
+  --docs-viewer-import-danger: #a22a2a;
   max-width: none;
   margin: 0;
 }
 
-.docsViewer .tagStudio__panel{
-  border: 1px solid var(--line, var(--studio-line));
-  border-radius: var(--studio-radius-lg);
-  background: var(--surface, var(--studio-surface));
-  padding: var(--studio-surface-padding-lg);
+.docsViewerImport__panel{
+  display: grid;
+  gap: 0.8rem;
+  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-radius: var(--docs-viewer-import-radius-lg);
+  background: var(--docs-viewer-panel, var(--panel, #fff));
+  padding: 0.9rem;
 }
 
-.docsViewer .tagStudio__input{
+.docsViewerImport__input{
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
-  border: 1px solid var(--studio-line-input);
-  border-radius: var(--studio-radius-sm);
+  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-radius: var(--docs-viewer-import-radius-sm);
   padding: 0.48rem 0.55rem;
   font: inherit;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
   color: inherit;
-  background: var(--surface, var(--studio-surface));
+  background: var(--docs-viewer-panel, var(--panel, #fff));
 }
 
-.docsViewer .tagStudio__input::placeholder{
-  color: var(--studio-default-value);
+.docsViewerImport__input::placeholder{
+  color: var(--docs-viewer-import-default-value);
   opacity: 1;
 }
 
-.docsViewer input.tagStudio__input,
-.docsViewer select.tagStudio__input{
-  min-height: var(--studio-control-height);
-  height: var(--studio-control-height);
+.docsViewerImport__input:is(input, select){
+  min-height: var(--docs-viewer-import-control-height);
+  height: var(--docs-viewer-import-control-height);
 }
 
-.docsViewer input.tagStudio__input:disabled,
-.docsViewer select.tagStudio__input:disabled,
-.docsViewer textarea.tagStudio__input:disabled{
-  color: var(--studio-default-value);
-  background: var(--surface, var(--studio-surface));
+.docsViewerImport__input:disabled{
+  color: var(--docs-viewer-import-default-value);
+  background: var(--docs-viewer-panel, var(--panel, #fff));
   cursor: not-allowed;
 }
 
-.docsViewer .tagStudio__input:focus{
+.docsViewerImport__input:focus{
   outline: none;
-  border-color: var(--studio-focus);
-  box-shadow: 0 0 0 2px var(--studio-focus-ring);
+  border-color: var(--docs-viewer-border-strong, var(--border-strong, #777));
+  box-shadow: 0 0 0 2px var(--docs-viewer-import-focus-ring);
 }
 
-.docsViewer .tagStudioField{
+.docsViewerImport__field{
   --field-width: 18rem;
-  --field-label-width: 8rem;
   display: grid;
   gap: 0.22rem;
   width: fit-content;
   max-width: 100%;
+  min-inline-size: 0;
 }
 
-.docsViewer .tagStudioField__label{
+.docsViewerImport__fieldLabel{
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  color: var(--studio-muted);
+  color: var(--docs-viewer-muted, var(--muted, #555));
   text-transform: lowercase;
 }
 
-.docsViewer .tagStudioField__control{
+.docsViewerImport__fieldControl{
   display: flex;
   align-items: center;
   gap: 0.45rem;
@@ -93,41 +81,31 @@
   max-width: 100%;
 }
 
-.docsViewer .tagStudioField__control > .tagStudio__input{
+.docsViewerImport__fieldControl > .docsViewerImport__input{
   flex: 0 1 var(--field-width);
   width: min(100%, var(--field-width));
   min-width: 0;
 }
 
-.docsViewer .tagStudioField--inline,
-.docsViewer .tagStudioField--split{
+.docsViewerImport__field--inline{
   align-items: center;
-}
-
-.docsViewer .tagStudioField--inline{
   grid-template-columns: max-content auto;
   gap: 0.45rem;
 }
 
-.docsViewer .tagStudioField--split{
-  grid-template-columns: minmax(0, var(--field-label-width)) auto;
-  column-gap: 0.6rem;
-}
-
-.docsViewer .tagStudioField--inline .tagStudioField__control,
-.docsViewer .tagStudioField--split .tagStudioField__control{
+.docsViewerImport__field--inline .docsViewerImport__fieldControl{
   grid-column: 2;
 }
 
-.docsViewer .tagStudio__button{
+.docsViewerImport__button{
   box-sizing: border-box;
-  --button-height: var(--studio-button-height-sm);
+  --button-height: var(--docs-viewer-import-control-height);
   --button-font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  --button-default-width: var(--studio-button-width-sm);
-  border: 1px solid var(--line, var(--studio-line-strong));
-  background: var(--surface, var(--studio-surface));
+  --button-default-width: var(--docs-viewer-import-button-width);
+  border: 1px solid var(--docs-viewer-border-strong, var(--border-strong, #aaa));
+  background: var(--docs-viewer-panel, var(--panel, #fff));
   color: inherit;
-  border-radius: var(--studio-radius-sm);
+  border-radius: var(--docs-viewer-import-radius-sm);
   padding: 0.42rem 0.7rem;
   font: inherit;
   font-size: var(--button-font-size);
@@ -142,22 +120,22 @@
   cursor: pointer;
 }
 
-.docsViewer .tagStudio__button--defaultWidth{
+.docsViewerImport__button--defaultWidth{
   min-inline-size: var(--button-default-width);
 }
 
-.docsViewer .tagStudio__button:disabled{
-  color: var(--studio-muted);
+.docsViewerImport__button:disabled{
+  color: var(--docs-viewer-muted, var(--muted, #555));
   cursor: not-allowed;
 }
 
-.docsViewer .tagStudioForm__meta{
+.docsViewerImport__meta{
   margin: 0.25rem 0 0.75rem;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  color: var(--studio-muted);
+  color: var(--docs-viewer-muted, var(--muted, #555));
 }
 
-.docsViewer .tagStudio__status{
+.docsViewerImport__status{
   display: block;
   margin: 0;
   border: 0;
@@ -168,173 +146,210 @@
   line-height: 1.4;
 }
 
-.docsViewer .tagStudio__status:empty{
+.docsViewerImport__status:empty{
   display: none;
 }
 
-.docsViewer .tagStudio__status[data-state="success"]{
-  color: var(--studio-success);
+.docsViewerImport__status[data-state="success"]{
+  color: var(--docs-viewer-import-success);
 }
 
-.docsViewer .tagStudio__status[data-state="warn"]{
-  color: var(--studio-warn);
+.docsViewerImport__status[data-state="warn"]{
+  color: var(--docs-viewer-import-warn);
 }
 
-.docsViewer .tagStudio__status[data-state="error"]{
-  color: var(--studio-danger);
+.docsViewerImport__status[data-state="error"]{
+  color: var(--docs-viewer-import-danger);
 }
 
-.docsHtmlImportPage__panel{
-  display: grid;
-  gap: 0.8rem;
-}
-
-.docsHtmlImportPage__intro,
-.docsHtmlImportPage__warning > p,
-.docsHtmlImportPage__warnings ul{
+.docsViewerImport__intro,
+.docsViewerImport__warning > p,
+.docsViewerImport__warnings ul{
   margin: 0;
 }
 
-.docsHtmlImportPage__intro,
-.docsHtmlImportPage__toggleHint,
-.docsHtmlImportPage__warning > p{
-  color: var(--studio-muted-body);
+.docsViewerImport__intro,
+.docsViewerImport__toggleHint,
+.docsViewerImport__warning > p{
+  color: var(--docs-viewer-muted, var(--muted, #555));
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
 }
 
-.docsHtmlImportPage__controls{
+.docsViewerImport__controls{
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.55rem 0.8rem;
 }
 
-.docsHtmlImportPage__field{
-  min-inline-size: 0;
-}
-
-.docsHtmlImportPage__field--file{
+.docsViewerImport__field--file{
   flex: 0 1 calc(50% - 0.4rem);
 }
 
-.docsHtmlImportPage__field--file .tagStudioField__control > .tagStudio__input{
+.docsViewerImport__field--file .docsViewerImport__fieldControl > .docsViewerImport__input{
   flex: 1 1 auto;
   width: 100%;
 }
 
-.docsHtmlImportPage__field--scope{
+.docsViewerImport__field--scope{
   flex: 0 0 auto;
 }
 
-.docsHtmlImportPage__modalField{
+.docsViewerImport__modalField{
   margin-top: 0.7rem;
   width: 100%;
 }
 
-.docsHtmlImportPage__modalField .tagStudioField__control{
+.docsViewerImport__modalField .docsViewerImport__fieldControl{
   width: 100%;
 }
 
-.docsHtmlImportPage__modalField .tagStudioField__control > .tagStudio__input{
+.docsViewerImport__modalField .docsViewerImport__fieldControl > .docsViewerImport__input{
   flex: 1 1 auto;
   width: 100%;
 }
 
-.docsHtmlImportPage__toggle{
+.docsViewerImport__toggle{
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
 }
 
-.docsHtmlImportPage__actions{
+.docsViewerImport__actions{
   display: flex;
   flex-wrap: wrap;
   gap: 0.55rem 0.8rem;
 }
 
-.docsHtmlImportPage__warning,
-.docsHtmlImportPage__result{
+.docsViewerImport__warning,
+.docsViewerImport__result{
   display: grid;
   gap: 0.5rem;
   padding: 0.9rem 1rem;
-  border: 1px solid var(--studio-line);
+  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
   border-radius: 1rem;
-  background: var(--studio-surface);
+  background: var(--docs-viewer-panel, var(--panel, #fff));
 }
 
-.docsHtmlImportPage__warning[hidden],
-.docsHtmlImportPage__result[hidden],
-.docsHtmlImportPage__warnings[hidden]{
+.docsViewerImport__warning[hidden],
+.docsViewerImport__result[hidden],
+.docsViewerImport__warnings[hidden]{
   display: none;
 }
 
-.docsHtmlImportPage__warning > h3,
-.docsHtmlImportPage__result > h3,
-.docsHtmlImportPage__warnings > h4{
+.docsViewerImport__warning > h3,
+.docsViewerImport__result > h3,
+.docsViewerImport__warnings > h4{
   margin: 0;
 }
 
-.docsHtmlImportPage__warning > h3{
-  color: var(--studio-warn);
+.docsViewerImport__warning > h3{
+  color: var(--docs-viewer-import-warn);
 }
 
-.docsHtmlImportPage__resultGrid{
+.docsViewerImport__resultGrid{
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 0.5rem;
   margin: 0;
 }
 
-.docsHtmlImportPage__resultGrid > div{
+.docsViewerImport__resultGrid > div{
   min-width: 0;
 }
 
-.docsHtmlImportPage__resultGrid dt{
+.docsViewerImport__resultGrid dt{
   margin: 0 0 0.16rem;
-  color: var(--studio-muted);
+  color: var(--docs-viewer-muted, var(--muted, #555));
   font-size: var(--font-caption, 0.75rem);
   text-transform: lowercase;
 }
 
-.docsHtmlImportPage__resultGrid dd{
+.docsViewerImport__resultGrid dd{
   margin: 0;
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
   overflow-wrap: anywhere;
 }
 
-.docsHtmlImportPage__result > .tagStudioForm__meta,
-.docsHtmlImportPage__warnings ul{
+.docsViewerImport__result > .docsViewerImport__meta,
+.docsViewerImport__warnings ul{
   font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
 }
 
-.docsHtmlImportPage__warnings ul{
+.docsViewerImport__warnings ul{
   padding-left: 1.1rem;
 }
 
+.docsViewerImportModal{
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+}
+
+.docsViewerImportModal[hidden]{
+  display: none;
+}
+
+.docsViewerImportModal__backdrop{
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--docs-viewer-text, var(--text, #111)) 26%, transparent);
+}
+
+.docsViewerImportModal__dialog{
+  box-sizing: border-box;
+  position: relative;
+  width: min(52rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
+  border-radius: var(--docs-viewer-import-radius-lg, 0.5rem);
+  background: var(--docs-viewer-panel, var(--panel, #fff));
+  padding: 1rem;
+}
+
+.docsViewerImportModal__dialog > h3{
+  margin-top: 0;
+}
+
+.docsViewerImportModal__label{
+  margin: 0.55rem 0 0.35rem;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+}
+
+.docsViewerImportModal__actions{
+  margin-top: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
 @media (max-width: 700px){
-  .docsViewer .tagStudioField,
-  .docsViewer .tagStudioField__control{
+  .docsViewerImport__field,
+  .docsViewerImport__fieldControl{
     width: 100%;
   }
 
-  .docsViewer .tagStudioField--inline,
-  .docsViewer .tagStudioField--split{
+  .docsViewerImport__field--inline{
     grid-template-columns: minmax(0, 1fr);
     gap: 0.22rem;
   }
 
-  .docsViewer .tagStudioField--inline .tagStudioField__control,
-  .docsViewer .tagStudioField--split .tagStudioField__control{
+  .docsViewerImport__field--inline .docsViewerImport__fieldControl{
     grid-column: auto;
   }
 
-  .docsHtmlImportPage__controls{
+  .docsViewerImport__controls{
     align-items: stretch;
   }
 
-  .docsHtmlImportPage__field--file,
-  .docsHtmlImportPage__field--scope{
+  .docsViewerImport__field--file,
+  .docsViewerImport__field--scope{
     flex: 1 1 100%;
   }
 }
@@ -565,10 +580,6 @@
   gap: 0.45rem;
 }
 
-.docsViewer__field--parent{
-  position: relative;
-}
-
 .docsViewer__fieldLabel{
   font-size: 1rem;
   line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
@@ -711,7 +722,7 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewer__modalNote[data-state="error"],
 .docsViewer__settingsWarnings{
-  color: var(--studio-danger, var(--docs-viewer-link-hover, var(--link-hover, #111)));
+  color: var(--docs-viewer-link-hover, var(--link-hover, #111));
 }
 
 .docsViewer__settingsWarnings ul{

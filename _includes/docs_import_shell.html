@@ -1,63 +1,63 @@
 <div
-  class="tagStudioPage docsHtmlImportPage"
+  class="docsViewerImport"
   id="docsHtmlImportRoot"
   hidden
   data-docs-import-auto-init="{{ include.auto_init | default: true }}"
   data-studio-ready="false"
   data-studio-busy="false"
 >
-  <div class="tagStudio__panel docsHtmlImportPage__panel">
-    <p class="docsHtmlImportPage__intro" id="docsHtmlImportIntro"></p>
+  <div class="docsViewerImport__panel">
+    <p class="docsViewerImport__intro" id="docsHtmlImportIntro"></p>
 
-    <div class="docsHtmlImportPage__controls">
-      <label class="tagStudioField tagStudioField--inline docsHtmlImportPage__field docsHtmlImportPage__field--file">
-        <span class="tagStudioField__label" id="docsHtmlImportFileLabel"></span>
-        <span class="tagStudioField__control">
-          <select class="tagStudio__input" id="docsHtmlImportFileSelect"></select>
+    <div class="docsViewerImport__controls">
+      <label class="docsViewerImport__field docsViewerImport__field--inline docsViewerImport__field--file">
+        <span class="docsViewerImport__fieldLabel" id="docsHtmlImportFileLabel"></span>
+        <span class="docsViewerImport__fieldControl">
+          <select class="docsViewerImport__input" id="docsHtmlImportFileSelect"></select>
         </span>
       </label>
 
-      <label class="tagStudioField tagStudioField--inline docsHtmlImportPage__field docsHtmlImportPage__field--scope">
-        <span class="tagStudioField__label" id="docsHtmlImportScopeLabel"></span>
-        <span class="tagStudioField__control">
-          <select class="tagStudio__input" id="docsHtmlImportScopeSelect"></select>
+      <label class="docsViewerImport__field docsViewerImport__field--inline docsViewerImport__field--scope">
+        <span class="docsViewerImport__fieldLabel" id="docsHtmlImportScopeLabel"></span>
+        <span class="docsViewerImport__fieldControl">
+          <select class="docsViewerImport__input" id="docsHtmlImportScopeSelect"></select>
         </span>
       </label>
     </div>
 
-    <label class="docsHtmlImportPage__toggle" id="docsHtmlImportIncludePromptMetaWrap">
+    <label class="docsViewerImport__toggle" id="docsHtmlImportIncludePromptMetaWrap">
       <input type="checkbox" id="docsHtmlImportIncludePromptMeta">
       <span id="docsHtmlImportIncludePromptMetaLabel"></span>
     </label>
-    <p class="tagStudioForm__meta docsHtmlImportPage__toggleHint" id="docsHtmlImportIncludePromptMetaHint"></p>
+    <p class="docsViewerImport__meta docsViewerImport__toggleHint" id="docsHtmlImportIncludePromptMetaHint"></p>
 
-    <div class="docsHtmlImportPage__actions">
-      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="docsHtmlImportRun"></button>
+    <div class="docsViewerImport__actions">
+      <button type="button" class="docsViewerImport__button docsViewerImport__button--defaultWidth" id="docsHtmlImportRun"></button>
       <button
         type="button"
-        class="tagStudio__button tagStudio__button--defaultWidth"
+        class="docsViewerImport__button docsViewerImport__button--defaultWidth"
         id="docsHtmlImportConfirm"
         hidden
       ></button>
       <button
         type="button"
-        class="tagStudio__button tagStudio__button--defaultWidth"
+        class="docsViewerImport__button docsViewerImport__button--defaultWidth"
         id="docsHtmlImportCancel"
         hidden
       ></button>
     </div>
 
-    <p class="tagStudio__status" id="docsHtmlImportStatus"></p>
+    <p class="docsViewerImport__status" id="docsHtmlImportStatus"></p>
 
-    <div class="docsHtmlImportPage__warning" id="docsHtmlImportWarning" hidden>
+    <div class="docsViewerImport__warning" id="docsHtmlImportWarning" hidden>
       <h3 id="docsHtmlImportCollisionHeading"></h3>
       <p id="docsHtmlImportCollisionBody"></p>
-      <p class="tagStudioForm__meta" id="docsHtmlImportCollisionMeta"></p>
+      <p class="docsViewerImport__meta" id="docsHtmlImportCollisionMeta"></p>
     </div>
 
-    <div class="docsHtmlImportPage__result" id="docsHtmlImportResult" hidden>
+    <div class="docsViewerImport__result" id="docsHtmlImportResult" hidden>
       <h3 id="docsHtmlImportResultTitle"></h3>
-      <dl class="docsHtmlImportPage__resultGrid">
+      <dl class="docsViewerImport__resultGrid">
         <div>
           <dt id="docsHtmlImportResultScopeLabel"></dt>
           <dd id="docsHtmlImportResultScope"></dd>
@@ -95,8 +95,8 @@
           <dd id="docsHtmlImportResultMediaToken"></dd>
         </div>
       </dl>
-      <p class="tagStudioForm__meta" id="docsHtmlImportResultCounts"></p>
-      <div class="docsHtmlImportPage__warnings" id="docsHtmlImportWarnings" hidden>
+      <p class="docsViewerImport__meta" id="docsHtmlImportResultCounts"></p>
+      <div class="docsViewerImport__warnings" id="docsHtmlImportWarnings" hidden>
         <h4 id="docsHtmlImportWarningsHeading"></h4>
         <ul id="docsHtmlImportWarningsList"></ul>
       </div>
@@ -104,4 +104,4 @@
   </div>
 </div>
 
-<p class="tagStudio__status" id="docsHtmlImportBootStatus">loading docs import...</p>
+<p class="docsViewerImport__status" id="docsHtmlImportBootStatus">loading docs import...</p>
