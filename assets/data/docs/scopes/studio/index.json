@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T12:29:12Z",
+  "generated_at": "2026-05-14T12:34:55Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -900,7 +900,7 @@
       "source_path": "site-request-docs-viewer-config-settings.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-config-settings.json",
-      "content_text_length": 11973,
+      "content_text_length": 11993,
       "ui_status": "in-progress"
     },
     {

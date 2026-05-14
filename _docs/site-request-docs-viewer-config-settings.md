@@ -268,7 +268,7 @@ Status:
 
 - proposed
 
-Add a management toolbar Settings button and modal for the first user-editable settings.
+Add a management toolbar Settings item to the Actions button and modal for the first user-editable settings.
 
 Acceptance:
 
