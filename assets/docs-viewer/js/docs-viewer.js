@@ -28,6 +28,13 @@ import {
   managementReloadPath,
   readAssetVersion
 } from "./docs-viewer-data.js";
+import {
+  escapeHtml,
+  renderBookmarkRowsMarkup,
+  renderRecentEntry,
+  renderSearchEntry,
+  renderStatusPillsMarkup
+} from "./docs-viewer-render.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
@@ -862,29 +869,16 @@ import {
     var activeStatus = currentStatusValue(doc);
     var canWrite = statusPillsCanWrite(doc);
     var activeStatusConfig = activeStatus ? state.uiStatusByValue.get(activeStatus) : null;
-    var menuLabel = activeStatusConfig
-      ? formatText(state.managementText.statusPillReadonlyLabel, { label: activeStatusConfig.label, title: doc.title })
-      : state.managementText.statusMenuLabel;
-    var menuItems = state.uiStatuses.map(function (statusConfig) {
-      var selected = statusConfig.ui_status === activeStatus;
-      var labelTemplate = canWrite
-        ? (selected ? state.managementText.statusPillClearLabel : state.managementText.statusPillSetLabel)
-        : state.managementText.statusPillReadonlyLabel;
-      var label = formatText(labelTemplate, { label: statusConfig.label, title: doc.title });
-      var className = "docsViewer__statusMenuItem" + (selected ? " is-active" : "");
-      return (
-        '<button type="button" role="menuitemradio" class="' + className + '" data-ui-status="' + escapeHtml(statusConfig.ui_status) + '" aria-checked="' + (selected ? "true" : "false") + '" aria-label="' + escapeHtml(label) + '" title="' + escapeHtml(label) + '"' + (canWrite ? "" : " disabled") + '>' +
-          '<span class="docsViewer__statusPillEmoji" aria-hidden="true">' + escapeHtml(statusConfig.emoji) + '</span>' +
-          '<span class="visually-hidden">' + escapeHtml(statusConfig.label) + '</span>' +
-        '</button>'
-      );
-    }).join("");
-    statusPills.innerHTML = (
-      '<button type="button" class="docsViewer__statusMenuToggle" data-ui-status-menu-toggle="true" aria-expanded="' + (state.statusMenuOpen ? "true" : "false") + '" aria-label="' + escapeHtml(menuLabel) + '" title="' + escapeHtml(menuLabel) + '"' + (canWrite ? "" : " disabled") + '>🏷️</button>' +
-      '<div class="docsViewer__statusMenu" role="menu"' + (state.statusMenuOpen && canWrite ? "" : " hidden") + ">" +
-        menuItems +
-      "</div>"
-    );
+    statusPills.innerHTML = renderStatusPillsMarkup({
+      activeStatus: activeStatus,
+      activeStatusConfig: activeStatusConfig,
+      canWrite: canWrite,
+      doc: doc,
+      formatText: formatText,
+      menuOpen: state.statusMenuOpen,
+      statuses: state.uiStatuses,
+      text: state.managementText
+    });
   }
 
   function renderBookmarkRow() {
@@ -903,27 +897,10 @@ import {
     }
 
     bookmarkRow.hidden = false;
-    bookmarkRow.innerHTML = bookmarks.map(function (record) {
-      var isActive = record.doc_id === state.selectedDocId;
-      var isEditing = record.key === state.editingBookmarkKey;
-      var pillClass = "docsViewer__bookmarkPill" + (isActive ? " is-active" : "");
-      if (isEditing) {
-        return (
-          '<div class="' + pillClass + '" data-bookmark-key="' + escapeHtml(record.key) + '">' +
-            '<input class="docsViewer__bookmarkInput" type="text" value="' + escapeHtml(record.label || record.default_title || record.doc_id) + '" data-bookmark-input="' + escapeHtml(record.key) + '" aria-label="Rename bookmark">' +
-            '<button type="button" class="docsViewer__bookmarkRemove" data-bookmark-remove="' + escapeHtml(record.key) + '" aria-label="Remove bookmark">x</button>' +
-          '</div>'
-        );
-      }
-      return (
-        '<div class="' + pillClass + '" data-bookmark-key="' + escapeHtml(record.key) + '">' +
-          '<button type="button" class="docsViewer__bookmarkOpen" data-bookmark-open="' + escapeHtml(record.doc_id) + '" title="Open bookmark. Right-click to rename." aria-current="' + (isActive ? "page" : "false") + '">' +
-            '<span class="docsViewer__bookmarkLabel">' + escapeHtml(record.label || record.default_title || record.doc_id) + '</span>' +
-          '</button>' +
-          '<button type="button" class="docsViewer__bookmarkRemove" data-bookmark-remove="' + escapeHtml(record.key) + '" aria-label="Remove bookmark">x</button>' +
-        '</div>'
-      );
-    }).join("");
+    bookmarkRow.innerHTML = renderBookmarkRowsMarkup(bookmarks, {
+      editingBookmarkKey: state.editingBookmarkKey,
+      selectedDocId: state.selectedDocId
+    });
 
     if (state.pendingBookmarkFocusKey) {
       var focusTarget = bookmarkRow.querySelector('[data-bookmark-input="' + cssEscape(state.pendingBookmarkFocusKey) + '"]');
@@ -2009,22 +1986,12 @@ import {
     return state.searchRequestPromise;
   }
 
-  function renderResultEntry(docId, title, metaText) {
-    return (
-      '<li class="docsViewer__resultItem">' +
-        '<a class="docsViewer__resultTitle" href="' + escapeHtml(viewerUrl(viewerTargetDocId(docId), "", "")) + '">' + escapeHtml(title) + '</a>' +
-        (metaText ? '<p class="docsViewer__resultMeta">' + escapeHtml(metaText) + '</p>' : '') +
-      '</li>'
-    );
+  function renderSearchResultEntry(entry) {
+    return renderSearchEntry(entry, viewerUrl(viewerTargetDocId(entry.id), "", ""));
   }
 
-  function renderSearchEntry(entry) {
-    var metaText = entry.displayMeta || [entry.lastUpdated, entry.parentTitle].filter(Boolean).join(" • ");
-    return renderResultEntry(entry.id, entry.title, metaText);
-  }
-
-  function renderRecentEntry(doc) {
-    return renderResultEntry(doc.doc_id, doc.title, displayRecentMetaForDoc(doc));
+  function renderRecentResultEntry(doc) {
+    return renderRecentEntry(doc, displayRecentMetaForDoc(doc), viewerUrl(viewerTargetDocId(doc.doc_id), "", ""));
   }
 
   function renderRecentMode() {
@@ -2041,7 +2008,7 @@ import {
     }
 
     setStatus(recentDocs.length === 1 ? "1 recently added doc" : recentDocs.length + " recently added docs", false);
-    results.innerHTML = recentDocs.map(renderRecentEntry).join("");
+    results.innerHTML = recentDocs.map(renderRecentResultEntry).join("");
     more.innerHTML = "";
     more.hidden = true;
   }
@@ -2110,7 +2077,7 @@ import {
         : matches.length + " results",
     false);
     results.innerHTML = visible.map(function (match) {
-      return renderSearchEntry(match.entry);
+      return renderSearchResultEntry(match.entry);
     }).join("");
     if (matches.length > visible.length) {
       more.hidden = false;
@@ -2175,15 +2142,6 @@ import {
       if (results) results.hidden = true;
       if (more) more.hidden = true;
     });
-
-  function escapeHtml(value) {
-    return String(value || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-  }
 
   function cssEscape(value) {
     if (window.CSS && typeof window.CSS.escape === "function") {

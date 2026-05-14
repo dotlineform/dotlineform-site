@@ -39,12 +39,12 @@ Re-run this inventory after material Studio or Docs Viewer JavaScript refactors.
 
 Measured on 2026-05-14.
 
-- Browser JavaScript files under `assets/`: 94
-- Total browser JavaScript lines under `assets/`: 35,264
+- Browser JavaScript files under `assets/`: 95
+- Total browser JavaScript lines under `assets/`: 35,323
 - Files over the 1,000-line review threshold: 6
 - Files in the 900-1,000 line watch band: 5
-- Over-threshold raw size total: 368.2 KiB
-- Over-threshold gzip size total: 71.2 KiB
+- Over-threshold raw size total: 365.4 KiB
+- Over-threshold gzip size total: 70.5 KiB
 
 The over-threshold set is still maintenance-driven more than transfer-driven.
 No route loads all over-threshold files together.
@@ -53,7 +53,7 @@ No route loads all over-threshold files together.
 
 | File | Lines | Raw | Gzip | Classification | Maintenance risk | Transfer-size risk | Notes |
 | --- | ---: | ---: | ---: | --- | --- | --- | --- |
-| `assets/docs-viewer/js/docs-viewer.js` | 2,182 | 73.4 KiB | 14.9 KiB | mixed shared viewer runtime controller | high | medium | Still the top cleanup target. It owns route state, tree rendering, content loading, search, bookmarks, reports entry, and management dynamic-loading. Further extraction should keep route boot stable while moving render and state clusters behind named helpers. |
+| `assets/docs-viewer/js/docs-viewer.js` | 2,152 | 70.5 KiB | 14.2 KiB | mixed shared viewer runtime controller | high | medium | Still the top cleanup target. Result-row, bookmark-row, and status-pill markup helpers now live in `assets/docs-viewer/js/docs-viewer-render.js`; the entry controller still owns route state, tree rendering, content loading, search orchestration, bookmarks, reports entry, and management dynamic-loading. Further extraction should keep route boot stable while moving additional render and state clusters behind named helpers. |
 | `assets/studio/js/tag-studio.js` | 1,886 | 63.2 KiB | 13.0 KiB | mixed route controller | high | low | Continue the Tag Editor split by moving render groups, popup behavior, and modal/save orchestration behind route-local helpers. |
 | `assets/docs-viewer/js/docs-viewer-management.js` | 1,812 | 67.6 KiB | 11.6 KiB | mixed Docs Viewer management controller | high | low | Dynamically loaded from `docs-viewer.js` only for management mode. Good next target after the shared viewer shell because it combines metadata modal, settings modal, import modal boot, drag/drop, context menu, and write orchestration. |
 | `assets/studio/js/tag-aliases.js` | 1,708 | 62.3 KiB | 11.2 KiB | mixed route controller | high | low | Existing domain/save/service split is useful but incomplete. Next cleanup should target modal view-models and list rendering before more alias workflow is added. |
