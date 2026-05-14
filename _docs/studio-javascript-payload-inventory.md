@@ -51,14 +51,94 @@ No route loads all over-threshold files together.
 
 ## Current Inventory
 
-| File | Lines | Raw | Gzip | Classification | Maintenance risk | Transfer-size risk | Notes |
-| --- | ---: | ---: | ---: | --- | --- | --- | --- |
-| `assets/docs-viewer/js/docs-viewer-management.js` | 1,892 | 69.5 KiB | 11.8 KiB | mixed Docs Viewer management controller | high | low | Dynamically loaded only for management mode. Management markup helpers for status pills, metadata parent/status controls, and settings warnings now live in `assets/docs-viewer/js/docs-viewer-management-render.js`. The controller still owns metadata modal, settings modal, import modal boot, drag/drop, context menu, and write orchestration. Next cleanup should split modal view-models or write-action orchestration behind management-only helpers. |
-| `assets/studio/js/tag-studio.js` | 1,886 | 63.2 KiB | 13.0 KiB | mixed route controller | high | low | Continue the Tag Editor split by moving render groups, popup behavior, and modal/save orchestration behind route-local helpers. |
-| `assets/studio/js/tag-aliases.js` | 1,708 | 62.3 KiB | 11.2 KiB | mixed route controller | high | low | Existing domain/save/service split is useful but incomplete. Next cleanup should target modal view-models and list rendering before more alias workflow is added. |
-| `assets/studio/js/tag-registry.js` | 1,625 | 58.3 KiB | 11.1 KiB | mixed route controller | high | low | Existing domain/save/service split is useful but incomplete. Next cleanup should target modal view-models, delete-impact rendering, and import-result rendering. |
-| `assets/docs-viewer/js/docs-viewer.js` | 1,240 | 39.5 KiB | 8.5 KiB | mixed shared viewer runtime controller | high | medium | Still the top cleanup target for read-only route payload. Bookmark state, storage, rendering, and events now live in `assets/docs-viewer/js/docs-viewer-bookmarks.js`; config/scope boot and viewer UI text merging now live in `assets/docs-viewer/js/docs-viewer-config-controller.js`; sidebar/nav/meta rendering and trail display now live in `assets/docs-viewer/js/docs-viewer-sidebar.js`; search loading, recent/search result rendering, result batching, and debounced search input binding now live in `assets/docs-viewer/js/docs-viewer-search-controller.js`; result-row and bookmark-row markup helpers live in `assets/docs-viewer/js/docs-viewer-render.js`; status-pill markup and events stay behind the lazy management-controller boundary. The entry controller still owns route/history state, content loading, reports entry, and management dynamic-loading. |
-| `assets/studio/js/data-sharing-review.js` | 1,163 | 43.4 KiB | 9.3 KiB | mixed route controller | medium | low | Newly over threshold relative to the older inventory. It owns staged package listing, preview rendering, apply confirmation, result rendering, and workflow-scope state. Split preview/result rendering or apply-action orchestration if it grows further. |
+### `assets/docs-viewer/js/docs-viewer-management.js`
+
+- Lines: 1,892
+- Raw: 69.5 KiB
+- Gzip: 11.8 KiB
+- Classification: mixed Docs Viewer management controller
+- Maintenance risk: high
+- Transfer-size risk: low
+
+Dynamically loaded only for management mode.
+Management markup helpers for status pills, metadata parent/status controls, and settings warnings now live in `assets/docs-viewer/js/docs-viewer-management-render.js`.
+The controller still owns metadata modal, settings modal, import modal boot, drag/drop, context menu, and write orchestration.
+Next cleanup should split modal view-models or write-action orchestration behind management-only helpers.
+
+### `assets/studio/js/tag-studio.js`
+
+- Lines: 1,886
+- Raw: 63.2 KiB
+- Gzip: 13.0 KiB
+- Classification: mixed route controller
+- Maintenance risk: high
+- Transfer-size risk: low
+
+Continue the Tag Editor split by moving render groups, popup behavior, and modal/save orchestration behind route-local helpers.
+
+### `assets/studio/js/tag-aliases.js`
+
+- Lines: 1,708
+- Raw: 62.3 KiB
+- Gzip: 11.2 KiB
+- Classification: mixed route controller
+- Maintenance risk: high
+- Transfer-size risk: low
+
+Existing domain/save/service split is useful but incomplete.
+Next cleanup should target modal view-models and list rendering before more alias workflow is added.
+
+### `assets/studio/js/tag-registry.js`
+
+- Lines: 1,625
+- Raw: 58.3 KiB
+- Gzip: 11.1 KiB
+- Classification: mixed route controller
+- Maintenance risk: high
+- Transfer-size risk: low
+
+Existing domain/save/service split is useful but incomplete.
+Next cleanup should target modal view-models, delete-impact rendering, and import-result rendering.
+
+### `assets/docs-viewer/js/docs-viewer.js`
+
+- Lines: 1,240
+- Raw: 39.5 KiB
+- Gzip: 8.5 KiB
+- Classification: mixed shared viewer runtime controller
+- Maintenance risk: high
+- Transfer-size risk: medium
+
+Recent extractions moved the largest non-route responsibilities out of the entry controller:
+
+- Bookmark state, storage, rendering, and events now live in `assets/docs-viewer/js/docs-viewer-bookmarks.js`.
+- Config/scope boot and viewer UI text merging now live in `assets/docs-viewer/js/docs-viewer-config-controller.js`.
+- Sidebar/nav/meta rendering and trail display now live in `assets/docs-viewer/js/docs-viewer-sidebar.js`.
+- Search loading, recent/search result rendering, result batching, and debounced search input binding now live in `assets/docs-viewer/js/docs-viewer-search-controller.js`.
+- Result-row and bookmark-row markup helpers live in `assets/docs-viewer/js/docs-viewer-render.js`.
+- Status-pill markup and events stay behind the lazy management-controller boundary.
+
+The remaining entry controller responsibilities are route/history state, content loading, reports entry, and management dynamic-loading.
+Maintenance risk remains high because the route/history and document-loading spine still has broad behavioral reach.
+That is an acceptable stop point for the current cleanup period only because the next route extraction has higher regression risk and should be tied to a concrete routing change.
+
+Do not extract a dedicated router module just for line count.
+Reconsider a router module when route behavior changes materially, especially if another public Docs Viewer route is added beyond the current configured public routes.
+That future pass should cover `viewerUrl`, `viewerUrlForScope`, `routeFromAnchor`, `setHistory`, `resolveDocId`, `applyCurrentRoute`, `loadDoc`, and `renderPayload`, and should have route-focused smoke tests in place before the move.
+Adding another public docs route is not imminent, but the router boundary should not be forgotten when that product shape changes.
+
+### `assets/studio/js/data-sharing-review.js`
+
+- Lines: 1,163
+- Raw: 43.4 KiB
+- Gzip: 9.3 KiB
+- Classification: mixed route controller
+- Maintenance risk: medium
+- Transfer-size risk: low
+
+Newly over threshold relative to the older inventory.
+It owns staged package listing, preview rendering, apply confirmation, result rendering, and workflow-scope state.
+Split preview/result rendering or apply-action orchestration if it grows further.
 
 ## Watch Band
 
@@ -74,13 +154,15 @@ These files are below the 1,000-line review threshold but close enough to watch 
 
 ## Current Priority
 
-1. `assets/docs-viewer/js/docs-viewer.js`
-2. `assets/docs-viewer/js/docs-viewer-management.js`
-3. `assets/studio/js/tag-studio.js`
-4. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
-5. `assets/studio/js/data-sharing-review.js`
+1. `assets/docs-viewer/js/docs-viewer-management.js`
+2. `assets/studio/js/tag-studio.js`
+3. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
+4. `assets/studio/js/data-sharing-review.js`
+5. `assets/docs-viewer/js/docs-viewer.js`, only when route behavior changes materially
 
-The first two are Docs Viewer files, but they are included here because `/docs/` is the Studio documentation and management surface.
+The Docs Viewer entry controller remains over the review threshold, but the current route-coordinator shape is acceptable after the sidebar, search, and config extractions.
+Treat a router extraction as deferred architecture work, not the next automatic cleanup.
+The first and fifth items are Docs Viewer files, but they are included here because `/docs/` is the Studio documentation and management surface.
 
 ## How To Rerun
 
