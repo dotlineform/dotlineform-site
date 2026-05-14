@@ -118,43 +118,11 @@ Do not use DOM activation for the primary action being verified. If the action b
 
 ## Current Adoption
 
-The shared route-ready contract is partially implemented.
-
-Adopted routes:
-
-- `/studio/activity/` with `#buildActivityRoot`
-- `/studio/bulk-add-work/` with `#bulkAddWorkRoot`
-- `/studio/activity/` with `#catalogueActivityRoot`
-- `/studio/catalogue-field-registry/` with `#fieldRegistryReviewRoot`
-- `/studio/catalogue-status/` with `#catalogueStatusRoot`
-- `/studio/catalogue-work/` with `#catalogueWorkRoot`
-- `/studio/catalogue-work-detail/` with `#catalogueWorkDetailRoot`
-- `/studio/catalogue-series/` with `#catalogueSeriesRoot`
-- `/studio/catalogue-moment/` with `#catalogueMomentRoot`
-- `/studio/docs-broken-links/` with `#docsBrokenLinksRoot`
-- `/docs/?mode=manage&import=1` with `#docsHtmlImportRoot` inside the Docs Viewer import modal
-- `/studio/project-state/` with `#projectStateRoot`
-- `/studio/analytics/series-tag-editor/` with `#seriesTagEditorRoot`
-- `/studio/analytics/series-tags/` with `#series-tags`
-- `/studio/studio-works/` with `#worksStudioRoot`
-- `/studio/analytics/tag-aliases/` with `#tag-aliases`
-- `/studio/analytics/tag-groups/` with `#tag-groups`
-- `/studio/analytics/tag-registry/` with `#tag-registry`
-- `/studio/` with `#studioHomeRoot`
-- `/studio/audits/` with `#studioAuditsRoot`
-- `/studio/catalogue/` with `#studioCatalogueDashboardRoot`
-- `/studio/data-sharing/prepare/` with `#dataSharingPrepareRoot`
-- `/studio/data-sharing/review/` with `#dataSharingReviewRoot`
-- `/studio/analytics/` with `#studioAnalyticsDashboardRoot`
-- `/studio/ui-catalogue/` with `#studioUiCatalogueRoot`
-- `/studio/ui-catalogue/button/` with `#studioUiCatalogueButtonRoot`
-- `/studio/ui-catalogue/input/` with `#studioUiCatalogueInputRoot`
-- `/studio/ui-catalogue/list/` with `#studioUiCatalogueListRoot`
-- `/studio/ui-catalogue/panel/` with `#studioUiCataloguePanelRoot`
+The shared route-ready contract is implemented on current Studio route shells. The canonical route inventory lives in [Studio Ready State](/docs/?scope=studio&doc=studio-ready-state).
 
 The dashboard and reference-page routes use a minimal ready contract. For those routes, smoke tests should only treat the root attributes as initial page-shell readiness unless a future feature adds route-specific async behavior or commands.
 
-The rollout is tracked in [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract).
+The rollout history is tracked in [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract).
 
 ## Ready-State Audit
 

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3d803878f5e957a8939201fd3f0d2dbb",
-    "generated_at_utc": "2026-05-14T14:13:22Z",
-    "count": 236
+    "version": "blake2b-f90395e1ddd5b30fb7f2914bb45f2de8",
+    "generated_at_utc": "2026-05-14T14:53:55Z",
+    "count": 237
   },
   "entries": [
     {
@@ -2411,6 +2411,28 @@
       "search_text": "site-request-json-schema-adoption site request json schema adoption json schema adoption request change requests change requests 2026-05-03 14:35 2026 05 03 14 35"
     },
     {
+      "id": "studio-ready-state",
+      "kind": "doc",
+      "title": "Studio Ready State",
+      "href": "/docs/?scope=studio&doc=studio-ready-state",
+      "last_updated": "2026-05-14",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-14 • Studio",
+      "search_terms": [
+        "studio-ready-state",
+        "studio",
+        "ready",
+        "state",
+        "studio ready state",
+        "2026-05-14",
+        "2026",
+        "05",
+        "14"
+      ],
+      "search_text": "studio-ready-state studio ready state studio ready state 2026-05-14 2026 05 14"
+    },
+    {
       "id": "site-request-script-structural-review-catalogue-json-build",
       "kind": "doc",
       "title": "Catalogue JSON Build Slices",
@@ -2615,34 +2637,6 @@
         "14"
       ],
       "search_text": "config-library-export-configs config library export configs library export configs 2026-05-06 21:14 2026 05 06 21 14"
-    },
-    {
-      "id": "site-request-moments-prose-source-model",
-      "kind": "doc",
-      "title": "Moments Prose Source Model Request",
-      "href": "/docs/?scope=studio&doc=site-request-moments-prose-source-model",
-      "last_updated": "2026-05-02",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
-      "search_terms": [
-        "site-request-moments-prose-source-model",
-        "site",
-        "request",
-        "moments",
-        "prose",
-        "source",
-        "model",
-        "moments prose source model request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-02",
-        "2026",
-        "05",
-        "02"
-      ],
-      "search_text": "site-request-moments-prose-source-model site request moments prose source model moments prose source model request change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-js-config-structural-review-public-runtime-extraction",
@@ -4042,35 +4036,6 @@
       "search_text": "config-studio-config-json config studio json studio config json 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
-      "id": "site-request-work-owned-files-links",
-      "kind": "doc",
-      "title": "Work-Owned Files And Links Request",
-      "href": "/docs/?scope=studio&doc=site-request-work-owned-files-links",
-      "last_updated": "2026-05-02",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
-      "search_terms": [
-        "site-request-work-owned-files-links",
-        "site",
-        "request",
-        "work",
-        "owned",
-        "files",
-        "links",
-        "work-owned files and links request",
-        "and",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-02",
-        "2026",
-        "05",
-        "02"
-      ],
-      "search_text": "site-request-work-owned-files-links site request work owned files links work-owned files and links request and change requests change requests 2026-05-02 2026 05 02"
-    },
-    {
       "id": "data-sharing",
       "kind": "doc",
       "title": "Data Sharing",
@@ -5451,33 +5416,6 @@
       "search_text": "library-import library import library import v1 v1 archive 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
-      "id": "ui-status-emoji",
-      "kind": "doc",
-      "title": "UI Status Emoji",
-      "href": "/docs/?scope=studio&doc=ui-status-emoji",
-      "last_updated": "2026-05-11 17:50",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-11 17:50 • Change Requests",
-      "search_terms": [
-        "ui-status-emoji",
-        "ui",
-        "status",
-        "emoji",
-        "ui status emoji",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-11 17:50",
-        "2026",
-        "05",
-        "11",
-        "17",
-        "50"
-      ],
-      "search_text": "ui-status-emoji ui status emoji ui status emoji change requests change requests 2026-05-11 17:50 2026 05 11 17 50"
-    },
-    {
       "id": "site-request-docs-import-source-registry-media",
       "kind": "doc",
       "title": "Docs Import Source Registry And Media Support Request",
@@ -6131,6 +6069,84 @@
         "45"
       ],
       "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and archive 2026-05-14 14:45 2026 05 14 45"
+    },
+    {
+      "id": "ui-status-emoji",
+      "kind": "doc",
+      "title": "UI Status Emoji",
+      "href": "/docs/?scope=studio&doc=ui-status-emoji",
+      "last_updated": "2026-05-11 17:50",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-11 17:50 • Archive",
+      "search_terms": [
+        "ui-status-emoji",
+        "ui",
+        "status",
+        "emoji",
+        "ui status emoji",
+        "archive",
+        "2026-05-11 17:50",
+        "2026",
+        "05",
+        "11",
+        "17",
+        "50"
+      ],
+      "search_text": "ui-status-emoji ui status emoji ui status emoji archive 2026-05-11 17:50 2026 05 11 17 50"
+    },
+    {
+      "id": "site-request-moments-prose-source-model",
+      "kind": "doc",
+      "title": "Moments Prose Source Model Request",
+      "href": "/docs/?scope=studio&doc=site-request-moments-prose-source-model",
+      "last_updated": "2026-05-02",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-02 • Archive",
+      "search_terms": [
+        "site-request-moments-prose-source-model",
+        "site",
+        "request",
+        "moments",
+        "prose",
+        "source",
+        "model",
+        "moments prose source model request",
+        "archive",
+        "2026-05-02",
+        "2026",
+        "05",
+        "02"
+      ],
+      "search_text": "site-request-moments-prose-source-model site request moments prose source model moments prose source model request archive 2026-05-02 2026 05 02"
+    },
+    {
+      "id": "site-request-work-owned-files-links",
+      "kind": "doc",
+      "title": "Work-Owned Files And Links Request",
+      "href": "/docs/?scope=studio&doc=site-request-work-owned-files-links",
+      "last_updated": "2026-05-02",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-02 • Archive",
+      "search_terms": [
+        "site-request-work-owned-files-links",
+        "site",
+        "request",
+        "work",
+        "owned",
+        "files",
+        "links",
+        "work-owned files and links request",
+        "and",
+        "archive",
+        "2026-05-02",
+        "2026",
+        "05",
+        "02"
+      ],
+      "search_text": "site-request-work-owned-files-links site request work owned files links work-owned files and links request and archive 2026-05-02 2026 05 02"
     }
   ]
 }

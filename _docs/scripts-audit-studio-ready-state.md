@@ -52,6 +52,7 @@ The `quick` profile in `./scripts/run_checks.py` includes this audit in strict m
 
 ## Related References
 
+- [Studio Ready State](/docs/?scope=studio&doc=studio-ready-state)
 - [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
 - [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)
 - [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
