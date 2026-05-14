@@ -68,7 +68,7 @@ def assert_ready_contract(attrs: dict[str, str]) -> None:
         raise AssertionError(f"route did not become ready: {attrs!r}")
     if attrs["busy"] == "true":
         raise AssertionError(f"route stayed busy after ready: {attrs!r}")
-    if attrs["mode"] != "selection":
+    if attrs["mode"] != "documents":
         raise AssertionError(f"unexpected route mode: {attrs['mode']!r}")
     if attrs["service"] not in {"available", "unavailable"}:
         raise AssertionError(f"unexpected service state: {attrs['service']!r}")

@@ -280,7 +280,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check the Studio data sharing review route ready state with docs-management unavailable.",
         ),
         CheckCommand(
-            "data-sharing-review-unsupported-adapter-smoke",
+            "data-sharing-review-tags-unavailable-smoke",
             (
                 sys.executable,
                 "tests/smoke/data_sharing_review.py",
@@ -289,10 +289,8 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "--block-docs-service",
                 "--route-path",
                 "/studio/data-sharing/review/?scope=tags",
-                "--expect-unsupported",
-                "Tags returned package staging is not implemented yet.",
             ),
-            "Smoke-check that future Data Sharing adapter stubs render disabled unavailable states.",
+            "Smoke-check the Tags returned package review route with docs-management unavailable.",
         ),
         CheckCommand(
             "data-sharing-review-preview-smoke",

@@ -114,6 +114,12 @@ def assert_unsupported_adapter_state(page, expected_status: str) -> dict[str, ob
     }
 
 
+def click_apply_action(page, selector: str) -> None:
+    page.locator("#dataSharingReviewActionsButton").click()
+    page.wait_for_selector("#dataSharingReviewActionsMenu:not([hidden])", timeout=5000)
+    page.locator(selector).click()
+
+
 def install_mock_docs_service(page) -> None:
     def handle(route):
         parsed = urlparse(route.request.url)
@@ -392,7 +398,7 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
     apply_hierarchy_disabled = page.locator("#dataSharingReviewApplyHierarchy").evaluate("button => button.disabled")
     if update_summary_disabled or apply_hierarchy_disabled:
         raise AssertionError("summary and hierarchy apply should enable for selected document previews")
-    page.locator("#dataSharingReviewUpdateSummary").click()
+    click_apply_action(page, "#dataSharingReviewUpdateSummary")
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     modal_title = page.locator("#studioModalTitle").text_content()
     if modal_title != "Update summaries?":
@@ -402,7 +408,7 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
     cancelled_status = page.locator("#dataSharingReviewStatus").text_content()
     if cancelled_status != "Summary update cancelled.":
         raise AssertionError(f"unexpected cancelled status: {cancelled_status!r}")
-    page.locator("#dataSharingReviewUpdateSummary").click()
+    click_apply_action(page, "#dataSharingReviewUpdateSummary")
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function(
@@ -435,7 +441,7 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"summary apply skipped row missing from issues: {issue_text!r}")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
-    page.locator("#dataSharingReviewApplyHierarchy").click()
+    click_apply_action(page, "#dataSharingReviewApplyHierarchy")
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     hierarchy_modal_title = page.locator("#studioModalTitle").text_content()
     if hierarchy_modal_title != "Update hierarchy?":
@@ -445,7 +451,7 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
     hierarchy_cancelled_status = page.locator("#dataSharingReviewStatus").text_content()
     if hierarchy_cancelled_status != "Hierarchy update cancelled.":
         raise AssertionError(f"unexpected hierarchy cancelled status: {hierarchy_cancelled_status!r}")
-    page.locator("#dataSharingReviewApplyHierarchy").click()
+    click_apply_action(page, "#dataSharingReviewApplyHierarchy")
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function(
