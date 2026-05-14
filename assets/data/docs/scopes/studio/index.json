@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T12:43:31Z",
+  "generated_at": "2026-05-14T12:51:59Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -884,23 +884,6 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
       "content_text_length": 26854,
-      "ui_status": "in-progress"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-docs-viewer-config-settings",
-      "title": "Docs Viewer Config And Settings Request",
-      "added_date": "2026-05-11",
-      "last_updated": "2026-05-14 14:45",
-      "parent_id": "change-requests",
-      "sort_order": 28,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "site-request-docs-viewer-config-settings.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-config-settings.json",
-      "content_text_length": 12002,
       "ui_status": "in-progress"
     },
     {
@@ -3847,6 +3830,23 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-toolkit-extraction.json",
       "content_text_length": 6008,
       "ui_status": "deferred"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-config-settings",
+      "title": "Docs Viewer Config And Settings Request",
+      "added_date": "2026-05-11",
+      "last_updated": "2026-05-14 14:45",
+      "parent_id": "archive",
+      "sort_order": 310,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-config-settings.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-config-settings.json",
+      "content_text_length": 12326,
+      "ui_status": "done"
     }
   ]
 }

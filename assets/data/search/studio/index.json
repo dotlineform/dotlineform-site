@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-dba0fb009cbddbd6862d05d4e1dde7f9",
-    "generated_at_utc": "2026-05-14T12:43:31Z",
+    "version": "blake2b-4b3e6c7c308d479e39e286dc650af747",
+    "generated_at_utc": "2026-05-14T12:52:00Z",
     "count": 235
   },
   "entries": [
@@ -1406,36 +1406,6 @@
         "55"
       ],
       "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-12 10:55 2026 05 12 10 55"
-    },
-    {
-      "id": "site-request-docs-viewer-config-settings",
-      "kind": "doc",
-      "title": "Docs Viewer Config And Settings Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
-      "last_updated": "2026-05-14 14:45",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-14 14:45 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-config-settings",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "config",
-        "settings",
-        "docs viewer config and settings request",
-        "and",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-14 14:45",
-        "2026",
-        "05",
-        "14",
-        "45"
-      ],
-      "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and change requests change requests 2026-05-14 14:45 2026 05 14 45"
     },
     {
       "id": "analytics",
@@ -6111,6 +6081,34 @@
         "07"
       ],
       "search_text": "site-request-docs-toolkit-extraction site request docs toolkit extraction docs toolkit extraction request archive 2026-05-13 21:07 2026 05 13 21 07"
+    },
+    {
+      "id": "site-request-docs-viewer-config-settings",
+      "kind": "doc",
+      "title": "Docs Viewer Config And Settings Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
+      "last_updated": "2026-05-14 14:45",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-14 14:45 • Archive",
+      "search_terms": [
+        "site-request-docs-viewer-config-settings",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "config",
+        "settings",
+        "docs viewer config and settings request",
+        "and",
+        "archive",
+        "2026-05-14 14:45",
+        "2026",
+        "05",
+        "14",
+        "45"
+      ],
+      "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and archive 2026-05-14 14:45 2026 05 14 45"
     }
   ]
 }

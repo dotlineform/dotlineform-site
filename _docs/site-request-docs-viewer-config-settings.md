@@ -3,16 +3,18 @@ doc_id: site-request-docs-viewer-config-settings
 title: Docs Viewer Config And Settings Request
 added_date: 2026-05-11
 last_updated: "2026-05-14 14:45"
-ui_status: in-progress
-parent_id: change-requests
-sort_order: 28
+ui_status: done
+parent_id: archive
+sort_order: 310
 hidden: false
 ---
 # Docs Viewer Config And Settings Request
 
 Status:
 
-- In progress
+- Implemented
+
+One caveat: the first settings UI is intentionally narrow. It only exposes scoped show_updated_date; recently_added_limit is still deferred because it is global, not active-scope scoped. So the original change request is complete for the agreed first editable setting, not for every candidate setting listed as future work.
 
 ## Summary
 
