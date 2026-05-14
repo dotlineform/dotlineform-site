@@ -62,6 +62,12 @@
 - In that case, use a separate destination for one-off verification builds:
   - `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
 - Before relying on, starting, stopping, or interrupting local `bin/dev-studio` services for verification, tell the user whether they need to start or stop those services. Do not assume running local Studio services are available for tests; they may only be running so the user can read docs.
+- A failed Codex `curl` to `localhost:4000` or `127.0.0.1:4000` may be a sandbox/network boundary, not proof that `bin/dev-studio` or Jekyll is not running. If the user says the route is running, trust that and avoid contradicting it.
+- When localhost reachability is uncertain, say the sandbox cannot reach the route and use an isolated temporary build/server for automated verification only if needed.
+- Docs Viewer management mode requires the dev Studio Jekyll config:
+  - `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --config _config.yml,_config.dev-studio.yml --destination /tmp/dlf-jekyll-build`
+- A normal `_config.yml` build intentionally renders `/docs/` as read-only, so `?mode=manage` will not include management CSS, controls, modal markup, local server config, or the right-click management menu.
+- `_config.dev-studio.yml` excludes generated docs/search JSON from Jekyll's output. For isolated temporary-build smoke tests, copy the needed generated `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/` payloads into the temporary build destination, or use a running `bin/dev-studio` route when reachable.
 - After changing `_docs/`, ensure Studio docs-viewer JSON payloads under `assets/data/docs/scopes/studio/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
 - After changing `_docs_library/`, ensure library docs-viewer JSON payloads under `assets/data/docs/scopes/library/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
 - When docs search output must be kept live with docs changes, rebuild the matching scope explicitly:

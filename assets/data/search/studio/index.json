@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a29f984e3406e3ea29c654a82e345487",
-    "generated_at_utc": "2026-05-14T14:57:26Z",
+    "version": "blake2b-cff21ecdf4898528392362640d049bce",
+    "generated_at_utc": "2026-05-14T15:27:48Z",
     "count": 237
   },
   "entries": [
@@ -2295,36 +2295,6 @@
       "search_text": "tag-registry tag registry tag registry analytics 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
-      "id": "site-request-work-series-prose-source-model",
-      "kind": "doc",
-      "title": "Work And Series Prose Source Model Request",
-      "href": "/docs/?scope=studio&doc=site-request-work-series-prose-source-model",
-      "last_updated": "2026-05-02",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
-      "search_terms": [
-        "site-request-work-series-prose-source-model",
-        "site",
-        "request",
-        "work",
-        "series",
-        "prose",
-        "source",
-        "model",
-        "work and series prose source model request",
-        "and",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-02",
-        "2026",
-        "05",
-        "02"
-      ],
-      "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and change requests change requests 2026-05-02 2026 05 02"
-    },
-    {
       "id": "doc-ui-status",
       "kind": "doc",
       "title": "Doc UI Status",
@@ -2830,34 +2800,6 @@
         "14"
       ],
       "search_text": "docs-viewer-source-config-report docs viewer source config report docs viewer source config report docs viewer 2026-05-14 2026 05 14"
-    },
-    {
-      "id": "site-request-analysis-doc-viewer",
-      "kind": "doc",
-      "title": "Analysis Docs Viewer Request",
-      "href": "/docs/?scope=studio&doc=site-request-analysis-doc-viewer",
-      "last_updated": "2026-05-02",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
-      "search_terms": [
-        "site-request-analysis-doc-viewer",
-        "site",
-        "request",
-        "analysis",
-        "doc",
-        "viewer",
-        "analysis docs viewer request",
-        "docs",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-02",
-        "2026",
-        "05",
-        "02"
-      ],
-      "search_text": "site-request-analysis-doc-viewer site request analysis doc viewer analysis docs viewer request docs change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "studio-works",
@@ -3587,34 +3529,6 @@
       "search_text": "architecture 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
-      "id": "site-request-catalogue-delete-cleanup",
-      "kind": "doc",
-      "title": "Catalogue Delete Cleanup Request",
-      "href": "/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup",
-      "last_updated": "2026-05-08 00:00",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-08 00:00 • Change Requests",
-      "search_terms": [
-        "site-request-catalogue-delete-cleanup",
-        "site",
-        "request",
-        "catalogue",
-        "delete",
-        "cleanup",
-        "catalogue delete cleanup request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-08 00:00",
-        "2026",
-        "05",
-        "08",
-        "00"
-      ],
-      "search_text": "site-request-catalogue-delete-cleanup site request catalogue delete cleanup catalogue delete cleanup request change requests change requests 2026-05-08 00:00 2026 05 08 00"
-    },
-    {
       "id": "scripts-verify-catalogue-field-registry",
       "kind": "doc",
       "title": "Catalogue Field Registry Verification",
@@ -4212,36 +4126,6 @@
         "03"
       ],
       "search_text": "site-request-moment-source-cleanup site request moment source cleanup moment source cleanup change requests change requests 2026-05-11 13:03 2026 05 11 13 03"
-    },
-    {
-      "id": "site-request-catalogue-media-section-schema",
-      "kind": "doc",
-      "title": "Catalogue Media And Detail Section Schema Request",
-      "href": "/docs/?scope=studio&doc=site-request-catalogue-media-section-schema",
-      "last_updated": "2026-05-02",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
-      "search_terms": [
-        "site-request-catalogue-media-section-schema",
-        "site",
-        "request",
-        "catalogue",
-        "media",
-        "section",
-        "schema",
-        "catalogue media and detail section schema request",
-        "and",
-        "detail",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-02",
-        "2026",
-        "05",
-        "02"
-      ],
-      "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request and detail change requests change requests 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-source-registry-drift-verification",
@@ -6145,6 +6029,114 @@
         "00"
       ],
       "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request archive 2026-05-09 16:00 2026 05 09 16 00"
+    },
+    {
+      "id": "site-request-work-series-prose-source-model",
+      "kind": "doc",
+      "title": "Work And Series Prose Source Model Request",
+      "href": "/docs/?scope=studio&doc=site-request-work-series-prose-source-model",
+      "last_updated": "2026-05-02",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-02 • Archive",
+      "search_terms": [
+        "site-request-work-series-prose-source-model",
+        "site",
+        "request",
+        "work",
+        "series",
+        "prose",
+        "source",
+        "model",
+        "work and series prose source model request",
+        "and",
+        "archive",
+        "2026-05-02",
+        "2026",
+        "05",
+        "02"
+      ],
+      "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and archive 2026-05-02 2026 05 02"
+    },
+    {
+      "id": "site-request-catalogue-media-section-schema",
+      "kind": "doc",
+      "title": "Catalogue Media And Detail Section Schema Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-media-section-schema",
+      "last_updated": "2026-05-02",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-02 • Archive",
+      "search_terms": [
+        "site-request-catalogue-media-section-schema",
+        "site",
+        "request",
+        "catalogue",
+        "media",
+        "section",
+        "schema",
+        "catalogue media and detail section schema request",
+        "and",
+        "detail",
+        "archive",
+        "2026-05-02",
+        "2026",
+        "05",
+        "02"
+      ],
+      "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request and detail archive 2026-05-02 2026 05 02"
+    },
+    {
+      "id": "site-request-catalogue-delete-cleanup",
+      "kind": "doc",
+      "title": "Catalogue Delete Cleanup Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup",
+      "last_updated": "2026-05-08 00:00",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-08 00:00 • Archive",
+      "search_terms": [
+        "site-request-catalogue-delete-cleanup",
+        "site",
+        "request",
+        "catalogue",
+        "delete",
+        "cleanup",
+        "catalogue delete cleanup request",
+        "archive",
+        "2026-05-08 00:00",
+        "2026",
+        "05",
+        "08",
+        "00"
+      ],
+      "search_text": "site-request-catalogue-delete-cleanup site request catalogue delete cleanup catalogue delete cleanup request archive 2026-05-08 00:00 2026 05 08 00"
+    },
+    {
+      "id": "site-request-analysis-doc-viewer",
+      "kind": "doc",
+      "title": "Analysis Docs Viewer Request",
+      "href": "/docs/?scope=studio&doc=site-request-analysis-doc-viewer",
+      "last_updated": "2026-05-02",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-02 • Archive",
+      "search_terms": [
+        "site-request-analysis-doc-viewer",
+        "site",
+        "request",
+        "analysis",
+        "doc",
+        "viewer",
+        "analysis docs viewer request",
+        "docs",
+        "archive",
+        "2026-05-02",
+        "2026",
+        "05",
+        "02"
+      ],
+      "search_text": "site-request-analysis-doc-viewer site request analysis doc viewer analysis docs viewer request docs archive 2026-05-02 2026 05 02"
     }
   ]
 }
