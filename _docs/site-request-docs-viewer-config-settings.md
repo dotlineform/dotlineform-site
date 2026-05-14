@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-config-settings
 title: Docs Viewer Config And Settings Request
 added_date: 2026-05-11
-last_updated: "2026-05-11 19:52"
+last_updated: "2026-05-14"
 ui_status: draft
 parent_id: change-requests
 sort_order: 28
@@ -16,7 +16,7 @@ Status:
 
 ## Summary
 
-Clarify the Docs Viewer configuration model and add a management UI for user-editable settings.
+Clarify the Docs Viewer configuration model, add a management UI for user-editable settings, and add a management-only read report for inspecting effective source config.
 
 The current portable viewer work introduced a useful split:
 
@@ -26,6 +26,9 @@ The current portable viewer work introduced a useful split:
 
 That split is functional, but it now needs a clearer contract.
 Some options are installation choices, some are generated data behavior, and some should eventually be editable by a user in Docs Viewer manage mode.
+
+There is also a second need: a read-only way to inspect the full source config from `/docs/` manage mode.
+That report should make all configured scope settings visible in readable form, with a scope dropdown for filtering, without turning config inspection into a write surface.
 
 ## Problem
 
@@ -37,10 +40,14 @@ This makes it harder to answer basic questions:
 - which settings are safe for a user to change in the browser
 - which settings belong to the public read-only viewer versus local management mode
 - which settings should be copied into another Jekyll project
+- what the current source config says for every configured Docs Viewer scope
 
 The immediate example is `show_updated_date`.
 It is defined in `scripts/docs/docs_scopes.json`, projected into generated `index.json.viewer_options`, and consumed by the browser runtime.
 That may be acceptable for data-tree behavior, but it is less clear for a user-facing display preference that could reasonably be changed from a settings modal.
+
+The broader inspection problem is that source config is currently easiest to audit by opening JSON files directly.
+That is workable for implementation, but not good enough for local Docs Viewer management because it hides the effective per-scope config from the place where scopes are selected, created, and managed.
 
 ## Goals
 
@@ -48,6 +55,8 @@ That may be acceptable for data-tree behavior, but it is less clear for a user-f
 - classify settings as install-time, generated-data, user-editable, or runtime-only
 - decide which settings should remain in generated docs indexes and which should move into browser config
 - add a management-mode settings button and modal for safe user-editable settings
+- add a `/docs/` manage-mode, read-only Docs Viewer report that displays source config for all scopes
+- make that report filterable by scope through a dropdown
 - keep public read-only routes free of local write behavior
 - avoid reintroducing hardcoded scope lists or route maps in the viewer runtime
 
@@ -56,6 +65,8 @@ That may be acceptable for data-tree behavior, but it is less clear for a user-f
 - replacing the whole portable Docs Viewer config system in one slice
 - moving Docs Search ownership at the same time
 - making public read-only routes write settings
+- exposing the config report on public read-only routes
+- letting the config report mutate source config
 - adding account/auth concepts
 - treating generated JSON files as hand-edited source files
 
@@ -101,7 +112,7 @@ Runtime-only settings:
 - management mode availability
 - transient local server capability state
 
-## Proposed UX
+## Aspect 1. Editable Settings UX
 
 Add a Settings button to the Docs Viewer management toolbar.
 
@@ -121,6 +132,36 @@ The modal should:
 - trigger or request the minimal rebuild needed for generated browser/config payloads
 - leave public read-only routes with no write surface
 - show a clear unavailable state if the management server is not running
+
+## Aspect 2. Source Config Report
+
+Add a `/docs/` scope, manage-mode, read-only Docs Viewer report that displays source config in readable form.
+
+The report should:
+
+- be available only from `/docs/?scope=studio&mode=manage`
+- read source config through the local docs-management server
+- show config for all configured Docs Viewer scopes
+- include a scope dropdown so the view can show all scopes or one selected scope
+- present source config in grouped, readable sections rather than raw JSON alone
+- identify source-owned values, generated projections, and runtime-only values where useful
+- include file/source references such as `scripts/docs/docs_scopes.json` where that helps audit ownership
+- avoid any save, edit, delete, or rebuild controls
+
+Candidate sections:
+
+- scope identity and title
+- source roots and nested-source policy
+- generated docs and search output paths
+- route base and default doc settings
+- browser config projection
+- viewer options generated into scope indexes
+- manage-only or non-loadable tree behavior
+- source config warnings, such as missing defaults or unsupported paths
+
+This report complements the editable settings modal.
+The report is for inspection and audit.
+The modal is for allowlisted user-editable settings.
 
 ## Storage Direction
 
@@ -152,7 +193,32 @@ Acceptance:
 - each current config file has an owner and edit model
 - `viewer_options` has a documented purpose or replacement plan
 
-### 2. Move Display Settings Out Of Generated Index Options
+### 2. Add Source Config Read Model
+
+Define a read-only server response that exposes source config for all Docs Viewer scopes in a browser-safe form.
+
+Acceptance:
+
+- reads are available only through local manage-mode capability
+- every configured scope is represented
+- response data is structured enough for readable grouped display
+- server does not expose arbitrary local files or raw filesystem traversal
+- the response distinguishes source config from generated projections where practical
+
+### 3. Add Manage-Only Source Config Report
+
+Add a Docs Viewer report-backed document or equivalent manage-only report surface for source config.
+
+Acceptance:
+
+- report is available from `/docs/?scope=studio&mode=manage`
+- report shows all scopes by default
+- scope dropdown filters to one scope
+- public read-only routes do not expose the report
+- report has no write controls
+- unavailable/error states are clear when the management server is not running
+
+### 4. Move Display Settings Out Of Generated Index Options
 
 Decide whether `show_updated_date` belongs in the browser config projection or a user settings projection.
 Move it out of `index.json.viewer_options` if it is treated as scope UI config rather than tree-data behavior.
@@ -163,7 +229,7 @@ Acceptance:
 - browser runtime still renders updated dates according to the effective scope setting
 - rebuild output is deterministic
 
-### 3. Add Management Settings Modal
+### 5. Add Management Settings Modal
 
 Add a management toolbar Settings button and modal for the first user-editable settings.
 
@@ -174,7 +240,7 @@ Acceptance:
 - public routes do not expose the settings button or write code path
 - the modal has empty/error/unavailable states
 
-### 4. Wire Settings Rebuilds
+### 6. Wire Settings Rebuilds
 
 Make settings saves update the generated browser config or docs data payloads required by the changed setting.
 
@@ -184,7 +250,7 @@ Acceptance:
 - generated browser config and docs payloads stay in sync
 - no manual generated-file edits are required
 
-### 5. Update Portable Setup
+### 7. Update Portable Setup
 
 Update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) with the final config model.
 
@@ -193,12 +259,15 @@ Acceptance:
 - install-time config and user-editable settings are described separately
 - downstream copy/setup steps identify which files are source and which files are generated
 - the management settings UI is included in the portable boundary
+- the read-only source config report is described as a local management inspection tool
 
 ## Risks
 
 - A settings UI can make generated config feel editable unless the source/generated distinction is strict.
 - Moving options between config layers can cause unnecessary rebuild churn if not staged carefully.
 - Exposing too many settings early could create a weak settings schema before the portable package boundary is stable.
+- A config report can leak implementation detail into UI if it is not clearly limited to local manage mode.
+- Showing source config from multiple files can become misleading unless source-owned, generated, and runtime-only values are labelled consistently.
 
 ## Related Docs
 
