@@ -60,6 +60,7 @@ Those boundaries are intentional:
 - [Docs Viewer Report Components Request](/docs/?scope=studio&doc=site-request-docs-viewer-report-components) records the report component design and first Library Documents use case.
 - [Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) records what currently needs copying into another Jekyll project and how to add a Library-style scope with a management route and read-only route.
 - [Dependencies](/docs/?scope=studio&doc=docs-viewer-dependencies) records the Docs Viewer Python dependency boundary, the Docs HTML import parser/sanitizer stack, and the role of `requirements.txt`.
+- [Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling) records Docs Viewer media path conventions, import staging, standalone media imports, inline raster extraction, SVG handling, and media-copy handoff behavior.
 - [Route Creation](/docs/?scope=studio&doc=docs-viewer-route-creation) explains the route-creation model and the options for public read-only, committed local-only, and uncommitted local-only scopes.
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) explains the current source roots and how docs trees are organised by `parent_id` and `sort_order`.
 - [Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) records when scope differences should stay in shells or data and when a true runtime fork would be justified.

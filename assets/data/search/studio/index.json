@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4fbb792b1edb40a8e80911e6454619c8",
-    "generated_at_utc": "2026-05-14T16:59:34Z",
-    "count": 239
+    "version": "blake2b-f88c89f2d933d1c9ae41b70ef5ab23c4",
+    "generated_at_utc": "2026-05-14T17:22:58Z",
+    "count": 241
   },
   "entries": [
     {
@@ -1985,6 +1985,30 @@
       "search_text": "docs-viewer-dependencies docs viewer dependencies docs viewer dependencies docs viewer 2026-05-14 2026 05 14"
     },
     {
+      "id": "docs-viewer-media-handling",
+      "kind": "doc",
+      "title": "Docs Viewer Media Handling",
+      "href": "/docs/?scope=studio&doc=docs-viewer-media-handling",
+      "last_updated": "2026-05-14",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-14 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-media-handling",
+        "docs",
+        "viewer",
+        "media",
+        "handling",
+        "docs viewer media handling",
+        "docs viewer",
+        "2026-05-14",
+        "2026",
+        "05",
+        "14"
+      ],
+      "search_text": "docs-viewer-media-handling docs viewer media handling docs viewer media handling docs viewer 2026-05-14 2026 05 14"
+    },
+    {
       "id": "site-request-studio-audits-page",
       "kind": "doc",
       "title": "Studio Audits Page Request",
@@ -2824,6 +2848,29 @@
         "14"
       ],
       "search_text": "docs-viewer-source-config-report docs viewer source config report docs viewer source config report docs viewer 2026-05-14 2026 05 14"
+    },
+    {
+      "id": "studio-javascript-payload-inventory",
+      "kind": "doc",
+      "title": "Studio JavaScript Payload Inventory",
+      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
+      "last_updated": "2026-05-14",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-14 • Studio",
+      "search_terms": [
+        "studio-javascript-payload-inventory",
+        "studio",
+        "javascript",
+        "payload",
+        "inventory",
+        "studio javascript payload inventory",
+        "2026-05-14",
+        "2026",
+        "05",
+        "14"
+      ],
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory studio javascript payload inventory 2026-05-14 2026 05 14"
     },
     {
       "id": "studio-works",
@@ -4661,34 +4708,6 @@
       "search_text": "config-search-build-json config search build json search build config json 2026-05-11 21:30 2026 05 11 21 30"
     },
     {
-      "id": "ui-request-docs-html-import-task",
-      "kind": "doc",
-      "title": "Docs HTML Import Task",
-      "href": "/docs/?scope=studio&doc=ui-request-docs-html-import-task",
-      "last_updated": "2026-05-03",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-03 • Change Requests",
-      "search_terms": [
-        "ui-request-docs-html-import-task",
-        "ui",
-        "request",
-        "docs",
-        "html",
-        "import",
-        "task",
-        "docs html import task",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-03",
-        "2026",
-        "05",
-        "03"
-      ],
-      "search_text": "ui-request-docs-html-import-task ui request docs html import task docs html import task change requests change requests 2026-05-03 2026 05 03"
-    },
-    {
       "id": "new-pipeline",
       "kind": "doc",
       "title": "New Catalogue Pipeline",
@@ -4735,36 +4754,6 @@
         "45"
       ],
       "search_text": "config-pipeline-json config pipeline json pipeline config json catalogue 2026-05-12 18:45 2026 05 12 18 45"
-    },
-    {
-      "id": "ui-request-docs-viewer-index-drag-undo-task",
-      "kind": "doc",
-      "title": "Docs Viewer Index Drag Undo",
-      "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
-      "last_updated": "2026-05-11",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-11 • Change Requests",
-      "search_terms": [
-        "ui-request-docs-viewer-index-drag-undo-task",
-        "ui",
-        "request",
-        "docs",
-        "viewer",
-        "index",
-        "drag",
-        "undo",
-        "task",
-        "docs viewer index drag undo",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-11",
-        "2026",
-        "05",
-        "11"
-      ],
-      "search_text": "ui-request-docs-viewer-index-drag-undo-task ui request docs viewer index drag undo task docs viewer index drag undo change requests change requests 2026-05-11 2026 05 11"
     },
     {
       "id": "library-semantic-enrichment-spec",
@@ -4980,66 +4969,6 @@
       "search_text": "site-request-r2-media-upload-automation site request r2 media upload automation r2 media upload automation request change requests change requests 2026-05-08 00:00 2026 05 08 00"
     },
     {
-      "id": "site-request-docs-html-inline-raster-media",
-      "kind": "doc",
-      "title": "Docs HTML Inline Raster Media Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media",
-      "last_updated": "2026-05-12 10:25",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-12 10:25 • Change Requests",
-      "search_terms": [
-        "site-request-docs-html-inline-raster-media",
-        "site",
-        "request",
-        "docs",
-        "html",
-        "inline",
-        "raster",
-        "media",
-        "docs html inline raster media request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-12 10:25",
-        "2026",
-        "05",
-        "12",
-        "10",
-        "25"
-      ],
-      "search_text": "site-request-docs-html-inline-raster-media site request docs html inline raster media docs html inline raster media request change requests change requests 2026-05-12 10:25 2026 05 12 10 25"
-    },
-    {
-      "id": "site-request-studio-unified-activity-log",
-      "kind": "doc",
-      "title": "Studio Unified Activity Log Request",
-      "href": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
-      "last_updated": "2026-05-08 20:20",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-08 20:20 • Change Requests",
-      "search_terms": [
-        "site-request-studio-unified-activity-log",
-        "site",
-        "request",
-        "studio",
-        "unified",
-        "activity",
-        "log",
-        "studio unified activity log request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-08 20:20",
-        "2026",
-        "05",
-        "08",
-        "20"
-      ],
-      "search_text": "site-request-studio-unified-activity-log site request studio unified activity log studio unified activity log request change requests change requests 2026-05-08 20:20 2026 05 08 20"
-    },
-    {
       "id": "site-request-studio-activity-follow-ups",
       "kind": "doc",
       "title": "Studio Activity Follow-Ups",
@@ -5096,35 +5025,6 @@
       "search_text": "library-export-ui library export ui library export - ui refinements refinements archive 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
-      "id": "site-request-script-structural-review",
-      "kind": "doc",
-      "title": "Script Structural Review Request",
-      "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
-      "last_updated": "2026-05-09 21:45",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 21:45 • Change Requests",
-      "search_terms": [
-        "site-request-script-structural-review",
-        "site",
-        "request",
-        "script",
-        "structural",
-        "review",
-        "script structural review request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-09 21:45",
-        "2026",
-        "05",
-        "09",
-        "21",
-        "45"
-      ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request change requests change requests 2026-05-09 21:45 2026 05 09 21 45"
-    },
-    {
       "id": "site-request-js-config-structural-review",
       "kind": "doc",
       "title": "JavaScript And Browser Config Structural Review Request",
@@ -5155,35 +5055,6 @@
         "19"
       ],
       "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 19:10 2026 05 10 19"
-    },
-    {
-      "id": "site-request-scripts-directory-organization",
-      "kind": "doc",
-      "title": "Scripts Directory Organization Request",
-      "href": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
-      "last_updated": "2026-05-09 22:35",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 22:35 • Change Requests",
-      "search_terms": [
-        "site-request-scripts-directory-organization",
-        "site",
-        "request",
-        "scripts",
-        "directory",
-        "organization",
-        "scripts directory organization request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-09 22:35",
-        "2026",
-        "05",
-        "09",
-        "22",
-        "35"
-      ],
-      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request change requests change requests 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "site-request-studio-import-export-module",
@@ -5260,33 +5131,6 @@
         "12"
       ],
       "search_text": "library-import-export-v2 library import export v2 library export/import v2 archive 2026-05-06 18:12 2026 05 06 18 12"
-    },
-    {
-      "id": "site-request-catalogue-lookup-invalidation",
-      "kind": "doc",
-      "title": "Catalogue Lookup Invalidation Request",
-      "href": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
-      "last_updated": "2026-05-13",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-13 • Change Requests",
-      "search_terms": [
-        "site-request-catalogue-lookup-invalidation",
-        "site",
-        "request",
-        "catalogue",
-        "lookup",
-        "invalidation",
-        "catalogue lookup invalidation request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-13",
-        "2026",
-        "05",
-        "13"
-      ],
-      "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request change requests change requests 2026-05-13 2026 05 13"
     },
     {
       "id": "library-import-ui",
@@ -6163,6 +6007,195 @@
         "03"
       ],
       "search_text": "ui-request-docs-html-import-spec ui request docs html import spec docs html import spec archive 2026-05-03 2026 05 03"
+    },
+    {
+      "id": "ui-request-docs-html-import-task",
+      "kind": "doc",
+      "title": "Docs HTML Import Task",
+      "href": "/docs/?scope=studio&doc=ui-request-docs-html-import-task",
+      "last_updated": "2026-05-03",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-03 • Archive",
+      "search_terms": [
+        "ui-request-docs-html-import-task",
+        "ui",
+        "request",
+        "docs",
+        "html",
+        "import",
+        "task",
+        "docs html import task",
+        "archive",
+        "2026-05-03",
+        "2026",
+        "05",
+        "03"
+      ],
+      "search_text": "ui-request-docs-html-import-task ui request docs html import task docs html import task archive 2026-05-03 2026 05 03"
+    },
+    {
+      "id": "ui-request-docs-viewer-index-drag-undo-task",
+      "kind": "doc",
+      "title": "Docs Viewer Index Drag Undo",
+      "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
+      "last_updated": "2026-05-11",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-11 • Archive",
+      "search_terms": [
+        "ui-request-docs-viewer-index-drag-undo-task",
+        "ui",
+        "request",
+        "docs",
+        "viewer",
+        "index",
+        "drag",
+        "undo",
+        "task",
+        "docs viewer index drag undo",
+        "archive",
+        "2026-05-11",
+        "2026",
+        "05",
+        "11"
+      ],
+      "search_text": "ui-request-docs-viewer-index-drag-undo-task ui request docs viewer index drag undo task docs viewer index drag undo archive 2026-05-11 2026 05 11"
+    },
+    {
+      "id": "site-request-docs-html-inline-raster-media",
+      "kind": "doc",
+      "title": "Docs HTML Inline Raster Media Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media",
+      "last_updated": "2026-05-12 10:25",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-12 10:25 • Archive",
+      "search_terms": [
+        "site-request-docs-html-inline-raster-media",
+        "site",
+        "request",
+        "docs",
+        "html",
+        "inline",
+        "raster",
+        "media",
+        "docs html inline raster media request",
+        "archive",
+        "2026-05-12 10:25",
+        "2026",
+        "05",
+        "12",
+        "10",
+        "25"
+      ],
+      "search_text": "site-request-docs-html-inline-raster-media site request docs html inline raster media docs html inline raster media request archive 2026-05-12 10:25 2026 05 12 10 25"
+    },
+    {
+      "id": "site-request-script-structural-review",
+      "kind": "doc",
+      "title": "Script Structural Review Request",
+      "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
+      "last_updated": "2026-05-09 21:45",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-09 21:45 • Archive",
+      "search_terms": [
+        "site-request-script-structural-review",
+        "site",
+        "request",
+        "script",
+        "structural",
+        "review",
+        "script structural review request",
+        "archive",
+        "2026-05-09 21:45",
+        "2026",
+        "05",
+        "09",
+        "21",
+        "45"
+      ],
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request archive 2026-05-09 21:45 2026 05 09 21 45"
+    },
+    {
+      "id": "site-request-studio-unified-activity-log",
+      "kind": "doc",
+      "title": "Studio Unified Activity Log Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
+      "last_updated": "2026-05-08 20:20",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-08 20:20 • Archive",
+      "search_terms": [
+        "site-request-studio-unified-activity-log",
+        "site",
+        "request",
+        "studio",
+        "unified",
+        "activity",
+        "log",
+        "studio unified activity log request",
+        "archive",
+        "2026-05-08 20:20",
+        "2026",
+        "05",
+        "08",
+        "20"
+      ],
+      "search_text": "site-request-studio-unified-activity-log site request studio unified activity log studio unified activity log request archive 2026-05-08 20:20 2026 05 08 20"
+    },
+    {
+      "id": "site-request-scripts-directory-organization",
+      "kind": "doc",
+      "title": "Scripts Directory Organization Request",
+      "href": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
+      "last_updated": "2026-05-09 22:35",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-09 22:35 • Archive",
+      "search_terms": [
+        "site-request-scripts-directory-organization",
+        "site",
+        "request",
+        "scripts",
+        "directory",
+        "organization",
+        "scripts directory organization request",
+        "archive",
+        "2026-05-09 22:35",
+        "2026",
+        "05",
+        "09",
+        "22",
+        "35"
+      ],
+      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request archive 2026-05-09 22:35 2026 05 09 22 35"
+    },
+    {
+      "id": "site-request-catalogue-lookup-invalidation",
+      "kind": "doc",
+      "title": "Catalogue Lookup Invalidation Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
+      "last_updated": "2026-05-13",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-13 • Archive",
+      "search_terms": [
+        "site-request-catalogue-lookup-invalidation",
+        "site",
+        "request",
+        "catalogue",
+        "lookup",
+        "invalidation",
+        "catalogue lookup invalidation request",
+        "archive",
+        "2026-05-13",
+        "2026",
+        "05",
+        "13"
+      ],
+      "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request archive 2026-05-13 2026 05 13"
     }
   ]
 }

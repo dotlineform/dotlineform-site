@@ -4,8 +4,8 @@ title: Docs HTML Inline Raster Media Request
 added_date: 2026-05-07
 last_updated: "2026-05-12 10:25"
 ui_status: done
-parent_id: change-requests
-sort_order: 207
+parent_id: archive
+sort_order: 560
 ---
 # Docs HTML Inline Raster Media Request
 

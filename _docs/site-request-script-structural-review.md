@@ -4,8 +4,8 @@ title: Script Structural Review Request
 added_date: 2026-05-08
 last_updated: "2026-05-09 21:45"
 ui_status: done
-parent_id: change-requests
-sort_order: 210
+parent_id: archive
+sort_order: 570
 viewable: true
 ---
 # Script Structural Review Request

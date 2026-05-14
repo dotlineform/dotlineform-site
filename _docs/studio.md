@@ -53,15 +53,16 @@ Read this section in this order:
 4. **[Studio Ready State](/docs/?scope=studio&doc=studio-ready-state)** for the implemented route-ready contract and audit expectations
 5. **[Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)** for Codex-run browser smoke-test harness rules
 6. Technical route and workflow docs:
-	   - **[Studio Activity](/docs/?scope=studio&doc=studio-activity)**
-	   - **[Studio Audits](/docs/?scope=studio&doc=studio-audits)**
+   - **[Studio Activity](/docs/?scope=studio&doc=studio-activity)**
+   - **[Studio Audits](/docs/?scope=studio&doc=studio-audits)**
+   - **[Studio JavaScript Payload Inventory](/docs/?scope=studio&doc=studio-javascript-payload-inventory)**
    - **[Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)**
    - **[Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)**
    - **[Library Documents](/docs/?scope=studio&doc=library-documents)**
    - **[Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing)**
    - **[Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec)**
-	   - **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
-	   - **[Project State Page](/docs/?scope=studio&doc=project-state-page)**
+   - **[Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)**
+   - **[Project State Page](/docs/?scope=studio&doc=project-state-page)**
    - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**
    - **[Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)**
    - **[Tag Groups](/docs/?scope=studio&doc=tag-groups)**
