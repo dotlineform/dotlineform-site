@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T19:58:27Z",
+  "generated_at": "2026-05-14T20:07:13Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1482,7 +1482,7 @@
       "source_path": "studio-smoke-testing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-smoke-testing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-smoke-testing.json",
-      "content_text_length": 6044
+      "content_text_length": 6162
     },
     {
       "scope": "studio",
@@ -1907,7 +1907,7 @@
       "source_path": "scripts-run-checks.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-run-checks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-run-checks.json",
-      "content_text_length": 1755
+      "content_text_length": 2011
     },
     {
       "scope": "studio",
@@ -2824,7 +2824,7 @@
       "source_path": "testing.md",
       "viewer_url": "/docs/?scope=studio&doc=testing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/testing.json",
-      "content_text_length": 3499
+      "content_text_length": 3664
     },
     {
       "scope": "studio",
@@ -3164,7 +3164,7 @@
       "source_path": "site-request-docs-viewer-router-extraction.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-router-extraction",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-router-extraction.json",
-      "content_text_length": 6389,
+      "content_text_length": 6499,
       "ui_status": "in-progress"
     },
     {

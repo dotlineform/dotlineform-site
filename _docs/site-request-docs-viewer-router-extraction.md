@@ -101,7 +101,8 @@ The entry controller should keep:
 
 Status: implemented.
 
-Add a focused `tests/smoke/docs_viewer_routes.py` script and wire it into the `studio-smoke` check profile.
+Add a focused `tests/smoke/docs_viewer_routes.py` script and wire it into the `docs-viewer-smoke` check profile.
+Keep the same route smoke in `studio-smoke` as an optional integration guard.
 
 Acceptance:
 
@@ -168,8 +169,8 @@ Required before implementation:
 
 Required after each runtime slice:
 
-- focused Docs Viewer route smoke
-- `./scripts/run_checks.py --profile studio-smoke` when the slice changes routed browser behavior enough to justify the full smoke profile
+- `./scripts/run_checks.py --profile docs-viewer-smoke`
+- optionally run `./scripts/run_checks.py --profile studio-smoke` when the slice should also be checked against broader Studio route smoke coverage
 
 ## Related References
 

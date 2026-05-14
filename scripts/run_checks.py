@@ -241,6 +241,23 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Regenerate Studio docs search payload.",
         ),
     ),
+    "docs-viewer-smoke": (
+        CheckCommand(
+            "jekyll-temp-build",
+            bundle_argv(),
+            "Build the site to a temporary destination for browser smoke tests.",
+        ),
+        CheckCommand(
+            "docs-viewer-route-smoke",
+            (
+                sys.executable,
+                "tests/smoke/docs_viewer_routes.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check Docs Viewer direct route, search, link interception, history, hash, and Library scope behavior.",
+        ),
+    ),
     "studio-smoke": (
         CheckCommand(
             "jekyll-temp-build",
