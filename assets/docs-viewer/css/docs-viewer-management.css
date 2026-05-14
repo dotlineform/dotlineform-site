@@ -529,7 +529,10 @@
 }
 
 .docsViewer__modalCard--documentWidth{
+  display: flex;
+  flex-direction: column;
   width: min(var(--docs-viewer-measure, 72ch), calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
 }
 
 .docsViewer__modalHeader{
@@ -741,6 +744,10 @@ select.docsViewer__fieldInput--listbox{
 }
 
 .docsViewer__importBody{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
   max-height: min(72vh, 48rem);
   overflow: auto;
   border: 0;
@@ -748,7 +755,16 @@ select.docsViewer__fieldInput--listbox{
   padding: 0;
 }
 
+.docsViewer__importBody .docsViewerImport{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
 .docsViewer__importBody .docsViewerImport__panel{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
   border: 0;
   background: transparent;
   padding: 0;
@@ -785,7 +801,15 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewer__importBody .docsViewerImport__actions{
   justify-content: flex-end;
-  margin-top: 0.2rem;
+}
+
+.docsViewer__importBody .docsViewerImport__footer{
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  gap: 0.55rem;
+  padding-top: 0.75rem;
+  background: var(--docs-viewer-panel, var(--panel, #fff));
 }
 
 .docsViewer__manageRow{
