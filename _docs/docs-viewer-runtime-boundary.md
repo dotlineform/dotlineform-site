@@ -40,8 +40,9 @@ Current shared implementation:
 - `assets/docs-viewer/js/docs-viewer-drag-drop.js` for drag/drop helpers used by the management controller
 - `assets/docs-viewer/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by the entry controller
 - `assets/docs-viewer/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the entry controller
-- `assets/docs-viewer/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the entry controller
-- `assets/docs-viewer/js/docs-viewer-render.js` for read-oriented result and bookmark markup helpers imported by the entry controller
+- `assets/docs-viewer/js/docs-viewer-bookmarks.js` for bookmark state, rendering, IndexedDB storage orchestration, and events imported by the entry controller
+- `assets/docs-viewer/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the bookmark controller
+- `assets/docs-viewer/js/docs-viewer-render.js` for read-oriented result and bookmark markup helpers imported by the entry and bookmark controllers
 - `_includes/docs_viewer_shell.html`
 - `assets/docs-viewer/css/docs-viewer-management.css` for management-only shell and modal styling
 

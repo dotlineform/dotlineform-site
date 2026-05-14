@@ -12,14 +12,8 @@ import {
   normalizeSearchText
 } from "./docs-viewer-search.js";
 import {
-  bookmarkKey,
-  compareBookmarks,
-  deleteBookmarkRecord,
-  isoNow,
-  loadBookmarks,
-  normalizeBookmarkRecord,
-  persistBookmark
-} from "./docs-viewer-favourites.js";
+  initDocsViewerBookmarks
+} from "./docs-viewer-bookmarks.js";
 import {
   appendAssetVersion,
   fetchIndexWithRetry,
@@ -30,7 +24,6 @@ import {
 } from "./docs-viewer-data.js";
 import {
   escapeHtml,
-  renderBookmarkRowsMarkup,
   renderRecentEntry,
   renderSearchEntry
 } from "./docs-viewer-render.js";
@@ -91,6 +84,7 @@ import {
   var assetVersion = readAssetVersion(document);
   var managementController = null;
   var managementControllerRequestPromise = null;
+  var bookmarkController = null;
 
   var state = {
     allDocs: [],
@@ -746,83 +740,20 @@ import {
     return target;
   }
 
-  function getScopeBookmarks() {
-    return state.bookmarks
-      .filter(function (record) { return record.scope === bookmarkScope; })
-      .sort(compareBookmarks);
-  }
-
-  function getBookmarkForDoc(docId) {
-    return findBookmarkByKey(bookmarkKey(bookmarkScope, docId));
-  }
-
-  function findBookmarkByKey(key) {
-    for (var i = 0; i < state.bookmarks.length; i += 1) {
-      if (state.bookmarks[i].key === key) return state.bookmarks[i];
-    }
-    return null;
-  }
-
-  function nextBookmarkOrder() {
-    var bookmarks = getScopeBookmarks();
-    if (!bookmarks.length) return 1;
-    return bookmarks[bookmarks.length - 1].order + 1;
-  }
-
-  function defaultBookmarkLabel(doc) {
-    if (!doc) return "";
-    return String(doc.title || doc.doc_id || "").trim();
-  }
-
-  function upsertBookmarkState(record) {
-    var normalized = normalizeBookmarkRecord(record);
-    if (!normalized) return;
-    var next = [];
-    var found = false;
-    state.bookmarks.forEach(function (entry) {
-      if (entry.key === normalized.key) {
-        next.push(normalized);
-        found = true;
-      } else {
-        next.push(entry);
-      }
-    });
-    if (!found) {
-      next.push(normalized);
-    }
-    state.bookmarks = next.sort(compareBookmarks);
-  }
-
-  function removeBookmarkState(key) {
-    state.bookmarks = state.bookmarks.filter(function (entry) {
-      return entry.key !== key;
-    });
-    if (state.editingBookmarkKey === key) {
-      state.editingBookmarkKey = "";
-      state.pendingBookmarkFocusKey = "";
-    }
-  }
-
   function renderBookmarkUi() {
-    renderBookmarkToggle();
-    renderBookmarkRow();
+    if (bookmarkController) {
+      bookmarkController.renderUi();
+      return;
+    }
     renderStatusPills();
   }
 
   function renderBookmarkToggle() {
-    if (!bookmarkToggle) return;
-    var doc = state.docsById.get(state.selectedDocId);
-    var canShow = Boolean(doc) && state.bookmarksLoaded && state.bookmarkSupport && !state.searchRouteActive;
-    bookmarkToggle.hidden = !canShow;
-    if (!canShow) return;
-
-    var record = getBookmarkForDoc(doc.doc_id);
-    var active = Boolean(record);
-    bookmarkToggle.classList.toggle("is-active", active);
-    bookmarkToggle.textContent = active ? "★" : "☆";
-    bookmarkToggle.setAttribute("aria-pressed", active ? "true" : "false");
-    bookmarkToggle.setAttribute("aria-label", active ? "Remove bookmark" : "Add bookmark");
-    bookmarkToggle.title = active ? "Remove bookmark" : "Add bookmark";
+    if (bookmarkController) {
+      bookmarkController.renderToggle();
+      return;
+    }
+    if (bookmarkToggle) bookmarkToggle.hidden = true;
   }
 
   function renderStatusPills() {
@@ -836,179 +767,8 @@ import {
     state.statusMenuOpen = false;
   }
 
-  function renderBookmarkRow() {
-    if (!bookmarkRow) return;
-    if (!state.bookmarksLoaded || !state.bookmarkSupport) {
-      bookmarkRow.hidden = true;
-      bookmarkRow.innerHTML = "";
-      return;
-    }
-
-    var bookmarks = getScopeBookmarks();
-    if (!bookmarks.length) {
-      bookmarkRow.hidden = true;
-      bookmarkRow.innerHTML = "";
-      return;
-    }
-
-    bookmarkRow.hidden = false;
-    bookmarkRow.innerHTML = renderBookmarkRowsMarkup(bookmarks, {
-      editingBookmarkKey: state.editingBookmarkKey,
-      selectedDocId: state.selectedDocId
-    });
-
-    if (state.pendingBookmarkFocusKey) {
-      var focusTarget = bookmarkRow.querySelector('[data-bookmark-input="' + cssEscape(state.pendingBookmarkFocusKey) + '"]');
-      if (focusTarget) {
-        window.requestAnimationFrame(function () {
-          focusTarget.focus();
-          focusTarget.select();
-        });
-      }
-      state.pendingBookmarkFocusKey = "";
-    }
-  }
-
-  function bookmarkStorageOptions() {
-    return {
-      indexedDB: window.indexedDB,
-      dbName: BOOKMARK_DB_NAME,
-      dbVersion: BOOKMARK_DB_VERSION,
-      storeName: BOOKMARK_STORE_NAME
-    };
-  }
-
-  function handleBookmarkStorageError(error) {
-    if (error && error.bookmarkStorageUnavailable) {
-      state.bookmarkSupport = false;
-      renderBookmarkUi();
-    }
-    return error;
-  }
-
   function initializeBookmarks() {
-    if (!state.bookmarkSupport) {
-      state.bookmarksLoaded = true;
-      renderBookmarkUi();
-      return;
-    }
-
-    loadBookmarks(bookmarkStorageOptions())
-      .then(function (records) {
-        state.bookmarks = records;
-        state.bookmarksLoaded = true;
-        renderBookmarkUi();
-      })
-      .catch(function (error) {
-        handleBookmarkStorageError(error);
-        state.bookmarks = [];
-        state.bookmarksLoaded = true;
-        renderBookmarkUi();
-      });
-  }
-
-  function addBookmarkForDoc(doc) {
-    if (!doc || !state.bookmarkSupport) return;
-    var now = isoNow();
-    var record = normalizeBookmarkRecord({
-      scope: bookmarkScope,
-      doc_id: doc.doc_id,
-      label: defaultBookmarkLabel(doc),
-      default_title: defaultBookmarkLabel(doc),
-      created_at_utc: now,
-      updated_at_utc: now,
-      order: nextBookmarkOrder()
-    });
-    upsertBookmarkState(record);
-    renderBookmarkUi();
-    persistBookmark(record, bookmarkStorageOptions()).catch(function (error) {
-      handleBookmarkStorageError(error);
-      removeBookmarkState(record.key);
-      renderBookmarkUi();
-      setStatus(error.message || "Failed to save bookmark.", true);
-    });
-  }
-
-  function removeBookmarkByKey(key) {
-    var record = key ? findBookmarkByKey(key) : null;
-    if (!record) return;
-    removeBookmarkState(key);
-    renderBookmarkUi();
-    deleteBookmarkRecord(key, bookmarkStorageOptions()).catch(function (error) {
-      handleBookmarkStorageError(error);
-      upsertBookmarkState(record);
-      renderBookmarkUi();
-      setStatus(error.message || "Failed to remove bookmark.", true);
-    });
-  }
-
-  function toggleCurrentBookmark() {
-    var doc = state.docsById.get(state.selectedDocId);
-    if (!doc || !state.bookmarksLoaded || !state.bookmarkSupport) return;
-    var existing = getBookmarkForDoc(doc.doc_id);
-    if (existing) {
-      removeBookmarkByKey(existing.key);
-      return;
-    }
-    addBookmarkForDoc(doc);
-  }
-
-  function startBookmarkRename(key) {
-    if (!key) return;
-    state.editingBookmarkKey = key;
-    state.pendingBookmarkFocusKey = key;
-    renderBookmarkRow();
-  }
-
-  function finishBookmarkRename(key, nextValue, cancel) {
-    var record = key ? findBookmarkByKey(key) : null;
-    if (!record) {
-      state.editingBookmarkKey = "";
-      state.pendingBookmarkFocusKey = "";
-      renderBookmarkRow();
-      return;
-    }
-
-    if (cancel) {
-      state.editingBookmarkKey = "";
-      state.pendingBookmarkFocusKey = "";
-      renderBookmarkRow();
-      return;
-    }
-
-    var nextLabel = String(nextValue || "").trim() || record.default_title || record.doc_id;
-    state.editingBookmarkKey = "";
-    state.pendingBookmarkFocusKey = "";
-    if (nextLabel === record.label) {
-      renderBookmarkRow();
-      return;
-    }
-
-    var updated = normalizeBookmarkRecord({
-      key: record.key,
-      scope: record.scope,
-      doc_id: record.doc_id,
-      label: nextLabel,
-      default_title: record.default_title,
-      created_at_utc: record.created_at_utc,
-      updated_at_utc: isoNow(),
-      order: record.order
-    });
-
-    upsertBookmarkState(updated);
-    renderBookmarkUi();
-    persistBookmark(updated, bookmarkStorageOptions()).catch(function (error) {
-      handleBookmarkStorageError(error);
-      upsertBookmarkState(record);
-      renderBookmarkUi();
-      setStatus(error.message || "Failed to rename bookmark.", true);
-    });
-  }
-
-  function commitBookmarkInput(input, cancel) {
-    if (!input || input.dataset.bookmarkCommitted === "true") return;
-    input.dataset.bookmarkCommitted = "true";
-    finishBookmarkRename(input.dataset.bookmarkInput, input.value, cancel);
+    if (bookmarkController) bookmarkController.initialize();
   }
 
   function viewerUrl(docId, hash, query) {
@@ -1632,13 +1392,6 @@ import {
       loadDoc(route.docId, { historyMode: "push", hash: route.hash });
     });
 
-    if (bookmarkToggle) {
-      bookmarkToggle.addEventListener("click", function () {
-        hideContextMenu();
-        toggleCurrentBookmark();
-      });
-    }
-
     if (sidebarToggle) {
       sidebarToggle.addEventListener("click", function () {
         toggleSidebarCollapsed();
@@ -1669,61 +1422,8 @@ import {
       });
     }
 
-    if (bookmarkRow) {
-      bookmarkRow.addEventListener("click", function (event) {
-        var removeButton = event.target.closest("[data-bookmark-remove]");
-        if (removeButton) {
-          event.preventDefault();
-          removeBookmarkByKey(removeButton.dataset.bookmarkRemove);
-          return;
-        }
-
-        var openButton = event.target.closest("[data-bookmark-open]");
-        if (openButton) {
-          event.preventDefault();
-          var targetDocId = openButton.dataset.bookmarkOpen;
-          if (!targetDocId) return;
-          cancelSearchDebounce();
-          state.searchQuery = "";
-          state.searchVisibleCount = SEARCH_BATCH_SIZE;
-          if (searchInput) {
-            searchInput.value = "";
-          }
-          loadDoc(targetDocId, { historyMode: "push", hash: "" });
-        }
-      });
-
-      bookmarkRow.addEventListener("contextmenu", function (event) {
-        var openButton = event.target.closest("[data-bookmark-open]");
-        if (!openButton) return;
-        event.preventDefault();
-        startBookmarkRename(bookmarkKey(bookmarkScope, openButton.dataset.bookmarkOpen));
-      });
-
-      bookmarkRow.addEventListener("keydown", function (event) {
-        var openButton = event.target.closest("[data-bookmark-open]");
-        if (openButton && event.key === "F2") {
-          event.preventDefault();
-          startBookmarkRename(bookmarkKey(bookmarkScope, openButton.dataset.bookmarkOpen));
-          return;
-        }
-
-        var input = event.target.closest("[data-bookmark-input]");
-        if (!input) return;
-        if (event.key === "Enter") {
-          event.preventDefault();
-          commitBookmarkInput(input, false);
-        } else if (event.key === "Escape") {
-          event.preventDefault();
-          commitBookmarkInput(input, true);
-        }
-      });
-
-      bookmarkRow.addEventListener("focusout", function (event) {
-        var input = event.target.closest("[data-bookmark-input]");
-        if (!input) return;
-        commitBookmarkInput(input, false);
-      });
+    if (bookmarkController) {
+      bookmarkController.bind();
     }
 
     document.addEventListener("keydown", function (event) {
@@ -2040,6 +1740,23 @@ import {
     }
   });
 
+  bookmarkController = initDocsViewerBookmarks({
+    bookmarkRow: bookmarkRow,
+    bookmarkScope: function () { return bookmarkScope; },
+    bookmarkToggle: bookmarkToggle,
+    cancelSearchDebounce: cancelSearchDebounce,
+    cssEscape: cssEscape,
+    dbName: BOOKMARK_DB_NAME,
+    dbVersion: BOOKMARK_DB_VERSION,
+    hideContextMenu: hideContextMenu,
+    loadDoc: loadDoc,
+    renderStatusPills: renderStatusPills,
+    searchBatchSize: SEARCH_BATCH_SIZE,
+    searchInput: searchInput,
+    setStatus: setStatus,
+    state: state,
+    storeName: BOOKMARK_STORE_NAME
+  });
   bindLinkInterception();
   loadDocsViewerConfig()
     .then(function () {
