@@ -1,8 +1,12 @@
+{%- assign docs_import_auto_init = true -%}
+{%- if include.auto_init == false -%}
+  {%- assign docs_import_auto_init = false -%}
+{%- endif -%}
 <div
   class="docsViewerImport"
   id="docsHtmlImportRoot"
   hidden
-  data-docs-import-auto-init="{{ include.auto_init | default: true }}"
+  data-docs-import-auto-init="{{ docs_import_auto_init }}"
   data-studio-ready="false"
   data-studio-busy="false"
 >
@@ -10,17 +14,17 @@
     <p class="docsViewerImport__intro" id="docsHtmlImportIntro"></p>
 
     <div class="docsViewerImport__controls">
-      <label class="docsViewerImport__field docsViewerImport__field--inline docsViewerImport__field--file">
-        <span class="docsViewerImport__fieldLabel" id="docsHtmlImportFileLabel"></span>
-        <span class="docsViewerImport__fieldControl">
-          <select class="docsViewerImport__input" id="docsHtmlImportFileSelect"></select>
-        </span>
-      </label>
-
       <label class="docsViewerImport__field docsViewerImport__field--inline docsViewerImport__field--scope">
         <span class="docsViewerImport__fieldLabel" id="docsHtmlImportScopeLabel"></span>
         <span class="docsViewerImport__fieldControl">
           <select class="docsViewerImport__input" id="docsHtmlImportScopeSelect"></select>
+        </span>
+      </label>
+
+      <label class="docsViewerImport__field docsViewerImport__field--inline docsViewerImport__field--file">
+        <span class="docsViewerImport__fieldLabel" id="docsHtmlImportFileLabel"></span>
+        <span class="docsViewerImport__fieldControl">
+          <select class="docsViewerImport__input" id="docsHtmlImportFileSelect"></select>
         </span>
       </label>
     </div>

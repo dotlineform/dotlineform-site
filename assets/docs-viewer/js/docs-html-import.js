@@ -821,14 +821,20 @@ export async function initDocsHtmlImport(options = {}) {
       .catch(() => false);
     state.serviceAvailable = Boolean(serviceAvailable);
 
-    setText(
-      state.introNode,
-      configText(
-        state.config,
-        "docs_html_import.intro",
-        "Import staged source files into the Studio, Analysis, or Library docs source."
-      )
-    );
+    if (options.hideIntro) {
+      setText(state.introNode, "");
+      state.introNode.hidden = true;
+    } else {
+      setText(
+        state.introNode,
+        configText(
+          state.config,
+          "docs_html_import.intro",
+          "Import staged source files into the Studio, Analysis, or Library docs source."
+        )
+      );
+      state.introNode.hidden = false;
+    }
     setText(state.fileLabelNode, configText(state.config, "docs_html_import.file_label", "staged file"));
     setText(state.scopeLabelNode, configText(state.config, "docs_html_import.scope_label", "publish into"));
     setText(

@@ -180,6 +180,7 @@ import {
       settingsSaved: "Settings saved.",
       settingsLoadFailed: "Settings unavailable.",
       settingsSaveFailed: "Settings save failed.",
+      importCancelButton: "Cancel",
       copyLinkLabel: "Copy Link",
       copyLinkStatus: "Copied link for {title}.",
       copyLinkFailed: "Copy link failed."

@@ -528,6 +528,10 @@
   margin-top: 4vh;
 }
 
+.docsViewer__modalCard--documentWidth{
+  width: min(var(--docs-viewer-measure, 72ch), calc(100vw - 2rem));
+}
+
 .docsViewer__modalHeader{
   display: flex;
   align-items: flex-start;
@@ -739,10 +743,49 @@ select.docsViewer__fieldInput--listbox{
 .docsViewer__importBody{
   max-height: min(72vh, 48rem);
   overflow: auto;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
-  border-radius: var(--docs-viewer-radius, var(--radius, 0.625rem));
-  background: var(--docs-viewer-bg, var(--bg, #fff));
-  padding: 0.95rem;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.docsViewer__importBody .docsViewerImport__panel{
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.docsViewer__importBody .docsViewerImport__controls{
+  display: grid;
+  justify-items: start;
+  align-items: start;
+  gap: 0.65rem;
+}
+
+.docsViewer__importBody .docsViewerImport__field{
+  width: min(24rem, 100%);
+}
+
+.docsViewer__importBody .docsViewerImport__field--inline{
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.22rem;
+}
+
+.docsViewer__importBody .docsViewerImport__field--inline .docsViewerImport__fieldControl{
+  grid-column: auto;
+}
+
+.docsViewer__importBody .docsViewerImport__fieldControl{
+  width: 100%;
+}
+
+.docsViewer__importBody .docsViewerImport__fieldControl > .docsViewerImport__input{
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.docsViewer__importBody .docsViewerImport__actions{
+  justify-content: flex-end;
+  margin-top: 0.2rem;
 }
 
 .docsViewer__manageRow{

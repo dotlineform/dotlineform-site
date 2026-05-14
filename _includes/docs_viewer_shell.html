@@ -219,13 +219,11 @@
   </div>
   <div class="docsViewer__modal" id="docsViewerImportModal" hidden>
     <div class="docsViewer__modalBackdrop" data-import-close="true"></div>
-    <div class="docsViewer__modalCard docsViewer__modalCard--wide" role="dialog" aria-modal="true" aria-labelledby="docsViewerImportHeading">
+    <div class="docsViewer__modalCard docsViewer__modalCard--documentWidth" role="dialog" aria-modal="true" aria-labelledby="docsViewerImportHeading">
       <div class="docsViewer__modalHeader">
         <div class="docsViewer__modalHeaderCopy">
           <h2 class="docsViewer__modalTitle" id="docsViewerImportHeading">Import docs</h2>
-          <p class="docsViewer__modalMeta muted small" id="docsViewerImportScope"></p>
         </div>
-        <button class="docsViewer__modalClose" type="button" id="docsViewerImportCloseButton" aria-label="Close import">×</button>
       </div>
       <div class="docsViewer__importBody" id="docsViewerImportBody">
         {% include docs_import_shell.html auto_init=false %}

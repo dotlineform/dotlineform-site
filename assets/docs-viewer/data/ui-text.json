@@ -25,6 +25,7 @@
   "settings_saved": "Settings saved.",
   "settings_load_failed": "Settings unavailable.",
   "settings_save_failed": "Settings save failed.",
+  "import_cancel_button": "Cancel",
   "copy_link_label": "Copy Link",
   "copy_link_status": "Copied link for {title}.",
   "copy_link_failed": "Copy link failed.",

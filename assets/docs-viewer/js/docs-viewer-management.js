@@ -76,8 +76,6 @@ export function initDocsViewerManagement(context) {
   var importModal = document.getElementById("docsViewerImportModal");
   var importRoot = document.getElementById("docsHtmlImportRoot");
   var importBootStatus = document.getElementById("docsHtmlImportBootStatus");
-  var importScope = document.getElementById("docsViewerImportScope");
-  var importCloseButton = document.getElementById("docsViewerImportCloseButton");
   var settingsModal = document.getElementById("docsViewerSettingsModal");
   var settingsForm = document.getElementById("docsViewerSettingsForm");
   var settingsHeading = document.getElementById("docsViewerSettingsHeading");
@@ -91,6 +89,7 @@ export function initDocsViewerManagement(context) {
   var settingsSaveButton = document.getElementById("docsViewerSettingsSaveButton");
   var docsImportRequestPromise = null;
   var docsImportInitialized = false;
+  var importModalCancelButton = null;
   var metadataModalResolve = null;
   var metadataParentOptionRecords = [];
   var metadataParentActiveIndex = -1;
@@ -555,7 +554,8 @@ export function initDocsViewerManagement(context) {
           docsViewerConfigUrl: root.dataset.docsViewerConfigUrl || "/assets/docs-viewer/data/docs-viewer-config.json",
           uiTextUrl: root.dataset.uiTextUrl || "/assets/docs-viewer/data/ui-text.json",
           managementBaseUrl: context.managementBaseUrl,
-          routePath: "/docs/"
+          routePath: "/docs/",
+          hideIntro: true
         });
       })
       .then(function () {
@@ -576,16 +576,30 @@ export function initDocsViewerManagement(context) {
     return docsImportRequestPromise;
   }
 
+  function ensureImportModalCancelButton() {
+    if (importModalCancelButton) return importModalCancelButton;
+    if (!importRoot) return null;
+    var actions = importRoot.querySelector(".docsViewerImport__actions");
+    var runButton = document.getElementById("docsHtmlImportRun");
+    if (!actions || !runButton) return null;
+    importModalCancelButton = document.createElement("button");
+    importModalCancelButton.type = "button";
+    importModalCancelButton.className = "docsViewerImport__button docsViewerImport__button--defaultWidth docsViewerImport__modalCancel";
+    importModalCancelButton.id = "docsViewerImportCancelButton";
+    importModalCancelButton.textContent = state.managementText.importCancelButton;
+    importModalCancelButton.addEventListener("click", closeImportModal);
+    actions.insertBefore(importModalCancelButton, runButton);
+    return importModalCancelButton;
+  }
+
   function openImportModal() {
     if (!importModal || !importRoot) return;
     var scope = viewerScope();
-    if (importScope) {
-      importScope.textContent = "scope: " + scope;
-    }
+    var cancelButton = ensureImportModalCancelButton();
     importModal.hidden = false;
     initializeImportModal(scope);
-    if (importCloseButton) {
-      importCloseButton.focus();
+    if (cancelButton) {
+      cancelButton.focus();
     }
   }
 
@@ -1499,6 +1513,8 @@ export function initDocsViewerManagement(context) {
     state.managementText.settingsSaved = context.getConfigText(config, "docs_viewer.settings_saved", state.managementText.settingsSaved);
     state.managementText.settingsLoadFailed = context.getConfigText(config, "docs_viewer.settings_load_failed", state.managementText.settingsLoadFailed);
     state.managementText.settingsSaveFailed = context.getConfigText(config, "docs_viewer.settings_save_failed", state.managementText.settingsSaveFailed);
+    state.managementText.importCancelButton = context.getConfigText(config, "docs_viewer.import_cancel_button", state.managementText.importCancelButton);
+    if (importModalCancelButton) importModalCancelButton.textContent = state.managementText.importCancelButton;
     state.managementText.copyLinkStatus = context.getConfigText(config, "docs_viewer.copy_link_status", state.managementText.copyLinkStatus);
     state.managementText.copyLinkFailed = context.getConfigText(config, "docs_viewer.copy_link_failed", state.managementText.copyLinkFailed);
     if (metadataStatusLabel) {
@@ -1806,9 +1822,6 @@ export function initDocsViewerManagement(context) {
     }
     if (metadataCancelButton) {
       metadataCancelButton.addEventListener("click", closeMetadataModal);
-    }
-    if (importCloseButton) {
-      importCloseButton.addEventListener("click", closeImportModal);
     }
     if (settingsCloseButton) {
       settingsCloseButton.addEventListener("click", closeSettingsModal);
