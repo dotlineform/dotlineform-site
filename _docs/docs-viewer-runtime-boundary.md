@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: Docs Viewer Runtime Boundary
 added_date: 2026-03-31
-last_updated: "2026-05-13 20:20"
+last_updated: "2026-05-14"
 parent_id: docs-viewer
 sort_order: 90
 ---
@@ -61,6 +61,7 @@ Current route capability boundary:
 - public read-only viewer routes also avoid loading the management controller module
 - local `bin/dev-studio` builds may configure `data-generated-base-url` for read-only generated-data reads because the local Jekyll overlay excludes generated docs/search JSON from the watch surface
 - a `mode=manage` query on a public viewer route is normalized away by the shared runtime because those routes cannot perform local writes on the static public site
+- canonical internal docs links stay read-only-safe and omit `mode=manage`; the management-capable `/docs/` shell preserves manage mode at runtime only when the current session is already in manage mode
 
 ## What should stay scope-specific
 

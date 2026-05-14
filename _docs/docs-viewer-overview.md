@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: "Overview"
 added_date: 2026-04-24
-last_updated: "2026-05-12"
+last_updated: "2026-05-14"
 parent_id: docs-viewer
 sort_order: 10
 ---
@@ -102,6 +102,9 @@ The local management shell normalizes onto canonical scoped URLs:
 - `/docs/?scope=studio&doc=<doc_id>`
 - `/docs/?scope=library&doc=<doc_id>`
 - `/docs/?scope=analysis&doc=<doc_id>`
+
+When the current `/docs/` session is already in `mode=manage`, the browser runtime preserves that mode for internal canonical `/docs/?scope=<scope>&doc=<doc_id>` clicks.
+Source Markdown links should stay canonical and should not include `mode=manage`.
 
 Public read-only docs routes use:
 

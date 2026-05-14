@@ -1643,8 +1643,16 @@ import {
     if (url.origin !== window.location.origin) return null;
     if (url.pathname !== viewerPathname) return null;
     var scope = String(url.searchParams.get("scope") || "").trim();
-    if (includeScopeParam && scope && scope !== viewerScope) return null;
-    if (allowManagement && String(url.searchParams.get("mode") || "") !== getCurrentMode()) return null;
+    var linkMode = String(url.searchParams.get("mode") || "");
+    var currentMode = getCurrentMode();
+    if (allowManagement && linkMode && linkMode !== currentMode) return null;
+    if (includeScopeParam && scope && scope !== viewerScope) {
+      if (!allowScopeQuery || !allowManagement || currentMode !== MANAGEMENT_MODE || linkMode) return null;
+      url.searchParams.set("mode", MANAGEMENT_MODE);
+      return {
+        navigateUrl: url.pathname + url.search + url.hash
+      };
+    }
 
     var docId = url.searchParams.get("doc");
     if (!docId) return null;
@@ -1679,6 +1687,10 @@ import {
       if (!route) return;
 
       event.preventDefault();
+      if (route.navigateUrl) {
+        window.location.assign(route.navigateUrl);
+        return;
+      }
       cancelSearchDebounce();
       state.searchQuery = "";
       state.searchVisibleCount = SEARCH_BATCH_SIZE;

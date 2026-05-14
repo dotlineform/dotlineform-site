@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T17:23:58Z",
+  "generated_at": "2026-05-14T17:41:37Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -271,7 +271,7 @@
       "doc_id": "docs-viewer-overview",
       "title": "Overview",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-12",
+      "last_updated": "2026-05-14",
       "parent_id": "docs-viewer",
       "sort_order": 10,
       "published": true,
@@ -280,7 +280,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 8310
+      "content_text_length": 8556
     },
     {
       "scope": "studio",
@@ -1826,7 +1826,8 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 6466
+      "content_text_length": 6466,
+      "ui_status": "urgent"
     },
     {
       "scope": "studio",
@@ -2116,7 +2117,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-payload-runtime-cleanup-inventory.json",
       "content_text_length": 4525,
-      "ui_status": "draft"
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -2445,7 +2446,7 @@
       "doc_id": "docs-viewer-runtime-boundary",
       "title": "Docs Viewer Runtime Boundary",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-14",
       "parent_id": "docs-viewer",
       "sort_order": 90,
       "published": true,
@@ -2454,7 +2455,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 5863
+      "content_text_length": 6061
     },
     {
       "scope": "studio",
@@ -3737,7 +3738,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 29285,
+      "content_text_length": 29484,
       "ui_status": "done"
     },
     {

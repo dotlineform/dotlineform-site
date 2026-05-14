@@ -3,7 +3,7 @@ doc_id: site-request-js-payload-runtime-cleanup-inventory
 title: JavaScript Payload And Runtime Cleanup Inventory
 added_date: 2026-05-10
 last_updated: "2026-05-11 00:35"
-ui_status: draft
+ui_status: done
 parent_id: site-request-js-config-structural-review
 sort_order: 70
 hidden: false

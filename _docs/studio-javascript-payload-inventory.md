@@ -3,8 +3,10 @@ doc_id: studio-javascript-payload-inventory
 title: Studio JavaScript Payload Inventory
 added_date: 2026-05-14
 last_updated: 2026-05-14
+ui_status: urgent
 parent_id: studio
 sort_order: 55
+hidden: false
 ---
 # Studio JavaScript Payload Inventory
 
