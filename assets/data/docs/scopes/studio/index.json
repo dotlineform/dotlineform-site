@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T12:06:18Z",
+  "generated_at": "2026-05-14T12:29:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -638,6 +638,7 @@
       "viewer_url": "/docs/?scope=studio&doc=library-documents",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-documents.json",
       "content_text_length": 1397,
+      "ui_status": "report",
       "viewer_report": "docs_index_table",
       "viewer_report_scope": "library",
       "viewer_report_access": "manage",
@@ -890,7 +891,7 @@
       "doc_id": "site-request-docs-viewer-config-settings",
       "title": "Docs Viewer Config And Settings Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-14 12:47",
+      "last_updated": "2026-05-14 13:28",
       "parent_id": "change-requests",
       "sort_order": 28,
       "published": true,
@@ -899,7 +900,7 @@
       "source_path": "site-request-docs-viewer-config-settings.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-config-settings.json",
-      "content_text_length": 11109,
+      "content_text_length": 11973,
       "ui_status": "in-progress"
     },
     {
@@ -1794,7 +1795,7 @@
       "source_path": "config-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=config-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-docs-viewer.json",
-      "content_text_length": 5141
+      "content_text_length": 5564
     },
     {
       "scope": "studio",
@@ -1805,12 +1806,13 @@
       "parent_id": "docs-viewer",
       "sort_order": 55,
       "published": true,
-      "hidden": true,
-      "viewable": false,
+      "hidden": false,
+      "viewable": true,
       "source_path": "docs-viewer-source-config-report.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-source-config-report",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-source-config-report.json",
       "content_text_length": 113,
+      "ui_status": "report",
       "viewer_report": "source_config",
       "viewer_report_access": "manage"
     },
@@ -2786,7 +2788,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 31940
+      "content_text_length": 33100
     },
     {
       "scope": "studio",

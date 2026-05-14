@@ -3,9 +3,11 @@ doc_id: docs-viewer-source-config-report
 title: Docs Viewer Source Config Report
 added_date: 2026-05-14
 last_updated: 2026-05-14
+ui_status: report
 parent_id: docs-viewer
 sort_order: 55
-hidden: true
+published: true
+hidden: false
 viewer_report: source_config
 viewer_report_access: manage
 ---

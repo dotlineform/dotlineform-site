@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d0e34bb1b7a4d319e26531f6dc7261af",
-    "generated_at_utc": "2026-05-14T12:06:18Z",
-    "count": 234
+    "version": "blake2b-4de27edbf68dd1dde17e17efbd2c5cf4",
+    "generated_at_utc": "2026-05-14T12:29:12Z",
+    "count": 235
   },
   "entries": [
     {
@@ -1412,10 +1412,10 @@
       "kind": "doc",
       "title": "Docs Viewer Config And Settings Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
-      "last_updated": "2026-05-14 12:47",
+      "last_updated": "2026-05-14 13:28",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-14 12:47 • Change Requests",
+      "display_meta": "2026-05-14 13:28 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-config-settings",
         "site",
@@ -1429,14 +1429,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-14 12:47",
+        "2026-05-14 13:28",
         "2026",
         "05",
         "14",
-        "12",
-        "47"
+        "13",
+        "28"
       ],
-      "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and change requests change requests 2026-05-14 12:47 2026 05 14 12 47"
+      "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and change requests change requests 2026-05-14 13:28 2026 05 14 13 28"
     },
     {
       "id": "analytics",
@@ -2851,6 +2851,31 @@
         "14"
       ],
       "search_text": "config-docs-viewer config docs viewer docs viewer config 2026-05-14 2026 05 14"
+    },
+    {
+      "id": "docs-viewer-source-config-report",
+      "kind": "doc",
+      "title": "Docs Viewer Source Config Report",
+      "href": "/docs/?scope=studio&doc=docs-viewer-source-config-report",
+      "last_updated": "2026-05-14",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-14 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-source-config-report",
+        "docs",
+        "viewer",
+        "source",
+        "config",
+        "report",
+        "docs viewer source config report",
+        "docs viewer",
+        "2026-05-14",
+        "2026",
+        "05",
+        "14"
+      ],
+      "search_text": "docs-viewer-source-config-report docs viewer source config report docs viewer source config report docs viewer 2026-05-14 2026 05 14"
     },
     {
       "id": "site-request-analysis-doc-viewer",

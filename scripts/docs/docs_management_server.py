@@ -12,6 +12,7 @@ Endpoints:
   GET /health
   GET /capabilities
   GET /docs/source-config
+  GET /docs/source-config-settings
   GET /docs/import-source-files
   GET /docs/import-html-files
   POST /docs/import-source
@@ -67,6 +68,7 @@ from studio import data_sharing_routes, data_sharing_service  # noqa: E402
 import docs_activity  # noqa: E402
 import docs_generated_reads  # noqa: E402
 import docs_source_config_report  # noqa: E402
+import docs_source_config_settings  # noqa: E402
 import documents_data_sharing_adapter  # noqa: E402
 from analytics import tags_data_sharing_adapter  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
@@ -305,6 +307,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "docs_management": True,
             "generated_data_reads": True,
             "source_config_reads": True,
+            "source_config_settings_reads": True,
             "html_import": True,
             "docs_export": True,
             "library_import": True,
@@ -488,6 +491,7 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         routes.GENERATED_SEARCH_PATH: "_handle_generated_search_get",
         routes.GENERATED_SEARCH_ALT_PATH: "_handle_generated_search_get",
         routes.SOURCE_CONFIG_PATH: "_handle_source_config_get",
+        routes.SOURCE_CONFIG_SETTINGS_PATH: "_handle_source_config_settings_get",
         routes.IMPORT_SOURCE_FILES_PATH: "_handle_import_source_files_get",
         routes.IMPORT_HTML_FILES_PATH: "_handle_import_source_files_get",
         data_sharing_routes.RETURNED_PACKAGES_PATH: "_handle_data_sharing_returned_packages_get",
@@ -573,6 +577,13 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
 
     def _handle_source_config_get(self) -> None:
         payload = docs_source_config_report.build_source_config_report(self.app["repo_root"])
+        write_response(self, HTTPStatus.OK, payload)
+
+    def _handle_source_config_settings_get(self) -> None:
+        payload = docs_source_config_settings.build_settings_contract(
+            self.app["repo_root"],
+            query_param(self, "scope"),
+        )
         write_response(self, HTTPStatus.OK, payload)
 
     def _handle_import_source_files_get(self) -> None:

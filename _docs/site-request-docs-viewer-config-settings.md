@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-config-settings
 title: Docs Viewer Config And Settings Request
 added_date: 2026-05-11
-last_updated: "2026-05-14 12:47"
+last_updated: "2026-05-14 13:28"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 28
@@ -121,10 +121,11 @@ The button opens a modal scoped to the active Docs Viewer scope.
 The first version should be deliberately small and only expose low-risk display settings.
 It should make the distinction between local management settings and public viewer output clear through behavior, not explanatory in-app text.
 
-Initial controls could include:
+Initial scoped controls should begin with:
 
 - show updated dates
-- recently added limit
+
+`recently_added_limit` remains a candidate, but it is global under `docs_viewer` rather than scoped to the active Docs Viewer scope, so it should wait until the settings UI explicitly supports global fields.
 
 The modal should:
 
@@ -238,9 +239,20 @@ Acceptance:
 
 Status:
 
-- proposed
+- implemented
 
 Define the source config fields that the management settings modal can edit and the validation/warning rules for each field.
+
+The first implemented contract is deliberately narrow:
+
+- scoped `show_updated_date` is allowlisted
+- route, source-root, output-root, validation-policy, tree-behavior, and import-media-storage fields are blocked from the settings modal
+- global `docs_viewer.recently_added_limit` is deferred until the settings UI has a global-settings section
+- generated `viewer_options.show_updated_date` mismatches produce a rebuild warning
+- candidate setting changes validate type, scope existence, rebuild need, and affected generated artifacts
+
+The read-only contract is served by `GET /docs/source-config-settings`.
+It does not write source config and does not introduce another config layer.
 
 Acceptance:
 

@@ -85,6 +85,11 @@
           "emoji": "❗"
         },
         {
+          "ui_status": "review",
+          "label": "Review",
+          "emoji": "👀"
+        },
+        {
           "ui_status": "in-progress",
           "label": "In progress",
           "emoji": "🔄"
@@ -98,6 +103,11 @@
           "ui_status": "deferred",
           "label": "Deferred",
           "emoji": "😴"
+        },
+        {
+          "ui_status": "report",
+          "label": "Report",
+          "emoji": "📊"
         }
       ],
       "library": [
