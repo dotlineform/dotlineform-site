@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cff21ecdf4898528392362640d049bce",
-    "generated_at_utc": "2026-05-14T15:27:48Z",
-    "count": 237
+    "version": "blake2b-deaaad6d9ea621499014d0a46a098376",
+    "generated_at_utc": "2026-05-14T15:43:42Z",
+    "count": 238
   },
   "entries": [
     {
@@ -2030,20 +2030,21 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-14 14:45",
-      "display_meta": "2026-05-14 14:45",
+      "last_updated": "2026-05-14 16:32",
+      "display_meta": "2026-05-14 16:32",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-14 14:45",
+        "2026-05-14 16:32",
         "2026",
         "05",
         "14",
-        "45"
+        "16",
+        "32"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-14 14:45 2026 05 14 45"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-14 16:32 2026 05 14 16 32"
     },
     {
       "id": "docs-viewer-route-creation",
@@ -4392,6 +4393,34 @@
       "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher docs viewer viewer 2026-05-13 20:20 2026 05 13 20"
     },
     {
+      "id": "docs-viewer-import-source-registry-spec",
+      "kind": "doc",
+      "title": "Docs Viewer Import Source Registry Spec",
+      "href": "/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec",
+      "last_updated": "2026-05-14 16:32",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-14 16:32 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-import-source-registry-spec",
+        "docs",
+        "viewer",
+        "import",
+        "source",
+        "registry",
+        "spec",
+        "docs viewer import source registry spec",
+        "docs viewer",
+        "2026-05-14 16:32",
+        "2026",
+        "05",
+        "14",
+        "16",
+        "32"
+      ],
+      "search_text": "docs-viewer-import-source-registry-spec docs viewer import source registry spec docs viewer import source registry spec docs viewer 2026-05-14 16:32 2026 05 14 16 32"
+    },
+    {
       "id": "scripts-srcset-builder",
       "kind": "doc",
       "title": "Srcset Builder",
@@ -4780,10 +4809,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-14 14:45",
+      "last_updated": "2026-05-14 16:43",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-14 14:45 • Change Requests",
+      "display_meta": "2026-05-14 16:43 • Change Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -4793,13 +4822,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-14 14:45",
+        "2026-05-14 16:43",
         "2026",
         "05",
         "14",
-        "45"
+        "16",
+        "43"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-14 14:45 2026 05 14 45"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-14 16:43 2026 05 14 16 43"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T15:27:47Z",
+  "generated_at": "2026-05-14T15:43:42Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1280,7 +1280,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-14 14:45",
+      "last_updated": "2026-05-14 16:32",
       "parent_id": "",
       "sort_order": 40,
       "published": true,
@@ -1289,7 +1289,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 3758
+      "content_text_length": 3907
     },
     {
       "scope": "studio",
@@ -2785,6 +2785,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "docs-viewer-import-source-registry-spec",
+      "title": "Docs Viewer Import Source Registry Spec",
+      "added_date": "2026-05-14",
+      "last_updated": "2026-05-14 16:32",
+      "parent_id": "docs-viewer",
+      "sort_order": 120,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-import-source-registry-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-import-source-registry-spec.json",
+      "content_text_length": 8779
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-srcset-builder",
       "title": "Srcset Builder",
       "added_date": "2026-03-31",
@@ -3033,7 +3049,7 @@
       "doc_id": "docs-viewer-management",
       "title": "Docs Viewer Management",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-14 14:45",
+      "last_updated": "2026-05-14 16:43",
       "parent_id": "change-requests",
       "sort_order": 150,
       "published": true,
@@ -3042,7 +3058,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 29152,
+      "content_text_length": 29213,
       "ui_status": "done"
     },
     {

@@ -744,12 +744,3 @@ select.docsViewer__fieldInput--listbox{
   outline: 2px solid var(--docs-viewer-border-strong, var(--border-strong, #aaa));
   outline-offset: 2px;
 }
-
-.docsViewer__manageNote{
-  margin: 0;
-  width: 100%;
-}
-
-.docsViewer__manageNote.is-error{
-  color: var(--docs-viewer-link-hover, var(--link-hover, #111));
-}

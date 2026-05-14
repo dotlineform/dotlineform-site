@@ -128,6 +128,7 @@ import {
     managementCapabilityCheckId: 0,
     managementMessage: "",
     managementMessageIsError: false,
+    managementStatusOwnsViewerStatus: false,
     generatedDataReadChecked: false,
     generatedDataReadAvailable: false,
     generatedDataReadRequestPromise: null,

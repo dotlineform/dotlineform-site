@@ -36,7 +36,6 @@ export function initDocsViewerManagement(context) {
   var state = context.state;
   var manageRow = document.getElementById("docsViewerManageRow");
   var manageActions = manageRow ? manageRow.querySelector(".docsViewer__manageActions") : null;
-  var manageNote = document.getElementById("docsViewerManageNote");
   var manageActionsButton = document.getElementById("docsViewerManageActionsButton");
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
@@ -262,7 +261,6 @@ export function initDocsViewerManagement(context) {
         includeDescendants = true;
       } else if (normalizedChoice !== "selected") {
         setManagementMessage(state.managementText.viewableInvalidChoice, true);
-        context.setStatus(state.managementText.viewableInvalidChoice, true);
         return null;
       }
     }
@@ -605,11 +603,21 @@ export function initDocsViewerManagement(context) {
     return "";
   }
 
+  function syncManagementStatus(noteText, isError) {
+    var text = String(noteText || "");
+    var hasManagementStatus = Boolean(text);
+    if (hasManagementStatus || state.managementStatusOwnsViewerStatus) {
+      context.setStatus(text, Boolean(isError));
+    }
+    state.managementStatusOwnsViewerStatus = hasManagementStatus;
+  }
+
   function renderManagementUi() {
     if (!manageRow) return;
 
     state.managementMode = context.getCurrentMode() === context.MANAGEMENT_MODE;
     if (!state.managementMode) {
+      syncManagementStatus("", false);
       manageRow.hidden = true;
       hideManageActionsMenu();
       if (indexUndoButton) {
@@ -626,22 +634,18 @@ export function initDocsViewerManagement(context) {
       }
     }
 
-    if (manageNote) {
-      var noteText = "";
-      var noteIsError = false;
-      if (!state.managementChecked) {
-        noteText = state.managementText.checkingNote;
-      } else if (!state.managementAvailable) {
-        noteText = state.managementText.unavailableNote;
-        noteIsError = true;
-      } else {
-        noteText = managementNoteText();
-        noteIsError = state.managementMessageIsError;
-      }
-      manageNote.textContent = noteText;
-      manageNote.hidden = !noteText;
-      manageNote.classList.toggle("is-error", noteIsError);
+    var noteText = "";
+    var noteIsError = false;
+    if (!state.managementChecked) {
+      noteText = state.managementText.checkingNote;
+    } else if (!state.managementAvailable) {
+      noteText = state.managementText.unavailableNote;
+      noteIsError = true;
+    } else {
+      noteText = managementNoteText();
+      noteIsError = state.managementMessageIsError;
     }
+    syncManagementStatus(noteText, noteIsError);
 
     if (indexUndoButton) {
       indexUndoButton.hidden = !state.managementMode;
@@ -800,7 +804,6 @@ export function initDocsViewerManagement(context) {
 
     setManagementBusy(true);
     setManagementMessage("Creating doc...", false);
-    context.setStatus("Creating doc...", false);
 
     createManagedDoc({
       title: title,
@@ -812,7 +815,6 @@ export function initDocsViewerManagement(context) {
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Create failed.", true);
-        context.setStatus(error.message || "Create failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -840,7 +842,6 @@ export function initDocsViewerManagement(context) {
     setManagementBusy(true);
     hideContextMenu();
     setManagementMessage("Creating doc...", false);
-    context.setStatus("Creating doc...", false);
 
     createManagedDoc(payload, managementClientOptions())
       .then(function (response) {
@@ -849,7 +850,6 @@ export function initDocsViewerManagement(context) {
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Create failed.", true);
-        context.setStatus(error.message || "Create failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -870,7 +870,6 @@ export function initDocsViewerManagement(context) {
     var parentId = resolveMetadataParentId(doc);
     if (parentId === null) {
       setManagementMessage(state.managementText.metadataParentInvalid, true);
-      context.setStatus(state.managementText.metadataParentInvalid, true);
       metadataParentInput.focus();
       return null;
     }
@@ -879,7 +878,6 @@ export function initDocsViewerManagement(context) {
     var sortOrderText = String(metadataSortOrderInput.value || "").trim();
     if (sortOrderText && Number(sortOrderText) < 0) {
       setManagementMessage("sort_order must be zero or greater.", true);
-      context.setStatus("sort_order must be zero or greater.", true);
       metadataSortOrderInput.focus();
       return null;
     }
@@ -913,7 +911,6 @@ export function initDocsViewerManagement(context) {
     setManagementBusy(true);
     renderManagementUi();
     setManagementMessage("Saving metadata for " + title + "...", false);
-    context.setStatus("Saving metadata for " + title + "...", false);
 
     updateManagedDocMetadata(payload, managementClientOptions())
       .then(function (response) {
@@ -922,7 +919,6 @@ export function initDocsViewerManagement(context) {
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Metadata update failed.", true);
-        context.setStatus(error.message || "Metadata update failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -953,7 +949,6 @@ export function initDocsViewerManagement(context) {
 
     setManagementBusy(true);
     setManagementMessage(savingText, false);
-    context.setStatus(savingText, false);
     context.renderStatusPills();
 
     updateManagedDocMetadata(metadataPayloadForStatus(doc, nextStatus), managementClientOptions())
@@ -964,7 +959,6 @@ export function initDocsViewerManagement(context) {
       .catch(function (error) {
         var failedText = error.message || state.managementText.statusPillFailed;
         setManagementMessage(failedText, true);
-        context.setStatus(failedText, true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -976,7 +970,6 @@ export function initDocsViewerManagement(context) {
   function handleRebuildDocs() {
     setManagementBusy(true);
     setManagementMessage("Rebuilding docs...", false);
-    context.setStatus("Rebuilding docs...", false);
 
     rebuildManagedDocs(managementClientOptions())
       .then(function (payload) {
@@ -986,7 +979,6 @@ export function initDocsViewerManagement(context) {
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Docs rebuild failed.", true);
-        context.setStatus(error.message || "Docs rebuild failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -1006,7 +998,6 @@ export function initDocsViewerManagement(context) {
     setManagementBusy(true);
     setSettingsStatus(state.managementText.settingsSaving, "");
     setManagementMessage(state.managementText.settingsSaving, false);
-    context.setStatus(state.managementText.settingsSaving, false);
     settingsUpdatedInput.disabled = true;
     if (settingsSaveButton) settingsSaveButton.disabled = true;
 
@@ -1025,7 +1016,6 @@ export function initDocsViewerManagement(context) {
         var message = error.message || state.managementText.settingsSaveFailed;
         setSettingsStatus(message, "error");
         setManagementMessage(message, true);
-        context.setStatus(message, true);
         settingsUpdatedInput.disabled = false;
         if (settingsSaveButton) settingsSaveButton.disabled = false;
       })
@@ -1047,7 +1037,6 @@ export function initDocsViewerManagement(context) {
 
     setManagementBusy(true);
     setManagementMessage("Archiving " + doc.title + "...", false);
-    context.setStatus("Archiving " + doc.title + "...", false);
 
     archiveManagedDoc(doc.doc_id, managementClientOptions())
       .then(function (payload) {
@@ -1056,7 +1045,6 @@ export function initDocsViewerManagement(context) {
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Archive failed.", true);
-        context.setStatus(error.message || "Archive failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -1092,23 +1080,19 @@ export function initDocsViewerManagement(context) {
 
     setManagementBusy(true);
     setManagementMessage("Checking delete impact for " + doc.title + "...", false);
-    context.setStatus("Checking delete impact for " + doc.title + "...", false);
 
     previewManagedDocDelete(doc.doc_id, managementClientOptions())
       .then(function (preview) {
         if (!preview.allowed) {
           var blockerText = (preview.blockers || []).join("; ") || "Delete is blocked.";
           setManagementMessage(blockerText, true);
-          context.setStatus(blockerText, true);
           return null;
         }
         if (!window.confirm(buildDeleteConfirmation(preview))) {
           setManagementMessage("", false);
-          context.setStatus("", false);
           return null;
         }
         setManagementMessage("Deleting " + doc.title + "...", false);
-        context.setStatus("Deleting " + doc.title + "...", false);
         return applyManagedDocDelete(doc.doc_id, managementClientOptions());
       })
       .then(function (payload) {
@@ -1119,7 +1103,6 @@ export function initDocsViewerManagement(context) {
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Delete failed.", true);
-        context.setStatus(error.message || "Delete failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -1136,7 +1119,6 @@ export function initDocsViewerManagement(context) {
     setManagementBusy(true);
     var countText = targetDocIds.length === 1 ? doc.title : targetDocIds.length + " docs";
     setManagementMessage("Showing " + countText + "...", false);
-    context.setStatus("Showing " + countText + "...", false);
 
     updateManagedDocsViewability(targetDocIds, false, managementClientOptions())
       .then(function (payload) {
@@ -1145,7 +1127,6 @@ export function initDocsViewerManagement(context) {
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Viewability update failed.", true);
-        context.setStatus(error.message || "Viewability update failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -1186,7 +1167,6 @@ export function initDocsViewerManagement(context) {
     setManagementBusy(true);
     clearDragState();
     setManagementMessage("Moving " + movingDoc.title + "...", false);
-    context.setStatus("Moving " + movingDoc.title + "...", false);
 
     moveManagedDoc(movingDoc.doc_id, targetDoc.doc_id, position, managementClientOptions())
       .then(function (payload) {
@@ -1217,7 +1197,6 @@ export function initDocsViewerManagement(context) {
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Move failed.", true);
-        context.setStatus(error.message || "Move failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -1234,7 +1213,6 @@ export function initDocsViewerManagement(context) {
     if (!focusDocId || !context.findAllDocById(focusDocId) || !undoRecords.length) {
       state.moveUndo = null;
       setManagementMessage("Undo unavailable: moved doc is no longer in the current index.", true);
-      context.setStatus("Undo unavailable: moved doc is no longer in the current index.", true);
       renderManagementUi();
       return;
     }
@@ -1242,7 +1220,6 @@ export function initDocsViewerManagement(context) {
     setManagementBusy(true);
     hideContextMenu();
     setManagementMessage(state.managementText.undoMoveStatus, false);
-    context.setStatus(state.managementText.undoMoveStatus, false);
 
     restoreManagedDocMove(focusDocId, moveUndoPayloadRecords(undoRecords), managementClientOptions())
       .then(function (response) {
@@ -1252,7 +1229,6 @@ export function initDocsViewerManagement(context) {
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Undo failed.", true);
-        context.setStatus(error.message || "Undo failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -1268,16 +1244,13 @@ export function initDocsViewerManagement(context) {
     setManagementBusy(true);
     hideContextMenu();
     setManagementMessage("Opening source for " + doc.title + "...", false);
-    context.setStatus("Opening source for " + doc.title + "...", false);
 
     openManagedDocSource(doc.doc_id, editor, managementClientOptions())
       .then(function () {
         setManagementMessage("", false);
-        context.setStatus("", false);
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Open source failed.", true);
-        context.setStatus(error.message || "Open source failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -1326,12 +1299,10 @@ export function initDocsViewerManagement(context) {
           title: doc.title || doc.doc_id
         });
         setManagementMessage(message, false);
-        context.setStatus(message, false);
       })
       .catch(function (error) {
         var message = error && error.message ? error.message : state.managementText.copyLinkFailed;
         setManagementMessage(message, true);
-        context.setStatus(message, true);
       });
   }
 
