@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0f20070b349ec52bc628219676faee28",
-    "generated_at_utc": "2026-05-14T16:52:17Z",
-    "count": 238
+    "version": "blake2b-4fbb792b1edb40a8e80911e6454619c8",
+    "generated_at_utc": "2026-05-14T16:59:34Z",
+    "count": 239
   },
   "entries": [
     {
@@ -1617,10 +1617,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-05-14 14:45",
+      "last_updated": "2026-05-14",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 14:45 • Docs Viewer",
+      "display_meta": "2026-05-14 • Docs Viewer",
       "search_terms": [
         "docs-viewer-portable-setup",
         "docs",
@@ -1629,13 +1629,12 @@
         "setup",
         "docs viewer portable setup",
         "docs viewer",
-        "2026-05-14 14:45",
+        "2026-05-14",
         "2026",
         "05",
-        "14",
-        "45"
+        "14"
       ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup docs viewer 2026-05-14 14:45 2026 05 14 45"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup docs viewer 2026-05-14 2026 05 14"
     },
     {
       "id": "config-library-export-configs",
@@ -1963,6 +1962,29 @@
       "search_text": "search 2026-05-11 2026 05 11"
     },
     {
+      "id": "docs-viewer-dependencies",
+      "kind": "doc",
+      "title": "Docs Viewer Dependencies",
+      "href": "/docs/?scope=studio&doc=docs-viewer-dependencies",
+      "last_updated": "2026-05-14",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-14 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-dependencies",
+        "docs",
+        "viewer",
+        "dependencies",
+        "docs viewer dependencies",
+        "docs viewer",
+        "2026-05-14",
+        "2026",
+        "05",
+        "14"
+      ],
+      "search_text": "docs-viewer-dependencies docs viewer dependencies docs viewer dependencies docs viewer 2026-05-14 2026 05 14"
+    },
+    {
       "id": "site-request-studio-audits-page",
       "kind": "doc",
       "title": "Studio Audits Page Request",
@@ -2081,21 +2103,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-14 16:32",
-      "display_meta": "2026-05-14 16:32",
+      "last_updated": "2026-05-14",
+      "display_meta": "2026-05-14",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-14 16:32",
+        "2026-05-14",
         "2026",
         "05",
-        "14",
-        "16",
-        "32"
+        "14"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-14 16:32 2026 05 14 16 32"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-14 2026 05 14"
     },
     {
       "id": "docs-viewer-route-creation",

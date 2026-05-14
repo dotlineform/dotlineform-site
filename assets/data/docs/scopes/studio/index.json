@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T16:52:16Z",
+  "generated_at": "2026-05-14T16:59:33Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1021,7 +1021,7 @@
       "doc_id": "docs-viewer-portable-setup",
       "title": "Docs Viewer Portable Setup",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-14 14:45",
+      "last_updated": "2026-05-14",
       "parent_id": "docs-viewer",
       "sort_order": 30,
       "published": true,
@@ -1030,7 +1030,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 15539
+      "content_text_length": 16472
     },
     {
       "scope": "studio",
@@ -1243,6 +1243,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "docs-viewer-dependencies",
+      "title": "Docs Viewer Dependencies",
+      "added_date": "2026-05-14",
+      "last_updated": "2026-05-14",
+      "parent_id": "docs-viewer",
+      "sort_order": 35,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-dependencies.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-dependencies",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-dependencies.json",
+      "content_text_length": 3651
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-studio-audits-page",
       "title": "Studio Audits Page Request",
       "added_date": "2026-05-03",
@@ -1312,7 +1328,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-14 16:32",
+      "last_updated": "2026-05-14",
       "parent_id": "",
       "sort_order": 40,
       "published": true,
@@ -1321,7 +1337,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 3907
+      "content_text_length": 4052
     },
     {
       "scope": "studio",

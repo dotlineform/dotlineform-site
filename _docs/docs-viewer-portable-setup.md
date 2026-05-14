@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-14 14:45"
+last_updated: "2026-05-14"
 parent_id: docs-viewer
 sort_order: 30
 ---
@@ -148,6 +148,26 @@ Configured docs scopes route to `scripts/docs/build_search.rb`, while the Catalo
 Adding a new docs scope should only require adding that scope to `scripts/docs/docs_scopes.json`, rebuilding docs data, and then running the same search command for the new scope.
 
 The target direction is tracked in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
+
+### Python Dependencies
+
+Copy or recreate the Python dependency contract:
+
+- `requirements.txt`
+
+Install those pinned packages in the Python environment used to run the Docs Viewer build scripts, local management server, and Docs Import.
+For the current repo, the Docs Viewer-specific import stack in `requirements.txt` is:
+
+- `beautifulsoup4`: builds the HTML import parse tree
+- `lxml`: parser backend used by Beautiful Soup
+- `bleach`: sanitizer dependency for the Docs HTML import boundary
+
+`requirements.txt` is the Python script dependency contract.
+It does not replace `Gemfile`, `Gemfile.lock`, or `.ruby-version`, which still own the Ruby/Jekyll build stack.
+It also does not mean every package is required for a read-only static viewer route.
+The parser/sanitizer packages are essential when the portable install includes Docs Import or the management server's import endpoints.
+
+For the full dependency-role explanation, see [Docs Viewer Dependencies](/docs/?scope=studio&doc=docs-viewer-dependencies).
 
 ### Management Server
 
