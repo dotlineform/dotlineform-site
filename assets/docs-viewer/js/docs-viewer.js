@@ -32,8 +32,7 @@ import {
   escapeHtml,
   renderBookmarkRowsMarkup,
   renderRecentEntry,
-  renderSearchEntry,
-  renderStatusPillsMarkup
+  renderSearchEntry
 } from "./docs-viewer-render.js";
 
 (function () {
@@ -292,7 +291,6 @@ import {
       applyDocVisibility: applyDocVisibility,
       cancelSearchDebounce: cancelSearchDebounce,
       cssEscape: cssEscape,
-      currentStatusValue: currentStatusValue,
       currentViewerConfig: function () { return state.viewerConfig || {}; },
       defaultDocId: defaultDocId,
       defaultRouteDocId: function () { return defaultRouteDocId; },
@@ -310,13 +308,11 @@ import {
       renderRecentMode: renderRecentMode,
       renderSearchMode: renderSearchMode,
       renderSidebar: renderSidebar,
-      renderStatusPills: renderStatusPills,
       root: root,
       searchInput: searchInput,
       setHistory: setHistory,
       setStatus: setStatus,
       state: state,
-      statusPillsCanWrite: statusPillsCanWrite,
       markdownDocLink: markdownDocLink,
       viewerScope: function () { return viewerScope; }
     };
@@ -829,56 +825,15 @@ import {
     bookmarkToggle.title = active ? "Remove bookmark" : "Add bookmark";
   }
 
-  function currentStatusValue(doc) {
-    return String(doc && doc.ui_status || "").trim();
-  }
-
-  function statusPillsCanWrite(doc) {
-    return Boolean(
-      doc &&
-      allowManagement &&
-      state.managementMode &&
-      state.managementAvailable &&
-      !state.managementBusy &&
-      !state.searchRouteActive
-    );
-  }
-
-  function statusPillsCanRender(doc) {
-    return Boolean(
-      doc &&
-      allowManagement &&
-      state.managementMode &&
-      state.managementAvailable &&
-      state.uiStatuses.length > 0 &&
-      !state.searchRouteActive
-    );
-  }
-
   function renderStatusPills() {
     if (!statusPills) return;
-    var doc = state.docsById.get(state.selectedDocId);
-    var canShow = statusPillsCanRender(doc);
-    statusPills.hidden = !canShow;
-    if (!canShow) {
-      statusPills.innerHTML = "";
-      state.statusMenuOpen = false;
+    if (managementController && typeof managementController.renderStatusPills === "function") {
+      managementController.renderStatusPills();
       return;
     }
-
-    var activeStatus = currentStatusValue(doc);
-    var canWrite = statusPillsCanWrite(doc);
-    var activeStatusConfig = activeStatus ? state.uiStatusByValue.get(activeStatus) : null;
-    statusPills.innerHTML = renderStatusPillsMarkup({
-      activeStatus: activeStatus,
-      activeStatusConfig: activeStatusConfig,
-      canWrite: canWrite,
-      doc: doc,
-      formatText: formatText,
-      menuOpen: state.statusMenuOpen,
-      statuses: state.uiStatuses,
-      text: state.managementText
-    });
+    statusPills.hidden = true;
+    statusPills.innerHTML = "";
+    state.statusMenuOpen = false;
   }
 
   function renderBookmarkRow() {
@@ -1771,39 +1726,7 @@ import {
       });
     }
 
-    if (statusPills) {
-      statusPills.addEventListener("click", function (event) {
-        var toggle = event.target.closest("[data-ui-status-menu-toggle]");
-        if (toggle) {
-          event.preventDefault();
-          event.stopPropagation();
-          if (toggle.disabled) return;
-          state.statusMenuOpen = !state.statusMenuOpen;
-          renderStatusPills();
-          return;
-        }
-        var button = event.target.closest("[data-ui-status]");
-        if (!button) return;
-        event.preventDefault();
-        event.stopPropagation();
-        state.statusMenuOpen = false;
-        if (managementController) {
-          managementController.handleStatusPillClick(button.dataset.uiStatus);
-        }
-      });
-    }
-
-    document.addEventListener("click", function (event) {
-      if (!state.statusMenuOpen || !statusPills || statusPills.contains(event.target)) return;
-      state.statusMenuOpen = false;
-      renderStatusPills();
-    });
-
     document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && state.statusMenuOpen) {
-        state.statusMenuOpen = false;
-        renderStatusPills();
-      }
       if (managementController && managementController.handleDocumentKeydown(event)) {
         return;
       }

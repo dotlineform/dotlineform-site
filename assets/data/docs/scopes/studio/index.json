@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T18:13:01Z",
+  "generated_at": "2026-05-14T18:23:32Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1826,7 +1826,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 6630,
+      "content_text_length": 6693,
       "ui_status": "urgent"
     },
     {
@@ -2455,7 +2455,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 6176
+      "content_text_length": 6191
     },
     {
       "scope": "studio",
@@ -3721,7 +3721,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 29484,
+      "content_text_length": 29518,
       "ui_status": "done"
     },
     {

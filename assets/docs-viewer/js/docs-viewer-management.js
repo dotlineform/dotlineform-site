@@ -47,6 +47,7 @@ export function initDocsViewerManagement(context) {
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
   var contextCopyLinkButton = contextMenu ? contextMenu.querySelector('[data-context-action="copy-link"]') : null;
+  var statusPills = document.getElementById("docsViewerStatusPills");
   var draftToggle = document.getElementById("docsViewerDraftToggle");
   var draftLabel = document.querySelector(".docsViewer__draftLabel");
   var indexUndoButton = document.getElementById("docsViewerIndexUndoButton");
@@ -140,6 +141,85 @@ export function initDocsViewerManagement(context) {
 
   function canDragCurrentDoc(doc) {
     return canDragDoc(doc, dragDropOptions());
+  }
+
+  function currentStatusValue(doc) {
+    return String(doc && doc.ui_status || "").trim();
+  }
+
+  function statusPillsCanWrite(doc) {
+    return Boolean(
+      doc &&
+      state.managementMode &&
+      state.managementAvailable &&
+      !state.managementBusy &&
+      !state.searchRouteActive
+    );
+  }
+
+  function statusPillsCanRender(doc) {
+    return Boolean(
+      doc &&
+      state.managementMode &&
+      state.managementAvailable &&
+      state.uiStatuses.length > 0 &&
+      !state.searchRouteActive
+    );
+  }
+
+  function renderStatusPillsMarkup(options) {
+    var settings = options || {};
+    var doc = settings.doc || {};
+    var activeStatus = String(settings.activeStatus || "").trim();
+    var canWrite = Boolean(settings.canWrite);
+    var menuOpen = Boolean(settings.menuOpen);
+    var activeStatusConfig = settings.activeStatusConfig || null;
+    var menuLabel = activeStatusConfig
+      ? context.formatText(state.managementText.statusPillReadonlyLabel, { label: activeStatusConfig.label, title: doc.title })
+      : state.managementText.statusMenuLabel;
+    var menuItems = state.uiStatuses.map(function (statusConfig) {
+      var selected = statusConfig.ui_status === activeStatus;
+      var labelTemplate = canWrite
+        ? (selected ? state.managementText.statusPillClearLabel : state.managementText.statusPillSetLabel)
+        : state.managementText.statusPillReadonlyLabel;
+      var label = context.formatText(labelTemplate, { label: statusConfig.label, title: doc.title });
+      var className = "docsViewer__statusMenuItem" + (selected ? " is-active" : "");
+      return (
+        '<button type="button" role="menuitemradio" class="' + className + '" data-ui-status="' + context.escapeHtml(statusConfig.ui_status) + '" aria-checked="' + (selected ? "true" : "false") + '" aria-label="' + context.escapeHtml(label) + '" title="' + context.escapeHtml(label) + '"' + (canWrite ? "" : " disabled") + '>' +
+          '<span class="docsViewer__statusPillEmoji" aria-hidden="true">' + context.escapeHtml(statusConfig.emoji) + '</span>' +
+          '<span class="visually-hidden">' + context.escapeHtml(statusConfig.label) + '</span>' +
+        '</button>'
+      );
+    }).join("");
+    return (
+      '<button type="button" class="docsViewer__statusMenuToggle" data-ui-status-menu-toggle="true" aria-expanded="' + (menuOpen ? "true" : "false") + '" aria-label="' + context.escapeHtml(menuLabel) + '" title="' + context.escapeHtml(menuLabel) + '"' + (canWrite ? "" : " disabled") + '>🏷️</button>' +
+      '<div class="docsViewer__statusMenu" role="menu"' + (menuOpen && canWrite ? "" : " hidden") + ">" +
+        menuItems +
+      "</div>"
+    );
+  }
+
+  function renderStatusPills() {
+    if (!statusPills) return;
+    var doc = currentSelectedDoc();
+    var canShow = statusPillsCanRender(doc);
+    statusPills.hidden = !canShow;
+    if (!canShow) {
+      statusPills.innerHTML = "";
+      state.statusMenuOpen = false;
+      return;
+    }
+
+    var activeStatus = currentStatusValue(doc);
+    var canWrite = statusPillsCanWrite(doc);
+    var activeStatusConfig = activeStatus ? state.uiStatusByValue.get(activeStatus) : null;
+    statusPills.innerHTML = renderStatusPillsMarkup({
+      activeStatus: activeStatus,
+      activeStatusConfig: activeStatusConfig,
+      canWrite: canWrite,
+      doc: doc,
+      menuOpen: state.statusMenuOpen
+    });
   }
 
   function clearDragState() {
@@ -792,7 +872,7 @@ export function initDocsViewerManagement(context) {
     if (settingsSaveButton && settingsModalOpen()) {
       settingsSaveButton.disabled = state.managementBusy || !settingsFieldState;
     }
-    context.renderStatusPills();
+    renderStatusPills();
   }
 
   function initializeManagement() {
@@ -1017,16 +1097,16 @@ export function initDocsViewerManagement(context) {
 
   function handleStatusPillClick(statusValue) {
     var doc = currentSelectedDoc();
-    if (!context.statusPillsCanWrite(doc)) return;
+    if (!statusPillsCanWrite(doc)) return;
     var selectedStatus = String(statusValue || "").trim();
     if (!selectedStatus || !state.uiStatusByValue.has(selectedStatus)) return;
 
-    var nextStatus = context.currentStatusValue(doc) === selectedStatus ? "" : selectedStatus;
+    var nextStatus = currentStatusValue(doc) === selectedStatus ? "" : selectedStatus;
     var savingText = context.formatText(state.managementText.statusPillSaving, { title: doc.title });
 
     setManagementBusy(true);
     setManagementMessage(savingText, false);
-    context.renderStatusPills();
+    renderStatusPills();
 
     updateManagedDocMetadata(metadataPayloadForStatus(doc, nextStatus), managementClientOptions())
       .then(function (response) {
@@ -1040,7 +1120,7 @@ export function initDocsViewerManagement(context) {
       .finally(function () {
         setManagementBusy(false);
         renderManagementUi();
-        context.renderStatusPills();
+        renderStatusPills();
       });
   }
 
@@ -1460,6 +1540,10 @@ export function initDocsViewerManagement(context) {
     if (contextMenu && !event.target.closest("#docsViewerContextMenu")) {
       hideContextMenu();
     }
+    if (state.statusMenuOpen && statusPills && !statusPills.contains(event.target)) {
+      state.statusMenuOpen = false;
+      renderStatusPills();
+    }
     if (manageActionsMenu && !event.target.closest(".docsViewer__manageActions")) {
       hideManageActionsMenu();
     }
@@ -1494,6 +1578,12 @@ export function initDocsViewerManagement(context) {
   }
 
   function handleDocumentKeydown(event) {
+    if (event.key === "Escape" && state.statusMenuOpen) {
+      event.preventDefault();
+      state.statusMenuOpen = false;
+      renderStatusPills();
+      return true;
+    }
     if (event.key === "Escape" && manageActionsMenu && !manageActionsMenu.hidden) {
       event.preventDefault();
       hideManageActionsMenu();
@@ -1709,6 +1799,30 @@ export function initDocsViewerManagement(context) {
         }
       });
     }
+    if (statusPills) {
+      statusPills.addEventListener("click", function (event) {
+        var toggle = event.target.closest("[data-ui-status-menu-toggle]");
+        if (toggle) {
+          event.preventDefault();
+          event.stopPropagation();
+          if (toggle.disabled) return;
+          state.statusMenuOpen = !state.statusMenuOpen;
+          renderStatusPills();
+          return;
+        }
+        var button = event.target.closest("[data-ui-status]");
+        if (!button) return;
+        event.preventDefault();
+        event.stopPropagation();
+        state.statusMenuOpen = false;
+        handleStatusPillClick(button.dataset.uiStatus);
+      });
+    }
+    document.addEventListener("click", function (event) {
+      if (!state.statusMenuOpen || !statusPills || statusPills.contains(event.target)) return;
+      state.statusMenuOpen = false;
+      renderStatusPills();
+    });
     if (metadataCloseButton) {
       metadataCloseButton.addEventListener("click", closeMetadataModal);
     }
@@ -1802,11 +1916,11 @@ export function initDocsViewerManagement(context) {
     canDragCurrentDoc: canDragCurrentDoc,
     handleDocumentKeydown: handleDocumentKeydown,
     handleRootClick: handleRootClick,
-    handleStatusPillClick: handleStatusPillClick,
     hideContextMenu: hideContextMenu,
     initialize: initializeManagement,
     openImportModal: openImportModal,
     render: renderManagementUi,
+    renderStatusPills: renderStatusPills,
     updateNavDragState: updateNavDragState
   };
 }
