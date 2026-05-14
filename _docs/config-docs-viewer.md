@@ -2,7 +2,7 @@
 doc_id: config-docs-viewer
 title: Docs Viewer Config
 added_date: 2026-05-12
-last_updated: "2026-05-12 10:55"
+last_updated: "2026-05-14"
 parent_id: config
 sort_order: 55
 ---
@@ -18,6 +18,9 @@ Site-wide media token resolution stays in `_config.yml`.
 
 `scripts/docs/docs_scopes.json` is the source-side Docs Viewer config.
 It is checked in and is read by docs builds, docs search builds, Docs Import, the local management server, live rebuild watching, generated-data reads, and source-write validation.
+
+In local manage mode, [Docs Viewer Source Config Report](/docs/?scope=studio&doc=docs-viewer-source-config-report&mode=manage) reads this source config through the docs-management server and shows it alongside browser and generated projections.
+The report is read-only; source edits still go through source JSON edits or explicit manage-mode write controls.
 
 Each scope entry owns:
 

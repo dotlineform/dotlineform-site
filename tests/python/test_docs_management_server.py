@@ -160,10 +160,77 @@ def write_generated_docs(root: Path) -> None:
             "content_url": "/assets/data/docs/scopes/studio/by-id/child.json",
         },
     ]
-    write_json(root / "assets/data/docs/scopes/studio/index.json", {"docs": docs})
+    write_json(
+        root / "assets/data/docs/scopes/studio/index.json",
+        {
+            "viewer_options": {
+                "show_updated_date": True,
+                "non_loadable_doc_ids": [],
+                "manage_only_tree_root_ids": [],
+            },
+            "docs": docs,
+        },
+    )
     write_json(root / "assets/data/docs/scopes/studio/by-id/archive.json", {"doc_id": "archive"})
     write_json(root / "assets/data/docs/scopes/studio/by-id/child.json", {"doc_id": "child"})
     write_json(root / "assets/data/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
+
+
+def write_docs_scope_config(root: Path) -> None:
+    write_json(
+        root / "scripts/docs/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v1",
+            "scopes": [
+                {
+                    "scope_id": "studio",
+                    "source": "_docs",
+                    "media_path_prefix": "docs/studio",
+                    "output": "assets/data/docs/scopes/studio",
+                    "viewer_base_url": "/docs/",
+                    "include_scope_param": True,
+                    "default_doc_id": "child",
+                    "allow_nested_source": False,
+                    "non_loadable_doc_ids": [],
+                    "manage_only_tree_root_ids": [],
+                    "show_updated_date": True,
+                    "allow_unresolved_parent_ids": False,
+                    "import_media_storage": {
+                        "storage_mode": "staging_manual",
+                        "repo_assets_path_prefix": "assets/docs/studio",
+                        "repo_assets_public_path_prefix": "/assets/docs/studio",
+                    },
+                }
+            ],
+            "docs_viewer": {
+                "recently_added_limit": 10,
+            },
+        },
+    )
+
+
+def write_docs_viewer_browser_config(root: Path) -> None:
+    write_json(
+        root / "assets/docs-viewer/data/docs-viewer-config.json",
+        {
+            "schema_version": "docs_viewer_config_v1",
+            "default_scope_id": "studio",
+            "scopes": [
+                {
+                    "scope_id": "studio",
+                    "viewer_base_url": "/docs/",
+                    "include_scope_param": True,
+                    "default_doc_id": "child",
+                    "media_path_prefix": "docs/studio",
+                    "index_url": "/assets/data/docs/scopes/studio/index.json",
+                    "search_index_url": "/assets/data/search/studio/index.json",
+                }
+            ],
+            "docs_viewer": {
+                "recently_added_limit": 10,
+            },
+        },
+    )
 
 
 def test_archive_doc_is_editable_in_dry_run() -> None:
@@ -264,6 +331,32 @@ def test_capabilities_advertise_generated_data_reads() -> None:
     assert payload["capabilities"]["scopes"]["studio"]["generated_search_reads"] is True
 
 
+def test_capabilities_advertise_source_config_reads() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        payload = docs_management_server.capabilities_payload(repo_root)
+
+    assert payload["capabilities"]["source_config_reads"] is True
+
+
+def test_source_config_report_reads_known_config_files() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        write_docs_viewer_browser_config(repo_root)
+        write_generated_docs(repo_root)
+        payload = docs_management_server.docs_source_config_report.build_source_config_report(repo_root)
+
+    assert payload["ok"] is True
+    assert payload["schema_version"] == "docs_source_config_report_v1"
+    assert payload["source_config_path"] == "scripts/docs/docs_scopes.json"
+    assert payload["scopes"][0]["scope_id"] == "studio"
+    assert payload["scopes"][0]["source_config"]["source"] == "_docs"
+    assert payload["scopes"][0]["browser_config"]["index_url"] == "/assets/data/docs/scopes/studio/index.json"
+    assert payload["scopes"][0]["viewer_options"]["show_updated_date"] is True
+    assert payload["scopes"][0]["warnings"] == []
+
+
 class FakeHandler:
     def __init__(self) -> None:
         self.headers: dict[str, str] = {}
@@ -337,6 +430,8 @@ def main() -> None:
         test_archive_parent_delete_is_blocked_only_by_children,
         test_archive_command_noops_on_archive_parent,
         test_capabilities_advertise_generated_data_reads,
+        test_capabilities_advertise_source_config_reads,
+        test_source_config_report_reads_known_config_files,
         test_json_responses_are_not_cached,
         test_docs_export_request_passes_target_format,
     ]

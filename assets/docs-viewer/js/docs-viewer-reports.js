@@ -18,6 +18,13 @@ const REPORT_LOADERS = {
         return module.mountReportsListReport;
       });
     }
+  },
+  source_config: {
+    load: function () {
+      return import("./reports/source-config-report.js").then(function (module) {
+        return module.mountSourceConfigReport;
+      });
+    }
   }
 };
 
@@ -38,6 +45,14 @@ const FALLBACK_REPORT_REGISTRY = {
       description: "Displays the configured Docs Viewer report metadata from the report registry.",
       defaultAccess: "public",
       loaderId: "reports_list",
+      presets: []
+    },
+    {
+      reportId: "source_config",
+      title: "Source Config",
+      description: "Displays Docs Viewer source config for all scopes in manage mode.",
+      defaultAccess: "manage",
+      loaderId: "source_config",
       presets: []
     }
   ],

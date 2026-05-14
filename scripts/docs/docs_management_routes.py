@@ -10,6 +10,7 @@ GENERATED_PAYLOAD_PATH = "/docs/doc"
 GENERATED_PAYLOAD_ALT_PATH = "/docs/generated/payload"
 GENERATED_SEARCH_PATH = "/docs/search"
 GENERATED_SEARCH_ALT_PATH = "/docs/generated/search"
+SOURCE_CONFIG_PATH = "/docs/source-config"
 IMPORT_SOURCE_FILES_PATH = "/docs/import-source-files"
 IMPORT_HTML_FILES_PATH = "/docs/import-html-files"
 
@@ -37,6 +38,7 @@ GET_PATHS = (
     GENERATED_PAYLOAD_ALT_PATH,
     GENERATED_SEARCH_PATH,
     GENERATED_SEARCH_ALT_PATH,
+    SOURCE_CONFIG_PATH,
     IMPORT_SOURCE_FILES_PATH,
     IMPORT_HTML_FILES_PATH,
 )

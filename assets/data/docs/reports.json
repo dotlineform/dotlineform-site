@@ -34,6 +34,14 @@
       "default_access": "public",
       "loader_id": "reports_list",
       "presets": []
+    },
+    {
+      "report_id": "source_config",
+      "title": "Source Config",
+      "description": "Displays Docs Viewer source config for all scopes in manage mode.",
+      "default_access": "manage",
+      "loader_id": "source_config",
+      "presets": []
     }
   ]
 }

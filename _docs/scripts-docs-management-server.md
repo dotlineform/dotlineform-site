@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-13 20:20"
+last_updated: "2026-05-14"
 parent_id: docs-viewer
 sort_order: 110
 ---
@@ -50,6 +50,7 @@ Exposed endpoints:
 - `GET /docs/index`
 - `GET /docs/doc`
 - `GET /docs/search`
+- `GET /docs/source-config`
 - `GET /docs/import-source-files`
 - `GET /docs/import-html-files`
 - `POST /docs/import-source`
@@ -77,6 +78,7 @@ Current behavior:
 - endpoint path constants are owned by `scripts/docs/docs_management_routes.py`; the server handler uses explicit GET and POST dispatch tables
 - docs source-model helpers are owned by `scripts/docs/docs_source_model.py`
 - generated Docs Viewer JSON read helpers are owned by `scripts/docs/docs_generated_reads.py`
+- source config report payloads are owned by `scripts/docs/docs_source_config_report.py`
 - docs-specific Studio Activity row construction is owned by `scripts/docs/docs_activity.py`
 - docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `scripts/docs/docs_write_rebuild.py`
 - staged source import orchestration for the Docs Viewer import modal is owned by `scripts/docs/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
@@ -89,6 +91,7 @@ Current behavior:
 - also used by `/studio/data-sharing/review/` to dispatch staged-file listing, Markdown review generation, summary apply, and hierarchy apply to the documents Data Sharing adapter
 - appends unified activity rows for covered docs import, Data Sharing package/apply, and broken-links audit actions when valid activity context is supplied
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
+- serves a read-only Docs Viewer source-config report payload to manage-mode report surfaces
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
 - creates Analysis docs as `published: true`, `viewable: false`
@@ -122,6 +125,7 @@ Search update behavior:
 - which scopes are writable
 - whether the current scope has `archive` for the Archive command
 - whether generated docs/search reads are available for each scope
+- whether source config report reads are available
 
 Read-only generated-data endpoints:
 
@@ -146,6 +150,18 @@ Generated-read behavior:
 - search reads resolve only `assets/data/search/<scope>/index.json`
 - missing scope, unsupported scope, missing generated files, and non-indexed payload ids return validation or 404 errors rather than filesystem paths chosen by the browser
 - these endpoints are read-only and do not write source or generated files
+
+Source-config report endpoint:
+
+- `GET /docs/source-config`
+
+Source-config report behavior:
+
+- reads only known Docs Viewer config files and generated scope indexes
+- returns repo-relative paths only
+- includes source scope config, browser config projection, generated output paths, generated viewer options, and per-scope warnings
+- is intended for `/docs/` manage-mode report rendering
+- is read-only and does not write source or generated files
 
 `POST /docs/create` expects:
 

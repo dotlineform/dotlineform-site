@@ -1119,6 +1119,7 @@ import {
       content: content,
       doc: doc,
       fetchDocsIndex: fetchDocsIndexForScope,
+      managementBaseUrl: managementBaseUrl,
       managementMode: state.managementMode,
       payload: payload,
       reportRegistryUrl: reportRegistryUrl,

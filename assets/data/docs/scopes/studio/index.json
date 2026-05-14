@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T10:26:30Z",
+  "generated_at": "2026-05-14T11:29:03Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -890,7 +890,7 @@
       "doc_id": "site-request-docs-viewer-config-settings",
       "title": "Docs Viewer Config And Settings Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-14 12:35",
       "parent_id": "change-requests",
       "sort_order": 28,
       "published": true,
@@ -899,7 +899,7 @@
       "source_path": "site-request-docs-viewer-config-settings.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-config-settings.json",
-      "content_text_length": 11159,
+      "content_text_length": 11255,
       "ui_status": "in-progress"
     },
     {
@@ -1573,7 +1573,7 @@
       "doc_id": "docs-viewer-reports",
       "title": "Docs Viewer Reports",
       "added_date": "2026-05-13",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-14",
       "parent_id": "docs-viewer",
       "sort_order": 50,
       "published": true,
@@ -1582,7 +1582,7 @@
       "source_path": "docs-viewer-reports.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-reports",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-reports.json",
-      "content_text_length": 4651,
+      "content_text_length": 4902,
       "viewer_report": "reports_list",
       "viewer_report_access": "public"
     },
@@ -1785,7 +1785,7 @@
       "doc_id": "config-docs-viewer",
       "title": "Docs Viewer Config",
       "added_date": "2026-05-12",
-      "last_updated": "2026-05-12 10:55",
+      "last_updated": "2026-05-14",
       "parent_id": "config",
       "sort_order": 55,
       "published": true,
@@ -1794,7 +1794,25 @@
       "source_path": "config-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=config-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-docs-viewer.json",
-      "content_text_length": 4855
+      "content_text_length": 5141
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer-source-config-report",
+      "title": "Docs Viewer Source Config Report",
+      "added_date": "2026-05-14",
+      "last_updated": "2026-05-14",
+      "parent_id": "docs-viewer",
+      "sort_order": 55,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "docs-viewer-source-config-report.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-source-config-report",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-source-config-report.json",
+      "content_text_length": 113,
+      "viewer_report": "source_config",
+      "viewer_report_access": "manage"
     },
     {
       "scope": "studio",
@@ -2759,7 +2777,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-14",
       "parent_id": "docs-viewer",
       "sort_order": 110,
       "published": true,
@@ -2768,7 +2786,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 31262
+      "content_text_length": 31940
     },
     {
       "scope": "studio",

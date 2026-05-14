@@ -1,0 +1,17 @@
+{
+  "scope": "studio",
+  "doc_id": "docs-viewer-source-config-report",
+  "title": "Docs Viewer Source Config Report",
+  "added_date": "2026-05-14",
+  "last_updated": "2026-05-14",
+  "parent_id": "docs-viewer",
+  "sort_order": 55,
+  "published": true,
+  "hidden": true,
+  "viewable": false,
+  "source_path": "docs-viewer-source-config-report.md",
+  "viewer_url": "/docs/?scope=studio&doc=docs-viewer-source-config-report",
+  "content_html": "<h1 id=\"docs-viewer-source-config-report\">Docs Viewer Source Config Report</h1>\n\n<p>This manage-mode report shows the Docs Viewer source config and generated projections for every configured scope.</p>\n",
+  "viewer_report": "source_config",
+  "viewer_report_access": "manage"
+}

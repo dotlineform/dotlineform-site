@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-config-settings
 title: Docs Viewer Config And Settings Request
 added_date: 2026-05-11
-last_updated: 2026-05-14
+last_updated: "2026-05-14 12:35"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 28
@@ -195,6 +195,10 @@ Acceptance:
 
 ### 2. Add Source Config Read Model
 
+Status:
+
+- implemented for the read-only source config report
+
 Define a read-only server response that exposes source config for all Docs Viewer scopes in a browser-safe form.
 
 Acceptance:
@@ -206,6 +210,10 @@ Acceptance:
 - the response distinguishes source config from generated projections where practical
 
 ### 3. Add Manage-Only Source Config Report
+
+Status:
+
+- implemented
 
 Add a Docs Viewer report-backed document or equivalent manage-only report surface for source config.
 
@@ -219,6 +227,10 @@ Acceptance:
 - unavailable/error states are clear when the management server is not running
 
 ### 4. Define Source Config Edit Allowlist And Guardrails
+
+Status:
+
+- proposed
 
 Define the source config fields that the management settings modal can edit and the validation/warning rules for each field.
 

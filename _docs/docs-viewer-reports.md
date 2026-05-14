@@ -2,7 +2,7 @@
 doc_id: docs-viewer-reports
 title: Docs Viewer Reports
 added_date: 2026-05-13
-last_updated: "2026-05-13 20:20"
+last_updated: "2026-05-14"
 parent_id: docs-viewer
 sort_order: 50
 viewer_report: reports_list
@@ -104,6 +104,9 @@ It is used by [Library Documents](/docs/?scope=studio&doc=library-documents) to 
 
 `reports_list` renders the report metadata registry itself.
 This document uses it so the list of configured reports stays visible from the Docs Viewer.
+
+`source_config` renders the Docs Viewer source config report in manage mode.
+It reads through the local docs-management server and shows source config, browser projection, generated output paths, and generated viewer options for every configured scope.
 
 ## Good Candidates
 
