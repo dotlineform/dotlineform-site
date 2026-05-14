@@ -230,6 +230,89 @@ export function applyViewerRoute(options) {
   };
 }
 
+export function loadViewerDoc(options) {
+  var settings = options || {};
+  var state = settings.state;
+  var docId = settings.docId || "";
+  var mode = settings.historyMode || "push";
+  var hash = settings.hash || "";
+  var shouldExpandTrail = settings.expandTrail !== false;
+  var targetDocId = typeof settings.resolveLoadableDocId === "function" ? settings.resolveLoadableDocId(docId) : "";
+
+  if (typeof settings.setRecentModeActive === "function") {
+    settings.setRecentModeActive(false);
+  }
+
+  if (targetDocId && targetDocId !== docId) {
+    return loadViewerDoc(Object.assign({}, settings, {
+      docId: targetDocId,
+      historyMode: mode === "none" ? "replace" : mode,
+      hash: hash,
+      expandTrail: shouldExpandTrail
+    }));
+  }
+
+  var doc = state && state.docsById ? state.docsById.get(docId) : null;
+  if (!doc) {
+    if (typeof settings.handleMissingDoc === "function") {
+      settings.handleMissingDoc();
+    }
+    return Promise.resolve(null);
+  }
+
+  if (state) {
+    state.selectedDocId = docId;
+  }
+  if (shouldExpandTrail && typeof settings.expandTrail === "function") {
+    settings.expandTrail(docId);
+  }
+  if (typeof settings.renderBookmarkUi === "function") {
+    settings.renderBookmarkUi();
+  }
+  if (typeof settings.setHistory === "function") {
+    settings.setHistory(docId, hash, "", mode);
+  }
+
+  if (state && state.payloadCache && state.payloadCache.has(docId)) {
+    if (typeof settings.renderPayload === "function") {
+      settings.renderPayload(doc, state.payloadCache.get(docId), hash);
+    }
+    return Promise.resolve(state.payloadCache.get(docId));
+  }
+
+  if (typeof settings.renderLoadingState === "function") {
+    settings.renderLoadingState(doc);
+  }
+
+  if (!state || typeof settings.fetchPayload !== "function") {
+    return Promise.resolve(null);
+  }
+
+  var requestId = state.requestId + 1;
+  state.requestId = requestId;
+
+  return settings.fetchPayload(doc, docId)
+    .then(function (payload) {
+      if (state.requestId !== requestId) return null;
+      if (state.payloadCache) {
+        state.payloadCache.set(docId, payload);
+      }
+      state.reloadNonce = "";
+      state.reloadExpectedDocId = "";
+      if (typeof settings.renderPayload === "function") {
+        settings.renderPayload(doc, payload, hash);
+      }
+      return payload;
+    })
+    .catch(function (error) {
+      if (state.requestId !== requestId) return null;
+      if (typeof settings.handlePayloadError === "function") {
+        settings.handlePayloadError(error);
+      }
+      return null;
+    });
+}
+
 export function handleViewerPopstate(options) {
   var settings = options || {};
   if (typeof settings.docsAvailable === "function" && !settings.docsAvailable()) return;

@@ -19,12 +19,12 @@ Archives:
 
 ## [2026-05-14] Started Docs Viewer Router Extraction
 
-**Status:** in progress
+**Status:** implemented
 
 **Area:** Docs Viewer / routing / validation
 
 **Summary:**
-Added a retained Docs Viewer route smoke test and started the router extraction by moving URL building, anchor route parsing, history writes, requested-doc resolution, canonical route correction, and popstate route orchestration into `assets/docs-viewer/js/docs-viewer-router.js`.
+Added a retained Docs Viewer route smoke test and moved URL building, anchor route parsing, history writes, requested-doc resolution, canonical route correction, popstate route orchestration, and payload-load orchestration into `assets/docs-viewer/js/docs-viewer-router.js`.
 The route smoke now covers direct doc load, search route state, internal link interception without full reload, back/forward history, hash fragments, and the Library read-only route.
 
 **Files changed/docs:**
@@ -38,7 +38,7 @@ The route smoke now covers direct doc load, search route state, internal link in
 - [Studio JavaScript Payload Inventory](/docs/?scope=studio&doc=studio-javascript-payload-inventory)
 
 **Impact:**
-The route boundary is now isolated through current-route application without changing document-load ownership.
+The route boundary is now isolated through payload-load handoff without moving final document rendering or report ownership out of the entry controller.
 The new smoke caught and covered a direct-hash canonicalization bug, so `#hash` fragments are preserved before payload rendering.
 
 ## [2026-05-14] Integrated Pytest Into Run Checks

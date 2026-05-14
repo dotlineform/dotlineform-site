@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T20:17:41Z",
+  "generated_at": "2026-05-14T20:23:44Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1826,7 +1826,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 9487,
+      "content_text_length": 9576,
       "ui_status": "urgent"
     },
     {
@@ -2455,7 +2455,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 6713
+      "content_text_length": 6741
     },
     {
       "scope": "studio",
@@ -3164,8 +3164,8 @@
       "source_path": "site-request-docs-viewer-router-extraction.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-router-extraction",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-router-extraction.json",
-      "content_text_length": 7344,
-      "ui_status": "in-progress"
+      "content_text_length": 8069,
+      "ui_status": "implemented"
     },
     {
       "scope": "studio",
@@ -3383,7 +3383,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 154733
+      "content_text_length": 154769
     },
     {
       "scope": "studio",

@@ -35,6 +35,7 @@ import {
   buildViewerUrl,
   buildViewerUrlForScope,
   handleViewerPopstate,
+  loadViewerDoc,
   resolveViewerRouteDocId,
   routeFromAnchorHref,
   setViewerHistory
@@ -899,72 +900,55 @@ import {
     state.searchDebounceId = null;
   }
 
-  function loadDoc(docId, options) {
-    setRecentModeActive(false);
-    var mode = options && options.historyMode ? options.historyMode : "push";
-    var hash = options && options.hash ? options.hash : "";
-    var shouldExpandTrail = !options || options.expandTrail !== false;
-    var targetDocId = resolveLoadableDocId(docId);
-    if (targetDocId && targetDocId !== docId) {
-      loadDoc(targetDocId, {
-        historyMode: mode === "none" ? "replace" : mode,
-        hash: hash,
-        expandTrail: shouldExpandTrail
-      });
-      return;
-    }
-    var doc = state.docsById.get(docId);
-    if (!doc) {
-      setStatus("Document not found.", true);
-      hideDocPane();
-      content.textContent = "";
-      results.innerHTML = "";
-      more.innerHTML = "";
-      more.hidden = true;
-      renderManagementUi();
-      return;
-    }
+  function handleMissingDoc() {
+    setStatus("Document not found.", true);
+    hideDocPane();
+    content.textContent = "";
+    results.innerHTML = "";
+    more.innerHTML = "";
+    more.hidden = true;
+    renderManagementUi();
+  }
 
-    state.selectedDocId = docId;
-    if (shouldExpandTrail) {
-      expandTrail(docId);
-    }
-    renderBookmarkUi();
-
-    setHistory(docId, hash, "", mode);
-
-    if (state.payloadCache.has(docId)) {
-      renderPayload(doc, state.payloadCache.get(docId), hash);
-      return;
-    }
-
+  function renderDocLoadingState(doc) {
     renderSidebar();
     showDocPane();
     renderMeta(doc);
     setStatus("Loading " + doc.title + "...", false);
     content.textContent = "";
+  }
 
-    var requestId = state.requestId + 1;
-    state.requestId = requestId;
-
-    fetchPreferredGeneratedJson(
+  function fetchDocPayload(doc, docId) {
+    return fetchPreferredGeneratedJson(
       doc.content_url,
       "Failed to load " + doc.content_url,
       managementReloadPath("/docs/generated/payload", { scope: viewerScope, doc_id: docId }),
       dataRequestOptions({ useSearchCapability: false })
-    )
-      .then(function (payload) {
-        if (state.requestId !== requestId) return;
-        state.payloadCache.set(docId, payload);
-        state.reloadNonce = "";
-        state.reloadExpectedDocId = "";
-        renderPayload(doc, payload, hash);
-      })
-      .catch(function (error) {
-        if (state.requestId !== requestId) return;
-        setStatus(error.message || "Failed to load document.", true);
-        content.textContent = "";
-      });
+    );
+  }
+
+  function handlePayloadError(error) {
+    setStatus(error.message || "Failed to load document.", true);
+    content.textContent = "";
+  }
+
+  function loadDoc(docId, options) {
+    return loadViewerDoc({
+      docId: docId,
+      expandTrail: !options || options.expandTrail !== false,
+      fetchPayload: fetchDocPayload,
+      handleMissingDoc: handleMissingDoc,
+      handlePayloadError: handlePayloadError,
+      hash: options && options.hash ? options.hash : "",
+      historyMode: options && options.historyMode ? options.historyMode : "push",
+      renderBookmarkUi: renderBookmarkUi,
+      renderLoadingState: renderDocLoadingState,
+      renderPayload: renderPayload,
+      resolveLoadableDocId: resolveLoadableDocId,
+      setHistory: setHistory,
+      setRecentModeActive: setRecentModeActive,
+      state: state
+    });
   }
 
   function routeFromAnchor(anchor) {

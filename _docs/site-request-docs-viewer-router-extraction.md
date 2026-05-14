@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-router-extraction
 title: Docs Viewer Router Extraction Request
 added_date: 2026-05-14
 last_updated: 2026-05-14
-ui_status: in-progress
+ui_status: implemented
 parent_id: change-requests
 sort_order: 205
 hidden: false
@@ -12,10 +12,12 @@ hidden: false
 
 Status:
 
+- implementation complete
 - test-first implementation started
 - retained route smoke added
 - route helper extraction implemented
 - document-resolution extraction implemented
+- payload-load handoff implemented
 
 ## Summary
 
@@ -151,9 +153,15 @@ Acceptance:
 
 ### Slice 4: Payload Load Handoff
 
-Status: pending.
+Status: implemented.
 
 Move document-load orchestration only if it can be done without hiding rendering and report ownership inside the router.
+
+Implementation result:
+
+- `assets/docs-viewer/js/docs-viewer-router.js` now owns document-load orchestration, including non-loadable redirects, selected-doc state, load history writes, payload-cache hits, request-id stale protection, payload fetch initiation, payload-cache storage, and stale-safe error handling.
+- `assets/docs-viewer/js/docs-viewer.js` keeps the concrete generated-payload fetch dependency, loading-shell DOM updates, missing-doc/error display, final payload rendering, report mounting, and document-pane ownership.
+- Management and search callers still use the same entry-controller `loadDoc(...)` wrapper, so the external controller contract stays stable.
 
 Acceptance:
 
