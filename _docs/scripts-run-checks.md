@@ -2,7 +2,7 @@
 doc_id: scripts-run-checks
 title: Run Checks
 added_date: 2026-05-01
-last_updated: "2026-05-08 23:56"
+last_updated: "2026-05-14 16:10"
 parent_id: site-docs
 sort_order: 60
 ---
@@ -41,11 +41,11 @@ Run the broad profile:
 ## Profiles
 
 - `quick`
-  Runs diff whitespace checks, lightweight Python syntax checks, catalogue cleanup, delete-plan, invalidation, lookup-refresh, publication, prose-import, route, save-build, source-mutation, and transaction tests, Studio activity tests, Studio backup-retention tests, the Studio ready-state audit, and Studio config/activity JSON parsing. The syntax check includes core catalogue/source helpers, the Studio audit service script, and core lightweight test modules.
+  Runs diff whitespace checks, lightweight Python syntax checks, grouped pytest checks for the quick-profile Python modules, the Studio ready-state audit, and Studio config/activity JSON parsing. The syntax check includes core catalogue/source helpers, the Studio audit service script, and core lightweight test modules.
 - `catalogue`
-  Runs catalogue field-registry verification and a representative field-aware build preview.
+  Runs grouped pytest checks for catalogue-profile Python modules and a representative field-aware build preview.
 - `docs`
-  Runs focused Docs Viewer export, Library import engine, Library import service, generated-read helpers, Docs Management Server, and Docs Broken Links checks, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
+  Runs grouped pytest checks for Docs Viewer export, Library import, generated-read helpers, Docs Management Server, Docs routes, and Docs Broken Links behavior, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
 - `studio-smoke`
   Builds the site to a temporary Jekyll destination and runs retained browser smoke checks, including the Studio data import route with docs-management unavailable and a mocked Library import preview flow.
 - `full`

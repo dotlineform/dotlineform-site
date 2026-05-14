@@ -12,6 +12,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DOCS_BROKEN_LINKS_PATH = REPO_ROOT / "scripts" / "docs" / "docs_broken_links.py"
+SCRIPTS_DOCS_DIR = DOCS_BROKEN_LINKS_PATH.parent
+if str(SCRIPTS_DOCS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DOCS_DIR))
 
 
 def load_docs_broken_links_module():
@@ -60,6 +63,7 @@ def make_repo(content_html: str) -> tempfile.TemporaryDirectory[str]:
         },
     )
     write_json(repo_root / "assets/data/docs/scopes/library/index.json", {"docs": []})
+    write_json(repo_root / "assets/data/docs/scopes/analysis/index.json", {"docs": []})
     write_doc_payload(repo_root, "studio", "source", content_html)
     return temp_dir
 

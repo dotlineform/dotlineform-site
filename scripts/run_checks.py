@@ -34,6 +34,10 @@ def bundle_argv() -> tuple[str, ...]:
     return (bundle, "exec", "jekyll", "build", "--quiet", "--destination", str(JEKYLL_DESTINATION))
 
 
+def pytest_argv(*paths: str) -> tuple[str, ...]:
+    return (sys.executable, "-m", "pytest", "-q", *paths)
+
+
 PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     "quick": (
         CheckCommand("git-diff-check", ("git", "diff", "--check"), "Check staged and unstaged diff whitespace."),
@@ -137,164 +141,42 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Compile lightweight Python check scripts.",
         ),
         CheckCommand(
-            "activity-contract-tests",
-            (sys.executable, "tests/python/test_activity_contract.py"),
-            "Verify Studio activity contract registry shape and v1 save-work coverage.",
-        ),
-        CheckCommand(
-            "local-env-tests",
-            (sys.executable, "tests/python/test_local_env.py"),
-            "Verify repo-local site.env parsing and precedence.",
-        ),
-        CheckCommand(
-            "publish-media-to-r2-tests",
-            (sys.executable, "tests/python/test_publish_media_to_r2.py"),
-            "Verify R2 publisher credential loading and media publish plans.",
-        ),
-        CheckCommand(
-            "catalogue-invalidation-tests",
-            (sys.executable, "tests/python/test_catalogue_invalidation.py"),
-            "Verify catalogue lookup and moment-build invalidation rules.",
-        ),
-        CheckCommand(
-            "catalogue-lookup-refresh-tests",
-            (sys.executable, "tests/python/test_catalogue_lookup_refresh.py"),
-            "Verify catalogue lookup refresh execution helpers.",
-        ),
-        CheckCommand(
-            "catalogue-cleanup-tests",
-            (sys.executable, "tests/python/test_catalogue_cleanup.py"),
-            "Verify catalogue generated-artifact cleanup planning.",
-        ),
-        CheckCommand(
-            "catalogue-delete-plan-tests",
-            (sys.executable, "tests/python/test_catalogue_delete_plans.py"),
-            "Verify catalogue delete preview planners.",
-        ),
-        CheckCommand(
-            "catalogue-publication-tests",
-            (sys.executable, "tests/python/test_catalogue_publication.py"),
-            "Verify catalogue publication preview planners.",
-        ),
-        CheckCommand(
-            "catalogue-prose-import-tests",
-            (sys.executable, "tests/python/test_catalogue_prose_import.py"),
-            "Verify staged catalogue prose and draft moment import helpers.",
-        ),
-        CheckCommand(
-            "catalogue-transaction-tests",
-            (sys.executable, "tests/python/test_catalogue_transactions.py"),
-            "Verify catalogue transaction backup and atomic-write helpers.",
-        ),
-        CheckCommand(
-            "catalogue-route-tests",
-            (sys.executable, "tests/python/test_catalogue_routes.py"),
-            "Verify catalogue route inventory and write-server POST dispatch coverage.",
-        ),
-        CheckCommand(
-            "tag-route-tests",
-            (sys.executable, "tests/python/test_tag_routes.py"),
-            "Verify tag route inventory and write-server POST dispatch coverage.",
-        ),
-        CheckCommand(
-            "tag-activity-tests",
-            (sys.executable, "tests/python/test_tag_activity.py"),
-            "Verify tag Studio activity status, route, and row helpers.",
-        ),
-        CheckCommand(
-            "tag-alias-mutation-tests",
-            (sys.executable, "tests/python/test_tag_alias_mutations.py"),
-            "Verify tag alias import, edit, delete, and rewrite planners.",
-        ),
-        CheckCommand(
-            "tag-assignment-service-tests",
-            (sys.executable, "tests/python/test_tag_assignment_service.py"),
-            "Verify tag assignment save and import planners.",
-        ),
-        CheckCommand(
-            "tag-promotion-mutation-tests",
-            (sys.executable, "tests/python/test_tag_promotion_mutations.py"),
-            "Verify tag alias promotion and canonical tag demotion planners.",
-        ),
-        CheckCommand(
-            "tag-registry-mutation-tests",
-            (sys.executable, "tests/python/test_tag_registry_mutations.py"),
-            "Verify tag registry import and canonical tag mutation planners.",
-        ),
-        CheckCommand(
-            "tag-source-model-tests",
-            (sys.executable, "tests/python/test_tag_source_model.py"),
-            "Verify tag source artifact validation, normalization, and default loading helpers.",
-        ),
-        CheckCommand(
-            "tag-write-transaction-tests",
-            (sys.executable, "tests/python/test_tag_write_transactions.py"),
-            "Verify tag write backup and atomic JSON transaction helpers.",
-        ),
-        CheckCommand(
-            "catalogue-save-build-tests",
-            (sys.executable, "tests/python/test_catalogue_save_build.py"),
-            "Verify save-time catalogue build follow-through helpers.",
-        ),
-        CheckCommand(
-            "catalogue-source-mutation-tests",
-            (sys.executable, "tests/python/test_catalogue_source_mutation.py"),
-            "Verify pure catalogue source mutation planners.",
-        ),
-        CheckCommand(
-            "studio-activity-context-tests",
-            (sys.executable, "tests/python/test_studio_activity_context.py"),
-            "Verify Studio save-work activity context normalization.",
-        ),
-        CheckCommand(
-            "studio-activity-feed-tests",
-            (sys.executable, "tests/python/test_studio_activity_feed.py"),
-            "Verify unified Studio activity feed writing and registry label hydration.",
-        ),
-        CheckCommand(
-            "studio-backup-retention-tests",
-            (sys.executable, "tests/python/test_studio_backup_retention.py"),
-            "Verify local Studio backup retention planning.",
-        ),
-        CheckCommand(
-            "catalogue-build-command-tests",
-            (sys.executable, "tests/python/test_catalogue_build_commands.py"),
-            "Verify scoped catalogue command construction and subprocess step shaping.",
-        ),
-        CheckCommand(
-            "catalogue-build-scope-tests",
-            (sys.executable, "tests/python/test_catalogue_build_scopes.py"),
-            "Verify scoped catalogue build planning helpers.",
-        ),
-        CheckCommand(
-            "catalogue-build-field-plan-tests",
-            (sys.executable, "tests/python/test_catalogue_build_field_plan.py"),
-            "Verify scoped catalogue field-aware build-plan helpers.",
-        ),
-        CheckCommand(
-            "catalogue-build-media-tests",
-            (sys.executable, "tests/python/test_catalogue_build_media.py"),
-            "Verify scoped catalogue media planning and readiness helpers.",
-        ),
-        CheckCommand(
-            "catalogue-generation-moment-tests",
-            (sys.executable, "tests/python/test_catalogue_generation_moments.py"),
-            "Verify generated catalogue moment artifact builders.",
-        ),
-        CheckCommand(
-            "catalogue-generation-recent-tests",
-            (sys.executable, "tests/python/test_catalogue_generation_recent.py"),
-            "Verify generated catalogue recent-publications builders.",
-        ),
-        CheckCommand(
-            "catalogue-generation-write-tests",
-            (sys.executable, "tests/python/test_catalogue_generation_writes.py"),
-            "Verify generated catalogue write-decision helpers.",
-        ),
-        CheckCommand(
-            "catalogue-generation-source-update-tests",
-            (sys.executable, "tests/python/test_catalogue_generation_source_updates.py"),
-            "Verify generated catalogue source-update planners.",
+            "quick-python-pytest",
+            pytest_argv(
+                "tests/python/test_activity_contract.py",
+                "tests/python/test_local_env.py",
+                "tests/python/test_publish_media_to_r2.py",
+                "tests/python/test_catalogue_invalidation.py",
+                "tests/python/test_catalogue_lookup_refresh.py",
+                "tests/python/test_catalogue_cleanup.py",
+                "tests/python/test_catalogue_delete_plans.py",
+                "tests/python/test_catalogue_publication.py",
+                "tests/python/test_catalogue_prose_import.py",
+                "tests/python/test_catalogue_transactions.py",
+                "tests/python/test_catalogue_routes.py",
+                "tests/python/test_tag_routes.py",
+                "tests/python/test_tag_activity.py",
+                "tests/python/test_tag_alias_mutations.py",
+                "tests/python/test_tag_assignment_service.py",
+                "tests/python/test_tag_promotion_mutations.py",
+                "tests/python/test_tag_registry_mutations.py",
+                "tests/python/test_tag_source_model.py",
+                "tests/python/test_tag_write_transactions.py",
+                "tests/python/test_catalogue_save_build.py",
+                "tests/python/test_catalogue_source_mutation.py",
+                "tests/python/test_studio_activity_context.py",
+                "tests/python/test_studio_activity_feed.py",
+                "tests/python/test_studio_backup_retention.py",
+                "tests/python/test_catalogue_build_commands.py",
+                "tests/python/test_catalogue_build_scopes.py",
+                "tests/python/test_catalogue_build_field_plan.py",
+                "tests/python/test_catalogue_build_media.py",
+                "tests/python/test_catalogue_generation_moments.py",
+                "tests/python/test_catalogue_generation_recent.py",
+                "tests/python/test_catalogue_generation_writes.py",
+                "tests/python/test_catalogue_generation_source_updates.py",
+            ),
+            "Run quick-profile Python tests through pytest collection.",
         ),
         CheckCommand(
             "studio-ready-state-audit",
@@ -314,14 +196,12 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
     "catalogue": (
         CheckCommand(
-            "catalogue-field-registry",
-            (sys.executable, "tests/python/test_catalogue_field_registry.py"),
-            "Verify representative catalogue field-registry build plans.",
-        ),
-        CheckCommand(
-            "catalogue-media-cleanup",
-            (sys.executable, "tests/python/test_catalogue_media_cleanup.py"),
-            "Verify staged catalogue thumbnails are removed after asset copy.",
+            "catalogue-python-pytest",
+            pytest_argv(
+                "tests/python/test_catalogue_field_registry.py",
+                "tests/python/test_catalogue_media_cleanup.py",
+            ),
+            "Run catalogue-profile Python tests through pytest collection.",
         ),
         CheckCommand(
             "catalogue-build-preview-downloads",
@@ -331,69 +211,23 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
     ),
     "docs": (
         CheckCommand(
-            "docs-export-tests",
-            (sys.executable, "tests/python/test_docs_export.py"),
-            "Verify Docs Viewer sharing profiles and representative Library export dry-runs.",
-        ),
-        CheckCommand(
-            "data-sharing-adapter-tests",
-            (sys.executable, "tests/python/test_data_sharing_adapters.py"),
-            "Verify Data Sharing adapter dispatch and future stub rejection.",
-        ),
-        CheckCommand(
-            "data-sharing-service-tests",
-            (sys.executable, "tests/python/test_data_sharing_service.py"),
-            "Verify Studio Data Sharing service gateway dispatch and neutral route names.",
-        ),
-        CheckCommand(
-            "docs-import-tests",
-            (sys.executable, "tests/python/test_docs_import.py"),
-            "Verify staged Library import parsing and preview rendering.",
-        ),
-        CheckCommand(
-            "docs-import-service-tests",
-            (sys.executable, "tests/python/test_docs_import_service.py"),
-            "Verify Docs Management Library import service handlers.",
-        ),
-        CheckCommand(
-            "docs-generated-read-tests",
-            (sys.executable, "tests/python/test_docs_generated_reads.py"),
-            "Verify generated Docs Viewer read helpers and safety checks.",
-        ),
-        CheckCommand(
-            "docs-activity-tests",
-            (sys.executable, "tests/python/test_docs_activity.py"),
-            "Verify Docs Management Studio Activity helper behavior.",
-        ),
-        CheckCommand(
-            "docs-live-rebuild-watcher-tests",
-            (sys.executable, "tests/python/test_docs_live_rebuild_watcher.py"),
-            "Verify Docs live rebuild watcher imports source-model helpers directly.",
-        ),
-        CheckCommand(
-            "docs-write-rebuild-tests",
-            (sys.executable, "tests/python/test_docs_write_rebuild.py"),
-            "Verify Docs Management write/rebuild helper command shapes and watcher suppression.",
-        ),
-        CheckCommand(
-            "docs-management-mutation-tests",
-            (sys.executable, "tests/python/test_docs_management_mutations.py"),
-            "Verify Docs Management mutation planner response, backup, and search-target behavior.",
-        ),
-        CheckCommand(
-            "docs-management-server-tests",
-            (sys.executable, "tests/python/test_docs_management_server.py"),
-            "Verify Docs Management Server archive-parent handling.",
-        ),
-        CheckCommand(
-            "docs-management-route-tests",
-            (sys.executable, "tests/python/test_docs_management_routes.py"),
-            "Verify Docs Management route inventory and handler dispatch coverage.",
-        ),
-        CheckCommand(
-            "docs-broken-links-tests",
-            (sys.executable, "tests/python/test_docs_broken_links.py"),
-            "Verify Docs Broken Links audit filtering.",
+            "docs-python-pytest",
+            pytest_argv(
+                "tests/python/test_docs_export.py",
+                "tests/python/test_data_sharing_adapters.py",
+                "tests/python/test_data_sharing_service.py",
+                "tests/python/test_docs_import.py",
+                "tests/python/test_docs_import_service.py",
+                "tests/python/test_docs_generated_reads.py",
+                "tests/python/test_docs_activity.py",
+                "tests/python/test_docs_live_rebuild_watcher.py",
+                "tests/python/test_docs_write_rebuild.py",
+                "tests/python/test_docs_management_mutations.py",
+                "tests/python/test_docs_management_server.py",
+                "tests/python/test_docs_management_routes.py",
+                "tests/python/test_docs_broken_links.py",
+            ),
+            "Run docs-profile Python tests through pytest collection.",
         ),
         CheckCommand(
             "studio-docs-build",

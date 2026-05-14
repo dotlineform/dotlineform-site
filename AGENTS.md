@@ -39,7 +39,7 @@
 
 ## Runtime and Paths
 
-- Use `/Users/dlf/miniconda3/bin/python3` for all Python commands.
+- Use `$HOME/miniconda3/bin/python3` for all Python commands.
 - Run project commands from `dotlineform-site/` unless explicitly told otherwise.
 - Media/generator scripts should rely on `DOTLINEFORM_PROJECTS_BASE_DIR` by default for source image lookups.
 - Only pass `--projects-base-dir` when intentionally overriding `DOTLINEFORM_PROJECTS_BASE_DIR`.
@@ -55,12 +55,12 @@
   - Bundler = `2.6.9`
 - In Codex/sandbox runs, do not rely on system `ruby`/`bundle` (`/usr/bin/*`), which can cause false failures.
 - Use rbenv shims explicitly for verification commands:
-  - `/Users/dlf/.rbenv/shims/ruby -v`
-  - `/Users/dlf/.rbenv/shims/bundle -v`
-  - `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet`
+  - `$HOME/.rbenv/shims/ruby -v`
+  - `$HOME/.rbenv/shims/bundle -v`
+  - `$HOME/.rbenv/shims/bundle exec jekyll build --quiet`
 - If `jekyll serve` or `bin/dev-studio` is already running, do not verify against the default `_site/` destination concurrently.
 - In that case, use a separate destination for one-off verification builds:
-  - `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+  - `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
 - Before relying on, starting, stopping, or interrupting local `bin/dev-studio` services for verification, tell the user whether they need to start or stop those services. Do not assume running local Studio services are available for tests; they may only be running so the user can read docs.
 - After changing `_docs/`, ensure Studio docs-viewer JSON payloads under `assets/data/docs/scopes/studio/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
 - After changing `_docs_library/`, ensure library docs-viewer JSON payloads under `assets/data/docs/scopes/library/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
@@ -93,10 +93,10 @@
 - After generator changes, run a dry-run and summarize what would be written.
 - After layout/template changes, verify behavior on desktop and mobile.
 - For a Codex-run browser smoke test on this machine, prefer local Playwright Chromium via the Miniconda Python environment:
-  - Playwright CLI: `/Users/dlf/miniconda3/bin/playwright`
-  - Python entrypoint: `/Users/dlf/miniconda3/bin/python -m playwright`
+  - Playwright CLI: `$HOME/miniconda3/bin/playwright`
+  - Python entrypoint: `$HOME/miniconda3/bin/python -m playwright`
   - example one-off smoke test:
-    - `/Users/dlf/miniconda3/bin/python - <<'PY'`
+    - `$HOME/miniconda3/bin/python - <<'PY'`
     - `from pathlib import Path`
     - `from playwright.sync_api import sync_playwright`
     - `url = Path('/tmp/dlf-jekyll-build/docs/index.html').resolve().as_uri()`
@@ -112,6 +112,7 @@
 - Avoid the raw Edge headless fallback unless Playwright is unavailable; Edge can trigger crash-report noise on this machine.
 - For Studio Playwright smoke tests, follow `_docs/studio-smoke-testing.md`: wait for the route root to be visible and for route-specific loaded status before interacting; for controls below async-rendered lists, scroll into view and verify `document.elementFromPoint()` resolves to the target or a child before pointer clicking; use DOM activation only for setup-only actions, not for the behavior being tested.
 - Use `_docs/testing.md` and `./scripts/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions. Do not run broad profiles by default for every change; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
+- Python tests in `./scripts/run_checks.py` run through pytest using the configured Python interpreter. For focused checks, prefer `$HOME/miniconda3/bin/python3 -m pytest <test-path>` over relying on whichever `python` happens to be active.
 - When `./scripts/run_checks.py` is used, report the profiles, pass/fail result, and `var/test-runs/.../summary.md` path in the final response.
 
 ## Security and Sanitization

@@ -2,26 +2,26 @@
 doc_id: testing-pytest
 title: Pytest
 added_date: 2026-05-14
-last_updated: "2026-05-14 15:25"
+last_updated: "2026-05-14 16:10"
 parent_id: testing
 sort_order: 20
 ---
 # Pytest
 
-Pytest is a good fit for this repo if the Python test set keeps growing.
-It should be added as a thin collection and reporting layer over the existing lightweight checks, not as a replacement for `./scripts/run_checks.py`.
+Pytest is the Python test collection layer for this repo.
+It sits underneath the existing lightweight check framework rather than replacing `./scripts/run_checks.py`.
 
 ## Current State
 
-The current test framework does not require pytest.
-Python checks live under `tests/python/`, use plain `assert`, and many files are directly executable with the configured Python interpreter.
+The current test framework requires pytest for grouped Python profile checks.
+Python checks live under `tests/python/`, use plain `assert`, and many files remain directly executable with the configured Python interpreter.
 `./scripts/run_checks.py` remains the top-level runner because it also coordinates Ruby/Jekyll builds, browser smoke checks, JSON parsing checks, diff checks, and local run logs under `var/test-runs/`.
 
 That structure should remain the source of truth for Codex close-out unless a future change explicitly replaces it.
 
 ## Benefits
 
-Pytest would improve the Python layer in ways that fit the existing test style:
+Pytest improves the Python layer in ways that fit the existing test style:
 
 - automatic discovery of `test_*` functions across `tests/python/`
 - clearer assertion failure output than direct script execution
@@ -41,23 +41,16 @@ python -m pytest tests/python/test_docs_management_server.py -k source_config_se
 ## Integration Model
 
 Keep `./scripts/run_checks.py` as the user-facing framework.
-Add pytest underneath it only for Python test collection.
+Use pytest underneath it for Python test collection.
 
-A conservative integration path:
+Current integration:
 
-1. Install pytest in the active local Python environment.
-2. Confirm existing tests collect cleanly with `python -m pytest tests/python`.
-3. Add a `pytest` check command to `./scripts/run_checks.py` for the Python-heavy profiles.
-4. Keep the existing direct-script commands during a transition period.
-5. Remove duplicated direct-script commands only after pytest collection is stable.
+- `quick` runs one grouped `quick-python-pytest` command after Python syntax checks.
+- `catalogue` runs one grouped `catalogue-python-pytest` command before the representative build preview.
+- `docs` runs one grouped `docs-python-pytest` command before the Studio docs payload/search rebuilds.
+- `studio-smoke` remains browser-smoke oriented and does not use pytest directly.
 
-The first useful profile change would be narrow:
-
-- keep `quick` mostly as-is
-- add a focused pytest command to the `docs` profile for `tests/python/test_docs_management_server.py` and nearby Docs Viewer modules
-- expand only after collection behavior is predictable
-
-This avoids turning every change into a broad suite run.
+This keeps profile selection proportional to risk without turning every change into a broad suite run.
 Profiles should still stay proportional to risk.
 
 ## Test File Compatibility
@@ -77,22 +70,45 @@ Those should be fixed in the tests rather than papered over in pytest config.
 
 ## Install In Current Miniconda Env
 
-Activate or target the current Miniconda environment, then install pytest with pip:
+There are two safe ways to use the current Miniconda environment.
+
+Option 1: activate the environment in the shell, then use `python` normally.
 
 ```bash
+source /path/to/miniconda3/bin/activate
+conda activate base
 python -m pip install pytest
-```
-
-Verify the installed command is attached to the same interpreter:
-
-```bash
 python -m pytest --version
 ```
 
-Run one focused check:
+Replace `base` with a named environment if the project is using one.
+Confirm which interpreter is active before installing:
+
+```bash
+python -c "import sys; print(sys.executable)"
+```
+
+Option 2: target the Miniconda interpreter directly without activating the shell.
+This is often clearer for Codex checks because the command names the interpreter explicitly:
+
+```bash
+/path/to/miniconda3/bin/python -m pip install pytest
+/path/to/miniconda3/bin/python -m pytest --version
+```
+
+Use the same interpreter for install and test commands.
+Do not install with one `python` and test with another.
+
+After install, run one focused check:
 
 ```bash
 python -m pytest tests/python/test_docs_management_server.py
+```
+
+Or, when targeting the interpreter directly:
+
+```bash
+/path/to/miniconda3/bin/python -m pytest tests/python/test_docs_management_server.py
 ```
 
 Run all Python tests:
@@ -101,8 +117,7 @@ Run all Python tests:
 python -m pytest tests/python
 ```
 
-If the environment should be reproducible for other machines, add pytest to the repo's Python dependency story in the same change that makes `run_checks.py` depend on it.
-Until then, treat pytest as a local developer convenience rather than a project requirement.
+Pytest is listed in `requirements.txt` because `run_checks.py` now depends on it for grouped Python checks.
 
 ## Not Yet Needed
 

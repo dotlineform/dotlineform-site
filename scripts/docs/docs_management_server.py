@@ -519,7 +519,7 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         routes.DELETE_PREVIEW_PATH: "_handle_delete_preview_post",
         routes.DELETE_APPLY_PATH: "_handle_delete_apply_post",
     }
-    OPTIONS_PATHS = (*routes.OPTIONS_PATHS, *data_sharing_routes.OPTIONS_PATHS)
+    OPTIONS_PATHS = tuple(dict.fromkeys((*routes.OPTIONS_PATHS, *data_sharing_routes.OPTIONS_PATHS)))
 
     @property
     def app(self) -> Dict[str, Any]:

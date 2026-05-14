@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-13"
+last_updated: "2026-05-14"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,28 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-14] Integrated Pytest Into Run Checks
+
+**Status:** implemented
+
+**Area:** Testing / validation
+
+**Summary:**
+`./scripts/run_checks.py` now runs grouped pytest commands for the Python portions of the `quick`, `catalogue`, and `docs` profiles while keeping the existing run-log and profile contract.
+Pytest is now listed in `requirements.txt`, and the testing docs describe focused pytest usage, direct interpreter targeting, and the retained direct-script fallback for narrow checks.
+
+**Files changed/docs:**
+
+- `scripts/run_checks.py`
+- `requirements.txt`
+- `AGENTS.md`
+- [Testing](/docs/?scope=studio&doc=testing)
+- [Pytest](/docs/?scope=studio&doc=testing-pytest)
+- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
+
+**Impact:**
+Codex can run clearer focused Python checks with the configured Miniconda interpreter and `-m pytest`, while normal close-out still reports `./scripts/run_checks.py` profiles and `var/test-runs/.../summary.md`.
 
 ## [2026-05-13] Moved Catalogue Lookup Planning To The Field Registry
 
