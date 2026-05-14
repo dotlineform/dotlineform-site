@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4de27edbf68dd1dde17e17efbd2c5cf4",
-    "generated_at_utc": "2026-05-14T12:29:12Z",
+    "version": "blake2b-dba0fb009cbddbd6862d05d4e1dde7f9",
+    "generated_at_utc": "2026-05-14T12:43:31Z",
     "count": 235
   },
   "entries": [
@@ -1412,10 +1412,10 @@
       "kind": "doc",
       "title": "Docs Viewer Config And Settings Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
-      "last_updated": "2026-05-14 13:28",
+      "last_updated": "2026-05-14 14:45",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-14 13:28 • Change Requests",
+      "display_meta": "2026-05-14 14:45 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-config-settings",
         "site",
@@ -1429,14 +1429,13 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-14 13:28",
+        "2026-05-14 14:45",
         "2026",
         "05",
         "14",
-        "13",
-        "28"
+        "45"
       ],
-      "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and change requests change requests 2026-05-14 13:28 2026 05 14 13 28"
+      "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and change requests change requests 2026-05-14 14:45 2026 05 14 45"
     },
     {
       "id": "analytics",
@@ -1600,10 +1599,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-05-13 21:30",
+      "last_updated": "2026-05-14 14:45",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 21:30 • Docs Viewer",
+      "display_meta": "2026-05-14 14:45 • Docs Viewer",
       "search_terms": [
         "docs-viewer-portable-setup",
         "docs",
@@ -1612,14 +1611,13 @@
         "setup",
         "docs viewer portable setup",
         "docs viewer",
-        "2026-05-13 21:30",
+        "2026-05-14 14:45",
         "2026",
         "05",
-        "13",
-        "21",
-        "30"
+        "14",
+        "45"
       ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup docs viewer 2026-05-13 21:30 2026 05 13 21 30"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup docs viewer 2026-05-14 14:45 2026 05 14 45"
     },
     {
       "id": "ui-primitive-list",
@@ -2070,21 +2068,20 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-13 09:48",
-      "display_meta": "2026-05-13 09:48",
+      "last_updated": "2026-05-14 14:45",
+      "display_meta": "2026-05-14 14:45",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-13 09:48",
+        "2026-05-14 14:45",
         "2026",
         "05",
-        "13",
-        "09",
-        "48"
+        "14",
+        "45"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-13 09:48 2026 05 13 09 48"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-14 14:45 2026 05 14 45"
     },
     {
       "id": "docs-viewer-route-creation",
@@ -2835,22 +2832,23 @@
       "kind": "doc",
       "title": "Docs Viewer Config",
       "href": "/docs/?scope=studio&doc=config-docs-viewer",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-14 14:45",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-14 • Config",
+      "display_meta": "2026-05-14 14:45 • Config",
       "search_terms": [
         "config-docs-viewer",
         "config",
         "docs",
         "viewer",
         "docs viewer config",
-        "2026-05-14",
+        "2026-05-14 14:45",
         "2026",
         "05",
-        "14"
+        "14",
+        "45"
       ],
-      "search_text": "config-docs-viewer config docs viewer docs viewer config 2026-05-14 2026 05 14"
+      "search_text": "config-docs-viewer config docs viewer docs viewer config 2026-05-14 14:45 2026 05 14 45"
     },
     {
       "id": "docs-viewer-source-config-report",
@@ -4405,10 +4403,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-14 14:45",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 • Docs Viewer",
+      "display_meta": "2026-05-14 14:45 • Docs Viewer",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -4418,12 +4416,13 @@
         "docs management server",
         "docs viewer",
         "viewer",
-        "2026-05-14",
+        "2026-05-14 14:45",
         "2026",
         "05",
-        "14"
+        "14",
+        "45"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-14 2026 05 14"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-14 14:45 2026 05 14 45"
     },
     {
       "id": "search-incremental-orchestration-plan",
@@ -4970,10 +4969,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-13 22:25",
+      "last_updated": "2026-05-14 14:45",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-13 22:25 • Change Requests",
+      "display_meta": "2026-05-14 14:45 • Change Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -4983,14 +4982,13 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-13 22:25",
+        "2026-05-14 14:45",
         "2026",
         "05",
-        "13",
-        "22",
-        "25"
+        "14",
+        "45"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-13 22:25 2026 05 13 22 25"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-14 14:45 2026 05 14 45"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",

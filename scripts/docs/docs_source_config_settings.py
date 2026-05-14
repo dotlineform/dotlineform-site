@@ -254,3 +254,46 @@ def validate_scope_settings_change(repo_root: Path, scope_id: str, changes: dict
         "requires_rebuild": any(item["changed"] for item in validated_changes.values()),
         "affected_artifacts": sorted(set(affected_artifacts)),
     }
+
+
+def _write_text_atomic(path: Path, text: str) -> None:
+    temp_path = path.with_name(f".{path.name}.tmp")
+    temp_path.write_text(text, encoding="utf-8")
+    temp_path.replace(path)
+
+
+def apply_scope_settings_change(repo_root: Path, scope_id: str, changes: dict[str, Any], *, dry_run: bool = False) -> dict[str, Any]:
+    validation = validate_scope_settings_change(repo_root, scope_id, changes)
+    changed_fields = {
+        field: detail["proposed_value"]
+        for field, detail in validation["changes"].items()
+        if detail["changed"]
+    }
+    if changed_fields and not dry_run:
+        config_path = repo_root / CONFIG_REL_PATH
+        payload = _load_json(config_path, CONFIG_REL_PATH.as_posix())
+        raw_scopes = payload.get("scopes")
+        if not isinstance(raw_scopes, list):
+            raise ValueError("docs scope config scopes must be an array")
+
+        updated = False
+        for item in raw_scopes:
+            if not isinstance(item, dict):
+                continue
+            if str(item.get("scope_id") or "").strip().lower() != validation["scope_id"]:
+                continue
+            for field, value in changed_fields.items():
+                item[field] = value
+            updated = True
+            break
+        if not updated:
+            raise ValueError(f"Docs scope is not configured: {validation['scope_id']}")
+
+        rendered = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+        _write_text_atomic(config_path, rendered)
+        load_docs_scope_configs(repo_root)
+
+    return {
+        **validation,
+        "changed": bool(changed_fields),
+    }

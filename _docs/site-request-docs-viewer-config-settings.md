@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-config-settings
 title: Docs Viewer Config And Settings Request
 added_date: 2026-05-11
-last_updated: "2026-05-14 13:28"
+last_updated: "2026-05-14 14:45"
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 28
@@ -266,7 +266,7 @@ Acceptance:
 
 Status:
 
-- proposed
+- implemented
 
 Add a management toolbar Settings item to the Actions button and modal for the first user-editable settings.
 
@@ -281,7 +281,7 @@ Acceptance:
 
 Status:
 
-- proposed
+- implemented
 
 Make settings saves update the generated browser config or docs data payloads required by the changed setting.
 
@@ -295,7 +295,7 @@ Acceptance:
 
 Status:
 
-- proposed
+- implemented
 
 Update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) with the final config model.
 

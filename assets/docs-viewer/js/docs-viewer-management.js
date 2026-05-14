@@ -11,9 +11,11 @@ import {
   openManagedDocSource,
   previewManagedDocDelete,
   readManagementCapabilities,
+  readSourceConfigSettings,
   rebuildManagedDocs,
   restoreManagedDocMove,
   scopeSupportsGeneratedDataReads,
+  updateSourceConfigSettings,
   updateManagedDocMetadata,
   updateManagedDocsViewability
 } from "./docs-viewer-management-client.js";
@@ -38,6 +40,7 @@ export function initDocsViewerManagement(context) {
   var manageActionsButton = document.getElementById("docsViewerManageActionsButton");
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
+  var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageEditButton = document.getElementById("docsViewerManageEditButton");
@@ -68,9 +71,21 @@ export function initDocsViewerManagement(context) {
   var importBootStatus = document.getElementById("docsHtmlImportBootStatus");
   var importScope = document.getElementById("docsViewerImportScope");
   var importCloseButton = document.getElementById("docsViewerImportCloseButton");
+  var settingsModal = document.getElementById("docsViewerSettingsModal");
+  var settingsForm = document.getElementById("docsViewerSettingsForm");
+  var settingsHeading = document.getElementById("docsViewerSettingsHeading");
+  var settingsScope = document.getElementById("docsViewerSettingsScope");
+  var settingsUpdatedInput = document.getElementById("docsViewerSettingsUpdatedInput");
+  var settingsUpdatedLabel = document.getElementById("docsViewerSettingsUpdatedLabel");
+  var settingsWarnings = document.getElementById("docsViewerSettingsWarnings");
+  var settingsStatus = document.getElementById("docsViewerSettingsStatus");
+  var settingsCloseButton = document.getElementById("docsViewerSettingsCloseButton");
+  var settingsCancelButton = document.getElementById("docsViewerSettingsCancelButton");
+  var settingsSaveButton = document.getElementById("docsViewerSettingsSaveButton");
   var docsImportRequestPromise = null;
   var docsImportInitialized = false;
   var metadataModalResolve = null;
+  var settingsFieldState = null;
 
   function viewerScope() {
     return context.viewerScope();
@@ -142,6 +157,10 @@ export function initDocsViewerManagement(context) {
 
   function importModalOpen() {
     return Boolean(importModal && !importModal.hidden);
+  }
+
+  function settingsModalOpen() {
+    return Boolean(settingsModal && !settingsModal.hidden);
   }
 
   function hideContextMenu() {
@@ -443,6 +462,83 @@ export function initDocsViewerManagement(context) {
     }
   }
 
+  function setSettingsStatus(message, stateName) {
+    if (!settingsStatus) return;
+    settingsStatus.textContent = String(message || "");
+    settingsStatus.dataset.state = stateName || "";
+    settingsStatus.hidden = !message;
+  }
+
+  function renderSettingsWarnings(warnings) {
+    if (!settingsWarnings) return;
+    var items = Array.isArray(warnings) ? warnings.filter(Boolean) : [];
+    settingsWarnings.hidden = items.length === 0;
+    settingsWarnings.innerHTML = items.length
+      ? '<ul>' + items.map(function (item) {
+        return '<li>' + context.escapeHtml(item) + '</li>';
+      }).join("") + '</ul>'
+      : "";
+  }
+
+  function currentSettingsField(payload) {
+    var scopes = payload && Array.isArray(payload.scopes) ? payload.scopes : [];
+    var scopePayload = scopes.find(function (item) {
+      return item && item.scope_id === viewerScope();
+    }) || scopes[0] || null;
+    var fields = scopePayload && Array.isArray(scopePayload.fields) ? scopePayload.fields : [];
+    return fields.find(function (field) {
+      return field && field.field === "show_updated_date";
+    }) || null;
+  }
+
+  function openSettingsModal() {
+    if (!settingsModal || !settingsForm || !settingsUpdatedInput) return;
+    hideContextMenu();
+    hideManageActionsMenu();
+    settingsFieldState = null;
+    settingsUpdatedInput.disabled = true;
+    if (settingsSaveButton) settingsSaveButton.disabled = true;
+    if (settingsScope) settingsScope.textContent = "scope: " + viewerScope();
+    setSettingsStatus(state.managementText.settingsLoading, "");
+    renderSettingsWarnings([]);
+    settingsModal.hidden = false;
+
+    readSourceConfigSettings(managementClientOptions())
+      .then(function (payload) {
+        var field = currentSettingsField(payload);
+        if (!field) {
+          throw new Error(state.managementText.settingsEmpty);
+        }
+        settingsFieldState = field;
+        settingsUpdatedInput.checked = field.current_value !== false;
+        settingsUpdatedInput.disabled = false;
+        if (settingsSaveButton) settingsSaveButton.disabled = state.managementBusy;
+        renderSettingsWarnings(field.warnings || []);
+        setSettingsStatus("", "");
+        window.requestAnimationFrame(function () {
+          settingsUpdatedInput.focus();
+        });
+      })
+      .catch(function (error) {
+        settingsUpdatedInput.disabled = true;
+        if (settingsSaveButton) settingsSaveButton.disabled = true;
+        renderSettingsWarnings([]);
+        setSettingsStatus(error.message || state.managementText.settingsLoadFailed, "error");
+      });
+  }
+
+  function closeSettingsModal() {
+    if (!settingsModal) return;
+    if (document.activeElement && settingsModal.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+    settingsModal.hidden = true;
+    settingsFieldState = null;
+    if (manageSettingsButton) {
+      manageSettingsButton.focus();
+    }
+  }
+
   function openMetadataModal() {
     var doc = currentSelectedDoc();
     if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) {
@@ -596,6 +692,9 @@ export function initDocsViewerManagement(context) {
     if (manageImportButton) {
       manageImportButton.disabled = state.managementBusy || !state.managementAvailable;
     }
+    if (manageSettingsButton) {
+      manageSettingsButton.disabled = state.managementBusy || !state.managementAvailable;
+    }
     manageNewButton.disabled = state.managementBusy || !state.managementAvailable;
     manageEditButton.disabled = !state.managementAvailable || editDisabled;
     manageArchiveButton.disabled = !state.managementAvailable || archiveDisabled;
@@ -607,6 +706,9 @@ export function initDocsViewerManagement(context) {
     }
     if (metadataSaveButton) {
       metadataSaveButton.disabled = state.managementBusy;
+    }
+    if (settingsSaveButton && settingsModalOpen()) {
+      settingsSaveButton.disabled = state.managementBusy || !settingsFieldState;
     }
     context.renderStatusPills();
   }
@@ -891,6 +993,52 @@ export function initDocsViewerManagement(context) {
       });
   }
 
+  function handleSettingsSave() {
+    if (!settingsUpdatedInput || !settingsFieldState) return;
+    var nextValue = Boolean(settingsUpdatedInput.checked);
+    var currentValue = settingsFieldState.current_value !== false;
+    if (nextValue === currentValue) {
+      closeSettingsModal();
+      return;
+    }
+
+    setManagementBusy(true);
+    setSettingsStatus(state.managementText.settingsSaving, "");
+    setManagementMessage(state.managementText.settingsSaving, false);
+    context.setStatus(state.managementText.settingsSaving, false);
+    settingsUpdatedInput.disabled = true;
+    if (settingsSaveButton) settingsSaveButton.disabled = true;
+
+    updateSourceConfigSettings({
+      show_updated_date: nextValue
+    }, managementClientOptions())
+      .then(function (payload) {
+        renderSettingsWarnings(payload.warnings || []);
+        var targetDocId = state.selectedDocId || context.defaultRouteDocId() || context.defaultDocId();
+        setManagementMessage("", false);
+        return reloadDocsIndex(targetDocId, "").then(function () {
+          closeSettingsModal();
+        });
+      })
+      .catch(function (error) {
+        var message = error.message || state.managementText.settingsSaveFailed;
+        setSettingsStatus(message, "error");
+        setManagementMessage(message, true);
+        context.setStatus(message, true);
+        settingsUpdatedInput.disabled = false;
+        if (settingsSaveButton) settingsSaveButton.disabled = false;
+      })
+      .finally(function () {
+        setManagementBusy(false);
+        renderManagementUi();
+      });
+  }
+
+  function handleSettingsSubmit(event) {
+    if (event) event.preventDefault();
+    handleSettingsSave();
+  }
+
   function handleArchiveDoc() {
     var doc = currentSelectedDoc();
     if (!doc) return;
@@ -1149,6 +1297,15 @@ export function initDocsViewerManagement(context) {
       manageViewableButton.setAttribute("aria-label", makeViewableLabel);
       manageViewableButton.title = makeViewableLabel;
     }
+    if (manageSettingsButton) {
+      manageSettingsButton.textContent = context.getConfigText(config, "docs_viewer.settings_button", "Settings");
+    }
+    if (settingsHeading) {
+      settingsHeading.textContent = context.getConfigText(config, "docs_viewer.settings_title", "Settings");
+    }
+    if (settingsUpdatedLabel) {
+      settingsUpdatedLabel.textContent = context.getConfigText(config, "docs_viewer.settings_show_updated_date_label", "show updated dates");
+    }
     state.managementText.archiveUnavailableNote = context.getConfigText(config, "docs_viewer.manage_archive_unavailable_note", state.managementText.archiveUnavailableNote);
     state.managementText.checkingNote = context.getConfigText(config, "docs_viewer.manage_checking_note", state.managementText.checkingNote);
     state.managementText.clearSearchNote = context.getConfigText(config, "docs_viewer.manage_clear_search_note", state.managementText.clearSearchNote);
@@ -1173,6 +1330,12 @@ export function initDocsViewerManagement(context) {
     state.managementText.statusPillSaving = context.getConfigText(config, "docs_viewer.status_pill_saving", state.managementText.statusPillSaving);
     state.managementText.statusPillSaved = context.getConfigText(config, "docs_viewer.status_pill_saved", state.managementText.statusPillSaved);
     state.managementText.statusPillFailed = context.getConfigText(config, "docs_viewer.status_pill_failed", state.managementText.statusPillFailed);
+    state.managementText.settingsLoading = context.getConfigText(config, "docs_viewer.settings_loading", state.managementText.settingsLoading);
+    state.managementText.settingsEmpty = context.getConfigText(config, "docs_viewer.settings_empty", state.managementText.settingsEmpty);
+    state.managementText.settingsSaving = context.getConfigText(config, "docs_viewer.settings_saving", state.managementText.settingsSaving);
+    state.managementText.settingsSaved = context.getConfigText(config, "docs_viewer.settings_saved", state.managementText.settingsSaved);
+    state.managementText.settingsLoadFailed = context.getConfigText(config, "docs_viewer.settings_load_failed", state.managementText.settingsLoadFailed);
+    state.managementText.settingsSaveFailed = context.getConfigText(config, "docs_viewer.settings_save_failed", state.managementText.settingsSaveFailed);
     if (metadataStatusLabel) {
       metadataStatusLabel.textContent = state.managementText.metadataStatusLabel;
     }
@@ -1209,6 +1372,14 @@ export function initDocsViewerManagement(context) {
         return true;
       }
     }
+    if (settingsModalOpen()) {
+      var settingsCloseTrigger = event.target.closest("[data-settings-close]");
+      if (settingsCloseTrigger) {
+        event.preventDefault();
+        closeSettingsModal();
+        return true;
+      }
+    }
     return false;
   }
 
@@ -1226,6 +1397,11 @@ export function initDocsViewerManagement(context) {
     if (event.key === "Escape" && importModalOpen()) {
       event.preventDefault();
       closeImportModal();
+      return true;
+    }
+    if (event.key === "Escape" && settingsModalOpen()) {
+      event.preventDefault();
+      closeSettingsModal();
       return true;
     }
     return false;
@@ -1343,6 +1519,9 @@ export function initDocsViewerManagement(context) {
         openImportModal();
       });
     }
+    if (manageSettingsButton) {
+      manageSettingsButton.addEventListener("click", openSettingsModal);
+    }
     if (manageActionsButton) {
       manageActionsButton.addEventListener("click", function () {
         toggleManageActionsMenu();
@@ -1420,11 +1599,20 @@ export function initDocsViewerManagement(context) {
     if (importCloseButton) {
       importCloseButton.addEventListener("click", closeImportModal);
     }
+    if (settingsCloseButton) {
+      settingsCloseButton.addEventListener("click", closeSettingsModal);
+    }
+    if (settingsCancelButton) {
+      settingsCancelButton.addEventListener("click", closeSettingsModal);
+    }
     if (metadataForm) {
       metadataForm.addEventListener("submit", function (event) {
         event.preventDefault();
         confirmMetadataModal();
       });
+    }
+    if (settingsForm) {
+      settingsForm.addEventListener("submit", handleSettingsSubmit);
     }
     if (metadataStatusInput) {
       metadataStatusInput.addEventListener("change", function () {

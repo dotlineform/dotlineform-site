@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-14"
+last_updated: "2026-05-14 14:45"
 parent_id: docs-viewer
 sort_order: 110
 ---
@@ -52,6 +52,7 @@ Exposed endpoints:
 - `GET /docs/search`
 - `GET /docs/source-config`
 - `GET /docs/source-config-settings`
+- `POST /docs/source-config-settings`
 - `GET /docs/import-source-files`
 - `GET /docs/import-html-files`
 - `POST /docs/import-source`
@@ -80,7 +81,7 @@ Current behavior:
 - docs source-model helpers are owned by `scripts/docs/docs_source_model.py`
 - generated Docs Viewer JSON read helpers are owned by `scripts/docs/docs_generated_reads.py`
 - source config report payloads are owned by `scripts/docs/docs_source_config_report.py`
-- source config settings allowlist and validation payloads are owned by `scripts/docs/docs_source_config_settings.py`
+- source config settings allowlist, validation payloads, and allowlisted source-config writes are owned by `scripts/docs/docs_source_config_settings.py`
 - docs-specific Studio Activity row construction is owned by `scripts/docs/docs_activity.py`
 - docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `scripts/docs/docs_write_rebuild.py`
 - staged source import orchestration for the Docs Viewer import modal is owned by `scripts/docs/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
@@ -94,7 +95,7 @@ Current behavior:
 - appends unified activity rows for covered docs import, Data Sharing package/apply, and broken-links audit actions when valid activity context is supplied
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
 - serves a read-only Docs Viewer source-config report payload to manage-mode report surfaces
-- serves a read-only source-config settings contract for future manage-mode settings controls
+- serves a source-config settings contract and allowlisted settings write endpoint for manage-mode settings controls
 - creates, archives, and deletes source docs under the current scope root
 - creates Studio docs as `published: true`, `viewable: true`
 - creates Analysis docs as `published: true`, `viewable: false`
@@ -129,7 +130,7 @@ Search update behavior:
 - whether the current scope has `archive` for the Archive command
 - whether generated docs/search reads are available for each scope
 - whether source config report reads are available
-- whether source config settings contract reads are available
+- whether source config settings contract reads and writes are available
 
 Read-only generated-data endpoints:
 
@@ -167,21 +168,35 @@ Source-config report behavior:
 - is intended for `/docs/` manage-mode report rendering
 - is read-only and does not write source or generated files
 
-Source-config settings contract endpoint:
+Source-config settings endpoints:
 
 - `GET /docs/source-config-settings`
 - `GET /docs/source-config-settings?scope=<scope>`
+- `POST /docs/source-config-settings`
 
-Source-config settings contract behavior:
+Source-config settings behavior:
 
 - reads only `scripts/docs/docs_scopes.json` and configured generated scope indexes
-- returns the allowlisted source config fields that future manage-mode settings controls may edit
+- returns the allowlisted source config fields that manage-mode settings controls may edit
 - currently allowlists scoped `show_updated_date` only
 - reports blocked install-time fields such as source roots, route bases, output roots, and import media storage
 - reports deferred global fields such as `recently_added_limit`
-- validates candidate setting changes through `scripts/docs/docs_source_config_settings.py` without writing files
+- validates setting changes through `scripts/docs/docs_source_config_settings.py`
+- writes only allowlisted source config fields back to `scripts/docs/docs_scopes.json`
+- rebuilds the affected generated docs scope after a changed setting is saved; `show_updated_date` uses a docs-only rebuild because docs search output is unaffected
 - warns when generated `viewer_options` are stale relative to source config or when a proposed change requires a generated docs rebuild
-- is read-only and does not write source or generated files
+- rejects blocked, deferred, unsupported, malformed, or wrong-type fields
+
+`POST /docs/source-config-settings` expects:
+
+```json
+{
+  "scope": "studio",
+  "changes": {
+    "show_updated_date": false
+  }
+}
+```
 
 `POST /docs/create` expects:
 

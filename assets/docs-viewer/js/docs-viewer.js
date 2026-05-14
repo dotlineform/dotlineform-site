@@ -155,7 +155,13 @@ import {
       statusPillReadonlyLabel: "Status: {label}",
       statusPillSaving: "Saving status for {title}...",
       statusPillSaved: "Status saved.",
-      statusPillFailed: "Status update failed."
+      statusPillFailed: "Status update failed.",
+      settingsLoading: "Loading settings...",
+      settingsEmpty: "No editable settings are available for this scope.",
+      settingsSaving: "Saving settings...",
+      settingsSaved: "Settings saved.",
+      settingsLoadFailed: "Settings unavailable.",
+      settingsSaveFailed: "Settings save failed."
     },
     showHidden: true,
     reloadNonce: "",

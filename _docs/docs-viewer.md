@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: "2026-05-13 09:48"
+last_updated: "2026-05-14 14:45"
 parent_id: ""
 sort_order: 40
 hidden: false
@@ -28,7 +28,7 @@ The current implementation uses:
 - browser-visible report metadata in `assets/data/docs/reports.json`
 - report module allowlist and access checks in `assets/docs-viewer/js/docs-viewer-reports.js`
 - the first report module in `assets/docs-viewer/js/reports/docs-index-table-report.js`
-- shared Docs Viewer settings in `assets/studio/data/studio_config.json`
+- browser-safe Docs Viewer settings in `assets/docs-viewer/data/docs-viewer-config.json`, generated from `scripts/docs/docs_scopes.json`
 - Docs Viewer UI text in `assets/docs-viewer/data/ui-text.json`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
 - a management-only stylesheet in `assets/docs-viewer/css/docs-viewer-management.css`, loaded only by `/docs/`

@@ -57,6 +57,7 @@
             >Actions</button>
             <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>
               <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageRebuildButton">Rebuild docs</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageSettingsButton">Settings</button>
               <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageImportButton">Import</button>
               <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewButton">New</button>
               <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageEditButton">Edit</button>
@@ -93,6 +94,7 @@
             >Actions</button>
             <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>
               <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageRebuildButton">Rebuild docs</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageSettingsButton">Settings</button>
               <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageImportButton">Import</button>
               <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewButton">New</button>
               <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageEditButton">Edit</button>
@@ -216,6 +218,30 @@
       <div class="docsViewer__importBody" id="docsViewerImportBody">
         {% include docs_import_shell.html auto_init=false %}
       </div>
+    </div>
+  </div>
+  <div class="docsViewer__modal" id="docsViewerSettingsModal" hidden>
+    <div class="docsViewer__modalBackdrop" data-settings-close="true"></div>
+    <div class="docsViewer__modalCard" role="dialog" aria-modal="true" aria-labelledby="docsViewerSettingsHeading">
+      <div class="docsViewer__modalHeader">
+        <div class="docsViewer__modalHeaderCopy">
+          <h2 class="docsViewer__modalTitle" id="docsViewerSettingsHeading">Settings</h2>
+          <p class="docsViewer__modalMeta muted small" id="docsViewerSettingsScope"></p>
+        </div>
+        <button class="docsViewer__modalClose" type="button" id="docsViewerSettingsCloseButton" aria-label="Close settings">×</button>
+      </div>
+      <form class="docsViewer__modalForm" id="docsViewerSettingsForm">
+        <label class="docsViewer__field docsViewer__field--checkbox">
+          <input class="docsViewer__checkboxInput" id="docsViewerSettingsUpdatedInput" name="show_updated_date" type="checkbox">
+          <span class="docsViewer__fieldLabel" id="docsViewerSettingsUpdatedLabel">show updated dates</span>
+        </label>
+        <div class="docsViewer__settingsWarnings muted small" id="docsViewerSettingsWarnings" hidden></div>
+        <p class="docsViewer__modalNote muted small" id="docsViewerSettingsStatus" hidden></p>
+        <div class="docsViewer__modalActions">
+          <button class="docsViewer__actionButton" type="button" id="docsViewerSettingsCancelButton">Cancel</button>
+          <button class="docsViewer__actionButton" type="submit" id="docsViewerSettingsSaveButton">OK</button>
+        </div>
+      </form>
     </div>
   </div>
   {%- endif -%}

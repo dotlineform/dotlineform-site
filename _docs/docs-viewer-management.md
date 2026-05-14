@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: "2026-05-13 22:25"
+last_updated: "2026-05-14 14:45"
 ui_status: done
 parent_id: change-requests
 sort_order: 150
@@ -63,6 +63,8 @@ Implemented now:
   - `New Child`
 - `Edit` is available for the current doc in the manage toolbar
 - `Rebuild docs`, `Import`, `New`, `Edit`, `Archive`, and `Delete` are grouped under the top-row `Actions` menu
+- `Settings` is grouped under the top-row `Actions` menu and opens the active-scope settings modal
+- the settings modal currently exposes scoped `show_updated_date` only, writes through the local source-config settings endpoint, and rebuilds the affected docs payloads after a changed save
 - `Actions`, `Show`, and `show hidden` sit in the search/control row so hidden-doc review controls stay quick to reach
 - the management message row appears only for active progress, blocked/unavailable states, validation failures, and write errors; routine success messages are cleared after the viewer reloads
 - metadata edit opens in a modal and currently supports:

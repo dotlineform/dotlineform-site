@@ -13,6 +13,7 @@ Endpoints:
   GET /capabilities
   GET /docs/source-config
   GET /docs/source-config-settings
+  POST /docs/source-config-settings
   GET /docs/import-source-files
   GET /docs/import-html-files
   POST /docs/import-source
@@ -308,6 +309,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "generated_data_reads": True,
             "source_config_reads": True,
             "source_config_settings_reads": True,
+            "source_config_settings_writes": True,
             "html_import": True,
             "docs_export": True,
             "library_import": True,
@@ -500,6 +502,7 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
     POST_HANDLERS: Dict[str, str] = {
         routes.OPEN_SOURCE_PATH: "_handle_open_source_post",
         routes.BROKEN_LINKS_PATH: "_handle_broken_links_post",
+        routes.SOURCE_CONFIG_SETTINGS_PATH: "_handle_source_config_settings_post",
         data_sharing_routes.PREPARE_PATH: "_handle_data_sharing_prepare_post",
         routes.IMPORT_SOURCE_PATH: "_handle_import_source_post",
         routes.IMPORT_HTML_PATH: "_handle_import_source_post",
@@ -619,6 +622,27 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
     def _handle_broken_links_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         payload = handle_broken_links(repo_root, body)
         docs_activity.maybe_attach_broken_links_activity(repo_root, body, payload)
+        return HTTPStatus.OK, payload
+
+    def _handle_source_config_settings_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        scope = source_model.normalize_scope(body.get("scope"))
+        changes = body.get("changes")
+        payload = docs_source_config_settings.apply_scope_settings_change(repo_root, scope, changes, dry_run=dry_run)
+        if payload.get("requires_rebuild") and not dry_run:
+            payload["rebuild"] = write_rebuild.rebuild_scope_outputs(repo_root, scope, include_search=False)
+        else:
+            payload["rebuild"] = None
+        if payload.get("changed") and not dry_run:
+            log_event(
+                repo_root,
+                "docs_source_config_settings",
+                {
+                    "scope": scope,
+                    "fields": sorted(payload.get("changes", {}).keys()),
+                    "source_config_path": payload.get("source_config_path", ""),
+                },
+            )
+        payload["dry_run"] = dry_run
         return HTTPStatus.OK, payload
 
     def _handle_data_sharing_prepare_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:

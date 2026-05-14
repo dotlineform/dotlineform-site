@@ -76,6 +76,19 @@ export function rebuildManagedDocs(options) {
   return fetchManagementJson("/docs/rebuild", "POST", scopedPayload({}, options), options);
 }
 
+export function readSourceConfigSettings(options) {
+  var settings = options || {};
+  var scope = encodeURIComponent(String(settings.scope || "").trim());
+  var path = "/docs/source-config-settings" + (scope ? "?scope=" + scope : "");
+  return fetchManagementJson(path, "GET", undefined, options);
+}
+
+export function updateSourceConfigSettings(changes, options) {
+  return fetchManagementJson("/docs/source-config-settings", "POST", scopedPayload({
+    changes: changes || {}
+  }, options), options);
+}
+
 export function archiveManagedDoc(docId, options) {
   return fetchManagementJson("/docs/archive", "POST", scopedPayload({ doc_id: docId }, options), options);
 }

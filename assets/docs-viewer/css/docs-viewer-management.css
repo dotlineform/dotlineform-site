@@ -628,6 +628,16 @@ select.docsViewer__fieldInput--listbox{
   margin: -0.2rem 0 0;
 }
 
+.docsViewer__modalNote[data-state="error"],
+.docsViewer__settingsWarnings{
+  color: var(--studio-danger, var(--docs-viewer-link-hover, var(--link-hover, #111)));
+}
+
+.docsViewer__settingsWarnings ul{
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
 .docsViewer__modalActions{
   display: flex;
   justify-content: flex-end;

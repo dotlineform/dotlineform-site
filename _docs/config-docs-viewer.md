@@ -2,7 +2,7 @@
 doc_id: config-docs-viewer
 title: Docs Viewer Config
 added_date: 2026-05-12
-last_updated: "2026-05-14"
+last_updated: "2026-05-14 14:45"
 parent_id: config
 sort_order: 55
 ---
@@ -22,9 +22,10 @@ It is checked in and is read by docs builds, docs search builds, Docs Import, th
 In local manage mode, [Docs Viewer Source Config Report](/docs/?scope=studio&doc=docs-viewer-source-config-report&mode=manage) reads this source config through the docs-management server and shows it alongside browser and generated projections.
 The report is read-only; source edits still go through source JSON edits or explicit manage-mode write controls.
 
-The docs-management server also exposes a read-only source-config settings contract for future manage-mode settings controls.
+The docs-management server also exposes a source-config settings contract for manage-mode settings controls.
 That contract currently allows scoped `show_updated_date` edits only, blocks install-time fields such as route bases and source/output roots, and defers global settings such as `recently_added_limit`.
 It does not create a new settings layer; it describes guarded edits to the existing source config.
+The `/docs/` manage-mode Settings modal writes allowlisted changes through that contract and rebuilds the affected generated docs scope so browser payloads stay in sync.
 
 Each scope entry owns:
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T12:34:55Z",
+  "generated_at": "2026-05-14T12:43:31Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -891,7 +891,7 @@
       "doc_id": "site-request-docs-viewer-config-settings",
       "title": "Docs Viewer Config And Settings Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-14 13:28",
+      "last_updated": "2026-05-14 14:45",
       "parent_id": "change-requests",
       "sort_order": 28,
       "published": true,
@@ -900,7 +900,7 @@
       "source_path": "site-request-docs-viewer-config-settings.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-config-settings.json",
-      "content_text_length": 11993,
+      "content_text_length": 12002,
       "ui_status": "in-progress"
     },
     {
@@ -1006,7 +1006,7 @@
       "doc_id": "docs-viewer-portable-setup",
       "title": "Docs Viewer Portable Setup",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-13 21:30",
+      "last_updated": "2026-05-14 14:45",
       "parent_id": "docs-viewer",
       "sort_order": 30,
       "published": true,
@@ -1015,7 +1015,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 15081
+      "content_text_length": 15539
     },
     {
       "scope": "studio",
@@ -1298,7 +1298,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-13 09:48",
+      "last_updated": "2026-05-14 14:45",
       "parent_id": "",
       "sort_order": 40,
       "published": true,
@@ -1307,7 +1307,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 3695
+      "content_text_length": 3758
     },
     {
       "scope": "studio",
@@ -1786,7 +1786,7 @@
       "doc_id": "config-docs-viewer",
       "title": "Docs Viewer Config",
       "added_date": "2026-05-12",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-14 14:45",
       "parent_id": "config",
       "sort_order": 55,
       "published": true,
@@ -1795,7 +1795,7 @@
       "source_path": "config-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=config-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-docs-viewer.json",
-      "content_text_length": 5564
+      "content_text_length": 5715
     },
     {
       "scope": "studio",
@@ -2779,7 +2779,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-14 14:45",
       "parent_id": "docs-viewer",
       "sort_order": 110,
       "published": true,
@@ -2788,7 +2788,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 33100
+      "content_text_length": 33551
     },
     {
       "scope": "studio",
@@ -3137,7 +3137,7 @@
       "doc_id": "docs-viewer-management",
       "title": "Docs Viewer Management",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-13 22:25",
+      "last_updated": "2026-05-14 14:45",
       "parent_id": "change-requests",
       "sort_order": 150,
       "published": true,
@@ -3146,7 +3146,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 28701,
+      "content_text_length": 28981,
       "ui_status": "done"
     },
     {

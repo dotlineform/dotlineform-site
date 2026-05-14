@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-13 21:30"
+last_updated: "2026-05-14 14:45"
 parent_id: docs-viewer
 sort_order: 30
 ---
@@ -109,6 +109,7 @@ It is required by the browser runtime and now includes the browser-safe Docs Vie
 Each configured scope also carries its Docs Viewer search policy and search index URL in this browser config.
 The viewer does not keep a hardcoded fallback scope list.
 Docs Import copy is nested in `assets/docs-viewer/data/ui-text.json` under `docs_html_import`.
+Settings-modal copy is also owned by `assets/docs-viewer/data/ui-text.json`.
 `assets/data/docs/reports.json` is the browser-visible report metadata registry.
 It lists report ids, titles, descriptions, access defaults, and presets.
 The executable report module allowlist remains in `assets/docs-viewer/js/docs-viewer-reports.js`, so changing the JSON alone cannot make the viewer import an arbitrary module.
@@ -174,6 +175,9 @@ Optional adjacent docs tools:
 The management server is local-only and should bind to loopback.
 It is not part of the public static site.
 Generated-data reads, source writes, import targets, and rebuild commands use `scripts/docs/docs_scopes.json` as the docs scope contract.
+The local management package also includes the read-only source config report and the Settings modal.
+The report inspects configured source, browser, and generated projections.
+The Settings modal writes only allowlisted source config fields; the first portable field is scoped `show_updated_date`, which saves to `scripts/docs/docs_scopes.json` and triggers a same-scope docs rebuild.
 For the full config split and media-storage choices, see [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer).
 
 ## Source Docs Required Shape

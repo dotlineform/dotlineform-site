@@ -338,6 +338,7 @@ def test_capabilities_advertise_source_config_reads() -> None:
 
     assert payload["capabilities"]["source_config_reads"] is True
     assert payload["capabilities"]["source_config_settings_reads"] is True
+    assert payload["capabilities"]["source_config_settings_writes"] is True
 
 
 def test_source_config_report_reads_known_config_files() -> None:
@@ -442,6 +443,44 @@ def test_source_config_settings_rejects_invalid_updated_date_value() -> None:
             assert "must be a boolean" in str(exc)
         else:
             raise AssertionError("non-boolean show_updated_date should be rejected")
+
+
+def test_source_config_settings_apply_writes_allowed_field() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        write_generated_docs(repo_root)
+
+        result = docs_management_server.docs_source_config_settings.apply_scope_settings_change(
+            repo_root,
+            "studio",
+            {"show_updated_date": False},
+        )
+        source_payload = json.loads((repo_root / "scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert result["changed"] is True
+    assert result["requires_rebuild"] is True
+    assert source_payload["scopes"][0]["show_updated_date"] is False
+
+
+def test_source_config_settings_apply_dry_run_does_not_write() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        write_generated_docs(repo_root)
+
+        result = docs_management_server.docs_source_config_settings.apply_scope_settings_change(
+            repo_root,
+            "studio",
+            {"show_updated_date": False},
+            dry_run=True,
+        )
+        source_payload = json.loads((repo_root / "scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert result["changed"] is True
+    assert source_payload["scopes"][0]["show_updated_date"] is True
 
 
 def test_source_config_settings_warns_when_generated_projection_is_stale() -> None:
