@@ -94,7 +94,8 @@ Implemented now:
 - Docs Import is reachable from the `/docs/` management toolbar as an import modal seeded with the active scope
 - `assets/docs-viewer/js/docs-html-import.js` exports the importer initializer used by the Docs Viewer modal
 - Docs Import reads its scope list, target source roots, and media token path prefixes from the Docs Viewer scope config
-- `assets/docs-viewer/js/docs-viewer-management.js` owns manage-mode toolbar rendering, status-pill rendering and events, metadata/import modal behavior, right-click actions, drag/drop, mutation calls, and management capability checks
+- `assets/docs-viewer/js/docs-viewer-management.js` owns manage-mode toolbar rendering, status-pill events, metadata/import modal behavior, right-click actions, drag/drop, mutation calls, and management capability checks
+- `assets/docs-viewer/js/docs-viewer-management-render.js` owns management-only markup helpers for status pills, metadata parent/status controls, and settings warnings
 - `assets/docs-viewer/js/docs-viewer.js` keeps the reader/search/history controller plus a small management bridge for shared state and lazy controller loading
 
 Not implemented yet:

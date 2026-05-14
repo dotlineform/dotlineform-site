@@ -35,6 +35,7 @@ Current shared implementation:
 
 - `assets/docs-viewer/js/docs-viewer.js` as the shared entry controller
 - `assets/docs-viewer/js/docs-viewer-management.js` as the management-mode controller loaded only by management-enabled viewer shells
+- `assets/docs-viewer/js/docs-viewer-management-render.js` for management-only markup helpers imported by the management controller
 - `assets/docs-viewer/js/docs-viewer-management-client.js` for docs-management server transport helpers used by the management controller
 - `assets/docs-viewer/js/docs-viewer-drag-drop.js` for drag/drop helpers used by the management controller
 - `assets/docs-viewer/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by the entry controller

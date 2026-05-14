@@ -78,6 +78,7 @@ Copy the shared viewer runtime files:
 For management mode, also copy:
 
 - `assets/docs-viewer/js/docs-viewer-management.js`
+- `assets/docs-viewer/js/docs-viewer-management-render.js`
 - `assets/docs-viewer/js/docs-viewer-management-client.js`
 - `assets/docs-viewer/js/docs-viewer-drag-drop.js`
 

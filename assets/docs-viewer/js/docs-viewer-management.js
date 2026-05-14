@@ -29,6 +29,12 @@ import {
   normalizeSortOrderValue,
   rowDropPosition
 } from "./docs-viewer-drag-drop.js";
+import {
+  renderMetadataParentPopupMarkup,
+  renderMetadataStatusOptionsMarkup,
+  renderSettingsWarningsMarkup,
+  renderStatusPillsMarkup
+} from "./docs-viewer-management-render.js";
 
 export function initDocsViewerManagement(context) {
   var root = context.root;
@@ -167,38 +173,6 @@ export function initDocsViewerManagement(context) {
     );
   }
 
-  function renderStatusPillsMarkup(options) {
-    var settings = options || {};
-    var doc = settings.doc || {};
-    var activeStatus = String(settings.activeStatus || "").trim();
-    var canWrite = Boolean(settings.canWrite);
-    var menuOpen = Boolean(settings.menuOpen);
-    var activeStatusConfig = settings.activeStatusConfig || null;
-    var menuLabel = activeStatusConfig
-      ? context.formatText(state.managementText.statusPillReadonlyLabel, { label: activeStatusConfig.label, title: doc.title })
-      : state.managementText.statusMenuLabel;
-    var menuItems = state.uiStatuses.map(function (statusConfig) {
-      var selected = statusConfig.ui_status === activeStatus;
-      var labelTemplate = canWrite
-        ? (selected ? state.managementText.statusPillClearLabel : state.managementText.statusPillSetLabel)
-        : state.managementText.statusPillReadonlyLabel;
-      var label = context.formatText(labelTemplate, { label: statusConfig.label, title: doc.title });
-      var className = "docsViewer__statusMenuItem" + (selected ? " is-active" : "");
-      return (
-        '<button type="button" role="menuitemradio" class="' + className + '" data-ui-status="' + context.escapeHtml(statusConfig.ui_status) + '" aria-checked="' + (selected ? "true" : "false") + '" aria-label="' + context.escapeHtml(label) + '" title="' + context.escapeHtml(label) + '"' + (canWrite ? "" : " disabled") + '>' +
-          '<span class="docsViewer__statusPillEmoji" aria-hidden="true">' + context.escapeHtml(statusConfig.emoji) + '</span>' +
-          '<span class="visually-hidden">' + context.escapeHtml(statusConfig.label) + '</span>' +
-        '</button>'
-      );
-    }).join("");
-    return (
-      '<button type="button" class="docsViewer__statusMenuToggle" data-ui-status-menu-toggle="true" aria-expanded="' + (menuOpen ? "true" : "false") + '" aria-label="' + context.escapeHtml(menuLabel) + '" title="' + context.escapeHtml(menuLabel) + '"' + (canWrite ? "" : " disabled") + '>🏷️</button>' +
-      '<div class="docsViewer__statusMenu" role="menu"' + (menuOpen && canWrite ? "" : " hidden") + ">" +
-        menuItems +
-      "</div>"
-    );
-  }
-
   function renderStatusPills() {
     if (!statusPills) return;
     var doc = currentSelectedDoc();
@@ -218,7 +192,10 @@ export function initDocsViewerManagement(context) {
       activeStatusConfig: activeStatusConfig,
       canWrite: canWrite,
       doc: doc,
-      menuOpen: state.statusMenuOpen
+      formatText: context.formatText,
+      menuOpen: state.statusMenuOpen,
+      statuses: state.uiStatuses,
+      text: state.managementText
     });
   }
 
@@ -440,25 +417,18 @@ export function initDocsViewerManagement(context) {
       return;
     }
     if (!matches.length) {
-      metadataParentPopup.innerHTML = '<p class="docsViewer__parentPopupEmpty">' + context.escapeHtml(state.managementText.metadataParentNoMatches) + "</p>";
+      metadataParentPopup.innerHTML = renderMetadataParentPopupMarkup(matches, {
+        emptyText: state.managementText.metadataParentNoMatches
+      });
       metadataParentPopup.hidden = false;
       metadataParentInput.setAttribute("aria-expanded", "true");
       metadataParentActiveIndex = -1;
       metadataParentInput.removeAttribute("aria-activedescendant");
       return;
     }
-    metadataParentPopup.innerHTML = matches.map(function (option, index) {
-      var optionId = "docsViewerMetadataParentOption-" + index;
-      var title = metadataParentOptionTitle(option);
-      var isActive = index === 0;
-      return (
-        '<button type="button" class="docsViewer__parentOption' + (isActive ? " is-active" : "") + '" ' +
-          'id="' + optionId + '" role="option" aria-selected="' + (isActive ? "true" : "false") + '" ' +
-          'data-parent-index="' + index + '">' +
-          '<span class="docsViewer__parentOptionTitle">' + context.escapeHtml(title) + "</span>" +
-        "</button>"
-      );
-    }).join("");
+    metadataParentPopup.innerHTML = renderMetadataParentPopupMarkup(matches, {
+      optionTitle: metadataParentOptionTitle
+    });
     metadataParentPopup.hidden = false;
     metadataParentInput.setAttribute("aria-expanded", "true");
     setMetadataParentActiveIndex(0);
@@ -522,11 +492,11 @@ export function initDocsViewerManagement(context) {
 
   function renderMetadataStatusSelection(selectedValue) {
     if (!metadataStatusInput) return;
-    metadataStatusInput.innerHTML = metadataStatusOptions().map(function (option) {
-      var selected = option.value === selectedValue ? " selected" : "";
-      var label = option.label + (selected ? state.managementText.metadataStatusSelectedSuffix : "");
-      return '<option value="' + context.escapeHtml(option.value) + '"' + selected + ">" + context.escapeHtml(label) + "</option>";
-    }).join("");
+    metadataStatusInput.innerHTML = renderMetadataStatusOptionsMarkup(
+      metadataStatusOptions(),
+      selectedValue,
+      state.managementText.metadataStatusSelectedSuffix
+    );
     metadataStatusInput.size = Math.max(1, metadataStatusInput.options.length);
   }
 
@@ -629,11 +599,7 @@ export function initDocsViewerManagement(context) {
     if (!settingsWarnings) return;
     var items = Array.isArray(warnings) ? warnings.filter(Boolean) : [];
     settingsWarnings.hidden = items.length === 0;
-    settingsWarnings.innerHTML = items.length
-      ? '<ul>' + items.map(function (item) {
-        return '<li>' + context.escapeHtml(item) + '</li>';
-      }).join("") + '</ul>'
-      : "";
+    settingsWarnings.innerHTML = renderSettingsWarningsMarkup(items);
   }
 
   function currentSettingsField(payload) {
