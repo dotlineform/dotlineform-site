@@ -67,6 +67,7 @@ That adapter renders management markup only when `docs_viewer_management_enabled
 Copy the shared viewer runtime files:
 
 - `assets/docs-viewer/js/docs-viewer.js`
+- `assets/docs-viewer/js/docs-viewer-config-controller.js`
 - `assets/docs-viewer/js/docs-viewer-data.js`
 - `assets/docs-viewer/js/docs-viewer-tree.js`
 - `assets/docs-viewer/js/docs-viewer-sidebar.js`
