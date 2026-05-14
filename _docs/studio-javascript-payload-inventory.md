@@ -120,12 +120,14 @@ Recent extractions moved the largest non-route responsibilities out of the entry
 
 The remaining entry controller responsibilities are route/history state, content loading, reports entry, and management dynamic-loading.
 Maintenance risk remains high because the route/history and document-loading spine still has broad behavioral reach.
-That is an acceptable stop point for the current cleanup period only because the next route extraction has higher regression risk and should be tied to a concrete routing change.
+This is not an acceptable long-term resting point: avoid adding route behavior directly to the entry controller unless the same change also reduces the routing surface there.
 
 Do not extract a dedicated router module just for line count.
-Reconsider a router module when route behavior changes materially, especially if another public Docs Viewer route is added beyond the current configured public routes.
-That future pass should cover `viewerUrl`, `viewerUrlForScope`, `routeFromAnchor`, `setHistory`, `resolveDocId`, `applyCurrentRoute`, `loadDoc`, and `renderPayload`, and should have route-focused smoke tests in place before the move.
-Adding another public docs route is not imminent, but the router boundary should not be forgotten when that product shape changes.
+Do reconsider a router module when route behavior changes materially.
+Public internet-facing Docs Viewer routes might not expand soon, but local Studio/management routes are expected to keep changing and may be short-lived for specific work.
+That higher-turnover local route surface is enough to justify a router extraction when the next route change lands.
+The route pass should cover `viewerUrl`, `viewerUrlForScope`, `routeFromAnchor`, `setHistory`, `resolveDocId`, `applyCurrentRoute`, `loadDoc`, and `renderPayload`, and should have route-focused smoke tests in place before or alongside the move.
+Treat the goal as isolating route parsing, canonical URL writing, document resolution, and payload rendering handoff from sidebar/search/bookmark/report concerns.
 
 ### `assets/studio/js/data-sharing-review.js`
 
@@ -155,14 +157,15 @@ These files are below the 1,000-line review threshold but close enough to watch 
 ## Current Priority
 
 1. `assets/docs-viewer/js/docs-viewer-management.js`
-2. `assets/studio/js/tag-studio.js`
-3. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
-4. `assets/studio/js/data-sharing-review.js`
-5. `assets/docs-viewer/js/docs-viewer.js`, only when route behavior changes materially
+2. `assets/docs-viewer/js/docs-viewer.js`, when the next local or public route behavior change lands
+3. `assets/studio/js/tag-studio.js`
+4. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
+5. `assets/studio/js/data-sharing-review.js`
 
-The Docs Viewer entry controller remains over the review threshold, but the current route-coordinator shape is acceptable after the sidebar, search, and config extractions.
-Treat a router extraction as deferred architecture work, not the next automatic cleanup.
-The first and fifth items are Docs Viewer files, but they are included here because `/docs/` is the Studio documentation and management surface.
+The Docs Viewer entry controller remains over the review threshold after the sidebar, search, and config extractions.
+Treat a router extraction as route-triggered architecture work, not automatic line-count cleanup and not public-route-only cleanup.
+Local Studio/management route turnover is a material trigger because short-lived work routes can otherwise make the entry controller harder to reason about quickly.
+The first two items are Docs Viewer files, but they are included here because `/docs/` is the Studio documentation and management surface.
 
 ## How To Rerun
 
