@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T18:45:54Z",
+  "generated_at": "2026-05-14T18:54:06Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1030,7 +1030,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 16618
+      "content_text_length": 16663
     },
     {
       "scope": "studio",
@@ -1826,7 +1826,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 6912,
+      "content_text_length": 7000,
       "ui_status": "urgent"
     },
     {

@@ -27,6 +27,9 @@ import {
   renderRecentEntry,
   renderSearchEntry
 } from "./docs-viewer-render.js";
+import {
+  initDocsViewerSidebarRenderer
+} from "./docs-viewer-sidebar.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
@@ -183,6 +186,21 @@ import {
     showUpdatedDate: true,
     sidebarCollapsed: readSidebarCollapsedState()
   };
+  var sidebarRenderer = initDocsViewerSidebarRenderer({
+    canDragCurrentDoc: canDragCurrentDoc,
+    meta: meta,
+    nav: nav,
+    pathEl: pathEl,
+    renderBookmarkToggle: renderBookmarkToggle,
+    renderStatusPills: renderStatusPills,
+    state: state,
+    statusForIndexDoc: statusForIndexDoc,
+    summaryEl: summaryEl,
+    updateNavDragState: updateNavDragState,
+    updatedEl: updatedEl,
+    viewerTargetDocId: viewerTargetDocId,
+    viewerUrl: viewerUrl
+  });
 
   function dataRequestOptions(overrides) {
     var settings = overrides || {};
@@ -905,10 +923,6 @@ import {
     return null;
   }
 
-  function docChildren(docId) {
-    return state.childrenByParent.get(docId) || [];
-  }
-
   function syncHiddenVisibilityForRequestedDoc() {
     if (!state.managementMode) return;
     var requestedDocId = getCurrentDocId();
@@ -982,13 +996,7 @@ import {
   }
 
   function buildTrail(docId) {
-    var trail = [];
-    var current = state.docsById.get(docId);
-    while (current) {
-      trail.unshift(current);
-      current = current.parent_id ? state.docsById.get(current.parent_id) : null;
-    }
-    return trail;
+    return sidebarRenderer.buildTrail(docId);
   }
 
   function displayRecentMetaForDoc(doc) {
@@ -1005,142 +1013,15 @@ import {
   }
 
   function expandTrail(docId) {
-    buildTrail(docId).forEach(function (doc) {
-      if ((state.childrenByParent.get(doc.doc_id) || []).length > 0) {
-        state.expandedDocIds.add(doc.doc_id);
-      }
-    });
+    sidebarRenderer.expandTrail(docId);
   }
 
   function renderSidebar() {
-    nav.textContent = "";
-    if (state.docs.length === 0) {
-      return;
-    }
-
-    nav.appendChild(renderNavList(""));
-    updateNavDragState();
-  }
-
-  function renderNavList(parentId) {
-    var list = document.createElement("ul");
-    list.className = parentId ? "docsViewer__navList docsViewer__navList--child" : "docsViewer__navList";
-
-    var docs = state.childrenByParent.get(parentId) || [];
-    docs.forEach(function (doc) {
-      var item = document.createElement("li");
-      item.className = "docsViewer__navItem";
-      var row = document.createElement("div");
-      row.className = "docsViewer__navRow";
-      if (isDocHidden(doc)) {
-        row.className += " is-draft";
-      }
-      row.dataset.docRowId = doc.doc_id;
-      var children = docChildren(doc.doc_id);
-      var hasChildren = children.length > 0;
-
-      if (hasChildren) {
-        var toggle = document.createElement("button");
-        toggle.type = "button";
-        toggle.className = "docsViewer__toggle";
-        toggle.dataset.toggleDocId = doc.doc_id;
-        toggle.setAttribute("aria-expanded", state.expandedDocIds.has(doc.doc_id) ? "true" : "false");
-        toggle.setAttribute("aria-label", state.expandedDocIds.has(doc.doc_id) ? "Collapse section" : "Expand section");
-        toggle.textContent = state.expandedDocIds.has(doc.doc_id) ? "▼" : "►";
-        row.appendChild(toggle);
-      } else {
-        var spacer = document.createElement("span");
-        spacer.className = "docsViewer__toggleSpacer";
-        spacer.setAttribute("aria-hidden", "true");
-        spacer.textContent = "";
-        row.appendChild(spacer);
-      }
-
-      var link = document.createElement("a");
-      link.className = "docsViewer__navLink";
-      if (doc.doc_id === state.selectedDocId) {
-        link.className += " is-active";
-        link.setAttribute("aria-current", "page");
-      }
-      if (isDocHidden(doc)) {
-        link.setAttribute("data-draft-doc", "true");
-        link.title = state.managementText.metadataHiddenLabel;
-      }
-      link.href = viewerUrl(viewerTargetDocId(doc.doc_id));
-      link.dataset.docId = doc.doc_id;
-      if (canDragCurrentDoc(doc)) {
-        link.draggable = true;
-        link.dataset.dragDocId = doc.doc_id;
-      }
-      link.textContent = "";
-      var uiStatus = statusForIndexDoc(doc);
-      if (uiStatus) {
-        var statusIcon = document.createElement("span");
-        statusIcon.className = "docsViewer__navStatus";
-        statusIcon.setAttribute("aria-hidden", "true");
-        statusIcon.textContent = uiStatus.emoji;
-        link.appendChild(statusIcon);
-      }
-      if (isDocHidden(doc)) {
-        var draftIcon = document.createElement("span");
-        draftIcon.className = "docsViewer__draftPrefix";
-        draftIcon.setAttribute("aria-hidden", "true");
-        draftIcon.textContent = state.managementText.docHiddenEmoji;
-        link.appendChild(draftIcon);
-      }
-      link.appendChild(document.createTextNode(doc.title));
-      row.appendChild(link);
-      item.appendChild(row);
-
-      if (hasChildren && state.expandedDocIds.has(doc.doc_id)) {
-        item.appendChild(renderNavList(doc.doc_id));
-      }
-
-      list.appendChild(item);
-    });
-
-    return list;
+    sidebarRenderer.renderSidebar();
   }
 
   function renderMeta(doc) {
-    var trail = buildTrail(doc.doc_id).slice(0, -1);
-    pathEl.textContent = "";
-    pathEl.hidden = trail.length === 0;
-
-    trail.forEach(function (entry, index) {
-      if (index > 0) {
-        var separator = document.createElement("span");
-        separator.className = "docsViewer__pathSep";
-        separator.textContent = "/";
-        pathEl.appendChild(separator);
-      }
-
-      var link = document.createElement("a");
-      link.href = viewerUrl(viewerTargetDocId(entry.doc_id));
-      link.dataset.docId = entry.doc_id;
-      link.textContent = entry.title;
-      pathEl.appendChild(link);
-    });
-
-    var hiddenLabel = state.managementText.metadataHiddenLabel;
-    if (!state.showUpdatedDate) {
-      updatedEl.textContent = isDocHidden(doc) ? hiddenLabel : "";
-      updatedEl.hidden = isDocViewable(doc);
-    } else if (doc.last_updated) {
-      updatedEl.textContent = (isDocHidden(doc) ? hiddenLabel + " • " : "") + "Updated " + doc.last_updated;
-      updatedEl.hidden = false;
-    } else {
-      updatedEl.textContent = isDocHidden(doc) ? hiddenLabel : "";
-      updatedEl.hidden = isDocViewable(doc);
-    }
-    if (summaryEl) {
-      var summary = String(doc.summary || "").trim();
-      summaryEl.textContent = summary;
-      summaryEl.hidden = !summary;
-    }
-    meta.hidden = false;
-    renderBookmarkToggle();
-    renderStatusPills();
+    sidebarRenderer.renderMeta(doc);
   }
 
   function setStatus(message, isError) {
