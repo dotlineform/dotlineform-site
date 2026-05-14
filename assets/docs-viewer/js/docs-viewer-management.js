@@ -47,6 +47,7 @@ export function initDocsViewerManagement(context) {
   var manageArchiveButton = document.getElementById("docsViewerManageArchiveButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
+  var contextCopyLinkButton = contextMenu ? contextMenu.querySelector('[data-context-action="copy-link"]') : null;
   var draftToggle = document.getElementById("docsViewerDraftToggle");
   var draftLabel = document.querySelector(".docsViewer__draftLabel");
   var indexUndoButton = document.getElementById("docsViewerIndexUndoButton");
@@ -1284,6 +1285,56 @@ export function initDocsViewerManagement(context) {
       });
   }
 
+  function writeClipboardText(text) {
+    if (window.navigator && window.navigator.clipboard && window.isSecureContext) {
+      return window.navigator.clipboard.writeText(text);
+    }
+
+    return new Promise(function (resolve, reject) {
+      var textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.top = "-1000px";
+      textarea.style.left = "-1000px";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try {
+        if (!document.execCommand("copy")) {
+          throw new Error(state.managementText.copyLinkFailed);
+        }
+        resolve();
+      } catch (error) {
+        reject(error);
+      } finally {
+        document.body.removeChild(textarea);
+      }
+    });
+  }
+
+  function handleCopyLink() {
+    var doc = currentContextMenuDoc();
+    if (!doc || typeof context.markdownDocLink !== "function") return;
+    var markdownLink = context.markdownDocLink(doc);
+    if (!markdownLink) return;
+
+    hideContextMenu();
+    writeClipboardText(markdownLink)
+      .then(function () {
+        var message = context.formatText(state.managementText.copyLinkStatus, {
+          title: doc.title || doc.doc_id
+        });
+        setManagementMessage(message, false);
+        context.setStatus(message, false);
+      })
+      .catch(function (error) {
+        var message = error && error.message ? error.message : state.managementText.copyLinkFailed;
+        setManagementMessage(message, true);
+        context.setStatus(message, true);
+      });
+  }
+
   function applyConfig(config) {
     if (draftLabel) {
       draftLabel.textContent = context.getConfigText(config, "docs_viewer.hidden_toggle_label", context.getConfigText(config, "docs_viewer.draft_toggle_label", "show hidden"));
@@ -1299,6 +1350,11 @@ export function initDocsViewerManagement(context) {
     }
     if (manageSettingsButton) {
       manageSettingsButton.textContent = context.getConfigText(config, "docs_viewer.settings_button", "Settings");
+    }
+    if (contextCopyLinkButton) {
+      state.managementText.copyLinkLabel = context.getConfigText(config, "docs_viewer.copy_link_label", state.managementText.copyLinkLabel);
+      contextCopyLinkButton.textContent = state.managementText.copyLinkLabel;
+      contextCopyLinkButton.setAttribute("aria-label", state.managementText.copyLinkLabel);
     }
     if (settingsHeading) {
       settingsHeading.textContent = context.getConfigText(config, "docs_viewer.settings_title", "Settings");
@@ -1336,6 +1392,8 @@ export function initDocsViewerManagement(context) {
     state.managementText.settingsSaved = context.getConfigText(config, "docs_viewer.settings_saved", state.managementText.settingsSaved);
     state.managementText.settingsLoadFailed = context.getConfigText(config, "docs_viewer.settings_load_failed", state.managementText.settingsLoadFailed);
     state.managementText.settingsSaveFailed = context.getConfigText(config, "docs_viewer.settings_save_failed", state.managementText.settingsSaveFailed);
+    state.managementText.copyLinkStatus = context.getConfigText(config, "docs_viewer.copy_link_status", state.managementText.copyLinkStatus);
+    state.managementText.copyLinkFailed = context.getConfigText(config, "docs_viewer.copy_link_failed", state.managementText.copyLinkFailed);
     if (metadataStatusLabel) {
       metadataStatusLabel.textContent = state.managementText.metadataStatusLabel;
     }
@@ -1579,6 +1637,10 @@ export function initDocsViewerManagement(context) {
         }
         if (action.dataset.contextAction === "new-child") {
           handleCreateRelatedDoc("child");
+          return;
+        }
+        if (action.dataset.contextAction === "copy-link") {
+          handleCopyLink();
           return;
         }
         if (action.dataset.contextAction === "open-vscode") {

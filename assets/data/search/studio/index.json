@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f90395e1ddd5b30fb7f2914bb45f2de8",
-    "generated_at_utc": "2026-05-14T14:53:55Z",
+    "version": "blake2b-a29f984e3406e3ea29c654a82e345487",
+    "generated_at_utc": "2026-05-14T14:57:26Z",
     "count": 237
   },
   "entries": [
@@ -1910,36 +1910,6 @@
         "11"
       ],
       "search_text": "search 2026-05-11 2026 05 11"
-    },
-    {
-      "id": "site-request-studio-ready-state-contract",
-      "kind": "doc",
-      "title": "Studio Ready State Contract Request",
-      "href": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
-      "last_updated": "2026-05-09 16:00",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 16:00 • Change Requests",
-      "search_terms": [
-        "site-request-studio-ready-state-contract",
-        "site",
-        "request",
-        "studio",
-        "ready",
-        "state",
-        "contract",
-        "studio ready state contract request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-09 16:00",
-        "2026",
-        "05",
-        "09",
-        "16",
-        "00"
-      ],
-      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request change requests change requests 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "site-request-studio-audits-page",
@@ -6147,6 +6117,34 @@
         "02"
       ],
       "search_text": "site-request-work-owned-files-links site request work owned files links work-owned files and links request and archive 2026-05-02 2026 05 02"
+    },
+    {
+      "id": "site-request-studio-ready-state-contract",
+      "kind": "doc",
+      "title": "Studio Ready State Contract Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
+      "last_updated": "2026-05-09 16:00",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-09 16:00 • Archive",
+      "search_terms": [
+        "site-request-studio-ready-state-contract",
+        "site",
+        "request",
+        "studio",
+        "ready",
+        "state",
+        "contract",
+        "studio ready state contract request",
+        "archive",
+        "2026-05-09 16:00",
+        "2026",
+        "05",
+        "09",
+        "16",
+        "00"
+      ],
+      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request archive 2026-05-09 16:00 2026 05 09 16 00"
     }
   ]
 }

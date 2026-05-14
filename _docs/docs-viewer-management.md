@@ -54,6 +54,7 @@ Implemented now:
 - `Show` includes required hidden ancestors after confirmation and can optionally include descendants
 - hidden/show changes are sent through a bulk endpoint so one action writes the affected source files and runs one docs/search rebuild
 - docs-management backups are operation-scoped rather than full-scope snapshots
+- `Copy Link` is available from a manage-mode right-click menu on doc rows and copies a Markdown link such as `[Studio Ready State](/docs/?scope=studio&doc=studio-ready-state)`
 - `Open Source` is available from a manage-mode right-click menu on doc rows
 - right-click `Open Source` currently exposes:
   - `Open`

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T14:55:02Z",
+  "generated_at": "2026-05-14T15:04:09Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1208,23 +1208,6 @@
       "viewer_url": "/docs/?scope=studio&doc=search",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search.json",
       "content_text_length": 2060
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-request-studio-ready-state-contract",
-      "title": "Studio Ready State Contract Request",
-      "added_date": "2026-05-01",
-      "last_updated": "2026-05-09 16:00",
-      "parent_id": "change-requests",
-      "sort_order": 37,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "site-request-studio-ready-state-contract.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-ready-state-contract.json",
-      "content_text_length": 9777,
-      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -3127,7 +3110,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 28981,
+      "content_text_length": 29152,
       "ui_status": "done"
     },
     {
@@ -3878,6 +3861,23 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-work-owned-files-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-work-owned-files-links.json",
       "content_text_length": 11906,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-studio-ready-state-contract",
+      "title": "Studio Ready State Contract Request",
+      "added_date": "2026-05-01",
+      "last_updated": "2026-05-09 16:00",
+      "parent_id": "archive",
+      "sort_order": 350,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-studio-ready-state-contract.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-ready-state-contract.json",
+      "content_text_length": 9777,
       "ui_status": "done"
     }
   ]

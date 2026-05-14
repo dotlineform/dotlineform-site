@@ -161,7 +161,10 @@ import {
       settingsSaving: "Saving settings...",
       settingsSaved: "Settings saved.",
       settingsLoadFailed: "Settings unavailable.",
-      settingsSaveFailed: "Settings save failed."
+      settingsSaveFailed: "Settings save failed.",
+      copyLinkLabel: "Copy Link",
+      copyLinkStatus: "Copied link for {title}.",
+      copyLinkFailed: "Copy link failed."
     },
     showHidden: true,
     reloadNonce: "",
@@ -305,6 +308,7 @@ import {
       setStatus: setStatus,
       state: state,
       statusPillsCanWrite: statusPillsCanWrite,
+      markdownDocLink: markdownDocLink,
       viewerScope: function () { return viewerScope; }
     };
   }
@@ -1102,6 +1106,20 @@ import {
     }
     url.searchParams.set("doc", docId);
     return url.pathname + url.search;
+  }
+
+  function escapeMarkdownLinkText(value) {
+    return String(value || "")
+      .replace(/\\/g, "\\\\")
+      .replace(/\[/g, "\\[")
+      .replace(/\]/g, "\\]");
+  }
+
+  function markdownDocLink(doc) {
+    if (!doc || !doc.doc_id) return "";
+    var title = escapeMarkdownLinkText(doc.title || doc.doc_id);
+    var url = viewerUrlForScope(viewerScope, viewerTargetDocId(doc.doc_id), { manage: false });
+    return "[" + title + "](" + url + ")";
   }
 
   function fetchDocsIndexForScope(scope) {
