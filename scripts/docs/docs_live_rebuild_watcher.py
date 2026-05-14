@@ -87,6 +87,10 @@ def changed_filenames(previous: Dict[str, tuple[int, int]], current: Dict[str, t
     return sorted(name for name in filenames if previous.get(name) != current.get(name))
 
 
+def merge_changed_filenames(existing: list[str], detected: list[str]) -> list[str]:
+    return ordered_unique([*existing, *detected])
+
+
 def ordered_unique(values: list[str]) -> list[str]:
     seen: set[str] = set()
     ordered: list[str] = []
@@ -283,7 +287,10 @@ def main() -> int:
                 current_snapshot = snapshot_scope(state["root"], scope)
                 if current_snapshot != previous_snapshot:
                     state["snapshot"] = current_snapshot
-                    state["changed_files"] = changed_filenames(previous_snapshot, current_snapshot)
+                    state["changed_files"] = merge_changed_filenames(
+                        state["changed_files"],
+                        changed_filenames(previous_snapshot, current_snapshot),
+                    )
                     state["dirty_at"] = now
                     changed_text = ", ".join(state["changed_files"]) or "unknown files"
                     log(f"Detected source changes for {scope}: {changed_text}.")

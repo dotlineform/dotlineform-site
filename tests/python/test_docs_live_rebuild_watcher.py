@@ -34,8 +34,22 @@ def test_watcher_imports_source_model_helpers_directly() -> None:
     assert module.scope_doc_sort_key.__module__ == "docs_source_model"
 
 
+def test_watcher_accumulates_changed_files_during_debounce() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+
+    assert module.merge_changed_filenames(["new-request.md"], ["change-requests.md"]) == [
+        "new-request.md",
+        "change-requests.md",
+    ]
+    assert module.merge_changed_filenames(["new-request.md"], ["new-request.md", "change-requests.md"]) == [
+        "new-request.md",
+        "change-requests.md",
+    ]
+
+
 def main() -> None:
     test_watcher_imports_source_model_helpers_directly()
+    test_watcher_accumulates_changed_files_during_debounce()
 
 
 if __name__ == "__main__":
