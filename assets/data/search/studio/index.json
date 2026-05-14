@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-34e1a0dd11ee1a85e976fc07ebf8829b",
-    "generated_at_utc": "2026-05-14T11:29:04Z",
+    "version": "blake2b-d0e34bb1b7a4d319e26531f6dc7261af",
+    "generated_at_utc": "2026-05-14T12:06:18Z",
     "count": 234
   },
   "entries": [
@@ -1412,10 +1412,10 @@
       "kind": "doc",
       "title": "Docs Viewer Config And Settings Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
-      "last_updated": "2026-05-14 12:35",
+      "last_updated": "2026-05-14 12:47",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-14 12:35 • Change Requests",
+      "display_meta": "2026-05-14 12:47 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-config-settings",
         "site",
@@ -1429,14 +1429,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-14 12:35",
+        "2026-05-14 12:47",
         "2026",
         "05",
         "14",
         "12",
-        "35"
+        "47"
       ],
-      "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and change requests change requests 2026-05-14 12:35 2026 05 14 12 35"
+      "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and change requests change requests 2026-05-14 12:47 2026 05 14 12 47"
     },
     {
       "id": "analytics",
