@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4b3e6c7c308d479e39e286dc650af747",
-    "generated_at_utc": "2026-05-14T12:52:00Z",
-    "count": 235
+    "version": "blake2b-31cff7c71ba4735dd876e80b04fea38d",
+    "generated_at_utc": "2026-05-14T12:55:35Z",
+    "count": 236
   },
   "entries": [
     {
@@ -1078,6 +1078,28 @@
         "08"
       ],
       "search_text": "llm-semantic-enrichment-spec llm semantic enrichment spec llm semantic enrichment spec 2026-05-03 17:08 2026 05 03 17 08"
+    },
+    {
+      "id": "testing-pytest",
+      "kind": "doc",
+      "title": "Pytest",
+      "href": "/docs/?scope=studio&doc=testing-pytest",
+      "last_updated": "2026-05-14 15:25",
+      "parent_id": "testing",
+      "parent_title": "Testing",
+      "display_meta": "2026-05-14 15:25 • Testing",
+      "search_terms": [
+        "testing-pytest",
+        "testing",
+        "pytest",
+        "2026-05-14 15:25",
+        "2026",
+        "05",
+        "14",
+        "15",
+        "25"
+      ],
+      "search_text": "testing-pytest testing pytest 2026-05-14 15:25 2026 05 14 15 25"
     },
     {
       "id": "runtime-dependencies",
@@ -4763,18 +4785,18 @@
       "kind": "doc",
       "title": "Testing",
       "href": "/docs/?scope=studio&doc=testing",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
+      "last_updated": "2026-05-14 15:25",
+      "display_meta": "2026-05-14 15:25",
       "search_terms": [
         "testing",
-        "2026-05-06 20:49",
+        "2026-05-14 15:25",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "14",
+        "15",
+        "25"
       ],
-      "search_text": "testing 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "testing 2026-05-14 15:25 2026 05 14 15 25"
     },
     {
       "id": "site-request-catalogue-unified-editor-cleanup",

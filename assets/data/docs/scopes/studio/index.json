@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T12:51:59Z",
+  "generated_at": "2026-05-14T12:55:35Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -659,6 +659,22 @@
       "viewer_url": "/docs/?scope=studio&doc=llm-semantic-enrichment-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/llm-semantic-enrichment-spec.json",
       "content_text_length": 13903
+    },
+    {
+      "scope": "studio",
+      "doc_id": "testing-pytest",
+      "title": "Pytest",
+      "added_date": "2026-05-14",
+      "last_updated": "2026-05-14 15:25",
+      "parent_id": "testing",
+      "sort_order": 20,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "testing-pytest.md",
+      "viewer_url": "/docs/?scope=studio&doc=testing-pytest",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/testing-pytest.json",
+      "content_text_length": 4047
     },
     {
       "scope": "studio",
@@ -3006,7 +3022,7 @@
       "doc_id": "testing",
       "title": "Testing",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-14 15:25",
       "parent_id": "",
       "sort_order": 135,
       "published": true,
@@ -3015,7 +3031,7 @@
       "source_path": "testing.md",
       "viewer_url": "/docs/?scope=studio&doc=testing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/testing.json",
-      "content_text_length": 2426
+      "content_text_length": 3417
     },
     {
       "scope": "studio",

@@ -2,7 +2,7 @@
 doc_id: testing
 title: Testing
 added_date: 2026-05-01
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-14 15:25"
 parent_id: ""
 sort_order: 135
 ---
@@ -11,6 +11,8 @@ sort_order: 135
 This repo uses lightweight, opt-in checks rather than a mandatory full test suite.
 
 The goal is to give Codex a standard place to put repeatable checks, run logs, and verification notes when a change is too broad for manual review alone.
+The current Python checks are direct executable scripts under `tests/python/`.
+They use ordinary `assert` statements and are run by `./scripts/run_checks.py`; pytest is not currently required by the checked-in framework.
 
 ## When To Use Automated Checks
 
@@ -30,7 +32,7 @@ Manual checks are still enough for small copy changes, narrow docs edits, and vi
 ## Structure
 
 - `tests/python/`
-  Deterministic Python checks.
+  Deterministic Python checks. Most files expose `test_*` functions and can run directly as scripts.
 - `tests/smoke/`
   Focused browser smoke scripts.
 - `tests/fixtures/`
@@ -56,6 +58,23 @@ Profiles are intentionally coarse. Choose the smallest profile that matches the 
 The `docs` profile includes Library import parser, Library import service, and Docs Management Server checks.
 The `studio-smoke` profile builds a temporary Jekyll site and runs retained browser smoke scripts such as the data import route checks.
 Those checks cover both the docs-management-unavailable state and a mocked Library import preview flow.
+
+## Python Test Style
+
+Python tests should stay small, deterministic, and local.
+Prefer direct module tests over broad end-to-end setup unless the integration boundary is the behavior being tested.
+
+Current conventions:
+
+- keep tests in `tests/python/test_<area>.py`
+- use plain `assert`
+- avoid network access
+- use temporary directories or small fixtures when repo data would make the test brittle
+- make test files executable directly with the configured Python interpreter
+- add the test script to the smallest relevant `./scripts/run_checks.py` profile when it covers a repeated risk
+
+Pytest is a candidate improvement, not a current requirement.
+See [Pytest](/docs/?scope=studio&doc=testing-pytest) for benefits, integration options, and local install steps.
 
 ## Expected Close-Out
 
@@ -87,7 +106,7 @@ Manual checks:
 
 The MVP framework is deliberately small:
 
-- no pytest dependency
+- no required pytest dependency
 - no CI contract
 - no automatic full-suite run before every change
 - no broad fixture duplication
