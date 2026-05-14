@@ -8,6 +8,8 @@ sort_order: 180
 ---
 # Library Semantic Enrichment Spec
 
+Status: Archived. now handled by data sharing.
+
 ## Sections
 
 - [Purpose](#purpose)

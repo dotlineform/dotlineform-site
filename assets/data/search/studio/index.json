@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-732b0594d4ea41ce44d3f601cff4efc2",
-    "generated_at_utc": "2026-05-14T17:41:37Z",
+    "version": "blake2b-89f9db1daad2fce46e05c86907ae1b1c",
+    "generated_at_utc": "2026-05-14T17:45:01Z",
     "count": 241
   },
   "entries": [
@@ -5024,38 +5024,6 @@
       "search_text": "library-export-ui library export ui library export - ui refinements refinements archive 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
-      "id": "site-request-js-config-structural-review",
-      "kind": "doc",
-      "title": "JavaScript And Browser Config Structural Review Request",
-      "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
-      "last_updated": "2026-05-10 19:10",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-10 19:10 • Change Requests",
-      "search_terms": [
-        "site-request-js-config-structural-review",
-        "site",
-        "request",
-        "js",
-        "config",
-        "structural",
-        "review",
-        "javascript and browser config structural review request",
-        "javascript",
-        "and",
-        "browser",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-10 19:10",
-        "2026",
-        "05",
-        "10",
-        "19"
-      ],
-      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser change requests change requests 2026-05-10 19:10 2026 05 10 19"
-    },
-    {
       "id": "site-request-studio-import-export-module",
       "kind": "doc",
       "title": "Studio Data Sharing Module Implementation Request",
@@ -6195,6 +6163,36 @@
         "13"
       ],
       "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request archive 2026-05-13 2026 05 13"
+    },
+    {
+      "id": "site-request-js-config-structural-review",
+      "kind": "doc",
+      "title": "JavaScript And Browser Config Structural Review Request",
+      "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
+      "last_updated": "2026-05-10 19:10",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-10 19:10 • Archive",
+      "search_terms": [
+        "site-request-js-config-structural-review",
+        "site",
+        "request",
+        "js",
+        "config",
+        "structural",
+        "review",
+        "javascript and browser config structural review request",
+        "javascript",
+        "and",
+        "browser",
+        "archive",
+        "2026-05-10 19:10",
+        "2026",
+        "05",
+        "10",
+        "19"
+      ],
+      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser archive 2026-05-10 19:10 2026 05 10 19"
     }
   ]
 }
