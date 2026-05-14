@@ -99,6 +99,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/catalogue/catalogue_source_mutation.py",
                 "scripts/catalogue/catalogue_transactions.py",
                 "scripts/studio/audit_service.py",
+                "tests/smoke/docs_viewer_routes.py",
                 "tests/python/test_activity_contract.py",
                 "tests/python/test_local_env.py",
                 "tests/python/test_publish_media_to_r2.py",
@@ -245,6 +246,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "jekyll-temp-build",
             bundle_argv(),
             "Build the site to a temporary destination for browser smoke tests.",
+        ),
+        CheckCommand(
+            "docs-viewer-route-smoke",
+            (
+                sys.executable,
+                "tests/smoke/docs_viewer_routes.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check Docs Viewer direct route, search, link interception, history, hash, and Library scope behavior.",
         ),
         CheckCommand(
             "data-sharing-prepare-smoke",

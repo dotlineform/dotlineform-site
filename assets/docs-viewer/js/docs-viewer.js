@@ -30,6 +30,12 @@ import {
 import {
   initDocsViewerSidebarRenderer
 } from "./docs-viewer-sidebar.js";
+import {
+  buildViewerUrl,
+  buildViewerUrlForScope,
+  routeFromAnchorHref,
+  writeViewerHistory
+} from "./docs-viewer-router.js";
 
 (function () {
   var root = document.getElementById("docsViewerRoot");
@@ -549,34 +555,32 @@ import {
   }
 
   function viewerUrl(docId, hash, query) {
-    var url = new URL(viewerBaseUrl, window.location.origin);
-    if (includeScopeParam && viewerScope) {
-      url.searchParams.set("scope", viewerScope);
-    }
-    if (state.managementMode) {
-      url.searchParams.set("mode", MANAGEMENT_MODE);
-    }
-    url.searchParams.set("doc", docId);
-    if (typeof query === "string" && query.trim()) {
-      url.searchParams.set("q", query.trim());
-    }
-    url.hash = hash || "";
-    return url.pathname + url.search + url.hash;
+    return buildViewerUrl({
+      docId: docId,
+      hash: hash,
+      includeScopeParam: includeScopeParam,
+      managementMode: state.managementMode,
+      managementModeValue: MANAGEMENT_MODE,
+      origin: window.location.origin,
+      query: query,
+      viewerBaseUrl: viewerBaseUrl,
+      viewerScope: viewerScope
+    });
   }
 
   function viewerUrlForScope(scope, docId, options) {
-    var targetScope = String(scope || viewerScope || "").trim().toLowerCase();
-    var targetConfig = state.scopeConfigsById.get(targetScope);
-    var useManage = Boolean(options && options.manage && allowManagement);
-    var url = new URL(useManage ? (routeViewerBaseUrl || viewerBaseUrl || "/docs/") : ((targetConfig && targetConfig.viewerBaseUrl) || viewerBaseUrl), window.location.origin);
-    if (useManage) {
-      url.searchParams.set("scope", targetScope);
-      url.searchParams.set("mode", MANAGEMENT_MODE);
-    } else if (targetConfig && targetConfig.includeScopeParam && targetScope) {
-      url.searchParams.set("scope", targetScope);
-    }
-    url.searchParams.set("doc", docId);
-    return url.pathname + url.search;
+    return buildViewerUrlForScope({
+      allowManagement: allowManagement,
+      docId: docId,
+      managementModeValue: MANAGEMENT_MODE,
+      manage: Boolean(options && options.manage),
+      origin: window.location.origin,
+      routeViewerBaseUrl: routeViewerBaseUrl,
+      scope: scope,
+      scopeConfigsById: state.scopeConfigsById,
+      viewerBaseUrl: viewerBaseUrl,
+      viewerScope: viewerScope
+    });
   }
 
   function escapeMarkdownLinkText(value) {
@@ -871,16 +875,8 @@ import {
   }
 
   function setHistory(docId, hash, query, mode) {
-    if (mode === "none") return;
-
     var nextUrl = viewerUrl(docId, hash, query);
-    var nextState = { docId: docId, hash: hash || "", q: query || "" };
-    if (mode === "replace") {
-      window.history.replaceState(nextState, "", nextUrl);
-      return;
-    }
-
-    window.history.pushState(nextState, "", nextUrl);
+    writeViewerHistory(window.history, docId, nextUrl, hash, query, mode);
   }
 
   function cancelSearchDebounce() {
@@ -958,28 +954,17 @@ import {
   }
 
   function routeFromAnchor(anchor) {
-    var url = new URL(anchor.href, window.location.href);
-    if (url.origin !== window.location.origin) return null;
-    if (url.pathname !== viewerPathname) return null;
-    var scope = String(url.searchParams.get("scope") || "").trim();
-    var linkMode = String(url.searchParams.get("mode") || "");
-    var currentMode = getCurrentMode();
-    if (allowManagement && linkMode && linkMode !== currentMode) return null;
-    if (includeScopeParam && scope && scope !== viewerScope) {
-      if (!allowScopeQuery || !allowManagement || currentMode !== MANAGEMENT_MODE || linkMode) return null;
-      url.searchParams.set("mode", MANAGEMENT_MODE);
-      return {
-        navigateUrl: url.pathname + url.search + url.hash
-      };
-    }
-
-    var docId = url.searchParams.get("doc");
-    if (!docId) return null;
-
-    return {
-      docId: docId,
-      hash: url.hash ? url.hash.slice(1) : ""
-    };
+    return routeFromAnchorHref(anchor.href, {
+      allowManagement: allowManagement,
+      allowScopeQuery: allowScopeQuery,
+      currentHref: window.location.href,
+      currentMode: getCurrentMode(),
+      includeScopeParam: includeScopeParam,
+      managementModeValue: MANAGEMENT_MODE,
+      origin: window.location.origin,
+      viewerPathname: viewerPathname,
+      viewerScope: viewerScope
+    });
   }
 
   function bindLinkInterception() {
@@ -1094,6 +1079,7 @@ import {
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
     syncHiddenVisibilityForRequestedDoc();
     applyDocVisibility();
+    var routeHash = options && options.hash ? options.hash : getCurrentHash();
     var route = resolveDocId();
     var docId = route.docId;
     if (!docId) {
@@ -1115,7 +1101,7 @@ import {
     renderManagementUi();
 
     if (route.corrected || !hasCanonicalScopeInUrl() || hasDisallowedModeInUrl() || hasDisallowedScopeInUrl()) {
-      setHistory(docId, "", query, "replace");
+      setHistory(docId, routeHash, query, "replace");
     }
 
     if (state.searchRouteActive) {
@@ -1125,7 +1111,7 @@ import {
 
     loadDoc(docId, {
       historyMode: options && options.historyMode ? options.historyMode : "push",
-      hash: options && options.hash ? options.hash : getCurrentHash(),
+      hash: routeHash,
       expandTrail: Boolean(state.docsById.get(docId).parent_id)
     });
   }

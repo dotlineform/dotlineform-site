@@ -39,12 +39,12 @@ Re-run this inventory after material Studio or Docs Viewer JavaScript refactors.
 
 Measured on 2026-05-14.
 
-- Browser JavaScript files under `assets/`: 100
-- Total browser JavaScript lines under `assets/`: 35,647
+- Browser JavaScript files under `assets/`: 101
+- Total browser JavaScript lines under `assets/`: 35,709
 - Files over the 1,000-line review threshold: 6
 - Files in the 900-1,000 line watch band: 5
-- Over-threshold raw size total: 336.3 KiB
-- Over-threshold gzip size total: 65.0 KiB
+- Over-threshold raw size total: 335.3 KiB
+- Over-threshold gzip size total: 64.8 KiB
 
 The over-threshold set is still maintenance-driven more than transfer-driven.
 No route loads all over-threshold files together.
@@ -102,9 +102,9 @@ Next cleanup should target modal view-models, delete-impact rendering, and impor
 
 ### `assets/docs-viewer/js/docs-viewer.js`
 
-- Lines: 1,240
-- Raw: 39.5 KiB
-- Gzip: 8.5 KiB
+- Lines: 1,226
+- Raw: 38.6 KiB
+- Gzip: 8.3 KiB
 - Classification: mixed shared viewer runtime controller
 - Maintenance risk: high
 - Transfer-size risk: medium
@@ -116,6 +116,7 @@ Recent extractions moved the largest non-route responsibilities out of the entry
 - Sidebar/nav/meta rendering and trail display now live in `assets/docs-viewer/js/docs-viewer-sidebar.js`.
 - Search loading, recent/search result rendering, result batching, and debounced search input binding now live in `assets/docs-viewer/js/docs-viewer-search-controller.js`.
 - Result-row and bookmark-row markup helpers live in `assets/docs-viewer/js/docs-viewer-render.js`.
+- URL building, anchor route parsing, and history writes now live in `assets/docs-viewer/js/docs-viewer-router.js`.
 - Status-pill markup and events stay behind the lazy management-controller boundary.
 
 The remaining entry controller responsibilities are route/history state, content loading, reports entry, and management dynamic-loading.
@@ -157,7 +158,7 @@ These files are below the 1,000-line review threshold but close enough to watch 
 ## Current Priority
 
 1. `assets/docs-viewer/js/docs-viewer-management.js`
-2. `assets/docs-viewer/js/docs-viewer.js`, when the next local or public route behavior change lands
+2. `assets/docs-viewer/js/docs-viewer.js`, continue the active route extraction through document resolution and payload handoff
 3. `assets/studio/js/tag-studio.js`
 4. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
 5. `assets/studio/js/data-sharing-review.js`

@@ -35,6 +35,7 @@ Those still belong in the owning reference docs and change logs.
 - [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)
 - [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
 - [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)
+- [Docs Viewer Router Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-router-extraction)
 - [Docs Viewer Report Components Request](/docs/?scope=studio&doc=site-request-docs-viewer-report-components)
 - [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
 - [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)

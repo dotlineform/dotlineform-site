@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T19:41:16Z",
+  "generated_at": "2026-05-14T19:58:27Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1826,7 +1826,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 9272,
+      "content_text_length": 9412,
       "ui_status": "urgent"
     },
     {
@@ -3152,6 +3152,23 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-docs-viewer-router-extraction",
+      "title": "Docs Viewer Router Extraction Request",
+      "added_date": "2026-05-14",
+      "last_updated": "2026-05-14",
+      "parent_id": "change-requests",
+      "sort_order": 205,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-router-extraction.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-router-extraction",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-router-extraction.json",
+      "content_text_length": 6389,
+      "ui_status": "in-progress"
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-r2-media-upload-automation",
       "title": "R2 Media Upload Automation Request",
       "added_date": "2026-05-07",
@@ -3232,7 +3249,7 @@
       "source_path": "change-requests.md",
       "viewer_url": "/docs/?scope=studio&doc=change-requests",
       "content_url": "/assets/data/docs/scopes/studio/by-id/change-requests.json",
-      "content_text_length": 1928
+      "content_text_length": 1966
     },
     {
       "scope": "studio",
@@ -3366,7 +3383,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 153642
+      "content_text_length": 154592
     },
     {
       "scope": "studio",
