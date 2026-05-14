@@ -1,11 +1,11 @@
 ---
 doc_id: site-request-catalogue-publication-workflow
 title: Catalogue Publication Workflow
-ui_status: "done"
 added_date: 2026-04-29
 last_updated: 2026-04-29
-parent_id: change-requests
-sort_order: 135
+ui_status: done
+parent_id: archive
+sort_order: 510
 ---
 # Catalogue Publication Workflow Request
 

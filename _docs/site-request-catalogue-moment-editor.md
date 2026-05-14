@@ -2,10 +2,10 @@
 doc_id: site-request-catalogue-moment-editor
 title: Catalogue Moment Editor Request
 added_date: 2026-04-27
-last_updated: 2026-05-10 23:43
+last_updated: "2026-05-10 23:43"
 ui_status: done
-parent_id: change-requests
-sort_order: 70
+parent_id: archive
+sort_order: 430
 ---
 # Catalogue Moment Editor Request
 

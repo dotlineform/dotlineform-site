@@ -4,8 +4,8 @@ title: Docs HTML Import Spec
 added_date: 2026-04-23
 last_updated: 2026-05-03
 ui_status: done
-parent_id: change-requests
-sort_order: 160
+parent_id: archive
+sort_order: 530
 ---
 # Docs HTML Import Spec
 

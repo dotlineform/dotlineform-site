@@ -3,9 +3,10 @@ doc_id: site-request-studio-audits-page
 title: Studio Audits Page Request
 added_date: 2026-05-03
 last_updated: 2026-05-03
-ui_status: done
+ui_status: deferred
 parent_id: change-requests
 sort_order: 38
+hidden: false
 ---
 # Studio Audits Page Request
 

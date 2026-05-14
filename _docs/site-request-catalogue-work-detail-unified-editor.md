@@ -4,8 +4,8 @@ title: Catalogue Work Detail Unified Editor Request
 added_date: 2026-04-28
 last_updated: 2026-05-02
 ui_status: done
-parent_id: change-requests
-sort_order: 120
+parent_id: archive
+sort_order: 500
 ---
 # Catalogue Work Detail Unified Editor Request
 

@@ -4,8 +4,8 @@ title: Compatibility Cleanup
 added_date: 2026-05-01
 last_updated: 2026-05-02
 ui_status: done
-parent_id: change-requests
-sort_order: 101
+parent_id: archive
+sort_order: 440
 ---
 # Compatibility Cleanup
 

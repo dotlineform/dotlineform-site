@@ -3,8 +3,9 @@ doc_id: config-docs-viewer
 title: Docs Viewer Config
 added_date: 2026-05-12
 last_updated: "2026-05-14 14:45"
-parent_id: config
-sort_order: 55
+parent_id: docs-viewer
+sort_order: 160
+hidden: false
 ---
 # Docs Viewer Config
 
