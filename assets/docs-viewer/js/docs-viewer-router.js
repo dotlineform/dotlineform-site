@@ -237,6 +237,9 @@ export function loadViewerDoc(options) {
   var mode = settings.historyMode || "push";
   var hash = settings.hash || "";
   var shouldExpandTrail = settings.expandTrail !== false;
+  var expandTrail = typeof settings.expandTrailForDoc === "function"
+    ? settings.expandTrailForDoc
+    : (typeof settings.expandTrail === "function" ? settings.expandTrail : null);
   var targetDocId = typeof settings.resolveLoadableDocId === "function" ? settings.resolveLoadableDocId(docId) : "";
 
   if (typeof settings.setRecentModeActive === "function") {
@@ -263,8 +266,8 @@ export function loadViewerDoc(options) {
   if (state) {
     state.selectedDocId = docId;
   }
-  if (shouldExpandTrail && typeof settings.expandTrail === "function") {
-    settings.expandTrail(docId);
+  if (shouldExpandTrail && expandTrail) {
+    expandTrail(docId);
   }
   if (typeof settings.renderBookmarkUi === "function") {
     settings.renderBookmarkUi();

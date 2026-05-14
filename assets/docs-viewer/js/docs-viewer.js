@@ -938,6 +938,7 @@ import {
   function loadDoc(docId, options) {
     return loadViewerDoc({
       docId: docId,
+      expandTrailForDoc: expandTrail,
       expandTrail: !options || options.expandTrail !== false,
       fetchPayload: fetchDocPayload,
       handleMissingDoc: handleMissingDoc,
@@ -1002,7 +1003,10 @@ import {
       if (searchInput) {
         searchInput.value = "";
       }
-      loadDoc(route.docId, { historyMode: "push", hash: route.hash });
+      loadDoc(route.docId, {
+        historyMode: "push",
+        hash: route.hash
+      });
     });
 
     if (sidebarToggle) {

@@ -507,6 +507,18 @@ export function initDocsViewerManagement(context) {
     hideMetadataParentPopup();
   }
 
+  function focusWithoutScroll(target) {
+    if (!target || typeof target.focus !== "function") return;
+    try {
+      target.focus({ preventScroll: true });
+    } catch (error) {
+      var scrollX = window.scrollX;
+      var scrollY = window.scrollY;
+      target.focus();
+      window.scrollTo(scrollX, scrollY);
+    }
+  }
+
   function closeMetadataModal(result) {
     if (!metadataModal) return;
     if (document.activeElement && metadataModal.contains(document.activeElement)) {
@@ -524,7 +536,7 @@ export function initDocsViewerManagement(context) {
     }
     if (!restoreDocId || !nav) return;
     var target = nav.querySelector('[data-doc-row-id="' + context.cssEscape(restoreDocId) + '"] .docsViewer__navLink');
-    if (target) target.focus();
+    focusWithoutScroll(target);
   }
 
   function initializeImportModal(scope) {

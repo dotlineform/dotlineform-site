@@ -3,9 +3,9 @@ doc_id: site-request-docs-viewer-router-extraction
 title: Docs Viewer Router Extraction Request
 added_date: 2026-05-14
 last_updated: 2026-05-14
-ui_status: implemented
-parent_id: change-requests
-sort_order: 205
+ui_status: done
+parent_id: archive
+sort_order: 620
 hidden: false
 ---
 # Docs Viewer Router Extraction Request

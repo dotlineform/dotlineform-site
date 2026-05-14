@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-489512feb3b2458525d890f18707651a",
-    "generated_at_utc": "2026-05-14T19:48:45Z",
+    "version": "blake2b-548be5e9f0fe794c18a3565d28b4e7f8",
+    "generated_at_utc": "2026-05-14T21:04:41Z",
     "count": 242
   },
   "entries": [
@@ -4939,34 +4939,6 @@
       "search_text": "library-import library import library import v1 v1 archive 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
-      "id": "site-request-docs-viewer-router-extraction",
-      "kind": "doc",
-      "title": "Docs Viewer Router Extraction Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-router-extraction",
-      "last_updated": "2026-05-14",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-14 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-router-extraction",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "router",
-        "extraction",
-        "docs viewer router extraction request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-14",
-        "2026",
-        "05",
-        "14"
-      ],
-      "search_text": "site-request-docs-viewer-router-extraction site request docs viewer router extraction docs viewer router extraction request change requests change requests 2026-05-14 2026 05 14"
-    },
-    {
       "id": "site-request-r2-media-upload-automation",
       "kind": "doc",
       "title": "R2 Media Upload Automation Request",
@@ -6221,6 +6193,32 @@
         "19"
       ],
       "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser archive 2026-05-10 19:10 2026 05 10 19"
+    },
+    {
+      "id": "site-request-docs-viewer-router-extraction",
+      "kind": "doc",
+      "title": "Docs Viewer Router Extraction Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-router-extraction",
+      "last_updated": "2026-05-14",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-14 • Archive",
+      "search_terms": [
+        "site-request-docs-viewer-router-extraction",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "router",
+        "extraction",
+        "docs viewer router extraction request",
+        "archive",
+        "2026-05-14",
+        "2026",
+        "05",
+        "14"
+      ],
+      "search_text": "site-request-docs-viewer-router-extraction site request docs viewer router extraction docs viewer router extraction request archive 2026-05-14 2026 05 14"
     }
   ]
 }
