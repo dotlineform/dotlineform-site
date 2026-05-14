@@ -149,6 +149,7 @@ import {
       metadataHiddenLabel: "hidden",
       metadataParentRootOption: "Root",
       metadataParentInvalid: "Select a parent from the search field suggestions or enter Root.",
+      metadataParentNoMatches: "No matching parent docs.",
       docHiddenEmoji: "🚫",
       statusMenuLabel: "Document status",
       statusPillSetLabel: "Set status: {label}",

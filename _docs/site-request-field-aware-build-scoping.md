@@ -4,8 +4,8 @@ title: Field-Aware Catalogue Build Scoping
 added_date: 2026-04-27
 last_updated: 2026-05-02
 ui_status: done
-parent_id: change-requests
-sort_order: 100
+parent_id: archive
+sort_order: 420
 ---
 # Field-Aware Catalogue Build Scoping Request
 

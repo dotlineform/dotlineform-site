@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-deaaad6d9ea621499014d0a46a098376",
-    "generated_at_utc": "2026-05-14T15:43:42Z",
+    "version": "blake2b-1e453d974d26259b2466f95ab1e6c478",
+    "generated_at_utc": "2026-05-14T16:15:53Z",
     "count": 238
   },
   "entries": [
@@ -3942,35 +3942,6 @@
       "search_text": "data-sharing data sharing data sharing 2026-05-13 17:16 2026 05 13 17 16"
     },
     {
-      "id": "site-request-field-aware-build-scoping",
-      "kind": "doc",
-      "title": "Field-Aware Catalogue Build Scoping",
-      "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
-      "last_updated": "2026-05-02",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-02 • Change Requests",
-      "search_terms": [
-        "site-request-field-aware-build-scoping",
-        "site",
-        "request",
-        "field",
-        "aware",
-        "build",
-        "scoping",
-        "field-aware catalogue build scoping",
-        "catalogue",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-02",
-        "2026",
-        "05",
-        "02"
-      ],
-      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping catalogue change requests change requests 2026-05-02 2026 05 02"
-    },
-    {
       "id": "search-validation-checklist",
       "kind": "doc",
       "title": "Search Validation Checklist",
@@ -4547,36 +4518,6 @@
       "search_text": "docs-broken-links docs broken links docs broken links docs viewer viewer 2026-05-13 20:20 2026 05 13 20"
     },
     {
-      "id": "ui-request-docs-viewer-favourites-spec",
-      "kind": "doc",
-      "title": "Docs Viewer Favourites Spec",
-      "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec",
-      "last_updated": "2026-05-09 16:00",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-09 16:00 • Change Requests",
-      "search_terms": [
-        "ui-request-docs-viewer-favourites-spec",
-        "ui",
-        "request",
-        "docs",
-        "viewer",
-        "favourites",
-        "spec",
-        "docs viewer favourites spec",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-09 16:00",
-        "2026",
-        "05",
-        "09",
-        "16",
-        "00"
-      ],
-      "search_text": "ui-request-docs-viewer-favourites-spec ui request docs viewer favourites spec docs viewer favourites spec change requests change requests 2026-05-09 16:00 2026 05 09 16 00"
-    },
-    {
       "id": "search-change-log-guidance",
       "kind": "doc",
       "title": "Search Change Log Guidance",
@@ -4809,10 +4750,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-14 16:43",
+      "last_updated": "2026-05-14 17:18",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-14 16:43 • Change Requests",
+      "display_meta": "2026-05-14 17:18 • Change Requests",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -4822,14 +4763,14 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-14 16:43",
+        "2026-05-14 17:18",
         "2026",
         "05",
         "14",
-        "16",
-        "43"
+        "17",
+        "18"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-14 16:43 2026 05 14 16 43"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management change requests change requests 2026-05-14 17:18 2026 05 14 17 18"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",
@@ -5300,39 +5241,6 @@
       "search_text": "library-import library import library import v1 v1 archive 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
-      "id": "site-request-docs-import-source-registry-media",
-      "kind": "doc",
-      "title": "Docs Import Source Registry And Media Support Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-import-source-registry-media",
-      "last_updated": "2026-05-12 10:25",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-12 10:25 • Change Requests",
-      "search_terms": [
-        "site-request-docs-import-source-registry-media",
-        "site",
-        "request",
-        "docs",
-        "import",
-        "source",
-        "registry",
-        "media",
-        "docs import source registry and media support request",
-        "and",
-        "support",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-12 10:25",
-        "2026",
-        "05",
-        "12",
-        "10",
-        "25"
-      ],
-      "search_text": "site-request-docs-import-source-registry-media site request docs import source registry media docs import source registry and media support request and support change requests change requests 2026-05-12 10:25 2026 05 12 10 25"
-    },
-    {
       "id": "site-request-r2-media-upload-automation",
       "kind": "doc",
       "title": "R2 Media Upload Automation Request",
@@ -5697,6 +5605,35 @@
       "search_text": "library-import-ui library import ui library import - ui refinements refinements archive 2026-05-06 18:13 2026 05 06 18 13"
     },
     {
+      "id": "site-request-docs-toolkit-extraction",
+      "kind": "doc",
+      "title": "Docs Toolkit Extraction Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-toolkit-extraction",
+      "last_updated": "2026-05-13 21:07",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-13 21:07 • Change Requests",
+      "search_terms": [
+        "site-request-docs-toolkit-extraction",
+        "site",
+        "request",
+        "docs",
+        "toolkit",
+        "extraction",
+        "docs toolkit extraction request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-13 21:07",
+        "2026",
+        "05",
+        "13",
+        "21",
+        "07"
+      ],
+      "search_text": "site-request-docs-toolkit-extraction site request docs toolkit extraction docs toolkit extraction request change requests change requests 2026-05-13 21:07 2026 05 13 21 07"
+    },
+    {
       "id": "scripts-fix-missing-title-sort",
       "kind": "doc",
       "title": "Legacy Title Sort Fix",
@@ -5898,33 +5835,6 @@
         "49"
       ],
       "search_text": "archive 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
-      "id": "site-request-docs-toolkit-extraction",
-      "kind": "doc",
-      "title": "Docs Toolkit Extraction Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-toolkit-extraction",
-      "last_updated": "2026-05-13 21:07",
-      "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-13 21:07 • Archive",
-      "search_terms": [
-        "site-request-docs-toolkit-extraction",
-        "site",
-        "request",
-        "docs",
-        "toolkit",
-        "extraction",
-        "docs toolkit extraction request",
-        "archive",
-        "2026-05-13 21:07",
-        "2026",
-        "05",
-        "13",
-        "21",
-        "07"
-      ],
-      "search_text": "site-request-docs-toolkit-extraction site request docs toolkit extraction docs toolkit extraction request archive 2026-05-13 21:07 2026 05 13 21 07"
     },
     {
       "id": "site-request-docs-viewer-config-settings",
@@ -6167,6 +6077,92 @@
         "02"
       ],
       "search_text": "site-request-analysis-doc-viewer site request analysis doc viewer analysis docs viewer request docs archive 2026-05-02 2026 05 02"
+    },
+    {
+      "id": "site-request-docs-import-source-registry-media",
+      "kind": "doc",
+      "title": "Docs Import Source Registry And Media Support Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-import-source-registry-media",
+      "last_updated": "2026-05-12 10:25",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-12 10:25 • Archive",
+      "search_terms": [
+        "site-request-docs-import-source-registry-media",
+        "site",
+        "request",
+        "docs",
+        "import",
+        "source",
+        "registry",
+        "media",
+        "docs import source registry and media support request",
+        "and",
+        "support",
+        "archive",
+        "2026-05-12 10:25",
+        "2026",
+        "05",
+        "12",
+        "10",
+        "25"
+      ],
+      "search_text": "site-request-docs-import-source-registry-media site request docs import source registry media docs import source registry and media support request and support archive 2026-05-12 10:25 2026 05 12 10 25"
+    },
+    {
+      "id": "ui-request-docs-viewer-favourites-spec",
+      "kind": "doc",
+      "title": "Docs Viewer Favourites Spec",
+      "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec",
+      "last_updated": "2026-05-09 16:00",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-09 16:00 • Archive",
+      "search_terms": [
+        "ui-request-docs-viewer-favourites-spec",
+        "ui",
+        "request",
+        "docs",
+        "viewer",
+        "favourites",
+        "spec",
+        "docs viewer favourites spec",
+        "archive",
+        "2026-05-09 16:00",
+        "2026",
+        "05",
+        "09",
+        "16",
+        "00"
+      ],
+      "search_text": "ui-request-docs-viewer-favourites-spec ui request docs viewer favourites spec docs viewer favourites spec archive 2026-05-09 16:00 2026 05 09 16 00"
+    },
+    {
+      "id": "site-request-field-aware-build-scoping",
+      "kind": "doc",
+      "title": "Field-Aware Catalogue Build Scoping",
+      "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
+      "last_updated": "2026-05-02",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-02 • Archive",
+      "search_terms": [
+        "site-request-field-aware-build-scoping",
+        "site",
+        "request",
+        "field",
+        "aware",
+        "build",
+        "scoping",
+        "field-aware catalogue build scoping",
+        "catalogue",
+        "archive",
+        "2026-05-02",
+        "2026",
+        "05",
+        "02"
+      ],
+      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping catalogue archive 2026-05-02 2026 05 02"
     }
   ]
 }

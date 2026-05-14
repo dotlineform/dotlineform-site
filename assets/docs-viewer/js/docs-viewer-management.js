@@ -61,7 +61,7 @@ export function initDocsViewerManagement(context) {
   var metadataHiddenInput = document.getElementById("docsViewerMetadataHiddenInput");
   var metadataHiddenLabel = document.getElementById("docsViewerMetadataHiddenLabel");
   var metadataParentInput = document.getElementById("docsViewerMetadataParentInput");
-  var metadataParentList = document.getElementById("docsViewerMetadataParentList");
+  var metadataParentPopup = document.getElementById("docsViewerMetadataParentPopup");
   var metadataSortOrderInput = document.getElementById("docsViewerMetadataSortOrderInput");
   var metadataCloseButton = document.getElementById("docsViewerMetadataCloseButton");
   var metadataCancelButton = document.getElementById("docsViewerMetadataCancelButton");
@@ -85,6 +85,8 @@ export function initDocsViewerManagement(context) {
   var docsImportRequestPromise = null;
   var docsImportInitialized = false;
   var metadataModalResolve = null;
+  var metadataParentOptionRecords = [];
+  var metadataParentActiveIndex = -1;
   var settingsFieldState = null;
 
   function viewerScope() {
@@ -301,22 +303,104 @@ export function initDocsViewerManagement(context) {
   }
 
   function metadataParentOptionDisplay(option) {
+    return metadataParentOptionTitle(option);
+  }
+
+  function metadataParentOptionTitle(option) {
     if (!option || !option.value) return state.managementText.metadataParentRootOption;
-    return option.label + " [" + option.value + "]";
+    return String(option.label || "").replace(/^(-\s*)+/, "");
+  }
+
+  function hideMetadataParentPopup() {
+    metadataParentOptionRecords = [];
+    metadataParentActiveIndex = -1;
+    if (metadataParentPopup) {
+      metadataParentPopup.hidden = true;
+      metadataParentPopup.innerHTML = "";
+    }
+    if (metadataParentInput) {
+      metadataParentInput.setAttribute("aria-expanded", "false");
+      metadataParentInput.removeAttribute("aria-activedescendant");
+    }
+  }
+
+  function setMetadataParentActiveIndex(index) {
+    if (!metadataParentPopup || !metadataParentInput) return;
+    metadataParentActiveIndex = index;
+    metadataParentPopup.querySelectorAll("[data-parent-index]").forEach(function (button) {
+      var active = Number(button.getAttribute("data-parent-index")) === metadataParentActiveIndex;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-selected", active ? "true" : "false");
+      if (active) {
+        metadataParentInput.setAttribute("aria-activedescendant", button.id);
+      }
+    });
+    if (metadataParentActiveIndex < 0) {
+      metadataParentInput.removeAttribute("aria-activedescendant");
+    }
+  }
+
+  function metadataParentMatches(doc, query) {
+    var normalizedQuery = String(query || "").trim().toLowerCase();
+    if (!normalizedQuery) return [];
+    return metadataParentOptions(doc).filter(function (option) {
+      var display = metadataParentOptionDisplay(option).toLowerCase();
+      var title = metadataParentOptionTitle(option).toLowerCase();
+      var value = String(option && option.value || "").toLowerCase();
+      return display.includes(normalizedQuery) || title.includes(normalizedQuery) || value.includes(normalizedQuery);
+    }).slice(0, 14);
+  }
+
+  function renderMetadataParentPopup(doc) {
+    if (!metadataParentInput || !metadataParentPopup) return;
+    var matches = metadataParentMatches(doc, metadataParentInput.value);
+    metadataParentOptionRecords = matches;
+    if (!String(metadataParentInput.value || "").trim()) {
+      hideMetadataParentPopup();
+      return;
+    }
+    if (!matches.length) {
+      metadataParentPopup.innerHTML = '<p class="docsViewer__parentPopupEmpty">' + context.escapeHtml(state.managementText.metadataParentNoMatches) + "</p>";
+      metadataParentPopup.hidden = false;
+      metadataParentInput.setAttribute("aria-expanded", "true");
+      metadataParentActiveIndex = -1;
+      metadataParentInput.removeAttribute("aria-activedescendant");
+      return;
+    }
+    metadataParentPopup.innerHTML = matches.map(function (option, index) {
+      var optionId = "docsViewerMetadataParentOption-" + index;
+      var title = metadataParentOptionTitle(option);
+      var isActive = index === 0;
+      return (
+        '<button type="button" class="docsViewer__parentOption' + (isActive ? " is-active" : "") + '" ' +
+          'id="' + optionId + '" role="option" aria-selected="' + (isActive ? "true" : "false") + '" ' +
+          'data-parent-index="' + index + '">' +
+          '<span class="docsViewer__parentOptionTitle">' + context.escapeHtml(title) + "</span>" +
+        "</button>"
+      );
+    }).join("");
+    metadataParentPopup.hidden = false;
+    metadataParentInput.setAttribute("aria-expanded", "true");
+    setMetadataParentActiveIndex(0);
+  }
+
+  function selectMetadataParentOption(index) {
+    var option = metadataParentOptionRecords[index];
+    if (!option || !metadataParentInput) return;
+    metadataParentInput.value = metadataParentOptionDisplay(option);
+    hideMetadataParentPopup();
+    metadataParentInput.focus();
   }
 
   function renderMetadataParentOptions(doc) {
-    if (!metadataParentInput || !metadataParentList) return;
-    metadataParentInput.setAttribute("list", "docsViewerMetadataParentList");
+    if (!metadataParentInput) return;
     var currentParentId = String(doc && doc.parent_id || "").trim();
     var options = metadataParentOptions(doc);
     var currentOption = options.find(function (option) {
       return option.value === currentParentId;
     }) || options[0];
     metadataParentInput.value = metadataParentOptionDisplay(currentOption);
-    metadataParentList.innerHTML = options.map(function (option) {
-      return '<option value="' + context.escapeHtml(metadataParentOptionDisplay(option)) + '"></option>';
-    }).join("");
+    hideMetadataParentPopup();
   }
 
   function resolveMetadataParentId(doc) {
@@ -325,10 +409,6 @@ export function initDocsViewerManagement(context) {
     var rootLabel = state.managementText.metadataParentRootOption;
     if (!inputValue || inputValue.toLowerCase() === rootLabel.toLowerCase()) return "";
     var options = metadataParentOptions(doc);
-    var exactDisplay = options.find(function (option) {
-      return metadataParentOptionDisplay(option) === inputValue;
-    });
-    if (exactDisplay) return exactDisplay.value;
     var exactDocId = options.find(function (option) {
       return option.value && option.value === inputValue;
     });
@@ -374,10 +454,7 @@ export function initDocsViewerManagement(context) {
     if (!metadataParentInput) return;
     metadataParentInput.blur();
     metadataParentInput.value = "";
-    metadataParentInput.removeAttribute("list");
-    if (metadataParentList) {
-      metadataParentList.innerHTML = "";
-    }
+    hideMetadataParentPopup();
   }
 
   function closeMetadataModal(result) {
@@ -1349,6 +1426,7 @@ export function initDocsViewerManagement(context) {
     state.managementText.metadataHiddenLabel = context.getConfigText(config, "docs_viewer.metadata_hidden_label", context.getConfigText(config, "docs_viewer.metadata_viewable_label", state.managementText.metadataHiddenLabel));
     state.managementText.metadataParentRootOption = context.getConfigText(config, "docs_viewer.metadata_parent_root_option", state.managementText.metadataParentRootOption);
     state.managementText.metadataParentInvalid = context.getConfigText(config, "docs_viewer.metadata_parent_invalid", state.managementText.metadataParentInvalid);
+    state.managementText.metadataParentNoMatches = context.getConfigText(config, "docs_viewer.metadata_parent_no_matches", state.managementText.metadataParentNoMatches);
     state.managementText.docHiddenEmoji = String(context.getConfigValue(config, "docs_viewer.doc_hidden_emoji") || state.managementText.docHiddenEmoji);
     state.managementText.statusMenuLabel = context.getConfigText(config, "docs_viewer.status_menu_label", state.managementText.statusMenuLabel);
     state.managementText.statusPillSetLabel = context.getConfigText(config, "docs_viewer.status_pill_set_label", state.managementText.statusPillSetLabel);
@@ -1386,6 +1464,9 @@ export function initDocsViewerManagement(context) {
       hideManageActionsMenu();
     }
     if (metadataModalOpen()) {
+      if (metadataParentPopup && !metadataParentPopup.hidden && !event.target.closest(".docsViewer__parentPicker")) {
+        hideMetadataParentPopup();
+      }
       var closeTrigger = event.target.closest("[data-metadata-close]");
       if (closeTrigger) {
         event.preventDefault();
@@ -1416,6 +1497,11 @@ export function initDocsViewerManagement(context) {
     if (event.key === "Escape" && manageActionsMenu && !manageActionsMenu.hidden) {
       event.preventDefault();
       hideManageActionsMenu();
+      return true;
+    }
+    if (event.key === "Escape" && metadataParentPopup && !metadataParentPopup.hidden) {
+      event.preventDefault();
+      hideMetadataParentPopup();
       return true;
     }
     if (event.key === "Escape" && metadataModalOpen()) {
@@ -1650,6 +1736,60 @@ export function initDocsViewerManagement(context) {
     if (metadataStatusInput) {
       metadataStatusInput.addEventListener("change", function () {
         renderMetadataStatusSelection(String(metadataStatusInput.value || "").trim());
+      });
+    }
+    if (metadataParentInput) {
+      metadataParentInput.addEventListener("input", function () {
+        var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
+        if (doc) renderMetadataParentPopup(doc);
+      });
+      metadataParentInput.addEventListener("focus", function () {
+        var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
+        if (doc) renderMetadataParentPopup(doc);
+      });
+      metadataParentInput.addEventListener("keydown", function (event) {
+        if (!metadataParentPopup || metadataParentPopup.hidden) {
+          if (event.key === "ArrowDown") {
+            var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
+            if (doc) renderMetadataParentPopup(doc);
+          }
+          return;
+        }
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          if (metadataParentOptionRecords.length) {
+            setMetadataParentActiveIndex(Math.min(metadataParentActiveIndex + 1, metadataParentOptionRecords.length - 1));
+          }
+          return;
+        }
+        if (event.key === "ArrowUp") {
+          event.preventDefault();
+          if (metadataParentOptionRecords.length) {
+            setMetadataParentActiveIndex(Math.max(metadataParentActiveIndex - 1, 0));
+          }
+          return;
+        }
+        if (event.key === "Enter" && metadataParentActiveIndex >= 0) {
+          event.preventDefault();
+          selectMetadataParentOption(metadataParentActiveIndex);
+          return;
+        }
+        if (event.key === "Escape") {
+          event.preventDefault();
+          hideMetadataParentPopup();
+        }
+      });
+    }
+    if (metadataParentPopup) {
+      metadataParentPopup.addEventListener("mousedown", function (event) {
+        if (event.target.closest("[data-parent-index]")) {
+          event.preventDefault();
+        }
+      });
+      metadataParentPopup.addEventListener("click", function (event) {
+        var button = event.target.closest("[data-parent-index]");
+        if (!button) return;
+        selectMetadataParentOption(Number(button.getAttribute("data-parent-index")));
       });
     }
   }

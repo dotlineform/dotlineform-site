@@ -8,6 +8,7 @@
   "metadata_hidden_label": "hidden",
   "metadata_parent_root_option": "Root",
   "metadata_parent_invalid": "Select a parent from the search field suggestions or enter Root.",
+  "metadata_parent_no_matches": "No matching parent docs.",
   "status_menu_label": "Document status",
   "status_pill_set_label": "Set status: {label}",
   "status_pill_clear_label": "Clear status: {label}",
