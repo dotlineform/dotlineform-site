@@ -28,6 +28,9 @@ import {
   initDocsViewerSearchController
 } from "./docs-viewer-search-controller.js";
 import {
+  escapeHtml
+} from "./docs-viewer-render.js";
+import {
   initDocsViewerSidebarRenderer
 } from "./docs-viewer-sidebar.js";
 import {
