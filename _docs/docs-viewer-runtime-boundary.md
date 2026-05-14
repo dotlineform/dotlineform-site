@@ -43,6 +43,7 @@ Current shared implementation:
 - `assets/docs-viewer/js/docs-viewer-bookmarks.js` for bookmark state, rendering, IndexedDB storage orchestration, and events imported by the entry controller
 - `assets/docs-viewer/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the bookmark controller
 - `assets/docs-viewer/js/docs-viewer-render.js` for read-oriented result and bookmark markup helpers imported by the entry and bookmark controllers
+- `assets/docs-viewer/js/docs-viewer-router.js` for URL building, anchor route parsing, browser history writes, requested-doc resolution, canonical route correction, and popstate orchestration imported by the entry controller
 - `_includes/docs_viewer_shell.html`
 - `assets/docs-viewer/css/docs-viewer-management.css` for management-only shell and modal styling
 

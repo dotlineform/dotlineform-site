@@ -15,6 +15,7 @@ Status:
 - test-first implementation started
 - retained route smoke added
 - route helper extraction implemented
+- document-resolution extraction implemented
 
 ## Summary
 
@@ -130,9 +131,16 @@ Acceptance:
 
 ### Slice 3: Document Resolution And History Orchestration
 
-Status: pending.
+Status: implemented.
 
 Move requested-doc resolution, history writes, and current-route application behind the router boundary.
+
+Implementation result:
+
+- `assets/docs-viewer/js/docs-viewer-router.js` now owns requested-doc resolution, canonical route correction decisions, search-route state setup, current-route application, and the popstate route branch.
+- `assets/docs-viewer/js/docs-viewer.js` delegates route application to the router while retaining DOM lookup, payload fetching/rendering, report mounting, sidebar/search/bookmark/management controller wiring, and small callback adapters for existing controller call sites.
+- Search route rendering remains delegated through the search controller; the router only sets route state and calls the provided search-render callback.
+- Non-loadable docs still resolve to the first loadable descendant or the configured/default loadable target before history correction and document load.
 
 Acceptance:
 

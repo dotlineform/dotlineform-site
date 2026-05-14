@@ -31,10 +31,13 @@ import {
   initDocsViewerSidebarRenderer
 } from "./docs-viewer-sidebar.js";
 import {
+  applyViewerRoute,
   buildViewerUrl,
   buildViewerUrlForScope,
+  handleViewerPopstate,
+  resolveViewerRouteDocId,
   routeFromAnchorHref,
-  writeViewerHistory
+  setViewerHistory
 } from "./docs-viewer-router.js";
 
 (function () {
@@ -875,8 +878,19 @@ import {
   }
 
   function setHistory(docId, hash, query, mode) {
-    var nextUrl = viewerUrl(docId, hash, query);
-    writeViewerHistory(window.history, docId, nextUrl, hash, query, mode);
+    setViewerHistory({
+      docId: docId,
+      hash: hash,
+      history: window.history,
+      includeScopeParam: includeScopeParam,
+      managementMode: state.managementMode,
+      managementModeValue: MANAGEMENT_MODE,
+      mode: mode,
+      origin: window.location.origin,
+      query: query,
+      viewerBaseUrl: viewerBaseUrl,
+      viewerScope: viewerScope
+    });
   }
 
   function cancelSearchDebounce() {
@@ -1030,25 +1044,13 @@ import {
   }
 
   function resolveDocId() {
-    var requestedDocId = getCurrentDocId();
-    var resolvedDocId = requestedDocId;
-    if (!state.docsById.has(resolvedDocId) && defaultRouteDocId && state.docsById.has(defaultRouteDocId)) {
-      resolvedDocId = defaultRouteDocId;
-    }
-    if (state.docsById.has(resolvedDocId)) {
-      resolvedDocId = resolveLoadableDocId(resolvedDocId) || "";
-    }
-    if (!resolvedDocId && defaultRouteDocId && state.docsById.has(defaultRouteDocId)) {
-      resolvedDocId = resolveLoadableDocId(defaultRouteDocId);
-    }
-    if (!resolvedDocId) {
-      resolvedDocId = defaultDocId();
-    }
-    return {
-      requestedDocId: requestedDocId,
-      docId: resolvedDocId,
-      corrected: resolvedDocId !== requestedDocId
-    };
+    return resolveViewerRouteDocId({
+      requestedDocId: getCurrentDocId(),
+      docsById: state.docsById,
+      defaultRouteDocId: defaultRouteDocId,
+      resolveLoadableDocId: resolveLoadableDocId,
+      defaultDocId: defaultDocId
+    });
   }
 
   function initializeIndex(payload) {
@@ -1075,44 +1077,37 @@ import {
   }
 
   function applyCurrentRoute(options) {
-    setRecentModeActive(false);
-    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
-    syncHiddenVisibilityForRequestedDoc();
-    applyDocVisibility();
-    var routeHash = options && options.hash ? options.hash : getCurrentHash();
-    var route = resolveDocId();
-    var docId = route.docId;
-    if (!docId) {
-      setStatus("No docs available.", true);
-      return;
-    }
-
-    var query = getCurrentQuery();
-    state.searchQuery = query;
-    state.searchRouteActive = hasActiveQuery(query);
-    state.selectedDocId = docId;
-    if (searchInput) {
-      searchInput.value = query;
-    }
-
-    expandTrail(docId);
-    renderSidebar();
-    renderBookmarkUi();
-    renderManagementUi();
-
-    if (route.corrected || !hasCanonicalScopeInUrl() || hasDisallowedModeInUrl() || hasDisallowedScopeInUrl()) {
-      setHistory(docId, routeHash, query, "replace");
-    }
-
-    if (state.searchRouteActive) {
-      renderSearchMode();
-      return;
-    }
-
-    loadDoc(docId, {
+    return applyViewerRoute({
+      applyDocVisibility: applyDocVisibility,
+      currentDocId: getCurrentDocId,
+      currentHash: getCurrentHash,
+      currentQuery: getCurrentQuery,
+      defaultDocId: defaultDocId,
+      defaultRouteDocId: defaultRouteDocId,
+      docHasParent: function (docId) {
+        var doc = state.docsById.get(docId);
+        return Boolean(doc && doc.parent_id);
+      },
+      expandTrail: expandTrail,
+      hasActiveQuery: hasActiveQuery,
+      hasCanonicalScopeInUrl: hasCanonicalScopeInUrl,
+      hasDisallowedModeInUrl: hasDisallowedModeInUrl,
+      hasDisallowedScopeInUrl: hasDisallowedScopeInUrl,
+      hash: options && options.hash ? options.hash : "",
       historyMode: options && options.historyMode ? options.historyMode : "push",
-      hash: routeHash,
-      expandTrail: Boolean(state.docsById.get(docId).parent_id)
+      loadDoc: loadDoc,
+      managementModeActive: function () { return getCurrentMode() === MANAGEMENT_MODE; },
+      renderBookmarkUi: renderBookmarkUi,
+      renderManagementUi: renderManagementUi,
+      renderSearchMode: renderSearchMode,
+      renderSidebar: renderSidebar,
+      resolveLoadableDocId: resolveLoadableDocId,
+      searchInput: searchInput,
+      setHistory: setHistory,
+      setRecentModeActive: setRecentModeActive,
+      setStatus: setStatus,
+      state: state,
+      syncHiddenVisibilityForRequestedDoc: syncHiddenVisibilityForRequestedDoc
     });
   }
 
@@ -1146,21 +1141,18 @@ import {
   }
 
   window.addEventListener("popstate", function () {
-    if (state.docs.length === 0) return;
-    if (allowScopeQuery) {
-      try {
-        if (routeScopeFromUrl() !== viewerScope) {
-          window.location.reload();
-          return;
-        }
-      } catch (error) {
-        setStatus(error.message || "Unknown docs scope.", true);
-        return;
-      }
-    }
-    hideContextMenu();
-    cancelSearchDebounce();
-    applyCurrentRoute({ historyMode: "none", hash: getCurrentHash() });
+    handleViewerPopstate({
+      allowScopeQuery: allowScopeQuery,
+      applyCurrentRoute: applyCurrentRoute,
+      cancelSearchDebounce: cancelSearchDebounce,
+      currentHash: getCurrentHash,
+      docsAvailable: function () { return state.docs.length > 0; },
+      hideContextMenu: hideContextMenu,
+      reloadWindow: function () { window.location.reload(); },
+      routeScopeFromUrl: routeScopeFromUrl,
+      setStatus: setStatus,
+      viewerScope: viewerScope
+    });
   });
 
   window.addEventListener("scroll", hideContextMenu, { passive: true });

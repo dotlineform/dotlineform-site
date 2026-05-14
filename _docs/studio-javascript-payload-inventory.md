@@ -102,8 +102,8 @@ Next cleanup should target modal view-models, delete-impact rendering, and impor
 
 ### `assets/docs-viewer/js/docs-viewer.js`
 
-- Lines: 1,226
-- Raw: 38.6 KiB
+- Lines: 1,218
+- Raw: 38.7 KiB
 - Gzip: 8.3 KiB
 - Classification: mixed shared viewer runtime controller
 - Maintenance risk: high
@@ -116,18 +116,18 @@ Recent extractions moved the largest non-route responsibilities out of the entry
 - Sidebar/nav/meta rendering and trail display now live in `assets/docs-viewer/js/docs-viewer-sidebar.js`.
 - Search loading, recent/search result rendering, result batching, and debounced search input binding now live in `assets/docs-viewer/js/docs-viewer-search-controller.js`.
 - Result-row and bookmark-row markup helpers live in `assets/docs-viewer/js/docs-viewer-render.js`.
-- URL building, anchor route parsing, and history writes now live in `assets/docs-viewer/js/docs-viewer-router.js`.
+- URL building, anchor route parsing, history writes, requested-doc resolution, canonical route correction, and popstate route orchestration now live in `assets/docs-viewer/js/docs-viewer-router.js`.
 - Status-pill markup and events stay behind the lazy management-controller boundary.
 
-The remaining entry controller responsibilities are route/history state, content loading, reports entry, and management dynamic-loading.
-Maintenance risk remains high because the route/history and document-loading spine still has broad behavioral reach.
+The remaining entry controller responsibilities are route callback binding, content loading, reports entry, and management dynamic-loading.
+Maintenance risk remains high because the document-loading spine still has broad behavioral reach.
 This is not an acceptable long-term resting point: avoid adding route behavior directly to the entry controller unless the same change also reduces the routing surface there.
 
 Do not extract a dedicated router module just for line count.
 Do reconsider a router module when route behavior changes materially.
 Public internet-facing Docs Viewer routes might not expand soon, but local Studio/management routes are expected to keep changing and may be short-lived for specific work.
 That higher-turnover local route surface is enough to justify a router extraction when the next route change lands.
-The route pass should cover `viewerUrl`, `viewerUrlForScope`, `routeFromAnchor`, `setHistory`, `resolveDocId`, `applyCurrentRoute`, `loadDoc`, and `renderPayload`, and should have route-focused smoke tests in place before or alongside the move.
+The active route pass has covered `viewerUrl`, `viewerUrlForScope`, `routeFromAnchor`, `setHistory`, `resolveDocId`, and `applyCurrentRoute`; the remaining extraction question is whether `loadDoc` can move without hiding `renderPayload` and report ownership inside the router.
 Treat the goal as isolating route parsing, canonical URL writing, document resolution, and payload rendering handoff from sidebar/search/bookmark/report concerns.
 
 ### `assets/studio/js/data-sharing-review.js`
@@ -158,7 +158,7 @@ These files are below the 1,000-line review threshold but close enough to watch 
 ## Current Priority
 
 1. `assets/docs-viewer/js/docs-viewer-management.js`
-2. `assets/docs-viewer/js/docs-viewer.js`, continue the active route extraction through document resolution and payload handoff
+2. `assets/docs-viewer/js/docs-viewer.js`, continue the active route extraction through payload handoff
 3. `assets/studio/js/tag-studio.js`
 4. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
 5. `assets/studio/js/data-sharing-review.js`

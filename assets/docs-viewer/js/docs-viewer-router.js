@@ -74,3 +74,190 @@ export function writeViewerHistory(history, docId, url, hash, query, mode) {
   }
   history.pushState(nextState, "", url);
 }
+
+export function setViewerHistory(options) {
+  var settings = options || {};
+  var nextUrl = buildViewerUrl(settings);
+  writeViewerHistory(
+    settings.history || window.history,
+    settings.docId,
+    nextUrl,
+    settings.hash,
+    settings.query,
+    settings.mode
+  );
+  return nextUrl;
+}
+
+export function resolveViewerRouteDocId(options) {
+  var settings = options || {};
+  var requestedDocId = settings.requestedDocId || "";
+  var resolvedDocId = requestedDocId;
+  var docsById = settings.docsById;
+  var defaultRouteDocId = settings.defaultRouteDocId || "";
+  var resolveLoadableDocId = settings.resolveLoadableDocId;
+  var defaultDocId = settings.defaultDocId;
+
+  if (!docsById || typeof docsById.has !== "function") {
+    return {
+      requestedDocId: requestedDocId,
+      docId: "",
+      corrected: Boolean(requestedDocId)
+    };
+  }
+
+  if (!docsById.has(resolvedDocId) && defaultRouteDocId && docsById.has(defaultRouteDocId)) {
+    resolvedDocId = defaultRouteDocId;
+  }
+  if (docsById.has(resolvedDocId) && typeof resolveLoadableDocId === "function") {
+    resolvedDocId = resolveLoadableDocId(resolvedDocId) || "";
+  }
+  if (!resolvedDocId && defaultRouteDocId && docsById.has(defaultRouteDocId) && typeof resolveLoadableDocId === "function") {
+    resolvedDocId = resolveLoadableDocId(defaultRouteDocId);
+  }
+  if (!resolvedDocId && typeof defaultDocId === "function") {
+    resolvedDocId = defaultDocId();
+  }
+  return {
+    requestedDocId: requestedDocId,
+    docId: resolvedDocId,
+    corrected: resolvedDocId !== requestedDocId
+  };
+}
+
+export function applyViewerRoute(options) {
+  var settings = options || {};
+  var state = settings.state;
+  var routeHash = settings.hash || (typeof settings.currentHash === "function" ? settings.currentHash() : "");
+  var historyMode = settings.historyMode || "push";
+
+  if (typeof settings.setRecentModeActive === "function") {
+    settings.setRecentModeActive(false);
+  }
+  if (state && typeof settings.managementModeActive === "function") {
+    state.managementMode = settings.managementModeActive();
+  }
+  if (typeof settings.syncHiddenVisibilityForRequestedDoc === "function") {
+    settings.syncHiddenVisibilityForRequestedDoc();
+  }
+  if (typeof settings.applyDocVisibility === "function") {
+    settings.applyDocVisibility();
+  }
+
+  var route = resolveViewerRouteDocId({
+    requestedDocId: typeof settings.currentDocId === "function" ? settings.currentDocId() : "",
+    docsById: state ? state.docsById : null,
+    defaultRouteDocId: settings.defaultRouteDocId,
+    resolveLoadableDocId: settings.resolveLoadableDocId,
+    defaultDocId: settings.defaultDocId
+  });
+  var docId = route.docId;
+  if (!docId) {
+    if (typeof settings.setStatus === "function") {
+      settings.setStatus("No docs available.", true);
+    }
+    return {
+      docId: "",
+      route: route,
+      searchRouteActive: false
+    };
+  }
+
+  var query = typeof settings.currentQuery === "function" ? settings.currentQuery() : "";
+  var searchRouteActive = typeof settings.hasActiveQuery === "function"
+    ? settings.hasActiveQuery(query)
+    : Boolean(String(query || "").trim());
+
+  if (state) {
+    state.searchQuery = query;
+    state.searchRouteActive = searchRouteActive;
+    state.selectedDocId = docId;
+  }
+  if (settings.searchInput) {
+    settings.searchInput.value = query;
+  }
+
+  if (typeof settings.expandTrail === "function") {
+    settings.expandTrail(docId);
+  }
+  if (typeof settings.renderSidebar === "function") {
+    settings.renderSidebar();
+  }
+  if (typeof settings.renderBookmarkUi === "function") {
+    settings.renderBookmarkUi();
+  }
+  if (typeof settings.renderManagementUi === "function") {
+    settings.renderManagementUi();
+  }
+
+  var shouldReplaceHistory = route.corrected;
+  if (!shouldReplaceHistory && typeof settings.hasCanonicalScopeInUrl === "function") {
+    shouldReplaceHistory = !settings.hasCanonicalScopeInUrl();
+  }
+  if (!shouldReplaceHistory && typeof settings.hasDisallowedModeInUrl === "function") {
+    shouldReplaceHistory = settings.hasDisallowedModeInUrl();
+  }
+  if (!shouldReplaceHistory && typeof settings.hasDisallowedScopeInUrl === "function") {
+    shouldReplaceHistory = settings.hasDisallowedScopeInUrl();
+  }
+  if (shouldReplaceHistory && typeof settings.setHistory === "function") {
+    settings.setHistory(docId, routeHash, query, "replace");
+  }
+
+  if (searchRouteActive) {
+    if (typeof settings.renderSearchMode === "function") {
+      settings.renderSearchMode();
+    }
+    return {
+      docId: docId,
+      route: route,
+      searchRouteActive: true
+    };
+  }
+
+  if (typeof settings.loadDoc === "function") {
+    settings.loadDoc(docId, {
+      historyMode: historyMode,
+      hash: routeHash,
+      expandTrail: typeof settings.docHasParent === "function" ? settings.docHasParent(docId) : true
+    });
+  }
+
+  return {
+    docId: docId,
+    route: route,
+    searchRouteActive: false
+  };
+}
+
+export function handleViewerPopstate(options) {
+  var settings = options || {};
+  if (typeof settings.docsAvailable === "function" && !settings.docsAvailable()) return;
+  if (settings.allowScopeQuery) {
+    try {
+      if (typeof settings.routeScopeFromUrl === "function" && settings.routeScopeFromUrl() !== settings.viewerScope) {
+        if (typeof settings.reloadWindow === "function") {
+          settings.reloadWindow();
+        }
+        return;
+      }
+    } catch (error) {
+      if (typeof settings.setStatus === "function") {
+        settings.setStatus(error.message || "Unknown docs scope.", true);
+      }
+      return;
+    }
+  }
+  if (typeof settings.hideContextMenu === "function") {
+    settings.hideContextMenu();
+  }
+  if (typeof settings.cancelSearchDebounce === "function") {
+    settings.cancelSearchDebounce();
+  }
+  if (typeof settings.applyCurrentRoute === "function") {
+    settings.applyCurrentRoute({
+      historyMode: "none",
+      hash: typeof settings.currentHash === "function" ? settings.currentHash() : ""
+    });
+  }
+}
