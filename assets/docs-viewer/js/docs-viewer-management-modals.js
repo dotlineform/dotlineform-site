@@ -46,15 +46,16 @@ function renderActions(actions) {
 
 function renderModalFrame(options) {
   var titleId = normalizeText(options.titleId) || "docsViewerManagementModalTitle";
+  var size = normalizeText(options.size);
+  var sizeClass = size ? " docsViewer__modalCard--" + escapeHtml(size) : "";
   return '' +
     '<div class="docsViewer__modal" data-role="docs-viewer-management-modal">' +
       '<div class="docsViewer__modalBackdrop" data-role="modal-cancel"></div>' +
-      '<div class="docsViewer__modalCard" role="dialog" aria-modal="true" aria-labelledby="' + escapeHtml(titleId) + '">' +
+      '<div class="docsViewer__modalCard' + sizeClass + '" role="dialog" aria-modal="true" aria-labelledby="' + escapeHtml(titleId) + '">' +
         '<div class="docsViewer__modalHeader">' +
           '<div class="docsViewer__modalHeaderCopy">' +
             '<h2 class="docsViewer__modalTitle" id="' + escapeHtml(titleId) + '">' + escapeHtml(options.title) + '</h2>' +
           '</div>' +
-          '<button class="docsViewer__modalClose" type="button" data-role="modal-cancel" aria-label="' + escapeHtml(options.closeLabel || "Close") + '">×</button>' +
         '</div>' +
         '<form class="docsViewer__modalForm" data-role="modal-form">' +
           (options.bodyHtml || "") +
@@ -158,6 +159,7 @@ export function openDocsViewerConfirmModal(options = {}) {
     root: options.root,
     title: options.title,
     closeLabel: options.closeLabel || options.cancelLabel,
+    size: options.size || "compact",
     bodyHtml: bodyHtmlFromText(options.body),
     actions: [
       { role: "modal-primary", label: options.primaryLabel || "OK" },
@@ -180,6 +182,7 @@ export function openDocsViewerTextInputModal(options = {}) {
     root: options.root,
     title: options.title,
     closeLabel: options.closeLabel || options.cancelLabel,
+    size: options.size || "compact",
     bodyHtml: bodyHtml,
     focusSelector: "#" + inputId,
     actions: [
@@ -217,6 +220,7 @@ export function openDocsViewerChoiceModal(options = {}) {
     root: options.root,
     title: options.title,
     closeLabel: options.closeLabel || options.cancelLabel,
+    size: options.size || "compact",
     bodyHtml: bodyHtml,
     focusSelector: 'input[name="' + name + '"]',
     actions: [
@@ -671,18 +675,10 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function wireEvents() {
-    if (refs.metadataCloseButton) {
-      refs.metadataCloseButton.addEventListener("click", function () {
-        closeMetadataModal();
-      });
-    }
     if (refs.metadataCancelButton) {
       refs.metadataCancelButton.addEventListener("click", function () {
         closeMetadataModal();
       });
-    }
-    if (refs.settingsCloseButton) {
-      refs.settingsCloseButton.addEventListener("click", closeSettingsModal);
     }
     if (refs.settingsCancelButton) {
       refs.settingsCancelButton.addEventListener("click", closeSettingsModal);

@@ -282,6 +282,10 @@
 }
 
 .docsViewerImportModal{
+  --docs-viewer-modal-width-compact: 38rem;
+  --docs-viewer-modal-width-default: 52rem;
+  --docs-viewer-modal-width-wide: 68rem;
+  --docs-viewer-modal-width-document: 72ch;
   position: fixed;
   inset: 0;
   z-index: 1000;
@@ -302,13 +306,29 @@
 .docsViewerImportModal__dialog{
   box-sizing: border-box;
   position: relative;
-  width: min(52rem, calc(100vw - 2rem));
+  width: min(var(--docs-viewer-modal-width-default), calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
   overflow: auto;
   border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
   border-radius: var(--docs-viewer-import-radius-lg, 0.5rem);
   background: var(--docs-viewer-panel, var(--panel, #fff));
   padding: 1rem;
+}
+
+.docsViewerImportModal__dialog--compact{
+  width: min(var(--docs-viewer-modal-width-compact), calc(100vw - 2rem));
+}
+
+.docsViewerImportModal__dialog--default{
+  width: min(var(--docs-viewer-modal-width-default), calc(100vw - 2rem));
+}
+
+.docsViewerImportModal__dialog--wide{
+  width: min(var(--docs-viewer-modal-width-wide), calc(100vw - 2rem));
+}
+
+.docsViewerImportModal__dialog--document{
+  width: min(var(--docs-viewer-modal-width-document), calc(100vw - 2rem));
 }
 
 .docsViewerImportModal__dialog > h3{
@@ -498,6 +518,10 @@
 }
 
 .docsViewer__modal{
+  --docs-viewer-modal-width-compact: 38rem;
+  --docs-viewer-modal-width-default: 52rem;
+  --docs-viewer-modal-width-wide: 68rem;
+  --docs-viewer-modal-width-document: 72ch;
   position: fixed;
   inset: 0;
   z-index: 150;
@@ -514,7 +538,7 @@
   position: relative;
   z-index: 1;
   color-scheme: light;
-  width: min(38rem, calc(100vw - 2rem));
+  width: min(var(--docs-viewer-modal-width-default), calc(100vw - 2rem));
   margin: 8vh auto 0;
   border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
   border-radius: var(--docs-viewer-radius, var(--radius, 0.625rem));
@@ -523,15 +547,23 @@
   padding: 0.95rem;
 }
 
+.docsViewer__modalCard--compact{
+  width: min(var(--docs-viewer-modal-width-compact), calc(100vw - 2rem));
+}
+
+.docsViewer__modalCard--default{
+  width: min(var(--docs-viewer-modal-width-default), calc(100vw - 2rem));
+}
+
 .docsViewer__modalCard--wide{
-  width: min(68rem, calc(100vw - 2rem));
+  width: min(var(--docs-viewer-modal-width-wide), calc(100vw - 2rem));
   margin-top: 4vh;
 }
 
-.docsViewer__modalCard--documentWidth{
+.docsViewer__modalCard--document{
   display: flex;
   flex-direction: column;
-  width: min(var(--docs-viewer-measure, 72ch), calc(100vw - 2rem));
+  width: min(var(--docs-viewer-modal-width-document), calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
 }
 
@@ -555,20 +587,6 @@
 
 .docsViewer__modalMeta{
   margin: 0.3rem 0 0;
-}
-
-.docsViewer__modalClose{
-  appearance: none;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  color: var(--docs-viewer-text, var(--text, #111));
-  border-radius: 999px;
-  width: 2rem;
-  min-width: 2rem;
-  height: 2rem;
-  line-height: 1;
-  font-size: 1.1rem;
-  cursor: pointer;
 }
 
 .docsViewer__modalForm{
@@ -658,8 +676,7 @@ select.docsViewer__fieldInput--listbox{
   resize: vertical;
 }
 
-.docsViewer__fieldInput:focus-visible,
-.docsViewer__modalClose:focus-visible{
+.docsViewer__fieldInput:focus-visible{
   outline: 2px solid var(--docs-viewer-border-strong, var(--border-strong, #aaa));
   outline-offset: 2px;
 }

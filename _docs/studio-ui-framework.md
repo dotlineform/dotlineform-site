@@ -103,9 +103,10 @@ Chip rule:
 Button rule:
 
 - `tagStudio__button` is the shared command-button primitive for actions such as `Save`, `Import`, `New`, `OK`, and `Cancel`
+- shared command buttons use one compact height; use the default-width modifier when a command row needs stable button widths
 - clickable pill-like controls are not buttons in this system and should be defined through the pill primitive layer instead
 - buttons do not need to live inside a toolbar; toolbar is an optional composition primitive rather than part of the button contract
-- modal action buttons should remain subsets of the shared button primitive
+- modal action buttons should remain subsets of the shared button primitive and use the default-width contract
 - button-related status, warning, and success copy should stay adjacent to the related command area, either on the same row or in a dedicated row immediately below it
 
 Use these as the default contract for:

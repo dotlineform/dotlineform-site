@@ -12,7 +12,8 @@ export function openActivityDetailsModal(state, entry) {
     root: state.root,
     title: getStudioText(state.config, "activity_log.modal_title", "Activity details"),
     body: detailItems.length ? detailItems : [fallback],
-    closeLabel: getStudioText(state.config, "activity_log.modal_close_button", "Close")
+    closeLabel: getStudioText(state.config, "activity_log.modal_close_button", "Close"),
+    size: "compact"
   });
 }
 

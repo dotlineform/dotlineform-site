@@ -37,7 +37,7 @@ Navigation should use links or a documented link-style composition.
 The shared command-button contract currently includes:
 
 - stable box sizing and height
-- small and medium sizes
+- one compact shared command height
 - optional default-width behavior
 - disabled state for temporarily unavailable commands
 - modal action-row compatibility
@@ -57,9 +57,11 @@ Current demo implementation lives in:
 Primary classes:
 
 - `tagStudio__button`
-- `tagStudio__button--md`
 - `tagStudio__button--defaultWidth`
 - `tagStudio__button--defaultAction`
+
+`tagStudio__button` uses the same compact height for page commands and modal actions.
+Use `tagStudio__button--defaultWidth` when commands in a row should share the standard minimum width, including modal action rows.
 
 Button-related visible copy belongs in the relevant route or feature `ui_text` config when the page is config-backed.
 

@@ -265,12 +265,6 @@ a.uiCatalogueDemoPanel:focus-visible {
   cursor: pointer;
 }
 
-.uiCatalogueDemoButton--medium {
-  --ui-demo-button-height: 2.45rem;
-  --ui-demo-button-width: 6.6rem;
-  font-size: var(--font-base, 1rem);
-}
-
 .uiCatalogueDemoButton--fixed {
   min-width: var(--ui-demo-button-width);
 }
@@ -563,6 +557,10 @@ a.uiCatalogueDemoPanel:focus-visible {
 }
 
 .uiCatalogueDemoModal {
+  --ui-demo-modal-width-compact: 38rem;
+  --ui-demo-modal-width-default: 52rem;
+  --ui-demo-modal-width-wide: 68rem;
+  --ui-demo-modal-width-document: 72ch;
   position: fixed;
   inset: 0;
   z-index: 1000;
@@ -590,7 +588,7 @@ a.uiCatalogueDemoPanel:focus-visible {
   position: relative;
   display: grid;
   gap: 0.85rem;
-  width: min(38rem, calc(100vw - 2rem));
+  width: min(var(--ui-demo-modal-width-default), calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
   overflow: auto;
   border: 1px solid var(--ui-demo-line);
@@ -599,8 +597,20 @@ a.uiCatalogueDemoPanel:focus-visible {
   background: var(--ui-demo-surface);
 }
 
+.uiCatalogueDemoModal__dialog--compact {
+  width: min(var(--ui-demo-modal-width-compact), calc(100vw - 2rem));
+}
+
+.uiCatalogueDemoModal__dialog--default {
+  width: min(var(--ui-demo-modal-width-default), calc(100vw - 2rem));
+}
+
 .uiCatalogueDemoModal__dialog--wide {
-  width: min(58rem, calc(100vw - 2rem));
+  width: min(var(--ui-demo-modal-width-wide), calc(100vw - 2rem));
+}
+
+.uiCatalogueDemoModal__dialog--document {
+  width: min(var(--ui-demo-modal-width-document), calc(100vw - 2rem));
 }
 
 .uiCatalogueDemoModal__header {
@@ -647,24 +657,6 @@ a.uiCatalogueDemoPanel:focus-visible {
   align-items: start;
 }
 
-.uiCatalogueDemoModal__close {
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  min-width: 2rem;
-  height: 2rem;
-  border: 1px solid var(--ui-demo-line);
-  border-radius: 999px;
-  color: inherit;
-  font: inherit;
-  font-size: 1rem;
-  line-height: 1;
-  background: var(--ui-demo-surface);
-  cursor: pointer;
-}
-
 .uiCatalogueDemoModal__status[data-state="warning"] {
   color: var(--ui-demo-warning);
 }
@@ -682,8 +674,7 @@ a.uiCatalogueDemoPanel:focus-visible {
 }
 
 .uiCatalogueDemoModal__backdrop:focus-visible,
-.uiCatalogueDemoModal__dialog:focus-visible,
-.uiCatalogueDemoModal__close:focus-visible {
+.uiCatalogueDemoModal__dialog:focus-visible {
   outline: 2px solid var(--ui-demo-focus);
   outline-offset: 2px;
 }

@@ -16,7 +16,6 @@ ui_catalogue_demo_primitive: modal-shell
         <h3 class="uiCatalogueDemoModal__title" id="exampleModalTitle">Modal title</h3>
         <p class="uiCatalogueDemoModal__meta">Optional modal context</p>
       </div>
-      <button class="uiCatalogueDemoModal__close" type="button" data-ui-demo-modal-close aria-label="Close modal">×</button>
     </header>
     <div class="uiCatalogueDemoModal__body">
       <p class="uiCatalogueDemoModal__text">Modal body content belongs to the route or command.</p>
@@ -67,7 +66,7 @@ ui_catalogue_demo_primitive: modal-shell
           <h3 class="uiCatalogueDemoExample__title">Notice Result</h3>
           <p class="uiCatalogueDemoExample__summary">A completed command returns readable details and a close action.</p>
         </header>
-        <button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed" type="button" data-ui-demo-modal-open="uiCatalogueDemoNoticeModal">Open</button>
+        <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button" data-ui-demo-modal-open="uiCatalogueDemoNoticeModal">Open</button>
       </section>
 
       <section class="uiCatalogueDemoExample uiCatalogueDemoExample--framed">
@@ -75,7 +74,7 @@ ui_catalogue_demo_primitive: modal-shell
           <h3 class="uiCatalogueDemoExample__title">Confirmation</h3>
           <p class="uiCatalogueDemoExample__summary">The opener keeps ownership of the destructive action.</p>
         </header>
-        <button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed" type="button" data-ui-demo-modal-open="uiCatalogueDemoConfirmModal">Open</button>
+        <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button" data-ui-demo-modal-open="uiCatalogueDemoConfirmModal">Open</button>
       </section>
 
       <section class="uiCatalogueDemoExample uiCatalogueDemoExample--framed">
@@ -83,7 +82,7 @@ ui_catalogue_demo_primitive: modal-shell
           <h3 class="uiCatalogueDemoExample__title">Short Input</h3>
           <p class="uiCatalogueDemoExample__summary">Local completeness validation stays inside the modal.</p>
         </header>
-        <button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed" type="button" data-ui-demo-modal-open="uiCatalogueDemoInputModal">Open</button>
+        <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button" data-ui-demo-modal-open="uiCatalogueDemoInputModal">Open</button>
       </section>
 
       <section class="uiCatalogueDemoExample uiCatalogueDemoExample--framed">
@@ -91,20 +90,19 @@ ui_catalogue_demo_primitive: modal-shell
           <h3 class="uiCatalogueDemoExample__title">Workflow</h3>
           <p class="uiCatalogueDemoExample__summary">A route-owned modal can contain several controls while keeping the same shell.</p>
         </header>
-        <button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed" type="button" data-ui-demo-modal-open="uiCatalogueDemoWorkflowModal">Open</button>
+        <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button" data-ui-demo-modal-open="uiCatalogueDemoWorkflowModal">Open</button>
       </section>
     </div>
   </section>
 
   <div class="uiCatalogueDemoModal" id="uiCatalogueDemoNoticeModal" data-ui-demo-modal data-open="false" aria-hidden="true">
     <button class="uiCatalogueDemoModal__backdrop" type="button" data-ui-demo-modal-close aria-label="Close result modal"></button>
-    <section class="uiCatalogueDemoModal__dialog" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoNoticeModalTitle" tabindex="-1">
+    <section class="uiCatalogueDemoModal__dialog uiCatalogueDemoModal__dialog--compact" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoNoticeModalTitle" tabindex="-1">
       <header class="uiCatalogueDemoModal__header">
         <div class="uiCatalogueDemoModal__headerCopy">
           <h3 class="uiCatalogueDemoModal__title" id="uiCatalogueDemoNoticeModalTitle">Prepare complete</h3>
           <p class="uiCatalogueDemoModal__meta">Library package</p>
         </div>
-        <button class="uiCatalogueDemoModal__close" type="button" data-ui-demo-modal-close aria-label="Close result modal">×</button>
       </header>
       <div class="uiCatalogueDemoModal__body">
         <p class="uiCatalogueDemoModal__text">Generated a returned-package preview with three document updates.</p>
@@ -128,13 +126,12 @@ ui_catalogue_demo_primitive: modal-shell
 
   <div class="uiCatalogueDemoModal" id="uiCatalogueDemoConfirmModal" data-ui-demo-modal data-open="false" aria-hidden="true">
     <button class="uiCatalogueDemoModal__backdrop" type="button" data-ui-demo-modal-close aria-label="Cancel delete"></button>
-    <section class="uiCatalogueDemoModal__dialog" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoConfirmModalTitle" tabindex="-1">
+    <section class="uiCatalogueDemoModal__dialog uiCatalogueDemoModal__dialog--compact" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoConfirmModalTitle" tabindex="-1">
       <header class="uiCatalogueDemoModal__header">
         <div class="uiCatalogueDemoModal__headerCopy">
           <h3 class="uiCatalogueDemoModal__title" id="uiCatalogueDemoConfirmModalTitle">Delete alias</h3>
           <p class="uiCatalogueDemoModal__meta">analytics tag aliases</p>
         </div>
-        <button class="uiCatalogueDemoModal__close" type="button" data-ui-demo-modal-close aria-label="Cancel delete">×</button>
       </header>
       <div class="uiCatalogueDemoModal__body">
         <p class="uiCatalogueDemoModal__text">Delete the selected alias? The page command owns the write after confirmation.</p>
@@ -149,13 +146,12 @@ ui_catalogue_demo_primitive: modal-shell
 
   <div class="uiCatalogueDemoModal" id="uiCatalogueDemoInputModal" data-ui-demo-modal data-open="false" aria-hidden="true" data-ui-demo-modal-required-message="Enter a title before continuing.">
     <button class="uiCatalogueDemoModal__backdrop" type="button" data-ui-demo-modal-close aria-label="Cancel title entry"></button>
-    <section class="uiCatalogueDemoModal__dialog" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoInputModalTitle" tabindex="-1">
+    <section class="uiCatalogueDemoModal__dialog uiCatalogueDemoModal__dialog--compact" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoInputModalTitle" tabindex="-1">
       <header class="uiCatalogueDemoModal__header">
         <div class="uiCatalogueDemoModal__headerCopy">
           <h3 class="uiCatalogueDemoModal__title" id="uiCatalogueDemoInputModalTitle">New document</h3>
           <p class="uiCatalogueDemoModal__meta">Docs Viewer management</p>
         </div>
-        <button class="uiCatalogueDemoModal__close" type="button" data-ui-demo-modal-close aria-label="Cancel title entry">×</button>
       </header>
       <div class="uiCatalogueDemoModal__body">
         <label class="uiCatalogueDemoField uiCatalogueDemoField--fill" for="uiCatalogueDemoModalTitleInput">
@@ -181,7 +177,6 @@ ui_catalogue_demo_primitive: modal-shell
           <h3 class="uiCatalogueDemoModal__title" id="uiCatalogueDemoWorkflowModalTitle">Import review</h3>
           <p class="uiCatalogueDemoModal__meta">series tag assignments</p>
         </div>
-        <button class="uiCatalogueDemoModal__close" type="button" data-ui-demo-modal-close aria-label="Close workflow modal">×</button>
       </header>
       <div class="uiCatalogueDemoModal__body uiCatalogueDemoModal__body--workflow">
         <label class="uiCatalogueDemoField uiCatalogueDemoField--fill" for="uiCatalogueDemoModalConflictSelect">

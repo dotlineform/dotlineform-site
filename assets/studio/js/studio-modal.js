@@ -52,8 +52,8 @@ function renderActions(options = {}) {
   const primaryAttrs = options.primaryDisabled ? " disabled" : "";
   return `
     <div class="tagStudioModal__actions">
-      <button type="button" class="tagStudio__button" data-role="modal-cancel">${escapeHtml(cancelLabel)}</button>
-      <button type="button" class="tagStudio__button tagStudio__button--defaultAction" data-role="modal-primary"${primaryAttrs}>${escapeHtml(primaryLabel)}</button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-role="modal-cancel">${escapeHtml(cancelLabel)}</button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth tagStudio__button--defaultAction" data-role="modal-primary"${primaryAttrs}>${escapeHtml(primaryLabel)}</button>
     </div>
   `;
 }
@@ -62,7 +62,7 @@ function renderCloseAction(options = {}) {
   const closeLabel = String(options.closeLabel || options.cancelLabel || "Close");
   return `
     <div class="tagStudioModal__actions">
-      <button type="button" class="tagStudio__button" data-role="modal-cancel">${escapeHtml(closeLabel)}</button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-role="modal-cancel">${escapeHtml(closeLabel)}</button>
     </div>
   `;
 }
@@ -71,7 +71,7 @@ function renderActionList(actions = []) {
   if (!Array.isArray(actions) || !actions.length) return "";
   return actions.map((action, index) => {
     const label = String(action && action.label ? action.label : `Action ${index + 1}`);
-    const classes = ["tagStudio__button"];
+    const classes = ["tagStudio__button", "tagStudio__button--defaultWidth"];
     if (action && action.primary) classes.push("tagStudio__button--defaultAction");
     if (action && action.className) classes.push(String(action.className));
     const roleAttr = action && action.role ? ` data-role="${escapeHtml(action.role)}"` : "";
@@ -98,17 +98,12 @@ export function renderStudioModalFrame(options = {}) {
   const bodyHtml = String(options.bodyHtml || "");
   const statusHtml = options.statusHtml || (options.status || options.includeStatus ? renderStatus(options.status) : "");
   const actionsHtml = options.actionsHtml || renderStudioModalActions(options.actions || []);
-  const closeRole = options.closeRole || options.backdropRole || "";
-  const closeButtonHtml = closeRole ? `
-          <button class="tagStudioModal__close" type="button" data-role="${escapeHtml(closeRole)}" aria-label="${escapeHtml(options.closeLabel || "Close")}">×</button>
-  ` : "";
   const contentHtml = `
         <header class="tagStudioModal__header">
           <div class="tagStudioModal__headerCopy">
             <h3 class="tagStudioModal__title" id="${escapeHtml(titleId)}"${titleRole}>${escapeHtml(title)}</h3>
             ${meta ? `<p class="tagStudioModal__meta">${escapeHtml(meta)}</p>` : ""}
           </div>
-          ${closeButtonHtml}
         </header>
         ${bodyHtml}
         ${statusHtml}
@@ -138,7 +133,6 @@ function renderModal(type, options = {}) {
     hidden: false,
     modalRole: "studio-modal",
     backdropRole: "modal-cancel",
-    closeRole: "modal-cancel",
     closeLabel: options.closeLabel || options.cancelLabel || "Close",
     titleId: options.titleId || "studioModalTitle",
     title,

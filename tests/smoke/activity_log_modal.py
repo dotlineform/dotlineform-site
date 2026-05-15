@@ -110,7 +110,7 @@ def assert_activity_modal(page, timeout_ms: int) -> dict[str, object]:
         """modal => {
             const dialog = modal.querySelector('[role="dialog"]');
             const title = modal.querySelector('.tagStudioModal__title');
-            const closeButton = modal.querySelector('.tagStudioModal__close');
+            const headerCloseButtons = Array.from(modal.querySelectorAll('.tagStudioModal__close'));
             const actionButtons = Array.from(modal.querySelectorAll('.tagStudioModal__actions button'));
             const bodyLines = Array.from(modal.querySelectorAll('.tagStudioModal__label'))
                 .map(node => node.textContent.trim())
@@ -118,11 +118,13 @@ def assert_activity_modal(page, timeout_ms: int) -> dict[str, object]:
             return {
                 role: dialog ? dialog.getAttribute('role') : "",
                 modal: dialog ? dialog.getAttribute('aria-modal') : "",
+                dialogClass: dialog ? dialog.className : "",
                 labelledBy: dialog ? dialog.getAttribute('aria-labelledby') : "",
                 titleId: title ? title.id : "",
                 title: title ? title.textContent.trim() : "",
-                closeLabel: closeButton ? closeButton.getAttribute('aria-label') : "",
+                headerCloseCount: headerCloseButtons.length,
                 actionLabels: actionButtons.map(button => button.textContent.trim()),
+                actionClasses: actionButtons.map(button => button.className),
                 bodyLines,
                 activeRole: document.activeElement ? document.activeElement.getAttribute('data-role') : ""
             };
@@ -132,10 +134,14 @@ def assert_activity_modal(page, timeout_ms: int) -> dict[str, object]:
         raise AssertionError(f"activity modal lacks dialog semantics: {modal_state!r}")
     if not modal_state["labelledBy"] or modal_state["labelledBy"] != modal_state["titleId"]:
         raise AssertionError(f"activity modal is not labelled by its title: {modal_state!r}")
+    if "tagStudioModal__dialog--compact" not in modal_state["dialogClass"]:
+        raise AssertionError(f"activity modal is not using the compact size variant: {modal_state!r}")
     if modal_state["title"] != "Activity details":
         raise AssertionError(f"activity modal title mismatch: {modal_state!r}")
-    if modal_state["closeLabel"] != "Close" or modal_state["actionLabels"] != ["Close"]:
+    if modal_state["headerCloseCount"] != 0 or modal_state["actionLabels"] != ["Close"]:
         raise AssertionError(f"activity modal close controls mismatch: {modal_state!r}")
+    if not modal_state["actionClasses"] or "tagStudio__button--defaultWidth" not in modal_state["actionClasses"][0]:
+        raise AssertionError(f"activity modal action is missing the default-width button contract: {modal_state!r}")
     if modal_state["bodyLines"] != ["Wrote source JSON", "Updated Studio activity feed"]:
         raise AssertionError(f"activity modal body mismatch: {modal_state!r}")
     if modal_state["activeRole"] != "modal-cancel":

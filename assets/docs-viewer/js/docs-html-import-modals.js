@@ -55,6 +55,7 @@ function renderModalActions(actions = []) {
 function renderModalFrame(options = {}) {
   const modalRole = options.modalRole ? ` data-role="${escapeHtml(options.modalRole)}"` : "";
   const backdropRole = options.backdropRole ? ` data-role="${escapeHtml(options.backdropRole)}"` : "";
+  const sizeClass = options.size ? ` docsViewerImportModal__dialog--${escapeHtml(options.size)}` : "";
   const dialogClass = options.dialogClass ? ` ${escapeHtml(options.dialogClass)}` : "";
   const hiddenAttr = options.hidden === false ? "" : " hidden";
   const titleId = String(options.titleId || "docsViewerImportModalTitle");
@@ -65,7 +66,7 @@ function renderModalFrame(options = {}) {
   return `
     <div class="docsViewerImportModal"${modalRole}${hiddenAttr}>
       <div class="docsViewerImportModal__backdrop"${backdropRole}></div>
-      <div class="docsViewerImportModal__dialog${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}">
+      <div class="docsViewerImportModal__dialog${sizeClass}${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}">
         <h3 id="${escapeHtml(titleId)}"${titleRole}>${escapeHtml(title)}</h3>
         ${bodyHtml}
         ${actionsHtml}

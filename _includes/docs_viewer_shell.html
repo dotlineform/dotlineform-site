@@ -168,7 +168,6 @@
           <h2 class="docsViewer__modalTitle" id="docsViewerMetadataHeading">Edit metadata</h2>
           <p class="docsViewer__modalMeta muted small" id="docsViewerMetadataDocId"></p>
         </div>
-        <button class="docsViewer__modalClose" type="button" id="docsViewerMetadataCloseButton" aria-label="Close metadata editor">×</button>
       </div>
       <form class="docsViewer__modalForm" id="docsViewerMetadataForm">
         <label class="docsViewer__field">
@@ -219,7 +218,7 @@
   </div>
   <div class="docsViewer__modal" id="docsViewerImportModal" hidden>
     <div class="docsViewer__modalBackdrop" data-import-close="true"></div>
-    <div class="docsViewer__modalCard docsViewer__modalCard--documentWidth" role="dialog" aria-modal="true" aria-labelledby="docsViewerImportHeading">
+    <div class="docsViewer__modalCard docsViewer__modalCard--document" role="dialog" aria-modal="true" aria-labelledby="docsViewerImportHeading">
       <div class="docsViewer__modalHeader">
         <div class="docsViewer__modalHeaderCopy">
           <h2 class="docsViewer__modalTitle" id="docsViewerImportHeading">Import docs</h2>
@@ -232,13 +231,12 @@
   </div>
   <div class="docsViewer__modal" id="docsViewerSettingsModal" hidden>
     <div class="docsViewer__modalBackdrop" data-settings-close="true"></div>
-    <div class="docsViewer__modalCard" role="dialog" aria-modal="true" aria-labelledby="docsViewerSettingsHeading">
+    <div class="docsViewer__modalCard docsViewer__modalCard--compact" role="dialog" aria-modal="true" aria-labelledby="docsViewerSettingsHeading">
       <div class="docsViewer__modalHeader">
         <div class="docsViewer__modalHeaderCopy">
           <h2 class="docsViewer__modalTitle" id="docsViewerSettingsHeading">Settings</h2>
           <p class="docsViewer__modalMeta muted small" id="docsViewerSettingsScope"></p>
         </div>
-        <button class="docsViewer__modalClose" type="button" id="docsViewerSettingsCloseButton" aria-label="Close settings">×</button>
       </div>
       <form class="docsViewer__modalForm" id="docsViewerSettingsForm">
         <label class="docsViewer__field docsViewer__field--checkbox">

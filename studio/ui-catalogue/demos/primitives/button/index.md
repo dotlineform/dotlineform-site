@@ -16,11 +16,11 @@ ui_catalogue_demo_primitive: button
   <p class="uiCatalogueDemoStatus" data-state="success">Saved.</p>
 </div>
 {% endcapture %}
-{% capture medium_markup %}<button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed" type="button">Save</button>
+{% capture command_markup %}<button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button">Save</button>
 {% endcapture %}
 {% capture modal_markup %}<div class="uiCatalogueDemoModal__actions">
-  <button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed" type="button">Cancel</button>
-  <button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed uiCatalogueDemoButton--primary" type="button">OK</button>
+  <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button">Cancel</button>
+  <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed uiCatalogueDemoButton--primary" type="button">OK</button>
 </div>
 {% endcapture %}
 {% capture disabled_markup %}<button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button" disabled>Save</button>
@@ -51,8 +51,8 @@ ui_catalogue_demo_primitive: button
 <div class="uiCatalogueDemoGrid">
   <section class="uiCatalogueDemoExample">
     <header class="uiCatalogueDemoExample__header">
-      <h3 class="uiCatalogueDemoExample__title">Small Button Next To A Field</h3>
-      <p class="uiCatalogueDemoExample__summary">A compact command aligns with a neighbouring field and keeps feedback beside the command area.</p>
+      <h3 class="uiCatalogueDemoExample__title">Button Next To A Field</h3>
+      <p class="uiCatalogueDemoExample__summary">A command aligns with a neighbouring field and keeps feedback beside the command area.</p>
     </header>
     <div class="uiCatalogueDemoFieldGroup">
       <div class="uiCatalogueDemoFieldGrid">
@@ -65,11 +65,11 @@ ui_catalogue_demo_primitive: button
 
   <section class="uiCatalogueDemoExample">
     <header class="uiCatalogueDemoExample__header">
-      <h3 class="uiCatalogueDemoExample__title">Medium Command Button</h3>
-      <p class="uiCatalogueDemoExample__summary">Use the medium size when the command needs more presence.</p>
+      <h3 class="uiCatalogueDemoExample__title">Command Button</h3>
+      <p class="uiCatalogueDemoExample__summary">All shared command buttons use the same compact height and optional default width.</p>
     </header>
     <div class="uiCatalogueDemoActions">
-      <button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed" type="button">Save</button>
+      <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button">Save</button>
     </div>
   </section>
 
@@ -79,8 +79,8 @@ ui_catalogue_demo_primitive: button
       <p class="uiCatalogueDemoExample__summary">Short and long labels share a predictable width inside the same action row.</p>
     </header>
     <div class="uiCatalogueDemoButtonPair">
-      <button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed" type="button">OK</button>
-      <button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed" type="button">Cancel</button>
+      <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button">OK</button>
+      <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button">Cancel</button>
     </div>
   </section>
 
@@ -90,8 +90,8 @@ ui_catalogue_demo_primitive: button
       <p class="uiCatalogueDemoExample__summary">The modal shell owns alignment; the button namespace only owns button geometry and visual weight.</p>
     </header>
     <div class="uiCatalogueDemoModal__actions">
-      <button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed" type="button">Cancel</button>
-      <button class="uiCatalogueDemoButton uiCatalogueDemoButton--medium uiCatalogueDemoButton--fixed uiCatalogueDemoButton--primary" type="button">OK</button>
+      <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button">Cancel</button>
+      <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed uiCatalogueDemoButton--primary" type="button">OK</button>
     </div>
   </section>
 
@@ -128,8 +128,8 @@ ui_catalogue_demo_primitive: button
         <pre><code>{{ field_markup | escape }}</code></pre>
       </section>
       <section class="uiCatalogueDemoCode__item">
-        <h4 class="uiCatalogueDemoCode__title">Medium Command Button</h4>
-        <pre><code>{{ medium_markup | escape }}</code></pre>
+        <h4 class="uiCatalogueDemoCode__title">Command Button</h4>
+        <pre><code>{{ command_markup | escape }}</code></pre>
       </section>
       <section class="uiCatalogueDemoCode__item">
         <h4 class="uiCatalogueDemoCode__title">Modal Action Row</h4>

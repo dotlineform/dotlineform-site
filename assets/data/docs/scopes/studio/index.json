@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T17:46:05Z",
+  "generated_at": "2026-05-15T18:30:57Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -85,7 +85,7 @@
       "source_path": "ui-primitive-button.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-button.json",
-      "content_text_length": 1822
+      "content_text_length": 2024
     },
     {
       "scope": "studio",
@@ -691,7 +691,7 @@
       "source_path": "modal-composition-migration-tracker.md",
       "viewer_url": "/docs/?scope=studio&doc=modal-composition-migration-tracker",
       "content_url": "/assets/data/docs/scopes/studio/by-id/modal-composition-migration-tracker.json",
-      "content_text_length": 6287,
+      "content_text_length": 6339,
       "ui_status": "in-progress"
     },
     {
@@ -1192,7 +1192,7 @@
       "source_path": "studio-ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework.json",
-      "content_text_length": 19364
+      "content_text_length": 19523
     },
     {
       "scope": "studio",
@@ -1728,7 +1728,7 @@
       "source_path": "ui-primitive-modal-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-modal-shell.json",
-      "content_text_length": 7331
+      "content_text_length": 7570
     },
     {
       "scope": "studio",
@@ -1809,7 +1809,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 170488
+      "content_text_length": 172106
     },
     {
       "scope": "studio",
@@ -3164,7 +3164,7 @@
       "source_path": "ui-request-modal-composition-pattern.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-modal-composition-pattern.json",
-      "content_text_length": 22070,
+      "content_text_length": 22057,
       "ui_status": "in-progress"
     },
     {

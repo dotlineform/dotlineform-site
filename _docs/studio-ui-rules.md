@@ -25,6 +25,28 @@ Use this as the single capture surface for Studio UI work:
 - systemic findings that should become permanent rules
 - local Codex change notes for UI work that did not go through PR review
 
+## UI Rule Log 2026-05-15 / UI-102
+
+- status: adopted
+- route: `/studio/activity/` and shared Studio modal actions
+- issue: the migrated Activity modal used the shared modal shell but its action button sized to fit content because the modal helper did not carry over the shared command-button default-width contract. The older button primitive also still documented a separate medium size, which made modal action height drift more likely.
+- triage: systemic primitive contract
+- reasoning: modal action buttons are command buttons and should inherit the same minimum-width rhythm as other Studio command rows. A second medium command size does not add useful meaning for current Studio workflows; the activity modal matched the desired compact height.
+- outcome: shared modal action rendering now adds `tagStudio__button--defaultWidth`, and the shared button primitive is a single compact-height command control with optional default-width and default-action modifiers.
+- files changed:
+  - `assets/studio/js/studio-modal.js`
+  - `assets/studio/css/studio.css`
+  - `assets/ui-catalogue/css/ui-catalogue-demo.css`
+  - `studio/ui-catalogue/demos/primitives/button/index.md`
+  - `studio/ui-catalogue/demos/primitives/modal-shell/index.md`
+  - `_docs/ui-primitive-button.md`
+  - `_docs/ui-primitive-modal-shell.md`
+  - `_docs/studio-ui-framework.md`
+  - `_docs/modal-composition-migration-tracker.md`
+- local verification:
+  - smoke `/studio/activity/` and confirm the notice modal action button keeps the standard default width at the compact height
+  - inspect `/studio/ui-catalogue/demos/primitives/button/` and `/studio/ui-catalogue/demos/primitives/modal-shell/` to confirm no medium button variant remains
+
 ## UI Rule Log 2026-05-11 / UI-101
 
 - status: adopted

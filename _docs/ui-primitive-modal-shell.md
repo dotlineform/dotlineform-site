@@ -42,10 +42,11 @@ The shared modal shell contract includes:
 - a root overlay with explicit open/hidden state
 - a backdrop that can cancel or close the modal when the workflow allows it
 - a dialog with `role="dialog"`, `aria-modal="true"`, and `aria-labelledby`
-- a header with title, optional metadata, and a close button
+- a header with title and optional metadata
 - a body slot for arbitrary route-owned content
 - a status or validation slot near the body/action boundary
 - an action row with consistent primary, secondary, cancel, close, and destructive command placement
+- action-row buttons that use the shared command-button default width
 - Escape, backdrop, cancel, close, and submit behavior
 - focus entry, focus containment, and focus return to the opener
 - responsive sizing through shell variants rather than page-specific modal chrome
@@ -65,11 +66,11 @@ The Studio canonical source should build from:
 Those helpers should be refined to match this full shell contract rather than treated as complete as-is.
 The shared Studio helper now provides:
 
-- explicit header and close-button support in the shared frame helper
+- explicit header support in the shared frame helper
 - a standard status or validation slot
 - focus return and focus containment
 - Enter-submit behavior for short input modals
-- `default`, `wide`, and `document` size variants
+- `compact`, `default`, `wide`, and `document` size variants
 
 The existing `openConfirmModal()`, `openConfirmDetailModal()`, `openNoticeModal()`, `openTextInputModal()`, and `openChoiceModal()` helpers are convenience APIs on top of this shell.
 They are not separate modal patterns.
@@ -82,10 +83,12 @@ That implementation separation is acceptable only when it preserves this same sh
 Use these defaults before starting page-level modal migration:
 
 - action order is secondary, cancel, or close first and primary confirmation last/rightmost
+- action buttons use the shared `tagStudio__button--defaultWidth` minimum width
 - destructive actions do not get a separate default visual treatment unless a page audit proves the workflow needs one
 - destructive meaning should be carried by title, body copy, affected-record detail, and confirmation flow
-- shell size variants are `default`, `wide`, and `document`
-- `default` is the normal Studio modal width
+- shell size variants are `compact`, `default`, `wide`, and `document`
+- `compact` is `38rem` and is for simple notices, short confirmations, and short input or choice modals
+- `default` is `52rem` and is the normal multi-field modal width
 - `wide` is for dense workflow modals with list, import, or preview content
 - `document` is for document-like or import-body content that should follow readable measure
 - Studio helper equivalence is available through confirm, detail-confirm, notice, text-input, and choice helpers
@@ -101,10 +104,9 @@ Preferred anatomy:
 3. dialog
 4. header
 5. title and optional meta
-6. close button
-7. body
-8. status or validation message
-9. action row
+6. body
+7. status or validation message
+8. action row
 
 The body may contain fields, lists, previews, file inputs, nested local popups, or route-specific workflow controls.
 Those controls should use the same primitive contracts as equivalent controls on the page.
@@ -168,7 +170,7 @@ UI audits for modal-owning pages should check:
 
 - at least one browser-opened modal state for each modal pattern used on the page
 - desktop and mobile fit
-- Escape, backdrop, close, cancel, and submit behavior
+- Escape, backdrop, close/cancel action, and submit behavior
 - focus entry and return
 - validation and status-message placement
 - action ownership, especially that writes and reloads remain route-owned

@@ -74,7 +74,6 @@ export function initDocsViewerManagement(context) {
   var metadataParentInput = document.getElementById("docsViewerMetadataParentInput");
   var metadataParentPopup = document.getElementById("docsViewerMetadataParentPopup");
   var metadataSortOrderInput = document.getElementById("docsViewerMetadataSortOrderInput");
-  var metadataCloseButton = document.getElementById("docsViewerMetadataCloseButton");
   var metadataCancelButton = document.getElementById("docsViewerMetadataCancelButton");
   var metadataSaveButton = document.getElementById("docsViewerMetadataSaveButton");
   var importModal = document.getElementById("docsViewerImportModal");
@@ -88,7 +87,6 @@ export function initDocsViewerManagement(context) {
   var settingsUpdatedLabel = document.getElementById("docsViewerSettingsUpdatedLabel");
   var settingsWarnings = document.getElementById("docsViewerSettingsWarnings");
   var settingsStatus = document.getElementById("docsViewerSettingsStatus");
-  var settingsCloseButton = document.getElementById("docsViewerSettingsCloseButton");
   var settingsCancelButton = document.getElementById("docsViewerSettingsCancelButton");
   var settingsSaveButton = document.getElementById("docsViewerSettingsSaveButton");
   var docsImportRequestPromise = null;
@@ -1535,7 +1533,6 @@ export function initDocsViewerManagement(context) {
       importRoot: importRoot,
       manageImportButton: manageImportButton,
       metadataCancelButton: metadataCancelButton,
-      metadataCloseButton: metadataCloseButton,
       metadataDocId: metadataDocId,
       metadataForm: metadataForm,
       metadataHiddenInput: metadataHiddenInput,
@@ -1547,7 +1544,6 @@ export function initDocsViewerManagement(context) {
       metadataSummaryInput: metadataSummaryInput,
       metadataTitleInput: metadataTitleInput,
       settingsCancelButton: settingsCancelButton,
-      settingsCloseButton: settingsCloseButton,
       settingsForm: settingsForm,
       settingsModal: settingsModal,
       settingsSaveButton: settingsSaveButton,

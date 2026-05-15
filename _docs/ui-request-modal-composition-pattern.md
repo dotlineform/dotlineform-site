@@ -165,7 +165,7 @@ The final pattern should not remain only in this change request. Once reviewed, 
 Modal shell:
 
 - use the same structural shell for title, optional metadata, body, action row, close behavior, focus return, and Escape handling
-- keep backdrop, close button, action alignment, and responsive sizing consistent
+- keep backdrop behavior, action alignment, and responsive sizing consistent
 - avoid page-specific modal chrome unless a real workflow difference requires it
 
 Controls:
@@ -199,7 +199,7 @@ Modal audit checks should cover:
 
 - at least one screenshot or browser inspection of each modal pattern used by the route
 - desktop and mobile fit when the modal body has meaningful layout or scrolling risk
-- close button, cancel button, backdrop, and Escape behavior
+- close/cancel action, backdrop, and Escape behavior
 - focus entry and focus return
 - validation and status-message placement
 - action ownership, especially that writes and reloads remain owned by the opener or page command
