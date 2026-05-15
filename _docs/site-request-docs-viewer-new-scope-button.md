@@ -3,9 +3,9 @@ doc_id: site-request-docs-viewer-new-scope-button
 title: Docs Viewer New Scope Button Request
 added_date: 2026-05-14
 last_updated: 2026-05-15
-ui_status: implemented
-parent_id: change-requests
-sort_order: 30
+ui_status: done
+parent_id: archive
+sort_order: 640
 hidden: false
 ---
 # Docs Viewer New Scope Button Request

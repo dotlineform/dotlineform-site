@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6fdc5adbf4bd4514e5d0972516de2f25",
-    "generated_at_utc": "2026-05-15T21:45:31Z",
+    "version": "blake2b-38a0a0893316249f7271ad3c70287cc8",
+    "generated_at_utc": "2026-05-15T22:40:38Z",
     "count": 245
   },
   "entries": [
@@ -1635,35 +1635,6 @@
         "15"
       ],
       "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters data sharing 2026-05-13 18:15 2026 05 13 18 15"
-    },
-    {
-      "id": "site-request-docs-viewer-new-scope-button",
-      "kind": "doc",
-      "title": "Docs Viewer New Scope Button Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button",
-      "last_updated": "2026-05-15",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-15 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-new-scope-button",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "new",
-        "scope",
-        "button",
-        "docs viewer new scope button request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "site-request-docs-viewer-new-scope-button site request docs viewer new scope button docs viewer new scope button request change requests change requests 2026-05-15 2026 05 15"
     },
     {
       "id": "docs-viewer-portable-setup",
@@ -6279,6 +6250,33 @@
         "15"
       ],
       "search_text": "ui-request-modal-composition-pattern ui request modal composition pattern modal composition pattern request archive 2026-05-15 2026 05 15"
+    },
+    {
+      "id": "site-request-docs-viewer-new-scope-button",
+      "kind": "doc",
+      "title": "Docs Viewer New Scope Button Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button",
+      "last_updated": "2026-05-15",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-15 • Archive",
+      "search_terms": [
+        "site-request-docs-viewer-new-scope-button",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "new",
+        "scope",
+        "button",
+        "docs viewer new scope button request",
+        "archive",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "site-request-docs-viewer-new-scope-button site request docs viewer new scope button docs viewer new scope button request archive 2026-05-15 2026 05 15"
     }
   ]
 }
