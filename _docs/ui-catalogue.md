@@ -25,6 +25,7 @@ Current demo pages:
 - [Button Primitive](/docs/?scope=studio&doc=ui-primitive-button) / [demo page](/studio/ui-catalogue/demos/primitives/button/)
 - [Input Primitive](/docs/?scope=studio&doc=ui-primitive-input) / [demo page](/studio/ui-catalogue/demos/primitives/input/)
 - [List Primitive](/docs/?scope=studio&doc=ui-primitive-list) / [demo page](/studio/ui-catalogue/demos/primitives/list/)
+- [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell) / [demo page](/studio/ui-catalogue/demos/primitives/modal-shell/)
 - [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel) / [demo page](/studio/ui-catalogue/demos/primitives/panel/)
 - [Reopenable Command Result Pattern](/docs/?scope=studio&doc=ui-pattern-reopenable-command-result) / [demo page](/studio/ui-catalogue/demos/patterns/reopenable-command-result/)
 - [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) / [demo page](/studio/ui-catalogue/demos/patterns/column-links/)
@@ -58,6 +59,7 @@ Current roots:
 - `/studio/ui-catalogue/demos/primitives/button/` uses `#uiCatalogueDemoButtonRoot`
 - `/studio/ui-catalogue/demos/primitives/input/` uses `#uiCatalogueDemoInputRoot`
 - `/studio/ui-catalogue/demos/primitives/list/` uses `#uiCatalogueDemoListRoot`
+- `/studio/ui-catalogue/demos/primitives/modal-shell/` uses `#uiCatalogueDemoModalShellRoot`
 - `/studio/ui-catalogue/demos/primitives/panel/` uses `#uiCatalogueDemoPanelRoot`
 - `/studio/ui-catalogue/demos/patterns/reopenable-command-result/` uses `#uiCatalogueDemoReopenableCommandResultRoot`
 - `/studio/ui-catalogue/demos/patterns/column-links/` uses `#uiCatalogueDemoColumnLinksRoot`
@@ -100,7 +102,7 @@ The current primitive set includes:
 - toolbar
 - modal shell
 
-Toolbar and modal shell still need complete demo pages. The modal work should use the same `primitives` and `patterns` structure, with any richer modal behavior implemented in `assets/ui-catalogue/js/ui-catalogue-demo.js` or a scoped demo module under `assets/ui-catalogue/js/`.
+Toolbar still needs a complete demo page. Modal shell now has a primitive demo page. Richer modal behavior should stay in `assets/ui-catalogue/js/ui-catalogue-demo.js` or a scoped demo module under `assets/ui-catalogue/js/`.
 
 ## Composition Patterns
 

@@ -17,6 +17,31 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-15] Added Modal Shell Primitive Contract
+
+**Status:** implemented
+
+**Area:** UI Catalogue / Studio design system
+
+**Summary:**
+Added the Modal Shell Primitive as the canonical modal composition contract for Studio and Docs Viewer management surfaces.
+The UI Catalogue now has an isolated modal-shell demo route covering notice, confirmation, short-input, and route-owned workflow modal variants.
+
+**Reason:**
+The modal composition migration needs one documented shell contract before current modal-owning pages can be migrated page by page.
+
+**Effect:**
+Future modal work can map live Studio and portable Docs Viewer implementations against one shell anatomy, focus, status, action-row, responsive sizing, and action-ownership contract.
+
+**Affected files/docs:**
+
+- `assets/ui-catalogue/css/ui-catalogue-demo.css`
+- `assets/ui-catalogue/js/ui-catalogue-demo.js`
+- `studio/ui-catalogue/demos/primitives/modal-shell/`
+- [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell)
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Modal Composition Pattern Request](/docs/?scope=studio&doc=ui-request-modal-composition-pattern)
+
 ## [2026-05-15] Isolated UI Catalogue Demo Namespace
 
 **Status:** implemented

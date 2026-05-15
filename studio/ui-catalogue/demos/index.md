@@ -28,6 +28,7 @@ studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
       <li><a class="uiCatalogueDemoNav__link" href="{{ '/studio/ui-catalogue/demos/primitives/button/' | relative_url }}">button</a></li>
       <li><a class="uiCatalogueDemoNav__link" href="{{ '/studio/ui-catalogue/demos/primitives/input/' | relative_url }}">input</a></li>
       <li><a class="uiCatalogueDemoNav__link" href="{{ '/studio/ui-catalogue/demos/primitives/list/' | relative_url }}">list</a></li>
+      <li><a class="uiCatalogueDemoNav__link" href="{{ '/studio/ui-catalogue/demos/primitives/modal-shell/' | relative_url }}">modal shell</a></li>
       <li><a class="uiCatalogueDemoNav__link" href="{{ '/studio/ui-catalogue/demos/primitives/panel/' | relative_url }}">panel</a></li>
     </ul>
   </section>

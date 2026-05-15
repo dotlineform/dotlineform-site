@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-11b1bb28690ac4266a5cb3088e34884e",
-    "generated_at_utc": "2026-05-15T15:28:02Z",
-    "count": 243
+    "version": "blake2b-179748d729d5c2a02a47899a4c91a063",
+    "generated_at_utc": "2026-05-15T17:10:41Z",
+    "count": 244
   },
   "entries": [
     {
@@ -2674,6 +2674,31 @@
         "10"
       ],
       "search_text": "config-jekyll-site-config config jekyll site jekyll site config site docs docs 2026-05-11 14:10 2026 05 11 14 10"
+    },
+    {
+      "id": "ui-primitive-modal-shell",
+      "kind": "doc",
+      "title": "Modal Shell Primitive",
+      "href": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-15 • UI Catalogue",
+      "search_terms": [
+        "ui-primitive-modal-shell",
+        "ui",
+        "primitive",
+        "modal",
+        "shell",
+        "modal shell primitive",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "ui-primitive-modal-shell ui primitive modal shell modal shell primitive ui catalogue catalogue 2026-05-15 2026 05 15"
     },
     {
       "id": "site-request-js-config-structural-review-public-runtime-extraction",

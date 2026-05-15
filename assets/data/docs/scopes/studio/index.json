@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T16:55:22Z",
+  "generated_at": "2026-05-15T17:11:58Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1699,6 +1699,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "ui-primitive-modal-shell",
+      "title": "Modal Shell Primitive",
+      "added_date": "2026-05-15",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui-catalogue",
+      "sort_order": 50,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "ui-primitive-modal-shell.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-modal-shell.json",
+      "content_text_length": 6325
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-js-config-structural-review-public-runtime-extraction",
       "title": "Public Runtime Extraction Slice",
       "added_date": "2026-05-10",
@@ -2230,7 +2246,7 @@
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json",
-      "content_text_length": 5519
+      "content_text_length": 5590
     },
     {
       "scope": "studio",
@@ -3131,7 +3147,7 @@
       "source_path": "ui-request-modal-composition-pattern.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-modal-composition-pattern.json",
-      "content_text_length": 26719,
+      "content_text_length": 26901,
       "ui_status": "in-progress"
     },
     {
@@ -3383,7 +3399,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 155652
+      "content_text_length": 156603
     },
     {
       "scope": "studio",

@@ -91,6 +91,8 @@ The canonical base should be the modal implementation shape that can meet the mo
 
 The current closest base is the shared Studio modal frame contract in `assets/studio/js/studio-modal.js`: `renderStudioModalFrame()`, `renderStudioModalActions()`, and modal hosts created or owned by the route. This shape supports arbitrary body content, action rows, close roles, route-owned workflow state, file inputs, popups, async flows, and simple confirm or notice dialogs.
 
+The canonical shell contract is documented in [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell). Use that primitive as the migration target for both Studio implementation and portable Docs Viewer equivalents.
+
 The higher-level simple helpers such as `openConfirmModal()` and `openNoticeModal()` should be treated as convenience APIs on top of the shared shell, not as separate modal patterns. They are useful for simple cases, but they should not define a different shell, CSS vocabulary, or action ownership model.
 
 The target is one shell contract and one modal CSS vocabulary, not separate shells for simple, medium, and complex modals. Simple and medium modals should use the same shell as complex modals, with less content and thinner helper APIs. This avoids encouraging new local patterns every time a modal starts simple and later gains validation, extra controls, async behavior, or workflow state.
