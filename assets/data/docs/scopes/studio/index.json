@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T22:35:28Z",
+  "generated_at": "2026-05-15T22:39:21Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1581,7 +1581,7 @@
       "source_path": "docs-viewer-new-scopes-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-new-scopes-builder.json",
-      "content_text_length": 15626
+      "content_text_length": 15299
     },
     {
       "scope": "studio",
