@@ -41,6 +41,98 @@ def route_url(base_url: str, path: str) -> str:
     return f"{base_url.rstrip('/')}{path}"
 
 
+def generated_docs_index() -> dict[str, object]:
+    return {
+        "docs": [
+            {
+                "doc_id": "modal-parent",
+                "title": "Modal parent",
+                "published": True,
+                "viewable": True,
+                "content_text_length": 120,
+                "summary": "Parent summary.",
+            },
+            {
+                "doc_id": "modal-empty-child",
+                "parent_id": "modal-parent",
+                "title": "Modal empty child",
+                "published": True,
+                "viewable": True,
+                "content_text_length": 0,
+                "summary": "",
+            },
+            {
+                "doc_id": "modal-hidden-child",
+                "parent_id": "modal-parent",
+                "title": "Modal hidden child",
+                "published": True,
+                "viewable": False,
+                "content_text_length": 45,
+                "summary": "Hidden summary.",
+            },
+        ],
+    }
+
+
+def prepare_result_payload() -> dict[str, object]:
+    return {
+        "ok": True,
+        "target_format": "json",
+        "count_unit": "document",
+        "counts": {
+            "selected": 3,
+            "exported": 2,
+            "skipped": 1,
+            "failed": 0,
+            "truncated": 0,
+        },
+        "output_files": [
+            "var/studio/data-sharing/library/exports/modal-smoke.json",
+        ],
+        "warnings": ["Skipped 1 unpublished document."],
+        "summary_text": "Package prepared.",
+    }
+
+
+def install_mock_docs_service(page) -> list[dict[str, object]]:
+    prepare_requests: list[dict[str, object]] = []
+
+    def handle(route):
+        request = route.request
+        url = request.url
+        if url.startswith("http://127.0.0.1:8789/health"):
+            route.fulfill(
+                status=200,
+                content_type="application/json",
+                body=json.dumps({"ok": True, "service": "docs_management", "dry_run": True}),
+            )
+            return
+        if url.startswith("http://127.0.0.1:8789/docs/generated/index"):
+            route.fulfill(
+                status=200,
+                content_type="application/json",
+                body=json.dumps(generated_docs_index()),
+            )
+            return
+        if url.startswith("http://127.0.0.1:8789/data-sharing/prepare"):
+            post_data_json = request.post_data_json
+            prepare_requests.append(post_data_json() if callable(post_data_json) else post_data_json)
+            route.fulfill(
+                status=200,
+                content_type="application/json",
+                body=json.dumps(prepare_result_payload()),
+            )
+            return
+        route.fulfill(
+            status=404,
+            content_type="application/json",
+            body=json.dumps({"ok": False, "error": "Unexpected mock docs-management route"}),
+        )
+
+    page.route("http://127.0.0.1:8789/**", handle)
+    return prepare_requests
+
+
 def wait_for_studio_route_ready(page, root_selector: str, timeout_ms: int) -> dict[str, str]:
     page.wait_for_selector(f"{root_selector}:not([hidden])", timeout=timeout_ms)
     page.wait_for_selector(f"{root_selector}[data-studio-ready='true']", timeout=timeout_ms)
@@ -215,11 +307,90 @@ def assert_filter_flow(page, total_docs: int) -> dict[str, int]:
     return counts
 
 
+def assert_prepare_result_modal(page, prepare_requests: list[dict[str, object]], timeout_ms: int) -> dict[str, object]:
+    page.locator("#dataSharingPrepareSelectAll").click()
+    page.locator("#dataSharingPrepareRun").click()
+    page.wait_for_selector('[data-role="studio-modal"]', timeout=timeout_ms)
+
+    modal_state = page.locator('[data-role="studio-modal"]').evaluate(
+        """modal => {
+            const dialog = modal.querySelector('[role="dialog"]');
+            const title = modal.querySelector('.tagStudioModal__title');
+            const actionButtons = Array.from(modal.querySelectorAll('.tagStudioModal__actions button'));
+            const rows = Array.from(modal.querySelectorAll('.dataSharingPrepareModal__countRow'))
+                .map(row => Array.from(row.children).map(node => node.textContent.trim()));
+            const issues = Array.from(modal.querySelectorAll('.dataSharingPrepareModal__issues li'))
+                .map(node => node.textContent.trim());
+            const fileList = modal.querySelector('.dataSharingPrepareModal__fileList');
+            return {
+                role: dialog ? dialog.getAttribute('role') : "",
+                modal: dialog ? dialog.getAttribute('aria-modal') : "",
+                dialogClass: dialog ? dialog.className : "",
+                labelledBy: dialog ? dialog.getAttribute('aria-labelledby') : "",
+                titleId: title ? title.id : "",
+                title: title ? title.textContent.trim() : "",
+                actionLabels: actionButtons.map(button => button.textContent.trim()),
+                actionClasses: actionButtons.map(button => button.className),
+                rows,
+                fileList: fileList ? fileList.value : "",
+                readonlyFiles: fileList ? fileList.readOnly : false,
+                issues,
+                activeRole: document.activeElement ? document.activeElement.getAttribute('data-role') : ""
+            };
+        }"""
+    )
+    if modal_state["role"] != "dialog" or modal_state["modal"] != "true":
+        raise AssertionError(f"prepare result modal lacks dialog semantics: {modal_state!r}")
+    if not modal_state["labelledBy"] or modal_state["labelledBy"] != modal_state["titleId"]:
+        raise AssertionError(f"prepare result modal is not labelled by its title: {modal_state!r}")
+    if "tagStudioModal__dialog--" in modal_state["dialogClass"]:
+        raise AssertionError(f"prepare result modal should use the default size contract: {modal_state!r}")
+    if modal_state["title"] != "Package result":
+        raise AssertionError(f"prepare result modal title mismatch: {modal_state!r}")
+    if modal_state["actionLabels"] != ["Close"]:
+        raise AssertionError(f"prepare result modal close action mismatch: {modal_state!r}")
+    if not modal_state["actionClasses"] or "tagStudio__button--defaultWidth" not in modal_state["actionClasses"][0]:
+        raise AssertionError(f"prepare result modal action is missing the default-width button contract: {modal_state!r}")
+    if ["format", "JSON"] not in modal_state["rows"]:
+        raise AssertionError(f"prepare result modal did not render the target format row: {modal_state!r}")
+    if ["packaged", "2 documents"] not in modal_state["rows"]:
+        raise AssertionError(f"prepare result modal did not render the packaged count: {modal_state!r}")
+    if modal_state["fileList"] != "modal-smoke.json" or not modal_state["readonlyFiles"]:
+        raise AssertionError(f"prepare result modal file list mismatch: {modal_state!r}")
+    if modal_state["issues"] != ["Skipped 1 unpublished document."]:
+        raise AssertionError(f"prepare result modal warnings mismatch: {modal_state!r}")
+    if modal_state["activeRole"] != "modal-cancel":
+        raise AssertionError(f"prepare result modal did not focus the close action: {modal_state!r}")
+    if not prepare_requests:
+        raise AssertionError("prepare result modal smoke did not call the prepare endpoint")
+    if prepare_requests[-1].get("data_domain") != "library" or prepare_requests[-1].get("config_id") != "library-parent-child-relationships":
+        raise AssertionError(f"prepare request ownership changed unexpectedly: {prepare_requests[-1]!r}")
+
+    page.keyboard.press("Escape")
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=timeout_ms)
+    focus_returned = page.evaluate("() => document.activeElement && document.activeElement.id")
+    if focus_returned != "dataSharingPrepareRun":
+        raise AssertionError(f"prepare result modal did not return focus to opener: {focus_returned!r}")
+
+    page.locator("#dataSharingPrepareRun").click()
+    page.wait_for_selector('[data-role="studio-modal"]', timeout=timeout_ms)
+    page.locator(".tagStudioModal__backdrop").click(position={"x": 8, "y": 8})
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=timeout_ms)
+
+    page.locator("#dataSharingPrepareRun").click()
+    page.wait_for_selector('[data-role="studio-modal"]', timeout=timeout_ms)
+    page.locator('[data-role="modal-cancel"]').last.click()
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=timeout_ms)
+
+    return modal_state
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", default="http://127.0.0.1:4000")
     parser.add_argument("--site-root", help="Serve a built site root on a temporary local HTTP server.")
     parser.add_argument("--block-docs-service", action="store_true")
+    parser.add_argument("--mock-docs-service", action="store_true")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()
 
@@ -232,7 +403,10 @@ def main() -> int:
         browser = playwright.chromium.launch(headless=True)
         try:
             page = browser.new_page()
-            if args.block_docs_service:
+            prepare_requests: list[dict[str, object]] = []
+            if args.mock_docs_service:
+                prepare_requests = install_mock_docs_service(page)
+            elif args.block_docs_service:
                 page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
             page.goto(route_url(base_url, "/studio/data-sharing/prepare/"), wait_until="domcontentloaded")
             attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
@@ -240,7 +414,12 @@ def main() -> int:
             if args.block_docs_service and attrs["service"] != "unavailable":
                 raise AssertionError(f"expected unavailable service state: {attrs!r}")
             content = assert_route_content(page, args.block_docs_service)
-            print(json.dumps({"route": attrs, "content": content}, sort_keys=True))
+            modal = None
+            if args.mock_docs_service:
+                if attrs["service"] != "available":
+                    raise AssertionError(f"expected available mock service state: {attrs!r}")
+                modal = assert_prepare_result_modal(page, prepare_requests, args.timeout_ms)
+            print(json.dumps({"route": attrs, "content": content, "modal": modal}, sort_keys=True))
         finally:
             browser.close()
             if server is not None:

@@ -1,14 +1,12 @@
 import { getStudioText } from "./studio-config.js";
-import { renderStudioModalFrame } from "./studio-modal.js";
-
-const RESULT_CLOSE_ROLE = "data-sharing-prepare-modal-close";
+import { openNoticeModal } from "./studio-modal.js";
 
 export function clearDataSharingPrepareResultModal(state) {
   if (state && state.modalHost) state.modalHost.innerHTML = "";
 }
 
 export function showDataSharingPrepareResultModal(state, payload, failed = false) {
-  if (!state || !state.modalHost) return;
+  if (!state) return Promise.resolve();
   const files = outputFiles(payload);
   const fileText = files.join("\n");
   const fileLabel = getStudioText(state.config, "data_sharing_prepare.result_files_label", "files created");
@@ -31,23 +29,15 @@ export function showDataSharingPrepareResultModal(state, payload, failed = false
     </label>
     ${issueList(state, payload?.warnings, payload?.errors)}
   `;
-  state.modalHost.innerHTML = renderStudioModalFrame({
-    hidden: false,
-    modalRole: "data-sharing-prepare-result-modal",
-    backdropRole: RESULT_CLOSE_ROLE,
+  return openNoticeModal({
+    root: state.root,
+    restoreFocus: state.runButton,
     titleId: "dataSharingPrepareResultModalTitle",
     title: failed
       ? getStudioText(state.config, "data_sharing_prepare.result_title_failed", "Package preparation failed")
       : getStudioText(state.config, "data_sharing_prepare.result_title", "Package result"),
     bodyHtml,
-    actions: [
-      { role: RESULT_CLOSE_ROLE, label: getStudioText(state.config, "data_sharing_prepare.result_close", "Close") }
-    ]
-  });
-  state.modalHost.querySelectorAll(`[data-role="${RESULT_CLOSE_ROLE}"]`).forEach((node) => {
-    node.addEventListener("click", () => {
-      clearDataSharingPrepareResultModal(state);
-    });
+    closeLabel: getStudioText(state.config, "data_sharing_prepare.result_close", "Close")
   });
 }
 

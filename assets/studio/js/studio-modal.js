@@ -174,7 +174,7 @@ function focusableNodes(root) {
 
 function openModal(type, options = {}) {
   const host = ensureHost(options);
-  const restoreFocus = document.activeElement;
+  const restoreFocus = options.restoreFocus || document.activeElement;
   closeActiveModal(host);
   host.innerHTML = renderModal(type, options);
 
