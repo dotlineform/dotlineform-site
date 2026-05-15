@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-548be5e9f0fe794c18a3565d28b4e7f8",
-    "generated_at_utc": "2026-05-14T21:04:41Z",
-    "count": 242
+    "version": "blake2b-f14cc11a2c4a598acb4d76d0226e3b42",
+    "generated_at_utc": "2026-05-15T09:59:20Z",
+    "count": 243
   },
   "entries": [
     {
@@ -443,6 +443,33 @@
         "45"
       ],
       "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-05-09 21:45 2026 05 09 21 45"
+    },
+    {
+      "id": "modal-responsibility-extraction-plan",
+      "kind": "doc",
+      "title": "Modal Responsibility Extraction Plan",
+      "href": "/docs/?scope=studio&doc=modal-responsibility-extraction-plan",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui-request-modal-composition-pattern",
+      "parent_title": "Modal Composition Pattern Request",
+      "display_meta": "2026-05-15 • Modal Composition Pattern Request",
+      "search_terms": [
+        "modal-responsibility-extraction-plan",
+        "modal",
+        "responsibility",
+        "extraction",
+        "plan",
+        "modal responsibility extraction plan",
+        "modal composition pattern request",
+        "composition",
+        "pattern",
+        "request",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "modal-responsibility-extraction-plan modal responsibility extraction plan modal responsibility extraction plan modal composition pattern request composition pattern request 2026-05-15 2026 05 15"
     },
     {
       "id": "docs-viewer-overview",
@@ -4864,10 +4891,10 @@
       "kind": "doc",
       "title": "Modal Composition Pattern Request",
       "href": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
-      "last_updated": "2026-05-10",
+      "last_updated": "2026-05-15",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-10 • Change Requests",
+      "display_meta": "2026-05-15 • Change Requests",
       "search_terms": [
         "ui-request-modal-composition-pattern",
         "ui",
@@ -4879,12 +4906,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-10",
+        "2026-05-15",
         "2026",
         "05",
-        "10"
+        "15"
       ],
-      "search_text": "ui-request-modal-composition-pattern ui request modal composition pattern modal composition pattern request change requests change requests 2026-05-10 2026 05 10"
+      "search_text": "ui-request-modal-composition-pattern ui request modal composition pattern modal composition pattern request change requests change requests 2026-05-15 2026 05 15"
     },
     {
       "id": "bulk-add-work",

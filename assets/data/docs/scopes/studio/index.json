@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T21:04:41Z",
+  "generated_at": "2026-05-15T10:17:42Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -265,6 +265,23 @@
       "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-server-architecture.json",
       "content_text_length": 5298
+    },
+    {
+      "scope": "studio",
+      "doc_id": "modal-responsibility-extraction-plan",
+      "title": "Modal Responsibility Extraction Plan",
+      "added_date": "2026-05-15",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui-request-modal-composition-pattern",
+      "sort_order": 10,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "modal-responsibility-extraction-plan.md",
+      "viewer_url": "/docs/?scope=studio&doc=modal-responsibility-extraction-plan",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/modal-responsibility-extraction-plan.json",
+      "content_text_length": 6080,
+      "ui_status": "draft"
     },
     {
       "scope": "studio",
@@ -3105,7 +3122,7 @@
       "doc_id": "ui-request-modal-composition-pattern",
       "title": "Modal Composition Pattern Request",
       "added_date": "2026-05-10",
-      "last_updated": "2026-05-10",
+      "last_updated": "2026-05-15",
       "parent_id": "change-requests",
       "sort_order": 190,
       "published": true,
@@ -3114,8 +3131,8 @@
       "source_path": "ui-request-modal-composition-pattern.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-modal-composition-pattern.json",
-      "content_text_length": 4162,
-      "ui_status": "draft"
+      "content_text_length": 19385,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
