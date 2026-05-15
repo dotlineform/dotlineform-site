@@ -17,17 +17,15 @@ import {
   catalogueSaveDisabled
 } from "./catalogue-editor-dirty-state.js";
 import {
-  formatCatalogueBuildPreviewModalHtml
-} from "./catalogue-editor-modal-formatters.js";
-import {
   WORK_DOWNLOAD_FIELDS as DOWNLOAD_FIELDS,
   WORK_LINK_FIELDS as LINK_FIELDS,
-  buildWorkEmbeddedDeleteConfirmation,
-  buildWorkEmbeddedEntry,
-  buildWorkEmbeddedModalDescriptor,
-  validateWorkEmbeddedEntryValues,
   validateWorkEmbeddedItems
 } from "./catalogue-editor-embedded-items.js";
+import {
+  confirmWorkEmbeddedDeleteModal,
+  openWorkBuildPreviewModal,
+  openWorkEmbeddedEntryModal
+} from "./catalogue-work-editor-modals.js";
 import {
   renderWorkCurrentPreview,
   renderWorkReadiness,
@@ -81,9 +79,7 @@ import {
   loadCatalogueMediaConfig
 } from "./catalogue-media-preview.js";
 import {
-  createStudioModalHost,
-  openConfirmModal,
-  renderStudioModalFrame
+  createStudioModalHost
 } from "./studio-modal.js";
 import {
   WORK_DATE_RE as DATE_RE,
@@ -101,15 +97,6 @@ import {
 } from "./catalogue-work-fields.js";
 
 const REQUIRED_WORK_FIELDS = ["title", "year", "year_display", "series_ids"];
-
-function escapeHtml(value) {
-  return normalizeText(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
 
 function changedWorkFieldNames(state) {
   if (state.mode !== "single" || !state.baselineDraft) return [];
@@ -153,156 +140,28 @@ async function loadWorkLookupRecord(state, workId) {
   });
 }
 
-function closeEntryModal(state) {
-  if (state.modalHost) state.modalHost.innerHTML = "";
-  document.removeEventListener("keydown", state.activeModalKeydown);
-  state.activeModalKeydown = null;
-}
-
-function modalFieldHtml({ fieldId, label, value, type = "text" }) {
-  return `
-    <label class="tagStudioForm__field" for="${escapeHtml(fieldId)}">
-      <span class="tagStudioForm__label">${escapeHtml(label)}</span>
-      <input class="tagStudio__input" id="${escapeHtml(fieldId)}" type="${escapeHtml(type)}" value="${escapeHtml(value)}">
-    </label>
-  `;
-}
-
-function openEmbeddedEntryModal(state, kind, index = null) {
-  if (!state.currentRecord || state.mode === "bulk") return;
-  const descriptor = buildWorkEmbeddedModalDescriptor(kind, index, {
-    draft: state.draft,
+async function openEmbeddedEntryModal(state, kind, index = null) {
+  const result = await openWorkEmbeddedEntryModal(state, kind, index, {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens)
-  });
-  if (!descriptor) return;
-  const firstField = descriptor.fields[0];
-  const secondField = descriptor.fields[1];
-
-  closeEntryModal(state);
-  state.modalHost.innerHTML = renderStudioModalFrame({
-    hidden: false,
-    title: descriptor.title,
-    titleId: descriptor.titleId,
-    modalRole: descriptor.modalRole,
-    backdropRole: "entry-modal-cancel",
-    bodyHtml: `
-      <div class="tagStudioForm__fields">
-        ${modalFieldHtml(firstField)}
-        ${modalFieldHtml(secondField)}
-      </div>
-      <p class="tagStudioForm__status" id="${escapeHtml(descriptor.statusId)}"></p>
-    `,
-    actions: [
-      { role: "entry-modal-save", label: t(state, "entry_modal_save_button", "Save") },
-      { role: "entry-modal-cancel", label: t(state, "entry_modal_cancel_button", "Cancel") }
-    ]
-  });
-
-  const firstNode = state.modalHost.querySelector(`#${firstField.fieldId}`);
-  const secondNode = state.modalHost.querySelector(`#${secondField.fieldId}`);
-  const statusNode = state.modalHost.querySelector(`#${descriptor.statusId}`);
-  const saveNode = state.modalHost.querySelector('[data-role="entry-modal-save"]');
-  const cancelNodes = state.modalHost.querySelectorAll('[data-role="entry-modal-cancel"]');
-
-  const setModalStatus = (message) => {
-    if (!statusNode) return;
-    statusNode.textContent = message || "";
-    if (message) {
-      statusNode.dataset.state = "error";
-    } else {
-      delete statusNode.dataset.state;
-    }
-  };
-
-  const submit = () => {
-    const firstValue = normalizeText(firstNode && firstNode.value);
-    const secondValue = normalizeText(secondNode && secondNode.value);
-    const validationMessage = validateWorkEmbeddedEntryValues(kind, firstValue, secondValue, {
-      text: (key, fallback, tokens) => t(state, key, fallback, tokens)
-    });
-    if (validationMessage) {
-      setModalStatus(validationMessage);
-      return;
-    }
-    const nextEntry = buildWorkEmbeddedEntry(kind, firstValue, secondValue);
-    if (descriptor.editing) {
-      descriptor.entries[index] = nextEntry;
-    } else {
-      descriptor.entries.push(nextEntry);
-    }
-    state.draft[descriptor.entriesKey] = descriptor.entries;
-    closeEntryModal(state);
-    updateEditorState(state);
-  };
-
-  state.activeModalKeydown = (event) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      closeEntryModal(state);
-    }
-    if (event.key === "Enter" && event.target && event.target.tagName === "INPUT") {
-      event.preventDefault();
-      submit();
-    }
-  };
-  document.addEventListener("keydown", state.activeModalKeydown);
-  cancelNodes.forEach((button) => button.addEventListener("click", () => closeEntryModal(state)));
-  if (saveNode) saveNode.addEventListener("click", submit);
-  if (firstNode) firstNode.focus();
-}
-
-async function deleteEmbeddedEntry(state, kind, index) {
-  if (!state.currentRecord || state.mode === "bulk") return;
-  const confirmation = buildWorkEmbeddedDeleteConfirmation(kind, state.draft, index, {
-    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
-  });
-  if (!confirmation) return;
-  const result = await openConfirmModal({
-    root: state.root,
-    title: confirmation.title,
-    body: confirmation.body,
-    primaryLabel: t(state, "entry_modal_delete_button", "Delete"),
-    cancelLabel: t(state, "entry_modal_cancel_button", "Cancel")
   });
   if (!result || !result.confirmed) return;
-  confirmation.entries.splice(index, 1);
-  state.draft[confirmation.entriesKey] = confirmation.entries;
+  state.draft[result.entriesKey] = result.entries;
   updateEditorState(state);
 }
 
-function closeBuildPreviewModal(state) {
-  closeEntryModal(state);
+async function deleteEmbeddedEntry(state, kind, index) {
+  const result = await confirmWorkEmbeddedDeleteModal(state, kind, index, {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
+  });
+  if (!result || !result.confirmed) return;
+  state.draft[result.entriesKey] = result.entries;
+  updateEditorState(state);
 }
 
 function openBuildPreviewModal(state, response, changedFields) {
-  closeEntryModal(state);
-  state.modalHost.innerHTML = renderStudioModalFrame({
-    hidden: false,
-    title: t(state, "build_preview_modal_title", "Public update preview"),
-    titleId: "catalogueWorkBuildPreviewModalTitle",
-    modalRole: "build-preview-modal",
-    backdropRole: "build-preview-modal-close",
-    bodyHtml: formatCatalogueBuildPreviewModalHtml(response, changedFields, {
-      text: (key, fallback, tokens) => t(state, key, fallback, tokens),
-      defaultTemplate: "Public update preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
-      reasonsClass: "catalogueWorkBuildPreview__reasons"
-    }),
-    actions: [
-      { role: "build-preview-modal-close", label: t(state, "build_preview_modal_close", "Close") }
-    ]
+  openWorkBuildPreviewModal(state, response, changedFields, {
+    text: (key, fallback, tokens) => t(state, key, fallback, tokens)
   });
-
-  const closeNodes = state.modalHost.querySelectorAll('[data-role="build-preview-modal-close"]');
-  state.activeModalKeydown = (event) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      closeBuildPreviewModal(state);
-    }
-  };
-  document.addEventListener("keydown", state.activeModalKeydown);
-  closeNodes.forEach((button) => button.addEventListener("click", () => closeBuildPreviewModal(state)));
-  const closeButton = state.modalHost.querySelector('[data-role="build-preview-modal-close"]');
-  if (closeButton) closeButton.focus();
 }
 
 function draftHasChanges(state) {
@@ -887,13 +746,23 @@ function bindWorkEditorEvents(state) {
     updateDetailSections(state);
   });
 
-  state.newFileLinkNode.addEventListener("click", () => openEmbeddedEntryModal(state, "download"));
-  state.newLinkLinkNode.addEventListener("click", () => openEmbeddedEntryModal(state, "link"));
+  state.newFileLinkNode.addEventListener("click", () => {
+    openEmbeddedEntryModal(state, "download").catch((error) => {
+      console.warn("catalogue_work_editor: failed to open download modal", error);
+    });
+  });
+  state.newLinkLinkNode.addEventListener("click", () => {
+    openEmbeddedEntryModal(state, "link").catch((error) => {
+      console.warn("catalogue_work_editor: failed to open link modal", error);
+    });
+  });
 
   state.filesResultsNode.addEventListener("click", (event) => {
     const editButton = event.target && event.target.closest ? event.target.closest("[data-download-edit]") : null;
     if (editButton) {
-      openEmbeddedEntryModal(state, "download", Number(editButton.getAttribute("data-download-edit")));
+      openEmbeddedEntryModal(state, "download", Number(editButton.getAttribute("data-download-edit"))).catch((error) => {
+        console.warn("catalogue_work_editor: failed to edit download", error);
+      });
       return;
     }
     const deleteButtonNode = event.target && event.target.closest ? event.target.closest("[data-download-delete]") : null;
@@ -907,7 +776,9 @@ function bindWorkEditorEvents(state) {
   state.linksResultsNode.addEventListener("click", (event) => {
     const editButton = event.target && event.target.closest ? event.target.closest("[data-link-edit]") : null;
     if (editButton) {
-      openEmbeddedEntryModal(state, "link", Number(editButton.getAttribute("data-link-edit")));
+      openEmbeddedEntryModal(state, "link", Number(editButton.getAttribute("data-link-edit"))).catch((error) => {
+        console.warn("catalogue_work_editor: failed to edit link", error);
+      });
       return;
     }
     const deleteButtonNode = event.target && event.target.closest ? event.target.closest("[data-link-delete]") : null;

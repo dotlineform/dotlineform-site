@@ -94,6 +94,7 @@ Additional files found during implementation inventory:
 
 - `assets/docs-viewer/js/docs-viewer-management-modals.js`
 - `assets/studio/js/catalogue-editor-action-modals.js`
+- `assets/studio/js/catalogue-work-editor-modals.js`
 - `assets/studio/js/tag-studio-modals.js`
 - `assets/studio/js/catalogue-work-actions.js`
 - `assets/studio/js/catalogue-work-detail-actions.js`
@@ -146,6 +147,9 @@ Completed slices:
 - Extracted the Series Tag Editor save preview modal from `assets/studio/js/tag-studio.js` into `assets/studio/js/tag-studio-modals.js`.
   The modal module owns the save preview shell/body/actions rendering, modal ref collection, resolved payload population, patch snippet population, open state, close helper, and local modal copy lookup.
   The route still owns editor diff construction, no-change handling, save mode probing, local/offline persistence, clipboard status messaging, route busy state, and editor rendering.
+- Extracted the Catalogue Work Editor embedded entry, embedded delete confirmation, and build preview modals from `assets/studio/js/catalogue-work-editor.js` into `assets/studio/js/catalogue-work-editor-modals.js`.
+  The modal module owns embedded entry shell rendering, local field validation/status, Escape/Enter/cancel/save lifecycle, embedded delete confirmation invocation, build preview shell/body/actions rendering, build preview close/Escape lifecycle, and modal result construction.
+  The route still owns draft mutation from returned modal results, editor refresh, work lookup/selection, save/delete/publication/build actions, route busy state, and work readiness rendering.
 
 Inventory notes:
 
@@ -163,6 +167,7 @@ Verification completed:
 - Focused module contract checks covered the Activity Log details modal helper's detail item filtering, fallback body text, escaped title/body/close labels, and close cleanup through the shared notice modal.
 - Focused module contract checks covered the Data Sharing Review modal helper's result title/summary/count/issues rendering, escaped labels/body text, notice close cleanup, apply confirmation body construction, and primary confirmation result.
 - Focused module contract checks covered the Series Tag Editor save preview modal helper's shell roles, escaped labels, hidden/open state, ref collection, resolved payload population, patch snippet population, and close helper.
+- Focused module contract checks covered the Catalogue Work Editor modal helper's embedded entry shell roles and escaping, entry validation status, save result contract, close cleanup, build preview labels/body, and Escape close behavior.
 
 ## Completion Criteria
 
