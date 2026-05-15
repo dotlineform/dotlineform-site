@@ -63,6 +63,142 @@ export function collectTagRegistryModalRefs(root) {
   };
 }
 
+export function wireTagRegistryModalEvents(state, callbacks = {}) {
+  state.refs.openImportModal.addEventListener("click", () => {
+    if (!state.importAvailable) return;
+    clearTagRegistryImportResult(state);
+    showTagRegistryImportModal(state);
+    callbacks.onModalStateChange?.();
+  });
+
+  state.refs.chooseFile.addEventListener("click", () => {
+    state.refs.importFile.click();
+  });
+
+  state.refs.importFile.addEventListener("change", () => {
+    const files = state.refs.importFile.files;
+    setTagRegistrySelectedImportFile(state, files && files.length ? files[0] : null);
+  });
+
+  state.refs.importMode.addEventListener("change", () => {
+    callbacks.onImportModeChange?.();
+  });
+
+  state.refs.importButton.addEventListener("click", () => {
+    callbacks.onImportSubmit?.();
+  });
+
+  state.refs.importModal.addEventListener("click", (event) => {
+    if (!event.target.closest(UI_SELECTOR.importModalClose)) return;
+    hideTagRegistryImportModal(state);
+    callbacks.onModalStateChange?.();
+  });
+
+  state.refs.patchModal.addEventListener("click", (event) => {
+    if (!event.target.closest(UI_SELECTOR.patchModalClose)) return;
+    hideTagRegistryPatchModal(state);
+  });
+
+  state.refs.copyPatch.addEventListener("click", () => {
+    callbacks.onPatchCopy?.();
+  });
+
+  state.refs.editModal.addEventListener("click", (event) => {
+    if (!event.target.closest(UI_SELECTOR.editModalClose)) return;
+    closeTagRegistryEditModal(state);
+    callbacks.onModalStateChange?.();
+  });
+
+  state.refs.saveEdit.addEventListener("click", () => {
+    callbacks.onEditSave?.();
+  });
+
+  state.refs.editDescription.addEventListener("input", () => {
+    callbacks.onEditDescriptionInput?.();
+  });
+
+  state.refs.newModal.addEventListener("click", (event) => {
+    if (event.target.closest(UI_SELECTOR.newModalClose)) {
+      closeTagRegistryNewModal(state);
+      callbacks.onModalStateChange?.();
+      return;
+    }
+    const groupButton = event.target.closest("button[data-new-group]");
+    if (!groupButton || !state.newTagState) return;
+    const group = normalizeModalValue(groupButton.getAttribute("data-new-group"));
+    if (!getStudioGroups(state).includes(group)) return;
+    state.newTagState.group = group;
+    callbacks.onNewTagInput?.();
+  });
+
+  state.refs.newTagSlug.addEventListener("input", () => {
+    callbacks.onNewTagInput?.();
+  });
+
+  state.refs.newTagDescription.addEventListener("input", () => {
+    callbacks.onNewTagInput?.();
+  });
+
+  state.refs.createTag.addEventListener("click", () => {
+    callbacks.onCreateTag?.();
+  });
+
+  state.refs.demoteModal.addEventListener("click", (event) => {
+    if (event.target.closest(UI_SELECTOR.demoteModalClose)) {
+      closeTagRegistryDemoteModal(state);
+      callbacks.onModalStateChange?.();
+      return;
+    }
+    if (state.refs.demoteTagPopupWrap.hidden) return;
+    if (!event.target.closest(UI_SELECTOR.demoteTagPopupWrap) && !event.target.closest(UI_SELECTOR.demoteTagSearch)) {
+      hideTagRegistryDemoteTagPopup(state);
+    }
+  });
+
+  state.refs.demoteTagSearch.addEventListener("input", () => {
+    callbacks.onDemoteSearch?.();
+  });
+
+  state.refs.demoteTagSearch.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      hideTagRegistryDemoteTagPopup(state);
+      state.refs.demoteTagSearch.blur();
+    }
+  });
+
+  state.refs.demoteTagPopup.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-popup-demote-tag-id]");
+    if (!button) return;
+    const tagId = button.getAttribute("data-popup-demote-tag-id");
+    if (!tagId) return;
+    callbacks.onDemoteTagSelect?.(tagId);
+    state.refs.demoteTagSearch.value = "";
+    hideTagRegistryDemoteTagPopup(state);
+  });
+
+  state.refs.demoteTagList.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-remove-demote-tag]");
+    if (!button || !state.demoteState) return;
+    const tagId = button.getAttribute("data-remove-demote-tag");
+    if (!tagId) return;
+    callbacks.onDemoteTagRemove?.(tagId);
+  });
+
+  state.refs.confirmDemote.addEventListener("click", () => {
+    callbacks.onDemoteSubmit?.();
+  });
+
+  state.refs.deleteModal.addEventListener("click", (event) => {
+    if (!event.target.closest(UI_SELECTOR.deleteModalClose)) return;
+    closeTagRegistryDeleteModal(state);
+    callbacks.onModalStateChange?.();
+  });
+
+  state.refs.confirmDeleteTag.addEventListener("click", () => {
+    callbacks.onDeleteConfirm?.();
+  });
+}
+
 export function showTagRegistryImportModal(state) {
   state.importModalOpen = true;
   state.refs.importModal.hidden = false;
@@ -541,6 +677,10 @@ function getStudioGroups(state) {
   return Array.isArray(state.studioGroups) && state.studioGroups.length
     ? state.studioGroups
     : ["subject", "domain", "form", "theme"];
+}
+
+function normalizeModalValue(value) {
+  return String(value == null ? "" : value).trim().toLowerCase();
 }
 
 function registryText(config, key, fallback, tokens) {

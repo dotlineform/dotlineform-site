@@ -57,7 +57,6 @@ import {
   closeTagRegistryEditModal,
   closeTagRegistryNewModal,
   hideTagRegistryImportModal,
-  hideTagRegistryPatchModal,
   hideTagRegistryDemoteTagPopup,
   openTagRegistryDeleteModal,
   openTagRegistryDemoteModal,
@@ -69,10 +68,9 @@ import {
   renderTagRegistryModals,
   setTagRegistryImportResult,
   setTagRegistryDeleteImpactStatus,
-  setTagRegistrySelectedImportFile,
-  showTagRegistryImportModal,
   showTagRegistryDemoteTagPopup,
-  showTagRegistryPatchModal
+  showTagRegistryPatchModal,
+  wireTagRegistryModalEvents
 } from "./tag-registry-modals.js";
 import {
   initializeStudioRouteState,
@@ -247,30 +245,6 @@ function wireEvents(state) {
     renderList(state);
   });
 
-  state.refs.openImportModal.addEventListener("click", () => {
-    if (!state.importAvailable) return;
-    clearImportResult(state);
-    showTagRegistryImportModal(state);
-    syncRouteBusyState(state);
-  });
-
-  state.refs.chooseFile.addEventListener("click", () => {
-    state.refs.importFile.click();
-  });
-
-  state.refs.importFile.addEventListener("change", () => {
-    const files = state.refs.importFile.files;
-    setTagRegistrySelectedImportFile(state, files && files.length ? files[0] : null);
-  });
-
-  state.refs.importMode.addEventListener("change", () => {
-    syncImportModeFromControl(state);
-  });
-
-  state.refs.importButton.addEventListener("click", () => {
-    void withRouteBusy(state, () => handleImport(state));
-  });
-
   state.refs.openNewTag.addEventListener("click", () => {
     openNewTagModal(state);
   });
@@ -324,117 +298,41 @@ function wireEvents(state) {
     renderList(state);
   });
 
-  state.refs.patchModal.addEventListener("click", (event) => {
-    if (!event.target.closest(UI_SELECTOR.patchModalClose)) return;
-    closePatchModal(state);
-  });
-
-  state.refs.importModal.addEventListener("click", (event) => {
-    if (!event.target.closest(UI_SELECTOR.importModalClose)) return;
-    closeImportModal(state);
-  });
-
-  state.refs.copyPatch.addEventListener("click", async () => {
-    if (!state.patchSnippet) return;
-    try {
-      await navigator.clipboard.writeText(state.patchSnippet);
-      setImportResult(state, "success", registryText(state.config, "patch_copy_success", "Patch snippet copied to clipboard."));
-    } catch (error) {
-      setImportResult(state, "error", registryText(state.config, "patch_copy_failed", "Copy failed. Select and copy the snippet manually."));
+  wireTagRegistryModalEvents(state, {
+    onModalStateChange: () => syncRouteBusyState(state),
+    onImportModeChange: () => syncImportModeFromControl(state),
+    onImportSubmit: () => {
+      void withRouteBusy(state, () => handleImport(state));
+    },
+    onPatchCopy: () => {
+      void copyPatchSnippet(state);
+    },
+    onEditSave: () => {
+      void withRouteBusy(state, () => handleTagEdit(state));
+    },
+    onEditDescriptionInput: () => setEditStatus(state, "", ""),
+    onNewTagInput: () => updateNewTagUi(state),
+    onCreateTag: () => {
+      void withRouteBusy(state, () => handleCreateTag(state));
+    },
+    onDemoteSearch: () => renderDemoteTagPopup(state),
+    onDemoteTagSelect: (tagId) => {
+      addDemoteTag(state, tagId);
+      updateDemoteUi(state);
+    },
+    onDemoteTagRemove: (tagId) => {
+      if (!state.demoteState) return;
+      const normalizedTagId = normalize(tagId);
+      if (!normalizedTagId) return;
+      state.demoteState.tags = state.demoteState.tags.filter((item) => item !== normalizedTagId);
+      updateDemoteUi(state);
+    },
+    onDemoteSubmit: () => {
+      void withRouteBusy(state, () => handleTagDemote(state));
+    },
+    onDeleteConfirm: () => {
+      void withRouteBusy(state, () => handleDeleteFromModal(state));
     }
-  });
-
-  state.refs.editModal.addEventListener("click", (event) => {
-    if (!event.target.closest(UI_SELECTOR.editModalClose)) return;
-    closeEditModal(state);
-  });
-
-  state.refs.saveEdit.addEventListener("click", () => {
-    void withRouteBusy(state, () => handleTagEdit(state));
-  });
-
-  state.refs.newModal.addEventListener("click", (event) => {
-    if (event.target.closest(UI_SELECTOR.newModalClose)) {
-      closeNewTagModal(state);
-      return;
-    }
-    const groupButton = event.target.closest("button[data-new-group]");
-    if (!groupButton || !state.newTagState) return;
-    const group = normalize(groupButton.getAttribute("data-new-group"));
-    if (!STUDIO_GROUPS.includes(group)) return;
-    state.newTagState.group = group;
-    updateNewTagUi(state);
-  });
-
-  state.refs.newTagSlug.addEventListener("input", () => {
-    updateNewTagUi(state);
-  });
-
-  state.refs.newTagDescription.addEventListener("input", () => {
-    updateNewTagUi(state);
-  });
-
-  state.refs.createTag.addEventListener("click", () => {
-    void withRouteBusy(state, () => handleCreateTag(state));
-  });
-
-  state.refs.demoteModal.addEventListener("click", (event) => {
-    if (event.target.closest(UI_SELECTOR.demoteModalClose)) {
-      closeDemoteModal(state);
-      return;
-    }
-    if (state.refs.demoteTagPopupWrap.hidden) return;
-    if (!event.target.closest(UI_SELECTOR.demoteTagPopupWrap) && !event.target.closest(UI_SELECTOR.demoteTagSearch)) {
-      hideTagRegistryDemoteTagPopup(state);
-    }
-  });
-
-  state.refs.demoteTagSearch.addEventListener("input", () => {
-    renderDemoteTagPopup(state);
-  });
-
-  state.refs.demoteTagSearch.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      hideTagRegistryDemoteTagPopup(state);
-      state.refs.demoteTagSearch.blur();
-    }
-  });
-
-  state.refs.demoteTagPopup.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-popup-demote-tag-id]");
-    if (!button) return;
-    const tagId = normalize(button.getAttribute("data-popup-demote-tag-id"));
-    if (!tagId) return;
-    addDemoteTag(state, tagId);
-    state.refs.demoteTagSearch.value = "";
-    hideTagRegistryDemoteTagPopup(state);
-    updateDemoteUi(state);
-  });
-
-  state.refs.demoteTagList.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-remove-demote-tag]");
-    if (!button || !state.demoteState) return;
-    const tagId = normalize(button.getAttribute("data-remove-demote-tag"));
-    if (!tagId) return;
-    state.demoteState.tags = state.demoteState.tags.filter((item) => item !== tagId);
-    updateDemoteUi(state);
-  });
-
-  state.refs.confirmDemote.addEventListener("click", () => {
-    void withRouteBusy(state, () => handleTagDemote(state));
-  });
-
-  state.refs.deleteModal.addEventListener("click", (event) => {
-    if (!event.target.closest(UI_SELECTOR.deleteModalClose)) return;
-    closeDeleteModal(state);
-  });
-
-  state.refs.confirmDeleteTag.addEventListener("click", () => {
-    void withRouteBusy(state, () => handleDeleteFromModal(state));
-  });
-
-  state.refs.editDescription.addEventListener("input", () => {
-    setEditStatus(state, "", "");
   });
 }
 
@@ -1140,10 +1038,6 @@ function openPatchModal(state, snippet) {
   showTagRegistryPatchModal(state, snippet);
 }
 
-function closePatchModal(state) {
-  hideTagRegistryPatchModal(state);
-}
-
 function setImportResult(state, kind, message) {
   setTagRegistryImportResult(state, kind, message);
 }
@@ -1193,6 +1087,16 @@ function buildSeriesEditorUrl(config, seriesId) {
 
 function clearImportResult(state) {
   clearTagRegistryImportResult(state);
+}
+
+async function copyPatchSnippet(state) {
+  if (!state.patchSnippet) return;
+  try {
+    await navigator.clipboard.writeText(state.patchSnippet);
+    setImportResult(state, "success", registryText(state.config, "patch_copy_success", "Patch snippet copied to clipboard."));
+  } catch (error) {
+    setImportResult(state, "error", registryText(state.config, "patch_copy_failed", "Copy failed. Select and copy the snippet manually."));
+  }
 }
 
 function registryText(config, key, fallback, tokens) {
