@@ -61,6 +61,163 @@ export function collectTagAliasesModalRefs(root) {
   };
 }
 
+export function wireTagAliasesModalEvents(state, callbacks = {}) {
+  state.refs.openImportModal.addEventListener("click", () => {
+    if (!state.importAvailable) return;
+    clearTagAliasesImportResult(state);
+    showTagAliasesImportModal(state);
+    callbacks.onModalStateChange?.();
+  });
+
+  state.refs.chooseFile.addEventListener("click", () => {
+    state.refs.importFile.click();
+  });
+
+  state.refs.importFile.addEventListener("change", () => {
+    const files = state.refs.importFile.files;
+    setTagAliasesSelectedImportFile(state, files && files.length ? files[0] : null);
+  });
+
+  state.refs.importMode.addEventListener("change", () => {
+    callbacks.onImportModeChange?.();
+  });
+
+  state.refs.importButton.addEventListener("click", () => {
+    callbacks.onImportSubmit?.();
+  });
+
+  state.refs.importModal.addEventListener("click", (event) => {
+    if (!event.target.closest(UI_SELECTOR.importModalClose)) return;
+    hideTagAliasesImportModal(state);
+    callbacks.onModalStateChange?.();
+  });
+
+  state.refs.patchModal.addEventListener("click", (event) => {
+    if (!event.target.closest(UI_SELECTOR.patchModalClose)) return;
+    hideTagAliasesPatchModal(state);
+  });
+
+  state.refs.copyPatch.addEventListener("click", () => {
+    callbacks.onPatchCopy?.();
+  });
+
+  state.refs.promotionModal.addEventListener("click", (event) => {
+    if (event.target.closest(UI_SELECTOR.promotionModalClose)) {
+      closeTagAliasesPromotionModal(state);
+      callbacks.onModalStateChange?.();
+      return;
+    }
+    const groupButton = event.target.closest("button[data-promotion-group]");
+    if (!groupButton || !state.promotionState) return;
+    const group = normalizeModalValue(groupButton.getAttribute("data-promotion-group"));
+    if (!getStudioGroups(state).includes(group)) return;
+    state.promotionState.group = group;
+    updateTagAliasesPromotionUi(state);
+  });
+
+  state.refs.confirmPromotion.addEventListener("click", () => {
+    callbacks.onPromotionSubmit?.();
+  });
+
+  state.refs.demoteModal.addEventListener("click", (event) => {
+    if (event.target.closest(UI_SELECTOR.demoteModalClose)) {
+      closeTagAliasesDemoteModal(state);
+      callbacks.onModalStateChange?.();
+      return;
+    }
+    if (state.refs.demoteTagPopupWrap.hidden) return;
+    if (!event.target.closest(UI_SELECTOR.demoteTagPopupWrap) && !event.target.closest(UI_SELECTOR.demoteTagSearch)) {
+      hideTagAliasesDemoteTagPopup(state);
+    }
+  });
+
+  state.refs.demoteTagSearch.addEventListener("input", () => {
+    callbacks.onDemoteSearch?.();
+  });
+
+  state.refs.demoteTagSearch.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      hideTagAliasesDemoteTagPopup(state);
+      state.refs.demoteTagSearch.blur();
+    }
+  });
+
+  state.refs.demoteTagPopup.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-popup-demote-tag-id]");
+    if (!button) return;
+    const tagId = button.getAttribute("data-popup-demote-tag-id");
+    if (!tagId) return;
+    callbacks.onDemoteTagSelect?.(tagId);
+    state.refs.demoteTagSearch.value = "";
+    hideTagAliasesDemoteTagPopup(state);
+  });
+
+  state.refs.demoteTagList.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-remove-demote-tag]");
+    if (!button || !state.demoteState) return;
+    const tagId = button.getAttribute("data-remove-demote-tag");
+    if (!tagId) return;
+    callbacks.onDemoteTagRemove?.(tagId);
+  });
+
+  state.refs.confirmDemote.addEventListener("click", () => {
+    callbacks.onDemoteSubmit?.();
+  });
+
+  state.refs.editModal.addEventListener("click", (event) => {
+    if (event.target.closest(UI_SELECTOR.editModalClose)) {
+      closeTagAliasesEditModal(state);
+      callbacks.onModalStateChange?.();
+      return;
+    }
+    if (state.refs.editTagPopupWrap.hidden) return;
+    if (!event.target.closest(UI_SELECTOR.editTagPopupWrap) && !event.target.closest(UI_SELECTOR.editTagSearch)) {
+      hideTagAliasesEditTagPopup(state);
+    }
+  });
+
+  state.refs.editAliasName.addEventListener("input", () => {
+    callbacks.onEditInput?.();
+  });
+
+  state.refs.editAliasDescription.addEventListener("input", () => {
+    callbacks.onEditInput?.();
+  });
+
+  state.refs.editTagSearch.addEventListener("input", () => {
+    callbacks.onEditSearch?.();
+  });
+
+  state.refs.editTagSearch.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      hideTagAliasesEditTagPopup(state);
+      state.refs.editTagSearch.blur();
+    }
+  });
+
+  state.refs.editTagPopup.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-popup-tag-id]");
+    if (!button) return;
+    const tagId = button.getAttribute("data-popup-tag-id");
+    if (!tagId) return;
+    callbacks.onEditTagSelect?.(tagId);
+    state.refs.editTagSearch.value = "";
+    hideTagAliasesEditTagPopup(state);
+  });
+
+  state.refs.editTagList.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-remove-edit-tag]");
+    if (!button || !state.editState) return;
+    const tagId = button.getAttribute("data-remove-edit-tag");
+    if (!tagId) return;
+    callbacks.onEditTagRemove?.(tagId);
+  });
+
+  state.refs.saveEditAlias.addEventListener("click", () => {
+    callbacks.onEditSave?.();
+  });
+}
+
 export function showTagAliasesImportModal(state) {
   state.importModalOpen = true;
   state.refs.importModal.hidden = false;
@@ -571,6 +728,10 @@ function getStudioGroups(state) {
   return Array.isArray(state.studioGroups) && state.studioGroups.length
     ? state.studioGroups
     : ["subject", "domain", "form", "theme"];
+}
+
+function normalizeModalValue(value) {
+  return String(value == null ? "" : value).trim().toLowerCase();
 }
 
 function aliasesText(config, key, fallback, tokens) {

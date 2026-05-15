@@ -55,10 +55,7 @@ import {
   closeTagAliasesEditModal,
   closeTagAliasesPromotionModal,
   collectTagAliasesModalRefs,
-  hideTagAliasesDemoteTagPopup,
-  hideTagAliasesEditTagPopup,
   hideTagAliasesImportModal,
-  hideTagAliasesPatchModal,
   openTagAliasesCreateModal,
   openTagAliasesDemoteModal,
   openTagAliasesEditModal,
@@ -72,10 +69,8 @@ import {
   setTagAliasesEditStatus,
   setTagAliasesImportResult,
   setTagAliasesPromotionStatus,
-  setTagAliasesSelectedImportFile,
-  showTagAliasesImportModal,
   showTagAliasesPatchModal,
-  updateTagAliasesPromotionUi
+  wireTagAliasesModalEvents
 } from "./tag-aliases-modals.js";
 import {
   initializeStudioRouteState,
@@ -245,30 +240,6 @@ function wireEvents(state) {
     renderList(state);
   });
 
-  state.refs.openImportModal.addEventListener("click", () => {
-    if (!state.importAvailable) return;
-    clearImportResult(state);
-    showTagAliasesImportModal(state);
-    syncRouteBusyState(state);
-  });
-
-  state.refs.chooseFile.addEventListener("click", () => {
-    state.refs.importFile.click();
-  });
-
-  state.refs.importFile.addEventListener("change", () => {
-    const files = state.refs.importFile.files;
-    setTagAliasesSelectedImportFile(state, files && files.length ? files[0] : null);
-  });
-
-  state.refs.importMode.addEventListener("change", () => {
-    syncImportModeFromControl(state);
-  });
-
-  state.refs.importButton.addEventListener("click", () => {
-    void withRouteBusy(state, () => handleImport(state));
-  });
-
   state.refs.openNewAlias.addEventListener("click", () => {
     openAliasCreateModal(state);
   });
@@ -331,141 +302,49 @@ function wireEvents(state) {
     }
   });
 
-  state.refs.patchModal.addEventListener("click", (event) => {
-    if (!event.target.closest(UI_SELECTOR.patchModalClose)) return;
-    closePatchModal(state);
-  });
-
-  state.refs.importModal.addEventListener("click", (event) => {
-    if (!event.target.closest(UI_SELECTOR.importModalClose)) return;
-    closeImportModal(state);
-  });
-
-  state.refs.promotionModal.addEventListener("click", (event) => {
-    if (event.target.closest(UI_SELECTOR.promotionModalClose)) {
-      closePromotionModal(state);
-      return;
+  wireTagAliasesModalEvents(state, {
+    onModalStateChange: () => syncRouteBusyState(state),
+    onImportModeChange: () => syncImportModeFromControl(state),
+    onImportSubmit: () => {
+      void withRouteBusy(state, () => handleImport(state));
+    },
+    onPatchCopy: () => {
+      void copyPatchSnippet(state);
+    },
+    onPromotionSubmit: () => {
+      void withRouteBusy(state, () => submitAliasPromotion(state));
+    },
+    onDemoteSearch: () => renderDemoteTagPopup(state),
+    onDemoteTagSelect: (tagId) => {
+      addDemoteTag(state, tagId);
+      updateDemoteUi(state);
+    },
+    onDemoteTagRemove: (tagId) => {
+      if (!state.demoteState) return;
+      const normalizedTagId = normalize(tagId);
+      if (!normalizedTagId) return;
+      state.demoteState.tags = state.demoteState.tags.filter((item) => item !== normalizedTagId);
+      updateDemoteUi(state);
+    },
+    onDemoteSubmit: () => {
+      void withRouteBusy(state, () => handleTagDemoteFromAliases(state));
+    },
+    onEditInput: () => updateAliasEditUi(state),
+    onEditSearch: () => renderEditTagPopup(state),
+    onEditTagSelect: (tagId) => {
+      addEditTag(state, tagId);
+      updateAliasEditUi(state);
+    },
+    onEditTagRemove: (tagId) => {
+      if (!state.editState) return;
+      const normalizedTagId = normalize(tagId);
+      if (!normalizedTagId) return;
+      state.editState.tags = state.editState.tags.filter((item) => item !== normalizedTagId);
+      updateAliasEditUi(state);
+    },
+    onEditSave: () => {
+      void withRouteBusy(state, () => saveAliasEdit(state));
     }
-    const groupButton = event.target.closest("button[data-promotion-group]");
-    if (!groupButton || !state.promotionState) return;
-    const group = normalize(groupButton.getAttribute("data-promotion-group"));
-    if (!STUDIO_GROUPS.includes(group)) return;
-    state.promotionState.group = group;
-    updateTagAliasesPromotionUi(state);
-  });
-
-  state.refs.confirmPromotion.addEventListener("click", () => {
-    void withRouteBusy(state, () => submitAliasPromotion(state));
-  });
-
-  state.refs.demoteModal.addEventListener("click", (event) => {
-    if (event.target.closest(UI_SELECTOR.demoteModalClose)) {
-      closeDemoteModal(state);
-      return;
-    }
-    if (state.refs.demoteTagPopupWrap.hidden) return;
-    if (!event.target.closest(UI_SELECTOR.demoteTagPopupWrap) && !event.target.closest(UI_SELECTOR.demoteTagSearch)) {
-      hideTagAliasesDemoteTagPopup(state);
-    }
-  });
-
-  state.refs.demoteTagSearch.addEventListener("input", () => {
-    renderDemoteTagPopup(state);
-  });
-
-  state.refs.demoteTagSearch.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      hideTagAliasesDemoteTagPopup(state);
-      state.refs.demoteTagSearch.blur();
-    }
-  });
-
-  state.refs.demoteTagPopup.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-popup-demote-tag-id]");
-    if (!button) return;
-    const tagId = normalize(button.getAttribute("data-popup-demote-tag-id"));
-    if (!tagId) return;
-    addDemoteTag(state, tagId);
-    state.refs.demoteTagSearch.value = "";
-    hideTagAliasesDemoteTagPopup(state);
-    updateDemoteUi(state);
-  });
-
-  state.refs.demoteTagList.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-remove-demote-tag]");
-    if (!button || !state.demoteState) return;
-    const tagId = normalize(button.getAttribute("data-remove-demote-tag"));
-    if (!tagId) return;
-    state.demoteState.tags = state.demoteState.tags.filter((item) => item !== tagId);
-    updateDemoteUi(state);
-  });
-
-  state.refs.confirmDemote.addEventListener("click", () => {
-    void withRouteBusy(state, () => handleTagDemoteFromAliases(state));
-  });
-
-  state.refs.copyPatch.addEventListener("click", async () => {
-    if (!state.patchSnippet) return;
-    try {
-      await navigator.clipboard.writeText(state.patchSnippet);
-      setImportResult(state, "success", aliasesText(state.config, "patch_copy_success", "Patch snippet copied to clipboard."));
-    } catch (error) {
-      setImportResult(state, "error", aliasesText(state.config, "patch_copy_failed", "Copy failed. Select and copy the snippet manually."));
-    }
-  });
-
-  state.refs.editModal.addEventListener("click", (event) => {
-    if (event.target.closest(UI_SELECTOR.editModalClose)) {
-      closeAliasEditModal(state);
-      return;
-    }
-    if (state.refs.editTagPopupWrap.hidden) return;
-    if (!event.target.closest(UI_SELECTOR.editTagPopupWrap) && !event.target.closest(UI_SELECTOR.editTagSearch)) {
-      hideTagAliasesEditTagPopup(state);
-    }
-  });
-
-  state.refs.editAliasName.addEventListener("input", () => {
-    updateAliasEditUi(state);
-  });
-
-  state.refs.editAliasDescription.addEventListener("input", () => {
-    updateAliasEditUi(state);
-  });
-
-  state.refs.editTagSearch.addEventListener("input", () => {
-    renderEditTagPopup(state);
-  });
-
-  state.refs.editTagSearch.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      hideTagAliasesEditTagPopup(state);
-      state.refs.editTagSearch.blur();
-    }
-  });
-
-  state.refs.editTagPopup.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-popup-tag-id]");
-    if (!button) return;
-    const tagId = normalize(button.getAttribute("data-popup-tag-id"));
-    if (!tagId) return;
-    addEditTag(state, tagId);
-    state.refs.editTagSearch.value = "";
-    hideTagAliasesEditTagPopup(state);
-    updateAliasEditUi(state);
-  });
-
-  state.refs.editTagList.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-remove-edit-tag]");
-    if (!button || !state.editState) return;
-    const tagId = normalize(button.getAttribute("data-remove-edit-tag"));
-    if (!tagId) return;
-    state.editState.tags = state.editState.tags.filter((item) => item !== tagId);
-    updateAliasEditUi(state);
-  });
-
-  state.refs.saveEditAlias.addEventListener("click", () => {
-    void withRouteBusy(state, () => saveAliasEdit(state));
   });
 }
 
@@ -1254,16 +1133,22 @@ function openPatchModal(state, snippet) {
   showTagAliasesPatchModal(state, snippet);
 }
 
-function closePatchModal(state) {
-  hideTagAliasesPatchModal(state);
-}
-
 function setImportResult(state, kind, message) {
   setTagAliasesImportResult(state, kind, message);
 }
 
 function clearImportResult(state) {
   clearTagAliasesImportResult(state);
+}
+
+async function copyPatchSnippet(state) {
+  if (!state.patchSnippet) return;
+  try {
+    await navigator.clipboard.writeText(state.patchSnippet);
+    setImportResult(state, "success", aliasesText(state.config, "patch_copy_success", "Patch snippet copied to clipboard."));
+  } catch (error) {
+    setImportResult(state, "error", aliasesText(state.config, "patch_copy_failed", "Copy failed. Select and copy the snippet manually."));
+  }
 }
 
 function aliasesText(config, key, fallback, tokens) {
