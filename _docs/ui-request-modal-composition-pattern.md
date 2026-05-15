@@ -13,6 +13,8 @@ hidden: false
 Status:
 
 - In progress
+- Extraction prerequisite complete
+- Next phase: define the canonical shell contract and migration targets
 
 ## Summary
 
@@ -53,17 +55,19 @@ This also makes the associated CSS harder to reason about. It is not always clea
 
 ## Current Implementation Context
 
-Current modal implementations appear to fall into these broad groups:
+The preparatory modal extraction is complete. See [Modal Responsibility Extraction Plan](/docs/?scope=studio&doc=modal-responsibility-extraction-plan).
+
+Current modal implementations now fall into these broad groups:
 
 - Shared Studio helper modals: `assets/studio/js/studio-modal.js` renders transient confirm, detail-confirm, patch-preview, and notice modals, then wires the current primary/cancel buttons directly. These work well for simple promise-style flows where the caller awaits a result.
-- Pre-rendered Studio route modals: Tag Registry, Tag Aliases, and Tag Studio render one or more hidden modal frames as part of the route shell, keep references to their controls, and delegate some events to route or modal containers. These work well for persistent route tools with internal controls, popups, and multiple modal states.
-- Re-rendered Studio modal hosts: Series Tags and some result modals render modal HTML into a host as state changes. Host-level delegation helps the handlers survive repeated `innerHTML` replacement.
-- Catalogue editor transient modals: Catalogue Work Editor creates short-lived modal DOM for embedded entries and build previews, then wires direct listeners for that modal instance. This is simple for tightly scoped edit operations but differs from the shared helper contract.
-- Docs Viewer management modals: Metadata, Import, and Settings modals are static markup in the Docs Viewer shell. Management code uses delegated root close handling plus direct form and button handlers. Metadata editing already follows the desired ownership boundary: the modal collects payload values, then the opener save flow performs the write.
-- Docs HTML import conflict modal: The HTML import route has a separate modal host, frame renderer, CSS namespace, and direct button listeners for filename conflict resolution.
-- Native browser dialogs: Some Docs Viewer management actions, such as creating a new doc from the Actions menu or context menu, currently use `window.prompt()`. Archive and delete flows also use native confirmation dialogs in places. These dialogs are locally simple but visually and behaviorally outside the Docs Viewer UI.
+- Route-local Studio modal modules: Tag Registry, Tag Aliases, Tag Studio, Series Tags, Catalogue Work Editor, Data Sharing Prepare, Data Sharing Review, Activity Log, and catalogue action confirmations now route modal rendering, event wiring, or transient invocations through `*-modals.js` helpers. Route controllers still own service calls, busy state, reloads, validation decisions, and list/control rendering.
+- Docs Viewer modal modules: Docs Viewer management now delegates transient confirm/text/choice modals and embedded metadata/import/settings modal lifecycle to `assets/docs-viewer/js/docs-viewer-management-modals.js`. Docs HTML import delegates filename-conflict resolution to `assets/docs-viewer/js/docs-html-import-modals.js`.
+- Static or route-owned shell details remain where they are implementation constraints, especially Docs Viewer management shell markup and portable `docsViewer__*` CSS. Those details should still follow the shared modal composition contract.
+- Non-modal suggestion/autocomplete popups remain feature-owned. They support inline editing/search workflows and are not part of the modal composition boundary.
 
-The issue is not that any one implementation is wrong. The issue is that the codebase now has enough valid local approaches that it is difficult to tell which one should be used for a new requirement, which old one should be extended, and which CSS layer is authoritative.
+No `window.prompt()`, `window.confirm()`, or `window.alert()` uses remain under `assets/studio/js` or `assets/docs-viewer/js`.
+
+The issue is no longer embedded modal bulk in route controllers. The remaining issue is that extracted modal helpers still use several locally valid shell shapes, CSS vocabularies, and helper APIs. The next phase should choose the stable shared shell contract, decide which existing helper is canonical, and document how Studio and portable Docs Viewer implementations stay visually and behaviorally aligned.
 
 ## Pattern Target
 
@@ -93,9 +97,9 @@ Under this direction:
 - transient result helpers own a small result contract but still render through the same shell and CSS vocabulary
 - Docs Viewer management should either adopt the same shell contract directly or be documented as a route-owned workflow modal using the same composition rules
 
-Native browser dialogs such as `window.prompt()`, `window.confirm()`, and `window.alert()` should not be treated as modal composition patterns for Studio or Docs Viewer management UI. Existing uses should be classified as migration debt and moved to transient result modals using the canonical shell, unless kept temporarily as explicit fallback behavior.
+Native browser dialogs such as `window.prompt()`, `window.confirm()`, and `window.alert()` should not be treated as modal composition patterns for Studio or Docs Viewer management UI. Existing uses have been replaced during the extraction phase. New native browser dialog usage should be treated as a regression unless it is a deliberate non-Studio fallback documented in the owning feature.
 
-For example, Docs Viewer Actions -> New should become a transient result modal that collects a title and returns a cancel or value result. The modal should own the title input, local required-title validation, OK/Cancel controls, focus behavior, and Escape handling. The Docs Viewer command should continue to own `createManagedDoc()`, management status, index reload, and error handling.
+For example, Docs Viewer Actions -> New now uses a transient result modal that collects a title and returns a cancel or value result. The modal owns the title input, local required-title validation, OK/Cancel controls, focus behavior, and Escape handling. The Docs Viewer command continues to own `createManagedDoc()`, management status, index reload, and error handling.
 
 ## Docs Viewer Portability
 
@@ -198,25 +202,34 @@ Screenshots add maintenance overhead, so the audit requirement should be proport
 
 As part of making this operational, the review should update `user-guide.md` or the relevant UI audit guidance so modal screenshots and browser checks become part of the expected UI conformance workflow rather than an optional afterthought.
 
-## First Implementation Slice
+## Next Steps
 
-1. Inventory existing Studio and Docs Viewer modals.
-2. Identify the shared shell already closest to the desired pattern.
-3. Write the stable pattern under the UI composition-pattern docs.
+1. Choose the canonical shell contract.
+   Start from `assets/studio/js/studio-modal.js`, especially `renderStudioModalFrame()` and `renderStudioModalActions()`, unless the review finds a missing requirement from the extracted route-local modules.
+2. Define the two preferred composition patterns.
+   Keep the target to transient result modals and route-owned workflow modals unless a concrete extracted example proves a durable third pattern is needed.
+3. Write stable guidance under the UI composition-pattern docs.
+   The guidance should include shell anatomy, focus/return behavior, Escape/backdrop behavior, action-row vocabulary, validation placement, result contracts, and action ownership.
 4. Update UI audit guidance to include modal composition checks.
-5. Convert only one representative modal if needed to prove the guidance.
+   Audits should check representative modal screenshots or browser states, not only page-level controls.
+5. Select representative migration targets.
+   Good candidates are one simple Studio transient helper flow, one complex route-owned Studio workflow modal, and one portable Docs Viewer management modal. Use them to prove the contract before broad migration.
+6. Decide CSS ownership and naming.
+   Clarify which modal rules become shared Studio shell rules, which stay route-local, and how `docsViewer__*` portable equivalents maintain parity.
+7. Record permanent API examples.
+   Document helper API shapes for confirm/notice/input/choice/result flows so future work copies an existing contract rather than inventing another local pattern.
 
 ## Modal Extraction Prerequisite
 
-Before redesigning or migrating the modal shell pattern, do a modal-focused extraction pass across all files that currently own modal responsibilities.
+The modal-focused extraction pass across current modal-owning files is complete.
 
 This follows the maintainability direction from [Studio JavaScript Payload Inventory](/docs/?scope=studio&doc=studio-javascript-payload-inventory). That inventory already flags long mixed route controllers that combine mutation orchestration, modal composition, generated-data reads, and rendering. Modal code is part of that maintainability problem because rendering, event wiring, validation, state transitions, and domain writes are often embedded in the same large files.
 
-The extraction should cover all current files with modal responsibilities rather than leaving a set of known "still to extract" modal code. Completing the extraction as a preparatory phase lets the actual modal pattern redesign start from cleaner ownership boundaries and avoids mixing architectural decisions with large-file untangling.
+The extraction covered current files with modal responsibilities rather than leaving a known "still to extract" modal set. Completing the extraction as a preparatory phase lets the actual modal pattern redesign start from cleaner ownership boundaries and avoids mixing architectural decisions with large-file untangling.
 
-Extraction should stay modal-focused. It should separate modal rendering helpers, descriptors, local modal validation, and modal event/lifecycle wiring where appropriate, while keeping route orchestration and domain writes owned by the route command or opener. It should not become a broad cleanup of every route-controller concern.
+The extraction stayed modal-focused. It separated modal rendering helpers, descriptors, local modal validation, and modal event/lifecycle wiring where appropriate, while keeping route orchestration and domain writes owned by the route command or opener. It did not attempt broad cleanup of every route-controller concern.
 
-Track this prerequisite in [Modal Responsibility Extraction Plan](/docs/?scope=studio&doc=modal-responsibility-extraction-plan).
+The completed extraction is tracked in [Modal Responsibility Extraction Plan](/docs/?scope=studio&doc=modal-responsibility-extraction-plan).
 
 ## Migration Review
 
@@ -248,7 +261,7 @@ The migration plan should be incremental. It should identify one low-risk repres
 
 ## Open Questions
 
-- Which current modal shell should become the canonical base?
-- Should the Docs Viewer metadata modal and Studio command-result modal share the exact same shell, or only the same composition rules?
+- Should `renderStudioModalFrame()` become the canonical shell as-is, or does it need a small accessibility/focus/action-row refinement before standardization?
+- Should Docs Viewer management keep static portable shell markup while matching Studio composition rules, or migrate more of its shell rendering into portable JS helpers?
+- Which extracted route-local modal should be the first complex workflow example in permanent guidance?
 - Should modal-return contracts be documented as JavaScript helper APIs, prose rules, or both?
-- Should UI audits require a modal screenshot/check whenever a route has modal behavior?

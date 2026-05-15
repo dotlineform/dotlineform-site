@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f14cc11a2c4a598acb4d76d0226e3b42",
-    "generated_at_utc": "2026-05-15T09:59:20Z",
+    "version": "blake2b-fde547d03ad0e8d512acd1d8ba818447",
+    "generated_at_utc": "2026-05-15T12:45:53Z",
     "count": 243
   },
   "entries": [
@@ -2881,10 +2881,10 @@
       "kind": "doc",
       "title": "Studio JavaScript Payload Inventory",
       "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-15",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-14 • Studio",
+      "display_meta": "2026-05-15 • Studio",
       "search_terms": [
         "studio-javascript-payload-inventory",
         "studio",
@@ -2892,12 +2892,12 @@
         "payload",
         "inventory",
         "studio javascript payload inventory",
-        "2026-05-14",
+        "2026-05-15",
         "2026",
         "05",
-        "14"
+        "15"
       ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory studio javascript payload inventory 2026-05-14 2026 05 14"
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory studio javascript payload inventory 2026-05-15 2026 05 15"
     },
     {
       "id": "studio-works",

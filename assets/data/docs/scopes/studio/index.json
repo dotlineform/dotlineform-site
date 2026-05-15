@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T12:41:16Z",
+  "generated_at": "2026-05-15T12:46:44Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1834,7 +1834,7 @@
       "doc_id": "studio-javascript-payload-inventory",
       "title": "Studio JavaScript Payload Inventory",
       "added_date": "2026-05-14",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-15",
       "parent_id": "studio",
       "sort_order": 55,
       "published": true,
@@ -1843,7 +1843,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 9576,
+      "content_text_length": 12181,
       "ui_status": "urgent"
     },
     {
@@ -3131,7 +3131,7 @@
       "source_path": "ui-request-modal-composition-pattern.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-modal-composition-pattern.json",
-      "content_text_length": 19387,
+      "content_text_length": 20518,
       "ui_status": "in-progress"
     },
     {
