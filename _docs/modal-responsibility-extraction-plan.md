@@ -130,6 +130,9 @@ Completed slices:
   The route now uses `assets/docs-viewer/js/docs-viewer-management-modals.js` for transient confirm, text-input, and choice modals covering make-viewable parent/descendant decisions, new doc title entry, archive confirmation, and delete confirmation.
   The modal module owns shell rendering, focus entry and return, Escape/cancel behavior, local text/choice result collection, and delete preview body formatting.
   The management controller still owns create, archive, delete, viewability writes, service calls, busy state, messages, context menu behavior, and index reloads.
+- Extracted the Series Tags offline session and import modal rendering from `assets/studio/js/series-tags.js` into `assets/studio/js/series-tags-modals.js`.
+  The modal module owns the session modal shell/body/actions rendering, import modal shell/body/actions rendering, import preview review rows, resolution select descriptors, and local modal copy lookup.
+  The route still owns modal open/close event wiring, session copy/download/clear actions, import file parsing, preview/apply service calls, route busy state, status messages, assignments reloads, and local session cleanup.
 
 Inventory notes:
 
@@ -142,6 +145,7 @@ Verification completed:
 - JSON validation passed for changed Studio UI text files.
 - Focused Playwright checks covered the Docs HTML import conflict modal result contract and the catalogue action modal helper's cancel, primary, Escape, and multiline body behavior.
 - Focused Playwright checks covered the Docs Viewer management modal helper's confirm, Escape cancel, text input result, choice result, delete preview body formatting, and cleanup behavior.
+- Focused module contract checks covered the Series Tags modal helper's session count rendering, hidden/open state, escaped status/file/review text, conflict resolution selection, and import review rows.
 
 ## Completion Criteria
 
