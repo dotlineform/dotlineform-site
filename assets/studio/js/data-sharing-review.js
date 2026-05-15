@@ -11,7 +11,10 @@ import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
-import { openConfirmDetailModal, openNoticeModal } from "./studio-modal.js";
+import {
+  confirmDataSharingReviewApply,
+  showDataSharingReviewResultModal
+} from "./data-sharing-review-modals.js";
 import {
   workflowCapabilityForOperation,
   workflowDomainForKey,
@@ -277,50 +280,6 @@ function issueLabel(issue) {
 
 function issueItems(issues) {
   return Array.isArray(issues) ? issues.map(issueLabel).filter(Boolean) : [];
-}
-
-function countRowsHtml(rows) {
-  const items = Array.isArray(rows) ? rows : [];
-  if (!items.length) return "";
-  return `
-    <dl class="dataSharingReviewResultModal__counts">
-      ${items.map((row) => `
-        <div>
-          <dt>${escapeHtml(row.label)}</dt>
-          <dd>${escapeHtml(row.value)}</dd>
-        </div>
-      `).join("")}
-    </dl>
-  `;
-}
-
-function issuesHtml(state, issues) {
-  const items = issueItems(issues);
-  if (!items.length) return "";
-  const heading = getStudioText(state.config, "data_sharing_review.issues_heading", "Issues");
-  return `
-    <div class="dataSharingReviewResultModal__issues">
-      <h4>${escapeHtml(heading)}</h4>
-      <ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
-    </div>
-  `;
-}
-
-function showResultModal(state, { title, summary, countRows, issues }) {
-  const summaryHtml = normalizeText(summary)
-    ? `<p class="tagStudioModal__label dataSharingReviewResultModal__summary">${escapeHtml(summary)}</p>`
-    : "";
-  const bodyHtml = `
-    ${summaryHtml}
-    ${countRowsHtml(countRows)}
-    ${issuesHtml(state, issues)}
-  `;
-  openNoticeModal({
-    root: state.root,
-    title,
-    bodyHtml,
-    closeLabel: getStudioText(state.config, "data_sharing_review.result_close_button", "Close")
-  }).catch((error) => console.warn("data_sharing_review: result modal failed", error));
 }
 
 function hideResultButton(state) {
@@ -642,7 +601,7 @@ function renderResult(state, payload, failed = false) {
   renderPreviewList(state);
   updateSelectionSummary(state);
   state.lastImportResult = failed ? null : result;
-  showResultModal(state, result);
+  showDataSharingReviewResultModal(state, result);
 }
 
 function setControlsDisabled(state, disabled) {
@@ -811,16 +770,12 @@ function actionChangeCount(action, counts) {
 function renderApplyActionResult(state, action, payload) {
   const countsValue = actionCountsText(action, payload && payload.counts);
   const summary = normalizeText(payload && payload.summary_text);
-  showResultModal(state, {
+  showDataSharingReviewResultModal(state, {
     title: action.resultTitle || getStudioText(state.config, "data_sharing_review.apply_result_title", "Apply complete"),
     summary: `${summary} ${countsValue}`.trim(),
     countRows: actionCountRows(action, payload && payload.counts),
     issues: applyIssues(payload || {}, action.id)
   });
-}
-
-function actionConfirmation(action) {
-  return action && action.confirmation && typeof action.confirmation === "object" ? action.confirmation : {};
 }
 
 function actionActivityContext(state, action, stagedFilename) {
@@ -877,18 +832,7 @@ async function runApplyAction(state, actionId) {
       return;
     }
 
-    const confirmation = actionConfirmation(action);
-    const confirm = await openConfirmDetailModal({
-      root: state.root,
-      title: normalizeText(confirmation.title) || getStudioText(state.config, "data_sharing_review.apply_confirm_title", "Apply returned changes?"),
-      body: [
-        preflight.summary_text || countsTextValue,
-        countsTextValue,
-        normalizeText(confirmation.body)
-      ].filter(Boolean),
-      primaryLabel: normalizeText(confirmation.primary_label) || getStudioText(state.config, "data_sharing_review.apply_confirm_ok", "OK"),
-      cancelLabel: normalizeText(confirmation.cancel_label) || getStudioText(state.config, "data_sharing_review.apply_confirm_cancel", "Cancel")
-    });
+    const confirm = await confirmDataSharingReviewApply(state, action, preflight, countsTextValue);
     if (!confirm.confirmed) {
       setStatus(
         state.statusNode,
@@ -1118,7 +1062,7 @@ async function init() {
     window.addEventListener("scroll", () => hideApplyActionsMenu(state), { passive: true });
     window.addEventListener("resize", () => hideApplyActionsMenu(state));
     state.resultButton.addEventListener("click", () => {
-      if (state.lastImportResult) showResultModal(state, state.lastImportResult);
+      if (state.lastImportResult) showDataSharingReviewResultModal(state, state.lastImportResult);
     });
     state.selectAllButton.addEventListener("click", () => {
       selectablePreviewIds(state).forEach((rowId) => state.selectedPreviewIds.add(rowId));

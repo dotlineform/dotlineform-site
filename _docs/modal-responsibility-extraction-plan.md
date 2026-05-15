@@ -139,6 +139,9 @@ Completed slices:
 - Extracted the Activity Log detail notice modal from `assets/studio/js/activity-log.js` into `assets/studio/js/activity-log-modals.js`.
   The modal module owns detail item filtering, fallback body text selection, notice modal labels, and the shared notice modal invocation.
   The route still owns feed loading, entry lookup, sorting, list rendering, click dispatch, and route ready state.
+- Extracted the Data Sharing Review result and apply-confirmation modals from `assets/studio/js/data-sharing-review.js` into `assets/studio/js/data-sharing-review-modals.js`.
+  The modal module owns result notice body rendering, result count rows, modal issue-list rendering, result close labels, apply confirmation labels/body construction, and shared modal invocations.
+  The route still owns returned package loading, preview row rendering, selection state, preflight/apply service calls, apply result payload shaping, activity context, status updates, and route busy state.
 
 Inventory notes:
 
@@ -154,6 +157,7 @@ Verification completed:
 - Focused module contract checks covered the Series Tags modal helper's session count rendering, hidden/open state, escaped status/file/review text, conflict resolution selection, and import review rows.
 - Focused module contract checks covered the Data Sharing Prepare result modal helper's success/failure titles, output filename normalization, count unit labels, escaped files/issues, close action cleanup, and explicit clearing helper.
 - Focused module contract checks covered the Activity Log details modal helper's detail item filtering, fallback body text, escaped title/body/close labels, and close cleanup through the shared notice modal.
+- Focused module contract checks covered the Data Sharing Review modal helper's result title/summary/count/issues rendering, escaped labels/body text, notice close cleanup, apply confirmation body construction, and primary confirmation result.
 
 ## Completion Criteria
 
