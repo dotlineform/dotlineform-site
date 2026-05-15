@@ -157,6 +157,9 @@ Completed slices:
 - Extracted the second Tag Registry modal slice from `assets/studio/js/tag-registry.js` into `assets/studio/js/tag-registry-modals.js`.
   The modal module now owns edit/new/delete/demote modal field population, open/close reset lifecycle, new-tag group key rendering, demote selected-target UI rendering, demote popup show/hide lifecycle, delete tag meta rendering, and delete preview state reset.
   The route still owns tag lookup, validation decisions, import parsing/submission, delete impact service preview, demote match lookup/selection rules, create/edit/delete/demote service calls, list/control rendering, status message decisions, and route busy state.
+- Extracted the third Tag Registry modal slice from `assets/studio/js/tag-registry.js` into `assets/studio/js/tag-registry-modals.js`.
+  The modal module now owns delete impact preview count/link rendering and delete impact status rendering.
+  The route still owns delete impact service preview loading, affected-series lookup, stale preview protection, delete service calls, and route busy state.
 
 Inventory notes:
 
@@ -177,6 +180,7 @@ Verification completed:
 - Focused module contract checks covered the Catalogue Work Editor modal helper's embedded entry shell roles and escaping, entry validation status, save result contract, close cleanup, build preview labels/body, and Escape close behavior.
 - Focused module contract checks covered the Tag Registry modal helper's modal shell roles, escaped labels, ref collection, import show/hide state, patch snippet population, patch close helper, and delete show/hide helper.
 - Focused module contract checks covered the Tag Registry modal helper's edit field population/reset, new-tag group rendering/status updates, demote selected-target rendering and popup reset, and delete preview state reset.
+- Focused module contract checks covered the Tag Registry modal helper's delete impact count/link rendering, empty-series fallback, escaping, and impact status rendering.
 
 ## Completion Criteria
 

@@ -63,8 +63,10 @@ import {
   openTagRegistryEditModal,
   openTagRegistryNewModal,
   renderTagRegistryDemoteSelectionState,
+  renderTagRegistryDeleteImpactPreview,
   renderTagRegistryNewTagModalState,
   renderTagRegistryModals,
+  setTagRegistryDeleteImpactStatus,
   showTagRegistryImportModal,
   showTagRegistryDemoteTagPopup,
   showTagRegistryPatchModal
@@ -681,10 +683,6 @@ function setEditStatus(state, kind, message) {
   setStatusText(state.refs.editStatus, kind, message);
 }
 
-function setImpactPreview(target, kind, message) {
-  setStatusText(target, kind, message, UI_CLASS.formImpact);
-}
-
 async function refreshDeleteImpactPreview(state) {
   const seq = ++state.deletePreviewSeq;
   state.isBusy = true;
@@ -703,10 +701,13 @@ async function refreshDeleteImpactPreview(state) {
   if (seq !== state.deletePreviewSeq || state.refs.deleteModal.hidden) return;
   if (result.ok) {
     state.deletePreview = result.summary;
-    renderDeleteImpactPreview(state, result.response, result.message);
+    renderTagRegistryDeleteImpactPreview(state, {
+      response: result.response,
+      affectedSeries: getDeleteImpactSeries(state, state.deleteTagId)
+    });
     return;
   }
-  setImpactPreview(state.refs.deleteImpact, "error", result.message);
+  setTagRegistryDeleteImpactStatus(state, "error", result.message);
 }
 
 async function handleTagEdit(state) {
@@ -818,7 +819,7 @@ function openDeleteModal(state, tagId) {
 
   if (state.saveMode !== "post") {
     setDeleteStatus(state, "error", registryText(state.config, "local_delete_required", "Local server is required for delete."));
-    setImpactPreview(state.refs.deleteImpact, "error", registryText(state.config, "delete_impact_unavailable_local", "Delete impact: unavailable (local server required)."));
+    setTagRegistryDeleteImpactStatus(state, "error", registryText(state.config, "delete_impact_unavailable_local", "Delete impact: unavailable (local server required)."));
     return;
   }
 
@@ -1153,62 +1154,6 @@ function closePatchModal(state) {
 
 function setImportResult(state, kind, message) {
   setStatusText(state.refs.importResult, kind, message, UI_CLASS.toolbarResult);
-}
-
-function renderDeleteImpactPreview(state, response, fallbackMessage) {
-  const stats = response && typeof response === "object" ? response : {};
-  const affectedSeries = getDeleteImpactSeries(state, state.deleteTagId);
-  const aliasesUpdated = Math.max(
-    0,
-    Number(stats.aliases_rewritten || 0) - Number(stats.aliases_removed_empty || 0) - Number(stats.aliases_removed_redundant || 0)
-  );
-  const aliasesDeleted = Number(stats.aliases_removed_empty || 0) + Number(stats.aliases_removed_redundant || 0);
-  const items = [
-    renderDeleteImpactSeriesItem(state, affectedSeries),
-    renderDeleteImpactCountItem(
-      registryText(state.config, "delete_impact_aliases_updated", "aliases updated"),
-      aliasesUpdated
-    ),
-    renderDeleteImpactCountItem(
-      registryText(state.config, "delete_impact_aliases_deleted", "aliases deleted"),
-      aliasesDeleted
-    )
-  ];
-  state.refs.deleteImpact.className = `${UI_CLASS.formImpact} tagRegistryDelete__impactPanel`;
-  delete state.refs.deleteImpact.dataset.state;
-  state.refs.deleteImpact.innerHTML = `
-    <ul class="${UI_CLASS.deleteImpactList}">
-      ${items.join("")}
-    </ul>
-  `;
-}
-
-function renderDeleteImpactCountItem(label, value) {
-  return `
-    <li class="${UI_CLASS.deleteImpactItem}">
-      <span>${escapeHtml(label)}: ${escapeHtml(String(value))}</span>
-    </li>
-  `;
-}
-
-function renderDeleteImpactSeriesItem(state, seriesEntries) {
-  const label = registryText(state.config, "delete_impact_series", "series affected");
-  const emptyLabel = registryText(state.config, "empty_state", "none");
-  const content = seriesEntries.length
-    ? `<span class="${UI_CLASS.deleteImpactLinks}">${seriesEntries.map((entry) => `
-        <a
-          class="${UI_CLASS.deleteImpactLink}"
-          href="${escapeHtml(entry.url)}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >${escapeHtml(entry.title)}</a>
-      `).join(", ")}</span>`
-    : `<span>${escapeHtml(emptyLabel)}</span>`;
-  return `
-    <li class="${UI_CLASS.deleteImpactItem}">
-      <span>${escapeHtml(label)}: </span>${content}
-    </li>
-  `;
 }
 
 function getDeleteImpactSeries(state, tagId) {

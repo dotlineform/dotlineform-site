@@ -218,6 +218,38 @@ export function closeTagRegistryDeleteModal(state) {
   state.refs.confirmDeleteTag.disabled = false;
 }
 
+export function setTagRegistryDeleteImpactStatus(state, kind, message) {
+  setStatusText(state.refs.deleteImpact, kind, message, UI_CLASS.formImpact);
+}
+
+export function renderTagRegistryDeleteImpactPreview(state, options = {}) {
+  const stats = options.response && typeof options.response === "object" ? options.response : {};
+  const affectedSeries = Array.isArray(options.affectedSeries) ? options.affectedSeries : [];
+  const aliasesUpdated = Math.max(
+    0,
+    Number(stats.aliases_rewritten || 0) - Number(stats.aliases_removed_empty || 0) - Number(stats.aliases_removed_redundant || 0)
+  );
+  const aliasesDeleted = Number(stats.aliases_removed_empty || 0) + Number(stats.aliases_removed_redundant || 0);
+  const items = [
+    renderDeleteImpactSeriesItem(state, affectedSeries),
+    renderDeleteImpactCountItem(
+      registryText(state.config, "delete_impact_aliases_updated", "aliases updated"),
+      aliasesUpdated
+    ),
+    renderDeleteImpactCountItem(
+      registryText(state.config, "delete_impact_aliases_deleted", "aliases deleted"),
+      aliasesDeleted
+    )
+  ];
+  state.refs.deleteImpact.className = `${UI_CLASS.formImpact} tagRegistryDelete__impactPanel`;
+  delete state.refs.deleteImpact.dataset.state;
+  state.refs.deleteImpact.innerHTML = `
+    <ul class="${UI_CLASS.deleteImpactList}">
+      ${items.join("")}
+    </ul>
+  `;
+}
+
 function renderPatchModal(state) {
   return renderStudioModalFrame({
     modalRole: UI.role.patchModal,
@@ -428,6 +460,34 @@ function renderDeleteTagMeta(state, tag) {
     <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group), UI_CLASS.deleteMetaTag)}" title="${escapeHtml(tag.tagId)}">
       ${escapeHtml(tag.label)}
     </span>
+  `;
+}
+
+function renderDeleteImpactCountItem(label, value) {
+  return `
+    <li class="${UI_CLASS.deleteImpactItem}">
+      <span>${escapeHtml(label)}: ${escapeHtml(String(value))}</span>
+    </li>
+  `;
+}
+
+function renderDeleteImpactSeriesItem(state, seriesEntries) {
+  const label = registryText(state.config, "delete_impact_series", "series affected");
+  const emptyLabel = registryText(state.config, "empty_state", "none");
+  const content = seriesEntries.length
+    ? `<span class="${UI_CLASS.deleteImpactLinks}">${seriesEntries.map((entry) => `
+        <a
+          class="${UI_CLASS.deleteImpactLink}"
+          href="${escapeHtml(entry.url)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >${escapeHtml(entry.title)}</a>
+      `).join(", ")}</span>`
+    : `<span>${escapeHtml(emptyLabel)}</span>`;
+  return `
+    <li class="${UI_CLASS.deleteImpactItem}">
+      <span>${escapeHtml(label)}: </span>${content}
+    </li>
   `;
 }
 
