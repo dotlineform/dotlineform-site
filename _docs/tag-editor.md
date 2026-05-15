@@ -328,7 +328,7 @@ User-facing name:
 
 DOM / CSS:
 
-- `[data-role="modal"]`
+- `[data-role="studio-modal"]`
 - `[data-role="modal-tags"]`
 - `[data-role="modal-snippet"]`
 - `[data-role="copy-snippet"]`
@@ -337,7 +337,8 @@ DOM / CSS:
 JS owner:
 
 - modal shell in `renderShell(state)`
-- open/close/copy handling in `assets/studio/js/tag-studio.js`
+- shell open/close/focus behavior in `assets/studio/js/tag-studio-modals.js`
+- copy/status handling in `assets/studio/js/tag-studio.js`
 
 Meaning:
 
@@ -476,7 +477,7 @@ If a change request refers to:
 - “tag suggestions”
   - start with `.tagStudio__popup` / `.tagStudioSuggest__*`
 - “save modal”
-  - start with the shared modal shell in `tag-studio.js` plus shared modal styles in `studio.css`
+  - start with `tag-studio-modals.js` plus shared modal styles in `studio.css`
 
 Clarify with the user when a request could mean:
 
