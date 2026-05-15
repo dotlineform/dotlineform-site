@@ -216,16 +216,38 @@ export function wireTagAliasesModalEvents(state, callbacks = {}) {
   state.refs.saveEditAlias.addEventListener("click", () => {
     callbacks.onEditSave?.();
   });
+
+  document.addEventListener("keydown", (event) => {
+    const modalKind = getOpenTagAliasesModalKind(state);
+    if (!modalKind) return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeTagAliasesModalByKind(state, modalKind);
+      callbacks.onModalStateChange?.();
+      return;
+    }
+
+    if (event.key !== "Tab") return;
+    trapModalFocus(event, getTagAliasesModalElement(state, modalKind));
+  });
 }
 
 export function showTagAliasesImportModal(state) {
+  captureModalRestoreFocus(state, "import");
   state.importModalOpen = true;
+  state.importModalFocusReady = false;
   state.refs.importModal.hidden = false;
+  syncModalFocusAfterOpen(state, "import");
 }
 
 export function hideTagAliasesImportModal(state) {
+  const restoreTarget = state.importModalRestoreFocus;
   state.importModalOpen = false;
+  state.importModalFocusReady = false;
+  state.importModalRestoreFocus = null;
   state.refs.importModal.hidden = true;
+  restoreModalFocus(restoreTarget);
 }
 
 export function setTagAliasesSelectedImportFile(state, file) {
@@ -252,31 +274,45 @@ export function clearTagAliasesImportResult(state) {
 }
 
 export function showTagAliasesPatchModal(state, snippet) {
+  captureModalRestoreFocus(state, "patch");
   state.patchSnippet = snippet;
   state.refs.patchSnippet.textContent = snippet;
   state.refs.patchModal.hidden = false;
+  state.patchModalFocusReady = false;
+  syncModalFocusAfterOpen(state, "patch");
 }
 
 export function hideTagAliasesPatchModal(state) {
+  const restoreTarget = state.patchModalRestoreFocus;
   state.refs.patchModal.hidden = true;
+  state.patchModalFocusReady = false;
+  state.patchModalRestoreFocus = null;
+  restoreModalFocus(restoreTarget);
 }
 
 export function openTagAliasesPromotionModal(state, aliasKey, suggestedGroup) {
+  captureModalRestoreFocus(state, "promotion");
   state.promotionState = {
     aliasKey,
     group: getStudioGroups(state).includes(suggestedGroup) ? suggestedGroup : ""
   };
   updateTagAliasesPromotionUi(state);
   state.refs.promotionModal.hidden = false;
+  state.promotionModalFocusReady = false;
+  syncModalFocusAfterOpen(state, "promotion");
 }
 
 export function closeTagAliasesPromotionModal(state) {
+  const restoreTarget = state.promotionModalRestoreFocus;
   state.promotionState = null;
   state.refs.promotionModal.hidden = true;
+  state.promotionModalFocusReady = false;
+  state.promotionModalRestoreFocus = null;
   state.refs.promotionAliasMeta.textContent = "";
   state.refs.promotionGroupKey.innerHTML = "";
   setTagAliasesPromotionStatus(state, "", "");
   state.refs.confirmPromotion.disabled = true;
+  restoreModalFocus(restoreTarget);
 }
 
 export function updateTagAliasesPromotionUi(state) {
@@ -307,6 +343,7 @@ export function setTagAliasesDemoteStatus(state, kind, message) {
 }
 
 export function openTagAliasesDemoteModal(state, options) {
+  captureModalRestoreFocus(state, "demote");
   const canonicalTagId = options && options.canonicalTagId ? options.canonicalTagId : "";
   const aliasKey = options && options.aliasKey ? options.aliasKey : canonicalTagId;
   state.demoteState = {
@@ -330,12 +367,16 @@ export function openTagAliasesDemoteModal(state, options) {
     statusMessage: ""
   });
   state.refs.demoteModal.hidden = false;
-  state.refs.demoteTagSearch.focus();
+  state.demoteModalFocusReady = false;
+  syncModalFocusAfterOpen(state, "demote");
 }
 
 export function closeTagAliasesDemoteModal(state) {
+  const restoreTarget = state.demoteModalRestoreFocus;
   state.demoteState = null;
   state.refs.demoteModal.hidden = true;
+  state.demoteModalFocusReady = false;
+  state.demoteModalRestoreFocus = null;
   state.refs.demoteTagMeta.textContent = "";
   state.refs.demoteTagSearch.value = "";
   state.refs.demoteGroupKey.innerHTML = "";
@@ -343,6 +384,7 @@ export function closeTagAliasesDemoteModal(state) {
   state.refs.confirmDemote.disabled = true;
   setTagAliasesDemoteStatus(state, "", "");
   hideTagAliasesDemoteTagPopup(state);
+  restoreModalFocus(restoreTarget);
 }
 
 export function renderTagAliasesDemoteSelectionState(state, options = {}) {
@@ -382,6 +424,7 @@ export function setTagAliasesEditStatus(state, kind, message) {
 }
 
 export function openTagAliasesEditModal(state, entry) {
+  captureModalRestoreFocus(state, "edit");
   state.editState = {
     originalAlias: entry.alias,
     originalDescription: String(entry.description || "").trim(),
@@ -396,9 +439,12 @@ export function openTagAliasesEditModal(state, entry) {
   setAliasEditModalMode(state, "edit");
   renderTagAliasesEditModalState(state);
   state.refs.editModal.hidden = false;
+  state.editModalFocusReady = false;
+  syncModalFocusAfterOpen(state, "edit");
 }
 
 export function openTagAliasesCreateModal(state) {
+  captureModalRestoreFocus(state, "edit");
   state.editState = {
     originalAlias: "",
     originalDescription: "",
@@ -412,12 +458,16 @@ export function openTagAliasesCreateModal(state) {
   setAliasEditModalMode(state, "new");
   renderTagAliasesEditModalState(state);
   state.refs.editModal.hidden = false;
-  state.refs.editAliasName.focus();
+  state.editModalFocusReady = false;
+  syncModalFocusAfterOpen(state, "edit");
 }
 
 export function closeTagAliasesEditModal(state) {
+  const restoreTarget = state.editModalRestoreFocus;
   state.editState = null;
   state.refs.editModal.hidden = true;
+  state.editModalFocusReady = false;
+  state.editModalRestoreFocus = null;
   state.refs.editAliasName.value = "";
   state.refs.editAliasDescription.value = "";
   state.refs.editTagSearch.value = "";
@@ -427,6 +477,7 @@ export function closeTagAliasesEditModal(state) {
   state.refs.saveEditAlias.disabled = true;
   state.refs.editTagList.innerHTML = "";
   hideTagAliasesEditTagPopup(state);
+  restoreModalFocus(restoreTarget);
 }
 
 export function renderTagAliasesEditModalState(state, options = {}) {
@@ -468,6 +519,7 @@ function renderImportModal(state) {
     backdropRole: UI.role.importModalClose,
     titleId: "tagAliasesImportTitle",
     title: aliasesText(state.config, "import_modal_title", "Import Aliases"),
+    size: "wide",
     hidden: !state.importModalOpen,
     bodyHtml: `
       <div class="tagStudioToolbar tagStudioToolbar--modalImport">
@@ -497,13 +549,14 @@ function renderPatchModal(state) {
     backdropRole: UI.role.patchModalClose,
     titleId: "tagAliasesPatchTitle",
     title: aliasesText(state.config, "patch_modal_title", "Aliases Patch Preview"),
+    size: "wide",
     bodyHtml: `
       <p class="${UI_CLASS.modalLabel}">${escapeHtml(aliasesText(state.config, "patch_modal_label", "Manual patch snippet"))}</p>
       <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.patchSnippet}"></pre>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.copyPatch, label: aliasesText(state.config, "patch_modal_copy_button", "Copy") },
-      { role: UI.role.patchModalClose, label: aliasesText(state.config, "patch_modal_close_button", "Close") }
+      { role: UI.role.patchModalClose, label: aliasesText(state.config, "patch_modal_close_button", "Close") },
+      { role: UI.role.copyPatch, label: aliasesText(state.config, "patch_modal_copy_button", "Copy"), primary: true }
     ])
   });
 }
@@ -521,8 +574,8 @@ function renderPromotionModal(state) {
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.promotionStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.confirmPromotion, label: aliasesText(state.config, "promotion_button", "Promote"), disabled: true },
-      { role: UI.role.promotionModalClose, label: aliasesText(state.config, "promotion_cancel_button", "Cancel") }
+      { role: UI.role.promotionModalClose, label: aliasesText(state.config, "promotion_cancel_button", "Cancel") },
+      { role: UI.role.confirmPromotion, label: aliasesText(state.config, "promotion_button", "Promote"), primary: true, disabled: true }
     ])
   });
 }
@@ -548,8 +601,8 @@ function renderDemoteModal(state) {
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.demoteStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.confirmDemote, label: aliasesText(state.config, "demotion_confirm_button", "Demote"), disabled: true },
-      { role: UI.role.demoteModalClose, label: aliasesText(state.config, "demotion_cancel_button", "Cancel") }
+      { role: UI.role.demoteModalClose, label: aliasesText(state.config, "demotion_cancel_button", "Cancel") },
+      { role: UI.role.confirmDemote, label: aliasesText(state.config, "demotion_confirm_button", "Demote"), primary: true, disabled: true }
     ])
   });
 }
@@ -557,6 +610,7 @@ function renderDemoteModal(state) {
 function renderEditModal(state) {
   return renderStudioModalFrame({
     modalRole: UI.role.editModal,
+    backdropRole: UI.role.editModalClose,
     titleId: "tagAliasesEditTitle",
     titleRole: UI.role.editModalTitle,
     title: aliasesText(state.config, "edit_modal_title", "Edit Alias"),
@@ -584,10 +638,149 @@ function renderEditModal(state) {
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.saveEditAlias, label: aliasesText(state.config, "edit_save_button", "Save"), disabled: true },
-      { role: UI.role.editModalClose, label: aliasesText(state.config, "edit_cancel_button", "Cancel") }
+      { role: UI.role.editModalClose, label: aliasesText(state.config, "edit_cancel_button", "Cancel") },
+      { role: UI.role.saveEditAlias, label: aliasesText(state.config, "edit_save_button", "Save"), primary: true, disabled: true }
     ])
   });
+}
+
+function closeTagAliasesModalByKind(state, modalKind) {
+  if (modalKind === "import") {
+    hideTagAliasesImportModal(state);
+    return;
+  }
+  if (modalKind === "patch") {
+    hideTagAliasesPatchModal(state);
+    return;
+  }
+  if (modalKind === "promotion") {
+    closeTagAliasesPromotionModal(state);
+    return;
+  }
+  if (modalKind === "demote") {
+    closeTagAliasesDemoteModal(state);
+    return;
+  }
+  if (modalKind === "edit") {
+    closeTagAliasesEditModal(state);
+  }
+}
+
+function getOpenTagAliasesModalKind(state) {
+  return modalConfigs().find((config) => {
+    const modal = state.refs[config.modalRef];
+    return Boolean(modal && !modal.hidden);
+  })?.kind || "";
+}
+
+function getTagAliasesModalElement(state, modalKind) {
+  const config = modalConfig(modalKind);
+  return config && state.refs[config.modalRef] ? state.refs[config.modalRef] : null;
+}
+
+function captureModalRestoreFocus(state, modalKind) {
+  const config = modalConfig(modalKind);
+  if (!config) return;
+  state[config.restoreProp] = document.activeElement;
+}
+
+function syncModalFocusAfterOpen(state, modalKind) {
+  const config = modalConfig(modalKind);
+  const modal = getTagAliasesModalElement(state, modalKind);
+  if (!config || !modal || modal.hidden) return;
+  if (state[config.focusProp] && modal.contains(document.activeElement)) return;
+  const target = modal.querySelector(config.focusSelector)
+    || modal.querySelector(`[data-role="${config.closeRole}"]`)
+    || modal.querySelector("[role='dialog']");
+  if (target && typeof target.focus === "function") target.focus();
+  state[config.focusProp] = true;
+}
+
+function trapModalFocus(event, modal) {
+  if (!modal) return;
+  const nodes = focusableNodes(modal);
+  if (!nodes.length) return;
+  const first = nodes[0];
+  const last = nodes[nodes.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+    return;
+  }
+  if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+function focusableNodes(root) {
+  return Array.from(root.querySelectorAll([
+    "a[href]",
+    "button:not([disabled])",
+    "input:not([disabled])",
+    "select:not([disabled])",
+    "textarea:not([disabled])",
+    "[tabindex]:not([tabindex='-1'])"
+  ].join(","))).filter((node) => node.getClientRects().length);
+}
+
+function restoreModalFocus(target) {
+  try {
+    if (target && typeof target.focus === "function" && target.getClientRects().length) {
+      target.focus({ preventScroll: true });
+    }
+  } catch (_error) {
+    // Focus return is best effort when a route re-render removes the opener.
+  }
+}
+
+function modalConfig(modalKind) {
+  return modalConfigs().find((config) => config.kind === modalKind) || null;
+}
+
+function modalConfigs() {
+  return [
+    {
+      kind: "import",
+      modalRef: "importModal",
+      closeRole: UI.role.importModalClose,
+      focusProp: "importModalFocusReady",
+      restoreProp: "importModalRestoreFocus",
+      focusSelector: `[data-role="${UI.role.chooseFile}"]:not([disabled])`
+    },
+    {
+      kind: "patch",
+      modalRef: "patchModal",
+      closeRole: UI.role.patchModalClose,
+      focusProp: "patchModalFocusReady",
+      restoreProp: "patchModalRestoreFocus",
+      focusSelector: `[data-role="${UI.role.copyPatch}"]:not([disabled])`
+    },
+    {
+      kind: "promotion",
+      modalRef: "promotionModal",
+      closeRole: UI.role.promotionModalClose,
+      focusProp: "promotionModalFocusReady",
+      restoreProp: "promotionModalRestoreFocus",
+      focusSelector: `[data-role="${UI.role.confirmPromotion}"]:not([disabled])`
+    },
+    {
+      kind: "demote",
+      modalRef: "demoteModal",
+      closeRole: UI.role.demoteModalClose,
+      focusProp: "demoteModalFocusReady",
+      restoreProp: "demoteModalRestoreFocus",
+      focusSelector: `[data-role="${UI.role.demoteTagSearch}"]`
+    },
+    {
+      kind: "edit",
+      modalRef: "editModal",
+      closeRole: UI.role.editModalClose,
+      focusProp: "editModalFocusReady",
+      restoreProp: "editModalRestoreFocus",
+      focusSelector: `[data-role="${UI.role.editAliasName}"]`
+    }
+  ];
 }
 
 function renderPromotionGroupKey(state) {
