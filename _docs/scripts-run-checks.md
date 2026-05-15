@@ -49,7 +49,7 @@ Run the broad profile:
 - `docs-viewer-smoke`
   Builds the site to a temporary Jekyll destination and runs retained Docs Viewer smoke checks for direct loads, search route state, link interception, history, hash fragments, Library scope loading, and management modal behavior.
 - `studio-smoke`
-  Builds the site to a temporary Jekyll destination and runs retained browser smoke checks, including the Docs Viewer route smoke, Studio data import route checks with docs-management unavailable, and a mocked Library import preview flow.
+  Builds the site to a temporary Jekyll destination and runs retained browser smoke checks, including the Docs Viewer route smoke, the UI Catalogue modal demo, Studio data import route checks with docs-management unavailable, and a mocked Library import preview flow.
 - `full`
   Runs `quick`, `catalogue`, `docs`, and `studio-smoke`.
 

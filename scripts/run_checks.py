@@ -101,6 +101,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/studio/audit_service.py",
                 "tests/smoke/docs_viewer_routes.py",
                 "tests/smoke/docs_viewer_management_modal.py",
+                "tests/smoke/ui_catalogue_modal_demo.py",
                 "tests/python/test_activity_contract.py",
                 "tests/python/test_local_env.py",
                 "tests/python/test_publish_media_to_r2.py",
@@ -284,6 +285,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(JEKYLL_DESTINATION),
             ),
             "Smoke-check Docs Viewer direct route, search, link interception, history, hash, and Library scope behavior.",
+        ),
+        CheckCommand(
+            "ui-catalogue-modal-demo-smoke",
+            (
+                sys.executable,
+                "tests/smoke/ui_catalogue_modal_demo.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check the UI Catalogue modal shell demo semantics, focus behavior, validation, and mobile sizing.",
         ),
         CheckCommand(
             "data-sharing-prepare-smoke",

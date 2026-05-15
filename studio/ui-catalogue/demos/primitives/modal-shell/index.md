@@ -8,9 +8,9 @@ ui_catalogue_demo_primitive: modal-shell
 
 <link rel="stylesheet" href="{{ '/assets/ui-catalogue/css/ui-catalogue-demo.css' | relative_url }}">
 
-{% capture shell_markup %}<div class="uiCatalogueDemoModal" id="exampleModal" data-ui-demo-modal data-open="false" aria-hidden="true">
-  <button class="uiCatalogueDemoModal__backdrop" type="button" data-ui-demo-modal-close aria-label="Close modal"></button>
-  <section class="uiCatalogueDemoModal__dialog" role="dialog" aria-modal="true" aria-labelledby="exampleModalTitle" tabindex="-1">
+{% capture shell_markup %}<div class="uiCatalogueDemoModal" id="exampleModal" data-ui-demo-modal data-open="false" aria-hidden="true" hidden>
+  <div class="uiCatalogueDemoModal__backdrop" data-ui-demo-modal-close></div>
+  <div class="uiCatalogueDemoModal__dialog" role="dialog" aria-modal="true" aria-labelledby="exampleModalTitle" tabindex="-1">
     <header class="uiCatalogueDemoModal__header">
       <div class="uiCatalogueDemoModal__headerCopy">
         <h3 class="uiCatalogueDemoModal__title" id="exampleModalTitle">Modal title</h3>
@@ -25,7 +25,7 @@ ui_catalogue_demo_primitive: modal-shell
       <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button" data-ui-demo-modal-close>Cancel</button>
       <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed uiCatalogueDemoButton--primary" type="button" data-ui-demo-modal-submit data-ui-demo-modal-initial-focus>OK</button>
     </div>
-  </section>
+  </div>
 </div>
 {% endcapture %}
 
@@ -95,9 +95,9 @@ ui_catalogue_demo_primitive: modal-shell
     </div>
   </section>
 
-  <div class="uiCatalogueDemoModal" id="uiCatalogueDemoNoticeModal" data-ui-demo-modal data-open="false" aria-hidden="true">
-    <button class="uiCatalogueDemoModal__backdrop" type="button" data-ui-demo-modal-close aria-label="Close result modal"></button>
-    <section class="uiCatalogueDemoModal__dialog uiCatalogueDemoModal__dialog--compact" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoNoticeModalTitle" tabindex="-1">
+  <div class="uiCatalogueDemoModal" id="uiCatalogueDemoNoticeModal" data-ui-demo-modal data-open="false" aria-hidden="true" hidden>
+    <div class="uiCatalogueDemoModal__backdrop" data-ui-demo-modal-close></div>
+    <div class="uiCatalogueDemoModal__dialog uiCatalogueDemoModal__dialog--compact" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoNoticeModalTitle" tabindex="-1">
       <header class="uiCatalogueDemoModal__header">
         <div class="uiCatalogueDemoModal__headerCopy">
           <h3 class="uiCatalogueDemoModal__title" id="uiCatalogueDemoNoticeModalTitle">Prepare complete</h3>
@@ -121,12 +121,12 @@ ui_catalogue_demo_primitive: modal-shell
       <div class="uiCatalogueDemoModal__actions">
         <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed uiCatalogueDemoButton--primary" type="button" data-ui-demo-modal-close data-ui-demo-modal-initial-focus>Close</button>
       </div>
-    </section>
+    </div>
   </div>
 
-  <div class="uiCatalogueDemoModal" id="uiCatalogueDemoConfirmModal" data-ui-demo-modal data-open="false" aria-hidden="true">
-    <button class="uiCatalogueDemoModal__backdrop" type="button" data-ui-demo-modal-close aria-label="Cancel delete"></button>
-    <section class="uiCatalogueDemoModal__dialog uiCatalogueDemoModal__dialog--compact" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoConfirmModalTitle" tabindex="-1">
+  <div class="uiCatalogueDemoModal" id="uiCatalogueDemoConfirmModal" data-ui-demo-modal data-open="false" aria-hidden="true" hidden>
+    <div class="uiCatalogueDemoModal__backdrop" data-ui-demo-modal-close></div>
+    <div class="uiCatalogueDemoModal__dialog uiCatalogueDemoModal__dialog--compact" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoConfirmModalTitle" tabindex="-1">
       <header class="uiCatalogueDemoModal__header">
         <div class="uiCatalogueDemoModal__headerCopy">
           <h3 class="uiCatalogueDemoModal__title" id="uiCatalogueDemoConfirmModalTitle">Delete alias</h3>
@@ -141,12 +141,12 @@ ui_catalogue_demo_primitive: modal-shell
         <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button" data-ui-demo-modal-close>Cancel</button>
         <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed uiCatalogueDemoButton--primary" type="button" data-ui-demo-modal-submit data-ui-demo-modal-initial-focus>Delete</button>
       </div>
-    </section>
+    </div>
   </div>
 
-  <div class="uiCatalogueDemoModal" id="uiCatalogueDemoInputModal" data-ui-demo-modal data-open="false" aria-hidden="true" data-ui-demo-modal-required-message="Enter a title before continuing.">
-    <button class="uiCatalogueDemoModal__backdrop" type="button" data-ui-demo-modal-close aria-label="Cancel title entry"></button>
-    <section class="uiCatalogueDemoModal__dialog uiCatalogueDemoModal__dialog--compact" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoInputModalTitle" tabindex="-1">
+  <div class="uiCatalogueDemoModal" id="uiCatalogueDemoInputModal" data-ui-demo-modal data-open="false" aria-hidden="true" hidden data-ui-demo-modal-required-message="Enter a title before continuing.">
+    <div class="uiCatalogueDemoModal__backdrop" data-ui-demo-modal-close></div>
+    <div class="uiCatalogueDemoModal__dialog uiCatalogueDemoModal__dialog--compact" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoInputModalTitle" tabindex="-1">
       <header class="uiCatalogueDemoModal__header">
         <div class="uiCatalogueDemoModal__headerCopy">
           <h3 class="uiCatalogueDemoModal__title" id="uiCatalogueDemoInputModalTitle">New document</h3>
@@ -166,12 +166,12 @@ ui_catalogue_demo_primitive: modal-shell
         <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button" data-ui-demo-modal-close>Cancel</button>
         <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed uiCatalogueDemoButton--primary" type="button" data-ui-demo-modal-submit>Create</button>
       </div>
-    </section>
+    </div>
   </div>
 
-  <div class="uiCatalogueDemoModal" id="uiCatalogueDemoWorkflowModal" data-ui-demo-modal data-open="false" aria-hidden="true">
-    <button class="uiCatalogueDemoModal__backdrop" type="button" data-ui-demo-modal-close aria-label="Close workflow modal"></button>
-    <section class="uiCatalogueDemoModal__dialog uiCatalogueDemoModal__dialog--wide" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoWorkflowModalTitle" tabindex="-1">
+  <div class="uiCatalogueDemoModal" id="uiCatalogueDemoWorkflowModal" data-ui-demo-modal data-open="false" aria-hidden="true" hidden>
+    <div class="uiCatalogueDemoModal__backdrop" data-ui-demo-modal-close></div>
+    <div class="uiCatalogueDemoModal__dialog uiCatalogueDemoModal__dialog--wide" role="dialog" aria-modal="true" aria-labelledby="uiCatalogueDemoWorkflowModalTitle" tabindex="-1">
       <header class="uiCatalogueDemoModal__header">
         <div class="uiCatalogueDemoModal__headerCopy">
           <h3 class="uiCatalogueDemoModal__title" id="uiCatalogueDemoWorkflowModalTitle">Import review</h3>
@@ -206,7 +206,7 @@ ui_catalogue_demo_primitive: modal-shell
         <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed" type="button">Preview</button>
         <button class="uiCatalogueDemoButton uiCatalogueDemoButton--fixed uiCatalogueDemoButton--primary" type="button" data-ui-demo-modal-submit>Apply</button>
       </div>
-    </section>
+    </div>
   </div>
 
   <section class="uiCatalogueDemoSection" aria-labelledby="uiCatalogueDemoModalShellCodeHeading">

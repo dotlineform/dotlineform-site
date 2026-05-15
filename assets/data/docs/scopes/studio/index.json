@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T20:55:36Z",
+  "generated_at": "2026-05-15T21:03:55Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -691,7 +691,7 @@
       "source_path": "modal-composition-migration-tracker.md",
       "viewer_url": "/docs/?scope=studio&doc=modal-composition-migration-tracker",
       "content_url": "/assets/data/docs/scopes/studio/by-id/modal-composition-migration-tracker.json",
-      "content_text_length": 9737,
+      "content_text_length": 10170,
       "ui_status": "in-progress"
     },
     {
@@ -1957,7 +1957,7 @@
       "source_path": "scripts-run-checks.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-run-checks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-run-checks.json",
-      "content_text_length": 2035
+      "content_text_length": 2064
     },
     {
       "scope": "studio",
@@ -2874,7 +2874,7 @@
       "source_path": "testing.md",
       "viewer_url": "/docs/?scope=studio&doc=testing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/testing.json",
-      "content_text_length": 3683
+      "content_text_length": 3711
     },
     {
       "scope": "studio",

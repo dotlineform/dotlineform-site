@@ -37,15 +37,17 @@ function initDemoModals() {
     const close = () => {
       modal.dataset.open = "false";
       modal.setAttribute("aria-hidden", "true");
+      modal.hidden = true;
       setStatus("");
       if (returnFocusTarget && typeof returnFocusTarget.focus === "function") {
-        returnFocusTarget.focus();
+        returnFocusTarget.focus({ preventScroll: true });
       }
       returnFocusTarget = null;
     };
 
     const open = (event) => {
       returnFocusTarget = event.currentTarget;
+      modal.hidden = false;
       modal.dataset.open = "true";
       modal.setAttribute("aria-hidden", "false");
       const focusTarget = modal.querySelector("[data-ui-demo-modal-initial-focus]")
