@@ -8,7 +8,7 @@ import json
 import re
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, load_docs_scope_configs, safe_relative_path
 
@@ -16,6 +16,7 @@ from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, load_docs_scope_
 MANIFEST_REL_PATH = Path("scripts/docs/docs_scope_manifest.json")
 SCHEMA_VERSION = "docs_scope_manifest_v1"
 LIFECYCLE_PREVIEW_SCHEMA_VERSION = "docs_scope_lifecycle_preview_v1"
+LIFECYCLE_APPLY_SCHEMA_VERSION = "docs_scope_lifecycle_apply_v1"
 TOOL_ID = "docs-viewer-scope-lifecycle"
 SAFE_SCOPE_ID_PATTERN = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 SAFE_DOC_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
@@ -46,6 +47,17 @@ def path_record(repo_root: Path, kind: str, path: Path, *, action: str = "track"
         "action": action,
         "exists": path.exists(),
     }
+
+
+def write_text_atomic(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = path.with_name(f".{path.name}.tmp")
+    temp_path.write_text(text, encoding="utf-8")
+    temp_path.replace(path)
+
+
+def render_json(payload: dict[str, Any]) -> str:
+    return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
 
 
 def generated_search_index_path(repo_root: Path, scope_id: str) -> Path:
@@ -242,6 +254,11 @@ def bool_value(payload: dict[str, Any], key: str, default: bool) -> bool:
     raise ValueError(f"{key} must be a boolean")
 
 
+def require_confirmed(body: dict[str, Any]) -> None:
+    if body.get("confirm") is not True:
+        raise ValueError("confirm must be true to apply scope lifecycle changes")
+
+
 def planned_scope_config_record(scope_id: str, source_root: Path, public_route_path: str, default_doc_id: str) -> dict[str, Any]:
     viewer_base_url = public_route_path or "/docs/"
     return {
@@ -262,6 +279,202 @@ def planned_scope_config_record(scope_id: str, source_root: Path, public_route_p
             "repo_assets_path_prefix": f"assets/docs/{scope_id}",
             "repo_assets_public_path_prefix": f"/assets/docs/{scope_id}",
         },
+    }
+
+
+def default_source_doc_text(title: str, default_doc_id: str) -> str:
+    today = utc_now()[:10]
+    return "\n".join(
+        [
+            "---",
+            f"doc_id: {default_doc_id}",
+            f"title: {json.dumps(title, ensure_ascii=False)}",
+            f"added_date: {today}",
+            f"last_updated: {today}",
+            "ui_status: draft",
+            "published: true",
+            "hidden: false",
+            "---",
+            f"# {title}",
+            "",
+            f"Start writing {title} docs here.",
+            "",
+        ]
+    )
+
+
+def readonly_route_text(title: str, scope_id: str, public_route_path: str) -> str:
+    route_section = public_route_path.strip("/").split("/", 1)[0] or scope_id
+    search_label = f"search {title.lower()}"
+    return "\n".join(
+        [
+            "---",
+            "layout: default",
+            f"title: {json.dumps(title, ensure_ascii=False)}",
+            f"section: {route_section}",
+            f"permalink: {public_route_path}",
+            "---",
+            "",
+            "{% include docs_viewer_readonly_route.html",
+            f"  search_placeholder={json.dumps(search_label, ensure_ascii=False)}",
+            f"  search_aria_label={json.dumps('Search ' + title, ensure_ascii=False)}",
+            "%}",
+            "",
+        ]
+    )
+
+
+def load_json_object(path: Path, label: str) -> dict[str, Any]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"{label} is invalid JSON: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise ValueError(f"{label} must be a JSON object")
+    return payload
+
+
+def append_scope_config(repo_root: Path, scope_config: dict[str, Any]) -> None:
+    config_path = repo_root / CONFIG_REL_PATH
+    payload = load_json_object(config_path, "docs scope config")
+    if payload.get("schema_version") != "docs_scopes_v1":
+        raise ValueError("docs scope config schema_version must be docs_scopes_v1")
+    scopes = payload.get("scopes")
+    if not isinstance(scopes, list):
+        raise ValueError("docs scope config scopes must be an array")
+    scope_id = str(scope_config.get("scope_id") or "").strip()
+    if any(isinstance(item, dict) and item.get("scope_id") == scope_id for item in scopes):
+        raise ValueError(f"scope_id {scope_id!r} already exists")
+    scopes.append(scope_config)
+    write_text_atomic(config_path, render_json(payload))
+
+
+def manifest_file_records_for_created_scope(repo_root: Path, preview: dict[str, Any]) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for item in [*preview.get("created_files", []), *preview.get("changed_files", [])]:
+        if not isinstance(item, dict):
+            continue
+        kind = str(item.get("kind") or "").strip()
+        if kind == "scope_manifest":
+            continue
+        path_text = str(item.get("path") or "").strip()
+        if not kind or not path_text:
+            continue
+        path = repo_root / safe_relative_path(path_text, field="created scope file path")
+        records.append(path_record(repo_root, kind, path, action="track"))
+    return records
+
+
+def created_scope_manifest_record(repo_root: Path, preview: dict[str, Any]) -> dict[str, Any]:
+    publishing_mode = str(preview["publishing_mode"])
+    scope_type = "public" if publishing_mode == PUBLIC_MODE else "local"
+    repo_status = "untracked" if publishing_mode == LOCAL_UNCOMMITTED_MODE else "tracked"
+    now = utc_now()
+    return {
+        "scope_id": preview["scope_id"],
+        "scope_type": scope_type,
+        "owner": "user",
+        "user_created": True,
+        "created_by_tool": True,
+        "tool_id": TOOL_ID,
+        "repo_status_at_creation": repo_status,
+        "created_at": now,
+        "updated_at": now,
+        "files": manifest_file_records_for_created_scope(repo_root, preview),
+        "metadata": {
+            "backfilled": False,
+            "viewer_base_url": preview["planned_scope_config"]["viewer_base_url"],
+            "default_doc_id": preview["planned_scope_config"]["default_doc_id"],
+            "publishing_mode": publishing_mode,
+            "build_inline_search": preview["build_inline_search"],
+            "write_generated_outputs": preview["write_generated_outputs"],
+        },
+    }
+
+
+def append_scope_manifest_record(repo_root: Path, preview: dict[str, Any], manifest: dict[str, Any] | None = None) -> None:
+    if manifest is None:
+        manifest = load_manifest(repo_root)
+    scopes = manifest.setdefault("scopes", [])
+    if not isinstance(scopes, list):
+        raise ValueError("docs scope manifest scopes must be an array")
+    scope_id = str(preview["scope_id"])
+    if scope_id in manifest_scopes_by_id(manifest):
+        raise ValueError(f"scope_id {scope_id!r} already exists in docs scope manifest")
+    scopes.append(created_scope_manifest_record(repo_root, preview))
+    manifest["updated_at"] = utc_now()
+    write_text_atomic(repo_root / MANIFEST_REL_PATH, render_json(manifest))
+
+
+def apply_build_commands(preview: dict[str, Any], *, dry_run: bool) -> list[dict[str, Any]]:
+    status = "planned" if dry_run else "completed"
+    return [
+        {
+            **command,
+            "status": status,
+        }
+        for command in preview.get("build_commands", [])
+        if isinstance(command, dict)
+    ]
+
+
+def apply_create_scope(
+    repo_root: Path,
+    body: dict[str, Any],
+    *,
+    dry_run: bool,
+    rebuild_scope_outputs: Callable[..., dict[str, Any]],
+) -> dict[str, Any]:
+    require_confirmed(body)
+    preview = plan_create_scope_preview(repo_root, body)
+    manifest = load_manifest(repo_root)
+    scope_id = str(preview["scope_id"])
+    source_root = repo_root / preview["planned_scope_config"]["source"]
+    default_doc_path = source_root / f"{preview['planned_scope_config']['default_doc_id']}.md"
+    rebuild = None
+
+    if not dry_run:
+        source_root.mkdir(parents=True, exist_ok=False)
+        write_text_atomic(
+            default_doc_path,
+            default_source_doc_text(str(preview["title"]), str(preview["planned_scope_config"]["default_doc_id"])),
+        )
+        append_scope_config(repo_root, preview["planned_scope_config"])
+        if preview["urls"]["public"]:
+            route_path = route_file_for_public_path(repo_root, str(preview["urls"]["public"]))
+            write_text_atomic(
+                route_path,
+                readonly_route_text(str(preview["title"]), scope_id, str(preview["urls"]["public"])),
+            )
+        append_scope_manifest_record(repo_root, preview, manifest)
+        if preview["write_generated_outputs"]:
+            rebuild = rebuild_scope_outputs(
+                repo_root,
+                scope_id,
+                include_search=preview["build_inline_search"],
+            )
+
+    return {
+        "ok": True,
+        "schema_version": LIFECYCLE_APPLY_SCHEMA_VERSION,
+        "action": "create_scope",
+        "operation": "apply",
+        "scope_id": scope_id,
+        "title": preview["title"],
+        "publishing_mode": preview["publishing_mode"],
+        "created_files": preview["created_files"],
+        "changed_files": preview["changed_files"],
+        "deleted_files": [],
+        "missing_files": [],
+        "build_commands": apply_build_commands(preview, dry_run=dry_run),
+        "urls": preview["urls"],
+        "rebuild": rebuild,
+        "summary_text": (
+            f"Created Docs Viewer scope {scope_id}."
+            if not dry_run
+            else f"Validated create apply for Docs Viewer scope {scope_id}."
+        ),
+        "dry_run": dry_run,
     }
 
 

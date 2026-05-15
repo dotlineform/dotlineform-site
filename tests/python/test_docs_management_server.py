@@ -341,7 +341,9 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["source_config_settings_writes"] is True
     assert payload["capabilities"]["scope_lifecycle"]["manifest"] is True
     assert payload["capabilities"]["scope_lifecycle"]["create_preview"] is True
-    assert payload["capabilities"]["scope_lifecycle"]["create_apply"] is False
+    assert payload["capabilities"]["scope_lifecycle"]["create_apply"] is True
+    assert payload["capabilities"]["scope_lifecycle"]["delete_preview"] is True
+    assert payload["capabilities"]["scope_lifecycle"]["delete_apply"] is False
 
 
 def test_scope_manifest_backfills_existing_scopes_as_system_owned() -> None:
@@ -384,6 +386,87 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
     assert payload["urls"]["public"] == "/research/"
     assert any(file["path"] == "_docs_research/research.md" for file in payload["created_files"])
     assert any(command["command"] == "./scripts/build_docs.rb --scope research --write" for command in payload["build_commands"])
+
+
+def test_scope_create_apply_requires_confirmation() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        try:
+            docs_management_server.handle_scope_create_apply(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "title": "Research",
+                    "source_root": "_docs_research",
+                    "default_doc_id": "research",
+                    "publishing_mode": "public_readonly",
+                    "public_route_path": "/research/",
+                },
+                dry_run=True,
+            )
+        except ValueError as exc:
+            assert "confirm must be true" in str(exc)
+        else:
+            raise AssertionError("scope create apply should require explicit confirmation")
+
+
+def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
+    calls: list[tuple[Path, str, dict[str, object]]] = []
+    original_rebuild = docs_management_server.write_rebuild.rebuild_scope_outputs
+
+    def fake_rebuild(repo_root: Path, scope: str, **kwargs):
+        calls.append((repo_root, scope, kwargs))
+        return {
+            "ok": True,
+            "steps": [{"command": "fake build", "returncode": 0, "stdout": "", "stderr": ""}],
+            "search": {"mode": "full", "doc_ids": []},
+        }
+
+    docs_management_server.write_rebuild.rebuild_scope_outputs = fake_rebuild
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            write_docs_scope_config(repo_root)
+            payload = docs_management_server.handle_scope_create_apply(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "title": "Research",
+                    "source_root": "_docs_research",
+                    "default_doc_id": "research",
+                    "publishing_mode": "public_readonly",
+                    "public_route_path": "/research/",
+                    "build_inline_search": True,
+                    "write_generated_outputs": True,
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+            source_payload = json.loads((repo_root / "scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
+            manifest_payload = json.loads((repo_root / "scripts/docs/docs_scope_manifest.json").read_text(encoding="utf-8"))
+            default_doc_exists = (repo_root / "_docs_research/research.md").exists()
+            route_exists = (repo_root / "research/index.md").exists()
+    finally:
+        docs_management_server.write_rebuild.rebuild_scope_outputs = original_rebuild
+
+    assert payload["ok"] is True
+    assert payload["schema_version"] == "docs_scope_lifecycle_apply_v1"
+    assert payload["backup_dir"].startswith("var/docs/backups/")
+    assert payload["build_commands"][0]["status"] == "completed"
+    assert calls == [(repo_root, "research", {"include_search": True})]
+    assert default_doc_exists is True
+    assert route_exists is True
+    assert source_payload["scopes"][1]["scope_id"] == "research"
+    records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
+    assert records["research"]["user_created"] is True
+    assert records["research"]["created_by_tool"] is True
+    assert any(file["path"] == "scripts/docs/docs_scopes.json" for file in records["research"]["files"])
+
+
+def test_scope_delete_apply_route_stays_closed_until_implemented() -> None:
+    assert docs_management_server.routes.SCOPE_DELETE_APPLY_PATH not in docs_management_server.routes.POST_PATHS
+    assert docs_management_server.routes.SCOPE_DELETE_APPLY_PATH not in docs_management_server.DocsManagementHandler.POST_HANDLERS
 
 
 def test_scope_delete_preview_blocks_system_scopes() -> None:
@@ -637,6 +720,9 @@ def main() -> None:
         test_capabilities_advertise_source_config_reads,
         test_scope_manifest_backfills_existing_scopes_as_system_owned,
         test_scope_create_preview_reports_write_set_and_urls,
+        test_scope_create_apply_requires_confirmation,
+        test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild,
+        test_scope_delete_apply_route_stays_closed_until_implemented,
         test_scope_delete_preview_blocks_system_scopes,
         test_source_config_report_reads_known_config_files,
         test_source_config_settings_contract_allows_updated_date_only,

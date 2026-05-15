@@ -131,9 +131,10 @@ Initial server-side foundation is in place:
 - `scripts/docs/docs_scope_manifest.py` owns manifest loading, backfill, validation, and preview planning
 - `GET /capabilities` advertises scope lifecycle preview support
 - `POST /docs/scopes/create-preview` reports a validated create write set
+- `POST /docs/scopes/create-apply` creates allowlisted scope files after explicit confirmation
 - `POST /docs/scopes/delete-preview` reports a manifest-backed delete plan and blocks system scopes
 
-Apply/write behavior and the management UI are not implemented yet.
+Delete apply behavior and the management UI are not implemented yet.
 
 ## Manifest Design
 
@@ -186,7 +187,7 @@ Future created scopes must set both `user_created: true` and `created_by_tool: t
   "scope_lifecycle": {
     "manifest": true,
     "create_preview": true,
-    "create_apply": false,
+    "create_apply": true,
     "delete_preview": true,
     "delete_apply": false,
     "publishing_modes": ["public_readonly", "local_committed", "local_uncommitted"],
@@ -195,8 +196,10 @@ Future created scopes must set both `user_created: true` and `created_by_tool: t
 }
 ```
 
-Apply flags are false by design until the server-side allowlisted write implementation is complete.
-The UI should treat those flags as authoritative and avoid showing save/delete apply controls before the server advertises them.
+Apply flags are authoritative.
+Create apply is advertised only after the allowlisted write implementation is available.
+Delete apply remains false until manifest-backed deletion is implemented.
+The UI should avoid showing save/delete apply controls before the server advertises the matching capability.
 
 Each scope capability record also includes lifecycle state:
 
@@ -269,6 +272,50 @@ The preview response uses file records with `kind`, `path`, `action`, and `exist
 It reports planned generated docs/search outputs only when generated output writes are requested.
 It reports a public URL only for public read-only scopes.
 
+## Create Apply Endpoint
+
+Endpoint:
+
+- `POST /docs/scopes/create-apply`
+
+Payload fields:
+
+- all create-preview fields
+- `confirm: true`
+
+Apply behavior:
+
+- requires explicit confirmation
+- re-runs create-preview validation before any write
+- creates the source root and default welcome Markdown document
+- appends the scope config entry to `scripts/docs/docs_scopes.json`
+- creates a public read-only route page only for `public_readonly`
+- writes a user-created, tool-created manifest record
+- creates a timestamped backup bundle for the previous scope config and manifest files
+- runs the docs build and, when requested, the docs search build after the config and source files are written
+
+Apply response fields:
+
+- `ok`
+- `schema_version`
+- `action`
+- `operation`
+- `scope_id`
+- `title`
+- `publishing_mode`
+- `created_files`
+- `changed_files`
+- `deleted_files`
+- `missing_files`
+- `build_commands`
+- `urls`
+- `backup_dir`
+- `rebuild`
+- `summary_text`
+- `dry_run`
+
+Dry-run server mode validates the apply request and returns the apply response shape without writing files, creating a backup, or running rebuild commands.
+
 ## Delete Preview Endpoint
 
 Endpoint:
@@ -325,8 +372,9 @@ The server response should list:
 - resulting management URL
 - resulting public URL, only when a public route exists
 
-Preview-only endpoints currently report this planned write set without writing files.
-The apply endpoints should remain hidden until the allowlisted source-root, route-file, generated-output, and manifest-write implementation is complete.
+Create preview reports this planned write set without writing files.
+Create apply writes the allowlisted source-root, route-file, config, generated-output, and manifest changes after confirmation.
+Delete apply should remain hidden until its manifest-backed write implementation is complete.
 
 ## Safety Rules
 
@@ -342,18 +390,15 @@ The apply endpoints should remain hidden until the allowlisted source-root, rout
 Record final decisions here as the implementation lands:
 
 - manifest schema and ownership semantics
-- create endpoint payload and response contract
+- delete apply endpoint payload and response contract
 - delete endpoint payload and response contract
 - publishing-mode behavior
-- allowlisted file-write rules
-- generated docs/search follow-through
+- generated docs/search follow-through for delete apply
 - management UI controls, modal states, and result reporting
 - manual verification workflow
 
 ## Open Implementation Notes
 
-- Apply endpoints should remain hidden from capabilities until allowlisted writes are implemented.
+- Delete apply should remain hidden from capabilities until allowlisted deletion writes are implemented.
 - System-owned scopes must never be delete-eligible through this workflow.
-- Public read-only scopes need route pages that use `docs_viewer_readonly_route.html`.
-- Local-only scopes should not create public read-only route pages.
 - Generated output choices need clear reporting so UI users are not left guessing whether a follow-up build is needed.

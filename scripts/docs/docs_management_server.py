@@ -35,6 +35,7 @@ Endpoints:
   POST /docs/delete-preview
   POST /docs/delete-apply
   POST /docs/scopes/create-preview
+  POST /docs/scopes/create-apply
   POST /docs/scopes/delete-preview
 
 Security constraints:
@@ -218,6 +219,33 @@ def make_import_overwrite_backup(
     return bundle_dir
 
 
+def make_scope_lifecycle_backup(repo_root: Path, scope: str, operation: str) -> Path:
+    bundle_dir = repo_root / BACKUPS_REL_DIR / f"{backup_stamp_now()}-{scope}-scope-{operation}"
+    bundle_dir.mkdir(parents=True, exist_ok=True)
+    candidates = [
+        repo_root / docs_scope_manifest.MANIFEST_REL_PATH,
+        repo_root / docs_scope_manifest.CONFIG_REL_PATH,
+    ]
+    files = []
+    for path in candidates:
+        record = {
+            "path": relative_path(repo_root, path),
+            "exists": path.exists(),
+        }
+        if path.exists() and path.is_file():
+            shutil.copy2(path, bundle_dir / path.name)
+            record["backup_name"] = path.name
+        files.append(record)
+    manifest = {
+        "time_utc": utc_now(),
+        "scope": scope,
+        "operation": f"scope-{operation}",
+        "files": files,
+    }
+    source_model.write_text_atomic(bundle_dir / "manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+    return bundle_dir
+
+
 def relative_path(repo_root: Path, path: Path) -> str:
     return path.resolve().relative_to(repo_root.resolve()).as_posix()
 
@@ -331,7 +359,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "scope_lifecycle": {
                 "manifest": True,
                 "create_preview": True,
-                "create_apply": False,
+                "create_apply": True,
                 "delete_preview": True,
                 "delete_apply": False,
                 "publishing_modes": list(docs_scope_manifest.PUBLISHING_MODES),
@@ -504,6 +532,31 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
     return execute_management_mutation_plan(repo_root, mutations.plan_delete_apply(repo_root, body), dry_run)
 
 
+def handle_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope_id = docs_scope_manifest.normalize_scope_id(body.get("scope_id"))
+    docs_scope_manifest.require_confirmed(body)
+    docs_scope_manifest.plan_create_scope_preview(repo_root, body)
+    backup_dir = None if dry_run else make_scope_lifecycle_backup(repo_root, scope_id, "create")
+    payload = docs_scope_manifest.apply_create_scope(
+        repo_root,
+        body,
+        dry_run=dry_run,
+        rebuild_scope_outputs=write_rebuild.rebuild_scope_outputs,
+    )
+    payload["backup_dir"] = relative_path(repo_root, backup_dir) if backup_dir else ""
+    if not dry_run:
+        log_event(
+            repo_root,
+            "docs_scope_create_apply",
+            {
+                "scope": scope_id,
+                "created_count": len(payload.get("created_files", [])),
+                "changed_count": len(payload.get("changed_files", [])),
+            },
+        )
+    return payload
+
+
 class DocsManagementHandler(BaseHTTPRequestHandler):
     server_version = "DocsManagementServer/0.1"
 
@@ -543,6 +596,7 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         routes.DELETE_PREVIEW_PATH: "_handle_delete_preview_post",
         routes.DELETE_APPLY_PATH: "_handle_delete_apply_post",
         routes.SCOPE_CREATE_PREVIEW_PATH: "_handle_scope_create_preview_post",
+        routes.SCOPE_CREATE_APPLY_PATH: "_handle_scope_create_apply_post",
         routes.SCOPE_DELETE_PREVIEW_PATH: "_handle_scope_delete_preview_post",
     }
     OPTIONS_PATHS = tuple(dict.fromkeys((*routes.OPTIONS_PATHS, *data_sharing_routes.OPTIONS_PATHS)))
@@ -730,6 +784,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
     def _handle_scope_create_preview_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         payload = docs_scope_manifest.plan_create_scope_preview(repo_root, body)
         payload["dry_run"] = True
+        return HTTPStatus.OK, payload
+
+    def _handle_scope_create_apply_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = handle_scope_create_apply(repo_root, body, dry_run)
         return HTTPStatus.OK, payload
 
     def _handle_scope_delete_preview_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:

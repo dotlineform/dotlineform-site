@@ -17,6 +17,29 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-15] Added Docs Viewer Scope Create Apply
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / docs-management server
+
+**Summary:**
+Added the confirmed create-apply endpoint for Docs Viewer scope lifecycle work.
+The docs-management server now advertises `create_apply`, requires `confirm: true`, re-runs create-preview validation before writing, writes the allowlisted source root, welcome doc, config entry, optional read-only route page, and manifest record, then runs the requested docs/search rebuilds.
+
+**Effect:**
+New scope creation has moved from preview-only to a server-owned write contract.
+Delete apply remains unadvertised until manifest-backed deletion writes are implemented.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_scope_manifest.py`
+- `scripts/docs/docs_management_server.py`
+- `scripts/docs/docs_management_routes.py`
+- `tests/python/test_docs_management_server.py`
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder)
+
 ## [2026-05-15] Added Docs Viewer Scope Lifecycle Preview Contract
 
 **Status:** implemented

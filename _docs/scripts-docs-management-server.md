@@ -131,7 +131,7 @@ Search update behavior:
 - whether generated docs/search reads are available for each scope
 - whether source config report reads are available
 - whether source config settings contract reads and writes are available
-- whether scope lifecycle preview actions are available
+- whether scope lifecycle preview/apply actions are available
 - whether each configured scope is manifest-recorded and delete-eligible
 
 Read-only generated-data endpoints:
@@ -670,6 +670,7 @@ Scope lifecycle preview endpoints:
 
 - `POST /docs/scopes/create-preview`
 - `POST /docs/scopes/delete-preview`
+- `POST /docs/scopes/create-apply`
 
 Scope lifecycle preview behavior:
 
@@ -678,7 +679,8 @@ Scope lifecycle preview behavior:
 - validates new scope ids, source roots, default doc ids, publishing mode, and public route paths before reporting a write set
 - reports planned created files, changed files, build commands, management URL, and public URL without writing files
 - blocks delete preview for system-owned scopes and scopes not created by the lifecycle tool
-- the initial server contract advertises preview support only; apply endpoints are intentionally not advertised until the allowlisted write implementation is complete
+- create apply requires `confirm: true`, re-runs create-preview validation, writes the allowlisted source root, default welcome doc, config entry, optional route page, and manifest record, then runs the requested docs/search rebuilds
+- delete apply is intentionally not advertised until manifest-backed deletion writes are implemented
 
 ## Security Constraints
 
@@ -695,6 +697,7 @@ Scope lifecycle preview behavior:
   - `var/docs/logs/`
   - `var/docs/watch-suppressions/`
 - scope lifecycle ownership is recorded in `scripts/docs/docs_scope_manifest.json`; existing scopes are system-owned and not eligible for lifecycle deletion
+- scope create apply creates a backup bundle for the previous scope config and manifest files before writing
 - timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch
 - backups are operation-scoped rather than full-scope:
   - `create` writes a manifest-only backup bundle
