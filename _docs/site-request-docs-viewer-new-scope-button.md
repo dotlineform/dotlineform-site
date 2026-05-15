@@ -171,6 +171,7 @@ Delete eligibility:
 
 Delete behavior:
 
+- the UI asks the operator to select an eligible user-created scope to delete; Delete scope is not implicitly scoped to the currently open Docs Viewer scope
 - preview the manifest-backed delete plan before writing
 - warn when manifest-listed files no longer exist
 - continue deleting files that still exist
@@ -212,6 +213,7 @@ The result should list:
 - Existing scopes should be retrospectively added to the manifest.
 - The manifest should distinguish user-created tool scopes from system-owned scopes.
 - Delete scope belongs in the same implementation and should only allow deletion of user-created tool scopes.
+- Delete scope is a selected-target workflow; the current Docs Viewer scope is only the management shell context and must not be treated as the implicit delete target.
 - Delete should warn about missing manifest files but continue deleting files that still exist.
 - Backups remain under normal backup retention after scope deletion.
 - New source roots should include a default welcome page.
@@ -277,14 +279,29 @@ Status:
 
 Add the New scope and eligible Delete scope controls to the Docs Viewer management shell.
 
+Commands to be added to the Actions button:
+
+- New scope
+- Delete scope
+
+Implementation approach:
+
+- keep `assets/docs-viewer/js/docs-viewer-management.js` as the management command coordinator
+- add a dedicated scope lifecycle UI module, likely `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js`
+- keep endpoint wrappers in `assets/docs-viewer/js/docs-viewer-management-client.js`
+- have the scope lifecycle module own create-scope form rendering, publishing-mode field state, preview/apply result rendering, delete target selection, and delete preview/apply result rendering
+- reuse the existing Docs Viewer management modal shell/helpers rather than adding a second modal framework
+- expose narrow flow entry points from the new module, such as `openCreateScopeFlow(...)` and `openDeleteScopeFlow(...)`, for `docs-viewer-management.js` to call from the Actions menu
+
 Acceptance:
 
 - controls appear only in management mode with local capability support
 - publishing mode drives which fields are required
 - route path input is shown only for public read-only scopes
 - the write set is visible before submission
+- delete asks the operator to select an eligible user-created scope before previewing deletion
 - the delete plan is visible before submission
-- delete is available only for eligible user-created scopes
+- delete targets are limited to eligible user-created scopes
 - validation errors are shown without writing files
 
 ### Task 4. Implement Allowlisted Scope File Writes
