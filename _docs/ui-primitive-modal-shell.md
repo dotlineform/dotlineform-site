@@ -63,15 +63,15 @@ The Studio canonical source should build from:
 - route-owned or shared modal hosts created through `createStudioModalHost()`
 
 Those helpers should be refined to match this full shell contract rather than treated as complete as-is.
-The missing pieces to close before broad migration are:
+The shared Studio helper now provides:
 
 - explicit header and close-button support in the shared frame helper
 - a standard status or validation slot
 - focus return and focus containment
-- consistent form-submit behavior for short input modals
-- documented size variants
+- Enter-submit behavior for short input modals
+- `default`, `wide`, and `document` size variants
 
-The existing `openConfirmModal()`, `openConfirmDetailModal()`, `openNoticeModal()`, and any future input or choice helpers are convenience APIs on top of this shell.
+The existing `openConfirmModal()`, `openConfirmDetailModal()`, `openNoticeModal()`, `openTextInputModal()`, and `openChoiceModal()` helpers are convenience APIs on top of this shell.
 They are not separate modal patterns.
 
 Docs Viewer management may keep `docsViewer__*` classes, its own static shell markup, and portable JavaScript helpers when portability requires it.

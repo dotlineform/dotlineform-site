@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T17:11:58Z",
+  "generated_at": "2026-05-15T17:27:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1711,7 +1711,7 @@
       "source_path": "ui-primitive-modal-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-modal-shell.json",
-      "content_text_length": 6325
+      "content_text_length": 6331
     },
     {
       "scope": "studio",
@@ -3147,7 +3147,7 @@
       "source_path": "ui-request-modal-composition-pattern.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-modal-composition-pattern.json",
-      "content_text_length": 26901,
+      "content_text_length": 26946,
       "ui_status": "in-progress"
     },
     {
@@ -3399,7 +3399,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 156603
+      "content_text_length": 156810
     },
     {
       "scope": "studio",

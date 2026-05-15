@@ -26,6 +26,7 @@ Archives:
 **Summary:**
 Added the Modal Shell Primitive as the canonical modal composition contract for Studio and Docs Viewer management surfaces.
 The UI Catalogue now has an isolated modal-shell demo route covering notice, confirmation, short-input, and route-owned workflow modal variants.
+The shared Studio modal helper now renders the fuller shell contract and exposes equivalent confirm, notice, text-input, and choice helper APIs.
 
 **Reason:**
 The modal composition migration needs one documented shell contract before current modal-owning pages can be migrated page by page.
@@ -37,6 +38,8 @@ Future modal work can map live Studio and portable Docs Viewer implementations a
 
 - `assets/ui-catalogue/css/ui-catalogue-demo.css`
 - `assets/ui-catalogue/js/ui-catalogue-demo.js`
+- `assets/studio/js/studio-modal.js`
+- `assets/studio/css/studio.css`
 - `studio/ui-catalogue/demos/primitives/modal-shell/`
 - [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell)
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
