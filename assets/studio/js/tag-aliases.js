@@ -47,10 +47,29 @@ import {
 } from "./tag-aliases-service.js";
 import {
   openConfirmDetailModal,
-  openConfirmModal,
-  renderStudioModalActions,
-  renderStudioModalFrame
+  openConfirmModal
 } from "./studio-modal.js";
+import {
+  clearTagAliasesImportResult,
+  closeTagAliasesPromotionModal,
+  collectTagAliasesModalRefs,
+  hideTagAliasesDemoteTagPopup,
+  hideTagAliasesEditTagPopup,
+  hideTagAliasesImportModal,
+  hideTagAliasesPatchModal,
+  openTagAliasesPromotionModal,
+  renderTagAliasesModals,
+  setTagAliasesDemoteStatus,
+  setTagAliasesEditStatus,
+  setTagAliasesImportResult,
+  setTagAliasesPromotionStatus,
+  setTagAliasesSelectedImportFile,
+  showTagAliasesDemoteTagPopup,
+  showTagAliasesEditTagPopup,
+  showTagAliasesImportModal,
+  showTagAliasesPatchModal,
+  updateTagAliasesPromotionUi
+} from "./tag-aliases-modals.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
@@ -138,6 +157,8 @@ async function initTagAliasesPage() {
     filterGroup: "all",
     sortKey: "alias",
     sortDir: "asc",
+    studioGroups: STUDIO_GROUPS,
+    groupInfoPagePath: GROUP_INFO_PAGE_PATH,
     importMode: "add",
     saveMode: "patch",
     importAvailable: false,
@@ -175,150 +196,10 @@ async function initTagAliasesPage() {
 }
 
 function renderShell(state) {
-  const importFileLabel = aliasesText(state.config, "import_file_label", "import file");
-  const importModeFieldLabel = aliasesText(state.config, "import_mode_label", "mode");
-  const importModeOptionAdd = aliasesText(state.config, "import_mode_option_add", "add (no overwrite)");
-  const importModeOptionMerge = aliasesText(state.config, "import_mode_option_merge", "add + overwrite");
-  const importModeOptionReplace = aliasesText(state.config, "import_mode_option_replace", "replace entire aliases");
-  const chooseFileLabel = aliasesText(state.config, "choose_file_button", "Choose file");
   const importButtonLabel = aliasesText(state.config, "import_button", "Import");
-  const importModalTitle = aliasesText(state.config, "import_modal_title", "Import Aliases");
-  const importModalClose = aliasesText(state.config, "import_modal_close_button", "Close");
   const newAliasButtonLabel = aliasesText(state.config, "new_alias_button", "New alias");
   const searchLabel = aliasesText(state.config, "search_label", "Search aliases");
   const searchPlaceholder = aliasesText(state.config, "search_placeholder", "search");
-  const patchModalTitle = aliasesText(state.config, "patch_modal_title", "Aliases Patch Preview");
-  const patchModalLabel = aliasesText(state.config, "patch_modal_label", "Manual patch snippet");
-  const patchModalCopy = aliasesText(state.config, "patch_modal_copy_button", "Copy");
-  const patchModalClose = aliasesText(state.config, "patch_modal_close_button", "Close");
-  const promotionModalTitle = aliasesText(state.config, "promotion_modal_title", "Promote Alias");
-  const promotionModalPrompt = aliasesText(state.config, "promotion_modal_prompt", "Choose the canonical tag group for this alias.");
-  const promotionButton = aliasesText(state.config, "promotion_button", "Promote");
-  const promotionCancelButton = aliasesText(state.config, "promotion_cancel_button", "Cancel");
-  const demotionModalTitle = aliasesText(state.config, "demotion_modal_title", "Demote Tag to Alias");
-  const demotionMeta = aliasesText(state.config, "demotion_modal_meta", "tag: {tag_id} -> alias \"{alias_key}\"");
-  const demotionSearchPlaceholder = aliasesText(state.config, "demotion_search_placeholder", "search tags");
-  const demotionButton = aliasesText(state.config, "demotion_confirm_button", "Demote");
-  const demotionCancelButton = aliasesText(state.config, "demotion_cancel_button", "Cancel");
-  const editModalTitle = aliasesText(state.config, "edit_modal_title", "Edit Alias");
-  const editAliasLabel = aliasesText(state.config, "edit_alias_label", "alias");
-  const editDescriptionLabel = aliasesText(state.config, "edit_description_label", "description");
-  const editSearchPlaceholder = aliasesText(state.config, "edit_search_placeholder", "search tags");
-  const editSaveButton = aliasesText(state.config, "edit_save_button", "Save");
-  const editCancelButton = aliasesText(state.config, "edit_cancel_button", "Cancel");
-  const patchModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.patchModal,
-    backdropRole: UI.role.patchModalClose,
-    titleId: "tagAliasesPatchTitle",
-    title: patchModalTitle,
-    bodyHtml: `
-      <p class="${UI_CLASS.modalLabel}">${escapeHtml(patchModalLabel)}</p>
-      <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.patchSnippet}"></pre>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.copyPatch, label: patchModalCopy },
-      { role: UI.role.patchModalClose, label: patchModalClose }
-    ])
-  });
-  const promotionModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.promotionModal,
-    backdropRole: UI.role.promotionModalClose,
-    titleId: "tagAliasesPromotionTitle",
-    title: promotionModalTitle,
-    bodyHtml: `
-      <p class="${UI_CLASS.formMeta}" data-role="${UI.role.promotionAliasMeta}"></p>
-      <p class="${UI_CLASS.formStatus}">${escapeHtml(promotionModalPrompt)}</p>
-      <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.promotionGroupKey}"></div>
-      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.promotionStatus}"></p>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.confirmPromotion, label: promotionButton, disabled: true },
-      { role: UI.role.promotionModalClose, label: promotionCancelButton }
-    ])
-  });
-  const importModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.importModal,
-    backdropRole: UI.role.importModalClose,
-    titleId: "tagAliasesImportTitle",
-    title: importModalTitle,
-    hidden: !state.importModalOpen,
-    bodyHtml: `
-      <div class="tagStudioToolbar tagStudioToolbar--modalImport">
-        <div class="tagStudioToolbar__row">
-          <button type="button" class="tagStudio__button" data-role="${UI.role.chooseFile}">${escapeHtml(chooseFileLabel)}</button>
-          <input type="file" data-role="${UI.role.importFile}" accept=".json,application/json" hidden>
-          <select class="tagStudioToolbar__select" data-role="${UI.role.importMode}">
-            <option value="add">${escapeHtml(importModeOptionAdd)}</option>
-            <option value="merge">${escapeHtml(importModeOptionMerge)}</option>
-            <option value="replace">${escapeHtml(importModeOptionReplace)}</option>
-          </select>
-          <button type="button" class="tagStudio__button" data-role="${UI.role.importButton}">${escapeHtml(importButtonLabel)}</button>
-        </div>
-        <p class="tagStudioToolbar__selected" data-role="${UI.role.selectedFile}"></p>
-        <p class="tagStudioToolbar__result" data-role="${UI.role.importResult}"></p>
-      </div>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.importModalClose, label: importModalClose }
-    ])
-  });
-  const demoteModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.demoteModal,
-    backdropRole: UI.role.demoteModalClose,
-    titleId: "tagAliasesDemotionTitle",
-    title: demotionModalTitle,
-    bodyHtml: `
-      <p class="${UI_CLASS.formMeta}" data-role="${UI.role.demoteTagMeta}">${escapeHtml(demotionMeta)}</p>
-      <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.demoteGroupKey}"></div>
-      <div class="${UI_CLASS.formFields}">
-        <label class="${UI_CLASS.formField} ${UI_CLASS.formSearchWrap}">
-          <input type="text" class="tagStudio__input" data-role="${UI.role.demoteTagSearch}" autocomplete="off" placeholder="${escapeHtml(demotionSearchPlaceholder)}">
-          <div class="${UI_CLASS.popup}" data-role="${UI.role.demoteTagPopupWrap}" hidden>
-            <div class="${UI_CLASS.popupInner}" data-role="${UI.role.demoteTagPopup}"></div>
-          </div>
-        </label>
-      </div>
-      <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.demoteTagList}"></div>
-      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.demoteStatus}"></p>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.confirmDemote, label: demotionButton, disabled: true },
-      { role: UI.role.demoteModalClose, label: demotionCancelButton }
-    ])
-  });
-  const editModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.editModal,
-    titleId: "tagAliasesEditTitle",
-    titleRole: UI.role.editModalTitle,
-    title: editModalTitle,
-    dialogClass: UI_CLASS.editDialog,
-    bodyHtml: `
-      <div class="${UI_CLASS.formFields}">
-        <label class="${UI_CLASS.formField}">
-          <span class="${UI_CLASS.formLabel}">${escapeHtml(editAliasLabel)}</span>
-          <input type="text" class="tagStudio__input" data-role="${UI.role.editAliasName}" autocomplete="off">
-        </label>
-        <p class="${UI_CLASS.formWarning}" data-role="${UI.role.editAliasWarning}"></p>
-        <label class="${UI_CLASS.formField}">
-          <span class="${UI_CLASS.formLabel}">${escapeHtml(editDescriptionLabel)}</span>
-          <textarea class="tagStudio__input ${UI_CLASS.editDescription}" data-role="${UI.role.editAliasDescription}" rows="2"></textarea>
-        </label>
-        <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.editGroupKey}"></div>
-        <label class="${UI_CLASS.formField} ${UI_CLASS.formSearchWrap}">
-          <input type="text" class="tagStudio__input" data-role="${UI.role.editTagSearch}" autocomplete="off" placeholder="${escapeHtml(editSearchPlaceholder)}">
-          <div class="${UI_CLASS.popup}" data-role="${UI.role.editTagPopupWrap}" hidden>
-            <div class="${UI_CLASS.popupInner}" data-role="${UI.role.editTagPopup}"></div>
-          </div>
-        </label>
-      </div>
-      <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.editTagList}"></div>
-      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.saveEditAlias, label: editSaveButton, disabled: true },
-      { role: UI.role.editModalClose, label: editCancelButton }
-    ])
-  });
   const refs = {
     openImportModal: state.mount.querySelector(UI_SELECTOR.openImportModal),
     openNewAlias: state.mount.querySelector(UI_SELECTOR.openNewAlias),
@@ -342,48 +223,11 @@ function renderShell(state) {
   refs.openNewAlias.textContent = newAliasButtonLabel;
   refs.searchLabel.textContent = searchLabel;
   refs.search.setAttribute("placeholder", searchPlaceholder);
-  refs.modalHost.innerHTML = `${importModalHtml}${patchModalHtml}${promotionModalHtml}${demoteModalHtml}${editModalHtml}`;
+  refs.modalHost.innerHTML = renderTagAliasesModals(state);
 
   state.refs = {
     ...refs,
-    importModal: state.mount.querySelector(UI_SELECTOR.importModal),
-    importFileLabel: state.mount.querySelector(UI_SELECTOR.importFileLabel),
-    chooseFile: state.mount.querySelector(UI_SELECTOR.chooseFile),
-    importFile: state.mount.querySelector(UI_SELECTOR.importFile),
-    importModeLabel: state.mount.querySelector(UI_SELECTOR.importModeLabel),
-    importMode: state.mount.querySelector(UI_SELECTOR.importMode),
-    importButton: state.mount.querySelector(UI_SELECTOR.importButton),
-    selectedFile: state.mount.querySelector(UI_SELECTOR.selectedFile),
-    importResult: state.mount.querySelector(UI_SELECTOR.importResult),
-    patchModal: state.mount.querySelector(UI_SELECTOR.patchModal),
-    patchSnippet: state.mount.querySelector(UI_SELECTOR.patchSnippet),
-    copyPatch: state.mount.querySelector(UI_SELECTOR.copyPatch),
-    promotionModal: state.mount.querySelector(UI_SELECTOR.promotionModal),
-    promotionAliasMeta: state.mount.querySelector(UI_SELECTOR.promotionAliasMeta),
-    promotionGroupKey: state.mount.querySelector(UI_SELECTOR.promotionGroupKey),
-    promotionStatus: state.mount.querySelector(UI_SELECTOR.promotionStatus),
-    confirmPromotion: state.mount.querySelector(UI_SELECTOR.confirmPromotion),
-    demoteModal: state.mount.querySelector(UI_SELECTOR.demoteModal),
-    demoteTagMeta: state.mount.querySelector(UI_SELECTOR.demoteTagMeta),
-    demoteTagSearch: state.mount.querySelector(UI_SELECTOR.demoteTagSearch),
-    demoteTagPopupWrap: state.mount.querySelector(UI_SELECTOR.demoteTagPopupWrap),
-    demoteTagPopup: state.mount.querySelector(UI_SELECTOR.demoteTagPopup),
-    demoteGroupKey: state.mount.querySelector(UI_SELECTOR.demoteGroupKey),
-    demoteTagList: state.mount.querySelector(UI_SELECTOR.demoteTagList),
-    demoteStatus: state.mount.querySelector(UI_SELECTOR.demoteStatus),
-    confirmDemote: state.mount.querySelector(UI_SELECTOR.confirmDemote),
-    editModal: state.mount.querySelector(UI_SELECTOR.editModal),
-    editModalTitle: state.mount.querySelector(UI_SELECTOR.editModalTitle),
-    editAliasName: state.mount.querySelector(UI_SELECTOR.editAliasName),
-    editAliasWarning: state.mount.querySelector(UI_SELECTOR.editAliasWarning),
-    editAliasDescription: state.mount.querySelector(UI_SELECTOR.editAliasDescription),
-    editTagSearch: state.mount.querySelector(UI_SELECTOR.editTagSearch),
-    editTagPopupWrap: state.mount.querySelector(UI_SELECTOR.editTagPopupWrap),
-    editTagPopup: state.mount.querySelector(UI_SELECTOR.editTagPopup),
-    editGroupKey: state.mount.querySelector(UI_SELECTOR.editGroupKey),
-    editTagList: state.mount.querySelector(UI_SELECTOR.editTagList),
-    editStatus: state.mount.querySelector(UI_SELECTOR.editStatus),
-    saveEditAlias: state.mount.querySelector(UI_SELECTOR.saveEditAlias)
+    ...collectTagAliasesModalRefs(state.mount)
   };
   renderImportAvailability(state);
 }
@@ -397,8 +241,7 @@ function wireEvents(state) {
   state.refs.openImportModal.addEventListener("click", () => {
     if (!state.importAvailable) return;
     clearImportResult(state);
-    state.importModalOpen = true;
-    state.refs.importModal.hidden = false;
+    showTagAliasesImportModal(state);
     syncRouteBusyState(state);
   });
 
@@ -408,11 +251,7 @@ function wireEvents(state) {
 
   state.refs.importFile.addEventListener("change", () => {
     const files = state.refs.importFile.files;
-    state.selectedFile = files && files.length ? files[0] : null;
-    state.refs.selectedFile.textContent = state.selectedFile
-      ? aliasesText(state.config, "selected_file_template", "Selected: {filename}", { filename: state.selectedFile.name })
-      : "";
-    if (state.selectedFile) clearImportResult(state);
+    setTagAliasesSelectedImportFile(state, files && files.length ? files[0] : null);
   });
 
   state.refs.importMode.addEventListener("change", () => {
@@ -505,7 +344,7 @@ function wireEvents(state) {
     const group = normalize(groupButton.getAttribute("data-promotion-group"));
     if (!STUDIO_GROUPS.includes(group)) return;
     state.promotionState.group = group;
-    updatePromotionUi(state);
+    updateTagAliasesPromotionUi(state);
   });
 
   state.refs.confirmPromotion.addEventListener("click", () => {
@@ -519,7 +358,7 @@ function wireEvents(state) {
     }
     if (state.refs.demoteTagPopupWrap.hidden) return;
     if (!event.target.closest(UI_SELECTOR.demoteTagPopupWrap) && !event.target.closest(UI_SELECTOR.demoteTagSearch)) {
-      hideDemoteTagPopup(state);
+      hideTagAliasesDemoteTagPopup(state);
     }
   });
 
@@ -529,7 +368,7 @@ function wireEvents(state) {
 
   state.refs.demoteTagSearch.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      hideDemoteTagPopup(state);
+      hideTagAliasesDemoteTagPopup(state);
       state.refs.demoteTagSearch.blur();
     }
   });
@@ -541,7 +380,7 @@ function wireEvents(state) {
     if (!tagId) return;
     addDemoteTag(state, tagId);
     state.refs.demoteTagSearch.value = "";
-    hideDemoteTagPopup(state);
+    hideTagAliasesDemoteTagPopup(state);
     updateDemoteUi(state);
   });
 
@@ -575,7 +414,7 @@ function wireEvents(state) {
     }
     if (state.refs.editTagPopupWrap.hidden) return;
     if (!event.target.closest(UI_SELECTOR.editTagPopupWrap) && !event.target.closest(UI_SELECTOR.editTagSearch)) {
-      hideEditTagPopup(state);
+      hideTagAliasesEditTagPopup(state);
     }
   });
 
@@ -593,7 +432,7 @@ function wireEvents(state) {
 
   state.refs.editTagSearch.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      hideEditTagPopup(state);
+      hideTagAliasesEditTagPopup(state);
       state.refs.editTagSearch.blur();
     }
   });
@@ -605,7 +444,7 @@ function wireEvents(state) {
     if (!tagId) return;
     addEditTag(state, tagId);
     state.refs.editTagSearch.value = "";
-    hideEditTagPopup(state);
+    hideTagAliasesEditTagPopup(state);
     updateAliasEditUi(state);
   });
 
@@ -635,28 +474,17 @@ function syncImportModeFromControl(state) {
 }
 
 function closeImportModal(state) {
-  state.importModalOpen = false;
-  state.refs.importModal.hidden = true;
+  hideTagAliasesImportModal(state);
   syncRouteBusyState(state);
 }
 
 function openPromotionModal(state, aliasKey, suggestedGroup) {
-  state.promotionState = {
-    aliasKey,
-    group: STUDIO_GROUPS.includes(suggestedGroup) ? suggestedGroup : ""
-  };
-  updatePromotionUi(state);
-  state.refs.promotionModal.hidden = false;
+  openTagAliasesPromotionModal(state, aliasKey, suggestedGroup);
   syncRouteBusyState(state);
 }
 
 function closePromotionModal(state) {
-  state.promotionState = null;
-  state.refs.promotionModal.hidden = true;
-  state.refs.promotionAliasMeta.textContent = "";
-  state.refs.promotionGroupKey.innerHTML = "";
-  setPromotionStatus(state, "", "");
-  state.refs.confirmPromotion.disabled = true;
+  closeTagAliasesPromotionModal(state);
   syncRouteBusyState(state);
 }
 
@@ -688,7 +516,7 @@ function openDemoteModal(state, tagId) {
     }
   );
   state.refs.demoteTagSearch.value = "";
-  hideDemoteTagPopup(state);
+  hideTagAliasesDemoteTagPopup(state);
   updateDemoteUi(state);
   state.refs.demoteModal.hidden = false;
   state.refs.demoteTagSearch.focus();
@@ -704,12 +532,12 @@ function closeDemoteModal(state) {
   state.refs.demoteTagList.innerHTML = "";
   state.refs.confirmDemote.disabled = true;
   setDemoteStatus(state, "", "");
-  hideDemoteTagPopup(state);
+  hideTagAliasesDemoteTagPopup(state);
   syncRouteBusyState(state);
 }
 
 function setDemoteStatus(state, kind, message) {
-  setStatusText(state.refs.demoteStatus, kind, message);
+  setTagAliasesDemoteStatus(state, kind, message);
 }
 
 function renderDemoteGroupKey(state) {
@@ -826,7 +654,7 @@ function renderDemoteTagPopup(state) {
   if (!state.demoteState) return;
   const result = getDemoteTagMatches(state, state.refs.demoteTagSearch.value);
   if (!result.matches.length) {
-    hideDemoteTagPopup(state);
+    hideTagAliasesDemoteTagPopup(state);
     return;
   }
   const chips = result.matches.map((item) => `
@@ -842,13 +670,7 @@ function renderDemoteTagPopup(state) {
   if (result.truncated) {
     chips.push(`<span class="${classNames(UI_CLASS.popupPill, UI_CLASS.popupMore)}" title="${escapeHtml(aliasesText(state.config, "popup_more_title", "More matches available"))}">…</span>`);
   }
-  state.refs.demoteTagPopup.innerHTML = chips.join("");
-  state.refs.demoteTagPopupWrap.hidden = false;
-}
-
-function hideDemoteTagPopup(state) {
-  state.refs.demoteTagPopupWrap.hidden = true;
-  state.refs.demoteTagPopup.innerHTML = "";
+  showTagAliasesDemoteTagPopup(state, chips.join(""));
 }
 
 function addDemoteTag(state, tagId) {
@@ -875,49 +697,8 @@ function addDemoteTag(state, tagId) {
   state.demoteState.tags.push(normalizedTagId);
 }
 
-function renderPromotionGroupKey(state) {
-  if (!state.refs.promotionGroupKey) return;
-  if (!state.promotionState) {
-    state.refs.promotionGroupKey.innerHTML = "";
-    return;
-  }
-  state.refs.promotionGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
-    const titleAttr = groupTitleAttr(state, group);
-    return `
-      <button
-        type="button"
-        class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"
-        data-promotion-group="${escapeHtml(group)}"
-        ${stateAttr(state.promotionState.group === group ? UI_STATE.active : "")}
-        ${titleAttr}
-      >
-        ${escapeHtml(group)}
-      </button>
-    `;
-  }).join("") + renderGroupInfoControl(state);
-}
-
 function setPromotionStatus(state, kind, message) {
-  if (!state.refs.promotionStatus) return;
-  setStatusText(state.refs.promotionStatus, kind, message);
-}
-
-function updatePromotionUi(state) {
-  if (!state.promotionState || !state.refs.promotionAliasMeta || !state.refs.confirmPromotion) return;
-  state.refs.promotionAliasMeta.textContent = aliasesText(
-    state.config,
-    "promotion_alias_meta",
-    "Alias: {alias_key}",
-    { alias_key: state.promotionState.aliasKey }
-  );
-  renderPromotionGroupKey(state);
-  if (!state.promotionState.group) {
-    setPromotionStatus(state, "", aliasesText(state.config, "promotion_group_required", "Choose a group."));
-    state.refs.confirmPromotion.disabled = true;
-    return;
-  }
-  setPromotionStatus(state, "", "");
-  state.refs.confirmPromotion.disabled = false;
+  setTagAliasesPromotionStatus(state, kind, message);
 }
 
 async function loadData(state) {
@@ -1266,7 +1047,7 @@ function openAliasEditModal(state, aliasKey) {
   state.refs.editAliasName.value = entry.alias;
   state.refs.editAliasDescription.value = String(entry.description || "").trim();
   state.refs.editTagSearch.value = "";
-  hideEditTagPopup(state);
+  hideTagAliasesEditTagPopup(state);
   setAliasEditModalMode(state, "edit");
   renderEditGroupKey(state);
   updateAliasEditUi(state);
@@ -1285,7 +1066,7 @@ function openAliasCreateModal(state) {
   state.refs.editAliasName.value = "";
   state.refs.editAliasDescription.value = "";
   state.refs.editTagSearch.value = "";
-  hideEditTagPopup(state);
+  hideTagAliasesEditTagPopup(state);
   setAliasEditModalMode(state, "new");
   renderEditGroupKey(state);
   updateAliasEditUi(state);
@@ -1305,7 +1086,7 @@ function closeAliasEditModal(state) {
   setAliasEditStatus(state, "", "");
   state.refs.saveEditAlias.disabled = true;
   state.refs.editTagList.innerHTML = "";
-  hideEditTagPopup(state);
+  hideTagAliasesEditTagPopup(state);
   syncRouteBusyState(state);
 }
 
@@ -1362,7 +1143,7 @@ function getAliasEditValidation(state) {
 }
 
 function setAliasEditStatus(state, kind, message) {
-  setStatusText(state.refs.editStatus, kind, message);
+  setTagAliasesEditStatus(state, kind, message);
 }
 
 function updateAliasEditUi(state) {
@@ -1395,7 +1176,7 @@ function renderEditTagPopup(state) {
   const result = getEditTagMatches(state, query);
   const matches = result.matches;
   if (!matches.length) {
-    hideEditTagPopup(state);
+    hideTagAliasesEditTagPopup(state);
     return;
   }
   const chips = matches.map((item) => `
@@ -1411,13 +1192,7 @@ function renderEditTagPopup(state) {
   if (result.truncated) {
     chips.push(`<span class="${classNames(UI_CLASS.popupPill, UI_CLASS.popupMore)}" title="${escapeHtml(aliasesText(state.config, "popup_more_title", "More matches available"))}">…</span>`);
   }
-  state.refs.editTagPopup.innerHTML = chips.join("");
-  state.refs.editTagPopupWrap.hidden = false;
-}
-
-function hideEditTagPopup(state) {
-  state.refs.editTagPopupWrap.hidden = true;
-  state.refs.editTagPopup.innerHTML = "";
+  showTagAliasesEditTagPopup(state, chips.join(""));
 }
 
 function addEditTag(state, tagId) {
@@ -1644,21 +1419,19 @@ async function handleTagDemoteFromAliases(state) {
 }
 
 function openPatchModal(state, snippet) {
-  state.patchSnippet = snippet;
-  state.refs.patchSnippet.textContent = snippet;
-  state.refs.patchModal.hidden = false;
+  showTagAliasesPatchModal(state, snippet);
 }
 
 function closePatchModal(state) {
-  state.refs.patchModal.hidden = true;
+  hideTagAliasesPatchModal(state);
 }
 
 function setImportResult(state, kind, message) {
-  setStatusText(state.refs.importResult, kind, message, UI_CLASS.toolbarResult);
+  setTagAliasesImportResult(state, kind, message);
 }
 
 function clearImportResult(state) {
-  setImportResult(state, "", "");
+  clearTagAliasesImportResult(state);
 }
 
 function aliasesText(config, key, fallback, tokens) {
@@ -1667,23 +1440,6 @@ function aliasesText(config, key, fallback, tokens) {
 
 function renderError(state, message) {
   state.mount.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(message)}</div>`;
-}
-
-function setSelectOptionLabel(select, value, label) {
-  if (!select) return;
-  const option = select.querySelector(`option[value="${value}"]`);
-  if (option) option.textContent = label;
-}
-
-function setStatusText(target, kind, message, baseClass = UI_CLASS.formStatus) {
-  if (!target) return;
-  target.textContent = message || "";
-  target.className = baseClass;
-  if (kind) {
-    target.dataset.state = kind;
-    return;
-  }
-  delete target.dataset.state;
 }
 
 function classNames(...tokens) {

@@ -163,6 +163,9 @@ Completed slices:
 - Extracted the fourth Tag Registry modal slice from `assets/studio/js/tag-registry.js` into `assets/studio/js/tag-registry-modals.js`.
   The modal module now owns import selected-file display and import result status rendering.
   The route still owns import availability decisions, file parsing, import submission, patch fallback decisions, patch-copy success/error decisions, and route busy state.
+- Extracted the first Tag Aliases modal slice from `assets/studio/js/tag-aliases.js` into `assets/studio/js/tag-aliases-modals.js`.
+  The modal module owns import, patch, promotion, demote, and edit modal shell/body/actions rendering, modal ref collection, import selected-file/result rendering, patch snippet modal UI, promotion open/close/status/group-key rendering, and edit/demote popup visibility/status helpers.
+  The route still owns alias lookup, validation decisions, import availability, import parsing/submission, create/edit/delete/promote/demote service calls, tag match lookup and selection rules, patch fallback decisions, route busy state, route ready state, and list/control rendering.
 
 Inventory notes:
 
@@ -185,6 +188,7 @@ Verification completed:
 - Focused module contract checks covered the Tag Registry modal helper's edit field population/reset, new-tag group rendering/status updates, demote selected-target rendering and popup reset, and delete preview state reset.
 - Focused module contract checks covered the Tag Registry modal helper's delete impact count/link rendering, empty-series fallback, escaping, and impact status rendering.
 - Focused module contract checks covered the Tag Registry modal helper's selected import file display, result clearing on file selection, empty-file reset, and import result status rendering.
+- Focused module contract checks covered the Tag Aliases modal helper's modal shell escaping, ref collection contract, selected import file display, import result clearing, patch show/hide behavior, promotion group-key rendering/status updates, and popup show/hide helpers.
 
 ## Completion Criteria
 
