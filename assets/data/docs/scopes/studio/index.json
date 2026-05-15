@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T17:27:14Z",
+  "generated_at": "2026-05-15T17:39:06Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -676,6 +676,23 @@
       "viewer_url": "/docs/?scope=studio&doc=llm-semantic-enrichment-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/llm-semantic-enrichment-spec.json",
       "content_text_length": 13903
+    },
+    {
+      "scope": "studio",
+      "doc_id": "modal-composition-migration-tracker",
+      "title": "Modal Composition Migration Tracker",
+      "added_date": "2026-05-15",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui-request-modal-composition-pattern",
+      "sort_order": 20,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "modal-composition-migration-tracker.md",
+      "viewer_url": "/docs/?scope=studio&doc=modal-composition-migration-tracker",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/modal-composition-migration-tracker.json",
+      "content_text_length": 6179,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -1711,7 +1728,7 @@
       "source_path": "ui-primitive-modal-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-modal-shell.json",
-      "content_text_length": 6331
+      "content_text_length": 7331
     },
     {
       "scope": "studio",
@@ -3147,7 +3164,7 @@
       "source_path": "ui-request-modal-composition-pattern.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-modal-composition-pattern.json",
-      "content_text_length": 26946,
+      "content_text_length": 22070,
       "ui_status": "in-progress"
     },
     {

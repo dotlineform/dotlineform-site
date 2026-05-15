@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-179748d729d5c2a02a47899a4c91a063",
-    "generated_at_utc": "2026-05-15T17:10:41Z",
-    "count": 244
+    "version": "blake2b-0efd6d3e68f374f8f0d1c6bfb2fb9144",
+    "generated_at_utc": "2026-05-15T17:39:07Z",
+    "count": 245
   },
   "entries": [
     {
@@ -1107,6 +1107,32 @@
         "08"
       ],
       "search_text": "llm-semantic-enrichment-spec llm semantic enrichment spec llm semantic enrichment spec 2026-05-03 17:08 2026 05 03 17 08"
+    },
+    {
+      "id": "modal-composition-migration-tracker",
+      "kind": "doc",
+      "title": "Modal Composition Migration Tracker",
+      "href": "/docs/?scope=studio&doc=modal-composition-migration-tracker",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui-request-modal-composition-pattern",
+      "parent_title": "Modal Composition Pattern Request",
+      "display_meta": "2026-05-15 • Modal Composition Pattern Request",
+      "search_terms": [
+        "modal-composition-migration-tracker",
+        "modal",
+        "composition",
+        "migration",
+        "tracker",
+        "modal composition migration tracker",
+        "modal composition pattern request",
+        "pattern",
+        "request",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "modal-composition-migration-tracker modal composition migration tracker modal composition migration tracker modal composition pattern request pattern request 2026-05-15 2026 05 15"
     },
     {
       "id": "testing-pytest",

@@ -77,6 +77,21 @@ They are not separate modal patterns.
 Docs Viewer management may keep `docsViewer__*` classes, its own static shell markup, and portable JavaScript helpers when portability requires it.
 That implementation separation is acceptable only when it preserves this same shell anatomy, focus behavior, action ownership, and audit contract.
 
+## Migration Defaults
+
+Use these defaults before starting page-level modal migration:
+
+- action order is secondary, cancel, or close first and primary confirmation last/rightmost
+- destructive actions do not get a separate default visual treatment unless a page audit proves the workflow needs one
+- destructive meaning should be carried by title, body copy, affected-record detail, and confirmation flow
+- shell size variants are `default`, `wide`, and `document`
+- `default` is the normal Studio modal width
+- `wide` is for dense workflow modals with list, import, or preview content
+- `document` is for document-like or import-body content that should follow readable measure
+- Studio helper equivalence is available through confirm, detail-confirm, notice, text-input, and choice helpers
+- Docs Viewer may keep portable `docsViewer__*` implementation details, but must match this contract visually and behaviorally
+- page migrations should use this primitive contract plus the page-level tracker in [Modal Composition Pattern Request](/docs/?scope=studio&doc=ui-request-modal-composition-pattern)
+
 ## Anatomy
 
 Preferred anatomy:
