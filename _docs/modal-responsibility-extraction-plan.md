@@ -96,6 +96,7 @@ Additional files found during implementation inventory:
 - `assets/studio/js/catalogue-editor-action-modals.js`
 - `assets/studio/js/catalogue-work-editor-modals.js`
 - `assets/studio/js/tag-studio-modals.js`
+- `assets/studio/js/tag-registry-modals.js`
 - `assets/studio/js/catalogue-work-actions.js`
 - `assets/studio/js/catalogue-work-detail-actions.js`
 - `assets/studio/js/catalogue-series-actions.js`
@@ -150,6 +151,9 @@ Completed slices:
 - Extracted the Catalogue Work Editor embedded entry, embedded delete confirmation, and build preview modals from `assets/studio/js/catalogue-work-editor.js` into `assets/studio/js/catalogue-work-editor-modals.js`.
   The modal module owns embedded entry shell rendering, local field validation/status, Escape/Enter/cancel/save lifecycle, embedded delete confirmation invocation, build preview shell/body/actions rendering, build preview close/Escape lifecycle, and modal result construction.
   The route still owns draft mutation from returned modal results, editor refresh, work lookup/selection, save/delete/publication/build actions, route busy state, and work readiness rendering.
+- Extracted the first Tag Registry modal slice from `assets/studio/js/tag-registry.js` into `assets/studio/js/tag-registry-modals.js`.
+  The modal module owns import, patch, edit, new, demote, and delete modal shell/body/actions rendering, modal ref collection, and simple modal show/hide helpers.
+  The route still owns registry filtering/list rendering, modal field population, local validation, delete impact preview loading, demote target selection, import parsing/submission, edit/create/delete/demote service calls, patch result handling, status messages, and route busy state.
 
 Inventory notes:
 
@@ -168,6 +172,7 @@ Verification completed:
 - Focused module contract checks covered the Data Sharing Review modal helper's result title/summary/count/issues rendering, escaped labels/body text, notice close cleanup, apply confirmation body construction, and primary confirmation result.
 - Focused module contract checks covered the Series Tag Editor save preview modal helper's shell roles, escaped labels, hidden/open state, ref collection, resolved payload population, patch snippet population, and close helper.
 - Focused module contract checks covered the Catalogue Work Editor modal helper's embedded entry shell roles and escaping, entry validation status, save result contract, close cleanup, build preview labels/body, and Escape close behavior.
+- Focused module contract checks covered the Tag Registry modal helper's modal shell roles, escaped labels, ref collection, import show/hide state, patch snippet population, patch close helper, and delete show/hide helper.
 
 ## Completion Criteria
 

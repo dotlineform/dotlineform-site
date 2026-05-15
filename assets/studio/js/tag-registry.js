@@ -47,10 +47,24 @@ import {
   submitTagEdit
 } from "./tag-registry-service.js";
 import {
-  openConfirmDetailModal,
-  renderStudioModalActions,
-  renderStudioModalFrame
+  openConfirmDetailModal
 } from "./studio-modal.js";
+import {
+  collectTagRegistryModalRefs,
+  hideTagRegistryDeleteModal,
+  hideTagRegistryDemoteModal,
+  hideTagRegistryEditModal,
+  hideTagRegistryImportModal,
+  hideTagRegistryNewModal,
+  hideTagRegistryPatchModal,
+  renderTagRegistryModals,
+  showTagRegistryDeleteModal,
+  showTagRegistryDemoteModal,
+  showTagRegistryEditModal,
+  showTagRegistryImportModal,
+  showTagRegistryNewModal,
+  showTagRegistryPatchModal
+} from "./tag-registry-modals.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
@@ -180,173 +194,10 @@ async function initTagRegistryPage() {
 }
 
 function renderShell(state) {
-  const importFileLabel = registryText(state.config, "import_file_label", "import file");
-  const importModeFieldLabel = registryText(state.config, "import_mode_label", "mode");
-  const importModeOptionAdd = registryText(state.config, "import_mode_option_add", "add (no overwrite)");
-  const importModeOptionMerge = registryText(state.config, "import_mode_option_merge", "add + overwrite");
-  const importModeOptionReplace = registryText(state.config, "import_mode_option_replace", "replace entire registry");
-  const chooseFileLabel = registryText(state.config, "choose_file_button", "Choose file");
   const importButtonLabel = registryText(state.config, "import_button", "Import");
-  const importModalTitle = registryText(state.config, "import_modal_title", "Import Registry");
-  const importModalClose = registryText(state.config, "import_modal_close_button", "Close");
   const newTagButtonLabel = registryText(state.config, "new_tag_button", "New tag");
   const searchLabel = registryText(state.config, "search_label", "Search tags");
   const searchPlaceholder = registryText(state.config, "search_placeholder", "search");
-  const patchModalTitle = registryText(state.config, "patch_modal_title", "Registry Patch Preview");
-  const patchModalLabel = registryText(state.config, "patch_modal_label", "Manual patch snippet");
-  const patchModalCopy = registryText(state.config, "patch_modal_copy_button", "Copy");
-  const patchModalClose = registryText(state.config, "patch_modal_close_button", "Close");
-  const editModalTitle = registryText(state.config, "edit_modal_title", "Edit Tag");
-  const editDescriptionLabel = registryText(state.config, "edit_description_label", "description");
-  const editSaveButton = registryText(state.config, "edit_save_button", "Save");
-  const editCloseButton = registryText(state.config, "edit_close_button", "Close");
-  const newModalTitle = registryText(state.config, "new_modal_title", "New Tag");
-  const newSlugLabel = registryText(state.config, "new_slug_label", "slug");
-  const newDescriptionLabel = registryText(state.config, "new_description_label", "description");
-  const newCreateButton = registryText(state.config, "new_create_button", "Create");
-  const newCancelButton = registryText(state.config, "new_cancel_button", "Cancel");
-  const demoteModalTitle = registryText(state.config, "demote_modal_title", "Demote Tag to Alias");
-  const demoteSearchLabel = registryText(state.config, "demote_search_label", "find target tags");
-  const demoteSearchPlaceholder = registryText(state.config, "demote_search_placeholder", "search tags");
-  const demoteConfirmButton = registryText(state.config, "demote_confirm_button", "Demote");
-  const demoteCloseButton = registryText(state.config, "demote_close_button", "Close");
-  const deleteModalTitle = registryText(state.config, "delete_modal_title", "Delete Tag");
-  const deleteImpactIntro = registryText(
-    state.config,
-    "delete_impact_intro",
-    "Deleting this tag also removes matching tag assignments and removes this tag from aliases. Aliases left with no targets are deleted."
-  );
-  const deleteConfirmButton = registryText(state.config, "delete_confirm_button", "Delete");
-  const deleteCloseButton = registryText(state.config, "delete_close_button", "Close");
-  const patchModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.patchModal,
-    backdropRole: UI.role.patchModalClose,
-    titleId: "tagRegistryPatchTitle",
-    title: patchModalTitle,
-    bodyHtml: `
-      <p class="${UI_CLASS.modalLabel}">${escapeHtml(patchModalLabel)}</p>
-      <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.patchSnippet}"></pre>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.copyPatch, label: patchModalCopy },
-      { role: UI.role.patchModalClose, label: patchModalClose }
-    ])
-  });
-  const importModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.importModal,
-    backdropRole: UI.role.importModalClose,
-    titleId: "tagRegistryImportTitle",
-    title: importModalTitle,
-    hidden: !state.importModalOpen,
-    bodyHtml: `
-      <div class="tagStudioToolbar tagStudioToolbar--modalImport">
-        <div class="tagStudioToolbar__row">
-          <button type="button" class="tagStudio__button" data-role="${UI.role.chooseFile}">${escapeHtml(chooseFileLabel)}</button>
-          <input type="file" data-role="${UI.role.importFile}" accept=".json,application/json" hidden>
-          <select class="tagStudioToolbar__select" data-role="${UI.role.importMode}">
-            <option value="add">${escapeHtml(importModeOptionAdd)}</option>
-            <option value="merge">${escapeHtml(importModeOptionMerge)}</option>
-            <option value="replace">${escapeHtml(importModeOptionReplace)}</option>
-          </select>
-          <button type="button" class="tagStudio__button" data-role="${UI.role.importButton}">${escapeHtml(importButtonLabel)}</button>
-        </div>
-        <p class="tagStudioToolbar__selected" data-role="${UI.role.selectedFile}"></p>
-        <p class="tagStudioToolbar__result" data-role="${UI.role.importResult}"></p>
-      </div>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.importModalClose, label: importModalClose }
-    ])
-  });
-  const editModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.editModal,
-    titleId: "tagRegistryEditTitle",
-    title: editModalTitle,
-    bodyHtml: `
-      <p class="${UI_CLASS.formMeta}" data-role="${UI.role.editTagId}"></p>
-      <div class="${UI_CLASS.formFields}">
-        <label class="${UI_CLASS.formField}">
-          <input type="text" class="tagStudio__input ${UI_CLASS.formReadonly}" data-role="${UI.role.editTagName}" autocomplete="off" readonly>
-        </label>
-        <label class="${UI_CLASS.formField}">
-          <span class="${UI_CLASS.formLabel}">${escapeHtml(editDescriptionLabel)}</span>
-          <textarea class="tagStudio__input ${UI_CLASS.formDescriptionInput}" data-role="${UI.role.editDescription}" rows="3" autocomplete="off"></textarea>
-        </label>
-      </div>
-      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.saveEdit, label: editSaveButton },
-      { role: UI.role.editModalClose, label: editCloseButton }
-    ])
-  });
-  const newModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.newModal,
-    titleId: "tagRegistryNewTitle",
-    title: newModalTitle,
-    bodyHtml: `
-      <div class="tagStudio__key ${UI_CLASS.newGroupKey}" data-role="${UI.role.newGroupKey}"></div>
-      <div class="${UI_CLASS.formFields}">
-        <label class="${UI_CLASS.formField}">
-          <span class="${UI_CLASS.formLabel}">${escapeHtml(newSlugLabel)}</span>
-          <input type="text" class="tagStudio__input" data-role="${UI.role.newTagSlug}" autocomplete="off">
-        </label>
-        <p class="${UI_CLASS.formWarning}" data-role="${UI.role.newTagWarning}"></p>
-        <label class="${UI_CLASS.formField}">
-          <span class="${UI_CLASS.formLabel}">${escapeHtml(newDescriptionLabel)}</span>
-          <textarea class="tagStudio__input ${UI_CLASS.formDescriptionInput}" data-role="${UI.role.newTagDescription}" rows="3" autocomplete="off"></textarea>
-        </label>
-      </div>
-      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.newTagStatus}"></p>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.createTag, label: newCreateButton, disabled: true },
-      { role: UI.role.newModalClose, label: newCancelButton }
-    ])
-  });
-  const demoteModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.demoteModal,
-    backdropRole: UI.role.demoteModalClose,
-    titleId: "tagRegistryDemoteTitle",
-    title: demoteModalTitle,
-    bodyHtml: `
-      <p class="${UI_CLASS.formMeta}" data-role="${UI.role.demoteTagMeta}"></p>
-      <div class="${UI_CLASS.formFields}">
-        <label class="${UI_CLASS.formField} ${UI_CLASS.formSearchWrap}">
-          <span class="${UI_CLASS.formLabel}">${escapeHtml(demoteSearchLabel)}</span>
-          <input type="text" class="tagStudio__input" data-role="${UI.role.demoteTagSearch}" autocomplete="off" placeholder="${escapeHtml(demoteSearchPlaceholder)}">
-          <div class="${UI_CLASS.popup}" data-role="${UI.role.demoteTagPopupWrap}" hidden>
-            <div class="${UI_CLASS.popupInner}" data-role="${UI.role.demoteTagPopup}"></div>
-          </div>
-        </label>
-      </div>
-      <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.demoteGroupKey}"></div>
-      <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.demoteTagList}"></div>
-      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.demoteStatus}"></p>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.confirmDemote, label: demoteConfirmButton, disabled: true },
-      { role: UI.role.demoteModalClose, label: demoteCloseButton }
-    ])
-  });
-  const deleteModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.deleteModal,
-    backdropRole: UI.role.deleteModalClose,
-    titleId: "tagRegistryDeleteTitle",
-    title: deleteModalTitle,
-    bodyHtml: `
-      <p class="${UI_CLASS.formMeta}" data-role="${UI.role.deleteTagMeta}"></p>
-      <p class="${UI_CLASS.formImpact} tagRegistryDelete__intro">
-        ${escapeHtml(deleteImpactIntro)}
-      </p>
-      <div class="${UI_CLASS.formImpact} tagRegistryDelete__impactPanel" data-role="${UI.role.deleteImpact}"></div>
-      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.deleteStatus}"></p>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.confirmDeleteTag, label: deleteConfirmButton },
-      { role: UI.role.deleteModalClose, label: deleteCloseButton }
-    ])
-  });
   const refs = {
     openImportModal: state.mount.querySelector(UI_SELECTOR.openImportModal),
     openNewTag: state.mount.querySelector(UI_SELECTOR.openNewTag),
@@ -370,49 +221,11 @@ function renderShell(state) {
   refs.openNewTag.textContent = newTagButtonLabel;
   refs.searchLabel.textContent = searchLabel;
   refs.search.setAttribute("placeholder", searchPlaceholder);
-  refs.modalHost.innerHTML = `${importModalHtml}${patchModalHtml}${editModalHtml}${newModalHtml}${demoteModalHtml}${deleteModalHtml}`;
+  refs.modalHost.innerHTML = renderTagRegistryModals(state);
 
   state.refs = {
     ...refs,
-    importModal: state.mount.querySelector(UI_SELECTOR.importModal),
-    importFileLabel: state.mount.querySelector(UI_SELECTOR.importFileLabel),
-    chooseFile: state.mount.querySelector(UI_SELECTOR.chooseFile),
-    importFile: state.mount.querySelector(UI_SELECTOR.importFile),
-    importModeLabel: state.mount.querySelector(UI_SELECTOR.importModeLabel),
-    importMode: state.mount.querySelector(UI_SELECTOR.importMode),
-    importButton: state.mount.querySelector(UI_SELECTOR.importButton),
-    selectedFile: state.mount.querySelector(UI_SELECTOR.selectedFile),
-    importResult: state.mount.querySelector(UI_SELECTOR.importResult),
-    patchModal: state.mount.querySelector(UI_SELECTOR.patchModal),
-    patchSnippet: state.mount.querySelector(UI_SELECTOR.patchSnippet),
-    copyPatch: state.mount.querySelector(UI_SELECTOR.copyPatch),
-    editModal: state.mount.querySelector(UI_SELECTOR.editModal),
-    editTagId: state.mount.querySelector(UI_SELECTOR.editTagId),
-    editTagName: state.mount.querySelector(UI_SELECTOR.editTagName),
-    editDescription: state.mount.querySelector(UI_SELECTOR.editDescription),
-    editStatus: state.mount.querySelector(UI_SELECTOR.editStatus),
-    saveEdit: state.mount.querySelector(UI_SELECTOR.saveEdit),
-    newModal: state.mount.querySelector(UI_SELECTOR.newModal),
-    newGroupKey: state.mount.querySelector(UI_SELECTOR.newGroupKey),
-    newTagSlug: state.mount.querySelector(UI_SELECTOR.newTagSlug),
-    newTagWarning: state.mount.querySelector(UI_SELECTOR.newTagWarning),
-    newTagDescription: state.mount.querySelector(UI_SELECTOR.newTagDescription),
-    newTagStatus: state.mount.querySelector(UI_SELECTOR.newTagStatus),
-    createTag: state.mount.querySelector(UI_SELECTOR.createTag),
-    demoteModal: state.mount.querySelector(UI_SELECTOR.demoteModal),
-    demoteTagMeta: state.mount.querySelector(UI_SELECTOR.demoteTagMeta),
-    demoteTagSearch: state.mount.querySelector(UI_SELECTOR.demoteTagSearch),
-    demoteTagPopupWrap: state.mount.querySelector(UI_SELECTOR.demoteTagPopupWrap),
-    demoteTagPopup: state.mount.querySelector(UI_SELECTOR.demoteTagPopup),
-    demoteGroupKey: state.mount.querySelector(UI_SELECTOR.demoteGroupKey),
-    demoteTagList: state.mount.querySelector(UI_SELECTOR.demoteTagList),
-    demoteStatus: state.mount.querySelector(UI_SELECTOR.demoteStatus),
-    confirmDemote: state.mount.querySelector(UI_SELECTOR.confirmDemote),
-    deleteModal: state.mount.querySelector(UI_SELECTOR.deleteModal),
-    deleteTagMeta: state.mount.querySelector(UI_SELECTOR.deleteTagMeta),
-    deleteImpact: state.mount.querySelector(UI_SELECTOR.deleteImpact),
-    deleteStatus: state.mount.querySelector(UI_SELECTOR.deleteStatus),
-    confirmDeleteTag: state.mount.querySelector(UI_SELECTOR.confirmDeleteTag)
+    ...collectTagRegistryModalRefs(state.mount)
   };
   renderImportAvailability(state);
 }
@@ -426,8 +239,7 @@ function wireEvents(state) {
   state.refs.openImportModal.addEventListener("click", () => {
     if (!state.importAvailable) return;
     clearImportResult(state);
-    state.importModalOpen = true;
-    state.refs.importModal.hidden = false;
+    showTagRegistryImportModal(state);
     syncRouteBusyState(state);
   });
 
@@ -821,12 +633,12 @@ function openEditModal(state, tagId) {
     ? ""
     : registryText(state.config, "local_edit_required", "Local server is required for edit.")
   );
-  state.refs.editModal.hidden = false;
+  showTagRegistryEditModal(state);
   syncRouteBusyState(state);
 }
 
 function closeEditModal(state) {
-  state.refs.editModal.hidden = true;
+  hideTagRegistryEditModal(state);
   state.editTagId = "";
   state.refs.editTagName.value = "";
   state.refs.editDescription.value = "";
@@ -846,20 +658,19 @@ function openNewTagModal(state) {
   setNewTagStatus(state, "", "");
   renderNewTagGroupKey(state);
   state.refs.createTag.disabled = true;
-  state.refs.newModal.hidden = false;
+  showTagRegistryNewModal(state);
   state.refs.newTagSlug.focus();
   syncRouteBusyState(state);
 }
 
 function closeImportModal(state) {
-  state.importModalOpen = false;
-  state.refs.importModal.hidden = true;
+  hideTagRegistryImportModal(state);
   syncRouteBusyState(state);
 }
 
 function closeNewTagModal(state) {
   state.newTagState = null;
-  state.refs.newModal.hidden = true;
+  hideTagRegistryNewModal(state);
   state.refs.newTagSlug.value = "";
   state.refs.newTagDescription.value = "";
   state.refs.newTagWarning.textContent = "";
@@ -1067,7 +878,7 @@ function openDeleteModal(state, tagId) {
   setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
   setDeleteStatus(state, "", "");
   state.refs.confirmDeleteTag.disabled = state.saveMode !== "post";
-  state.refs.deleteModal.hidden = false;
+  showTagRegistryDeleteModal(state);
   syncRouteBusyState(state);
 
   if (state.saveMode !== "post") {
@@ -1080,7 +891,7 @@ function openDeleteModal(state, tagId) {
 }
 
 function closeDeleteModal(state) {
-  state.refs.deleteModal.hidden = true;
+  hideTagRegistryDeleteModal(state);
   state.deleteTagId = "";
   state.deletePreview = "";
   state.deletePreviewSeq += 1;
@@ -1143,14 +954,14 @@ function openDemoteModal(state, tagId) {
   state.refs.demoteTagSearch.value = "";
   hideDemoteTagPopup(state);
   updateDemoteUi(state);
-  state.refs.demoteModal.hidden = false;
+  showTagRegistryDemoteModal(state);
   state.refs.demoteTagSearch.focus();
   syncRouteBusyState(state);
 }
 
 function closeDemoteModal(state) {
   state.demoteState = null;
-  state.refs.demoteModal.hidden = true;
+  hideTagRegistryDemoteModal(state);
   state.refs.demoteTagMeta.textContent = "";
   state.refs.demoteTagSearch.value = "";
   state.refs.demoteTagList.innerHTML = "";
@@ -1454,13 +1265,11 @@ async function readImportRegistryFromFile(file) {
 }
 
 function openPatchModal(state, snippet) {
-  state.patchSnippet = snippet;
-  state.refs.patchSnippet.textContent = snippet;
-  state.refs.patchModal.hidden = false;
+  showTagRegistryPatchModal(state, snippet);
 }
 
 function closePatchModal(state) {
-  state.refs.patchModal.hidden = true;
+  hideTagRegistryPatchModal(state);
 }
 
 function setImportResult(state, kind, message) {

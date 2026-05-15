@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T11:15:02Z",
+  "generated_at": "2026-05-15T11:21:25Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -280,7 +280,7 @@
       "source_path": "modal-responsibility-extraction-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=modal-responsibility-extraction-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/modal-responsibility-extraction-plan.json",
-      "content_text_length": 13671,
+      "content_text_length": 14507,
       "ui_status": "in-progress"
     },
     {
