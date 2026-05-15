@@ -86,6 +86,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/docs/docs_live_rebuild_watcher.py",
                 "scripts/docs/docs_management_server.py",
                 "scripts/docs/docs_management_mutations.py",
+                "scripts/docs/docs_scope_manifest.py",
                 "scripts/analytics/tag_routes.py",
                 "scripts/catalogue/catalogue_source.py",
                 "scripts/catalogue/catalogue_cleanup.py",

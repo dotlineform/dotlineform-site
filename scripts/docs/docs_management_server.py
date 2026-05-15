@@ -34,6 +34,8 @@ Endpoints:
   POST /docs/archive
   POST /docs/delete-preview
   POST /docs/delete-apply
+  POST /docs/scopes/create-preview
+  POST /docs/scopes/delete-preview
 
 Security constraints:
   - Binds to 127.0.0.1 only.
@@ -75,6 +77,7 @@ from analytics import tags_data_sharing_adapter  # noqa: E402
 import docs_management_routes as routes  # noqa: E402
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_management_mutations as mutations  # noqa: E402
+import docs_scope_manifest  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from docs_scope_config import DOCS_SCOPE_CONFIGS, SCOPE_ROOTS  # noqa: E402
@@ -291,9 +294,15 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
 
 def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     scopes: Dict[str, Any] = {}
+    try:
+        manifest = docs_scope_manifest.load_manifest(repo_root)
+    except (FileNotFoundError, ValueError):
+        manifest = {"scopes": []}
+    manifest_scopes = docs_scope_manifest.manifest_scopes_by_id(manifest)
     for scope in sorted(SCOPE_ROOTS.keys()):
         root = source_model.scope_root(repo_root, scope)
         scope_docs = source_model.load_scope_docs(repo_root, scope) if root.exists() else []
+        manifest_record = manifest_scopes.get(scope)
         scopes[scope] = {
             "available": root.exists(),
             "root": relative_path(repo_root, root),
@@ -301,6 +310,12 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "generated_data_reads": docs_generated_reads.generated_scope_data_available(repo_root, scope),
             "generated_search_reads": docs_generated_reads.generated_search_data_available(repo_root, scope),
             "count": len(scope_docs),
+            "scope_lifecycle": {
+                "manifest_recorded": manifest_record is not None,
+                "owner": str((manifest_record or {}).get("owner") or ""),
+                "created_by_tool": (manifest_record or {}).get("created_by_tool") is True,
+                "delete_eligible": docs_scope_manifest.scope_delete_eligible(manifest_record),
+            },
         }
     return {
         "ok": True,
@@ -313,6 +328,15 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "html_import": True,
             "docs_export": True,
             "library_import": True,
+            "scope_lifecycle": {
+                "manifest": True,
+                "create_preview": True,
+                "create_apply": False,
+                "delete_preview": True,
+                "delete_apply": False,
+                "publishing_modes": list(docs_scope_manifest.PUBLISHING_MODES),
+                "manifest_path": docs_scope_manifest.MANIFEST_REL_PATH.as_posix(),
+            },
             "scopes": scopes,
         },
     }
@@ -518,6 +542,8 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         routes.ARCHIVE_PATH: "_handle_archive_post",
         routes.DELETE_PREVIEW_PATH: "_handle_delete_preview_post",
         routes.DELETE_APPLY_PATH: "_handle_delete_apply_post",
+        routes.SCOPE_CREATE_PREVIEW_PATH: "_handle_scope_create_preview_post",
+        routes.SCOPE_DELETE_PREVIEW_PATH: "_handle_scope_delete_preview_post",
     }
     OPTIONS_PATHS = tuple(dict.fromkeys((*routes.OPTIONS_PATHS, *data_sharing_routes.OPTIONS_PATHS)))
 
@@ -700,6 +726,16 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
 
     def _handle_delete_apply_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         return HTTPStatus.OK, handle_delete_apply(repo_root, body, dry_run)
+
+    def _handle_scope_create_preview_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = docs_scope_manifest.plan_create_scope_preview(repo_root, body)
+        payload["dry_run"] = True
+        return HTTPStatus.OK, payload
+
+    def _handle_scope_delete_preview_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = docs_scope_manifest.plan_delete_scope_preview(repo_root, body)
+        payload["dry_run"] = True
+        return HTTPStatus.OK, payload
 
     def do_POST(self) -> None:  # noqa: N802
         origin = self.headers.get("Origin", "")

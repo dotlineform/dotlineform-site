@@ -17,6 +17,30 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-15] Added Docs Viewer Scope Lifecycle Preview Contract
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / docs-management server
+
+**Summary:**
+Added the first server-side slice for Docs Viewer scope lifecycle work.
+The docs-management server now advertises scope lifecycle preview support, reads a backfilled scope ownership manifest, and exposes preview endpoints for new-scope creation and manifest-backed scope deletion.
+
+**Effect:**
+Existing Studio, Library, and Analysis scopes are recorded as system-owned and are not delete-eligible through the lifecycle contract.
+The preview endpoints validate scope ids, source roots, default doc ids, publishing mode, and public route paths before reporting planned file changes, commands, and URLs.
+Apply/write behavior remains intentionally unadvertised until the allowlisted file-write implementation is complete.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_scope_manifest.py`
+- `scripts/docs/docs_scope_manifest.json`
+- `scripts/docs/docs_management_server.py`
+- `scripts/docs/docs_management_routes.py`
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Viewer Route Creation](/docs/?scope=studio&doc=docs-viewer-route-creation)
+
 ## [2026-05-15] Moved Docs Import Into The Docs Viewer Modal Shell
 
 **Status:** implemented

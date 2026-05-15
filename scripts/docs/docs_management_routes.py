@@ -29,6 +29,8 @@ RESTORE_MOVE_PATH = "/docs/restore-move"
 ARCHIVE_PATH = "/docs/archive"
 DELETE_PREVIEW_PATH = "/docs/delete-preview"
 DELETE_APPLY_PATH = "/docs/delete-apply"
+SCOPE_CREATE_PREVIEW_PATH = "/docs/scopes/create-preview"
+SCOPE_DELETE_PREVIEW_PATH = "/docs/scopes/delete-preview"
 
 GET_PATHS = (
     HEALTH_PATH,
@@ -61,6 +63,8 @@ POST_PATHS = (
     ARCHIVE_PATH,
     DELETE_PREVIEW_PATH,
     DELETE_APPLY_PATH,
+    SCOPE_CREATE_PREVIEW_PATH,
+    SCOPE_DELETE_PREVIEW_PATH,
 )
 
 OPTIONS_PATHS = tuple(dict.fromkeys((*POST_PATHS, *GET_PATHS)))

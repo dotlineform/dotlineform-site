@@ -116,6 +116,10 @@ The management UI should label this mode as local-only and make the write set vi
 A future New scope button should be available only in `/docs/?mode=manage`.
 It should ask for the publishing mode before writing files.
 
+The first server-side contract is in place through preview endpoints on the localhost docs-management server.
+`GET /capabilities` now advertises scope lifecycle preview support and reports whether existing scopes are manifest-recorded and delete-eligible.
+Existing scopes are backfilled in `scripts/docs/docs_scope_manifest.json` as system-owned records, so they are not eligible for lifecycle deletion.
+
 Minimum fields:
 
 - scope id
@@ -136,6 +140,9 @@ The server response should list:
 - build commands run or suggested
 - resulting management URL
 - resulting public URL, only when a public route exists
+
+Preview-only endpoints currently report this planned write set without writing files.
+The apply endpoints should remain hidden until the allowlisted source-root, route-file, generated-output, and manifest-write implementation is complete.
 
 ## Safety Rules
 

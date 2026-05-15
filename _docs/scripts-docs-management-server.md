@@ -131,6 +131,8 @@ Search update behavior:
 - whether generated docs/search reads are available for each scope
 - whether source config report reads are available
 - whether source config settings contract reads and writes are available
+- whether scope lifecycle preview actions are available
+- whether each configured scope is manifest-recorded and delete-eligible
 
 Read-only generated-data endpoints:
 
@@ -664,6 +666,20 @@ Apply behavior:
 - deletes the Markdown source file when no blockers remain
 - rebuilds the current scope docs payloads and runs a targeted docs-search removal/update after delete
 
+Scope lifecycle preview endpoints:
+
+- `POST /docs/scopes/create-preview`
+- `POST /docs/scopes/delete-preview`
+
+Scope lifecycle preview behavior:
+
+- reads scope ownership from `scripts/docs/docs_scope_manifest.json`
+- backfills existing scopes as system-owned when the manifest is missing
+- validates new scope ids, source roots, default doc ids, publishing mode, and public route paths before reporting a write set
+- reports planned created files, changed files, build commands, management URL, and public URL without writing files
+- blocks delete preview for system-owned scopes and scopes not created by the lifecycle tool
+- the initial server contract advertises preview support only; apply endpoints are intentionally not advertised until the allowlisted write implementation is complete
+
 ## Security Constraints
 
 - binds to loopback only
@@ -678,6 +694,7 @@ Apply behavior:
   - `var/studio/data-sharing/<data-domain>/import-preview/`
   - `var/docs/logs/`
   - `var/docs/watch-suppressions/`
+- scope lifecycle ownership is recorded in `scripts/docs/docs_scope_manifest.json`; existing scopes are system-owned and not eligible for lifecycle deletion
 - timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch
 - backups are operation-scoped rather than full-scope:
   - `create` writes a manifest-only backup bundle

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T21:21:42Z",
+  "generated_at": "2026-05-15T21:31:04Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1403,7 +1403,7 @@
       "source_path": "docs-viewer-route-creation.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-route-creation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-route-creation.json",
-      "content_text_length": 5058
+      "content_text_length": 5697
     },
     {
       "scope": "studio",
@@ -2682,7 +2682,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 33551
+      "content_text_length": 34597
     },
     {
       "scope": "studio",
@@ -3399,7 +3399,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 157857
+      "content_text_length": 158940
     },
     {
       "scope": "studio",

@@ -339,6 +339,68 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["source_config_reads"] is True
     assert payload["capabilities"]["source_config_settings_reads"] is True
     assert payload["capabilities"]["source_config_settings_writes"] is True
+    assert payload["capabilities"]["scope_lifecycle"]["manifest"] is True
+    assert payload["capabilities"]["scope_lifecycle"]["create_preview"] is True
+    assert payload["capabilities"]["scope_lifecycle"]["create_apply"] is False
+
+
+def test_scope_manifest_backfills_existing_scopes_as_system_owned() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        write_generated_docs(repo_root)
+        payload = docs_management_server.docs_scope_manifest.build_backfilled_manifest(repo_root)
+
+    assert payload["schema_version"] == "docs_scope_manifest_v1"
+    records = {record["scope_id"]: record for record in payload["scopes"]}
+    assert records["studio"]["owner"] == "system"
+    assert records["studio"]["user_created"] is False
+    assert records["studio"]["created_by_tool"] is False
+    assert any(file["path"] == "_docs/child.md" for file in records["studio"]["files"])
+
+
+def test_scope_create_preview_reports_write_set_and_urls() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        payload = docs_management_server.docs_scope_manifest.plan_create_scope_preview(
+            repo_root,
+            {
+                "scope_id": "research",
+                "title": "Research",
+                "source_root": "_docs_research",
+                "default_doc_id": "research",
+                "publishing_mode": "public_readonly",
+                "public_route_path": "/research/",
+                "build_inline_search": True,
+                "write_generated_outputs": True,
+            },
+        )
+
+    assert payload["ok"] is True
+    assert payload["scope_id"] == "research"
+    assert payload["planned_scope_config"]["viewer_base_url"] == "/research/"
+    assert payload["urls"]["management"] == "/docs/?scope=research&mode=manage"
+    assert payload["urls"]["public"] == "/research/"
+    assert any(file["path"] == "_docs_research/research.md" for file in payload["created_files"])
+    assert any(command["command"] == "./scripts/build_docs.rb --scope research --write" for command in payload["build_commands"])
+
+
+def test_scope_delete_preview_blocks_system_scopes() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        write_generated_docs(repo_root)
+        payload = docs_management_server.docs_scope_manifest.plan_delete_scope_preview(
+            repo_root,
+            {
+                "scope_id": "studio",
+            },
+        )
+
+    assert payload["ok"] is True
+    assert payload["allowed"] is False
+    assert "system-owned" in payload["blockers"][0]
 
 
 def test_source_config_report_reads_known_config_files() -> None:
@@ -573,6 +635,9 @@ def main() -> None:
         test_archive_command_noops_on_archive_parent,
         test_capabilities_advertise_generated_data_reads,
         test_capabilities_advertise_source_config_reads,
+        test_scope_manifest_backfills_existing_scopes_as_system_owned,
+        test_scope_create_preview_reports_write_set_and_urls,
+        test_scope_delete_preview_blocks_system_scopes,
         test_source_config_report_reads_known_config_files,
         test_source_config_settings_contract_allows_updated_date_only,
         test_source_config_settings_validation_reports_rebuild_artifact,
