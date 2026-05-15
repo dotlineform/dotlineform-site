@@ -136,6 +136,9 @@ Completed slices:
 - Extracted the Data Sharing Prepare result modal from `assets/studio/js/data-sharing-prepare.js` into `assets/studio/js/data-sharing-prepare-modals.js`.
   The modal module owns the result modal shell/body/actions rendering, output file display formatting, count rows, warning/error list rendering, close-role wiring, and modal clearing helper.
   The route still owns scope/config selection, package payload assembly, prepare service calls, route busy state, success/error status messages, and local result reset timing.
+- Extracted the Activity Log detail notice modal from `assets/studio/js/activity-log.js` into `assets/studio/js/activity-log-modals.js`.
+  The modal module owns detail item filtering, fallback body text selection, notice modal labels, and the shared notice modal invocation.
+  The route still owns feed loading, entry lookup, sorting, list rendering, click dispatch, and route ready state.
 
 Inventory notes:
 
@@ -150,6 +153,7 @@ Verification completed:
 - Focused Playwright checks covered the Docs Viewer management modal helper's confirm, Escape cancel, text input result, choice result, delete preview body formatting, and cleanup behavior.
 - Focused module contract checks covered the Series Tags modal helper's session count rendering, hidden/open state, escaped status/file/review text, conflict resolution selection, and import review rows.
 - Focused module contract checks covered the Data Sharing Prepare result modal helper's success/failure titles, output filename normalization, count unit labels, escaped files/issues, close action cleanup, and explicit clearing helper.
+- Focused module contract checks covered the Activity Log details modal helper's detail item filtering, fallback body text, escaped title/body/close labels, and close cleanup through the shared notice modal.
 
 ## Completion Criteria
 

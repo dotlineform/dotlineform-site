@@ -3,7 +3,7 @@ import {
   loadStudioConfigWithText
 } from "./studio-config.js";
 import { loadStudioServerReadJson } from "./studio-data.js";
-import { openNoticeModal } from "./studio-modal.js";
+import { openActivityDetailsModal } from "./activity-log-modals.js";
 import {
   initializeStudioRouteState,
   setStudioRouteReady
@@ -158,14 +158,7 @@ async function loadFeed() {
 function openActivityDetails(state, activityId) {
   const entry = state.entriesById.get(activityId);
   if (!entry) return;
-  const detailItems = Array.isArray(entry.detail_items) ? entry.detail_items.filter((item) => normalizeText(item)) : [];
-  const fallback = normalizeText(entry.script_purpose_label) || getStudioText(state.config, "activity_log.modal_empty_detail", "No detail items recorded.");
-  openNoticeModal({
-    root: state.root,
-    title: getStudioText(state.config, "activity_log.modal_title", "Activity details"),
-    body: detailItems.length ? detailItems : [fallback],
-    closeLabel: getStudioText(state.config, "activity_log.modal_close_button", "Close")
-  });
+  openActivityDetailsModal(state, entry);
 }
 
 function applySort(state) {
