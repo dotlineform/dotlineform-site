@@ -125,16 +125,21 @@ The management UI should label this mode as local-only and make the write set vi
 
 ## Current Implementation State
 
-Initial server-side foundation is in place:
+The scope lifecycle workflow now has server-side preview/apply endpoints and a management UI entry point:
 
 - `scripts/docs/docs_scope_manifest.json` records existing scopes as system-owned
 - `scripts/docs/docs_scope_manifest.py` owns manifest loading, backfill, validation, and preview planning
-- `GET /capabilities` advertises scope lifecycle preview support
+- `GET /capabilities` advertises scope lifecycle preview and apply support
 - `POST /docs/scopes/create-preview` reports a validated create write set
 - `POST /docs/scopes/create-apply` creates allowlisted scope files after explicit confirmation
 - `POST /docs/scopes/delete-preview` reports a manifest-backed delete plan and blocks system scopes
+- `POST /docs/scopes/delete-apply` deletes eligible user-created scopes after explicit confirmation
+- the `/docs/?mode=manage` Actions menu exposes capability-gated `New scope` and `Delete scope` commands
+- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js` owns the create/delete modal flows
+- `assets/docs-viewer/js/docs-viewer-management.js` remains the management command coordinator
+- `assets/docs-viewer/js/docs-viewer-management-client.js` owns the scope lifecycle endpoint wrappers
 
-Delete apply behavior and the management UI are not implemented yet.
+The stable documentation still needs a final pass after hands-on use, but the core lifecycle UI and server contracts are implemented.
 
 ## Manifest Design
 
@@ -419,6 +424,35 @@ Create preview reports this planned write set without writing files.
 Create apply writes the allowlisted source-root, route-file, config, generated-output, and manifest changes after confirmation.
 Delete apply removes manifest-owned scope files, updates config and manifest state, and refreshes generated docs output after confirmation.
 
+## Management UI Flow
+
+The management shell exposes scope lifecycle commands only when the local docs-management server advertises the matching lifecycle capability.
+
+`New scope` opens a dedicated modal flow that:
+
+- collects scope id, title, source root, default doc id, publishing mode, generated-output choice, and inline-search choice
+- shows the public route path field only for `public_readonly`
+- previews the server-planned write set before enabling the save step
+- sends `confirm: true` only from the final save action
+- reports created files, changed files, build commands, and resulting URLs from the server response
+
+`Delete scope` is a selected-target flow.
+The current Docs Viewer scope is only the management shell context and is not the implicit delete target.
+The UI asks the operator to choose from server-advertised scopes whose lifecycle capability record has `delete_eligible: true`.
+After target selection, the flow:
+
+- previews the manifest-backed delete plan
+- shows deleted files, missing files, changed files, and build commands before confirmation
+- sends `confirm: true` only from the final delete action
+- reports the server apply result after deletion
+
+Implementation ownership:
+
+- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js` owns the modal body rendering, field state, preview summaries, selected delete target, and apply result summaries
+- `assets/docs-viewer/js/docs-viewer-management.js` owns Actions menu wiring, capability-gated command visibility, busy/status state, and management capability refresh after apply
+- `assets/docs-viewer/js/docs-viewer-management-client.js` owns the HTTP wrappers for create/delete preview and apply endpoints
+- `assets/docs-viewer/js/docs-viewer-management-modals.js` provides the reusable modal shell; the lifecycle flow does not define a separate modal framework
+
 ## Safety Rules
 
 - Scope creation is a local write action and must stay behind the loopback management server.
@@ -432,9 +466,6 @@ Delete apply removes manifest-owned scope files, updates config and manifest sta
 
 Record final decisions here as the implementation lands:
 
-- manifest schema and ownership semantics
-- publishing-mode behavior in the management UI
-- management UI controls, modal states, and result reporting
 - manual verification workflow
 
 ## Open Implementation Notes

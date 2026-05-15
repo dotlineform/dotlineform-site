@@ -104,6 +104,29 @@ export function applyManagedDocDelete(docId, options) {
   }, options), options);
 }
 
+export function previewScopeCreate(payload, options) {
+  return fetchManagementJson("/docs/scopes/create-preview", "POST", payload || {}, options);
+}
+
+export function applyScopeCreate(payload, options) {
+  return fetchManagementJson("/docs/scopes/create-apply", "POST", Object.assign({}, payload || {}, {
+    confirm: true
+  }), options);
+}
+
+export function previewScopeDelete(scopeId, options) {
+  return fetchManagementJson("/docs/scopes/delete-preview", "POST", {
+    scope_id: scopeId
+  }, options);
+}
+
+export function applyScopeDelete(scopeId, options) {
+  return fetchManagementJson("/docs/scopes/delete-apply", "POST", {
+    scope_id: scopeId,
+    confirm: true
+  }, options);
+}
+
 export function updateManagedDocsViewability(docIds, hidden, options) {
   return fetchManagementJson("/docs/update-viewability-bulk", "POST", scopedPayload({
     doc_ids: docIds,

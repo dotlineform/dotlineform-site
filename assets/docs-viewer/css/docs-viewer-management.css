@@ -675,6 +675,59 @@ select.docsViewer__fieldInput--listbox{
   padding-left: 1.1rem;
 }
 
+.docsViewerScopeLifecycle{
+  display: grid;
+  gap: 0.85rem;
+}
+
+.docsViewerScopeLifecycle__summaryGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.55rem 0.85rem;
+  margin: 0;
+}
+
+.docsViewerScopeLifecycle__summaryGrid > div{
+  display: grid;
+  gap: 0.12rem;
+}
+
+.docsViewerScopeLifecycle__summaryGrid dt,
+.docsViewerScopeLifecycle__section > h3{
+  margin: 0;
+  color: var(--docs-viewer-muted, var(--muted, #555));
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  font-weight: 600;
+  line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
+}
+
+.docsViewerScopeLifecycle__summaryGrid dd{
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  line-height: var(--docs-viewer-line-snug, var(--line-snug, 1.25));
+}
+
+.docsViewerScopeLifecycle__section{
+  display: grid;
+  gap: 0.35rem;
+}
+
+.docsViewerScopeLifecycle__list{
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
+  line-height: var(--docs-viewer-line-normal, var(--line-normal, 1.45));
+}
+
+.docsViewerScopeLifecycle__list > li{
+  overflow-wrap: anywhere;
+}
+
+.docsViewerScopeLifecycle__empty{
+  margin: 0;
+}
+
 .docsViewer__modalActions{
   display: flex;
   flex-wrap: wrap;

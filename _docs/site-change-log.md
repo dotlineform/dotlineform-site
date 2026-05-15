@@ -17,6 +17,34 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-15] Added Docs Viewer Scope Lifecycle UI
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / scope lifecycle UI
+
+**Summary:**
+Added the management UI flow for creating and deleting Docs Viewer scopes.
+The `/docs/?mode=manage` Actions menu now exposes capability-gated `New scope` and `Delete scope` commands.
+Scope creation collects the required metadata, previews the planned write set, and applies only after confirmation.
+Scope deletion asks the operator to select an eligible user-created scope before previewing and applying the manifest-backed delete plan.
+
+**Effect:**
+The Docs Viewer scope lifecycle feature now has a browser-owned preview/apply workflow against the completed server endpoints.
+The implementation keeps the route coordinator thin by moving the unique modal flow into a dedicated lifecycle module while reusing the existing Docs Viewer management modal shell.
+
+**Affected files/docs:**
+
+- `_includes/docs_viewer_shell.html`
+- `assets/docs-viewer/js/docs-viewer-management.js`
+- `assets/docs-viewer/js/docs-viewer-management-client.js`
+- `assets/docs-viewer/js/docs-viewer-management-modals.js`
+- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js`
+- `assets/docs-viewer/css/docs-viewer-management.css`
+- `assets/docs-viewer/data/ui-text.json`
+- [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder)
+- [Docs Viewer New Scope Button Request](/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button)
+
 ## [2026-05-15] Added Docs Viewer Scope Delete Apply
 
 **Status:** implemented

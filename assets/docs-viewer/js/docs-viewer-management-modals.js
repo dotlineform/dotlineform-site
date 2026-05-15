@@ -66,7 +66,7 @@ function renderModalFrame(options) {
     '</div>';
 }
 
-function openManagementModal(options = {}) {
+export function openDocsViewerManagementModal(options = {}) {
   var host = createModalHost({ root: options.root });
   var restoreFocus = document.activeElement;
   host.innerHTML = renderModalFrame(options);
@@ -102,6 +102,11 @@ function openManagementModal(options = {}) {
       }
     }
 
+    var api = {
+      host: host,
+      setStatus: setStatus
+    };
+
     function close(value) {
       cleanup();
       resolve(value);
@@ -113,7 +118,7 @@ function openManagementModal(options = {}) {
 
     function submit() {
       var result = typeof options.onSubmit === "function"
-        ? options.onSubmit({ host: host, setStatus: setStatus })
+        ? options.onSubmit(api)
         : { confirmed: true };
       if (result === false) return;
       close(result || { confirmed: true });
@@ -142,6 +147,9 @@ function openManagementModal(options = {}) {
       modal.addEventListener("click", function (event) {
         if (event.target === modal) cancel();
       });
+    }
+    if (typeof options.onOpen === "function") {
+      options.onOpen(api);
     }
 
     window.setTimeout(function () {
@@ -195,7 +203,7 @@ function trapModalFocus(event, modal) {
 }
 
 export function openDocsViewerConfirmModal(options = {}) {
-  return openManagementModal({
+  return openDocsViewerManagementModal({
     root: options.root,
     title: options.title,
     closeLabel: options.closeLabel || options.cancelLabel,
@@ -218,7 +226,7 @@ export function openDocsViewerTextInputModal(options = {}) {
       '<input class="docsViewer__fieldInput" id="' + escapeHtml(inputId) + '" type="text" autocomplete="off" spellcheck="false" value="' + escapeHtml(options.initialValue || "") + '">' +
     '</label>';
 
-  return openManagementModal({
+  return openDocsViewerManagementModal({
     root: options.root,
     title: options.title,
     closeLabel: options.closeLabel || options.cancelLabel,
@@ -256,7 +264,7 @@ export function openDocsViewerChoiceModal(options = {}) {
     '</label>';
   }).join("");
 
-  return openManagementModal({
+  return openDocsViewerManagementModal({
     root: options.root,
     title: options.title,
     closeLabel: options.closeLabel || options.cancelLabel,

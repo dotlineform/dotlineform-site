@@ -33,6 +33,13 @@ import {
   renderStatusPillsMarkup
 } from "./docs-viewer-management-render.js";
 import {
+  openCreateScopeFlow,
+  openDeleteScopeFlow,
+  scopeCreateSupported,
+  scopeDeleteSupported,
+  scopeLifecycleDeleteTargets
+} from "./docs-viewer-scope-lifecycle.js";
+import {
   buildDocsViewerDeletePreviewBody,
   createDocsViewerManagementModalController,
   openDocsViewerChoiceModal,
@@ -50,6 +57,8 @@ export function initDocsViewerManagement(context) {
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
   var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
+  var manageNewScopeButton = document.getElementById("docsViewerManageNewScopeButton");
+  var manageDeleteScopeButton = document.getElementById("docsViewerManageDeleteScopeButton");
   var manageImportButton = document.getElementById("docsViewerManageImportButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageEditButton = document.getElementById("docsViewerManageEditButton");
@@ -571,6 +580,17 @@ export function initDocsViewerManagement(context) {
         hideManageActionsMenu();
       }
     }
+    if (manageNewScopeButton) {
+      var newScopeAvailable = state.managementAvailable && scopeCreateSupported(state.managementCapabilities);
+      manageNewScopeButton.hidden = !newScopeAvailable;
+      manageNewScopeButton.disabled = state.managementBusy || !newScopeAvailable;
+    }
+    if (manageDeleteScopeButton) {
+      var deleteScopeAvailable = state.managementAvailable && scopeDeleteSupported(state.managementCapabilities);
+      var deleteScopeTargets = scopeLifecycleDeleteTargets(state.managementCapabilities);
+      manageDeleteScopeButton.hidden = !deleteScopeAvailable;
+      manageDeleteScopeButton.disabled = state.managementBusy || !deleteScopeAvailable || deleteScopeTargets.length === 0;
+    }
     if (manageImportButton) {
       manageImportButton.disabled = state.managementBusy || !state.managementAvailable;
     }
@@ -607,6 +627,12 @@ export function initDocsViewerManagement(context) {
       return;
     }
 
+    state.managementCapabilityCheckId += 1;
+    checkManagementCapabilities(0, state.managementCapabilityCheckId);
+  }
+
+  function refreshManagementCapabilities() {
+    if (!state.managementMode || !context.managementBaseUrl) return;
     state.managementCapabilityCheckId += 1;
     checkManagementCapabilities(0, state.managementCapabilityCheckId);
   }
@@ -920,6 +946,39 @@ export function initDocsViewerManagement(context) {
     handleSettingsSave();
   }
 
+  function scopeLifecycleCallbacks() {
+    return {
+      onApplied: refreshManagementCapabilities,
+      render: renderManagementUi,
+      setBusy: setManagementBusy,
+      setMessage: setManagementMessage
+    };
+  }
+
+  function handleCreateScope() {
+    hideContextMenu();
+    hideManageActionsMenu();
+    return openCreateScopeFlow({
+      root: root,
+      state: state,
+      capabilities: state.managementCapabilities,
+      clientOptions: managementClientOptions(),
+      callbacks: scopeLifecycleCallbacks()
+    });
+  }
+
+  function handleDeleteScope() {
+    hideContextMenu();
+    hideManageActionsMenu();
+    return openDeleteScopeFlow({
+      root: root,
+      state: state,
+      capabilities: state.managementCapabilities,
+      clientOptions: managementClientOptions(),
+      callbacks: scopeLifecycleCallbacks()
+    });
+  }
+
   async function handleArchiveDoc() {
     var doc = currentSelectedDoc();
     if (!doc) return;
@@ -1205,6 +1264,14 @@ export function initDocsViewerManagement(context) {
     if (manageSettingsButton) {
       manageSettingsButton.textContent = context.getConfigText(config, "docs_viewer.settings_button", "Settings");
     }
+    if (manageNewScopeButton) {
+      state.managementText.scopeNewButton = context.getConfigText(config, "docs_viewer.scope_new_button", state.managementText.scopeNewButton);
+      manageNewScopeButton.textContent = state.managementText.scopeNewButton;
+    }
+    if (manageDeleteScopeButton) {
+      state.managementText.scopeDeleteMenuButton = context.getConfigText(config, "docs_viewer.scope_delete_menu_button", state.managementText.scopeDeleteMenuButton);
+      manageDeleteScopeButton.textContent = state.managementText.scopeDeleteMenuButton;
+    }
     if (contextCopyLinkButton) {
       state.managementText.copyLinkLabel = context.getConfigText(config, "docs_viewer.copy_link_label", state.managementText.copyLinkLabel);
       contextCopyLinkButton.textContent = state.managementText.copyLinkLabel;
@@ -1264,6 +1331,45 @@ export function initDocsViewerManagement(context) {
     state.managementText.settingsSaved = context.getConfigText(config, "docs_viewer.settings_saved", state.managementText.settingsSaved);
     state.managementText.settingsLoadFailed = context.getConfigText(config, "docs_viewer.settings_load_failed", state.managementText.settingsLoadFailed);
     state.managementText.settingsSaveFailed = context.getConfigText(config, "docs_viewer.settings_save_failed", state.managementText.settingsSaveFailed);
+    state.managementText.scopeCreateTitle = context.getConfigText(config, "docs_viewer.scope_create_title", state.managementText.scopeCreateTitle);
+    state.managementText.scopeCreateIntro = context.getConfigText(config, "docs_viewer.scope_create_intro", state.managementText.scopeCreateIntro);
+    state.managementText.scopeIdLabel = context.getConfigText(config, "docs_viewer.scope_id_label", state.managementText.scopeIdLabel);
+    state.managementText.scopeTitleLabel = context.getConfigText(config, "docs_viewer.scope_title_label", state.managementText.scopeTitleLabel);
+    state.managementText.scopePublishingModeLabel = context.getConfigText(config, "docs_viewer.scope_publishing_mode_label", state.managementText.scopePublishingModeLabel);
+    state.managementText.scopePublicReadonlyMode = context.getConfigText(config, "docs_viewer.scope_public_readonly_mode", state.managementText.scopePublicReadonlyMode);
+    state.managementText.scopeLocalCommittedMode = context.getConfigText(config, "docs_viewer.scope_local_committed_mode", state.managementText.scopeLocalCommittedMode);
+    state.managementText.scopeLocalUncommittedMode = context.getConfigText(config, "docs_viewer.scope_local_uncommitted_mode", state.managementText.scopeLocalUncommittedMode);
+    state.managementText.scopePublicReadonlyModeNote = context.getConfigText(config, "docs_viewer.scope_public_readonly_mode_note", state.managementText.scopePublicReadonlyModeNote);
+    state.managementText.scopeLocalCommittedModeNote = context.getConfigText(config, "docs_viewer.scope_local_committed_mode_note", state.managementText.scopeLocalCommittedModeNote);
+    state.managementText.scopeLocalUncommittedModeNote = context.getConfigText(config, "docs_viewer.scope_local_uncommitted_mode_note", state.managementText.scopeLocalUncommittedModeNote);
+    state.managementText.scopeSourceRootLabel = context.getConfigText(config, "docs_viewer.scope_source_root_label", state.managementText.scopeSourceRootLabel);
+    state.managementText.scopeDefaultDocIdLabel = context.getConfigText(config, "docs_viewer.scope_default_doc_id_label", state.managementText.scopeDefaultDocIdLabel);
+    state.managementText.scopePublicRoutePathLabel = context.getConfigText(config, "docs_viewer.scope_public_route_path_label", state.managementText.scopePublicRoutePathLabel);
+    state.managementText.scopeWriteGeneratedLabel = context.getConfigText(config, "docs_viewer.scope_write_generated_label", state.managementText.scopeWriteGeneratedLabel);
+    state.managementText.scopeBuildSearchLabel = context.getConfigText(config, "docs_viewer.scope_build_search_label", state.managementText.scopeBuildSearchLabel);
+    state.managementText.scopePreviewButton = context.getConfigText(config, "docs_viewer.scope_preview_button", state.managementText.scopePreviewButton);
+    state.managementText.scopeSaveButton = context.getConfigText(config, "docs_viewer.scope_save_button", state.managementText.scopeSaveButton);
+    state.managementText.scopeDeleteButton = context.getConfigText(config, "docs_viewer.scope_delete_button", state.managementText.scopeDeleteButton);
+    state.managementText.scopeResultOkButton = context.getConfigText(config, "docs_viewer.scope_result_ok_button", state.managementText.scopeResultOkButton);
+    state.managementText.scopeCreateRequiredMessage = context.getConfigText(config, "docs_viewer.scope_create_required_message", state.managementText.scopeCreateRequiredMessage);
+    state.managementText.scopeCreateRouteRequiredMessage = context.getConfigText(config, "docs_viewer.scope_create_route_required_message", state.managementText.scopeCreateRouteRequiredMessage);
+    state.managementText.scopeCreatePreviewing = context.getConfigText(config, "docs_viewer.scope_create_previewing", state.managementText.scopeCreatePreviewing);
+    state.managementText.scopeCreatePreviewTitle = context.getConfigText(config, "docs_viewer.scope_create_preview_title", state.managementText.scopeCreatePreviewTitle);
+    state.managementText.scopeCreateSaving = context.getConfigText(config, "docs_viewer.scope_create_saving", state.managementText.scopeCreateSaving);
+    state.managementText.scopeCreateFailed = context.getConfigText(config, "docs_viewer.scope_create_failed", state.managementText.scopeCreateFailed);
+    state.managementText.scopeCreateResultTitle = context.getConfigText(config, "docs_viewer.scope_create_result_title", state.managementText.scopeCreateResultTitle);
+    state.managementText.scopeDeleteTitle = context.getConfigText(config, "docs_viewer.scope_delete_title", state.managementText.scopeDeleteTitle);
+    state.managementText.scopeDeleteIntro = context.getConfigText(config, "docs_viewer.scope_delete_intro", state.managementText.scopeDeleteIntro);
+    state.managementText.scopeDeleteTargetLabel = context.getConfigText(config, "docs_viewer.scope_delete_target_label", state.managementText.scopeDeleteTargetLabel);
+    state.managementText.scopeDeleteRequiredMessage = context.getConfigText(config, "docs_viewer.scope_delete_required_message", state.managementText.scopeDeleteRequiredMessage);
+    state.managementText.scopeDeleteNoTargets = context.getConfigText(config, "docs_viewer.scope_delete_no_targets", state.managementText.scopeDeleteNoTargets);
+    state.managementText.scopeDeletePreviewing = context.getConfigText(config, "docs_viewer.scope_delete_previewing", state.managementText.scopeDeletePreviewing);
+    state.managementText.scopeDeletePreviewTitle = context.getConfigText(config, "docs_viewer.scope_delete_preview_title", state.managementText.scopeDeletePreviewTitle);
+    state.managementText.scopeDeleteDeleting = context.getConfigText(config, "docs_viewer.scope_delete_deleting", state.managementText.scopeDeleteDeleting);
+    state.managementText.scopeDeleteFailed = context.getConfigText(config, "docs_viewer.scope_delete_failed", state.managementText.scopeDeleteFailed);
+    state.managementText.scopeDeleteBlocked = context.getConfigText(config, "docs_viewer.scope_delete_blocked", state.managementText.scopeDeleteBlocked);
+    state.managementText.scopeDeleteBlockedTitle = context.getConfigText(config, "docs_viewer.scope_delete_blocked_title", state.managementText.scopeDeleteBlockedTitle);
+    state.managementText.scopeDeleteResultTitle = context.getConfigText(config, "docs_viewer.scope_delete_result_title", state.managementText.scopeDeleteResultTitle);
     state.managementText.importCancelButton = context.getConfigText(config, "docs_viewer.import_cancel_button", state.managementText.importCancelButton);
     if (modalController) modalController.updateImportCancelLabel();
     state.managementText.copyLinkStatus = context.getConfigText(config, "docs_viewer.copy_link_status", state.managementText.copyLinkStatus);
@@ -1424,6 +1530,16 @@ export function initDocsViewerManagement(context) {
     }
     if (manageSettingsButton) {
       manageSettingsButton.addEventListener("click", openSettingsModal);
+    }
+    if (manageNewScopeButton) {
+      manageNewScopeButton.addEventListener("click", function () {
+        handleCreateScope();
+      });
+    }
+    if (manageDeleteScopeButton) {
+      manageDeleteScopeButton.addEventListener("click", function () {
+        handleDeleteScope();
+      });
     }
     if (manageActionsButton) {
       manageActionsButton.addEventListener("click", function () {

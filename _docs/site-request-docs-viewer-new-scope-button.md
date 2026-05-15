@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-new-scope-button
 title: Docs Viewer New Scope Button Request
 added_date: 2026-05-14
 last_updated: 2026-05-15
-ui_status: in-progress
+ui_status: implemented
 parent_id: change-requests
 sort_order: 30
 hidden: false
@@ -12,7 +12,7 @@ hidden: false
 
 Status:
 
-- in progress
+- implemented
 
 ## Summary
 
@@ -275,7 +275,7 @@ Acceptance:
 
 Status:
 
-- proposed
+- implemented
 
 Add the New scope and eligible Delete scope controls to the Docs Viewer management shell.
 
@@ -287,22 +287,31 @@ Commands to be added to the Actions button:
 Implementation approach:
 
 - keep `assets/docs-viewer/js/docs-viewer-management.js` as the management command coordinator
-- add a dedicated scope lifecycle UI module, likely `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js`
+- add a dedicated scope lifecycle UI module, `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js`
 - keep endpoint wrappers in `assets/docs-viewer/js/docs-viewer-management-client.js`
 - have the scope lifecycle module own create-scope form rendering, publishing-mode field state, preview/apply result rendering, delete target selection, and delete preview/apply result rendering
 - reuse the existing Docs Viewer management modal shell/helpers rather than adding a second modal framework
 - expose narrow flow entry points from the new module, such as `openCreateScopeFlow(...)` and `openDeleteScopeFlow(...)`, for `docs-viewer-management.js` to call from the Actions menu
 
+Progress:
+
+- the Actions menu now includes capability-gated `New scope` and `Delete scope` commands
+- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js` owns the scope create/delete modal flows
+- the create flow collects scope metadata, switches public route visibility based on publishing mode, previews the write set, and applies only after confirmation
+- the delete flow asks the operator to select an eligible user-created target scope before previewing deletion
+- create/delete apply payloads send `confirm: true`
+- preview and result modals show created, changed, deleted, missing, command, and URL records returned by the server
+
 Acceptance:
 
-- controls appear only in management mode with local capability support
-- publishing mode drives which fields are required
-- route path input is shown only for public read-only scopes
-- the write set is visible before submission
-- delete asks the operator to select an eligible user-created scope before previewing deletion
-- the delete plan is visible before submission
-- delete targets are limited to eligible user-created scopes
-- validation errors are shown without writing files
+- controls appear only in management mode with local capability support - implemented
+- publishing mode drives which fields are required - implemented
+- route path input is shown only for public read-only scopes - implemented
+- the write set is visible before submission - implemented
+- delete asks the operator to select an eligible user-created scope before previewing deletion - implemented
+- the delete plan is visible before submission - implemented
+- delete targets are limited to eligible user-created scopes - implemented
+- validation errors are shown without writing files - implemented
 
 ### Task 4. Implement Allowlisted Scope File Writes
 
@@ -381,7 +390,7 @@ Progress:
 
 Status:
 
-- in progress
+- implemented
 
 When implemented, update the stable Docs Viewer route-creation and management docs with the actual UI and server behavior.
 
@@ -389,12 +398,12 @@ Progress:
 
 - [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder) now owns the technical design notes.
 - The retired route-creation doc was folded into New Scopes Builder so implementation details have one stable home.
-- Final UI and apply-write behavior still need to be documented when those slices land.
+- Server apply-write behavior and the management UI flow are now documented in New Scopes Builder.
 
 Acceptance:
 
-- stable docs describe the New scope workflow accurately
-- stable docs describe the Delete scope workflow accurately
-- stable docs describe the scope manifest contract
-- safety boundaries remain documented
+- stable docs describe the New scope workflow accurately - implemented
+- stable docs describe the Delete scope workflow accurately - implemented
+- stable docs describe the scope manifest contract - implemented
+- safety boundaries remain documented - implemented
 - this request can be moved to archive when all tasks are done
