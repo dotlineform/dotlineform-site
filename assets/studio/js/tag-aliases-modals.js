@@ -200,6 +200,21 @@ export function showTagAliasesDemoteTagPopup(state, html) {
   state.refs.demoteTagPopupWrap.hidden = false;
 }
 
+export function renderTagAliasesDemoteTagPopup(state, result) {
+  const matches = result && Array.isArray(result.matches) ? result.matches : [];
+  if (!matches.length) {
+    hideTagAliasesDemoteTagPopup(state);
+    return;
+  }
+  showTagAliasesDemoteTagPopup(
+    state,
+    renderPopupTagOptions(state, matches, {
+      attribute: "data-popup-demote-tag-id",
+      truncated: Boolean(result && result.truncated)
+    })
+  );
+}
+
 export function hideTagAliasesDemoteTagPopup(state) {
   state.refs.demoteTagPopupWrap.hidden = true;
   state.refs.demoteTagPopup.innerHTML = "";
@@ -268,6 +283,21 @@ export function renderTagAliasesEditModalState(state, options = {}) {
 export function showTagAliasesEditTagPopup(state, html) {
   state.refs.editTagPopup.innerHTML = html || "";
   state.refs.editTagPopupWrap.hidden = false;
+}
+
+export function renderTagAliasesEditTagPopup(state, result) {
+  const matches = result && Array.isArray(result.matches) ? result.matches : [];
+  if (!matches.length) {
+    hideTagAliasesEditTagPopup(state);
+    return;
+  }
+  showTagAliasesEditTagPopup(
+    state,
+    renderPopupTagOptions(state, matches, {
+      attribute: "data-popup-tag-id",
+      truncated: Boolean(result && result.truncated)
+    })
+  );
 }
 
 export function hideTagAliasesEditTagPopup(state) {
@@ -494,6 +524,24 @@ function renderSelectedTagChips(state, tagIds, removeAttribute) {
       </span>
     `;
   }).join("");
+}
+
+function renderPopupTagOptions(state, matches, options) {
+  const attribute = options && options.attribute ? options.attribute : "data-popup-tag-id";
+  const chips = matches.map((item) => `
+    <button
+      type="button"
+      class="${classNames(UI_CLASS.popupPill, chipGroupClass(item.group))}"
+      ${attribute}="${escapeHtml(item.tagId)}"
+      title="${escapeHtml(item.tagId)}"
+    >
+      ${escapeHtml(item.label)}
+    </button>
+  `);
+  if (options && options.truncated) {
+    chips.push(`<span class="${classNames(UI_CLASS.popupPill, UI_CLASS.popupMore)}" title="${escapeHtml(aliasesText(state.config, "popup_more_title", "More matches available"))}">&hellip;</span>`);
+  }
+  return chips.join("");
 }
 
 function renderGroupInfoControl(state) {
