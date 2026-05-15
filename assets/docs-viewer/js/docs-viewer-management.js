@@ -35,6 +35,12 @@ import {
   renderSettingsWarningsMarkup,
   renderStatusPillsMarkup
 } from "./docs-viewer-management-render.js";
+import {
+  buildDocsViewerDeletePreviewBody,
+  openDocsViewerChoiceModal,
+  openDocsViewerConfirmModal,
+  openDocsViewerTextInputModal
+} from "./docs-viewer-management-modals.js";
 
 export function initDocsViewerManagement(context) {
   var root = context.root;
@@ -293,13 +299,20 @@ export function initDocsViewerManagement(context) {
     }).join(", ");
   }
 
-  function viewabilityTargetDocIds(doc) {
+  async function viewabilityTargetDocIds(doc) {
     var ancestors = nonViewableAncestorDocs(doc);
     if (ancestors.length) {
       var ancestorMessage = context.formatText(state.managementText.viewableAncestorPrompt, {
         titles: docTitleList(ancestors)
       });
-      if (!window.confirm(ancestorMessage)) {
+      var confirmedAncestors = await openDocsViewerConfirmModal({
+        root: root,
+        title: state.managementText.viewableAncestorTitle,
+        body: ancestorMessage,
+        primaryLabel: state.managementText.confirmContinueButton,
+        cancelLabel: state.managementText.cancelButton
+      });
+      if (!confirmedAncestors) {
         return null;
       }
     }
@@ -307,14 +320,22 @@ export function initDocsViewerManagement(context) {
     var includeDescendants = false;
     var descendantIds = Array.from(collectAllDescendantDocIds(doc.doc_id, new Set()));
     if (descendantIds.length) {
-      var descendantChoice = window.prompt(
-        state.managementText.viewableDescendantPrompt,
-        "selected"
-      );
-      if (descendantChoice === null) {
+      var descendantChoice = await openDocsViewerChoiceModal({
+        root: root,
+        title: state.managementText.viewableDescendantTitle,
+        body: state.managementText.viewableDescendantPrompt,
+        value: "selected",
+        choices: [
+          { value: "selected", label: state.managementText.viewableDescendantSelectedLabel },
+          { value: "all", label: state.managementText.viewableDescendantAllLabel }
+        ],
+        primaryLabel: state.managementText.confirmContinueButton,
+        cancelLabel: state.managementText.cancelButton
+      });
+      if (!descendantChoice || !descendantChoice.confirmed) {
         return null;
       }
-      var normalizedChoice = descendantChoice.trim().toLowerCase();
+      var normalizedChoice = String(descendantChoice.value || "").trim().toLowerCase();
       if (normalizedChoice === "all") {
         includeDescendants = true;
       } else if (normalizedChoice !== "selected") {
@@ -944,11 +965,19 @@ export function initDocsViewerManagement(context) {
     renderManagementUi();
   }
 
-  function handleCreateDoc() {
-    var titleInput = window.prompt("New doc title", "New Doc");
-    if (titleInput == null) return;
+  async function handleCreateDoc() {
+    var titleResult = await openDocsViewerTextInputModal({
+      root: root,
+      title: state.managementText.createDocTitle,
+      label: state.managementText.createDocLabel,
+      initialValue: state.managementText.createDocDefaultTitle,
+      defaultValue: state.managementText.createDocDefaultTitle,
+      primaryLabel: state.managementText.createDocButton,
+      cancelLabel: state.managementText.cancelButton
+    });
+    if (!titleResult || !titleResult.confirmed) return;
 
-    var title = String(titleInput || "").trim() || "New Doc";
+    var title = String(titleResult.value || "").trim() || state.managementText.createDocDefaultTitle;
     var currentDoc = currentSelectedDoc();
 
     setManagementBusy(true);
@@ -971,14 +1000,22 @@ export function initDocsViewerManagement(context) {
       });
   }
 
-  function handleCreateRelatedDoc(kind) {
+  async function handleCreateRelatedDoc(kind) {
     var baseDoc = currentContextMenuDoc();
     if (!baseDoc) return;
 
-    var titleInput = window.prompt(kind === "child" ? "New child title" : "New sibling title", "New Doc");
-    if (titleInput == null) return;
+    var titleResult = await openDocsViewerTextInputModal({
+      root: root,
+      title: kind === "child" ? state.managementText.createChildDocTitle : state.managementText.createSiblingDocTitle,
+      label: state.managementText.createDocLabel,
+      initialValue: state.managementText.createDocDefaultTitle,
+      defaultValue: state.managementText.createDocDefaultTitle,
+      primaryLabel: state.managementText.createDocButton,
+      cancelLabel: state.managementText.cancelButton
+    });
+    if (!titleResult || !titleResult.confirmed) return;
 
-    var title = String(titleInput || "").trim() || "New Doc";
+    var title = String(titleResult.value || "").trim() || state.managementText.createDocDefaultTitle;
     var payload = {
       title: title
     };
@@ -1179,10 +1216,17 @@ export function initDocsViewerManagement(context) {
     handleSettingsSave();
   }
 
-  function handleArchiveDoc() {
+  async function handleArchiveDoc() {
     var doc = currentSelectedDoc();
     if (!doc) return;
-    if (!window.confirm("Archive " + doc.title + "?")) return;
+    var confirmed = await openDocsViewerConfirmModal({
+      root: root,
+      title: state.managementText.archiveConfirmTitle,
+      body: context.formatText(state.managementText.archiveConfirmBody, { title: doc.title }),
+      primaryLabel: state.managementText.archiveConfirmButton,
+      cancelLabel: state.managementText.cancelButton
+    });
+    if (!confirmed) return;
 
     setManagementBusy(true);
     setManagementMessage("Archiving " + doc.title + "...", false);
@@ -1201,28 +1245,6 @@ export function initDocsViewerManagement(context) {
       });
   }
 
-  function buildDeleteConfirmation(preview) {
-    var lines = ["Delete " + preview.title + "?"];
-    if (Array.isArray(preview.warnings) && preview.warnings.length) {
-      lines.push("");
-      lines.push("Warnings:");
-      preview.warnings.forEach(function (item) {
-        lines.push("- " + item);
-      });
-    }
-    if (Array.isArray(preview.inbound_refs) && preview.inbound_refs.length) {
-      lines.push("");
-      lines.push("Inbound refs:");
-      preview.inbound_refs.slice(0, 6).forEach(function (item) {
-        lines.push("- " + item.doc_id);
-      });
-      if (preview.inbound_refs.length > 6) {
-        lines.push("- +" + (preview.inbound_refs.length - 6) + " more");
-      }
-    }
-    return lines.join("\n");
-  }
-
   function handleDeleteDoc() {
     var doc = currentSelectedDoc();
     if (!doc) return;
@@ -1237,12 +1259,20 @@ export function initDocsViewerManagement(context) {
           setManagementMessage(blockerText, true);
           return null;
         }
-        if (!window.confirm(buildDeleteConfirmation(preview))) {
-          setManagementMessage("", false);
-          return null;
-        }
-        setManagementMessage("Deleting " + doc.title + "...", false);
-        return applyManagedDocDelete(doc.doc_id, managementClientOptions());
+        return openDocsViewerConfirmModal({
+          root: root,
+          title: state.managementText.deleteConfirmTitle,
+          body: buildDocsViewerDeletePreviewBody(preview),
+          primaryLabel: state.managementText.deleteConfirmButton,
+          cancelLabel: state.managementText.cancelButton
+        }).then(function (confirmed) {
+          if (!confirmed) {
+            setManagementMessage("", false);
+            return null;
+          }
+          setManagementMessage("Deleting " + doc.title + "...", false);
+          return applyManagedDocDelete(doc.doc_id, managementClientOptions());
+        });
       })
       .then(function (payload) {
         if (!payload) return;
@@ -1259,10 +1289,10 @@ export function initDocsViewerManagement(context) {
       });
   }
 
-  function handleMakeViewable() {
+  async function handleMakeViewable() {
     var doc = currentSelectedDoc();
     if (!doc || isDocViewable(doc)) return;
-    var targetDocIds = viewabilityTargetDocIds(doc);
+    var targetDocIds = await viewabilityTargetDocIds(doc);
     if (!targetDocIds) return;
 
     setManagementBusy(true);
@@ -1489,9 +1519,26 @@ export function initDocsViewerManagement(context) {
     state.managementText.undoMoveStatus = context.getConfigText(config, "docs_viewer.undo_move_status", state.managementText.undoMoveStatus);
     state.managementText.serverNotConfiguredError = context.getConfigText(config, "docs_viewer.manage_server_not_configured_error", state.managementText.serverNotConfiguredError);
     state.managementText.unavailableNote = context.getConfigText(config, "docs_viewer.manage_unavailable_note", state.managementText.unavailableNote);
+    state.managementText.cancelButton = context.getConfigText(config, "docs_viewer.modal_cancel_button", state.managementText.cancelButton);
+    state.managementText.confirmContinueButton = context.getConfigText(config, "docs_viewer.modal_continue_button", state.managementText.confirmContinueButton);
     state.managementText.viewableAncestorPrompt = context.getConfigText(config, "docs_viewer.viewable_ancestor_prompt", state.managementText.viewableAncestorPrompt);
+    state.managementText.viewableAncestorTitle = context.getConfigText(config, "docs_viewer.viewable_ancestor_title", state.managementText.viewableAncestorTitle);
     state.managementText.viewableDescendantPrompt = context.getConfigText(config, "docs_viewer.viewable_descendant_prompt", state.managementText.viewableDescendantPrompt);
+    state.managementText.viewableDescendantTitle = context.getConfigText(config, "docs_viewer.viewable_descendant_title", state.managementText.viewableDescendantTitle);
+    state.managementText.viewableDescendantSelectedLabel = context.getConfigText(config, "docs_viewer.viewable_descendant_selected_label", state.managementText.viewableDescendantSelectedLabel);
+    state.managementText.viewableDescendantAllLabel = context.getConfigText(config, "docs_viewer.viewable_descendant_all_label", state.managementText.viewableDescendantAllLabel);
     state.managementText.viewableInvalidChoice = context.getConfigText(config, "docs_viewer.viewable_invalid_choice", state.managementText.viewableInvalidChoice);
+    state.managementText.createDocTitle = context.getConfigText(config, "docs_viewer.create_doc_title", state.managementText.createDocTitle);
+    state.managementText.createChildDocTitle = context.getConfigText(config, "docs_viewer.create_child_doc_title", state.managementText.createChildDocTitle);
+    state.managementText.createSiblingDocTitle = context.getConfigText(config, "docs_viewer.create_sibling_doc_title", state.managementText.createSiblingDocTitle);
+    state.managementText.createDocLabel = context.getConfigText(config, "docs_viewer.create_doc_label", state.managementText.createDocLabel);
+    state.managementText.createDocDefaultTitle = context.getConfigText(config, "docs_viewer.create_doc_default_title", state.managementText.createDocDefaultTitle);
+    state.managementText.createDocButton = context.getConfigText(config, "docs_viewer.create_doc_button", state.managementText.createDocButton);
+    state.managementText.archiveConfirmTitle = context.getConfigText(config, "docs_viewer.archive_confirm_title", state.managementText.archiveConfirmTitle);
+    state.managementText.archiveConfirmBody = context.getConfigText(config, "docs_viewer.archive_confirm_body", state.managementText.archiveConfirmBody);
+    state.managementText.archiveConfirmButton = context.getConfigText(config, "docs_viewer.archive_confirm_button", state.managementText.archiveConfirmButton);
+    state.managementText.deleteConfirmTitle = context.getConfigText(config, "docs_viewer.delete_confirm_title", state.managementText.deleteConfirmTitle);
+    state.managementText.deleteConfirmButton = context.getConfigText(config, "docs_viewer.delete_confirm_button", state.managementText.deleteConfirmButton);
     state.managementText.metadataStatusLabel = context.getConfigText(config, "docs_viewer.metadata_status_label", state.managementText.metadataStatusLabel);
     state.managementText.metadataStatusNoneOption = context.getConfigText(config, "docs_viewer.metadata_status_none_option", state.managementText.metadataStatusNoneOption);
     state.managementText.metadataStatusSelectedSuffix = context.getConfigText(config, "docs_viewer.metadata_status_selected_suffix", state.managementText.metadataStatusSelectedSuffix);

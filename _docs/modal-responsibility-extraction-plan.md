@@ -92,6 +92,7 @@ Add files if the inventory finds additional modal behavior.
 
 Additional files found during implementation inventory:
 
+- `assets/docs-viewer/js/docs-viewer-management-modals.js`
 - `assets/studio/js/catalogue-editor-action-modals.js`
 - `assets/studio/js/catalogue-work-actions.js`
 - `assets/studio/js/catalogue-work-detail-actions.js`
@@ -125,11 +126,14 @@ Completed slices:
 - Replaced native Studio catalogue action confirmations in `assets/studio/js/catalogue-work-actions.js`, `assets/studio/js/catalogue-work-detail-actions.js`, `assets/studio/js/catalogue-series-actions.js`, and `assets/studio/js/catalogue-moment-actions.js`.
   These routes now use `assets/studio/js/catalogue-editor-action-modals.js`, a small transient confirmation wrapper over `openConfirmModal()`.
   The helper owns body-line normalization and the modal confirmation result; the route action modules still own prose import, publication, delete, service calls, status updates, and navigation.
+- Replaced Docs Viewer management native browser dialogs in `assets/docs-viewer/js/docs-viewer-management.js`.
+  The route now uses `assets/docs-viewer/js/docs-viewer-management-modals.js` for transient confirm, text-input, and choice modals covering make-viewable parent/descendant decisions, new doc title entry, archive confirmation, and delete confirmation.
+  The modal module owns shell rendering, focus entry and return, Escape/cancel behavior, local text/choice result collection, and delete preview body formatting.
+  The management controller still owns create, archive, delete, viewability writes, service calls, busy state, messages, context menu behavior, and index reloads.
 
 Inventory notes:
 
-- Remaining native browser dialogs are currently isolated to `assets/docs-viewer/js/docs-viewer-management.js`.
-  They cover move safety confirmation, move descendant prompt, new doc title prompts, archive confirmation, and delete confirmation.
+- No `window.prompt()`, `window.confirm()`, or `window.alert()` uses remain under `assets/studio/js` or `assets/docs-viewer/js` after this slice.
 - The catalogue action modules were added to the extraction file set because native confirmation dialogs lived outside the original modal file list.
 
 Verification completed:
@@ -137,6 +141,7 @@ Verification completed:
 - JavaScript syntax checks passed for changed modal/action modules.
 - JSON validation passed for changed Studio UI text files.
 - Focused Playwright checks covered the Docs HTML import conflict modal result contract and the catalogue action modal helper's cancel, primary, Escape, and multiline body behavior.
+- Focused Playwright checks covered the Docs Viewer management modal helper's confirm, Escape cancel, text input result, choice result, delete preview body formatting, and cleanup behavior.
 
 ## Completion Criteria
 
