@@ -3,7 +3,7 @@ doc_id: modal-responsibility-extraction-plan
 title: Modal Responsibility Extraction Plan
 added_date: 2026-05-15
 last_updated: 2026-05-15
-ui_status: in-progress
+ui_status: done
 parent_id: ui-request-modal-composition-pattern
 sort_order: 10
 hidden: false
@@ -12,7 +12,7 @@ hidden: false
 
 Status:
 
-- in progress
+- complete
 
 ## Summary
 
@@ -195,6 +195,9 @@ Inventory notes:
 
 - No `window.prompt()`, `window.confirm()`, or `window.alert()` uses remain under `assets/studio/js` or `assets/docs-viewer/js` after this slice.
 - The catalogue action modules were added to the extraction file set because native confirmation dialogs lived outside the original modal file list.
+- Final route-file scan found no remaining avoidable modal rendering or lifecycle bulk in the audited route/controllers. Remaining modal references are route bridge calls into extracted modal modules or shared transient modal helpers, with route-owned copy/payload/service decisions preserved.
+- `assets/studio/js/studio-modal.js` remains the shared transient modal and frame helper. It is intentionally not extracted further in this plan; it is the next pattern-redesign target.
+- Non-modal suggestion/autocomplete popups, such as tag/work search suggestions, remain route or feature-owned. They are part of inline editing/search workflows rather than modal composition, so they are out of this extraction's completion boundary.
 
 Verification completed:
 
@@ -221,6 +224,8 @@ Verification completed:
 - Focused module contract checks covered the Tag Aliases modal helper's edit/create/demote open state, field population, selected target chip rendering, group key rendering, validation-driven warning/status/button state, focus entry, and close reset lifecycle.
 - Focused module contract checks covered the Tag Aliases modal helper's edit/demote popup option rendering, escaped popup labels and IDs, truncated-match indicator, and empty-result popup hiding.
 - Focused module contract checks covered the Tag Aliases modal helper's import, patch, promotion, edit, and demote event wiring, including modal close state changes, selected file display, patch-copy callback dispatch, promotion group selection rendering, popup Escape/dismiss behavior, and tag add/remove callback dispatch.
+- Final close-out scans covered route/controller modal references, native browser dialog usage, shared modal helper usage, and intentionally retained non-modal popup references.
+- Browser smoke against the running Docs Viewer route confirmed this plan renders with `complete` status.
 
 ## Completion Criteria
 
