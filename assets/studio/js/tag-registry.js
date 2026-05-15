@@ -57,18 +57,17 @@ import {
   closeTagRegistryEditModal,
   closeTagRegistryNewModal,
   hideTagRegistryImportModal,
-  hideTagRegistryDemoteTagPopup,
   openTagRegistryDeleteModal,
   openTagRegistryDemoteModal,
   openTagRegistryEditModal,
   openTagRegistryNewModal,
   renderTagRegistryDemoteSelectionState,
+  renderTagRegistryDemoteTagPopup,
   renderTagRegistryDeleteImpactPreview,
   renderTagRegistryNewTagModalState,
   renderTagRegistryModals,
   setTagRegistryImportResult,
   setTagRegistryDeleteImpactStatus,
-  showTagRegistryDemoteTagPopup,
   showTagRegistryPatchModal,
   wireTagRegistryModalEvents
 } from "./tag-registry-modals.js";
@@ -826,24 +825,7 @@ function getDemoteTagMatches(state, query) {
 function renderDemoteTagPopup(state) {
   if (!state.demoteState) return;
   const result = getDemoteTagMatches(state, state.refs.demoteTagSearch.value);
-  if (!result.matches.length) {
-    hideTagRegistryDemoteTagPopup(state);
-    return;
-  }
-  const chips = result.matches.map((item) => `
-    <button
-      type="button"
-      class="${classNames(UI_CLASS.popupPill, chipGroupClass(item.group))}"
-      data-popup-demote-tag-id="${escapeHtml(item.tagId)}"
-      title="${escapeHtml(item.tagId)}"
-    >
-      ${escapeHtml(item.label)}
-    </button>
-  `);
-  if (result.truncated) {
-    chips.push(`<span class="${classNames(UI_CLASS.popupPill, UI_CLASS.popupMore)}" title="${escapeHtml(registryText(state.config, "popup_more_title", "More matches available"))}">...</span>`);
-  }
-  showTagRegistryDemoteTagPopup(state, chips.join(""));
+  renderTagRegistryDemoteTagPopup(state, result);
 }
 
 function addDemoteTag(state, tagId) {

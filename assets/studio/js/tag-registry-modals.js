@@ -350,6 +350,21 @@ export function showTagRegistryDemoteTagPopup(state, html) {
   state.refs.demoteTagPopupWrap.hidden = false;
 }
 
+export function renderTagRegistryDemoteTagPopup(state, result) {
+  const matches = result && Array.isArray(result.matches) ? result.matches : [];
+  if (!matches.length) {
+    hideTagRegistryDemoteTagPopup(state);
+    return;
+  }
+  showTagRegistryDemoteTagPopup(
+    state,
+    renderPopupTagOptions(state, matches, {
+      attribute: "data-popup-demote-tag-id",
+      truncated: Boolean(result && result.truncated)
+    })
+  );
+}
+
 export function hideTagRegistryDemoteTagPopup(state) {
   state.refs.demoteTagPopupWrap.hidden = true;
   state.refs.demoteTagPopup.innerHTML = "";
@@ -612,6 +627,24 @@ function renderTagRegistryDemoteTagList(state, selectedItems) {
     </span>
   `).join("");
   state.refs.demoteTagList.innerHTML = rows || `<span class="${UI_CLASS.empty}">${escapeHtml(registryText(state.config, "empty_state", "none"))}</span>`;
+}
+
+function renderPopupTagOptions(state, matches, options = {}) {
+  const attribute = options.attribute || "data-popup-tag-id";
+  const chips = matches.map((item) => `
+    <button
+      type="button"
+      class="${classNames(UI_CLASS.popupPill, chipGroupClass(item.group))}"
+      ${attribute}="${escapeHtml(item.tagId)}"
+      title="${escapeHtml(item.tagId)}"
+    >
+      ${escapeHtml(item.label)}
+    </button>
+  `);
+  if (options.truncated) {
+    chips.push(`<span class="${classNames(UI_CLASS.popupPill, UI_CLASS.popupMore)}" title="${escapeHtml(registryText(state.config, "popup_more_title", "More matches available"))}">...</span>`);
+  }
+  return chips.join("");
 }
 
 function renderDeleteTagMeta(state, tag) {
