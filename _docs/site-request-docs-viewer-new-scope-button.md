@@ -204,6 +204,18 @@ The result should list:
 - public routes must remain read-only even when `mode=manage` appears in the URL
 - generated docs/search data should be rebuilt or explicitly reported as stale after scope config changes
 
+## Key Decisions
+
+- Dry-run should exist in the CLI/server contract but should not be exposed as a separate UI mode.
+- The UI uses preview and save; save writes the new scope and runs required follow-through.
+- All scope types should be tracked in a manifest-style JSON file.
+- Existing scopes should be retrospectively added to the manifest.
+- The manifest should distinguish user-created tool scopes from system-owned scopes.
+- Delete scope belongs in the same implementation and should only allow deletion of user-created tool scopes.
+- Delete should warn about missing manifest files but continue deleting files that still exist.
+- Backups remain under normal backup retention after scope deletion.
+- New source roots should include a default welcome page.
+
 ## Implementation Tasks
 
 ### Task 1. Define Manifest Schema And Backfill Existing Scopes
@@ -322,16 +334,4 @@ Acceptance:
 - stable docs describe the Delete scope workflow accurately
 - stable docs describe the scope manifest contract
 - safety boundaries remain documented
-- this request can be moved to completed requests or archive when all tasks are done
-
-## Decisions
-
-- Dry-run should exist in the CLI/server contract but should not be exposed as a separate UI mode.
-- The UI uses preview and save; save writes the new scope and runs required follow-through.
-- All scope types should be tracked in a manifest-style JSON file.
-- Existing scopes should be retrospectively added to the manifest.
-- The manifest should distinguish user-created tool scopes from system-owned scopes.
-- Delete scope belongs in the same implementation and should only allow deletion of user-created tool scopes.
-- Delete should warn about missing manifest files but continue deleting files that still exist.
-- Backups remain under normal backup retention after scope deletion.
-- New source roots should include a default welcome page.
+- this request can be moved to archive when all tasks are done

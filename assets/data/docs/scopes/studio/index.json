@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T21:18:43Z",
+  "generated_at": "2026-05-15T21:21:42Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1047,7 +1047,7 @@
       "source_path": "site-request-docs-viewer-new-scope-button.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-new-scope-button.json",
-      "content_text_length": 11610,
+      "content_text_length": 11592,
       "ui_status": "draft"
     },
     {
