@@ -581,16 +581,21 @@ export async function applyWorkDetailPublicationChange(state, context) {
         defaultText: "Unpublish this detail?",
         includeDirtyNote: context.draftHasChanges()
       });
+      state.isBuilding = false;
+      context.updateEditorState();
       const confirmed = await confirmCatalogueActionModal(state, {
         title: t(state, context, "publication_unpublish_confirm_title", "Confirm unpublish"),
         message: summary,
         primaryLabel: t(state, context, "publication_unpublish_confirm_button", "Unpublish"),
-        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
+        restoreFocus: state.publicationButton
       });
       if (!confirmed) {
         setTextWithState(context, state.statusNode, t(state, context, "publication_status_cancelled", "Publication change cancelled."));
         return;
       }
+      state.isBuilding = true;
+      context.updateEditorState();
     }
 
     setTextWithState(
@@ -712,18 +717,22 @@ export async function deleteCurrentDetail(state, context) {
       text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
       defaultText: "Delete this source record?"
     });
+    state.isDeleting = false;
+    context.updateEditorState();
     const confirmed = await confirmCatalogueActionModal(state, {
       title: t(state, context, "delete_confirm_title", "Confirm delete"),
       message: summary,
       primaryLabel: t(state, context, "delete_confirm_button", "Delete"),
-      cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+      cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
+      restoreFocus: state.deleteButton
     });
     if (!confirmed) {
       setTextWithState(context, state.statusNode, t(state, context, "delete_status_cancelled", "Delete cancelled."));
-      state.isDeleting = false;
       context.updateEditorState();
       return;
     }
+    state.isDeleting = true;
+    context.updateEditorState();
     setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Deleting source record…"));
     await applyCatalogueDelete(request);
     const route = getStudioRoute(state.config, "catalogue_work_editor");

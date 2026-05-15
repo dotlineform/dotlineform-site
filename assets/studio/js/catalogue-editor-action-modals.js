@@ -13,7 +13,9 @@ export async function confirmCatalogueActionModal(state, options = {}) {
     title: options.title,
     body: modalBodyLines(options.message),
     primaryLabel: options.primaryLabel,
-    cancelLabel: options.cancelLabel
+    cancelLabel: options.cancelLabel,
+    size: options.size || "compact",
+    restoreFocus: options.restoreFocus
   });
   return Boolean(result && result.confirmed);
 }
