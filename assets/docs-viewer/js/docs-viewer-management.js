@@ -30,13 +30,11 @@ import {
   rowDropPosition
 } from "./docs-viewer-drag-drop.js";
 import {
-  renderMetadataParentPopupMarkup,
-  renderMetadataStatusOptionsMarkup,
-  renderSettingsWarningsMarkup,
   renderStatusPillsMarkup
 } from "./docs-viewer-management-render.js";
 import {
   buildDocsViewerDeletePreviewBody,
+  createDocsViewerManagementModalController,
   openDocsViewerChoiceModal,
   openDocsViewerConfirmModal,
   openDocsViewerTextInputModal
@@ -95,11 +93,7 @@ export function initDocsViewerManagement(context) {
   var settingsSaveButton = document.getElementById("docsViewerSettingsSaveButton");
   var docsImportRequestPromise = null;
   var docsImportInitialized = false;
-  var importModalCancelButton = null;
-  var metadataModalResolve = null;
-  var metadataParentOptionRecords = [];
-  var metadataParentActiveIndex = -1;
-  var settingsFieldState = null;
+  var modalController = null;
 
   function viewerScope() {
     return context.viewerScope();
@@ -215,16 +209,8 @@ export function initDocsViewerManagement(context) {
     return state.managementMode && state.managementAvailable;
   }
 
-  function metadataModalOpen() {
-    return Boolean(metadataModal && !metadataModal.hidden);
-  }
-
-  function importModalOpen() {
-    return Boolean(importModal && !importModal.hidden);
-  }
-
   function settingsModalOpen() {
-    return Boolean(settingsModal && !settingsModal.hidden);
+    return Boolean(modalController && modalController.settingsModalOpen());
   }
 
   function hideContextMenu() {
@@ -379,186 +365,6 @@ export function initDocsViewerManagement(context) {
     return options;
   }
 
-  function metadataParentOptionDisplay(option) {
-    return metadataParentOptionTitle(option);
-  }
-
-  function metadataParentOptionTitle(option) {
-    if (!option || !option.value) return state.managementText.metadataParentRootOption;
-    return String(option.label || "").replace(/^(-\s*)+/, "");
-  }
-
-  function hideMetadataParentPopup() {
-    metadataParentOptionRecords = [];
-    metadataParentActiveIndex = -1;
-    if (metadataParentPopup) {
-      metadataParentPopup.hidden = true;
-      metadataParentPopup.innerHTML = "";
-    }
-    if (metadataParentInput) {
-      metadataParentInput.setAttribute("aria-expanded", "false");
-      metadataParentInput.removeAttribute("aria-activedescendant");
-    }
-  }
-
-  function setMetadataParentActiveIndex(index) {
-    if (!metadataParentPopup || !metadataParentInput) return;
-    metadataParentActiveIndex = index;
-    metadataParentPopup.querySelectorAll("[data-parent-index]").forEach(function (button) {
-      var active = Number(button.getAttribute("data-parent-index")) === metadataParentActiveIndex;
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-selected", active ? "true" : "false");
-      if (active) {
-        metadataParentInput.setAttribute("aria-activedescendant", button.id);
-      }
-    });
-    if (metadataParentActiveIndex < 0) {
-      metadataParentInput.removeAttribute("aria-activedescendant");
-    }
-  }
-
-  function metadataParentMatches(doc, query) {
-    var normalizedQuery = String(query || "").trim().toLowerCase();
-    if (!normalizedQuery) return [];
-    return metadataParentOptions(doc).filter(function (option) {
-      var display = metadataParentOptionDisplay(option).toLowerCase();
-      var title = metadataParentOptionTitle(option).toLowerCase();
-      var value = String(option && option.value || "").toLowerCase();
-      return display.includes(normalizedQuery) || title.includes(normalizedQuery) || value.includes(normalizedQuery);
-    }).slice(0, 14);
-  }
-
-  function renderMetadataParentPopup(doc) {
-    if (!metadataParentInput || !metadataParentPopup) return;
-    var matches = metadataParentMatches(doc, metadataParentInput.value);
-    metadataParentOptionRecords = matches;
-    if (!String(metadataParentInput.value || "").trim()) {
-      hideMetadataParentPopup();
-      return;
-    }
-    if (!matches.length) {
-      metadataParentPopup.innerHTML = renderMetadataParentPopupMarkup(matches, {
-        emptyText: state.managementText.metadataParentNoMatches
-      });
-      metadataParentPopup.hidden = false;
-      metadataParentInput.setAttribute("aria-expanded", "true");
-      metadataParentActiveIndex = -1;
-      metadataParentInput.removeAttribute("aria-activedescendant");
-      return;
-    }
-    metadataParentPopup.innerHTML = renderMetadataParentPopupMarkup(matches, {
-      optionTitle: metadataParentOptionTitle
-    });
-    metadataParentPopup.hidden = false;
-    metadataParentInput.setAttribute("aria-expanded", "true");
-    setMetadataParentActiveIndex(0);
-  }
-
-  function selectMetadataParentOption(index) {
-    var option = metadataParentOptionRecords[index];
-    if (!option || !metadataParentInput) return;
-    metadataParentInput.value = metadataParentOptionDisplay(option);
-    hideMetadataParentPopup();
-    metadataParentInput.focus();
-  }
-
-  function renderMetadataParentOptions(doc) {
-    if (!metadataParentInput) return;
-    var currentParentId = String(doc && doc.parent_id || "").trim();
-    var options = metadataParentOptions(doc);
-    var currentOption = options.find(function (option) {
-      return option.value === currentParentId;
-    }) || options[0];
-    metadataParentInput.value = metadataParentOptionDisplay(currentOption);
-    hideMetadataParentPopup();
-  }
-
-  function resolveMetadataParentId(doc) {
-    if (!metadataParentInput) return "";
-    var inputValue = String(metadataParentInput.value || "").trim();
-    var rootLabel = state.managementText.metadataParentRootOption;
-    if (!inputValue || inputValue.toLowerCase() === rootLabel.toLowerCase()) return "";
-    var options = metadataParentOptions(doc);
-    var exactDocId = options.find(function (option) {
-      return option.value && option.value === inputValue;
-    });
-    if (exactDocId) return exactDocId.value;
-    var exactTitle = options.filter(function (option) {
-      return option.value && option.label.replace(/^(-\s*)+/, "") === inputValue;
-    });
-    if (exactTitle.length === 1) return exactTitle[0].value;
-    return null;
-  }
-
-  function metadataStatusOptions() {
-    var options = [{
-      value: "",
-      label: state.managementText.metadataStatusNoneOption
-    }];
-    state.uiStatuses.forEach(function (status) {
-      options.push({
-        value: status.ui_status,
-        label: status.emoji + " " + status.label
-      });
-    });
-    return options;
-  }
-
-  function renderMetadataStatusOptions(doc) {
-    if (!metadataStatusInput) return;
-    var selectedValue = String(doc && doc.ui_status || "").trim();
-    renderMetadataStatusSelection(selectedValue);
-  }
-
-  function renderMetadataStatusSelection(selectedValue) {
-    if (!metadataStatusInput) return;
-    metadataStatusInput.innerHTML = renderMetadataStatusOptionsMarkup(
-      metadataStatusOptions(),
-      selectedValue,
-      state.managementText.metadataStatusSelectedSuffix
-    );
-    metadataStatusInput.size = Math.max(1, metadataStatusInput.options.length);
-  }
-
-  function dismissMetadataParentSuggestions() {
-    if (!metadataParentInput) return;
-    metadataParentInput.blur();
-    metadataParentInput.value = "";
-    hideMetadataParentPopup();
-  }
-
-  function focusWithoutScroll(target) {
-    if (!target || typeof target.focus !== "function") return;
-    try {
-      target.focus({ preventScroll: true });
-    } catch (error) {
-      var scrollX = window.scrollX;
-      var scrollY = window.scrollY;
-      target.focus();
-      window.scrollTo(scrollX, scrollY);
-    }
-  }
-
-  function closeMetadataModal(result) {
-    if (!metadataModal) return;
-    if (document.activeElement && metadataModal.contains(document.activeElement)) {
-      document.activeElement.blur();
-    }
-    dismissMetadataParentSuggestions();
-    metadataModal.hidden = true;
-    state.metadataEditingDocId = "";
-    var restoreDocId = state.metadataRestoreFocusId;
-    state.metadataRestoreFocusId = "";
-    if (metadataModalResolve) {
-      var resolve = metadataModalResolve;
-      metadataModalResolve = null;
-      resolve(result || null);
-    }
-    if (!restoreDocId || !nav) return;
-    var target = nav.querySelector('[data-doc-row-id="' + context.cssEscape(restoreDocId) + '"] .docsViewer__navLink');
-    focusWithoutScroll(target);
-  }
-
   function initializeImportModal(scope) {
     if (!importRoot || !importBootStatus || docsImportInitialized) return Promise.resolve();
     if (docsImportRequestPromise) return docsImportRequestPromise;
@@ -597,56 +403,12 @@ export function initDocsViewerManagement(context) {
     return docsImportRequestPromise;
   }
 
-  function ensureImportModalCancelButton() {
-    if (importModalCancelButton) return importModalCancelButton;
-    if (!importRoot) return null;
-    var actions = importRoot.querySelector(".docsViewerImport__actions");
-    var runButton = document.getElementById("docsHtmlImportRun");
-    if (!actions || !runButton) return null;
-    importModalCancelButton = document.createElement("button");
-    importModalCancelButton.type = "button";
-    importModalCancelButton.className = "docsViewerImport__button docsViewerImport__button--defaultWidth docsViewerImport__modalCancel";
-    importModalCancelButton.id = "docsViewerImportCancelButton";
-    importModalCancelButton.textContent = state.managementText.importCancelButton;
-    importModalCancelButton.addEventListener("click", closeImportModal);
-    actions.insertBefore(importModalCancelButton, runButton);
-    return importModalCancelButton;
-  }
-
   function openImportModal() {
-    if (!importModal || !importRoot) return;
-    var scope = viewerScope();
-    var cancelButton = ensureImportModalCancelButton();
-    importModal.hidden = false;
-    initializeImportModal(scope);
-    if (cancelButton) {
-      cancelButton.focus();
-    }
+    if (modalController) modalController.openImportModal();
   }
 
   function closeImportModal() {
-    if (!importModal) return;
-    if (document.activeElement && importModal.contains(document.activeElement)) {
-      document.activeElement.blur();
-    }
-    importModal.hidden = true;
-    if (manageImportButton) {
-      manageImportButton.focus();
-    }
-  }
-
-  function setSettingsStatus(message, stateName) {
-    if (!settingsStatus) return;
-    settingsStatus.textContent = String(message || "");
-    settingsStatus.dataset.state = stateName || "";
-    settingsStatus.hidden = !message;
-  }
-
-  function renderSettingsWarnings(warnings) {
-    if (!settingsWarnings) return;
-    var items = Array.isArray(warnings) ? warnings.filter(Boolean) : [];
-    settingsWarnings.hidden = items.length === 0;
-    settingsWarnings.innerHTML = renderSettingsWarningsMarkup(items);
+    if (modalController) modalController.closeImportModal();
   }
 
   function currentSettingsField(payload) {
@@ -661,16 +423,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function openSettingsModal() {
-    if (!settingsModal || !settingsForm || !settingsUpdatedInput) return;
-    hideContextMenu();
-    hideManageActionsMenu();
-    settingsFieldState = null;
-    settingsUpdatedInput.disabled = true;
-    if (settingsSaveButton) settingsSaveButton.disabled = true;
-    if (settingsScope) settingsScope.textContent = "scope: " + viewerScope();
-    setSettingsStatus(state.managementText.settingsLoading, "");
-    renderSettingsWarnings([]);
-    settingsModal.hidden = false;
+    if (!modalController || !modalController.openSettingsModalShell()) return;
 
     readSourceConfigSettings(managementClientOptions())
       .then(function (payload) {
@@ -678,64 +431,20 @@ export function initDocsViewerManagement(context) {
         if (!field) {
           throw new Error(state.managementText.settingsEmpty);
         }
-        settingsFieldState = field;
-        settingsUpdatedInput.checked = field.current_value !== false;
-        settingsUpdatedInput.disabled = false;
-        if (settingsSaveButton) settingsSaveButton.disabled = state.managementBusy;
-        renderSettingsWarnings(field.warnings || []);
-        setSettingsStatus("", "");
-        window.requestAnimationFrame(function () {
-          settingsUpdatedInput.focus();
-        });
+        modalController.setSettingsField(field);
       })
       .catch(function (error) {
-        settingsUpdatedInput.disabled = true;
-        if (settingsSaveButton) settingsSaveButton.disabled = true;
-        renderSettingsWarnings([]);
-        setSettingsStatus(error.message || state.managementText.settingsLoadFailed, "error");
+        modalController.setSettingsLoadError(error.message || state.managementText.settingsLoadFailed);
       });
   }
 
   function closeSettingsModal() {
-    if (!settingsModal) return;
-    if (document.activeElement && settingsModal.contains(document.activeElement)) {
-      document.activeElement.blur();
-    }
-    settingsModal.hidden = true;
-    settingsFieldState = null;
-    if (manageSettingsButton) {
-      manageSettingsButton.focus();
-    }
+    if (modalController) modalController.closeSettingsModal();
   }
 
   function openMetadataModal() {
     var doc = currentSelectedDoc();
-    if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataSummaryInput || !metadataStatusInput || !metadataHiddenInput || !metadataParentInput || !metadataSortOrderInput) {
-      return Promise.resolve(null);
-    }
-    hideContextMenu();
-    state.metadataEditingDocId = doc.doc_id;
-    state.metadataRestoreFocusId = doc.doc_id;
-    if (metadataDocId) {
-      metadataDocId.textContent = doc.doc_id;
-    }
-
-    metadataTitleInput.value = doc.title || "";
-    metadataSummaryInput.value = doc.summary || "";
-    renderMetadataStatusOptions(doc);
-    metadataHiddenInput.checked = isDocHidden(doc);
-    metadataSortOrderInput.value = doc.sort_order == null ? "" : String(doc.sort_order);
-    metadataSortOrderInput.min = "0";
-    renderMetadataParentOptions(doc);
-
-    metadataModal.hidden = false;
-    window.requestAnimationFrame(function () {
-      metadataTitleInput.focus();
-      metadataTitleInput.select();
-    });
-    return new Promise(function (resolve) {
-      metadataModalResolve = resolve;
-    });
+    return modalController ? modalController.openMetadataModal(doc) : Promise.resolve(null);
   }
 
   function updateNavDragState() {
@@ -883,7 +592,7 @@ export function initDocsViewerManagement(context) {
       metadataSaveButton.disabled = state.managementBusy;
     }
     if (settingsSaveButton && settingsModalOpen()) {
-      settingsSaveButton.disabled = state.managementBusy || !settingsFieldState;
+      settingsSaveButton.disabled = state.managementBusy || !modalController.getSettingsFieldState();
     }
     renderStatusPills();
   }
@@ -1053,7 +762,7 @@ export function initDocsViewerManagement(context) {
       return null;
     }
 
-    var parentId = resolveMetadataParentId(doc);
+    var parentId = modalController.resolveMetadataParentId(doc);
     if (parentId === null) {
       setManagementMessage(state.managementText.metadataParentInvalid, true);
       metadataParentInput.focus();
@@ -1086,7 +795,7 @@ export function initDocsViewerManagement(context) {
   function confirmMetadataModal() {
     var payload = metadataPayloadFromModal();
     if (!payload) return;
-    closeMetadataModal(payload);
+    modalController.closeMetadataModal(payload);
   }
 
   function handleEditMetadataSave(payload) {
@@ -1173,6 +882,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function handleSettingsSave() {
+    var settingsFieldState = modalController ? modalController.getSettingsFieldState() : null;
     if (!settingsUpdatedInput || !settingsFieldState) return;
     var nextValue = Boolean(settingsUpdatedInput.checked);
     var currentValue = settingsFieldState.current_value !== false;
@@ -1182,16 +892,14 @@ export function initDocsViewerManagement(context) {
     }
 
     setManagementBusy(true);
-    setSettingsStatus(state.managementText.settingsSaving, "");
+    modalController.setSettingsSaving();
     setManagementMessage(state.managementText.settingsSaving, false);
-    settingsUpdatedInput.disabled = true;
-    if (settingsSaveButton) settingsSaveButton.disabled = true;
 
     updateSourceConfigSettings({
       show_updated_date: nextValue
     }, managementClientOptions())
       .then(function (payload) {
-        renderSettingsWarnings(payload.warnings || []);
+        modalController.renderSettingsWarnings(payload.warnings || []);
         var targetDocId = state.selectedDocId || context.defaultRouteDocId() || context.defaultDocId();
         setManagementMessage("", false);
         return reloadDocsIndex(targetDocId, "").then(function () {
@@ -1200,10 +908,8 @@ export function initDocsViewerManagement(context) {
       })
       .catch(function (error) {
         var message = error.message || state.managementText.settingsSaveFailed;
-        setSettingsStatus(message, "error");
+        modalController.setSettingsSaveError(message);
         setManagementMessage(message, true);
-        settingsUpdatedInput.disabled = false;
-        if (settingsSaveButton) settingsSaveButton.disabled = false;
       })
       .finally(function () {
         setManagementBusy(false);
@@ -1561,7 +1267,7 @@ export function initDocsViewerManagement(context) {
     state.managementText.settingsLoadFailed = context.getConfigText(config, "docs_viewer.settings_load_failed", state.managementText.settingsLoadFailed);
     state.managementText.settingsSaveFailed = context.getConfigText(config, "docs_viewer.settings_save_failed", state.managementText.settingsSaveFailed);
     state.managementText.importCancelButton = context.getConfigText(config, "docs_viewer.import_cancel_button", state.managementText.importCancelButton);
-    if (importModalCancelButton) importModalCancelButton.textContent = state.managementText.importCancelButton;
+    if (modalController) modalController.updateImportCancelLabel();
     state.managementText.copyLinkStatus = context.getConfigText(config, "docs_viewer.copy_link_status", state.managementText.copyLinkStatus);
     state.managementText.copyLinkFailed = context.getConfigText(config, "docs_viewer.copy_link_failed", state.managementText.copyLinkFailed);
     if (metadataStatusLabel) {
@@ -1572,8 +1278,8 @@ export function initDocsViewerManagement(context) {
     }
     if (state.metadataEditingDocId && metadataStatusInput) {
       var metadataDoc = state.docsById.get(state.metadataEditingDocId);
-      renderMetadataStatusOptions(metadataDoc);
-      renderMetadataParentOptions(metadataDoc);
+      modalController.renderMetadataStatusOptions(metadataDoc);
+      modalController.renderMetadataParentOptions(metadataDoc);
     }
   }
 
@@ -1588,34 +1294,7 @@ export function initDocsViewerManagement(context) {
     if (manageActionsMenu && !event.target.closest(".docsViewer__manageActions")) {
       hideManageActionsMenu();
     }
-    if (metadataModalOpen()) {
-      if (metadataParentPopup && !metadataParentPopup.hidden && !event.target.closest(".docsViewer__parentPicker")) {
-        hideMetadataParentPopup();
-      }
-      var closeTrigger = event.target.closest("[data-metadata-close]");
-      if (closeTrigger) {
-        event.preventDefault();
-        closeMetadataModal();
-        return true;
-      }
-    }
-    if (importModalOpen()) {
-      var importCloseTrigger = event.target.closest("[data-import-close]");
-      if (importCloseTrigger) {
-        event.preventDefault();
-        closeImportModal();
-        return true;
-      }
-    }
-    if (settingsModalOpen()) {
-      var settingsCloseTrigger = event.target.closest("[data-settings-close]");
-      if (settingsCloseTrigger) {
-        event.preventDefault();
-        closeSettingsModal();
-        return true;
-      }
-    }
-    return false;
+    return modalController ? modalController.handleRootClick(event) : false;
   }
 
   function handleDocumentKeydown(event) {
@@ -1630,27 +1309,7 @@ export function initDocsViewerManagement(context) {
       hideManageActionsMenu();
       return true;
     }
-    if (event.key === "Escape" && metadataParentPopup && !metadataParentPopup.hidden) {
-      event.preventDefault();
-      hideMetadataParentPopup();
-      return true;
-    }
-    if (event.key === "Escape" && metadataModalOpen()) {
-      event.preventDefault();
-      closeMetadataModal();
-      return true;
-    }
-    if (event.key === "Escape" && importModalOpen()) {
-      event.preventDefault();
-      closeImportModal();
-      return true;
-    }
-    if (event.key === "Escape" && settingsModalOpen()) {
-      event.preventDefault();
-      closeSettingsModal();
-      return true;
-    }
-    return false;
+    return modalController ? modalController.handleDocumentKeydown(event) : false;
   }
 
   function bind() {
@@ -1864,87 +1523,52 @@ export function initDocsViewerManagement(context) {
       state.statusMenuOpen = false;
       renderStatusPills();
     });
-    if (metadataCloseButton) {
-      metadataCloseButton.addEventListener("click", closeMetadataModal);
-    }
-    if (metadataCancelButton) {
-      metadataCancelButton.addEventListener("click", closeMetadataModal);
-    }
-    if (settingsCloseButton) {
-      settingsCloseButton.addEventListener("click", closeSettingsModal);
-    }
-    if (settingsCancelButton) {
-      settingsCancelButton.addEventListener("click", closeSettingsModal);
-    }
-    if (metadataForm) {
-      metadataForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        confirmMetadataModal();
-      });
-    }
-    if (settingsForm) {
-      settingsForm.addEventListener("submit", handleSettingsSubmit);
-    }
-    if (metadataStatusInput) {
-      metadataStatusInput.addEventListener("change", function () {
-        renderMetadataStatusSelection(String(metadataStatusInput.value || "").trim());
-      });
-    }
-    if (metadataParentInput) {
-      metadataParentInput.addEventListener("input", function () {
-        var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-        if (doc) renderMetadataParentPopup(doc);
-      });
-      metadataParentInput.addEventListener("focus", function () {
-        var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-        if (doc) renderMetadataParentPopup(doc);
-      });
-      metadataParentInput.addEventListener("keydown", function (event) {
-        if (!metadataParentPopup || metadataParentPopup.hidden) {
-          if (event.key === "ArrowDown") {
-            var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-            if (doc) renderMetadataParentPopup(doc);
-          }
-          return;
-        }
-        if (event.key === "ArrowDown") {
-          event.preventDefault();
-          if (metadataParentOptionRecords.length) {
-            setMetadataParentActiveIndex(Math.min(metadataParentActiveIndex + 1, metadataParentOptionRecords.length - 1));
-          }
-          return;
-        }
-        if (event.key === "ArrowUp") {
-          event.preventDefault();
-          if (metadataParentOptionRecords.length) {
-            setMetadataParentActiveIndex(Math.max(metadataParentActiveIndex - 1, 0));
-          }
-          return;
-        }
-        if (event.key === "Enter" && metadataParentActiveIndex >= 0) {
-          event.preventDefault();
-          selectMetadataParentOption(metadataParentActiveIndex);
-          return;
-        }
-        if (event.key === "Escape") {
-          event.preventDefault();
-          hideMetadataParentPopup();
-        }
-      });
-    }
-    if (metadataParentPopup) {
-      metadataParentPopup.addEventListener("mousedown", function (event) {
-        if (event.target.closest("[data-parent-index]")) {
-          event.preventDefault();
-        }
-      });
-      metadataParentPopup.addEventListener("click", function (event) {
-        var button = event.target.closest("[data-parent-index]");
-        if (!button) return;
-        selectMetadataParentOption(Number(button.getAttribute("data-parent-index")));
-      });
-    }
+    if (modalController) modalController.wireEvents();
   }
+
+  modalController = createDocsViewerManagementModalController({
+    nav: nav,
+    state: state,
+    context: context,
+    refs: {
+      importModal: importModal,
+      importRoot: importRoot,
+      manageImportButton: manageImportButton,
+      metadataCancelButton: metadataCancelButton,
+      metadataCloseButton: metadataCloseButton,
+      metadataDocId: metadataDocId,
+      metadataForm: metadataForm,
+      metadataHiddenInput: metadataHiddenInput,
+      metadataModal: metadataModal,
+      metadataParentInput: metadataParentInput,
+      metadataParentPopup: metadataParentPopup,
+      metadataSortOrderInput: metadataSortOrderInput,
+      metadataStatusInput: metadataStatusInput,
+      metadataSummaryInput: metadataSummaryInput,
+      metadataTitleInput: metadataTitleInput,
+      settingsCancelButton: settingsCancelButton,
+      settingsCloseButton: settingsCloseButton,
+      settingsForm: settingsForm,
+      settingsModal: settingsModal,
+      settingsSaveButton: settingsSaveButton,
+      settingsScope: settingsScope,
+      settingsStatus: settingsStatus,
+      settingsUpdatedInput: settingsUpdatedInput,
+      settingsWarnings: settingsWarnings,
+      manageSettingsButton: manageSettingsButton
+    },
+    callbacks: {
+      currentSelectedDoc: currentSelectedDoc,
+      hideContextMenu: hideContextMenu,
+      hideManageActionsMenu: hideManageActionsMenu,
+      isDocHidden: isDocHidden,
+      metadataParentOptions: metadataParentOptions,
+      onImportOpen: initializeImportModal,
+      onMetadataSubmit: confirmMetadataModal,
+      onSettingsSubmit: handleSettingsSubmit,
+      viewerScope: viewerScope
+    }
+  });
 
   bind();
   applyConfig(context.currentViewerConfig());
