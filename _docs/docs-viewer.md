@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: "2026-05-14"
+last_updated: "2026-05-15"
 parent_id: ""
 sort_order: 40
 hidden: false
@@ -61,7 +61,7 @@ Those boundaries are intentional:
 - [Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) records what currently needs copying into another Jekyll project and how to add a Library-style scope with a management route and read-only route.
 - [Dependencies](/docs/?scope=studio&doc=docs-viewer-dependencies) records the Docs Viewer Python dependency boundary, the Docs HTML import parser/sanitizer stack, and the role of `requirements.txt`.
 - [Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling) records Docs Viewer media path conventions, import staging, standalone media imports, inline raster extraction, SVG handling, and media-copy handoff behavior.
-- [Route Creation](/docs/?scope=studio&doc=docs-viewer-route-creation) explains the route-creation model and the options for public read-only, committed local-only, and uncommitted local-only scopes.
+- [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder) records the technical design, route-creation model, publishing choices, and implementation notes for the local New scope workflow.
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) explains the current source roots and how docs trees are organised by `parent_id` and `sort_order`.
 - [Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) records when scope differences should stay in shells or data and when a true runtime fork would be justified.
 - [Viewability Workflow Spec](/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec) records the separate `viewable: true | false` visibility workflow while preserving `published` as the docs generation gate.

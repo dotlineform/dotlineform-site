@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9fdc76bfeadb4bbb7694d485bb124af2",
-    "generated_at_utc": "2026-05-15T21:18:43Z",
+    "version": "blake2b-5819eba63e26d4554e9ba8e55014793f",
+    "generated_at_utc": "2026-05-15T21:39:04Z",
     "count": 245
   },
   "entries": [
@@ -2180,44 +2180,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-14",
-      "display_meta": "2026-05-14",
+      "last_updated": "2026-05-15",
+      "display_meta": "2026-05-15",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-14",
+        "2026-05-15",
         "2026",
         "05",
-        "14"
+        "15"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-14 2026 05 14"
-    },
-    {
-      "id": "docs-viewer-route-creation",
-      "kind": "doc",
-      "title": "Docs Viewer Route Creation",
-      "href": "/docs/?scope=studio&doc=docs-viewer-route-creation",
-      "last_updated": "2026-05-13 20:20",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 20:20 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-route-creation",
-        "docs",
-        "viewer",
-        "route",
-        "creation",
-        "docs viewer route creation",
-        "docs viewer",
-        "2026-05-13 20:20",
-        "2026",
-        "05",
-        "13",
-        "20"
-      ],
-      "search_text": "docs-viewer-route-creation docs viewer route creation docs viewer route creation docs viewer 2026-05-13 20:20 2026 05 13 20"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-15 2026 05 15"
     },
     {
       "id": "site-request-script-structural-review-generate-work-pages",
@@ -2497,6 +2472,31 @@
         "35"
       ],
       "search_text": "site-request-json-schema-adoption site request json schema adoption json schema adoption request change requests change requests 2026-05-03 14:35 2026 05 03 14 35"
+    },
+    {
+      "id": "docs-viewer-new-scopes-builder",
+      "kind": "doc",
+      "title": "New Scopes Builder",
+      "href": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
+      "last_updated": "2026-05-15",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-15 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-new-scopes-builder",
+        "docs",
+        "viewer",
+        "new",
+        "scopes",
+        "builder",
+        "new scopes builder",
+        "docs viewer",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-05-15 2026 05 15"
     },
     {
       "id": "studio-ready-state",

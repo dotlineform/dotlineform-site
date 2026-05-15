@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T21:31:04Z",
+  "generated_at": "2026-05-15T21:39:04Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1047,7 +1047,7 @@
       "source_path": "site-request-docs-viewer-new-scope-button.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-new-scope-button.json",
-      "content_text_length": 11592,
+      "content_text_length": 11587,
       "ui_status": "draft"
     },
     {
@@ -1378,7 +1378,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-15",
       "parent_id": "",
       "sort_order": 40,
       "published": true,
@@ -1387,23 +1387,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 4226
-    },
-    {
-      "scope": "studio",
-      "doc_id": "docs-viewer-route-creation",
-      "title": "Docs Viewer Route Creation",
-      "added_date": "2026-05-11",
-      "last_updated": "2026-05-13 20:20",
-      "parent_id": "docs-viewer",
-      "sort_order": 40,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "docs-viewer-route-creation.md",
-      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-route-creation",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-route-creation.json",
-      "content_text_length": 5697
+      "content_text_length": 4232
     },
     {
       "scope": "studio",
@@ -1582,6 +1566,22 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-json-schema-adoption.json",
       "content_text_length": 5665,
       "ui_status": "in-progress"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer-new-scopes-builder",
+      "title": "New Scopes Builder",
+      "added_date": "2026-05-15",
+      "last_updated": "2026-05-15",
+      "parent_id": "docs-viewer",
+      "sort_order": 45,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-new-scopes-builder.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-new-scopes-builder.json",
+      "content_text_length": 6773
     },
     {
       "scope": "studio",
@@ -3399,7 +3399,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 158940
+      "content_text_length": 158924
     },
     {
       "scope": "studio",

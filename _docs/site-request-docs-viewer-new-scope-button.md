@@ -19,7 +19,7 @@ Status:
 Add a local-only New scope action to the Docs Viewer management route.
 
 The action should let a local operator create a new Docs Viewer scope from `/docs/?mode=manage` without hand-editing the source root, scope config, route page, and generated output setup.
-It should implement the future flow described in [Docs Viewer Route Creation](/docs/?scope=studio&doc=docs-viewer-route-creation).
+Implementation details should be carried forward in [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder).
 
 ## Goal
 

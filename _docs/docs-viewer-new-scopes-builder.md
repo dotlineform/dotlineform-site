@@ -1,29 +1,41 @@
 ---
-doc_id: docs-viewer-route-creation
-title: Docs Viewer Route Creation
-added_date: 2026-05-11
-last_updated: "2026-05-13 20:20"
+doc_id: docs-viewer-new-scopes-builder
+title: New Scopes Builder
+added_date: 2026-05-15
+last_updated: "2026-05-15"
 parent_id: docs-viewer
-sort_order: 40
+sort_order: 45
+hidden: false
 ---
-# Docs Viewer Route Creation
+# New Scopes Builder
 
-This document explains the route-creation model for new Docs Viewer scopes.
-It focuses on what a local scope-creation flow should create and the publishing choices after the scope exists.
+This document records the technical design and implementation notes for the Docs Viewer New Scopes Builder.
+It should be populated as the implementation progresses and reviewed fully before the feature is treated as complete.
 
-The practical target is a future local management action, such as a New scope button in `/docs/?mode=manage`.
-That action should create the same files a developer would create by hand, while keeping all write behavior local-only.
+The product request is tracked in [Docs Viewer New Scope Button Request](/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button).
+
+## Purpose
+
+The New Scopes Builder is the local-management workflow for creating and deleting Docs Viewer scopes from `/docs/?mode=manage`.
+
+It should:
+
+- create the same files a developer would otherwise create by hand
+- keep all write behavior behind the loopback docs-management server
+- preserve public read-only routes
+- show the planned write or delete set before any write
+- record ownership in a scope manifest so deletion can fail closed
 
 ## Scope Creation Boundary
 
-A docs scope is made from four parts:
+A Docs Viewer scope is made from four parts:
 
 - source root, such as `_docs_research/`
 - scope config entry in `scripts/docs/docs_scopes.json`
 - generated viewer/search outputs under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/`
 - optional read-only route page, such as `research/index.md`
 
-The localhost management server may create or update those files.
+The localhost docs-management server may create or update those files.
 The public browser runtime must not.
 
 Scope creation should run only through:
@@ -63,7 +75,7 @@ The adapter requires `docs_viewer_management_enabled: true`, which is set by `_c
 The management shell can switch scopes with the `scope` query parameter.
 Public read-only routes ignore and normalize away `scope` and `mode` so they cannot become management routes by query string.
 
-## Publishing Options
+## Publishing Modes
 
 ### Public Read-Only Scope
 
@@ -111,14 +123,19 @@ The scope exists only in the local working tree.
 This option needs clear cleanup expectations because generated files and config edits can otherwise look like accidental repo drift.
 The management UI should label this mode as local-only and make the write set visible before creating files.
 
-## Future New Scope Button
+## Current Implementation State
 
-A future New scope button should be available only in `/docs/?mode=manage`.
-It should ask for the publishing mode before writing files.
+Initial server-side foundation is in place:
 
-The first server-side contract is in place through preview endpoints on the localhost docs-management server.
-`GET /capabilities` now advertises scope lifecycle preview support and reports whether existing scopes are manifest-recorded and delete-eligible.
-Existing scopes are backfilled in `scripts/docs/docs_scope_manifest.json` as system-owned records, so they are not eligible for lifecycle deletion.
+- `scripts/docs/docs_scope_manifest.json` records existing scopes as system-owned
+- `scripts/docs/docs_scope_manifest.py` owns manifest loading, backfill, validation, and preview planning
+- `GET /capabilities` advertises scope lifecycle preview support
+- `POST /docs/scopes/create-preview` reports a validated create write set
+- `POST /docs/scopes/delete-preview` reports a manifest-backed delete plan and blocks system scopes
+
+Apply/write behavior and the management UI are not implemented yet.
+
+## Create Flow Contract
 
 Minimum fields:
 
@@ -153,9 +170,23 @@ The apply endpoints should remain hidden until the allowlisted source-root, rout
 - Local-only uncommitted scopes should be easy to identify in the response and cleanup guidance.
 - Generated data should be rebuilt after scope config changes so `assets/docs-viewer/data/docs-viewer-config.json` stays current.
 
-## Related Docs
+## Design Notes To Complete
 
-- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
-- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
-- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+Record final decisions here as the implementation lands:
+
+- manifest schema and ownership semantics
+- create endpoint payload and response contract
+- delete endpoint payload and response contract
+- publishing-mode behavior
+- allowlisted file-write rules
+- generated docs/search follow-through
+- management UI controls, modal states, and result reporting
+- manual verification workflow
+
+## Open Implementation Notes
+
+- Apply endpoints should remain hidden from capabilities until allowlisted writes are implemented.
+- System-owned scopes must never be delete-eligible through this workflow.
+- Public read-only scopes need route pages that use `docs_viewer_readonly_route.html`.
+- Local-only scopes should not create public read-only route pages.
+- Generated output choices need clear reporting so UI users are not left guessing whether a follow-up build is needed.

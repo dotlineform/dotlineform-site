@@ -39,7 +39,7 @@ Apply/write behavior remains intentionally unadvertised until the allowlisted fi
 - `scripts/docs/docs_management_server.py`
 - `scripts/docs/docs_management_routes.py`
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
-- [Docs Viewer Route Creation](/docs/?scope=studio&doc=docs-viewer-route-creation)
+- [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder)
 
 ## [2026-05-15] Moved Docs Import Into The Docs Viewer Modal Shell
 
@@ -387,7 +387,7 @@ The local `bin/dev-studio` overlay enables the flag for local management session
 - `_includes/docs_viewer_management_route.html`
 - [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
 - [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
-- [Docs Viewer Route Creation](/docs/?scope=studio&doc=docs-viewer-route-creation)
+- [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder)
 
 **Impact:**
 The public site stays read-only by construction instead of probing a localhost docs-management server that cannot be used from the public origin.
