@@ -189,7 +189,7 @@ Future created scopes must set both `user_created: true` and `created_by_tool: t
     "create_preview": true,
     "create_apply": true,
     "delete_preview": true,
-    "delete_apply": false,
+    "delete_apply": true,
     "publishing_modes": ["public_readonly", "local_committed", "local_uncommitted"],
     "manifest_path": "scripts/docs/docs_scope_manifest.json"
   }
@@ -198,7 +198,7 @@ Future created scopes must set both `user_created: true` and `created_by_tool: t
 
 Apply flags are authoritative.
 Create apply is advertised only after the allowlisted write implementation is available.
-Delete apply remains false until manifest-backed deletion is implemented.
+Delete apply is advertised only after the manifest-backed deletion implementation is available.
 The UI should avoid showing save/delete apply controls before the server advertises the matching capability.
 
 Each scope capability record also includes lifecycle state:
@@ -347,7 +347,50 @@ Eligible delete response fields:
 - `dry_run`
 
 Missing manifest-listed files should be reported in `missing_files`.
-They should not block deletion of files that still exist when apply behavior is implemented.
+They do not block deletion of files that still exist.
+
+## Delete Apply Endpoint
+
+Endpoint:
+
+- `POST /docs/scopes/delete-apply`
+
+Payload fields:
+
+- `scope_id`; `scope` is accepted as an alias
+- `confirm: true`
+
+Apply behavior:
+
+- requires explicit confirmation
+- re-runs delete-preview validation before any write
+- blocks system-owned scopes and scopes not created by the lifecycle tool
+- deletes existing manifest-owned scope paths, excluding scope config and manifest files
+- reports missing manifest-owned paths without blocking the delete
+- removes the scope entry from `scripts/docs/docs_scopes.json`
+- removes the scope record from `scripts/docs/docs_scope_manifest.json`
+- creates a timestamped backup bundle for the previous scope config and manifest files
+- refreshes docs viewer generated outputs for the remaining configured scopes
+
+Apply response fields:
+
+- `ok`
+- `schema_version`
+- `action`
+- `operation`
+- `scope_id`
+- `created_files`
+- `changed_files`
+- `deleted_files`
+- `missing_files`
+- `build_commands`
+- `urls`
+- `backup_dir`
+- `rebuild`
+- `summary_text`
+- `dry_run`
+
+Dry-run server mode validates the delete apply request and returns the apply response shape without deleting files, changing config/manifest state, creating a backup, or running rebuild commands.
 
 ## Create Flow Contract
 
@@ -374,7 +417,7 @@ The server response should list:
 
 Create preview reports this planned write set without writing files.
 Create apply writes the allowlisted source-root, route-file, config, generated-output, and manifest changes after confirmation.
-Delete apply should remain hidden until its manifest-backed write implementation is complete.
+Delete apply removes manifest-owned scope files, updates config and manifest state, and refreshes generated docs output after confirmation.
 
 ## Safety Rules
 
@@ -390,15 +433,11 @@ Delete apply should remain hidden until its manifest-backed write implementation
 Record final decisions here as the implementation lands:
 
 - manifest schema and ownership semantics
-- delete apply endpoint payload and response contract
-- delete endpoint payload and response contract
-- publishing-mode behavior
-- generated docs/search follow-through for delete apply
+- publishing-mode behavior in the management UI
 - management UI controls, modal states, and result reporting
 - manual verification workflow
 
 ## Open Implementation Notes
 
-- Delete apply should remain hidden from capabilities until allowlisted deletion writes are implemented.
 - System-owned scopes must never be delete-eligible through this workflow.
 - Generated output choices need clear reporting so UI users are not left guessing whether a follow-up build is needed.

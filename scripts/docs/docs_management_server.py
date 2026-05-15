@@ -37,6 +37,7 @@ Endpoints:
   POST /docs/scopes/create-preview
   POST /docs/scopes/create-apply
   POST /docs/scopes/delete-preview
+  POST /docs/scopes/delete-apply
 
 Security constraints:
   - Binds to 127.0.0.1 only.
@@ -361,7 +362,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
                 "create_preview": True,
                 "create_apply": True,
                 "delete_preview": True,
-                "delete_apply": False,
+                "delete_apply": True,
                 "publishing_modes": list(docs_scope_manifest.PUBLISHING_MODES),
                 "manifest_path": docs_scope_manifest.MANIFEST_REL_PATH.as_posix(),
             },
@@ -557,6 +558,35 @@ def handle_scope_create_apply(repo_root: Path, body: Dict[str, Any], dry_run: bo
     return payload
 
 
+def handle_scope_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope_id = docs_scope_manifest.normalize_scope_id(body.get("scope_id") or body.get("scope"))
+    docs_scope_manifest.require_confirmed(body)
+    preview = docs_scope_manifest.plan_delete_scope_preview(repo_root, body)
+    if not preview.get("allowed"):
+        blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
+        raise ValueError("; ".join(str(blocker) for blocker in blockers) or "scope delete is not allowed")
+    backup_dir = None if dry_run else make_scope_lifecycle_backup(repo_root, scope_id, "delete")
+    payload = docs_scope_manifest.apply_delete_scope(
+        repo_root,
+        body,
+        dry_run=dry_run,
+        rebuild_all_docs_outputs=write_rebuild.rebuild_all_docs_outputs,
+    )
+    payload["backup_dir"] = relative_path(repo_root, backup_dir) if backup_dir else ""
+    if not dry_run:
+        log_event(
+            repo_root,
+            "docs_scope_delete_apply",
+            {
+                "scope": scope_id,
+                "deleted_count": len(payload.get("deleted_files", [])),
+                "missing_count": len(payload.get("missing_files", [])),
+                "changed_count": len(payload.get("changed_files", [])),
+            },
+        )
+    return payload
+
+
 class DocsManagementHandler(BaseHTTPRequestHandler):
     server_version = "DocsManagementServer/0.1"
 
@@ -598,6 +628,7 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         routes.SCOPE_CREATE_PREVIEW_PATH: "_handle_scope_create_preview_post",
         routes.SCOPE_CREATE_APPLY_PATH: "_handle_scope_create_apply_post",
         routes.SCOPE_DELETE_PREVIEW_PATH: "_handle_scope_delete_preview_post",
+        routes.SCOPE_DELETE_APPLY_PATH: "_handle_scope_delete_apply_post",
     }
     OPTIONS_PATHS = tuple(dict.fromkeys((*routes.OPTIONS_PATHS, *data_sharing_routes.OPTIONS_PATHS)))
 
@@ -793,6 +824,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
     def _handle_scope_delete_preview_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         payload = docs_scope_manifest.plan_delete_scope_preview(repo_root, body)
         payload["dry_run"] = True
+        return HTTPStatus.OK, payload
+
+    def _handle_scope_delete_apply_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
+        payload = handle_scope_delete_apply(repo_root, body, dry_run)
         return HTTPStatus.OK, payload
 
     def do_POST(self) -> None:  # noqa: N802

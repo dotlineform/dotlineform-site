@@ -343,7 +343,7 @@ def test_capabilities_advertise_source_config_reads() -> None:
     assert payload["capabilities"]["scope_lifecycle"]["create_preview"] is True
     assert payload["capabilities"]["scope_lifecycle"]["create_apply"] is True
     assert payload["capabilities"]["scope_lifecycle"]["delete_preview"] is True
-    assert payload["capabilities"]["scope_lifecycle"]["delete_apply"] is False
+    assert payload["capabilities"]["scope_lifecycle"]["delete_apply"] is True
 
 
 def test_scope_manifest_backfills_existing_scopes_as_system_owned() -> None:
@@ -464,11 +464,6 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert any(file["path"] == "scripts/docs/docs_scopes.json" for file in records["research"]["files"])
 
 
-def test_scope_delete_apply_route_stays_closed_until_implemented() -> None:
-    assert docs_management_server.routes.SCOPE_DELETE_APPLY_PATH not in docs_management_server.routes.POST_PATHS
-    assert docs_management_server.routes.SCOPE_DELETE_APPLY_PATH not in docs_management_server.DocsManagementHandler.POST_HANDLERS
-
-
 def test_scope_delete_preview_blocks_system_scopes() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -484,6 +479,132 @@ def test_scope_delete_preview_blocks_system_scopes() -> None:
     assert payload["ok"] is True
     assert payload["allowed"] is False
     assert "system-owned" in payload["blockers"][0]
+
+
+def test_scope_delete_preview_keeps_config_as_changed_file() -> None:
+    original_rebuild = docs_management_server.write_rebuild.rebuild_scope_outputs
+    docs_management_server.write_rebuild.rebuild_scope_outputs = lambda *_args, **_kwargs: {"ok": True}
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            write_docs_scope_config(repo_root)
+            docs_management_server.handle_scope_create_apply(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "title": "Research",
+                    "source_root": "_docs_research",
+                    "default_doc_id": "research",
+                    "publishing_mode": "public_readonly",
+                    "public_route_path": "/research/",
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+            payload = docs_management_server.docs_scope_manifest.plan_delete_scope_preview(
+                repo_root,
+                {
+                    "scope_id": "research",
+                },
+            )
+    finally:
+        docs_management_server.write_rebuild.rebuild_scope_outputs = original_rebuild
+
+    assert payload["ok"] is True
+    assert payload["allowed"] is True
+    assert not any(file["kind"] == "scope_config" for file in payload["delete_files"])
+    assert any(file["kind"] == "scope_config" for file in payload["changed_files"])
+    assert any(file["path"] == "_docs_research" for file in payload["delete_files"])
+
+
+def test_scope_delete_apply_requires_confirmation() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        try:
+            docs_management_server.handle_scope_delete_apply(
+                repo_root,
+                {
+                    "scope_id": "studio",
+                },
+                dry_run=True,
+            )
+        except ValueError as exc:
+            assert "confirm must be true" in str(exc)
+        else:
+            raise AssertionError("scope delete apply should require explicit confirmation")
+
+
+def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
+    create_calls: list[tuple[Path, str, dict[str, object]]] = []
+    delete_calls: list[Path] = []
+    original_create_rebuild = docs_management_server.write_rebuild.rebuild_scope_outputs
+    original_delete_rebuild = docs_management_server.write_rebuild.rebuild_all_docs_outputs
+
+    def fake_create_rebuild(repo_root: Path, scope: str, **kwargs):
+        create_calls.append((repo_root, scope, kwargs))
+        docs_output = repo_root / "assets/data/docs/scopes" / scope
+        (docs_output / "by-id").mkdir(parents=True)
+        (docs_output / "index.json").write_text("{}", encoding="utf-8")
+        (docs_output / "by-id/research.json").write_text("{}", encoding="utf-8")
+        search_output = repo_root / "assets/data/search" / scope
+        search_output.mkdir(parents=True)
+        (search_output / "index.json").write_text("{}", encoding="utf-8")
+        return {"ok": True}
+
+    def fake_delete_rebuild(repo_root: Path):
+        delete_calls.append(repo_root)
+        return {"ok": True, "steps": [], "search": {"mode": "full", "doc_ids": []}}
+
+    docs_management_server.write_rebuild.rebuild_scope_outputs = fake_create_rebuild
+    docs_management_server.write_rebuild.rebuild_all_docs_outputs = fake_delete_rebuild
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            write_docs_scope_config(repo_root)
+            docs_management_server.handle_scope_create_apply(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "title": "Research",
+                    "source_root": "_docs_research",
+                    "default_doc_id": "research",
+                    "publishing_mode": "public_readonly",
+                    "public_route_path": "/research/",
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+            payload = docs_management_server.handle_scope_delete_apply(
+                repo_root,
+                {
+                    "scope_id": "research",
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+            source_payload = json.loads((repo_root / "scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
+            manifest_payload = json.loads((repo_root / "scripts/docs/docs_scope_manifest.json").read_text(encoding="utf-8"))
+            source_root_exists = (repo_root / "_docs_research").exists()
+            route_exists = (repo_root / "research/index.md").exists()
+            generated_docs_exists = (repo_root / "assets/data/docs/scopes/research").exists()
+            generated_search_exists = (repo_root / "assets/data/search/research/index.json").exists()
+    finally:
+        docs_management_server.write_rebuild.rebuild_scope_outputs = original_create_rebuild
+        docs_management_server.write_rebuild.rebuild_all_docs_outputs = original_delete_rebuild
+
+    assert payload["ok"] is True
+    assert payload["schema_version"] == "docs_scope_lifecycle_apply_v1"
+    assert payload["backup_dir"].startswith("var/docs/backups/")
+    assert delete_calls == [repo_root]
+    assert create_calls == [(repo_root, "research", {"include_search": True})]
+    assert [scope["scope_id"] for scope in source_payload["scopes"]] == ["studio"]
+    assert "research" not in {record["scope_id"] for record in manifest_payload["scopes"]}
+    assert source_root_exists is False
+    assert route_exists is False
+    assert generated_docs_exists is False
+    assert generated_search_exists is False
+    assert any(file["path"] == "_docs_research" for file in payload["deleted_files"])
 
 
 def test_source_config_report_reads_known_config_files() -> None:
@@ -722,8 +843,10 @@ def main() -> None:
         test_scope_create_preview_reports_write_set_and_urls,
         test_scope_create_apply_requires_confirmation,
         test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild,
-        test_scope_delete_apply_route_stays_closed_until_implemented,
         test_scope_delete_preview_blocks_system_scopes,
+        test_scope_delete_preview_keeps_config_as_changed_file,
+        test_scope_delete_apply_requires_confirmation,
+        test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild,
         test_source_config_report_reads_known_config_files,
         test_source_config_settings_contract_allows_updated_date_only,
         test_source_config_settings_validation_reports_rebuild_artifact,

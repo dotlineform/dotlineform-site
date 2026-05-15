@@ -9,7 +9,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS
+from docs_scope_config import DOCS_SCOPE_CONFIGS, load_docs_scope_configs
 from docs_source_model import scope_root
 from docs_watch_suppression import (
     DEFAULT_COMPLETE_TTL_SECONDS,
@@ -157,10 +157,15 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
     if not bundle_bin:
         raise RuntimeError("bundle executable not found")
 
+    try:
+        scope_ids = list(load_docs_scope_configs(repo_root).keys())
+    except (FileNotFoundError, ValueError):
+        scope_ids = list(DOCS_SCOPE_CONFIGS.keys())
+
     commands = [
         [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--write"],
     ]
-    for scope in DOCS_SCOPE_CONFIGS:
+    for scope in scope_ids:
         commands.append([bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"])
     steps = []
     for command in commands:

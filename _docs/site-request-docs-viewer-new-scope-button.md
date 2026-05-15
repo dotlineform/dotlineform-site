@@ -245,7 +245,7 @@ Acceptance:
 
 Status:
 
-- partially implemented
+- implemented
 
 Add docs-management capabilities for scope creation and eligible scope deletion.
 Define endpoint payloads, validation errors, dry-run behavior, preview behavior, and response shapes.
@@ -257,7 +257,8 @@ Progress:
 - `POST /docs/scopes/create-preview` validates inputs and returns a planned create write set.
 - `POST /docs/scopes/create-apply` requires `confirm: true`, re-runs preview validation, and writes allowlisted create-scope files.
 - `POST /docs/scopes/delete-preview` returns a manifest-backed delete plan and blocks system-owned scopes.
-- `create_apply` is now advertised; `delete_apply` remains false until manifest-backed deletion writes are implemented.
+- `POST /docs/scopes/delete-apply` requires `confirm: true`, re-runs preview validation, and deletes eligible user-created scopes.
+- `create_apply` and `delete_apply` are now advertised.
 
 Acceptance:
 
@@ -265,6 +266,7 @@ Acceptance:
 - unsupported environments hide or disable the action cleanly
 - the create endpoint can return a preview write set before performing writes
 - the delete endpoint can return a preview delete plan before performing writes
+- create and delete apply endpoints fail closed without explicit confirmation
 - CLI/server dry-run remains available without becoming a separate UI mode
 
 ### Task 3. Build The Management UI Flow
@@ -289,7 +291,7 @@ Acceptance:
 
 Status:
 
-- in progress
+- implemented
 
 Implement server-side creation for source roots, default welcome docs, scope config entries, optional route pages, optional generated outputs, and manifest updates.
 
@@ -300,21 +302,21 @@ Acceptance:
 - new scopes include a default welcome page - implemented for create apply
 - existing-file conflicts fail safely - implemented through preview re-validation
 - paths outside allowlists are rejected - implemented through preview re-validation
-- the response distinguishes created and changed files - implemented for create apply
-- the manifest records the created scope files - implemented for create apply
+- the response distinguishes created and changed files - implemented
+- the manifest records the created scope files - implemented
 
 Progress:
 
 - `POST /docs/scopes/create-apply` is implemented behind `create_apply: true`.
 - Apply requires `confirm: true` and re-runs create-preview before writing.
 - A backup bundle is created for the previous scope config and manifest files before non-dry-run writes.
-- Delete apply remains out of scope for Task 4 and stays unadvertised.
+- Delete apply re-runs delete-preview before writing and removes only manifest-owned scope paths while treating config and manifest as changed files.
 
 ### Task 5. Implement Manifest-Backed Scope Delete
 
 Status:
 
-- proposed
+- implemented
 
 Implement server-side deletion for scopes that are manifest-backed, user-created, and tool-created.
 
@@ -327,11 +329,19 @@ Acceptance:
 - backups are left to the normal backup retention plan
 - scope config and generated outputs are updated consistently
 
+Progress:
+
+- `POST /docs/scopes/delete-apply` is implemented behind `delete_apply: true`.
+- Apply requires `confirm: true` and re-runs delete-preview before writing.
+- System-owned scopes and scopes not created by the lifecycle tool remain blocked.
+- Missing manifest-listed files are reported in `missing_files` and do not block deleting existing files.
+- Scope config and manifest entries are removed after the manifest-owned paths are deleted.
+
 ### Task 6. Align Rebuild And Search Follow-Through
 
 Status:
 
-- in progress
+- implemented
 
 After a scope is created or deleted, run the required docs and search build commands for the selected mode.
 
@@ -339,6 +349,7 @@ Acceptance:
 
 - `assets/docs-viewer/data/docs-viewer-config.json` is refreshed or reported as needing refresh - implemented for create apply through the docs rebuild command
 - generated docs payloads are written when requested - implemented for create apply
+- deleted scope generated payloads are removed by delete apply
 - inline search output is written only when enabled - implemented for create apply
 - command reporting uses project-local script forms - implemented for create preview/apply responses
 - UI users are not required to run CLI commands after save or delete
@@ -347,7 +358,7 @@ Progress:
 
 - Create apply runs `./scripts/build_docs.rb --scope <scope> --write` when generated outputs are requested.
 - Create apply runs `./scripts/build_search.rb --scope <scope> --write` only when inline search is enabled.
-- Delete apply follow-through remains pending with Task 5.
+- Delete apply runs the full docs output refresh for the remaining configured scopes after removing the deleted scope from config.
 
 ### Task 7. Document The Completed Workflow
 

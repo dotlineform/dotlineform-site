@@ -73,6 +73,10 @@ Exposed endpoints:
 - `POST /docs/archive`
 - `POST /docs/delete-preview`
 - `POST /docs/delete-apply`
+- `POST /docs/scopes/create-preview`
+- `POST /docs/scopes/create-apply`
+- `POST /docs/scopes/delete-preview`
+- `POST /docs/scopes/delete-apply`
 
 Current behavior:
 
@@ -671,6 +675,7 @@ Scope lifecycle preview endpoints:
 - `POST /docs/scopes/create-preview`
 - `POST /docs/scopes/delete-preview`
 - `POST /docs/scopes/create-apply`
+- `POST /docs/scopes/delete-apply`
 
 Scope lifecycle preview behavior:
 
@@ -680,7 +685,7 @@ Scope lifecycle preview behavior:
 - reports planned created files, changed files, build commands, management URL, and public URL without writing files
 - blocks delete preview for system-owned scopes and scopes not created by the lifecycle tool
 - create apply requires `confirm: true`, re-runs create-preview validation, writes the allowlisted source root, default welcome doc, config entry, optional route page, and manifest record, then runs the requested docs/search rebuilds
-- delete apply is intentionally not advertised until manifest-backed deletion writes are implemented
+- delete apply requires `confirm: true`, re-runs delete-preview validation, deletes manifest-owned scope files, removes the scope config entry and manifest record, then refreshes docs output for remaining scopes
 
 ## Security Constraints
 
@@ -698,6 +703,7 @@ Scope lifecycle preview behavior:
   - `var/docs/watch-suppressions/`
 - scope lifecycle ownership is recorded in `scripts/docs/docs_scope_manifest.json`; existing scopes are system-owned and not eligible for lifecycle deletion
 - scope create apply creates a backup bundle for the previous scope config and manifest files before writing
+- scope delete apply creates a backup bundle for the previous scope config and manifest files before deleting or changing scope lifecycle state
 - timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch
 - backups are operation-scoped rather than full-scope:
   - `create` writes a manifest-only backup bundle

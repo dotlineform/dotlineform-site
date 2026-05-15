@@ -17,6 +17,29 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-15] Added Docs Viewer Scope Delete Apply
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / docs-management server
+
+**Summary:**
+Added the confirmed delete-apply endpoint for Docs Viewer scope lifecycle work.
+The docs-management server now advertises `delete_apply`, requires `confirm: true`, re-runs delete-preview validation before writing, blocks system-owned scopes, deletes manifest-owned scope files, removes the scope config entry and manifest record, and refreshes docs output for remaining scopes.
+
+**Effect:**
+The server-side scope lifecycle contract now covers preview and apply for both creation and deletion.
+The next slice can build the management UI against stable capability flags instead of provisional endpoint behavior.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_scope_manifest.py`
+- `scripts/docs/docs_management_server.py`
+- `scripts/docs/docs_management_routes.py`
+- `tests/python/test_docs_management_server.py`
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder)
+
 ## [2026-05-15] Added Docs Viewer Scope Create Apply
 
 **Status:** implemented

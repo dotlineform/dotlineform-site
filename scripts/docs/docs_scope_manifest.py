@@ -6,6 +6,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 import re
+import shutil
 import subprocess
 from pathlib import Path
 from typing import Any, Callable
@@ -25,6 +26,7 @@ PUBLIC_MODE = "public_readonly"
 LOCAL_COMMITTED_MODE = "local_committed"
 LOCAL_UNCOMMITTED_MODE = "local_uncommitted"
 PUBLISHING_MODES = (PUBLIC_MODE, LOCAL_COMMITTED_MODE, LOCAL_UNCOMMITTED_MODE)
+SCOPE_DELETE_CHANGE_KINDS = {"scope_config", "scope_manifest"}
 
 
 def utc_now() -> str:
@@ -349,6 +351,25 @@ def append_scope_config(repo_root: Path, scope_config: dict[str, Any]) -> None:
     write_text_atomic(config_path, render_json(payload))
 
 
+def remove_scope_config(repo_root: Path, scope_id: str) -> None:
+    config_path = repo_root / CONFIG_REL_PATH
+    payload = load_json_object(config_path, "docs scope config")
+    if payload.get("schema_version") != "docs_scopes_v1":
+        raise ValueError("docs scope config schema_version must be docs_scopes_v1")
+    scopes = payload.get("scopes")
+    if not isinstance(scopes, list):
+        raise ValueError("docs scope config scopes must be an array")
+    retained = [
+        item
+        for item in scopes
+        if not (isinstance(item, dict) and str(item.get("scope_id") or "").strip() == scope_id)
+    ]
+    if len(retained) == len(scopes):
+        raise ValueError(f"scope_id {scope_id!r} is missing from docs scope config")
+    payload["scopes"] = retained
+    write_text_atomic(config_path, render_json(payload))
+
+
 def manifest_file_records_for_created_scope(repo_root: Path, preview: dict[str, Any]) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for item in [*preview.get("created_files", []), *preview.get("changed_files", [])]:
@@ -402,6 +423,24 @@ def append_scope_manifest_record(repo_root: Path, preview: dict[str, Any], manif
     if scope_id in manifest_scopes_by_id(manifest):
         raise ValueError(f"scope_id {scope_id!r} already exists in docs scope manifest")
     scopes.append(created_scope_manifest_record(repo_root, preview))
+    manifest["updated_at"] = utc_now()
+    write_text_atomic(repo_root / MANIFEST_REL_PATH, render_json(manifest))
+
+
+def remove_scope_manifest_record(repo_root: Path, scope_id: str, manifest: dict[str, Any] | None = None) -> None:
+    if manifest is None:
+        manifest = load_manifest(repo_root)
+    scopes = manifest.get("scopes")
+    if not isinstance(scopes, list):
+        raise ValueError("docs scope manifest scopes must be an array")
+    retained = [
+        item
+        for item in scopes
+        if not (isinstance(item, dict) and str(item.get("scope_id") or "").strip() == scope_id)
+    ]
+    if len(retained) == len(scopes):
+        raise ValueError(f"scope_id {scope_id!r} is missing from docs scope manifest")
+    manifest["scopes"] = retained
     manifest["updated_at"] = utc_now()
     write_text_atomic(repo_root / MANIFEST_REL_PATH, render_json(manifest))
 
@@ -473,6 +512,113 @@ def apply_create_scope(
             f"Created Docs Viewer scope {scope_id}."
             if not dry_run
             else f"Validated create apply for Docs Viewer scope {scope_id}."
+        ),
+        "dry_run": dry_run,
+    }
+
+
+def manifest_delete_path_records(repo_root: Path, record: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    delete_files = []
+    missing_files = []
+    for file_record in record.get("files", []):
+        if not isinstance(file_record, dict):
+            continue
+        kind = str(file_record.get("kind") or "file").strip() or "file"
+        if kind in SCOPE_DELETE_CHANGE_KINDS:
+            continue
+        path_text = str(file_record.get("path") or "").strip()
+        if not path_text:
+            continue
+        path = repo_root / safe_relative_path(path_text, field="manifest file path")
+        planned = path_record(repo_root, kind, path, action="delete")
+        if path.exists():
+            delete_files.append(planned)
+        else:
+            missing_files.append(planned)
+    return delete_files, missing_files
+
+
+def delete_path_sort_key(repo_root: Path, record: dict[str, Any]) -> tuple[int, str]:
+    path = repo_root / safe_relative_path(record.get("path"), field="delete file path")
+    return (-len(path.parts), path.as_posix())
+
+
+def delete_manifest_paths(repo_root: Path, delete_files: list[dict[str, Any]]) -> None:
+    for record in sorted(delete_files, key=lambda item: delete_path_sort_key(repo_root, item)):
+        path = repo_root / safe_relative_path(record.get("path"), field="delete file path")
+        if not path.exists():
+            continue
+        if path.is_dir():
+            shutil.rmtree(path)
+        else:
+            path.unlink()
+
+
+def apply_delete_build_commands(repo_root: Path, scope_id: str, *, dry_run: bool) -> list[dict[str, Any]]:
+    status = "planned" if dry_run else "completed"
+    remaining_scope_ids = [
+        config_scope_id
+        for config_scope_id in sorted(load_docs_scope_configs(repo_root))
+        if config_scope_id != scope_id
+    ]
+    commands = [
+        {
+            "command": "./scripts/build_docs.rb --write",
+            "status": status,
+        },
+    ]
+    commands.extend(
+        {
+            "command": f"./scripts/build_search.rb --scope {remaining_scope_id} --write",
+            "status": status,
+        }
+        for remaining_scope_id in remaining_scope_ids
+    )
+    return commands
+
+
+def apply_delete_scope(
+    repo_root: Path,
+    body: dict[str, Any],
+    *,
+    dry_run: bool,
+    rebuild_all_docs_outputs: Callable[..., dict[str, Any]],
+) -> dict[str, Any]:
+    require_confirmed(body)
+    preview = plan_delete_scope_preview(repo_root, body)
+    if not preview.get("allowed"):
+        blockers = preview.get("blockers") if isinstance(preview.get("blockers"), list) else []
+        raise ValueError("; ".join(str(blocker) for blocker in blockers) or "scope delete is not allowed")
+
+    scope_id = str(preview["scope_id"])
+    manifest = load_manifest(repo_root)
+    rebuild = None
+    if not dry_run:
+        delete_manifest_paths(repo_root, preview["delete_files"])
+        remove_scope_config(repo_root, scope_id)
+        remove_scope_manifest_record(repo_root, scope_id, manifest)
+        rebuild = rebuild_all_docs_outputs(repo_root)
+
+    return {
+        "ok": True,
+        "schema_version": LIFECYCLE_APPLY_SCHEMA_VERSION,
+        "action": "delete_scope",
+        "operation": "apply",
+        "scope_id": scope_id,
+        "created_files": [],
+        "changed_files": preview["changed_files"],
+        "deleted_files": preview["delete_files"],
+        "missing_files": preview["missing_files"],
+        "build_commands": apply_delete_build_commands(repo_root, scope_id, dry_run=dry_run),
+        "urls": {
+            "management": "/docs/?mode=manage",
+            "public": "",
+        },
+        "rebuild": rebuild,
+        "summary_text": (
+            f"Deleted Docs Viewer scope {scope_id}."
+            if not dry_run
+            else f"Validated delete apply for Docs Viewer scope {scope_id}."
         ),
         "dry_run": dry_run,
     }
@@ -585,20 +731,7 @@ def plan_delete_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             "build_commands": [],
         }
 
-    delete_files = []
-    missing_files = []
-    for file_record in record.get("files", []):
-        if not isinstance(file_record, dict):
-            continue
-        path_text = str(file_record.get("path") or "").strip()
-        if not path_text:
-            continue
-        path = repo_root / safe_relative_path(path_text, field="manifest file path")
-        planned = path_record(repo_root, str(file_record.get("kind") or "file"), path, action="delete")
-        if path.exists():
-            delete_files.append(planned)
-        else:
-            missing_files.append(planned)
+    delete_files, missing_files = manifest_delete_path_records(repo_root, record)
 
     return {
         "ok": True,
@@ -614,9 +747,6 @@ def plan_delete_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             path_record(repo_root, "scope_config", repo_root / CONFIG_REL_PATH, action="change"),
             path_record(repo_root, "scope_manifest", repo_root / MANIFEST_REL_PATH, action="change"),
         ],
-        "build_commands": [
-            {"command": f"./scripts/build_docs.rb --scope {scope_id} --write", "status": "planned"},
-            {"command": f"./scripts/build_search.rb --scope {scope_id} --write", "status": "planned"},
-        ],
+        "build_commands": apply_delete_build_commands(repo_root, scope_id, dry_run=True),
         "summary_text": f"Previewed deletion for Docs Viewer scope {scope_id}.",
     }

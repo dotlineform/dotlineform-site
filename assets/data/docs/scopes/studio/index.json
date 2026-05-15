@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T21:58:38Z",
+  "generated_at": "2026-05-15T22:10:02Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1047,7 +1047,7 @@
       "source_path": "site-request-docs-viewer-new-scope-button.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-new-scope-button.json",
-      "content_text_length": 13973,
+      "content_text_length": 14711,
       "ui_status": "in-progress"
     },
     {
@@ -1581,7 +1581,7 @@
       "source_path": "docs-viewer-new-scopes-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-new-scopes-builder.json",
-      "content_text_length": 12457
+      "content_text_length": 13374
     },
     {
       "scope": "studio",
@@ -2682,7 +2682,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 34906
+      "content_text_length": 35317
     },
     {
       "scope": "studio",
@@ -3399,7 +3399,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 159829
+      "content_text_length": 160786
     },
     {
       "scope": "studio",
