@@ -1,7 +1,7 @@
 import { getStudioText } from "./studio-config.js";
 import { openConfirmDetailModal, openNoticeModal } from "./studio-modal.js";
 
-export function showDataSharingReviewResultModal(state, { title, summary, countRows, issues }) {
+export function showDataSharingReviewResultModal(state, { title, summary, countRows, issues }, options = {}) {
   const summaryHtml = normalizeText(summary)
     ? `<p class="tagStudioModal__label dataSharingReviewResultModal__summary">${escapeHtml(summary)}</p>`
     : "";
@@ -14,6 +14,7 @@ export function showDataSharingReviewResultModal(state, { title, summary, countR
     root: state.root,
     title,
     bodyHtml,
+    restoreFocus: options.restoreFocus,
     closeLabel: getStudioText(state.config, "data_sharing_review.result_close_button", "Close")
   }).catch((error) => console.warn("data_sharing_review: result modal failed", error));
 }

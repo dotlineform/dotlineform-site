@@ -601,7 +601,7 @@ function renderResult(state, payload, failed = false) {
   renderPreviewList(state);
   updateSelectionSummary(state);
   state.lastImportResult = failed ? null : result;
-  showDataSharingReviewResultModal(state, result);
+  showDataSharingReviewResultModal(state, result, { restoreFocus: state.previewButton });
 }
 
 function setControlsDisabled(state, disabled) {
@@ -775,6 +775,8 @@ function renderApplyActionResult(state, action, payload) {
     summary: `${summary} ${countsValue}`.trim(),
     countRows: actionCountRows(action, payload && payload.counts),
     issues: applyIssues(payload || {}, action.id)
+  }, {
+    restoreFocus: state.actionMenuButton
   });
 }
 
@@ -1062,7 +1064,7 @@ async function init() {
     window.addEventListener("scroll", () => hideApplyActionsMenu(state), { passive: true });
     window.addEventListener("resize", () => hideApplyActionsMenu(state));
     state.resultButton.addEventListener("click", () => {
-      if (state.lastImportResult) showDataSharingReviewResultModal(state, state.lastImportResult);
+      if (state.lastImportResult) showDataSharingReviewResultModal(state, state.lastImportResult, { restoreFocus: state.resultButton });
     });
     state.selectAllButton.addEventListener("click", () => {
       selectablePreviewIds(state).forEach((rowId) => state.selectedPreviewIds.add(rowId));

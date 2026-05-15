@@ -120,7 +120,9 @@ def click_apply_action(page, selector: str) -> None:
     page.locator(selector).click()
 
 
-def install_mock_docs_service(page) -> None:
+def install_mock_docs_service(page) -> list[dict[str, object]]:
+    apply_requests: list[dict[str, object]] = []
+
     def handle(route):
         parsed = urlparse(route.request.url)
         if parsed.path == "/health":
@@ -267,6 +269,7 @@ def install_mock_docs_service(page) -> None:
                 if callable(post_data):
                     post_data = post_data()
                 request_body = json.loads(post_data or "{}")
+            apply_requests.append(request_body)
             if request_body.get("operation") == "apply" and request_body.get("apply_action") == "hierarchy_apply":
                 payload = {
                     "ok": True,
@@ -338,12 +341,88 @@ def install_mock_docs_service(page) -> None:
         route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
 
     page.route("http://127.0.0.1:8789/**", handle)
+    return apply_requests
 
 
-def assert_mock_preview_flow(page) -> dict[str, object]:
+def modal_shell_state(page) -> dict[str, object]:
+    return page.locator('[data-role="studio-modal"]').evaluate(
+        """modal => {
+            const dialog = modal.querySelector('[role="dialog"]');
+            const title = modal.querySelector('.tagStudioModal__title');
+            const actionButtons = Array.from(modal.querySelectorAll('.tagStudioModal__actions button'));
+            return {
+                role: dialog ? dialog.getAttribute('role') : "",
+                modal: dialog ? dialog.getAttribute('aria-modal') : "",
+                dialogClass: dialog ? dialog.className : "",
+                labelledBy: dialog ? dialog.getAttribute('aria-labelledby') : "",
+                titleId: title ? title.id : "",
+                title: title ? title.textContent.trim() : "",
+                actionLabels: actionButtons.map(button => button.textContent.trim()),
+                actionClasses: actionButtons.map(button => button.className),
+                activeRole: document.activeElement ? document.activeElement.getAttribute('data-role') : "",
+                activeId: document.activeElement ? document.activeElement.id : ""
+            };
+        }"""
+    )
+
+
+def assert_modal_shell(
+    page,
+    expected_title: str,
+    expected_action_labels: list[str],
+    expected_active_role: str,
+) -> dict[str, object]:
+    state = modal_shell_state(page)
+    if state["role"] != "dialog" or state["modal"] != "true":
+        raise AssertionError(f"modal lacks dialog semantics: {state!r}")
+    if not state["labelledBy"] or state["labelledBy"] != state["titleId"]:
+        raise AssertionError(f"modal is not labelled by its title: {state!r}")
+    if state["title"] != expected_title:
+        raise AssertionError(f"unexpected modal title: {state!r}")
+    if state["actionLabels"] != expected_action_labels:
+        raise AssertionError(f"unexpected modal actions: {state!r}")
+    if not all("tagStudio__button--defaultWidth" in classes for classes in state["actionClasses"]):
+        raise AssertionError(f"modal action buttons are missing the default-width contract: {state!r}")
+    if state["activeRole"] != expected_active_role:
+        raise AssertionError(f"modal focus did not enter the expected action: {state!r}")
+    return state
+
+
+def apply_request_count(
+    apply_requests: list[dict[str, object]],
+    action_id: str,
+    confirmed: bool | None = None,
+) -> int:
+    return sum(
+        1
+        for request in apply_requests
+        if request.get("operation") == "apply"
+        and request.get("apply_action") == action_id
+        and (confirmed is None or bool(request.get("confirm")) is confirmed)
+    )
+
+
+def assert_apply_request_counts(
+    apply_requests: list[dict[str, object]],
+    action_id: str,
+    expected_preflight: int,
+    expected_confirmed: int,
+) -> None:
+    preflight_count = apply_request_count(apply_requests, action_id, False)
+    confirmed_count = apply_request_count(apply_requests, action_id, True)
+    if preflight_count != expected_preflight or confirmed_count != expected_confirmed:
+        raise AssertionError(
+            f"unexpected {action_id} apply ownership counts: "
+            f"preflight={preflight_count!r}, confirmed={confirmed_count!r}, "
+            f"requests={apply_requests!r}"
+        )
+
+
+def assert_mock_preview_flow(page, apply_requests: list[dict[str, object]]) -> dict[str, object]:
     page.locator("#dataSharingReviewRun").click()
     page.wait_for_selector("[data-data-sharing-review-preview]", timeout=5000)
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    preview_modal = assert_modal_shell(page, "Returned package review", ["Close"], "modal-cancel")
     preview_modal_title = page.locator("#studioModalTitle").text_content()
     preview_count_labels = page.locator(".dataSharingReviewResultModal__counts dt").evaluate_all(
         "nodes => nodes.map(node => node.textContent)"
@@ -360,17 +439,29 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"unexpected preview count values: {preview_count_values!r}")
     if "unknown_doc_id" not in preview_issue_text:
         raise AssertionError(f"preview warning missing from modal issues: {preview_issue_text!r}")
-    page.locator('[data-role="modal-cancel"]').last.click()
+
+    page.keyboard.press("Escape")
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
+    focus_after_preview_escape = page.evaluate("() => document.activeElement && document.activeElement.id")
+    if focus_after_preview_escape != "dataSharingReviewRun":
+        raise AssertionError(f"preview modal did not return focus to the preview button: {focus_after_preview_escape!r}")
+
     result_button = page.locator("#dataSharingReviewResults")
     if result_button.is_hidden() or result_button.text_content() != "results":
         raise AssertionError("preview results button should be visible after successful preview status")
     result_button.click()
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    assert_modal_shell(page, "Returned package review", ["Close"], "modal-cancel")
     reopened_title = page.locator("#studioModalTitle").text_content()
     reopened_summary = page.locator(".dataSharingReviewResultModal__summary").text_content()
     if reopened_title != "Returned package review" or reopened_summary != "Generated 3 Library returned package review files.":
         raise AssertionError(f"unexpected reopened results modal: {reopened_title!r}, {reopened_summary!r}")
+    page.locator(".tagStudioModal__backdrop").click(position={"x": 8, "y": 8})
+    page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
+
+    result_button.click()
+    page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    assert_modal_shell(page, "Returned package review", ["Close"], "modal-cancel")
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
     rows = page.locator("[data-data-sharing-review-preview]").count()
@@ -400,16 +491,21 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError("summary and hierarchy apply should enable for selected document previews")
     click_apply_action(page, "#dataSharingReviewUpdateSummary")
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    assert_modal_shell(page, "Update summaries?", ["Cancel", "OK"], "modal-primary")
+    assert_apply_request_counts(apply_requests, "summary_apply", 1, 0)
     modal_title = page.locator("#studioModalTitle").text_content()
     if modal_title != "Update summaries?":
         raise AssertionError(f"unexpected summary apply modal title: {modal_title!r}")
-    page.locator('[data-role="modal-cancel"]').last.click()
+    page.keyboard.press("Escape")
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
+    assert_apply_request_counts(apply_requests, "summary_apply", 1, 0)
     cancelled_status = page.locator("#dataSharingReviewStatus").text_content()
     if cancelled_status != "Summary update cancelled.":
         raise AssertionError(f"unexpected cancelled status: {cancelled_status!r}")
     click_apply_action(page, "#dataSharingReviewUpdateSummary")
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    assert_modal_shell(page, "Update summaries?", ["Cancel", "OK"], "modal-primary")
+    assert_apply_request_counts(apply_requests, "summary_apply", 2, 0)
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function(
         "selector => document.querySelector(selector)?.textContent === 'Updated 2 Library summary update(s).'",
@@ -439,20 +535,26 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"summary apply counts missing from summary: {summary!r}")
     if "missing_summary" not in issue_text:
         raise AssertionError(f"summary apply skipped row missing from issues: {issue_text!r}")
+    assert_apply_request_counts(apply_requests, "summary_apply", 2, 1)
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
     click_apply_action(page, "#dataSharingReviewApplyHierarchy")
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    assert_modal_shell(page, "Update hierarchy?", ["Cancel", "OK"], "modal-primary")
+    assert_apply_request_counts(apply_requests, "hierarchy_apply", 1, 0)
     hierarchy_modal_title = page.locator("#studioModalTitle").text_content()
     if hierarchy_modal_title != "Update hierarchy?":
         raise AssertionError(f"unexpected hierarchy apply modal title: {hierarchy_modal_title!r}")
-    page.locator('[data-role="modal-cancel"]').last.click()
+    page.locator(".tagStudioModal__backdrop").click(position={"x": 8, "y": 8})
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
+    assert_apply_request_counts(apply_requests, "hierarchy_apply", 1, 0)
     hierarchy_cancelled_status = page.locator("#dataSharingReviewStatus").text_content()
     if hierarchy_cancelled_status != "Hierarchy update cancelled.":
         raise AssertionError(f"unexpected hierarchy cancelled status: {hierarchy_cancelled_status!r}")
     click_apply_action(page, "#dataSharingReviewApplyHierarchy")
     page.wait_for_selector('[data-role="studio-modal"]', timeout=5000)
+    assert_modal_shell(page, "Update hierarchy?", ["Cancel", "OK"], "modal-primary")
+    assert_apply_request_counts(apply_requests, "hierarchy_apply", 2, 0)
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function(
         "selector => document.querySelector(selector)?.textContent === 'Updated 1 Library hierarchy change(s).'",
@@ -480,14 +582,22 @@ def assert_mock_preview_flow(page) -> dict[str, object]:
         raise AssertionError(f"hierarchy apply counts missing from summary: {hierarchy_summary!r}")
     if "unknown_parent_id" not in hierarchy_issue_text:
         raise AssertionError(f"hierarchy apply warning missing from issues: {hierarchy_issue_text!r}")
+    assert_apply_request_counts(apply_requests, "hierarchy_apply", 2, 1)
     page.locator('[data-role="modal-cancel"]').last.click()
     page.wait_for_selector('[data-role="studio-modal"]', state="detached", timeout=5000)
     return {
         "preview_rows": rows,
         "selected_summary": selection,
         "depths": depths,
+        "preview_modal": preview_modal,
         "summary_apply": applied_status,
         "hierarchy_apply": hierarchy_status,
+        "apply_requests": {
+            "summary_preflight": apply_request_count(apply_requests, "summary_apply", False),
+            "summary_confirmed": apply_request_count(apply_requests, "summary_apply", True),
+            "hierarchy_preflight": apply_request_count(apply_requests, "hierarchy_apply", False),
+            "hierarchy_confirmed": apply_request_count(apply_requests, "hierarchy_apply", True),
+        },
     }
 
 
@@ -512,10 +622,11 @@ def main() -> int:
             browser = playwright.chromium.launch(headless=True)
             try:
                 page = browser.new_page()
+                apply_requests: list[dict[str, object]] = []
                 if args.block_docs_service:
                     page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
                 elif args.mock_docs_service:
-                    install_mock_docs_service(page)
+                    apply_requests = install_mock_docs_service(page)
                 page.goto(route_url(base_url, args.route_path), wait_until="domcontentloaded")
                 attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
                 assert_ready_contract(attrs)
@@ -525,7 +636,7 @@ def main() -> int:
                 if args.expect_unsupported:
                     content["unsupported_adapter"] = assert_unsupported_adapter_state(page, args.expect_unsupported)
                 if args.mock_docs_service:
-                    content["mock_preview"] = assert_mock_preview_flow(page)
+                    content["mock_preview"] = assert_mock_preview_flow(page, apply_requests)
                 print(json.dumps({"route": attrs, "content": content}, sort_keys=True))
             finally:
                 browser.close()
