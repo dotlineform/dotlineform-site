@@ -73,6 +73,29 @@ export function hideTagRegistryImportModal(state) {
   state.refs.importModal.hidden = true;
 }
 
+export function setTagRegistrySelectedImportFile(state, file) {
+  state.selectedFile = file || null;
+  if (state.selectedFile) {
+    state.refs.selectedFile.textContent = registryText(
+      state.config,
+      "selected_file_template",
+      "Selected: {filename}",
+      { filename: state.selectedFile.name }
+    );
+    clearTagRegistryImportResult(state);
+    return;
+  }
+  state.refs.selectedFile.textContent = "";
+}
+
+export function setTagRegistryImportResult(state, kind, message) {
+  setStatusText(state.refs.importResult, kind, message, UI_CLASS.toolbarResult);
+}
+
+export function clearTagRegistryImportResult(state) {
+  setTagRegistryImportResult(state, "", "");
+}
+
 export function showTagRegistryPatchModal(state, snippet) {
   state.patchSnippet = snippet;
   state.refs.patchSnippet.textContent = snippet;

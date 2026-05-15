@@ -50,6 +50,7 @@ import {
   openConfirmDetailModal
 } from "./studio-modal.js";
 import {
+  clearTagRegistryImportResult,
   collectTagRegistryModalRefs,
   closeTagRegistryDeleteModal,
   closeTagRegistryDemoteModal,
@@ -66,7 +67,9 @@ import {
   renderTagRegistryDeleteImpactPreview,
   renderTagRegistryNewTagModalState,
   renderTagRegistryModals,
+  setTagRegistryImportResult,
   setTagRegistryDeleteImpactStatus,
+  setTagRegistrySelectedImportFile,
   showTagRegistryImportModal,
   showTagRegistryDemoteTagPopup,
   showTagRegistryPatchModal
@@ -257,18 +260,7 @@ function wireEvents(state) {
 
   state.refs.importFile.addEventListener("change", () => {
     const files = state.refs.importFile.files;
-    state.selectedFile = files && files.length ? files[0] : null;
-    if (state.selectedFile) {
-      state.refs.selectedFile.textContent = registryText(
-        state.config,
-        "selected_file_template",
-        "Selected: {filename}",
-        { filename: state.selectedFile.name }
-      );
-      clearImportResult(state);
-    } else {
-      state.refs.selectedFile.textContent = "";
-    }
+    setTagRegistrySelectedImportFile(state, files && files.length ? files[0] : null);
   });
 
   state.refs.importMode.addEventListener("change", () => {
@@ -1153,7 +1145,7 @@ function closePatchModal(state) {
 }
 
 function setImportResult(state, kind, message) {
-  setStatusText(state.refs.importResult, kind, message, UI_CLASS.toolbarResult);
+  setTagRegistryImportResult(state, kind, message);
 }
 
 function getDeleteImpactSeries(state, tagId) {
@@ -1200,7 +1192,7 @@ function buildSeriesEditorUrl(config, seriesId) {
 }
 
 function clearImportResult(state) {
-  setImportResult(state, "", "");
+  clearTagRegistryImportResult(state);
 }
 
 function registryText(config, key, fallback, tokens) {

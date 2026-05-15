@@ -160,6 +160,9 @@ Completed slices:
 - Extracted the third Tag Registry modal slice from `assets/studio/js/tag-registry.js` into `assets/studio/js/tag-registry-modals.js`.
   The modal module now owns delete impact preview count/link rendering and delete impact status rendering.
   The route still owns delete impact service preview loading, affected-series lookup, stale preview protection, delete service calls, and route busy state.
+- Extracted the fourth Tag Registry modal slice from `assets/studio/js/tag-registry.js` into `assets/studio/js/tag-registry-modals.js`.
+  The modal module now owns import selected-file display and import result status rendering.
+  The route still owns import availability decisions, file parsing, import submission, patch fallback decisions, patch-copy success/error decisions, and route busy state.
 
 Inventory notes:
 
@@ -181,6 +184,7 @@ Verification completed:
 - Focused module contract checks covered the Tag Registry modal helper's modal shell roles, escaped labels, ref collection, import show/hide state, patch snippet population, patch close helper, and delete show/hide helper.
 - Focused module contract checks covered the Tag Registry modal helper's edit field population/reset, new-tag group rendering/status updates, demote selected-target rendering and popup reset, and delete preview state reset.
 - Focused module contract checks covered the Tag Registry modal helper's delete impact count/link rendering, empty-series fallback, escaping, and impact status rendering.
+- Focused module contract checks covered the Tag Registry modal helper's selected import file display, result clearing on file selection, empty-file reset, and import result status rendering.
 
 ## Completion Criteria
 
