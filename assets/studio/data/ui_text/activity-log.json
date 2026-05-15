@@ -16,7 +16,11 @@
   "record_group_series": "series",
   "record_group_details": "details",
   "record_group_moments": "moments",
+  "record_group_docs": "docs",
+  "record_group_files": "files",
   "record_group_search": "search",
+  "record_group_tags": "tags",
+  "record_group_aliases": "aliases",
   "modal_title": "Activity details",
   "modal_close_button": "Close",
   "modal_empty_detail": "No detail items recorded."

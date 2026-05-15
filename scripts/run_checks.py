@@ -286,6 +286,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check the Studio data sharing prepare route ready state with docs-management unavailable.",
         ),
         CheckCommand(
+            "activity-log-modal-smoke",
+            (
+                sys.executable,
+                "tests/smoke/activity_log_modal.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check the Studio activity detail notice modal shell behavior.",
+        ),
+        CheckCommand(
             "data-sharing-review-smoke",
             (
                 sys.executable,
