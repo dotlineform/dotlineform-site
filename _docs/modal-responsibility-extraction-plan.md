@@ -154,6 +154,9 @@ Completed slices:
 - Extracted the first Tag Registry modal slice from `assets/studio/js/tag-registry.js` into `assets/studio/js/tag-registry-modals.js`.
   The modal module owns import, patch, edit, new, demote, and delete modal shell/body/actions rendering, modal ref collection, and simple modal show/hide helpers.
   The route still owns registry filtering/list rendering, modal field population, local validation, delete impact preview loading, demote target selection, import parsing/submission, edit/create/delete/demote service calls, patch result handling, status messages, and route busy state.
+- Extracted the second Tag Registry modal slice from `assets/studio/js/tag-registry.js` into `assets/studio/js/tag-registry-modals.js`.
+  The modal module now owns edit/new/delete/demote modal field population, open/close reset lifecycle, new-tag group key rendering, demote selected-target UI rendering, demote popup show/hide lifecycle, delete tag meta rendering, and delete preview state reset.
+  The route still owns tag lookup, validation decisions, import parsing/submission, delete impact service preview, demote match lookup/selection rules, create/edit/delete/demote service calls, list/control rendering, status message decisions, and route busy state.
 
 Inventory notes:
 
@@ -173,6 +176,7 @@ Verification completed:
 - Focused module contract checks covered the Series Tag Editor save preview modal helper's shell roles, escaped labels, hidden/open state, ref collection, resolved payload population, patch snippet population, and close helper.
 - Focused module contract checks covered the Catalogue Work Editor modal helper's embedded entry shell roles and escaping, entry validation status, save result contract, close cleanup, build preview labels/body, and Escape close behavior.
 - Focused module contract checks covered the Tag Registry modal helper's modal shell roles, escaped labels, ref collection, import show/hide state, patch snippet population, patch close helper, and delete show/hide helper.
+- Focused module contract checks covered the Tag Registry modal helper's edit field population/reset, new-tag group rendering/status updates, demote selected-target rendering and popup reset, and delete preview state reset.
 
 ## Completion Criteria
 

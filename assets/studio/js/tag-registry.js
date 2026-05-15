@@ -51,18 +51,22 @@ import {
 } from "./studio-modal.js";
 import {
   collectTagRegistryModalRefs,
-  hideTagRegistryDeleteModal,
-  hideTagRegistryDemoteModal,
-  hideTagRegistryEditModal,
+  closeTagRegistryDeleteModal,
+  closeTagRegistryDemoteModal,
+  closeTagRegistryEditModal,
+  closeTagRegistryNewModal,
   hideTagRegistryImportModal,
-  hideTagRegistryNewModal,
   hideTagRegistryPatchModal,
+  hideTagRegistryDemoteTagPopup,
+  openTagRegistryDeleteModal,
+  openTagRegistryDemoteModal,
+  openTagRegistryEditModal,
+  openTagRegistryNewModal,
+  renderTagRegistryDemoteSelectionState,
+  renderTagRegistryNewTagModalState,
   renderTagRegistryModals,
-  showTagRegistryDeleteModal,
-  showTagRegistryDemoteModal,
-  showTagRegistryEditModal,
   showTagRegistryImportModal,
-  showTagRegistryNewModal,
+  showTagRegistryDemoteTagPopup,
   showTagRegistryPatchModal
 } from "./tag-registry-modals.js";
 import {
@@ -141,6 +145,8 @@ async function initTagRegistryPage() {
   const state = {
     mount,
     config,
+    studioGroups: STUDIO_GROUPS,
+    groupInfoPagePath: GROUP_INFO_PAGE_PATH,
     tags: [],
     filterGroup: "all",
     searchQuery: "",
@@ -385,7 +391,7 @@ function wireEvents(state) {
     }
     if (state.refs.demoteTagPopupWrap.hidden) return;
     if (!event.target.closest(UI_SELECTOR.demoteTagPopupWrap) && !event.target.closest(UI_SELECTOR.demoteTagSearch)) {
-      hideDemoteTagPopup(state);
+      hideTagRegistryDemoteTagPopup(state);
     }
   });
 
@@ -395,7 +401,7 @@ function wireEvents(state) {
 
   state.refs.demoteTagSearch.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      hideDemoteTagPopup(state);
+      hideTagRegistryDemoteTagPopup(state);
       state.refs.demoteTagSearch.blur();
     }
   });
@@ -407,7 +413,7 @@ function wireEvents(state) {
     if (!tagId) return;
     addDemoteTag(state, tagId);
     state.refs.demoteTagSearch.value = "";
-    hideDemoteTagPopup(state);
+    hideTagRegistryDemoteTagPopup(state);
     updateDemoteUi(state);
   });
 
@@ -617,49 +623,18 @@ function openEditModal(state, tagId) {
   const tag = findTagById(state, tagId);
   if (!tag) return;
   clearImportResult(state);
-  const [, slug = ""] = String(tag.tagId || "").split(":", 2);
-  state.editTagId = tag.tagId;
-  state.refs.editTagId.innerHTML = `
-    <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group))}" title="${escapeHtml(String(state.groupDescriptions.get(tag.group) || tag.tagId))}">
-      ${escapeHtml(tag.group)}
-    </span>
-  `;
-  state.refs.editTagName.value = slug;
-  state.refs.editDescription.value = String(tag.description || "");
-  setStatusText(
-    state.refs.editStatus,
-    "",
-    state.saveMode === "post"
-    ? ""
-    : registryText(state.config, "local_edit_required", "Local server is required for edit.")
-  );
-  showTagRegistryEditModal(state);
+  openTagRegistryEditModal(state, tag);
   syncRouteBusyState(state);
 }
 
 function closeEditModal(state) {
-  hideTagRegistryEditModal(state);
-  state.editTagId = "";
-  state.refs.editTagName.value = "";
-  state.refs.editDescription.value = "";
+  closeTagRegistryEditModal(state);
   syncRouteBusyState(state);
 }
 
 function openNewTagModal(state) {
   clearImportResult(state);
-  state.newTagState = {
-    group: "",
-    slug: "",
-    description: ""
-  };
-  state.refs.newTagSlug.value = "";
-  state.refs.newTagDescription.value = "";
-  state.refs.newTagWarning.textContent = "";
-  setNewTagStatus(state, "", "");
-  renderNewTagGroupKey(state);
-  state.refs.createTag.disabled = true;
-  showTagRegistryNewModal(state);
-  state.refs.newTagSlug.focus();
+  openTagRegistryNewModal(state);
   syncRouteBusyState(state);
 }
 
@@ -669,40 +644,12 @@ function closeImportModal(state) {
 }
 
 function closeNewTagModal(state) {
-  state.newTagState = null;
-  hideTagRegistryNewModal(state);
-  state.refs.newTagSlug.value = "";
-  state.refs.newTagDescription.value = "";
-  state.refs.newTagWarning.textContent = "";
-  setNewTagStatus(state, "", "");
-  state.refs.newGroupKey.innerHTML = "";
-  state.refs.createTag.disabled = true;
+  closeTagRegistryNewModal(state);
   syncRouteBusyState(state);
 }
 
 function setNewTagStatus(state, kind, message) {
   setStatusText(state.refs.newTagStatus, kind, message);
-}
-
-function renderNewTagGroupKey(state) {
-  if (!state.newTagState) {
-    state.refs.newGroupKey.innerHTML = "";
-    return;
-  }
-  state.refs.newGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
-    const titleAttr = groupTitleAttr(state, group);
-    return `
-      <button
-        type="button"
-        class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"
-        data-new-group="${escapeHtml(group)}"
-        ${stateAttr(state.newTagState.group === group ? UI_STATE.active : "")}
-        ${titleAttr}
-      >
-        ${escapeHtml(group)}
-      </button>
-    `;
-  }).join("") + renderGroupInfoControl(state);
 }
 
 function getNewTagValidation(state) {
@@ -726,13 +673,8 @@ function updateNewTagUi(state) {
   state.newTagState.slug = slug;
   state.newTagState.description = String(state.refs.newTagDescription.value || "").trim();
 
-  renderNewTagGroupKey(state);
   const validation = getNewTagValidation(state);
-  state.refs.newTagWarning.textContent = validation.warning || "";
-  state.refs.createTag.disabled = !validation.valid;
-  if (!validation.warning) {
-    setNewTagStatus(state, "", "");
-  }
+  renderTagRegistryNewTagModalState(state, validation);
 }
 
 function setEditStatus(state, kind, message) {
@@ -871,14 +813,7 @@ function openDeleteModal(state, tagId) {
     setImportResult(state, "error", registryText(state.config, "selected_tag_missing", "Selected tag is no longer available."));
     return;
   }
-  state.deleteTagId = tag.tagId;
-  state.deletePreview = "";
-  state.deletePreviewSeq += 1;
-  state.refs.deleteTagMeta.innerHTML = renderDeleteTagMeta(state, tag);
-  setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
-  setDeleteStatus(state, "", "");
-  state.refs.confirmDeleteTag.disabled = state.saveMode !== "post";
-  showTagRegistryDeleteModal(state);
+  openTagRegistryDeleteModal(state, tag);
   syncRouteBusyState(state);
 
   if (state.saveMode !== "post") {
@@ -891,14 +826,7 @@ function openDeleteModal(state, tagId) {
 }
 
 function closeDeleteModal(state) {
-  hideTagRegistryDeleteModal(state);
-  state.deleteTagId = "";
-  state.deletePreview = "";
-  state.deletePreviewSeq += 1;
-  state.refs.deleteTagMeta.innerHTML = "";
-  setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
-  setDeleteStatus(state, "", "");
-  state.refs.confirmDeleteTag.disabled = false;
+  closeTagRegistryDeleteModal(state);
   syncRouteBusyState(state);
 }
 
@@ -946,72 +874,18 @@ function openDemoteModal(state, tagId) {
     return;
   }
 
-  state.demoteState = {
-    tagId: tag.tagId,
-    tags: []
-  };
-  state.refs.demoteTagMeta.textContent = `tag: ${tag.tagId} -> alias "${aliasKey}"`;
-  state.refs.demoteTagSearch.value = "";
-  hideDemoteTagPopup(state);
+  openTagRegistryDemoteModal(state, { tag, aliasKey });
   updateDemoteUi(state);
-  showTagRegistryDemoteModal(state);
-  state.refs.demoteTagSearch.focus();
   syncRouteBusyState(state);
 }
 
 function closeDemoteModal(state) {
-  state.demoteState = null;
-  hideTagRegistryDemoteModal(state);
-  state.refs.demoteTagMeta.textContent = "";
-  state.refs.demoteTagSearch.value = "";
-  state.refs.demoteTagList.innerHTML = "";
-  state.refs.demoteGroupKey.innerHTML = "";
-  state.refs.confirmDemote.disabled = true;
-  setDemoteStatus(state, "", "");
-  hideDemoteTagPopup(state);
+  closeTagRegistryDemoteModal(state);
   syncRouteBusyState(state);
 }
 
 function setDemoteStatus(state, kind, message) {
   setStatusText(state.refs.demoteStatus, kind, message);
-}
-
-function renderDemoteGroupKey(state) {
-  if (!state.demoteState) {
-    state.refs.demoteGroupKey.innerHTML = "";
-    return;
-  }
-  const selected = new Set((state.demoteState.tags || []).map((tagId) => normalize(tagId).split(":", 1)[0]));
-  state.refs.demoteGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
-    const titleAttr = groupTitleAttr(state, group);
-    return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI_STATE.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
-  }).join("") + renderGroupInfoControl(state);
-}
-
-function renderDemoteTagList(state) {
-  if (!state.demoteState) {
-    state.refs.demoteTagList.innerHTML = "";
-    return;
-  }
-  const rows = state.demoteState.tags.map((tagId) => {
-    const info = findTagById(state, tagId);
-    const group = info && STUDIO_GROUPS.includes(info.group) ? info.group : "warning";
-    const label = info ? info.label : tagId;
-    return `
-      <span class="${classNames(UI_CLASS.chip, chipGroupClass(group))}" title="${escapeHtml(tagId)}">
-        ${escapeHtml(label)}
-        <button
-          type="button"
-          class="${UI_CLASS.chipRemove}"
-          data-remove-demote-tag="${escapeHtml(tagId)}"
-          aria-label="${escapeHtml(registryText(state.config, "remove_target_tag_aria_label", "Remove {tag_id}", { tag_id: tagId }))}"
-        >
-          x
-        </button>
-      </span>
-    `;
-  }).join("");
-  state.refs.demoteTagList.innerHTML = rows || `<span class="${UI_CLASS.empty}">${escapeHtml(registryText(state.config, "empty_state", "none"))}</span>`;
 }
 
 function getDemoteValidation(state) {
@@ -1025,17 +899,28 @@ function getDemoteValidation(state) {
 
 function updateDemoteUi(state) {
   if (!state.demoteState) return;
-  renderDemoteGroupKey(state);
-  renderDemoteTagList(state);
   const validation = getDemoteValidation(state);
-  state.refs.confirmDemote.disabled = !validation.valid;
+  let statusKind = "";
+  let statusMessage = "";
   if (validation.warning) {
     const emptyWarning = registryText(state.config, "demote_select_target_warning", "Select at least one target tag.");
-    const kind = validation.warning === emptyWarning ? "" : "error";
-    setDemoteStatus(state, kind, validation.warning);
-  } else {
-    setDemoteStatus(state, "", "");
+    statusKind = validation.warning === emptyWarning ? "" : "error";
+    statusMessage = validation.warning;
   }
+  const selectedItems = state.demoteState.tags.map((tagId) => {
+    const info = findTagById(state, tagId);
+    return {
+      tagId,
+      group: info && STUDIO_GROUPS.includes(info.group) ? info.group : "warning",
+      label: info ? info.label : tagId
+    };
+  });
+  renderTagRegistryDemoteSelectionState(state, {
+    selectedItems,
+    canConfirm: validation.valid,
+    statusKind,
+    statusMessage
+  });
 }
 
 function getDemoteTagMatches(state, query) {
@@ -1051,7 +936,7 @@ function renderDemoteTagPopup(state) {
   if (!state.demoteState) return;
   const result = getDemoteTagMatches(state, state.refs.demoteTagSearch.value);
   if (!result.matches.length) {
-    hideDemoteTagPopup(state);
+    hideTagRegistryDemoteTagPopup(state);
     return;
   }
   const chips = result.matches.map((item) => `
@@ -1067,13 +952,7 @@ function renderDemoteTagPopup(state) {
   if (result.truncated) {
     chips.push(`<span class="${classNames(UI_CLASS.popupPill, UI_CLASS.popupMore)}" title="${escapeHtml(registryText(state.config, "popup_more_title", "More matches available"))}">...</span>`);
   }
-  state.refs.demoteTagPopup.innerHTML = chips.join("");
-  state.refs.demoteTagPopupWrap.hidden = false;
-}
-
-function hideDemoteTagPopup(state) {
-  state.refs.demoteTagPopupWrap.hidden = true;
-  state.refs.demoteTagPopup.innerHTML = "";
+  showTagRegistryDemoteTagPopup(state, chips.join(""));
 }
 
 function addDemoteTag(state, tagId) {
@@ -1274,14 +1153,6 @@ function closePatchModal(state) {
 
 function setImportResult(state, kind, message) {
   setStatusText(state.refs.importResult, kind, message, UI_CLASS.toolbarResult);
-}
-
-function renderDeleteTagMeta(state, tag) {
-  return `
-    <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group), UI_CLASS.deleteMetaTag)}" title="${escapeHtml(tag.tagId)}">
-      ${escapeHtml(tag.label)}
-    </span>
-  `;
 }
 
 function renderDeleteImpactPreview(state, response, fallbackMessage) {

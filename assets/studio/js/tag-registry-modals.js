@@ -83,36 +83,139 @@ export function hideTagRegistryPatchModal(state) {
   state.refs.patchModal.hidden = true;
 }
 
-export function showTagRegistryEditModal(state) {
+export function openTagRegistryEditModal(state, tag) {
+  const [, slug = ""] = String(tag.tagId || "").split(":", 2);
+  state.editTagId = tag.tagId;
+  state.refs.editTagId.innerHTML = `
+    <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group))}" title="${escapeHtml(String(state.groupDescriptions.get(tag.group) || tag.tagId))}">
+      ${escapeHtml(tag.group)}
+    </span>
+  `;
+  state.refs.editTagName.value = slug;
+  state.refs.editDescription.value = String(tag.description || "");
+  setStatusText(
+    state.refs.editStatus,
+    "",
+    state.saveMode === "post"
+      ? ""
+      : registryText(state.config, "local_edit_required", "Local server is required for edit.")
+  );
   state.refs.editModal.hidden = false;
 }
 
-export function hideTagRegistryEditModal(state) {
+export function closeTagRegistryEditModal(state) {
   state.refs.editModal.hidden = true;
+  state.editTagId = "";
+  state.refs.editTagName.value = "";
+  state.refs.editDescription.value = "";
 }
 
-export function showTagRegistryNewModal(state) {
+export function openTagRegistryNewModal(state) {
+  state.newTagState = {
+    group: "",
+    slug: "",
+    description: ""
+  };
+  state.refs.newTagSlug.value = "";
+  state.refs.newTagDescription.value = "";
+  state.refs.newTagWarning.textContent = "";
+  setStatusText(state.refs.newTagStatus, "", "");
+  renderTagRegistryNewTagGroupKey(state);
+  state.refs.createTag.disabled = true;
   state.refs.newModal.hidden = false;
+  state.refs.newTagSlug.focus();
 }
 
-export function hideTagRegistryNewModal(state) {
+export function closeTagRegistryNewModal(state) {
+  state.newTagState = null;
   state.refs.newModal.hidden = true;
+  state.refs.newTagSlug.value = "";
+  state.refs.newTagDescription.value = "";
+  state.refs.newTagWarning.textContent = "";
+  setStatusText(state.refs.newTagStatus, "", "");
+  state.refs.newGroupKey.innerHTML = "";
+  state.refs.createTag.disabled = true;
 }
 
-export function showTagRegistryDemoteModal(state) {
+export function renderTagRegistryNewTagModalState(state, validation) {
+  renderTagRegistryNewTagGroupKey(state);
+  state.refs.newTagWarning.textContent = validation && validation.warning ? validation.warning : "";
+  state.refs.createTag.disabled = !(validation && validation.valid);
+  if (!(validation && validation.warning)) {
+    setStatusText(state.refs.newTagStatus, "", "");
+  }
+}
+
+export function openTagRegistryDemoteModal(state, options) {
+  const tag = options && options.tag;
+  const aliasKey = options && options.aliasKey ? options.aliasKey : tag.tagId;
+  state.demoteState = {
+    tagId: tag.tagId,
+    tags: []
+  };
+  state.refs.demoteTagMeta.textContent = `tag: ${tag.tagId} -> alias "${aliasKey}"`;
+  state.refs.demoteTagSearch.value = "";
+  hideTagRegistryDemoteTagPopup(state);
+  renderTagRegistryDemoteSelectionState(state, {
+    selectedItems: [],
+    canConfirm: false,
+    statusKind: "",
+    statusMessage: ""
+  });
   state.refs.demoteModal.hidden = false;
+  state.refs.demoteTagSearch.focus();
 }
 
-export function hideTagRegistryDemoteModal(state) {
+export function closeTagRegistryDemoteModal(state) {
+  state.demoteState = null;
   state.refs.demoteModal.hidden = true;
+  state.refs.demoteTagMeta.textContent = "";
+  state.refs.demoteTagSearch.value = "";
+  state.refs.demoteTagList.innerHTML = "";
+  state.refs.demoteGroupKey.innerHTML = "";
+  state.refs.confirmDemote.disabled = true;
+  setStatusText(state.refs.demoteStatus, "", "");
+  hideTagRegistryDemoteTagPopup(state);
 }
 
-export function showTagRegistryDeleteModal(state) {
+export function renderTagRegistryDemoteSelectionState(state, options = {}) {
+  const selectedItems = Array.isArray(options.selectedItems) ? options.selectedItems : [];
+  renderTagRegistryDemoteGroupKey(state, selectedItems);
+  renderTagRegistryDemoteTagList(state, selectedItems);
+  state.refs.confirmDemote.disabled = !options.canConfirm;
+  setStatusText(state.refs.demoteStatus, options.statusKind || "", options.statusMessage || "");
+}
+
+export function showTagRegistryDemoteTagPopup(state, html) {
+  state.refs.demoteTagPopup.innerHTML = html || "";
+  state.refs.demoteTagPopupWrap.hidden = false;
+}
+
+export function hideTagRegistryDemoteTagPopup(state) {
+  state.refs.demoteTagPopupWrap.hidden = true;
+  state.refs.demoteTagPopup.innerHTML = "";
+}
+
+export function openTagRegistryDeleteModal(state, tag) {
+  state.deleteTagId = tag.tagId;
+  state.deletePreview = "";
+  state.deletePreviewSeq += 1;
+  state.refs.deleteTagMeta.innerHTML = renderDeleteTagMeta(state, tag);
+  setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
+  setStatusText(state.refs.deleteStatus, "", "");
+  state.refs.confirmDeleteTag.disabled = state.saveMode !== "post";
   state.refs.deleteModal.hidden = false;
 }
 
-export function hideTagRegistryDeleteModal(state) {
+export function closeTagRegistryDeleteModal(state) {
   state.refs.deleteModal.hidden = true;
+  state.deleteTagId = "";
+  state.deletePreview = "";
+  state.deletePreviewSeq += 1;
+  state.refs.deleteTagMeta.innerHTML = "";
+  setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
+  setStatusText(state.refs.deleteStatus, "", "");
+  state.refs.confirmDeleteTag.disabled = false;
 }
 
 function renderPatchModal(state) {
@@ -266,8 +369,122 @@ function renderDeleteModal(state) {
   });
 }
 
+function renderTagRegistryNewTagGroupKey(state) {
+  if (!state.newTagState) {
+    state.refs.newGroupKey.innerHTML = "";
+    return;
+  }
+  state.refs.newGroupKey.innerHTML = getStudioGroups(state).map((group) => {
+    const titleAttr = groupTitleAttr(state, group);
+    return `
+      <button
+        type="button"
+        class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"
+        data-new-group="${escapeHtml(group)}"
+        ${stateAttr(state.newTagState.group === group ? UI.state.active : "")}
+        ${titleAttr}
+      >
+        ${escapeHtml(group)}
+      </button>
+    `;
+  }).join("") + renderGroupInfoControl(state);
+}
+
+function renderTagRegistryDemoteGroupKey(state, selectedItems) {
+  if (!state.demoteState) {
+    state.refs.demoteGroupKey.innerHTML = "";
+    return;
+  }
+  const selected = new Set(selectedItems.map((item) => item && item.group).filter(Boolean));
+  state.refs.demoteGroupKey.innerHTML = getStudioGroups(state).map((group) => {
+    const titleAttr = groupTitleAttr(state, group);
+    return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI.state.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
+  }).join("") + renderGroupInfoControl(state);
+}
+
+function renderTagRegistryDemoteTagList(state, selectedItems) {
+  if (!state.demoteState) {
+    state.refs.demoteTagList.innerHTML = "";
+    return;
+  }
+  const rows = selectedItems.map((item) => `
+    <span class="${classNames(UI_CLASS.chip, chipGroupClass(item.group || "warning"))}" title="${escapeHtml(item.tagId)}">
+      ${escapeHtml(item.label || item.tagId)}
+      <button
+        type="button"
+        class="${UI_CLASS.chipRemove}"
+        data-remove-demote-tag="${escapeHtml(item.tagId)}"
+        aria-label="${escapeHtml(registryText(state.config, "remove_target_tag_aria_label", "Remove {tag_id}", { tag_id: item.tagId }))}"
+      >
+        x
+      </button>
+    </span>
+  `).join("");
+  state.refs.demoteTagList.innerHTML = rows || `<span class="${UI_CLASS.empty}">${escapeHtml(registryText(state.config, "empty_state", "none"))}</span>`;
+}
+
+function renderDeleteTagMeta(state, tag) {
+  return `
+    <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group), UI_CLASS.deleteMetaTag)}" title="${escapeHtml(tag.tagId)}">
+      ${escapeHtml(tag.label)}
+    </span>
+  `;
+}
+
+function renderGroupInfoControl(state) {
+  const title = registryText(state.config, "group_info_title", "Open group descriptions in a new tab");
+  const ariaLabel = registryText(state.config, "group_info_aria_label", "Open group descriptions in a new tab");
+  return `
+    <a
+      class="${classNames(UI_CLASS.keyPill, UI_CLASS.keyInfoButton)}"
+      href="${escapeHtml(state.groupInfoPagePath || "")}"
+      target="_blank"
+      rel="noopener noreferrer"
+      title="${escapeHtml(title)}"
+      aria-label="${escapeHtml(ariaLabel)}"
+    >
+      <em>i</em>
+    </a>
+  `;
+}
+
+function groupTitleAttr(state, group) {
+  const description = String(state.groupDescriptions.get(group) || "").trim();
+  if (!description) return "";
+  return `title="${escapeHtml(description)}"`;
+}
+
+function getStudioGroups(state) {
+  return Array.isArray(state.studioGroups) && state.studioGroups.length
+    ? state.studioGroups
+    : ["subject", "domain", "form", "theme"];
+}
+
 function registryText(config, key, fallback, tokens) {
   return getStudioText(config, `tag_registry.${key}`, fallback, tokens);
+}
+
+function setStatusText(target, kind, message, baseClass = UI_CLASS.formStatus) {
+  if (!target) return;
+  target.textContent = message || "";
+  target.className = baseClass;
+  if (kind) {
+    target.dataset.state = kind;
+    return;
+  }
+  delete target.dataset.state;
+}
+
+function classNames(...tokens) {
+  return tokens.filter(Boolean).join(" ");
+}
+
+function chipGroupClass(group) {
+  return `${UI_CLASS.chipGroupPrefix}${group}`;
+}
+
+function stateAttr(stateValue) {
+  return stateValue ? ` data-state="${escapeHtml(stateValue)}"` : "";
 }
 
 function escapeHtml(value) {
