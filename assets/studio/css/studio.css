@@ -1836,6 +1836,10 @@ span.tagStudio__input--readonlyDisplay {
   place-items: center;
 }
 
+.tagStudioModal[hidden] {
+  display: none;
+}
+
 .tagStudioModal__backdrop {
   position: absolute;
   inset: 0;

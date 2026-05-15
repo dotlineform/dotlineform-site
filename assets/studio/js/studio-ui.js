@@ -112,6 +112,7 @@ export const seriesTagsUi = createUiContract({
     importModal: "series-tags-import-modal",
     closeSessionModal: "close-session-modal",
     closeImportModal: "close-import-modal",
+    applyImport: "apply-import",
     sessionSummary: "series-tags-session-summary",
     sessionActions: "series-tags-session-actions",
     sessionImport: "series-tags-session-import",

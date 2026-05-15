@@ -2,7 +2,7 @@
 doc_id: series-tags
 title: Series Tags
 added_date: 2026-03-31
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-15"
 parent_id: analytics
 sort_order: 60
 ---
@@ -98,12 +98,14 @@ DOM / CSS:
 
 JS owner:
 
-- `renderSessionModal(state)` in `assets/studio/js/series-tags.js`
+- `renderSessionModal(state)` and modal lifecycle handling in `assets/studio/js/series-tags-modals.js`
+- session open state, local session writes, copy/download/clear callbacks, and route status in `assets/studio/js/series-tags.js`
 
 Meaning:
 
 - modal hub for staged offline assignment rows across series
 - provides `Copy JSON`, `Download JSON`, `Clear session`, and `Close`
+- uses the shared compact Studio modal shell with standard status placement, focus containment, Escape/backdrop/Close dismissal, and focus return to the opener
 
 ### Import modal
 
@@ -122,13 +124,15 @@ DOM / CSS:
 
 JS owner:
 
-- `renderImportModal(state)` in `assets/studio/js/series-tags.js`
+- `renderImportModal(state)` and modal lifecycle handling in `assets/studio/js/series-tags-modals.js`
+- import preview/apply service calls, conflict-resolution payloads, activity context, reloads, and route status in `assets/studio/js/series-tags.js`
 
 Meaning:
 
 - modal flow for assignment import preview/apply
-- includes per-series overwrite/skip review plus `Close`
+- includes file choice, import preview, per-series overwrite/skip review, `Close`, and action-row `Apply import`
 - successful apply sends Studio activity context and appends a unified activity row with script purpose `save tag data`
+- uses the shared wide Studio modal shell with standard status placement, focus containment, Escape/backdrop/Close dismissal, and focus return to the opener
 
 ### Table shell
 

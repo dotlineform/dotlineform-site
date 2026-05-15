@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0efd6d3e68f374f8f0d1c6bfb2fb9144",
-    "generated_at_utc": "2026-05-15T17:39:07Z",
+    "version": "blake2b-576eae016acdacdd57ca5b1998e82472",
+    "generated_at_utc": "2026-05-15T19:44:38Z",
     "count": 245
   },
   "entries": [
@@ -3139,24 +3139,22 @@
       "kind": "doc",
       "title": "Series Tags",
       "href": "/docs/?scope=studio&doc=series-tags",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-15",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-09 16:00 • Analytics",
+      "display_meta": "2026-05-15 • Analytics",
       "search_terms": [
         "series-tags",
         "series",
         "tags",
         "series tags",
         "analytics",
-        "2026-05-09 16:00",
+        "2026-05-15",
         "2026",
         "05",
-        "09",
-        "16",
-        "00"
+        "15"
       ],
-      "search_text": "series-tags series tags series tags analytics 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "series-tags series tags series tags analytics 2026-05-15 2026 05 15"
     },
     {
       "id": "scripts-studio-audit-service",

@@ -281,14 +281,20 @@ function wireEvents(state) {
     state.refs.actions.addEventListener("click", (event) => {
       const sessionButton = event.target.closest(UI_SELECTOR.openSessionModal);
       if (sessionButton && !sessionButton.disabled) {
+        state.sessionModalRestoreFocus = document.activeElement;
+        state.sessionModalFocusReady = false;
         state.sessionModalOpen = true;
+        state.importModalOpen = false;
         renderChrome(state);
         syncRouteBusyState(state);
         return;
       }
       const importButton = event.target.closest(UI_SELECTOR.openImportModal);
       if (importButton && !importButton.disabled) {
+        state.importModalRestoreFocus = document.activeElement;
+        state.importModalFocusReady = false;
         state.importModalOpen = true;
+        state.sessionModalOpen = false;
         renderChrome(state);
         syncRouteBusyState(state);
       }
