@@ -44,18 +44,18 @@ function createModalHost(options = {}) {
 
 function renderModalActions(actions = []) {
   if (!Array.isArray(actions) || !actions.length) return "";
-  return `<div class="docsViewerImportModal__actions">${actions.map((action, index) => {
+  return `<div class="docsViewer__modalActions">${actions.map((action, index) => {
     const label = String(action && action.label ? action.label : `Action ${index + 1}`);
     const roleAttr = action && action.role ? ` data-role="${escapeHtml(action.role)}"` : "";
     const disabledAttr = action && action.disabled ? " disabled" : "";
-    return `<button type="button" class="docsViewerImport__button"${roleAttr}${disabledAttr}>${escapeHtml(label)}</button>`;
+    return `<button type="button" class="docsViewer__actionButton docsViewer__actionButton--defaultWidth"${roleAttr}${disabledAttr}>${escapeHtml(label)}</button>`;
   }).join("")}</div>`;
 }
 
 function renderModalFrame(options = {}) {
   const modalRole = options.modalRole ? ` data-role="${escapeHtml(options.modalRole)}"` : "";
   const backdropRole = options.backdropRole ? ` data-role="${escapeHtml(options.backdropRole)}"` : "";
-  const sizeClass = options.size ? ` docsViewerImportModal__dialog--${escapeHtml(options.size)}` : "";
+  const sizeClass = options.size ? ` docsViewer__modalCard--${escapeHtml(options.size)}` : "";
   const dialogClass = options.dialogClass ? ` ${escapeHtml(options.dialogClass)}` : "";
   const hiddenAttr = options.hidden === false ? "" : " hidden";
   const titleId = String(options.titleId || "docsViewerImportModalTitle");
@@ -64,15 +64,60 @@ function renderModalFrame(options = {}) {
   const bodyHtml = String(options.bodyHtml || "");
   const actionsHtml = options.actionsHtml || renderModalActions(options.actions || []);
   return `
-    <div class="docsViewerImportModal"${modalRole}${hiddenAttr}>
-      <div class="docsViewerImportModal__backdrop"${backdropRole}></div>
-      <div class="docsViewerImportModal__dialog${sizeClass}${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}">
-        <h3 id="${escapeHtml(titleId)}"${titleRole}>${escapeHtml(title)}</h3>
-        ${bodyHtml}
-        ${actionsHtml}
+    <div class="docsViewer__modal"${modalRole}${hiddenAttr}>
+      <div class="docsViewer__modalBackdrop"${backdropRole}></div>
+      <div class="docsViewer__modalCard${sizeClass}${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}">
+        <div class="docsViewer__modalHeader">
+          <div class="docsViewer__modalHeaderCopy">
+            <h2 class="docsViewer__modalTitle" id="${escapeHtml(titleId)}"${titleRole}>${escapeHtml(title)}</h2>
+          </div>
+        </div>
+        <form class="docsViewer__modalForm" data-role="filename-conflict-form">
+          ${bodyHtml}
+          ${actionsHtml}
+        </form>
       </div>
     </div>
   `;
+}
+
+function focusableControls(container) {
+  if (!container) return [];
+  return Array.from(container.querySelectorAll([
+    "button:not([disabled])",
+    "input:not([disabled])",
+    "select:not([disabled])",
+    "textarea:not([disabled])",
+    "a[href]",
+    "[tabindex]:not([tabindex='-1'])"
+  ].join(","))).filter((node) => {
+    return !node.hidden && node.getClientRects && node.getClientRects().length;
+  });
+}
+
+function trapModalFocus(event, modal) {
+  if (!modal || event.key !== "Tab") return false;
+  const controls = focusableControls(modal);
+  if (!controls.length) return false;
+  const first = controls[0];
+  const last = controls[controls.length - 1];
+  const active = document.activeElement;
+  if (!modal.contains(active)) {
+    event.preventDefault();
+    first.focus();
+    return true;
+  }
+  if (event.shiftKey && active === first) {
+    event.preventDefault();
+    last.focus();
+    return true;
+  }
+  if (!event.shiftKey && active === last) {
+    event.preventDefault();
+    first.focus();
+    return true;
+  }
+  return false;
 }
 
 export function openReplacementDocIdModal(options = {}) {
@@ -94,37 +139,46 @@ export function openReplacementDocIdModal(options = {}) {
     modalRole: "docs-import-filename-conflict-modal",
     backdropRole: "filename-conflict-cancel",
     bodyHtml: `
-      <p class="docsViewerImportModal__label">${escapeHtml(modalText(
+      <p class="docsViewer__modalNote muted small">${escapeHtml(modalText(
         config,
         "docs_html_import.filename_conflict_body",
         "A source file named {doc_id}.md already exists. Edit the doc_id to choose a new filename.",
         { doc_id: currentDocId }
       ))}</p>
-      <label class="docsViewerImport__field docsViewerImport__modalField" for="${inputId}">
-        <span class="docsViewerImport__fieldLabel">${escapeHtml(modalText(config, "docs_html_import.replacement_doc_id_label", "doc_id"))}</span>
-        <span class="docsViewerImport__fieldControl">
-          <input class="docsViewerImport__input" id="${inputId}" type="text" value="${escapeHtml(currentDocId)}">
-        </span>
+      <label class="docsViewer__field" for="${inputId}">
+        <span class="docsViewer__fieldLabel">${escapeHtml(modalText(config, "docs_html_import.replacement_doc_id_label", "doc_id"))}</span>
+        <input class="docsViewer__fieldInput" id="${inputId}" type="text" autocomplete="off" spellcheck="false" value="${escapeHtml(currentDocId)}">
       </label>
-      <p class="docsViewerImport__status" data-role="${statusRole}"></p>
+      <p class="docsViewer__modalNote muted small" data-role="${statusRole}" hidden></p>
     `,
+    size: "compact",
     actions: [
-      { role: "filename-conflict-ok", label: modalText(config, "docs_html_import.filename_conflict_ok_button", "OK") },
+      { role: "filename-conflict-cancel", label: modalText(config, "docs_html_import.filename_conflict_cancel_button", "Cancel") },
       { role: "filename-conflict-replace", label: modalText(config, "docs_html_import.filename_conflict_replace_button", "Replace") },
-      { role: "filename-conflict-cancel", label: modalText(config, "docs_html_import.filename_conflict_cancel_button", "Cancel") }
+      { role: "filename-conflict-ok", label: modalText(config, "docs_html_import.filename_conflict_ok_button", "OK") }
     ]
   });
 
+  const modal = host.querySelector('[data-role="docs-import-filename-conflict-modal"]');
+  const form = host.querySelector('[data-role="filename-conflict-form"]');
   const input = host.querySelector(`#${inputId}`);
   const statusNode = host.querySelector(`[data-role="${statusRole}"]`);
   const okButton = host.querySelector('[data-role="filename-conflict-ok"]');
   const replaceButton = host.querySelector('[data-role="filename-conflict-replace"]');
   const cancelNodes = host.querySelectorAll('[data-role="filename-conflict-cancel"]');
+  const restoreFocus = document.activeElement;
 
   return new Promise((resolve) => {
     const cleanup = () => {
       host.innerHTML = "";
       document.removeEventListener("keydown", onKeydown);
+      try {
+        if (restoreFocus && typeof restoreFocus.focus === "function") {
+          restoreFocus.focus({ preventScroll: true });
+        }
+      } catch (_error) {
+        // Focus return is best effort.
+      }
     };
     const close = (value) => {
       cleanup();
@@ -133,6 +187,7 @@ export function openReplacementDocIdModal(options = {}) {
     const setModalStatus = (message) => {
       if (!statusNode) return;
       statusNode.textContent = message || "";
+      statusNode.hidden = !message;
       if (message) {
         statusNode.dataset.state = "error";
       } else {
@@ -151,6 +206,7 @@ export function openReplacementDocIdModal(options = {}) {
     const submitReplace = () => close({ action: "replace", overwriteDocId: currentDocId });
     const cancel = () => close({ action: "cancel" });
     const onKeydown = (event) => {
+      if (trapModalFocus(event, modal)) return;
       if (event.key === "Escape") {
         event.preventDefault();
         cancel();
@@ -161,6 +217,12 @@ export function openReplacementDocIdModal(options = {}) {
     if (okButton) okButton.addEventListener("click", submitReplacement);
     if (replaceButton) replaceButton.addEventListener("click", submitReplace);
     cancelNodes.forEach((node) => node.addEventListener("click", cancel));
+    if (form) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        submitReplacement();
+      });
+    }
 
     window.setTimeout(() => {
       try {

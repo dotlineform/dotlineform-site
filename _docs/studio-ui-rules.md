@@ -63,6 +63,23 @@ Use this as the single capture surface for Studio UI work:
   - `assets/docs-viewer/css/docs-viewer-management.css`
 - local verification:
   - open `/docs/?scope=library&mode=manage&doc=library&import=1` and confirm the modal initializes the importer without an iframe
+
+## UI Rule Log 2026-05-15 / UI-102
+
+- status: adopted
+- route: `/docs/?scope=<scope>&mode=manage`
+- issue: the Docs Import modal still carried the old standalone-page migration shape through `_includes/docs_import_shell.html` and the filename-conflict dialog used a separate import-specific modal shell.
+- triage: modal composition migration
+- reasoning: Docs Import is now a Docs Viewer management workflow, so its modal markup should be part of the Docs Viewer management shell and any nested conflict dialog should use the same portable modal anatomy as metadata, settings, and transient Docs Viewer management modals.
+- outcome: the import body moved into `_includes/docs_viewer_shell.html`, `_includes/docs_import_shell.html` was retired, and the filename-conflict dialog now uses the `docsViewer__modal*` shell, status slot, default-width action row, focus return, and focus containment.
+- files changed:
+  - `_includes/docs_viewer_shell.html`
+  - `assets/docs-viewer/js/docs-html-import.js`
+  - `assets/docs-viewer/js/docs-html-import-modals.js`
+  - `assets/docs-viewer/js/docs-viewer-management-modals.js`
+  - `assets/docs-viewer/css/docs-viewer-management.css`
+- local verification:
+  - open `/docs/?scope=library&mode=manage&doc=library&import=1` and confirm the import modal initializes, action focus remains inside the modal, and the filename-conflict dialog follows the Docs Viewer modal shell
   - confirm no `/studio/docs-import/` route is needed for the importer
 
 ## UI Rule Log 2026-05-11 / UI-100

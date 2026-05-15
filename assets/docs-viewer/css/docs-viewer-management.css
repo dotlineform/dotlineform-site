@@ -195,20 +195,6 @@
   flex: 0 0 auto;
 }
 
-.docsViewerImport__modalField{
-  margin-top: 0.7rem;
-  width: 100%;
-}
-
-.docsViewerImport__modalField .docsViewerImport__fieldControl{
-  width: 100%;
-}
-
-.docsViewerImport__modalField .docsViewerImport__fieldControl > .docsViewerImport__input{
-  flex: 1 1 auto;
-  width: 100%;
-}
-
 .docsViewerImport__toggle{
   display: inline-flex;
   align-items: center;
@@ -279,74 +265,6 @@
 
 .docsViewerImport__warnings ul{
   padding-left: 1.1rem;
-}
-
-.docsViewerImportModal{
-  --docs-viewer-modal-width-compact: 38rem;
-  --docs-viewer-modal-width-default: 52rem;
-  --docs-viewer-modal-width-wide: 68rem;
-  --docs-viewer-modal-width-document: 72ch;
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: grid;
-  place-items: center;
-}
-
-.docsViewerImportModal[hidden]{
-  display: none;
-}
-
-.docsViewerImportModal__backdrop{
-  position: absolute;
-  inset: 0;
-  background: color-mix(in srgb, var(--docs-viewer-text, var(--text, #111)) 26%, transparent);
-}
-
-.docsViewerImportModal__dialog{
-  box-sizing: border-box;
-  position: relative;
-  width: min(var(--docs-viewer-modal-width-default), calc(100vw - 2rem));
-  max-height: calc(100vh - 2rem);
-  overflow: auto;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
-  border-radius: var(--docs-viewer-import-radius-lg, 0.5rem);
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  padding: 1rem;
-}
-
-.docsViewerImportModal__dialog--compact{
-  width: min(var(--docs-viewer-modal-width-compact), calc(100vw - 2rem));
-}
-
-.docsViewerImportModal__dialog--default{
-  width: min(var(--docs-viewer-modal-width-default), calc(100vw - 2rem));
-}
-
-.docsViewerImportModal__dialog--wide{
-  width: min(var(--docs-viewer-modal-width-wide), calc(100vw - 2rem));
-}
-
-.docsViewerImportModal__dialog--document{
-  width: min(var(--docs-viewer-modal-width-document), calc(100vw - 2rem));
-}
-
-.docsViewerImportModal__dialog > h3{
-  margin-top: 0;
-}
-
-.docsViewerImportModal__label{
-  margin: 0.55rem 0 0.35rem;
-  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-}
-
-.docsViewerImportModal__actions{
-  margin-top: 0.9rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
 }
 
 @media (max-width: 700px){
@@ -539,6 +457,8 @@
   z-index: 1;
   color-scheme: light;
   width: min(var(--docs-viewer-modal-width-default), calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
   margin: 8vh auto 0;
   border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
   border-radius: var(--docs-viewer-radius, var(--radius, 0.625rem));
@@ -565,6 +485,7 @@
   flex-direction: column;
   width: min(var(--docs-viewer-modal-width-document), calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
+  overflow: hidden;
 }
 
 .docsViewer__modalHeader{
@@ -756,8 +677,13 @@ select.docsViewer__fieldInput--listbox{
 
 .docsViewer__modalActions{
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.6rem;
+}
+
+.docsViewer__actionButton--defaultWidth{
+  min-inline-size: 5.75rem;
 }
 
 .docsViewer__importBody{

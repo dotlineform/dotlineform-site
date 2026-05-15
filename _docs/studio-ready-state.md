@@ -37,7 +37,7 @@ As of 2026-05-14, the strict audit reports:
 - 0 errors
 - 0 warnings
 
-The Docs Import modal also implements the contract through the Docs Viewer shell, but it is not counted by the Studio route-shell audit because its root lives in `_includes/docs_import_shell.html`.
+The Docs Import modal also implements the contract through the Docs Viewer shell, but it is not counted by the Studio route-shell audit because its root is owned by the Docs Viewer management modal rather than a Studio route shell.
 
 ## Contract
 

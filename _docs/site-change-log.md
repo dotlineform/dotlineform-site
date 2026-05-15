@@ -17,6 +17,30 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-15] Moved Docs Import Into The Docs Viewer Modal Shell
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / modal composition
+
+**Summary:**
+Retired the Docs Import body include that was left from the old standalone import page migration.
+The `/docs/` management shell now owns the import modal body directly, and the Docs HTML import filename-conflict dialog uses the same portable `docsViewer__modal*` shell vocabulary as the other Docs Viewer management modals.
+
+**Effect:**
+Priority 12 of the modal composition migration is in progress with the highest-risk include debt removed.
+Docs Viewer management modals now share the default-width action-row class and focus containment helper before the remaining browser verification pass.
+
+**Affected files/docs:**
+
+- `_includes/docs_viewer_shell.html`
+- `assets/docs-viewer/js/docs-viewer-management-modals.js`
+- `assets/docs-viewer/js/docs-html-import.js`
+- `assets/docs-viewer/js/docs-html-import-modals.js`
+- `assets/docs-viewer/css/docs-viewer-management.css`
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Modal Composition Migration Tracker](/docs/?scope=studio&doc=modal-composition-migration-tracker)
+
 ## [2026-05-15] Added Modal Shell Primitive Contract
 
 **Status:** implemented

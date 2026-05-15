@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T20:24:31Z",
+  "generated_at": "2026-05-15T20:33:36Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -691,7 +691,7 @@
       "source_path": "modal-composition-migration-tracker.md",
       "viewer_url": "/docs/?scope=studio&doc=modal-composition-migration-tracker",
       "content_url": "/assets/data/docs/scopes/studio/by-id/modal-composition-migration-tracker.json",
-      "content_text_length": 9307,
+      "content_text_length": 9684,
       "ui_status": "in-progress"
     },
     {
@@ -933,7 +933,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 26854,
+      "content_text_length": 26932,
       "ui_status": "in-progress"
     },
     {
@@ -1064,7 +1064,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 16773
+      "content_text_length": 16814
     },
     {
       "scope": "studio",
@@ -1597,7 +1597,7 @@
       "source_path": "studio-ready-state.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ready-state",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ready-state.json",
-      "content_text_length": 8002
+      "content_text_length": 8037
     },
     {
       "scope": "studio",
@@ -1809,7 +1809,7 @@
       "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 172106
+      "content_text_length": 173448
     },
     {
       "scope": "studio",
@@ -3416,7 +3416,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 156810
+      "content_text_length": 157857
     },
     {
       "scope": "studio",

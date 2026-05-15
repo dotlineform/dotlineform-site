@@ -40,7 +40,7 @@ function bodyHtmlFromText(body) {
 function renderActions(actions) {
   return '<div class="docsViewer__modalActions">' + actions.map(function (action) {
     var roleAttr = action.role ? ' data-role="' + escapeHtml(action.role) + '"' : "";
-    return '<button class="docsViewer__actionButton" type="button"' + roleAttr + '>' + escapeHtml(action.label) + '</button>';
+    return '<button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="button"' + roleAttr + '>' + escapeHtml(action.label) + '</button>';
   }).join("") + '</div>';
 }
 
@@ -120,6 +120,7 @@ function openManagementModal(options = {}) {
     }
 
     function onKeydown(event) {
+      if (trapModalFocus(event, modal)) return;
       if (event.key === "Escape") {
         event.preventDefault();
         cancel();
@@ -152,6 +153,45 @@ function openManagementModal(options = {}) {
       }
     }, 0);
   });
+}
+
+function focusableControls(container) {
+  if (!container) return [];
+  return Array.from(container.querySelectorAll([
+    "button:not([disabled])",
+    "input:not([disabled])",
+    "select:not([disabled])",
+    "textarea:not([disabled])",
+    "a[href]",
+    "[tabindex]:not([tabindex='-1'])"
+  ].join(","))).filter(function (node) {
+    return !node.hidden && node.getClientRects && node.getClientRects().length;
+  });
+}
+
+function trapModalFocus(event, modal) {
+  if (!modal || event.key !== "Tab") return false;
+  var controls = focusableControls(modal);
+  if (!controls.length) return false;
+  var first = controls[0];
+  var last = controls[controls.length - 1];
+  var active = document.activeElement;
+  if (!modal.contains(active)) {
+    event.preventDefault();
+    first.focus();
+    return true;
+  }
+  if (event.shiftKey && active === first) {
+    event.preventDefault();
+    last.focus();
+    return true;
+  }
+  if (!event.shiftKey && active === last) {
+    event.preventDefault();
+    first.focus();
+    return true;
+  }
+  return false;
 }
 
 export function openDocsViewerConfirmModal(options = {}) {
@@ -455,6 +495,23 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
   }
 
+  function isFocusableNow(target) {
+    return Boolean(
+      target
+      && typeof target.focus === "function"
+      && !target.disabled
+      && target.getClientRects
+      && target.getClientRects().length
+    );
+  }
+
+  function focusModalReturnTarget(preferredTarget) {
+    var target = isFocusableNow(preferredTarget) ? preferredTarget : refs.manageActionsButton;
+    window.setTimeout(function () {
+      focusWithoutScroll(target);
+    }, 0);
+  }
+
   function closeMetadataModal(result) {
     if (!refs.metadataModal) return;
     if (document.activeElement && refs.metadataModal.contains(document.activeElement)) {
@@ -525,14 +582,26 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (importModalCancelButton) importModalCancelButton.textContent = state.managementText.importCancelButton;
   }
 
+  function focusImportModalEntry() {
+    var cancelButton = ensureImportModalCancelButton();
+    if (cancelButton) {
+      focusWithoutScroll(cancelButton);
+      return;
+    }
+    if (refs.importRoot) {
+      focusWithoutScroll(refs.importRoot);
+    }
+  }
+
   function openImportModal() {
     if (!refs.importModal || !refs.importRoot) return;
     var scope = viewerScope();
-    var cancelButton = ensureImportModalCancelButton();
     refs.importModal.hidden = false;
-    if (typeof callbacks.onImportOpen === "function") callbacks.onImportOpen(scope);
-    if (cancelButton) {
-      cancelButton.focus();
+    var initResult = typeof callbacks.onImportOpen === "function" ? callbacks.onImportOpen(scope) : null;
+    if (initResult && typeof initResult.then === "function") {
+      initResult.then(focusImportModalEntry).catch(focusImportModalEntry);
+    } else {
+      focusImportModalEntry();
     }
   }
 
@@ -542,9 +611,7 @@ export function createDocsViewerManagementModalController(options = {}) {
       document.activeElement.blur();
     }
     refs.importModal.hidden = true;
-    if (refs.manageImportButton) {
-      refs.manageImportButton.focus();
-    }
+    focusModalReturnTarget(refs.manageImportButton);
   }
 
   function setSettingsStatus(message, stateName) {
@@ -614,9 +681,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
     refs.settingsModal.hidden = true;
     settingsFieldState = null;
-    if (refs.manageSettingsButton) {
-      refs.manageSettingsButton.focus();
-    }
+    focusModalReturnTarget(refs.manageSettingsButton);
   }
 
   function handleRootClick(event) {
@@ -651,6 +716,15 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function handleDocumentKeydown(event) {
+    if (event.key === "Tab" && metadataModalOpen()) {
+      return trapModalFocus(event, refs.metadataModal);
+    }
+    if (event.key === "Tab" && importModalOpen()) {
+      return trapModalFocus(event, refs.importModal);
+    }
+    if (event.key === "Tab" && settingsModalOpen()) {
+      return trapModalFocus(event, refs.settingsModal);
+    }
     if (event.key === "Escape" && refs.metadataParentPopup && !refs.metadataParentPopup.hidden) {
       event.preventDefault();
       hideMetadataParentPopup();

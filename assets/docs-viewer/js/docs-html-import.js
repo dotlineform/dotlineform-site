@@ -855,8 +855,3 @@ export async function initDocsHtmlImport(options = {}) {
     markRouteReady(state, true);
   }
 }
-
-const autoInitRoot = document.getElementById("docsHtmlImportRoot");
-if (!autoInitRoot || autoInitRoot.dataset.docsImportAutoInit !== "false") {
-  initDocsHtmlImport();
-}

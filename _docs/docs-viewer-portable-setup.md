@@ -49,7 +49,7 @@ Copy:
 
 If management mode should include Docs Import, also copy:
 
-- `_includes/docs_import_shell.html`
+- the Docs Import modal markup embedded in `_includes/docs_viewer_shell.html`
 
 The route adapter includes wrap `docs_viewer_shell.html` with the right public or management flags.
 Examples in this repo are:

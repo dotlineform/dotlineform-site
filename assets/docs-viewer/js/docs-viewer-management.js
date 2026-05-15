@@ -1531,6 +1531,7 @@ export function initDocsViewerManagement(context) {
     refs: {
       importModal: importModal,
       importRoot: importRoot,
+      manageActionsButton: manageActionsButton,
       manageImportButton: manageImportButton,
       metadataCancelButton: metadataCancelButton,
       metadataDocId: metadataDocId,

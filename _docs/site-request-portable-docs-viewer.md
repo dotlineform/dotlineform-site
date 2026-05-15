@@ -143,7 +143,7 @@ Ownership decisions for this slice:
 
 | Area | Current examples | Target owner | Decision |
 | --- | --- | --- | --- |
-| Docs Viewer shell | `_includes/docs_viewer_shell.html`, `_includes/docs_import_shell.html` | Docs Viewer package plus consuming route adapter | Keep includes as the route integration boundary until the route-adapter slice defines templates. |
+| Docs Viewer shell | `_includes/docs_viewer_shell.html` | Docs Viewer package plus consuming route adapter | Keep the viewer shell include as the route integration boundary until the route-adapter slice defines templates. Docs Import modal markup lives inside that shell rather than a migrated standalone-page include. |
 | Docs Viewer runtime JS | `assets/docs-viewer/js/docs-viewer*.js` | Docs Viewer | Runtime modules live under `assets/docs-viewer/js/`. |
 | Docs Viewer CSS | `assets/docs-viewer/css/docs-viewer-management.css`, `.docsViewer*` rules in `assets/css/main.css` | Docs Viewer | Management CSS lives under `assets/docs-viewer/css/`; public CSS extraction is still a later slice. |
 | Docs Viewer browser config | `scripts/docs/docs_scopes.json`, `assets/studio/data/studio_config.json`, hardcoded route maps | Docs Viewer | Keep `scripts/docs/docs_scopes.json` as source config; add a browser-facing config under `assets/docs-viewer/data/`. |
