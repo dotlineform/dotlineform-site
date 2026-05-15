@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-576eae016acdacdd57ca5b1998e82472",
-    "generated_at_utc": "2026-05-15T19:44:38Z",
+    "version": "blake2b-31b732c09e9df009794b8e2224e5101f",
+    "generated_at_utc": "2026-05-15T20:55:36Z",
     "count": 245
   },
   "entries": [
@@ -3052,10 +3052,10 @@
       "kind": "doc",
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
-      "last_updated": "2026-05-14 16:10",
+      "last_updated": "2026-05-15",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-05-14 16:10 • Site Docs",
+      "display_meta": "2026-05-15 • Site Docs",
       "search_terms": [
         "scripts-run-checks",
         "scripts",
@@ -3065,14 +3065,12 @@
         "site docs",
         "site",
         "docs",
-        "2026-05-14 16:10",
+        "2026-05-15",
         "2026",
         "05",
-        "14",
-        "16",
-        "10"
+        "15"
       ],
-      "search_text": "scripts-run-checks scripts run checks run checks site docs site docs 2026-05-14 16:10 2026 05 14 16 10"
+      "search_text": "scripts-run-checks scripts run checks run checks site docs site docs 2026-05-15 2026 05 15"
     },
     {
       "id": "site-request-js-config-structural-review-search-performance-instrumentation",
@@ -4487,18 +4485,16 @@
       "kind": "doc",
       "title": "Testing",
       "href": "/docs/?scope=studio&doc=testing",
-      "last_updated": "2026-05-14 16:10",
-      "display_meta": "2026-05-14 16:10",
+      "last_updated": "2026-05-15",
+      "display_meta": "2026-05-15",
       "search_terms": [
         "testing",
-        "2026-05-14 16:10",
+        "2026-05-15",
         "2026",
         "05",
-        "14",
-        "16",
-        "10"
+        "15"
       ],
-      "search_text": "testing 2026-05-14 16:10 2026 05 14 16 10"
+      "search_text": "testing 2026-05-15 2026 05 15"
     },
     {
       "id": "scripts-docs-broken-links",

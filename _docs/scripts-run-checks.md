@@ -2,7 +2,7 @@
 doc_id: scripts-run-checks
 title: Run Checks
 added_date: 2026-05-01
-last_updated: "2026-05-14 16:10"
+last_updated: "2026-05-15"
 parent_id: site-docs
 sort_order: 60
 ---
@@ -47,7 +47,7 @@ Run the broad profile:
 - `docs`
   Runs grouped pytest checks for Docs Viewer export, Library import, generated-read helpers, Docs Management Server, Docs routes, and Docs Broken Links behavior, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
 - `docs-viewer-smoke`
-  Builds the site to a temporary Jekyll destination and runs the retained Docs Viewer route smoke for direct loads, search route state, link interception, history, hash fragments, and Library scope loading.
+  Builds the site to a temporary Jekyll destination and runs retained Docs Viewer smoke checks for direct loads, search route state, link interception, history, hash fragments, Library scope loading, and management modal behavior.
 - `studio-smoke`
   Builds the site to a temporary Jekyll destination and runs retained browser smoke checks, including the Docs Viewer route smoke, Studio data import route checks with docs-management unavailable, and a mocked Library import preview flow.
 - `full`

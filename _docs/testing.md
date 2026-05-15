@@ -2,7 +2,7 @@
 doc_id: testing
 title: Testing
 added_date: 2026-05-01
-last_updated: "2026-05-14 16:10"
+last_updated: "2026-05-15"
 parent_id: ""
 sort_order: 135
 ---
@@ -57,7 +57,7 @@ Examples:
 
 Profiles are intentionally coarse. Choose the smallest profile that matches the risk.
 The `docs` profile includes Library import parser, Library import service, and Docs Management Server checks.
-The `docs-viewer-smoke` profile builds a temporary Jekyll site and runs only the retained Docs Viewer route smoke.
+The `docs-viewer-smoke` profile builds a temporary Jekyll site and runs retained Docs Viewer route and management-modal smoke checks.
 The `studio-smoke` profile builds a temporary Jekyll site and runs retained browser smoke scripts such as the data import route checks.
 Those checks cover both the docs-management-unavailable state and a mocked Library import preview flow.
 
