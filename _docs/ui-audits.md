@@ -75,6 +75,7 @@ Update the existing same-day audit doc when:
 Audit docs should follow the output structure defined in [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance):
 
 - coverage summary
+- modal composition, when the audited route opens modals
 - findings
 - cleanup opportunities
 - remediation status
@@ -95,6 +96,8 @@ When auditing a page that implements a catalogue primitive or pattern:
 - do not treat UI Catalogue demo pages as proof that live CSS is correct
 
 If a live page drifts from the demo pattern, record whether the issue belongs to the live route implementation, the production shared primitive, or the catalogue demo itself.
+
+When the pattern is a modal shell, open representative modal states in the live route and record the checks required by the [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance). The modal shell demo proves the isolated pattern only; it does not prove the route's focus behavior, close behavior, validation placement, action ownership, or responsive fit.
 
 Working rule:
 

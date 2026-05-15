@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T21:03:55Z",
+  "generated_at": "2026-05-15T21:18:43Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -692,7 +692,7 @@
       "viewer_url": "/docs/?scope=studio&doc=modal-composition-migration-tracker",
       "content_url": "/assets/data/docs/scopes/studio/by-id/modal-composition-migration-tracker.json",
       "content_text_length": 10170,
-      "ui_status": "in-progress"
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -1532,7 +1532,7 @@
       "source_path": "studio-ui-conformance.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-conformance",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-conformance.json",
-      "content_text_length": 9589
+      "content_text_length": 11016
     },
     {
       "scope": "studio",
@@ -2279,7 +2279,7 @@
       "source_path": "ui-audits.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-audits",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audits.json",
-      "content_text_length": 3064
+      "content_text_length": 3448
     },
     {
       "scope": "studio",
@@ -3152,23 +3152,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "ui-request-modal-composition-pattern",
-      "title": "Modal Composition Pattern Request",
-      "added_date": "2026-05-10",
-      "last_updated": "2026-05-15",
-      "parent_id": "change-requests",
-      "sort_order": 190,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "ui-request-modal-composition-pattern.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-modal-composition-pattern.json",
-      "content_text_length": 22057,
-      "ui_status": "in-progress"
-    },
-    {
-      "scope": "studio",
       "doc_id": "bulk-add-work",
       "title": "Bulk Add Work",
       "added_date": "2026-04-19",
@@ -4010,6 +3993,23 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-router-extraction",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-router-extraction.json",
       "content_text_length": 8069,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-request-modal-composition-pattern",
+      "title": "Modal Composition Pattern Request",
+      "added_date": "2026-05-10",
+      "last_updated": "2026-05-15",
+      "parent_id": "archive",
+      "sort_order": 630,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "ui-request-modal-composition-pattern.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-modal-composition-pattern.json",
+      "content_text_length": 22026,
       "ui_status": "done"
     }
   ]

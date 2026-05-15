@@ -3,18 +3,19 @@ doc_id: ui-request-modal-composition-pattern
 title: Modal Composition Pattern Request
 added_date: 2026-05-10
 last_updated: 2026-05-15
-ui_status: in-progress
-parent_id: change-requests
-sort_order: 190
+ui_status: done
+parent_id: archive
+sort_order: 630
 hidden: false
 ---
 # Modal Composition Pattern Request
 
 Status:
 
-- In progress
+- Complete
 - Extraction prerequisite complete
-- Next phase: define the canonical shell contract and migrate current modal pages
+- Canonical shell contract documented
+- Current modal-owning pages migrated and verified
 
 ## Summary
 
@@ -25,6 +26,20 @@ The pattern should make modals consistent as UI containers while keeping domain 
 The review should also explain the current implementation spread. Existing Studio and Docs Viewer modals use several reasonable but different approaches, and that variety now makes the codebase harder to understand, harder to discuss when requirements change, and harder to extend safely.
 
 This is not only future-facing guidance. The modal composition migration applies to all current Studio and Docs Viewer modal surfaces. Migration should be tracked and completed at page or route level, so a route with multiple modals is reviewed and migrated as one coherent UI surface unless a concrete implementation blocker requires a narrower temporary slice.
+
+## Completed Outcome
+
+The durable modal shell contract now lives in [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell).
+The page-level rollout is complete in [Modal Composition Migration Tracker](/docs/?scope=studio&doc=modal-composition-migration-tracker), with every current modal-owning route marked `done` and backed by representative browser smoke coverage.
+
+The final implementation direction is:
+
+- one shared modal shell contract for Studio and portable Docs Viewer management surfaces
+- two preferred composition patterns: transient result modals and route-owned workflow modals
+- `assets/studio/js/studio-modal.js` as the canonical Studio helper layer
+- portable `docsViewer__*` equivalents allowed for Docs Viewer when they preserve the same shell anatomy, focus behavior, action-row contract, validation placement, and action ownership
+- UI Catalogue modal demos aligned to the same contract
+- UI audit guidance updated so routes with modals require representative modal composition checks
 
 ## Reason
 
@@ -70,7 +85,7 @@ Current modal implementations now fall into these broad groups:
 
 No `window.prompt()`, `window.confirm()`, or `window.alert()` uses remain under `assets/studio/js` or `assets/docs-viewer/js`.
 
-The issue is no longer embedded modal bulk in route controllers. The remaining issue is that extracted modal helpers still use several locally valid shell shapes, CSS vocabularies, and helper APIs. The next phase should choose the stable shared shell contract, decide which existing helper is canonical, and document how Studio and portable Docs Viewer implementations stay visually and behaviorally aligned.
+The issue is no longer embedded modal bulk in route controllers. The pattern phase chose the stable shared shell contract, standardized the current modal pages against it, and documented how Studio and portable Docs Viewer implementations stay visually and behaviorally aligned.
 
 Once the shell contract is chosen, the migration should not stop at representative examples. Representative pages can still be used to prove implementation details, but every current modal page remains in scope until the tracker marks it done.
 
@@ -209,22 +224,17 @@ Screenshots add maintenance overhead, so the audit requirement should be proport
 
 As part of making this operational, the review should update `user-guide.md` or the relevant UI audit guidance so modal screenshots and browser checks become part of the expected UI conformance workflow rather than an optional afterthought.
 
-## Next Steps
+## Completion Notes
 
-1. Choose the canonical shell contract.
-   Start from `assets/studio/js/studio-modal.js`, especially `renderStudioModalFrame()` and `renderStudioModalActions()`, unless the review finds a missing requirement from the extracted route-local modules.
-2. Define the two preferred composition patterns.
-   Keep the target to transient result modals and route-owned workflow modals unless a concrete extracted example proves a durable third pattern is needed.
-3. Write stable guidance under the UI composition-pattern docs.
-   The guidance should include shell anatomy, focus/return behavior, Escape/backdrop behavior, action-row vocabulary, validation placement, result contracts, and action ownership.
-4. Update UI audit guidance to include modal composition checks.
-   Audits should check representative modal screenshots or browser states, not only page-level controls.
-5. Maintain the page-level migration tracker.
-   Prioritize easiest pages first when useful for momentum, but keep all current modal pages in scope.
-6. Decide CSS ownership and naming.
-   Clarify which modal rules become shared Studio shell rules, which stay route-local, and how `docsViewer__*` portable equivalents maintain parity.
-7. Record permanent API examples.
-   Document helper API shapes for confirm/notice/input/choice/result flows so future work copies an existing contract rather than inventing another local pattern.
+The original next steps are complete:
+
+- canonical shell contract: [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell)
+- preferred composition patterns: transient result modal and route-owned workflow modal
+- migration tracker: [Modal Composition Migration Tracker](/docs/?scope=studio&doc=modal-composition-migration-tracker)
+- UI audit guidance: [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance) and [UI Audits](/docs/?scope=studio&doc=ui-audits)
+- demo reference: [Modal shell primitive demo](/studio/ui-catalogue/demos/primitives/modal-shell/)
+
+Future modal work should start from the permanent primitive and audit docs rather than this completed request.
 
 ## Modal Extraction Prerequisite
 
@@ -271,9 +281,9 @@ Use that child doc for migration status updates and quick-start rules.
 - converting existing modals in bulk could introduce regressions in local write flows
 - action ownership needs clear naming so code does not become harder to follow
 
-## Open Questions
+## Resolved Decisions
 
-- Should `renderStudioModalFrame()` become the canonical shell as-is, or does it need a small accessibility/focus/action-row refinement before standardization?
-- Should Docs Viewer management keep static portable shell markup while matching Studio composition rules, or migrate more of its shell rendering into portable JS helpers?
-- Which extracted route-local modal should be the first complex workflow example in permanent guidance?
-- Should modal-return contracts be documented as JavaScript helper APIs, prose rules, or both?
+- `renderStudioModalFrame()` and `renderStudioModalActions()` are the canonical Studio shell base, with the refinements documented in [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell).
+- Docs Viewer management may keep static portable shell markup and portable `docsViewer__*` helpers when needed, as long as they match the shared contract.
+- Complex workflow examples are represented by route-owned modal migrations in Tag Registry, Tag Aliases, Series Tags, Catalogue Work, Docs Viewer management, and the UI Catalogue modal-shell demo.
+- Modal-return contracts should be documented both as helper APIs in JavaScript and as prose rules in the primitive and audit docs.

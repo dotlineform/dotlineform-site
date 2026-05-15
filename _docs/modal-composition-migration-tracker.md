@@ -2,8 +2,8 @@
 doc_id: modal-composition-migration-tracker
 title: Modal Composition Migration Tracker
 added_date: 2026-05-15
-last_updated: "2026-05-15"
-ui_status: in-progress
+last_updated: 2026-05-15
+ui_status: done
 parent_id: ui-request-modal-composition-pattern
 sort_order: 20
 hidden: false

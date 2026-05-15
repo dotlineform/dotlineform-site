@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-31b732c09e9df009794b8e2224e5101f",
-    "generated_at_utc": "2026-05-15T20:55:36Z",
+    "version": "blake2b-9fdc76bfeadb4bbb7694d485bb124af2",
+    "generated_at_utc": "2026-05-15T21:18:43Z",
     "count": 245
   },
   "entries": [
@@ -4924,33 +4924,6 @@
       "search_text": "library-export library export library export v1 v1 archive 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
-      "id": "ui-request-modal-composition-pattern",
-      "kind": "doc",
-      "title": "Modal Composition Pattern Request",
-      "href": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
-      "last_updated": "2026-05-15",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-15 • Change Requests",
-      "search_terms": [
-        "ui-request-modal-composition-pattern",
-        "ui",
-        "request",
-        "modal",
-        "composition",
-        "pattern",
-        "modal composition pattern request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "ui-request-modal-composition-pattern ui request modal composition pattern modal composition pattern request change requests change requests 2026-05-15 2026 05 15"
-    },
-    {
       "id": "bulk-add-work",
       "kind": "doc",
       "title": "Bulk Add Work",
@@ -6281,6 +6254,31 @@
         "14"
       ],
       "search_text": "site-request-docs-viewer-router-extraction site request docs viewer router extraction docs viewer router extraction request archive 2026-05-14 2026 05 14"
+    },
+    {
+      "id": "ui-request-modal-composition-pattern",
+      "kind": "doc",
+      "title": "Modal Composition Pattern Request",
+      "href": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
+      "last_updated": "2026-05-15",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-15 • Archive",
+      "search_terms": [
+        "ui-request-modal-composition-pattern",
+        "ui",
+        "request",
+        "modal",
+        "composition",
+        "pattern",
+        "modal composition pattern request",
+        "archive",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "ui-request-modal-composition-pattern ui request modal composition pattern modal composition pattern request archive 2026-05-15 2026 05 15"
     }
   ]
 }

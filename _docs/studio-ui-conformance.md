@@ -69,6 +69,7 @@ Current expected coverage:
 - `authoritative`
   - button
   - input
+  - modal shell
   - panel
 - `framework-only`
   - toolbar/import block
@@ -78,7 +79,6 @@ Current expected coverage:
 - `partial`
   - list shell as a published primitive
   - toolbar as a published primitive
-  - modal shell as a published primitive
 - `uncovered`
   - any page pattern that is not yet mapped into the shared `tagStudio*` layer or recorded as a permanent shared rule
 
@@ -102,6 +102,8 @@ Expected verification modes:
 - desktop browser check
 - mobile browser check
 - local code inspection for shared-class usage, route-local compensation, and redundant styling
+
+If the route opens modals, the browser checks must include representative modal states. At minimum, open one instance of each modal pattern used by the route and verify shell anatomy, action row, close behavior, focus entry/return, validation or status placement, and desktop/mobile fit where layout risk exists.
 
 ## Audit Workflow
 
@@ -172,12 +174,30 @@ Minimum categories:
 
 - actions/buttons
 - fields/inputs
+- modal shell and modal action row, when the route opens modals
 - panels/surfaces
 - summaries/messages
 - list or result shells
 - route-specific compositions
 
-### 5. Findings
+### 5. Modal Composition
+
+Include this section when the route opens modals.
+
+Record:
+
+- modal patterns used, such as notice, confirmation, short input, choice, import/review, or route-owned workflow
+- routes and controls used to open the representative modal states
+- shell contract source, usually [Modal Shell Primitive](/docs/?scope=studio&doc=ui-primitive-modal-shell)
+- desktop and mobile modal checks run
+- focus entry, focus containment, Escape/backdrop/action close behavior, and focus return
+- validation or status-message placement
+- action ownership, especially whether writes, rebuilds, archive/delete operations, reloads, and durable page status remain owned by the opener or route command
+- parity notes for portable Docs Viewer implementations when applicable
+
+If a route has modal behavior but the audit cannot open the modal, record that as a blocked verification path rather than treating the modal as covered.
+
+### 6. Findings
 
 Each finding should include:
 
@@ -201,7 +221,7 @@ Each finding should include:
 - `local-now`
 - `blocked`
 
-### 6. Cleanup Opportunities
+### 7. Cleanup Opportunities
 
 If the audit identifies redundant implementation after a fix, record:
 
@@ -212,13 +232,14 @@ If the audit identifies redundant implementation after a fix, record:
 
 This section is required even when the page mostly conforms.
 
-### 7. Verification
+### 8. Verification
 
 Record:
 
 - routes checked
 - desktop checks run
 - mobile checks run
+- modal checks run, when applicable
 - any code inspection used
 - any blocked verification path
 
@@ -316,8 +337,17 @@ Open decisions:
 Coverage summary:
 - buttons: authoritative
 - inputs: authoritative
+- modal shell: authoritative | not applicable
 - summary panel: framework-only
 - route-specific composition: partial
+
+Modal composition:
+- patterns:
+- desktop modal checks:
+- mobile modal checks:
+- focus/close checks:
+- action ownership:
+- blocked modal checks:
 
 Findings:
 1. [severity] [status] ui area
