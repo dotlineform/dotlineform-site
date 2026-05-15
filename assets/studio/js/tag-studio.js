@@ -33,8 +33,7 @@ import {
   normalizeWorkId,
   pushMapList,
   sanitizeTag,
-  splitWorkInputTokens,
-  workStateMapToObject
+  splitWorkInputTokens
 } from "./tag-studio-domain.js";
 import {
   equalOfflineSeriesRows,
@@ -46,16 +45,17 @@ import {
   writeOfflineAssignmentsSession
 } from "./tag-assignments-offline.js";
 import {
-  buildPatchSnippet,
   buildSaveModeText as buildTagStudioSaveModeText,
   buildTagSaveSuccessMessage,
   postTags,
   utcTimestamp
 } from "./tag-studio-save.js";
 import {
-  renderStudioModalActions,
-  renderStudioModalFrame
-} from "./studio-modal.js";
+  closeTagStudioSaveModal,
+  collectTagStudioSaveModalRefs,
+  openTagStudioSaveModal,
+  renderTagStudioSaveModal
+} from "./tag-studio-modals.js";
 import {
   setStudioRouteBusy,
   setStudioRouteReady
@@ -378,27 +378,6 @@ function renderShell(state) {
   const addButtonLabel = studioText(state.config, "add_button", "Add");
   const saveButtonLabel = studioText(state.config, "save_button", "Save Tags");
   const saveModeLabel = buildTagStudioSaveModeText(state.config, "offline", studioText);
-  const modalTitle = studioText(state.config, "modal_title", "Tag Assignment Patch Preview");
-  const modalResolvedLabel = studioText(state.config, "modal_resolved_label", "Resolved tag assignment payload");
-  const modalPatchGuidanceLabel = studioText(state.config, "modal_patch_guidance_label", "Patch guidance for tag_assignments.json");
-  const modalCopyButton = studioText(state.config, "modal_copy_button", "Copy");
-  const modalCloseButton = studioText(state.config, "modal_close_button", "Close");
-  const saveModalHtml = renderStudioModalFrame({
-    modalRole: UI.role.modal,
-    backdropRole: UI.role.modalClose,
-    titleId: "tagStudioModalTitle",
-    title: modalTitle,
-    bodyHtml: `
-      <p class="${UI_CLASS.modalLabel}">${escapeHtml(modalResolvedLabel)}</p>
-      <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.modalTags}"></pre>
-      <p class="${UI_CLASS.modalLabel}">${escapeHtml(modalPatchGuidanceLabel)}</p>
-      <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.modalSnippet}"></pre>
-    `,
-    actionsHtml: renderStudioModalActions([
-      { role: UI.role.copySnippet, label: modalCopyButton },
-      { role: UI.role.modalClose, label: modalCloseButton }
-    ])
-  });
   const refs = {
     workInput: state.mount.querySelector(UI_SELECTOR.workInput),
     selectedWork: state.mount.querySelector(UI_SELECTOR.workSelection),
@@ -432,14 +411,11 @@ function renderShell(state) {
   refs.addButton.textContent = addButtonLabel;
   refs.saveButton.textContent = saveButtonLabel;
   refs.saveMode.textContent = saveModeLabel;
-  refs.modalHost.innerHTML = saveModalHtml;
+  refs.modalHost.innerHTML = renderTagStudioSaveModal(state);
 
   state.refs = {
     ...refs,
-    modal: state.mount.querySelector(UI_SELECTOR.modal),
-    modalTags: state.mount.querySelector(UI_SELECTOR.modalTags),
-    modalSnippet: state.mount.querySelector(UI_SELECTOR.modalSnippet),
-    copyButton: state.mount.querySelector(UI_SELECTOR.copySnippet)
+    ...collectTagStudioSaveModalRefs(state.mount)
   };
 }
 
@@ -613,7 +589,7 @@ function wireEvents(state) {
 
   state.refs.modal.addEventListener("click", (event) => {
     if (!event.target.closest(UI_SELECTOR.modalClose)) return;
-    closeModal(state);
+    closeTagStudioSaveModal(state);
   });
 
   state.refs.copyButton.addEventListener("click", async () => {
@@ -1741,24 +1717,7 @@ function openSaveModal(state) {
     return;
   }
 
-  const timestamp = utcTimestamp();
-  const snippet = buildPatchSnippet(
-    state.seriesId,
-    diff,
-    timestamp
-  );
-  state.modalSnippet = snippet;
-
-  state.refs.modalTags.textContent = JSON.stringify({
-    series_tags: diff.nextSeriesRows,
-    work_overrides: workStateMapToObject(diff.nextWorkStateById)
-  }, null, 2);
-  state.refs.modalSnippet.textContent = snippet;
-  state.refs.modal.hidden = false;
-}
-
-function closeModal(state) {
-  state.refs.modal.hidden = true;
+  openTagStudioSaveModal(state, diff);
 }
 
 function setStatus(state, kind, text) {

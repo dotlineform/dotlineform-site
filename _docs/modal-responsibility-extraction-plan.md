@@ -94,6 +94,7 @@ Additional files found during implementation inventory:
 
 - `assets/docs-viewer/js/docs-viewer-management-modals.js`
 - `assets/studio/js/catalogue-editor-action-modals.js`
+- `assets/studio/js/tag-studio-modals.js`
 - `assets/studio/js/catalogue-work-actions.js`
 - `assets/studio/js/catalogue-work-detail-actions.js`
 - `assets/studio/js/catalogue-series-actions.js`
@@ -142,6 +143,9 @@ Completed slices:
 - Extracted the Data Sharing Review result and apply-confirmation modals from `assets/studio/js/data-sharing-review.js` into `assets/studio/js/data-sharing-review-modals.js`.
   The modal module owns result notice body rendering, result count rows, modal issue-list rendering, result close labels, apply confirmation labels/body construction, and shared modal invocations.
   The route still owns returned package loading, preview row rendering, selection state, preflight/apply service calls, apply result payload shaping, activity context, status updates, and route busy state.
+- Extracted the Series Tag Editor save preview modal from `assets/studio/js/tag-studio.js` into `assets/studio/js/tag-studio-modals.js`.
+  The modal module owns the save preview shell/body/actions rendering, modal ref collection, resolved payload population, patch snippet population, open state, close helper, and local modal copy lookup.
+  The route still owns editor diff construction, no-change handling, save mode probing, local/offline persistence, clipboard status messaging, route busy state, and editor rendering.
 
 Inventory notes:
 
@@ -158,6 +162,7 @@ Verification completed:
 - Focused module contract checks covered the Data Sharing Prepare result modal helper's success/failure titles, output filename normalization, count unit labels, escaped files/issues, close action cleanup, and explicit clearing helper.
 - Focused module contract checks covered the Activity Log details modal helper's detail item filtering, fallback body text, escaped title/body/close labels, and close cleanup through the shared notice modal.
 - Focused module contract checks covered the Data Sharing Review modal helper's result title/summary/count/issues rendering, escaped labels/body text, notice close cleanup, apply confirmation body construction, and primary confirmation result.
+- Focused module contract checks covered the Series Tag Editor save preview modal helper's shell roles, escaped labels, hidden/open state, ref collection, resolved payload population, patch snippet population, and close helper.
 
 ## Completion Criteria
 
