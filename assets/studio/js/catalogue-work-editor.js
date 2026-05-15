@@ -648,7 +648,7 @@ function createWorkEditorState(elements) {
     isDeleting: false,
     serverAvailable: false,
     modalHost: createStudioModalHost({ root }),
-    activeModalKeydown: null,
+    activeModalController: null,
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
     readonlyNodes: new Map(),

@@ -550,6 +550,7 @@ export async function previewCurrentBuildImpact(state, context) {
   state.isPreviewingBuild = true;
   context.updateEditorState();
   setTextWithState(context, state.statusNode, t(state, context, "build_preview_status_running", "Preparing public update preview..."));
+  let openedPreviewModal = false;
   try {
     const response = await previewCatalogueBuild({
       work_id: state.currentWorkId,
@@ -557,8 +558,11 @@ export async function previewCurrentBuildImpact(state, context) {
       changed_fields: changedFields,
       extra_series_ids: previewExtraSeriesIdsForDraft(state)
     });
-    context.openBuildPreviewModal(response, changedFields);
     setTextWithState(context, state.statusNode, t(state, context, "save_status_loaded", "Loaded work {work_id}.", { work_id: state.currentWorkId }));
+    state.isPreviewingBuild = false;
+    context.updateEditorState();
+    context.openBuildPreviewModal(response, changedFields);
+    openedPreviewModal = true;
   } catch (error) {
     setTextWithState(
       context,
@@ -567,8 +571,10 @@ export async function previewCurrentBuildImpact(state, context) {
       "error"
     );
   } finally {
-    state.isPreviewingBuild = false;
-    context.updateEditorState();
+    if (!openedPreviewModal) {
+      state.isPreviewingBuild = false;
+      context.updateEditorState();
+    }
   }
 }
 
@@ -604,16 +610,22 @@ export async function importWorkProse(state, context) {
           staging_path: normalizeText(preview.staging_path)
         }
       );
+      state.isBuilding = false;
+      context.updateEditorState();
+      const proseRestoreFocus = state.readinessNode && state.readinessNode.querySelector('[data-prose-import="work"]');
       confirmOverwrite = await confirmCatalogueActionModal(state, {
         title: t(state, context, "prose_import_confirm_title", "Confirm prose overwrite"),
         message,
         primaryLabel: t(state, context, "prose_import_confirm_button", "Overwrite"),
-        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
+        restoreFocus: proseRestoreFocus
       });
       if (!confirmOverwrite) {
         setTextWithState(context, state.statusNode, t(state, context, "prose_import_overwrite_cancelled", "Prose import cancelled."), "warning");
         return;
       }
+      state.isBuilding = true;
+      context.updateEditorState();
     }
     setTextWithState(context, state.statusNode, t(state, context, "prose_import_running", "Importing staged prose…"));
     const importResponse = await applyCatalogueProseImport({
@@ -768,16 +780,21 @@ export async function applyPublicationChange(state, context) {
         defaultText: "Unpublish this work?",
         includeDirtyNote: context.draftHasChanges()
       });
+      state.isBuilding = false;
+      context.updateEditorState();
       const confirmed = await confirmCatalogueActionModal(state, {
         title: t(state, context, "publication_unpublish_confirm_title", "Confirm unpublish"),
         message: summary,
         primaryLabel: t(state, context, "publication_unpublish_confirm_button", "Unpublish"),
-        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
+        restoreFocus: state.publicationButton
       });
       if (!confirmed) {
         setTextWithState(context, state.statusNode, t(state, context, "publication_status_cancelled", "Publication change cancelled."));
         return;
       }
+      state.isBuilding = true;
+      context.updateEditorState();
     }
 
     setTextWithState(
@@ -904,18 +921,21 @@ export async function deleteCurrentWork(state, context) {
       text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
       defaultText: "Delete this source record?"
     });
+    state.isDeleting = false;
+    context.updateEditorState();
     const confirmed = await confirmCatalogueActionModal(state, {
       title: t(state, context, "delete_confirm_title", "Confirm delete"),
       message: summary,
       primaryLabel: t(state, context, "delete_confirm_button", "Delete"),
-      cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+      cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
+      restoreFocus: state.deleteButton
     });
     if (!confirmed) {
-      state.isDeleting = false;
-      context.updateEditorState();
       setTextWithState(context, state.statusNode, t(state, context, "delete_status_cancelled", "Delete cancelled."));
       return;
     }
+    state.isDeleting = true;
+    context.updateEditorState();
     setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Deleting source record…"));
     await applyCatalogueDelete(request);
     const route = getStudioRoute(state.config, "catalogue_status");

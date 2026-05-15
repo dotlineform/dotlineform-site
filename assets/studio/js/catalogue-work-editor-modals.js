@@ -8,7 +8,9 @@ import {
   validateWorkEmbeddedEntryValues
 } from "./catalogue-editor-embedded-items.js";
 import {
+  activateStudioModalFrame,
   openConfirmModal,
+  openNoticeModal,
   renderStudioModalFrame
 } from "./studio-modal.js";
 import {
@@ -17,14 +19,15 @@ import {
 
 const ENTRY_SAVE_ROLE = "entry-modal-save";
 const ENTRY_CANCEL_ROLE = "entry-modal-cancel";
-const BUILD_PREVIEW_CLOSE_ROLE = "build-preview-modal-close";
 
 export function closeCatalogueWorkModal(state) {
-  if (state && state.modalHost) state.modalHost.innerHTML = "";
-  if (state && state.activeModalKeydown) {
-    document.removeEventListener("keydown", state.activeModalKeydown);
+  if (state && state.activeModalController) {
+    const controller = state.activeModalController;
+    state.activeModalController = null;
+    controller.destroy({ restoreFocus: false });
+    return;
   }
-  if (state) state.activeModalKeydown = null;
+  if (state && state.modalHost) state.modalHost.innerHTML = "";
 }
 
 export function openWorkEmbeddedEntryModal(state, kind, index = null, options = {}) {
@@ -41,35 +44,22 @@ export function openWorkEmbeddedEntryModal(state, kind, index = null, options = 
   closeCatalogueWorkModal(state);
   state.modalHost.innerHTML = renderWorkEmbeddedEntryModalHtml(descriptor, { text });
 
-  const firstNode = state.modalHost.querySelector(`#${firstField.fieldId}`);
-  const secondNode = state.modalHost.querySelector(`#${secondField.fieldId}`);
-  const statusNode = state.modalHost.querySelector(`#${descriptor.statusId}`);
-  const saveNode = state.modalHost.querySelector(`[data-role="${ENTRY_SAVE_ROLE}"]`);
-  const cancelNodes = state.modalHost.querySelectorAll(`[data-role="${ENTRY_CANCEL_ROLE}"]`);
-
-  return new Promise((resolve) => {
-    const setModalStatus = (message) => {
-      if (!statusNode) return;
-      statusNode.textContent = message || "";
-      if (message) {
-        statusNode.dataset.state = "error";
-      } else {
-        delete statusNode.dataset.state;
-      }
-    };
-
-    const cancel = () => {
-      closeCatalogueWorkModal(state);
-      resolve({ confirmed: false });
-    };
-
-    const submit = () => {
+  const controller = activateStudioModalFrame(state.modalHost, {
+    cancelRoles: [ENTRY_CANCEL_ROLE],
+    submitRoles: [ENTRY_SAVE_ROLE],
+    focusSelector: `#${firstField.fieldId}`,
+    selectInitialFocus: true,
+    onSubmit(api) {
+      const firstNode = state.modalHost.querySelector(`#${firstField.fieldId}`);
+      const secondNode = state.modalHost.querySelector(`#${secondField.fieldId}`);
       const firstValue = normalizeText(firstNode && firstNode.value);
       const secondValue = normalizeText(secondNode && secondNode.value);
       const validationMessage = validateWorkEmbeddedEntryValues(kind, firstValue, secondValue, { text });
       if (validationMessage) {
-        setModalStatus(validationMessage);
-        return;
+        api.setStatus("error", validationMessage);
+        if (firstNode && !firstValue) firstNode.focus();
+        else if (secondNode && !secondValue) secondNode.focus();
+        return false;
       }
       const nextEntry = buildWorkEmbeddedEntry(kind, firstValue, secondValue);
       const nextEntries = descriptor.entries.slice();
@@ -78,31 +68,18 @@ export function openWorkEmbeddedEntryModal(state, kind, index = null, options = 
       } else {
         nextEntries.push(nextEntry);
       }
-      closeCatalogueWorkModal(state);
-      resolve({
-        confirmed: true,
+      return {
         entriesKey: descriptor.entriesKey,
         entries: nextEntries,
         entry: nextEntry,
         editing: descriptor.editing,
         index: descriptor.editing ? index : null
-      });
-    };
-
-    state.activeModalKeydown = (event) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        cancel();
-      }
-      if (event.key === "Enter" && event.target && event.target.tagName === "INPUT") {
-        event.preventDefault();
-        submit();
-      }
-    };
-    document.addEventListener("keydown", state.activeModalKeydown);
-    cancelNodes.forEach((button) => button.addEventListener("click", cancel));
-    if (saveNode) saveNode.addEventListener("click", submit);
-    if (firstNode) firstNode.focus();
+      };
+    }
+  });
+  state.activeModalController = controller;
+  return controller.promise.finally(() => {
+    if (state.activeModalController === controller) state.activeModalController = null;
   });
 }
 
@@ -116,7 +93,8 @@ export async function confirmWorkEmbeddedDeleteModal(state, kind, index, options
     title: confirmation.title,
     body: confirmation.body,
     primaryLabel: lookupText(text, "entry_modal_delete_button", "Delete"),
-    cancelLabel: lookupText(text, "entry_modal_cancel_button", "Cancel")
+    cancelLabel: lookupText(text, "entry_modal_cancel_button", "Cancel"),
+    size: "compact"
   });
   if (!result || !result.confirmed) return { confirmed: false };
   const nextEntries = confirmation.entries.slice();
@@ -130,36 +108,22 @@ export async function confirmWorkEmbeddedDeleteModal(state, kind, index, options
 }
 
 export function openWorkBuildPreviewModal(state, response, changedFields, options = {}) {
-  if (!state || !state.modalHost) return;
+  if (!state || !state.root) return;
   const text = options.text;
   closeCatalogueWorkModal(state);
-  state.modalHost.innerHTML = renderStudioModalFrame({
-    hidden: false,
+  openNoticeModal({
+    root: state.root,
     title: lookupText(text, "build_preview_modal_title", "Public update preview"),
     titleId: "catalogueWorkBuildPreviewModalTitle",
-    modalRole: "build-preview-modal",
-    backdropRole: BUILD_PREVIEW_CLOSE_ROLE,
+    size: "wide",
     bodyHtml: formatCatalogueBuildPreviewModalHtml(response, changedFields, {
       text,
       defaultTemplate: "Public update preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
       reasonsClass: "catalogueWorkBuildPreview__reasons"
     }),
-    actions: [
-      { role: BUILD_PREVIEW_CLOSE_ROLE, label: lookupText(text, "build_preview_modal_close", "Close") }
-    ]
+    closeLabel: lookupText(text, "build_preview_modal_close", "Close"),
+    restoreFocus: state.previewNode && state.previewNode.querySelector('[data-action="preview-build-impact"]')
   });
-
-  const closeNodes = state.modalHost.querySelectorAll(`[data-role="${BUILD_PREVIEW_CLOSE_ROLE}"]`);
-  state.activeModalKeydown = (event) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      closeCatalogueWorkModal(state);
-    }
-  };
-  document.addEventListener("keydown", state.activeModalKeydown);
-  closeNodes.forEach((button) => button.addEventListener("click", () => closeCatalogueWorkModal(state)));
-  const closeButton = state.modalHost.querySelector(`[data-role="${BUILD_PREVIEW_CLOSE_ROLE}"]`);
-  if (closeButton) closeButton.focus();
 }
 
 export function renderWorkEmbeddedEntryModalHtml(descriptor, options = {}) {
@@ -170,18 +134,18 @@ export function renderWorkEmbeddedEntryModalHtml(descriptor, options = {}) {
     hidden: false,
     title: descriptor.title,
     titleId: descriptor.titleId,
-    modalRole: descriptor.modalRole,
+    modalRole: "studio-modal",
     backdropRole: ENTRY_CANCEL_ROLE,
     bodyHtml: `
       <div class="tagStudioForm__fields">
         ${modalFieldHtml(firstField)}
         ${modalFieldHtml(secondField)}
       </div>
-      <p class="tagStudioForm__status" id="${escapeHtml(descriptor.statusId)}"></p>
+      <p class="tagStudioForm__status tagStudioModal__status" data-role="modal-status" id="${escapeHtml(descriptor.statusId)}" hidden></p>
     `,
     actions: [
-      { role: ENTRY_SAVE_ROLE, label: lookupText(text, "entry_modal_save_button", "Save") },
-      { role: ENTRY_CANCEL_ROLE, label: lookupText(text, "entry_modal_cancel_button", "Cancel") }
+      { role: ENTRY_CANCEL_ROLE, label: lookupText(text, "entry_modal_cancel_button", "Cancel") },
+      { role: ENTRY_SAVE_ROLE, label: lookupText(text, "entry_modal_save_button", "Save"), primary: true }
     ]
   });
 }

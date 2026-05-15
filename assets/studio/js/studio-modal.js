@@ -119,6 +119,147 @@ export function renderStudioModalFrame(options = {}) {
   `;
 }
 
+export function activateStudioModalFrame(host, options = {}) {
+  const restoreFocus = options.restoreFocus || document.activeElement;
+  const modal = host && host.querySelector('[data-role="studio-modal"], .tagStudioModal');
+  const dialog = host && host.querySelector('[role="dialog"]');
+  const form = host && host.querySelector('[data-role="modal-form"]');
+  const cancelRoles = Array.isArray(options.cancelRoles) && options.cancelRoles.length
+    ? options.cancelRoles
+    : ["modal-cancel"];
+  const submitRoles = Array.isArray(options.submitRoles) && options.submitRoles.length
+    ? options.submitRoles
+    : ["modal-primary"];
+  const cancelNodes = cancelRoles.flatMap((role) => Array.from(host.querySelectorAll(`[data-role="${role}"]`)));
+  const submitNodes = submitRoles.flatMap((role) => Array.from(host.querySelectorAll(`[data-role="${role}"]`)));
+  let settled = false;
+  let resolvePromise = null;
+
+  const promise = new Promise((resolve) => {
+    resolvePromise = resolve;
+  });
+
+  const cleanup = (restore = true) => {
+    closeActiveModal(host);
+    document.removeEventListener("keydown", onKeydown);
+    if (!restore) return;
+    try {
+      if (restoreFocus && typeof restoreFocus.focus === "function") {
+        restoreFocus.focus({ preventScroll: true });
+      }
+    } catch (_error) {
+      // Focus return is best effort for removed or disabled opener controls.
+    }
+  };
+
+  const settle = (result = { confirmed: false }, settleOptions = {}) => {
+    if (settled) return;
+    settled = true;
+    cleanup(settleOptions.restoreFocus !== false);
+    if (resolvePromise) resolvePromise(result);
+  };
+
+  const api = {
+    host,
+    modal,
+    dialog,
+    setStatus(kind, message) {
+      setRoleMessage(host, "modal-status", "tagStudioForm__status tagStudioModal__status", kind, message);
+    },
+    cancel(settleOptions = {}) {
+      settle({ confirmed: false }, settleOptions);
+    },
+    close(result = { confirmed: false }, settleOptions = {}) {
+      settle(result, settleOptions);
+    }
+  };
+
+  const submit = async () => {
+    if (settled) return;
+    if (typeof options.onSubmit === "function") {
+      const result = await options.onSubmit(api);
+      if (result === false) return;
+      if (result && typeof result === "object" && result.ok === false) {
+        if ("status" in result) api.setStatus(result.statusKind || "error", result.status || "");
+        return;
+      }
+      settle({ confirmed: true, ...(result && typeof result === "object" ? result : {}) });
+      return;
+    }
+    settle({ confirmed: true });
+  };
+
+  api.submit = submit;
+
+  function onKeydown(event) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      api.cancel();
+      return;
+    }
+    if (event.key === "Tab" && modal) {
+      const nodes = focusableNodes(modal);
+      if (!nodes.length) return;
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+        return;
+      }
+      if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+      return;
+    }
+    if (event.key === "Enter" && options.submitOnEnter !== false) {
+      const target = event.target;
+      const tagName = target && target.tagName ? target.tagName.toLowerCase() : "";
+      if (tagName === "textarea" || tagName === "button") return;
+      event.preventDefault();
+      submit();
+    }
+  }
+
+  document.addEventListener("keydown", onKeydown);
+
+  cancelNodes.forEach((node) => {
+    node.addEventListener("click", () => api.cancel());
+  });
+  submitNodes.forEach((node) => {
+    node.addEventListener("click", submit);
+  });
+  if (form) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      submit();
+    });
+  }
+  if (modal) {
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) api.cancel();
+    });
+  }
+
+  const focusTarget = options.focusSelector ? host.querySelector(options.focusSelector) : null;
+  const initialFocus = focusTarget || submitNodes[0] || cancelNodes[cancelNodes.length - 1] || dialog;
+  if (initialFocus && typeof initialFocus.focus === "function") initialFocus.focus();
+  if (options.selectInitialFocus && initialFocus && typeof initialFocus.select === "function") initialFocus.select();
+  if (typeof options.onOpen === "function") options.onOpen(api);
+
+  return {
+    promise,
+    api,
+    submit,
+    cancel: api.cancel,
+    close: api.close,
+    destroy(destroyOptions = {}) {
+      settle({ confirmed: false }, { restoreFocus: Boolean(destroyOptions.restoreFocus) });
+    }
+  };
+}
+
 function renderModal(type, options = {}) {
   const title = String(options.title || "");
   const bodyHtml = options.bodyHtml ? String(options.bodyHtml) : renderBodyText(options.body);
@@ -178,120 +319,18 @@ function openModal(type, options = {}) {
   closeActiveModal(host);
   host.innerHTML = renderModal(type, options);
 
-  const modal = host.querySelector('[data-role="studio-modal"]');
-  const dialog = host.querySelector('[role="dialog"]');
-  const form = host.querySelector('[data-role="modal-form"]');
-  const primary = host.querySelector('[data-role="modal-primary"]');
-  const cancelButtons = host.querySelectorAll('[data-role="modal-cancel"]');
-  let settled = false;
-
-  return new Promise((resolve) => {
-    const cleanup = () => {
-      closeActiveModal(host);
-      document.removeEventListener("keydown", onKeydown);
-      try {
-        if (restoreFocus && typeof restoreFocus.focus === "function") {
-          restoreFocus.focus({ preventScroll: true });
-        }
-      } catch (_error) {
-        // Focus return is best effort for removed or disabled opener controls.
-      }
-    };
-
-    const api = {
-      host,
-      setStatus(kind, message) {
-        setRoleMessage(host, "modal-status", "tagStudioForm__status tagStudioModal__status", kind, message);
-      }
-    };
-
-    const submit = async () => {
-      if (settled) return;
+  const controller = activateStudioModalFrame(host, {
+    ...options,
+    restoreFocus,
+    async onSubmit(api) {
       if (typeof options.onSubmit === "function") {
-        const result = await options.onSubmit(api);
-        if (result === false) return;
-        if (result && typeof result === "object" && result.ok === false) {
-          if ("status" in result) api.setStatus(result.statusKind || "error", result.status || "");
-          return;
-        }
-        settled = true;
-        cleanup();
-        resolve({ confirmed: true, ...(result && typeof result === "object" ? result : {}) });
-        return;
+        return options.onSubmit(api);
       }
-      settled = true;
-      cleanup();
-      if (type === "patch-preview") {
-        resolve({ confirmed: true });
-        return;
-      }
-      resolve({ confirmed: true });
-    };
-
-    const cancel = () => {
-      if (settled) return;
-      settled = true;
-      cleanup();
-      resolve({ confirmed: false });
-    };
-
-    const onKeydown = (event) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        cancel();
-        return;
-      }
-      if (event.key === "Tab" && modal) {
-        const nodes = focusableNodes(modal);
-        if (!nodes.length) return;
-        const first = nodes[0];
-        const last = nodes[nodes.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last.focus();
-          return;
-        }
-        if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first.focus();
-        }
-        return;
-      }
-      if (event.key === "Enter" && options.submitOnEnter !== false) {
-        const target = event.target;
-        const tagName = target && target.tagName ? target.tagName.toLowerCase() : "";
-        if (tagName === "textarea" || tagName === "button") return;
-        event.preventDefault();
-        submit();
-      }
-    };
-
-    document.addEventListener("keydown", onKeydown);
-
-    cancelButtons.forEach((button) => {
-      button.addEventListener("click", cancel);
-    });
-    if (primary) {
-      primary.addEventListener("click", submit);
+      if (type === "patch-preview") return {};
+      return {};
     }
-    if (form) {
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        submit();
-      });
-    }
-
-    if (modal) {
-      modal.addEventListener("click", (event) => {
-        if (event.target === modal) cancel();
-      });
-    }
-
-    const focusTarget = options.focusSelector ? host.querySelector(options.focusSelector) : null;
-    const initialFocus = focusTarget || primary || cancelButtons[cancelButtons.length - 1] || dialog;
-    if (initialFocus && typeof initialFocus.focus === "function") initialFocus.focus();
-    if (options.selectInitialFocus && initialFocus && typeof initialFocus.select === "function") initialFocus.select();
   });
+  return controller.promise;
 }
 
 function fieldId(options, fallback) {
