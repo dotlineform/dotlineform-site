@@ -166,6 +166,9 @@ Completed slices:
 - Extracted the first Tag Aliases modal slice from `assets/studio/js/tag-aliases.js` into `assets/studio/js/tag-aliases-modals.js`.
   The modal module owns import, patch, promotion, demote, and edit modal shell/body/actions rendering, modal ref collection, import selected-file/result rendering, patch snippet modal UI, promotion open/close/status/group-key rendering, and edit/demote popup visibility/status helpers.
   The route still owns alias lookup, validation decisions, import availability, import parsing/submission, create/edit/delete/promote/demote service calls, tag match lookup and selection rules, patch fallback decisions, route busy state, route ready state, and list/control rendering.
+- Extracted the second Tag Aliases modal slice from `assets/studio/js/tag-aliases.js` into `assets/studio/js/tag-aliases-modals.js`.
+  The modal module now owns edit/create/demote modal field population, open/close reset lifecycle, edit/demote selected-target chip rendering, edit/demote group key rendering, and validation result display application.
+  The route still owns alias and tag lookup, edit/demote validation decisions, tag match lookup and selection rules, import parsing/submission, create/edit/delete/promote/demote service calls, patch fallback decisions, route busy state, route ready state, and list/control rendering.
 
 Inventory notes:
 
@@ -189,6 +192,7 @@ Verification completed:
 - Focused module contract checks covered the Tag Registry modal helper's delete impact count/link rendering, empty-series fallback, escaping, and impact status rendering.
 - Focused module contract checks covered the Tag Registry modal helper's selected import file display, result clearing on file selection, empty-file reset, and import result status rendering.
 - Focused module contract checks covered the Tag Aliases modal helper's modal shell escaping, ref collection contract, selected import file display, import result clearing, patch show/hide behavior, promotion group-key rendering/status updates, and popup show/hide helpers.
+- Focused module contract checks covered the Tag Aliases modal helper's edit/create/demote open state, field population, selected target chip rendering, group key rendering, validation-driven warning/status/button state, focus entry, and close reset lifecycle.
 
 ## Completion Criteria
 

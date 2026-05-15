@@ -149,6 +149,52 @@ export function setTagAliasesDemoteStatus(state, kind, message) {
   setStatusText(state.refs.demoteStatus, kind, message);
 }
 
+export function openTagAliasesDemoteModal(state, options) {
+  const canonicalTagId = options && options.canonicalTagId ? options.canonicalTagId : "";
+  const aliasKey = options && options.aliasKey ? options.aliasKey : canonicalTagId;
+  state.demoteState = {
+    tagId: canonicalTagId,
+    tags: []
+  };
+  state.refs.demoteTagMeta.textContent = aliasesText(
+    state.config,
+    "demotion_modal_meta",
+    "tag: {tag_id} -> alias \"{alias_key}\"",
+    {
+      tag_id: canonicalTagId,
+      alias_key: aliasKey
+    }
+  );
+  state.refs.demoteTagSearch.value = "";
+  hideTagAliasesDemoteTagPopup(state);
+  renderTagAliasesDemoteSelectionState(state, {
+    canConfirm: false,
+    statusKind: "",
+    statusMessage: ""
+  });
+  state.refs.demoteModal.hidden = false;
+  state.refs.demoteTagSearch.focus();
+}
+
+export function closeTagAliasesDemoteModal(state) {
+  state.demoteState = null;
+  state.refs.demoteModal.hidden = true;
+  state.refs.demoteTagMeta.textContent = "";
+  state.refs.demoteTagSearch.value = "";
+  state.refs.demoteGroupKey.innerHTML = "";
+  state.refs.demoteTagList.innerHTML = "";
+  state.refs.confirmDemote.disabled = true;
+  setTagAliasesDemoteStatus(state, "", "");
+  hideTagAliasesDemoteTagPopup(state);
+}
+
+export function renderTagAliasesDemoteSelectionState(state, options = {}) {
+  renderDemoteGroupKey(state);
+  renderDemoteTagList(state);
+  state.refs.confirmDemote.disabled = !options.canConfirm;
+  setTagAliasesDemoteStatus(state, options.statusKind || "", options.statusMessage || "");
+}
+
 export function showTagAliasesDemoteTagPopup(state, html) {
   state.refs.demoteTagPopup.innerHTML = html || "";
   state.refs.demoteTagPopupWrap.hidden = false;
@@ -161,6 +207,62 @@ export function hideTagAliasesDemoteTagPopup(state) {
 
 export function setTagAliasesEditStatus(state, kind, message) {
   setStatusText(state.refs.editStatus, kind, message);
+}
+
+export function openTagAliasesEditModal(state, entry) {
+  state.editState = {
+    originalAlias: entry.alias,
+    originalDescription: String(entry.description || "").trim(),
+    originalTags: Array.isArray(entry.targets) ? entry.targets.slice() : [],
+    tags: Array.isArray(entry.targets) ? entry.targets.slice() : []
+  };
+
+  state.refs.editAliasName.value = entry.alias;
+  state.refs.editAliasDescription.value = String(entry.description || "").trim();
+  state.refs.editTagSearch.value = "";
+  hideTagAliasesEditTagPopup(state);
+  setAliasEditModalMode(state, "edit");
+  renderTagAliasesEditModalState(state);
+  state.refs.editModal.hidden = false;
+}
+
+export function openTagAliasesCreateModal(state) {
+  state.editState = {
+    originalAlias: "",
+    originalDescription: "",
+    originalTags: [],
+    tags: []
+  };
+  state.refs.editAliasName.value = "";
+  state.refs.editAliasDescription.value = "";
+  state.refs.editTagSearch.value = "";
+  hideTagAliasesEditTagPopup(state);
+  setAliasEditModalMode(state, "new");
+  renderTagAliasesEditModalState(state);
+  state.refs.editModal.hidden = false;
+  state.refs.editAliasName.focus();
+}
+
+export function closeTagAliasesEditModal(state) {
+  state.editState = null;
+  state.refs.editModal.hidden = true;
+  state.refs.editAliasName.value = "";
+  state.refs.editAliasDescription.value = "";
+  state.refs.editTagSearch.value = "";
+  setAliasEditModalMode(state, "edit");
+  state.refs.editAliasWarning.textContent = "";
+  setTagAliasesEditStatus(state, "", "");
+  state.refs.saveEditAlias.disabled = true;
+  state.refs.editTagList.innerHTML = "";
+  hideTagAliasesEditTagPopup(state);
+}
+
+export function renderTagAliasesEditModalState(state, options = {}) {
+  renderEditGroupKey(state);
+  renderEditTagList(state);
+  state.refs.editAliasWarning.textContent = options.warning || "";
+  state.refs.saveEditAlias.disabled = !options.canSave;
+  setTagAliasesEditStatus(state, options.statusKind || "", options.statusMessage || "");
 }
 
 export function showTagAliasesEditTagPopup(state, html) {
@@ -321,6 +423,77 @@ function renderPromotionGroupKey(state) {
       </button>
     `;
   }).join("") + renderGroupInfoControl(state);
+}
+
+function setAliasEditModalMode(state, mode) {
+  const normalizedMode = mode === "new" ? "new" : "edit";
+  state.refs.editModalTitle.textContent = normalizedMode === "new"
+    ? aliasesText(state.config, "new_modal_title", "New Alias")
+    : aliasesText(state.config, "edit_modal_title", "Edit Alias");
+  state.refs.saveEditAlias.textContent = normalizedMode === "new"
+    ? aliasesText(state.config, "edit_create_button", "Create")
+    : aliasesText(state.config, "edit_save_button", "Save");
+}
+
+function renderDemoteGroupKey(state) {
+  if (!state.demoteState) {
+    state.refs.demoteGroupKey.innerHTML = "";
+    return;
+  }
+  state.refs.demoteGroupKey.innerHTML = renderSelectedGroupKey(state, state.demoteState.tags);
+}
+
+function renderDemoteTagList(state) {
+  if (!state.demoteState) {
+    state.refs.demoteTagList.innerHTML = "";
+    return;
+  }
+  state.refs.demoteTagList.innerHTML = renderSelectedTagChips(state, state.demoteState.tags, "data-remove-demote-tag");
+}
+
+function renderEditGroupKey(state) {
+  if (!state.editState) {
+    state.refs.editGroupKey.innerHTML = "";
+    return;
+  }
+  state.refs.editGroupKey.innerHTML = renderSelectedGroupKey(state, state.editState.tags);
+}
+
+function renderEditTagList(state) {
+  if (!state.editState) {
+    state.refs.editTagList.innerHTML = "";
+    return;
+  }
+  state.refs.editTagList.innerHTML = renderSelectedTagChips(state, state.editState.tags, "data-remove-edit-tag");
+}
+
+function renderSelectedGroupKey(state, tagIds) {
+  const selected = new Set((Array.isArray(tagIds) ? tagIds : []).map((tagId) => String(tagId || "").split(":", 1)[0]));
+  return getStudioGroups(state).map((group) => {
+    const titleAttr = groupTitleAttr(state, group);
+    return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI.state.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
+  }).join("") + renderGroupInfoControl(state);
+}
+
+function renderSelectedTagChips(state, tagIds, removeAttribute) {
+  return (Array.isArray(tagIds) ? tagIds : []).map((tagId) => {
+    const info = state.registryById.get(tagId);
+    const group = info && getStudioGroups(state).includes(info.group) ? info.group : "warning";
+    const label = info ? info.label : tagId;
+    return `
+      <span class="${classNames(UI_CLASS.chip, group === "warning" ? UI_CLASS.chipWarning : chipGroupClass(group))}" title="${escapeHtml(tagId)}">
+        ${escapeHtml(label)}
+        <button
+          type="button"
+          class="${UI_CLASS.chipRemove}"
+          ${removeAttribute}="${escapeHtml(tagId)}"
+          aria-label="${escapeHtml(aliasesText(state.config, "remove_target_tag_aria_label", "Remove {tag_id}", { tag_id: tagId }))}"
+        >
+          x
+        </button>
+      </span>
+    `;
+  }).join("");
 }
 
 function renderGroupInfoControl(state) {

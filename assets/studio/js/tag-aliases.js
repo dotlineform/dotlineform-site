@@ -51,14 +51,21 @@ import {
 } from "./studio-modal.js";
 import {
   clearTagAliasesImportResult,
+  closeTagAliasesDemoteModal,
+  closeTagAliasesEditModal,
   closeTagAliasesPromotionModal,
   collectTagAliasesModalRefs,
   hideTagAliasesDemoteTagPopup,
   hideTagAliasesEditTagPopup,
   hideTagAliasesImportModal,
   hideTagAliasesPatchModal,
+  openTagAliasesCreateModal,
+  openTagAliasesDemoteModal,
+  openTagAliasesEditModal,
   openTagAliasesPromotionModal,
   renderTagAliasesModals,
+  renderTagAliasesDemoteSelectionState,
+  renderTagAliasesEditModalState,
   setTagAliasesDemoteStatus,
   setTagAliasesEditStatus,
   setTagAliasesImportResult,
@@ -502,80 +509,20 @@ function openDemoteModal(state, tagId) {
     return;
   }
 
-  state.demoteState = {
-    tagId: canonicalTagId,
-    tags: []
-  };
-  state.refs.demoteTagMeta.textContent = aliasesText(
-    state.config,
-    "demotion_modal_meta",
-    "tag: {tag_id} -> alias \"{alias_key}\"",
-    {
-      tag_id: canonicalTagId,
-      alias_key: canonicalTagId.split(":", 2)[1] || canonicalTagId
-    }
-  );
-  state.refs.demoteTagSearch.value = "";
-  hideTagAliasesDemoteTagPopup(state);
-  updateDemoteUi(state);
-  state.refs.demoteModal.hidden = false;
-  state.refs.demoteTagSearch.focus();
+  openTagAliasesDemoteModal(state, {
+    canonicalTagId,
+    aliasKey: canonicalTagId.split(":", 2)[1] || canonicalTagId
+  });
   syncRouteBusyState(state);
 }
 
 function closeDemoteModal(state) {
-  state.demoteState = null;
-  state.refs.demoteModal.hidden = true;
-  state.refs.demoteTagMeta.textContent = "";
-  state.refs.demoteTagSearch.value = "";
-  state.refs.demoteGroupKey.innerHTML = "";
-  state.refs.demoteTagList.innerHTML = "";
-  state.refs.confirmDemote.disabled = true;
-  setDemoteStatus(state, "", "");
-  hideTagAliasesDemoteTagPopup(state);
+  closeTagAliasesDemoteModal(state);
   syncRouteBusyState(state);
 }
 
 function setDemoteStatus(state, kind, message) {
   setTagAliasesDemoteStatus(state, kind, message);
-}
-
-function renderDemoteGroupKey(state) {
-  if (!state.demoteState) {
-    state.refs.demoteGroupKey.innerHTML = "";
-    return;
-  }
-  const selected = new Set((state.demoteState.tags || []).map((tagId) => normalize(tagId).split(":", 1)[0]));
-  state.refs.demoteGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
-    const titleAttr = groupTitleAttr(state, group);
-    return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI_STATE.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
-  }).join("") + renderGroupInfoControl(state);
-}
-
-function renderDemoteTagList(state) {
-  if (!state.demoteState) {
-    state.refs.demoteTagList.innerHTML = "";
-    return;
-  }
-  const rows = state.demoteState.tags.map((tagId) => {
-    const info = state.registryById.get(tagId);
-    const group = info && STUDIO_GROUPS.includes(info.group) ? info.group : "warning";
-    const label = info ? info.label : tagId;
-    return `
-      <span class="${classNames(UI_CLASS.chip, group === "warning" ? UI_CLASS.chipWarning : chipGroupClass(group))}" title="${escapeHtml(tagId)}">
-        ${escapeHtml(label)}
-        <button
-          type="button"
-          class="${UI_CLASS.chipRemove}"
-          data-remove-demote-tag="${escapeHtml(tagId)}"
-          aria-label="${escapeHtml(aliasesText(state.config, "remove_target_tag_aria_label", "Remove {tag_id}", { tag_id: tagId }))}"
-        >
-          x
-        </button>
-      </span>
-    `;
-  }).join("");
-  state.refs.demoteTagList.innerHTML = rows;
 }
 
 function getDemoteValidation(state) {
@@ -616,17 +563,19 @@ function getDemoteValidation(state) {
 
 function updateDemoteUi(state) {
   if (!state.demoteState) return;
-  renderDemoteGroupKey(state);
-  renderDemoteTagList(state);
   const validation = getDemoteValidation(state);
-  state.refs.confirmDemote.disabled = !validation.valid;
+  let statusKind = "";
+  let statusMessage = "";
   if (validation.warning) {
     const emptyWarning = aliasesText(state.config, "target_tag_required", "At least one canonical target tag is required.");
-    const kind = validation.warning === emptyWarning ? "" : "error";
-    setDemoteStatus(state, kind, validation.warning);
-  } else {
-    setDemoteStatus(state, "", "");
+    statusKind = validation.warning === emptyWarning ? "" : "error";
+    statusMessage = validation.warning;
   }
+  renderTagAliasesDemoteSelectionState(state, {
+    canConfirm: validation.valid,
+    statusKind,
+    statusMessage
+  });
 }
 
 function getDemoteTagMatches(state, query) {
@@ -1019,16 +968,6 @@ function isCreateAliasFlow(state) {
   return isCreateNormalizedAliasFlow(state.editState);
 }
 
-function setAliasEditModalMode(state, mode) {
-  const normalizedMode = mode === "new" ? "new" : "edit";
-  state.refs.editModalTitle.textContent = normalizedMode === "new"
-    ? aliasesText(state.config, "new_modal_title", "New Alias")
-    : aliasesText(state.config, "edit_modal_title", "Edit Alias");
-  state.refs.saveEditAlias.textContent = normalizedMode === "new"
-    ? aliasesText(state.config, "edit_create_button", "Create")
-    : aliasesText(state.config, "edit_save_button", "Save");
-}
-
 function openAliasEditModal(state, aliasKey) {
   clearImportResult(state);
   const entry = findAliasEntry(state, aliasKey);
@@ -1037,96 +976,21 @@ function openAliasEditModal(state, aliasKey) {
     return;
   }
 
-  state.editState = {
-    originalAlias: entry.alias,
-    originalDescription: String(entry.description || "").trim(),
-    originalTags: Array.isArray(entry.targets) ? entry.targets.slice() : [],
-    tags: Array.isArray(entry.targets) ? entry.targets.slice() : []
-  };
-
-  state.refs.editAliasName.value = entry.alias;
-  state.refs.editAliasDescription.value = String(entry.description || "").trim();
-  state.refs.editTagSearch.value = "";
-  hideTagAliasesEditTagPopup(state);
-  setAliasEditModalMode(state, "edit");
-  renderEditGroupKey(state);
+  openTagAliasesEditModal(state, entry);
   updateAliasEditUi(state);
-  state.refs.editModal.hidden = false;
   syncRouteBusyState(state);
 }
 
 function openAliasCreateModal(state) {
   clearImportResult(state);
-  state.editState = {
-    originalAlias: "",
-    originalDescription: "",
-    originalTags: [],
-    tags: []
-  };
-  state.refs.editAliasName.value = "";
-  state.refs.editAliasDescription.value = "";
-  state.refs.editTagSearch.value = "";
-  hideTagAliasesEditTagPopup(state);
-  setAliasEditModalMode(state, "new");
-  renderEditGroupKey(state);
+  openTagAliasesCreateModal(state);
   updateAliasEditUi(state);
-  state.refs.editModal.hidden = false;
-  state.refs.editAliasName.focus();
   syncRouteBusyState(state);
 }
 
 function closeAliasEditModal(state) {
-  state.editState = null;
-  state.refs.editModal.hidden = true;
-  state.refs.editAliasName.value = "";
-  state.refs.editAliasDescription.value = "";
-  state.refs.editTagSearch.value = "";
-  setAliasEditModalMode(state, "edit");
-  state.refs.editAliasWarning.textContent = "";
-  setAliasEditStatus(state, "", "");
-  state.refs.saveEditAlias.disabled = true;
-  state.refs.editTagList.innerHTML = "";
-  hideTagAliasesEditTagPopup(state);
+  closeTagAliasesEditModal(state);
   syncRouteBusyState(state);
-}
-
-function renderEditGroupKey(state) {
-  if (!state.editState) {
-    state.refs.editGroupKey.innerHTML = "";
-    return;
-  }
-  const selected = new Set((state.editState.tags || []).map((tagId) => normalize(tagId).split(":", 1)[0]));
-  state.refs.editGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
-    const titleAttr = groupTitleAttr(state, group);
-    return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI_STATE.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
-  }).join("") + renderGroupInfoControl(state);
-}
-
-function renderEditTagList(state) {
-  if (!state.editState) {
-    state.refs.editTagList.innerHTML = "";
-    return;
-  }
-  const rows = state.editState.tags.map((tagId) => {
-    const info = state.registryById.get(tagId);
-    const group = info && STUDIO_GROUPS.includes(info.group) ? info.group : "warning";
-    const label = info ? info.label : tagId;
-    return `
-      <span class="${classNames(UI_CLASS.chip, group === "warning" ? UI_CLASS.chipWarning : chipGroupClass(group))}" title="${escapeHtml(tagId)}">
-        ${escapeHtml(label)}
-        <button
-          type="button"
-          class="${UI_CLASS.chipRemove}"
-          data-remove-edit-tag="${escapeHtml(tagId)}"
-          aria-label="${escapeHtml(aliasesText(state.config, "remove_target_tag_aria_label", "Remove {tag_id}", { tag_id: tagId }))}"
-        >
-          x
-        </button>
-      </span>
-    `;
-  }).join("");
-
-  state.refs.editTagList.innerHTML = rows;
 }
 
 function getAliasEditValidation(state) {
@@ -1148,17 +1012,20 @@ function setAliasEditStatus(state, kind, message) {
 
 function updateAliasEditUi(state) {
   if (!state.editState) return;
-  renderEditGroupKey(state);
-  renderEditTagList(state);
   const validation = getAliasEditValidation(state);
   state.refs.editAliasName.value = normalize(state.refs.editAliasName.value);
-  state.refs.editAliasWarning.textContent = validation.warning || "";
-  state.refs.saveEditAlias.disabled = !(validation.valid && validation.changed);
+  let statusKind = "";
+  let statusMessage = "";
   if (validation.tagsWarning) {
-    setAliasEditStatus(state, "error", validation.tagsWarning);
-  } else if (!validation.warning) {
-    setAliasEditStatus(state, "", "");
+    statusKind = "error";
+    statusMessage = validation.tagsWarning;
   }
+  renderTagAliasesEditModalState(state, {
+    warning: validation.warning || "",
+    canSave: validation.valid && validation.changed,
+    statusKind,
+    statusMessage
+  });
 }
 
 function getEditTagMatches(state, query) {
