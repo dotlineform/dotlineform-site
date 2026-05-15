@@ -330,6 +330,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             ),
             "Smoke-check the Studio returned package review list flow with a mocked docs-management service.",
         ),
+        CheckCommand(
+            "catalogue-series-modal-smoke",
+            (
+                sys.executable,
+                "tests/smoke/catalogue_series_modal.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check the Catalogue Series confirmation modal shell behavior.",
+        ),
     ),
 }
 

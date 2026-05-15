@@ -129,6 +129,7 @@ export async function importSeriesProse(state, context) {
     return;
   }
 
+  let restoreProseImportFocus = false;
   state.isBuilding = true;
   context.updateEditorState();
   setTextWithState(context, state.statusNode, t(state, context, "prose_import_preview_running", "Previewing staged prose…"));
@@ -144,6 +145,8 @@ export async function importSeriesProse(state, context) {
     }
     let confirmOverwrite = false;
     if (preview.overwrite_required) {
+      state.isBuilding = false;
+      context.updateEditorState();
       const message = t(
         state,
         context,
@@ -158,12 +161,16 @@ export async function importSeriesProse(state, context) {
         title: t(state, context, "prose_import_confirm_title", "Confirm prose overwrite"),
         message,
         primaryLabel: t(state, context, "prose_import_confirm_button", "Overwrite"),
-        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
+        restoreFocus: state.readinessNode && state.readinessNode.querySelector("[data-prose-import]")
       });
       if (!confirmOverwrite) {
         setTextWithState(context, state.statusNode, t(state, context, "prose_import_overwrite_cancelled", "Prose import cancelled."), "warning");
+        restoreProseImportFocus = true;
         return;
       }
+      state.isBuilding = true;
+      context.updateEditorState();
     }
     setTextWithState(context, state.statusNode, t(state, context, "prose_import_running", "Importing staged prose…"));
     const importResponse = await applyCatalogueProseImport({
@@ -193,6 +200,12 @@ export async function importSeriesProse(state, context) {
   } finally {
     state.isBuilding = false;
     context.updateEditorState();
+    if (restoreProseImportFocus && state.readinessNode) {
+      const proseImportButton = state.readinessNode.querySelector("[data-prose-import]");
+      if (proseImportButton && typeof proseImportButton.focus === "function") {
+        proseImportButton.focus({ preventScroll: true });
+      }
+    }
   }
 }
 
@@ -449,6 +462,8 @@ export async function applyPublicationChange(state, context) {
     }
 
     if (action === "unpublish") {
+      state.isBuilding = false;
+      context.updateEditorState();
       const summary = formatCataloguePublicationPreview(preview, {
         text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
         defaultText: "Unpublish this series?",
@@ -458,12 +473,15 @@ export async function applyPublicationChange(state, context) {
         title: t(state, context, "publication_unpublish_confirm_title", "Confirm unpublish"),
         message: summary,
         primaryLabel: t(state, context, "publication_unpublish_confirm_button", "Unpublish"),
-        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
+        restoreFocus: state.publicationButton
       });
       if (!confirmed) {
         setTextWithState(context, state.statusNode, t(state, context, "publication_status_cancelled", "Publication change cancelled."));
         return;
       }
+      state.isBuilding = true;
+      context.updateEditorState();
     }
 
     setTextWithState(
@@ -547,11 +565,14 @@ export async function deleteCurrentSeries(state, context) {
       text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
       defaultText: "Delete this source record?"
     });
+    state.isDeleting = false;
+    context.updateEditorState();
     const confirmed = await confirmCatalogueActionModal(state, {
       title: t(state, context, "delete_confirm_title", "Confirm delete"),
       message: summary,
       primaryLabel: t(state, context, "delete_confirm_button", "Delete"),
-      cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+      cancelLabel: t(state, context, "confirm_cancel_button", "Cancel"),
+      restoreFocus: state.deleteButton
     });
     if (!confirmed) {
       setTextWithState(context, state.statusNode, t(state, context, "delete_status_cancelled", "Delete cancelled."));
@@ -559,6 +580,8 @@ export async function deleteCurrentSeries(state, context) {
       context.updateEditorState();
       return;
     }
+    state.isDeleting = true;
+    context.updateEditorState();
     setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Deleting source record…"));
     await applyCatalogueDelete(request);
     const route = getStudioRoute(state.config, "catalogue_status");
