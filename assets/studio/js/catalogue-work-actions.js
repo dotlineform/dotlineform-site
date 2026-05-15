@@ -18,6 +18,7 @@ import {
   formatCatalogueDeletePreview,
   formatCataloguePublicationPreview
 } from "./catalogue-editor-modal-formatters.js";
+import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import {
   setLoadedBulkWorks,
   setLoadedWorkRecord
@@ -603,7 +604,12 @@ export async function importWorkProse(state, context) {
           staging_path: normalizeText(preview.staging_path)
         }
       );
-      confirmOverwrite = window.confirm(message);
+      confirmOverwrite = await confirmCatalogueActionModal(state, {
+        title: t(state, context, "prose_import_confirm_title", "Confirm prose overwrite"),
+        message,
+        primaryLabel: t(state, context, "prose_import_confirm_button", "Overwrite"),
+        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+      });
       if (!confirmOverwrite) {
         setTextWithState(context, state.statusNode, t(state, context, "prose_import_overwrite_cancelled", "Prose import cancelled."), "warning");
         return;
@@ -762,7 +768,13 @@ export async function applyPublicationChange(state, context) {
         defaultText: "Unpublish this work?",
         includeDirtyNote: context.draftHasChanges()
       });
-      if (!window.confirm(summary)) {
+      const confirmed = await confirmCatalogueActionModal(state, {
+        title: t(state, context, "publication_unpublish_confirm_title", "Confirm unpublish"),
+        message: summary,
+        primaryLabel: t(state, context, "publication_unpublish_confirm_button", "Unpublish"),
+        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+      });
+      if (!confirmed) {
         setTextWithState(context, state.statusNode, t(state, context, "publication_status_cancelled", "Publication change cancelled."));
         return;
       }
@@ -892,7 +904,13 @@ export async function deleteCurrentWork(state, context) {
       text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
       defaultText: "Delete this source record?"
     });
-    if (!window.confirm(summary)) {
+    const confirmed = await confirmCatalogueActionModal(state, {
+      title: t(state, context, "delete_confirm_title", "Confirm delete"),
+      message: summary,
+      primaryLabel: t(state, context, "delete_confirm_button", "Delete"),
+      cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+    });
+    if (!confirmed) {
       state.isDeleting = false;
       context.updateEditorState();
       setTextWithState(context, state.statusNode, t(state, context, "delete_status_cancelled", "Delete cancelled."));

@@ -15,6 +15,7 @@ import {
   formatCatalogueDeletePreview,
   formatCataloguePublicationPreview
 } from "./catalogue-editor-modal-formatters.js";
+import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import { utcTimestamp } from "./tag-studio-save.js";
 import {
@@ -198,7 +199,13 @@ export async function applyPublicationChange(state, context) {
         defaultText: "Unpublish this moment?",
         includeDirtyNote: context.draftHasChanges()
       });
-      if (!window.confirm(summary)) {
+      const confirmed = await confirmCatalogueActionModal(state, {
+        title: t(state, context, "publication_unpublish_confirm_title", "Confirm unpublish"),
+        message: summary,
+        primaryLabel: t(state, context, "publication_unpublish_confirm_button", "Unpublish"),
+        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+      });
+      if (!confirmed) {
         setTextWithState(context, state.statusNode, t(state, context, "publication_status_cancelled", "Publication change cancelled."), "warning");
         return;
       }
@@ -305,13 +312,18 @@ export async function importMomentProse(state, context) {
       throw new Error(errors || t(state, context, "prose_import_preview_invalid", "Staged prose is not ready to import."));
     }
     if (preview.overwrite_required) {
-      const confirmed = window.confirm(t(
-        state,
-        context,
-        "prose_import_confirm_overwrite",
-        "Overwrite existing prose source at {target_path} with staged file {staging_path}?",
-        { target_path: preview.target_path, staging_path: preview.staging_path }
-      ));
+      const confirmed = await confirmCatalogueActionModal(state, {
+        title: t(state, context, "prose_import_confirm_title", "Confirm prose overwrite"),
+        message: t(
+          state,
+          context,
+          "prose_import_confirm_overwrite",
+          "Overwrite existing prose source at {target_path} with staged file {staging_path}?",
+          { target_path: preview.target_path, staging_path: preview.staging_path }
+        ),
+        primaryLabel: t(state, context, "prose_import_confirm_button", "Overwrite"),
+        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+      });
       if (!confirmed) {
         setTextWithState(context, state.statusNode, t(state, context, "prose_import_overwrite_cancelled", "Prose import cancelled."), "warning");
         return;
@@ -372,7 +384,13 @@ export async function deleteCurrentMoment(state, context) {
       text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
       defaultText: "Delete this source record?"
     });
-    if (!window.confirm(summary)) {
+    const confirmed = await confirmCatalogueActionModal(state, {
+      title: t(state, context, "delete_confirm_title", "Confirm delete"),
+      message: summary,
+      primaryLabel: t(state, context, "delete_confirm_button", "Delete"),
+      cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+    });
+    if (!confirmed) {
       setTextWithState(context, state.statusNode, t(state, context, "delete_status_cancelled", "Delete cancelled."), "warning");
       state.isDeleting = false;
       context.updateEditorState();

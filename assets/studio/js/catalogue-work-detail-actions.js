@@ -16,6 +16,7 @@ import {
   formatCatalogueDeletePreview,
   formatCataloguePublicationPreview
 } from "./catalogue-editor-modal-formatters.js";
+import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import { utcTimestamp } from "./tag-studio-save.js";
 import {
@@ -580,7 +581,13 @@ export async function applyWorkDetailPublicationChange(state, context) {
         defaultText: "Unpublish this detail?",
         includeDirtyNote: context.draftHasChanges()
       });
-      if (!window.confirm(summary)) {
+      const confirmed = await confirmCatalogueActionModal(state, {
+        title: t(state, context, "publication_unpublish_confirm_title", "Confirm unpublish"),
+        message: summary,
+        primaryLabel: t(state, context, "publication_unpublish_confirm_button", "Unpublish"),
+        cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+      });
+      if (!confirmed) {
         setTextWithState(context, state.statusNode, t(state, context, "publication_status_cancelled", "Publication change cancelled."));
         return;
       }
@@ -705,7 +712,13 @@ export async function deleteCurrentDetail(state, context) {
       text: (key, fallback, tokens) => t(state, context, key, fallback, tokens),
       defaultText: "Delete this source record?"
     });
-    if (!window.confirm(summary)) {
+    const confirmed = await confirmCatalogueActionModal(state, {
+      title: t(state, context, "delete_confirm_title", "Confirm delete"),
+      message: summary,
+      primaryLabel: t(state, context, "delete_confirm_button", "Delete"),
+      cancelLabel: t(state, context, "confirm_cancel_button", "Cancel")
+    });
+    if (!confirmed) {
       setTextWithState(context, state.statusNode, t(state, context, "delete_status_cancelled", "Delete cancelled."));
       state.isDeleting = false;
       context.updateEditorState();

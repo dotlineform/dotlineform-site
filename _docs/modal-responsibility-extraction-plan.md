@@ -3,15 +3,16 @@ doc_id: modal-responsibility-extraction-plan
 title: Modal Responsibility Extraction Plan
 added_date: 2026-05-15
 last_updated: 2026-05-15
-ui_status: draft
+ui_status: in-progress
 parent_id: ui-request-modal-composition-pattern
 sort_order: 10
+hidden: false
 ---
 # Modal Responsibility Extraction Plan
 
 Status:
 
-- requested
+- in progress
 
 ## Summary
 
@@ -89,6 +90,14 @@ Review and extract modal responsibilities from these files:
 
 Add files if the inventory finds additional modal behavior.
 
+Additional files found during implementation inventory:
+
+- `assets/studio/js/catalogue-editor-action-modals.js`
+- `assets/studio/js/catalogue-work-actions.js`
+- `assets/studio/js/catalogue-work-detail-actions.js`
+- `assets/studio/js/catalogue-series-actions.js`
+- `assets/studio/js/catalogue-moment-actions.js`
+
 ## Work Slices
 
 1. Inventory modal responsibilities.
@@ -105,6 +114,29 @@ Add files if the inventory finds additional modal behavior.
    Use focused browser checks for each route with modal behavior, including representative modal screenshots where practical.
 7. Update this plan.
    Mark completed extractions and record any files intentionally left unchanged with reasons.
+
+## Implementation Progress
+
+Completed slices:
+
+- Extracted the Docs HTML import filename-conflict modal from `assets/docs-viewer/js/docs-html-import.js` into `assets/docs-viewer/js/docs-html-import-modals.js`.
+  The modal module now owns the transient host, shell/actions rendering, local replacement `doc_id` validation, focus entry, Escape/cancel behavior, and result object construction.
+  The import route still owns status messaging, import retries, overwrite confirmation payloads, service calls, and route busy state.
+- Replaced native Studio catalogue action confirmations in `assets/studio/js/catalogue-work-actions.js`, `assets/studio/js/catalogue-work-detail-actions.js`, `assets/studio/js/catalogue-series-actions.js`, and `assets/studio/js/catalogue-moment-actions.js`.
+  These routes now use `assets/studio/js/catalogue-editor-action-modals.js`, a small transient confirmation wrapper over `openConfirmModal()`.
+  The helper owns body-line normalization and the modal confirmation result; the route action modules still own prose import, publication, delete, service calls, status updates, and navigation.
+
+Inventory notes:
+
+- Remaining native browser dialogs are currently isolated to `assets/docs-viewer/js/docs-viewer-management.js`.
+  They cover move safety confirmation, move descendant prompt, new doc title prompts, archive confirmation, and delete confirmation.
+- The catalogue action modules were added to the extraction file set because native confirmation dialogs lived outside the original modal file list.
+
+Verification completed:
+
+- JavaScript syntax checks passed for changed modal/action modules.
+- JSON validation passed for changed Studio UI text files.
+- Focused Playwright checks covered the Docs HTML import conflict modal result contract and the catalogue action modal helper's cancel, primary, Escape, and multiline body behavior.
 
 ## Completion Criteria
 
