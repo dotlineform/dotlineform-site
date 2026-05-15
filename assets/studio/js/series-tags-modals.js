@@ -101,6 +101,54 @@ export function renderImportModal(state) {
   });
 }
 
+export function wireSeriesTagsModalEvents(state, callbacks = {}) {
+  if (state.refs.sessionModalHost) {
+    state.refs.sessionModalHost.addEventListener("click", (event) => {
+      if (event.target.closest(`[data-role="${UI.role.closeSessionModal}"]`)) {
+        state.sessionModalOpen = false;
+        callbacks.onModalStateChange?.();
+        return;
+      }
+      const action = event.target.closest("button[data-session-action]");
+      if (!action) return;
+      callbacks.onSessionAction?.(String(action.getAttribute("data-session-action") || ""));
+    });
+  }
+
+  if (state.refs.importModalHost) {
+    state.refs.importModalHost.addEventListener("click", (event) => {
+      if (event.target.closest(`[data-role="${UI.role.closeImportModal}"]`)) {
+        state.importModalOpen = false;
+        callbacks.onModalStateChange?.();
+        return;
+      }
+      const action = event.target.closest("button[data-import-action]");
+      if (!action) return;
+      const actionName = String(action.getAttribute("data-import-action") || "");
+      if (actionName === "choose-file") {
+        const input = state.refs.importModalHost.querySelector('input[type="file"]');
+        if (input) input.click();
+        return;
+      }
+      callbacks.onImportAction?.(actionName);
+    });
+
+    state.refs.importModalHost.addEventListener("change", (event) => {
+      const input = event.target;
+      if (isFileInput(input)) {
+        const files = input.files;
+        callbacks.onImportFileChange?.(files && files.length ? files[0] : null);
+        return;
+      }
+      const select = event.target.closest("select[data-import-resolution]");
+      if (!select) return;
+      const seriesId = normalizeModalValue(select.getAttribute("data-import-resolution"));
+      if (!seriesId) return;
+      callbacks.onImportResolutionChange?.(seriesId, String(select.value || "skip").trim().toLowerCase());
+    });
+  }
+}
+
 function renderImportReview(state) {
   const preview = state.importPreview;
   if (!preview) return "";
@@ -153,4 +201,12 @@ function escapeHtml(value) {
 
 function seriesTagsText(config, key, fallback, tokens) {
   return getStudioText(config, `series_tags.${key}`, fallback, tokens);
+}
+
+function isFileInput(value) {
+  return value && value.tagName === "INPUT" && String(value.type || "").toLowerCase() === "file";
+}
+
+function normalizeModalValue(value) {
+  return String(value == null ? "" : value).trim().toLowerCase();
 }

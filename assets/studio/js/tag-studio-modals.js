@@ -47,6 +47,17 @@ export function collectTagStudioSaveModalRefs(root) {
   };
 }
 
+export function wireTagStudioSaveModalEvents(state, callbacks = {}) {
+  state.refs.modal.addEventListener("click", (event) => {
+    if (!event.target.closest(UI_SELECTOR.modalClose)) return;
+    closeTagStudioSaveModal(state);
+  });
+
+  state.refs.copyButton.addEventListener("click", () => {
+    callbacks.onCopySnippet?.();
+  });
+}
+
 export function openTagStudioSaveModal(state, diff) {
   const timestamp = utcTimestamp();
   const snippet = buildPatchSnippet(

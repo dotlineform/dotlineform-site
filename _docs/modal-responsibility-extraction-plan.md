@@ -136,6 +136,9 @@ Completed slices:
 - Extracted the Series Tags offline session and import modal rendering from `assets/studio/js/series-tags.js` into `assets/studio/js/series-tags-modals.js`.
   The modal module owns the session modal shell/body/actions rendering, import modal shell/body/actions rendering, import preview review rows, resolution select descriptors, and local modal copy lookup.
   The route still owns modal open/close event wiring, session copy/download/clear actions, import file parsing, preview/apply service calls, route busy state, status messages, assignments reloads, and local session cleanup.
+- Extracted the Series Tags modal event/lifecycle wiring from `assets/studio/js/series-tags.js` into `assets/studio/js/series-tags-modals.js`.
+  The modal module now owns session/import close-role handling, session action trigger dispatch, import choose-file trigger handling, import action trigger dispatch, import file change dispatch, and import resolution change dispatch.
+  The route still owns opening the modals from route actions, session copy/download/clear behavior, import file state reset, import resolution state updates, import file parsing, preview/apply service calls, route busy state, status messages, assignments reloads, and local session cleanup.
 - Extracted the Data Sharing Prepare result modal from `assets/studio/js/data-sharing-prepare.js` into `assets/studio/js/data-sharing-prepare-modals.js`.
   The modal module owns the result modal shell/body/actions rendering, output file display formatting, count rows, warning/error list rendering, close-role wiring, and modal clearing helper.
   The route still owns scope/config selection, package payload assembly, prepare service calls, route busy state, success/error status messages, and local result reset timing.
@@ -148,6 +151,9 @@ Completed slices:
 - Extracted the Series Tag Editor save preview modal from `assets/studio/js/tag-studio.js` into `assets/studio/js/tag-studio-modals.js`.
   The modal module owns the save preview shell/body/actions rendering, modal ref collection, resolved payload population, patch snippet population, open state, close helper, and local modal copy lookup.
   The route still owns editor diff construction, no-change handling, save mode probing, local/offline persistence, clipboard status messaging, route busy state, and editor rendering.
+- Extracted the Series Tag Editor save modal event wiring from `assets/studio/js/tag-studio.js` into `assets/studio/js/tag-studio-modals.js`.
+  The modal module now owns save modal close click handling and patch-copy trigger dispatch.
+  The route still owns diff construction, save/probe decisions, local/offline persistence, clipboard write behavior, status wording, route busy state, and editor rendering.
 - Extracted the Catalogue Work Editor embedded entry, embedded delete confirmation, and build preview modals from `assets/studio/js/catalogue-work-editor.js` into `assets/studio/js/catalogue-work-editor-modals.js`.
   The modal module owns embedded entry shell rendering, local field validation/status, Escape/Enter/cancel/save lifecycle, embedded delete confirmation invocation, build preview shell/body/actions rendering, build preview close/Escape lifecycle, and modal result construction.
   The route still owns draft mutation from returned modal results, editor refresh, work lookup/selection, save/delete/publication/build actions, route busy state, and work readiness rendering.
@@ -194,10 +200,12 @@ Verification completed:
 - Focused Playwright checks covered the Docs HTML import conflict modal result contract and the catalogue action modal helper's cancel, primary, Escape, and multiline body behavior.
 - Focused Playwright checks covered the Docs Viewer management modal helper's confirm, Escape cancel, text input result, choice result, delete preview body formatting, and cleanup behavior.
 - Focused module contract checks covered the Series Tags modal helper's session count rendering, hidden/open state, escaped status/file/review text, conflict resolution selection, and import review rows.
+- Focused module contract checks covered the Series Tags modal helper's session/import close handling, session/import action dispatch, import choose-file trigger, import file selection dispatch, and import resolution change dispatch.
 - Focused module contract checks covered the Data Sharing Prepare result modal helper's success/failure titles, output filename normalization, count unit labels, escaped files/issues, close action cleanup, and explicit clearing helper.
 - Focused module contract checks covered the Activity Log details modal helper's detail item filtering, fallback body text, escaped title/body/close labels, and close cleanup through the shared notice modal.
 - Focused module contract checks covered the Data Sharing Review modal helper's result title/summary/count/issues rendering, escaped labels/body text, notice close cleanup, apply confirmation body construction, and primary confirmation result.
 - Focused module contract checks covered the Series Tag Editor save preview modal helper's shell roles, escaped labels, hidden/open state, ref collection, resolved payload population, patch snippet population, and close helper.
+- Focused module contract checks covered the Series Tag Editor save modal helper's close click handling and patch-copy callback dispatch.
 - Focused module contract checks covered the Catalogue Work Editor modal helper's embedded entry shell roles and escaping, entry validation status, save result contract, close cleanup, build preview labels/body, and Escape close behavior.
 - Focused module contract checks covered the Tag Registry modal helper's modal shell roles, escaped labels, ref collection, import show/hide state, patch snippet population, patch close helper, and delete show/hide helper.
 - Focused module contract checks covered the Tag Registry modal helper's edit field population/reset, new-tag group rendering/status updates, demote selected-target rendering and popup reset, and delete preview state reset.

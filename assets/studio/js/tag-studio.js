@@ -51,10 +51,10 @@ import {
   utcTimestamp
 } from "./tag-studio-save.js";
 import {
-  closeTagStudioSaveModal,
   collectTagStudioSaveModalRefs,
   openTagStudioSaveModal,
-  renderTagStudioSaveModal
+  renderTagStudioSaveModal,
+  wireTagStudioSaveModalEvents
 } from "./tag-studio-modals.js";
 import {
   setStudioRouteBusy,
@@ -587,21 +587,22 @@ function wireEvents(state) {
     void handleSave(state);
   });
 
-  state.refs.modal.addEventListener("click", (event) => {
-    if (!event.target.closest(UI_SELECTOR.modalClose)) return;
-    closeTagStudioSaveModal(state);
-  });
-
-  state.refs.copyButton.addEventListener("click", async () => {
-    if (!state.modalSnippet) return;
-    try {
-      await navigator.clipboard.writeText(state.modalSnippet);
-      setStatus(state, "success", studioText(state.config, "save_status_copy", "Patch guidance copied to clipboard."));
-    } catch (error) {
-      setStatus(state, "error", studioText(state.config, "save_status_copy_failed", "Copy failed. Select and copy the patch guidance manually."));
+  wireTagStudioSaveModalEvents(state, {
+    onCopySnippet: () => {
+      void copySaveModalSnippet(state);
     }
-    renderStatus(state);
   });
+}
+
+async function copySaveModalSnippet(state) {
+  if (!state.modalSnippet) return;
+  try {
+    await navigator.clipboard.writeText(state.modalSnippet);
+    setStatus(state, "success", studioText(state.config, "save_status_copy", "Patch guidance copied to clipboard."));
+  } catch (error) {
+    setStatus(state, "error", studioText(state.config, "save_status_copy_failed", "Copy failed. Select and copy the patch guidance manually."));
+  }
+  renderStatus(state);
 }
 
 function selectWorkFromInput(state) {

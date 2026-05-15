@@ -36,7 +36,8 @@ import {
 } from "./studio-transport.js";
 import {
   renderImportModal,
-  renderSessionModal
+  renderSessionModal,
+  wireSeriesTagsModalEvents
 } from "./series-tags-modals.js";
 import {
   initializeStudioRouteState,
@@ -315,19 +316,14 @@ function wireEvents(state) {
     renderTable(state);
   });
 
-  if (state.refs.sessionModalHost) {
-    state.refs.sessionModalHost.addEventListener("click", async (event) => {
-      if (event.target.closest(`[data-role="${UI.role.closeSessionModal}"]`)) {
-        state.sessionModalOpen = false;
-        renderChrome(state);
-        syncRouteBusyState(state);
-        return;
-      }
-      const action = event.target.closest("button[data-session-action]");
-      if (!action) return;
-      const actionName = String(action.getAttribute("data-session-action") || "");
+  wireSeriesTagsModalEvents(state, {
+    onModalStateChange: () => {
+      renderChrome(state);
+      syncRouteBusyState(state);
+    },
+    onSessionAction: (actionName) => {
       if (actionName === "copy") {
-        await handleCopySession(state);
+        void handleCopySession(state);
         return;
       }
       if (actionName === "download") {
@@ -337,53 +333,28 @@ function wireEvents(state) {
       if (actionName === "clear") {
         handleClearSession(state);
       }
-    });
-  }
-
-  if (state.refs.importModalHost) {
-    state.refs.importModalHost.addEventListener("click", async (event) => {
-      if (event.target.closest(`[data-role="${UI.role.closeImportModal}"]`)) {
-        state.importModalOpen = false;
-        renderChrome(state);
-        syncRouteBusyState(state);
-        return;
-      }
-      const action = event.target.closest("button[data-import-action]");
-      if (!action) return;
-      const actionName = String(action.getAttribute("data-import-action") || "");
-      if (actionName === "choose-file") {
-        const input = state.refs.importModalHost.querySelector('input[type="file"]');
-        if (input) input.click();
-        return;
-      }
+    },
+    onImportAction: (actionName) => {
       if (actionName === "preview-import") {
-        await withRouteBusy(state, () => handlePreviewImport(state));
+        void withRouteBusy(state, () => handlePreviewImport(state));
         return;
       }
       if (actionName === "apply-import") {
-        await withRouteBusy(state, () => handleApplyImport(state));
+        void withRouteBusy(state, () => handleApplyImport(state));
       }
-    });
-
-    state.refs.importModalHost.addEventListener("change", (event) => {
-      const input = event.target;
-      if (input instanceof HTMLInputElement && input.type === "file") {
-        const files = input.files;
-        state.importFile = files && files.length ? files[0] : null;
-        state.importPayload = null;
-        state.importPreview = null;
-        state.importResolutions = {};
-        setResult(state, "", "");
-        renderImportModal(state);
-        return;
-      }
-      const select = event.target.closest("select[data-import-resolution]");
-      if (!select) return;
-      const seriesId = normalize(select.getAttribute("data-import-resolution"));
-      if (!seriesId) return;
-      state.importResolutions[seriesId] = String(select.value || "skip").trim().toLowerCase();
-    });
-  }
+    },
+    onImportFileChange: (file) => {
+      state.importFile = file;
+      state.importPayload = null;
+      state.importPreview = null;
+      state.importResolutions = {};
+      setResult(state, "", "");
+      renderImportModal(state);
+    },
+    onImportResolutionChange: (seriesId, value) => {
+      state.importResolutions[seriesId] = value;
+    }
+  });
 }
 
 function renderPage(state) {
