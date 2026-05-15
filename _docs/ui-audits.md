@@ -2,7 +2,7 @@
 doc_id: ui-audits
 title: UI Audits
 added_date: 2026-04-21
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-15"
 parent_id: ""
 sort_order: 75
 ---
@@ -15,6 +15,7 @@ Use it for:
 - Studio UI conformance reviews
 - page-specific audit findings that compare a live route against shared UI standards
 - follow-up audit passes where the result, cleanup path, or coverage status changed meaningfully
+- live-route checks that map UI Catalogue demo patterns into production namespaces
 
 Do not use it for:
 
@@ -79,6 +80,21 @@ Audit docs should follow the output structure defined in [Studio UI Conformance 
 - remediation status
 - open decisions
 - verification
+
+## UI Catalogue Demo Alignment
+
+UI Audit owns live implementation checks. The UI Catalogue owns isolated demos.
+
+When auditing a page that implements a catalogue primitive or pattern:
+
+- reference the relevant demo route under `/studio/ui-catalogue/demos/`
+- identify the demo namespace classes, for example `uiCatalogueDemoButton` or `uiCatalogueDemoModal`
+- identify the live implementation classes that the page maps the pattern into, for example `tagStudio__button`, `catalogueDashboardRoutes`, or a route-owned namespace
+- verify the live route imports production CSS/JS only, not `assets/ui-catalogue/css/ui-catalogue-demo.css` or demo scripts
+- check the live route with production ready-state attributes such as `data-studio-ready` where applicable
+- do not treat UI Catalogue demo pages as proof that live CSS is correct
+
+If a live page drifts from the demo pattern, record whether the issue belongs to the live route implementation, the production shared primitive, or the catalogue demo itself.
 
 Working rule:
 

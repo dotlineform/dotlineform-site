@@ -2,7 +2,7 @@
 doc_id: site-request-studio-ready-state-contract
 title: Studio Ready State Contract Request
 added_date: 2026-05-01
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-15"
 ui_status: done
 parent_id: archive
 sort_order: 350
@@ -136,13 +136,11 @@ Lower-priority dashboard, landing, and reference routes:
 - [x] `/studio/analytics/` root `#studioAnalyticsDashboardRoot`
 - [x] `/studio/catalogue/` root `#studioCatalogueDashboardRoot`
 - [x] `/studio/library/` root `#studioLibraryDashboardRoot` retired with the Library dashboard
-- [x] `/studio/ui-catalogue/` root `#studioUiCatalogueRoot`
-- [x] `/studio/ui-catalogue/button/` root `#studioUiCatalogueButtonRoot`
-- [x] `/studio/ui-catalogue/input/` root `#studioUiCatalogueInputRoot`
-- [x] `/studio/ui-catalogue/list/` root `#studioUiCatalogueListRoot`
-- [x] `/studio/ui-catalogue/panel/` root `#studioUiCataloguePanelRoot`
+- [x] legacy UI catalogue reference routes retired in favor of isolated demo routes under `/studio/ui-catalogue/demos/`
 
 These lower-priority routes expose a deliberately small contract. Dashboard pages use the shared dashboard metric loader to mark ready after metric hydration settles. Static landing and reference pages use a generic static-route initializer that immediately marks the route ready after DOM load.
+
+The isolated UI Catalogue demo routes use their own `data-ui-catalogue-demo-ready` contract rather than the production `data-studio-ready` route contract.
 
 Future async features should extend the contract at the route level. Static-route readiness is only valid while the page is a static or reference shell; if the route adds async data, service checks, route commands, or additional route scripts, replace the static initializer with a route-specific ready/busy implementation and run the ready-state audit in strict mode.
 

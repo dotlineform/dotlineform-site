@@ -1568,236 +1568,6 @@ span.tagStudio__input--readonlyDisplay {
   align-items: flex-start;
 }
 
-.studioUiCataloguePage,
-.studioUiPrimitivePage {
-  display: grid;
-  gap: 1rem;
-}
-
-.studioUiCataloguePage__intro,
-.studioUiPrimitivePage__intro,
-.studioUiPrimitivePage__sectionSummary,
-.studioUiPrimitiveExample__summary {
-  margin: 0;
-  color: var(--muted, var(--studio-muted-body));
-  font-size: var(--font-small);
-}
-
-.studioUiPrimitivePage__eyebrow {
-  margin: 0 0 0.35rem;
-  font-size: var(--font-caption);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--muted, var(--studio-muted));
-}
-
-.studioUiPrimitivePage__live,
-.studioUiPrimitivePage__code,
-.studioUiPrimitivePage__notes {
-  display: grid;
-  gap: 0.9rem;
-}
-
-.studioUiPrimitivePage__live,
-.studioUiPrimitivePage__code,
-.studioUiPrimitivePage__notes {
-  padding: 0;
-  border: 0;
-  background: transparent;
-}
-
-.studioUiPrimitivePage__sectionHeader,
-.studioUiPrimitiveExample__header {
-  display: grid;
-  gap: 0.3rem;
-}
-
-.studioUiPrimitiveDemo {
-  display: grid;
-  gap: 0.9rem;
-}
-
-.studioUiPrimitiveExample {
-  display: grid;
-  gap: 0.55rem;
-  align-content: start;
-}
-
-.studioUiPrimitiveExample__title,
-.studioUiPrimitiveCodeList__title,
-.studioUiPrimitivePanelDemo__heading {
-  margin: 0;
-  font-size: var(--font-small);
-}
-
-.studioUiPrimitivePanelDemo {
-  display: grid;
-  gap: 0.6rem;
-}
-
-.studioUiPrimitivePanelDemo__body {
-  margin: 0;
-  font-size: var(--font-small);
-  color: var(--muted, var(--studio-muted-body));
-}
-
-.studioUiPrimitivePanelDemo__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  align-items: center;
-}
-
-.studioUiPrimitiveButtonDemo {
-  display: grid;
-  gap: 0.6rem;
-}
-
-.studioUiPrimitiveButtonDemo__body {
-  margin: 0;
-  font-size: var(--font-small);
-  color: var(--muted, var(--studio-muted-body));
-}
-
-.studioUiPrimitiveButtonDemo__actions,
-.studioUiPrimitiveButtonDemo__pair {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  align-items: center;
-}
-
-.studioUiPrimitiveButtonDemo__modalActions {
-  margin-top: 0;
-}
-
-.studioUiPrimitiveButtonDemo__fieldGroup {
-  display: grid;
-  gap: 0.35rem;
-}
-
-.studioUiPrimitiveButtonDemo__fieldGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 18rem) max-content;
-  align-items: center;
-  gap: 0.45rem;
-  justify-content: start;
-  width: fit-content;
-  max-width: 100%;
-}
-
-.studioUiPrimitiveButtonDemo__fieldGrid > .tagStudio__input {
-  width: 100%;
-}
-
-.studioUiPrimitiveButtonDemo__fieldGrid > .tagStudio__button {
-  justify-self: start;
-}
-
-.studioUiPrimitiveButtonDemo__fieldFeedback {
-  justify-items: start;
-}
-
-.studioUiPrimitiveInputDemo {
-  display: grid;
-  gap: 0.6rem;
-}
-
-.studioUiPrimitiveInputDemo__body {
-  margin: 0;
-  font-size: var(--font-small);
-  color: var(--muted, var(--studio-muted-body));
-}
-
-.studioUiPrimitiveInputDemo__controlRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  align-items: center;
-}
-
-.studioUiPrimitiveInputDemo__fillRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content;
-  gap: 0.45rem;
-  align-items: center;
-}
-
-.studioUiPrimitiveListDemo__example {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.studioUiPrimitiveListDemo__list {
-  --studio-list-width: 38rem;
-}
-
-.studioUiPrimitiveListDemo__list--simple {
-  --studio-list-width: 28rem;
-}
-
-.studioUiPrimitiveListDemo__list--sortable {
-  --studio-list-width: 34rem;
-}
-
-.studioUiPrimitiveListDemo__list--dense {
-  --studio-list-width: 52rem;
-}
-
-.studioUiPrimitiveListDemo__simpleRow {
-  grid-template-columns: minmax(0, 1fr) minmax(5rem, max-content);
-}
-
-.studioUiPrimitiveListDemo__sortableHead,
-.studioUiPrimitiveListDemo__sortableRow {
-  grid-template-columns: minmax(4.5rem, 6rem) minmax(12rem, 1fr) minmax(5.5rem, 7rem);
-}
-
-.studioUiPrimitiveListDemo__sortControls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  align-items: center;
-}
-
-.studioUiPrimitiveListDemo__thumbHead,
-.studioUiPrimitiveListDemo__thumbRow {
-  grid-template-columns: 56px minmax(12rem, 1fr) minmax(5.5rem, 7rem);
-}
-
-.studioUiPrimitiveListDemo__denseHead,
-.studioUiPrimitiveListDemo__denseRow {
-  grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
-}
-
-.studioUiPrimitiveCodeList {
-  display: grid;
-  gap: 0.8rem;
-}
-
-.studioUiPrimitiveCodeList__item {
-  display: grid;
-  gap: 0.35rem;
-}
-
-.studioUiPrimitivePage__notesBody > :last-child {
-  margin-bottom: 0;
-}
-
-.studioUiPrimitivePage__notesBody h3 {
-  margin: 0 0 0.35rem;
-  font-size: var(--font-small);
-}
-
-.studioUiPrimitivePage__notesBody h3:not(:first-child) {
-  margin-top: 0.9rem;
-}
-
-.studioUiPrimitivePage__notesBody ul {
-  margin: 0;
-  padding-left: 1.1rem;
-}
-
 .tagStudioGroups {
   display: grid;
   gap: 0.35rem;
@@ -2108,10 +1878,6 @@ span.tagStudio__input--readonlyDisplay {
   align-items: center;
   justify-content: flex-end;
   gap: 0.5rem;
-}
-
-.studioUiPrimitiveButtonDemo .tagStudioModal__actions.studioUiPrimitiveButtonDemo__modalActions {
-  justify-content: flex-start;
 }
 
 .tagStudioError {
@@ -3440,8 +3206,7 @@ button.tagStudioList__cellLink {
     width: 100%;
   }
 
-  .tagStudio__editorActionGrid,
-  .studioUiPrimitiveButtonDemo__fieldGrid {
+  .tagStudio__editorActionGrid {
     grid-template-columns: minmax(0, 1fr);
     width: 100%;
   }
@@ -3449,24 +3214,6 @@ button.tagStudioList__cellLink {
   .tagStudioField,
   .tagStudioField__control {
     width: 100%;
-  }
-
-  .studioUiPrimitiveInputDemo__fillRow {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .studioUiPrimitiveListDemo__simpleRow,
-  .studioUiPrimitiveListDemo__sortableHead,
-  .studioUiPrimitiveListDemo__sortableRow,
-  .studioUiPrimitiveListDemo__thumbHead,
-  .studioUiPrimitiveListDemo__thumbRow,
-  .studioUiPrimitiveListDemo__denseHead,
-  .studioUiPrimitiveListDemo__denseRow {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .studioUiPrimitiveListDemo__thumbHead {
-    display: none;
   }
 
   .worksList--studio .worksList__head,

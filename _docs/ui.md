@@ -2,7 +2,7 @@
 doc_id: ui
 title: UI
 added_date: 2026-05-05
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-15"
 parent_id: ""
 sort_order: 60
 ---
@@ -38,7 +38,7 @@ Use this hierarchy:
 
 - [Design](/docs/?scope=studio&doc=design) remains the high-level section index.
 - This `UI` doc becomes the site-wide UI framework and migration target.
-- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) remains the index for named primitives, composition patterns, and live reference pages.
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) remains the index for named primitives, composition patterns, and isolated demo pages.
 - Primitive docs live under `ui-catalogue` as one doc per primitive.
 - Composition-pattern docs live under `ui-catalogue` as one doc per pattern.
 - Historical change notes belong in [Site Change Log](/docs/?scope=studio&doc=site-change-log).

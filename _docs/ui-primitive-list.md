@@ -2,7 +2,7 @@
 doc_id: ui-primitive-list
 title: "List Primitive"
 added_date: 2026-05-05
-last_updated: "2026-05-07"
+last_updated: "2026-05-15"
 parent_id: ui-catalogue
 sort_order: 30
 ---
@@ -10,9 +10,9 @@ sort_order: 30
 
 This doc is the durable implementation contract for shared list surfaces.
 
-Live reference:
+Demo reference:
 
-- [List primitive page](/studio/ui-catalogue/list/)
+- [List primitive demo](/studio/ui-catalogue/demos/primitives/list/)
 
 ## Scope
 
@@ -52,9 +52,14 @@ Page-specific classes still own column templates, row actions, chips, and respon
 
 ## Implementation Notes
 
-Current implementation lives in:
+Current live implementation lives in:
 
 - `assets/studio/css/studio.css`
+
+Current demo implementation lives in:
+
+- `assets/ui-catalogue/css/ui-catalogue-demo.css`
+- `studio/ui-catalogue/demos/primitives/list/index.md`
 
 Primary classes:
 
@@ -81,6 +86,8 @@ Dense list guidance:
 - use page-specific header and row classes for the column template
 - use `tagStudioList__cellTitle` on the title cell so the shared bold rule applies
 - do not add row dividers back locally unless the page needs a different list variant
+
+The UI Catalogue demo uses `uiCatalogueDemo*` classes. Use demo markup as the structural reference, then map it into the live list shell or a route-owned production variant.
 
 ## Lifecycle Notes
 

@@ -2,7 +2,7 @@
 doc_id: ui-pattern-column-links
 title: "Column Links Pattern"
 added_date: 2026-05-05
-last_updated: "2026-05-13"
+last_updated: "2026-05-15"
 parent_id: ui-catalogue
 sort_order: 120
 ---
@@ -10,22 +10,22 @@ sort_order: 120
 
 This composition pattern covers compact route-link column groups used on Studio dashboard and catalogue entry pages.
 
-Live reference:
+Demo reference:
 
-- [Column links pattern page](/studio/ui-catalogue/column-links/)
+- [Column links pattern demo](/studio/ui-catalogue/demos/patterns/column-links/)
 
 Current live examples:
 
 - `/studio/catalogue/`
 - `/studio/analytics/`
-- `/studio/ui-catalogue/`
+- `/studio/data-sharing/`
 
 ## Scope
 
 Use this pattern when:
 
 - a page is primarily routing the user into a small set of related work areas
-- links naturally group into two or three short categories
+- links naturally group into any small number of short categories
 - category headings add useful scan structure
 - individual links do not need descriptions, counts, or cards
 
@@ -39,13 +39,16 @@ Do not use this pattern for:
 
 ## Anatomy
 
-The pattern has three layers:
+The pattern combines labeled columns with stacked pill links.
+
+The live pattern has three layers:
 
 - `catalogueDashboardRoutes` for the column wrapper
 - `catalogueDashboardColumn` for each labeled group
 - `catalogueDashboardPills` for the compact route links
 
 Use `catalogueDashboardRoutes--three` when a dashboard needs three peer route groups.
+Additional column counts should be explicit in the owning route or shared CSS rather than inferred from content length.
 
 The links are ordinary anchors styled as pills.
 They should navigate, not run local commands.
@@ -64,6 +67,11 @@ Current implementation lives in:
 
 - `assets/css/main.css`
 
+Current demo implementation lives in:
+
+- `assets/ui-catalogue/css/ui-catalogue-demo.css`
+- `studio/ui-catalogue/demos/patterns/column-links/index.md`
+
 Current live pages use:
 
 - `catalogueDashboardRoutes`
@@ -73,7 +81,9 @@ Current live pages use:
 Keep link labels short enough to fit the pill treatment.
 If labels need supporting copy, move to a different pattern rather than stretching this one into a card grid.
 
+The UI Catalogue demo uses `uiCatalogueDemoColumnLinks*` classes. Treat those as demo-only pattern names, then map the structure into `catalogueDashboard*` or another owning live namespace.
+
 ## Migration Notes
 
-This pattern was first reused by Catalogue and Library dashboards, then adopted by the Analytics dashboard and UI Catalogue index. The Library dashboard has since been retired, but the pattern remains active on the other listed pages.
+This pattern was first reused by Catalogue and Library dashboards, then adopted by Analytics and Data Sharing dashboard routes. The Library dashboard has since been retired, but the pattern remains active on the other listed pages.
 Future dashboard-like Studio entry pages should use this documented pattern instead of creating page-local route-card variants.

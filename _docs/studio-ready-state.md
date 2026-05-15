@@ -2,7 +2,7 @@
 doc_id: studio-ready-state
 title: Studio Ready State
 added_date: 2026-05-14
-last_updated: "2026-05-14"
+last_updated: "2026-05-15"
 parent_id: studio
 sort_order: 48
 ---
@@ -162,13 +162,7 @@ Static Studio roots:
 
 - `/studio/` with `#studioHomeRoot`
 - `/studio/data-sharing/` with `#studioDataSharingDashboardRoot`
-- `/studio/ui-catalogue/` with `#studioUiCatalogueRoot`
-- `/studio/ui-catalogue/button/` with `#studioUiCatalogueButtonRoot`
-- `/studio/ui-catalogue/column-links/` with `#studioUiCatalogueColumnLinksRoot`
-- `/studio/ui-catalogue/input/` with `#studioUiCatalogueInputRoot`
-- `/studio/ui-catalogue/list/` with `#studioUiCatalogueListRoot`
-- `/studio/ui-catalogue/panel/` with `#studioUiCataloguePanelRoot`
-- `/studio/ui-catalogue/reopenable-command-result/` with `#studioUiCatalogueReopenableCommandResultRoot`
+The legacy UI catalogue reference routes have been retired. Isolated UI Catalogue demo routes now use `data-ui-catalogue-demo-ready` instead of the production `data-studio-ready` contract.
 
 Dashboard Studio roots:
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T12:46:44Z",
+  "generated_at": "2026-05-15T15:46:06Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -76,7 +76,7 @@
       "doc_id": "ui-primitive-button",
       "title": "Button Primitive",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-15",
       "parent_id": "ui-catalogue",
       "sort_order": 10,
       "published": true,
@@ -85,7 +85,7 @@
       "source_path": "ui-primitive-button.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-button.json",
-      "content_text_length": 1504
+      "content_text_length": 1822
     },
     {
       "scope": "studio",
@@ -629,7 +629,7 @@
       "doc_id": "ui-primitive-input",
       "title": "Input Primitive",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-15",
       "parent_id": "ui-catalogue",
       "sort_order": 20,
       "published": true,
@@ -638,7 +638,7 @@
       "source_path": "ui-primitive-input.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-input",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-input.json",
-      "content_text_length": 1735
+      "content_text_length": 2072
     },
     {
       "scope": "studio",
@@ -826,7 +826,7 @@
       "doc_id": "studio-ui-start",
       "title": "Studio UI Start",
       "added_date": "2026-04-21",
-      "last_updated": "2026-05-06 19:55",
+      "last_updated": "2026-05-15",
       "parent_id": "ui",
       "sort_order": 20,
       "published": true,
@@ -835,7 +835,7 @@
       "source_path": "studio-ui-start.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-start",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-start.json",
-      "content_text_length": 4277
+      "content_text_length": 4371
     },
     {
       "scope": "studio",
@@ -1070,7 +1070,7 @@
       "doc_id": "ui-primitive-list",
       "title": "List Primitive",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-15",
       "parent_id": "ui-catalogue",
       "sort_order": 30,
       "published": true,
@@ -1079,7 +1079,7 @@
       "source_path": "ui-primitive-list.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-list",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-list.json",
-      "content_text_length": 3065
+      "content_text_length": 3377
     },
     {
       "scope": "studio",
@@ -1426,7 +1426,7 @@
       "doc_id": "ui-primitive-panel",
       "title": "Panel Primitive",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-15",
       "parent_id": "ui-catalogue",
       "sort_order": 40,
       "published": true,
@@ -1435,7 +1435,7 @@
       "source_path": "ui-primitive-panel.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-panel",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-panel.json",
-      "content_text_length": 2425
+      "content_text_length": 2729
     },
     {
       "scope": "studio",
@@ -1506,7 +1506,7 @@
       "doc_id": "studio-ui-conformance",
       "title": "Studio UI Conformance Spec",
       "added_date": "2026-04-21",
-      "last_updated": "2026-05-06 19:55",
+      "last_updated": "2026-05-15",
       "parent_id": "ui",
       "sort_order": 40,
       "published": true,
@@ -1515,7 +1515,7 @@
       "source_path": "studio-ui-conformance.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-conformance",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-conformance.json",
-      "content_text_length": 9476
+      "content_text_length": 9589
     },
     {
       "scope": "studio",
@@ -1571,7 +1571,7 @@
       "doc_id": "studio-ready-state",
       "title": "Studio Ready State",
       "added_date": "2026-05-14",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-15",
       "parent_id": "studio",
       "sort_order": 48,
       "published": true,
@@ -1580,7 +1580,7 @@
       "source_path": "studio-ready-state.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ready-state",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ready-state.json",
-      "content_text_length": 8284
+      "content_text_length": 8002
     },
     {
       "scope": "studio",
@@ -2012,7 +2012,7 @@
       "doc_id": "ui",
       "title": "UI",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-15",
       "parent_id": "",
       "sort_order": 60,
       "published": true,
@@ -2021,7 +2021,7 @@
       "source_path": "ui.md",
       "viewer_url": "/docs/?scope=studio&doc=ui",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui.json",
-      "content_text_length": 2123
+      "content_text_length": 2122
     },
     {
       "scope": "studio",
@@ -2221,7 +2221,7 @@
       "doc_id": "ui-catalogue",
       "title": "UI Catalogue",
       "added_date": "2026-04-21",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-15",
       "parent_id": "",
       "sort_order": 70,
       "published": true,
@@ -2230,14 +2230,14 @@
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json",
-      "content_text_length": 6404
+      "content_text_length": 5519
     },
     {
       "scope": "studio",
       "doc_id": "ui-audits",
       "title": "UI Audits",
       "added_date": "2026-04-21",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-15",
       "parent_id": "",
       "sort_order": 75,
       "published": true,
@@ -2246,7 +2246,7 @@
       "source_path": "ui-audits.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-audits",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audits.json",
-      "content_text_length": 2008
+      "content_text_length": 3064
     },
     {
       "scope": "studio",
@@ -2431,7 +2431,7 @@
       "doc_id": "design",
       "title": "Design",
       "added_date": "2026-04-21",
-      "last_updated": "2026-05-06 20:02",
+      "last_updated": "2026-05-15",
       "parent_id": "ui",
       "sort_order": 90,
       "published": true,
@@ -2440,7 +2440,7 @@
       "source_path": "design.md",
       "viewer_url": "/docs/?scope=studio&doc=design",
       "content_url": "/assets/data/docs/scopes/studio/by-id/design.json",
-      "content_text_length": 1535
+      "content_text_length": 1534
     },
     {
       "scope": "studio",
@@ -2672,7 +2672,7 @@
       "doc_id": "ui-pattern-reopenable-command-result",
       "title": "Reopenable Command Result Pattern",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-05",
+      "last_updated": "2026-05-15",
       "parent_id": "ui-catalogue",
       "sort_order": 110,
       "published": true,
@@ -2681,7 +2681,7 @@
       "source_path": "ui-pattern-reopenable-command-result.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-reopenable-command-result.json",
-      "content_text_length": 2782
+      "content_text_length": 3213
     },
     {
       "scope": "studio",
@@ -2704,7 +2704,7 @@
       "doc_id": "ui-pattern-column-links",
       "title": "Column Links Pattern",
       "added_date": "2026-05-05",
-      "last_updated": "2026-05-13",
+      "last_updated": "2026-05-15",
       "parent_id": "ui-catalogue",
       "sort_order": 120,
       "published": true,
@@ -2713,7 +2713,7 @@
       "source_path": "ui-pattern-column-links.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-column-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-column-links.json",
-      "content_text_length": 2064
+      "content_text_length": 2582
     },
     {
       "scope": "studio",
@@ -3374,7 +3374,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-15",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3383,7 +3383,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 154769
+      "content_text_length": 155652
     },
     {
       "scope": "studio",
@@ -3508,7 +3508,7 @@
       "doc_id": "site-request-studio-ready-state-contract",
       "title": "Studio Ready State Contract Request",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-15",
       "parent_id": "archive",
       "sort_order": 350,
       "published": true,
@@ -3517,7 +3517,7 @@
       "source_path": "site-request-studio-ready-state-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-ready-state-contract.json",
-      "content_text_length": 9777,
+      "content_text_length": 9746,
       "ui_status": "done"
     },
     {

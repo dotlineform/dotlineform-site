@@ -2,7 +2,7 @@
 doc_id: studio-ui-conformance
 title: Studio UI Conformance Spec
 added_date: 2026-04-21
-last_updated: "2026-05-06 19:55"
+last_updated: "2026-05-15"
 parent_id: ui
 sort_order: 40
 ---
@@ -19,7 +19,7 @@ Use it when the task is:
 
 This is the audit contract, not the primitive reference itself.
 
-Use the published primitive pages and shared framework docs as the source rules. Use this document to define how those rules should be audited and reported.
+Use UI Catalogue primitive and pattern docs, isolated demo pages, and shared framework docs as the source rules. Use this document to define how those rules should be audited and reported.
 
 Related references:
 
@@ -44,21 +44,21 @@ If a page uses a pattern that has not yet been standardized enough to audit, the
 
 Use these sources in this order:
 
-1. Published primitive pages under `/studio/ui-catalogue/`
+1. UI Catalogue docs and isolated demo pages under `/studio/ui-catalogue/demos/`
 2. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 3. [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 4. Relevant page/runtime docs if they define route-specific behavior that does not conflict with the shared Studio contract
 
-Do not treat live page behavior by itself as authoritative if it conflicts with a published primitive or permanent shared rule.
+Do not treat UI Catalogue demo rendering as a live CSS check. For production conformance, map the demo pattern into the live namespace, then verify the live route through UI Audit.
 
 ## Coverage Model
 
 Every audited UI element must be classified into one of these coverage states before judging conformance:
 
 - `authoritative`
-  The pattern has a published primitive page or a clear shared framework rule.
+  The pattern has a published demo page or a clear shared framework rule.
 - `framework-only`
-  The pattern has a shared framework rule but no published primitive page yet.
+  The pattern has a shared framework rule but no published demo page yet.
 - `partial`
   The pattern is named or implied in docs, but the contract is still incomplete.
 - `uncovered`
@@ -94,7 +94,7 @@ Use these sources while auditing:
 - the page route itself in a browser
 - the page template and relevant runtime JS
 - the shared Studio CSS
-- the published primitive pages
+- the relevant UI Catalogue docs and demo pages
 - the shared framework and rules docs
 
 Expected verification modes:

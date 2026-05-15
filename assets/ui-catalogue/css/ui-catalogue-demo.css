@@ -1,0 +1,669 @@
+.uiCatalogueDemoRoot {
+  --ui-demo-surface: #fff;
+  --ui-demo-surface-soft: #f6f7f4;
+  --ui-demo-surface-code: #f2f4f5;
+  --ui-demo-line: #d8ded8;
+  --ui-demo-line-strong: #89978d;
+  --ui-demo-text: #1b201d;
+  --ui-demo-muted: #5c675f;
+  --ui-demo-focus: #2f6f73;
+  --ui-demo-success: #23623f;
+  --ui-demo-warning: #89651f;
+  --ui-demo-overlay: rgba(20, 24, 22, 0.54);
+  --ui-demo-radius: 6px;
+  --ui-demo-gap: 1rem;
+  --ui-demo-control-height: 2.05rem;
+  color: var(--ui-demo-text);
+}
+
+.uiCatalogueDemoRoot,
+.uiCatalogueDemoPage {
+  display: grid;
+  gap: var(--ui-demo-gap);
+}
+
+.uiCatalogueDemoIntro,
+.uiCatalogueDemoSummary,
+.uiCatalogueDemoExample__summary,
+.uiCatalogueDemoText {
+  margin: 0;
+  color: var(--ui-demo-muted);
+  font-size: var(--font-small, 0.9rem);
+  line-height: 1.45;
+}
+
+.uiCatalogueDemoEyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--ui-demo-muted);
+  font-size: var(--font-caption, 0.78rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.uiCatalogueDemoSection,
+.uiCatalogueDemoNotes {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.uiCatalogueDemoSection__header,
+.uiCatalogueDemoExample__header {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.uiCatalogueDemoHeading,
+.uiCatalogueDemoExample__title,
+.uiCatalogueDemoCode__title,
+.uiCatalogueDemoPanel__heading {
+  margin: 0;
+  font-size: var(--font-small, 0.9rem);
+}
+
+.uiCatalogueDemoGrid {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.uiCatalogueDemoExample {
+  display: grid;
+  gap: 0.55rem;
+  align-content: start;
+}
+
+.uiCatalogueDemoNav {
+  display: grid;
+  gap: 1rem;
+}
+
+.uiCatalogueDemoNav__group {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+}
+
+.uiCatalogueDemoNav__list {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.uiCatalogueDemoNav__link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.uiCatalogueDemoNav__link:hover,
+.uiCatalogueDemoNav__link:focus-visible {
+  color: var(--ui-demo-focus);
+}
+
+.uiCatalogueDemoColumnLinks {
+  display: grid;
+  grid-template-columns: repeat(var(--ui-demo-column-count, 2), minmax(0, 1fr));
+  gap: 2rem;
+  align-items: start;
+  justify-content: start;
+  width: min(100%, var(--ui-demo-column-links-width, 42rem));
+}
+
+.uiCatalogueDemoColumnLinks__column {
+  display: grid;
+  gap: 0.7rem;
+  justify-items: start;
+}
+
+.uiCatalogueDemoColumnLinks__pills {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.uiCatalogueDemoColumnLinks__pill {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ui-demo-control-height);
+  border: 1px solid var(--ui-demo-line);
+  border-radius: 999px;
+  padding: 0.32rem 0.72rem;
+  color: inherit;
+  font-size: var(--font-small, 0.9rem);
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  background: var(--ui-demo-surface);
+}
+
+.uiCatalogueDemoColumnLinks__pill:hover,
+.uiCatalogueDemoColumnLinks__pill:focus-visible {
+  border-color: var(--ui-demo-line-strong);
+  color: inherit;
+}
+
+.uiCatalogueDemoPanel {
+  display: grid;
+  gap: 0.6rem;
+  border: 1px solid var(--ui-demo-line);
+  border-radius: var(--ui-demo-radius);
+  padding: 1rem;
+  background: var(--ui-demo-surface);
+}
+
+.uiCatalogueDemoPanel--compact {
+  padding: 0.75rem;
+}
+
+.uiCatalogueDemoPanel--editor {
+  align-content: start;
+}
+
+.uiCatalogueDemoPanel > .uiCatalogueDemoPanel {
+  background: var(--ui-demo-surface-soft);
+}
+
+a.uiCatalogueDemoPanel {
+  box-sizing: border-box;
+  min-height: 8.25rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+a.uiCatalogueDemoPanel:hover,
+a.uiCatalogueDemoPanel:focus-visible {
+  border-color: var(--ui-demo-line-strong);
+}
+
+.uiCatalogueDemoPanel--image {
+  position: relative;
+  overflow: hidden;
+  color: #111;
+  background: var(--ui-demo-surface-soft);
+}
+
+.uiCatalogueDemoPanel--image::before,
+.uiCatalogueDemoPanel--image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.uiCatalogueDemoPanel--image::before {
+  background-image: var(--ui-demo-panel-image);
+  background-position: center;
+  background-size: cover;
+}
+
+.uiCatalogueDemoPanel--image::after {
+  background: var(
+    --ui-demo-panel-overlay,
+    linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.84))
+  );
+}
+
+.uiCatalogueDemoPanel--image > * {
+  position: relative;
+  z-index: 1;
+}
+
+.uiCatalogueDemoPanel--imageContrast {
+  color: #fff;
+}
+
+.uiCatalogueDemoPanel--imageContrast::after {
+  background: var(
+    --ui-demo-panel-overlay,
+    linear-gradient(180deg, rgba(18, 21, 20, 0.2), rgba(18, 21, 20, 0.74))
+  );
+}
+
+.uiCatalogueDemoActions,
+.uiCatalogueDemoButtonPair,
+.uiCatalogueDemoInputRow,
+.uiCatalogueDemoListSortControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.uiCatalogueDemoButton {
+  box-sizing: border-box;
+  --ui-demo-button-height: var(--ui-demo-control-height);
+  --ui-demo-button-width: 5.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ui-demo-button-height);
+  border: 1px solid var(--ui-demo-line-strong);
+  border-radius: var(--ui-demo-radius);
+  padding: 0.42rem 0.7rem;
+  color: inherit;
+  font: inherit;
+  font-size: var(--font-small, 0.9rem);
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+  background: var(--ui-demo-surface);
+  cursor: pointer;
+}
+
+.uiCatalogueDemoButton--medium {
+  --ui-demo-button-height: 2.45rem;
+  --ui-demo-button-width: 6.6rem;
+  font-size: var(--font-base, 1rem);
+}
+
+.uiCatalogueDemoButton--fixed {
+  min-width: var(--ui-demo-button-width);
+}
+
+.uiCatalogueDemoButton--primary {
+  font-weight: 700;
+}
+
+.uiCatalogueDemoButton:disabled,
+.uiCatalogueDemoButton[aria-disabled="true"] {
+  color: var(--ui-demo-muted);
+  cursor: not-allowed;
+}
+
+.uiCatalogueDemoStatus {
+  margin: 0;
+  color: var(--ui-demo-muted);
+  font-size: var(--font-small, 0.9rem);
+}
+
+.uiCatalogueDemoStatus[data-state="success"] {
+  color: var(--ui-demo-success);
+}
+
+.uiCatalogueDemoStatus[data-state="warning"] {
+  color: var(--ui-demo-warning);
+}
+
+.uiCatalogueDemoFieldGroup {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.uiCatalogueDemoFieldGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) max-content;
+  gap: 0.45rem;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.uiCatalogueDemoField {
+  --ui-demo-field-width: 18rem;
+  --ui-demo-field-label-width: 8rem;
+  display: grid;
+  gap: 0.22rem;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.uiCatalogueDemoField--fill {
+  width: 100%;
+}
+
+.uiCatalogueDemoField--inline,
+.uiCatalogueDemoField--split {
+  align-items: center;
+}
+
+.uiCatalogueDemoField--inline {
+  grid-template-columns: max-content auto;
+  gap: 0.45rem;
+}
+
+.uiCatalogueDemoField--split {
+  grid-template-columns: minmax(0, var(--ui-demo-field-label-width)) auto;
+  column-gap: 0.6rem;
+}
+
+.uiCatalogueDemoField__label {
+  color: var(--ui-demo-muted);
+  font-size: var(--font-small, 0.9rem);
+  text-transform: lowercase;
+}
+
+.uiCatalogueDemoField__control {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.uiCatalogueDemoField--fill .uiCatalogueDemoField__control {
+  width: 100%;
+}
+
+.uiCatalogueDemoField--inline .uiCatalogueDemoField__control,
+.uiCatalogueDemoField--split .uiCatalogueDemoField__control {
+  grid-column: 2;
+}
+
+.uiCatalogueDemoInput {
+  box-sizing: border-box;
+  width: min(100%, var(--ui-demo-field-width, 18rem));
+  min-width: 0;
+  min-height: var(--ui-demo-control-height);
+  border: 1px solid var(--ui-demo-line);
+  border-radius: var(--ui-demo-radius);
+  padding: 0.48rem 0.55rem;
+  color: inherit;
+  font: inherit;
+  font-size: var(--font-small, 0.9rem);
+  line-height: 1.2;
+  background: var(--ui-demo-surface);
+}
+
+.uiCatalogueDemoField--fill .uiCatalogueDemoInput {
+  width: 100%;
+}
+
+.uiCatalogueDemoInput::placeholder {
+  color: var(--ui-demo-muted);
+  opacity: 1;
+}
+
+.uiCatalogueDemoInput:disabled {
+  color: var(--ui-demo-muted);
+  cursor: not-allowed;
+}
+
+.uiCatalogueDemoInput:focus {
+  outline: none;
+  border-color: var(--ui-demo-focus);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ui-demo-focus) 24%, transparent);
+}
+
+.uiCatalogueDemoInput--readonly {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ui-demo-control-height);
+  background: transparent;
+}
+
+.uiCatalogueDemoStepButton {
+  min-width: var(--ui-demo-control-height);
+  padding-inline: 0;
+}
+
+.uiCatalogueDemoFillRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.uiCatalogueDemoList {
+  display: grid;
+  gap: 0.5rem;
+  width: min(100%, var(--ui-demo-list-width, 38rem));
+  max-width: 100%;
+}
+
+.uiCatalogueDemoList__head,
+.uiCatalogueDemoList__row {
+  display: grid;
+  gap: 0.625rem;
+  align-items: start;
+  font-size: var(--font-small, 0.9rem);
+  line-height: 1.25;
+}
+
+.uiCatalogueDemoList__head {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--ui-demo-line);
+}
+
+.uiCatalogueDemoList__rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.uiCatalogueDemoList__row {
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--ui-demo-line);
+}
+
+.uiCatalogueDemoList__row:first-child {
+  border-top: 0;
+}
+
+.uiCatalogueDemoList__row--center {
+  align-items: center;
+}
+
+.uiCatalogueDemoList__label,
+.uiCatalogueDemoList__sort,
+.uiCatalogueDemoList__meta {
+  color: var(--ui-demo-muted);
+  font-size: var(--font-small, 0.9rem);
+}
+
+.uiCatalogueDemoList__sort {
+  border: 0;
+  padding: 0;
+  color: var(--ui-demo-muted);
+  font: inherit;
+  text-align: left;
+  text-transform: lowercase;
+  background: transparent;
+  cursor: pointer;
+}
+
+.uiCatalogueDemoList__sort[data-state="active"] {
+  color: inherit;
+}
+
+.uiCatalogueDemoList__cell {
+  display: grid;
+  gap: 0.16rem;
+  min-width: 0;
+}
+
+.uiCatalogueDemoList__link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+  overflow-wrap: anywhere;
+}
+
+.uiCatalogueDemoList__title {
+  font-weight: 700;
+}
+
+.uiCatalogueDemoList__thumb {
+  display: block;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border: 1px solid var(--ui-demo-line);
+  border-radius: var(--ui-demo-radius);
+  background: var(--ui-demo-surface-soft);
+}
+
+.uiCatalogueDemoList__thumbImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.uiCatalogueDemoList--simple {
+  --ui-demo-list-width: 28rem;
+}
+
+.uiCatalogueDemoList--sortable {
+  --ui-demo-list-width: 34rem;
+}
+
+.uiCatalogueDemoList--dense {
+  --ui-demo-list-width: 52rem;
+}
+
+.uiCatalogueDemoList--thumbnail {
+  --ui-demo-list-width: 38rem;
+}
+
+.uiCatalogueDemoList--simple .uiCatalogueDemoList__row {
+  grid-template-columns: minmax(0, 1fr) minmax(5rem, max-content);
+}
+
+.uiCatalogueDemoList--sortable .uiCatalogueDemoList__head,
+.uiCatalogueDemoList--sortable .uiCatalogueDemoList__row {
+  grid-template-columns: minmax(4.5rem, 6rem) minmax(12rem, 1fr) minmax(5.5rem, 7rem);
+}
+
+.uiCatalogueDemoList--dense .uiCatalogueDemoList__head,
+.uiCatalogueDemoList--dense .uiCatalogueDemoList__row {
+  grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
+}
+
+.uiCatalogueDemoList--dense .uiCatalogueDemoList__head,
+.uiCatalogueDemoList--dense .uiCatalogueDemoList__row,
+.uiCatalogueDemoList--dense .uiCatalogueDemoList__sort,
+.uiCatalogueDemoList--dense .uiCatalogueDemoList__meta {
+  font-size: var(--font-caption, 0.78rem);
+  line-height: 1.2;
+}
+
+.uiCatalogueDemoList--dense .uiCatalogueDemoList__row {
+  border-top: 0;
+  padding: 0.2rem 0;
+}
+
+.uiCatalogueDemoList--thumbnail .uiCatalogueDemoList__head,
+.uiCatalogueDemoList--thumbnail .uiCatalogueDemoList__row {
+  grid-template-columns: 56px minmax(12rem, 1fr) minmax(5.5rem, 7rem);
+}
+
+.uiCatalogueDemoModal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  place-items: center;
+}
+
+.uiCatalogueDemoModal[data-open="true"] {
+  display: grid;
+}
+
+.uiCatalogueDemoModal__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: var(--ui-demo-overlay);
+  cursor: pointer;
+}
+
+.uiCatalogueDemoModal__dialog {
+  box-sizing: border-box;
+  position: relative;
+  display: grid;
+  gap: 0.7rem;
+  width: min(34rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  border: 1px solid var(--ui-demo-line);
+  border-radius: var(--ui-demo-radius);
+  padding: 1rem;
+  background: var(--ui-demo-surface);
+}
+
+.uiCatalogueDemoModal__title,
+.uiCatalogueDemoModal__body {
+  margin: 0;
+}
+
+.uiCatalogueDemoModal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.uiCatalogueDemoResultRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.uiCatalogueDemoCode {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.uiCatalogueDemoCode__item {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.uiCatalogueDemoCode pre {
+  margin: 0;
+  max-width: 100%;
+  overflow: auto;
+  border: 1px solid var(--ui-demo-line);
+  border-radius: var(--ui-demo-radius);
+  padding: 0.7rem;
+  background: var(--ui-demo-surface-code);
+  font-size: var(--font-caption, 0.78rem);
+}
+
+.uiCatalogueDemoNotesBody > :last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 700px) {
+  .uiCatalogueDemoFieldGrid,
+  .uiCatalogueDemoFillRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .uiCatalogueDemoField,
+  .uiCatalogueDemoField__control,
+  .uiCatalogueDemoInput {
+    width: 100%;
+  }
+
+  .uiCatalogueDemoField--inline,
+  .uiCatalogueDemoField--split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .uiCatalogueDemoField--inline .uiCatalogueDemoField__control,
+  .uiCatalogueDemoField--split .uiCatalogueDemoField__control {
+    grid-column: 1;
+  }
+
+  .uiCatalogueDemoColumnLinks {
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .uiCatalogueDemoList--simple .uiCatalogueDemoList__row,
+  .uiCatalogueDemoList--sortable .uiCatalogueDemoList__head,
+  .uiCatalogueDemoList--sortable .uiCatalogueDemoList__row,
+  .uiCatalogueDemoList--thumbnail .uiCatalogueDemoList__head,
+  .uiCatalogueDemoList--thumbnail .uiCatalogueDemoList__row,
+  .uiCatalogueDemoList--dense .uiCatalogueDemoList__head,
+  .uiCatalogueDemoList--dense .uiCatalogueDemoList__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

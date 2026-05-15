@@ -2,7 +2,7 @@
 doc_id: ui-primitive-panel
 title: "Panel Primitive"
 added_date: 2026-05-05
-last_updated: "2026-05-05"
+last_updated: "2026-05-15"
 parent_id: ui-catalogue
 sort_order: 40
 ---
@@ -10,9 +10,9 @@ sort_order: 40
 
 This doc is the durable implementation contract for shared panel surfaces.
 
-Live reference:
+Demo reference:
 
-- [Panel primitive page](/studio/ui-catalogue/panel/)
+- [Panel primitive demo](/studio/ui-catalogue/demos/primitives/panel/)
 
 ## Scope
 
@@ -41,9 +41,14 @@ The panel primitive should:
 
 ## Implementation Notes
 
-Current implementation lives in:
+Current live implementation lives in:
 
 - `assets/studio/css/studio.css`
+
+Current demo implementation lives in:
+
+- `assets/ui-catalogue/css/ui-catalogue-demo.css`
+- `studio/ui-catalogue/demos/primitives/panel/index.md`
 
 Dark-mode panel surfaces must override the Studio surface token set together.
 Do not combine a light `--studio-surface` with global dark-mode text tokens such as `--muted`; that makes labels and disabled text low contrast on white panels.
@@ -60,6 +65,8 @@ Primary classes:
 - `tagStudio__panelLink`
 - `tagStudio__panelLink--image`
 - `tagStudio__panelLink--imageContrast`
+
+The UI Catalogue demo uses `uiCatalogueDemo*` classes. Treat those as demo-only pattern names, then map the structure into live production classes during page work.
 
 Jekyll-rendered image panel links should keep design-time asset selections in shared page data where possible.
 Asset width should be treated as an explicit page design variable.

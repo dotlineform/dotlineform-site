@@ -2,7 +2,7 @@
 doc_id: design
 title: Design
 added_date: 2026-04-21
-last_updated: "2026-05-06 20:02"
+last_updated: "2026-05-15"
 parent_id: ui
 sort_order: 90
 ---
@@ -27,7 +27,7 @@ Related references:
 
 - **[UI](/docs/?scope=studio&doc=ui)** for the unified site-wide UI framework and migration target for older split UI docs
 - **[Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)** for the short Studio UI preflight and implementation checklist
-- **[UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)** for the top-level index of primitive docs, composition-pattern docs, and live reference pages
+- **[UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)** for the top-level index of primitive docs, composition-pattern docs, and isolated demo pages
 - **[Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)** for the page-audit contract, coverage model, and required conformance-report format
 - **[UI Audits](/docs/?scope=studio&doc=ui-audits)** for saved page-level UI conformance reviews
 - **[UI Framework](/docs/?scope=studio&doc=ui-framework)** for legacy site-wide UI material that is being consolidated into UI

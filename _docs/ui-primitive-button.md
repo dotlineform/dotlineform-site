@@ -2,7 +2,7 @@
 doc_id: ui-primitive-button
 title: "Button Primitive"
 added_date: 2026-05-05
-last_updated: "2026-05-05"
+last_updated: "2026-05-15"
 parent_id: ui-catalogue
 sort_order: 10
 ---
@@ -10,9 +10,9 @@ sort_order: 10
 
 This doc is the durable implementation contract for shared command buttons.
 
-Live reference:
+Demo reference:
 
-- [Button primitive page](/studio/ui-catalogue/button/)
+- [Button primitive demo](/studio/ui-catalogue/demos/primitives/button/)
 
 ## Scope
 
@@ -45,9 +45,14 @@ The shared command-button contract currently includes:
 
 ## Implementation Notes
 
-Current implementation lives in:
+Current live implementation lives in:
 
 - `assets/studio/css/studio.css`
+
+Current demo implementation lives in:
+
+- `assets/ui-catalogue/css/ui-catalogue-demo.css`
+- `studio/ui-catalogue/demos/primitives/button/index.md`
 
 Primary classes:
 
@@ -57,6 +62,8 @@ Primary classes:
 - `tagStudio__button--defaultAction`
 
 Button-related visible copy belongs in the relevant route or feature `ui_text` config when the page is config-backed.
+
+The UI Catalogue demo uses `uiCatalogueDemo*` classes. Treat the demo markup as a pattern reference that must be mapped into the live production namespace during implementation.
 
 ## Lifecycle Notes
 

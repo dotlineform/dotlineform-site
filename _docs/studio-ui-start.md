@@ -2,7 +2,7 @@
 doc_id: studio-ui-start
 title: Studio UI Start
 added_date: 2026-04-21
-last_updated: "2026-05-06 19:55"
+last_updated: "2026-05-15"
 parent_id: ui
 sort_order: 20
 ---
@@ -44,9 +44,9 @@ If the answer is unclear, stop and classify it first. Several recent inconsisten
 
 Before adding or changing Studio UI:
 
-- check the live primitive pages under `/studio/ui-catalogue/`
-- use the shared `tagStudio*` layer before inventing route-local markup or CSS
-- if the primitive fails on the catalogue page, treat that as a shared problem rather than hiding it with page-local compensation
+- check the isolated demo pages under `/studio/ui-catalogue/demos/`
+- map the demo structure into the shared `tagStudio*` layer or an owning route namespace before inventing unrelated markup or CSS
+- if the live page fails after mapping a catalogue pattern, use UI Audit to decide whether the issue is in the live route, the shared production primitive, or the demo pattern
 - if a pattern is repeated but not yet formalized, decide whether it is:
   - a shared primitive
   - a shared composition
@@ -129,5 +129,5 @@ Use the detailed docs only as needed:
 - [UI Audits](/docs/?scope=studio&doc=ui-audits) for saved page-level conformance review outputs
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework) for Studio shared contracts and primitives
 - [UI Framework](/docs/?scope=studio&doc=ui-framework) for site-wide interaction defaults
-- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) for primitive pages and implementation notes
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) for primitive and pattern demo pages
 - [Studio](/docs/?scope=studio&doc=studio) for Studio feature/runtime docs

@@ -2,7 +2,7 @@
 doc_id: ui-primitive-input
 title: "Input Primitive"
 added_date: 2026-05-05
-last_updated: "2026-05-05"
+last_updated: "2026-05-15"
 parent_id: ui-catalogue
 sort_order: 20
 ---
@@ -10,9 +10,9 @@ sort_order: 20
 
 This doc is the durable implementation contract for shared input controls and field shells.
 
-Live reference:
+Demo reference:
 
-- [Input primitive page](/studio/ui-catalogue/input/)
+- [Input primitive demo](/studio/ui-catalogue/demos/primitives/input/)
 
 ## Scope
 
@@ -38,9 +38,14 @@ Display-only values should use a readonly display treatment rather than a disabl
 
 ## Implementation Notes
 
-Current implementation lives in:
+Current live implementation lives in:
 
 - `assets/studio/css/studio.css`
+
+Current demo implementation lives in:
+
+- `assets/ui-catalogue/css/ui-catalogue-demo.css`
+- `studio/ui-catalogue/demos/primitives/input/index.md`
 
 Primary classes:
 
@@ -55,6 +60,8 @@ Primary classes:
 - `tagStudioField__control`
 - `tagStudioField__stepButton`
 - `tagStudioField__incrementValue`
+
+The UI Catalogue demo uses `uiCatalogueDemo*` classes. Treat those as demo-only pattern names, then map the structure into live `tagStudio*` or route-owned classes when implementing production pages.
 
 ## Lifecycle Notes
 

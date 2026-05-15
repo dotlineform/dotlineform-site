@@ -2,7 +2,7 @@
 doc_id: ui-pattern-reopenable-command-result
 title: "Reopenable Command Result Pattern"
 added_date: 2026-05-05
-last_updated: "2026-05-05"
+last_updated: "2026-05-15"
 parent_id: ui-catalogue
 sort_order: 110
 ---
@@ -13,7 +13,10 @@ This composition pattern covers command results that open in a modal and can be 
 Current live examples:
 
 - `/studio/data-sharing/review/`
-- [Reopenable command result pattern page](/studio/ui-catalogue/reopenable-command-result/)
+
+Demo reference:
+
+- [Reopenable command result pattern demo](/studio/ui-catalogue/demos/patterns/reopenable-command-result/)
 
 ## Scope
 
@@ -66,6 +69,14 @@ The route hides or clears the action when:
 The stored payload should contain the data required to reopen the modal, not just the status text.
 
 ## Implementation Notes
+
+Current demo implementation lives in:
+
+- `assets/ui-catalogue/css/ui-catalogue-demo.css`
+- `assets/ui-catalogue/js/ui-catalogue-demo.js`
+- `studio/ui-catalogue/demos/patterns/reopenable-command-result/index.md`
+
+The UI Catalogue demo uses `uiCatalogueDemo*` classes and demo-owned modal JavaScript. Treat the demo as the pattern reference, then map the lifecycle, result storage, modal helper, and class names into the live route.
 
 The Library import implementation stores:
 

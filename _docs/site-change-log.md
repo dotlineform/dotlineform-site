@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-14"
+last_updated: "2026-05-15"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,30 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-15] Isolated UI Catalogue Demo Namespace
+
+**Status:** implemented
+
+**Area:** UI Catalogue / Studio design system
+
+**Summary:**
+Moved UI Catalogue primitive and pattern pages into an isolated demo route and code namespace.
+The catalogue now publishes demo pages under `/studio/ui-catalogue/demos/`, renders demo-only `uiCatalogueDemo*` markup, and uses `assets/ui-catalogue/` CSS/JS instead of importing live Studio component CSS.
+
+**Files changed/docs:**
+
+- `assets/ui-catalogue/css/ui-catalogue-demo.css`
+- `assets/ui-catalogue/js/ui-catalogue-demo.js`
+- `studio/ui-catalogue/demos/`
+- `assets/studio/css/studio.css`
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [UI Audits](/docs/?scope=studio&doc=ui-audits)
+- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
+
+**Impact:**
+The UI Catalogue is now a designer/developer demo resource rather than a dual-purpose live CSS check.
+Live page verification moves to UI Audit, where each audit maps the demo pattern into the production namespace and checks the real route.
 
 ## [2026-05-14] Started Docs Viewer Router Extraction
 

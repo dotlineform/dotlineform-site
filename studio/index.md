@@ -37,7 +37,7 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
 
 <section aria-labelledby="studioResourcesHeading">
   <h3 id="studioResourcesHeading">Resources</h3>
-  <p><a href="{{ '/studio/ui-catalogue/' | relative_url }}">UI Catalogue</a></p>
+  <p><a href="{{ '/studio/ui-catalogue/demos/' | relative_url }}">UI Catalogue Demos</a></p>
   <p><a href="{{ '/studio/catalogue-field-registry/' | relative_url }}">Catalogue Field Registry</a></p>
   <p><a href="{{ '/studio/activity/' | relative_url }}">Activity</a></p>
   <p><a href="{{ '/studio/audits/' | relative_url }}">Audits</a></p>
