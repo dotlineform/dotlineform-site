@@ -2,8 +2,8 @@
 doc_id: site-request-docs-viewer-new-scope-button
 title: Docs Viewer New Scope Button Request
 added_date: 2026-05-14
-last_updated: 2026-05-14
-ui_status: draft
+last_updated: 2026-05-15
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 30
 hidden: false
@@ -12,7 +12,7 @@ hidden: false
 
 Status:
 
-- requested
+- in progress
 
 ## Summary
 
@@ -222,9 +222,16 @@ The result should list:
 
 Status:
 
-- proposed
+- implemented
 
 Add the scope manifest schema and populate it for all existing Docs Viewer scopes.
+
+Progress:
+
+- `scripts/docs/docs_scope_manifest.json` now records Studio, Library, and Analysis.
+- Existing scopes are marked system-owned, not user-created, and not tool-created.
+- The manifest uses repo-relative file records and records source roots, scope config, default docs, route files, generated docs output, and generated search output.
+- `scripts/docs/docs_scope_manifest.py` can backfill a manifest from `scripts/docs/docs_scopes.json` when the manifest is missing.
 
 Acceptance:
 
@@ -238,10 +245,18 @@ Acceptance:
 
 Status:
 
-- proposed
+- partially implemented
 
 Add docs-management capabilities for scope creation and eligible scope deletion.
 Define endpoint payloads, validation errors, dry-run behavior, preview behavior, and response shapes.
+
+Progress:
+
+- `GET /capabilities` now advertises `scope_lifecycle` support.
+- Per-scope capability data reports whether a manifest record exists and whether the scope is delete-eligible.
+- `POST /docs/scopes/create-preview` validates inputs and returns a planned create write set.
+- `POST /docs/scopes/delete-preview` returns a manifest-backed delete plan and blocks system-owned scopes.
+- Apply/write capability flags intentionally remain false until allowlisted writes are implemented.
 
 Acceptance:
 
@@ -324,9 +339,15 @@ Acceptance:
 
 Status:
 
-- proposed
+- in progress
 
 When implemented, update the stable Docs Viewer route-creation and management docs with the actual UI and server behavior.
+
+Progress:
+
+- [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder) now owns the technical design notes.
+- The retired route-creation doc was folded into New Scopes Builder so implementation details have one stable home.
+- Final UI and apply-write behavior still need to be documented when those slices land.
 
 Acceptance:
 

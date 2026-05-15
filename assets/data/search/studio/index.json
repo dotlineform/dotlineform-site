@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5819eba63e26d4554e9ba8e55014793f",
-    "generated_at_utc": "2026-05-15T21:39:04Z",
+    "version": "blake2b-6fdc5adbf4bd4514e5d0972516de2f25",
+    "generated_at_utc": "2026-05-15T21:45:31Z",
     "count": 245
   },
   "entries": [
@@ -1641,10 +1641,10 @@
       "kind": "doc",
       "title": "Docs Viewer New Scope Button Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-15",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-14 • Change Requests",
+      "display_meta": "2026-05-15 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-new-scope-button",
         "site",
@@ -1658,12 +1658,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-14",
+        "2026-05-15",
         "2026",
         "05",
-        "14"
+        "15"
       ],
-      "search_text": "site-request-docs-viewer-new-scope-button site request docs viewer new scope button docs viewer new scope button request change requests change requests 2026-05-14 2026 05 14"
+      "search_text": "site-request-docs-viewer-new-scope-button site request docs viewer new scope button docs viewer new scope button request change requests change requests 2026-05-15 2026 05 15"
     },
     {
       "id": "docs-viewer-portable-setup",

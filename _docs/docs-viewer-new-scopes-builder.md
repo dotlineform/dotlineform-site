@@ -135,6 +135,173 @@ Initial server-side foundation is in place:
 
 Apply/write behavior and the management UI are not implemented yet.
 
+## Manifest Design
+
+Manifest file:
+
+- `scripts/docs/docs_scope_manifest.json`
+
+Schema version:
+
+- `docs_scope_manifest_v1`
+
+Top-level fields:
+
+- `schema_version`: manifest schema id
+- `tool_id`: current lifecycle tool id, `docs-viewer-scope-lifecycle`
+- `updated_at`: UTC timestamp for the manifest payload
+- `scopes`: scope ownership records
+
+Scope record fields:
+
+- `scope_id`: configured Docs Viewer scope id
+- `scope_type`: `public` or `local`
+- `owner`: `system` or a future user/tool owner value
+- `user_created`: whether the scope was created by a local operator
+- `created_by_tool`: whether this lifecycle tool created the scope
+- `tool_id`: creating tool id when applicable
+- `repo_status_at_creation`: `tracked`, `untracked`, or `unknown`
+- `created_at`: creation timestamp when known
+- `updated_at`: manifest-record timestamp
+- `files`: repo-relative file records owned by the scope
+- `metadata`: audit metadata such as `backfilled`, `viewer_base_url`, and `default_doc_id`
+
+File record fields:
+
+- `kind`: file role, such as `source_root`, `scope_config`, `default_source_doc`, `route_file`, `generated_docs_root`, `generated_docs_index`, `generated_docs_payload_root`, or `generated_search_index`
+- `path`: repo-relative path
+- `action`: current manifest action, usually `track`; preview responses use actions such as `create`, `change`, or `delete`
+- `exists`: whether the path existed when the record or preview was generated
+
+Existing scopes are backfilled as system-owned records.
+That means Studio, Library, and Analysis are visible in lifecycle capability data but are not delete-eligible.
+Future created scopes must set both `user_created: true` and `created_by_tool: true` before delete can be available.
+
+## Capability Contract
+
+`GET /capabilities` includes a top-level lifecycle capability block:
+
+```json
+{
+  "scope_lifecycle": {
+    "manifest": true,
+    "create_preview": true,
+    "create_apply": false,
+    "delete_preview": true,
+    "delete_apply": false,
+    "publishing_modes": ["public_readonly", "local_committed", "local_uncommitted"],
+    "manifest_path": "scripts/docs/docs_scope_manifest.json"
+  }
+}
+```
+
+Apply flags are false by design until the server-side allowlisted write implementation is complete.
+The UI should treat those flags as authoritative and avoid showing save/delete apply controls before the server advertises them.
+
+Each scope capability record also includes lifecycle state:
+
+```json
+{
+  "scope_lifecycle": {
+    "manifest_recorded": true,
+    "owner": "system",
+    "created_by_tool": false,
+    "delete_eligible": false
+  }
+}
+```
+
+Delete eligibility is server-derived.
+The client should not infer delete eligibility from scope ids, routes, or file locations.
+
+## Create Preview Endpoint
+
+Endpoint:
+
+- `POST /docs/scopes/create-preview`
+
+Required payload fields:
+
+- `scope_id`
+- `title`
+- `source_root`
+- `default_doc_id`
+- `publishing_mode`
+
+Conditional and optional payload fields:
+
+- `public_route_path`: required for `public_readonly`
+- `build_inline_search`: boolean, defaults true
+- `write_generated_outputs`: boolean, defaults true
+
+Validation rules currently implemented:
+
+- `scope_id` must use lowercase letters, numbers, and single hyphen separators
+- `scope_id` must not already exist in `scripts/docs/docs_scopes.json`
+- `scope_id` must not already exist in the scope manifest
+- `source_root` must be a single repo-relative `_docs_<scope>` directory
+- `default_doc_id` must use lowercase letters, numbers, and hyphens
+- `publishing_mode` must be `public_readonly`, `local_committed`, or `local_uncommitted`
+- `public_route_path` must use lowercase route segments with hyphens
+- planned created paths must not already exist
+
+Preview response fields:
+
+- `ok`
+- `schema_version`
+- `action`
+- `operation`
+- `scope_id`
+- `title`
+- `publishing_mode`
+- `build_inline_search`
+- `write_generated_outputs`
+- `planned_scope_config`
+- `created_files`
+- `changed_files`
+- `build_commands`
+- `urls`
+- `warnings`
+- `summary_text`
+- `dry_run`
+
+The preview response uses file records with `kind`, `path`, `action`, and `exists`.
+It reports planned generated docs/search outputs only when generated output writes are requested.
+It reports a public URL only for public read-only scopes.
+
+## Delete Preview Endpoint
+
+Endpoint:
+
+- `POST /docs/scopes/delete-preview`
+
+Payload fields:
+
+- `scope_id`; `scope` is accepted as an alias
+
+Delete preview is manifest-driven.
+If the scope has no manifest record, the response is allowed false with a blocker.
+If the manifest record is system-owned or was not created by this lifecycle tool, the response is allowed false with a blocker.
+
+Eligible delete response fields:
+
+- `ok`
+- `schema_version`
+- `action`
+- `operation`
+- `scope_id`
+- `allowed`
+- `blockers`
+- `delete_files`
+- `missing_files`
+- `changed_files`
+- `build_commands`
+- `summary_text`
+- `dry_run`
+
+Missing manifest-listed files should be reported in `missing_files`.
+They should not block deletion of files that still exist when apply behavior is implemented.
+
 ## Create Flow Contract
 
 Minimum fields:
