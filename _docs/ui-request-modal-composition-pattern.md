@@ -14,7 +14,7 @@ Status:
 
 - In progress
 - Extraction prerequisite complete
-- Next phase: define the canonical shell contract and migration targets
+- Next phase: define the canonical shell contract and migrate current modal pages
 
 ## Summary
 
@@ -23,6 +23,8 @@ Define a shared modal composition pattern for Studio and Docs Viewer interfaces 
 The pattern should make modals consistent as UI containers while keeping domain actions owned by the page or command that opens the modal.
 
 The review should also explain the current implementation spread. Existing Studio and Docs Viewer modals use several reasonable but different approaches, and that variety now makes the codebase harder to understand, harder to discuss when requirements change, and harder to extend safely.
+
+This is not only future-facing guidance. The modal composition migration applies to all current Studio and Docs Viewer modal surfaces. Migration should be tracked and completed at page or route level, so a route with multiple modals is reviewed and migrated as one coherent UI surface unless a concrete implementation blocker requires a narrower temporary slice.
 
 ## Reason
 
@@ -43,15 +45,16 @@ This also makes the associated CSS harder to reason about. It is not always clea
 - document when a modal may validate local input versus when validation belongs to the owning page/service flow
 - update UI audit guidance so page audits check modal composition patterns, not only page-level controls
 - reduce the implementation surface to two preferred modal composition patterns, or at most three if the inventory proves a distinct third pattern is justified
-- map existing Studio and Docs Viewer modals to the preferred patterns before starting broad migration work
-- produce an implementation plan for migrating existing modal code and CSS toward those patterns
+- map every current Studio and Docs Viewer modal page to the preferred patterns
+- produce and maintain a page-by-page migration tracker with planned, in-progress, and done states
+- migrate all current modal-owning pages toward the chosen shell, CSS, focus, action-row, validation, and ownership contracts
 
 ## Non-Goals
 
-- converting every existing modal in the first implementation slice
 - creating a new modal framework before inventorying current modal usage
 - changing service endpoints only to fit the modal pattern
 - using modal guidance as a substitute for route-specific workflow design
+- redesigning modal workflows unless redesign is needed to avoid throwaway migration code, prevent new technical debt, or remove a blocker to the shared composition contract
 
 ## Current Implementation Context
 
@@ -68,6 +71,8 @@ Current modal implementations now fall into these broad groups:
 No `window.prompt()`, `window.confirm()`, or `window.alert()` uses remain under `assets/studio/js` or `assets/docs-viewer/js`.
 
 The issue is no longer embedded modal bulk in route controllers. The remaining issue is that extracted modal helpers still use several locally valid shell shapes, CSS vocabularies, and helper APIs. The next phase should choose the stable shared shell contract, decide which existing helper is canonical, and document how Studio and portable Docs Viewer implementations stay visually and behaviorally aligned.
+
+Once the shell contract is chosen, the migration should not stop at representative examples. Representative pages can still be used to prove implementation details, but every current modal page remains in scope until the tracker marks it done.
 
 ## Pattern Target
 
@@ -212,8 +217,8 @@ As part of making this operational, the review should update `user-guide.md` or 
    The guidance should include shell anatomy, focus/return behavior, Escape/backdrop behavior, action-row vocabulary, validation placement, result contracts, and action ownership.
 4. Update UI audit guidance to include modal composition checks.
    Audits should check representative modal screenshots or browser states, not only page-level controls.
-5. Select representative migration targets.
-   Good candidates are one simple Studio transient helper flow, one complex route-owned Studio workflow modal, and one portable Docs Viewer management modal. Use them to prove the contract before broad migration.
+5. Maintain the page-level migration tracker.
+   Prioritize easiest pages first when useful for momentum, but keep all current modal pages in scope.
 6. Decide CSS ownership and naming.
    Clarify which modal rules become shared Studio shell rules, which stay route-local, and how `docsViewer__*` portable equivalents maintain parity.
 7. Record permanent API examples.
@@ -235,16 +240,45 @@ The completed extraction is tracked in [Modal Responsibility Extraction Plan](/d
 
 The review should extend beyond inventory and classify each existing modal against the new preferred patterns.
 
-For each modal, record:
+For each page-level migration unit, record:
 
 - current owner and file locations
-- current implementation group
-- proposed target pattern
-- whether the opener or modal currently owns the domain action
-- CSS namespace and whether the styling should remain route-local or move to the shared shell
+- current modal set and implementation group
+- proposed target pattern or patterns used on that page
+- whether openers or modal helpers currently own domain actions
+- CSS namespace and whether styling should remain route-local, move to the shared shell, or remain as a portable Docs Viewer equivalent
 - migration risk, especially for local write flows, file inputs, async service calls, focus handling, and generated Docs Viewer management markup
 
-The migration plan should be incremental. It should identify one low-risk representative modal for each preferred pattern, migrate or adapt it first, then use that result to refine the shared guidance before moving broader route families.
+The migration plan should be incremental but page-level. A page or route can be prioritized because it is low risk, but completion should mean all modals on that page have been checked and migrated together. Splitting one page into smaller modal slices should be exceptional and should leave a clear temporary tracker note.
+
+Shared helpers can still be implemented once and reused across several pages. The tracker state should remain page-based: a shared helper change does not mark a page done until the page's current modals have been visually and behaviorally checked against the contract.
+
+## Migration Tracker
+
+Status values:
+
+- `planned`: current modal page identified but not started
+- `in-progress`: route is actively being migrated or verified
+- `done`: all current modals on that page follow the chosen shell, focus, action-row, validation, CSS, and action-ownership contracts
+- `blocked`: page cannot be completed without an explicit design, portability, service, or route-lifecycle decision
+
+The priority order is easiest-first where practical, not scope reduction. Every row is required before this request can be considered complete.
+
+| Priority | Status | Page / route | Current modal set | Primary owner files | Migration notes |
+| --- | --- | --- | --- | --- | --- |
+| 1 | planned | `/studio/activity/` | Activity detail notice modal | `assets/studio/js/activity-log.js`, `assets/studio/js/activity-log-modals.js` | Low-risk transient notice flow; good first proof for simple result/notice behavior. |
+| 2 | planned | `/studio/data-sharing/prepare/` | Prepare result modal | `assets/studio/js/data-sharing-prepare.js`, `assets/studio/js/data-sharing-prepare-modals.js` | Low-risk result modal with structured body content and no domain write inside the modal. |
+| 3 | planned | `/studio/data-sharing/review/` | Review result notice modal and apply confirmation modal | `assets/studio/js/data-sharing-review.js`, `assets/studio/js/data-sharing-review-modals.js` | Covers notice plus confirmation helpers on one page; verify returned-package apply remains route-owned. |
+| 4 | planned | `/studio/catalogue-work-detail/` | Catalogue action confirmations for prose overwrite, publication, and delete flows | `assets/studio/js/catalogue-work-detail-editor.js`, `assets/studio/js/catalogue-work-detail-actions.js`, `assets/studio/js/catalogue-editor-action-modals.js` | Mostly shared transient confirmations; page completion should still verify all current detail-editor modal flows. |
+| 5 | planned | `/studio/catalogue-series/` | Catalogue action confirmations for prose overwrite, publication, and delete flows | `assets/studio/js/catalogue-series-editor.js`, `assets/studio/js/catalogue-series-actions.js`, `assets/studio/js/catalogue-editor-action-modals.js` | Similar to work-detail route; keep series membership and publication writes owned by page actions. |
+| 6 | planned | `/studio/catalogue-moment/` | Catalogue action confirmations for publication, delete, and related moment actions | `assets/studio/js/catalogue-moment-editor.js`, `assets/studio/js/catalogue-moment-actions.js`, `assets/studio/js/catalogue-editor-action-modals.js` | Similar shared confirmation path; verify moment import/apply ownership does not move into modal helpers. |
+| 7 | planned | `/studio/analytics/series-tag-editor/` | Save preview modal | `assets/studio/js/series-tag-editor-page.js`, `assets/studio/js/tag-studio.js`, `assets/studio/js/tag-studio-modals.js` | Single persistent preview modal; confirm clipboard/status behavior stays route-owned. |
+| 8 | planned | `/studio/analytics/series-tags/` | Offline session modal and import modal | `assets/studio/js/series-tags.js`, `assets/studio/js/series-tags-modals.js` | Moderate complexity because file import, review rows, conflict resolution, and session actions share one page. |
+| 9 | planned | `/studio/catalogue-work/` | Embedded download/link entry modals, embedded delete confirmation, build preview modal, and catalogue action confirmations | `assets/studio/js/catalogue-work-editor.js`, `assets/studio/js/catalogue-work-editor-modals.js`, `assets/studio/js/catalogue-work-actions.js`, `assets/studio/js/catalogue-editor-action-modals.js` | Complex route-owned workflow page; migrate all work-editor modals together unless a specific blocker is recorded. |
+| 10 | planned | `/studio/analytics/tag-registry/` | Import, patch, edit, new-tag, demote, delete, and detail confirmation modals | `assets/studio/js/tag-registry.js`, `assets/studio/js/tag-registry-modals.js`, `assets/studio/js/studio-modal.js` | Complex route-owned workflow page with popups inside modals and local write flows. |
+| 11 | planned | `/studio/analytics/tag-aliases/` | Import, patch, promotion, demote, edit/create, delete, and detail confirmation modals | `assets/studio/js/tag-aliases.js`, `assets/studio/js/tag-aliases-modals.js`, `assets/studio/js/studio-modal.js` | Similar complexity to Tag Registry; verify promote/demote/delete write ownership remains in route commands. |
+| 12 | planned | `/docs/?mode=manage` | Metadata, import, settings, transient confirm/text/choice, and Docs HTML import filename-conflict modals | `_includes/docs_viewer_shell.html`, `_includes/docs_import_shell.html`, `assets/docs-viewer/js/docs-viewer-management.js`, `assets/docs-viewer/js/docs-viewer-management-modals.js`, `assets/docs-viewer/js/docs-html-import.js`, `assets/docs-viewer/js/docs-html-import-modals.js`, `assets/docs-viewer/css/docs-viewer-management.css` | Highest portability risk. Keep Docs Viewer portable implementation if needed, but require parity with the shared composition contract. |
+| 13 | planned | `/studio/ui-catalogue/demos/` | Demo modal pattern | `studio/ui-catalogue/demos/`, `assets/ui-catalogue/js/ui-catalogue-demo.js`, `assets/ui-catalogue/css/ui-catalogue-demo.css` | Demo route should be updated after the production contract is stable so examples do not preserve obsolete modal anatomy. |
 
 ## Benefits
 
