@@ -60,6 +60,8 @@ DocRecord = Struct.new(
 class DocsDataBuilder
   FRONT_MATTER_PATTERN = /\A---\s*\n(.*?)\n---\s*\n?/m.freeze
   MEDIA_TOKEN_PATTERN = /\[\[media:(.+?)\]\]/.freeze
+  INTERACTIVE_HTML_TOKEN_PATTERN = /\[\[interactive-html:(.+?)\]\]/.freeze
+  INTERACTIVE_HTML_FILENAME_PATTERN = /\A[a-z0-9][a-z0-9._-]*\.html\z/i.freeze
   SCRIPT_STYLE_PATTERN = %r{<\s*(script|style)\b[^>]*>.*?<\s*/\s*\1\s*>}im.freeze
   SVG_PATTERN = %r{<svg\b.*?</svg>}im.freeze
   SVG_TEXT_PATTERN = %r{<(title|desc|text)\b[^>]*>(.*?)</\s*\1\s*>}im.freeze
@@ -338,7 +340,7 @@ class DocsDataBuilder
       "source_path" => doc.source_path,
       "viewer_url" => doc.viewer_url,
       "content_html" => rewrite_doc_links(
-        JekyllMarkdownRenderer.render_string(resolve_media_tokens(doc.body_markdown)),
+        JekyllMarkdownRenderer.render_string(resolve_content_tokens(doc.body_markdown)),
         current_doc: doc,
         docs: docs
       )
@@ -591,6 +593,46 @@ class DocsDataBuilder
     markdown.gsub(MEDIA_TOKEN_PATTERN) do
       resolve_media_url(Regexp.last_match(1))
     end
+  end
+
+  def resolve_interactive_html_tokens(markdown)
+    return markdown unless markdown.include?("[[interactive-html:")
+
+    markdown.gsub(INTERACTIVE_HTML_TOKEN_PATTERN) do
+      interactive_html_iframe(Regexp.last_match(1))
+    end
+  end
+
+  def resolve_content_tokens(markdown)
+    resolve_interactive_html_tokens(resolve_media_tokens(markdown))
+  end
+
+  def interactive_html_iframe(raw_filename)
+    filename = normalize_interactive_html_filename(raw_filename)
+    asset_path = interactive_html_asset_path(filename)
+    raise "Interactive HTML asset not found for scope #{@scope_id}: #{interactive_html_asset_relative_path(filename)}" unless asset_path.file?
+
+    public_path = "/assets/docs/interactive/#{@scope_id}/#{filename}"
+    title = "Interactive HTML: #{filename}"
+    <<~HTML.chomp
+      <iframe class="docsViewer__interactiveFrame" src="#{CGI.escapeHTML(public_path)}" sandbox="allow-scripts" loading="lazy" title="#{CGI.escapeHTML(title)}"></iframe>
+    HTML
+  end
+
+  def normalize_interactive_html_filename(raw_filename)
+    filename = raw_filename.to_s.strip
+    unless filename.match?(INTERACTIVE_HTML_FILENAME_PATTERN)
+      raise "Invalid interactive HTML token #{raw_filename.inspect}; use a same-scope .html filename only"
+    end
+    filename
+  end
+
+  def interactive_html_asset_relative_path(filename)
+    Pathname("assets/docs/interactive").join(@scope_id, filename).to_s
+  end
+
+  def interactive_html_asset_path(filename)
+    @repo_root.join(interactive_html_asset_relative_path(filename)).cleanpath
   end
 
   def resolve_media_url(raw_path)

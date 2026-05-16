@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-38a0a0893316249f7271ad3c70287cc8",
-    "generated_at_utc": "2026-05-15T22:40:38Z",
+    "version": "blake2b-71854b0d888ca011ddc979214b86cde4",
+    "generated_at_utc": "2026-05-16T11:56:19Z",
     "count": 245
   },
   "entries": [
@@ -885,10 +885,10 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-05-12 10:25",
+      "last_updated": "2026-05-16 13:35",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-12 10:25 • User Guide",
+      "display_meta": "2026-05-16 13:35 • User Guide",
       "search_terms": [
         "user-guide-docs-html-import",
         "user",
@@ -898,14 +898,14 @@
         "import",
         "docs import",
         "user guide",
-        "2026-05-12 10:25",
+        "2026-05-16 13:35",
         "2026",
         "05",
-        "12",
-        "10",
-        "25"
+        "16",
+        "13",
+        "35"
       ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-12 10:25 2026 05 12 10 25"
+      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-16 13:35 2026 05 16 13 35"
     },
     {
       "id": "site-request-script-structural-review-docs-management-server",
@@ -4547,10 +4547,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-16 13:35",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 20:20 • Docs Viewer",
+      "display_meta": "2026-05-16 13:35 • Docs Viewer",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -4559,13 +4559,14 @@
         "docs viewer builder",
         "viewer",
         "docs viewer",
-        "2026-05-13 20:20",
+        "2026-05-16 13:35",
         "2026",
         "05",
+        "16",
         "13",
-        "20"
+        "35"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-13 20:20 2026 05 13 20"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-16 13:35 2026 05 16 13 35"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",
@@ -5278,20 +5279,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-15",
-      "display_meta": "2026-05-15",
+      "last_updated": "2026-05-16",
+      "display_meta": "2026-05-16",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-15",
+        "2026-05-16",
         "2026",
         "05",
-        "15"
+        "16"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-15 2026 05 15"
+      "search_text": "site-change-log site change log site change log 2026-05-16 2026 05 16"
     },
     {
       "id": "site-request-docs-build-incremental",

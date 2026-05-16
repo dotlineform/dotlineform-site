@@ -491,6 +491,134 @@ def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
     assert "title: An Overly Descriptive Document Title" in source_text
 
 
+def test_html_import_copies_interactive_companion_asset() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_html(
+            root,
+            "worksheet.html",
+            """
+            <html>
+              <head><title>Worksheet</title></head>
+              <body><h1>Worksheet</h1><p>Readable body.</p></body>
+            </html>
+            """,
+        )
+        write_staged_html(
+            root,
+            "worksheet-interactive.html",
+            "<!doctype html><html><body><button>Run</button><script>window.ready = true;</script></body></html>",
+        )
+        original_rebuild = stub_rebuild()
+        validation_globals = import_source_service.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "worksheet.html"},
+                dry_run=False,
+            )
+        finally:
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_text = (root / "_docs_library/worksheet.md").read_text(encoding="utf-8")
+        asset_path = root / "assets/docs/interactive/library/worksheet-interactive.html"
+        asset_text = asset_path.read_text(encoding="utf-8")
+
+    assert payload["ok"] is True
+    assert "[[interactive-html:worksheet-interactive.html]]" not in source_text
+    assert payload["import_preview"]["interactive_html_plan"]["token"] == "[[interactive-html:worksheet-interactive.html]]"
+    assert payload["interactive_html_written"]["target_path"] == "assets/docs/interactive/library/worksheet-interactive.html"
+    assert "window.ready = true" in asset_text
+    assert "Copied interactive HTML asset assets/docs/interactive/library/worksheet-interactive.html." in payload["summary_text"]
+    assert "Add [[interactive-html:worksheet-interactive.html]]" in payload["summary_text"]
+
+
+def test_html_import_reports_interactive_companion_asset_in_preview_only() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_html(root, "worksheet.html", "<html><body><h1>Worksheet</h1></body></html>")
+        write_staged_html(root, "worksheet-interactive.html", "<!doctype html><html><body>Interactive</body></html>")
+        original_rebuild = stub_rebuild()
+        validation_globals = import_source_service.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            payload = handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "worksheet.html", "preview_only": True},
+                dry_run=False,
+            )
+        finally:
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        asset_exists = (root / "assets/docs/interactive/library/worksheet-interactive.html").exists()
+
+    assert payload["ok"] is True
+    assert payload["preview_only"] is True
+    assert payload["import_preview"]["interactive_html_plan"]["target_path"] == "assets/docs/interactive/library/worksheet-interactive.html"
+    assert asset_exists is False
+
+
+def test_html_import_confirms_existing_interactive_companion_target() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        write_library_doc(root, "library.md", {"doc_id": "library", "title": "Library", "parent_id": ""})
+        write_staged_html(root, "worksheet.html", "<html><body><h1>Worksheet</h1></body></html>")
+        write_staged_html(root, "worksheet-interactive.html", "<!doctype html><html><body>Interactive</body></html>")
+        existing_asset = root / "assets/docs/interactive/library/worksheet-interactive.html"
+        existing_asset.parent.mkdir(parents=True, exist_ok=True)
+        existing_asset.write_text("existing\n", encoding="utf-8")
+        original_rebuild = stub_rebuild()
+        validation_globals = import_source_service.generate_import_preview.__globals__
+        original_validation = validation_globals["validate_markdown_with_jekyll"]
+        validation_globals["validate_markdown_with_jekyll"] = lambda repo_root, markdown: {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "stub",
+        }
+        try:
+            preview_payload = handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "worksheet.html"},
+                dry_run=False,
+            )
+            apply_payload = handle_import_source(
+                root,
+                {"scope": "library", "staged_filename": "worksheet.html", "confirm_overwrite": True},
+                dry_run=False,
+            )
+        finally:
+            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            validation_globals["validate_markdown_with_jekyll"] = original_validation
+
+        source_text = (root / "_docs_library/worksheet.md").read_text(encoding="utf-8")
+        asset_text = existing_asset.read_text(encoding="utf-8")
+
+    assert preview_payload["ok"] is True
+    assert preview_payload["preview_only"] is True
+    assert preview_payload["requires_interactive_html_confirmation"] is True
+    assert preview_payload["summary_text"] == "Interactive HTML asset overwrite required for assets/docs/interactive/library/worksheet-interactive.html."
+    assert apply_payload["ok"] is True
+    assert apply_payload["interactive_html_written"]["overwrote"] is True
+    assert "doc_id: worksheet" in source_text
+    assert "Interactive" in asset_text
+    assert asset_text != "existing\n"
+
+
 def test_source_import_files_list_html_and_markdown() -> None:
     with make_repo() as temp:
         root = Path(temp)
@@ -1093,6 +1221,9 @@ def main() -> None:
         test_documents_import_rejects_unconfigured_data_domain,
         test_docs_export_summary_text_uses_context_aware_document_plural,
         test_html_import_create_uses_staged_filename_for_doc_id_and_path,
+        test_html_import_copies_interactive_companion_asset,
+        test_html_import_reports_interactive_companion_asset_in_preview_only,
+        test_html_import_confirms_existing_interactive_companion_target,
         test_source_import_files_list_html_and_markdown,
         test_markdown_import_create_wraps_body_with_generated_front_matter,
         test_text_import_autolinks_plain_urls,

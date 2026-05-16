@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T22:40:37Z",
+  "generated_at": "2026-05-16T12:05:13Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -546,7 +546,7 @@
       "doc_id": "user-guide-docs-html-import",
       "title": "Docs Import",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-12 10:25",
+      "last_updated": "2026-05-16 13:35",
       "parent_id": "user-guide",
       "sort_order": 20,
       "published": true,
@@ -555,7 +555,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 8103
+      "content_text_length": 9592
     },
     {
       "scope": "studio",
@@ -2912,7 +2912,7 @@
       "doc_id": "scripts-docs-builder",
       "title": "Docs Viewer Builder",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-16 13:35",
       "parent_id": "docs-viewer",
       "sort_order": 150,
       "published": true,
@@ -2921,7 +2921,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 9427
+      "content_text_length": 10577
     },
     {
       "scope": "studio",
@@ -3373,7 +3373,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-16",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3382,7 +3382,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 162070
+      "content_text_length": 163258
     },
     {
       "scope": "studio",

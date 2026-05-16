@@ -359,6 +359,10 @@ function renderOverwriteWarning(state, payload) {
   const preview = payload && payload.import_preview && typeof payload.import_preview === "object"
     ? payload.import_preview
     : {};
+  const interactivePlan = preview.interactive_html_plan && typeof preview.interactive_html_plan === "object"
+    ? preview.interactive_html_plan
+    : {};
+  const isInteractiveAssetOverwrite = Boolean(payload && payload.requires_interactive_html_confirmation);
   state.pendingOverwriteDocId = normalizeText(collision.doc_id);
   setText(
     state.collisionHeadingNode,
@@ -366,23 +370,38 @@ function renderOverwriteWarning(state, payload) {
   );
   setText(
     state.collisionBodyNode,
-    configText(
-      state.config,
-      "docs_html_import.collision_body",
-      "This import matches an existing doc target. Confirm overwrite to replace the current source while keeping the same doc identity and filename."
-    )
+    isInteractiveAssetOverwrite
+      ? configText(
+        state.config,
+        "docs_html_import.interactive_asset_collision_body",
+        "This import includes an interactive HTML companion that matches an existing asset. Confirm overwrite to replace that asset."
+      )
+      : configText(
+        state.config,
+        "docs_html_import.collision_body",
+        "This import matches an existing doc target. Confirm overwrite to replace the current source while keeping the same doc identity and filename."
+      )
   );
   setText(
     state.collisionMetaNode,
-    configText(
-      state.config,
-      "docs_html_import.overwrite_required",
-      "Overwrite required: {doc_id} ({title}). Review the warning and confirm if you want to replace it.",
-      {
-        doc_id: collision.doc_id || preview.proposed_doc_id || "",
-        title: collision.title || preview.title || ""
-      }
-    )
+    isInteractiveAssetOverwrite
+      ? configText(
+        state.config,
+        "docs_html_import.interactive_asset_overwrite_required",
+        "Interactive asset overwrite required: {path}. Review the warning and confirm if you want to replace it.",
+        {
+          path: interactivePlan.target_path || interactivePlan.filename || ""
+        }
+      )
+      : configText(
+        state.config,
+        "docs_html_import.overwrite_required",
+        "Overwrite required: {doc_id} ({title}). Review the warning and confirm if you want to replace it.",
+        {
+          doc_id: collision.doc_id || preview.proposed_doc_id || "",
+          title: collision.title || preview.title || ""
+        }
+      )
   );
   state.warningNode.hidden = false;
   state.confirmButton.hidden = false;

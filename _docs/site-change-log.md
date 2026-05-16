@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-15"
+last_updated: "2026-05-16"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,30 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-16] Added Docs Viewer Interactive HTML Tokens
+
+**Status:** implemented
+
+**Area:** Docs Viewer builder / rendered docs content
+
+**Summary:**
+Added a same-scope <code>&#91;&#91;interactive-html:filename.html&#93;&#93;</code> token for embedding repo-local interactive HTML assets in Docs Viewer content.
+The docs builder validates filename-only tokens, requires the matching file under `assets/docs/interactive/<scope>/`, and renders a sandboxed iframe with script execution isolated from the main Docs Viewer page.
+Docs Import also detects a staged `<source-stem>-interactive.html` sidecar, copies it into the selected scope's interactive assets, prompts before replacing an existing interactive asset, and reports the token for manual placement in source Markdown.
+
+**Effect:**
+Imported HTML stays script-stripped by default, while manually authored and browser-tested interactive HTML can be embedded explicitly through Markdown source.
+The repo now includes scope folders and a starter HTML template for those standalone assets.
+
+**Affected files/docs:**
+
+- `scripts/docs/build_docs.rb`
+- `scripts/docs/docs_import_source_service.py`
+- `assets/docs-viewer/css/docs-viewer.css`
+- `assets/docs/interactive/template.html`
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
 
 ## [2026-05-15] Added Docs Viewer Scope Lifecycle UI
 

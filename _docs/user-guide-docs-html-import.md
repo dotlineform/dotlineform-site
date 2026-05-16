@@ -2,7 +2,7 @@
 doc_id: user-guide-docs-html-import
 title: "Docs Import"
 added_date: 2026-04-24
-last_updated: "2026-05-12 10:25"
+last_updated: "2026-05-16 13:35"
 parent_id: user-guide
 sort_order: 20
 ---
@@ -31,6 +31,10 @@ For image and downloadable file imports, copy the media file to the configured m
 The importer creates the wrapper Markdown and reports the expected media path, but it does not upload media.
 For inline raster images extracted from HTML or Markdown data URLs, copy the generated staged image file after import.
 
+For interactive HTML widgets, test a standalone HTML file in a browser first.
+If the selected staged source is `example.html`, an optional `example-interactive.html` sidecar in the same staging folder is copied into the current scope's repo-local interactive assets during import.
+The source Markdown is not edited automatically; add the reported <code>&#91;&#91;interactive-html:example-interactive.html&#93;&#93;</code> token yourself where the iframe should appear.
+
 ## What The Modal Does
 
 The import modal:
@@ -45,6 +49,7 @@ The import modal:
 - imports raster images as wrapper docs that point at the configured `<media_path_prefix>/img/<filename>` media path
 - imports supported downloadable files as wrapper docs that point at the configured `<media_path_prefix>/files/<filename>` media path
 - extracts Markdown-image-form inline raster data URLs from HTML and Markdown imports into generated staged media files
+- copies an optional `<staged-stem>-interactive.html` companion into `assets/docs/interactive/<scope>/` for manual iframe-token embedding
 - keeps literal pipe characters in source text as text, including mathematical notation such as `I(X;Y|Z)`
 - validates the generated Markdown through the current Jekyll docs renderer before write success
 - writes a new doc immediately when the target is free
@@ -134,6 +139,22 @@ Generated filenames use the final proposed `doc_id` plus an incrementing suffix,
 The generated Markdown points at the matching docs media token and the result panel lists each staged media path, configured media path, and media token.
 Copy each generated staged image file to the reported media path before expecting the rendered doc to display it.
 
+## Interactive HTML Companions
+
+An import can carry a same-stem interactive sidecar:
+
+- selected staged source: `coincidence-salience.html`
+- optional sidecar: `coincidence-salience-interactive.html`
+- copied asset: `assets/docs/interactive/<scope>/coincidence-salience-interactive.html`
+- Markdown token to add manually: <code>&#91;&#91;interactive-html:coincidence-salience-interactive.html&#93;&#93;</code>
+
+The companion file must be a complete standalone HTML document.
+The importer copies it into the selected scope's repo-local interactive assets and reports the token, but it does not insert the token into the generated source doc.
+This keeps the import conversion unchanged and leaves placement as an explicit source edit.
+
+If the target interactive asset already exists, the importer asks for overwrite confirmation before replacing it.
+Cancel leaves the existing asset unchanged.
+
 Supported raster image extensions:
 
 - `.jpg`
@@ -172,6 +193,7 @@ After a successful import, the page reports:
 - the viewer link for the imported doc
 - generated staged media paths for inline raster images
 - the expected media path and media token for image, file-media, and extracted inline raster imports
+- copied interactive HTML asset path and iframe token when a sidecar is present
 - any non-routine conversion warnings
 
 ## Route Ready State

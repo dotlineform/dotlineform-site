@@ -594,6 +594,16 @@
   margin-block: 1rem;
 }
 
+.docsViewer__interactiveFrame{
+  display: block;
+  width: 100%;
+  min-height: min(72vh, 46rem);
+  margin-block: 1rem;
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: 6px;
+  background: var(--docs-viewer-panel);
+}
+
 .docsViewer__results{
   list-style: none;
   max-width: var(--docs-viewer-measure);

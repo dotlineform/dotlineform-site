@@ -2,15 +2,13 @@
 doc_id: coincidence-salience
 title: "Loose Ends — Memory — Coincidence Salience Worksheet (Event Frequency × Filter Specificity)"
 added_date: "2026-05-16 09:45"
-last_updated: "2026-05-16 09:45"
+last_updated: "2026-05-16 12:11"
 parent_id: ""
 sort_order: 140
 published: true
 hidden: true
 ---
 # Loose Ends — Memory — Coincidence Salience Worksheet (Event Frequency × Filter Specificity)
-
-> Created: 2025-10-07 15:18 UTC+01:00 — Location: Europe/London
 
 ## Original Prompt
 

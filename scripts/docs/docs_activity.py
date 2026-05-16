@@ -140,10 +140,12 @@ def maybe_attach_import_source_activity(repo_root: Path, body: Dict[str, Any], p
     if not doc_id:
         return
     media_written = payload.get("inline_media_written") if isinstance(payload.get("inline_media_written"), list) else []
+    interactive_written = payload.get("interactive_html_written") if isinstance(payload.get("interactive_html_written"), dict) else None
     details = [
         str(payload.get("summary_text") or f"Imported docs source {doc_id}.").strip(),
         f"Wrote source file: {payload.get('path')}" if payload.get("path") else "",
         f"Materialized {len(media_written)} inline media file(s)." if media_written else "",
+        f"Copied interactive HTML: {interactive_written.get('target_path')}" if interactive_written else "",
         f"Backup: {payload.get('backup_dir')}" if payload.get("backup_dir") else "",
     ]
     attach_docs_activity(
@@ -155,7 +157,10 @@ def maybe_attach_import_source_activity(repo_root: Path, body: Dict[str, Any], p
         record_id=str(body.get("staged_filename") or "").strip(),
         record_groups={
             "docs": [doc_id],
-            "files": compact_ids([item.get("path") for item in media_written if isinstance(item, dict)]),
+            "files": compact_ids(
+                [item.get("path") for item in media_written if isinstance(item, dict)]
+                + ([interactive_written.get("target_path")] if interactive_written else [])
+            ),
         },
         detail_items=details,
         status="completed",

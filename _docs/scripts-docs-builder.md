@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: Docs Viewer Builder
 added_date: 2026-04-23
-last_updated: "2026-05-13 20:20"
+last_updated: "2026-05-16 13:35"
 parent_id: docs-viewer
 sort_order: 150
 ---
@@ -54,6 +54,7 @@ This config is the shared source of truth for docs scope ids, Markdown source ro
 - renders each Markdown body to HTML using the local Jekyll Markdown stack
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
+- resolves <code>&#91;&#91;interactive-html:...&#93;&#93;</code> tokens to same-scope sandboxed iframes for repo-local interactive HTML assets
 - rewrites same-scope doc-to-doc links onto the scope-owned viewer route
 - emits scope-level viewer options such as compatibility non-loadable ids, compatibility manage-only tree root ids, and document-view updated-date visibility
 - writes one index payload plus one per-doc payload for each configured scope
@@ -125,6 +126,18 @@ Docs media tokens:
   - <code>&lt;img src="&#91;&#91;media:library/example.jpg&#93;&#93;" alt="Example"&gt;</code>
 - this is intended for remotely hosted docs media, keeping the repo free of full-size docs images
 - repo-local docs assets are ordinary public asset paths such as `/assets/docs/...`; they are not a builder token
+
+Interactive HTML tokens:
+
+- use the literal token <code>&#91;&#91;interactive-html:filename.html&#93;&#93;</code> when a doc needs to embed a repo-local interactive HTML asset
+- filenames are same-scope only; do not include a scope name, slash, nested path, absolute path, or `..`
+- the builder resolves the token to `assets/docs/interactive/<scope>/filename.html` and fails the build if that file is missing
+- the rendered doc receives a sandboxed iframe with `sandbox="allow-scripts"` so the embedded file's JavaScript runs inside the iframe, not in the main Docs Viewer page
+- start from `assets/docs/interactive/template.html`, save the finished file under the current scope folder, and test it directly in a browser before adding the token
+- Docs Import can copy a staged `<source-stem>-interactive.html` sidecar into the matching scope folder, but the source doc still needs a manual token where the iframe should appear
+- example for a Library doc:
+  - source asset: `assets/docs/interactive/library/coincidence-salience.html`
+  - Markdown token: <code>&#91;&#91;interactive-html:coincidence-salience.html&#93;&#93;</code>
 
 ## Commands
 

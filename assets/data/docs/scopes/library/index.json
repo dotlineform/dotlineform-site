@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T08:45:56Z",
+  "generated_at": "2026-05-16T11:11:34Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -240,7 +240,7 @@
       "doc_id": "coincidence-salience",
       "title": "Loose Ends — Memory — Coincidence Salience Worksheet (Event Frequency × Filter Specificity)",
       "added_date": "2026-05-16 09:45",
-      "last_updated": "2026-05-16 09:45",
+      "last_updated": "2026-05-16 12:11",
       "parent_id": "",
       "sort_order": 140,
       "published": true,
@@ -249,7 +249,7 @@
       "source_path": "coincidence-salience.md",
       "viewer_url": "/library/?doc=coincidence-salience",
       "content_url": "/assets/data/docs/scopes/library/by-id/coincidence-salience.json",
-      "content_text_length": 2832
+      "content_text_length": 2770
     }
   ]
 }

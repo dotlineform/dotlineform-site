@@ -116,6 +116,8 @@
     "file_required": "Select a staged file first.",
     "import_failed": "Import failed.",
     "overwrite_required": "Overwrite required: {doc_id} ({title}). Review the warning and confirm if you want to replace it.",
+    "interactive_asset_collision_body": "This import includes an interactive HTML companion that matches an existing asset. Confirm overwrite to replace that asset.",
+    "interactive_asset_overwrite_required": "Interactive asset overwrite required: {path}. Review the warning and confirm if you want to replace it.",
     "overwrite_cancelled": "Overwrite cancelled.",
     "result_title": "Imported",
     "result_operation_create": "Created new doc",
