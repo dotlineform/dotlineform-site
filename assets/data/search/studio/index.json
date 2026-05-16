@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-71854b0d888ca011ddc979214b86cde4",
-    "generated_at_utc": "2026-05-16T11:56:19Z",
+    "version": "blake2b-d10aac103307eb7b3f5225dd2b47fc61",
+    "generated_at_utc": "2026-05-16T15:56:22Z",
     "count": 245
   },
   "entries": [
@@ -885,10 +885,10 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-05-16 13:35",
+      "last_updated": "2026-05-16 14:10",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-16 13:35 • User Guide",
+      "display_meta": "2026-05-16 14:10 • User Guide",
       "search_terms": [
         "user-guide-docs-html-import",
         "user",
@@ -898,14 +898,14 @@
         "import",
         "docs import",
         "user guide",
-        "2026-05-16 13:35",
+        "2026-05-16 14:10",
         "2026",
         "05",
         "16",
-        "13",
-        "35"
+        "14",
+        "10"
       ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-16 13:35 2026 05 16 13 35"
+      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-16 14:10 2026 05 16 14 10"
     },
     {
       "id": "site-request-script-structural-review-docs-management-server",

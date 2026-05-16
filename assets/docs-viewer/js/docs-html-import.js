@@ -260,9 +260,15 @@ function resultCountsText(state, preview) {
   );
 }
 
+const ALL_STAGED_FILES_VALUE = "__all_staged_import_files__";
+
 async function fetchImportFiles(state) {
   const payload = await fetchManagementJson("/docs/import-source-files", "GET", undefined, managementOptions(state));
   return Array.isArray(payload.files) ? payload.files : [];
+}
+
+function isAllFilesSelected(state) {
+  return normalizeText(state.fileSelect.value) === ALL_STAGED_FILES_VALUE;
 }
 
 function selectedFileRecord(state) {
@@ -270,13 +276,19 @@ function selectedFileRecord(state) {
   return state.files.find((file) => normalizeText(file && file.filename) === filename) || null;
 }
 
-function selectedSourceFormat(state) {
-  const record = selectedFileRecord(state);
+function sourceFormatForRecord(record) {
   return normalizeText(record && record.source_format).toLowerCase() || "html";
 }
 
+function selectedImportFiles(state) {
+  if (isAllFilesSelected(state)) return state.files.slice();
+  const record = selectedFileRecord(state);
+  return record ? [record] : [];
+}
+
 function syncSourceFormatControls(state) {
-  const supportsPromptMeta = selectedSourceFormat(state) === "html";
+  const selectedFiles = selectedImportFiles(state);
+  const supportsPromptMeta = selectedFiles.some((file) => sourceFormatForRecord(file) === "html");
   state.includePromptMeta.checked = supportsPromptMeta ? state.includePromptMeta.checked : false;
   state.includePromptMeta.disabled = !supportsPromptMeta || !state.serviceAvailable;
   state.includePromptMetaWrap.hidden = !supportsPromptMeta;
@@ -318,17 +330,20 @@ function renderWarnings(state, warnings) {
   state.warningsWrap.hidden = false;
 }
 
-function renderResult(state, payload) {
+function resultRowsForPayload(state, payload, includeFilename) {
   const preview = payload && payload.import_preview && typeof payload.import_preview === "object"
     ? payload.import_preview
     : {};
-  setText(state.resultTitleNode, configText(state.config, "docs_html_import.result_title", "Imported"));
   const scriptRows = Array.isArray(payload && payload.interactive_html_written)
     ? payload.interactive_html_written
     : [];
+  const sourceLabel = sourceDocLinkHtml(payload.scope, payload.doc_id);
+  const sourceName = normalizeText(payload && payload.staged_filename);
   const rows = [
     [
-      sourceDocLinkHtml(payload.scope, payload.doc_id),
+      includeFilename && sourceName
+        ? `${escapeHtml(sourceName)}: ${sourceLabel}`
+        : sourceLabel,
       escapeHtml(resultCountsText(state, preview))
     ]
   ].concat(scriptRows.map((item) => {
@@ -340,6 +355,30 @@ function renderResult(state, payload) {
       escapeHtml(configText(state.config, "docs_html_import.script_file_result_type", "script file"))
     ];
   }));
+  return rows;
+}
+
+function payloadWarnings(payload, includeFilename) {
+  const preview = payload && payload.import_preview && typeof payload.import_preview === "object"
+    ? payload.import_preview
+    : {};
+  const warnings = Array.isArray(preview.warnings) ? preview.warnings : [];
+  const sourceName = normalizeText(payload && payload.staged_filename);
+  return warnings
+    .filter((item) => normalizeText(item))
+    .map((item) => includeFilename && sourceName ? `${sourceName}: ${item}` : item);
+}
+
+function renderResult(state, payloadOrPayloads) {
+  const payloads = Array.isArray(payloadOrPayloads) ? payloadOrPayloads : [payloadOrPayloads].filter(Boolean);
+  const includeFilename = payloads.length > 1;
+  setText(
+    state.resultTitleNode,
+    includeFilename
+      ? configText(state.config, "docs_html_import.result_title_all", "Imported {count} files", { count: payloads.length })
+      : configText(state.config, "docs_html_import.result_title", "Imported")
+  );
+  const rows = payloads.flatMap((payload) => resultRowsForPayload(state, payload, includeFilename));
   setHtml(
     state.resultGridNode,
     rows.map((row, index) => (
@@ -349,7 +388,7 @@ function renderResult(state, payload) {
       `</div>`
     )).join("")
   );
-  renderWarnings(state, preview.warnings);
+  renderWarnings(state, payloads.flatMap((payload) => payloadWarnings(payload, includeFilename)));
   state.resultNode.hidden = false;
 }
 
@@ -431,6 +470,16 @@ function renderOverwriteWarning(state, payload) {
   state.cancelButton.hidden = false;
 }
 
+function importScope(state) {
+  const selectedScope = normalizeText(state.scopeSelect.value).toLowerCase();
+  return state.docsScopeIds.includes(selectedScope) ? selectedScope : state.docsScopeIds[0];
+}
+
+function collisionDocId(payload) {
+  const collision = payload && payload.collision && typeof payload.collision === "object" ? payload.collision : {};
+  return normalizeText(collision.doc_id);
+}
+
 async function handleReplacementDocIdModal(state, payload) {
   const result = await openReplacementDocIdModal({
     root: state.root,
@@ -443,20 +492,144 @@ async function handleReplacementDocIdModal(state, payload) {
       "",
       configText(state.config, "docs_html_import.filename_conflict_cancelled", "Import cancelled.")
     );
-    return;
+    return { action: "cancel" };
   }
-  if (result.action === "replace" && result.overwriteDocId) {
-    await runImport(state, { overwriteDocId: result.overwriteDocId, confirmOverwrite: true });
-    return;
+  if ((result.action === "replace" || result.action === "replaceAll") && result.overwriteDocId) {
+    if (result.action === "replaceAll") {
+      state.replaceAllOverwrites = true;
+    }
+    return {
+      action: "replace",
+      overwriteDocId: result.overwriteDocId,
+      confirmOverwrite: true
+    };
   }
   if (result.action === "rename" && result.replacementDocId) {
-    await runImport(state, { replacementDocId: result.replacementDocId });
+    return { action: "rename", replacementDocId: result.replacementDocId };
+  }
+  return { action: "cancel" };
+}
+
+function awaitOverwriteConfirmation(state, payload) {
+  renderOverwriteWarning(state, payload);
+  renderWarnings(state, payload.import_preview && payload.import_preview.warnings);
+  setStatus(
+    state.statusNode,
+    "warn",
+    payload.summary_text || configText(state.config, "docs_html_import.overwrite_required", "Overwrite required.")
+  );
+  state.confirmButton.disabled = false;
+  state.cancelButton.disabled = false;
+  return new Promise((resolve) => {
+    state.pendingOverwriteResolver = (action) => {
+      state.pendingOverwriteResolver = null;
+      resetWarning(state);
+      resolve(action);
+    };
+  });
+}
+
+async function requestImport(state, file, { overwriteDocId = "", confirmOverwrite = false, replacementDocId = "" } = {}) {
+  const stagedFilename = normalizeText(file && file.filename);
+  const scope = importScope(state);
+  const normalizedReplacementDocId = normalizeText(replacementDocId);
+  return fetchManagementJson("/docs/import-source", "POST", {
+    scope,
+    staged_filename: stagedFilename,
+    include_prompt_meta: sourceFormatForRecord(file) === "html" ? Boolean(state.includePromptMeta.checked) : false,
+    overwrite_doc_id: overwriteDocId,
+    confirm_overwrite: confirmOverwrite,
+    replacement_doc_id: normalizedReplacementDocId,
+    preview_only: false,
+    activity_context: buildActivityContext({
+      pageId: "docs-import",
+      actionId: "import-docs-source",
+      route: state.routePath || "/docs/",
+      controlId: "docsHtmlImportRun",
+      controlSelector: "#docsHtmlImportRun",
+      recordIdField: "staged_filename",
+      recordId: stagedFilename
+    })
+  }, managementOptions(state));
+}
+
+async function importFileWithPrompts(state, file, context = {}) {
+  let nextOptions = {};
+  const total = Number(context.total || 1);
+  while (true) {
+    const stagedFilename = normalizeText(file && file.filename);
+    if (total > 1) {
+      setStatus(
+        state.statusNode,
+        "",
+        configText(
+          state.config,
+          "docs_html_import.running_status_all",
+          "Importing {index} of {total}: {filename}",
+          {
+            index: Number(context.index || 0) + 1,
+            total,
+            filename: stagedFilename
+          }
+        )
+      );
+    }
+    const payload = await requestImport(state, file, nextOptions);
+
+    if (payload.preview_only && (payload.replacement_doc_id_required || payload.replacement_title_required)) {
+      renderWarnings(state, payload.import_preview && payload.import_preview.warnings);
+      setStatus(
+        state.statusNode,
+        "warn",
+        payload.summary_text || configText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first.")
+      );
+      if (state.replaceAllOverwrites) {
+        const overwriteDocId = collisionDocId(payload);
+        if (!overwriteDocId) {
+          throw new Error(configText(state.config, "docs_html_import.overwrite_required", "Overwrite required."));
+        }
+        nextOptions = { overwriteDocId, confirmOverwrite: true };
+        continue;
+      }
+      const choice = await handleReplacementDocIdModal(state, payload);
+      if (!choice || choice.action === "cancel") return { cancelled: true };
+      if (choice.action === "replace") {
+        nextOptions = {
+          overwriteDocId: choice.overwriteDocId,
+          confirmOverwrite: true
+        };
+        continue;
+      }
+      if (choice.action === "rename") {
+        nextOptions = { replacementDocId: choice.replacementDocId };
+        continue;
+      }
+    }
+
+    if (payload.preview_only && payload.requires_overwrite_confirmation) {
+      if (state.replaceAllOverwrites) {
+        nextOptions = {
+          overwriteDocId: collisionDocId(payload),
+          confirmOverwrite: true
+        };
+        continue;
+      }
+      const action = await awaitOverwriteConfirmation(state, payload);
+      if (action !== "confirm") return { cancelled: true };
+      nextOptions = {
+        overwriteDocId: collisionDocId(payload),
+        confirmOverwrite: true
+      };
+      continue;
+    }
+
+    return { payload };
   }
 }
 
-async function runImport(state, { overwriteDocId = "", confirmOverwrite = false, replacementDocId = "" } = {}) {
-  const stagedFilename = normalizeText(state.fileSelect.value);
-  if (!stagedFilename) {
+async function runImport(state) {
+  const files = selectedImportFiles(state);
+  if (!files.length) {
     setStatus(
       state.statusNode,
       "error",
@@ -465,14 +638,13 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
     return;
   }
 
-  const selectedScope = normalizeText(state.scopeSelect.value).toLowerCase();
-  const scope = state.docsScopeIds.includes(selectedScope) ? selectedScope : state.docsScopeIds[0];
+  const scope = importScope(state);
   if (!scope) {
     setStatus(state.statusNode, "error", "Docs Viewer config does not define any import scopes.");
     return;
   }
-  const normalizedReplacementDocId = normalizeText(replacementDocId);
   persistSelectedScope(state, scope);
+  state.replaceAllOverwrites = false;
   state.runButton.disabled = true;
   state.confirmButton.disabled = true;
   state.cancelButton.disabled = true;
@@ -483,52 +655,43 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
   state.isRunning = true;
   syncRouteBusyState(state);
 
+  const results = [];
   try {
-    const payload = await fetchManagementJson("/docs/import-source", "POST", {
-      scope,
-      staged_filename: stagedFilename,
-      include_prompt_meta: selectedSourceFormat(state) === "html" ? Boolean(state.includePromptMeta.checked) : false,
-      overwrite_doc_id: overwriteDocId,
-      confirm_overwrite: confirmOverwrite,
-      replacement_doc_id: normalizedReplacementDocId,
-      preview_only: false,
-      activity_context: buildActivityContext({
-        pageId: "docs-import",
-        actionId: "import-docs-source",
-        route: state.routePath || "/docs/",
-        controlId: "docsHtmlImportRun",
-        controlSelector: "#docsHtmlImportRun",
-        recordIdField: "staged_filename",
-        recordId: stagedFilename
-      })
-    }, managementOptions(state));
-
-    if (payload.preview_only && (payload.replacement_doc_id_required || payload.replacement_title_required)) {
-      renderWarnings(state, payload.import_preview && payload.import_preview.warnings);
-      setStatus(
-        state.statusNode,
-        "warn",
-        payload.summary_text || configText(state.config, "docs_html_import.replacement_doc_id_required", "Enter a doc_id first.")
-      );
-      await handleReplacementDocIdModal(state, payload);
-      return;
+    for (let index = 0; index < files.length; index += 1) {
+      const result = await importFileWithPrompts(state, files[index], {
+        index,
+        total: files.length
+      });
+      if (result.cancelled) {
+        if (results.length) renderResult(state, results);
+        setStatus(
+          state.statusNode,
+          "",
+          files.length > 1
+            ? configText(
+              state.config,
+              "docs_html_import.import_cancelled_partial",
+              "Import cancelled after {count} of {total} files.",
+              { count: results.length, total: files.length }
+            )
+            : configText(state.config, "docs_html_import.filename_conflict_cancelled", "Import cancelled.")
+        );
+        return;
+      }
+      if (result.payload) results.push(result.payload);
     }
 
-    if (payload.preview_only && payload.requires_overwrite_confirmation) {
-      renderOverwriteWarning(state, payload);
-      renderWarnings(state, payload.import_preview && payload.import_preview.warnings);
-      setStatus(
-        state.statusNode,
-        "warn",
-        payload.summary_text || configText(state.config, "docs_html_import.overwrite_required", "Overwrite required.")
-      );
-      return;
-    }
-
-    renderResult(state, payload);
-    setStatus(state.statusNode, "success", payload.summary_text || "");
+    renderResult(state, results);
+    setStatus(
+      state.statusNode,
+      "success",
+      results.length > 1
+        ? configText(state.config, "docs_html_import.import_all_success", "Imported {count} staged files.", { count: results.length })
+        : normalizeText(results[0] && results[0].summary_text)
+    );
   } catch (error) {
     console.warn("docs_html_import: import failed", error);
+    if (results.length) renderResult(state, results);
     setStatus(
       state.statusNode,
       "error",
@@ -539,6 +702,7 @@ async function runImport(state, { overwriteDocId = "", confirmOverwrite = false,
     state.runButton.disabled = false;
     state.confirmButton.disabled = false;
     state.cancelButton.disabled = false;
+    state.pendingOverwriteResolver = null;
     syncRouteBusyState(state);
   }
 }
@@ -580,6 +744,8 @@ export async function initDocsHtmlImport(options = {}) {
     warningsHeading: document.getElementById("docsHtmlImportWarningsHeading"),
     warningsList: document.getElementById("docsHtmlImportWarningsList"),
     pendingOverwriteDocId: "",
+    pendingOverwriteResolver: null,
+    replaceAllOverwrites: false,
     persistScope: options.persistScope !== false,
     routePath: normalizeText(options.routePath) || "/docs/",
     managementBaseUrl: normalizeText(options.managementBaseUrl) || "http://127.0.0.1:8789",
@@ -712,10 +878,13 @@ export async function initDocsHtmlImport(options = {}) {
       return;
     }
 
-    state.fileSelect.innerHTML = files.map((file) => {
+    state.fileSelect.innerHTML = [
+      `<option value="${escapeHtml(ALL_STAGED_FILES_VALUE)}">${escapeHtml(configText(state.config, "docs_html_import.all_files_option", "< all >"))}</option>`
+    ].concat(files.map((file) => {
       const filename = normalizeText(file.filename);
       return `<option value="${escapeHtml(filename)}">${escapeHtml(filename)}</option>`;
-    }).join("");
+    })).join("");
+    state.fileSelect.value = normalizeText(files[0] && files[0].filename);
     syncSourceFormatControls(state);
 
     setStatus(
@@ -758,12 +927,17 @@ export async function initDocsHtmlImport(options = {}) {
       openResultSource(state, link).catch((error) => console.warn("docs_html_import: unexpected open source failure", error));
     });
     state.confirmButton.addEventListener("click", () => {
-      runImport(state, {
-        overwriteDocId: state.pendingOverwriteDocId,
-        confirmOverwrite: true
-      }).catch((error) => console.warn("docs_html_import: unexpected overwrite failure", error));
+      if (state.pendingOverwriteResolver) {
+        state.pendingOverwriteResolver("confirm");
+        return;
+      }
+      runImport(state).catch((error) => console.warn("docs_html_import: unexpected overwrite failure", error));
     });
     state.cancelButton.addEventListener("click", () => {
+      if (state.pendingOverwriteResolver) {
+        state.pendingOverwriteResolver("cancel");
+        return;
+      }
       resetWarning(state);
       setStatus(
         state.statusNode,

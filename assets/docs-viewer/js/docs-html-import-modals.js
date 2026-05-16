@@ -133,6 +133,16 @@ export function openReplacementDocIdModal(options = {}) {
   const statusRole = "filename-conflict-status";
   const host = createModalHost({ root: options.root });
 
+  const actions = [
+    { role: "filename-conflict-cancel", label: modalText(config, "docs_html_import.filename_conflict_cancel_button", "Cancel") },
+    { role: "filename-conflict-replace", label: modalText(config, "docs_html_import.filename_conflict_replace_button", "Replace") },
+    {
+      role: "filename-conflict-replace-all",
+      label: modalText(config, "docs_html_import.filename_conflict_replace_all_button", "Replace all")
+    }
+  ];
+  actions.push({ role: "filename-conflict-ok", label: modalText(config, "docs_html_import.filename_conflict_ok_button", "OK") });
+
   host.innerHTML = renderModalFrame({
     hidden: false,
     title: modalText(config, "docs_html_import.filename_conflict_heading", "File already exists"),
@@ -152,11 +162,7 @@ export function openReplacementDocIdModal(options = {}) {
       <p class="docsViewer__modalNote muted small" data-role="${statusRole}" hidden></p>
     `,
     size: "compact",
-    actions: [
-      { role: "filename-conflict-cancel", label: modalText(config, "docs_html_import.filename_conflict_cancel_button", "Cancel") },
-      { role: "filename-conflict-replace", label: modalText(config, "docs_html_import.filename_conflict_replace_button", "Replace") },
-      { role: "filename-conflict-ok", label: modalText(config, "docs_html_import.filename_conflict_ok_button", "OK") }
-    ]
+    actions
   });
 
   const modal = host.querySelector('[data-role="docs-import-filename-conflict-modal"]');
@@ -165,6 +171,7 @@ export function openReplacementDocIdModal(options = {}) {
   const statusNode = host.querySelector(`[data-role="${statusRole}"]`);
   const okButton = host.querySelector('[data-role="filename-conflict-ok"]');
   const replaceButton = host.querySelector('[data-role="filename-conflict-replace"]');
+  const replaceAllButton = host.querySelector('[data-role="filename-conflict-replace-all"]');
   const cancelNodes = host.querySelectorAll('[data-role="filename-conflict-cancel"]');
   const restoreFocus = document.activeElement;
 
@@ -204,6 +211,7 @@ export function openReplacementDocIdModal(options = {}) {
       close({ action: "rename", replacementDocId: value });
     };
     const submitReplace = () => close({ action: "replace", overwriteDocId: currentDocId });
+    const submitReplaceAll = () => close({ action: "replaceAll", overwriteDocId: currentDocId });
     const cancel = () => close({ action: "cancel" });
     const onKeydown = (event) => {
       if (trapModalFocus(event, modal)) return;
@@ -216,6 +224,7 @@ export function openReplacementDocIdModal(options = {}) {
     document.addEventListener("keydown", onKeydown);
     if (okButton) okButton.addEventListener("click", submitReplacement);
     if (replaceButton) replaceButton.addEventListener("click", submitReplace);
+    if (replaceAllButton) replaceAllButton.addEventListener("click", submitReplaceAll);
     cancelNodes.forEach((node) => node.addEventListener("click", cancel));
     if (form) {
       form.addEventListener("submit", (event) => {

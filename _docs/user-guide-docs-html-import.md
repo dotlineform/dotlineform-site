@@ -2,7 +2,7 @@
 doc_id: user-guide-docs-html-import
 title: "Docs Import"
 added_date: 2026-04-24
-last_updated: "2026-05-16 13:35"
+last_updated: "2026-05-16 14:10"
 parent_id: user-guide
 sort_order: 20
 ---
@@ -41,6 +41,7 @@ The source Markdown is not edited automatically; add an <code>&#91;&#91;interact
 The import modal:
 
 - lists supported staged files from `var/docs/import-staging/`
+- adds a `< all >` option that imports every listed staged source file in sequence
 - lets you choose any configured docs scope
 - optionally keeps clearly identifiable prompt/meta blocks for HTML imports
 - converts HTML into a best-attempt Markdown source doc
@@ -61,6 +62,7 @@ The import modal:
 1. Open `/docs/?scope=library&mode=manage&import=1` or the matching Docs Viewer management scope.
 2. Click `Import`.
 3. Choose the staged file.
+   Choose `< all >` to import every listed staged source file in one run.
 4. Confirm or change the publish scope:
    - `library` for the public Library viewer
    - `analysis` for the public Analysis viewer
@@ -99,6 +101,7 @@ If the generated import target already matches an existing doc:
 - the modal's text input is seeded with the existing `doc_id`
 - the edited `doc_id` is used as the new Markdown filename stem
 - `Replace` overwrites the existing source file instead of creating a renamed import
+- `Replace all` also overwrites the current collision; during an all-file import, it automatically overwrites later filename collisions without opening another filename-conflict modal
 - the importer checks the new `doc_id` again before writing
 
 Example:
@@ -111,6 +114,7 @@ Example:
 
 Low-level overwrite support remains available to the local service for explicit callers, but the Studio page treats filename collisions as a rename prompt rather than as a normal overwrite flow.
 Use `Replace` only when the staged file should intentionally replace the existing source doc at the same filename.
+Use `Replace all` only when every later filename collision in the current all-file run should be replaced too.
 
 ## Media Imports
 
@@ -200,6 +204,7 @@ Before overwriting through the low-level service, the importer creates an untrac
 After a successful import, the page reports:
 
 - whether the operation created or overwrote a doc
+- each imported staged file when `< all >` was selected
 - the target scope
 - the final `doc_id`
 - the imported title
