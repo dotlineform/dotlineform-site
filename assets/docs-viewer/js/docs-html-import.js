@@ -221,12 +221,6 @@ function persistSelectedScope(state, scope) {
   }
 }
 
-function viewerLinkHtml(config, href, fallbackLabel) {
-  const label = configText(config, "docs_html_import.result_open_viewer", fallbackLabel || "Open viewer");
-  if (!normalizeText(href)) return "";
-  return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
-}
-
 function sourceDocLinkHtml(scope, docId) {
   const normalizedScope = normalizeText(scope);
   const normalizedDocId = normalizeText(docId);
@@ -237,21 +231,6 @@ function sourceDocLinkHtml(scope, docId) {
     ` data-doc-id="${escapeHtml(normalizedDocId)}">`,
     `${escapeHtml(normalizedDocId)}</a>`
   ].join("");
-}
-
-function mediaPlansFromPreview(preview) {
-  if (Array.isArray(preview.media_plans)) {
-    return preview.media_plans.filter((plan) => plan && typeof plan === "object");
-  }
-  return preview.media_plan && typeof preview.media_plan === "object" ? [preview.media_plan] : [];
-}
-
-function mediaPlanListHtml(plans, key) {
-  return plans
-    .map((plan) => normalizeText(plan[key]))
-    .filter(Boolean)
-    .map((value) => escapeHtml(value))
-    .join("<br>");
 }
 
 async function fetchImportFiles(state) {
@@ -316,55 +295,8 @@ function renderResult(state, payload) {
   const preview = payload && payload.import_preview && typeof payload.import_preview === "object"
     ? payload.import_preview
     : {};
-  setText(
-    state.resultTitleNode,
-    payload.operation === "overwrite"
-      ? configText(state.config, "docs_html_import.result_operation_overwrite", "Overwrote existing doc")
-      : configText(state.config, "docs_html_import.result_operation_create", "Created new doc")
-  );
-  setText(state.resultScopeLabelNode, configText(state.config, "docs_html_import.result_scope", "scope"));
-  setText(state.resultDocIdLabelNode, configText(state.config, "docs_html_import.result_doc_id", "doc_id"));
-  setText(state.resultTitleLabelNode, configText(state.config, "docs_html_import.result_title_label", "title"));
-  setText(state.resultSourceLabelNode, configText(state.config, "docs_html_import.result_source", "source"));
-  setText(state.resultViewerLabelNode, configText(state.config, "docs_html_import.result_viewer", "viewer"));
-  setText(state.resultBackupLabelNode, configText(state.config, "docs_html_import.result_backup", "backup"));
-  setText(state.resultMediaSourceLabelNode, configText(state.config, "docs_html_import.result_media_source", "staged media"));
-  setText(state.resultMediaKeyLabelNode, configText(state.config, "docs_html_import.result_media_key", "media path"));
-  setText(state.resultMediaTokenLabelNode, configText(state.config, "docs_html_import.result_media_token", "media link"));
-  setText(state.resultScopeNode, payload.scope);
+  setText(state.resultTitleNode, configText(state.config, "docs_html_import.result_title", "Imported"));
   setHtml(state.resultDocIdNode, sourceDocLinkHtml(payload.scope, payload.doc_id));
-  setText(state.resultDocTitleNode, payload.title || preview.title || "");
-  setText(state.resultSourceNode, preview.source_path || preview.source_html || payload.staged_filename || "");
-  setHtml(
-    state.resultViewerNode,
-    payload.viewer_url ? viewerLinkHtml(state.config, payload.viewer_url, "Open viewer") : ""
-  );
-  setText(state.resultBackupNode, payload.backup_dir || "");
-  const mediaPlans = mediaPlansFromPreview(preview);
-  const mediaSourceHtml = mediaPlanListHtml(mediaPlans, "staging_path") || mediaPlanListHtml(mediaPlans, "source_path");
-  if (mediaSourceHtml) {
-    setHtml(state.resultMediaSourceNode, mediaSourceHtml);
-    state.resultMediaSourceRow.hidden = false;
-  } else {
-    setHtml(state.resultMediaSourceNode, "");
-    state.resultMediaSourceRow.hidden = true;
-  }
-  const mediaKeyHtml = mediaPlanListHtml(mediaPlans, "media_path");
-  if (mediaKeyHtml) {
-    setHtml(state.resultMediaKeyNode, mediaKeyHtml);
-    state.resultMediaKeyRow.hidden = false;
-  } else {
-    setHtml(state.resultMediaKeyNode, "");
-    state.resultMediaKeyRow.hidden = true;
-  }
-  const mediaTokenHtml = mediaPlanListHtml(mediaPlans, "media_token");
-  if (mediaTokenHtml) {
-    setHtml(state.resultMediaTokenNode, mediaTokenHtml);
-    state.resultMediaTokenRow.hidden = false;
-  } else {
-    setHtml(state.resultMediaTokenNode, "");
-    state.resultMediaTokenRow.hidden = true;
-  }
 
   const stats = preview.source_stats && typeof preview.source_stats === "object" ? preview.source_stats : {};
   if (preview.source_format === "markdown") {
@@ -599,27 +531,7 @@ export async function initDocsHtmlImport(options = {}) {
     collisionMetaNode: document.getElementById("docsHtmlImportCollisionMeta"),
     resultNode: document.getElementById("docsHtmlImportResult"),
     resultTitleNode: document.getElementById("docsHtmlImportResultTitle"),
-    resultScopeLabelNode: document.getElementById("docsHtmlImportResultScopeLabel"),
-    resultScopeNode: document.getElementById("docsHtmlImportResultScope"),
-    resultDocIdLabelNode: document.getElementById("docsHtmlImportResultDocIdLabel"),
     resultDocIdNode: document.getElementById("docsHtmlImportResultDocId"),
-    resultTitleLabelNode: document.getElementById("docsHtmlImportResultTitleLabel"),
-    resultDocTitleNode: document.getElementById("docsHtmlImportResultDocTitle"),
-    resultSourceLabelNode: document.getElementById("docsHtmlImportResultSourceLabel"),
-    resultSourceNode: document.getElementById("docsHtmlImportResultSource"),
-    resultViewerLabelNode: document.getElementById("docsHtmlImportResultViewerLabel"),
-    resultViewerNode: document.getElementById("docsHtmlImportResultViewer"),
-    resultBackupLabelNode: document.getElementById("docsHtmlImportResultBackupLabel"),
-    resultBackupNode: document.getElementById("docsHtmlImportResultBackup"),
-    resultMediaSourceRow: document.getElementById("docsHtmlImportResultMediaSourceRow"),
-    resultMediaSourceLabelNode: document.getElementById("docsHtmlImportResultMediaSourceLabel"),
-    resultMediaSourceNode: document.getElementById("docsHtmlImportResultMediaSource"),
-    resultMediaKeyRow: document.getElementById("docsHtmlImportResultMediaKeyRow"),
-    resultMediaKeyLabelNode: document.getElementById("docsHtmlImportResultMediaKeyLabel"),
-    resultMediaKeyNode: document.getElementById("docsHtmlImportResultMediaKey"),
-    resultMediaTokenRow: document.getElementById("docsHtmlImportResultMediaTokenRow"),
-    resultMediaTokenLabelNode: document.getElementById("docsHtmlImportResultMediaTokenLabel"),
-    resultMediaTokenNode: document.getElementById("docsHtmlImportResultMediaToken"),
     resultCountsNode: document.getElementById("docsHtmlImportResultCounts"),
     warningsWrap: document.getElementById("docsHtmlImportWarnings"),
     warningsHeading: document.getElementById("docsHtmlImportWarningsHeading"),
@@ -655,27 +567,7 @@ export async function initDocsHtmlImport(options = {}) {
     state.collisionMetaNode,
     state.resultNode,
     state.resultTitleNode,
-    state.resultScopeLabelNode,
-    state.resultScopeNode,
-    state.resultDocIdLabelNode,
     state.resultDocIdNode,
-    state.resultTitleLabelNode,
-    state.resultDocTitleNode,
-    state.resultSourceLabelNode,
-    state.resultSourceNode,
-    state.resultViewerLabelNode,
-    state.resultViewerNode,
-    state.resultBackupLabelNode,
-    state.resultBackupNode,
-    state.resultMediaSourceRow,
-    state.resultMediaSourceLabelNode,
-    state.resultMediaSourceNode,
-    state.resultMediaKeyRow,
-    state.resultMediaKeyLabelNode,
-    state.resultMediaKeyNode,
-    state.resultMediaTokenRow,
-    state.resultMediaTokenLabelNode,
-    state.resultMediaTokenNode,
     state.resultCountsNode,
     state.warningsWrap,
     state.warningsHeading,

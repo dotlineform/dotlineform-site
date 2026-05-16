@@ -117,7 +117,7 @@
     "import_failed": "Import failed.",
     "overwrite_required": "Overwrite required: {doc_id} ({title}). Review the warning and confirm if you want to replace it.",
     "overwrite_cancelled": "Overwrite cancelled.",
-    "result_title": "Import result",
+    "result_title": "Imported",
     "result_operation_create": "Created new doc",
     "result_operation_overwrite": "Overwrote existing doc",
     "result_scope": "scope",
