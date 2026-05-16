@@ -1,12 +1,12 @@
 ---
 doc_id: beauty-memory-meaning
-title: "Beauty × Memory × Meaning — Pattern, Resonance, Renewal"
+title: "Beauty × Memory × Meaning"
 added_date: "2026-05-07 17:01"
 last_updated: "2026-05-07 22:13"
 parent_id: ""
 sort_order: 90
 published: true
-viewable: true
+hidden: false
 ---
 # Beauty × Memory × Meaning — Pattern, Resonance, Renewal
 

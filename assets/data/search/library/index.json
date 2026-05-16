@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-5e4fb262fcc52c5c3315dd25e2356a92",
-    "generated_at_utc": "2026-05-16T15:13:23Z",
+    "version": "blake2b-b21da006d74fe3a252fc940b6ea675e1",
+    "generated_at_utc": "2026-05-16T15:42:15Z",
     "count": 14
   },
   "entries": [
@@ -185,7 +185,7 @@
     {
       "id": "beauty-memory-meaning",
       "kind": "doc",
-      "title": "Beauty × Memory × Meaning — Pattern, Resonance, Renewal",
+      "title": "Beauty × Memory × Meaning",
       "href": "/library/?doc=beauty-memory-meaning",
       "last_updated": "2026-05-07 22:13",
       "display_meta": "2026-05-07 22:13",
@@ -194,10 +194,7 @@
         "beauty",
         "memory",
         "meaning",
-        "beauty × memory × meaning — pattern, resonance, renewal",
-        "pattern",
-        "resonance",
-        "renewal",
+        "beauty × memory × meaning",
         "2026-05-07 22:13",
         "2026",
         "05",
@@ -205,7 +202,7 @@
         "22",
         "13"
       ],
-      "search_text": "beauty-memory-meaning beauty memory meaning beauty × memory × meaning — pattern, resonance, renewal pattern resonance renewal 2026-05-07 22:13 2026 05 07 22 13"
+      "search_text": "beauty-memory-meaning beauty memory meaning beauty × memory × meaning 2026-05-07 22:13 2026 05 07 22 13"
     },
     {
       "id": "beauty",
