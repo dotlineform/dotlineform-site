@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-a1453b0c4c0577a96ecacdec54a0bbde",
-    "generated_at_utc": "2026-05-16T08:12:36Z",
-    "count": 13
+    "version": "blake2b-5e4fb262fcc52c5c3315dd25e2356a92",
+    "generated_at_utc": "2026-05-16T15:13:23Z",
+    "count": 14
   },
   "entries": [
     {
@@ -296,6 +296,28 @@
         "58"
       ],
       "search_text": "coincidence-inevitability coincidence inevitability coincidence inevitability 2026-05-16 08:58 2026 05 16 08 58"
+    },
+    {
+      "id": "coincidence-salience",
+      "kind": "doc",
+      "title": "Coincidence Salience Worksheet",
+      "href": "/library/?doc=coincidence-salience",
+      "last_updated": "2026-05-16 15:31",
+      "display_meta": "2026-05-16 15:31",
+      "search_terms": [
+        "coincidence-salience",
+        "coincidence",
+        "salience",
+        "coincidence salience worksheet",
+        "worksheet",
+        "2026-05-16 15:31",
+        "2026",
+        "05",
+        "16",
+        "15",
+        "31"
+      ],
+      "search_text": "coincidence-salience coincidence salience coincidence salience worksheet worksheet 2026-05-16 15:31 2026 05 16 15 31"
     }
   ]
 }
