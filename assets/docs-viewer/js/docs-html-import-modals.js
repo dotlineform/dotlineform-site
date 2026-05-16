@@ -28,7 +28,7 @@ function modalText(config, path, fallback, tokens = {}) {
       current = undefined;
     }
   });
-  return formatText(String(current || fallback || ""), tokens);
+  return formatText(String(current == null ? fallback == null ? "" : fallback : current), tokens);
 }
 
 function createModalHost(options = {}) {

@@ -25,7 +25,7 @@ export function getConfigValue(config, path) {
 
 export function getConfigText(config, path, fallback) {
   var value = getConfigValue(config, "ui_text." + path);
-  return String(value || fallback || "");
+  return String(value == null ? fallback == null ? "" : fallback : value);
 }
 
 export function formatText(template, tokens) {

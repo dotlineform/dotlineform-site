@@ -55,7 +55,7 @@ function configText(config, path, fallback, tokens = {}) {
       current = undefined;
     }
   });
-  return formatText(String(current || fallback || ""), tokens);
+  return formatText(String(current == null ? fallback == null ? "" : fallback : current), tokens);
 }
 
 async function loadDocsViewerText(textUrl = "/assets/docs-viewer/data/ui-text.json") {
@@ -274,7 +274,7 @@ function syncSourceFormatControls(state) {
   state.includePromptMeta.checked = supportsPromptMeta ? state.includePromptMeta.checked : false;
   state.includePromptMeta.disabled = !supportsPromptMeta || !state.serviceAvailable;
   state.includePromptMetaWrap.hidden = !supportsPromptMeta;
-  state.includePromptMetaHintNode.hidden = !supportsPromptMeta;
+  state.includePromptMetaHintNode.hidden = !supportsPromptMeta || !normalizeText(state.includePromptMetaHintNode.textContent);
 }
 
 function resetWarning(state) {
@@ -716,14 +716,7 @@ export async function initDocsHtmlImport(options = {}) {
         "Include obvious prompt/meta blocks"
       )
     );
-    setText(
-      state.includePromptMetaHintNode,
-      configText(
-        state.config,
-        "docs_html_import.include_prompt_meta_hint",
-        "When enabled, clearly identifiable prompt/meta sections are kept in simple fenced code blocks."
-      )
-    );
+    setText(state.includePromptMetaHintNode, configText(state.config, "docs_html_import.include_prompt_meta_hint", ""));
     setText(state.runButton, configText(state.config, "docs_html_import.import_button", "Import"));
     setText(
       state.confirmButton,

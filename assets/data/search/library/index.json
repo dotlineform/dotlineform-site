@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_library_v1",
     "scope": "library",
-    "version": "blake2b-1f8d9849f2fda5f39ea7119671898a93",
-    "generated_at_utc": "2026-05-07T21:13:30Z",
-    "count": 12
+    "version": "blake2b-a1453b0c4c0577a96ecacdec54a0bbde",
+    "generated_at_utc": "2026-05-16T08:12:36Z",
+    "count": 13
   },
   "entries": [
     {
@@ -275,6 +275,27 @@
         "12"
       ],
       "search_text": "closed-vs-open-universe closed vs open universe entropy & evolution under two cosmologies entropy evolution under two cosmologies 2026-05-07 22:12 2026 05 07 22 12"
+    },
+    {
+      "id": "coincidence-inevitability",
+      "kind": "doc",
+      "title": "Coincidence Inevitability",
+      "href": "/library/?doc=coincidence-inevitability",
+      "last_updated": "2026-05-16 08:58",
+      "display_meta": "2026-05-16 08:58",
+      "search_terms": [
+        "coincidence-inevitability",
+        "coincidence",
+        "inevitability",
+        "coincidence inevitability",
+        "2026-05-16 08:58",
+        "2026",
+        "05",
+        "16",
+        "08",
+        "58"
+      ],
+      "search_text": "coincidence-inevitability coincidence inevitability coincidence inevitability 2026-05-16 08:58 2026 05 16 08 58"
     }
   ]
 }

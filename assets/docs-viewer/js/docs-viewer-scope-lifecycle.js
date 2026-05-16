@@ -22,7 +22,11 @@ function normalizeText(value) {
 }
 
 function managementText(state, key, fallback) {
-  return normalizeText(state && state.managementText && state.managementText[key]) || fallback;
+  if (state && state.managementText && Object.prototype.hasOwnProperty.call(state.managementText, key)) {
+    var value = state.managementText[key];
+    return value == null ? fallback : normalizeText(value);
+  }
+  return fallback;
 }
 
 function lifecycleCapabilities(capabilities) {
