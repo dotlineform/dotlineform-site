@@ -113,6 +113,26 @@ Use `Replace` only when the staged file should intentionally replace the existin
 
 ## Media Imports
 
+Supported raster image extensions:
+
+- `.jpg`
+- `.jpeg`
+- `.png`
+- `.webp`
+- `.gif`
+
+Supported downloadable file extensions:
+
+- `.pdf`
+- `.zip`
+- `.csv`
+- `.tsv`
+- `.json`
+- `.jsonl`
+- `.docx`
+- `.xlsx`
+- `.pptx`
+
 Raster image wrappers use:
 
 - <code>&#91;&#91;media:docs/&lt;scope&gt;/img/&lt;filename&gt;&#93;&#93;</code>
@@ -139,6 +159,7 @@ Generated filenames use the final proposed `doc_id` plus an incrementing suffix,
 The generated Markdown points at the matching docs media token and the result panel lists each staged media path, configured media path, and media token.
 Copy each generated staged image file to the reported media path before expecting the rendered doc to display it.
 
+
 ## Interactive HTML Companions
 
 An import can carry a same-stem interactive sidecar:
@@ -155,25 +176,7 @@ This keeps the import conversion unchanged and leaves placement as an explicit s
 If the target interactive asset already exists, the importer asks for overwrite confirmation before replacing it.
 Cancel leaves the existing asset unchanged.
 
-Supported raster image extensions:
-
-- `.jpg`
-- `.jpeg`
-- `.png`
-- `.webp`
-- `.gif`
-
-Supported downloadable file extensions:
-
-- `.pdf`
-- `.zip`
-- `.csv`
-- `.tsv`
-- `.json`
-- `.jsonl`
-- `.docx`
-- `.xlsx`
-- `.pptx`
+Template: `assets/docs/interactive/template.html`
 
 ## Backup Behavior
 
