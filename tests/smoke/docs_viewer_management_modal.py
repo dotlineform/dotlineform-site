@@ -116,6 +116,18 @@ def install_modal_fixture(page: Page) -> None:
                     <div class="docsViewer__importBody" id="docsViewerImportBody">
                       <div class="docsViewerImport" id="docsHtmlImportRoot" hidden tabindex="-1">
                         <div class="docsViewerImport__panel">
+                          <div class="docsViewerImport__scrollRegion">
+                            <p class="docsViewerImport__intro" id="docsHtmlImportIntro">Import fixture.</p>
+                            <div class="docsViewerImport__result" id="docsHtmlImportResult">
+                              <h3 id="docsHtmlImportResultTitle">Created new doc</h3>
+                              <dl class="docsViewerImport__resultGrid">
+                                <div>
+                                  <dt>title</dt>
+                                  <dd id="docsHtmlImportLongResult">Long result text</dd>
+                                </div>
+                              </dl>
+                            </div>
+                          </div>
                           <div class="docsViewerImport__footer">
                             <p class="docsViewerImport__status" id="docsHtmlImportStatus">Ready.</p>
                             <div class="docsViewerImport__actions">
@@ -390,6 +402,11 @@ def run_metadata_modal_check(page: Page) -> None:
 
 def run_import_modal_check(page: Page) -> None:
     page.locator("#docsViewerManageImportButton").focus()
+    page.locator("#docsHtmlImportLongResult").evaluate(
+        """node => {
+            node.textContent = Array(80).fill('Long imported result line with enough text to require the import body to scroll.').join(' ');
+        }"""
+    )
     page.evaluate("window.__docsViewerManagementModalSmoke.controller.openImportModal()")
     wait_for_focus(page, "docsViewerImportCancelButton")
     assert_shell(
@@ -400,6 +417,37 @@ def run_import_modal_check(page: Page) -> None:
         active_id="docsViewerImportCancelButton",
         size_class="docsViewer__modalCard--document",
     )
+    layout = page.locator("#docsViewerImportModal").evaluate(
+        """modal => {
+            const card = modal.querySelector('.docsViewer__modalCard');
+            const body = modal.querySelector('.docsViewer__importBody');
+            const scrollRegion = modal.querySelector('.docsViewerImport__scrollRegion');
+            const footer = modal.querySelector('.docsViewerImport__footer');
+            const actions = modal.querySelector('.docsViewerImport__actions');
+            const cardRect = card.getBoundingClientRect();
+            const bodyRect = body.getBoundingClientRect();
+            const scrollRect = scrollRegion.getBoundingClientRect();
+            const footerRect = footer.getBoundingClientRect();
+            const actionsRect = actions.getBoundingClientRect();
+            return {
+                cardOverflows: card.scrollHeight > card.clientHeight,
+                bodyOverflows: body.scrollHeight > body.clientHeight,
+                scrollRegionOverflows: scrollRegion.scrollHeight > scrollRegion.clientHeight,
+                footerBelowScroll: footerRect.top >= scrollRect.bottom - 1,
+                actionsInsideCard: actionsRect.bottom <= cardRect.bottom + 1,
+                actionsInsideBody: actionsRect.bottom <= bodyRect.bottom + 1
+            };
+        }"""
+    )
+    if layout != {
+        "cardOverflows": False,
+        "bodyOverflows": False,
+        "scrollRegionOverflows": True,
+        "footerBelowScroll": True,
+        "actionsInsideCard": True,
+        "actionsInsideBody": True,
+    }:
+        raise AssertionError(f"import modal scroll boundary is wrong: {layout!r}")
     if focus_wrap_id(page, "#docsViewerImportCancelButton", "Shift+Tab") != "docsHtmlImportRun":
         raise AssertionError("import modal did not wrap focus backward to Import")
     page.keyboard.press("Escape")

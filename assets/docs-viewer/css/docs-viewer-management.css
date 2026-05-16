@@ -745,7 +745,7 @@ select.docsViewer__fieldInput--listbox{
   flex: 1 1 auto;
   min-height: 0;
   max-height: min(72vh, 48rem);
-  overflow: auto;
+  overflow: hidden;
   border: 0;
   background: transparent;
   padding: 0;
@@ -755,15 +755,27 @@ select.docsViewer__fieldInput--listbox{
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  min-height: 0;
 }
 
 .docsViewer__importBody .docsViewerImport__panel{
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  min-height: 0;
   border: 0;
   background: transparent;
   padding: 0;
+}
+
+.docsViewer__importBody .docsViewerImport__scrollRegion{
+  display: grid;
+  flex: 1 1 auto;
+  gap: 0.8rem;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 0.35rem;
+  scrollbar-gutter: stable;
 }
 
 .docsViewer__importBody .docsViewerImport__controls{
@@ -800,8 +812,7 @@ select.docsViewer__fieldInput--listbox{
 }
 
 .docsViewer__importBody .docsViewerImport__footer{
-  position: sticky;
-  bottom: 0;
+  flex: 0 0 auto;
   display: grid;
   gap: 0.55rem;
   padding-top: 0.75rem;
