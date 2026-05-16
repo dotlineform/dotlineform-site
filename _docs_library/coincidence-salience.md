@@ -14,7 +14,7 @@ hidden: false
 
 This worksheet gives a quick, heuristic estimate of how likely a coincidence will feel *salient*. It combines an exposure term (**Event Frequency**) with a filter term (**Filter Specificity**). It is *not* a probability of truth — it’s a guide to expected *experience of synchronicity*.
 
-[[interactive-html:coincidence-salience-demo.html]]
+[[interactive-html:coincidence-salience-demo.html height=546]]
 
 ### Notes & Safeguards
 

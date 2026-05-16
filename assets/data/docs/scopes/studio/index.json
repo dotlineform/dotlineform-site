@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T14:06:27Z",
+  "generated_at": "2026-05-16T15:31:16Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -555,7 +555,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 10160
+      "content_text_length": 10327
     },
     {
       "scope": "studio",
@@ -2921,7 +2921,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 10577
+      "content_text_length": 10782
     },
     {
       "scope": "studio",
@@ -3382,7 +3382,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 163258
+      "content_text_length": 163370
     },
     {
       "scope": "studio",

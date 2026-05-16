@@ -62,6 +62,7 @@ class DocsDataBuilder
   MEDIA_TOKEN_PATTERN = /\[\[media:(.+?)\]\]/.freeze
   INTERACTIVE_HTML_TOKEN_PATTERN = /\[\[interactive-html:(.+?)\]\]/.freeze
   INTERACTIVE_HTML_FILENAME_PATTERN = /\A[a-z0-9][a-z0-9._-]*\.html\z/i.freeze
+  INTERACTIVE_HTML_HEIGHT_PATTERN = /\A[1-9][0-9]{0,3}\z/.freeze
   SCRIPT_STYLE_PATTERN = %r{<\s*(script|style)\b[^>]*>.*?<\s*/\s*\1\s*>}im.freeze
   SVG_PATTERN = %r{<svg\b.*?</svg>}im.freeze
   SVG_TEXT_PATTERN = %r{<(title|desc|text)\b[^>]*>(.*?)</\s*\1\s*>}im.freeze
@@ -607,16 +608,34 @@ class DocsDataBuilder
     resolve_interactive_html_tokens(resolve_media_tokens(markdown))
   end
 
-  def interactive_html_iframe(raw_filename)
-    filename = normalize_interactive_html_filename(raw_filename)
+  def interactive_html_iframe(raw_token_body)
+    token = parse_interactive_html_token(raw_token_body)
+    filename = token.fetch(:filename)
     asset_path = interactive_html_asset_path(filename)
     raise "Interactive HTML asset not found for scope #{@scope_id}: #{interactive_html_asset_relative_path(filename)}" unless asset_path.file?
 
     public_path = "/assets/docs/interactive/#{@scope_id}/#{filename}"
     title = "Interactive HTML: #{filename}"
+    style_attr = token[:height] ? %( style="--docs-viewer-interactive-height: #{token[:height]}px") : ""
     <<~HTML.chomp
-      <iframe class="docsViewer__interactiveFrame" src="#{CGI.escapeHTML(public_path)}" sandbox="allow-scripts" loading="lazy" title="#{CGI.escapeHTML(title)}"></iframe>
+      <iframe class="docsViewer__interactiveFrame" src="#{CGI.escapeHTML(public_path)}" sandbox="allow-scripts" loading="lazy" title="#{CGI.escapeHTML(title)}"#{style_attr}></iframe>
     HTML
+  end
+
+  def parse_interactive_html_token(raw_token_body)
+    parts = raw_token_body.to_s.strip.split(/\s+/)
+    filename = normalize_interactive_html_filename(parts.shift)
+    token = { filename: filename }
+    parts.each do |part|
+      key, value = part.split("=", 2)
+      case key
+      when "height"
+        token[:height] = normalize_interactive_html_height(value, raw_token_body)
+      else
+        raise "Invalid interactive HTML token attribute #{part.inspect}; supported attributes: height"
+      end
+    end
+    token
   end
 
   def normalize_interactive_html_filename(raw_filename)
@@ -625,6 +644,14 @@ class DocsDataBuilder
       raise "Invalid interactive HTML token #{raw_filename.inspect}; use a same-scope .html filename only"
     end
     filename
+  end
+
+  def normalize_interactive_html_height(raw_height, raw_token_body)
+    height = raw_height.to_s.strip
+    unless height.match?(INTERACTIVE_HTML_HEIGHT_PATTERN)
+      raise "Invalid interactive HTML token height in #{raw_token_body.inspect}; use height=<positive pixel integer>"
+    end
+    height.to_i
   end
 
   def interactive_html_asset_relative_path(filename)

@@ -24,9 +24,9 @@ Archives:
 **Area:** Docs Viewer builder / rendered docs content
 
 **Summary:**
-Added a same-scope <code>&#91;&#91;interactive-html:filename.html&#93;&#93;</code> token for embedding repo-local interactive HTML assets in Docs Viewer content.
-The docs builder validates filename-only tokens, requires the matching file under `assets/docs/interactive/<scope>/`, and renders a sandboxed iframe with script execution isolated from the main Docs Viewer page.
-Docs Import also detects a staged `<source-stem>-interactive.html` sidecar, copies it into the selected scope's interactive assets, prompts before replacing an existing interactive asset, and reports the token for manual placement in source Markdown.
+Added a same-scope <code>&#91;&#91;interactive-html:filename.html&#93;&#93;</code> token for embedding repo-local interactive HTML assets in Docs Viewer content, with optional <code>height=&lt;pixels&gt;</code> sizing for assets that need a measured iframe height.
+The docs builder validates same-scope filenames, requires the matching file under `assets/docs/interactive/<scope>/`, and renders a sandboxed iframe with script execution isolated from the main Docs Viewer page.
+Docs Import also detects staged HTML files marked with `<meta name="dlf:docs-import-role" content="interactive-html">`, copies each one into the selected scope's interactive assets, prompts before replacing an existing interactive asset, and leaves token placement to the user.
 
 **Effect:**
 Imported HTML stays script-stripped by default, while manually authored and browser-tested interactive HTML can be embedded explicitly through Markdown source.

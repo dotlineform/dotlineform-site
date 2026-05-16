@@ -130,14 +130,15 @@ Docs media tokens:
 Interactive HTML tokens:
 
 - use the literal token <code>&#91;&#91;interactive-html:filename.html&#93;&#93;</code> when a doc needs to embed a repo-local interactive HTML asset
+- add an optional pixel height as <code>&#91;&#91;interactive-html:filename.html height=546&#93;&#93;</code> when the default iframe height is too tall or too short for that asset
 - filenames are same-scope only; do not include a scope name, slash, nested path, absolute path, or `..`
 - the builder resolves the token to `assets/docs/interactive/<scope>/filename.html` and fails the build if that file is missing
 - the rendered doc receives a sandboxed iframe with `sandbox="allow-scripts"` so the embedded file's JavaScript runs inside the iframe, not in the main Docs Viewer page
 - start from `assets/docs/interactive/template.html`, save the finished file under the current scope folder, and test it directly in a browser before adding the token
-- Docs Import can copy a staged `<source-stem>-interactive.html` sidecar into the matching scope folder, but the source doc still needs a manual token where the iframe should appear
+- Docs Import can copy staged HTML files marked with `<meta name="dlf:docs-import-role" content="interactive-html">` into the matching scope folder, but the source doc still needs a manual token where each iframe should appear
 - example for a Library doc:
   - source asset: `assets/docs/interactive/library/coincidence-salience.html`
-  - Markdown token: <code>&#91;&#91;interactive-html:coincidence-salience.html&#93;&#93;</code>
+  - Markdown token: <code>&#91;&#91;interactive-html:coincidence-salience.html height=546&#93;&#93;</code>
 
 ## Commands
 

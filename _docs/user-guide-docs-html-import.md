@@ -182,6 +182,7 @@ The target filename is the slugified original filename stem plus `.html`.
 The import result lists each copied interactive file as another two-column result row with the slugified stem and `script file`, but it does not insert iframe tokens into the generated source doc.
 This keeps the import conversion unchanged and leaves placement as an explicit source edit.
 You can add multiple interactive HTML tokens manually when a document uses multiple interactive assets.
+When the default iframe height does not fit the asset, add a measured pixel height to the token, for example <code>&#91;&#91;interactive-html:coincidence-widget.html height=546&#93;&#93;</code>.
 
 If any target interactive asset already exists, the importer asks for overwrite confirmation before replacing it.
 Cancel leaves the existing asset unchanged.
