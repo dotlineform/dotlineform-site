@@ -243,6 +243,7 @@
 
 .docsViewerImport__resultGrid > div{
   min-width: 0;
+  display: contents;
 }
 
 .docsViewerImport__resultGrid dd{

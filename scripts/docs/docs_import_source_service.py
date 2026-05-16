@@ -10,7 +10,10 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
 from docs_html_import import (
+    HTML_STAGED_SUFFIXES,
+    STAGING_REL_DIR,
     generate_import_preview,
+    is_interactive_html_import_asset,
     list_staged_import_source_files,
     materialize_inline_raster_media,
     resolve_staged_import_source,
@@ -39,8 +42,7 @@ MakeImportOverwriteBackup = Callable[[Path, str, ScopeDoc, Optional[Dict[str, An
 PerformSourceWriteAndRebuild = Callable[..., Dict[str, Any]]
 
 INTERACTIVE_HTML_ASSET_REL_ROOT = Path("assets/docs/interactive")
-INTERACTIVE_HTML_SUFFIX = "-interactive"
-INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*-interactive\.html$")
+INTERACTIVE_HTML_FILENAME_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*\.html$")
 
 
 @dataclass(frozen=True)
@@ -135,21 +137,23 @@ def apply_replacement_doc_id_to_preview(preview: Dict[str, Any], replacement_doc
     preview["proposed_doc_id_source"] = "replacement_doc_id"
 
 
-def interactive_html_companion_path(source_path: Path) -> Optional[Path]:
-    if source_path.stem.endswith(INTERACTIVE_HTML_SUFFIX):
-        return None
-    candidate = source_path.with_name(f"{source_path.stem}{INTERACTIVE_HTML_SUFFIX}.html")
-    return candidate if candidate.exists() else None
+def interactive_html_staged_paths(repo_root: Path) -> list[Path]:
+    staging_root = (repo_root / STAGING_REL_DIR).resolve()
+    if not staging_root.exists():
+        return []
+    return [
+        path
+        for path in sorted(staging_root.iterdir(), key=lambda candidate: candidate.name.lower())
+        if path.is_file()
+        and path.suffix.lower() in HTML_STAGED_SUFFIXES
+        and is_interactive_html_import_asset(path)
+    ]
 
 
-def interactive_html_asset_plan(repo_root: Path, source_path: Path, scope: str) -> Optional[Dict[str, Any]]:
-    companion_path = interactive_html_companion_path(source_path)
-    if companion_path is None:
-        return None
-
-    filename = companion_path.name
+def interactive_html_asset_plan_for_path(repo_root: Path, source_path: Path, scope: str) -> Dict[str, Any]:
+    filename = f"{slugify(source_path.stem)}.html"
     if not INTERACTIVE_HTML_FILENAME_PATTERN.fullmatch(filename):
-        raise ValueError(f"Interactive companion filename must be a simple slug ending in .html: {filename}")
+        raise ValueError(f"Interactive HTML asset filename must be a simple slug ending in .html: {filename}")
 
     normalized_scope = normalize_scope(scope)
     target_rel = INTERACTIVE_HTML_ASSET_REL_ROOT / normalized_scope / filename
@@ -159,45 +163,60 @@ def interactive_html_asset_plan(repo_root: Path, source_path: Path, scope: str) 
         raise ValueError(f"Interactive HTML target escapes scope asset root: {target_rel.as_posix()}")
 
     return {
-        "source_path": relative_path(repo_root, companion_path),
+        "source_path": relative_path(repo_root, source_path),
         "target_path": target_rel.as_posix(),
         "public_path": f"/assets/docs/interactive/{normalized_scope}/{filename}",
         "token": f"[[interactive-html:{filename}]]",
         "filename": filename,
+        "display_name": Path(filename).stem,
+        "result_type": "script file",
         "target_exists": target_path.exists(),
     }
 
 
-def ensure_interactive_html_target_available(plan: Optional[Dict[str, Any]], *, allow_overwrite: bool = False) -> None:
-    if not plan:
-        return
-    if plan.get("target_exists") and not allow_overwrite:
-        raise FileExistsError(
-            f"Interactive HTML asset already exists: {plan.get('target_path')}. "
-            "Edit that asset directly or remove it before importing the companion again."
-        )
+def interactive_html_asset_plans(repo_root: Path, scope: str) -> list[Dict[str, Any]]:
+    plans = [
+        interactive_html_asset_plan_for_path(repo_root, path, scope)
+        for path in interactive_html_staged_paths(repo_root)
+    ]
+    target_paths: set[str] = set()
+    for plan in plans:
+        target_path = str(plan.get("target_path") or "")
+        if target_path in target_paths:
+            raise ValueError(f"Multiple interactive HTML staged files resolve to {target_path}.")
+        target_paths.add(target_path)
+    return plans
+
+
+def ensure_interactive_html_targets_available(plans: list[Dict[str, Any]], *, allow_overwrite: bool = False) -> None:
+    for plan in plans:
+        if plan.get("target_exists") and not allow_overwrite:
+            raise FileExistsError(
+                f"Interactive HTML asset already exists: {plan.get('target_path')}. "
+                "Edit that asset directly or confirm overwrite to replace it during import."
+            )
 
 
 def materialize_interactive_html_asset(
     repo_root: Path,
-    plan: Optional[Dict[str, Any]],
+    plan: Dict[str, Any],
     *,
     allow_overwrite: bool = False,
-) -> Optional[Dict[str, Any]]:
-    if not plan:
-        return None
-    ensure_interactive_html_target_available(plan, allow_overwrite=allow_overwrite)
+) -> Dict[str, Any]:
+    ensure_interactive_html_targets_available([plan], allow_overwrite=allow_overwrite)
     source_path = (repo_root / str(plan.get("source_path") or "")).resolve()
     target_path = (repo_root / str(plan.get("target_path") or "")).resolve()
-    staging_root = (repo_root / "var/docs/import-staging").resolve()
+    staging_root = (repo_root / STAGING_REL_DIR).resolve()
     target_root = (repo_root / INTERACTIVE_HTML_ASSET_REL_ROOT / target_path.parent.name).resolve()
     if not source_path.is_relative_to(staging_root):
-        raise ValueError("Interactive HTML companion source escapes import staging root.")
+        raise ValueError("Interactive HTML asset source escapes import staging root.")
     if not target_path.is_relative_to(target_root):
-        raise ValueError("Interactive HTML companion target escapes scope asset root.")
+        raise ValueError("Interactive HTML asset target escapes scope asset root.")
     target_existed = target_path.exists()
     if target_existed and not allow_overwrite:
-        raise FileExistsError(f"Interactive HTML asset already exists: {relative_path(repo_root, target_path)}")
+        raise FileExistsError(
+            f"Interactive HTML asset already exists: {relative_path(repo_root, target_path)}"
+        )
     target_path.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source_path, target_path)
     return {
@@ -205,23 +224,48 @@ def materialize_interactive_html_asset(
         "target_path": relative_path(repo_root, target_path),
         "public_path": str(plan.get("public_path") or ""),
         "token": str(plan.get("token") or ""),
+        "filename": str(plan.get("filename") or target_path.name),
+        "display_name": str(plan.get("display_name") or target_path.stem),
+        "result_type": "script file",
         "size_bytes": target_path.stat().st_size,
         "overwrote": target_existed,
     }
+
+
+def materialize_interactive_html_assets(
+    repo_root: Path,
+    plans: list[Dict[str, Any]],
+    *,
+    allow_overwrite: bool = False,
+) -> list[Dict[str, Any]]:
+    if not plans:
+        return []
+    ensure_interactive_html_targets_available(plans, allow_overwrite=allow_overwrite)
+    return [
+        materialize_interactive_html_asset(repo_root, plan, allow_overwrite=allow_overwrite)
+        for plan in plans
+    ]
 
 
 def import_summary_text(
     operation: str,
     doc_id: str,
     staged_filename: str,
-    interactive_html_written: Optional[Dict[str, Any]],
+    interactive_html_written: list[Dict[str, Any]],
 ) -> str:
     action = "Created" if operation == "create" else "Overwrote"
     summary = f"{action} {doc_id} from {staged_filename}."
     if interactive_html_written:
-        summary += f" Copied interactive HTML asset {interactive_html_written.get('target_path')}."
-        summary += f" Add {interactive_html_written.get('token')} where the iframe should appear."
+        count = len(interactive_html_written)
+        suffix = "" if count == 1 else "s"
+        summary += f" Copied {count} interactive HTML script file{suffix}."
     return summary
+
+
+def interactive_html_overwrite_summary(plans: list[Dict[str, Any]]) -> str:
+    if len(plans) == 1:
+        return f"Interactive HTML asset overwrite required for {plans[0]['target_path']}."
+    return f"Interactive HTML asset overwrite required for {len(plans)} script files."
 
 
 def handle_import_source(
@@ -239,16 +283,20 @@ def handle_import_source(
     replacement_doc_id = str(body.get("replacement_doc_id") or "").strip()
     replacement_title = str(body.get("replacement_title") or "").strip()
     source_path = resolve_staged_import_source(repo_root, staged_filename)
+    if is_interactive_html_import_asset(source_path):
+        raise ValueError("interactive HTML script files cannot be selected as the primary import source")
     preview = generate_import_preview(
         repo_root,
         source_path=source_path,
         scope=scope,
         include_prompt_meta=include_prompt_meta,
     )
-    interactive_plan = interactive_html_asset_plan(repo_root, source_path, scope)
-    if interactive_plan:
-        preview["interactive_html_plan"] = interactive_plan
-        if interactive_plan.get("target_exists"):
+    interactive_plans = interactive_html_asset_plans(repo_root, scope)
+    if interactive_plans:
+        preview["interactive_html_plans"] = interactive_plans
+        for interactive_plan in interactive_plans:
+            if not interactive_plan.get("target_exists"):
+                continue
             preview.setdefault("warnings", []).append(
                 f"Interactive HTML asset target already exists: {interactive_plan['target_path']}."
             )
@@ -283,18 +331,18 @@ def handle_import_source(
         raise ValueError(f"overwrite_doc_id must match the colliding doc_id {collision_doc.doc_id!r}")
 
     requires_doc_overwrite_confirmation = collision_doc is not None and not (overwrite_doc_id and confirm_overwrite)
-    requires_interactive_html_confirmation = bool(
-        interactive_plan and interactive_plan.get("target_exists") and not confirm_overwrite
-    )
+    existing_interactive_plans = [plan for plan in interactive_plans if plan.get("target_exists")]
+    requires_interactive_html_confirmation = bool(existing_interactive_plans and not confirm_overwrite)
     requires_overwrite_confirmation = requires_doc_overwrite_confirmation or requires_interactive_html_confirmation
     if requires_doc_overwrite_confirmation:
         preview.setdefault("warnings", []).append(
             f"Proposed filename {preview['proposed_doc_id']}.md already exists in {scope}; enter a replacement doc_id before import."
         )
     if requires_interactive_html_confirmation:
-        preview.setdefault("warnings", []).append(
-            f"Interactive HTML asset {interactive_plan['target_path']} already exists; confirm overwrite to replace it."
-        )
+        for interactive_plan in existing_interactive_plans:
+            preview.setdefault("warnings", []).append(
+                f"Interactive HTML asset {interactive_plan['target_path']} already exists; confirm overwrite to replace it."
+            )
 
     if dry_run or preview_only or requires_overwrite_confirmation:
         dependencies.log_event(
@@ -308,7 +356,7 @@ def handle_import_source(
                 "proposed_doc_id": preview["proposed_doc_id"],
                 "collision": collision["exists"],
                 "inline_media_count": len(preview.get("media_plans") or []),
-                "interactive_html_asset": bool(interactive_plan),
+                "interactive_html_asset_count": len(interactive_plans),
                 "requires_overwrite_confirmation": requires_overwrite_confirmation,
                 "requires_doc_overwrite_confirmation": requires_doc_overwrite_confirmation,
                 "requires_interactive_html_confirmation": requires_interactive_html_confirmation,
@@ -332,8 +380,8 @@ def handle_import_source(
             "summary_text": (
                 f"Replacement doc_id required for {preview['proposed_doc_id']}."
                 if requires_doc_overwrite_confirmation
-                else f"Interactive HTML asset overwrite required for {interactive_plan['target_path']}."
-                if requires_interactive_html_confirmation and interactive_plan
+                else interactive_html_overwrite_summary(existing_interactive_plans)
+                if requires_interactive_html_confirmation and existing_interactive_plans
                 else f"Prepared import preview for {staged_filename}."
             ),
             "dry_run": dry_run,
@@ -342,8 +390,8 @@ def handle_import_source(
     backup_dir = None
     rebuild = None
     inline_media_written: list[dict[str, Any]] = []
-    interactive_html_written: Optional[Dict[str, Any]] = None
-    ensure_interactive_html_target_available(interactive_plan, allow_overwrite=confirm_overwrite)
+    interactive_html_written: list[Dict[str, Any]] = []
+    ensure_interactive_html_targets_available(interactive_plans, allow_overwrite=confirm_overwrite)
     if collision_doc is not None:
         source_text = imported_source_text_for_overwrite(preview, collision_doc)
         overwrite_title = str(preview.get("title") or collision_doc.title).strip() or collision_doc.title
@@ -373,9 +421,9 @@ def handle_import_source(
                     import_preview=preview,
                     include_prompt_meta=include_prompt_meta,
                 )
-                interactive_html_written = materialize_interactive_html_asset(
+                interactive_html_written = materialize_interactive_html_assets(
                     repo_root,
-                    interactive_plan,
+                    interactive_plans,
                     allow_overwrite=confirm_overwrite,
                 )
                 write_text_atomic(collision_doc.path, source_text)
@@ -396,7 +444,7 @@ def handle_import_source(
                 "staged_filename": staged_filename,
                 "source_format": preview.get("source_format"),
                 "inline_media_count": len(preview.get("media_plans") or []),
-                "interactive_html_asset": bool(interactive_plan),
+                "interactive_html_asset_count": len(interactive_plans),
                 "doc_id": collision_doc.doc_id,
                 "path": relative_path(repo_root, collision_doc.path),
                 "include_prompt_meta": include_prompt_meta,
@@ -466,9 +514,9 @@ def handle_import_source(
                 import_preview=preview,
                 include_prompt_meta=include_prompt_meta,
             )
-            interactive_html_written = materialize_interactive_html_asset(
+            interactive_html_written = materialize_interactive_html_assets(
                 repo_root,
-                interactive_plan,
+                interactive_plans,
                 allow_overwrite=confirm_overwrite,
             )
             write_text_atomic(target_path, source_text)
@@ -489,7 +537,7 @@ def handle_import_source(
             "staged_filename": staged_filename,
             "source_format": preview.get("source_format"),
             "inline_media_count": len(preview.get("media_plans") or []),
-            "interactive_html_asset": bool(interactive_plan),
+            "interactive_html_asset_count": len(interactive_plans),
             "doc_id": doc_id,
             "path": relative_path(repo_root, target_path),
             "include_prompt_meta": include_prompt_meta,

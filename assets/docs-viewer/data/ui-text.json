@@ -135,6 +135,7 @@
     "result_open_source_failed": "Failed to open source doc.",
     "result_summary_counts": "{links} links, {images} images, {svg} SVG, {details} details blocks",
     "result_markdown_counts": "{chars} chars, {links} links, {images} images",
+    "script_file_result_type": "script file",
     "warnings_heading": "Warnings",
     "collision_heading": "Overwrite warning",
     "collision_body": "This import matches an existing doc target. Confirm overwrite to replace the current source while keeping the same doc identity and filename.",

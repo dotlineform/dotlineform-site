@@ -83,6 +83,8 @@ INLINE_RASTER_EXTENSIONS = {
     "png": "png",
     "webp": "webp",
 }
+DOCS_IMPORT_ROLE_META_NAME = "dlf:docs-import-role"
+INTERACTIVE_HTML_ROLE = "interactive-html"
 
 
 @dataclass(frozen=True)
@@ -185,6 +187,26 @@ def source_format_for_path(path: Path) -> str:
         "staged file must use one of these extensions: "
         f"{', '.join(sorted(SUPPORTED_STAGED_SUFFIXES))}"
     )
+
+
+def html_import_role_for_path(path: Path) -> str:
+    if path.suffix.lower() not in HTML_STAGED_SUFFIXES:
+        return ""
+    source_html = path.read_text(encoding="utf-8", errors="replace")
+    soup = BeautifulSoup(source_html, "lxml")
+    role_meta = soup.find(
+        "meta",
+        attrs={
+            "name": lambda value: str(value or "").strip().lower() == DOCS_IMPORT_ROLE_META_NAME,
+        },
+    )
+    if not role_meta:
+        return ""
+    return str(role_meta.get("content") or "").strip().lower()
+
+
+def is_interactive_html_import_asset(path: Path) -> bool:
+    return html_import_role_for_path(path) == INTERACTIVE_HTML_ROLE
 
 
 @dataclass
@@ -940,6 +962,8 @@ def list_staged_import_source_files(repo_root: Path) -> list[dict[str, Any]]:
         if path.is_file() and path.suffix.lower() in SUPPORTED_STAGED_SUFFIXES
     ]
     for path in sorted(candidates, key=lambda candidate: candidate.name.lower()):
+        if is_interactive_html_import_asset(path):
+            continue
         stat = path.stat()
         files.append(
             {

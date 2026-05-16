@@ -233,6 +233,33 @@ function sourceDocLinkHtml(scope, docId) {
   ].join("");
 }
 
+function resultCountsText(state, preview) {
+  const stats = preview.source_stats && typeof preview.source_stats === "object" ? preview.source_stats : {};
+  if (preview.source_format === "markdown") {
+    return configText(
+      state.config,
+      "docs_html_import.result_markdown_counts",
+      "{chars} chars, {links} links, {images} images",
+      {
+        chars: Number(stats.chars || 0),
+        links: Number(stats.links || 0),
+        images: Number(stats.images || 0)
+      }
+    );
+  }
+  return configText(
+    state.config,
+    "docs_html_import.result_summary_counts",
+    "{links} links, {images} images, {svg} SVG, {details} details blocks",
+    {
+      links: Number(stats.links || 0),
+      images: Number(stats.images || 0),
+      svg: Number(stats.svg || 0),
+      details: Number(stats.details || 0)
+    }
+  );
+}
+
 async function fetchImportFiles(state) {
   const payload = await fetchManagementJson("/docs/import-source-files", "GET", undefined, managementOptions(state));
   return Array.isArray(payload.files) ? payload.files : [];
@@ -296,39 +323,32 @@ function renderResult(state, payload) {
     ? payload.import_preview
     : {};
   setText(state.resultTitleNode, configText(state.config, "docs_html_import.result_title", "Imported"));
-  setHtml(state.resultDocIdNode, sourceDocLinkHtml(payload.scope, payload.doc_id));
-
-  const stats = preview.source_stats && typeof preview.source_stats === "object" ? preview.source_stats : {};
-  if (preview.source_format === "markdown") {
-    setText(
-      state.resultCountsNode,
-      configText(
-        state.config,
-        "docs_html_import.result_markdown_counts",
-        "{chars} chars, {links} links, {images} images",
-        {
-          chars: Number(stats.chars || 0),
-          links: Number(stats.links || 0),
-          images: Number(stats.images || 0)
-        }
-      )
-    );
-  } else {
-    setText(
-      state.resultCountsNode,
-      configText(
-        state.config,
-        "docs_html_import.result_summary_counts",
-        "{links} links, {images} images, {svg} SVG, {details} details blocks",
-        {
-          links: Number(stats.links || 0),
-          images: Number(stats.images || 0),
-          svg: Number(stats.svg || 0),
-          details: Number(stats.details || 0)
-        }
-      )
-    );
-  }
+  const scriptRows = Array.isArray(payload && payload.interactive_html_written)
+    ? payload.interactive_html_written
+    : [];
+  const rows = [
+    [
+      sourceDocLinkHtml(payload.scope, payload.doc_id),
+      escapeHtml(resultCountsText(state, preview))
+    ]
+  ].concat(scriptRows.map((item) => {
+    const displayName = normalizeText(item && item.display_name)
+      || normalizeText(item && item.filename).replace(/\.html$/i, "")
+      || normalizeText(item && item.target_path).split("/").pop().replace(/\.html$/i, "");
+    return [
+      escapeHtml(displayName),
+      escapeHtml(configText(state.config, "docs_html_import.script_file_result_type", "script file"))
+    ];
+  }));
+  setHtml(
+    state.resultGridNode,
+    rows.map((row, index) => (
+      `<div>` +
+        `<dd${index === 0 ? ' id="docsHtmlImportResultDocId"' : ""}>${row[0]}</dd>` +
+        `<dd${index === 0 ? ' id="docsHtmlImportResultCounts"' : ""}>${row[1]}</dd>` +
+      `</div>`
+    )).join("")
+  );
   renderWarnings(state, preview.warnings);
   state.resultNode.hidden = false;
 }
@@ -359,9 +379,12 @@ function renderOverwriteWarning(state, payload) {
   const preview = payload && payload.import_preview && typeof payload.import_preview === "object"
     ? payload.import_preview
     : {};
-  const interactivePlan = preview.interactive_html_plan && typeof preview.interactive_html_plan === "object"
-    ? preview.interactive_html_plan
-    : {};
+  const interactivePlans = Array.isArray(preview.interactive_html_plans)
+    ? preview.interactive_html_plans
+    : [];
+  const interactiveTargetText = interactivePlans.length === 1
+    ? normalizeText(interactivePlans[0] && (interactivePlans[0].target_path || interactivePlans[0].filename))
+    : `${interactivePlans.length} script files`;
   const isInteractiveAssetOverwrite = Boolean(payload && payload.requires_interactive_html_confirmation);
   state.pendingOverwriteDocId = normalizeText(collision.doc_id);
   setText(
@@ -390,7 +413,7 @@ function renderOverwriteWarning(state, payload) {
         "docs_html_import.interactive_asset_overwrite_required",
         "Interactive asset overwrite required: {path}. Review the warning and confirm if you want to replace it.",
         {
-          path: interactivePlan.target_path || interactivePlan.filename || ""
+          path: interactiveTargetText
         }
       )
       : configText(
@@ -550,6 +573,7 @@ export async function initDocsHtmlImport(options = {}) {
     collisionMetaNode: document.getElementById("docsHtmlImportCollisionMeta"),
     resultNode: document.getElementById("docsHtmlImportResult"),
     resultTitleNode: document.getElementById("docsHtmlImportResultTitle"),
+    resultGridNode: document.getElementById("docsHtmlImportResultGrid"),
     resultDocIdNode: document.getElementById("docsHtmlImportResultDocId"),
     resultCountsNode: document.getElementById("docsHtmlImportResultCounts"),
     warningsWrap: document.getElementById("docsHtmlImportWarnings"),
@@ -586,6 +610,7 @@ export async function initDocsHtmlImport(options = {}) {
     state.collisionMetaNode,
     state.resultNode,
     state.resultTitleNode,
+    state.resultGridNode,
     state.resultDocIdNode,
     state.resultCountsNode,
     state.warningsWrap,
@@ -719,7 +744,7 @@ export async function initDocsHtmlImport(options = {}) {
     state.runButton.addEventListener("click", () => {
       runImport(state).catch((error) => console.warn("docs_html_import: unexpected import failure", error));
     });
-    state.resultDocIdNode.addEventListener("click", (event) => {
+    state.resultGridNode.addEventListener("click", (event) => {
       const target = event.target && event.target.closest
         ? event.target
         : event.target && event.target.parentElement
@@ -728,7 +753,7 @@ export async function initDocsHtmlImport(options = {}) {
       const link = target && target.closest
         ? target.closest("[data-doc-source-link]")
         : null;
-      if (!link || !state.resultDocIdNode.contains(link)) return;
+      if (!link || !state.resultGridNode.contains(link)) return;
       event.preventDefault();
       openResultSource(state, link).catch((error) => console.warn("docs_html_import: unexpected open source failure", error));
     });

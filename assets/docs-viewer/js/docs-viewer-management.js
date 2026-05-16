@@ -1022,6 +1022,8 @@ export function initDocsViewerManagement(context) {
           setManagementMessage(blockerText, true);
           return null;
         }
+        setManagementBusy(false);
+        setManagementMessage("", false);
         return openDocsViewerConfirmModal({
           root: root,
           title: state.managementText.deleteConfirmTitle,
@@ -1033,6 +1035,7 @@ export function initDocsViewerManagement(context) {
             setManagementMessage("", false);
             return null;
           }
+          setManagementBusy(true);
           setManagementMessage("Deleting " + doc.title + "...", false);
           return applyManagedDocDelete(doc.doc_id, managementClientOptions());
         });

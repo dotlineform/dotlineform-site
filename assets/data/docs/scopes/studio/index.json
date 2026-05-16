@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T12:52:02Z",
+  "generated_at": "2026-05-16T14:06:27Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -555,7 +555,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 9640
+      "content_text_length": 10160
     },
     {
       "scope": "studio",

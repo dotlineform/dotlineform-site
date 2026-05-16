@@ -633,6 +633,268 @@ def run_filename_conflict_check(page: Page) -> None:
         raise AssertionError("filename-conflict modal did not return focus to opener")
 
 
+def run_import_result_rows_check(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <main id="docsHtmlImportRoot" data-management-base-url="http://docs-management.test">
+                <p id="docsHtmlImportIntro"></p>
+                <label><span id="docsHtmlImportFileLabel"></span><select id="docsHtmlImportFileSelect"></select></label>
+                <label><span id="docsHtmlImportScopeLabel"></span><select id="docsHtmlImportScopeSelect"></select></label>
+                <label id="docsHtmlImportIncludePromptMetaWrap">
+                  <input type="checkbox" id="docsHtmlImportIncludePromptMeta">
+                  <span id="docsHtmlImportIncludePromptMetaLabel"></span>
+                </label>
+                <p id="docsHtmlImportIncludePromptMetaHint"></p>
+                <button id="docsHtmlImportRun" type="button"></button>
+                <button id="docsHtmlImportConfirm" type="button" hidden></button>
+                <button id="docsHtmlImportCancel" type="button" hidden></button>
+                <p id="docsHtmlImportStatus"></p>
+                <div id="docsHtmlImportWarning" hidden>
+                  <h3 id="docsHtmlImportCollisionHeading"></h3>
+                  <p id="docsHtmlImportCollisionBody"></p>
+                  <p id="docsHtmlImportCollisionMeta"></p>
+                </div>
+                <div id="docsHtmlImportResult" hidden>
+                  <h3 id="docsHtmlImportResultTitle"></h3>
+                  <dl id="docsHtmlImportResultGrid" class="docsViewerImport__resultGrid">
+                    <div>
+                      <dd id="docsHtmlImportResultDocId"></dd>
+                      <dd id="docsHtmlImportResultCounts"></dd>
+                    </div>
+                  </dl>
+                  <div id="docsHtmlImportWarnings" hidden>
+                    <h4 id="docsHtmlImportWarningsHeading"></h4>
+                    <ul id="docsHtmlImportWarningsList"></ul>
+                  </div>
+                </div>
+              </main>
+              <p id="docsHtmlImportBootStatus">loading docs import...</p>
+            `;
+            const responses = {
+                '/assets/docs-viewer/data/ui-text.json': {
+                    docs_html_import: {
+                        script_file_result_type: 'script file'
+                    }
+                },
+                '/assets/docs-viewer/data/docs-viewer-config.json': {
+                    schema_version: 'docs_viewer_config_v1',
+                    scopes: [{ scope_id: 'library' }]
+                },
+                'http://docs-management.test/health': { ok: true },
+                'http://docs-management.test/docs/import-source-files': {
+                    ok: true,
+                    files: [{ filename: 'source.html', source_format: 'html' }]
+                },
+                'http://docs-management.test/docs/import-source': {
+                    ok: true,
+                    scope: 'library',
+                    doc_id: 'source',
+                    import_preview: {
+                        source_format: 'html',
+                        source_stats: {
+                            links: 1,
+                            images: 2,
+                            svg: 0,
+                            details: 0
+                        },
+                        warnings: []
+                    },
+                    interactive_html_written: [
+                        { display_name: 'widget-one', result_type: 'script file' },
+                        { display_name: 'widget-two', result_type: 'script file' }
+                    ],
+                    summary_text: 'Created source from source.html. Copied 2 interactive HTML script files.'
+                }
+            };
+            window.fetch = async (url) => {
+                const key = String(url);
+                if (!Object.prototype.hasOwnProperty.call(responses, key)) {
+                    throw new Error(`unexpected fetch: ${key}`);
+                }
+                return {
+                    ok: true,
+                    status: 200,
+                    json: async () => responses[key]
+                };
+            };
+            const module = await import('/assets/docs-viewer/js/docs-html-import.js');
+            await module.initDocsHtmlImport({
+                root: document.getElementById('docsHtmlImportRoot'),
+                bootStatus: document.getElementById('docsHtmlImportBootStatus'),
+                docsViewerConfigUrl: '/assets/docs-viewer/data/docs-viewer-config.json',
+                uiTextUrl: '/assets/docs-viewer/data/ui-text.json',
+                managementBaseUrl: 'http://docs-management.test',
+                persistScope: false
+            });
+            document.getElementById('docsHtmlImportRun').click();
+        }"""
+    )
+    page.wait_for_function("() => !document.getElementById('docsHtmlImportResult').hidden")
+    rows = page.locator("#docsHtmlImportResultGrid").evaluate(
+        """grid => Array.from(grid.querySelectorAll('dd')).map(node => node.textContent.trim())"""
+    )
+    expected = [
+        "source",
+        "1 links, 2 images, 0 SVG, 0 details blocks",
+        "widget-one",
+        "script file",
+        "widget-two",
+        "script file",
+    ]
+    if rows != expected:
+        raise AssertionError(f"import result rows did not render as expected: {rows!r}")
+
+
+def run_delete_confirm_idle_check(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <main id="docsViewerRoot" class="docsViewer" data-management-busy="false">
+                <div id="docsViewerManageRow">
+                  <div class="docsViewer__manageActions">
+                    <button id="docsViewerManageActionsButton" type="button">Actions</button>
+                    <div id="docsViewerManageActionsMenu" hidden>
+                      <button id="docsViewerManageDeleteButton" type="button">Delete</button>
+                    </div>
+                    <button id="docsViewerManageRebuildButton" type="button">Rebuild</button>
+                    <button id="docsViewerManageSettingsButton" type="button">Settings</button>
+                    <button id="docsViewerManageNewScopeButton" type="button">New scope</button>
+                    <button id="docsViewerManageDeleteScopeButton" type="button">Delete scope</button>
+                    <button id="docsViewerManageImportButton" type="button">Import</button>
+                    <button id="docsViewerManageNewButton" type="button">New</button>
+                    <button id="docsViewerManageEditButton" type="button">Edit</button>
+                    <button id="docsViewerManageArchiveButton" type="button">Archive</button>
+                    <button id="docsViewerManageViewableButton" type="button">Show</button>
+                  </div>
+                </div>
+                <button id="docsViewerIndexUndoButton" type="button">Undo</button>
+                <label class="docsViewer__draftLabel"><input id="docsViewerDraftToggle" type="checkbox"> show hidden</label>
+                <nav id="docsViewerNav"></nav>
+                <p id="docsViewerStatus"></p>
+              </main>
+            `;
+
+            const root = document.getElementById('docsViewerRoot');
+            const nav = document.getElementById('docsViewerNav');
+            const status = document.getElementById('docsViewerStatus');
+            const doc = {
+                doc_id: 'current-doc',
+                title: 'Current Doc',
+                parent_id: '',
+                sort_order: 1,
+                hidden: false
+            };
+            const state = {
+                allDocs: [doc],
+                docsById: new Map([['current-doc', doc]]),
+                childrenByParent: new Map(),
+                payloadCache: new Map(),
+                searchEntries: [],
+                selectedDocId: 'current-doc',
+                managementMode: true,
+                managementChecked: true,
+                managementAvailable: true,
+                managementBusy: false,
+                managementCapabilities: {
+                    scopes: {
+                        studio: {
+                            available: true,
+                            archive_available: true
+                        }
+                    }
+                },
+                managementText: {
+                    archiveUnavailableNote: 'Archive unavailable.',
+                    cancelButton: 'Cancel',
+                    checkingNote: 'Checking manage mode...',
+                    clearSearchNote: 'Clear search to manage the current doc.',
+                    deleteConfirmButton: 'Delete',
+                    deleteConfirmTitle: 'Confirm delete',
+                    serverNotConfiguredError: 'Server unavailable.',
+                    unavailableNote: 'Manage mode unavailable.',
+                    undoMoveLabel: 'Undo move'
+                },
+                searchRouteActive: false,
+                showHidden: true,
+                uiStatuses: [],
+                moveUndo: null,
+                managementMessage: '',
+                managementMessageIsError: false,
+                managementStatusOwnsViewerStatus: false,
+                statusMenuOpen: false
+            };
+            window.__docsViewerDeletePreviewCalls = 0;
+            window.fetch = (url, options) => {
+                if (!String(url).endsWith('/docs/delete-preview')) {
+                    return Promise.reject(new Error(`unexpected fetch: ${url}`));
+                }
+                window.__docsViewerDeletePreviewCalls += 1;
+                return new Promise(resolve => {
+                    window.setTimeout(() => {
+                        resolve({
+                            ok: true,
+                            status: 200,
+                            json: () => Promise.resolve({
+                                ok: true,
+                                allowed: true,
+                                title: 'Current Doc',
+                                warnings: [],
+                                inbound_refs: []
+                            })
+                        });
+                    }, 20);
+                });
+            };
+            const management = await import('/assets/docs-viewer/js/docs-viewer-management.js');
+            const controller = management.initDocsViewerManagement({
+                root,
+                nav,
+                state,
+                MANAGEMENT_MODE: 'manage',
+                managementBaseUrl: 'http://docs-management.test',
+                getCurrentMode: () => 'manage',
+                currentViewerConfig: () => ({}),
+                getConfigValue: () => undefined,
+                getConfigText: (_config, _path, fallback) => fallback || '',
+                formatText: (template, tokens = {}) => String(template || '').replace(/\\{(\\w+)\\}/g, (_match, key) => tokens[key] || ''),
+                setStatus: (message, isError) => {
+                    status.textContent = message || '';
+                    status.dataset.state = isError ? 'error' : 'idle';
+                },
+                viewerScope: () => 'studio',
+                cssEscape: value => CSS.escape(value),
+                renderSidebar: () => {},
+                renderBookmarkUi: () => {}
+            });
+            controller.render();
+            document.getElementById('docsViewerManageDeleteButton').click();
+            window.__docsViewerDeleteBusyDuringPreview = root.dataset.managementBusy;
+        }"""
+    )
+    if page.evaluate("window.__docsViewerDeleteBusyDuringPreview") != "true":
+        raise AssertionError("delete preview did not mark management busy before the modal")
+    page.wait_for_selector('[data-role="docs-viewer-management-modal"]')
+    state = page.locator("#docsViewerRoot").evaluate(
+        """root => {
+            const modal = document.querySelector('[data-role="docs-viewer-management-modal"]');
+            const title = modal ? modal.querySelector('.docsViewer__modalTitle') : null;
+            return {
+                busy: root.dataset.managementBusy,
+                cursor: getComputedStyle(root).cursor,
+                previewCalls: window.__docsViewerDeletePreviewCalls,
+                title: title ? title.textContent.trim() : ''
+            };
+        }"""
+    )
+    if state["title"] != "Confirm delete":
+        raise AssertionError(f"delete confirmation modal did not open: {state!r}")
+    if state["previewCalls"] != 1:
+        raise AssertionError(f"delete preview request count changed: {state!r}")
+    if state["busy"] != "false" or state["cursor"] == "progress":
+        raise AssertionError(f"delete confirmation should not leave the viewer busy: {state!r}")
+
+
 def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) -> dict[str, object]:
     page.set_viewport_size(viewport)
     page.goto(route_url(base_url, "/assets/docs-viewer/css/docs-viewer-management.css"), wait_until="domcontentloaded")
@@ -644,6 +906,8 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
     run_transient_text_check(page)
     run_transient_choice_check(page)
     run_filename_conflict_check(page)
+    run_import_result_rows_check(page)
+    run_delete_confirm_idle_check(page)
     return {
         "width": viewport["width"],
         "height": viewport["height"],
@@ -655,6 +919,8 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
             "transient-text",
             "transient-choice",
             "filename-conflict",
+            "import-result-rows",
+            "delete-confirm-idle",
         ],
     }
 
