@@ -5,7 +5,7 @@ added_date: 2026-04-19
 last_updated: "2026-05-09 16:00"
 ui_status: done
 parent_id: archive
-sort_order: 410
+sort_order: 47000
 ---
 # Docs Viewer Favourites Spec
 

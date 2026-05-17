@@ -5,7 +5,7 @@ added_date: 2026-05-01
 last_updated: "2026-05-11 13:03"
 ui_status: done
 parent_id: site-request-moment-source-cleanup
-sort_order: 10
+sort_order: 1000
 hidden: false
 ---
 # Inventory

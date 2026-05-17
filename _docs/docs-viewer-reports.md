@@ -2,9 +2,9 @@
 doc_id: docs-viewer-reports
 title: Docs Viewer Reports
 added_date: 2026-05-13
-last_updated: "2026-05-14"
+last_updated: 2026-05-14
 parent_id: docs-viewer
-sort_order: 50
+sort_order: 8000
 viewer_report: reports_list
 viewer_report_access: public
 ---

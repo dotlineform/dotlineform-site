@@ -4,7 +4,7 @@ title: Scoped JSON Catalogue Build
 added_date: 2026-04-18
 last_updated: "2026-05-12 18:45"
 parent_id: catalogue
-sort_order: 150
+sort_order: 12000
 ---
 # Scoped JSON Catalogue Build
 

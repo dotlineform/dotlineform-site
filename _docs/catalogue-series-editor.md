@@ -1,10 +1,10 @@
 ---
 doc_id: catalogue-series-editor
-title: "Catalogue Series Editor"
+title: Catalogue Series Editor
 added_date: 2026-04-22
 last_updated: 2026-05-10
 parent_id: user-guide
-sort_order: 70
+sort_order: 5000
 ---
 # Catalogue Series Editor
 

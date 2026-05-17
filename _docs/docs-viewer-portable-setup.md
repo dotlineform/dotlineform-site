@@ -2,9 +2,9 @@
 doc_id: docs-viewer-portable-setup
 title: Docs Viewer Portable Setup
 added_date: 2026-05-11
-last_updated: "2026-05-14"
+last_updated: 2026-05-14
 parent_id: docs-viewer
-sort_order: 30
+sort_order: 3000
 ---
 # Docs Viewer Portable Setup
 

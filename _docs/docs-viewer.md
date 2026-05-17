@@ -2,9 +2,9 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: "2026-05-15"
+last_updated: 2026-05-15
 parent_id: ""
-sort_order: 40
+sort_order: 9000
 hidden: false
 ---
 # Docs Viewer

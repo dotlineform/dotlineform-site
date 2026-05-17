@@ -4,7 +4,7 @@ title: Catalogue Scope
 added_date: 2026-04-01
 last_updated: "2026-05-09 21:28"
 parent_id: catalogue
-sort_order: 20
+sort_order: 1000
 ---
 # Catalogue Scope
 

@@ -1,11 +1,11 @@
 ---
 doc_id: site-request-json-schema-adoption
-title: "JSON Schema Adoption Request"
+title: JSON Schema Adoption Request
 added_date: "2026-05-03 14:35"
 last_updated: "2026-05-03 14:35"
 ui_status: in-progress
 parent_id: change-requests
-sort_order: 45
+sort_order: 3000
 ---
 # JSON Schema Adoption Request
 

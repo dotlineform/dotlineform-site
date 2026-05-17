@@ -1,13 +1,12 @@
 ---
 doc_id: regression-checklist
-title: "Studio Regression Checklist"
+title: Studio Regression Checklist
 added_date: 2026-03-28
 last_updated: "2026-05-09 16:00"
 parent_id: archive
-sort_order: 80
+sort_order: 21000
 published: false
 ---
-
 # Studio Regression Checklist
 
 Use `Pass`, `Fail`, or `N/A` for each item.

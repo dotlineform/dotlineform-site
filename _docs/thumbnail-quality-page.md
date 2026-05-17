@@ -2,9 +2,9 @@
 doc_id: thumbnail-quality-page
 title: Thumbnail Quality Page
 added_date: 2026-05-12
-last_updated: "2026-05-12"
+last_updated: 2026-05-12
 parent_id: catalogue
-sort_order: 125
+sort_order: 9000
 ---
 # Thumbnail Quality Page
 

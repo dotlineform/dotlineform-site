@@ -4,7 +4,7 @@ title: Docs Viewer Builder
 added_date: 2026-04-23
 last_updated: "2026-05-16 13:35"
 parent_id: docs-viewer
-sort_order: 150
+sort_order: 20000
 ---
 # Docs Viewer Builder
 

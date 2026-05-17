@@ -4,7 +4,7 @@ title: Site Change Log Guidance
 added_date: 2026-03-31
 last_updated: "2026-05-06 20:58"
 parent_id: site-change-log
-sort_order: 10
+sort_order: 1000
 ---
 # Site Change Log Guidance
 

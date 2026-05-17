@@ -1,10 +1,10 @@
 ---
 doc_id: llm-dimension
-title: "LLM-Assisted Dimension Recommendation"
+title: LLM-Assisted Dimension Recommendation
 added_date: 2026-04-16
 last_updated: 2026-04-16
 parent_id: llm
-sort_order: 10
+sort_order: 1000
 ---
 # LLM-Assisted Dimension Recommendation
 Draft workflow note for semantic support in portfolio scoring

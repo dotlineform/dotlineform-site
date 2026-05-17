@@ -2,9 +2,9 @@
 doc_id: studio-works
 title: Catalogue Works
 added_date: 2026-04-01
-last_updated: "2026-05-07"
+last_updated: 2026-05-07
 parent_id: catalogue
-sort_order: 60
+sort_order: 3000
 ---
 # Catalogue Works
 

@@ -1,10 +1,10 @@
 ---
 doc_id: ui-pattern-column-links
-title: "Column Links Pattern"
+title: Column Links Pattern
 added_date: 2026-05-05
-last_updated: "2026-05-15"
+last_updated: 2026-05-15
 parent_id: ui-catalogue
-sort_order: 120
+sort_order: 7000
 ---
 # Column Links Pattern
 

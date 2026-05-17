@@ -4,7 +4,7 @@ title: Legacy Title Sort Fix
 added_date: 2026-03-31
 last_updated: "2026-05-09 21:28"
 parent_id: archive
-sort_order: 240
+sort_order: 31000
 ---
 # Legacy Title Sort Fix
 

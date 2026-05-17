@@ -5,7 +5,7 @@ added_date: 2026-05-09
 last_updated: "2026-05-09 21:28"
 ui_status: done
 parent_id: site-request-script-structural-review
-sort_order: 50
+sort_order: 5000
 viewable: true
 ---
 # Catalogue JSON Build Slices

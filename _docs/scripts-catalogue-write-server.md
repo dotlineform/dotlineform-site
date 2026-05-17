@@ -4,7 +4,7 @@ title: Catalogue Write Server
 added_date: 2026-04-22
 last_updated: "2026-05-09 21:28"
 parent_id: servers
-sort_order: 40
+sort_order: 4000
 ---
 # Catalogue Write Server
 

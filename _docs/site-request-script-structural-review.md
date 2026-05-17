@@ -5,7 +5,7 @@ added_date: 2026-05-08
 last_updated: "2026-05-09 21:45"
 ui_status: done
 parent_id: archive
-sort_order: 570
+sort_order: 63000
 viewable: true
 ---
 # Script Structural Review Request

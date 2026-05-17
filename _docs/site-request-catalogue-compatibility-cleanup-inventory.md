@@ -4,7 +4,7 @@ title: Inventory
 added_date: 2026-05-01
 last_updated: 2026-05-01
 parent_id: site-request-catalogue-compatibility-cleanup
-sort_order: 10
+sort_order: 1000
 ---
 # Inventory
 

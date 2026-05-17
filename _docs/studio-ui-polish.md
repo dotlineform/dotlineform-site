@@ -1,12 +1,11 @@
 ---
 doc_id: new-pipeline-studio-ui-polish
-title: "Studio UI Polish"
+title: Studio UI Polish
 added_date: 2026-04-19
 last_updated: 2026-04-19
 parent_id: archive
-sort_order: 61
+sort_order: 19000
 ---
-
 # Studio UI Polish
 
 This document has been folded into [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules).

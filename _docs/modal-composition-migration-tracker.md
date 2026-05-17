@@ -5,7 +5,7 @@ added_date: 2026-05-15
 last_updated: 2026-05-15
 ui_status: done
 parent_id: ui-request-modal-composition-pattern
-sort_order: 20
+sort_order: 2000
 hidden: false
 ---
 # Modal Composition Migration Tracker

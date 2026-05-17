@@ -2,9 +2,9 @@
 doc_id: studio-ui-rules
 title: Studio UI Rules And Decision Log
 added_date: 2026-04-24
-last_updated: "2026-05-13"
+last_updated: 2026-05-13
 parent_id: ui
-sort_order: 50
+sort_order: 5000
 ---
 # Studio UI Rules And Decision Log
 

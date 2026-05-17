@@ -4,7 +4,7 @@ title: Data Sharing Adapters
 added_date: "2026-05-06 11:35"
 last_updated: "2026-05-13 18:15"
 parent_id: data-sharing
-sort_order: 30
+sort_order: 3000
 hidden: false
 ---
 # Data Sharing Adapters

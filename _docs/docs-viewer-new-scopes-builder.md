@@ -2,9 +2,9 @@
 doc_id: docs-viewer-new-scopes-builder
 title: New Scopes Builder
 added_date: 2026-05-15
-last_updated: "2026-05-15"
+last_updated: 2026-05-15
 parent_id: docs-viewer
-sort_order: 45
+sort_order: 5500
 hidden: false
 ---
 # New Scopes Builder

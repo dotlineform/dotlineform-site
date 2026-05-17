@@ -1,12 +1,11 @@
 ---
 doc_id: new-pipeline-refine-search
-title: "Search Plan"
+title: Search Plan
 added_date: 2026-04-18
-last_updated: "2026-05-11"
+last_updated: 2026-05-11
 parent_id: archive
-sort_order: 62
+sort_order: 20000
 ---
-
 # Search Plan
 
 Archived: current Search documentation lives under [Search](/docs/?scope=studio&doc=search).

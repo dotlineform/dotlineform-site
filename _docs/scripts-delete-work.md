@@ -1,12 +1,11 @@
 ---
 doc_id: scripts-delete-work
-title: "Delete Work"
+title: Delete Work
 added_date: 2026-04-18
 last_updated: 2026-05-01
 parent_id: archive
-sort_order: 60
+sort_order: 16000
 ---
-
 # Deprecated: Delete Work
 
 Status:

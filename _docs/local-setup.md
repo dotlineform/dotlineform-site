@@ -4,7 +4,7 @@ title: Local Setup
 added_date: 2026-04-13
 last_updated: "2026-05-09 21:28"
 parent_id: site-docs
-sort_order: 30
+sort_order: 2000
 ---
 # Local Setup
 

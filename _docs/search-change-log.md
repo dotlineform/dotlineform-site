@@ -2,9 +2,9 @@
 doc_id: search-change-log
 title: Search Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-11"
+last_updated: 2026-05-11
 parent_id: search
-sort_order: 140
+sort_order: 14000
 ---
 # Search Change Log
 

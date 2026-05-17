@@ -1,12 +1,11 @@
 ---
 doc_id: scripts-generate-work-pages
-title: "Generate Work Pages"
+title: Generate Work Pages
 added_date: 2026-04-19
 last_updated: "2026-05-09 21:28"
 parent_id: archive
-sort_order: 50
+sort_order: 13000
 ---
-
 # Deprecated: Generate Work Pages
 
 Status:

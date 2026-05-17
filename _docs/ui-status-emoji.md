@@ -5,7 +5,7 @@ added_date: 2026-05-02
 last_updated: "2026-05-11 17:50"
 ui_status: done
 parent_id: archive
-sort_order: 320
+sort_order: 38000
 ---
 # UI Status Emoji
 

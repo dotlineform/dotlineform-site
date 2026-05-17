@@ -1,10 +1,10 @@
 ---
 doc_id: ui-primitive-modal-shell
-title: "Modal Shell Primitive"
+title: Modal Shell Primitive
 added_date: 2026-05-15
-last_updated: "2026-05-15"
+last_updated: 2026-05-15
 parent_id: ui-catalogue
-sort_order: 50
+sort_order: 5000
 ---
 # Modal Shell Primitive
 

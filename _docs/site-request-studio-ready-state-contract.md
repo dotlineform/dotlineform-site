@@ -2,10 +2,10 @@
 doc_id: site-request-studio-ready-state-contract
 title: Studio Ready State Contract Request
 added_date: 2026-05-01
-last_updated: "2026-05-15"
+last_updated: 2026-05-15
 ui_status: done
 parent_id: archive
-sort_order: 350
+sort_order: 41000
 ---
 # Studio Ready State Contract Request
 

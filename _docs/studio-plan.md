@@ -1,13 +1,12 @@
 ---
 doc_id: studio-plan
-title: "Implementation Plan"
+title: Implementation Plan
 added_date: 2026-03-28
 last_updated: "2026-05-09 16:00"
 parent_id: archive
-sort_order: 90
+sort_order: 22000
 published: false
 ---
-
 **Phase 1 Task List**
 
 This is the concrete implementation plan for the first pass.

@@ -4,7 +4,7 @@ title: Search Change Log Guidance
 added_date: 2026-03-31
 last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 130
+sort_order: 13000
 ---
 # Search Change Log Guidance
 

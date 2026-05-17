@@ -5,7 +5,7 @@ added_date: 2026-04-29
 last_updated: 2026-04-29
 ui_status: done
 parent_id: archive
-sort_order: 510
+sort_order: 57000
 ---
 # Catalogue Publication Workflow Request
 

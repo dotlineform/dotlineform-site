@@ -4,7 +4,7 @@ title: Search Build Pipeline
 added_date: 2026-04-23
 last_updated: "2026-05-11 21:30"
 parent_id: search
-sort_order: 80
+sort_order: 8000
 ---
 # Search Build Pipeline
 

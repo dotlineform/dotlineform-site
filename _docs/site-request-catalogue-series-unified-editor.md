@@ -5,7 +5,7 @@ added_date: 2026-04-29
 last_updated: 2026-05-02
 ui_status: done
 parent_id: archive
-sort_order: 490
+sort_order: 55000
 ---
 # Catalogue Series Unified Editor Request
 

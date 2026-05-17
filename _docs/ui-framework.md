@@ -4,7 +4,7 @@ title: UI Framework
 added_date: 2026-04-24
 last_updated: "2026-05-11 14:10"
 parent_id: ui
-sort_order: 10
+sort_order: 1000
 ---
 # UI Framework
 

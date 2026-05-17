@@ -5,7 +5,7 @@ added_date: 2026-05-07
 last_updated: "2026-05-08 00:00"
 ui_status: urgent
 parent_id: change-requests
-sort_order: 206
+sort_order: 6000
 ---
 # R2 Media Upload Automation Request
 

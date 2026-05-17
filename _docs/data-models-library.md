@@ -2,9 +2,9 @@
 doc_id: data-models-library
 title: Library Scope
 added_date: 2026-03-31
-last_updated: "2026-05-11"
+last_updated: 2026-05-11
 parent_id: library
-sort_order: 10
+sort_order: 1000
 ---
 # Library Scope
 

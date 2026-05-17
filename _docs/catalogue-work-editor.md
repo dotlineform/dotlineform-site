@@ -1,10 +1,10 @@
 ---
 doc_id: catalogue-work-editor
-title: "Catalogue Work Editor"
+title: Catalogue Work Editor
 added_date: 2026-04-22
 last_updated: "2026-05-10 21:10"
 parent_id: user-guide
-sort_order: 30
+sort_order: 3000
 ---
 # Catalogue Work Editor
 

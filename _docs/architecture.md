@@ -4,7 +4,7 @@ title: Architecture
 added_date: 2026-03-31
 last_updated: "2026-05-06 20:49"
 parent_id: ""
-sort_order: 80
+sort_order: 15000
 ---
 # Architecture
 

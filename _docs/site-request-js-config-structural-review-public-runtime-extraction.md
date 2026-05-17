@@ -5,7 +5,7 @@ added_date: 2026-05-10
 last_updated: "2026-05-10 17:25"
 ui_status: done
 parent_id: site-request-js-config-structural-review
-sort_order: 50
+sort_order: 5000
 hidden: false
 ---
 # Public Runtime Extraction Slice

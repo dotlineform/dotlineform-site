@@ -4,7 +4,7 @@ title: Catalogue Field Registry Verification
 added_date: 2026-05-01
 last_updated: "2026-05-09 21:28"
 parent_id: catalogue
-sort_order: 80
+sort_order: 5000
 ---
 # Catalogue Field Registry Verification
 

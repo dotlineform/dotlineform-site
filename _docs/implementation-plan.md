@@ -1,12 +1,11 @@
 ---
 doc_id: new-pipeline-implementation-plan
-title: "Implementation Plan"
+title: Implementation Plan
 added_date: 2026-04-18
 last_updated: 2026-05-01
 parent_id: archive
-sort_order: 40
+sort_order: 12000
 ---
-
 # Implementation Plan
 
 Archived: this phased migration record is retained as historical context. Current behavior lives in the Studio, scripts, data-model, and site-change-log docs.

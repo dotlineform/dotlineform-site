@@ -1,12 +1,11 @@
 ---
 doc_id: scripts-copy-draft-media
-title: "Copy Draft Media"
+title: Copy Draft Media
 added_date: 2026-04-18
 last_updated: 2026-05-01
 parent_id: archive
-sort_order: 30
+sort_order: 10000
 ---
-
 # Deprecated: Copy Draft Media
 
 Status:

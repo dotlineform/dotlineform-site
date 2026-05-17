@@ -4,7 +4,7 @@ title: Search Index Schema
 added_date: 2026-04-01
 last_updated: "2026-05-11 12:50"
 parent_id: search
-sort_order: 30
+sort_order: 3000
 ---
 # Search Index Schema
 

@@ -5,7 +5,7 @@ added_date: 2026-05-14
 last_updated: 2026-05-15
 ui_status: done
 parent_id: archive
-sort_order: 640
+sort_order: 70000
 hidden: false
 ---
 # Docs Viewer New Scope Button Request

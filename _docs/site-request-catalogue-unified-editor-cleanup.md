@@ -5,7 +5,7 @@ added_date: 2026-04-29
 last_updated: 2026-05-03
 ui_status: done
 parent_id: archive
-sort_order: 520
+sort_order: 58000
 ---
 # Catalogue Unified Editor Cleanup Request
 

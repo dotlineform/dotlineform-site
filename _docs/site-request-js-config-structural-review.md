@@ -5,7 +5,7 @@ added_date: 2026-05-10
 last_updated: "2026-05-10 19:10"
 ui_status: done
 parent_id: archive
-sort_order: 610
+sort_order: 67000
 hidden: false
 ---
 # JavaScript And Browser Config Structural Review Request

@@ -1,12 +1,11 @@
 ---
 doc_id: docs-viewer-overview
-title: "Overview"
+title: Overview
 added_date: 2026-04-24
-last_updated: "2026-05-14"
+last_updated: 2026-05-14
 parent_id: docs-viewer
-sort_order: 10
+sort_order: 1000
 ---
-
 # Docs Viewer Overview
 
 ## Purpose

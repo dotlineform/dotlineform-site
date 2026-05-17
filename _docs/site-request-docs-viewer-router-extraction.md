@@ -5,7 +5,7 @@ added_date: 2026-05-14
 last_updated: 2026-05-14
 ui_status: done
 parent_id: archive
-sort_order: 620
+sort_order: 68000
 hidden: false
 ---
 # Docs Viewer Router Extraction Request

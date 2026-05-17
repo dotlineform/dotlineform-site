@@ -4,7 +4,7 @@ title: Generic LLM Helper Pattern
 added_date: 2026-04-16
 last_updated: 2026-04-16
 parent_id: llm
-sort_order: 11
+sort_order: 2000
 ---
 # Generic LLM Helper Pattern
 Draft note for structured semantic orchestration

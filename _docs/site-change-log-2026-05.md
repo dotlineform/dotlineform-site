@@ -4,7 +4,7 @@ title: "Site Change Log Archive: May 2026"
 added_date: 2026-05-06
 last_updated: "2026-05-06 20:58"
 parent_id: site-change-log
-sort_order: 20
+sort_order: 2000
 ---
 # Site Change Log Archive: May 2026
 

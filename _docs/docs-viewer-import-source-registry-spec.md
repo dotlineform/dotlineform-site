@@ -4,7 +4,7 @@ title: Docs Viewer Import Source Registry Spec
 added_date: 2026-05-14
 last_updated: "2026-05-14 16:32"
 parent_id: docs-viewer
-sort_order: 120
+sort_order: 17000
 ---
 # Docs Viewer Import Source Registry Spec
 

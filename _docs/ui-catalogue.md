@@ -2,9 +2,9 @@
 doc_id: ui-catalogue
 title: UI Catalogue
 added_date: 2026-04-21
-last_updated: "2026-05-15"
+last_updated: 2026-05-15
 parent_id: ""
-sort_order: 70
+sort_order: 12000
 ---
 # UI Catalogue
 

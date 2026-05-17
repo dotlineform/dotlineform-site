@@ -4,7 +4,7 @@ title: Route-Anchor Collection Stubs Spec
 added_date: 2026-04-30
 last_updated: 2026-04-30
 parent_id: site-request-field-aware-build-scoping
-sort_order: 5
+sort_order: 1000
 ---
 # Route-Anchor Collection Stubs Spec
 

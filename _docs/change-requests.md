@@ -2,9 +2,9 @@
 doc_id: change-requests
 title: Change Requests
 added_date: 2026-04-28
-last_updated: "2026-05-14"
+last_updated: 2026-05-14
 parent_id: ""
-sort_order: 220
+sort_order: 23000
 ---
 # Change Requests
 

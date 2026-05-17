@@ -5,7 +5,7 @@ added_date: 2026-05-08
 last_updated: "2026-05-09 21:28"
 ui_status: done
 parent_id: site-request-script-structural-review
-sort_order: 10
+sort_order: 1000
 viewable: true
 ---
 # Catalogue Write Server Slices

@@ -2,9 +2,9 @@
 doc_id: studio-ui-conformance
 title: Studio UI Conformance Spec
 added_date: 2026-04-21
-last_updated: "2026-05-15"
+last_updated: 2026-05-15
 parent_id: ui
-sort_order: 40
+sort_order: 4000
 ---
 # Studio UI Conformance Spec
 

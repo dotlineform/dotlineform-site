@@ -5,7 +5,7 @@ added_date: 2026-05-11
 last_updated: "2026-05-12 10:55"
 ui_status: in-progress
 parent_id: change-requests
-sort_order: 27
+sort_order: 1000
 hidden: false
 ---
 # Portable Docs Viewer Request

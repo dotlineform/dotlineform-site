@@ -1,12 +1,11 @@
 ---
 doc_id: new-pipeline-web-system-spec
-title: "Web System Specification"
+title: Web System Specification
 added_date: 2026-04-17
 last_updated: "2026-05-09 21:28"
 parent_id: archive
-sort_order: 30
+sort_order: 11000
 ---
-
 # Web System Specification
 
 Archived: current Studio route and local-write behavior now lives in [Studio Runtime](/docs/?scope=studio&doc=studio-runtime), [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow), and [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server).

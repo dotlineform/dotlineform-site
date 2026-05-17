@@ -5,7 +5,7 @@ added_date: 2026-04-28
 last_updated: 2026-05-02
 ui_status: in-progress
 parent_id: change-requests
-sort_order: 110
+sort_order: 4000
 ---
 # Catalogue Work Unified Editor Request
 

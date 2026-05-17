@@ -4,7 +4,7 @@ title: Shared Patterns
 added_date: 2026-04-19
 last_updated: "2026-05-06 21:10"
 parent_id: architecture
-sort_order: 20
+sort_order: 2000
 ---
 # Shared Patterns
 

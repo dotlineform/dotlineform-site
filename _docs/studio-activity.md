@@ -4,7 +4,7 @@ title: Studio Activity
 added_date: 2026-05-08
 last_updated: 2026-05-13
 parent_id: studio
-sort_order: 60
+sort_order: 6000
 ---
 # Studio Activity
 

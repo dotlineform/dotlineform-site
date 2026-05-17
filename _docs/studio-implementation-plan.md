@@ -1,12 +1,11 @@
 ---
 doc_id: new-pipeline-studio-implementation-plan
-title: "Studio Implementation Plan"
+title: Studio Implementation Plan
 added_date: 2026-04-18
 last_updated: 2026-05-01
 parent_id: archive
-sort_order: 50
+sort_order: 15000
 ---
-
 # Studio Implementation Plan
 
 Archived: current Studio behavior now lives in [Studio](/docs/?scope=studio&doc=studio), [Studio Runtime](/docs/?scope=studio&doc=studio-runtime), and the page-level Studio docs.

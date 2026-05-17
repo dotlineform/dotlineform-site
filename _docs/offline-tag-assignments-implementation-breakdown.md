@@ -1,12 +1,12 @@
 ---
 doc_id: offline-tag-assignments-implementation-breakdown
-title: "Offline Tag Assignments Implementation Breakdown"
+title: Offline Tag Assignments Implementation Breakdown
 added_date: 2026-03-28
 last_updated: "2026-05-09 21:45"
 parent_id: archive
+sort_order: 71000
 published: false
 ---
-
 # Offline Tag Assignments Implementation Breakdown
 
 Status:

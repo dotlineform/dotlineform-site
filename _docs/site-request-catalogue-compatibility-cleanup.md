@@ -5,7 +5,7 @@ added_date: 2026-05-01
 last_updated: 2026-05-02
 ui_status: done
 parent_id: archive
-sort_order: 440
+sort_order: 50000
 ---
 # Compatibility Cleanup
 

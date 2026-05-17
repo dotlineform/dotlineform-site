@@ -2,9 +2,9 @@
 doc_id: scripts-run-checks
 title: Run Checks
 added_date: 2026-05-01
-last_updated: "2026-05-15"
+last_updated: 2026-05-15
 parent_id: site-docs
-sort_order: 60
+sort_order: 5000
 ---
 # Run Checks
 

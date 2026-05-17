@@ -1,12 +1,11 @@
 ---
 doc_id: llm-semantic-enrichment-spec
-title: "LLM Semantic Enrichment Spec"
+title: LLM Semantic Enrichment Spec
 added_date: 2026-04-24
 last_updated: "2026-05-03 17:08"
 parent_id: llm
-sort_order: 20
+sort_order: 3000
 ---
-
 # LLM Semantic Enrichment Spec
 
 ## Purpose

@@ -4,7 +4,7 @@ title: Docs Viewer Media Handling
 added_date: 2026-05-14
 last_updated: 2026-05-14
 parent_id: docs-viewer
-sort_order: 36
+sort_order: 5000
 ---
 # Docs Viewer Media Handling
 

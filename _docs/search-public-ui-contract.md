@@ -4,7 +4,7 @@ title: Search Public UI Contract
 added_date: 2026-03-31
 last_updated: "2026-05-11 14:10"
 parent_id: search
-sort_order: 60
+sort_order: 6000
 ---
 # Search Public UI Contract
 

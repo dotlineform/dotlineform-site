@@ -4,7 +4,7 @@ title: Field-Aware Build Scoping Inventory
 added_date: 2026-04-30
 last_updated: 2026-05-01
 parent_id: site-request-field-aware-build-scoping
-sort_order: 10
+sort_order: 3000
 ---
 # Field-Aware Build Scoping Inventory
 

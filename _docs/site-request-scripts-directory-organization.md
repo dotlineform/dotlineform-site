@@ -5,7 +5,7 @@ added_date: 2026-05-09
 last_updated: "2026-05-09 22:35"
 ui_status: done
 parent_id: archive
-sort_order: 590
+sort_order: 65000
 viewable: true
 ---
 # Scripts Directory Organization Request

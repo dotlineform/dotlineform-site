@@ -1,12 +1,11 @@
 ---
 doc_id: runtime-dependencies
-title: "Runtime Dependencies"
+title: Runtime Dependencies
 added_date: 2026-04-23
 last_updated: 2026-04-23
 parent_id: site-docs
-sort_order: 20
+sort_order: 1000
 ---
-
 # Runtime Dependencies
 
 This document records the main runtime and package dependencies used by this repo, where they come from, and which ones are critical in local versus cloud environments.

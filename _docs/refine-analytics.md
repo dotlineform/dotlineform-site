@@ -1,12 +1,11 @@
 ---
 doc_id: new-pipeline-refine-analytics
-title: "Analytics Plan"
+title: Analytics Plan
 added_date: 2026-04-18
 last_updated: "2026-05-09 16:00"
 parent_id: archive
-sort_order: 61
+sort_order: 18000
 ---
-
 # Analytics Plan
 
 Archived: Analytics planning is no longer part of the new-pipeline section.

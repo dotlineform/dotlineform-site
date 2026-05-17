@@ -4,7 +4,7 @@ title: Registry-Driven Scoring Architecture
 added_date: 2026-04-16
 last_updated: "2026-05-06 20:54"
 parent_id: analytics
-sort_order: 70
+sort_order: 7000
 ---
 # Registry-Driven Scoring Architecture
 Draft design note for semantic-to-UI mapping

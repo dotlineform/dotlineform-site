@@ -2,9 +2,9 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: "2026-05-13"
+last_updated: 2026-05-13
 parent_id: ""
-sort_order: 20
+sort_order: 3000
 ---
 # Studio
 

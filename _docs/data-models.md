@@ -4,7 +4,7 @@ title: Data Models
 added_date: 2026-03-31
 last_updated: "2026-05-06 21:10"
 parent_id: architecture
-sort_order: 10
+sort_order: 1000
 ---
 # Data Models
 

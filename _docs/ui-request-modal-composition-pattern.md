@@ -5,7 +5,7 @@ added_date: 2026-05-10
 last_updated: 2026-05-15
 ui_status: done
 parent_id: archive
-sort_order: 630
+sort_order: 69000
 hidden: false
 ---
 # Modal Composition Pattern Request

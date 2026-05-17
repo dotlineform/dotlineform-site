@@ -5,7 +5,7 @@ added_date: 2026-05-10
 last_updated: "2026-05-10 14:45"
 ui_status: done
 parent_id: site-request-js-config-structural-review
-sort_order: 20
+sort_order: 2000
 hidden: false
 ---
 # Docs Viewer Boundary Spec Slice

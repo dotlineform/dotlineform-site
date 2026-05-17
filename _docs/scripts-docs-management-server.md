@@ -2,9 +2,9 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-17"
+last_updated: 2026-05-17
 parent_id: docs-viewer
-sort_order: 110
+sort_order: 15000
 ---
 # Docs Management Server
 

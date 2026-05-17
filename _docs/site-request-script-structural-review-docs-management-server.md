@@ -5,7 +5,7 @@ added_date: 2026-05-09
 last_updated: "2026-05-09 14:56"
 ui_status: done
 parent_id: site-request-script-structural-review
-sort_order: 20
+sort_order: 2000
 viewable: true
 ---
 # Docs Management Server Slices

@@ -5,7 +5,7 @@
   "added_date": "2026-05-08",
   "last_updated": "2026-05-09 16:00",
   "parent_id": "site-request-studio-unified-activity-log",
-  "sort_order": 10,
+  "sort_order": 1000,
   "published": true,
   "hidden": false,
   "viewable": true,

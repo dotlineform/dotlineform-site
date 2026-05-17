@@ -4,7 +4,7 @@ title: Studio Scope
 added_date: 2026-04-19
 last_updated: "2026-05-06 20:51"
 parent_id: studio
-sort_order: 10
+sort_order: 1000
 ---
 # Studio Scope
 

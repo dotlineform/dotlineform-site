@@ -4,7 +4,7 @@ title: Dimension Visualisation Projection Table
 added_date: 2026-04-16
 last_updated: "2026-05-06 20:54"
 parent_id: analytics
-sort_order: 80
+sort_order: 8000
 ---
 # Dimension Visualisation Projection Table
 Draft for linking native dimension types to shared diagrams

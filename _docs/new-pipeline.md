@@ -1,10 +1,10 @@
 ---
 doc_id: new-pipeline
-title: "New Catalogue Pipeline"
+title: New Catalogue Pipeline
 added_date: 2026-04-19
 last_updated: 2026-05-01
 parent_id: archive
-sort_order: 170
+sort_order: 23000
 ---
 # New Catalogue Pipeline
 

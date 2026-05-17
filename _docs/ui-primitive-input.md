@@ -1,10 +1,10 @@
 ---
 doc_id: ui-primitive-input
-title: "Input Primitive"
+title: Input Primitive
 added_date: 2026-05-05
-last_updated: "2026-05-15"
+last_updated: 2026-05-15
 parent_id: ui-catalogue
-sort_order: 20
+sort_order: 2000
 ---
 # Input Primitive
 

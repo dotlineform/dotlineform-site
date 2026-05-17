@@ -1,12 +1,11 @@
 ---
 doc_id: new-pipeline-current-pipeline-map
-title: "Current Pipeline Map"
+title: Current Pipeline Map
 added_date: 2026-04-17
 last_updated: "2026-05-09 21:28"
 parent_id: archive
-sort_order: 10
+sort_order: 1000
 ---
-
 # Current Pipeline Map
 
 Archived: the current catalogue model and build boundaries now live in [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue) and [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json).
