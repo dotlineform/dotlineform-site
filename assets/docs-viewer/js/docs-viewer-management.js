@@ -91,12 +91,12 @@ export function initDocsViewerManagement(context) {
   var manageArchiveButton = document.getElementById("docsViewerManageArchiveButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
   var manageViewableButton = document.getElementById("docsViewerManageViewableButton");
-  var contextCopyLinkButton = contextMenu ? contextMenu.querySelector('[data-context-action="copy-link"]') : null;
   var statusPills = document.getElementById("docsViewerStatusPills");
   var draftToggle = document.getElementById("docsViewerDraftToggle");
   var draftLabel = document.querySelector(".docsViewer__draftLabel");
   var indexUndoButton = document.getElementById("docsViewerIndexUndoButton");
   var contextMenu = document.getElementById("docsViewerContextMenu");
+  var contextCopyLinkButton = contextMenu ? contextMenu.querySelector('[data-context-action="copy-link"]') : null;
   var metadataModal = document.getElementById("docsViewerMetadataModal");
   var metadataForm = document.getElementById("docsViewerMetadataForm");
   var metadataDocId = document.getElementById("docsViewerMetadataDocId");
