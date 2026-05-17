@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: "2026-05-16"
+last_updated: "2026-05-17"
 parent_id: ""
 sort_order: 270
 ---
@@ -16,6 +16,26 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-17] Extracted Docs Viewer Management Write Actions
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / JavaScript maintainability
+
+**Summary:**
+Moved Docs Viewer management write-action orchestration into a dedicated action module.
+The management controller still owns DOM lookup, event binding, metadata payload collection, capability checks, import/settings modal loading, and route reload callbacks, while the new module owns create, metadata/status save, settings save, rebuild, archive/delete, viewability, move/undo, source-open, and copy-link flows.
+
+**Effect:**
+`docs-viewer-management.js` is smaller and has a narrower controller role without changing the local docs-management API contract or modal shell behavior.
+The JavaScript payload inventory now records write-action orchestration as complete and points the next Docs Viewer management cleanup at capability/config coordination or drag/drop/context-menu ownership.
+
+**Affected files/docs:**
+
+- `assets/docs-viewer/js/docs-viewer-management.js`
+- `assets/docs-viewer/js/docs-viewer-management-actions.js`
+- [Studio JavaScript Payload Inventory](/docs/?scope=studio&doc=studio-javascript-payload-inventory)
 
 ## [2026-05-16] Added Docs Viewer Interactive HTML Tokens
 

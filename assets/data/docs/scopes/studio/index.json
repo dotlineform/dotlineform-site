@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T16:01:36Z",
+  "generated_at": "2026-05-17T10:02:44Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1850,7 +1850,7 @@
       "doc_id": "studio-javascript-payload-inventory",
       "title": "Studio JavaScript Payload Inventory",
       "added_date": "2026-05-14",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-17",
       "parent_id": "studio",
       "sort_order": 55,
       "published": true,
@@ -1859,7 +1859,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 12181,
+      "content_text_length": 12976,
       "ui_status": "urgent"
     },
     {
@@ -3373,7 +3373,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-16",
+      "last_updated": "2026-05-17",
       "parent_id": "",
       "sort_order": 270,
       "published": true,
@@ -3382,7 +3382,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 163370
+      "content_text_length": 164458
     },
     {
       "scope": "studio",

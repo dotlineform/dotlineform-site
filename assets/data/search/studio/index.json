@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d10aac103307eb7b3f5225dd2b47fc61",
-    "generated_at_utc": "2026-05-16T15:56:22Z",
+    "version": "blake2b-1de923c1a8d1f4736510f78bd5d90f6e",
+    "generated_at_utc": "2026-05-17T10:02:45Z",
     "count": 245
   },
   "entries": [
@@ -2902,10 +2902,10 @@
       "kind": "doc",
       "title": "Studio JavaScript Payload Inventory",
       "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-17",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-15 • Studio",
+      "display_meta": "2026-05-17 • Studio",
       "search_terms": [
         "studio-javascript-payload-inventory",
         "studio",
@@ -2913,12 +2913,12 @@
         "payload",
         "inventory",
         "studio javascript payload inventory",
-        "2026-05-15",
+        "2026-05-17",
         "2026",
         "05",
-        "15"
+        "17"
       ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory studio javascript payload inventory 2026-05-15 2026 05 15"
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory studio javascript payload inventory 2026-05-17 2026 05 17"
     },
     {
       "id": "studio-works",
@@ -5279,20 +5279,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-16",
-      "display_meta": "2026-05-16",
+      "last_updated": "2026-05-17",
+      "display_meta": "2026-05-17",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-16",
+        "2026-05-17",
         "2026",
         "05",
-        "16"
+        "17"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-16 2026 05 16"
+      "search_text": "site-change-log site change log site change log 2026-05-17 2026 05 17"
     },
     {
       "id": "site-request-docs-build-incremental",
