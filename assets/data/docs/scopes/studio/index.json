@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T10:45:06Z",
+  "generated_at": "2026-05-17T10:54:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2608,7 +2608,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-14 14:45",
+      "last_updated": "2026-05-17",
       "parent_id": "docs-viewer",
       "sort_order": 110,
       "published": true,
@@ -2617,7 +2617,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 35317
+      "content_text_length": 36324
     },
     {
       "scope": "studio",
@@ -3382,7 +3382,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 167762
+      "content_text_length": 168606
     },
     {
       "scope": "studio",
@@ -3737,7 +3737,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 30634,
+      "content_text_length": 30705,
       "ui_status": "done"
     },
     {

@@ -683,6 +683,68 @@ def plan_restore_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
     )
 
 
+def plan_normalize_order(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
+    scope = source_model.normalize_scope(body.get("scope"))
+    docs = source_model.load_scope_docs(repo_root, scope)
+    docs_by_id = {doc.doc_id: doc for doc in docs}
+    whole_scope = bool(body.get("whole_scope"))
+
+    if whole_scope:
+        parent_ids = sorted({doc.parent_id for doc in docs})
+    else:
+        parent_id = str(body.get("parent_id") or "").strip()
+        if parent_id and parent_id not in docs_by_id and not any(doc.parent_id == parent_id for doc in docs):
+            raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
+        parent_ids = [parent_id]
+
+    planned_placements: list[tuple[source_model.ScopeDoc, str, int]] = []
+    for parent_id in parent_ids:
+        planned_placements.extend(source_model.normalized_sibling_placements(docs, parent_id))
+
+    changed_placements = [
+        (doc, parent_id, sort_order)
+        for doc, parent_id, sort_order in planned_placements
+        if doc.parent_id != parent_id or doc.sort_order != sort_order
+    ]
+    touched_docs = [doc for doc, _parent_id, _sort_order in changed_placements]
+    changed_parent_ids = sorted({parent_id for _doc, parent_id, _sort_order in changed_placements})
+
+    return ManagementMutationPlan(
+        scope=scope,
+        response={
+            "ok": True,
+            "scope": scope,
+            "parent_ids": parent_ids,
+            "changed_parent_ids": changed_parent_ids,
+            "changed_doc_ids": [doc.doc_id for doc in touched_docs],
+            "records": [
+                {"doc_id": doc.doc_id, "parent_id": parent_id, "sort_order": sort_order}
+                for doc, parent_id, sort_order in changed_placements
+            ],
+            "summary_text": (
+                f"Normalized order for {len(touched_docs)} doc{'s' if len(touched_docs) != 1 else ''}."
+                if touched_docs
+                else "Order already normalized."
+            ),
+        },
+        source_writes=tuple(
+            SourceWrite(doc.path, source_model.rewrite_doc_placement_source(doc, parent_id, sort_order))
+            for doc, parent_id, sort_order in changed_placements
+        ),
+        suppression_reason="docs-normalize-order",
+        search_doc_ids=[],
+        log_event_name="docs-normalize-order" if touched_docs else None,
+        log_details={
+            "scope": scope,
+            "whole_scope": whole_scope,
+            "parent_ids": parent_ids,
+            "changed_parent_ids": changed_parent_ids,
+            "changed_count": len(touched_docs),
+        },
+        include_write_result_keys=True,
+    )
+
+
 def plan_archive(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     scope = source_model.normalize_scope(body.get("scope"))
     doc_id = str(body.get("doc_id") or "").strip()

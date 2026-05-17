@@ -26,6 +26,7 @@ CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
 MOVE_PATH = "/docs/move"
 RESTORE_MOVE_PATH = "/docs/restore-move"
+NORMALIZE_ORDER_PATH = "/docs/normalize-order"
 ARCHIVE_PATH = "/docs/archive"
 DELETE_PREVIEW_PATH = "/docs/delete-preview"
 DELETE_APPLY_PATH = "/docs/delete-apply"
@@ -62,6 +63,7 @@ POST_PATHS = (
     REBUILD_PATH,
     MOVE_PATH,
     RESTORE_MOVE_PATH,
+    NORMALIZE_ORDER_PATH,
     ARCHIVE_PATH,
     DELETE_PREVIEW_PATH,
     DELETE_APPLY_PATH,

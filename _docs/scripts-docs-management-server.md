@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: "2026-05-14 14:45"
+last_updated: "2026-05-17"
 parent_id: docs-viewer
 sort_order: 110
 ---
@@ -537,6 +537,7 @@ Metadata-update behavior:
 - `parent_id` cannot point at the current doc or any of its descendants
 - `sort_order` accepts a non-negative integer, blank, or `append`
 - `append` stores the next available sparse `sort_order` under the requested `parent_id`
+- sparse order spacing uses `1000` between normalized siblings
 - always rebuilds docs payloads for the scope
 - runs a targeted same-scope docs-search update for affected ids after a successful write
 - skips docs-search updates when `ui_status` is the only changed field, because status emoji are viewer-only metadata
@@ -591,12 +592,14 @@ Move behavior:
 - `position: "inside"` places the dragged doc as the last child of the target doc
 - only leaf docs can move; docs with child docs are rejected
 - moves rewrite front matter only and never move files on disk
-- moves update the dragged doc's `parent_id` and normalize the destination sibling set to sparse unique `sort_order` values
+- moves update the dragged doc's `parent_id` and assign a sparse `sort_order` to the moved doc when there is room between neighboring siblings
+- moves normalize the destination sibling set to sparse unique `sort_order` values only when the numeric gap is exhausted or the target order is ambiguous
 - moves preserve `added_date`
 - moves refresh `last_updated` on each source doc whose placement front matter is rewritten
-- moves may rewrite multiple sibling docs when normalization changes their order values
+- moves usually rewrite only the moved doc; they may rewrite multiple sibling docs when fallback normalization changes order values
 - successful move responses include `undo_records` for every doc whose placement changed
-- successful moves rebuild the current scope docs payloads and run a targeted docs-search update for the moved doc
+- same-parent reorder rebuilds the current scope docs payloads without a docs-search update
+- reparenting rebuilds the current scope docs payloads and runs a targeted docs-search update for the moved doc
 
 `POST /docs/restore-move` expects:
 
@@ -621,7 +624,35 @@ Restore-move behavior:
 - accepts integer or blank `sort_order`
 - writes only records whose current placement differs from the supplied restore record
 - refreshes `last_updated` on each restored source doc whose placement front matter is rewritten
-- rebuilds the current scope docs payloads and runs targeted docs-search updates for changed doc ids
+- rebuilds the current scope docs payloads and runs targeted docs-search updates only for changed docs whose parent changed
+
+`POST /docs/normalize-order` expects either a single sibling group:
+
+```json
+{
+  "scope": "studio",
+  "parent_id": "docs-viewer"
+}
+```
+
+or a whole-scope repair:
+
+```json
+{
+  "scope": "studio",
+  "whole_scope": true
+}
+```
+
+Normalize-order behavior:
+
+- rewrites sibling `sort_order` values to `1000`, `2000`, `3000`, and so on
+- defaults to the root sibling group when `parent_id` is omitted or blank
+- validates non-root `parent_id` values against current scope source data
+- `whole_scope: true` normalizes every sibling group in the scope
+- writes only docs whose `sort_order` changes
+- creates no backup bundle
+- rebuilds the current scope docs payloads without a docs-search update
 
 `POST /docs/archive` expects:
 

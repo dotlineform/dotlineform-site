@@ -120,7 +120,7 @@ def test_create_plan_selects_unique_source_path_backup_metadata_and_search_targe
 
     assert plan.response["doc_id"] == "target-2"
     assert plan.response["record"]["parent_id"] == ""
-    assert plan.response["record"]["sort_order"] == 11
+    assert plan.response["record"]["sort_order"] == 15
     assert plan.backup_operation == "create"
     assert plan.backup_metadata is not None
     assert plan.backup_metadata["path"] == "_docs/target-2.md"
@@ -251,11 +251,29 @@ def test_move_plan_keeps_search_target_for_reparent() -> None:
             },
         )
 
-    assert plan.response["record"] == {"doc_id": "sibling", "parent_id": "parent", "sort_order": 20}
+    assert plan.response["record"] == {"doc_id": "sibling", "parent_id": "parent", "sort_order": 1010}
     assert [record["doc_id"] for record in plan.response["undo_records"]] == ["sibling"]
     assert [write.path.name for write in plan.source_writes] == ["sibling.md"]
     assert plan.backup_operation is None
     assert plan.search_doc_ids == ["sibling"]
+
+
+def test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_search() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        plan = mutations.plan_normalize_order(
+            repo_root,
+            {
+                "scope": "studio",
+                "parent_id": "",
+            },
+        )
+
+    assert plan.response["changed_doc_ids"] == ["parent", "target", "sibling", "archive"]
+    assert [record["sort_order"] for record in plan.response["records"]] == [1000, 2000, 3000, 4000]
+    assert [write.path.name for write in plan.source_writes] == ["parent.md", "target.md", "sibling.md", "archive.md"]
+    assert plan.backup_operation is None
+    assert plan.search_doc_ids == []
 
 
 def test_restore_move_plan_deduplicates_records_and_searches_changed_docs() -> None:
@@ -354,6 +372,7 @@ def main() -> None:
         test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs,
         test_move_plan_writes_only_moved_doc_for_sparse_same_parent_reorder,
         test_move_plan_keeps_search_target_for_reparent,
+        test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_search,
         test_restore_move_plan_deduplicates_records_and_searches_changed_docs,
         test_archive_plan_preserves_already_archived_noop,
         test_archive_plan_preserves_last_updated_for_tree_metadata_change,

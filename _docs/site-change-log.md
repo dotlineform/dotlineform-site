@@ -17,6 +17,29 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-17] Added Docs Viewer Order Normalization Command
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / write performance
+
+**Summary:**
+Changed Docs Viewer sparse ordering to use `1000` spacing and added `POST /docs/normalize-order` for explicit sibling-order repair.
+The endpoint can normalize one sibling group, defaulting to root when `parent_id` is blank, or every sibling group in a scope with `whole_scope: true`.
+
+**Effect:**
+Drag/drop has more midpoint room before it needs fallback normalization.
+Legacy dense or duplicate sibling groups can now be repaired deliberately without creating backup bundles or rebuilding search.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_source_model.py`
+- `scripts/docs/docs_management_mutations.py`
+- `scripts/docs/docs_management_routes.py`
+- `scripts/docs/docs_management_server.py`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+
 ## [2026-05-17] Reduced Docs Viewer Drag/Drop Move Writes
 
 **Status:** implemented

@@ -19,6 +19,7 @@ FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 INTEGER_PATTERN = re.compile(r"^-?\d+$")
 SLUG_SEP_PATTERN = re.compile(r"[^a-z0-9]+")
 SAFE_PLAIN_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 .,&()/_'-]*$")
+SORT_ORDER_GAP = 1000
 
 
 @dataclass
@@ -259,8 +260,8 @@ def validate_scope_docs(docs: list[ScopeDoc], *, allow_unknown_parent_ids: bool 
 def next_sort_order(docs: list[ScopeDoc], parent_id: str) -> int:
     sibling_orders = [doc.sort_order for doc in docs if doc.parent_id == parent_id and isinstance(doc.sort_order, int)]
     if not sibling_orders:
-        return 10
-    return max(sibling_orders) + 10
+        return SORT_ORDER_GAP
+    return max(sibling_orders) + SORT_ORDER_GAP
 
 
 def scope_doc_sort_key(doc: ScopeDoc) -> tuple[Any, ...]:
@@ -280,14 +281,18 @@ def create_sort_order_after(docs: list[ScopeDoc], after_doc: ScopeDoc) -> int:
     current_order = after_doc.sort_order if isinstance(after_doc.sort_order, int) else None
     if current_order is None:
         return next_sort_order(docs, after_doc.parent_id)
-    return current_order + 1
+    siblings = sorted_siblings(docs, after_doc.parent_id)
+    sibling_index = next((index for index, doc in enumerate(siblings) if doc.doc_id == after_doc.doc_id), None)
+    next_doc = siblings[sibling_index + 1] if sibling_index is not None and sibling_index + 1 < len(siblings) else None
+    next_order = next_doc.sort_order if next_doc and isinstance(next_doc.sort_order, int) else None
+    return sparse_order_between(current_order, next_order) or (current_order + 1)
 
 
 def sparse_order_between(previous_order: Optional[int], next_order: Optional[int]) -> Optional[int]:
     if previous_order is None:
         return None
     if next_order is None:
-        return previous_order + 10
+        return previous_order + SORT_ORDER_GAP
     if next_order - previous_order > 1:
         return previous_order + ((next_order - previous_order) // 2)
     return None
@@ -371,7 +376,11 @@ def normalized_move_placements(
             raise ValueError(f"target_doc_id {target_doc.doc_id!r} is not in the expected sibling set")
         ordered_docs.insert(target_index + 1, moving_doc)
 
-    return [(doc, next_parent_id, (index + 1) * 10) for index, doc in enumerate(ordered_docs)]
+    return [(doc, next_parent_id, (index + 1) * SORT_ORDER_GAP) for index, doc in enumerate(ordered_docs)]
+
+
+def normalized_sibling_placements(docs: list[ScopeDoc], parent_id: str) -> list[tuple[ScopeDoc, str, int]]:
+    return [(doc, parent_id, (index + 1) * SORT_ORDER_GAP) for index, doc in enumerate(sorted_siblings(docs, parent_id))]
 
 
 def move_placements(
@@ -384,7 +393,7 @@ def move_placements(
         next_parent_id = target_doc.doc_id
         ordered_docs = [doc for doc in sorted_siblings(docs, next_parent_id) if doc.doc_id != moving_doc.doc_id]
         if not ordered_docs:
-            return [(moving_doc, next_parent_id, 10)]
+            return [(moving_doc, next_parent_id, SORT_ORDER_GAP)]
         previous_order = ordered_docs[-1].sort_order if isinstance(ordered_docs[-1].sort_order, int) else None
         next_sort_order_value = sparse_order_between(previous_order, None)
         if next_sort_order_value is not None:

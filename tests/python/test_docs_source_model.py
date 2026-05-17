@@ -146,10 +146,10 @@ def test_sort_order_and_child_helpers_are_stable() -> None:
     blank = make_doc("blank", title="Blank", parent_id="parent")
     docs = [parent, first, second, blank]
 
-    assert source_model.next_sort_order(docs, "parent") == 30
+    assert source_model.next_sort_order(docs, "parent") == 1020
     assert [doc.doc_id for doc in source_model.sorted_siblings(docs, "parent")] == ["second", "first", "blank"]
-    assert source_model.create_sort_order_after(docs, first) == 21
-    assert source_model.create_sort_order_after(docs, blank) == 30
+    assert source_model.create_sort_order_after(docs, first) == 1020
+    assert source_model.create_sort_order_after(docs, blank) == 1020
     assert source_model.direct_child_doc_ids(docs, "parent") == ["second", "first", "blank"]
 
 
@@ -171,7 +171,7 @@ def test_move_placement_uses_sparse_single_doc_orders_when_possible() -> None:
     after = source_model.move_placements(docs, moving, target, "after")
 
     assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in inside] == [
-        ("moving", "parent", 30),
+        ("moving", "parent", 1020),
     ]
     assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in after] == [
         ("moving", "parent", 15),
@@ -188,9 +188,9 @@ def test_move_placement_normalizes_only_when_sparse_gap_is_exhausted() -> None:
     after = source_model.move_placements(docs, moving, target, "after")
 
     assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in after] == [
-        ("target", "parent", 10),
-        ("moving", "parent", 20),
-        ("sibling", "parent", 30),
+        ("target", "parent", 1000),
+        ("moving", "parent", 2000),
+        ("sibling", "parent", 3000),
     ]
 
 

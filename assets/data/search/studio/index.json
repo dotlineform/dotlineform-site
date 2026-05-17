@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-518dbc088a6d37d9e880884f8c81adbd",
-    "generated_at_utc": "2026-05-17T10:44:58Z",
+    "version": "blake2b-0de73664d2aa4bfcecac354fdf6b3ff8",
+    "generated_at_utc": "2026-05-17T10:54:41Z",
     "count": 245
   },
   "entries": [
@@ -4076,10 +4076,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-14 14:45",
+      "last_updated": "2026-05-17",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 14:45 • Docs Viewer",
+      "display_meta": "2026-05-17 • Docs Viewer",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -4089,13 +4089,12 @@
         "docs management server",
         "docs viewer",
         "viewer",
-        "2026-05-14 14:45",
+        "2026-05-17",
         "2026",
         "05",
-        "14",
-        "45"
+        "17"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-14 14:45 2026 05 14 45"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-17 2026 05 17"
     },
     {
       "id": "search-incremental-orchestration-plan",
