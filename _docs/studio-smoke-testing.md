@@ -2,9 +2,9 @@
 doc_id: studio-smoke-testing
 title: Studio Smoke Testing
 added_date: 2026-05-01
-last_updated: "2026-05-13"
+last_updated: 2026-05-13
 parent_id: studio
-sort_order: 40
+sort_order: 30
 ---
 # Studio Smoke Testing
 

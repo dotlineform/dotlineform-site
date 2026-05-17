@@ -160,21 +160,33 @@ def test_descendant_helper_handles_cycles_without_looping() -> None:
     assert source_model.descendant_doc_ids([alpha, beta], "alpha") == {"alpha", "beta"}
 
 
-def test_move_placement_normalizes_inside_and_after_positions() -> None:
+def test_move_placement_uses_sparse_single_doc_orders_when_possible() -> None:
     parent = make_doc("parent", title="Parent")
     target = make_doc("target", title="Target", parent_id="parent", sort_order=10)
     sibling = make_doc("sibling", title="Sibling", parent_id="parent", sort_order=20)
     moving = make_doc("moving", title="Moving", parent_id="", sort_order=10)
     docs = [parent, target, sibling, moving]
 
-    inside = source_model.normalized_move_placements(docs, moving, parent, "inside")
-    after = source_model.normalized_move_placements(docs, moving, target, "after")
+    inside = source_model.move_placements(docs, moving, parent, "inside")
+    after = source_model.move_placements(docs, moving, target, "after")
 
     assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in inside] == [
-        ("target", "parent", 10),
-        ("sibling", "parent", 20),
         ("moving", "parent", 30),
     ]
+    assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in after] == [
+        ("moving", "parent", 15),
+    ]
+
+
+def test_move_placement_normalizes_only_when_sparse_gap_is_exhausted() -> None:
+    parent = make_doc("parent", title="Parent")
+    target = make_doc("target", title="Target", parent_id="parent", sort_order=10)
+    sibling = make_doc("sibling", title="Sibling", parent_id="parent", sort_order=11)
+    moving = make_doc("moving", title="Moving", parent_id="", sort_order=10)
+    docs = [parent, target, sibling, moving]
+
+    after = source_model.move_placements(docs, moving, target, "after")
+
     assert [(doc.doc_id, parent_id, sort_order) for doc, parent_id, sort_order in after] == [
         ("target", "parent", 10),
         ("moving", "parent", 20),
@@ -224,7 +236,8 @@ def main() -> None:
         test_load_scope_docs_allows_unknown_library_parent,
         test_sort_order_and_child_helpers_are_stable,
         test_descendant_helper_handles_cycles_without_looping,
-        test_move_placement_normalizes_inside_and_after_positions,
+        test_move_placement_uses_sparse_single_doc_orders_when_possible,
+        test_move_placement_normalizes_only_when_sparse_gap_is_exhausted,
         test_source_rewrite_preserves_doc_dates_and_removes_blank_sort_order,
         test_ensure_unique_stem_checks_existing_stems_and_doc_ids,
     ]

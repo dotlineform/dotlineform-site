@@ -283,6 +283,16 @@ def create_sort_order_after(docs: list[ScopeDoc], after_doc: ScopeDoc) -> int:
     return current_order + 1
 
 
+def sparse_order_between(previous_order: Optional[int], next_order: Optional[int]) -> Optional[int]:
+    if previous_order is None:
+        return None
+    if next_order is None:
+        return previous_order + 10
+    if next_order - previous_order > 1:
+        return previous_order + ((next_order - previous_order) // 2)
+    return None
+
+
 def descendant_doc_ids(docs: list[ScopeDoc], doc_id: str) -> set[str]:
     children_by_parent: dict[str, list[ScopeDoc]] = {}
     for doc in docs:
@@ -362,6 +372,39 @@ def normalized_move_placements(
         ordered_docs.insert(target_index + 1, moving_doc)
 
     return [(doc, next_parent_id, (index + 1) * 10) for index, doc in enumerate(ordered_docs)]
+
+
+def move_placements(
+    docs: list[ScopeDoc],
+    moving_doc: ScopeDoc,
+    target_doc: ScopeDoc,
+    position: str,
+) -> list[tuple[ScopeDoc, str, int]]:
+    if position == "inside":
+        next_parent_id = target_doc.doc_id
+        ordered_docs = [doc for doc in sorted_siblings(docs, next_parent_id) if doc.doc_id != moving_doc.doc_id]
+        if not ordered_docs:
+            return [(moving_doc, next_parent_id, 10)]
+        previous_order = ordered_docs[-1].sort_order if isinstance(ordered_docs[-1].sort_order, int) else None
+        next_sort_order_value = sparse_order_between(previous_order, None)
+        if next_sort_order_value is not None:
+            return [(moving_doc, next_parent_id, next_sort_order_value)]
+        return normalized_move_placements(docs, moving_doc, target_doc, position)
+
+    next_parent_id = target_doc.parent_id
+    ordered_docs = [doc for doc in sorted_siblings(docs, next_parent_id) if doc.doc_id != moving_doc.doc_id]
+    target_index = next((index for index, doc in enumerate(ordered_docs) if doc.doc_id == target_doc.doc_id), None)
+    if target_index is None:
+        raise ValueError(f"target_doc_id {target_doc.doc_id!r} is not in the expected sibling set")
+
+    next_doc = ordered_docs[target_index + 1] if target_index + 1 < len(ordered_docs) else None
+    previous_order = target_doc.sort_order if isinstance(target_doc.sort_order, int) else None
+    next_order = next_doc.sort_order if next_doc and isinstance(next_doc.sort_order, int) else None
+    next_sort_order_value = sparse_order_between(previous_order, next_order)
+    if next_sort_order_value is not None:
+        return [(moving_doc, next_parent_id, next_sort_order_value)]
+
+    return normalized_move_placements(docs, moving_doc, target_doc, position)
 
 
 def ensure_unique_stem(docs: list[ScopeDoc], title: str) -> str:

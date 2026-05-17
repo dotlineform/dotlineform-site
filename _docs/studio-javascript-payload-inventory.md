@@ -5,7 +5,7 @@ added_date: 2026-05-14
 last_updated: 2026-05-17
 ui_status: urgent
 parent_id: studio
-sort_order: 55
+sort_order: 70
 hidden: false
 ---
 # Studio JavaScript Payload Inventory

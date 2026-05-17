@@ -17,6 +17,26 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-17] Reduced Docs Viewer Drag/Drop Move Writes
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / write performance
+
+**Summary:**
+Changed Docs Viewer drag/drop placement so moves use a sparse `sort_order` for the moved doc when there is room between neighboring siblings.
+The older full sibling normalization remains as a fallback for exhausted numeric gaps or ambiguous target ordering.
+
+**Effect:**
+Most same-parent reorder operations now rewrite only the moved source doc and skip the targeted search rebuild because searchable metadata has not changed.
+Move and move-undo writes no longer create backup bundles; the current viewer session still keeps a one-step Undo record.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_source_model.py`
+- `scripts/docs/docs_management_mutations.py`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+
 ## [2026-05-17] Extracted Docs Viewer Management Interactions
 
 **Status:** implemented

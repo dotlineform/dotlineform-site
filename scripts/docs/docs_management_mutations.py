@@ -547,7 +547,7 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     if any(doc.parent_id == moving_doc.doc_id for doc in docs):
         raise ValueError(f"{moving_doc.doc_id} has child docs and cannot be moved")
 
-    planned_placements = source_model.normalized_move_placements(docs, moving_doc, target_doc, position)
+    planned_placements = source_model.move_placements(docs, moving_doc, target_doc, position)
     changed_placements = [
         (doc, parent_id, sort_order)
         for doc, parent_id, sort_order in planned_placements
@@ -573,25 +573,13 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
             "changed_doc_ids": [doc.doc_id for doc in touched_docs],
             "summary_text": f"Moved {moving_doc.doc_id}.",
         },
-        backup_operation="move" if touched_docs else None,
-        backup_docs=tuple(touched_docs),
-        backup_metadata={
-            "doc_id": moving_doc.doc_id,
-            "target_doc_id": target_doc.doc_id,
-            "position": position,
-            "parent_id": moved_parent_id,
-            "sort_order": moved_sort_order,
-            "changed_doc_ids": [doc.doc_id for doc in touched_docs],
-            "undo_records": undo_records,
-        }
-        if touched_docs
-        else None,
+        backup_operation=None,
         source_writes=tuple(
             SourceWrite(doc.path, source_model.rewrite_doc_placement_source(doc, parent_id, sort_order))
             for doc, parent_id, sort_order in changed_placements
         ),
         suppression_reason="docs-move",
-        search_doc_ids=[moving_doc.doc_id],
+        search_doc_ids=[moving_doc.doc_id] if moving_doc.parent_id != moved_parent_id else [],
         log_event_name="docs-move" if touched_docs else None,
         log_details={
             "scope": scope,
@@ -678,23 +666,13 @@ def plan_restore_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
                 else "Move already restored."
             ),
         },
-        backup_operation="restore-move" if touched_docs else None,
-        backup_docs=tuple(touched_docs),
-        backup_metadata={
-            "changed_doc_ids": [doc.doc_id for doc in touched_docs],
-            "restore_records": [
-                {"doc_id": doc.doc_id, "parent_id": parent_id, "sort_order": sort_order}
-                for doc, parent_id, sort_order in changed_records
-            ],
-        }
-        if touched_docs
-        else None,
+        backup_operation=None,
         source_writes=tuple(
             SourceWrite(doc.path, source_model.rewrite_doc_placement_source(doc, parent_id, sort_order))
             for doc, parent_id, sort_order in changed_records
         ),
         suppression_reason="docs-restore-move",
-        search_doc_ids=[doc.doc_id for doc in touched_docs],
+        search_doc_ids=[doc.doc_id for doc, parent_id, _sort_order in changed_records if doc.parent_id != parent_id],
         log_event_name="docs-restore-move" if touched_docs else None,
         log_details={
             "scope": scope,

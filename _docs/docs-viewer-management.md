@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: "2026-05-14 17:18"
+last_updated: "2026-05-17"
 ui_status: done
 parent_id: archive
 sort_order: 480
@@ -43,9 +43,9 @@ Implemented now:
 - all nodes can gain children through drag/drop; there is no source or generated `folder` schema field
 - the index toolbar exposes a one-step Undo action for the most recent successful move in the current viewer session
 - source writes remain front-matter-only; files do not move on disk
-- drag/drop moves normalize the destination sibling set into sparse unique `sort_order` values so reorder actions have a visible effect even when previous sibling orders collided
+- drag/drop moves assign a sparse `sort_order` to the moved doc only when there is room between neighboring siblings, and normalize the destination sibling set only when the numeric gap is exhausted or the target order is ambiguous
 - create-after-selected uses sparse `sort_order` increments without renumbering siblings
-- create, move, archive, delete, and metadata edits rebuild docs payloads plus same-scope docs search
+- create, reparent, archive, delete, and searchable metadata edits rebuild docs payloads plus same-scope docs search; same-parent drag/drop reorder rebuilds docs payloads without a search update
 - docs-management writes `added_date` and `last_updated` values in `YYYY-MM-DD HH:MM` form for new or content-imported docs; metadata-only changes preserve existing `last_updated` values so the field reflects content freshness rather than tree/status/summary churn
 - Library create/import defaults to `published: true`, `hidden: true`; Studio create/import defaults to `published: true`, `hidden: false`
 - generated docs data keeps a compatibility `viewable` field computed as `!hidden`
@@ -567,8 +567,9 @@ The implemented management surface now also includes metadata edit, leaf-doc dra
 - dropping on the upper half of a row changes `parent_id` to that target doc and appends as the target's last child
 - dropping on the lower half of a row keeps the target's parent, shows an insert line after the target row, and places the moved doc after the target
 - any node can become a parent through drag/drop; there is no `folder` source field
-- the destination sibling set is normalized to sparse unique orders after the move, currently `10`, `20`, `30`, and so on
-- one successful move is stored client-side for Undo in the current viewer session, including all docs whose placement was changed by normalization
+- when there is room between neighboring `sort_order` values, only the moved doc is rewritten
+- the destination sibling set is normalized to sparse unique orders, currently `10`, `20`, `30`, and so on, only when the numeric gap is exhausted or target ordering is ambiguous
+- one successful move is stored client-side for Undo in the current viewer session, including all docs whose placement changed
 
 ## Data And Builder Implications
 

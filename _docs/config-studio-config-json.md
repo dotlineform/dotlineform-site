@@ -4,7 +4,7 @@ title: Studio Config JSON
 added_date: 2026-04-24
 last_updated: "2026-05-11 17:50"
 parent_id: studio
-sort_order: 90
+sort_order: 120
 ---
 # Studio Config JSON
 

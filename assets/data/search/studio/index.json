@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1de923c1a8d1f4736510f78bd5d90f6e",
-    "generated_at_utc": "2026-05-17T10:02:45Z",
+    "version": "blake2b-518dbc088a6d37d9e880884f8c81adbd",
+    "generated_at_utc": "2026-05-17T10:44:58Z",
     "count": 245
   },
   "entries": [
@@ -1813,30 +1813,26 @@
       "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
-      "id": "studio-config-and-save-flow",
+      "id": "studio-smoke-testing",
       "kind": "doc",
-      "title": "Studio Config and Save Flow",
-      "href": "/docs/?scope=studio&doc=studio-config-and-save-flow",
-      "last_updated": "2026-05-09 21:45",
+      "title": "Studio Smoke Testing",
+      "href": "/docs/?scope=studio&doc=studio-smoke-testing",
+      "last_updated": "2026-05-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-09 21:45 • Studio",
+      "display_meta": "2026-05-13 • Studio",
       "search_terms": [
-        "studio-config-and-save-flow",
+        "studio-smoke-testing",
         "studio",
-        "config",
-        "and",
-        "save",
-        "flow",
-        "studio config and save flow",
-        "2026-05-09 21:45",
+        "smoke",
+        "testing",
+        "studio smoke testing",
+        "2026-05-13",
         "2026",
         "05",
-        "09",
-        "21",
-        "45"
+        "13"
       ],
-      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-05-09 21:45 2026 05 09 21 45"
+      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-13 2026 05 13"
     },
     {
       "id": "studio-ui-framework",
@@ -2320,26 +2316,26 @@
       "search_text": "sorting-architecture sorting architecture sorting architecture 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
-      "id": "studio-smoke-testing",
+      "id": "studio-ready-state",
       "kind": "doc",
-      "title": "Studio Smoke Testing",
-      "href": "/docs/?scope=studio&doc=studio-smoke-testing",
-      "last_updated": "2026-05-13",
+      "title": "Studio Ready State",
+      "href": "/docs/?scope=studio&doc=studio-ready-state",
+      "last_updated": "2026-05-15",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-13 • Studio",
+      "display_meta": "2026-05-15 • Studio",
       "search_terms": [
-        "studio-smoke-testing",
+        "studio-ready-state",
         "studio",
-        "smoke",
-        "testing",
-        "studio smoke testing",
-        "2026-05-13",
+        "ready",
+        "state",
+        "studio ready state",
+        "2026-05-15",
         "2026",
         "05",
-        "13"
+        "15"
       ],
-      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-13 2026 05 13"
+      "search_text": "studio-ready-state studio ready state studio ready state 2026-05-15 2026 05 15"
     },
     {
       "id": "studio-ui-conformance",
@@ -2468,28 +2464,6 @@
         "15"
       ],
       "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-05-15 2026 05 15"
-    },
-    {
-      "id": "studio-ready-state",
-      "kind": "doc",
-      "title": "Studio Ready State",
-      "href": "/docs/?scope=studio&doc=studio-ready-state",
-      "last_updated": "2026-05-15",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-15 • Studio",
-      "search_terms": [
-        "studio-ready-state",
-        "studio",
-        "ready",
-        "state",
-        "studio ready state",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "studio-ready-state studio ready state studio ready state 2026-05-15 2026 05 15"
     },
     {
       "id": "site-request-script-structural-review-catalogue-json-build",
@@ -2852,27 +2826,6 @@
       "search_text": "tag-aliases tag aliases tag aliases analytics 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
-      "id": "studio-activity",
-      "kind": "doc",
-      "title": "Studio Activity",
-      "href": "/docs/?scope=studio&doc=studio-activity",
-      "last_updated": "2026-05-13",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-13 • Studio",
-      "search_terms": [
-        "studio-activity",
-        "studio",
-        "activity",
-        "studio activity",
-        "2026-05-13",
-        "2026",
-        "05",
-        "13"
-      ],
-      "search_text": "studio-activity studio activity studio activity 2026-05-13 2026 05 13"
-    },
-    {
       "id": "docs-viewer-source-config-report",
       "kind": "doc",
       "title": "Docs Viewer Source Config Report",
@@ -2896,29 +2849,6 @@
         "14"
       ],
       "search_text": "docs-viewer-source-config-report docs viewer source config report docs viewer source config report docs viewer 2026-05-14 2026 05 14"
-    },
-    {
-      "id": "studio-javascript-payload-inventory",
-      "kind": "doc",
-      "title": "Studio JavaScript Payload Inventory",
-      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "last_updated": "2026-05-17",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-17 • Studio",
-      "search_terms": [
-        "studio-javascript-payload-inventory",
-        "studio",
-        "javascript",
-        "payload",
-        "inventory",
-        "studio javascript payload inventory",
-        "2026-05-17",
-        "2026",
-        "05",
-        "17"
-      ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory studio javascript payload inventory 2026-05-17 2026 05 17"
     },
     {
       "id": "studio-works",
@@ -3126,29 +3056,25 @@
       "search_text": "series-tags series tags series tags analytics 2026-05-15 2026 05 15"
     },
     {
-      "id": "scripts-studio-audit-service",
+      "id": "studio-activity",
       "kind": "doc",
-      "title": "Studio Audit Service",
-      "href": "/docs/?scope=studio&doc=scripts-studio-audit-service",
-      "last_updated": "2026-05-08 19:25",
+      "title": "Studio Activity",
+      "href": "/docs/?scope=studio&doc=studio-activity",
+      "last_updated": "2026-05-13",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-08 19:25 • Studio",
+      "display_meta": "2026-05-13 • Studio",
       "search_terms": [
-        "scripts-studio-audit-service",
-        "scripts",
+        "studio-activity",
         "studio",
-        "audit",
-        "service",
-        "studio audit service",
-        "2026-05-08 19:25",
+        "activity",
+        "studio activity",
+        "2026-05-13",
         "2026",
         "05",
-        "08",
-        "19",
-        "25"
+        "13"
       ],
-      "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-08 19:25 2026 05 08 19 25"
+      "search_text": "studio-activity studio activity studio activity 2026-05-13 2026 05 13"
     },
     {
       "id": "new-pipeline-studio-e2e-checklist",
@@ -3484,30 +3410,27 @@
       "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-05-13 20:20 2026 05 13 20"
     },
     {
-      "id": "scripts-audit-studio-ready-state",
+      "id": "studio-javascript-payload-inventory",
       "kind": "doc",
-      "title": "Studio Ready-State Audit",
-      "href": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
-      "last_updated": "2026-05-09 22:35",
+      "title": "Studio JavaScript Payload Inventory",
+      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
+      "last_updated": "2026-05-17",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-09 22:35 • Studio",
+      "display_meta": "2026-05-17 • Studio",
       "search_terms": [
-        "scripts-audit-studio-ready-state",
-        "scripts",
-        "audit",
+        "studio-javascript-payload-inventory",
         "studio",
-        "ready",
-        "state",
-        "studio ready-state audit",
-        "2026-05-09 22:35",
+        "javascript",
+        "payload",
+        "inventory",
+        "studio javascript payload inventory",
+        "2026-05-17",
         "2026",
         "05",
-        "09",
-        "22",
-        "35"
+        "17"
       ],
-      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory studio javascript payload inventory 2026-05-17 2026 05 17"
     },
     {
       "id": "ui-catalogue",
@@ -3802,29 +3725,29 @@
       "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-05-11 21:30 2026 05 11 21 30"
     },
     {
-      "id": "scripts-studio-backup-retention",
+      "id": "scripts-studio-audit-service",
       "kind": "doc",
-      "title": "Studio Backup Retention",
-      "href": "/docs/?scope=studio&doc=scripts-studio-backup-retention",
-      "last_updated": "2026-05-09 22:35",
+      "title": "Studio Audit Service",
+      "href": "/docs/?scope=studio&doc=scripts-studio-audit-service",
+      "last_updated": "2026-05-08 19:25",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-09 22:35 • Studio",
+      "display_meta": "2026-05-08 19:25 • Studio",
       "search_terms": [
-        "scripts-studio-backup-retention",
+        "scripts-studio-audit-service",
         "scripts",
         "studio",
-        "backup",
-        "retention",
-        "studio backup retention",
-        "2026-05-09 22:35",
+        "audit",
+        "service",
+        "studio audit service",
+        "2026-05-08 19:25",
         "2026",
         "05",
-        "09",
-        "22",
-        "35"
+        "08",
+        "19",
+        "25"
       ],
-      "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "design",
@@ -3948,28 +3871,30 @@
       "search_text": "project-state-page project state page project state page catalogue 2026-05-08 18:20 2026 05 08 18 20"
     },
     {
-      "id": "config-studio-config-json",
+      "id": "scripts-audit-studio-ready-state",
       "kind": "doc",
-      "title": "Studio Config JSON",
-      "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-11 17:50",
+      "title": "Studio Ready-State Audit",
+      "href": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-11 17:50 • Studio",
+      "display_meta": "2026-05-09 22:35 • Studio",
       "search_terms": [
-        "config-studio-config-json",
-        "config",
+        "scripts-audit-studio-ready-state",
+        "scripts",
+        "audit",
         "studio",
-        "json",
-        "studio config json",
-        "2026-05-11 17:50",
+        "ready",
+        "state",
+        "studio ready-state audit",
+        "2026-05-09 22:35",
         "2026",
         "05",
-        "11",
-        "17",
-        "50"
+        "09",
+        "22",
+        "35"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "data-sharing",
@@ -4017,29 +3942,29 @@
       "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-05-11 21:30 2026 05 11 21 30"
     },
     {
-      "id": "config-studio-config-js",
+      "id": "scripts-studio-backup-retention",
       "kind": "doc",
-      "title": "Studio Config Loader JS",
-      "href": "/docs/?scope=studio&doc=config-studio-config-js",
-      "last_updated": "2026-05-13 18:15",
+      "title": "Studio Backup Retention",
+      "href": "/docs/?scope=studio&doc=scripts-studio-backup-retention",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-13 18:15 • Studio",
+      "display_meta": "2026-05-09 22:35 • Studio",
       "search_terms": [
-        "config-studio-config-js",
-        "config",
+        "scripts-studio-backup-retention",
+        "scripts",
         "studio",
-        "js",
-        "studio config loader js",
-        "loader",
-        "2026-05-13 18:15",
+        "backup",
+        "retention",
+        "studio backup retention",
+        "2026-05-09 22:35",
         "2026",
         "05",
-        "13",
-        "18",
-        "15"
+        "09",
+        "22",
+        "35"
       ],
-      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "tiered-dimension-policy",
@@ -4224,6 +4149,32 @@
       "search_text": "ui-pattern-reopenable-command-result ui pattern reopenable command result reopenable command result pattern ui catalogue catalogue 2026-05-15 2026 05 15"
     },
     {
+      "id": "studio-config-and-save-flow",
+      "kind": "doc",
+      "title": "Studio Config and Save Flow",
+      "href": "/docs/?scope=studio&doc=studio-config-and-save-flow",
+      "last_updated": "2026-05-09 21:45",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-09 21:45 • Studio",
+      "search_terms": [
+        "studio-config-and-save-flow",
+        "studio",
+        "config",
+        "and",
+        "save",
+        "flow",
+        "studio config and save flow",
+        "2026-05-09 21:45",
+        "2026",
+        "05",
+        "09",
+        "21",
+        "45"
+      ],
+      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-05-09 21:45 2026 05 09 21 45"
+    },
+    {
       "id": "search-catalogue-targeted-plan",
       "kind": "doc",
       "title": "Catalogue Targeted Search Plan",
@@ -4354,6 +4305,30 @@
       "search_text": "scripts-srcset-builder scripts srcset builder srcset builder catalogue 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
+      "id": "config-studio-config-json",
+      "kind": "doc",
+      "title": "Studio Config JSON",
+      "href": "/docs/?scope=studio&doc=config-studio-config-json",
+      "last_updated": "2026-05-11 17:50",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-11 17:50 • Studio",
+      "search_terms": [
+        "config-studio-config-json",
+        "config",
+        "studio",
+        "json",
+        "studio config json",
+        "2026-05-11 17:50",
+        "2026",
+        "05",
+        "11",
+        "17",
+        "50"
+      ],
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-11 17:50 2026 05 11 17 50"
+    },
+    {
       "id": "thumbnail-quality-page",
       "kind": "doc",
       "title": "Thumbnail Quality Page",
@@ -4450,6 +4425,31 @@
         "50"
       ],
       "search_text": "search-change-log-guidance search change log guidance search change log guidance 2026-05-11 12:50 2026 05 11 12 50"
+    },
+    {
+      "id": "config-studio-config-js",
+      "kind": "doc",
+      "title": "Studio Config Loader JS",
+      "href": "/docs/?scope=studio&doc=config-studio-config-js",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-13 18:15 • Studio",
+      "search_terms": [
+        "config-studio-config-js",
+        "config",
+        "studio",
+        "js",
+        "studio config loader js",
+        "loader",
+        "2026-05-13 18:15",
+        "2026",
+        "05",
+        "13",
+        "18",
+        "15"
+      ],
+      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "testing",
@@ -5832,10 +5832,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-14 17:18",
+      "last_updated": "2026-05-17",
       "parent_id": "archive",
       "parent_title": "Archive",
-      "display_meta": "2026-05-14 17:18 • Archive",
+      "display_meta": "2026-05-17 • Archive",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -5843,14 +5843,12 @@
         "management",
         "docs viewer management",
         "archive",
-        "2026-05-14 17:18",
+        "2026-05-17",
         "2026",
         "05",
-        "14",
-        "17",
-        "18"
+        "17"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management archive 2026-05-14 17:18 2026 05 14 17 18"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management archive 2026-05-17 2026 05 17"
     },
     {
       "id": "site-request-catalogue-series-unified-editor",
