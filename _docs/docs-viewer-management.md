@@ -94,7 +94,11 @@ Implemented now:
 - Docs Import is reachable from the `/docs/` management toolbar as an import modal seeded with the active scope
 - `assets/docs-viewer/js/docs-html-import.js` exports the importer initializer used by the Docs Viewer modal
 - Docs Import reads its scope list, target source roots, and media token path prefixes from the Docs Viewer scope config
-- `assets/docs-viewer/js/docs-viewer-management.js` owns manage-mode toolbar rendering, status-pill events, metadata/import modal behavior, right-click actions, drag/drop, mutation calls, and management capability checks
+- `assets/docs-viewer/js/docs-viewer-management.js` owns manage-mode toolbar rendering, status-pill events, metadata/import modal coordination, metadata payload collection, settings reads, busy/message/reload callbacks, and navigation
+- `assets/docs-viewer/js/docs-viewer-management-interactions.js` owns manage-mode nav drag/drop event handling, transient drag/drop visual state, context-menu active-doc state, context-menu positioning, and context-menu action dispatch
+- `assets/docs-viewer/js/docs-viewer-management-actions.js` owns create, metadata/status save, settings save, rebuild, archive/delete, viewability, move/undo, source-open, and copy-link write/action orchestration
+- `assets/docs-viewer/js/docs-viewer-management-capabilities.js` owns management capability helpers and the capability probe/retry state machine
+- `assets/docs-viewer/js/docs-viewer-management-config.js` owns management UI-text/config application
 - `assets/docs-viewer/js/docs-viewer-management-render.js` owns management-only markup helpers for status pills, metadata parent/status controls, and settings warnings
 - `assets/docs-viewer/js/docs-viewer.js` keeps the reader/search/history controller plus a small management bridge for shared state and lazy controller loading
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T10:17:48Z",
+  "generated_at": "2026-05-17T10:28:50Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1859,7 +1859,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 13279,
+      "content_text_length": 12160,
       "ui_status": "urgent"
     },
     {
@@ -3382,7 +3382,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 165701
+      "content_text_length": 166967
     },
     {
       "scope": "studio",
@@ -3737,7 +3737,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 29668,
+      "content_text_length": 30362,
       "ui_status": "done"
     },
     {

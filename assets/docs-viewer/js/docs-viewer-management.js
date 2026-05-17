@@ -16,15 +16,14 @@ import {
   applyDocsViewerManagementConfig
 } from "./docs-viewer-management-config.js";
 import {
-  canDragDoc,
-  canDropOnDoc,
-  currentDropTargetFromEvent,
-  normalizeSortOrderValue,
-  rowDropPosition
+  normalizeSortOrderValue
 } from "./docs-viewer-drag-drop.js";
 import {
   renderStatusPillsMarkup
 } from "./docs-viewer-management-render.js";
+import {
+  createDocsViewerManagementInteractionController
+} from "./docs-viewer-management-interactions.js";
 import {
   createDocsViewerManagementModalController
 } from "./docs-viewer-management-modals.js";
@@ -54,8 +53,6 @@ export function initDocsViewerManagement(context) {
   var draftToggle = document.getElementById("docsViewerDraftToggle");
   var draftLabel = document.querySelector(".docsViewer__draftLabel");
   var indexUndoButton = document.getElementById("docsViewerIndexUndoButton");
-  var contextMenu = document.getElementById("docsViewerContextMenu");
-  var contextCopyLinkButton = contextMenu ? contextMenu.querySelector('[data-context-action="copy-link"]') : null;
   var metadataModal = document.getElementById("docsViewerMetadataModal");
   var metadataForm = document.getElementById("docsViewerMetadataForm");
   var metadataDocId = document.getElementById("docsViewerMetadataDocId");
@@ -87,6 +84,7 @@ export function initDocsViewerManagement(context) {
   var docsImportInitialized = false;
   var scopeLifecycleRequestPromise = null;
   var capabilityController = null;
+  var interactionController = null;
   var modalController = null;
   var actionController = null;
 
@@ -110,32 +108,11 @@ export function initDocsViewerManagement(context) {
   }
 
   function currentContextMenuDoc() {
-    return state.docsById.get(state.contextMenuDocId) || null;
-  }
-
-  function docChildren(docId) {
-    return state.childrenByParent.get(docId) || [];
-  }
-
-  function docHasChildren(docId) {
-    return docChildren(docId).length > 0;
-  }
-
-  function managementDragEnabled() {
-    return state.managementMode && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
-  }
-
-  function dragDropOptions() {
-    return {
-      dragDocId: state.dragDocId,
-      dragEnabled: managementDragEnabled(),
-      docsById: state.docsById,
-      hasChildren: docHasChildren
-    };
+    return interactionController ? interactionController.currentContextMenuDoc() : null;
   }
 
   function canDragCurrentDoc(doc) {
-    return canDragDoc(doc, dragDropOptions());
+    return Boolean(interactionController && interactionController.canDragCurrentDoc(doc));
   }
 
   function currentStatusValue(doc) {
@@ -189,14 +166,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function clearDragState() {
-    state.dragDocId = "";
-    state.dropTargetDocId = "";
-    state.dropPosition = "";
-    updateNavDragState();
-  }
-
-  function contextMenuEnabled() {
-    return state.managementMode && state.managementAvailable;
+    if (interactionController) interactionController.clearDragState();
   }
 
   function settingsModalOpen() {
@@ -204,12 +174,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function hideContextMenu() {
-    state.contextMenuDocId = "";
-    if (contextMenu) {
-      contextMenu.hidden = true;
-      contextMenu.style.left = "";
-      contextMenu.style.top = "";
-    }
+    if (interactionController) interactionController.hideContextMenu();
   }
 
   function hideManageActionsMenu() {
@@ -233,19 +198,6 @@ export function initDocsViewerManagement(context) {
     if (root) {
       root.dataset.managementBusy = state.managementBusy ? "true" : "false";
     }
-  }
-
-  function showContextMenu(docId, clientX, clientY) {
-    if (!contextMenu || !contextMenuEnabled()) return;
-    state.contextMenuDocId = docId;
-    contextMenu.hidden = false;
-    contextMenu.style.left = "0px";
-    contextMenu.style.top = "0px";
-    var menuRect = contextMenu.getBoundingClientRect();
-    var maxLeft = Math.max(8, window.innerWidth - menuRect.width - 8);
-    var maxTop = Math.max(8, window.innerHeight - menuRect.height - 8);
-    contextMenu.style.left = Math.min(clientX, maxLeft) + "px";
-    contextMenu.style.top = Math.min(clientY, maxTop) + "px";
   }
 
   function collectAllDescendantDocIds(docId, bucket) {
@@ -358,22 +310,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function updateNavDragState() {
-    if (!nav) return;
-    nav.querySelectorAll(".docsViewer__navRow").forEach(function (row) {
-      row.classList.remove("is-dragging", "is-drop-after", "is-drop-inside");
-    });
-    if (state.dragDocId) {
-      var dragRow = nav.querySelector('[data-doc-row-id="' + context.cssEscape(state.dragDocId) + '"]');
-      if (dragRow) {
-        dragRow.classList.add("is-dragging");
-      }
-    }
-    if (state.dropTargetDocId && state.dropPosition) {
-      var dropRow = nav.querySelector('[data-doc-row-id="' + context.cssEscape(state.dropTargetDocId) + '"]');
-      if (dropRow) {
-        dropRow.classList.add(state.dropPosition === "inside" ? "is-drop-inside" : "is-drop-after");
-      }
-    }
+    if (interactionController) interactionController.updateNavDragState();
   }
 
   function managementArchiveAvailable() {
@@ -699,7 +636,7 @@ export function initDocsViewerManagement(context) {
       context: context,
       state: state,
       refs: {
-        contextCopyLinkButton: contextCopyLinkButton,
+        contextCopyLinkButton: interactionController ? interactionController.refs.contextCopyLinkButton : null,
         draftLabel: draftLabel,
         draftToggle: draftToggle,
         manageDeleteScopeButton: manageDeleteScopeButton,
@@ -717,9 +654,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function handleRootClick(event) {
-    if (contextMenu && !event.target.closest("#docsViewerContextMenu")) {
-      hideContextMenu();
-    }
+    if (interactionController) interactionController.handleRootClick(event);
     if (state.statusMenuOpen && statusPills && !statusPills.contains(event.target)) {
       state.statusMenuOpen = false;
       renderStatusPills();
@@ -731,6 +666,9 @@ export function initDocsViewerManagement(context) {
   }
 
   function handleDocumentKeydown(event) {
+    if (interactionController && interactionController.handleDocumentKeydown(event)) {
+      return true;
+    }
     if (event.key === "Escape" && state.statusMenuOpen) {
       event.preventDefault();
       state.statusMenuOpen = false;
@@ -746,102 +684,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function bind() {
-    if (nav) {
-      nav.addEventListener("mousedown", function (event) {
-        var row = event.target.closest("[data-doc-row-id]");
-        if (!row || !contextMenuEnabled() || event.button !== 2) return;
-        event.preventDefault();
-        if (window.getSelection) {
-          var selection = window.getSelection();
-          if (selection) selection.removeAllRanges();
-        }
-      });
-
-      nav.addEventListener("contextmenu", function (event) {
-        var row = event.target.closest("[data-doc-row-id]");
-        if (!row || !contextMenuEnabled()) return;
-        event.preventDefault();
-        if (window.getSelection) {
-          var selection = window.getSelection();
-          if (selection) selection.removeAllRanges();
-        }
-        showContextMenu(row.dataset.docRowId || "", event.clientX, event.clientY);
-      });
-
-      nav.addEventListener("dragstart", function (event) {
-        var dragHandle = event.target.closest("[data-drag-doc-id]");
-        if (!dragHandle || !managementDragEnabled()) return;
-        hideContextMenu();
-        state.dragDocId = dragHandle.dataset.dragDocId || "";
-        state.dropTargetDocId = "";
-        state.dropPosition = "";
-        if (event.dataTransfer) {
-          event.dataTransfer.effectAllowed = "move";
-          event.dataTransfer.setData("text/plain", state.dragDocId);
-        }
-        updateNavDragState();
-      });
-
-      nav.addEventListener("dragover", function (event) {
-        var row = event.target.closest("[data-doc-row-id]");
-        if (!row) {
-          if (state.dropTargetDocId || state.dropPosition) {
-            state.dropTargetDocId = "";
-            state.dropPosition = "";
-            updateNavDragState();
-          }
-          return;
-        }
-
-        var targetDocId = row.dataset.docRowId || "";
-        var dropOptions = dragDropOptions();
-        var nextPosition = rowDropPosition(row, event, dropOptions);
-        if (!canDropOnDoc(targetDocId, nextPosition, dropOptions)) {
-          if (state.dropTargetDocId || state.dropPosition) {
-            state.dropTargetDocId = "";
-            state.dropPosition = "";
-            updateNavDragState();
-          }
-          return;
-        }
-
-        event.preventDefault();
-        if (event.dataTransfer) {
-          event.dataTransfer.dropEffect = "move";
-        }
-        if (state.dropTargetDocId !== targetDocId || state.dropPosition !== nextPosition) {
-          state.dropTargetDocId = targetDocId;
-          state.dropPosition = nextPosition;
-          updateNavDragState();
-        }
-      });
-
-      nav.addEventListener("drop", function (event) {
-        event.preventDefault();
-        var dropOptions = dragDropOptions();
-        var dropTarget = currentDropTargetFromEvent(event, {
-          targetDocId: state.dropTargetDocId,
-          position: state.dropPosition
-        }, dropOptions);
-        var targetDocId = dropTarget.targetDocId;
-        var position = dropTarget.position;
-        if ((!targetDocId || !position) && state.dropTargetDocId && state.dropPosition) {
-          targetDocId = state.dropTargetDocId;
-          position = state.dropPosition;
-        }
-        if (!canDropOnDoc(targetDocId, position, dropOptions) || !position) {
-          clearDragState();
-          return;
-        }
-        var movingDocId = state.dragDocId;
-        clearDragState();
-        actionController.handleMoveDoc(movingDocId, targetDocId, position);
-      });
-
-      nav.addEventListener("dragend", function () {
-        clearDragState();
-      });
-    }
+    if (interactionController) interactionController.wireEvents();
 
     if (manageRebuildButton) {
       manageRebuildButton.addEventListener("click", function () {
@@ -917,31 +760,6 @@ export function initDocsViewerManagement(context) {
         handleDraftToggleChange();
       });
     }
-    if (contextMenu) {
-      contextMenu.addEventListener("click", function (event) {
-        var action = event.target.closest("[data-context-action]");
-        if (!action) return;
-        if (action.dataset.contextAction === "new-sibling") {
-          actionController.handleCreateRelatedDoc("sibling");
-          return;
-        }
-        if (action.dataset.contextAction === "new-child") {
-          actionController.handleCreateRelatedDoc("child");
-          return;
-        }
-        if (action.dataset.contextAction === "copy-link") {
-          actionController.handleCopyLink();
-          return;
-        }
-        if (action.dataset.contextAction === "open-vscode") {
-          actionController.handleOpenSource("vscode");
-          return;
-        }
-        if (action.dataset.contextAction === "open") {
-          actionController.handleOpenSource("default");
-        }
-      });
-    }
     if (statusPills) {
       statusPills.addEventListener("click", function (event) {
         var toggle = event.target.closest("[data-ui-status-menu-toggle]");
@@ -977,6 +795,39 @@ export function initDocsViewerManagement(context) {
       renderManagementUi: renderManagementUi,
       renderSidebar: context.renderSidebar,
       viewerScope: viewerScope
+    }
+  });
+
+  interactionController = createDocsViewerManagementInteractionController({
+    nav: nav,
+    state: state,
+    context: context,
+    callbacks: {
+      onContextAction: function (actionName) {
+        if (!actionController) return;
+        if (actionName === "new-sibling") {
+          actionController.handleCreateRelatedDoc("sibling");
+          return;
+        }
+        if (actionName === "new-child") {
+          actionController.handleCreateRelatedDoc("child");
+          return;
+        }
+        if (actionName === "copy-link") {
+          actionController.handleCopyLink();
+          return;
+        }
+        if (actionName === "open-vscode") {
+          actionController.handleOpenSource("vscode");
+          return;
+        }
+        if (actionName === "open") {
+          actionController.handleOpenSource("default");
+        }
+      },
+      onMoveDoc: function (movingDocId, targetDocId, position) {
+        if (actionController) actionController.handleMoveDoc(movingDocId, targetDocId, position);
+      }
     }
   });
 
