@@ -17,6 +17,31 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-17] Added Normalize Order UI
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / UI
+
+**Summary:**
+Added `Normalize order` to the Docs Viewer management `Actions` menu.
+The command opens a modal for current sibling group, selected-doc children, root sibling group, or whole-scope order repair, then calls `POST /docs/normalize-order`.
+
+**Effect:**
+Order repair no longer requires a manual `curl` command for normal Studio use.
+The UI keeps the repair target explicit before writing source front matter.
+
+**Affected files/docs:**
+
+- `_includes/docs_viewer_shell.html`
+- `assets/docs-viewer/js/docs-viewer-management.js`
+- `assets/docs-viewer/js/docs-viewer-management-actions.js`
+- `assets/docs-viewer/js/docs-viewer-management-client.js`
+- `assets/docs-viewer/js/docs-viewer-management-config.js`
+- `assets/docs-viewer/data/ui-text.json`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+
 ## [2026-05-17] Added Docs Viewer Order Normalization Command
 
 **Status:** implemented

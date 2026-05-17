@@ -3,6 +3,7 @@ import {
   archiveManagedDoc,
   createManagedDoc,
   moveManagedDoc,
+  normalizeManagedDocOrder,
   openManagedDocSource,
   previewManagedDocDelete,
   rebuildManagedDocs,
@@ -91,6 +92,54 @@ export function createDocsViewerManagementActionController(options) {
 
   function reloadDocsIndex(targetDocId, summaryText) {
     return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(targetDocId, summaryText) : Promise.resolve();
+  }
+
+  function docLabel(doc) {
+    return doc && doc.title ? doc.title : (doc && doc.doc_id ? doc.doc_id : "");
+  }
+
+  function parentLabel(parentId) {
+    var normalized = String(parentId || "").trim();
+    if (!normalized) return state.managementText.normalizeOrderRootLabel;
+    return docLabel(state.docsById.get(normalized)) || normalized;
+  }
+
+  function normalizeOrderChoices(doc) {
+    var choices = [];
+    var seen = new Set();
+    function push(value, label) {
+      if (!value || seen.has(value)) return;
+      seen.add(value);
+      choices.push({ value: value, label: label });
+    }
+
+    if (doc) {
+      var currentParentId = String(doc.parent_id || "").trim();
+      push(
+        "parent:" + currentParentId,
+        context.formatText(state.managementText.normalizeOrderCurrentSiblingsLabel, {
+          parent: parentLabel(currentParentId)
+        })
+      );
+      push(
+        "parent:" + doc.doc_id,
+        context.formatText(state.managementText.normalizeOrderSelectedChildrenLabel, {
+          title: docLabel(doc)
+        })
+      );
+    }
+    push("parent:", state.managementText.normalizeOrderRootChoiceLabel);
+    push("whole", state.managementText.normalizeOrderWholeScopeLabel);
+    return choices;
+  }
+
+  function normalizeOrderPayload(choiceValue) {
+    var value = String(choiceValue || "").trim();
+    if (value === "whole") return { whole_scope: true };
+    if (value.indexOf("parent:") === 0) {
+      return { parent_id: value.slice("parent:".length) };
+    }
+    return null;
   }
 
   function collectAllDescendantDocIds(docId, bucket) {
@@ -354,6 +403,44 @@ export function createDocsViewerManagementActionController(options) {
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Docs rebuild failed.", true);
+      })
+      .finally(function () {
+        setManagementBusy(false);
+        renderManagementUi();
+      });
+  }
+
+  async function handleNormalizeOrder() {
+    if (state.managementBusy) return;
+    var doc = currentSelectedDoc();
+    var choices = normalizeOrderChoices(doc);
+    var result = await openDocsViewerChoiceModal({
+      root: root,
+      title: state.managementText.normalizeOrderTitle,
+      body: state.managementText.normalizeOrderPrompt,
+      value: choices.length ? choices[0].value : "",
+      choices: choices,
+      primaryLabel: state.managementText.normalizeOrderButton,
+      cancelLabel: state.managementText.cancelButton,
+      requiredMessage: state.managementText.normalizeOrderRequired
+    });
+    if (!result || !result.confirmed) return;
+    var payload = normalizeOrderPayload(result.value);
+    if (!payload) {
+      setManagementMessage(state.managementText.normalizeOrderRequired, true);
+      return;
+    }
+
+    setManagementBusy(true);
+    setManagementMessage(state.managementText.normalizeOrderRunning, false);
+
+    normalizeManagedDocOrder(payload, managementClientOptions())
+      .then(function (response) {
+        setManagementMessage(response.summary_text || state.managementText.normalizeOrderDone, false);
+        return reloadDocsIndex(state.selectedDocId || context.defaultRouteDocId() || context.defaultDocId(), "");
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || state.managementText.normalizeOrderFailed, true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -631,6 +718,7 @@ export function createDocsViewerManagementActionController(options) {
     handleEditMetadataSave: handleEditMetadataSave,
     handleMakeViewable: handleMakeViewable,
     handleMoveDoc: handleMoveDoc,
+    handleNormalizeOrder: handleNormalizeOrder,
     handleOpenSource: handleOpenSource,
     handleRebuildDocs: handleRebuildDocs,
     handleSettingsSubmit: handleSettingsSubmit,

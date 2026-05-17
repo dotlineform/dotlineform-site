@@ -40,6 +40,7 @@ export function initDocsViewerManagement(context) {
   var manageActionsButton = document.getElementById("docsViewerManageActionsButton");
   var manageActionsMenu = document.getElementById("docsViewerManageActionsMenu");
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
+  var manageNormalizeOrderButton = document.getElementById("docsViewerManageNormalizeOrderButton");
   var manageSettingsButton = document.getElementById("docsViewerManageSettingsButton");
   var manageNewScopeButton = document.getElementById("docsViewerManageNewScopeButton");
   var manageDeleteScopeButton = document.getElementById("docsViewerManageDeleteScopeButton");
@@ -433,6 +434,9 @@ export function initDocsViewerManagement(context) {
     if (manageImportButton) {
       manageImportButton.disabled = state.managementBusy || !state.managementAvailable;
     }
+    if (manageNormalizeOrderButton) {
+      manageNormalizeOrderButton.disabled = state.managementBusy || !state.managementAvailable;
+    }
     if (manageSettingsButton) {
       manageSettingsButton.disabled = state.managementBusy || !state.managementAvailable;
     }
@@ -640,6 +644,7 @@ export function initDocsViewerManagement(context) {
         draftLabel: draftLabel,
         draftToggle: draftToggle,
         manageDeleteScopeButton: manageDeleteScopeButton,
+        manageNormalizeOrderButton: manageNormalizeOrderButton,
         manageNewScopeButton: manageNewScopeButton,
         manageSettingsButton: manageSettingsButton,
         manageViewableButton: manageViewableButton,
@@ -691,6 +696,13 @@ export function initDocsViewerManagement(context) {
         hideContextMenu();
         hideManageActionsMenu();
         actionController.handleRebuildDocs();
+      });
+    }
+    if (manageNormalizeOrderButton) {
+      manageNormalizeOrderButton.addEventListener("click", function () {
+        hideContextMenu();
+        hideManageActionsMenu();
+        actionController.handleNormalizeOrder();
       });
     }
     if (manageImportButton) {

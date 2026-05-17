@@ -89,7 +89,7 @@ Current behavior:
 - docs-specific Studio Activity row construction is owned by `scripts/docs/docs_activity.py`
 - docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `scripts/docs/docs_write_rebuild.py`
 - staged source import orchestration for the Docs Viewer import modal is owned by `scripts/docs/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
-- management mutation planners for create, metadata, viewability, move, restore, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
+- management mutation planners for create, metadata, viewability, move, restore, normalize-order, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups where configured, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
 - Data Sharing HTTP endpoints are hosted here for now, with neutral route constants and shared dispatch owned by `scripts/studio/` and Library document behavior owned by `scripts/docs/documents_data_sharing_adapter.py`
 - used by `/docs/?scope=<scope>&mode=manage` for configured docs scopes
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
@@ -650,6 +650,7 @@ Normalize-order behavior:
 - defaults to the root sibling group when `parent_id` is omitted or blank
 - validates non-root `parent_id` values against current scope source data
 - `whole_scope: true` normalizes every sibling group in the scope
+- the Docs Viewer `Actions` menu opens a modal for current sibling group, selected-doc children, root sibling group, or whole-scope repair
 - writes only docs whose `sort_order` changes
 - creates no backup bundle
 - rebuilds the current scope docs payloads without a docs-search update

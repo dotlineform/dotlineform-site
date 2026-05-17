@@ -45,6 +45,18 @@ var MANAGEMENT_TEXT_KEYS = [
   ["settingsSaved", "docs_viewer.settings_saved"],
   ["settingsLoadFailed", "docs_viewer.settings_load_failed"],
   ["settingsSaveFailed", "docs_viewer.settings_save_failed"],
+  ["normalizeOrderTitle", "docs_viewer.normalize_order_title"],
+  ["normalizeOrderPrompt", "docs_viewer.normalize_order_prompt"],
+  ["normalizeOrderButton", "docs_viewer.normalize_order_button"],
+  ["normalizeOrderRunning", "docs_viewer.normalize_order_running"],
+  ["normalizeOrderDone", "docs_viewer.normalize_order_done"],
+  ["normalizeOrderFailed", "docs_viewer.normalize_order_failed"],
+  ["normalizeOrderRequired", "docs_viewer.normalize_order_required"],
+  ["normalizeOrderRootLabel", "docs_viewer.normalize_order_root_label"],
+  ["normalizeOrderRootChoiceLabel", "docs_viewer.normalize_order_root_choice_label"],
+  ["normalizeOrderCurrentSiblingsLabel", "docs_viewer.normalize_order_current_siblings_label"],
+  ["normalizeOrderSelectedChildrenLabel", "docs_viewer.normalize_order_selected_children_label"],
+  ["normalizeOrderWholeScopeLabel", "docs_viewer.normalize_order_whole_scope_label"],
   ["scopeCreateTitle", "docs_viewer.scope_create_title"],
   ["scopeCreateIntro", "docs_viewer.scope_create_intro"],
   ["scopeIdLabel", "docs_viewer.scope_id_label"],
@@ -137,6 +149,9 @@ export function applyDocsViewerManagementConfig(options) {
   }
   if (refs.manageSettingsButton) {
     refs.manageSettingsButton.textContent = context.getConfigText(config, "docs_viewer.settings_button", "Settings");
+  }
+  if (refs.manageNormalizeOrderButton) {
+    refs.manageNormalizeOrderButton.textContent = context.getConfigText(config, "docs_viewer.normalize_order_menu_button", "Normalize order");
   }
 
   state.managementText.scopeNewButton = context.getConfigText(config, "docs_viewer.scope_new_button", state.managementText.scopeNewButton);

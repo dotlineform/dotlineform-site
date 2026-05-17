@@ -149,6 +149,10 @@ export function restoreManagedDocMove(focusDocId, records, options) {
   }, options), options);
 }
 
+export function normalizeManagedDocOrder(payload, options) {
+  return fetchManagementJson("/docs/normalize-order", "POST", scopedPayload(payload || {}, options), options);
+}
+
 export function openManagedDocSource(docId, editor, options) {
   return fetchManagementJson("/docs/open-source", "POST", scopedPayload({
     doc_id: docId,

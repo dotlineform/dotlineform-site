@@ -45,6 +45,7 @@ Implemented now:
 - source writes remain front-matter-only; files do not move on disk
 - drag/drop moves assign a sparse `sort_order` to the moved doc only when there is room between neighboring siblings, and normalize the destination sibling set only when the numeric gap is exhausted or the target order is ambiguous
 - sparse order spacing uses `1000` between normalized siblings
+- the `Actions` menu exposes `Normalize order`, which opens a modal for current sibling group, selected-doc children, root sibling group, or whole-scope repair
 - create-after-selected uses sparse `sort_order` increments without renumbering siblings
 - create, reparent, archive, delete, and searchable metadata edits rebuild docs payloads plus same-scope docs search; same-parent drag/drop reorder rebuilds docs payloads without a search update
 - docs-management writes `added_date` and `last_updated` values in `YYYY-MM-DD HH:MM` form for new or content-imported docs; metadata-only changes preserve existing `last_updated` values so the field reflects content freshness rather than tree/status/summary churn
@@ -65,7 +66,7 @@ Implemented now:
   - `New Sibling`
   - `New Child`
 - `Edit` is available for the current doc in the manage toolbar
-- `Rebuild docs`, `Import`, `New`, `Edit`, `Archive`, and `Delete` are grouped under the top-row `Actions` menu
+- `Rebuild docs`, `Normalize order`, `Import`, `New`, `Edit`, `Archive`, and `Delete` are grouped under the top-row `Actions` menu
 - `Settings` is grouped under the top-row `Actions` menu and opens the active-scope settings modal
 - the settings modal currently exposes scoped `show_updated_date` only, writes through the local source-config settings endpoint, and rebuilds the affected docs payloads after a changed save
 - `Actions`, `Show`, and `show hidden` sit in the search/control row so hidden-doc review controls stay quick to reach
