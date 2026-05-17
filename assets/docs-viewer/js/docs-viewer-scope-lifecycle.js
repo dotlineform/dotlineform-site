@@ -234,7 +234,7 @@ function collectCreatePayload(api, state) {
   var defaultDocId = normalizeText(host.querySelector('[data-role="scope-default-doc-id"]')?.value);
   var publicRoutePath = normalizeText(host.querySelector('[data-role="scope-public-route-path"]')?.value);
   var writeGenerated = Boolean(host.querySelector('[data-role="scope-write-generated"]')?.checked);
-  var buildSearch = Boolean(host.querySelector('[data-role="scope-build-search"]')?.checked);
+  var buildSearch = writeGenerated && Boolean(host.querySelector('[data-role="scope-build-search"]')?.checked);
 
   if (!scopeId || !title || !sourceRoot || !defaultDocId) {
     api.setStatus(managementText(state, "scopeCreateRequiredMessage", "Enter the required scope fields."));
