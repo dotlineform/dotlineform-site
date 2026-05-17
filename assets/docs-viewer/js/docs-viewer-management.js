@@ -33,19 +33,45 @@ import {
   renderStatusPillsMarkup
 } from "./docs-viewer-management-render.js";
 import {
-  openCreateScopeFlow,
-  openDeleteScopeFlow,
-  scopeCreateSupported,
-  scopeDeleteSupported,
-  scopeLifecycleDeleteTargets
-} from "./docs-viewer-scope-lifecycle.js";
-import {
   buildDocsViewerDeletePreviewBody,
   createDocsViewerManagementModalController,
   openDocsViewerChoiceModal,
   openDocsViewerConfirmModal,
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
+
+function scopeLifecycleCapabilities(capabilities) {
+  return capabilities && capabilities.scope_lifecycle && typeof capabilities.scope_lifecycle === "object"
+    ? capabilities.scope_lifecycle
+    : null;
+}
+
+function scopeCreateSupported(capabilities) {
+  var lifecycle = scopeLifecycleCapabilities(capabilities);
+  return Boolean(lifecycle && lifecycle.create_preview && lifecycle.create_apply);
+}
+
+function scopeDeleteSupported(capabilities) {
+  var lifecycle = scopeLifecycleCapabilities(capabilities);
+  return Boolean(lifecycle && lifecycle.delete_preview && lifecycle.delete_apply);
+}
+
+function scopeLifecycleDeleteTargets(capabilities) {
+  var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
+    ? capabilities.scopes
+    : {};
+  return Object.keys(scopes).sort().map(function (scopeId) {
+    var scopeCaps = scopes[scopeId] || {};
+    var lifecycle = scopeCaps.scope_lifecycle || {};
+    return {
+      scopeId: scopeId,
+      root: String(scopeCaps.root || "").trim(),
+      deleteEligible: lifecycle.delete_eligible === true
+    };
+  }).filter(function (record) {
+    return record.deleteEligible;
+  });
+}
 
 export function initDocsViewerManagement(context) {
   var root = context.root;
@@ -100,6 +126,7 @@ export function initDocsViewerManagement(context) {
   var settingsSaveButton = document.getElementById("docsViewerSettingsSaveButton");
   var docsImportRequestPromise = null;
   var docsImportInitialized = false;
+  var scopeLifecycleRequestPromise = null;
   var modalController = null;
 
   function viewerScope() {
@@ -955,28 +982,62 @@ export function initDocsViewerManagement(context) {
     };
   }
 
+  function loadScopeLifecycleModule() {
+    if (scopeLifecycleRequestPromise) return scopeLifecycleRequestPromise;
+    scopeLifecycleRequestPromise = import("./docs-viewer-scope-lifecycle.js")
+      .then(function (module) {
+        if (
+          !module ||
+          typeof module.openCreateScopeFlow !== "function" ||
+          typeof module.openDeleteScopeFlow !== "function"
+        ) {
+          throw new Error("Docs Viewer scope lifecycle module is unavailable.");
+        }
+        return module;
+      })
+      .catch(function (error) {
+        scopeLifecycleRequestPromise = null;
+        throw error;
+      });
+    return scopeLifecycleRequestPromise;
+  }
+
   function handleCreateScope() {
     hideContextMenu();
     hideManageActionsMenu();
-    return openCreateScopeFlow({
-      root: root,
-      state: state,
-      capabilities: state.managementCapabilities,
-      clientOptions: managementClientOptions(),
-      callbacks: scopeLifecycleCallbacks()
-    });
+    return loadScopeLifecycleModule()
+      .then(function (module) {
+        return module.openCreateScopeFlow({
+          root: root,
+          state: state,
+          capabilities: state.managementCapabilities,
+          clientOptions: managementClientOptions(),
+          callbacks: scopeLifecycleCallbacks()
+        });
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Scope lifecycle unavailable.", true);
+        return null;
+      });
   }
 
   function handleDeleteScope() {
     hideContextMenu();
     hideManageActionsMenu();
-    return openDeleteScopeFlow({
-      root: root,
-      state: state,
-      capabilities: state.managementCapabilities,
-      clientOptions: managementClientOptions(),
-      callbacks: scopeLifecycleCallbacks()
-    });
+    return loadScopeLifecycleModule()
+      .then(function (module) {
+        return module.openDeleteScopeFlow({
+          root: root,
+          state: state,
+          capabilities: state.managementCapabilities,
+          clientOptions: managementClientOptions(),
+          callbacks: scopeLifecycleCallbacks()
+        });
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Scope lifecycle unavailable.", true);
+        return null;
+      });
   }
 
   async function handleArchiveDoc() {
