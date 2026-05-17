@@ -611,7 +611,7 @@ def run_filename_conflict_check(page: Page) -> None:
         page,
         '[data-role="docs-import-filename-conflict-modal"]',
         "File already exists",
-        ["Cancel", "Replace", "OK"],
+        ["Cancel", "Replace", "Replace all", "OK"],
         active_id="docsHtmlImportReplacementDocId",
         size_class="docsViewer__modalCard--compact",
     )
@@ -744,6 +744,126 @@ def run_import_result_rows_check(page: Page) -> None:
     ]
     if rows != expected:
         raise AssertionError(f"import result rows did not render as expected: {rows!r}")
+
+
+def run_scope_lifecycle_create_payload_check(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <main id="docsViewerRoot" class="docsViewer">
+                <button id="scopeLifecycleOpener" type="button">New scope</button>
+              </main>
+            `;
+            window.__docsViewerScopeCreateRequests = [];
+            window.fetch = async (url, options = {}) => {
+                const body = options.body ? JSON.parse(options.body) : null;
+                window.__docsViewerScopeCreateRequests.push({
+                    url: String(url),
+                    body
+                });
+                return {
+                    ok: true,
+                    status: 200,
+                    json: async () => ({
+                        ok: true,
+                        schema_version: 'docs_scope_lifecycle_preview_v1',
+                        action: 'create_scope',
+                        operation: 'preview',
+                        scope_id: body.scope_id,
+                        title: body.title,
+                        summary_text: 'Preview scope create.',
+                        blockers: [],
+                        created_files: [],
+                        changed_files: [],
+                        build_commands: [],
+                        urls: {
+                            management: `/docs/?scope=${body.scope_id}&mode=manage`,
+                            public: ''
+                        }
+                    })
+                };
+            };
+            const lifecycle = await import('/assets/docs-viewer/js/docs-viewer-scope-lifecycle.js');
+            window.__docsViewerScopeCreatePromise = lifecycle.openCreateScopeFlow({
+                root: document.getElementById('docsViewerRoot'),
+                state: {
+                    managementText: {
+                        cancelButton: 'Cancel',
+                        scopeBuildSearchLabel: 'build inline search',
+                        scopeCreateIntro: 'Create scope fixture.',
+                        scopeCreatePreviewTitle: 'Preview new scope',
+                        scopeCreatePreviewing: 'Previewing new scope...',
+                        scopeCreateRequiredMessage: 'Enter the required scope fields.',
+                        scopeCreateRouteRequiredMessage: 'Enter a public route path for public read-only scopes.',
+                        scopeCreateTitle: 'New scope',
+                        scopeDefaultDocIdLabel: 'default doc id',
+                        scopeIdLabel: 'scope id',
+                        scopeLocalCommittedMode: 'local-only committed scope',
+                        scopeLocalCommittedModeNote: 'Local committed note.',
+                        scopeLocalUncommittedMode: 'local-only uncommitted scope',
+                        scopeLocalUncommittedModeNote: 'Local uncommitted note.',
+                        scopePreviewButton: 'Preview',
+                        scopePublicReadonlyMode: 'public read-only scope',
+                        scopePublicReadonlyModeNote: 'Public note.',
+                        scopePublicRoutePathLabel: 'public route path',
+                        scopePublishingModeLabel: 'publishing mode',
+                        scopeSaveButton: 'Save',
+                        scopeSourceRootLabel: 'source root',
+                        scopeTitleLabel: 'title',
+                        scopeWriteGeneratedLabel: 'write generated outputs immediately'
+                    }
+                },
+                capabilities: {
+                    scope_lifecycle: {
+                        publishing_modes: ['public_readonly', 'local_committed', 'local_uncommitted']
+                    }
+                },
+                clientOptions: {
+                    baseUrl: 'http://docs-management.test'
+                },
+                callbacks: {
+                    render: () => {},
+                    setBusy: busy => { window.__docsViewerScopeBusy = busy; },
+                    setMessage: (message, isError) => {
+                        window.__docsViewerScopeMessage = { message, isError };
+                    }
+                }
+            }).then(value => {
+                window.__docsViewerScopeCreateResult = value;
+            });
+        }"""
+    )
+    page.wait_for_selector('[data-role="docs-viewer-management-modal"]')
+    assert_shell(
+        page,
+        '[data-role="docs-viewer-management-modal"]',
+        "New scope",
+        ["Preview", "Cancel"],
+        size_class="docsViewer__modalCard--wide",
+    )
+    page.locator('[data-role="scope-id"]').fill("private-notes")
+    page.locator('[data-role="scope-title"]').fill("Private Notes")
+    page.locator('[data-role="scope-write-generated"]').uncheck()
+    page.locator('[data-role="modal-primary"]').click()
+    page.wait_for_function("() => window.__docsViewerScopeCreateRequests.length === 1")
+    request = page.evaluate("window.__docsViewerScopeCreateRequests[0]")
+    expected_body = {
+        "scope_id": "private-notes",
+        "title": "Private Notes",
+        "source_root": "_docs_private-notes",
+        "default_doc_id": "private-notes",
+        "publishing_mode": "public_readonly",
+        "public_route_path": "/private-notes/",
+        "build_inline_search": False,
+        "write_generated_outputs": False,
+    }
+    if request["url"] != "http://docs-management.test/docs/scopes/create-preview":
+        raise AssertionError(f"scope create preview used the wrong endpoint: {request!r}")
+    if request["body"] != expected_body:
+        raise AssertionError(f"scope create payload did not match disabled generated-output state: {request!r}")
+    page.wait_for_function("() => document.querySelector('[data-role=\"docs-viewer-management-modal\"] .docsViewer__modalTitle')?.textContent.trim() === 'Preview new scope'")
+    page.locator('button[data-role="modal-cancel"]').click()
+    page.wait_for_function("() => window.__docsViewerScopeCreateResult === null")
 
 
 def run_delete_confirm_idle_check(page: Page) -> None:
@@ -907,6 +1027,7 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
     run_transient_choice_check(page)
     run_filename_conflict_check(page)
     run_import_result_rows_check(page)
+    run_scope_lifecycle_create_payload_check(page)
     run_delete_confirm_idle_check(page)
     return {
         "width": viewport["width"],
@@ -920,6 +1041,7 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
             "transient-choice",
             "filename-conflict",
             "import-result-rows",
+            "scope-lifecycle-create-payload",
             "delete-confirm-idle",
         ],
     }
