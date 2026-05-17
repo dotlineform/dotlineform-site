@@ -3,10 +3,18 @@ import {
   isDocHidden
 } from "./docs-viewer-tree.js";
 import {
-  readManagementCapabilities,
-  readSourceConfigSettings,
-  scopeSupportsGeneratedDataReads
+  readSourceConfigSettings
 } from "./docs-viewer-management-client.js";
+import {
+  createDocsViewerManagementCapabilityController,
+  scopeArchiveAvailable,
+  scopeCreateSupported,
+  scopeDeleteSupported,
+  scopeLifecycleDeleteTargets
+} from "./docs-viewer-management-capabilities.js";
+import {
+  applyDocsViewerManagementConfig
+} from "./docs-viewer-management-config.js";
 import {
   canDragDoc,
   canDropOnDoc,
@@ -23,39 +31,6 @@ import {
 import {
   createDocsViewerManagementActionController
 } from "./docs-viewer-management-actions.js";
-
-function scopeLifecycleCapabilities(capabilities) {
-  return capabilities && capabilities.scope_lifecycle && typeof capabilities.scope_lifecycle === "object"
-    ? capabilities.scope_lifecycle
-    : null;
-}
-
-function scopeCreateSupported(capabilities) {
-  var lifecycle = scopeLifecycleCapabilities(capabilities);
-  return Boolean(lifecycle && lifecycle.create_preview && lifecycle.create_apply);
-}
-
-function scopeDeleteSupported(capabilities) {
-  var lifecycle = scopeLifecycleCapabilities(capabilities);
-  return Boolean(lifecycle && lifecycle.delete_preview && lifecycle.delete_apply);
-}
-
-function scopeLifecycleDeleteTargets(capabilities) {
-  var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
-    ? capabilities.scopes
-    : {};
-  return Object.keys(scopes).sort().map(function (scopeId) {
-    var scopeCaps = scopes[scopeId] || {};
-    var lifecycle = scopeCaps.scope_lifecycle || {};
-    return {
-      scopeId: scopeId,
-      root: String(scopeCaps.root || "").trim(),
-      deleteEligible: lifecycle.delete_eligible === true
-    };
-  }).filter(function (record) {
-    return record.deleteEligible;
-  });
-}
 
 export function initDocsViewerManagement(context) {
   var root = context.root;
@@ -111,6 +86,7 @@ export function initDocsViewerManagement(context) {
   var docsImportRequestPromise = null;
   var docsImportInitialized = false;
   var scopeLifecycleRequestPromise = null;
+  var capabilityController = null;
   var modalController = null;
   var actionController = null;
 
@@ -127,11 +103,6 @@ export function initDocsViewerManagement(context) {
         return window.fetch(url, options);
       }
     };
-  }
-
-  function scopeManagementCapabilities() {
-    if (!state.managementCapabilities || !state.managementCapabilities.scopes) return null;
-    return state.managementCapabilities.scopes[viewerScope()] || null;
   }
 
   function currentSelectedDoc() {
@@ -406,8 +377,7 @@ export function initDocsViewerManagement(context) {
   }
 
   function managementArchiveAvailable() {
-    var scopeCaps = scopeManagementCapabilities();
-    return Boolean(scopeCaps && scopeCaps.archive_available);
+    return scopeArchiveAvailable(state.managementCapabilities, viewerScope());
   }
 
   function managementNoteText() {
@@ -548,55 +518,11 @@ export function initDocsViewerManagement(context) {
   }
 
   function initializeManagement() {
-    state.managementMode = context.getCurrentMode() === context.MANAGEMENT_MODE;
-    renderManagementUi();
-    if (!state.managementMode) return;
-
-    if (!context.managementBaseUrl) {
-      state.managementChecked = true;
-      state.managementAvailable = false;
-      renderManagementUi();
-      return;
-    }
-
-    state.managementCapabilityCheckId += 1;
-    checkManagementCapabilities(0, state.managementCapabilityCheckId);
+    if (capabilityController) capabilityController.initialize();
   }
 
   function refreshManagementCapabilities() {
-    if (!state.managementMode || !context.managementBaseUrl) return;
-    state.managementCapabilityCheckId += 1;
-    checkManagementCapabilities(0, state.managementCapabilityCheckId);
-  }
-
-  function checkManagementCapabilities(attempt, checkId) {
-    readManagementCapabilities(managementClientOptions())
-      .then(function (payload) {
-        if (checkId !== state.managementCapabilityCheckId) return;
-        var scopeCaps = payload && payload.capabilities && payload.capabilities.scopes
-          ? payload.capabilities.scopes[viewerScope()]
-          : null;
-        state.managementCapabilities = payload.capabilities || null;
-        state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(state.managementCapabilities, viewerScope());
-        state.generatedDataReadChecked = true;
-        state.managementChecked = true;
-        state.managementAvailable = Boolean(scopeCaps && scopeCaps.available);
-        renderManagementUi();
-        context.renderSidebar();
-      })
-      .catch(function () {
-        if (checkId !== state.managementCapabilityCheckId) return;
-        if (attempt < context.MANAGEMENT_CAPABILITY_RETRY_ATTEMPTS - 1) {
-          window.setTimeout(function () {
-            checkManagementCapabilities(attempt + 1, checkId);
-          }, context.MANAGEMENT_CAPABILITY_RETRY_DELAY_MS);
-          return;
-        }
-        state.managementCapabilities = null;
-        state.managementChecked = true;
-        state.managementAvailable = false;
-        renderManagementUi();
-      });
+    if (capabilityController) capabilityController.refresh();
   }
 
   function reloadDocsIndex(targetDocId, summaryText) {
@@ -768,142 +694,26 @@ export function initDocsViewerManagement(context) {
   }
 
   function applyConfig(config) {
-    if (draftLabel) {
-      draftLabel.textContent = context.getConfigText(config, "docs_viewer.hidden_toggle_label", context.getConfigText(config, "docs_viewer.draft_toggle_label", "show hidden"));
-    }
-    if (draftToggle) {
-      draftToggle.setAttribute("aria-label", context.getConfigText(config, "docs_viewer.hidden_toggle_aria_label", context.getConfigText(config, "docs_viewer.draft_toggle_aria_label", "Show hidden docs")));
-    }
-    if (manageViewableButton) {
-      var makeViewableLabel = context.getConfigText(config, "docs_viewer.make_viewable_button", "Show");
-      manageViewableButton.textContent = makeViewableLabel;
-      manageViewableButton.setAttribute("aria-label", makeViewableLabel);
-      manageViewableButton.title = makeViewableLabel;
-    }
-    if (manageSettingsButton) {
-      manageSettingsButton.textContent = context.getConfigText(config, "docs_viewer.settings_button", "Settings");
-    }
-    if (manageNewScopeButton) {
-      state.managementText.scopeNewButton = context.getConfigText(config, "docs_viewer.scope_new_button", state.managementText.scopeNewButton);
-      manageNewScopeButton.textContent = state.managementText.scopeNewButton;
-    }
-    if (manageDeleteScopeButton) {
-      state.managementText.scopeDeleteMenuButton = context.getConfigText(config, "docs_viewer.scope_delete_menu_button", state.managementText.scopeDeleteMenuButton);
-      manageDeleteScopeButton.textContent = state.managementText.scopeDeleteMenuButton;
-    }
-    if (contextCopyLinkButton) {
-      state.managementText.copyLinkLabel = context.getConfigText(config, "docs_viewer.copy_link_label", state.managementText.copyLinkLabel);
-      contextCopyLinkButton.textContent = state.managementText.copyLinkLabel;
-      contextCopyLinkButton.setAttribute("aria-label", state.managementText.copyLinkLabel);
-    }
-    if (settingsHeading) {
-      settingsHeading.textContent = context.getConfigText(config, "docs_viewer.settings_title", "Settings");
-    }
-    if (settingsUpdatedLabel) {
-      settingsUpdatedLabel.textContent = context.getConfigText(config, "docs_viewer.settings_show_updated_date_label", "show updated dates");
-    }
-    state.managementText.archiveUnavailableNote = context.getConfigText(config, "docs_viewer.manage_archive_unavailable_note", state.managementText.archiveUnavailableNote);
-    state.managementText.checkingNote = context.getConfigText(config, "docs_viewer.manage_checking_note", state.managementText.checkingNote);
-    state.managementText.clearSearchNote = context.getConfigText(config, "docs_viewer.manage_clear_search_note", state.managementText.clearSearchNote);
-    state.managementText.undoMoveLabel = context.getConfigText(config, "docs_viewer.undo_move_label", state.managementText.undoMoveLabel);
-    state.managementText.undoMoveStatus = context.getConfigText(config, "docs_viewer.undo_move_status", state.managementText.undoMoveStatus);
-    state.managementText.serverNotConfiguredError = context.getConfigText(config, "docs_viewer.manage_server_not_configured_error", state.managementText.serverNotConfiguredError);
-    state.managementText.unavailableNote = context.getConfigText(config, "docs_viewer.manage_unavailable_note", state.managementText.unavailableNote);
-    state.managementText.cancelButton = context.getConfigText(config, "docs_viewer.modal_cancel_button", state.managementText.cancelButton);
-    state.managementText.confirmContinueButton = context.getConfigText(config, "docs_viewer.modal_continue_button", state.managementText.confirmContinueButton);
-    state.managementText.viewableAncestorPrompt = context.getConfigText(config, "docs_viewer.viewable_ancestor_prompt", state.managementText.viewableAncestorPrompt);
-    state.managementText.viewableAncestorTitle = context.getConfigText(config, "docs_viewer.viewable_ancestor_title", state.managementText.viewableAncestorTitle);
-    state.managementText.viewableDescendantPrompt = context.getConfigText(config, "docs_viewer.viewable_descendant_prompt", state.managementText.viewableDescendantPrompt);
-    state.managementText.viewableDescendantTitle = context.getConfigText(config, "docs_viewer.viewable_descendant_title", state.managementText.viewableDescendantTitle);
-    state.managementText.viewableDescendantSelectedLabel = context.getConfigText(config, "docs_viewer.viewable_descendant_selected_label", state.managementText.viewableDescendantSelectedLabel);
-    state.managementText.viewableDescendantAllLabel = context.getConfigText(config, "docs_viewer.viewable_descendant_all_label", state.managementText.viewableDescendantAllLabel);
-    state.managementText.viewableInvalidChoice = context.getConfigText(config, "docs_viewer.viewable_invalid_choice", state.managementText.viewableInvalidChoice);
-    state.managementText.createDocTitle = context.getConfigText(config, "docs_viewer.create_doc_title", state.managementText.createDocTitle);
-    state.managementText.createChildDocTitle = context.getConfigText(config, "docs_viewer.create_child_doc_title", state.managementText.createChildDocTitle);
-    state.managementText.createSiblingDocTitle = context.getConfigText(config, "docs_viewer.create_sibling_doc_title", state.managementText.createSiblingDocTitle);
-    state.managementText.createDocLabel = context.getConfigText(config, "docs_viewer.create_doc_label", state.managementText.createDocLabel);
-    state.managementText.createDocDefaultTitle = context.getConfigText(config, "docs_viewer.create_doc_default_title", state.managementText.createDocDefaultTitle);
-    state.managementText.createDocButton = context.getConfigText(config, "docs_viewer.create_doc_button", state.managementText.createDocButton);
-    state.managementText.archiveConfirmTitle = context.getConfigText(config, "docs_viewer.archive_confirm_title", state.managementText.archiveConfirmTitle);
-    state.managementText.archiveConfirmBody = context.getConfigText(config, "docs_viewer.archive_confirm_body", state.managementText.archiveConfirmBody);
-    state.managementText.archiveConfirmButton = context.getConfigText(config, "docs_viewer.archive_confirm_button", state.managementText.archiveConfirmButton);
-    state.managementText.deleteConfirmTitle = context.getConfigText(config, "docs_viewer.delete_confirm_title", state.managementText.deleteConfirmTitle);
-    state.managementText.deleteConfirmButton = context.getConfigText(config, "docs_viewer.delete_confirm_button", state.managementText.deleteConfirmButton);
-    state.managementText.metadataStatusLabel = context.getConfigText(config, "docs_viewer.metadata_status_label", state.managementText.metadataStatusLabel);
-    state.managementText.metadataStatusNoneOption = context.getConfigText(config, "docs_viewer.metadata_status_none_option", state.managementText.metadataStatusNoneOption);
-    state.managementText.metadataStatusSelectedSuffix = context.getConfigText(config, "docs_viewer.metadata_status_selected_suffix", state.managementText.metadataStatusSelectedSuffix);
-    state.managementText.metadataHiddenLabel = context.getConfigText(config, "docs_viewer.metadata_hidden_label", context.getConfigText(config, "docs_viewer.metadata_viewable_label", state.managementText.metadataHiddenLabel));
-    state.managementText.metadataParentRootOption = context.getConfigText(config, "docs_viewer.metadata_parent_root_option", state.managementText.metadataParentRootOption);
-    state.managementText.metadataParentInvalid = context.getConfigText(config, "docs_viewer.metadata_parent_invalid", state.managementText.metadataParentInvalid);
-    state.managementText.metadataParentNoMatches = context.getConfigText(config, "docs_viewer.metadata_parent_no_matches", state.managementText.metadataParentNoMatches);
-    state.managementText.docHiddenEmoji = String(context.getConfigValue(config, "docs_viewer.doc_hidden_emoji") || state.managementText.docHiddenEmoji);
-    state.managementText.statusMenuLabel = context.getConfigText(config, "docs_viewer.status_menu_label", state.managementText.statusMenuLabel);
-    state.managementText.statusPillSetLabel = context.getConfigText(config, "docs_viewer.status_pill_set_label", state.managementText.statusPillSetLabel);
-    state.managementText.statusPillClearLabel = context.getConfigText(config, "docs_viewer.status_pill_clear_label", state.managementText.statusPillClearLabel);
-    state.managementText.statusPillReadonlyLabel = context.getConfigText(config, "docs_viewer.status_pill_readonly_label", state.managementText.statusPillReadonlyLabel);
-    state.managementText.statusPillSaving = context.getConfigText(config, "docs_viewer.status_pill_saving", state.managementText.statusPillSaving);
-    state.managementText.statusPillSaved = context.getConfigText(config, "docs_viewer.status_pill_saved", state.managementText.statusPillSaved);
-    state.managementText.statusPillFailed = context.getConfigText(config, "docs_viewer.status_pill_failed", state.managementText.statusPillFailed);
-    state.managementText.settingsLoading = context.getConfigText(config, "docs_viewer.settings_loading", state.managementText.settingsLoading);
-    state.managementText.settingsEmpty = context.getConfigText(config, "docs_viewer.settings_empty", state.managementText.settingsEmpty);
-    state.managementText.settingsSaving = context.getConfigText(config, "docs_viewer.settings_saving", state.managementText.settingsSaving);
-    state.managementText.settingsSaved = context.getConfigText(config, "docs_viewer.settings_saved", state.managementText.settingsSaved);
-    state.managementText.settingsLoadFailed = context.getConfigText(config, "docs_viewer.settings_load_failed", state.managementText.settingsLoadFailed);
-    state.managementText.settingsSaveFailed = context.getConfigText(config, "docs_viewer.settings_save_failed", state.managementText.settingsSaveFailed);
-    state.managementText.scopeCreateTitle = context.getConfigText(config, "docs_viewer.scope_create_title", state.managementText.scopeCreateTitle);
-    state.managementText.scopeCreateIntro = context.getConfigText(config, "docs_viewer.scope_create_intro", state.managementText.scopeCreateIntro);
-    state.managementText.scopeIdLabel = context.getConfigText(config, "docs_viewer.scope_id_label", state.managementText.scopeIdLabel);
-    state.managementText.scopeTitleLabel = context.getConfigText(config, "docs_viewer.scope_title_label", state.managementText.scopeTitleLabel);
-    state.managementText.scopePublishingModeLabel = context.getConfigText(config, "docs_viewer.scope_publishing_mode_label", state.managementText.scopePublishingModeLabel);
-    state.managementText.scopePublicReadonlyMode = context.getConfigText(config, "docs_viewer.scope_public_readonly_mode", state.managementText.scopePublicReadonlyMode);
-    state.managementText.scopeLocalCommittedMode = context.getConfigText(config, "docs_viewer.scope_local_committed_mode", state.managementText.scopeLocalCommittedMode);
-    state.managementText.scopeLocalUncommittedMode = context.getConfigText(config, "docs_viewer.scope_local_uncommitted_mode", state.managementText.scopeLocalUncommittedMode);
-    state.managementText.scopePublicReadonlyModeNote = context.getConfigText(config, "docs_viewer.scope_public_readonly_mode_note", state.managementText.scopePublicReadonlyModeNote);
-    state.managementText.scopeLocalCommittedModeNote = context.getConfigText(config, "docs_viewer.scope_local_committed_mode_note", state.managementText.scopeLocalCommittedModeNote);
-    state.managementText.scopeLocalUncommittedModeNote = context.getConfigText(config, "docs_viewer.scope_local_uncommitted_mode_note", state.managementText.scopeLocalUncommittedModeNote);
-    state.managementText.scopeSourceRootLabel = context.getConfigText(config, "docs_viewer.scope_source_root_label", state.managementText.scopeSourceRootLabel);
-    state.managementText.scopeDefaultDocIdLabel = context.getConfigText(config, "docs_viewer.scope_default_doc_id_label", state.managementText.scopeDefaultDocIdLabel);
-    state.managementText.scopePublicRoutePathLabel = context.getConfigText(config, "docs_viewer.scope_public_route_path_label", state.managementText.scopePublicRoutePathLabel);
-    state.managementText.scopeWriteGeneratedLabel = context.getConfigText(config, "docs_viewer.scope_write_generated_label", state.managementText.scopeWriteGeneratedLabel);
-    state.managementText.scopeBuildSearchLabel = context.getConfigText(config, "docs_viewer.scope_build_search_label", state.managementText.scopeBuildSearchLabel);
-    state.managementText.scopePreviewButton = context.getConfigText(config, "docs_viewer.scope_preview_button", state.managementText.scopePreviewButton);
-    state.managementText.scopeSaveButton = context.getConfigText(config, "docs_viewer.scope_save_button", state.managementText.scopeSaveButton);
-    state.managementText.scopeDeleteButton = context.getConfigText(config, "docs_viewer.scope_delete_button", state.managementText.scopeDeleteButton);
-    state.managementText.scopeResultOkButton = context.getConfigText(config, "docs_viewer.scope_result_ok_button", state.managementText.scopeResultOkButton);
-    state.managementText.scopeCreateRequiredMessage = context.getConfigText(config, "docs_viewer.scope_create_required_message", state.managementText.scopeCreateRequiredMessage);
-    state.managementText.scopeCreateRouteRequiredMessage = context.getConfigText(config, "docs_viewer.scope_create_route_required_message", state.managementText.scopeCreateRouteRequiredMessage);
-    state.managementText.scopeCreatePreviewing = context.getConfigText(config, "docs_viewer.scope_create_previewing", state.managementText.scopeCreatePreviewing);
-    state.managementText.scopeCreatePreviewTitle = context.getConfigText(config, "docs_viewer.scope_create_preview_title", state.managementText.scopeCreatePreviewTitle);
-    state.managementText.scopeCreateSaving = context.getConfigText(config, "docs_viewer.scope_create_saving", state.managementText.scopeCreateSaving);
-    state.managementText.scopeCreateFailed = context.getConfigText(config, "docs_viewer.scope_create_failed", state.managementText.scopeCreateFailed);
-    state.managementText.scopeCreateResultTitle = context.getConfigText(config, "docs_viewer.scope_create_result_title", state.managementText.scopeCreateResultTitle);
-    state.managementText.scopeDeleteTitle = context.getConfigText(config, "docs_viewer.scope_delete_title", state.managementText.scopeDeleteTitle);
-    state.managementText.scopeDeleteIntro = context.getConfigText(config, "docs_viewer.scope_delete_intro", state.managementText.scopeDeleteIntro);
-    state.managementText.scopeDeleteTargetLabel = context.getConfigText(config, "docs_viewer.scope_delete_target_label", state.managementText.scopeDeleteTargetLabel);
-    state.managementText.scopeDeleteRequiredMessage = context.getConfigText(config, "docs_viewer.scope_delete_required_message", state.managementText.scopeDeleteRequiredMessage);
-    state.managementText.scopeDeleteNoTargets = context.getConfigText(config, "docs_viewer.scope_delete_no_targets", state.managementText.scopeDeleteNoTargets);
-    state.managementText.scopeDeletePreviewing = context.getConfigText(config, "docs_viewer.scope_delete_previewing", state.managementText.scopeDeletePreviewing);
-    state.managementText.scopeDeletePreviewTitle = context.getConfigText(config, "docs_viewer.scope_delete_preview_title", state.managementText.scopeDeletePreviewTitle);
-    state.managementText.scopeDeleteDeleting = context.getConfigText(config, "docs_viewer.scope_delete_deleting", state.managementText.scopeDeleteDeleting);
-    state.managementText.scopeDeleteFailed = context.getConfigText(config, "docs_viewer.scope_delete_failed", state.managementText.scopeDeleteFailed);
-    state.managementText.scopeDeleteBlocked = context.getConfigText(config, "docs_viewer.scope_delete_blocked", state.managementText.scopeDeleteBlocked);
-    state.managementText.scopeDeleteBlockedTitle = context.getConfigText(config, "docs_viewer.scope_delete_blocked_title", state.managementText.scopeDeleteBlockedTitle);
-    state.managementText.scopeDeleteResultTitle = context.getConfigText(config, "docs_viewer.scope_delete_result_title", state.managementText.scopeDeleteResultTitle);
-    state.managementText.importCancelButton = context.getConfigText(config, "docs_viewer.import_cancel_button", state.managementText.importCancelButton);
-    if (modalController) modalController.updateImportCancelLabel();
-    state.managementText.copyLinkStatus = context.getConfigText(config, "docs_viewer.copy_link_status", state.managementText.copyLinkStatus);
-    state.managementText.copyLinkFailed = context.getConfigText(config, "docs_viewer.copy_link_failed", state.managementText.copyLinkFailed);
-    if (metadataStatusLabel) {
-      metadataStatusLabel.textContent = state.managementText.metadataStatusLabel;
-    }
-    if (metadataHiddenLabel) {
-      metadataHiddenLabel.textContent = state.managementText.metadataHiddenLabel;
-    }
-    if (state.metadataEditingDocId && metadataStatusInput) {
-      var metadataDoc = state.docsById.get(state.metadataEditingDocId);
-      modalController.renderMetadataStatusOptions(metadataDoc);
-      modalController.renderMetadataParentOptions(metadataDoc);
-    }
+    applyDocsViewerManagementConfig({
+      config: config,
+      context: context,
+      state: state,
+      refs: {
+        contextCopyLinkButton: contextCopyLinkButton,
+        draftLabel: draftLabel,
+        draftToggle: draftToggle,
+        manageDeleteScopeButton: manageDeleteScopeButton,
+        manageNewScopeButton: manageNewScopeButton,
+        manageSettingsButton: manageSettingsButton,
+        manageViewableButton: manageViewableButton,
+        metadataHiddenLabel: metadataHiddenLabel,
+        metadataStatusInput: metadataStatusInput,
+        metadataStatusLabel: metadataStatusLabel,
+        settingsHeading: settingsHeading,
+        settingsUpdatedLabel: settingsUpdatedLabel
+      },
+      modalController: modalController
+    });
   }
 
   function handleRootClick(event) {
@@ -1158,6 +968,17 @@ export function initDocsViewerManagement(context) {
     });
     if (modalController) modalController.wireEvents();
   }
+
+  capabilityController = createDocsViewerManagementCapabilityController({
+    state: state,
+    context: context,
+    callbacks: {
+      managementClientOptions: managementClientOptions,
+      renderManagementUi: renderManagementUi,
+      renderSidebar: context.renderSidebar,
+      viewerScope: viewerScope
+    }
+  });
 
   actionController = createDocsViewerManagementActionController({
     root: root,

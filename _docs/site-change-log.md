@@ -17,6 +17,29 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-17] Extracted Docs Viewer Management Capability And Config Coordination
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / JavaScript maintainability
+
+**Summary:**
+Moved Docs Viewer management capability helpers, capability probe/retry coordination, and management UI-text config application into dedicated modules.
+The management controller still owns DOM lookup, route event binding, drag/drop, context menu behavior, import/settings modal loading, metadata payload collection, busy/message/reload callbacks, and navigation.
+
+**Effect:**
+`docs-viewer-management.js` is smaller and no longer embeds capability probing or the full management UI-text merge inline.
+Lifecycle helper logic now has one pure source that the lazy scope lifecycle flow reuses without making the lifecycle module eager.
+The JavaScript payload inventory now records capability/config coordination as complete and points the next Docs Viewer management cleanup at drag/drop/context-menu ownership.
+
+**Affected files/docs:**
+
+- `assets/docs-viewer/js/docs-viewer-management.js`
+- `assets/docs-viewer/js/docs-viewer-management-capabilities.js`
+- `assets/docs-viewer/js/docs-viewer-management-config.js`
+- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js`
+- [Studio JavaScript Payload Inventory](/docs/?scope=studio&doc=studio-javascript-payload-inventory)
+
 ## [2026-05-17] Extracted Docs Viewer Management Write Actions
 
 **Status:** implemented

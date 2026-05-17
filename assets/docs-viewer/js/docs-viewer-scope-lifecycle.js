@@ -8,8 +8,19 @@ import {
   openDocsViewerManagementModal
 } from "./docs-viewer-management-modals.js";
 import {
+  scopeCreateSupported,
+  scopeDeleteSupported,
+  scopeLifecycleDeleteTargets
+} from "./docs-viewer-management-capabilities.js";
+import {
   escapeHtml
 } from "./docs-viewer-render.js";
+
+export {
+  scopeCreateSupported,
+  scopeDeleteSupported,
+  scopeLifecycleDeleteTargets
+};
 
 var DEFAULT_PUBLISHING_MODES = [
   "public_readonly",
@@ -29,41 +40,10 @@ function managementText(state, key, fallback) {
   return fallback;
 }
 
-function lifecycleCapabilities(capabilities) {
-  return capabilities && capabilities.scope_lifecycle && typeof capabilities.scope_lifecycle === "object"
+function publishingModes(capabilities) {
+  var lifecycle = capabilities && capabilities.scope_lifecycle && typeof capabilities.scope_lifecycle === "object"
     ? capabilities.scope_lifecycle
     : null;
-}
-
-export function scopeCreateSupported(capabilities) {
-  var lifecycle = lifecycleCapabilities(capabilities);
-  return Boolean(lifecycle && lifecycle.create_preview && lifecycle.create_apply);
-}
-
-export function scopeDeleteSupported(capabilities) {
-  var lifecycle = lifecycleCapabilities(capabilities);
-  return Boolean(lifecycle && lifecycle.delete_preview && lifecycle.delete_apply);
-}
-
-export function scopeLifecycleDeleteTargets(capabilities) {
-  var scopes = capabilities && capabilities.scopes && typeof capabilities.scopes === "object"
-    ? capabilities.scopes
-    : {};
-  return Object.keys(scopes).sort().map(function (scopeId) {
-    var scopeCaps = scopes[scopeId] || {};
-    var lifecycle = scopeCaps.scope_lifecycle || {};
-    return {
-      scopeId: scopeId,
-      root: normalizeText(scopeCaps.root),
-      deleteEligible: lifecycle.delete_eligible === true
-    };
-  }).filter(function (record) {
-    return record.deleteEligible;
-  });
-}
-
-function publishingModes(capabilities) {
-  var lifecycle = lifecycleCapabilities(capabilities);
   var rawModes = lifecycle && Array.isArray(lifecycle.publishing_modes)
     ? lifecycle.publishing_modes
     : DEFAULT_PUBLISHING_MODES;
