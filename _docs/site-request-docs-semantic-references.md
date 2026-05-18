@@ -66,12 +66,20 @@ Use a custom inline reference token:
 [[ref:<kind>:<id>|<label>]]
 ```
 
+The label may be omitted:
+
+```md
+[[ref:<kind>:<id>]]
+```
+
 Rules:
 
 - `ref` identifies the token family
 - `<kind>` identifies the target registry, such as `work`, `series`, `moment`, or `tag`
 - `<id>` is the stable registry id
-- `<label>` is the visible inline text
+- `<label>` is optional visible inline text
+- when `<label>` is omitted, v1 should resolve the current registry title and use that as the visible text
+- an explicit `<label>` overrides the resolved title
 - the target id may contain additional colons; parse the first segment after `ref:` as the kind, then treat the remaining text before `|` as the id
 
 Optional modifiers may follow the token:
@@ -81,7 +89,14 @@ Optional modifiers may follow the token:
 ```
 
 The default v1 action is `link`.
-Future actions can be reserved without implementing them immediately, for example:
+V1 should use a closed action allowlist.
+Unsupported actions should warn and render as inert annotated text rather than as links.
+
+Initial allowlist:
+
+- `link`
+
+Future actions can be reserved for later allowlist expansion, for example:
 
 - `definition`
 - `references`
@@ -298,6 +313,14 @@ Each resolver should return:
 - existence/status metadata
 - warnings when the id is missing, unpublished, or not linkable
 
+V1 rendering policy:
+
+- published catalogue records with allowed actions render as normal links
+- draft or unpublished catalogue records render as inert annotated text
+- unresolved references warn only and render as inert annotated text
+- unsupported actions warn only and render as inert annotated text
+- warning-only behavior keeps local docs readable while making diagnostics visible in build output and reports
+
 The docs builder should not hard-code tag, work, or series policy directly into token parsing.
 Parsing should produce a neutral token object, and the resolver should own registry-specific behavior.
 
@@ -310,6 +333,7 @@ Add a parser for inline semantic-reference tokens before Markdown is rendered.
 Minimum behavior:
 
 - detect `[[ref:<kind>:<id>|<label>]]`
+- detect `[[ref:<kind>:<id>]]` with omitted label
 - detect optional trailing modifiers such as `{action=link}`
 - escape rendered labels
 - preserve unknown or malformed tokens as visible text with a build warning
@@ -326,11 +350,11 @@ Implement v1 resolvers for:
 Resolvers should read existing catalogue source or generated lookup data, then return canonical public hrefs:
 
 - `/works/<work_id>/`
-- `/series/<series_id-or-slug>/` if the current route model requires slug resolution
+- `/series/<series_id-or-slug>/` with the slug lookup required by the current route model
 - `/moments/<moment_id>/`
 
-The implementation must decide whether v1 allows references to draft/unpublished catalogue records.
-If it allows them, the generated reference record should carry status metadata and the rendered href should have a safe fallback.
+Draft or unpublished catalogue records should not render as links in v1.
+They should render as inert annotated text, warn during build, and still produce relationship metadata that records target status when the id can be resolved.
 
 ### Task 3. Render Semantic Links
 
@@ -341,6 +365,14 @@ During docs build, replace each valid token with normal HTML:
 ```
 
 The emitted HTML should remain accessible and usable without Docs Viewer JavaScript.
+
+When a token is unresolved, unpublished, malformed, or uses an unsupported action, render inert annotated text instead of a link.
+The exact HTML can be decided during implementation, but it should not navigate.
+For example:
+
+```html
+<span data-ref-kind="work" data-ref-id="00638" data-ref-status="unpublished">3 symbols</span>
+```
 
 ### Task 4. Emit Incremental Reference Artifacts
 
@@ -380,11 +412,11 @@ Add validation coverage for:
 - generated reference artifact stability
 - unchanged unrelated target buckets staying untouched during single-doc edits
 
-The existing broken-links audit can later read semantic references too, but v1 should at minimum fail or warn clearly during docs build.
+The existing broken-links audit can later read semantic references too, but v1 should warn clearly during docs build.
 
 ### Task 6. Add A Management Report
 
-Add a Docs Viewer report or Studio maintenance page that lists semantic references.
+Add a Docs Viewer report that lists semantic references.
 
 Minimum useful view:
 
@@ -467,22 +499,28 @@ Until those rules are explicit, per-file incremental writes are the safer optimi
 Extend the broken-links audit to understand semantic references after v1 output exists.
 The audit can then report unresolved semantic refs separately from ordinary broken `href` links.
 
-## Open Decisions
+## Decisions
 
-- Should v1 references to draft catalogue records render as links, warnings, or inert annotated text?
-- Should unresolved semantic references fail the build or warn only?
-- Should labels be required, or should `[[ref:work:00638]]` resolve the current title automatically?
-- Should the first implementation support `series` slug lookup, or start with `work` only?
-- Should `action` be limited to a closed allowlist from the start?
-- Should reverse-reference reports be Docs Viewer reports, Studio pages, or both?
+- v1 references to draft catalogue records render as inert annotated text, not links
+- unresolved semantic references warn only
+- omitted labels resolve the current registry title automatically
+- explicit labels override resolved titles
+- v1 includes `series` support, including slug lookup required by the current route model
+- `action` uses a closed allowlist from the start
+- actions outside the allowlist warn and render as inert annotated text
+- reverse-reference reports are Docs Viewer reports
 
 ## Acceptance Criteria
 
 - author can write `[[ref:work:00638|3 symbols]]` in a Docs Viewer Markdown source doc
+- author can write `[[ref:work:00638]]` and get the current resolved work title as link text
 - rendered document shows a normal link to `/works/00638/`
 - rendered link includes stable `data-ref-*` attributes
 - generated scope data includes a semantic reference record for `work:00638`
 - single-doc edits only rewrite changed per-doc/per-target reference artifacts
-- invalid ids produce clear diagnostics
+- invalid ids warn, render as inert annotated text, and produce clear diagnostics
+- draft catalogue targets render as inert annotated text
+- unsupported actions warn and render as inert annotated text
+- series semantic references resolve the current public series route
 - normal Markdown links continue to behave as plain links with no semantic relationship
 - the implementation leaves room for `[[ref:tag:subject:nature|nature]]` without changing the token grammar
