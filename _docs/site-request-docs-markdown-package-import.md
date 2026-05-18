@@ -205,6 +205,8 @@ The importer should not use opaque hashes for v1 unless a later collision case p
 
 ## Implementation Steps
 
+Please group and sequence these as appropriate during implementation. Clearly report on progress.
+
 1. Add a package source format.
    Extend the Docs Import source registry so it can represent directory-backed import sources, not only files. Return package records from `GET /docs/import-source-files` with a distinct source format such as `markdown_package`.
 
