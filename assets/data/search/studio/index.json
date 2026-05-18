@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-066f5d7fcc088f4018b4796be22f5cce",
-    "generated_at_utc": "2026-05-18T18:17:43Z",
-    "count": 246
+    "version": "blake2b-d715b45735a5207fbff57b949369d956",
+    "generated_at_utc": "2026-05-18T19:33:42Z",
+    "count": 247
   },
   "entries": [
     {
@@ -4938,19 +4938,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-17",
-      "display_meta": "2026-05-17",
+      "last_updated": "2026-05-18",
+      "display_meta": "2026-05-18",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-17",
+        "2026-05-18",
         "2026",
         "05",
-        "17"
+        "18"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-17 2026 05 17"
+      "search_text": "change-requests change requests change requests 2026-05-18 2026 05 18"
     },
     {
       "id": "new-pipeline",
@@ -6301,6 +6301,33 @@
         "15"
       ],
       "search_text": "site-request-docs-viewer-new-scope-button site request docs viewer new scope button docs viewer new scope button request archive 2026-05-15 2026 05 15"
+    },
+    {
+      "id": "site-request-docs-semantic-references",
+      "kind": "doc",
+      "title": "Docs Semantic References Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
+      "last_updated": "2026-05-18",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-18 • Change Requests",
+      "search_terms": [
+        "site-request-docs-semantic-references",
+        "site",
+        "request",
+        "docs",
+        "semantic",
+        "references",
+        "docs semantic references request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-18",
+        "2026",
+        "05",
+        "18"
+      ],
+      "search_text": "site-request-docs-semantic-references site request docs semantic references docs semantic references request change requests change requests 2026-05-18 2026 05 18"
     }
   ]
 }

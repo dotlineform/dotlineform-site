@@ -10,26 +10,20 @@ hidden: true
 ---
 # 3 symbols
 
-
-**3 symbols**
-2007
-enamel paint on c-type print, aluminium mount
-75 x 75 cm
-
-
-includes /projects:
-
-3 symbols, 2007
-3 symbols (book ‘composite for 3 symbols’), 2007
+[3 symbols](/works/00638/){:target="_blank" rel="noopener noreferrer"}<br>
+3 symbols (book ‘composite for 3 symbols’), 2007<br>
 3 symbols (cards), 2008
 
-_______________________
+![3 symbols image 01]([[media:docs/analysis/img/3-symbols-image-01.webp]] "3 symbols image 01")<br>
+<span style="font-size: var(--font-caption);">3 symbols</span>
 
-**3 symbols**
+---
+
+## 3 symbols
  
-**birth** growing forming
-**life** healing joining
-**death** decaying fragmenting
+**birth** growing forming<br>
+**life** healing joining<br>
+**death** decaying fragmenting<br>
  
 there are 3 core symbols, everything else is derived from these 3. new symbols are created in powers of 3. when a new concept is added to the group, it would apply to all existing symbols. a new concept may not just add a graphical element to a symbol, it may completely transform the symbol.
  
@@ -37,9 +31,7 @@ meta-symbols can be created by grouping combinations of symbols. in a composite 
  
 the form symbols, when layered into an image, describe the hidden meaning of the image
 
-![3 symbols image 01]([[media:docs/analysis/img/3-symbols-image-01.webp]] "3 symbols image 01")
- <span style="font-size: var(--font-caption);">3 symbols</span>
- <span style="font-size: var(--font-caption); text-align: left;">_____________________________________________</span>
+
  
 *3 symbols* is an experiment in how to reconcile in a single image the idea of photographic realism with the symbolism of forms, lines and dots, which represent the ‘unreal’ and hidden, the fundamental forces that lie within/behind what we see and experience as ‘real life’. Together these 2 layers, one of formless colour and the other of colourless form, represent the intangible and shifting boundaries between our perception of the world and the world itself; the point at which our symbols for the world merge with our perception of it.
  
