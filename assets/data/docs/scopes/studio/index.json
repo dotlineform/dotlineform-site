@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T20:11:25Z",
+  "generated_at": "2026-05-18T20:14:01Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -4026,7 +4026,8 @@
       "source_path": "site-request-docs-semantic-references.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-semantic-references.json",
-      "content_text_length": 15592
+      "content_text_length": 15595,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
