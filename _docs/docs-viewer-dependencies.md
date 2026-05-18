@@ -66,15 +66,15 @@ It should not be treated as:
 - a complete list of system tools used by media workflows
 - proof that every package is required for every repo task
 
-The HTML import parser stack is feature-specific, but it is intentionally checked into the main `requirements.txt`.
-That keeps local and cloud sessions on the same parser behavior whenever Docs Import is used.
+The Docs Import parser and conversion stack is feature-specific, but it is intentionally checked into the main `requirements.txt`.
+That keeps local and cloud sessions on the same parser and image-conversion behavior whenever Docs Import is used.
 
 ## Operational Checks
 
-Before treating Docs Import as available in a new environment, confirm the parser stack can be imported by the configured project Python:
+Before treating Docs Import as available in a new environment, confirm the parser and conversion stack can be imported by the configured project Python:
 
 ```bash
-python -c "import bs4, lxml, bleach"
+python -c "import bs4, lxml, bleach, PIL"
 ```
 
 If this fails, install the pinned packages from `requirements.txt` in the active Python environment before starting the docs-management server or running Docs Import checks.

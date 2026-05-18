@@ -2,7 +2,7 @@
 doc_id: user-guide-docs-html-import
 title: Docs Import
 added_date: 2026-04-24
-last_updated: "2026-05-16 14:10"
+last_updated: "2026-05-18 00:00"
 parent_id: user-guide
 sort_order: 2000
 ---
@@ -23,13 +23,15 @@ Put the original source file in:
 - `var/docs/import-staging/`
 
 This staging directory is repo-local and untracked, so it is a practical place to keep the original export nearby while you test imports.
+For Markdown package imports, copy the whole exported folder as a direct child of this staging directory.
 
 Staged Markdown files should not include predefined front matter.
 The importer creates or preserves the normal Docs Viewer front matter when it writes the target source doc.
 
-For image and downloadable file imports, copy the media file to the configured media store manually after import.
-The importer creates the wrapper Markdown and reports the expected media path, but it does not upload media.
+For image and downloadable file imports, copy the media file to the configured media store manually after import when the scope uses manual staging.
+The importer creates the wrapper Markdown and reports the expected media path, but it does not upload remote media.
 For inline raster images extracted from HTML or Markdown data URLs, copy the generated staged image file after import.
+For Markdown package imports, package images are converted to 800px-max WebP outputs and package attachments are copied to readable staged filenames during import.
 
 For interactive HTML widgets, test a standalone HTML file in a browser first.
 Add `<meta name="dlf:docs-import-role" content="interactive-html">` to the file.
@@ -46,6 +48,7 @@ The import modal:
 - optionally keeps clearly identifiable prompt/meta blocks for HTML imports
 - converts HTML into a best-attempt Markdown source doc
 - imports staged Markdown as the source body without HTML conversion
+- imports staged Markdown package folders as one Markdown source doc plus planned image and attachment media
 - imports `.txt` files as plain Markdown prose and converts plain URLs to autolinks
 - imports standalone `.svg` files as wrapper docs with sanitized inline SVG
 - imports raster images as wrapper docs that point at the configured `<media_path_prefix>/img/<filename>` media path
@@ -164,6 +167,30 @@ Generated filenames use the final proposed `doc_id` plus an incrementing suffix,
 The generated Markdown points at the matching docs media token and the result panel lists each staged media path, configured media path, and media token.
 Copy each generated staged image file to the reported media path before expecting the rendered doc to display it.
 
+## Markdown Package Imports
+
+Use a Markdown package import for folder exports such as Apple Notes Markdown export.
+
+The package must be a direct child folder under `var/docs/import-staging/` and must contain exactly one `.md` or `.markdown` file.
+Local image and attachment links are resolved relative to that Markdown file and must remain inside the package folder.
+
+Package image behavior:
+
+- supported source image extensions are `.jpg`, `.jpeg`, `.png`, `.webp`, and `.gif`
+- generated image outputs are always `.webp`
+- images wider than 800px are downscaled to 800px wide
+- smaller images are not upscaled
+- animated images are rejected instead of being silently flattened
+- generated filenames use `<doc_id>-image-NN.webp`
+
+Package attachment behavior:
+
+- supported attachment extensions match the downloadable file allowlist
+- attachments are copied unchanged
+- generated filenames use `<doc_id>-attachment-NN.<ext>`
+
+The generated Markdown points at docs media links for each resolved package image or attachment.
+The result panel lists every planned media item, including original package-relative paths and image conversion details.
 
 ## Interactive HTML Assets
 
@@ -211,7 +238,8 @@ After a successful import, the page reports:
 - the original staged source path
 - the viewer link for the imported doc
 - generated staged media paths for inline raster images
-- the expected media path and media token for image, file-media, and extracted inline raster imports
+- the expected media path and media token for image, file-media, extracted inline raster, and Markdown package media imports
+- converted WebP image outputs and copied package attachments
 - copied interactive HTML script files as result rows labelled `script file`
 - any non-routine conversion warnings
 

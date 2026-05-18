@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from html import escape
 from pathlib import Path
 from typing import Any, Optional
+from urllib.parse import unquote, urlsplit
 
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 
@@ -70,9 +71,20 @@ PLAIN_URL_TRAILING_PUNCTUATION = ".,;:!?)]}'"
 MARKDOWN_HEADING_PATTERN = re.compile(r"^\s*#\s+(.+?)\s*#*\s*$", re.MULTILINE)
 MARKDOWN_LINK_PATTERN = re.compile(r"(?<!!)\[[^\]]+\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
+MARKDOWN_IMAGE_REWRITE_PATTERN = re.compile(
+    r"!\[(?P<alt>[^\]]*)\]\((?P<target>[^)\s]+)(?P<title>\s+\"[^\"]*\")?\)"
+)
+MARKDOWN_LINK_REWRITE_PATTERN = re.compile(
+    r"(?<!!)\[(?P<label>[^\]]+)\]\((?P<target>[^)\s]+)(?P<title>\s+\"[^\"]*\")?\)"
+)
 MARKDOWN_INLINE_RASTER_IMAGE_PATTERN = re.compile(
     r"!\[(?P<alt>[^\]]*)\]\((?P<url>data:image/(?P<subtype>png|jpe?g|webp|gif);base64,(?P<data>[A-Za-z0-9+/=]+))\)",
     re.IGNORECASE,
+)
+APPLE_NOTES_CAPTION_SPAN_PATTERN = re.compile(
+    r"<span\b(?P<attrs>[^>]*)style=\"(?P<style>[^\"]*font-size:\s*11\.285714[^;\"]*;?[^\"]*)\"(?P<tail>[^>]*)>"
+    r"(?P<body>.*?)</span>",
+    re.IGNORECASE | re.DOTALL,
 )
 SVG_EVENT_ATTR_PATTERN = re.compile(r"\son[a-z]+\s*=", re.IGNORECASE)
 SVG_EXTERNAL_REF_ATTRS = {"href", "xlink:href", "src"}
@@ -180,6 +192,8 @@ def detect_bundle_bin() -> Optional[str]:
 
 
 def source_format_for_path(path: Path) -> str:
+    if path.is_dir():
+        return "markdown_package"
     importer = SOURCE_IMPORTER_BY_SUFFIX.get(path.suffix.lower())
     if importer:
         return importer.source_format
@@ -206,6 +220,8 @@ def html_import_role_for_path(path: Path) -> str:
 
 
 def is_interactive_html_import_asset(path: Path) -> bool:
+    if not path.is_file():
+        return False
     return html_import_role_for_path(path) == INTERACTIVE_HTML_ROLE
 
 
@@ -674,8 +690,14 @@ def apply_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], sc
 
     staging_root = repo_root / STAGING_REL_DIR
     proposed_doc_id = str(summary.get("proposed_doc_id") or summary.get("title") or "imported-doc")
-    used_filenames: set[str] = set()
-    plans: list[dict[str, Any]] = []
+    existing_plans = summary.get("media_plans")
+    plans: list[dict[str, Any]] = list(existing_plans) if isinstance(existing_plans, list) else []
+    used_filenames: set[str] = {
+        str(plan.get("source_path") or "")
+        for plan in plans
+        if isinstance(plan, dict) and str(plan.get("source_path") or "")
+    }
+    inline_plans: list[dict[str, Any]] = []
     warnings = summary.setdefault("warnings", [])
 
     def replace(match: re.Match[str]) -> str:
@@ -692,7 +714,7 @@ def apply_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], sc
             return match.group(0)
 
         filename = next_inline_media_filename(staging_root, proposed_doc_id, extension, used_filenames)
-        title = alt or f"Inline image {len(plans) + 1:02d}"
+        title = alt or f"Inline image {len(inline_plans) + 1:02d}"
         plan = inline_media_plan(
             scope,
             filename,
@@ -701,6 +723,7 @@ def apply_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], sc
             size_bytes=len(decoded),
         )
         plans.append(plan)
+        inline_plans.append(plan)
         if plan["manual_copy_required"]:
             warnings.append(
                 f"Copy {filename} to the media path {plan['media_path']} before the rendered doc can display it."
@@ -708,7 +731,7 @@ def apply_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any], sc
         return f"![{match.group('alt')}]({plan['media_token']})"
 
     normalized = MARKDOWN_INLINE_RASTER_IMAGE_PATTERN.sub(replace, markdown)
-    if plans:
+    if inline_plans:
         summary["markdown_preview"] = normalized
         summary["media_plans"] = plans
 
@@ -720,12 +743,18 @@ def retarget_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any],
 
     staging_root = repo_root / STAGING_REL_DIR
     proposed_doc_id = str(summary.get("proposed_doc_id") or summary.get("title") or "imported-doc")
-    used_filenames: set[str] = set()
+    used_filenames: set[str] = {
+        str(plan.get("source_path") or "")
+        for plan in plans
+        if isinstance(plan, dict) and plan.get("source") != "inline_data_url" and str(plan.get("source_path") or "")
+    }
     markdown = str(summary.get("markdown_preview") or "")
     warnings = summary.get("warnings") if isinstance(summary.get("warnings"), list) else []
 
     for index, plan in enumerate(plans):
         if not isinstance(plan, dict):
+            continue
+        if plan.get("source") != "inline_data_url":
             continue
         old_token = str(plan.get("media_token") or "")
         old_filename = str(plan.get("source_path") or "")
@@ -752,6 +781,66 @@ def retarget_inline_raster_media_plans(repo_root: Path, summary: dict[str, Any],
     summary["markdown_preview"] = markdown
 
 
+def retarget_markdown_package_media_plans(repo_root: Path, summary: dict[str, Any], scope: str) -> None:
+    plans = summary.get("media_plans")
+    if not isinstance(plans, list) or not plans:
+        return
+    package_indices = [
+        index
+        for index, plan in enumerate(plans)
+        if isinstance(plan, dict) and plan.get("source") in {"markdown_package_image", "markdown_package_attachment"}
+    ]
+    if not package_indices:
+        return
+
+    package_root = (repo_root / str(summary.get("package_path") or "")).resolve()
+    proposed_doc_id = str(summary.get("proposed_doc_id") or summary.get("title") or "imported-doc")
+    used_filenames: set[str] = set()
+    markdown = str(summary.get("markdown_preview") or "")
+    warnings = summary.get("warnings") if isinstance(summary.get("warnings"), list) else []
+
+    for index in package_indices:
+        plan = plans[index]
+        assert isinstance(plan, dict)
+        old_token = str(plan.get("media_token") or "")
+        old_filename = str(plan.get("source_path") or "")
+        kind = str(plan.get("kind") or "")
+        source_original = str(plan.get("source_original_path") or "")
+        source_path = (repo_root / source_original).resolve()
+        media_class = "img" if kind == "image" else "files"
+        suffix = "image" if kind == "image" else "attachment"
+        extension = "webp" if kind == "image" else Path(old_filename).suffix.lstrip(".")
+        new_filename = next_package_media_filename(
+            repo_root,
+            scope,
+            proposed_doc_id,
+            media_class,
+            suffix,
+            extension,
+            used_filenames,
+        )
+        new_plan = build_package_media_plan(
+            repo_root,
+            scope,
+            package_root=package_root,
+            source_path=source_path,
+            filename=new_filename,
+            title=str(plan.get("title") or humanize(source_path.stem) or new_filename),
+            kind=kind,
+        )
+        if old_token:
+            markdown = markdown.replace(old_token, new_plan["media_token"], 1)
+        if old_filename != new_filename:
+            for warning_index, warning in enumerate(warnings):
+                if isinstance(warning, str) and old_filename in warning:
+                    warnings[warning_index] = warning.replace(old_filename, new_filename).replace(
+                        str(plan.get("media_path") or ""),
+                        new_plan["media_path"],
+                    )
+        plans[index] = new_plan
+    summary["markdown_preview"] = markdown
+
+
 def raw_markdown_for_inline_media(source_path: Path, *, include_prompt_meta: bool) -> str:
     source_format = source_format_for_path(source_path)
     if source_format == "html":
@@ -769,7 +858,126 @@ def raw_markdown_for_inline_media(source_path: Path, *, include_prompt_meta: boo
     if source_format == "markdown":
         summary = build_markdown_summary(source_path.read_text(encoding="utf-8", errors="replace"), source_path.stem)
         return str(summary.get("markdown_preview") or "")
+    if source_format == "markdown_package":
+        markdown_path = find_package_markdown_file(source_path)
+        return normalize_apple_notes_caption_spans(markdown_path.read_text(encoding="utf-8", errors="replace"))
     return ""
+
+
+def package_media_target_path(repo_root: Path, plan: dict[str, Any], scope: str) -> Path:
+    filename = str(plan.get("source_path") or "").strip()
+    if not filename or Path(filename).name != filename:
+        raise ValueError(f"Invalid package media filename: {filename!r}")
+    if plan.get("storage_mode") == "repo_assets":
+        target_rel = Path(str(plan.get("repo_asset_path") or ""))
+        if not str(target_rel) or target_rel.name != filename:
+            raise ValueError(f"Invalid package media repo asset path: {target_rel.as_posix()!r}")
+        target_root = (repo_root / IMPORT_MEDIA_CONFIGS[scope].repo_assets_path_prefix).resolve()
+        target_path = (repo_root / target_rel).resolve()
+        if not target_path.is_relative_to(target_root):
+            raise ValueError(f"Package media target escapes repo assets root: {target_rel.as_posix()!r}")
+        return target_path
+    if plan.get("storage_mode") == "staging_manual":
+        target_root = (repo_root / STAGING_REL_DIR).resolve()
+        target_path = (target_root / filename).resolve()
+        if not target_path.is_relative_to(target_root):
+            raise ValueError(f"Package media filename escapes staging root: {filename!r}")
+        return target_path
+    raise ValueError("Docs Import media storage mode is not available for package media writes.")
+
+
+def package_media_source_path(repo_root: Path, package_root: Path, plan: dict[str, Any]) -> Path:
+    source_rel = str(plan.get("source_original_path") or "").strip()
+    if not source_rel:
+        raise ValueError("Package media plan is missing source_original_path.")
+    source_path = (repo_root / source_rel).resolve()
+    if not source_path.is_relative_to(package_root.resolve()):
+        raise ValueError(f"Package media source escapes package root: {source_rel}")
+    if not source_path.exists() or not source_path.is_file():
+        raise FileNotFoundError(f"Package media source does not exist: {source_rel}")
+    return source_path
+
+
+def convert_package_image_to_webp(source_path: Path, target_path: Path, *, max_width: int = 800) -> dict[str, Any]:
+    try:
+        from PIL import Image, ImageOps
+    except ImportError as exc:
+        raise RuntimeError(
+            "Pillow is required for Markdown package image conversion. "
+            "Install requirements.txt before importing package images."
+        ) from exc
+
+    with Image.open(source_path) as image:
+        if getattr(image, "is_animated", False):
+            raise ValueError(f"Animated image conversion is not supported for Markdown package imports: {source_path.name}")
+        image = ImageOps.exif_transpose(image)
+        original_width, original_height = image.size
+        output = image
+        resized = False
+        if original_width > max_width:
+            ratio = max_width / float(original_width)
+            output = image.resize((max_width, max(1, round(original_height * ratio))), Image.Resampling.LANCZOS)
+            resized = True
+        if output.mode in {"RGBA", "LA"} or (output.mode == "P" and "transparency" in output.info):
+            output = output.convert("RGBA")
+        else:
+            output = output.convert("RGB")
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        output.save(target_path, "WEBP", quality=85, method=6)
+        output_width, output_height = output.size
+    return {
+        "original_width": original_width,
+        "original_height": original_height,
+        "output_width": output_width,
+        "output_height": output_height,
+        "resized": resized,
+    }
+
+
+def materialize_package_media_plans(repo_root: Path, package_root: Path, plans: list[dict[str, Any]], scope: str) -> list[dict[str, Any]]:
+    package_plans = [
+        plan
+        for plan in plans
+        if plan.get("source") in {"markdown_package_image", "markdown_package_attachment"}
+    ]
+    if not package_plans:
+        return []
+    normalized_scope = normalize_scope(scope)
+    written: list[dict[str, Any]] = []
+    for plan in package_plans:
+        source_path = package_media_source_path(repo_root, package_root, plan)
+        target_path = package_media_target_path(repo_root, plan, normalized_scope)
+        if target_path.exists():
+            raise FileExistsError(f"Package media target already exists: {relative_path(repo_root, target_path)}")
+        if plan.get("source") == "markdown_package_image":
+            conversion_result = convert_package_image_to_webp(
+                source_path,
+                target_path,
+                max_width=int((plan.get("conversion") or {}).get("max_width") or 800),
+            )
+            size_bytes = target_path.stat().st_size
+        else:
+            target_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source_path, target_path)
+            conversion_result = {}
+            size_bytes = target_path.stat().st_size
+        written.append(
+            {
+                "source_path": plan.get("source_path", ""),
+                "source_original_path": plan.get("source_original_path", ""),
+                "staging_path": plan.get("staging_path", relative_path(repo_root, target_path)),
+                "size_bytes": size_bytes,
+                "media_path": plan.get("media_path", ""),
+                "media_token": plan.get("media_token", ""),
+                "media_link": plan.get("media_link", plan.get("media_token", "")),
+                "repo_asset_path": plan.get("repo_asset_path", ""),
+                "public_path": plan.get("public_path", ""),
+                "storage_mode": plan.get("storage_mode", ""),
+                "kind": plan.get("kind", ""),
+                "conversion": conversion_result,
+            }
+        )
+    return written
 
 
 def materialize_inline_raster_media(
@@ -790,6 +998,7 @@ def materialize_inline_raster_media(
         return []
 
     inline_plans = [plan for plan in plans if plan.get("source") == "inline_data_url"]
+    package_written = materialize_package_media_plans(repo_root, source_path, plans, normalize_scope(str(import_preview.get("scope")))) if source_path.is_dir() else []
     source_file_plans = [plan for plan in plans if plan.get("source") != "inline_data_url"]
     valid_inline_matches: list[tuple[re.Match[str], bytes]] = []
     if inline_plans:
@@ -804,7 +1013,7 @@ def materialize_inline_raster_media(
         if len(valid_inline_matches) < len(inline_plans):
             raise RuntimeError("Inline media extraction plan no longer matches the staged source.")
 
-    written: list[dict[str, Any]] = []
+    written: list[dict[str, Any]] = list(package_written)
     for plan, (_, decoded) in zip(inline_plans, valid_inline_matches):
         filename = str(plan.get("source_path") or "").strip()
         if not filename or Path(filename).name != filename:
@@ -844,6 +1053,8 @@ def materialize_inline_raster_media(
             }
         )
     for plan in source_file_plans:
+        if plan.get("source") in {"markdown_package_image", "markdown_package_attachment"}:
+            continue
         if plan.get("storage_mode") != "repo_assets":
             continue
         filename = str(plan.get("source_path") or "").strip()
@@ -937,6 +1148,12 @@ def resolve_staged_import_source(
         raise ValueError(f"staged file must resolve inside {STAGING_REL_DIR.as_posix()}")
     if not path.exists():
         raise FileNotFoundError(f"staged import source does not exist: {filename}")
+    if path.is_dir():
+        if allowed_suffixes is not None:
+            raise ValueError("staged file must use one of these extensions: " + ", ".join(sorted(allowed_suffixes)))
+        if path.parent != staging_root:
+            raise ValueError(f"staged Markdown packages must be direct child directories of {STAGING_REL_DIR.as_posix()}")
+        return path
     suffixes = allowed_suffixes or SUPPORTED_STAGED_SUFFIXES
     if path.suffix.lower() not in suffixes:
         raise ValueError("staged file must use one of these extensions: " + ", ".join(sorted(suffixes)))
@@ -961,6 +1178,11 @@ def list_staged_import_source_files(repo_root: Path) -> list[dict[str, Any]]:
         for path in staging_root.iterdir()
         if path.is_file() and path.suffix.lower() in SUPPORTED_STAGED_SUFFIXES
     ]
+    package_candidates = [
+        path
+        for path in staging_root.iterdir()
+        if path.is_dir() and not path.is_symlink()
+    ]
     for path in sorted(candidates, key=lambda candidate: candidate.name.lower()):
         if is_interactive_html_import_asset(path):
             continue
@@ -974,6 +1196,27 @@ def list_staged_import_source_files(repo_root: Path) -> list[dict[str, Any]]:
                 "modified_utc": dt.datetime.fromtimestamp(stat.st_mtime, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             }
         )
+    for path in sorted(package_candidates, key=lambda candidate: candidate.name.lower()):
+        markdown_files = [
+            file
+            for file in path.rglob("*")
+            if file.is_file() and file.suffix.lower() in MARKDOWN_STAGED_SUFFIXES
+        ]
+        if not markdown_files:
+            continue
+        package_files = [file for file in path.rglob("*") if file.is_file()]
+        modified = max((file.stat().st_mtime for file in package_files), default=path.stat().st_mtime)
+        files.append(
+            {
+                "filename": path.name,
+                "path": relative_path(repo_root, path),
+                "source_format": "markdown_package",
+                "size_bytes": sum(file.stat().st_size for file in package_files),
+                "modified_utc": dt.datetime.fromtimestamp(modified, tz=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "package_file_count": len(package_files),
+                "package_markdown_count": len(markdown_files),
+            }
+        )
     return files
 
 
@@ -985,6 +1228,12 @@ def generate_import_preview(
     include_prompt_meta: bool,
 ) -> dict[str, Any]:
     source_format = source_format_for_path(source_path)
+    if source_format == "markdown_package":
+        return generate_markdown_package_import_preview(
+            repo_root,
+            package_path=source_path,
+            scope=scope,
+        )
     if source_format == "markdown":
         return generate_markdown_import_preview(
             repo_root,
@@ -1094,6 +1343,25 @@ def build_markdown_summary(source_markdown: str, source_filename_stem: str) -> d
     }
 
 
+def normalize_apple_notes_caption_spans(markdown: str) -> str:
+    def replace(match: re.Match[str]) -> str:
+        attrs = f"{match.group('attrs') or ''}{match.group('tail') or ''}"
+        attrs = re.sub(r'\sstyle="[^"]*"', "", attrs, flags=re.IGNORECASE)
+        style = str(match.group("style") or "")
+        style_parts = [
+            part.strip()
+            for part in style.split(";")
+            if part.strip() and not part.strip().lower().startswith("font-size:")
+        ]
+        style_parts.insert(0, "font-size: var(--font-caption)")
+        body = str(match.group("body") or "").strip()
+        normalized_attrs = normalize_space(attrs)
+        attr_text = f" {normalized_attrs}" if normalized_attrs else ""
+        return f'<span{attr_text} style="{"; ".join(style_parts)};">{body}</span>'
+
+    return APPLE_NOTES_CAPTION_SPAN_PATTERN.sub(replace, markdown or "")
+
+
 def build_text_summary(source_text: str, source_filename_stem: str) -> dict[str, Any]:
     text = (source_text or "").lstrip("\ufeff")
     first_line = next((normalize_space(line) for line in text.splitlines() if normalize_space(line)), "")
@@ -1194,6 +1462,245 @@ def build_media_plan(scope: str, media_class: str, source_path: Path, title: str
     }
 
 
+def is_external_or_special_markdown_target(target: str) -> bool:
+    value = str(target or "").strip()
+    if not value:
+        return True
+    if value.startswith("#"):
+        return True
+    parsed = urlsplit(value)
+    return bool(parsed.scheme or parsed.netloc)
+
+
+def resolve_package_link_target(package_root: Path, markdown_path: Path, target: str) -> Path | None:
+    if is_external_or_special_markdown_target(target):
+        return None
+    parsed = urlsplit(str(target or ""))
+    if parsed.query or parsed.fragment:
+        return None
+    raw_path = unquote(parsed.path or "")
+    if not raw_path or raw_path.startswith("/"):
+        return None
+    resolved = (markdown_path.parent / raw_path).resolve()
+    package_resolved = package_root.resolve()
+    if not resolved.is_relative_to(package_resolved):
+        return None
+    return resolved
+
+
+def package_source_original_path(repo_root: Path, source_path: Path) -> str:
+    return relative_path(repo_root, source_path)
+
+
+def next_package_media_filename(
+    repo_root: Path,
+    scope: str,
+    doc_id: str,
+    media_class: str,
+    suffix: str,
+    extension: str,
+    used_filenames: set[str],
+) -> str:
+    normalized_scope = normalize_scope(scope)
+    safe_doc_id = slugify(doc_id or "imported-doc")
+    safe_extension = extension.lower().lstrip(".")
+    staging_root = (repo_root / STAGING_REL_DIR).resolve()
+    repo_asset_root = (repo_root / IMPORT_MEDIA_CONFIGS[normalized_scope].repo_assets_path_prefix / media_class).resolve()
+    index = 1
+    while True:
+        filename = f"{safe_doc_id}-{suffix}-{index:02d}.{safe_extension}"
+        repo_asset_path = (repo_asset_root / filename).resolve()
+        if (
+            filename not in used_filenames
+            and not (staging_root / filename).exists()
+            and not repo_asset_path.exists()
+        ):
+            used_filenames.add(filename)
+            return filename
+        index += 1
+
+
+def build_package_media_plan(
+    repo_root: Path,
+    scope: str,
+    *,
+    package_root: Path,
+    source_path: Path,
+    filename: str,
+    title: str,
+    kind: str,
+) -> dict[str, Any]:
+    media_class = "img" if kind == "image" else "files"
+    plan = build_media_plan(scope, media_class, Path(filename), title)
+    source_rel = package_source_original_path(repo_root, source_path)
+    plan.update(
+        {
+            "source": f"markdown_package_{kind}",
+            "kind": kind,
+            "source_original_path": source_rel,
+            "package_relative_source_path": source_path.resolve().relative_to(package_root.resolve()).as_posix(),
+        }
+    )
+    if kind == "image":
+        plan["conversion"] = {
+            "format": "webp",
+            "max_width": 800,
+            "resize_only_if_wider": True,
+        }
+    if plan["manual_copy_required"]:
+        plan["staging_path"] = (STAGING_REL_DIR / filename).as_posix()
+    return plan
+
+
+def package_media_warning(plan: dict[str, Any]) -> str:
+    if plan.get("kind") == "attachment":
+        return (
+            f"Copy {plan.get('source_path')} to the media path {plan.get('media_path')} "
+            "before the rendered download link will work."
+        )
+    return (
+        f"Copy {plan.get('source_path')} to the media path {plan.get('media_path')} "
+        "before the rendered doc can display it."
+    )
+
+
+def find_package_markdown_file(package_root: Path) -> Path:
+    markdown_files = sorted(
+        [
+            path
+            for path in package_root.rglob("*")
+            if path.is_file() and path.suffix.lower() in MARKDOWN_STAGED_SUFFIXES
+        ],
+        key=lambda path: path.relative_to(package_root).as_posix().lower(),
+    )
+    if not markdown_files:
+        raise ValueError(f"Markdown package {package_root.name!r} does not contain a Markdown file.")
+    if len(markdown_files) > 1:
+        names = ", ".join(path.relative_to(package_root).as_posix() for path in markdown_files[:5])
+        if len(markdown_files) > 5:
+            names += ", ..."
+        raise ValueError(f"Markdown package {package_root.name!r} contains multiple Markdown files: {names}")
+    return markdown_files[0]
+
+
+def rewrite_markdown_package_media_links(
+    repo_root: Path,
+    *,
+    package_root: Path,
+    markdown_path: Path,
+    summary: dict[str, Any],
+    scope: str,
+) -> None:
+    markdown = str(summary.get("markdown_preview") or "")
+    doc_id = str(summary.get("proposed_doc_id") or package_root.name or "imported-doc")
+    plans: list[dict[str, Any]] = []
+    warnings = summary.setdefault("warnings", [])
+    used_filenames: set[str] = set()
+    plans_by_target: dict[str, dict[str, Any]] = {}
+    unresolved_count = 0
+    unsupported_count = 0
+
+    def plan_for_image(target: str, alt: str) -> dict[str, Any] | None:
+        nonlocal unresolved_count, unsupported_count
+        source = resolve_package_link_target(package_root, markdown_path, target)
+        if source is None:
+            return None
+        key = source.as_posix()
+        if key in plans_by_target:
+            return plans_by_target[key]
+        if not source.exists() or not source.is_file():
+            unresolved_count += 1
+            warnings.append(f"Package image target was not found: {target}")
+            return None
+        suffix = source.suffix.lower()
+        if suffix not in RASTER_IMAGE_STAGED_SUFFIXES:
+            unsupported_count += 1
+            warnings.append(f"Unsupported package image type {suffix or '(none)'} for {target}; left the link unchanged.")
+            return None
+        filename = next_package_media_filename(repo_root, scope, doc_id, "img", "image", "webp", used_filenames)
+        title = normalize_space(alt) or f"Image {len([plan for plan in plans if plan.get('kind') == 'image']) + 1:02d}"
+        plan = build_package_media_plan(
+            repo_root,
+            scope,
+            package_root=package_root,
+            source_path=source,
+            filename=filename,
+            title=title,
+            kind="image",
+        )
+        plans.append(plan)
+        plans_by_target[key] = plan
+        if plan["manual_copy_required"]:
+            warnings.append(package_media_warning(plan))
+        return plan
+
+    def plan_for_attachment(target: str, label: str) -> dict[str, Any] | None:
+        nonlocal unresolved_count, unsupported_count
+        source = resolve_package_link_target(package_root, markdown_path, target)
+        if source is None:
+            return None
+        key = source.as_posix()
+        if key in plans_by_target:
+            return plans_by_target[key]
+        if not source.exists() or not source.is_file():
+            unresolved_count += 1
+            warnings.append(f"Package attachment target was not found: {target}")
+            return None
+        suffix = source.suffix.lower()
+        if suffix in RASTER_IMAGE_STAGED_SUFFIXES:
+            return None
+        if suffix not in FILE_MEDIA_STAGED_SUFFIXES:
+            unsupported_count += 1
+            warnings.append(f"Unsupported package attachment type {suffix or '(none)'} for {target}; left the link unchanged.")
+            return None
+        filename = next_package_media_filename(repo_root, scope, doc_id, "files", "attachment", suffix, used_filenames)
+        title = normalize_space(label) or humanize(source.stem) or f"Attachment {len([plan for plan in plans if plan.get('kind') == 'attachment']) + 1:02d}"
+        plan = build_package_media_plan(
+            repo_root,
+            scope,
+            package_root=package_root,
+            source_path=source,
+            filename=filename,
+            title=title,
+            kind="attachment",
+        )
+        plans.append(plan)
+        plans_by_target[key] = plan
+        if plan["manual_copy_required"]:
+            warnings.append(package_media_warning(plan))
+        return plan
+
+    def replace_image(match: re.Match[str]) -> str:
+        target = match.group("target")
+        if str(target or "").startswith("data:image/"):
+            return match.group(0)
+        plan = plan_for_image(target, match.group("alt"))
+        if not plan:
+            return match.group(0)
+        return f"![{match.group('alt')}]({plan['media_token']}{match.group('title') or ''})"
+
+    def replace_link(match: re.Match[str]) -> str:
+        plan = plan_for_attachment(match.group("target"), match.group("label"))
+        if not plan:
+            return match.group(0)
+        return f"[{match.group('label')}]({plan['media_token']}{match.group('title') or ''})"
+
+    markdown = MARKDOWN_IMAGE_REWRITE_PATTERN.sub(replace_image, markdown)
+    markdown = MARKDOWN_LINK_REWRITE_PATTERN.sub(replace_link, markdown)
+    summary["markdown_preview"] = markdown
+    if plans:
+        summary["media_plans"] = plans
+    summary["source_stats"]["images"] = int(summary["source_stats"].get("images") or 0)
+    summary["source_stats"]["attachments"] = len([plan for plan in plans if plan.get("kind") == "attachment"])
+    summary["package_media_summary"] = {
+        "planned": len(plans),
+        "images": len([plan for plan in plans if plan.get("kind") == "image"]),
+        "attachments": len([plan for plan in plans if plan.get("kind") == "attachment"]),
+        "unresolved": unresolved_count,
+        "unsupported": unsupported_count,
+    }
+
+
 def build_image_summary(source_path: Path, scope: str) -> dict[str, Any]:
     title = humanize(source_path.stem) or "Imported Image"
     plan = build_media_plan(scope, "img", source_path, title)
@@ -1276,6 +1783,39 @@ def generate_markdown_import_preview(
     summary["staging_root"] = STAGING_REL_DIR.as_posix()
     summary["tag_counts"] = {}
     summary["comment_count"] = 0
+    apply_inline_raster_media_plans(repo_root, summary, normalized_scope)
+    summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
+    return summary
+
+
+def generate_markdown_package_import_preview(
+    repo_root: Path,
+    *,
+    package_path: Path,
+    scope: str,
+) -> dict[str, Any]:
+    normalized_scope = normalize_scope(scope)
+    package_root = package_path.resolve()
+    markdown_path = find_package_markdown_file(package_root)
+    source_markdown = markdown_path.read_text(encoding="utf-8", errors="replace")
+    package_markdown = normalize_apple_notes_caption_spans(source_markdown)
+    summary = build_markdown_summary(package_markdown, package_path.name)
+    summary["scope"] = normalized_scope
+    summary["source_format"] = "markdown_package"
+    summary["source_path"] = relative_path(repo_root, package_root)
+    summary["source_markdown"] = relative_path(repo_root, markdown_path)
+    summary["package_path"] = relative_path(repo_root, package_root)
+    summary["package_markdown_path"] = markdown_path.relative_to(package_root).as_posix()
+    summary["staging_root"] = STAGING_REL_DIR.as_posix()
+    summary["tag_counts"] = {}
+    summary["comment_count"] = 0
+    rewrite_markdown_package_media_links(
+        repo_root,
+        package_root=package_root,
+        markdown_path=markdown_path,
+        summary=summary,
+        scope=normalized_scope,
+    )
     apply_inline_raster_media_plans(repo_root, summary, normalized_scope)
     summary["jekyll_validation"] = validate_markdown_with_jekyll(repo_root, summary["markdown_preview"])
     return summary

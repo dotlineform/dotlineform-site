@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-dd9dcf885d0c59d61931e91286ba2e4d",
-    "generated_at_utc": "2026-05-18T16:34:08Z",
+    "version": "blake2b-71790630e819404817c1a5d891ef5d73",
+    "generated_at_utc": "2026-05-18T16:59:40Z",
     "count": 246
   },
   "entries": [
@@ -830,10 +830,10 @@
       "kind": "doc",
       "title": "Docs Import",
       "href": "/docs/?scope=studio&doc=user-guide-docs-html-import",
-      "last_updated": "2026-05-16 14:10",
+      "last_updated": "2026-05-18 00:00",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-16 14:10 • User Guide",
+      "display_meta": "2026-05-18 00:00 • User Guide",
       "search_terms": [
         "user-guide-docs-html-import",
         "user",
@@ -843,14 +843,13 @@
         "import",
         "docs import",
         "user guide",
-        "2026-05-16 14:10",
+        "2026-05-18 00:00",
         "2026",
         "05",
-        "16",
-        "14",
-        "10"
+        "18",
+        "00"
       ],
-      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-16 14:10 2026 05 16 14 10"
+      "search_text": "user-guide-docs-html-import user guide docs html import docs import user guide 2026-05-18 00:00 2026 05 18 00"
     },
     {
       "id": "site-request-script-structural-review-docs-management-server",
@@ -2402,10 +2401,10 @@
       "kind": "doc",
       "title": "Docs Viewer Media Handling",
       "href": "/docs/?scope=studio&doc=docs-viewer-media-handling",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-18",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 • Docs Viewer",
+      "display_meta": "2026-05-18 • Docs Viewer",
       "search_terms": [
         "docs-viewer-media-handling",
         "docs",
@@ -2414,12 +2413,12 @@
         "handling",
         "docs viewer media handling",
         "docs viewer",
-        "2026-05-14",
+        "2026-05-18",
         "2026",
         "05",
-        "14"
+        "18"
       ],
-      "search_text": "docs-viewer-media-handling docs viewer media handling docs viewer media handling docs viewer 2026-05-14 2026 05 14"
+      "search_text": "docs-viewer-media-handling docs viewer media handling docs viewer media handling docs viewer 2026-05-18 2026 05 18"
     },
     {
       "id": "library",
@@ -4672,10 +4671,10 @@
       "kind": "doc",
       "title": "Docs Viewer Import Source Registry Spec",
       "href": "/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec",
-      "last_updated": "2026-05-14 16:32",
+      "last_updated": "2026-05-18 00:00",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 16:32 • Docs Viewer",
+      "display_meta": "2026-05-18 00:00 • Docs Viewer",
       "search_terms": [
         "docs-viewer-import-source-registry-spec",
         "docs",
@@ -4686,14 +4685,13 @@
         "spec",
         "docs viewer import source registry spec",
         "docs viewer",
-        "2026-05-14 16:32",
+        "2026-05-18 00:00",
         "2026",
         "05",
-        "14",
-        "16",
-        "32"
+        "18",
+        "00"
       ],
-      "search_text": "docs-viewer-import-source-registry-spec docs viewer import source registry spec docs viewer import source registry spec docs viewer 2026-05-14 16:32 2026 05 14 16 32"
+      "search_text": "docs-viewer-import-source-registry-spec docs viewer import source registry spec docs viewer import source registry spec docs viewer 2026-05-18 00:00 2026 05 18 00"
     },
     {
       "id": "new-pipeline-studio-e2e-checklist",
@@ -5084,20 +5082,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-17",
-      "display_meta": "2026-05-17",
+      "last_updated": "2026-05-18",
+      "display_meta": "2026-05-18",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-17",
+        "2026-05-18",
         "2026",
         "05",
-        "17"
+        "18"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-17 2026 05 17"
+      "search_text": "site-change-log site change log site change log 2026-05-18 2026 05 18"
     },
     {
       "id": "site-request-studio-import-export-module",

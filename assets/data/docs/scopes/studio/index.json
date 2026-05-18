@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T16:43:18Z",
+  "generated_at": "2026-05-18T16:59:39Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -363,7 +363,7 @@
       "source_path": "runtime-dependencies.md",
       "viewer_url": "/docs/?scope=studio&doc=runtime-dependencies",
       "content_url": "/assets/data/docs/scopes/studio/by-id/runtime-dependencies.json",
-      "content_text_length": 7154
+      "content_text_length": 7443
     },
     {
       "scope": "studio",
@@ -515,7 +515,7 @@
       "doc_id": "user-guide-docs-html-import",
       "title": "Docs Import",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-16 14:10",
+      "last_updated": "2026-05-18 00:00",
       "parent_id": "user-guide",
       "sort_order": 2000,
       "published": true,
@@ -524,7 +524,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 10816
+      "content_text_length": 12417
     },
     {
       "scope": "studio",
@@ -935,7 +935,7 @@
       "source_path": "docs-viewer-portable-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-setup.json",
-      "content_text_length": 16814
+      "content_text_length": 16912
     },
     {
       "scope": "studio",
@@ -1275,7 +1275,7 @@
       "source_path": "docs-viewer-dependencies.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-dependencies",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-dependencies.json",
-      "content_text_length": 3651
+      "content_text_length": 3707
     },
     {
       "scope": "studio",
@@ -1508,7 +1508,7 @@
       "doc_id": "docs-viewer-media-handling",
       "title": "Docs Viewer Media Handling",
       "added_date": "2026-05-14",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-18",
       "parent_id": "docs-viewer",
       "sort_order": 5000,
       "published": true,
@@ -1517,7 +1517,7 @@
       "source_path": "docs-viewer-media-handling.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-media-handling",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-media-handling.json",
-      "content_text_length": 7805
+      "content_text_length": 9769
     },
     {
       "scope": "studio",
@@ -2861,7 +2861,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 36493
+      "content_text_length": 36796
     },
     {
       "scope": "studio",
@@ -2980,7 +2980,7 @@
       "doc_id": "docs-viewer-import-source-registry-spec",
       "title": "Docs Viewer Import Source Registry Spec",
       "added_date": "2026-05-14",
-      "last_updated": "2026-05-14 16:32",
+      "last_updated": "2026-05-18 00:00",
       "parent_id": "docs-viewer",
       "sort_order": 17000,
       "published": true,
@@ -2989,7 +2989,7 @@
       "source_path": "docs-viewer-import-source-registry-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-import-source-registry-spec.json",
-      "content_text_length": 8779
+      "content_text_length": 9961
     },
     {
       "scope": "studio",
@@ -3255,7 +3255,7 @@
       "doc_id": "site-change-log",
       "title": "Site Change Log",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-17",
+      "last_updated": "2026-05-18",
       "parent_id": "",
       "sort_order": 28000,
       "published": true,
@@ -3264,7 +3264,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 169450
+      "content_text_length": 170424
     },
     {
       "scope": "studio",

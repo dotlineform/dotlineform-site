@@ -2,7 +2,7 @@
 doc_id: docs-viewer-import-source-registry-spec
 title: Docs Viewer Import Source Registry Spec
 added_date: 2026-05-14
-last_updated: "2026-05-14 16:32"
+last_updated: "2026-05-18 00:00"
 parent_id: docs-viewer
 sort_order: 17000
 ---
@@ -49,6 +49,7 @@ Current registry entries:
 | --- | --- | --- | --- |
 | `html` | `.html`, `.htm` | yes | inline raster extraction can emit `media_plans` |
 | `markdown` | `.md`, `.markdown` | no | inline raster extraction can emit `media_plans` |
+| `markdown_package` | direct child directories containing one Markdown file | no | package images and attachments emit `media_plans` |
 | `text` | `.txt` | no | no |
 | `svg` | `.svg` | no | no |
 | `image` | `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif` | no | singular `media_plan` |
@@ -63,8 +64,9 @@ All managed imports read from:
 
 - `var/docs/import-staging/`
 
-`resolve_staged_import_source()` requires the staged filename to resolve inside that directory and to use a supported suffix.
-Nested paths, path traversal, and unsupported extensions are rejected before conversion.
+`resolve_staged_import_source()` requires the staged filename to resolve inside that directory and to use a supported suffix, unless the source is a supported Markdown package directory.
+Markdown package directories must be direct children of the staging folder.
+Nested paths, path traversal, unsupported extensions, and package directory escapes are rejected before conversion.
 
 `list_staged_import_source_files()` returns only supported files and includes:
 
@@ -73,6 +75,11 @@ Nested paths, path traversal, and unsupported extensions are rejected before con
 - `source_format`
 - `size_bytes`
 - `modified_utc`
+
+Markdown package records also include:
+
+- `package_file_count`
+- `package_markdown_count`
 
 The local management service exposes that list through `GET /docs/import-source-files`.
 `GET /docs/import-html-files` remains a compatibility alias.
@@ -85,6 +92,7 @@ The current dispatch functions are:
 
 - `generate_html_import_preview()`
 - `generate_markdown_import_preview()`
+- `generate_markdown_package_import_preview()`
 - `generate_text_import_preview()`
 - `generate_svg_import_preview()`
 - `generate_image_import_preview()`
@@ -118,11 +126,12 @@ Optional fields are format-specific:
 
 - `source_html` for HTML imports
 - `source_markdown` for Markdown imports
+- `package_path` and `package_markdown_path` for Markdown package imports
 - `source_text` for text imports
 - `source_svg` for standalone SVG imports
 - `source_media` for image and file-media imports
 - `media_plan` for standalone image and file-media wrappers
-- `media_plans` for extracted inline raster images
+- `media_plans` for extracted inline raster images and Markdown package media
 
 The service adds collision and write-flow fields after loading the target scope:
 
@@ -137,6 +146,11 @@ HTML imports parse the source with Beautiful Soup, convert supported structures 
 Markdown imports treat the staged file as body Markdown without front matter.
 The first `# H1` becomes the title when present; otherwise the title is derived from the filename.
 Inline raster data URLs are planned the same way as HTML imports.
+
+Markdown package imports treat a direct child directory of `var/docs/import-staging/` as one source when it contains exactly one Markdown file.
+Local Markdown image links are resolved inside the package, renamed to readable `<doc_id>-image-NN.webp` outputs, rewritten to docs media links, and converted to WebP at write time with a maximum width of 800px.
+Local Markdown links to supported downloadable files are treated as attachments, renamed to `<doc_id>-attachment-NN.<ext>`, rewritten to docs media links, and copied unchanged at write time.
+External links, anchors, mail links, unresolved package links, and unsupported package media stay in place with warnings where useful.
 
 Text imports treat `.txt` content as prose, derive the title from a short first non-empty line when available, and convert plain `http://` and `https://` URLs to Markdown autolinks.
 

@@ -17,6 +17,7 @@ from docs_html_import import (
     list_staged_import_source_files,
     materialize_inline_raster_media,
     resolve_staged_import_source,
+    retarget_markdown_package_media_plans,
     retarget_inline_raster_media_plans,
 )
 from docs_management_mutations import metadata_search_doc_ids
@@ -302,9 +303,11 @@ def handle_import_source(
             )
     if replacement_doc_id:
         apply_replacement_doc_id_to_preview(preview, replacement_doc_id)
+        retarget_markdown_package_media_plans(repo_root, preview, scope)
         retarget_inline_raster_media_plans(repo_root, preview, scope)
     elif replacement_title:
         apply_replacement_title_to_preview(preview, replacement_title)
+        retarget_markdown_package_media_plans(repo_root, preview, scope)
         retarget_inline_raster_media_plans(repo_root, preview, scope)
 
     docs = load_scope_docs(repo_root, scope)

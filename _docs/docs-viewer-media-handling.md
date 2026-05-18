@@ -2,7 +2,7 @@
 doc_id: docs-viewer-media-handling
 title: Docs Viewer Media Handling
 added_date: 2026-05-14
-last_updated: 2026-05-14
+last_updated: 2026-05-18
 parent_id: docs-viewer
 sort_order: 5000
 ---
@@ -19,6 +19,7 @@ Docs Viewer media handling covers:
 - source-file imports staged under `var/docs/import-staging/`
 - wrapper docs for standalone images and downloadable files
 - inline raster extraction from HTML and Markdown imports
+- folder-based Markdown package imports with local images and attachments
 - sanitized inline SVG preservation
 - scope-specific media path generation
 - media-copy handoff information shown in the Docs Import result
@@ -84,10 +85,11 @@ All Docs Import source formats are staged under:
 - `var/docs/import-staging/`
 
 This folder is local and untracked.
-It can contain original source files, standalone media import files, and generated inline raster image files.
+It can contain original source files, standalone media import files, generated inline raster image files, and direct child Markdown package folders.
 
 The importer requires staged filenames to resolve inside that directory.
 Nested paths, path traversal, unsupported extensions, and unsafe media filenames are rejected before conversion or write.
+Markdown package folders must be direct children of the staging folder, and package-local links must resolve inside the package.
 
 ## Standalone Image Imports
 
@@ -182,6 +184,37 @@ For `repo_assets`, decoded files may be written to the configured repo asset pat
 
 If a collision replacement changes the final `doc_id`, the service retargets inline media plans before write so filenames, media paths, and Markdown links match the final doc id.
 
+## Markdown Package Media
+
+Markdown package imports are directory-backed imports for exports such as Apple Notes Markdown folders.
+The package must contain exactly one `.md` or `.markdown` source file.
+
+During preview, the importer:
+
+- resolves local Markdown image and file links relative to the package Markdown file
+- leaves external URLs, anchors, mail links, unresolved links, and unsupported file types unchanged with warnings where useful
+- rewrites supported local image links to generated docs media links under `img`
+- rewrites supported local attachment links to generated docs media links under `files`
+- reports every planned image and attachment in `media_plans`
+
+Generated package image filenames use the final proposed `doc_id` plus an incrementing suffix and always end in `.webp`:
+
+- `<doc_id>-image-01.webp`
+- `<doc_id>-image-02.webp`
+
+Generated package attachment filenames use:
+
+- `<doc_id>-attachment-01.<ext>`
+- `<doc_id>-attachment-02.<ext>`
+
+During create or overwrite, package images are converted with Pillow to WebP.
+Images wider than 800px are downscaled to a maximum width of 800px; smaller images are not upscaled.
+Attachments are copied unchanged.
+
+For `staging_manual`, converted images and copied attachments are materialized under `var/docs/import-staging/` with the generated readable filenames.
+For `repo_assets`, they are written into the configured repo asset path.
+Animated image conversion is rejected rather than silently flattening animation.
+
 ## Inline Raster Handoff
 
 For each extracted inline raster image, the result panel reports:
@@ -192,6 +225,8 @@ For each extracted inline raster image, the result panel reports:
 - MIME type
 - decoded byte size
 - warning text when manual copy is required
+
+Markdown package image and attachment plans use the same result payload shape, with `kind`, `source_original_path`, and image `conversion` metadata added.
 
 For `staging_manual`, copy each generated staged image file to the reported media path before expecting the rendered doc to display it.
 This keeps imported Markdown and generated docs JSON free of long base64 payloads while preserving the original raster bytes.
@@ -241,6 +276,7 @@ For a normal media import:
 6. Rebuild or refresh docs payloads through the normal management workflow if you changed media availability outside the import write.
 
 For HTML or Markdown with embedded raster data URLs, the same workflow applies, except the import write creates the staged decoded image files for you.
+For Markdown package imports, copy the whole package folder under `var/docs/import-staging/` and select the package folder in the import modal.
 
 ## Related References
 

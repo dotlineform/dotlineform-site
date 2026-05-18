@@ -54,12 +54,14 @@ Current checked-in Python packages:
 | `beautifulsoup4` | PyPI via `requirements.txt` | HTML parsing for Docs HTML import | feature-specific | feature-specific | required for the HTML import feature once that importer is in use |
 | `lxml` | PyPI via `requirements.txt` | parser backend for the Docs HTML import tree build | feature-specific | feature-specific | treated as part of the pinned HTML import parser stack |
 | `bleach` | PyPI via `requirements.txt` | HTML sanitization for Docs HTML import | feature-specific | feature-specific | required for the intended import sanitization boundary even if the first scaffold uses only a subset of that behavior |
+| `Pillow` | PyPI via `requirements.txt` | raster image conversion for Docs Markdown package imports | feature-specific | feature-specific | required when importing package images that must become 800px-max WebP outputs |
 
 Current interpretation:
 
 - `openpyxl` is the only current baseline Python package for the established catalogue/workbook pipeline
-- `beautifulsoup4`, `lxml`, and `bleach` are now checked-in because the HTML import feature is intended to build against a fixed parser/sanitizer stack from the start
-- in cloud environments that never touch the HTML import flow, those three import packages are less critical operationally than `openpyxl`, but they are still part of the checked-in repo dependency set and should normally be installed for parity
+- `beautifulsoup4`, `lxml`, and `bleach` are checked-in because the HTML import feature is intended to build against a fixed parser/sanitizer stack from the start
+- `Pillow` is checked-in because Markdown package imports convert local package images to WebP during write
+- in cloud environments that never touch Docs Import, these import packages are less critical operationally than `openpyxl`, but they are still part of the checked-in repo dependency set and should normally be installed for parity
 
 ## Ruby And Jekyll Stack
 

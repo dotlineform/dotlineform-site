@@ -235,15 +235,20 @@ function sourceDocLinkHtml(scope, docId) {
 
 function resultCountsText(state, preview) {
   const stats = preview.source_stats && typeof preview.source_stats === "object" ? preview.source_stats : {};
-  if (preview.source_format === "markdown") {
+  if (preview.source_format === "markdown" || preview.source_format === "markdown_package") {
     return configText(
       state.config,
-      "docs_html_import.result_markdown_counts",
-      "{chars} chars, {links} links, {images} images",
+      preview.source_format === "markdown_package"
+        ? "docs_html_import.result_markdown_package_counts"
+        : "docs_html_import.result_markdown_counts",
+      preview.source_format === "markdown_package"
+        ? "{chars} chars, {links} links, {images} images, {attachments} attachments"
+        : "{chars} chars, {links} links, {images} images",
       {
         chars: Number(stats.chars || 0),
         links: Number(stats.links || 0),
-        images: Number(stats.images || 0)
+        images: Number(stats.images || 0),
+        attachments: Number(stats.attachments || 0)
       }
     );
   }
@@ -337,6 +342,9 @@ function resultRowsForPayload(state, payload, includeFilename) {
   const scriptRows = Array.isArray(payload && payload.interactive_html_written)
     ? payload.interactive_html_written
     : [];
+  const mediaPlans = []
+    .concat(Array.isArray(preview.media_plans) ? preview.media_plans : [])
+    .concat(preview.media_plan && typeof preview.media_plan === "object" ? [preview.media_plan] : []);
   const sourceLabel = sourceDocLinkHtml(payload.scope, payload.doc_id);
   const sourceName = normalizeText(payload && payload.staged_filename);
   const rows = [
@@ -353,6 +361,27 @@ function resultRowsForPayload(state, payload, includeFilename) {
     return [
       escapeHtml(displayName),
       escapeHtml(configText(state.config, "docs_html_import.script_file_result_type", "script file"))
+    ];
+  })).concat(mediaPlans.map((item) => {
+    const sourcePath = normalizeText(item && item.source_path);
+    const title = normalizeText(item && item.title) || sourcePath;
+    const kind = normalizeText(item && item.kind) || (normalizeText(item && item.media_path).includes("/files/") ? "attachment" : "image");
+    const conversion = item && item.conversion && typeof item.conversion === "object" ? item.conversion : {};
+    const typeText = kind === "image" && normalizeText(conversion.format)
+      ? configText(
+        state.config,
+        "docs_html_import.image_media_result_type",
+        "image, {format} <= {max_width}px",
+        {
+          format: normalizeText(conversion.format).toUpperCase(),
+          max_width: Number(conversion.max_width || 800)
+        }
+      )
+      : configText(state.config, "docs_html_import.attachment_media_result_type", "attachment");
+    const mediaPath = normalizeText(item && (item.media_path || item.media_link || item.media_token));
+    return [
+      escapeHtml(`${title}${sourcePath && sourcePath !== title ? ` (${sourcePath})` : ""}`),
+      escapeHtml(mediaPath ? `${typeText}: ${mediaPath}` : typeText)
     ];
   }));
   return rows;
@@ -882,7 +911,8 @@ export async function initDocsHtmlImport(options = {}) {
       `<option value="${escapeHtml(ALL_STAGED_FILES_VALUE)}">${escapeHtml(configText(state.config, "docs_html_import.all_files_option", "< all >"))}</option>`
     ].concat(files.map((file) => {
       const filename = normalizeText(file.filename);
-      return `<option value="${escapeHtml(filename)}">${escapeHtml(filename)}</option>`;
+      const sourceFormat = sourceFormatForRecord(file).replace(/_/g, " ");
+      return `<option value="${escapeHtml(filename)}">${escapeHtml(`${filename} (${sourceFormat})`)}</option>`;
     })).join("");
     state.fileSelect.value = normalizeText(files[0] && files[0].filename);
     syncSourceFormatControls(state);

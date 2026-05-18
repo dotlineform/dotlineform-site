@@ -237,6 +237,7 @@ Supported source formats:
 
 - `html`: `.html`, `.htm`
 - `markdown`: `.md`, `.markdown`
+- `markdown_package`: direct child package folders containing exactly one Markdown file
 - `text`: `.txt`
 - `svg`: `.svg`
 - `image`: `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`
@@ -266,6 +267,7 @@ Import behavior:
 - accepts the supported staged source formats listed above
 - parses full staged HTML files through the shared converter
 - imports staged Markdown as the source body without predefined front matter
+- imports staged Markdown package folders as one source doc, rewrites local package images and attachments to docs media links, converts package images to 800px-max WebP outputs, and copies package attachments unchanged
 - imports staged text as plain Markdown prose and converts plain URLs to Markdown autolinks
 - imports standalone SVG as a wrapper Markdown doc with sanitized inline SVG
 - imports raster images as wrapper Markdown docs pointing at <code>&#91;&#91;media:docs/&lt;scope&gt;/img/&lt;filename&gt;&#93;&#93;</code>

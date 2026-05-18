@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: 2026-05-17
+last_updated: 2026-05-18
 parent_id: ""
 sort_order: 28000
 ---
@@ -16,6 +16,31 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-18] Added Docs Markdown Package Import
+
+**Status:** implemented
+
+**Area:** Docs Viewer management / import
+
+**Summary:**
+Docs Import now lists direct child Markdown package folders under `var/docs/import-staging/`.
+Package imports require one Markdown file, rewrite local package image and attachment links to docs media links, convert package raster images to 800px-max WebP outputs, and copy package attachments unchanged with readable generated filenames.
+
+**Effect:**
+Apple Notes Markdown exports can be imported as normal Docs Viewer source docs without losing their companion images or attachments.
+Package media plans now appear in the import result panel alongside source docs and interactive HTML assets.
+
+**Affected files/docs:**
+
+- `scripts/docs/docs_html_import.py`
+- `scripts/docs/docs_import_source_service.py`
+- `assets/docs-viewer/js/docs-html-import.js`
+- `assets/docs-viewer/data/ui-text.json`
+- `requirements.txt`
+- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
+- [Docs Viewer Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling)
+- [Docs Viewer Import Source Registry Spec](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)
 
 ## [2026-05-17] Added Normalize Order UI
 
