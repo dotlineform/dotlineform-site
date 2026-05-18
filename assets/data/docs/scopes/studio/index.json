@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T18:17:50Z",
+  "generated_at": "2026-05-18T18:25:11Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -524,7 +524,7 @@
       "source_path": "user-guide-docs-html-import.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-html-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-html-import.json",
-      "content_text_length": 12417
+      "content_text_length": 12491
     },
     {
       "scope": "studio",
@@ -1517,7 +1517,7 @@
       "source_path": "docs-viewer-media-handling.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-media-handling",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-media-handling.json",
-      "content_text_length": 9769
+      "content_text_length": 9899
     },
     {
       "scope": "studio",
@@ -2989,7 +2989,7 @@
       "source_path": "docs-viewer-import-source-registry-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-import-source-registry-spec.json",
-      "content_text_length": 9961
+      "content_text_length": 10083
     },
     {
       "scope": "studio",
@@ -3264,7 +3264,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 170916
+      "content_text_length": 171040
     },
     {
       "scope": "studio",

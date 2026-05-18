@@ -1070,13 +1070,14 @@ Some text.
     assert payload["import_preview"]["source_format"] == "markdown_package"
     assert payload["import_preview"]["media_plans"][0]["source_path"] == "my-note-image-01.webp"
     assert payload["import_preview"]["media_plans"][0]["kind"] == "image"
+    assert payload["import_preview"]["media_plans"][0]["title"] == "my note image 01"
     assert payload["import_preview"]["media_plans"][1]["source_path"] == "my-note-attachment-01.pdf"
     assert payload["import_preview"]["media_plans"][1]["kind"] == "attachment"
     assert payload["inline_media_written"][0]["kind"] == "image"
     assert payload["inline_media_written"][0]["conversion"]["output_width"] == 800
     assert output_size == (800, 400)
     assert attachment_bytes == b"%PDF-1.4 fake\n"
-    assert "![Opaque]([[media:docs/library/img/my-note-image-01.webp]])" in source_text
+    assert '![my note image 01]([[media:docs/library/img/my-note-image-01.webp]] "my note image 01")' in source_text
     assert "[Research PDF]([[media:docs/library/files/my-note-attachment-01.pdf]])" in source_text
     assert "font-size: var(--font-caption)" in source_text
 

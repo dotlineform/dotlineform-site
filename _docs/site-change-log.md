@@ -26,6 +26,7 @@ Archives:
 **Summary:**
 Docs Import now lists direct child Markdown package folders under `var/docs/import-staging/`.
 Package imports require one Markdown file, rewrite local package image and attachment links to docs media links, convert package raster images to 800px-max WebP outputs, and copy package attachments unchanged with readable generated filenames.
+Package image Markdown now receives readable alt/title text such as `<doc_id> image NN` instead of opaque exported filenames.
 
 **Effect:**
 Apple Notes Markdown exports can be imported as normal Docs Viewer source docs without losing their companion images or attachments.

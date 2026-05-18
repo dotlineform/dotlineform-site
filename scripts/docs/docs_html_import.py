@@ -798,18 +798,25 @@ def retarget_markdown_package_media_plans(repo_root: Path, summary: dict[str, An
     used_filenames: set[str] = set()
     markdown = str(summary.get("markdown_preview") or "")
     warnings = summary.get("warnings") if isinstance(summary.get("warnings"), list) else []
+    image_index = 0
 
     for index in package_indices:
         plan = plans[index]
         assert isinstance(plan, dict)
         old_token = str(plan.get("media_token") or "")
         old_filename = str(plan.get("source_path") or "")
+        old_title = str(plan.get("title") or "")
         kind = str(plan.get("kind") or "")
         source_original = str(plan.get("source_original_path") or "")
         source_path = (repo_root / source_original).resolve()
         media_class = "img" if kind == "image" else "files"
         suffix = "image" if kind == "image" else "attachment"
         extension = "webp" if kind == "image" else Path(old_filename).suffix.lstrip(".")
+        if kind == "image":
+            image_index += 1
+            new_title = readable_package_image_title(proposed_doc_id, image_index)
+        else:
+            new_title = str(plan.get("title") or humanize(source_path.stem) or old_filename)
         new_filename = next_package_media_filename(
             repo_root,
             scope,
@@ -825,11 +832,19 @@ def retarget_markdown_package_media_plans(repo_root: Path, summary: dict[str, An
             package_root=package_root,
             source_path=source_path,
             filename=new_filename,
-            title=str(plan.get("title") or humanize(source_path.stem) or new_filename),
+            title=new_title,
             kind=kind,
         )
         if old_token:
-            markdown = markdown.replace(old_token, new_plan["media_token"], 1)
+            if kind == "image" and old_title:
+                old_markdown = f'![{old_title}]({old_token} "{old_title}")'
+                new_markdown = f'![{new_title}]({new_plan["media_token"]} "{new_title}")'
+                if old_markdown in markdown:
+                    markdown = markdown.replace(old_markdown, new_markdown, 1)
+                else:
+                    markdown = markdown.replace(old_token, new_plan["media_token"], 1)
+            else:
+                markdown = markdown.replace(old_token, new_plan["media_token"], 1)
         if old_filename != new_filename:
             for warning_index, warning in enumerate(warnings):
                 if isinstance(warning, str) and old_filename in warning:
@@ -1564,6 +1579,11 @@ def package_media_warning(plan: dict[str, Any]) -> str:
     )
 
 
+def readable_package_image_title(doc_id: str, image_index: int) -> str:
+    base = slugify(doc_id or "imported-doc").replace("-", " ") or "imported doc"
+    return f"{base} image {image_index:02d}"
+
+
 def find_package_markdown_file(package_root: Path) -> Path:
     markdown_files = sorted(
         [
@@ -1617,8 +1637,9 @@ def rewrite_markdown_package_media_links(
             unsupported_count += 1
             warnings.append(f"Unsupported package image type {suffix or '(none)'} for {target}; left the link unchanged.")
             return None
+        image_index = len([plan for plan in plans if plan.get("kind") == "image"]) + 1
         filename = next_package_media_filename(repo_root, scope, doc_id, "img", "image", "webp", used_filenames)
-        title = normalize_space(alt) or f"Image {len([plan for plan in plans if plan.get('kind') == 'image']) + 1:02d}"
+        title = readable_package_image_title(doc_id, image_index)
         plan = build_package_media_plan(
             repo_root,
             scope,
@@ -1677,7 +1698,8 @@ def rewrite_markdown_package_media_links(
         plan = plan_for_image(target, match.group("alt"))
         if not plan:
             return match.group(0)
-        return f"![{match.group('alt')}]({plan['media_token']}{match.group('title') or ''})"
+        title = str(plan.get("title") or "").replace('"', r"\"")
+        return f"![{plan['title']}]({plan['media_token']} \"{title}\")"
 
     def replace_link(match: re.Match[str]) -> str:
         plan = plan_for_attachment(match.group("target"), match.group("label"))

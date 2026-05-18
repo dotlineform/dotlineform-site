@@ -149,6 +149,7 @@ Inline raster data URLs are planned the same way as HTML imports.
 
 Markdown package imports treat a direct child directory of `var/docs/import-staging/` as one source when it contains exactly one Markdown file.
 Local Markdown image links are resolved inside the package, renamed to readable `<doc_id>-image-NN.webp` outputs, rewritten to docs media links, and converted to WebP at write time with a maximum width of 800px.
+The rewritten Markdown image alt text and title use readable `<doc_id> image NN` text instead of opaque exported filenames.
 Local Markdown links to supported downloadable files are treated as attachments, renamed to `<doc_id>-attachment-NN.<ext>`, rewritten to docs media links, and copied unchanged at write time.
 External links, anchors, mail links, unresolved package links, and unsupported package media stay in place with warnings where useful.
 

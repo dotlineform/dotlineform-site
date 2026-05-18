@@ -37,7 +37,7 @@ meta-symbols can be created by grouping combinations of symbols. in a composite 
  
 the form symbols, when layered into an image, describe the hidden meaning of the image
 
-![F1E9F92E-538C-4C7D-8B90-E67265B646FF]([[media:docs/analysis/img/3-symbols-image-01.webp]])
+![3 symbols image 01]([[media:docs/analysis/img/3-symbols-image-01.webp]] "3 symbols image 01")
  <span style="font-size: var(--font-caption);">3 symbols</span>
  <span style="font-size: var(--font-caption); text-align: left;">_____________________________________________</span>
  
@@ -45,20 +45,20 @@ the form symbols, when layered into an image, describe the hidden meaning of the
  
 **composite**
 
-![340D662B-133B-4448-91BC-3132BFF0EFDE]([[media:docs/analysis/img/3-symbols-image-02.webp]])
+![3 symbols image 02]([[media:docs/analysis/img/3-symbols-image-02.webp]] "3 symbols image 02")
 **composite for 3 symbols**
 2007
  
  
 The *real* is represented by a composite of 630 images appropriated from a systematic search of Google Images. The image selection process started with formulating a list of 21 words to be used as image search terms. A seed list of words beginning with the letters R, G and B was constructed, from which 21 words were selected randomly/intuitively.
 
-![C9D42F20-615E-4418-88A5-A1347E5E20F5]([[media:docs/analysis/img/3-symbols-image-03.webp]])
+![3 symbols image 03]([[media:docs/analysis/img/3-symbols-image-03.webp]] "3 symbols image 03")
 *3 symbols: seed list of image search terms*
  
 From: *RGB Proposal for South Square Centre, Oct 2007*
 
 [D6199E27-07B2-4045-B09B-2EF5E64920DC]([[media:docs/analysis/files/3-symbols-attachment-01.pdf]])
-![E142C224-F4A4-4889-8835-CE21B6F163D4]([[media:docs/analysis/img/3-symbols-image-04.webp]])
+![3 symbols image 04]([[media:docs/analysis/img/3-symbols-image-04.webp]] "3 symbols image 04")
 *21 selected image search terms*
  
 These 21 words were typed into Google Images and 30 images for each word selected. Each set of images was composited into a single image, resulting in 21 images which were then merged in repeating sequence R-G-B to form the final composite. (A number of arbitrary factors contributed to the process, for example, 7 folders fitted on my laptop desktop screen in a vertical column of icons, 30 was the number of images i had downloaded for the first word before i checked how many had been downloaded).
@@ -69,15 +69,15 @@ The *unreal* is represented by simple elemental forms, painted onto the surface 
  
 The 3 symbols were based on a series of black and white line drawings which represent birth, healing and death.
 
-![6D307C22-0B81-4052-931A-A1CFBB44034E]([[media:docs/analysis/img/3-symbols-image-05.webp]])
+![3 symbols image 05]([[media:docs/analysis/img/3-symbols-image-05.webp]] "3 symbols image 05")
 *concept drawings for 3 symbols*
 
-![EFD0C017-1E26-433B-BCD2-81B9F5DD742D]([[media:docs/analysis/img/3-symbols-image-06.webp]])
+![3 symbols image 06]([[media:docs/analysis/img/3-symbols-image-06.webp]] "3 symbols image 06")
 *3 primary symbols*
  
 The symbols are contained in 3 columns, whose size and placement is derived from the dimensions of the golden rectangle.
 
-![D767F4E9-02E8-4B40-AB26-5C1654B30624]([[media:docs/analysis/img/3-symbols-image-07.webp]])
+![3 symbols image 07]([[media:docs/analysis/img/3-symbols-image-07.webp]] "3 symbols image 07")
 *spaces for symbols*
  
 3 columns to contain birth, life and death
@@ -85,7 +85,7 @@ The symbols are contained in 3 columns, whose size and placement is derived from
 **3 into 9**
  
 The 3 primary symbols were extended into a set of 9 to represent the primary forces of birth, healing and death acting on each other.
-![8DFF5FE5-284A-4940-9E58-075BC20D0D1C]([[media:docs/analysis/img/3-symbols-image-08.webp]])
+![3 symbols image 08]([[media:docs/analysis/img/3-symbols-image-08.webp]] "3 symbols image 08")
 *symbol matrix*
  
 The division of the 3 columns into 3 rows introduces the idea of a dominant (primary) force and a secondary one. The 3 columns represent the primary, and the rows represent the secondary. Hence each cell is a space in which a primary force interacts/transforms a secondary one.
@@ -94,7 +94,7 @@ The 3 primary symbols occupy cells 1, 5 and 9 (these cells are the ones where bo
  
 The remaining 6 symbols were derived as follows:
 
-![9B450AE5-F44F-453B-ABDB-99C4BA63F8D5]([[media:docs/analysis/img/3-symbols-image-09.webp]])
+![3 symbols image 09]([[media:docs/analysis/img/3-symbols-image-09.webp]] "3 symbols image 09")
 The ‘addition’ of 2 symbols to form a 3rd derived symbol is an intuitive operation, partially based on the technique of compositing. It is transformative rather than additive, intuitive and non-linear, and the order in which the symbols are combined affects the form of the derived symbol.
  
 The process of combining 2 symbols graphically to produce a 3rd can be understood in terms of what properties each symbol possesses:

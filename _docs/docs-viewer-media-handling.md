@@ -196,6 +196,7 @@ During preview, the importer:
 - rewrites supported local image links to generated docs media links under `img`
 - rewrites supported local attachment links to generated docs media links under `files`
 - reports every planned image and attachment in `media_plans`
+- replaces opaque package image alt text with readable `<doc_id> image NN` text and writes the same value as the Markdown image title
 
 Generated package image filenames use the final proposed `doc_id` plus an incrementing suffix and always end in `.webp`:
 

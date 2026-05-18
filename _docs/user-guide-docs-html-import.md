@@ -182,6 +182,7 @@ Package image behavior:
 - smaller images are not upscaled
 - animated images are rejected instead of being silently flattened
 - generated filenames use `<doc_id>-image-NN.webp`
+- generated Markdown uses readable alt/title text such as `<doc_id> image NN`
 
 Package attachment behavior:
 
