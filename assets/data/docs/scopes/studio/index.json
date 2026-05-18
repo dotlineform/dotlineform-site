@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T19:33:42Z",
+  "generated_at": "2026-05-18T20:02:21Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -3606,22 +3606,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "site-request-docs-markdown-package-import",
-      "title": "Docs Markdown Package Import Request",
-      "added_date": "2026-05-17",
-      "last_updated": "2026-05-18",
-      "parent_id": "change-requests",
-      "sort_order": 47000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "site-request-docs-markdown-package-import.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-markdown-package-import",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-markdown-package-import.json",
-      "content_text_length": 13313
-    },
-    {
-      "scope": "studio",
       "doc_id": "ui-request-docs-viewer-favourites-spec",
       "title": "Docs Viewer Favourites Spec",
       "added_date": "2026-04-19",
@@ -4042,7 +4026,24 @@
       "source_path": "site-request-docs-semantic-references.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-semantic-references.json",
-      "content_text_length": 10068
+      "content_text_length": 14207
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-markdown-package-import",
+      "title": "Docs Markdown Package Import Request",
+      "added_date": "2026-05-17",
+      "last_updated": "2026-05-18",
+      "parent_id": "archive",
+      "sort_order": 73000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-markdown-package-import.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-markdown-package-import",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-markdown-package-import.json",
+      "content_text_length": 13316,
+      "ui_status": "done"
     }
   ]
 }

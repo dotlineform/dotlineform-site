@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d715b45735a5207fbff57b949369d956",
-    "generated_at_utc": "2026-05-18T19:33:42Z",
+    "version": "blake2b-241b8f0c17dc72f0b47e37a79938c256",
+    "generated_at_utc": "2026-05-18T19:45:40Z",
     "count": 247
   },
   "entries": [
@@ -5635,34 +5635,6 @@
       "search_text": "site-request-docs-import-source-registry-media site request docs import source registry media docs import source registry and media support request and support archive 2026-05-12 10:25 2026 05 12 10 25"
     },
     {
-      "id": "site-request-docs-markdown-package-import",
-      "kind": "doc",
-      "title": "Docs Markdown Package Import Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-markdown-package-import",
-      "last_updated": "2026-05-18",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-18 • Change Requests",
-      "search_terms": [
-        "site-request-docs-markdown-package-import",
-        "site",
-        "request",
-        "docs",
-        "markdown",
-        "package",
-        "import",
-        "docs markdown package import request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-18",
-        "2026",
-        "05",
-        "18"
-      ],
-      "search_text": "site-request-docs-markdown-package-import site request docs markdown package import docs markdown package import request change requests change requests 2026-05-18 2026 05 18"
-    },
-    {
       "id": "ui-request-docs-viewer-favourites-spec",
       "kind": "doc",
       "title": "Docs Viewer Favourites Spec",
@@ -6328,6 +6300,32 @@
         "18"
       ],
       "search_text": "site-request-docs-semantic-references site request docs semantic references docs semantic references request change requests change requests 2026-05-18 2026 05 18"
+    },
+    {
+      "id": "site-request-docs-markdown-package-import",
+      "kind": "doc",
+      "title": "Docs Markdown Package Import Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-markdown-package-import",
+      "last_updated": "2026-05-18",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-18 • Archive",
+      "search_terms": [
+        "site-request-docs-markdown-package-import",
+        "site",
+        "request",
+        "docs",
+        "markdown",
+        "package",
+        "import",
+        "docs markdown package import request",
+        "archive",
+        "2026-05-18",
+        "2026",
+        "05",
+        "18"
+      ],
+      "search_text": "site-request-docs-markdown-package-import site request docs markdown package import docs markdown package import request archive 2026-05-18 2026 05 18"
     }
   ]
 }

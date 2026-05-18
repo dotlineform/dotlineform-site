@@ -3,14 +3,16 @@ doc_id: site-request-docs-markdown-package-import
 title: Docs Markdown Package Import Request
 added_date: 2026-05-17
 last_updated: 2026-05-18
-parent_id: change-requests
-sort_order: 47000
+ui_status: done
+parent_id: archive
+sort_order: 73000
+hidden: false
 ---
 # Docs Markdown Package Import Request
 
 Status:
 
-- proposed
+- implemented
 
 ## Summary
 

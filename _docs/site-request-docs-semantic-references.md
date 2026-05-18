@@ -169,31 +169,55 @@ Docs Viewer or a future public runtime can progressively enhance `data-ref-actio
 
 ## Generated Relationship Index
 
-The docs build should emit a scope-level relationship artifact alongside the normal docs index and per-doc payloads.
+The docs build should emit incremental relationship artifacts alongside the normal docs index and per-doc payloads.
 
-Proposed path:
+The output should not be a single all-scope registry blob that rewrites whenever one source doc changes.
+The current docs watcher already rebuilds the affected scope only, and `build_docs.rb` already writes unchanged docs payloads incrementally.
+Semantic-reference output should preserve that behavior by diffing and writing per-doc and per-target files.
 
-- `assets/data/docs/scopes/<scope>/references.json`
+Proposed paths:
 
-Proposed top-level shape:
+- `assets/data/docs/scopes/<scope>/references/index.json`
+- `assets/data/docs/scopes/<scope>/references/by-doc/<doc_id>.json`
+- `assets/data/docs/scopes/<scope>/references/by-target/<target_kind>/<target_id_slug>.json`
+
+The per-doc file is the canonical source for references authored by one doc:
 
 ```json
 {
   "header": {
-    "schema": "docs_semantic_references_v1",
+    "schema": "docs_semantic_references_by_doc_v1",
     "scope": "studio",
+    "doc_id": "example-doc",
     "count": 1
   },
-  "references": [],
-  "targets": []
+  "references": [
+    {
+      "source_scope": "studio",
+      "source_doc_id": "example-doc",
+      "source_title": "Example Doc",
+      "source_path": "_docs/example-doc.md",
+      "target_kind": "work",
+      "target_id": "00638",
+      "target_key": "work:00638",
+      "target_href": "/works/00638/",
+      "label": "3 symbols",
+      "action": "link",
+      "ordinal": 1
+    }
+  ]
 }
 ```
 
-`references[]` should be the canonical flat list.
-`targets[]` can be a derived grouping for fast reverse lookup:
+The per-target file is a derived reverse lookup bucket:
 
 ```json
 {
+  "header": {
+    "schema": "docs_semantic_references_by_target_v1",
+    "scope": "studio",
+    "count": 1
+  },
   "target_key": "work:00638",
   "target_kind": "work",
   "target_id": "00638",
@@ -211,8 +235,40 @@ Proposed top-level shape:
 }
 ```
 
+The scope-level `references/index.json` should stay small.
+It can list target summaries and output metadata needed by runtime reports, but it should avoid duplicating every reference when per-target buckets can serve reverse lookups.
+
 This artifact should be separate from the docs search index.
 Search is optimized for text matching; semantic references are relationship data.
+
+### Watcher And Incremental Build Behavior
+
+The v1 implementation should integrate with the current docs watcher without changing the watcher protocol.
+
+Current watcher behavior:
+
+- a changed Studio doc rebuilds only the `studio` docs scope
+- a changed Library doc rebuilds only the `library` docs scope
+- docs search can be targeted to affected `doc_id`s
+- `build_docs.rb` still parses the rebuilt scope, then writes only changed generated files
+
+Semantic references should use the same pattern:
+
+- parse references while building the affected scope
+- compare generated per-doc reference JSON with existing `references/by-doc/<doc_id>.json`
+- compare generated per-target buckets with existing `references/by-target/...`
+- write only changed per-doc files, changed per-target files, and changed reference index metadata
+- remove stale per-doc and per-target files when references or docs are deleted
+
+For a single-doc edit that changes `[[ref:work:00638|3 symbols]]` to `[[ref:work:00639|3 symbols]]`, the expected writes should be limited to:
+
+- the changed rendered doc payload, if the rendered HTML changed
+- `references/by-doc/<doc_id>.json`
+- `references/by-target/work/00638.json`
+- `references/by-target/work/00639.json`
+- `references/index.json` only if target summaries or counts changed
+
+The implementation should avoid rewriting unrelated target buckets.
 
 ## Registry Resolver Model
 
@@ -286,11 +342,11 @@ During docs build, replace each valid token with normal HTML:
 
 The emitted HTML should remain accessible and usable without Docs Viewer JavaScript.
 
-### Task 4. Emit `references.json`
+### Task 4. Emit Incremental Reference Artifacts
 
-Collect all resolved references while building each scope and write `references.json` under that scope's generated docs data output.
+Collect all resolved references while building each scope and write the incremental reference artifacts under that scope's generated docs data output.
 
-The artifact should include enough source metadata for reverse-reference UI:
+The artifacts should include enough source metadata for reverse-reference UI:
 
 - source scope
 - source doc id
@@ -303,6 +359,14 @@ The artifact should include enough source metadata for reverse-reference UI:
 - action
 - ordinal or source order where useful
 
+The write plan should report:
+
+- changed per-doc reference files
+- changed per-target reference files
+- stale per-doc reference files removed
+- stale per-target reference files removed
+- whether the reference index metadata changed
+
 ### Task 5. Validate References
 
 Add validation coverage for:
@@ -313,7 +377,8 @@ Add validation coverage for:
 - label escaping
 - duplicate references in one doc
 - tokens inside code blocks
-- generated `references.json` stability
+- generated reference artifact stability
+- unchanged unrelated target buckets staying untouched during single-doc edits
 
 The existing broken-links audit can later read semantic references too, but v1 should at minimum fail or warn clearly during docs build.
 
@@ -365,9 +430,42 @@ Possible term actions:
 
 ### Public Reverse References
 
-Once `references.json` is stable, public work, series, moment, or tag pages could show "Referenced in docs" sections.
+Once the generated reference artifacts are stable, public work, series, moment, or tag pages could show "Referenced in docs" sections.
 
 That should be a later change because it affects public page layout and generated public data dependencies.
+
+## Next Steps After V1
+
+### Affected-Doc Build Input
+
+The first implementation can keep the current `build_docs.rb --scope <scope> --write` model:
+
+- the watcher determines the affected scope
+- the builder parses the whole scope
+- the write plan skips unchanged doc, search, and reference outputs
+
+A later optimization could pass affected doc ids into `build_docs.rb`, similar to docs search:
+
+```sh
+./scripts/build_docs.rb --scope studio --write --only-doc-ids example-doc
+```
+
+That optimization should only be attempted after v1 reference correctness is stable.
+It needs dependency rules for cases where one doc edit affects derived output for other docs or targets:
+
+- changed `doc_id`
+- deleted source doc
+- changed title used by relationship reports
+- changed parent/title metadata used in report rows
+- changed target id that moves a reference between target buckets
+- resolver data changes outside docs source, such as catalogue title or route changes
+
+Until those rules are explicit, per-file incremental writes are the safer optimization boundary.
+
+### Reference-Aware Broken Link Audit
+
+Extend the broken-links audit to understand semantic references after v1 output exists.
+The audit can then report unresolved semantic refs separately from ordinary broken `href` links.
 
 ## Open Decisions
 
@@ -384,6 +482,7 @@ That should be a later change because it affects public page layout and generate
 - rendered document shows a normal link to `/works/00638/`
 - rendered link includes stable `data-ref-*` attributes
 - generated scope data includes a semantic reference record for `work:00638`
+- single-doc edits only rewrite changed per-doc/per-target reference artifacts
 - invalid ids produce clear diagnostics
 - normal Markdown links continue to behave as plain links with no semantic relationship
 - the implementation leaves room for `[[ref:tag:subject:nature|nature]]` without changing the token grammar
