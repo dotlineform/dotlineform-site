@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T20:36:57Z",
+  "generated_at": "2026-05-18T21:13:38Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2134,7 +2134,7 @@
       "source_path": "docs-viewer-reports.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-reports",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-reports.json",
-      "content_text_length": 5103,
+      "content_text_length": 5217,
       "viewer_report": "reports_list",
       "viewer_report_access": "public"
     },
@@ -2232,7 +2232,7 @@
       "source_path": "docs-viewer-semantic-references.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-semantic-references",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-semantic-references.json",
-      "content_text_length": 220,
+      "content_text_length": 347,
       "ui_status": "report",
       "viewer_report": "semantic_references",
       "viewer_report_access": "manage"
@@ -3120,7 +3120,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 12297
+      "content_text_length": 12438
     },
     {
       "scope": "studio",

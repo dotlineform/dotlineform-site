@@ -549,6 +549,7 @@ class DocsDataBuilder
         "target_kind" => target_kind,
         "target_id" => target_id,
         "target_href" => first.fetch("target_href"),
+        "target_title" => first.fetch("target_title", ""),
         "target_status" => first.fetch("target_status"),
         "count" => refs.length,
         "references" => refs.map do |ref|
@@ -574,6 +575,7 @@ class DocsDataBuilder
         "target_kind" => target_kind,
         "target_id" => target_id,
         "target_href" => payload.fetch("target_href"),
+        "target_title" => payload.fetch("target_title", ""),
         "target_status" => payload.fetch("target_status"),
         "count" => payload.fetch("count"),
         "bucket_url" => reference_target_url(target_kind, target_id)
@@ -1144,6 +1146,7 @@ class DocsDataBuilder
       "target_id" => resolution[:target_id],
       "target_key" => resolution[:target_key],
       "target_href" => resolution[:target_href],
+      "target_title" => resolution[:target_title],
       "target_status" => resolution[:target_status],
       "label" => label,
       "action" => token.action,
@@ -1167,6 +1170,8 @@ class DocsDataBuilder
       "data-ref-action" => token.action
     }
     if usable && resolution[:linkable] && !resolution[:target_href].to_s.empty?
+      attrs["target"] = "_blank"
+      attrs["rel"] = "noopener noreferrer"
       return %(<a href="#{CGI.escapeHTML(resolution[:target_href])}" #{html_attrs(attrs)}>#{label}</a>)
     end
 

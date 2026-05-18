@@ -11,7 +11,7 @@
   "viewable": true,
   "source_path": "docs-viewer-semantic-references.md",
   "viewer_url": "/docs/?scope=studio&doc=docs-viewer-semantic-references",
-  "content_html": "<h1 id=\"semantic-references\">Semantic References</h1>\n\n<p>This management report lists generated semantic references authored in Docs Viewer Markdown.</p>\n\n<p>Use it to inspect which docs reference catalogue works, series, moments, or future registry targets through <code class=\"language-plaintext highlighter-rouge\">[[ref:...]]</code> tokens.</p>\n",
+  "content_html": "<h1 id=\"semantic-references\">Semantic References</h1>\n\n<p>This management report lists generated semantic references authored in Docs Viewer Markdown.</p>\n\n<p>Use it to inspect which docs reference catalogue works, series, moments, or future registry targets through <code class=\"language-plaintext highlighter-rouge\">[[ref:...]]</code> tokens.\nThe report defaults to all configured docs scopes; use the scope selector to focus on Studio, Analysis, or Library references.</p>\n",
   "ui_status": "report",
   "viewer_report": "semantic_references",
   "viewer_report_access": "manage"

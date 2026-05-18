@@ -152,6 +152,7 @@ Semantic reference tokens:
 - omit the label as <code>&#91;&#91;ref:&lt;kind&gt;:&lt;id&gt;&#93;&#93;</code> to use the current resolved catalogue title
 - v1 supports `work`, `series`, and `moment`
 - v1 supports only `action=link`, which is also the default
+- published catalogue targets open in a new browser tab with `target="_blank"` and `rel="noopener noreferrer"` so the current doc remains in place
 - unsupported actions, unsupported kinds, missing ids, and draft catalogue targets render as inert annotated text and produce build warnings
 - semantic-reference tokens are ignored inside fenced code blocks and inline code
 - normal Markdown links remain plain links and do not create semantic-reference records

@@ -15,3 +15,4 @@ viewer_report_access: manage
 This management report lists generated semantic references authored in Docs Viewer Markdown.
 
 Use it to inspect which docs reference catalogue works, series, moments, or future registry targets through `[[ref:...]]` tokens.
+The report defaults to all configured docs scopes; use the scope selector to focus on Studio, Analysis, or Library references.

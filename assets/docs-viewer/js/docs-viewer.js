@@ -763,6 +763,7 @@ import {
       payload: payload,
       reportRegistryUrl: reportRegistryUrl,
       setStatus: setStatus,
+      scopeConfigs: state.scopeConfigs.slice(),
       viewerScope: viewerScope,
       viewerUrlForScope: viewerUrlForScope
     };

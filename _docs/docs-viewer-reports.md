@@ -110,6 +110,7 @@ It reads through the local docs-management server and shows source config, brows
 
 `semantic_references` renders generated semantic-reference targets and source docs in manage mode.
 It reads the current scope's `references/index.json` plus per-target buckets from `references/by-target/`.
+The report defaults to all configured docs scopes and provides a `report_scope` selector for focusing on one scope.
 
 ## Good Candidates
 
