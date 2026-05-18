@@ -17,6 +17,32 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-18] Added Docs Semantic References
+
+**Status:** implemented
+
+**Area:** Docs Viewer builder / reports
+
+**Summary:**
+Docs Viewer Markdown can now author semantic references with `[[ref:<kind>:<id>|<label>]]`.
+The builder resolves `work`, `series`, and `moment` catalogue targets, renders published targets as normal links with stable `data-ref-*` attributes, renders invalid or non-published targets as inert annotated text, and writes generated relationship artifacts under each scope's `references/` output.
+
+**Effect:**
+Docs can distinguish authored semantic relationships from ordinary prose links.
+The new Semantic References management report lists generated targets and source docs without adding a runtime graph service.
+
+**Affected files/docs:**
+
+- `scripts/docs/build_docs.rb`
+- `scripts/docs/docs_generated_reads.py`
+- `scripts/docs/docs_management_server.py`
+- `assets/docs-viewer/js/docs-viewer.js`
+- `assets/docs-viewer/js/docs-viewer-reports.js`
+- `assets/docs-viewer/js/reports/semantic-references-report.js`
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Docs Viewer Reports](/docs/?scope=studio&doc=docs-viewer-reports)
+- [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references)
+
 ## [2026-05-18] Added Docs Markdown Package Import
 
 **Status:** implemented

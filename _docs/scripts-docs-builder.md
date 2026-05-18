@@ -35,6 +35,9 @@ Generated outputs:
 
 - `assets/data/docs/scopes/studio/index.json`
 - `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
+- `assets/data/docs/scopes/studio/references/index.json`
+- `assets/data/docs/scopes/studio/references/by-doc/<doc_id>.json`
+- `assets/data/docs/scopes/studio/references/by-target/<target_kind>/<target_id_slug>.json`
 - `assets/data/docs/scopes/analysis/index.json`
 - `assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
 - `assets/data/docs/scopes/library/index.json`
@@ -55,10 +58,12 @@ This config is the shared source of truth for docs scope ids, Markdown source ro
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
 - resolves <code>&#91;&#91;interactive-html:...&#93;&#93;</code> tokens to same-scope sandboxed iframes for repo-local interactive HTML assets
+- resolves <code>&#91;&#91;ref:&lt;kind&gt;:&lt;id&gt;|&lt;label&gt;&#93;&#93;</code> semantic-reference tokens for catalogue works, series, and moments before Markdown rendering
 - rewrites same-scope doc-to-doc links onto the scope-owned viewer route
 - adds missing image `title` attributes from image `alt` text so rendered docs images expose the same text on hover without changing explicit titles
 - emits scope-level viewer options such as compatibility non-loadable ids, compatibility manage-only tree root ids, and document-view updated-date visibility
 - writes one index payload plus one per-doc payload for each configured scope
+- writes incremental semantic-reference relationship artifacts under `references/`
 - writes `assets/docs-viewer/data/docs-viewer-config.json` from `scripts/docs/docs_scopes.json`, including route/scope data and the `docs_viewer` browser settings used by public and management routes
 - writes incrementally: unchanged payloads are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
 
@@ -141,6 +146,20 @@ Interactive HTML tokens:
   - source asset: `assets/docs/interactive/library/coincidence-salience.html`
   - Markdown token: <code>&#91;&#91;interactive-html:coincidence-salience.html height=546&#93;&#93;</code>
 
+Semantic reference tokens:
+
+- use the literal token <code>&#91;&#91;ref:&lt;kind&gt;:&lt;id&gt;|&lt;label&gt;&#93;&#93;</code> when a doc should render a normal link and record a generated relationship to a stable registry record
+- omit the label as <code>&#91;&#91;ref:&lt;kind&gt;:&lt;id&gt;&#93;&#93;</code> to use the current resolved catalogue title
+- v1 supports `work`, `series`, and `moment`
+- v1 supports only `action=link`, which is also the default
+- unsupported actions, unsupported kinds, missing ids, and draft catalogue targets render as inert annotated text and produce build warnings
+- semantic-reference tokens are ignored inside fenced code blocks and inline code
+- normal Markdown links remain plain links and do not create semantic-reference records
+- examples:
+  - <code>&#91;&#91;ref:work:00638|3 symbols&#93;&#93;</code>
+  - <code>&#91;&#91;ref:work:00638&#93;&#93;</code>
+  - <code>&#91;&#91;ref:series:026|collected 1989-1998&#93;&#93;</code>
+
 ## Commands
 
 Default command:
@@ -183,6 +202,8 @@ Flags:
 - current write behavior is incremental within the rebuilt scope:
   - unchanged `index.json` or `by-id/<doc_id>.json` payloads are not rewritten
   - stale `by-id/<doc_id>.json` payloads are removed when the rebuilt scope no longer generates that doc
+  - unchanged semantic-reference by-doc and by-target payloads are not rewritten
+  - stale semantic-reference by-doc and by-target payloads are removed when references or source docs no longer generate them
 - if you want a scope-specific rebuild, use `--scope studio`, `--scope analysis`, or `--scope library` explicitly
 
 Jekyll verification builds:

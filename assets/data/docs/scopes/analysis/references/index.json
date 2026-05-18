@@ -1,0 +1,20 @@
+{
+  "header": {
+    "schema": "docs_semantic_references_index_v1",
+    "scope": "analysis",
+    "count": 1,
+    "target_count": 1,
+    "generated_at": "2026-05-18T20:40:03Z"
+  },
+  "targets": [
+    {
+      "target_key": "work:00638",
+      "target_kind": "work",
+      "target_id": "00638",
+      "target_href": "/works/00638/",
+      "target_status": "published",
+      "count": 1,
+      "bucket_url": "/assets/data/docs/scopes/analysis/references/by-target/work/00638.json"
+    }
+  ]
+}

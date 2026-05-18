@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T20:14:01Z",
+  "generated_at": "2026-05-18T20:36:57Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -2134,7 +2134,7 @@
       "source_path": "docs-viewer-reports.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-reports",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-reports.json",
-      "content_text_length": 4902,
+      "content_text_length": 5103,
       "viewer_report": "reports_list",
       "viewer_report_access": "public"
     },
@@ -2220,6 +2220,25 @@
     },
     {
       "scope": "studio",
+      "doc_id": "docs-viewer-semantic-references",
+      "title": "Semantic References",
+      "added_date": "2026-05-18",
+      "last_updated": "2026-05-18",
+      "parent_id": "docs-viewer",
+      "sort_order": 8500,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-semantic-references.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-semantic-references",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-semantic-references.json",
+      "content_text_length": 220,
+      "ui_status": "report",
+      "viewer_report": "semantic_references",
+      "viewer_report_access": "manage"
+    },
+    {
+      "scope": "studio",
       "doc_id": "design",
       "title": "Design",
       "added_date": "2026-04-21",
@@ -2264,7 +2283,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 4232
+      "content_text_length": 4424
     },
     {
       "scope": "studio",
@@ -3101,7 +3120,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 10925
+      "content_text_length": 12297
     },
     {
       "scope": "studio",
@@ -3264,7 +3283,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 171040
+      "content_text_length": 172073
     },
     {
       "scope": "studio",
@@ -4026,7 +4045,7 @@
       "source_path": "site-request-docs-semantic-references.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-semantic-references.json",
-      "content_text_length": 15595,
+      "content_text_length": 15877,
       "ui_status": "in-progress"
     },
     {

@@ -108,6 +108,9 @@ This document uses it so the list of configured reports stays visible from the D
 `source_config` renders the Docs Viewer source config report in manage mode.
 It reads through the local docs-management server and shows source config, browser projection, generated output paths, and generated viewer options for every configured scope.
 
+`semantic_references` renders generated semantic-reference targets and source docs in manage mode.
+It reads the current scope's `references/index.json` plus per-target buckets from `references/by-target/`.
+
 ## Good Candidates
 
 Good report candidates are compact, read-oriented views over generated docs data:

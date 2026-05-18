@@ -685,12 +685,78 @@ import {
     }));
   }
 
+  function docsScopeDataBaseUrl(scope) {
+    var targetScope = String(scope || viewerScope || "").trim().toLowerCase();
+    var targetConfig = state.scopeConfigsById.get(targetScope);
+    var indexUrl = targetConfig ? String(targetConfig.indexUrl || "") : "";
+    return indexUrl.replace(/\/index\.json(?:[?#].*)?$/, "");
+  }
+
+  function referenceTargetSlug(target) {
+    var bucketUrl = String(target && target.bucket_url || "").trim();
+    if (bucketUrl) {
+      try {
+        var url = new URL(bucketUrl, window.location.origin);
+        var filename = url.pathname.split("/").pop() || "";
+        if (filename.slice(-5) === ".json") return filename.slice(0, -5);
+      } catch (error) {
+        // Fall through to the target id encoding below.
+      }
+    }
+    return encodeURIComponent(String(target && target.target_id || "").trim());
+  }
+
+  function fetchDocsReferencesIndexForScope(scope) {
+    var targetScope = String(scope || viewerScope || "").trim().toLowerCase();
+    var baseUrl = docsScopeDataBaseUrl(targetScope);
+    if (!baseUrl) {
+      return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
+    }
+    return fetchPreferredGeneratedJson(
+      appendAssetVersion(baseUrl + "/references/index.json"),
+      "Failed to load docs references",
+      managementReloadPath("/docs/generated/references", { scope: targetScope }),
+      dataRequestOptions({
+        viewerScope: targetScope,
+        reloadNonce: "",
+        reloadExpectedDocId: ""
+      })
+    );
+  }
+
+  function fetchDocsReferenceTargetForScope(scope, target) {
+    var targetScope = String(scope || viewerScope || "").trim().toLowerCase();
+    var targetKind = String(target && target.target_kind || "").trim();
+    var targetSlug = referenceTargetSlug(target);
+    var staticUrl = String(target && target.bucket_url || "").trim();
+    if (!staticUrl) {
+      var baseUrl = docsScopeDataBaseUrl(targetScope);
+      staticUrl = baseUrl + "/references/by-target/" + encodeURIComponent(targetKind) + "/" + targetSlug + ".json";
+    }
+    return fetchPreferredGeneratedJson(
+      appendAssetVersion(staticUrl),
+      "Failed to load docs reference target",
+      managementReloadPath("/docs/generated/reference-target", {
+        scope: targetScope,
+        target_kind: targetKind,
+        target_slug: targetSlug
+      }),
+      dataRequestOptions({
+        viewerScope: targetScope,
+        reloadNonce: "",
+        reloadExpectedDocId: ""
+      })
+    );
+  }
+
   function reportContext(doc, payload) {
     return {
       allowManagement: allowManagement,
       checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
       content: content,
       doc: doc,
+      fetchDocsReferenceTarget: fetchDocsReferenceTargetForScope,
+      fetchDocsReferencesIndex: fetchDocsReferencesIndexForScope,
       fetchDocsIndex: fetchDocsIndexForScope,
       managementBaseUrl: managementBaseUrl,
       managementMode: state.managementMode,

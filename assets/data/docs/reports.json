@@ -42,6 +42,14 @@
       "default_access": "manage",
       "loader_id": "source_config",
       "presets": []
+    },
+    {
+      "report_id": "semantic_references",
+      "title": "Semantic References",
+      "description": "Displays generated semantic-reference targets and source docs.",
+      "default_access": "manage",
+      "loader_id": "semantic_references",
+      "presets": []
     }
   ]
 }

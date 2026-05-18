@@ -45,6 +45,14 @@ def write_generated_docs(root: Path) -> None:
     write_json(root / "assets/data/docs/scopes/studio/index.json", {"docs": docs})
     write_json(root / "assets/data/docs/scopes/studio/by-id/archive.json", {"doc_id": "archive"})
     write_json(root / "assets/data/docs/scopes/studio/by-id/child.json", {"doc_id": "child"})
+    write_json(
+        root / "assets/data/docs/scopes/studio/references/index.json",
+        {"targets": [{"target_kind": "work", "target_id": "00638"}]},
+    )
+    write_json(
+        root / "assets/data/docs/scopes/studio/references/by-target/work/00638.json",
+        {"target_kind": "work", "target_id": "00638", "references": []},
+    )
     write_json(root / "assets/data/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
 
 
@@ -139,6 +147,30 @@ def test_generated_doc_payload_allows_external_content_url_with_expected_path() 
     assert payload["doc_id"] == "child"
 
 
+def test_generated_references_reads_scope_index_and_target() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_generated_docs(repo_root)
+
+        index_payload = generated_reads.read_generated_references_index(repo_root, "studio")
+        target_payload = generated_reads.read_generated_reference_target(repo_root, "studio", "work", "00638")
+
+    assert index_payload["targets"][0]["target_id"] == "00638"
+    assert target_payload["target_kind"] == "work"
+
+
+def test_generated_reference_target_rejects_unsafe_path_parts() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_generated_docs(repo_root)
+        try:
+            generated_reads.read_generated_reference_target(repo_root, "studio", "../work", "00638")
+        except ValueError as exc:
+            assert "unsupported characters" in str(exc)
+        else:
+            raise AssertionError("Expected unsafe reference target kind to be rejected")
+
+
 def test_generated_doc_paths_use_scope_config_output() -> None:
     original_configs = generated_reads.DOCS_SCOPE_CONFIGS
     generated_reads.DOCS_SCOPE_CONFIGS = {
@@ -187,6 +219,8 @@ def main() -> None:
     test_generated_doc_payload_requires_index_record()
     test_generated_doc_payload_rejects_unexpected_content_url()
     test_generated_doc_payload_allows_external_content_url_with_expected_path()
+    test_generated_references_reads_scope_index_and_target()
+    test_generated_reference_target_rejects_unsafe_path_parts()
     test_generated_doc_paths_use_scope_config_output()
     test_read_generated_json_reports_invalid_json()
     print("Docs generated-read tests OK")

@@ -10,6 +10,8 @@ hidden: true
 ---
 # 3 symbols
 
+[[ref:work:00638|3 symbols]]
+
 [3 symbols](/works/00638/){:target="_blank" rel="noopener noreferrer"}<br>
 3 symbols (book ‘composite for 3 symbols’), 2007<br>
 3 symbols (cards), 2008

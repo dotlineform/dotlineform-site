@@ -57,10 +57,23 @@ DocRecord = Struct.new(
   keyword_init: true
 )
 
+SemanticRefToken = Struct.new(
+  :raw,
+  :kind,
+  :id,
+  :label,
+  :action,
+  :modifier_error,
+  keyword_init: true
+)
+
 class DocsDataBuilder
   FRONT_MATTER_PATTERN = /\A---\s*\n(.*?)\n---\s*\n?/m.freeze
   MEDIA_TOKEN_PATTERN = /\[\[media:(.+?)\]\]/.freeze
   INTERACTIVE_HTML_TOKEN_PATTERN = /\[\[interactive-html:(.+?)\]\]/.freeze
+  SEMANTIC_REF_TOKEN_PATTERN = /\[\[ref:(.*?)\]\](\{[^}\n]*\})?/m.freeze
+  SEMANTIC_REF_ALLOWED_ACTIONS = %w[link].freeze
+  SEMANTIC_REF_SUPPORTED_KINDS = %w[work series moment].freeze
   INTERACTIVE_HTML_FILENAME_PATTERN = /\A[a-z0-9][a-z0-9._-]*\.html\z/i.freeze
   INTERACTIVE_HTML_HEIGHT_PATTERN = /\A[1-9][0-9]{0,3}\z/.freeze
   SCRIPT_STYLE_PATTERN = %r{<\s*(script|style)\b[^>]*>.*?<\s*/\s*\1\s*>}im.freeze
@@ -102,7 +115,10 @@ class DocsDataBuilder
     docs = load_docs
     validate_docs!(docs)
 
-    item_payloads = docs.to_h { |doc| [doc.doc_id, item_entry(doc, docs)] }
+    semantic_references_by_doc = {}
+    item_payloads = docs.to_h do |doc|
+      [doc.doc_id, item_entry(doc, docs, semantic_references_by_doc)]
+    end
     docs_index = docs.sort_by { |doc| doc_sort_key(doc) }.map { |doc| index_entry(doc, docs, item_payloads[doc.doc_id]) }
     viewer_options = viewer_options_payload
     index_payload = {
@@ -110,21 +126,24 @@ class DocsDataBuilder
       "viewer_options" => viewer_options,
       "docs" => docs_index
     }
-    write_plan = build_write_plan(index_payload, item_payloads)
+    reference_payloads = build_reference_payloads(docs, semantic_references_by_doc)
+    write_plan = build_write_plan(index_payload, item_payloads, reference_payloads)
 
     unless write
-      dry_run_summary(index_payload, item_payloads, write_plan)
+      dry_run_summary(index_payload, item_payloads, reference_payloads, write_plan)
       return {
         index_payload: index_payload,
         item_payloads: item_payloads,
+        reference_payloads: reference_payloads,
         write_plan: write_plan
       }
     end
 
-    write_outputs(index_payload, item_payloads, write_plan)
+    write_outputs(index_payload, item_payloads, reference_payloads, write_plan)
     {
       index_payload: index_payload,
       item_payloads: item_payloads,
+      reference_payloads: reference_payloads,
       write_plan: write_plan
     }
   end
@@ -326,7 +345,8 @@ class DocsDataBuilder
     entry
   end
 
-  def item_entry(doc, docs)
+  def item_entry(doc, docs, semantic_references_by_doc)
+    resolved_markdown = resolve_content_tokens(doc.body_markdown, doc: doc, references_by_doc: semantic_references_by_doc)
     entry = {
       "scope" => doc.scope_id,
       "doc_id" => doc.doc_id,
@@ -342,7 +362,7 @@ class DocsDataBuilder
       "viewer_url" => doc.viewer_url,
       "content_html" => add_missing_image_titles(
         rewrite_doc_links(
-          JekyllMarkdownRenderer.render_string(resolve_content_tokens(doc.body_markdown)),
+          JekyllMarkdownRenderer.render_string(resolved_markdown),
           current_doc: doc,
           docs: docs
         )
@@ -500,18 +520,118 @@ class DocsDataBuilder
     existing_generated_at
   end
 
-  def write_outputs(index_payload, item_payloads, write_plan)
-    write_payload_set(@output_dir, @items_dir, index_payload, item_payloads, write_plan)
+  def build_reference_payloads(docs, semantic_references_by_doc)
+    references = docs.flat_map { |doc| semantic_references_by_doc.fetch(doc.doc_id, []) }
+    by_doc_payloads = semantic_references_by_doc.each_with_object({}) do |(doc_id, refs), memo|
+      next if refs.empty?
+
+      memo[doc_id] = {
+        "header" => {
+          "schema" => "docs_semantic_references_by_doc_v1",
+          "scope" => @scope_id,
+          "doc_id" => doc_id,
+          "count" => refs.length
+        },
+        "references" => refs
+      }
+    end
+
+    by_target = references.group_by { |ref| [ref.fetch("target_kind"), ref.fetch("target_id")] }
+    by_target_payloads = by_target.each_with_object({}) do |((target_kind, target_id), refs), memo|
+      first = refs.first
+      memo[[target_kind, target_id]] = {
+        "header" => {
+          "schema" => "docs_semantic_references_by_target_v1",
+          "scope" => @scope_id,
+          "count" => refs.length
+        },
+        "target_key" => first.fetch("target_key"),
+        "target_kind" => target_kind,
+        "target_id" => target_id,
+        "target_href" => first.fetch("target_href"),
+        "target_status" => first.fetch("target_status"),
+        "count" => refs.length,
+        "references" => refs.map do |ref|
+          {
+            "source_scope" => ref.fetch("source_scope"),
+            "source_doc_id" => ref.fetch("source_doc_id"),
+            "source_title" => ref.fetch("source_title"),
+            "source_path" => ref.fetch("source_path"),
+            "source_viewer_url" => ref.fetch("source_viewer_url"),
+            "label" => ref.fetch("label"),
+            "action" => ref.fetch("action"),
+            "ordinal" => ref.fetch("ordinal")
+          }
+        end.sort_by { |ref| [ref.fetch("source_title").downcase, ref.fetch("source_doc_id"), ref.fetch("ordinal")] }
+      }
+    end
+
+    index_targets = by_target_payloads.values.map do |payload|
+      target_kind = payload.fetch("target_kind")
+      target_id = payload.fetch("target_id")
+      {
+        "target_key" => payload.fetch("target_key"),
+        "target_kind" => target_kind,
+        "target_id" => target_id,
+        "target_href" => payload.fetch("target_href"),
+        "target_status" => payload.fetch("target_status"),
+        "count" => payload.fetch("count"),
+        "bucket_url" => reference_target_url(target_kind, target_id)
+      }
+    end.sort_by { |target| [target.fetch("target_kind"), target.fetch("target_id")] }
+
+    index_without_generated_at = {
+      "header" => {
+        "schema" => "docs_semantic_references_index_v1",
+        "scope" => @scope_id,
+        "count" => references.length,
+        "target_count" => index_targets.length
+      },
+      "targets" => index_targets
+    }
+    {
+      index: index_without_generated_at.merge(
+        "header" => index_without_generated_at.fetch("header").merge(
+          "generated_at" => effective_reference_generated_at(index_without_generated_at)
+        )
+      ),
+      by_doc: by_doc_payloads,
+      by_target: by_target_payloads
+    }
   end
 
-  def dry_run_summary(index_payload, item_payloads, write_plan)
+  def effective_reference_generated_at(index_payload_without_generated_at)
+    existing_payload = load_json_file(references_dir.join("index.json"))
+    return Time.now.utc.iso8601 unless existing_payload.is_a?(Hash)
+
+    existing_header = existing_payload.fetch("header", {}).dup
+    existing_generated_at = existing_header.delete("generated_at").to_s
+    comparable_existing = existing_payload.merge("header" => existing_header)
+    return Time.now.utc.iso8601 unless comparable_existing == index_payload_without_generated_at
+    return Time.now.utc.iso8601 if existing_generated_at.empty?
+
+    existing_generated_at
+  end
+
+  def write_outputs(index_payload, item_payloads, reference_payloads, write_plan)
+    write_payload_set(@output_dir, @items_dir, index_payload, item_payloads, write_plan)
+    write_reference_payload_set(reference_payloads, write_plan)
+  end
+
+  def dry_run_summary(index_payload, item_payloads, reference_payloads, write_plan)
     puts "Dry run:"
     puts "  scope: #{@scope_id}"
     puts "  source: #{@source_dir}"
     puts "  docs: #{index_payload.fetch("docs").length}"
+    puts "  semantic references: #{reference_payloads.fetch(:index).fetch("header").fetch("count")}"
     puts "  would write index: #{write_plan[:index_write] ? 1 : 0}"
     puts "  would write doc payloads: #{write_plan[:changed_item_ids].length}"
     puts "  would remove stale doc payloads: #{write_plan[:stale_item_ids].length}"
+    puts "  would write references index: #{write_plan[:reference_index_write] ? 1 : 0}"
+    puts "  would write reference by-doc payloads: #{write_plan[:changed_reference_doc_ids].length}"
+    puts "  would write reference by-target payloads: #{write_plan[:changed_reference_target_keys].length}"
+    puts "  would remove stale reference by-doc payloads: #{write_plan[:stale_reference_doc_ids].length}"
+    puts "  would remove stale reference by-target payloads: #{write_plan[:stale_reference_target_keys].length}"
   end
 
   def write_payload_set(output_dir, items_dir, index_payload, item_payloads, write_plan, label: nil)
@@ -536,7 +656,40 @@ class DocsDataBuilder
     puts "#{prefix}Doc payloads removed: #{write_plan[:stale_item_ids].length}. Path: #{items_dir}"
   end
 
-  def build_write_plan(index_payload, item_payloads)
+  def write_reference_payload_set(reference_payloads, write_plan)
+    FileUtils.mkdir_p(references_by_doc_dir)
+    FileUtils.mkdir_p(references_by_target_dir)
+
+    index_path = references_dir.join("index.json")
+    write_text(index_path, write_plan[:reference_index_text]) if write_plan[:reference_index_write]
+
+    write_plan[:changed_reference_doc_ids].each do |doc_id|
+      write_text(references_by_doc_dir.join("#{doc_id}.json"), write_plan[:reference_doc_text_by_id].fetch(doc_id))
+    end
+
+    write_plan[:stale_reference_doc_ids].each do |doc_id|
+      FileUtils.rm_f(references_by_doc_dir.join("#{doc_id}.json"))
+    end
+
+    write_plan[:changed_reference_target_keys].each do |key|
+      path = reference_target_path(*key)
+      FileUtils.mkdir_p(path.dirname)
+      write_text(path, write_plan[:reference_target_text_by_key].fetch(key))
+    end
+
+    write_plan[:stale_reference_target_keys].each do |key|
+      FileUtils.rm_f(reference_target_path(*key))
+    end
+
+    puts "References JSON done for scope #{@scope_id}."
+    puts "Reference index wrote: #{write_plan[:reference_index_write] ? 1 : 0}. Path: #{index_path}"
+    puts "Reference by-doc payloads wrote: #{write_plan[:changed_reference_doc_ids].length}. Path: #{references_by_doc_dir}"
+    puts "Reference by-doc payloads removed: #{write_plan[:stale_reference_doc_ids].length}. Path: #{references_by_doc_dir}"
+    puts "Reference by-target payloads wrote: #{write_plan[:changed_reference_target_keys].length}. Path: #{references_by_target_dir}"
+    puts "Reference by-target payloads removed: #{write_plan[:stale_reference_target_keys].length}. Path: #{references_by_target_dir}"
+  end
+
+  def build_write_plan(index_payload, item_payloads, reference_payloads)
     index_text = json_text(index_payload)
     existing_index_text = read_text(@output_dir.join("index.json"))
     changed_item_ids = []
@@ -551,6 +704,7 @@ class DocsDataBuilder
 
     existing_item_ids = existing_doc_payload_ids(@items_dir)
     desired_item_ids = item_payloads.keys.sort
+    reference_plan = build_reference_write_plan(reference_payloads)
 
     {
       index_write: existing_index_text != index_text,
@@ -558,6 +712,36 @@ class DocsDataBuilder
       changed_item_ids: changed_item_ids.sort,
       stale_item_ids: (existing_item_ids - desired_item_ids).sort,
       item_text_by_id: item_text_by_id
+    }.merge(reference_plan)
+  end
+
+  def build_reference_write_plan(reference_payloads)
+    reference_index_text = json_text(reference_payloads.fetch(:index))
+    changed_doc_ids = []
+    doc_text_by_id = {}
+    reference_payloads.fetch(:by_doc).each do |doc_id, payload|
+      text = json_text(payload)
+      doc_text_by_id[doc_id] = text
+      changed_doc_ids << doc_id if read_text(references_by_doc_dir.join("#{doc_id}.json")) != text
+    end
+
+    changed_target_keys = []
+    target_text_by_key = {}
+    reference_payloads.fetch(:by_target).each do |key, payload|
+      text = json_text(payload)
+      target_text_by_key[key] = text
+      changed_target_keys << key if read_text(reference_target_path(*key)) != text
+    end
+
+    {
+      reference_index_write: read_text(references_dir.join("index.json")) != reference_index_text,
+      reference_index_text: reference_index_text,
+      changed_reference_doc_ids: changed_doc_ids.sort,
+      stale_reference_doc_ids: (existing_reference_doc_ids - reference_payloads.fetch(:by_doc).keys.sort).sort,
+      reference_doc_text_by_id: doc_text_by_id,
+      changed_reference_target_keys: changed_target_keys.sort,
+      stale_reference_target_keys: (existing_reference_target_keys - reference_payloads.fetch(:by_target).keys.sort).sort,
+      reference_target_text_by_key: target_text_by_key
     }
   end
 
@@ -566,6 +750,46 @@ class DocsDataBuilder
 
     Dir.glob(items_dir.join("*.json").to_s).sort.map do |file_path|
       Pathname(file_path).basename(".json").to_s
+    end
+  end
+
+  def references_dir
+    @references_dir ||= @output_dir.join("references")
+  end
+
+  def references_by_doc_dir
+    @references_by_doc_dir ||= references_dir.join("by-doc")
+  end
+
+  def references_by_target_dir
+    @references_by_target_dir ||= references_dir.join("by-target")
+  end
+
+  def reference_target_path(target_kind, target_id)
+    references_by_target_dir.join(target_kind.to_s, "#{reference_target_id_slug(target_id)}.json")
+  end
+
+  def reference_target_url(target_kind, target_id)
+    "#{@output_url_base}/references/by-target/#{CGI.escape(target_kind.to_s)}/#{reference_target_id_slug(target_id)}.json"
+  end
+
+  def reference_target_id_slug(target_id)
+    CGI.escape(target_id.to_s)
+  end
+
+  def existing_reference_doc_ids
+    existing_doc_payload_ids(references_by_doc_dir)
+  end
+
+  def existing_reference_target_keys
+    return [] unless references_by_target_dir.exist?
+
+    Dir.glob(references_by_target_dir.join("*", "*.json").to_s).sort.map do |file_path|
+      path = Pathname(file_path)
+      [
+        path.dirname.basename.to_s,
+        CGI.unescape(path.basename(".json").to_s)
+      ]
     end
   end
 
@@ -619,8 +843,9 @@ class DocsDataBuilder
     end
   end
 
-  def resolve_content_tokens(markdown)
-    resolve_interactive_html_tokens(resolve_media_tokens(markdown))
+  def resolve_content_tokens(markdown, doc:, references_by_doc:)
+    resolved = resolve_interactive_html_tokens(resolve_media_tokens(markdown))
+    resolve_semantic_ref_tokens(resolved, doc: doc, references_by_doc: references_by_doc)
   end
 
   def interactive_html_iframe(raw_token_body)
@@ -675,6 +900,311 @@ class DocsDataBuilder
 
   def interactive_html_asset_path(filename)
     @repo_root.join(interactive_html_asset_relative_path(filename)).cleanpath
+  end
+
+  def resolve_semantic_ref_tokens(markdown, doc:, references_by_doc:)
+    return markdown unless markdown.include?("[[ref:")
+
+    references = []
+    ordinal = 0
+    rendered = replace_semantic_ref_tokens_outside_code(markdown) do |raw_token, raw_body, raw_modifier|
+      ordinal += 1
+      token = parse_semantic_ref_token(raw_token, raw_body, raw_modifier)
+      if token.nil?
+        warn_semantic_ref(doc, "malformed semantic reference token #{raw_token.inspect}")
+        next %(<span data-ref-status="malformed">#{CGI.escapeHTML(raw_token)}</span>)
+      end
+
+      resolution = resolve_semantic_ref(token)
+      warnings = semantic_ref_warnings(token, resolution)
+      warnings.each { |message| warn_semantic_ref(doc, message) }
+      references << semantic_ref_record(doc, token, resolution, ordinal)
+      render_semantic_ref_token(token, resolution, warnings.empty?)
+    end
+
+    references_by_doc[doc.doc_id] = references
+    rendered
+  end
+
+  def replace_semantic_ref_tokens_outside_code(markdown)
+    output = +""
+    in_fence = false
+    fence_marker = nil
+    markdown.each_line do |line|
+      fence_match = line.match(/\A {0,3}(`{3,}|~{3,})/)
+      if fence_match
+        marker = fence_match[1]
+        if in_fence && marker.start_with?(fence_marker)
+          in_fence = false
+          fence_marker = nil
+        elsif !in_fence
+          in_fence = true
+          fence_marker = marker[0]
+        end
+        output << line
+        next
+      end
+
+      output << (in_fence ? line : replace_semantic_ref_tokens_outside_inline_code(line) { |*args| yield(*args) })
+    end
+    output
+  end
+
+  def replace_semantic_ref_tokens_outside_inline_code(line)
+    output = +""
+    index = 0
+    while index < line.length
+      tick_match = line.match(/`+/, index)
+      segment_end = tick_match ? tick_match.begin(0) : line.length
+      output << replace_semantic_ref_tokens_in_text(line[index...segment_end]) { |*args| yield(*args) }
+      break unless tick_match
+
+      tick = tick_match[0]
+      close_index = line.index(tick, tick_match.end(0))
+      if close_index
+        output << line[tick_match.begin(0)...close_index + tick.length]
+        index = close_index + tick.length
+      else
+        output << line[tick_match.begin(0)..]
+        index = line.length
+      end
+    end
+    output
+  end
+
+  def replace_semantic_ref_tokens_in_text(text)
+    text.gsub(SEMANTIC_REF_TOKEN_PATTERN) do
+      yield(Regexp.last_match(0), Regexp.last_match(1), Regexp.last_match(2))
+    end
+  end
+
+  def parse_semantic_ref_token(raw_token, raw_body, raw_modifier)
+    body = raw_body.to_s
+    target, explicit_label = body.split("|", 2)
+    kind, id = target.to_s.split(":", 2)
+    kind = kind.to_s.strip.downcase
+    id = id.to_s.strip
+    return nil if kind.empty? || id.empty?
+    return nil unless kind.match?(/\A[a-z0-9_-]+\z/)
+
+    modifier = parse_semantic_ref_modifier(raw_modifier)
+    SemanticRefToken.new(
+      raw: raw_token,
+      kind: kind,
+      id: id,
+      label: explicit_label&.strip,
+      action: modifier.fetch(:action, "link"),
+      modifier_error: modifier[:error]
+    )
+  end
+
+  def parse_semantic_ref_modifier(raw_modifier)
+    return { action: "link" } if raw_modifier.to_s.strip.empty?
+
+    inner = raw_modifier.to_s.strip.sub(/\A\{/, "").sub(/\}\z/, "").strip
+    return { action: "link", error: "empty modifier" } if inner.empty?
+
+    attrs = {}
+    inner.split(/\s+/).each do |part|
+      key, value = part.split("=", 2)
+      return { action: "link", error: "invalid modifier #{part.inspect}" } if key.to_s.empty? || value.to_s.empty?
+
+      attrs[key] = value
+    end
+    unsupported = attrs.keys - ["action"]
+    return { action: attrs.fetch("action", "link"), error: "unsupported modifier #{unsupported.first.inspect}" } unless unsupported.empty?
+
+    { action: attrs.fetch("action", "link") }
+  end
+
+  def resolve_semantic_ref(token)
+    return unsupported_semantic_ref_resolution(token) unless SEMANTIC_REF_SUPPORTED_KINDS.include?(token.kind)
+
+    case token.kind
+    when "work"
+      resolve_catalogue_ref(token, catalogue_work_records, "work_id", 5, "/works")
+    when "series"
+      resolve_catalogue_ref(token, catalogue_series_records, "series_id", 3, "/series", allow_slug_id: true)
+    when "moment"
+      resolve_catalogue_ref(token, catalogue_moment_records, "moment_id", nil, "/moments", moment_id: true)
+    end
+  end
+
+  def unsupported_semantic_ref_resolution(token)
+    {
+      target_kind: token.kind,
+      target_id: token.id,
+      target_key: "#{token.kind}:#{token.id}",
+      target_href: "",
+      target_title: "",
+      target_status: "unsupported_kind",
+      exists: false,
+      linkable: false,
+      warning: "unsupported semantic reference kind #{token.kind.inspect}"
+    }
+  end
+
+  def resolve_catalogue_ref(token, records, id_field, numeric_width, route_base, allow_slug_id: false, moment_id: false)
+    normalized_id = if moment_id
+      normalize_moment_id(token.id)
+    elsif allow_slug_id
+      normalize_semantic_series_id(token.id, numeric_width)
+    else
+      normalize_numeric_semantic_id(token.id, numeric_width)
+    end
+    record = records[normalized_id]
+    target_key = "#{token.kind}:#{normalized_id}"
+    unless record
+      return {
+        target_kind: token.kind,
+        target_id: normalized_id,
+        target_key: target_key,
+        target_href: "",
+        target_title: "",
+        target_status: "missing",
+        exists: false,
+        linkable: false,
+        warning: "unresolved semantic reference #{target_key}"
+      }
+    end
+
+    status = record.fetch("status", "").to_s.strip.downcase
+    href = "#{route_base}/#{CGI.escape(normalized_id)}/"
+    {
+      target_kind: token.kind,
+      target_id: record.fetch(id_field, normalized_id).to_s,
+      target_key: target_key,
+      target_href: href,
+      target_title: record.fetch("title", "").to_s.strip,
+      target_status: status.empty? ? "unknown" : status,
+      exists: true,
+      linkable: status == "published",
+      warning: status == "published" ? "" : "semantic reference #{target_key} targets non-published catalogue record"
+    }
+  rescue ArgumentError
+    {
+      target_kind: token.kind,
+      target_id: token.id,
+      target_key: "#{token.kind}:#{token.id}",
+      target_href: "",
+      target_title: "",
+      target_status: "invalid_id",
+      exists: false,
+      linkable: false,
+      warning: "invalid semantic reference id #{token.kind}:#{token.id}"
+    }
+  end
+
+  def normalize_numeric_semantic_id(value, width)
+    text = value.to_s.strip.sub(/\A'/, "").sub(/\.0+\z/, "").gsub(/\D/, "")
+    raise ArgumentError, "invalid id" if text.empty?
+
+    text.rjust(width, "0")
+  end
+
+  def normalize_semantic_series_id(value, width)
+    text = value.to_s.strip.sub(/\A'/, "").sub(/\.0+\z/, "")
+    raise ArgumentError, "invalid series id" if text.empty?
+
+    return text.rjust(width, "0") if text.match?(/\A\d+\z/)
+    return text if text.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
+
+    raise ArgumentError, "invalid series id"
+  end
+
+  def normalize_moment_id(value)
+    text = value.to_s.strip.downcase
+    text = text.delete_suffix(".md")
+    raise ArgumentError, "invalid moment id" unless text.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
+
+    text
+  end
+
+  def semantic_ref_warnings(token, resolution)
+    warnings = []
+    warnings << token.modifier_error if token.modifier_error.to_s != ""
+    warnings << "unsupported semantic reference action #{token.action.inspect}" unless SEMANTIC_REF_ALLOWED_ACTIONS.include?(token.action)
+    warnings << resolution[:warning] if resolution[:warning].to_s != ""
+    warnings
+  end
+
+  def warn_semantic_ref(doc, message)
+    warn "Docs semantic reference warning [#{@scope_id}/#{doc.doc_id}]: #{message}"
+  end
+
+  def semantic_ref_record(doc, token, resolution, ordinal)
+    label = semantic_ref_label(token, resolution)
+    {
+      "source_scope" => @scope_id,
+      "source_doc_id" => doc.doc_id,
+      "source_title" => doc.title,
+      "source_path" => doc.source_path,
+      "source_viewer_url" => doc.viewer_url,
+      "target_kind" => resolution[:target_kind],
+      "target_id" => resolution[:target_id],
+      "target_key" => resolution[:target_key],
+      "target_href" => resolution[:target_href],
+      "target_status" => resolution[:target_status],
+      "label" => label,
+      "action" => token.action,
+      "ordinal" => ordinal
+    }
+  end
+
+  def semantic_ref_label(token, resolution)
+    explicit_label = token.label.to_s.strip
+    return explicit_label unless explicit_label.empty?
+
+    title = resolution[:target_title].to_s.strip
+    title.empty? ? resolution[:target_key].to_s : title
+  end
+
+  def render_semantic_ref_token(token, resolution, usable)
+    label = CGI.escapeHTML(semantic_ref_label(token, resolution))
+    attrs = {
+      "data-ref-kind" => resolution[:target_kind],
+      "data-ref-id" => resolution[:target_id],
+      "data-ref-action" => token.action
+    }
+    if usable && resolution[:linkable] && !resolution[:target_href].to_s.empty?
+      return %(<a href="#{CGI.escapeHTML(resolution[:target_href])}" #{html_attrs(attrs)}>#{label}</a>)
+    end
+
+    attrs["data-ref-status"] = resolution[:target_status]
+    %(<span #{html_attrs(attrs)}>#{label}</span>)
+  end
+
+  def html_attrs(attrs)
+    attrs.map do |key, value|
+      %(#{key}="#{CGI.escapeHTML(value.to_s)}")
+    end.join(" ")
+  end
+
+  def catalogue_work_records
+    @catalogue_work_records ||= load_catalogue_records("works.json", "works", "work_id")
+  end
+
+  def catalogue_series_records
+    @catalogue_series_records ||= load_catalogue_records("series.json", "series", "series_id")
+  end
+
+  def catalogue_moment_records
+    @catalogue_moment_records ||= load_catalogue_records("moments.json", "moments", "moment_id")
+  end
+
+  def load_catalogue_records(filename, root_key, id_field)
+    path = @repo_root.join("assets/studio/data/catalogue/#{filename}")
+    payload = JSON.parse(path.read)
+    records = payload[root_key]
+    pairs = records.is_a?(Hash) ? records.values : Array(records)
+    pairs.each_with_object({}) do |record, memo|
+      next unless record.is_a?(Hash)
+
+      id = record[id_field].to_s.strip
+      memo[id] = record unless id.empty?
+    end
+  rescue Errno::ENOENT, JSON::ParserError
+    {}
   end
 
   def resolve_media_url(raw_path)

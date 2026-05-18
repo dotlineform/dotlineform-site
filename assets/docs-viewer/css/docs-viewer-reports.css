@@ -101,6 +101,11 @@
   grid-template-columns: minmax(12rem, 1fr) 7rem minmax(12rem, 1fr);
 }
 
+.docsViewerReport[data-report-id="semantic_references"] .docsViewerReport__head,
+.docsViewerReport[data-report-id="semantic_references"] .docsViewerReport__row{
+  grid-template-columns: minmax(12rem, 1fr) 5rem minmax(14rem, 1.4fr);
+}
+
 .docsViewerReport__head{
   padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--docs-viewer-border);
@@ -178,6 +183,17 @@
 .docsViewerReport__reportName{
   display: grid;
   gap: 0.12rem;
+}
+
+.docsViewerReport__referenceTarget,
+.docsViewerReport__referenceSources,
+.docsViewerReport__referenceSource{
+  display: grid;
+  gap: 0.12rem;
+}
+
+.docsViewerReport__referenceSources{
+  gap: 0.42rem;
 }
 
 .docsViewerReport__subtext{

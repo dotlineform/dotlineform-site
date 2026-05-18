@@ -603,6 +603,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         routes.GENERATED_PAYLOAD_ALT_PATH: "_handle_generated_payload_get",
         routes.GENERATED_SEARCH_PATH: "_handle_generated_search_get",
         routes.GENERATED_SEARCH_ALT_PATH: "_handle_generated_search_get",
+        routes.GENERATED_REFERENCES_PATH: "_handle_generated_references_get",
+        routes.GENERATED_REFERENCES_ALT_PATH: "_handle_generated_references_get",
+        routes.GENERATED_REFERENCE_TARGET_PATH: "_handle_generated_reference_target_get",
+        routes.GENERATED_REFERENCE_TARGET_ALT_PATH: "_handle_generated_reference_target_get",
         routes.SOURCE_CONFIG_PATH: "_handle_source_config_get",
         routes.SOURCE_CONFIG_SETTINGS_PATH: "_handle_source_config_settings_get",
         routes.IMPORT_SOURCE_FILES_PATH: "_handle_import_source_files_get",
@@ -692,6 +696,25 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
     def _handle_generated_search_get(self) -> None:
         scope = source_model.normalize_scope(query_param(self, "scope"))
         payload = docs_generated_reads.read_generated_search_index(self.app["repo_root"], scope)
+        write_response(self, HTTPStatus.OK, payload)
+
+    def _handle_generated_references_get(self) -> None:
+        scope = source_model.normalize_scope(query_param(self, "scope"))
+        payload = docs_generated_reads.read_generated_references_index(self.app["repo_root"], scope)
+        write_response(self, HTTPStatus.OK, payload)
+
+    def _handle_generated_reference_target_get(self) -> None:
+        scope = source_model.normalize_scope(query_param(self, "scope"))
+        target_kind = query_param(self, "target_kind")
+        target_slug = query_param(self, "target_slug")
+        if not target_kind or not target_slug:
+            raise ValueError("target_kind and target_slug are required")
+        payload = docs_generated_reads.read_generated_reference_target(
+            self.app["repo_root"],
+            scope,
+            target_kind,
+            target_slug,
+        )
         write_response(self, HTTPStatus.OK, payload)
 
     def _handle_source_config_get(self) -> None:

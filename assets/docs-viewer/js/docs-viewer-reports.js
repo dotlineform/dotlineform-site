@@ -25,6 +25,13 @@ const REPORT_LOADERS = {
         return module.mountSourceConfigReport;
       });
     }
+  },
+  semantic_references: {
+    load: function () {
+      return import("./reports/semantic-references-report.js").then(function (module) {
+        return module.mountSemanticReferencesReport;
+      });
+    }
   }
 };
 
@@ -53,6 +60,14 @@ const FALLBACK_REPORT_REGISTRY = {
       description: "Displays Docs Viewer source config for all scopes in manage mode.",
       defaultAccess: "manage",
       loaderId: "source_config",
+      presets: []
+    },
+    {
+      reportId: "semantic_references",
+      title: "Semantic References",
+      description: "Displays generated semantic-reference targets and source docs.",
+      defaultAccess: "manage",
+      loaderId: "semantic_references",
       presets: []
     }
   ],

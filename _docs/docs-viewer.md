@@ -28,6 +28,7 @@ The current implementation uses:
 - browser-visible report metadata in `assets/data/docs/reports.json`
 - report module allowlist and access checks in `assets/docs-viewer/js/docs-viewer-reports.js`
 - the first report module in `assets/docs-viewer/js/reports/docs-index-table-report.js`
+- generated semantic-reference artifacts under `assets/data/docs/scopes/<scope>/references/`
 - browser-safe Docs Viewer settings in `assets/docs-viewer/data/docs-viewer-config.json`, generated from `scripts/docs/docs_scopes.json`
 - Docs Viewer UI text in `assets/docs-viewer/data/ui-text.json`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
@@ -57,6 +58,7 @@ Those boundaries are intentional:
 
 - [Overview](/docs/?scope=studio&doc=docs-viewer-overview) explains the shared route-shell, include, runtime, and URL/state model.
 - [Reports](/docs/?scope=studio&doc=docs-viewer-reports) describes the report component purpose, source metadata, JSON registry, and report module allowlist.
+- [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references) is the management report for generated semantic-reference targets and source docs.
 - [Docs Viewer Report Components Request](/docs/?scope=studio&doc=site-request-docs-viewer-report-components) records the report component design and first Library Documents use case.
 - [Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) records what currently needs copying into another Jekyll project and how to add a Library-style scope with a management route and read-only route.
 - [Dependencies](/docs/?scope=studio&doc=docs-viewer-dependencies) records the Docs Viewer Python dependency boundary, the Docs HTML import parser/sanitizer stack, and the role of `requirements.txt`.

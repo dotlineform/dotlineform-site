@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-241b8f0c17dc72f0b47e37a79938c256",
-    "generated_at_utc": "2026-05-18T19:45:40Z",
-    "count": 247
+    "version": "blake2b-6b13c7aee34066fbf8cf00e22efc5f7b",
+    "generated_at_utc": "2026-05-18T20:25:08Z",
+    "count": 248
   },
   "entries": [
     {
@@ -3516,6 +3516,30 @@
         "25"
       ],
       "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-08 19:25 2026 05 08 19 25"
+    },
+    {
+      "id": "docs-viewer-semantic-references",
+      "kind": "doc",
+      "title": "Semantic References",
+      "href": "/docs/?scope=studio&doc=docs-viewer-semantic-references",
+      "last_updated": "2026-05-18",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-18 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-semantic-references",
+        "docs",
+        "viewer",
+        "semantic",
+        "references",
+        "semantic references",
+        "docs viewer",
+        "2026-05-18",
+        "2026",
+        "05",
+        "18"
+      ],
+      "search_text": "docs-viewer-semantic-references docs viewer semantic references semantic references docs viewer 2026-05-18 2026 05 18"
     },
     {
       "id": "design",
