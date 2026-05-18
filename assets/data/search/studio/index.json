@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0f1ecb482ec41f4e932ca1939a7907e9",
-    "generated_at_utc": "2026-05-18T16:30:02Z",
+    "version": "blake2b-dd9dcf885d0c59d61931e91286ba2e4d",
+    "generated_at_utc": "2026-05-18T16:34:08Z",
     "count": 246
   },
   "entries": [
@@ -5641,10 +5641,10 @@
       "kind": "doc",
       "title": "Docs Markdown Package Import Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-markdown-package-import",
-      "last_updated": "2026-05-17",
+      "last_updated": "2026-05-18",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-17 • Change Requests",
+      "display_meta": "2026-05-18 • Change Requests",
       "search_terms": [
         "site-request-docs-markdown-package-import",
         "site",
@@ -5657,12 +5657,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-17",
+        "2026-05-18",
         "2026",
         "05",
-        "17"
+        "18"
       ],
-      "search_text": "site-request-docs-markdown-package-import site request docs markdown package import docs markdown package import request change requests change requests 2026-05-17 2026 05 17"
+      "search_text": "site-request-docs-markdown-package-import site request docs markdown package import docs markdown package import request change requests change requests 2026-05-18 2026 05 18"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",
