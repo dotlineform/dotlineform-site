@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T16:59:39Z",
+  "generated_at": "2026-05-18T17:27:51Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1266,7 +1266,7 @@
       "doc_id": "docs-viewer-dependencies",
       "title": "Docs Viewer Dependencies",
       "added_date": "2026-05-14",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-18",
       "parent_id": "docs-viewer",
       "sort_order": 4000,
       "published": true,
@@ -1275,7 +1275,7 @@
       "source_path": "docs-viewer-dependencies.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-dependencies",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-dependencies.json",
-      "content_text_length": 3707
+      "content_text_length": 3896
     },
     {
       "scope": "studio",

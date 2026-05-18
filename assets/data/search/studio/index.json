@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-71790630e819404817c1a5d891ef5d73",
-    "generated_at_utc": "2026-05-18T16:59:40Z",
+    "version": "blake2b-c5797406a17d095b403137593d7474c4",
+    "generated_at_utc": "2026-05-18T17:27:51Z",
     "count": 246
   },
   "entries": [
@@ -2026,10 +2026,10 @@
       "kind": "doc",
       "title": "Docs Viewer Dependencies",
       "href": "/docs/?scope=studio&doc=docs-viewer-dependencies",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-18",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 • Docs Viewer",
+      "display_meta": "2026-05-18 • Docs Viewer",
       "search_terms": [
         "docs-viewer-dependencies",
         "docs",
@@ -2037,12 +2037,12 @@
         "dependencies",
         "docs viewer dependencies",
         "docs viewer",
-        "2026-05-14",
+        "2026-05-18",
         "2026",
         "05",
-        "14"
+        "18"
       ],
-      "search_text": "docs-viewer-dependencies docs viewer dependencies docs viewer dependencies docs viewer 2026-05-14 2026 05 14"
+      "search_text": "docs-viewer-dependencies docs viewer dependencies docs viewer dependencies docs viewer 2026-05-18 2026 05 18"
     },
     {
       "id": "site-request-script-structural-review-generate-work-pages",

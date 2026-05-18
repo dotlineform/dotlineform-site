@@ -2,7 +2,7 @@
 doc_id: docs-viewer-dependencies
 title: Docs Viewer Dependencies
 added_date: 2026-05-14
-last_updated: 2026-05-14
+last_updated: 2026-05-18
 parent_id: docs-viewer
 sort_order: 4000
 ---
@@ -33,11 +33,12 @@ The current checked-in Python packages are:
 | `beautifulsoup4` | Builds the HTML import parse tree through Beautiful Soup. | Using Docs Import for staged HTML. |
 | `lxml` | Parser backend selected by `BeautifulSoup(source_html, "lxml")`. | Using Docs Import for staged HTML. |
 | `bleach` | Sanitization boundary for the Docs HTML import feature. | Using or extending HTML sanitization rules for Docs Import. |
+| `Pillow` | Opens, resizes, and writes package images as 800px-max WebP outputs. | Using Docs Import for Markdown packages with local images. |
 | `openpyxl` | Not a Docs Viewer dependency; used by workbook/spreadsheet pipeline scripts. | Catalogue or spreadsheet-driven workflows need it. |
 | `pytest` | Test runner used by the repo check profiles. | Running Python tests through the repo check workflow. |
 
 The Docs HTML import implementation currently lives in `scripts/docs/docs_html_import.py`.
-Its parser boundary depends on `beautifulsoup4` plus `lxml`, and its sanitization contract treats `bleach` as part of the pinned import stack.
+Its parser boundary depends on `beautifulsoup4` plus `lxml`, its sanitization contract treats `bleach` as part of the pinned import stack, and Markdown package image conversion depends on `Pillow`.
 
 ## Parser Stack Roles
 

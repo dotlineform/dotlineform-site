@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T18:16:22Z",
+  "generated_at": "2026-05-18T17:07:52Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -21,6 +21,22 @@
       "viewer_url": "/analysis/?doc=analysis",
       "content_url": "/assets/data/docs/scopes/analysis/by-id/analysis.json",
       "content_text_length": 235
+    },
+    {
+      "scope": "analysis",
+      "doc_id": "3-symbols",
+      "title": "3 symbols",
+      "added_date": "2026-05-18 18:07",
+      "last_updated": "2026-05-18 18:07",
+      "parent_id": "",
+      "sort_order": 1010,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "3-symbols.md",
+      "viewer_url": "/analysis/?doc=3-symbols",
+      "content_url": "/assets/data/docs/scopes/analysis/by-id/3-symbols.json",
+      "content_text_length": 7765
     }
   ]
 }
