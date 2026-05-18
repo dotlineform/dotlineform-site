@@ -42,6 +42,24 @@ Package media plans now appear in the import result panel alongside source docs 
 - [Docs Viewer Media Handling](/docs/?scope=studio&doc=docs-viewer-media-handling)
 - [Docs Viewer Import Source Registry Spec](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)
 
+## [2026-05-18] Added Docs Image Hover Titles
+
+**Status:** implemented
+
+**Area:** Docs Viewer builder / rendered docs content
+
+**Summary:**
+Docs Viewer payload generation now adds a missing image `title` attribute from the rendered image `alt` text.
+Images with explicit titles keep their authored title.
+
+**Effect:**
+Docs images now expose their alt text on hover in normal browsers without changing source Markdown syntax or accessibility alt text.
+
+**Affected files/docs:**
+
+- `scripts/docs/build_docs.rb`
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+
 ## [2026-05-17] Added Normalize Order UI
 
 **Status:** implemented

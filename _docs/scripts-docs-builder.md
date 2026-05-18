@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: Docs Viewer Builder
 added_date: 2026-04-23
-last_updated: "2026-05-16 13:35"
+last_updated: "2026-05-18 19:10"
 parent_id: docs-viewer
 sort_order: 20000
 ---
@@ -56,6 +56,7 @@ This config is the shared source of truth for docs scope ids, Markdown source ro
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
 - resolves <code>&#91;&#91;interactive-html:...&#93;&#93;</code> tokens to same-scope sandboxed iframes for repo-local interactive HTML assets
 - rewrites same-scope doc-to-doc links onto the scope-owned viewer route
+- adds missing image `title` attributes from image `alt` text so rendered docs images expose the same text on hover without changing explicit titles
 - emits scope-level viewer options such as compatibility non-loadable ids, compatibility manage-only tree root ids, and document-view updated-date visibility
 - writes one index payload plus one per-doc payload for each configured scope
 - writes `assets/docs-viewer/data/docs-viewer-config.json` from `scripts/docs/docs_scopes.json`, including route/scope data and the `docs_viewer` browser settings used by public and management routes

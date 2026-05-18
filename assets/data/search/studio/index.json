@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c5797406a17d095b403137593d7474c4",
-    "generated_at_utc": "2026-05-18T17:27:51Z",
+    "version": "blake2b-066f5d7fcc088f4018b4796be22f5cce",
+    "generated_at_utc": "2026-05-18T18:17:43Z",
     "count": 246
   },
   "entries": [
@@ -4845,10 +4845,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-05-16 13:35",
+      "last_updated": "2026-05-18 19:10",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-16 13:35 • Docs Viewer",
+      "display_meta": "2026-05-18 19:10 • Docs Viewer",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -4857,14 +4857,14 @@
         "docs viewer builder",
         "viewer",
         "docs viewer",
-        "2026-05-16 13:35",
+        "2026-05-18 19:10",
         "2026",
         "05",
-        "16",
-        "13",
-        "35"
+        "18",
+        "19",
+        "10"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-16 13:35 2026 05 16 13 35"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-18 19:10 2026 05 18 19 10"
     },
     {
       "id": "llm",

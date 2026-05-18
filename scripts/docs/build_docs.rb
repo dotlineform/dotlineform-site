@@ -340,10 +340,12 @@ class DocsDataBuilder
       "viewable" => doc.viewable,
       "source_path" => doc.source_path,
       "viewer_url" => doc.viewer_url,
-      "content_html" => rewrite_doc_links(
-        JekyllMarkdownRenderer.render_string(resolve_content_tokens(doc.body_markdown)),
-        current_doc: doc,
-        docs: docs
+      "content_html" => add_missing_image_titles(
+        rewrite_doc_links(
+          JekyllMarkdownRenderer.render_string(resolve_content_tokens(doc.body_markdown)),
+          current_doc: doc,
+          docs: docs
+        )
       )
     }
     entry["summary"] = doc.summary unless doc.summary.empty?
@@ -384,6 +386,19 @@ class DocsDataBuilder
   def html_attribute(raw_attrs, name)
     match = raw_attrs.to_s.match(/\b#{Regexp.escape(name)}\s*=\s*(["'])(.*?)\1/im)
     match ? match[2] : ""
+  end
+
+  def add_missing_image_titles(html)
+    html.to_s.gsub(IMG_PATTERN) do
+      raw_attrs = Regexp.last_match(1).to_s
+      alt = html_attribute(raw_attrs, "alt").to_s.strip
+      title = html_attribute(raw_attrs, "title").to_s.strip
+      next Regexp.last_match(0) if alt.empty? || !title.empty?
+
+      attrs = raw_attrs.sub(/\s*\/\s*\z/, "")
+      closing = raw_attrs.match?(/\s*\/\s*\z/) ? " /" : ""
+      %(<img#{attrs} title="#{CGI.escapeHTML(CGI.unescapeHTML(alt))}"#{closing}>)
+    end
   end
 
   def rewrite_doc_links(html, current_doc:, docs:)
