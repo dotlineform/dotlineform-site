@@ -108,6 +108,9 @@ This document uses it so the list of configured reports stays visible from the D
 `source_config` renders the Docs Viewer source config report in manage mode.
 It reads through the local docs-management server and shows source config, browser projection, generated output paths, and generated viewer options for every configured scope.
 
+`change_history` renders structured docs-log entries in manage mode.
+It reads ignored local projections under `_docs_logs/generated/` through the docs-management server and provides domain filtering for migrated change history.
+
 `semantic_references` renders generated semantic-reference targets and source docs in manage mode.
 It reads the current scope's `references/index.json` plus per-target buckets from `references/by-target/`.
 The report defaults to all configured docs scopes and provides a `report_scope` selector for focusing on one scope.

@@ -40,6 +40,8 @@ Use it as the default entry point for `/docs/`.
   end-to-end lifecycle guidance for human and Codex implementation work.
 - **[Site Change Log](/docs/?scope=studio&doc=site-change-log)**
   meaningful non-search site and Studio history.
+- **[Change History Reports](/docs/?scope=studio&doc=change-history-reports&mode=manage)**
+  manage-only structured change-history views generated from `_docs_logs/`.
 - **[Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)**
   checked-in dependency sources, critical versus workflow-specific packages, and local/cloud dependency expectations.
 - **[UI Audits](/docs/?scope=studio&doc=ui-audits)**

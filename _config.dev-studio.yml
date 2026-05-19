@@ -9,6 +9,7 @@ exclude:
   - vendor
   - node_modules
   - .bundle
+  - .pytest_cache
   - tests
   - var
   - logs

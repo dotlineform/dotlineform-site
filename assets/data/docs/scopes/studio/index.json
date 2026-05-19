@@ -1,8 +1,10 @@
 {
-  "generated_at": "2026-05-19T16:34:59Z",
+  "generated_at": "2026-05-19T16:51:19Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
-    "manage_only_tree_root_ids": [],
+    "manage_only_tree_root_ids": [
+      "change-history-reports"
+    ],
     "show_updated_date": true
   },
   "docs": [
@@ -104,6 +106,25 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-script-structural-review-catalogue-write-server.json",
       "content_text_length": 27471,
       "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "change-history",
+      "title": "Change History",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "change-history-reports",
+      "sort_order": 1000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "change-history.md",
+      "viewer_url": "/docs/?scope=studio&doc=change-history",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/change-history.json",
+      "content_text_length": 886,
+      "ui_status": "report",
+      "viewer_report": "change_history",
+      "viewer_report_access": "manage"
     },
     {
       "scope": "studio",
@@ -428,7 +449,7 @@
       "source_path": "site-docs.md",
       "viewer_url": "/docs/?scope=studio&doc=site-docs",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-docs.json",
-      "content_text_length": 1632
+      "content_text_length": 1728
     },
     {
       "scope": "studio",
@@ -749,7 +770,7 @@
       "doc_id": "site-change-log-2026-05",
       "title": "Site Change Log Archive: May 2026",
       "added_date": "2026-05-06",
-      "last_updated": "2026-05-06 20:58",
+      "last_updated": "2026-05-19",
       "parent_id": "site-change-log",
       "sort_order": 2000,
       "published": true,
@@ -758,7 +779,7 @@
       "source_path": "site-change-log-2026-05.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-05",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-05.json",
-      "content_text_length": 77306
+      "content_text_length": 219
     },
     {
       "scope": "studio",
@@ -1072,7 +1093,7 @@
       "doc_id": "site-change-log-2026-04",
       "title": "Site Change Log Archive: April 2026",
       "added_date": "2026-05-06",
-      "last_updated": "2026-05-06 20:57",
+      "last_updated": "2026-05-19",
       "parent_id": "site-change-log",
       "sort_order": 3000,
       "published": true,
@@ -1081,7 +1102,7 @@
       "source_path": "site-change-log-2026-04.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-04",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-04.json",
-      "content_text_length": 190483
+      "content_text_length": 221
     },
     {
       "scope": "studio",
@@ -1396,7 +1417,7 @@
       "doc_id": "site-change-log-2026-03-and-earlier",
       "title": "Site Change Log Archive: March 2026 And Earlier",
       "added_date": "2026-05-06",
-      "last_updated": "2026-05-06 20:57",
+      "last_updated": "2026-05-19",
       "parent_id": "site-change-log",
       "sort_order": 4000,
       "published": true,
@@ -1405,7 +1426,7 @@
       "source_path": "site-change-log-2026-03-and-earlier.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-03-and-earlier.json",
-      "content_text_length": 11250
+      "content_text_length": 266
     },
     {
       "scope": "studio",
@@ -2184,7 +2205,7 @@
       "source_path": "docs-viewer-reports.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-reports",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-reports.json",
-      "content_text_length": 5217,
+      "content_text_length": 5441,
       "viewer_report": "reports_list",
       "viewer_report_access": "public"
     },
@@ -3287,6 +3308,23 @@
     },
     {
       "scope": "studio",
+      "doc_id": "change-history-reports",
+      "title": "Change History Reports",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "site-docs",
+      "sort_order": 26000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "change-history-reports.md",
+      "viewer_url": "/docs/?scope=studio&doc=change-history-reports",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/change-history-reports.json",
+      "content_text_length": 254,
+      "ui_status": "report"
+    },
+    {
+      "scope": "studio",
       "doc_id": "library-import",
       "title": "Library Import v1",
       "added_date": "2026-05-03",
@@ -3333,7 +3371,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 174155
+      "content_text_length": 1360
     },
     {
       "scope": "studio",
@@ -4112,7 +4150,7 @@
       "source_path": "site-request-change-log-entry-model.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-change-log-entry-model",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-change-log-entry-model.json",
-      "content_text_length": 19250,
+      "content_text_length": 19984,
       "ui_status": "in-progress"
     },
     {

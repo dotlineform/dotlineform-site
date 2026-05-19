@@ -159,6 +159,23 @@ def test_generated_references_reads_scope_index_and_target() -> None:
     assert target_payload["target_kind"] == "work"
 
 
+def test_generated_docs_log_projection_uses_allowlisted_names() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_json(repo_root / "_docs_logs/generated/search-index.json", {"entries": [{"id": "change-1"}]})
+
+        payload = generated_reads.read_generated_docs_log_projection(repo_root, "search-index")
+        try:
+            generated_reads.read_generated_docs_log_projection(repo_root, "../schema")
+        except ValueError as exc:
+            error = str(exc)
+        else:
+            error = ""
+
+    assert payload["entries"][0]["id"] == "change-1"
+    assert "unsupported docs-log projection" in error
+
+
 def test_generated_reference_target_rejects_unsafe_path_parts() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
@@ -220,6 +237,7 @@ def main() -> None:
     test_generated_doc_payload_rejects_unexpected_content_url()
     test_generated_doc_payload_allows_external_content_url_with_expected_path()
     test_generated_references_reads_scope_index_and_target()
+    test_generated_docs_log_projection_uses_allowlisted_names()
     test_generated_reference_target_rejects_unsafe_path_parts()
     test_generated_doc_paths_use_scope_config_output()
     test_read_generated_json_reports_invalid_json()

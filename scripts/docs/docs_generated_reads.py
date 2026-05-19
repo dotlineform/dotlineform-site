@@ -16,6 +16,15 @@ SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 SAFE_REF_KIND_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 SAFE_REF_TARGET_SLUG_PATTERN = re.compile(r"^[A-Za-z0-9_.%+-]+$")
 
+DOCS_LOG_PROJECTIONS = {
+    "by-date": "by-date.json",
+    "by-domain": "by-domain.json",
+    "by-related-doc": "by-related-doc.json",
+    "by-related-file": "by-related-file.json",
+    "by-change-request": "by-change-request.json",
+    "search-index": "search-index.json",
+}
+
 
 def generated_docs_output_root(repo_root: Path, scope: str) -> Path:
     config = DOCS_SCOPE_CONFIGS.get(scope)
@@ -36,6 +45,13 @@ def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path
 
 def generated_search_index_path(repo_root: Path, scope: str) -> Path:
     return repo_root / "assets" / "data" / "search" / scope / "index.json"
+
+
+def generated_docs_log_projection_path(repo_root: Path, projection: str) -> Path:
+    filename = DOCS_LOG_PROJECTIONS.get(projection)
+    if filename is None:
+        raise ValueError(f"unsupported docs-log projection: {projection}")
+    return repo_root / "_docs_logs" / "generated" / filename
 
 
 def generated_references_index_path(repo_root: Path, scope: str) -> Path:
@@ -78,6 +94,13 @@ def read_generated_search_index(repo_root: Path, scope: str) -> Dict[str, Any]:
     return read_generated_json(
         generated_search_index_path(repo_root, scope),
         f"generated search index for {scope}",
+    )
+
+
+def read_generated_docs_log_projection(repo_root: Path, projection: str) -> Dict[str, Any]:
+    return read_generated_json(
+        generated_docs_log_projection_path(repo_root, projection),
+        f"generated docs-log projection {projection}",
     )
 
 

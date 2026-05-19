@@ -11,7 +11,7 @@
       "default_doc_id": "site-docs",
       "allow_nested_source": false,
       "non_loadable_doc_ids": [],
-      "manage_only_tree_root_ids": [],
+      "manage_only_tree_root_ids": ["change-history-reports"],
       "show_updated_date": true,
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {

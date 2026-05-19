@@ -1,0 +1,16 @@
+{
+  "scope": "studio",
+  "doc_id": "change-history-reports",
+  "title": "Change History Reports",
+  "added_date": "2026-05-19",
+  "last_updated": "2026-05-19",
+  "parent_id": "site-docs",
+  "sort_order": 26000,
+  "published": true,
+  "hidden": false,
+  "viewable": true,
+  "source_path": "change-history-reports.md",
+  "viewer_url": "/docs/?scope=studio&doc=change-history-reports",
+  "content_html": "<h1 id=\"change-history-reports\">Change History Reports</h1>\n\n<p>Manage-only report pages for structured project change history.</p>\n\n<p>The source of truth is <code class=\"language-plaintext highlighter-rouge\">_docs_logs/entries/*.jsonl</code>.\nGenerated report data under <code class=\"language-plaintext highlighter-rouge\">_docs_logs/generated/</code> and <code class=\"language-plaintext highlighter-rouge\">_docs_logs/reports/</code> is local build output and is not tracked.</p>\n\n<h2 id=\"reports\">Reports</h2>\n\n<ul>\n  <li><a href=\"/docs/?scope=studio&doc=change-history\">Change History</a></li>\n</ul>\n\n",
+  "ui_status": "report"
+}

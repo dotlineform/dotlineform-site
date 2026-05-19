@@ -604,6 +604,7 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         routes.GENERATED_PAYLOAD_ALT_PATH: "_handle_generated_payload_get",
         routes.GENERATED_SEARCH_PATH: "_handle_generated_search_get",
         routes.GENERATED_SEARCH_ALT_PATH: "_handle_generated_search_get",
+        routes.GENERATED_DOCS_LOG_PATH: "_handle_generated_docs_log_get",
         routes.GENERATED_REFERENCES_PATH: "_handle_generated_references_get",
         routes.GENERATED_REFERENCES_ALT_PATH: "_handle_generated_references_get",
         routes.GENERATED_REFERENCE_TARGET_PATH: "_handle_generated_reference_target_get",
@@ -697,6 +698,11 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
     def _handle_generated_search_get(self) -> None:
         scope = source_model.normalize_scope(query_param(self, "scope"))
         payload = docs_generated_reads.read_generated_search_index(self.app["repo_root"], scope)
+        write_response(self, HTTPStatus.OK, payload)
+
+    def _handle_generated_docs_log_get(self) -> None:
+        projection = query_param(self, "projection") or "search-index"
+        payload = docs_generated_reads.read_generated_docs_log_projection(self.app["repo_root"], projection)
         write_response(self, HTTPStatus.OK, payload)
 
     def _handle_generated_references_get(self) -> None:

@@ -6,6 +6,7 @@ require "json"
 require "optparse"
 require "openssl"
 require "pathname"
+require "set"
 require "time"
 
 DEFAULT_SCOPE = "studio"
@@ -130,6 +131,7 @@ class DocsViewerSearchDataBuilder
       raise SystemExit, "Invalid docs index payload: expected top-level docs array"
     end
 
+    manage_only_ids = manage_only_doc_ids(payload, docs)
     docs.map do |row|
       next unless row.is_a?(Hash)
 
@@ -137,6 +139,7 @@ class DocsViewerSearchDataBuilder
       title = normalize_text(row["title"])
       viewer_url = normalize_text(row["viewer_url"])
       next if doc_id.empty? || title.empty? || viewer_url.empty?
+      next if manage_only_ids.include?(doc_id)
       next unless boolean_field(row, "viewable", true)
 
       SearchDocRecord.new(
@@ -148,6 +151,36 @@ class DocsViewerSearchDataBuilder
         viewable: true
       )
     end.compact
+  end
+
+  def manage_only_doc_ids(payload, docs)
+    viewer_options = payload.is_a?(Hash) ? payload["viewer_options"] : nil
+    roots = viewer_options.is_a?(Hash) ? Array(viewer_options["manage_only_tree_root_ids"]).map { |value| normalize_text(value) }.reject(&:empty?) : []
+    return Set.new if roots.empty?
+
+    by_parent = Hash.new { |hash, key| hash[key] = [] }
+    docs.each do |row|
+      next unless row.is_a?(Hash)
+
+      doc_id = normalize_text(row["doc_id"])
+      parent_id = normalize_text(row["parent_id"])
+      next if doc_id.empty? || parent_id.empty?
+
+      by_parent[parent_id] << doc_id
+    end
+
+    hidden = Set.new(roots)
+    queue = roots.dup
+    until queue.empty?
+      current = queue.shift
+      by_parent[current].each do |child_id|
+        next if hidden.include?(child_id)
+
+        hidden.add(child_id)
+        queue << child_id
+      end
+    end
+    hidden
   end
 
   def boolean_field(row, key, default)

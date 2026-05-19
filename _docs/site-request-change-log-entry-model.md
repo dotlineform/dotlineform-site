@@ -19,6 +19,7 @@ Status:
 - Step 4 completed: Codex-oriented log entry helper added
 - Step 5 completed: legacy site and Search change-log migration script added and run
 - Step 6 completed: generated date, domain, related-doc, related-file, change-request, and search projections added
+- Step 7 completed: compact change-log archive stubs and manage-only change-history report added
 
 ## Summary
 
@@ -360,6 +361,10 @@ Implementation notes:
 
 ### Step 7. Replace Long Archives With Compact Human Views
 
+Status:
+
+- completed
+
 After the generated entries are reviewed, replace the current long-form archive pages with compact summaries or generated index links.
 
 The current [Site Change Log](/docs/?scope=studio&doc=site-change-log) should become a concise recent-changes page with links to:
@@ -383,6 +388,14 @@ Track canonical `_docs_logs/entries/*.jsonl` records, ignore `_docs_logs/generat
 The v1 report should be manage-only without adding a new front-matter field.
 Use an ordinary Studio docs report page with `viewer_report_access: manage`, place it under a dedicated report-tree root such as `change-history-reports`, and add that root to the Studio scope's `manage_only_tree_root_ids`.
 That keeps the report doc and its descendants out of public navigation and public docs search while still allowing manage mode to mount a report that reads local generated docs-log projections.
+
+Implementation notes:
+
+- `_docs/site-change-log.md` and the dated site archive docs are compact migration stubs.
+- `_docs/change-history-reports.md` is the manage-only report-tree root.
+- `_docs/change-history.md` uses `viewer_report: change_history` and `viewer_report_access: manage`.
+- The Studio scope lists `change-history-reports` in `manage_only_tree_root_ids`.
+- `assets/docs-viewer/js/reports/change-history-report.js` renders the v1 domain-filtered report from `_docs_logs/generated/search-index.json` via `GET /docs/generated/docs-log?projection=search-index`.
 
 Additional filter granularity can be designed iteratively after the basic report is useful.
 
@@ -435,3 +448,7 @@ Risks:
 - inferred metadata will need review before it is trusted
 - search policy work may be needed before the new scope feels useful
 - future change-log authoring needs a clear workflow so the corpus does not drift back into long unstructured pages
+
+## Change Log Entries
+
+- `change-2026-05-19-added-manage-only-change-history-report`
