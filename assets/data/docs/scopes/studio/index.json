@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T21:13:38Z",
+  "generated_at": "2026-05-19T11:45:34Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -152,6 +152,23 @@
       "viewer_url": "/docs/?scope=studio&doc=data-models",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models.json",
       "content_text_length": 461
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-build-management-import-export-improvements",
+      "title": "Docs Build Management Import Export Improvements",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "studio-python-ruby-script-inventory",
+      "sort_order": 1000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-build-management-import-export-improvements.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-build-management-import-export-improvements",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-build-management-import-export-improvements.json",
+      "content_text_length": 8967,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -1080,7 +1097,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 5274
+      "content_text_length": 5314
     },
     {
       "scope": "studio",
@@ -2052,6 +2069,23 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
       "content_text_length": 12160,
+      "ui_status": "urgent"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-python-ruby-script-inventory",
+      "title": "Studio Python And Ruby Script Inventory",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "studio",
+      "sort_order": 7010,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-python-ruby-script-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-python-ruby-script-inventory.json",
+      "content_text_length": 16475,
       "ui_status": "urgent"
     },
     {

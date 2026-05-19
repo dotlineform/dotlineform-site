@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6b13c7aee34066fbf8cf00e22efc5f7b",
-    "generated_at_utc": "2026-05-18T20:25:08Z",
-    "count": 248
+    "version": "blake2b-af7e886ed8753a1a84a27c79bdeacc20",
+    "generated_at_utc": "2026-05-19T11:40:07Z",
+    "count": 250
   },
   "entries": [
     {
@@ -255,6 +255,38 @@
         "10"
       ],
       "search_text": "data-models data models data models architecture 2026-05-06 21:10 2026 05 06 21 10"
+    },
+    {
+      "id": "docs-build-management-import-export-improvements",
+      "kind": "doc",
+      "title": "Docs Build Management Import Export Improvements",
+      "href": "/docs/?scope=studio&doc=docs-build-management-import-export-improvements",
+      "last_updated": "2026-05-19",
+      "parent_id": "studio-python-ruby-script-inventory",
+      "parent_title": "Studio Python And Ruby Script Inventory",
+      "display_meta": "2026-05-19 • Studio Python And Ruby Script Inventory",
+      "search_terms": [
+        "docs-build-management-import-export-improvements",
+        "docs",
+        "build",
+        "management",
+        "import",
+        "export",
+        "improvements",
+        "docs build management import export improvements",
+        "studio python and ruby script inventory",
+        "studio",
+        "python",
+        "and",
+        "ruby",
+        "script",
+        "inventory",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "docs-build-management-import-export-improvements docs build management import export improvements docs build management import export improvements studio python and ruby script inventory studio python and ruby script inventory 2026-05-19 2026 05 19"
     },
     {
       "id": "user-guide-docs-images",
@@ -3266,6 +3298,31 @@
         "17"
       ],
       "search_text": "studio-javascript-payload-inventory studio javascript payload inventory studio javascript payload inventory 2026-05-17 2026 05 17"
+    },
+    {
+      "id": "studio-python-ruby-script-inventory",
+      "kind": "doc",
+      "title": "Studio Python And Ruby Script Inventory",
+      "href": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
+      "last_updated": "2026-05-19",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-19 • Studio",
+      "search_terms": [
+        "studio-python-ruby-script-inventory",
+        "studio",
+        "python",
+        "ruby",
+        "script",
+        "inventory",
+        "studio python and ruby script inventory",
+        "and",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-catalogue-js-runtime-consistency",
