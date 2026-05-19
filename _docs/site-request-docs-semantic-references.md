@@ -3,7 +3,7 @@ doc_id: site-request-docs-semantic-references
 title: Docs Semantic References Request
 added_date: 2026-05-18
 last_updated: 2026-05-19
-ui_status: implemented
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 71000
 hidden: false

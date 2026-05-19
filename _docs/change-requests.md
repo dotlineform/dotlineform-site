@@ -2,7 +2,7 @@
 doc_id: change-requests
 title: Change Requests
 added_date: 2026-04-28
-last_updated: 2026-05-18
+last_updated: 2026-05-19
 parent_id: ""
 sort_order: 23000
 ---
@@ -29,6 +29,7 @@ Those still belong in the owning reference docs and change logs.
 ## Current Requests
 
 - [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)
+- [Change Log Entry Model Request](/docs/?scope=studio&doc=site-request-change-log-entry-model)
 - [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization)
 - [Docs Viewer New Scope Button Request](/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button)
 - [Docs Markdown Package Import Request](/docs/?scope=studio&doc=site-request-docs-markdown-package-import)

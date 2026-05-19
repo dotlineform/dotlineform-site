@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-162eee2b57487d603a2b0b76938b1708",
-    "generated_at_utc": "2026-05-19T12:46:43Z",
-    "count": 250
+    "version": "blake2b-4b7b5774cc2c5afc230f02dcd2bf2e62",
+    "generated_at_utc": "2026-05-19T13:06:31Z",
+    "count": 251
   },
   "entries": [
     {
@@ -5022,19 +5022,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-18",
-      "display_meta": "2026-05-18",
+      "last_updated": "2026-05-19",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-18",
+        "2026-05-19",
         "2026",
         "05",
-        "18"
+        "19"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-18 2026 05 18"
+      "search_text": "change-requests change requests change requests 2026-05-19 2026 05 19"
     },
     {
       "id": "new-pipeline",
@@ -6384,6 +6384,33 @@
         "19"
       ],
       "search_text": "site-request-docs-semantic-references site request docs semantic references docs semantic references request change requests change requests 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "site-request-change-log-entry-model",
+      "kind": "doc",
+      "title": "Change Log Entry Model Request",
+      "href": "/docs/?scope=studio&doc=site-request-change-log-entry-model",
+      "last_updated": "2026-05-19",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-19 • Change Requests",
+      "search_terms": [
+        "site-request-change-log-entry-model",
+        "site",
+        "request",
+        "change",
+        "log",
+        "entry",
+        "model",
+        "change log entry model request",
+        "change requests",
+        "requests",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "site-request-change-log-entry-model site request change log entry model change log entry model request change requests requests 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-docs-markdown-package-import",
