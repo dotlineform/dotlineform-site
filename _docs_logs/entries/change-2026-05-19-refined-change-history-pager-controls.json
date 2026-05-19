@@ -1,0 +1,29 @@
+{
+  "id": "change-2026-05-19-refined-change-history-pager-controls",
+  "date": "2026-05-19",
+  "title": "Refined Change History Pager Controls",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "studio-ui",
+    "workflow"
+  ],
+  "summary": "Changed the change-history report pagination controls to square icon buttons and duplicated the pager in the top filter row while keeping the bottom pager below the list.",
+  "source": {
+    "file": "_docs/change-history.md"
+  },
+  "subjects": [
+    "change-history",
+    "report-pagination"
+  ],
+  "related_docs": [
+    "change-history"
+  ],
+  "related_files": [
+    "assets/docs-viewer/js/reports/change-history-report.js",
+    "assets/docs-viewer/css/docs-viewer-reports.css",
+    "_docs/change-history.md"
+  ],
+  "effect": "The report's paging controls are available before and after the entry list, with compact previous and next buttons that preserve accessible labels."
+}

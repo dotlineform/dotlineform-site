@@ -116,6 +116,7 @@ function renderToolbar(root, state) {
   toolbar.appendChild(label);
   toolbar.appendChild(select);
   toolbar.appendChild(status);
+  toolbar.appendChild(state.topPagerNode);
 
   select.addEventListener("change", () => {
     state.selectedDomain = cleanString(select.value);
@@ -158,24 +159,25 @@ function filteredEntries(state) {
     : state.entries;
 }
 
-function appendPagerButton(parent, label, disabled, onClick) {
+function appendPagerButton(parent, label, ariaLabel, disabled, onClick) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "docsViewerReport__pagerButton";
   button.textContent = label;
+  button.setAttribute("aria-label", ariaLabel);
+  button.title = ariaLabel;
   button.disabled = disabled;
   button.addEventListener("click", onClick);
   parent.appendChild(button);
 }
 
-function renderPager(state, pageCount) {
-  clearNode(state.pagerNode);
+function appendPagerControls(parent, state, pageCount) {
   if (pageCount <= 1) return;
 
   const previousDisabled = state.currentPage <= 1;
   const nextDisabled = state.currentPage >= pageCount;
 
-  appendPagerButton(state.pagerNode, "Previous", previousDisabled, () => {
+  appendPagerButton(parent, "◀︎", "Previous page", previousDisabled, () => {
     if (previousDisabled) return;
     state.currentPage -= 1;
     persistReportRoute(state);
@@ -185,14 +187,21 @@ function renderPager(state, pageCount) {
   const status = document.createElement("span");
   status.className = "docsViewerReport__pagerStatus";
   status.textContent = `Page ${state.currentPage} of ${pageCount}`;
-  state.pagerNode.appendChild(status);
+  parent.appendChild(status);
 
-  appendPagerButton(state.pagerNode, "Next", nextDisabled, () => {
+  appendPagerButton(parent, "▶︎", "Next page", nextDisabled, () => {
     if (nextDisabled) return;
     state.currentPage += 1;
     persistReportRoute(state);
     renderEntries(state);
   });
+}
+
+function renderPager(state, pageCount) {
+  clearNode(state.topPagerNode);
+  clearNode(state.bottomPagerNode);
+  appendPagerControls(state.topPagerNode, state, pageCount);
+  appendPagerControls(state.bottomPagerNode, state, pageCount);
 }
 
 function renderEntries(state) {
@@ -231,14 +240,17 @@ export function mountChangeHistoryReport(context) {
       currentPage: selectedPageFromRoute(),
       statusNode: null,
       entriesNode: document.createElement("ul"),
-      pagerNode: document.createElement("nav")
+      topPagerNode: document.createElement("nav"),
+      bottomPagerNode: document.createElement("nav")
     };
     state.entriesNode.className = "docsViewerReport__changeEntries";
-    state.pagerNode.className = "docsViewerReport__pager";
-    state.pagerNode.setAttribute("aria-label", "Change history pages");
+    state.topPagerNode.className = "docsViewerReport__pager docsViewerReport__pager--top";
+    state.topPagerNode.setAttribute("aria-label", "Change history pages");
+    state.bottomPagerNode.className = "docsViewerReport__pager docsViewerReport__pager--bottom";
+    state.bottomPagerNode.setAttribute("aria-label", "Change history pages");
     renderToolbar(root, state);
     root.appendChild(state.entriesNode);
-    root.appendChild(state.pagerNode);
+    root.appendChild(state.bottomPagerNode);
     renderEntries(state);
   }).catch((error) => {
     clearNode(root);

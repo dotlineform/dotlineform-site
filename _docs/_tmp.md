@@ -1,5 +1,5 @@
 ---
-doc_id: _tmp
+doc_id: docs-inventory
 title: tmp
 added_date: "2026-05-19"
 last_updated: "2026-05-19"

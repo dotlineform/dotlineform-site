@@ -327,14 +327,23 @@
 .docsViewerReport__pager{
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem;
+  gap: 0.42rem;
   align-items: center;
   justify-content: flex-end;
   padding-top: 0.2rem;
 }
 
+.docsViewerReport__pager--top{
+  margin-left: auto;
+  padding-top: 0;
+}
+
 .docsViewerReport__pagerButton{
+  display: inline-grid;
+  place-items: center;
   appearance: none;
+  width: 2rem;
+  height: 2rem;
   border: 1px solid var(--docs-viewer-border);
   border-radius: 6px;
   color: var(--docs-viewer-text);
@@ -342,8 +351,7 @@
   cursor: pointer;
   font: inherit;
   line-height: var(--docs-viewer-line-snug);
-  min-width: 5.8rem;
-  padding: 0.36rem 0.68rem;
+  padding: 0;
 }
 
 .docsViewerReport__pagerButton:hover:not(:disabled){
@@ -377,5 +385,9 @@
 
   .docsViewerReport__pager{
     justify-content: flex-start;
+  }
+
+  .docsViewerReport__pager--top{
+    margin-left: 0;
   }
 }
