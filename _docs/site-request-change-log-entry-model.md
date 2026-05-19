@@ -20,6 +20,7 @@ Status:
 - Step 5 completed: legacy site and Search change-log migration script added and run
 - Step 6 completed: generated date, domain, related-doc, related-file, change-request, and search projections added
 - Step 7 completed: compact change-log archive stubs and manage-only change-history report added
+- Step 8 pending: migrate canonical entries from monthly JSONL to flat per-entry JSON files
 
 ## Summary
 
@@ -105,7 +106,8 @@ _docs_logs/
 
 Source files:
 
-- `entries/*.jsonl` are canonical source records
+- `entries/*.json` should be canonical source records after the per-entry migration
+- legacy `entries/*.jsonl` monthly files are an intermediate migration format and should be retired after Step 8
 - `schema.json` validates the record contract
 - `README.md` documents authoring and migration rules
 
@@ -118,15 +120,26 @@ Generated files:
 
 ## Record Format
 
-Use JSONL as the primary format: one JSON object per line, one change entry per object.
+Use one JSON file per change entry as the primary format.
+Each file contains one JSON object matching `_docs_logs/schema.json`.
 
 Reasons:
 
-- easy for Python scripts and Codex to scan
+- efficient for Codex to retrieve individual entries without loading a full month of unrelated records
+- easy for `rg -l` to find candidate entry files by id, domain, related file, or prose
 - easy to validate against `schema.json`
-- stable diffs when entries are appended
+- stable diffs because completed historical entries rarely change
 - no front matter/body parsing after migration
 - compact enough for machine retrieval without requiring hundreds of Markdown files
+
+Use a flat source directory rather than month folders.
+The entry id and filename already carry the date, and nested month directories do not improve Codex retrieval.
+
+Filename pattern:
+
+```text
+_docs_logs/entries/change-YYYY-MM-DD-entry-slug.json
+```
 
 Suggested entry record:
 
@@ -398,6 +411,53 @@ Implementation notes:
 - `assets/docs-viewer/js/reports/change-history-report.js` renders the v1 domain-filtered report from `_docs_logs/generated/search-index.json` via `GET /docs/generated/docs-log?projection=search-index`.
 
 Additional filter granularity can be designed iteratively after the basic report is useful.
+
+### Step 8. Migrate Canonical Entries To Flat Per-Entry JSON
+
+Status:
+
+- pending
+
+Replace the monthly JSONL canonical source files with one flat JSON file per change entry.
+
+The current monthly JSONL files are script-friendly, but they are inefficient for Codex context because reading one entry can require opening a large month file.
+The canonical source should optimize for selective retrieval by Codex and scripts.
+
+Target layout:
+
+```text
+_docs_logs/
+  entries/
+    change-2026-05-19-added-manage-only-change-history-report.json
+    change-2026-05-19-added-targeted-docs-payload-rebuilds.json
+    change-2026-04-30-converted-public-catalogue-stubs-to-route-anchors.json
+```
+
+Implementation requirements:
+
+- convert existing `_docs_logs/entries/*.jsonl` rows to flat `_docs_logs/entries/<id>.json` files
+- preserve the existing record schema and ids
+- update `scripts/docs_logs/log_entry.py` so new entries preview/write one JSON file instead of appending to monthly JSONL
+- update `scripts/docs_logs/build_indexes.py` to read `entries/*.json`
+- update `scripts/docs_logs/migrate_legacy_logs.py` so its write mode creates per-entry JSON files rather than monthly JSONL
+- update tests to cover per-entry read/write behavior and duplicate-id handling
+- update `_docs_logs/README.md`, `_docs_logs/entries/README.md`, and this request doc to remove JSONL as the active canonical format
+- remove the monthly JSONL files after the per-entry files are generated and verified
+- keep ignored generated projections under `_docs_logs/generated/*.json`
+
+Codex retrieval should use simple file search first:
+
+```bash
+rg -l "scripts/docs/build_search.rb" _docs_logs/entries
+rg -l "change-history-report" _docs_logs/entries
+rg -l "\"docs-viewer\"" _docs_logs/entries
+```
+
+Expected result:
+
+- Codex can locate and open one or a few small entry files instead of loading a 600KB month file
+- generated indexes and the manage-only change-history report keep the same output shape
+- script behavior remains deterministic, with flat per-entry JSON files as the sole canonical source
 
 ## Migration Script Notes
 
