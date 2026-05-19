@@ -52,6 +52,8 @@ Default behavior:
 - uses targeted docs-search updates for source changes at or below the targeted threshold when affected doc ids can be computed from parsed snapshots
 - falls back to a full same-scope docs-search rebuild when affected ids are ambiguous
 - skips a duplicate same-scope pass when a docs-management write has already rebuilt that source change and left a short-lived watcher suppression marker
+- logs computed affected doc ids when targeted search is safe
+- logs the fallback reason when affected ids are unavailable and search must rebuild the full scope
 
 ## Optional Flags
 
@@ -106,6 +108,8 @@ Targeted affected-id rules:
 - `title` changed: target the doc plus direct children, because child search records include `parent_title`
 - `parent_id` changed: target only the changed doc under the current search schema
 - parse failure, invalid docs tree, missing parsed snapshot, or threshold overflow: run full same-scope docs search
+
+Watcher diagnostics are intentionally log-only. They report affected doc ids and fallback reasons, but avoid adding per-source-path detail beyond the existing changed-file detection line.
 
 ## Operational Notes
 

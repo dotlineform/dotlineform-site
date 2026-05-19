@@ -122,6 +122,22 @@ The command exits with:
 - `1` for command/runtime failures
 - `2` when parsing returns a structured report with errors
 
+## Apply Follow-Through
+
+Returned-package apply behavior is owned by the documents Data Sharing adapter and source service rather than by `docs_import.py` itself.
+
+When an apply action writes Library Markdown source:
+
+- the source service creates the configured backup before writing changed source docs
+- the write/rebuild helper rebuilds same-scope Docs Viewer payloads after the source write succeeds
+- docs search is updated for the affected ids when the adapter can provide a targeted set
+- the apply response includes `rebuild.steps`, `rebuild.search`, and `rebuild.diagnostics`
+- `rebuild.diagnostics.docs` comes from the docs builder diagnostics line
+- `rebuild.diagnostics.search` describes the full or targeted search update
+- activity rows are attached by the docs-management server after successful apply handling
+
+The parser CLI remains read-only unless `--write-previews` is passed, and preview writes do not trigger generated docs or docs-search rebuilds.
+
 ## Validation Boundary
 
 This parser is intentionally not an apply validator.

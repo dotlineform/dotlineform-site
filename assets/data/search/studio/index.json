@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-af7e886ed8753a1a84a27c79bdeacc20",
-    "generated_at_utc": "2026-05-19T11:40:07Z",
+    "version": "blake2b-2f4bf67892ea35760e04eb42f81c2b98",
+    "generated_at_utc": "2026-05-19T11:53:39Z",
     "count": 250
   },
   "entries": [
@@ -5163,20 +5163,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-18",
-      "display_meta": "2026-05-18",
+      "last_updated": "2026-05-19",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-05-18",
+        "2026-05-19",
         "2026",
         "05",
-        "18"
+        "19"
       ],
-      "search_text": "site-change-log site change log site change log 2026-05-18 2026 05 18"
+      "search_text": "site-change-log site change log site change log 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-studio-import-export-module",

@@ -3,9 +3,12 @@
 
 from __future__ import annotations
 
+import json
 import os
+import re
 import shutil
 import subprocess
+import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
@@ -19,6 +22,8 @@ from docs_watch_suppression import (
     clear_watch_suppressions,
     set_watch_suppressions,
 )
+
+DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
 
 
 def detect_bundle_bin() -> Optional[str]:
@@ -40,6 +45,77 @@ def ordered_search_doc_ids(doc_ids: list[str]) -> list[str]:
     return ordered
 
 
+def extract_docs_builder_diagnostics(stdout: str) -> list[Dict[str, Any]]:
+    diagnostics: list[Dict[str, Any]] = []
+    for line in stdout.splitlines():
+        text = line.strip()
+        if not text.startswith(DOCS_BUILDER_DIAGNOSTICS_PREFIX):
+            continue
+        raw_payload = text[len(DOCS_BUILDER_DIAGNOSTICS_PREFIX) :].strip()
+        try:
+            payload = json.loads(raw_payload)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict):
+            diagnostics.append(payload)
+    return diagnostics
+
+
+def extract_search_step_diagnostics(stdout: str, search: Dict[str, Any]) -> Dict[str, Any]:
+    diagnostics: Dict[str, Any] = {
+        "mode": search.get("mode", "none"),
+        "doc_ids": list(search.get("doc_ids", [])),
+    }
+    if diagnostics["mode"] == "none":
+        return diagnostics
+
+    changed_match = re.search(
+        r"Changed:\s*(\d+)\.\s*Removed:\s*(\d+)\.\s*Unchanged:\s*(\d+)\.\s*Full fallback:\s*(\d+)",
+        stdout,
+    )
+    if changed_match:
+        diagnostics.update(
+            {
+                "changed": int(changed_match.group(1)),
+                "removed": int(changed_match.group(2)),
+                "unchanged": int(changed_match.group(3)),
+                "full_fallback": bool(int(changed_match.group(4))),
+            }
+        )
+
+    count_match = re.search(r"\bwith\s+(\d+)\s+\S+\s+search entries\b", stdout)
+    if count_match:
+        diagnostics["entries"] = int(count_match.group(1))
+
+    skipped_match = re.search(r"\bSkipped:\s*(\d+)\b", stdout)
+    if skipped_match:
+        diagnostics["skipped"] = int(skipped_match.group(1))
+
+    wrote_match = re.search(r"\bWrote:\s*(\d+)\b", stdout)
+    if wrote_match:
+        diagnostics["wrote"] = int(wrote_match.group(1))
+
+    return diagnostics
+
+
+def run_rebuild_command(command: list[str], repo_root: Path) -> Dict[str, Any]:
+    started_at = time.perf_counter()
+    completed = subprocess.run(
+        command,
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return {
+        "command": " ".join(command),
+        "returncode": completed.returncode,
+        "stdout": completed.stdout.strip(),
+        "stderr": completed.stderr.strip(),
+        "elapsed_seconds": round(time.perf_counter() - started_at, 3),
+    }
+
+
 def rebuild_scope_outputs(
     repo_root: Path,
     scope: str,
@@ -50,54 +126,56 @@ def rebuild_scope_outputs(
     if not bundle_bin:
         raise RuntimeError("bundle executable not found")
 
-    commands = [[bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"]]
+    commands = [("docs", [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"])]
     search = {"mode": "none", "doc_ids": []}
     if include_search:
         if search_doc_ids is None:
             search = {"mode": "full", "doc_ids": []}
-            commands.append([bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"])
+            commands.append(("search", [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"]))
         else:
             target_doc_ids = ordered_search_doc_ids(search_doc_ids)
             search = {"mode": "targeted" if target_doc_ids else "none", "doc_ids": target_doc_ids}
             if target_doc_ids:
                 commands.append(
-                    [
-                        bundle_bin,
-                        "exec",
-                        "ruby",
-                        "scripts/build_search.rb",
-                        "--scope",
-                        scope,
-                        "--write",
-                        "--only-doc-ids",
-                        ",".join(target_doc_ids),
-                        "--remove-missing",
-                    ]
+                    (
+                        "search",
+                        [
+                            bundle_bin,
+                            "exec",
+                            "ruby",
+                            "scripts/build_search.rb",
+                            "--scope",
+                            scope,
+                            "--write",
+                            "--only-doc-ids",
+                            ",".join(target_doc_ids),
+                            "--remove-missing",
+                        ],
+                    )
                 )
     steps = []
-    for command in commands:
-        completed = subprocess.run(
-            command,
-            cwd=str(repo_root),
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        steps.append(
-            {
-                "command": " ".join(command),
-                "returncode": completed.returncode,
-                "stdout": completed.stdout.strip(),
-                "stderr": completed.stderr.strip(),
-            }
-        )
-        if completed.returncode != 0:
-            detail = completed.stderr.strip() or completed.stdout.strip() or f"exit {completed.returncode}"
+    docs_diagnostics: Optional[Dict[str, Any]] = None
+    search_diagnostics = extract_search_step_diagnostics("", search)
+    for label, command in commands:
+        step = run_rebuild_command(command, repo_root)
+        steps.append(step)
+        if label == "docs":
+            docs_payloads = extract_docs_builder_diagnostics(step["stdout"])
+            docs_diagnostics = docs_payloads[-1] if docs_payloads else None
+        elif label == "search":
+            search_diagnostics = extract_search_step_diagnostics(step["stdout"], search)
+            search_diagnostics["elapsed_seconds"] = step["elapsed_seconds"]
+        if step["returncode"] != 0:
+            detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
             raise RuntimeError(f"rebuild failed for {scope}: {detail}")
     return {
         "ok": True,
         "steps": steps,
         "search": search,
+        "diagnostics": {
+            "docs": docs_diagnostics,
+            "search": search_diagnostics,
+        },
     }
 
 
@@ -163,32 +241,34 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
         scope_ids = list(DOCS_SCOPE_CONFIGS.keys())
 
     commands = [
-        [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--write"],
+        ("docs", [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--write"]),
     ]
     for scope in scope_ids:
-        commands.append([bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"])
+        commands.append(("search", [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"]))
     steps = []
-    for command in commands:
-        completed = subprocess.run(
-            command,
-            cwd=str(repo_root),
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        steps.append(
-            {
-                "command": " ".join(command),
-                "returncode": completed.returncode,
-                "stdout": completed.stdout.strip(),
-                "stderr": completed.stderr.strip(),
-            }
-        )
-        if completed.returncode != 0:
-            detail = completed.stderr.strip() or completed.stdout.strip() or f"exit {completed.returncode}"
+    docs_diagnostics: list[Dict[str, Any]] = []
+    search_diagnostics: list[Dict[str, Any]] = []
+    for label, command in commands:
+        step = run_rebuild_command(command, repo_root)
+        steps.append(step)
+        if label == "docs":
+            docs_diagnostics.extend(extract_docs_builder_diagnostics(step["stdout"]))
+        elif label == "search":
+            scope_index = len(search_diagnostics)
+            scope_id = scope_ids[scope_index] if scope_index < len(scope_ids) else ""
+            diagnostics = extract_search_step_diagnostics(step["stdout"], {"mode": "full", "doc_ids": []})
+            diagnostics["scope"] = scope_id
+            diagnostics["elapsed_seconds"] = step["elapsed_seconds"]
+            search_diagnostics.append(diagnostics)
+        if step["returncode"] != 0:
+            detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
             raise RuntimeError(f"docs rebuild failed: {detail}")
     return {
         "ok": True,
         "steps": steps,
+        "diagnostics": {
+            "docs": docs_diagnostics,
+            "search": search_diagnostics,
+        },
         "summary_text": f"Docs and docs search rebuilt for {', '.join(DOCS_SCOPE_CONFIGS)}.",
     }

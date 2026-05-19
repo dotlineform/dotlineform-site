@@ -11,6 +11,7 @@ Run:
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import shutil
 import subprocess
@@ -29,6 +30,8 @@ from docs_source_model import load_scope_docs, scope_doc_sort_key
 from docs_scope_config import NESTED_SOURCE_SCOPES, SCOPE_ROOTS
 from docs_watch_suppression import SUPPRESSION_COMPLETE, clear_watch_suppressions, load_active_watch_suppressions
 from local_env import runtime_env
+
+DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
 
 
 def log(message: str) -> None:
@@ -82,6 +85,27 @@ def summarize_output(output: str, fallback: str) -> str:
     return lines[-1] if lines else fallback
 
 
+def extract_docs_builder_diagnostics(stdout: str) -> Optional[Dict[str, Any]]:
+    for line in stdout.splitlines():
+        text = line.strip()
+        if not text.startswith(DOCS_BUILDER_DIAGNOSTICS_PREFIX):
+            continue
+        raw_payload = text[len(DOCS_BUILDER_DIAGNOSTICS_PREFIX) :].strip()
+        try:
+            payload = json.loads(raw_payload)
+        except json.JSONDecodeError:
+            return None
+        return payload if isinstance(payload, dict) else None
+    return None
+
+
+def formatted_docs_builder_diagnostics(stdout: str) -> list[str]:
+    payload = extract_docs_builder_diagnostics(stdout)
+    if not payload:
+        return []
+    return [f"{key}: {json.dumps(value) if isinstance(value, (list, dict)) else value}" for key, value in payload.items()]
+
+
 def changed_filenames(previous: Dict[str, tuple[int, int]], current: Dict[str, tuple[int, int]]) -> list[str]:
     filenames = set(previous.keys()) | set(current.keys())
     return sorted(name for name in filenames if previous.get(name) != current.get(name))
@@ -101,6 +125,14 @@ def ordered_unique(values: list[str]) -> list[str]:
         seen.add(item)
         ordered.append(item)
     return ordered
+
+
+def affected_doc_ids_log_text(doc_ids: Optional[list[str]]) -> str:
+    if doc_ids is None:
+        return "full-search fallback"
+    if not doc_ids:
+        return "none"
+    return ", ".join(doc_ids)
 
 
 def parsed_doc_snapshot(repo_root: Path, scope: str) -> Dict[str, Dict[str, Any]]:
@@ -218,6 +250,13 @@ def rebuild_scope(
             detail = stderr or stdout or f"exit {completed.returncode}"
             log(f"{scope} {label} rebuild failed: {detail}")
             return False
+        if label == "docs":
+            diagnostics = formatted_docs_builder_diagnostics(stdout)
+            if diagnostics:
+                log(f"{scope} docs diagnostics:")
+                for line in diagnostics:
+                    log(f"  {line}")
+                continue
         log(f"{scope} {label}: {summarize_output(stdout, 'done')}")
     return True
 
@@ -327,7 +366,7 @@ def main() -> int:
                 current_doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, ready_scope)
                 search_doc_ids = None
                 if snapshot_error:
-                    log(f"{ready_scope} targeted search fallback: {snapshot_error}")
+                    log(f"{ready_scope} targeted search fallback; affected ids unavailable: {snapshot_error}")
                 else:
                     search_doc_ids, fallback_reason = affected_search_doc_ids(
                         states[ready_scope]["doc_snapshot"],
@@ -336,7 +375,12 @@ def main() -> int:
                         args.targeted_search_threshold,
                     )
                     if fallback_reason:
-                        log(f"{ready_scope} targeted search fallback: {fallback_reason}")
+                        log(f"{ready_scope} targeted search fallback; affected ids unavailable: {fallback_reason}")
+                    else:
+                        log(
+                            f"{ready_scope} affected docs for targeted search: "
+                            f"{affected_doc_ids_log_text(search_doc_ids)}."
+                        )
 
                 rebuild_succeeded = rebuild_scope(repo_root, bundle_bin, ready_scope, search_doc_ids=search_doc_ids)
                 post_rebuild_snapshot = snapshot_scope(states[ready_scope]["root"], ready_scope)

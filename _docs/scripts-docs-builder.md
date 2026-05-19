@@ -190,6 +190,32 @@ Flags:
 - `--write`
   persist generated files; if omitted, the script prints a dry-run summary only
 
+## Diagnostics
+
+Each selected scope run prints one compact diagnostics line after the dry-run or write summary:
+
+```text
+Docs builder diagnostics: {"scope":"studio",...}
+```
+
+The diagnostics payload is console output only. It does not change the generated Docs Viewer JSON schema.
+
+Current fields:
+
+- `scope`
+- `source_files_scanned`
+- `docs_emitted`
+- `doc_payloads_changed`
+- `doc_payloads_removed`
+- `reference_index_changed`
+- `reference_by_doc_payloads_changed`
+- `reference_by_doc_payloads_removed`
+- `reference_by_target_payloads_changed`
+- `reference_by_target_payloads_removed`
+- `warning_count`
+- `warnings`
+- `elapsed_seconds`
+
 ## Operational Notes
 
 - `bin/dev-studio` currently runs this builder for the `studio` scope once before starting Jekyll

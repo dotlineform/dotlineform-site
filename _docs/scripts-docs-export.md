@@ -54,6 +54,9 @@ Outputs:
 - no file in dry-run mode
 - one JSON or JSONL share package in write mode
 
+Export preparation is read-only with respect to docs source and generated docs/search payloads.
+It does not run `build_docs.rb`, does not run `build_search.rb`, and does not include rebuild diagnostics in its report.
+
 Share packages are local working files.
 They are ignored by git, may be deleted, and should be reproduced from generated Docs Viewer data plus the selected profile and document selection.
 

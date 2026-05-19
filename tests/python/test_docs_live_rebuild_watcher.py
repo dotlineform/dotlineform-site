@@ -47,9 +47,35 @@ def test_watcher_accumulates_changed_files_during_debounce() -> None:
     ]
 
 
+def test_watcher_formats_affected_doc_ids_for_logs() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+
+    assert module.affected_doc_ids_log_text(None) == "full-search fallback"
+    assert module.affected_doc_ids_log_text([]) == "none"
+    assert module.affected_doc_ids_log_text(["parent", "child"]) == "parent, child"
+
+
+def test_watcher_formats_docs_builder_diagnostics_on_separate_lines() -> None:
+    module = load_docs_live_rebuild_watcher_module()
+    stdout = (
+        'Docs builder diagnostics: {"scope":"studio","source_files_scanned":3,'
+        '"docs_emitted":2,"warnings":[],"elapsed_seconds":0.25}\n'
+    )
+
+    assert module.formatted_docs_builder_diagnostics(stdout) == [
+        "scope: studio",
+        "source_files_scanned: 3",
+        "docs_emitted: 2",
+        "warnings: []",
+        "elapsed_seconds: 0.25",
+    ]
+
+
 def main() -> None:
     test_watcher_imports_source_model_helpers_directly()
     test_watcher_accumulates_changed_files_during_debounce()
+    test_watcher_formats_affected_doc_ids_for_logs()
+    test_watcher_formats_docs_builder_diagnostics_on_separate_lines()
 
 
 if __name__ == "__main__":

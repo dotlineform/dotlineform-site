@@ -47,7 +47,7 @@ That means a small source edit can still require parsing a whole docs scope befo
 
 ## Slice 1: Diagnostics And Contract Map
 
-Status: planned.
+Status: completed in the diagnostics slice.
 
 Purpose:
 
@@ -69,6 +69,13 @@ Acceptance checks:
 - focused tests cover diagnostic payload shaping where the behavior is structured
 - docs-management service responses keep existing keys stable
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder), [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server), [Docs Import](/docs/?scope=studio&doc=scripts-docs-import), and [Docs Export](/docs/?scope=studio&doc=scripts-docs-export) are updated if command output or response contracts change
+
+Implementation note:
+
+- `scripts/docs/build_docs.rb` now emits one compact diagnostics JSON line per selected scope without changing generated Docs Viewer payload schemas.
+- `scripts/docs/docs_write_rebuild.py` now parses docs-builder diagnostics, adds elapsed timing to rebuild steps, and returns additive `diagnostics.docs` and `diagnostics.search` objects.
+- `scripts/docs/docs_live_rebuild_watcher.py` now logs affected doc ids for targeted search and fallback reasons when affected ids are unavailable.
+- The owning builder, management, watcher, import, export, and site change-log docs were updated with the new command, response, and log contracts.
 
 Risks:
 

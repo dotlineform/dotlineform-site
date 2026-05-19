@@ -316,6 +316,10 @@ Rebuild behavior:
 - `scope` must be one of the configured scope ids in `scripts/docs/docs_scopes.json`
 - rebuilds generated docs payloads for the requested scope
 - rebuilds the docs-search artifact for the requested scope
+- includes a `diagnostics` object alongside the existing `ok`, `steps`, and `search` keys
+- `diagnostics.docs` is parsed from the docs builder diagnostics line and reports source files scanned, emitted docs, changed/removed generated payload counts, semantic-reference changed/removed counts, warning count, warning messages, and elapsed seconds
+- `diagnostics.search` reports the search mode, affected ids for targeted updates, and any parsed changed/removed/unchanged/write counts exposed by the search builder output
+- each row in `steps` keeps the existing `command`, `returncode`, `stdout`, and `stderr` fields and now also reports `elapsed_seconds`
 - is intended for local manage mode rather than the public hosted site
 
 `POST /docs/broken-links` expects:
@@ -544,6 +548,7 @@ Metadata-update behavior:
 - runs a targeted same-scope docs-search update for affected ids after a successful write
 - skips docs-search updates when `ui_status` is the only changed field, because status emoji are viewer-only metadata
 - keeps docs-search updates enabled for `viewable` changes so non-viewable docs are removed from search and newly viewable docs are added back
+- successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
 
 `POST /docs/update-viewability` expects:
 
@@ -576,6 +581,7 @@ Viewability-update behavior:
 - no-op requests write no files, create no backup, and do not rebuild docs/search
 - changed bulk requests copy only changed source files into the backup bundle, then run one docs rebuild and one targeted docs-search update for the scope
 - the Docs Viewer manage-mode `Make viewable` action now uses the bulk endpoint so it can include required ancestors and optional descendants in one write/rebuild
+- successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
 
 `POST /docs/move` expects:
 
@@ -602,6 +608,7 @@ Move behavior:
 - successful move responses include `undo_records` for every doc whose placement changed
 - same-parent reorder rebuilds the current scope docs payloads without a docs-search update
 - reparenting rebuilds the current scope docs payloads and runs a targeted docs-search update for the moved doc
+- successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
 
 `POST /docs/restore-move` expects:
 
@@ -627,6 +634,7 @@ Restore-move behavior:
 - writes only records whose current placement differs from the supplied restore record
 - refreshes `last_updated` on each restored source doc whose placement front matter is rewritten
 - rebuilds the current scope docs payloads and runs targeted docs-search updates only for changed docs whose parent changed
+- successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
 
 `POST /docs/normalize-order` expects either a single sibling group:
 
@@ -703,6 +711,7 @@ Apply behavior:
 - re-runs preview validation before delete
 - deletes the Markdown source file when no blockers remain
 - rebuilds the current scope docs payloads and runs a targeted docs-search removal/update after delete
+- successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
 
 Scope lifecycle preview endpoints:
 

@@ -2,7 +2,7 @@
 doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
-last_updated: 2026-05-18
+last_updated: 2026-05-19
 parent_id: ""
 sort_order: 28000
 ---
@@ -16,6 +16,32 @@ Archives:
 - [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
+
+## [2026-05-19] Added Docs Rebuild Diagnostics
+
+**Status:** implemented
+
+**Area:** Docs Viewer builder / management
+
+**Summary:**
+The Docs Viewer builder now emits one compact diagnostics JSON line per selected scope.
+Docs-management rebuild helpers parse those diagnostics, add elapsed timing to rebuild steps, and expose additive `rebuild.diagnostics` objects in management and import/apply responses.
+The live docs watcher now logs affected doc ids when targeted docs-search updates are safe and logs the fallback reason when a full docs-search rebuild is required.
+
+**Effect:**
+Docs writes and rebuilds are easier to inspect before the affected-doc build optimization work begins.
+Existing rebuild response keys and generated Docs Viewer payload schemas are unchanged.
+
+**Affected files/docs:**
+
+- `scripts/docs/build_docs.rb`
+- `scripts/docs/docs_write_rebuild.py`
+- `scripts/docs/docs_live_rebuild_watcher.py`
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
 
 ## [2026-05-18] Added Docs Semantic References
 

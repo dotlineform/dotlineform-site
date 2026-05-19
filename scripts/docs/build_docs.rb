@@ -109,9 +109,13 @@ class DocsDataBuilder
     @repo_root = Pathname(__dir__).parent.parent.realpath
     @output_url_base = output_url_base_for(@output_dir)
     @site_config = load_site_config
+    @source_files_scanned = 0
+    @warnings = []
   end
 
   def run(write:)
+    started_at = monotonic_time
+    @warnings = []
     docs = load_docs
     validate_docs!(docs)
 
@@ -131,20 +135,34 @@ class DocsDataBuilder
 
     unless write
       dry_run_summary(index_payload, item_payloads, reference_payloads, write_plan)
+      diagnostics = diagnostics_payload(
+        docs: docs,
+        write_plan: write_plan,
+        elapsed_seconds: elapsed_seconds_since(started_at)
+      )
+      print_diagnostics(diagnostics)
       return {
         index_payload: index_payload,
         item_payloads: item_payloads,
         reference_payloads: reference_payloads,
-        write_plan: write_plan
+        write_plan: write_plan,
+        diagnostics: diagnostics
       }
     end
 
     write_outputs(index_payload, item_payloads, reference_payloads, write_plan)
+    diagnostics = diagnostics_payload(
+      docs: docs,
+      write_plan: write_plan,
+      elapsed_seconds: elapsed_seconds_since(started_at)
+    )
+    print_diagnostics(diagnostics)
     {
       index_payload: index_payload,
       item_payloads: item_payloads,
       reference_payloads: reference_payloads,
-      write_plan: write_plan
+      write_plan: write_plan,
+      diagnostics: diagnostics
     }
   end
 
@@ -171,6 +189,7 @@ class DocsDataBuilder
 
   def load_docs
     all_paths = Dir.glob(@source_dir.join("**/*.md").to_s).sort.map { |file_path| Pathname(file_path) }
+    @source_files_scanned = all_paths.length
     nested_paths = all_paths.select { |path| path.dirname != @source_dir }
     if !@allow_nested_source && !nested_paths.empty?
       nested_list = nested_paths.map { |path| path.relative_path_from(@source_dir).to_s }.join(", ")
@@ -634,6 +653,36 @@ class DocsDataBuilder
     puts "  would write reference by-target payloads: #{write_plan[:changed_reference_target_keys].length}"
     puts "  would remove stale reference by-doc payloads: #{write_plan[:stale_reference_doc_ids].length}"
     puts "  would remove stale reference by-target payloads: #{write_plan[:stale_reference_target_keys].length}"
+  end
+
+  def diagnostics_payload(docs:, write_plan:, elapsed_seconds:)
+    {
+      "scope" => @scope_id,
+      "source_files_scanned" => @source_files_scanned,
+      "docs_emitted" => docs.length,
+      "doc_payloads_changed" => write_plan[:changed_item_ids].length,
+      "doc_payloads_removed" => write_plan[:stale_item_ids].length,
+      "reference_index_changed" => write_plan[:reference_index_write] ? 1 : 0,
+      "reference_by_doc_payloads_changed" => write_plan[:changed_reference_doc_ids].length,
+      "reference_by_doc_payloads_removed" => write_plan[:stale_reference_doc_ids].length,
+      "reference_by_target_payloads_changed" => write_plan[:changed_reference_target_keys].length,
+      "reference_by_target_payloads_removed" => write_plan[:stale_reference_target_keys].length,
+      "warning_count" => @warnings.length,
+      "warnings" => @warnings,
+      "elapsed_seconds" => elapsed_seconds
+    }
+  end
+
+  def print_diagnostics(diagnostics)
+    puts "Docs builder diagnostics: #{JSON.generate(diagnostics)}"
+  end
+
+  def monotonic_time
+    Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  end
+
+  def elapsed_seconds_since(started_at)
+    (monotonic_time - started_at).round(3)
   end
 
   def write_payload_set(output_dir, items_dir, index_payload, item_payloads, write_plan, label: nil)
@@ -1131,7 +1180,9 @@ class DocsDataBuilder
   end
 
   def warn_semantic_ref(doc, message)
-    warn "Docs semantic reference warning [#{@scope_id}/#{doc.doc_id}]: #{message}"
+    warning = "Docs semantic reference warning [#{@scope_id}/#{doc.doc_id}]: #{message}"
+    @warnings << warning
+    warn warning
   end
 
   def semantic_ref_record(doc, token, resolution, ordinal)
