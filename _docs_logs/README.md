@@ -104,9 +104,8 @@ Keep records compact:
 
 ### Current Implementation State
 
-The source model, schema, authoring workflow, and entry helper exist.
-Migration, generated indexes, and report UI are still part of the change-log entry model implementation.
-Until those are implemented, follow the active request rather than hand-maintaining large JSONL data files.
+The source model, schema, authoring workflow, entry helper, legacy migration, generated indexes, and migration review report exist.
+The report UI and compact human-facing archive replacement are still part of the change-log entry model implementation.
 
 ## Helper Script
 
@@ -147,7 +146,36 @@ Append the row after reviewing the preview:
 Add `--update-change-request` with `--write` when the completed request has a closure task that should reference the created log entry id.
 
 The helper validates required fields and common id/list formats with standard-library checks.
-When generated log indexes are implemented, the helper will run the generated rebuild hook after writes unless `--no-rebuild-generated` is passed.
+After writes, the helper runs `scripts/docs_logs/build_indexes.py --write` unless `--no-rebuild-generated` is passed.
+
+## Migration Script
+
+Use `scripts/docs_logs/migrate_legacy_logs.py` to parse legacy Markdown change logs into JSONL records.
+The script previews by default and writes only with `--write`.
+
+Preview the migration:
+
+```bash
+./scripts/docs_logs/migrate_legacy_logs.py
+```
+
+Write the initial migration records and review report:
+
+```bash
+./scripts/docs_logs/migrate_legacy_logs.py --write
+```
+
+The v1 migration wrote 469 records from the site and Search change logs.
+Review diagnostics live in `_docs_logs/reports/migration-review.json`.
+
+## Generated Indexes
+
+Use `scripts/docs_logs/build_indexes.py` to rebuild generated projections from JSONL source records.
+The script previews by default and writes only with `--write`.
+
+```bash
+./scripts/docs_logs/build_indexes.py --write
+```
 
 ## Generated Outputs
 

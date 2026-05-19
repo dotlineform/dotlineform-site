@@ -30,6 +30,10 @@ var/test-runs/
 .env.local
 var/local/
 
+# Generated structured docs-log projections
+_docs_logs/generated/*.json
+_docs_logs/reports/*.json
+
 # Studio local backup output
 var/studio/activity/
 var/studio/backups/

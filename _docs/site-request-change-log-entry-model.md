@@ -17,6 +17,8 @@ Status:
 - Step 2 completed: development workflow doc added under Site Docs and AGENTS.md now points to it
 - Step 3 completed: ongoing log authoring workflow documented in `_docs_logs/README.md`
 - Step 4 completed: Codex-oriented log entry helper added
+- Step 5 completed: legacy site and Search change-log migration script added and run
+- Step 6 completed: generated date, domain, related-doc, related-file, change-request, and search projections added
 
 ## Summary
 
@@ -304,6 +306,10 @@ Completion remains a manual docs-management decision driven by the request's tas
 
 ### Step 5. Script The Migration From Existing Logs
 
+Status:
+
+- completed
+
 Use one-off Python scripts to parse the current site and Search change-log files, split each dated `## [YYYY-MM-DD] ...` section into an atomic entry, infer initial metadata, and write JSONL records under `_docs_logs/entries/`.
 Search change logs should be included in the same implementation and represented with `domain: search` rather than maintained as a separate documentation system.
 
@@ -319,7 +325,17 @@ The scripts should be dry-run first and report:
 The first migration can preserve existing prose exactly and only add conservative metadata.
 There should be no assumption of a large manual curation pass after migration.
 
+Implementation notes:
+
+- `scripts/docs_logs/migrate_legacy_logs.py` parses the current site log, May archive, April archive, March-and-earlier archive, and Search change log.
+- The initial migration wrote 469 records across `_docs_logs/entries/2025-08.jsonl`, `_docs_logs/entries/2026-03.jsonl`, `_docs_logs/entries/2026-04.jsonl`, and `_docs_logs/entries/2026-05.jsonl`.
+- `_docs_logs/reports/migration-review.json` records the migration summary and entries that need metadata review.
+
 ### Step 6. Generate Search And Index Projections
+
+Status:
+
+- completed
 
 Build generated projections from the JSONL source records.
 
@@ -335,6 +351,12 @@ Required generated outputs:
 
 The search projection should weight title, date, domains, subjects, related docs, related files, change request doc id, summary, and effect ahead of boilerplate section labels.
 Generated `_docs_logs/generated/*.json` outputs should rebuild automatically when log entries are added or changed.
+
+Implementation notes:
+
+- `scripts/docs_logs/build_indexes.py` validates `_docs_logs/entries/*.jsonl` and writes the generated projections.
+- `scripts/docs_logs/log_entry.py` now has an implemented generated rebuild hook through `build_indexes.py`.
+- Generated v1 outputs are `_docs_logs/generated/by-date.json`, `_docs_logs/generated/by-domain.json`, `_docs_logs/generated/by-related-doc.json`, `_docs_logs/generated/by-related-file.json`, `_docs_logs/generated/by-change-request.json`, and `_docs_logs/generated/search-index.json`.
 
 ### Step 7. Replace Long Archives With Compact Human Views
 
@@ -354,6 +376,13 @@ Its v1 display should provide:
 - title
 - date
 - summary paragraph for each log entry
+
+The generated JSON projections and migration reports are large local build artifacts, not tracked source.
+Track canonical `_docs_logs/entries/*.jsonl` records, ignore `_docs_logs/generated/*.json` and `_docs_logs/reports/*.json`, and rebuild generated projections locally from source records.
+
+The v1 report should be manage-only without adding a new front-matter field.
+Use an ordinary Studio docs report page with `viewer_report_access: manage`, place it under a dedicated report-tree root such as `change-history-reports`, and add that root to the Studio scope's `manage_only_tree_root_ids`.
+That keeps the report doc and its descendants out of public navigation and public docs search while still allowing manage mode to mount a report that reads local generated docs-log projections.
 
 Additional filter granularity can be designed iteratively after the basic report is useful.
 
