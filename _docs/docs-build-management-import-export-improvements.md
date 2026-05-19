@@ -138,7 +138,7 @@ Implementation note:
 
 ## Slice 3: Import Export Management Closeout
 
-Status: planned.
+Status: completed in the closeout slice.
 
 Purpose:
 
@@ -173,6 +173,13 @@ Acceptance checks:
 - command examples remain project-local and machine-agnostic
 - final verification names the exact run-check profile or focused tests used
 
+Implementation note:
+
+- Library returned-package summary and hierarchy apply responses now use the same `rebuild` object shape as docs-management writes: `rebuild.steps`, `rebuild.docs`, `rebuild.search`, and `rebuild.diagnostics`.
+- Documents package preparation remains source-read-only and does not run docs payload or docs-search rebuilds.
+- The durable builder, management-server, watcher, import, export, semantic-reference, and script-inventory docs now carry the as-is behavior instead of this implementation record owning the technical contract.
+- The focused import-service tests assert the returned-package apply rebuild shape for both summary and hierarchy writes.
+
 Risks:
 
 - closeout can leave duplicated details across request, script, and inventory docs
@@ -181,15 +188,20 @@ Risks:
 
 ## Final State
 
-When this plan is complete:
+This plan is complete.
 
-- `scripts/docs/build_docs.rb` has an explicit affected-doc input contract or a documented reason it remains scope-only
+- `scripts/docs/build_docs.rb` has an explicit affected-doc input contract through `--only-doc-ids`
 - docs-management, live-watcher, import, and export responses expose enough diagnostics to identify expensive rebuild paths
 - targeted rebuilds are used only where dependency rules make them safe
 - semantic-reference artifacts are preserved correctly under targeted docs rebuilds
 - existing script docs own the durable technical behavior
 - this doc remains a short implementation record
 - [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory) is refreshed back to the current as-is risk state
+
+Remaining deferred work:
+
+- resolver-data changes outside docs source, such as catalogue title or route changes, still need explicit orchestration before they can safely request targeted docs payload rebuilds
+- broader benchmarking is still deferred until diagnostics show a repeated slow path
 
 ## Related References
 

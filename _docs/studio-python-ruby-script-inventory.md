@@ -37,7 +37,7 @@ Measured on 2026-05-19:
 - Python and Ruby scripts under `scripts/`: 98
 - Python scripts: 90
 - Ruby scripts: 8
-- Total Python/Ruby script lines: 41,657
+- Total Python/Ruby script lines: 41,978
 - Files over the 1,000-line review threshold: 10
 - Largest script family by lines: `scripts/catalogue/`
 - Largest individual script: `scripts/catalogue/catalogue_write_server.py`
@@ -51,7 +51,7 @@ The remaining risk is less about one obvious file to split and more about keepin
 | Area | Files | Lines | Maintenance | Structure and consistency | Performance | Main reason |
 | --- | ---: | ---: | --- | --- | --- | --- |
 | `scripts/catalogue/` | 38 | 17,150 | high | medium | high | Large source/build/write surface with multiple generated artifact families, field-aware build planning, media derivation, lookup refreshes, search rebuilds, publication flows, and local write-server orchestration. |
-| `scripts/docs/` | 21 | 12,751 | high | medium | high | Docs build, import, export, management mutations, generated reads, live rebuild, and search coordination span both Python services and Ruby builders. Full-scope rebuild behavior remains the main performance concern. |
+| `scripts/docs/` | 21 | 13,072 | high | medium | medium | Docs build, import, export, management mutations, generated reads, live rebuild, and search coordination span both Python services and Ruby builders. Targeted docs payload rebuilds reduce routine write cost, while cross-language contracts and resolver-data fallbacks still need care. |
 | `scripts/analytics/` | 11 | 4,419 | medium | medium | low | Tag write flows have clearer module owners after extraction, but Data Sharing and tag import/apply flows remain broad enough to watch. |
 | `scripts/checks/` | 6 | 2,054 | medium | medium | medium | Audit scripts intentionally span many site contracts, especially `audit_site_consistency.py`; risk grows when new checks are added without grouping or shared report contracts. |
 | `scripts/media/` | 5 | 1,792 | medium | medium | high | Media work is subprocess-heavy, file-system-heavy, and mostly serial; performance matters when image batches grow. |
@@ -102,7 +102,7 @@ Immediate work signal: high.
 | --- | --- |
 | Maintenance risk | high |
 | Structure and consistency risk | medium |
-| Performance risk | high |
+| Performance risk | medium |
 
 Relevant files:
 
@@ -120,19 +120,19 @@ Ruby owns the generated Docs Viewer payload builder and search adapters, while P
 That split is acceptable, but it raises consistency risk when a change must update source rules, generated payload shape, search behavior, management responses, and docs-watch behavior together.
 
 The main performance risk is coarse rebuild behavior.
-The builder can produce targeted write plans, and the live watcher can identify affected scopes and search ids, but the normal local development contract still often depends on rebuilding scope payloads and search artifacts after source edits.
-As library and Studio docs grow, full-scope docs/search rebuilds will become the likely bottleneck.
+The builder now accepts targeted same-scope docs payload ids, and docs-management, source import, Library returned-package apply, and watcher paths use those ids when dependency rules are explicit.
+Explicit rebuilds, source-config settings changes, missing generated output, ambiguous watcher changes, and resolver-data changes outside docs source still fall back to full same-scope docs payload rebuilds.
+As Library and Studio docs grow, the remaining performance work is to use the new diagnostics to identify which fallback paths are actually expensive.
 
 Recommended improvements:
 
-- Define a durable incremental-docs build contract before adding more management-side source mutation features.
 - Keep source config, generated reads, mutations, import/export adapters, and rebuild orchestration in their current Python owners rather than adding logic back into `docs_management_server.py`.
-- Add benchmark-style diagnostics to docs rebuild responses: source files scanned, docs emitted, item payloads changed, references changed, and search records touched.
-- Make targeted docs search fallback reasons visible in the same place as rebuild results so conservative rebuilds can be reduced deliberately.
-- Treat the affected-doc `build_docs.rb --only-doc-ids` idea from [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references) as the concrete next candidate for docs-builder performance work, after reference correctness is stable.
+- Keep the `build_docs.rb --only-doc-ids` contract narrow: same-scope only, explicit caller-owned affected ids, and full fallback when generated output or dependency data is incomplete.
+- Use rebuild diagnostics before adding deeper optimization: source files scanned, docs emitted, item payloads changed, references changed, search records touched, and elapsed time are now visible in rebuild responses or logs.
+- Add explicit affected-id rules before targeting resolver-data changes outside docs source, such as catalogue title or route changes.
 - Keep Ruby builder and Python management response contracts documented together when generated Docs Viewer schema changes.
 
-Immediate work signal: high.
+Immediate work signal: medium.
 
 Implementation plan: [Docs Build Management Import Export Improvements](/docs/?scope=studio&doc=docs-build-management-import-export-improvements).
 
@@ -228,7 +228,7 @@ Immediate work signal: medium.
 | `scripts/catalogue/catalogue_write_server.py` | 3,149 | high | medium | medium | Still large, but now primarily HTTP orchestration after earlier extraction. Avoid adding domain planning back into this file. |
 | `scripts/docs/docs_html_import.py` | 2,008 | high | medium | medium | Large conversion surface with HTML, Markdown, package, media, and preview behavior. Watch as import requirements expand. |
 | `scripts/catalogue/generate_work_pages.py` | 1,769 | high | medium | high | Generator orchestration remains broad. Keep new payload shaping in extracted generation modules. |
-| `scripts/docs/build_docs.rb` | 1,410 | high | medium | high | Central Ruby docs builder. Incremental and diagnostic improvements should happen here first. |
+| `scripts/docs/build_docs.rb` | 1,516 | high | medium | medium | Central Ruby docs builder. Targeted payload input and diagnostics are implemented; future risk is dependency-rule drift across builder, watcher, and management callers. |
 | `scripts/checks/audit_site_consistency.py` | 1,358 | medium | medium | medium | Broad audit surface. Grouping matters more than splitting by line count. |
 | `scripts/docs/docs_export.py` | 1,250 | medium | medium | medium | Export adapter grows with Data Sharing requirements. Keep profile/config behavior explicit. |
 | `scripts/analytics/tags_data_sharing_adapter.py` | 1,249 | medium | medium | low | Data Sharing apply paths should remain adapter-owned and directly tested. |
@@ -238,8 +238,8 @@ Immediate work signal: medium.
 
 ## Current Priority
 
-1. Reduce conservative full rebuilds in catalogue and docs flows where existing field or doc-scope metadata can safely drive targeted work.
-2. Add timing/count diagnostics to save, rebuild, search, and media responses before making deeper performance changes.
+1. Reduce conservative full rebuilds in catalogue flows and remaining docs fallback paths where existing field or doc-scope metadata can safely drive targeted work.
+2. Use the new docs timing/count diagnostics, and add equivalent catalogue/media diagnostics where needed, before making deeper performance changes.
 3. Keep large orchestration files from regrowing by requiring new domain behavior to land in existing owner modules.
 4. Standardize local service mechanics only where the behavior is identical and low risk.
 5. Group broad audit scripts before adding more unrelated checks.

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: Documents Package Preparation Script
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-13 20:20"
+last_updated: "2026-05-19"
 parent_id: docs-viewer
 sort_order: 2000
 ---
@@ -223,3 +223,4 @@ The static sharing profile schema remains documented in [Library Export Configs]
 
 The Studio page runs the same documents package engine through the Data Sharing endpoint `POST /data-sharing/prepare`.
 The local service first resolves `data_domain` and `operation` through `assets/studio/data/data_sharing_adapters.json`, then dispatches to the documents adapter, writes under the adapter-declared export root, and returns the same report shape used by the CLI.
+The response is annotated with `data_domain`, `adapter_id`, and service summary text, but it does not include `rebuild` or `rebuild.diagnostics` because package preparation does not mutate source docs or generated docs/search payloads.

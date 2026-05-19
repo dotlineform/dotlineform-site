@@ -2,8 +2,8 @@
 doc_id: site-request-docs-semantic-references
 title: Docs Semantic References Request
 added_date: 2026-05-18
-last_updated: 2026-05-18
-ui_status: in-progress
+last_updated: 2026-05-19
+ui_status: implemented
 parent_id: change-requests
 sort_order: 71000
 hidden: false
@@ -13,7 +13,8 @@ hidden: false
 Status:
 
 - Implemented v1
-- see next steps section
+- affected-doc build input is implemented
+- see remaining follow-up section
 
 
 ## Summary
@@ -476,33 +477,38 @@ Once the generated reference artifacts are stable, public work, series, moment, 
 
 That should be a later change because it affects public page layout and generated public data dependencies.
 
-## Next Steps After V1
+## Remaining Follow-Up After V1
 
 ### Affected-Doc Build Input
 
-The first implementation can keep the current `build_docs.rb --scope <scope> --write` model:
-
-- the watcher determines the affected scope
-- the builder parses the whole scope
-- the write plan skips unchanged doc, search, and reference outputs
-
-A later optimization could pass affected doc ids into `build_docs.rb`, similar to docs search:
+Implemented on 2026-05-19.
+`build_docs.rb` now accepts targeted same-scope docs payload input:
 
 ```sh
 ./scripts/build_docs.rb --scope studio --write --only-doc-ids example-doc
 ```
 
-That optimization should only be attempted after v1 reference correctness is stable.
-It needs dependency rules for cases where one doc edit affects derived output for other docs or targets:
+Current behavior:
 
-- changed `doc_id`
-- deleted source doc
-- changed title used by relationship reports
-- changed parent/title metadata used in report rows
-- changed target id that moves a reference between target buckets
-- resolver data changes outside docs source, such as catalogue title or route changes
+- the caller must select exactly one scope
+- the builder still rebuilds the scope index from current source metadata
+- selected docs are rendered and written through the normal per-doc payload path
+- selected docs' semantic-reference by-doc records are refreshed
+- semantic-reference by-target buckets are derived from refreshed selected by-doc records plus existing unselected by-doc records, so stale target buckets are removed when selected docs move or drop references
+- orchestration falls back to a full same-scope docs payload rebuild when existing generated output is missing or incomplete
 
-Until those rules are explicit, per-file incremental writes are the safer optimization boundary.
+Implemented orchestration:
+
+- docs-management mutation planners pass targeted docs ids when their dependency rules are explicit
+- Docs Import source writes pass targeted docs ids for create and overwrite
+- Library returned-package summary and hierarchy apply writes pass targeted docs ids for changed source docs
+- the live watcher passes targeted docs ids for source changes whose affected ids can be computed from its parsed snapshot
+- source-config settings writes, explicit rebuilds, missing generated output, and ambiguous watcher changes remain full-scope fallbacks
+
+Remaining follow-up:
+
+- resolver-data changes outside docs source, such as catalogue title or route changes, should trigger a full same-scope docs payload rebuild until they have explicit affected-id rules
+- future resolver kinds should define their targeted rebuild dependencies before using targeted docs payload writes
 
 ### Reference-Aware Broken Link Audit
 

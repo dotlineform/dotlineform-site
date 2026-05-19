@@ -332,10 +332,21 @@ def stub_rebuild():
 
     def fake_rebuild(repo_root, scope, changed_paths, write_operation, **kwargs):
         write_operation()
+        docs_doc_ids = list(kwargs.get("docs_doc_ids") or [])
+        search_doc_ids = list(kwargs.get("search_doc_ids") or [])
         return {
             "ok": True,
             "steps": [],
-            "search": {"mode": "targeted", "doc_ids": kwargs.get("search_doc_ids") or []},
+            "docs": {
+                "mode": "targeted" if docs_doc_ids else "full",
+                "doc_ids": docs_doc_ids,
+                "reason": "targeted docs payload ids provided" if docs_doc_ids else "full-scope fallback",
+            },
+            "search": {"mode": "targeted" if search_doc_ids else "none", "doc_ids": search_doc_ids},
+            "diagnostics": {
+                "docs": {"scope": scope, "build_mode": "targeted" if docs_doc_ids else "full"},
+                "search": {"mode": "targeted" if search_doc_ids else "none", "doc_ids": search_doc_ids},
+            },
         }
 
     docs_management.write_rebuild.perform_source_write_and_rebuild = fake_rebuild
@@ -1243,6 +1254,10 @@ def test_library_import_summary_apply_creates_backup_and_writes_source() -> None
     assert payload["summary_apply_written"] is True
     assert payload["counts"]["updates"] == 1
     assert payload["backup_dir"].startswith("var/docs/backups/")
+    assert payload["rebuild"]["docs"]["mode"] == "targeted"
+    assert payload["rebuild"]["docs"]["doc_ids"] == ["alpha"]
+    assert payload["rebuild"]["search"]["doc_ids"] == ["alpha"]
+    assert payload["rebuild"]["diagnostics"]["docs"]["build_mode"] == "targeted"
     assert backup_exists
     assert backup_source_exists
     assert manifest["operation"] == "documents-summary-apply"
@@ -1344,6 +1359,10 @@ def test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order(
     assert payload["hierarchy_apply_written"] is True
     assert payload["counts"]["changed"] == 1
     assert payload["backup_dir"].startswith("var/docs/backups/")
+    assert payload["rebuild"]["docs"]["mode"] == "targeted"
+    assert payload["rebuild"]["docs"]["doc_ids"] == ["alpha"]
+    assert payload["rebuild"]["search"]["doc_ids"] == ["alpha"]
+    assert payload["rebuild"]["diagnostics"]["search"]["mode"] == "targeted"
     assert manifest["operation"] == "documents-hierarchy-apply"
     assert manifest["metadata"]["updated_doc_ids"] == ["alpha"]
     assert "last_updated: 2026-05-01" in alpha_text

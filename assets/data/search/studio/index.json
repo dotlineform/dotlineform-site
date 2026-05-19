@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fd7335f66db4951beae89128e354b16b",
-    "generated_at_utc": "2026-05-19T12:07:48Z",
+    "version": "blake2b-162eee2b57487d603a2b0b76938b1708",
+    "generated_at_utc": "2026-05-19T12:18:37Z",
     "count": 250
   },
   "entries": [
@@ -990,10 +990,10 @@
       "kind": "doc",
       "title": "Documents Package Preparation Script",
       "href": "/docs/?scope=studio&doc=scripts-docs-export",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-19",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 20:20 • Docs Viewer",
+      "display_meta": "2026-05-19 • Docs Viewer",
       "search_terms": [
         "scripts-docs-export",
         "scripts",
@@ -1006,13 +1006,12 @@
         "script",
         "docs viewer",
         "viewer",
-        "2026-05-13 20:20",
+        "2026-05-19",
         "2026",
         "05",
-        "13",
-        "20"
+        "19"
       ],
-      "search_text": "scripts-docs-export scripts docs export documents package preparation script documents package preparation script docs viewer viewer 2026-05-13 20:20 2026 05 13 20"
+      "search_text": "scripts-docs-export scripts docs export documents package preparation script documents package preparation script docs viewer viewer 2026-05-19 2026 05 19"
     },
     {
       "id": "generic-llm-helper-pattern",
@@ -6364,10 +6363,10 @@
       "kind": "doc",
       "title": "Docs Semantic References Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
-      "last_updated": "2026-05-18",
+      "last_updated": "2026-05-19",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-18 • Change Requests",
+      "display_meta": "2026-05-19 • Change Requests",
       "search_terms": [
         "site-request-docs-semantic-references",
         "site",
@@ -6379,12 +6378,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-18",
+        "2026-05-19",
         "2026",
         "05",
-        "18"
+        "19"
       ],
-      "search_text": "site-request-docs-semantic-references site request docs semantic references docs semantic references request change requests change requests 2026-05-18 2026 05 18"
+      "search_text": "site-request-docs-semantic-references site request docs semantic references docs semantic references request change requests change requests 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-docs-markdown-package-import",

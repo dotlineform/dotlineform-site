@@ -170,7 +170,7 @@ Service handler checks live in:
 tests/python/test_docs_import_service.py
 ```
 
-They cover documents adapter returned-package listing, review writing, dry-run review reporting, non-Library domain rejection, the summary-apply contract for missing target docs, backup creation, skipped rows, and source write output, and the hierarchy-apply contract for missing target docs, backup creation, unknown parent warnings, partial selections, no-write dry runs, and preserved `sort_order`.
+They cover documents adapter returned-package listing, review writing, dry-run review reporting, non-Library domain rejection, the summary-apply contract for missing target docs, backup creation, skipped rows, source write output, and rebuild diagnostics shape, and the hierarchy-apply contract for missing target docs, backup creation, unknown parent warnings, partial selections, no-write dry runs, preserved `sort_order`, and rebuild diagnostics shape.
 The parser and service checks run in the `docs` profile:
 
 ```bash
