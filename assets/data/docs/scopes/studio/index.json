@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T12:33:59Z",
+  "generated_at": "2026-05-19T12:46:43Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -4098,6 +4098,22 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-markdown-package-import.json",
       "content_text_length": 13316,
       "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "_tmp",
+      "title": "tmp",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "",
+      "sort_order": 100000,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "_tmp.md",
+      "viewer_url": "/docs/?scope=studio&doc=_tmp",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp.json",
+      "content_text_length": 2299
     }
   ]
 }
