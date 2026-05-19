@@ -1,3 +1,5 @@
+const PAGE_SIZE = 20;
+
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -37,12 +39,23 @@ function selectedDomainFromRoute(domains) {
   return domains.includes(selected) ? selected : "";
 }
 
-function persistSelectedDomain(domain) {
+function selectedPageFromRoute() {
+  const params = new URLSearchParams(window.location.search);
+  const page = Number.parseInt(cleanString(params.get("report_page")), 10);
+  return Number.isFinite(page) && page > 0 ? page : 1;
+}
+
+function persistReportRoute(state) {
   const url = new URL(window.location.href);
-  if (domain) {
-    url.searchParams.set("report_domain", domain);
+  if (state.selectedDomain) {
+    url.searchParams.set("report_domain", state.selectedDomain);
   } else {
     url.searchParams.delete("report_domain");
+  }
+  if (state.currentPage > 1) {
+    url.searchParams.set("report_page", String(state.currentPage));
+  } else {
+    url.searchParams.delete("report_page");
   }
   try {
     window.history.replaceState({}, "", url.pathname + url.search + url.hash);
@@ -106,7 +119,8 @@ function renderToolbar(root, state) {
 
   select.addEventListener("change", () => {
     state.selectedDomain = cleanString(select.value);
-    persistSelectedDomain(state.selectedDomain);
+    state.currentPage = 1;
+    persistReportRoute(state);
     renderEntries(state);
   });
 
@@ -138,13 +152,66 @@ function appendEntry(parent, entry) {
   parent.appendChild(row);
 }
 
-function renderEntries(state) {
-  clearNode(state.entriesNode);
-  const visible = state.selectedDomain
+function filteredEntries(state) {
+  return state.selectedDomain
     ? state.entries.filter((entry) => entryDomains(entry).includes(state.selectedDomain))
     : state.entries;
-  state.statusNode.textContent = visible.length === 1 ? "1 entry" : `${visible.length} entries`;
-  visible.forEach((entry) => appendEntry(state.entriesNode, entry));
+}
+
+function appendPagerButton(parent, label, disabled, onClick) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "docsViewerReport__pagerButton";
+  button.textContent = label;
+  button.disabled = disabled;
+  button.addEventListener("click", onClick);
+  parent.appendChild(button);
+}
+
+function renderPager(state, pageCount) {
+  clearNode(state.pagerNode);
+  if (pageCount <= 1) return;
+
+  const previousDisabled = state.currentPage <= 1;
+  const nextDisabled = state.currentPage >= pageCount;
+
+  appendPagerButton(state.pagerNode, "Previous", previousDisabled, () => {
+    if (previousDisabled) return;
+    state.currentPage -= 1;
+    persistReportRoute(state);
+    renderEntries(state);
+  });
+
+  const status = document.createElement("span");
+  status.className = "docsViewerReport__pagerStatus";
+  status.textContent = `Page ${state.currentPage} of ${pageCount}`;
+  state.pagerNode.appendChild(status);
+
+  appendPagerButton(state.pagerNode, "Next", nextDisabled, () => {
+    if (nextDisabled) return;
+    state.currentPage += 1;
+    persistReportRoute(state);
+    renderEntries(state);
+  });
+}
+
+function renderEntries(state) {
+  clearNode(state.entriesNode);
+  const visible = filteredEntries(state);
+  const pageCount = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  state.currentPage = Math.min(Math.max(1, state.currentPage), pageCount);
+  const start = (state.currentPage - 1) * PAGE_SIZE;
+  const pageEntries = visible.slice(start, start + PAGE_SIZE);
+  if (!visible.length) {
+    state.statusNode.textContent = "0 entries";
+  } else {
+    const first = start + 1;
+    const last = start + pageEntries.length;
+    const entryLabel = visible.length === 1 ? "entry" : "entries";
+    state.statusNode.textContent = `Showing ${first}-${last} of ${visible.length} ${entryLabel}`;
+  }
+  pageEntries.forEach((entry) => appendEntry(state.entriesNode, entry));
+  renderPager(state, pageCount);
 }
 
 export function mountChangeHistoryReport(context) {
@@ -161,12 +228,17 @@ export function mountChangeHistoryReport(context) {
       entries,
       domains,
       selectedDomain: selectedDomainFromRoute(domains),
+      currentPage: selectedPageFromRoute(),
       statusNode: null,
-      entriesNode: document.createElement("ul")
+      entriesNode: document.createElement("ul"),
+      pagerNode: document.createElement("nav")
     };
     state.entriesNode.className = "docsViewerReport__changeEntries";
+    state.pagerNode.className = "docsViewerReport__pager";
+    state.pagerNode.setAttribute("aria-label", "Change history pages");
     renderToolbar(root, state);
     root.appendChild(state.entriesNode);
+    root.appendChild(state.pagerNode);
     renderEntries(state);
   }).catch((error) => {
     clearNode(root);

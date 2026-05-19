@@ -1,0 +1,29 @@
+{
+  "id": "change-2026-05-19-added-change-history-report-pagination",
+  "date": "2026-05-19",
+  "title": "Added Change History Report Pagination",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "workflow"
+  ],
+  "summary": "Added client-side pagination to the manage-only change-history report so it displays 20 entries per page with controls below the entry list.",
+  "source": {
+    "file": "_docs/change-history.md"
+  },
+  "subjects": [
+    "change-history",
+    "report-pagination"
+  ],
+  "related_docs": [
+    "change-history",
+    "site-change-log"
+  ],
+  "related_files": [
+    "assets/docs-viewer/js/reports/change-history-report.js",
+    "assets/docs-viewer/css/docs-viewer-reports.css",
+    "_docs/change-history.md"
+  ],
+  "effect": "The report stays usable as the structured change-history corpus grows, while keeping the existing domain filter and generated projection shape unchanged."
+}

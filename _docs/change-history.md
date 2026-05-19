@@ -19,6 +19,7 @@ Viewer report:
 Purpose:
 
 - browse structured `_docs_logs/` entries by domain in manage mode
+- show 20 entries per page with pagination controls below the entry list
 
 ## Data Source
 
