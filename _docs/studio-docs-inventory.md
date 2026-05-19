@@ -1,13 +1,21 @@
 ---
-doc_id: docs-inventory
-title: tmp
+doc_id: studio-docs-inventory
+title: Studio Docs Inventory
 added_date: "2026-05-19"
 last_updated: "2026-05-19"
 parent_id: ""
-sort_order: 100000
+sort_order: 7500
 published: true
-viewable: false
+viewable: true
 ---
+
+# Studio Document Inventory
+
+This document is used to identify any large documents in Studio scope that are good candidates for splitting into logical child-documents. The aim is to improve search and readability of long complex documents, especially where they are frequently used for reference during development.
+
+It should be updated follwing any subsequent review or document-splitting.
+
+# Current review
 
 Scanned `_docs/*.md` under `/Users/dlf/Developer/dotlineform/dotlineform-site`.
 

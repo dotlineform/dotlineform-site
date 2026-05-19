@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7254b4b01955ffedb5e9383ff954ee8b",
-    "generated_at_utc": "2026-05-19T16:48:47Z",
-    "count": 252
+    "version": "blake2b-cb0f22bb62c7b7e6eaba62ae1d6eae64",
+    "generated_at_utc": "2026-05-19T18:33:09Z",
+    "count": 253
   },
   "entries": [
     {
@@ -3340,6 +3340,26 @@
       "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and 2026-05-19 2026 05 19"
     },
     {
+      "id": "studio-docs-inventory",
+      "kind": "doc",
+      "title": "Studio Docs Inventory",
+      "href": "/docs/?scope=studio&doc=studio-docs-inventory",
+      "last_updated": "2026-05-19",
+      "display_meta": "2026-05-19",
+      "search_terms": [
+        "studio-docs-inventory",
+        "studio",
+        "docs",
+        "inventory",
+        "studio docs inventory",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-docs-inventory studio docs inventory studio docs inventory 2026-05-19 2026 05 19"
+    },
+    {
       "id": "site-request-catalogue-js-runtime-consistency",
       "kind": "doc",
       "title": "Catalogue JavaScript Runtime Consistency Request",
@@ -6402,33 +6422,6 @@
       "search_text": "site-request-docs-semantic-references site request docs semantic references docs semantic references request change requests change requests 2026-05-19 2026 05 19"
     },
     {
-      "id": "site-request-change-log-entry-model",
-      "kind": "doc",
-      "title": "Change Log Entry Model Request",
-      "href": "/docs/?scope=studio&doc=site-request-change-log-entry-model",
-      "last_updated": "2026-05-19",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-19 • Change Requests",
-      "search_terms": [
-        "site-request-change-log-entry-model",
-        "site",
-        "request",
-        "change",
-        "log",
-        "entry",
-        "model",
-        "change log entry model request",
-        "change requests",
-        "requests",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "site-request-change-log-entry-model site request change log entry model change log entry model request change requests requests 2026-05-19 2026 05 19"
-    },
-    {
       "id": "site-request-docs-markdown-package-import",
       "kind": "doc",
       "title": "Docs Markdown Package Import Request",
@@ -6453,6 +6446,32 @@
         "18"
       ],
       "search_text": "site-request-docs-markdown-package-import site request docs markdown package import docs markdown package import request archive 2026-05-18 2026 05 18"
+    },
+    {
+      "id": "site-request-change-log-entry-model",
+      "kind": "doc",
+      "title": "Change Log Entry Model Request",
+      "href": "/docs/?scope=studio&doc=site-request-change-log-entry-model",
+      "last_updated": "2026-05-19",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-19 • Archive",
+      "search_terms": [
+        "site-request-change-log-entry-model",
+        "site",
+        "request",
+        "change",
+        "log",
+        "entry",
+        "model",
+        "change log entry model request",
+        "archive",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "site-request-change-log-entry-model site request change log entry model change log entry model request archive 2026-05-19 2026 05 19"
     }
   ]
 }

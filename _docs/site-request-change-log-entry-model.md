@@ -3,16 +3,15 @@ doc_id: site-request-change-log-entry-model
 title: Change Log Entry Model Request
 added_date: 2026-05-19
 last_updated: 2026-05-19
-ui_status: in-progress
-parent_id: change-requests
-sort_order: 72000
+ui_status: done
+parent_id: archive
+sort_order: 74000
 hidden: false
 ---
 # Change Log Entry Model Request
 
 Status:
 
-- In progress
 - Step 1 completed: `_docs_logs/` source conventions and schema scaffold added
 - Step 2 completed: development workflow doc added under Site Docs and AGENTS.md now points to it
 - Step 3 completed: ongoing log authoring workflow documented in `_docs_logs/README.md`
