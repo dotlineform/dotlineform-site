@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T18:39:23Z",
+  "generated_at": "2026-05-19T19:18:00Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2139,7 +2139,7 @@
       "source_path": "studio-docs-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-docs-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-docs-inventory.json",
-      "content_text_length": 3598
+      "content_text_length": 2590
     },
     {
       "scope": "studio",
@@ -2811,22 +2811,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "search-change-log-guidance",
-      "title": "Search Change Log Guidance",
-      "added_date": "2026-03-31",
-      "last_updated": "2026-05-11 12:50",
-      "parent_id": "search",
-      "sort_order": 13000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "search-change-log-guidance.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-change-log-guidance",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log-guidance.json",
-      "content_text_length": 7539
-    },
-    {
-      "scope": "studio",
       "doc_id": "config-studio-config-js",
       "title": "Studio Config Loader JS",
       "added_date": "2026-04-01",
@@ -2888,22 +2872,6 @@
       "viewer_url": "/docs/?scope=studio&doc=config-pipeline-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-pipeline-json.json",
       "content_text_length": 2087
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-change-log",
-      "title": "Search Change Log",
-      "added_date": "2026-04-24",
-      "last_updated": "2026-05-11",
-      "parent_id": "search",
-      "sort_order": 14000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "search-change-log.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-change-log",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log.json",
-      "content_text_length": 48146
     },
     {
       "scope": "studio",
@@ -4185,6 +4153,38 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-change-log-entry-model.json",
       "content_text_length": 23314,
       "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-change-log-guidance",
+      "title": "Search Change Log Guidance",
+      "added_date": "2026-03-31",
+      "last_updated": "2026-05-11 12:50",
+      "parent_id": "archive",
+      "sort_order": 75000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "search-change-log-guidance.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-change-log-guidance",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log-guidance.json",
+      "content_text_length": 7693
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-change-log",
+      "title": "Search Change Log",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-05-11",
+      "parent_id": "archive",
+      "sort_order": 76000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "search-change-log.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-change-log",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log.json",
+      "content_text_length": 121
     }
   ]
 }

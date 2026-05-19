@@ -26,14 +26,6 @@ Summary:
 - Over 500 lines: `25`
 - Over 1000 lines: `2`
 
-Change-log refactor follow-up:
-
-- `_docs/site-change-log.md` is no longer a split candidate. It is now a compact `46` line public entry point.
-- The dated site change-log archive docs are compact stubs at `17` lines each.
-- `_docs/change-history.md` is a compact manage-only report doc at `50` lines.
-- Detailed durable change history now lives in `_docs_logs/entries/*.json`, with generated projections under `_docs_logs/generated/*.json`.
-- `_docs/search-change-log.md` remains a long historical doc at `1167` lines. Its entries have been migrated into `_docs_logs/`, so it is now a cleanup/stub candidate rather than an active reference-doc split candidate.
-
 Highest-priority split candidates:
 
 1. `_docs/studio-ui-rules.md` - `2474` lines  
@@ -59,4 +51,3 @@ Secondary candidates:
 - `_docs/local-setup.md` - `461` lines; setup, recovery, environment, and Codex notes could be separated.
 - `_docs/docs-viewer-portable-setup.md` - `462` lines; the file manifest/setup procedure looks like a natural child doc.
 
-Treat long `site-request-*`, archived implementation plans, and migrated historical change-log docs as lower priority unless they are still used as active reference docs. Their length is less harmful when they are historical records rather than current operating guidance, but migrated change logs should eventually become compact stubs to avoid duplicate historical ledgers.
