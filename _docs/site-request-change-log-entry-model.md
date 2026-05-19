@@ -444,6 +444,7 @@ Implementation requirements:
 - update `_docs_logs/README.md`, `_docs_logs/entries/README.md`, and this request doc to remove JSONL as the active canonical format
 - remove the monthly JSONL files after the per-entry files are generated and verified
 - keep ignored generated projections under `_docs_logs/generated/*.json`
+- check and update if needed the manage -only change-history report.
 
 Codex retrieval should use simple file search first:
 
