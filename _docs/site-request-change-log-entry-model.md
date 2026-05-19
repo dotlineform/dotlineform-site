@@ -3,7 +3,7 @@ doc_id: site-request-change-log-entry-model
 title: Change Log Entry Model Request
 added_date: 2026-05-19
 last_updated: 2026-05-19
-ui_status: proposed
+ui_status: draft
 parent_id: change-requests
 sort_order: 72000
 hidden: false
