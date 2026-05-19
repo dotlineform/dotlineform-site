@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-857433837b12e66fe6edc7f18edc1633",
-    "generated_at_utc": "2026-05-19T20:24:29Z",
+    "version": "blake2b-34f02469d0cbc8339948165c93909c0e",
+    "generated_at_utc": "2026-05-19T21:09:53Z",
     "count": 285
   },
   "entries": [
@@ -62,30 +62,6 @@
         "54"
       ],
       "search_text": "data-models-analysis data models analysis analysis scope scope analytics 2026-05-06 20:54 2026 05 06 20 54"
-    },
-    {
-      "id": "ui-primitive-button",
-      "kind": "doc",
-      "title": "Button Primitive",
-      "href": "/docs/?scope=studio&doc=ui-primitive-button",
-      "last_updated": "2026-05-15",
-      "parent_id": "ui-catalogue",
-      "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-15 • UI Catalogue",
-      "search_terms": [
-        "ui-primitive-button",
-        "ui",
-        "primitive",
-        "button",
-        "button primitive",
-        "ui catalogue",
-        "catalogue",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "ui-primitive-button ui primitive button button primitive ui catalogue catalogue 2026-05-15 2026 05 15"
     },
     {
       "id": "site-request-js-config-structural-review-catalogue-editor-extraction-plan",
@@ -175,34 +151,6 @@
         "28"
       ],
       "search_text": "site-request-script-structural-review-catalogue-write-server site request script structural review catalogue write server catalogue write server slices slices script structural review request 2026-05-09 21:28 2026 05 09 21 28"
-    },
-    {
-      "id": "scripts-css-token-audit",
-      "kind": "doc",
-      "title": "CSS Token Audit",
-      "href": "/docs/?scope=studio&doc=scripts-css-token-audit",
-      "last_updated": "2026-05-09 22:35",
-      "parent_id": "ui-audits",
-      "parent_title": "UI Audits",
-      "display_meta": "2026-05-09 22:35 • UI Audits",
-      "search_terms": [
-        "scripts-css-token-audit",
-        "scripts",
-        "css",
-        "token",
-        "audit",
-        "css token audit",
-        "ui audits",
-        "ui",
-        "audits",
-        "2026-05-09 22:35",
-        "2026",
-        "05",
-        "09",
-        "22",
-        "35"
-      ],
-      "search_text": "scripts-css-token-audit scripts css token audit css token audit ui audits ui audits 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "new-pipeline-current-pipeline-map",
@@ -881,6 +829,81 @@
       "search_text": "development-workflow development workflow development workflow site docs site docs 2026-05-19 2026 05 19"
     },
     {
+      "id": "studio-ui-framework-primitives",
+      "kind": "doc",
+      "title": "Studio UI Framework Primitives",
+      "href": "/docs/?scope=studio&doc=studio-ui-framework-primitives",
+      "last_updated": "2026-05-19",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-19 • UI Catalogue",
+      "search_terms": [
+        "studio-ui-framework-primitives",
+        "studio",
+        "ui",
+        "framework",
+        "primitives",
+        "studio ui framework primitives",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-ui-framework-primitives studio ui framework primitives studio ui framework primitives ui catalogue catalogue 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "css-primitives",
+      "kind": "doc",
+      "title": "CSS Primitives",
+      "href": "/docs/?scope=studio&doc=css-primitives",
+      "last_updated": "2026-05-06 20:00",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-06 20:00 • UI Catalogue",
+      "search_terms": [
+        "css-primitives",
+        "css",
+        "primitives",
+        "css primitives",
+        "ui catalogue",
+        "ui",
+        "catalogue",
+        "2026-05-06 20:00",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "00"
+      ],
+      "search_text": "css-primitives css primitives css primitives ui catalogue ui catalogue 2026-05-06 20:00 2026 05 06 20 00"
+    },
+    {
+      "id": "ui-primitive-button",
+      "kind": "doc",
+      "title": "Button Primitive",
+      "href": "/docs/?scope=studio&doc=ui-primitive-button",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-15 • UI Catalogue",
+      "search_terms": [
+        "ui-primitive-button",
+        "ui",
+        "primitive",
+        "button",
+        "button primitive",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "ui-primitive-button ui primitive button button primitive ui catalogue catalogue 2026-05-15 2026 05 15"
+    },
+    {
       "id": "catalogue-status",
       "kind": "doc",
       "title": "Catalogue Drafts",
@@ -1359,28 +1382,6 @@
       "search_text": "studio-runtime studio runtime studio runtime 2026-05-13 2026 05 13"
     },
     {
-      "id": "studio-ui-start",
-      "kind": "doc",
-      "title": "Studio UI Start",
-      "href": "/docs/?scope=studio&doc=studio-ui-start",
-      "last_updated": "2026-05-15",
-      "parent_id": "ui",
-      "parent_title": "UI",
-      "display_meta": "2026-05-15 • UI",
-      "search_terms": [
-        "studio-ui-start",
-        "studio",
-        "ui",
-        "start",
-        "studio ui start",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "studio-ui-start studio ui start studio ui start 2026-05-15 2026 05 15"
-    },
-    {
       "id": "tag-groups",
       "kind": "doc",
       "title": "Tag Groups",
@@ -1403,6 +1404,28 @@
         "00"
       ],
       "search_text": "tag-groups tag groups tag groups analytics 2026-05-09 16:00 2026 05 09 16 00"
+    },
+    {
+      "id": "studio-ui-start",
+      "kind": "doc",
+      "title": "UI Start",
+      "href": "/docs/?scope=studio&doc=studio-ui-start",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui",
+      "parent_title": "UI",
+      "display_meta": "2026-05-15 • UI",
+      "search_terms": [
+        "studio-ui-start",
+        "studio",
+        "ui",
+        "start",
+        "ui start",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "studio-ui-start studio ui start ui start 2026-05-15 2026 05 15"
     },
     {
       "id": "user-guide",
@@ -1972,28 +1995,6 @@
       "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-13 2026 05 13"
     },
     {
-      "id": "studio-ui-framework",
-      "kind": "doc",
-      "title": "Studio UI Framework",
-      "href": "/docs/?scope=studio&doc=studio-ui-framework",
-      "last_updated": "2026-05-19",
-      "parent_id": "ui",
-      "parent_title": "UI",
-      "display_meta": "2026-05-19 • UI",
-      "search_terms": [
-        "studio-ui-framework",
-        "studio",
-        "ui",
-        "framework",
-        "studio ui framework",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "studio-ui-framework studio ui framework studio ui framework 2026-05-19 2026 05 19"
-    },
-    {
       "id": "tag-editor",
       "kind": "doc",
       "title": "Tag Editor",
@@ -2075,6 +2076,27 @@
       "search_text": "site-request-script-structural-review-tag-write-server site request script structural review tag write server tag write server slices slices script structural review request 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
+      "id": "ui-audits",
+      "kind": "doc",
+      "title": "UI Audits",
+      "href": "/docs/?scope=studio&doc=ui-audits",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui",
+      "parent_title": "UI",
+      "display_meta": "2026-05-15 • UI",
+      "search_terms": [
+        "ui-audits",
+        "ui",
+        "audits",
+        "ui audits",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "ui-audits ui audits ui audits 2026-05-15 2026 05 15"
+    },
+    {
       "id": "docs-viewer-portable-files",
       "kind": "doc",
       "title": "Docs Viewer Portable File Manifest",
@@ -2100,30 +2122,6 @@
         "19"
       ],
       "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-19 2026 05 19"
-    },
-    {
-      "id": "studio-ui-framework-primitives",
-      "kind": "doc",
-      "title": "Studio UI Framework Primitives",
-      "href": "/docs/?scope=studio&doc=studio-ui-framework-primitives",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio-ui-framework",
-      "parent_title": "Studio UI Framework",
-      "display_meta": "2026-05-19 • Studio UI Framework",
-      "search_terms": [
-        "studio-ui-framework-primitives",
-        "studio",
-        "ui",
-        "framework",
-        "primitives",
-        "studio ui framework primitives",
-        "studio ui framework",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "studio-ui-framework-primitives studio ui framework primitives studio ui framework primitives studio ui framework 2026-05-19 2026 05 19"
     },
     {
       "id": "docs-viewer-portable-source-shape",
@@ -2152,31 +2150,6 @@
       "search_text": "docs-viewer-portable-source-shape docs viewer portable source shape docs viewer portable source shape docs viewer portable setup setup 2026-05-19 2026 05 19"
     },
     {
-      "id": "studio-ui-framework-modal-contract",
-      "kind": "doc",
-      "title": "Studio UI Framework Modal Contract",
-      "href": "/docs/?scope=studio&doc=studio-ui-framework-modal-contract",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio-ui-framework",
-      "parent_title": "Studio UI Framework",
-      "display_meta": "2026-05-19 • Studio UI Framework",
-      "search_terms": [
-        "studio-ui-framework-modal-contract",
-        "studio",
-        "ui",
-        "framework",
-        "modal",
-        "contract",
-        "studio ui framework modal contract",
-        "studio ui framework",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "studio-ui-framework-modal-contract studio ui framework modal contract studio ui framework modal contract studio ui framework 2026-05-19 2026 05 19"
-    },
-    {
       "id": "docs-viewer-portable-scope-setup",
       "kind": "doc",
       "title": "Docs Viewer Portable Scope Setup",
@@ -2200,57 +2173,6 @@
         "19"
       ],
       "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup docs viewer portable scope setup docs viewer portable setup 2026-05-19 2026 05 19"
-    },
-    {
-      "id": "studio-ui-framework-modal-implementation",
-      "kind": "doc",
-      "title": "Studio UI Framework Modal Implementation",
-      "href": "/docs/?scope=studio&doc=studio-ui-framework-modal-implementation",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio-ui-framework",
-      "parent_title": "Studio UI Framework",
-      "display_meta": "2026-05-19 • Studio UI Framework",
-      "search_terms": [
-        "studio-ui-framework-modal-implementation",
-        "studio",
-        "ui",
-        "framework",
-        "modal",
-        "implementation",
-        "studio ui framework modal implementation",
-        "studio ui framework",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "studio-ui-framework-modal-implementation studio ui framework modal implementation studio ui framework modal implementation studio ui framework 2026-05-19 2026 05 19"
-    },
-    {
-      "id": "studio-ui-framework-review-coverage",
-      "kind": "doc",
-      "title": "Studio UI Framework Review And Coverage",
-      "href": "/docs/?scope=studio&doc=studio-ui-framework-review-coverage",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio-ui-framework",
-      "parent_title": "Studio UI Framework",
-      "display_meta": "2026-05-19 • Studio UI Framework",
-      "search_terms": [
-        "studio-ui-framework-review-coverage",
-        "studio",
-        "ui",
-        "framework",
-        "review",
-        "coverage",
-        "studio ui framework review and coverage",
-        "and",
-        "studio ui framework",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "studio-ui-framework-review-coverage studio ui framework review coverage studio ui framework review and coverage and studio ui framework 2026-05-19 2026 05 19"
     },
     {
       "id": "catalogue",
@@ -3082,6 +3004,58 @@
       "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-05-15 2026 05 15"
     },
     {
+      "id": "studio-ui-framework-modal-contract",
+      "kind": "doc",
+      "title": "Studio UI Framework Modal Contract",
+      "href": "/docs/?scope=studio&doc=studio-ui-framework-modal-contract",
+      "last_updated": "2026-05-19",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-19 • UI Catalogue",
+      "search_terms": [
+        "studio-ui-framework-modal-contract",
+        "studio",
+        "ui",
+        "framework",
+        "modal",
+        "contract",
+        "studio ui framework modal contract",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-ui-framework-modal-contract studio ui framework modal contract studio ui framework modal contract ui catalogue catalogue 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "studio-ui-framework-modal-implementation",
+      "kind": "doc",
+      "title": "Studio UI Framework Modal Implementation",
+      "href": "/docs/?scope=studio&doc=studio-ui-framework-modal-implementation",
+      "last_updated": "2026-05-19",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-19 • UI Catalogue",
+      "search_terms": [
+        "studio-ui-framework-modal-implementation",
+        "studio",
+        "ui",
+        "framework",
+        "modal",
+        "implementation",
+        "studio ui framework modal implementation",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-ui-framework-modal-implementation studio ui framework modal implementation studio ui framework modal implementation ui catalogue catalogue 2026-05-19 2026 05 19"
+    },
+    {
       "id": "analytics",
       "kind": "doc",
       "title": "Analytics",
@@ -3152,30 +3126,6 @@
         "25"
       ],
       "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-05-11 00:25 2026 05 11 00 25"
-    },
-    {
-      "id": "css-primitives",
-      "kind": "doc",
-      "title": "CSS Primitives",
-      "href": "/docs/?scope=studio&doc=css-primitives",
-      "last_updated": "2026-05-06 20:00",
-      "parent_id": "ui",
-      "parent_title": "UI",
-      "display_meta": "2026-05-06 20:00 • UI",
-      "search_terms": [
-        "css-primitives",
-        "css",
-        "primitives",
-        "css primitives",
-        "ui",
-        "2026-05-06 20:00",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "00"
-      ],
-      "search_text": "css-primitives css primitives css primitives ui 2026-05-06 20:00 2026 05 06 20 00"
     },
     {
       "id": "doc-ui-status",
@@ -3759,28 +3709,30 @@
       "search_text": "site-request-catalogue-js-runtime-consistency site request catalogue js runtime consistency catalogue javascript runtime consistency request javascript javascript and browser config structural review request and browser config structural review 2026-05-11 00:39 2026 05 11 00 39"
     },
     {
-      "id": "css-refactor",
+      "id": "scripts-css-token-audit",
       "kind": "doc",
-      "title": "CSS Refactor",
-      "href": "/docs/?scope=studio&doc=css-refactor",
-      "last_updated": "2026-05-06 20:00",
+      "title": "CSS Token Audit",
+      "href": "/docs/?scope=studio&doc=scripts-css-token-audit",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-06 20:00 • UI",
+      "display_meta": "2026-05-09 22:35 • UI",
       "search_terms": [
-        "css-refactor",
+        "scripts-css-token-audit",
+        "scripts",
         "css",
-        "refactor",
-        "css refactor",
+        "token",
+        "audit",
+        "css token audit",
         "ui",
-        "2026-05-06 20:00",
+        "2026-05-09 22:35",
         "2026",
         "05",
-        "06",
-        "20",
-        "00"
+        "09",
+        "22",
+        "35"
       ],
-      "search_text": "css-refactor css refactor css refactor ui 2026-05-06 20:00 2026 05 06 20 00"
+      "search_text": "scripts-css-token-audit scripts css token audit css token audit ui 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "dimension-visualisation-projection",
@@ -4119,25 +4071,6 @@
         "18"
       ],
       "search_text": "docs-viewer-semantic-references docs viewer semantic references semantic references docs viewer 2026-05-18 2026 05 18"
-    },
-    {
-      "id": "design",
-      "kind": "doc",
-      "title": "Design",
-      "href": "/docs/?scope=studio&doc=design",
-      "last_updated": "2026-05-15",
-      "parent_id": "ui",
-      "parent_title": "UI",
-      "display_meta": "2026-05-15 • UI",
-      "search_terms": [
-        "design",
-        "ui",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "design ui 2026-05-15 2026 05 15"
     },
     {
       "id": "search-studio-v1-index-shape",
@@ -4890,25 +4823,6 @@
         "15"
       ],
       "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-13 18:15 2026 05 13 18 15"
-    },
-    {
-      "id": "ui-audits",
-      "kind": "doc",
-      "title": "UI Audits",
-      "href": "/docs/?scope=studio&doc=ui-audits",
-      "last_updated": "2026-05-15",
-      "display_meta": "2026-05-15",
-      "search_terms": [
-        "ui-audits",
-        "ui",
-        "audits",
-        "ui audits",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "ui-audits ui audits ui audits 2026-05-15 2026 05 15"
     },
     {
       "id": "import-export",
@@ -7268,6 +7182,98 @@
         "19"
       ],
       "search_text": "site-change-log site change log site change log archive 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "studio-ui-framework",
+      "kind": "doc",
+      "title": "Studio UI Framework",
+      "href": "/docs/?scope=studio&doc=studio-ui-framework",
+      "last_updated": "2026-05-19",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-19 • Archive",
+      "search_terms": [
+        "studio-ui-framework",
+        "studio",
+        "ui",
+        "framework",
+        "studio ui framework",
+        "archive",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-ui-framework studio ui framework studio ui framework archive 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "design",
+      "kind": "doc",
+      "title": "Design",
+      "href": "/docs/?scope=studio&doc=design",
+      "last_updated": "2026-05-15",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-15 • Archive",
+      "search_terms": [
+        "design",
+        "archive",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "design archive 2026-05-15 2026 05 15"
+    },
+    {
+      "id": "studio-ui-framework-review-coverage",
+      "kind": "doc",
+      "title": "Studio UI Framework Review And Coverage",
+      "href": "/docs/?scope=studio&doc=studio-ui-framework-review-coverage",
+      "last_updated": "2026-05-19",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-19 • Archive",
+      "search_terms": [
+        "studio-ui-framework-review-coverage",
+        "studio",
+        "ui",
+        "framework",
+        "review",
+        "coverage",
+        "studio ui framework review and coverage",
+        "and",
+        "archive",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-ui-framework-review-coverage studio ui framework review coverage studio ui framework review and coverage and archive 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "css-refactor",
+      "kind": "doc",
+      "title": "CSS Refactor",
+      "href": "/docs/?scope=studio&doc=css-refactor",
+      "last_updated": "2026-05-06 20:00",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-06 20:00 • Archive",
+      "search_terms": [
+        "css-refactor",
+        "css",
+        "refactor",
+        "css refactor",
+        "archive",
+        "2026-05-06 20:00",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "00"
+      ],
+      "search_text": "css-refactor css refactor css refactor archive 2026-05-06 20:00 2026 05 06 20 00"
     }
   ]
 }

@@ -3,8 +3,9 @@ doc_id: ui-audits
 title: UI Audits
 added_date: 2026-04-21
 last_updated: 2026-05-15
-parent_id: ""
-sort_order: 13000
+parent_id: ui
+sort_order: 3000
+hidden: false
 ---
 # UI Audits
 

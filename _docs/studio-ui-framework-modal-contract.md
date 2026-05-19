@@ -3,8 +3,8 @@ doc_id: studio-ui-framework-modal-contract
 title: Studio UI Framework Modal Contract
 added_date: 2026-05-19
 last_updated: 2026-05-19
-parent_id: studio-ui-framework
-sort_order: 3200
+parent_id: ui-catalogue
+sort_order: 5500
 ---
 # Studio UI Framework Modal Contract
 

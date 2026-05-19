@@ -83,7 +83,7 @@ Implemented now:
 - `ui_status` is descriptive UI metadata and does not change viewer visibility
 - `draft` is a configured `ui_status` option rather than a special modal-only status
 - `hidden` is edited independently through a metadata checkbox
-- the metadata parent control is a Docs Viewer-owned searchable popup, not a native `datalist`; `Root` resolves to blank `parent_id`, parent choices display title-only labels, and selected suggestions resolve back to their source `doc_id`
+- the metadata parent control is a Docs Viewer-owned searchable popup, not a native `datalist`; `Root` resolves to blank `parent_id`, parent choices display title-only labels, exact `doc_id` and title matches rank ahead of broad substring matches, and selected suggestions resolve back to their source `doc_id`
 - configured `ui_status` values are available from a compact tag-menu button beside the bookmark control
 - the tag menu is hidden outside available manage mode
 - in available manage mode, status menu choices write immediately through the metadata endpoint without changing `hidden`, and reload the docs payload

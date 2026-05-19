@@ -3,8 +3,8 @@ doc_id: design
 title: Design
 added_date: 2026-04-21
 last_updated: 2026-05-15
-parent_id: ui
-sort_order: 9000
+parent_id: archive
+sort_order: 83000
 ---
 # Design
 

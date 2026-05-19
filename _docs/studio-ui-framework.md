@@ -3,8 +3,8 @@ doc_id: studio-ui-framework
 title: Studio UI Framework
 added_date: 2026-04-21
 last_updated: 2026-05-19
-parent_id: ui
-sort_order: 3000
+parent_id: archive
+sort_order: 82000
 ---
 # Studio UI Framework
 

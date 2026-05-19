@@ -352,6 +352,19 @@ export function createDocsViewerManagementModalController(options = {}) {
     return metadataParentOptionTitle(option);
   }
 
+  function metadataParentMatchRank(option, query) {
+    var display = metadataParentOptionDisplay(option).toLowerCase();
+    var title = metadataParentOptionTitle(option).toLowerCase();
+    var value = String(option && option.value || "").toLowerCase();
+    if (value === query) return 0;
+    if (title === query || display === query) return 1;
+    if (value.startsWith(query)) return 2;
+    if (title.startsWith(query) || display.startsWith(query)) return 3;
+    if (value.includes(query)) return 4;
+    if (title.includes(query) || display.includes(query)) return 5;
+    return null;
+  }
+
   function hideMetadataParentPopup() {
     metadataParentOptionRecords = [];
     metadataParentActiveIndex = -1;
@@ -384,12 +397,20 @@ export function createDocsViewerManagementModalController(options = {}) {
   function metadataParentMatches(doc, query) {
     var normalizedQuery = String(query || "").trim().toLowerCase();
     if (!normalizedQuery) return [];
-    return metadataParentOptions(doc).filter(function (option) {
-      var display = metadataParentOptionDisplay(option).toLowerCase();
-      var title = metadataParentOptionTitle(option).toLowerCase();
-      var value = String(option && option.value || "").toLowerCase();
-      return display.includes(normalizedQuery) || title.includes(normalizedQuery) || value.includes(normalizedQuery);
-    }).slice(0, 14);
+    return metadataParentOptions(doc).map(function (option, index) {
+      return {
+        index: index,
+        option: option,
+        rank: metadataParentMatchRank(option, normalizedQuery)
+      };
+    }).filter(function (match) {
+      return match.rank !== null;
+    }).sort(function (left, right) {
+      if (left.rank !== right.rank) return left.rank - right.rank;
+      return left.index - right.index;
+    }).slice(0, 14).map(function (match) {
+      return match.option;
+    });
   }
 
   function renderMetadataParentPopup(doc) {

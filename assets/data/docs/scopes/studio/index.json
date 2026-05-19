@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T20:24:28Z",
+  "generated_at": "2026-05-19T21:09:57Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -40,22 +40,6 @@
       "viewer_url": "/docs/?scope=studio&doc=data-models-analysis",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-analysis.json",
       "content_text_length": 3017
-    },
-    {
-      "scope": "studio",
-      "doc_id": "ui-primitive-button",
-      "title": "Button Primitive",
-      "added_date": "2026-05-05",
-      "last_updated": "2026-05-15",
-      "parent_id": "ui-catalogue",
-      "sort_order": 1000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "ui-primitive-button.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-button.json",
-      "content_text_length": 2037
     },
     {
       "scope": "studio",
@@ -125,22 +109,6 @@
       "ui_status": "report",
       "viewer_report": "change_history",
       "viewer_report_access": "manage"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "scripts-css-token-audit",
-      "title": "CSS Token Audit",
-      "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 22:35",
-      "parent_id": "ui-audits",
-      "sort_order": 1000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "scripts-css-token-audit.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-css-token-audit",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-css-token-audit.json",
-      "content_text_length": 760
     },
     {
       "scope": "studio",
@@ -486,22 +454,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "ui-framework",
-      "title": "UI Framework",
-      "added_date": "2026-04-24",
-      "last_updated": "2026-05-11 14:10",
-      "parent_id": "ui",
-      "sort_order": 1000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "ui-framework.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-framework",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-framework.json",
-      "content_text_length": 11325
-    },
-    {
-      "scope": "studio",
       "doc_id": "data-models-catalogue-source",
       "title": "Catalogue Source Model",
       "added_date": "2026-05-19",
@@ -563,6 +515,54 @@
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/development-workflow.json",
       "content_text_length": 7470
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-ui-framework-primitives",
+      "title": "Studio UI Framework Primitives",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "ui-catalogue",
+      "sort_order": 1500,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-ui-framework-primitives.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-primitives",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-primitives.json",
+      "content_text_length": 9980
+    },
+    {
+      "scope": "studio",
+      "doc_id": "css-primitives",
+      "title": "CSS Primitives",
+      "added_date": "2026-03-31",
+      "last_updated": "2026-05-06 20:00",
+      "parent_id": "ui-catalogue",
+      "sort_order": 1625,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "css-primitives.md",
+      "viewer_url": "/docs/?scope=studio&doc=css-primitives",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/css-primitives.json",
+      "content_text_length": 5206
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-primitive-button",
+      "title": "Button Primitive",
+      "added_date": "2026-05-05",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui-catalogue",
+      "sort_order": 1750,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "ui-primitive-button.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-button.json",
+      "content_text_length": 2037
     },
     {
       "scope": "studio",
@@ -864,22 +864,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-ui-start",
-      "title": "Studio UI Start",
-      "added_date": "2026-04-21",
-      "last_updated": "2026-05-15",
-      "parent_id": "ui",
-      "sort_order": 2000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-ui-start.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-ui-start",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-start.json",
-      "content_text_length": 4440
-    },
-    {
-      "scope": "studio",
       "doc_id": "tag-groups",
       "title": "Tag Groups",
       "added_date": "2026-03-31",
@@ -893,6 +877,22 @@
       "viewer_url": "/docs/?scope=studio&doc=tag-groups",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-groups.json",
       "content_text_length": 2579
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-ui-start",
+      "title": "UI Start",
+      "added_date": "2026-04-21",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui",
+      "sort_order": 2000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-ui-start.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-ui-start",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-start.json",
+      "content_text_length": 4306
     },
     {
       "scope": "studio",
@@ -1021,6 +1021,22 @@
       "viewer_url": "/docs/?scope=studio&doc=local-setup-github-codex",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-setup-github-codex.json",
       "content_text_length": 1906
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-framework",
+      "title": "UI Framework",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-05-11 14:10",
+      "parent_id": "ui",
+      "sort_order": 2500,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "ui-framework.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-framework",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-framework.json",
+      "content_text_length": 11325
     },
     {
       "scope": "studio",
@@ -1266,22 +1282,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-ui-framework",
-      "title": "Studio UI Framework",
-      "added_date": "2026-04-21",
-      "last_updated": "2026-05-19",
-      "parent_id": "ui",
-      "sort_order": 3000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-ui-framework.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework.json",
-      "content_text_length": 816
-    },
-    {
-      "scope": "studio",
       "doc_id": "tag-editor",
       "title": "Tag Editor",
       "added_date": "2026-03-31",
@@ -1331,6 +1331,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "ui-audits",
+      "title": "UI Audits",
+      "added_date": "2026-04-21",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui",
+      "sort_order": 3000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "ui-audits.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-audits",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audits.json",
+      "content_text_length": 3448
+    },
+    {
+      "scope": "studio",
       "doc_id": "docs-viewer-portable-files",
       "title": "Docs Viewer Portable File Manifest",
       "added_date": "2026-05-19",
@@ -1344,22 +1360,6 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-files.json",
       "content_text_length": 7110
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio-ui-framework-primitives",
-      "title": "Studio UI Framework Primitives",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio-ui-framework",
-      "sort_order": 3100,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-ui-framework-primitives.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-primitives",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-primitives.json",
-      "content_text_length": 9980
     },
     {
       "scope": "studio",
@@ -1379,22 +1379,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-ui-framework-modal-contract",
-      "title": "Studio UI Framework Modal Contract",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio-ui-framework",
-      "sort_order": 3200,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-ui-framework-modal-contract.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-modal-contract",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-modal-contract.json",
-      "content_text_length": 2820
-    },
-    {
-      "scope": "studio",
       "doc_id": "docs-viewer-portable-scope-setup",
       "title": "Docs Viewer Portable Scope Setup",
       "added_date": "2026-05-19",
@@ -1408,38 +1392,6 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-scope-setup.json",
       "content_text_length": 7256
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio-ui-framework-modal-implementation",
-      "title": "Studio UI Framework Modal Implementation",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio-ui-framework",
-      "sort_order": 3300,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-ui-framework-modal-implementation.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-modal-implementation",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-modal-implementation.json",
-      "content_text_length": 4139
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio-ui-framework-review-coverage",
-      "title": "Studio UI Framework Review And Coverage",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio-ui-framework",
-      "sort_order": 3400,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-ui-framework-review-coverage.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-review-coverage",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-review-coverage.json",
-      "content_text_length": 1739
     },
     {
       "scope": "studio",
@@ -1977,6 +1929,38 @@
     },
     {
       "scope": "studio",
+      "doc_id": "studio-ui-framework-modal-contract",
+      "title": "Studio UI Framework Modal Contract",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "ui-catalogue",
+      "sort_order": 5500,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-ui-framework-modal-contract.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-modal-contract",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-modal-contract.json",
+      "content_text_length": 2820
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-ui-framework-modal-implementation",
+      "title": "Studio UI Framework Modal Implementation",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "ui-catalogue",
+      "sort_order": 5750,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-ui-framework-modal-implementation.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-modal-implementation",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-modal-implementation.json",
+      "content_text_length": 4139
+    },
+    {
+      "scope": "studio",
       "doc_id": "analytics",
       "title": "Analytics",
       "added_date": "2026-05-06 18:19",
@@ -2022,22 +2006,6 @@
       "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-moment-editor.json",
       "content_text_length": 7648
-    },
-    {
-      "scope": "studio",
-      "doc_id": "css-primitives",
-      "title": "CSS Primitives",
-      "added_date": "2026-03-31",
-      "last_updated": "2026-05-06 20:00",
-      "parent_id": "ui",
-      "sort_order": 6000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "css-primitives.md",
-      "viewer_url": "/docs/?scope=studio&doc=css-primitives",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/css-primitives.json",
-      "content_text_length": 5206
     },
     {
       "scope": "studio",
@@ -2400,19 +2368,19 @@
     },
     {
       "scope": "studio",
-      "doc_id": "css-refactor",
-      "title": "CSS Refactor",
-      "added_date": "2026-04-19",
-      "last_updated": "2026-05-06 20:00",
+      "doc_id": "scripts-css-token-audit",
+      "title": "CSS Token Audit",
+      "added_date": "2026-03-31",
+      "last_updated": "2026-05-09 22:35",
       "parent_id": "ui",
       "sort_order": 8000,
       "published": true,
       "hidden": false,
       "viewable": true,
-      "source_path": "css refactor.md",
-      "viewer_url": "/docs/?scope=studio&doc=css-refactor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/css-refactor.json",
-      "content_text_length": 4917
+      "source_path": "scripts-css-token-audit.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-css-token-audit",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-css-token-audit.json",
+      "content_text_length": 760
     },
     {
       "scope": "studio",
@@ -2643,22 +2611,6 @@
       "ui_status": "report",
       "viewer_report": "semantic_references",
       "viewer_report_access": "manage"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "design",
-      "title": "Design",
-      "added_date": "2026-04-21",
-      "last_updated": "2026-05-15",
-      "parent_id": "ui",
-      "sort_order": 9000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "design.md",
-      "viewer_url": "/docs/?scope=studio&doc=design",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/design.json",
-      "content_text_length": 1534
     },
     {
       "scope": "studio",
@@ -2967,7 +2919,7 @@
       "source_path": "ui.md",
       "viewer_url": "/docs/?scope=studio&doc=ui",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui.json",
-      "content_text_length": 2139
+      "content_text_length": 224
     },
     {
       "scope": "studio",
@@ -3144,22 +3096,6 @@
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-js",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-js.json",
       "content_text_length": 2611
-    },
-    {
-      "scope": "studio",
-      "doc_id": "ui-audits",
-      "title": "UI Audits",
-      "added_date": "2026-04-21",
-      "last_updated": "2026-05-15",
-      "parent_id": "",
-      "sort_order": 13000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "ui-audits.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-audits",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audits.json",
-      "content_text_length": 3448
     },
     {
       "scope": "studio",
@@ -4229,7 +4165,7 @@
       "source_path": "docs-viewer-management-current.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management-current",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management-current.json",
-      "content_text_length": 10458
+      "content_text_length": 10528
     },
     {
       "scope": "studio",
@@ -4697,6 +4633,70 @@
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
       "content_text_length": 1195
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-ui-framework",
+      "title": "Studio UI Framework",
+      "added_date": "2026-04-21",
+      "last_updated": "2026-05-19",
+      "parent_id": "archive",
+      "sort_order": 82000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-ui-framework.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework.json",
+      "content_text_length": 816
+    },
+    {
+      "scope": "studio",
+      "doc_id": "design",
+      "title": "Design",
+      "added_date": "2026-04-21",
+      "last_updated": "2026-05-15",
+      "parent_id": "archive",
+      "sort_order": 83000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "design.md",
+      "viewer_url": "/docs/?scope=studio&doc=design",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/design.json",
+      "content_text_length": 1534
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-ui-framework-review-coverage",
+      "title": "Studio UI Framework Review And Coverage",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "archive",
+      "sort_order": 84000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-ui-framework-review-coverage.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-review-coverage",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-review-coverage.json",
+      "content_text_length": 1739
+    },
+    {
+      "scope": "studio",
+      "doc_id": "css-refactor",
+      "title": "CSS Refactor",
+      "added_date": "2026-04-19",
+      "last_updated": "2026-05-06 20:00",
+      "parent_id": "archive",
+      "sort_order": 85000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "css refactor.md",
+      "viewer_url": "/docs/?scope=studio&doc=css-refactor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/css-refactor.json",
+      "content_text_length": 4917
     }
   ]
 }

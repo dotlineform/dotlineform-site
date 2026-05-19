@@ -1,22 +1,32 @@
 ---
 doc_id: studio-ui-start
-title: Studio UI Start
+title: UI Start
 added_date: 2026-04-21
 last_updated: 2026-05-15
 parent_id: ui
 sort_order: 2000
 ---
-# Studio UI Start
+# UI Start
 
-Use this as the first doc for Studio UI work.
+Use this as the first doc for UI work.
 
-This is a short implementation preflight, not the full reference.
+## Direction
 
-Use the longer docs only after this checklist has told you which one you actually need.
+UI guidance should be organized around the design problem and affected surfaces, not around an artificial split between Studio and the public site Use one framework vocabulary for:
 
-## Start Here
+- public pages
+- docs viewer pages
+- Library pages
+- Studio pages
+- local-service-backed command pages
 
-For any Studio UI task:
+Some primitives and patterns will only appear on Studio routes today.
+That does not make them Studio-only design rules.
+It means the current affected surface is Studio.
+
+## Design Steps
+
+For any UI task:
 
 1. Identify the UI type before editing.
 2. Check whether the page should use an existing shared primitive or composition.
@@ -42,7 +52,7 @@ If the answer is unclear, stop and classify it first. Several recent inconsisten
 
 ## Shared Primitive Check
 
-Before adding or changing Studio UI:
+Before adding or changing UI:
 
 - check the isolated demo pages under `/studio/ui-catalogue/demos/`
 - map the demo structure into the shared `tagStudio*` layer or an owning route namespace before inventing unrelated markup or CSS
@@ -119,14 +129,3 @@ Before finishing Studio UI work:
 - verify desktop and mobile behavior
 - run `./scripts/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
 - run the sanitization scan on changed files
-
-## Then Go Deeper
-
-Use the detailed docs only as needed:
-
-- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance) for page-level UI audits, coverage gaps, and required conformance reporting
-- [UI Audits](/docs/?scope=studio&doc=ui-audits) for saved page-level conformance review outputs
-- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework) for Studio shared contracts and primitives
-- [UI Framework](/docs/?scope=studio&doc=ui-framework) for site-wide interaction defaults
-- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) for primitive and pattern demo pages
-- [Studio](/docs/?scope=studio&doc=studio) for Studio feature/runtime docs

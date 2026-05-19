@@ -3,8 +3,8 @@ doc_id: studio-ui-framework-review-coverage
 title: Studio UI Framework Review And Coverage
 added_date: 2026-05-19
 last_updated: 2026-05-19
-parent_id: studio-ui-framework
-sort_order: 3400
+parent_id: archive
+sort_order: 84000
 ---
 # Studio UI Framework Review And Coverage
 

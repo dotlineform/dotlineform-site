@@ -3,8 +3,8 @@ doc_id: css-refactor
 title: CSS Refactor
 added_date: 2026-04-19
 last_updated: "2026-05-06 20:00"
-parent_id: ui
-sort_order: 8000
+parent_id: archive
+sort_order: 85000
 ---
 # CSS Refactor
 

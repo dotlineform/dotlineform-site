@@ -3,8 +3,8 @@ doc_id: css-primitives
 title: CSS Primitives
 added_date: 2026-03-31
 last_updated: "2026-05-06 20:00"
-parent_id: ui
-sort_order: 6000
+parent_id: ui-catalogue
+sort_order: 1625
 ---
 # CSS Primitives
 
