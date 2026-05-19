@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T12:19:48Z",
+  "generated_at": "2026-05-19T12:33:59Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -168,7 +168,7 @@
       "viewer_url": "/docs/?scope=studio&doc=docs-build-management-import-export-improvements",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-build-management-import-export-improvements.json",
       "content_text_length": 11733,
-      "ui_status": "in-progress"
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -2085,7 +2085,7 @@
       "source_path": "studio-python-ruby-script-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-python-ruby-script-inventory.json",
-      "content_text_length": 16816,
+      "content_text_length": 17285,
       "ui_status": "urgent"
     },
     {

@@ -119,22 +119,22 @@ Docs have the clearest cross-language ownership risk.
 Ruby owns the generated Docs Viewer payload builder and search adapters, while Python owns management writes, imports, exports, generated reads, live rebuild orchestration, and source configuration writes.
 That split is acceptable, but it raises consistency risk when a change must update source rules, generated payload shape, search behavior, management responses, and docs-watch behavior together.
 
-The main performance risk is coarse rebuild behavior.
+The remaining performance risk is fallback visibility, not a missing targeted-build contract.
 The builder now accepts targeted same-scope docs payload ids, and docs-management, source import, Library returned-package apply, and watcher paths use those ids when dependency rules are explicit.
-Explicit rebuilds, source-config settings changes, missing generated output, ambiguous watcher changes, and resolver-data changes outside docs source still fall back to full same-scope docs payload rebuilds.
-As Library and Studio docs grow, the remaining performance work is to use the new diagnostics to identify which fallback paths are actually expensive.
+Explicit rebuilds, source-config settings changes, missing generated output, ambiguous watcher changes, and resolver-data changes outside docs source intentionally fall back to full same-scope docs payload rebuilds.
+As Library and Studio docs grow, the diagnostics added to rebuild responses and watcher logs are the way to tell whether those intentional fallbacks are actually expensive.
 
-Recommended improvements:
+Current guardrails and watch points:
 
-- Keep source config, generated reads, mutations, import/export adapters, and rebuild orchestration in their current Python owners rather than adding logic back into `docs_management_server.py`.
-- Keep the `build_docs.rb --only-doc-ids` contract narrow: same-scope only, explicit caller-owned affected ids, and full fallback when generated output or dependency data is incomplete.
-- Use rebuild diagnostics before adding deeper optimization: source files scanned, docs emitted, item payloads changed, references changed, search records touched, and elapsed time are now visible in rebuild responses or logs.
-- Add explicit affected-id rules before targeting resolver-data changes outside docs source, such as catalogue title or route changes.
-- Keep Ruby builder and Python management response contracts documented together when generated Docs Viewer schema changes.
+- source config, generated reads, mutations, import/export adapters, and rebuild orchestration already have current Python owners; avoid moving that behavior back into `docs_management_server.py`
+- the `build_docs.rb --only-doc-ids` contract is intentionally same-scope only, caller-owned for affected ids, and backed by full fallback when generated output or dependency data is incomplete
+- rebuild diagnostics already expose source files scanned, docs emitted, item payloads changed, references changed, search records touched, and elapsed time in rebuild responses or logs
+- resolver-data changes outside docs source, such as catalogue title or route changes, remain full-scope until a future change defines explicit affected-id rules for them
+- Ruby builder and Python management response contracts should stay documented together when generated Docs Viewer schema changes
 
 Immediate work signal: medium.
 
-Implementation plan: [Docs Build Management Import Export Improvements](/docs/?scope=studio&doc=docs-build-management-import-export-improvements).
+Completed implementation record: [Docs Build Management Import Export Improvements](/docs/?scope=studio&doc=docs-build-management-import-export-improvements).
 
 ### Media derivation and remote publishing
 
@@ -238,14 +238,14 @@ Immediate work signal: medium.
 
 ## Current Priority
 
-1. Reduce conservative full rebuilds in catalogue flows and remaining docs fallback paths where existing field or doc-scope metadata can safely drive targeted work.
-2. Use the new docs timing/count diagnostics, and add equivalent catalogue/media diagnostics where needed, before making deeper performance changes.
-3. Keep large orchestration files from regrowing by requiring new domain behavior to land in existing owner modules.
-4. Standardize local service mechanics only where the behavior is identical and low risk.
-5. Group broad audit scripts before adding more unrelated checks.
+1. Add catalogue save/build diagnostics for the repeated local write paths: source writes, lookup refreshes, generated artifact groups, search updates, media work, elapsed time, and fallback reasons.
+2. Use those catalogue diagnostics to reduce conservative rebuilds where field-aware metadata can safely identify smaller generated artifact, lookup, search, or media scopes.
+3. Add media-derivation timing and count diagnostics, then evaluate bounded parallelism or batched freshness checks only for the slow paths the diagnostics identify.
+4. Treat docs rebuild work as monitoring mode for now: keep the current targeted payload/search contract stable, and revisit remaining full-scope fallbacks only when diagnostics show a repeated cost.
+5. Keep orchestration files from regrowing, standardize local service mechanics only where contracts are identical, and group broad audit scripts before adding more unrelated checks.
 
-The most useful near-term performance work is not another broad structural split.
-It is better visibility into what each save or rebuild actually did, followed by targeted reductions in generated artifact, search, and media work.
+The next implementation plan should start with catalogue diagnostics, not another broad structural split.
+The useful sequence is visibility first, then targeted reductions in generated artifact, search, and media work based on measured local-service behavior.
 
 ## Structure Guardrails
 
