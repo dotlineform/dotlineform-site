@@ -1,6 +1,7 @@
 /* assets/docs-viewer/css/docs-viewer-reports.css */
 
 .docsViewerReport{
+  --docs-viewer-report-control-height: 2rem;
   display: grid;
   gap: var(--docs-viewer-space-3);
   max-width: min(100%, 98ch);
@@ -49,6 +50,8 @@
 
 .docsViewerReport__filter:focus-visible,
 .docsViewerReport__select:focus-visible,
+.docsViewerReport__searchInput:focus-visible,
+.docsViewerReport__searchClear:focus-visible,
 .docsViewerReport__sortButton:focus-visible,
 .docsViewerReport__pagerButton:focus-visible,
 .docsViewerReport__cellLink:focus-visible{
@@ -69,6 +72,7 @@
 
 .docsViewerReport__select{
   min-width: 10rem;
+  height: var(--docs-viewer-report-control-height);
   border: 1px solid var(--docs-viewer-border);
   border-radius: 6px;
   color: var(--docs-viewer-text);
@@ -76,6 +80,56 @@
   font: inherit;
   line-height: var(--docs-viewer-line-snug);
   padding: 0.36rem 0.52rem;
+}
+
+.docsViewerReport__search{
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: min(100%, 12rem);
+}
+
+.docsViewerReport__searchInput{
+  width: 100%;
+  height: var(--docs-viewer-report-control-height);
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: 6px;
+  color: var(--docs-viewer-text);
+  background: var(--docs-viewer-panel);
+  font: inherit;
+  line-height: var(--docs-viewer-line-snug);
+  padding: 0 1.75rem 0 0.52rem;
+}
+
+.docsViewerReport__searchInput::placeholder{
+  color: var(--docs-viewer-muted);
+  opacity: 1;
+}
+
+.docsViewerReport__searchInput::-webkit-search-cancel-button{
+  appearance: none;
+}
+
+.docsViewerReport__searchClear{
+  position: absolute;
+  right: 0.28rem;
+  display: inline-grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border: 0;
+  border-radius: 999px;
+  color: var(--docs-viewer-muted);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+  padding: 0;
+}
+
+.docsViewerReport__searchClear:hover{
+  color: var(--docs-viewer-text);
+  background: var(--docs-viewer-panel-2);
 }
 
 .docsViewerReport__table{
@@ -311,6 +365,13 @@
   border-bottom: 1px solid var(--docs-viewer-border);
 }
 
+.docsViewerReport__empty{
+  margin: 0;
+  padding: 0.72rem 0;
+  color: var(--docs-viewer-muted);
+  border-bottom: 1px solid var(--docs-viewer-border);
+}
+
 .docsViewerReport__changeTitle{
   margin: 0;
   font-size: 1rem;
@@ -342,8 +403,8 @@
   display: inline-grid;
   place-items: center;
   appearance: none;
-  width: 2rem;
-  height: 2rem;
+  width: var(--docs-viewer-report-control-height);
+  height: var(--docs-viewer-report-control-height);
   border: 1px solid var(--docs-viewer-border);
   border-radius: 6px;
   color: var(--docs-viewer-text);
@@ -364,8 +425,10 @@
 }
 
 .docsViewerReport__pagerStatus{
+  min-width: 3.2rem;
   color: var(--docs-viewer-muted);
   line-height: var(--docs-viewer-line-snug);
+  text-align: center;
 }
 
 @media (max-width: 820px){

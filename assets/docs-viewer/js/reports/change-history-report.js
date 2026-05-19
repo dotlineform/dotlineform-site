@@ -45,12 +45,22 @@ function selectedPageFromRoute() {
   return Number.isFinite(page) && page > 0 ? page : 1;
 }
 
+function selectedQueryFromRoute() {
+  const params = new URLSearchParams(window.location.search);
+  return cleanString(params.get("report_query"));
+}
+
 function persistReportRoute(state) {
   const url = new URL(window.location.href);
   if (state.selectedDomain) {
     url.searchParams.set("report_domain", state.selectedDomain);
   } else {
     url.searchParams.delete("report_domain");
+  }
+  if (state.query) {
+    url.searchParams.set("report_query", state.query);
+  } else {
+    url.searchParams.delete("report_query");
   }
   if (state.currentPage > 1) {
     url.searchParams.set("report_page", String(state.currentPage));
@@ -84,6 +94,72 @@ function fetchChangeHistory(context) {
   });
 }
 
+function entrySearchText(entry) {
+  const weighted = entry && entry.search_text && typeof entry.search_text === "object" ? entry.search_text : {};
+  return [
+    weighted.title,
+    weighted.trace,
+    weighted.summary,
+    weighted.body,
+    entryTitle(entry),
+    entryDate(entry),
+    entrySummary(entry),
+    entryDomains(entry).join(" ")
+  ].map(cleanString).filter(Boolean).join(" ").toLowerCase();
+}
+
+function queryTokens(query) {
+  return cleanString(query).toLowerCase().split(/\s+/).filter(Boolean);
+}
+
+function matchesQuery(entry, query) {
+  const tokens = queryTokens(query);
+  if (!tokens.length) return true;
+  const haystack = entrySearchText(entry);
+  return tokens.every((token) => haystack.includes(token));
+}
+
+function renderSearchControl(state) {
+  const wrap = document.createElement("div");
+  wrap.className = "docsViewerReport__search";
+
+  const input = document.createElement("input");
+  input.type = "search";
+  input.className = "docsViewerReport__searchInput";
+  input.placeholder = "search...";
+  input.value = state.query;
+  input.setAttribute("aria-label", "Search change history");
+
+  const clear = document.createElement("button");
+  clear.type = "button";
+  clear.className = "docsViewerReport__searchClear";
+  clear.textContent = "x";
+  clear.title = "Clear search";
+  clear.setAttribute("aria-label", "Clear search");
+
+  input.addEventListener("input", () => {
+    state.query = cleanString(input.value);
+    state.currentPage = 1;
+    persistReportRoute(state);
+    renderEntries(state);
+  });
+
+  clear.addEventListener("click", () => {
+    state.query = "";
+    input.value = "";
+    input.focus();
+    state.currentPage = 1;
+    persistReportRoute(state);
+    renderEntries(state);
+  });
+
+  state.searchInputNode = input;
+  state.searchClearNode = clear;
+  wrap.appendChild(input);
+  wrap.appendChild(clear);
+  return wrap;
+}
+
 function renderToolbar(root, state) {
   const toolbar = document.createElement("div");
   toolbar.className = "docsViewerReport__toolbar";
@@ -110,12 +186,9 @@ function renderToolbar(root, state) {
   });
   select.value = state.selectedDomain;
 
-  const status = document.createElement("p");
-  status.className = "docsViewerReport__status";
-
   toolbar.appendChild(label);
   toolbar.appendChild(select);
-  toolbar.appendChild(status);
+  toolbar.appendChild(renderSearchControl(state));
   toolbar.appendChild(state.topPagerNode);
 
   select.addEventListener("change", () => {
@@ -125,7 +198,6 @@ function renderToolbar(root, state) {
     renderEntries(state);
   });
 
-  state.statusNode = status;
   root.appendChild(toolbar);
 }
 
@@ -154,9 +226,9 @@ function appendEntry(parent, entry) {
 }
 
 function filteredEntries(state) {
-  return state.selectedDomain
-    ? state.entries.filter((entry) => entryDomains(entry).includes(state.selectedDomain))
-    : state.entries;
+  return state.entries
+    .filter((entry) => matchesQuery(entry, state.query))
+    .filter((entry) => !state.selectedDomain || entryDomains(entry).includes(state.selectedDomain));
 }
 
 function appendPagerButton(parent, label, ariaLabel, disabled, onClick) {
@@ -186,7 +258,7 @@ function appendPagerControls(parent, state, pageCount) {
 
   const status = document.createElement("span");
   status.className = "docsViewerReport__pagerStatus";
-  status.textContent = `Page ${state.currentPage} of ${pageCount}`;
+  status.textContent = `${state.currentPage} of ${pageCount}`;
   parent.appendChild(status);
 
   appendPagerButton(parent, "▶︎", "Next page", nextDisabled, () => {
@@ -211,15 +283,17 @@ function renderEntries(state) {
   state.currentPage = Math.min(Math.max(1, state.currentPage), pageCount);
   const start = (state.currentPage - 1) * PAGE_SIZE;
   const pageEntries = visible.slice(start, start + PAGE_SIZE);
-  if (!visible.length) {
-    state.statusNode.textContent = "0 entries";
-  } else {
-    const first = start + 1;
-    const last = start + pageEntries.length;
-    const entryLabel = visible.length === 1 ? "entry" : "entries";
-    state.statusNode.textContent = `Showing ${first}-${last} of ${visible.length} ${entryLabel}`;
+  if (state.searchClearNode) {
+    state.searchClearNode.hidden = !state.query;
   }
-  pageEntries.forEach((entry) => appendEntry(state.entriesNode, entry));
+  if (pageEntries.length) {
+    pageEntries.forEach((entry) => appendEntry(state.entriesNode, entry));
+  } else {
+    const empty = document.createElement("li");
+    empty.className = "docsViewerReport__empty";
+    empty.textContent = "No matching entries.";
+    state.entriesNode.appendChild(empty);
+  }
   renderPager(state, pageCount);
 }
 
@@ -237,8 +311,10 @@ export function mountChangeHistoryReport(context) {
       entries,
       domains,
       selectedDomain: selectedDomainFromRoute(domains),
+      query: selectedQueryFromRoute(),
       currentPage: selectedPageFromRoute(),
-      statusNode: null,
+      searchInputNode: null,
+      searchClearNode: null,
       entriesNode: document.createElement("ul"),
       topPagerNode: document.createElement("nav"),
       bottomPagerNode: document.createElement("nav")

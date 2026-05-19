@@ -1,0 +1,29 @@
+{
+  "id": "change-2026-05-19-added-change-history-report-search",
+  "date": "2026-05-19",
+  "title": "Added Change History Report Search",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "studio-ui",
+    "workflow"
+  ],
+  "summary": "Added a report-local search input to the manage-only change-history report, replacing the toolbar count text and filtering the loaded docs-log search projection before domain filtering and pagination.",
+  "source": {
+    "file": "_docs/change-history.md"
+  },
+  "subjects": [
+    "change-history",
+    "report-search"
+  ],
+  "related_docs": [
+    "change-history"
+  ],
+  "related_files": [
+    "assets/docs-viewer/js/reports/change-history-report.js",
+    "assets/docs-viewer/css/docs-viewer-reports.css",
+    "_docs/change-history.md"
+  ],
+  "effect": "Change-history lookup now supports lightweight text filtering without coupling the report to the main search runtime, while the toolbar controls stay compact and aligned."
+}
