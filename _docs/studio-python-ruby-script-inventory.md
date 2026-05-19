@@ -14,6 +14,26 @@ This document records the current maintenance, structure/consistency, and perfor
 
 It complements [Studio JavaScript Payload Inventory](/docs/?scope=studio&doc=studio-javascript-payload-inventory), but uses script-family ownership rather than browser payload size as the primary review unit.
 
+## Current Priority
+
+1. Add catalogue save/build diagnostics for the repeated local write paths: source writes, lookup refreshes, generated artifact groups, search updates, media work, elapsed time, and fallback reasons.
+2. Use those catalogue diagnostics to reduce conservative rebuilds where field-aware metadata can safely identify smaller generated artifact, lookup, search, or media scopes.
+3. Add media-derivation timing and count diagnostics, then evaluate bounded parallelism or batched freshness checks only for the slow paths the diagnostics identify.
+4. Treat docs rebuild work as monitoring mode for now: keep the current targeted payload/search contract stable, and revisit remaining full-scope fallbacks only when diagnostics show a repeated cost.
+5. Keep orchestration files from regrowing, standardize local service mechanics only where contracts are identical, and group broad audit scripts before adding more unrelated checks.
+
+The next implementation plan should start with catalogue diagnostics, not another broad structural split.
+The useful sequence is visibility first, then targeted reductions in generated artifact, search, and media work based on measured local-service behavior.
+
+## Structure Guardrails
+
+- New catalogue generated payload behavior belongs in `scripts/catalogue/catalogue_generation_*`, `catalogue_lookup*`, or source-model modules, not directly in write-server handlers.
+- New docs source mutation behavior belongs in `docs_management_mutations.py`, source config/settings modules, or import-source services, not directly in the HTTP server.
+- New tag assignment, registry, alias, promotion, or Data Sharing behavior belongs in the analytics domain modules, not in `tag_write_server.py` handler bodies.
+- New local-service behavior should preserve explicit write allowlists, dry-run semantics, backup paths, and compact logging.
+- New rebuild performance work should first expose counts and fallback reasons, then optimize the path with the highest measured cost.
+- New command examples in docs should use project-local script paths from `dotlineform-site/`.
+
 ## Classification
 
 Each area is classified as high, medium, or low for:
@@ -235,26 +255,6 @@ Immediate work signal: medium.
 | `scripts/catalogue/catalogue_build_media.py` | 1,184 | medium | medium | high | Local media planning/execution is a concrete performance improvement candidate. |
 | `scripts/docs/docs_import.py` | 1,182 | medium | medium | medium | Returned-package parsing and preview writing should stay separated from source-apply services. |
 | `scripts/analytics/tag_write_server.py` | 1,067 | medium | medium | low | Still large but much clearer after tag mutation/service extractions. Avoid broad shared-service rewrites. |
-
-## Current Priority
-
-1. Add catalogue save/build diagnostics for the repeated local write paths: source writes, lookup refreshes, generated artifact groups, search updates, media work, elapsed time, and fallback reasons.
-2. Use those catalogue diagnostics to reduce conservative rebuilds where field-aware metadata can safely identify smaller generated artifact, lookup, search, or media scopes.
-3. Add media-derivation timing and count diagnostics, then evaluate bounded parallelism or batched freshness checks only for the slow paths the diagnostics identify.
-4. Treat docs rebuild work as monitoring mode for now: keep the current targeted payload/search contract stable, and revisit remaining full-scope fallbacks only when diagnostics show a repeated cost.
-5. Keep orchestration files from regrowing, standardize local service mechanics only where contracts are identical, and group broad audit scripts before adding more unrelated checks.
-
-The next implementation plan should start with catalogue diagnostics, not another broad structural split.
-The useful sequence is visibility first, then targeted reductions in generated artifact, search, and media work based on measured local-service behavior.
-
-## Structure Guardrails
-
-- New catalogue generated payload behavior belongs in `scripts/catalogue/catalogue_generation_*`, `catalogue_lookup*`, or source-model modules, not directly in write-server handlers.
-- New docs source mutation behavior belongs in `docs_management_mutations.py`, source config/settings modules, or import-source services, not directly in the HTTP server.
-- New tag assignment, registry, alias, promotion, or Data Sharing behavior belongs in the analytics domain modules, not in `tag_write_server.py` handler bodies.
-- New local-service behavior should preserve explicit write allowlists, dry-run semantics, backup paths, and compact logging.
-- New rebuild performance work should first expose counts and fallback reasons, then optimize the path with the highest measured cost.
-- New command examples in docs should use project-local script paths from `dotlineform-site/`.
 
 ## How To Rerun
 
