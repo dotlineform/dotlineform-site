@@ -43,6 +43,71 @@ Every entry should answer:
 
 The minimum useful retrieval fields are `title`, `date`, `domains`, `subjects`, `related_docs`, `related_files`, `summary`, `effect`, and `source`.
 
+## Authoring Workflow
+
+Structured log entries are the durable implementation history.
+They do not replace change requests, implementation docs, or generated activity logs.
+
+Create log entries for meaningful completed work, especially when the change affects:
+
+- user workflow
+- Studio or public UI behavior
+- build flow, validation, or generated data
+- search behavior, schema, ranking, or index shape
+- local services, scripts, or write paths
+- data models, config contracts, or source ownership
+- development workflow or repo conventions
+
+Small typo fixes, narrow copy edits, and purely mechanical cleanup usually do not need log entries unless they explain an important decision.
+
+### Completed Change Request Path
+
+When work was driven by a change request:
+
+1. Complete the implementation and targeted verification.
+2. Update the change request task/status sections.
+3. Create one or more JSONL log records for the completed implementation work.
+4. Set `change_request_doc_id` to the request doc id on each related log record.
+5. Include related docs and files that would help Codex trace the decision later.
+6. Add references from the completed request back to the created log entry ids when the request has a closure/cleanup task for that.
+7. Move or mark the request according to the current request archive practice.
+8. Rebuild generated log indexes/search payloads after the entries are written.
+
+One change request may produce more than one log entry when the implementation landed as distinct meaningful changes.
+Do not force every task-list item into its own entry.
+
+### Direct Change Path
+
+When meaningful work was not backed by a change request:
+
+1. Use the current implementation context to identify the change date, title, domains, subjects, related docs, and related files.
+2. Create a JSONL log record without `change_request_doc_id`.
+3. Keep `summary` factual and short.
+4. Use `effect` to explain why the change matters.
+5. Set `source.file` to the best available trace source, such as the current implementation summary, old changelog source, or follow-up workflow artifact.
+6. Rebuild generated log indexes/search payloads after the entry is written.
+
+Direct entries should still be structured enough for search and Codex retrieval.
+They do not need to read like standalone release notes.
+
+### Record Style
+
+Keep records compact:
+
+- use lower-case hyphenated domain ids such as `docs-viewer`, `search`, `catalogue`, `library`, `studio-ui`, `build`, `scripts`, `data-models`, or `workflow`
+- use `subjects` for more specific concepts, not folder structure
+- keep `summary` to one short paragraph
+- keep `effect` focused on behavior, maintenance impact, or decision context
+- prefer repo-relative paths in `related_files`
+- prefer Docs Viewer doc ids in `related_docs`
+- preserve old changelog prose in `body` only when it cannot be cleanly split into structured fields
+
+### Current Implementation State
+
+The source model and schema exist.
+Migration, helper tooling, generated indexes, and report UI are still part of the change-log entry model implementation.
+Until those are implemented, follow the active request rather than hand-maintaining large JSONL data files.
+
 ## Generated Outputs
 
 Files under `generated/` are rebuilt from JSONL source records.
@@ -61,4 +126,3 @@ Expected generated projections include:
 
 Human-readable browsing should come from generated reports or compact index views.
 Individual log entries are not normal Docs Viewer documents in v1 and should not be added to `_docs/`.
-

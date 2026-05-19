@@ -15,6 +15,7 @@ Status:
 - In progress
 - Step 1 completed: `_docs_logs/` source conventions and schema scaffold added
 - Step 2 completed: development workflow doc added under Site Docs and AGENTS.md now points to it
+- Step 3 completed: ongoing log authoring workflow documented in `_docs_logs/README.md`
 
 ## Summary
 
@@ -254,6 +255,10 @@ This document should cover the project workflow around:
 AGENTS.md should point to this workflow document so Codex sees the close-out and log-entry obligations as part of normal work, while task-specific details can be read only when relevant.
 
 ### Step 3. Document The Ongoing Log Authoring Workflow
+
+Status:
+
+- completed
 
 Document how new change-log records are created after the migration.
 

@@ -148,6 +148,8 @@ When that system is implemented:
 - include related docs and files so Codex can trace decisions later
 - let generated indexes and reports provide human browsing
 
+The source model and authoring workflow are documented in `_docs_logs/README.md`.
+
 Until the structured system is ready, continue following existing change-log guidance for meaningful UI, build flow, validation, or architecture changes.
 
 ## Documentation Review Candidates
@@ -160,4 +162,3 @@ These are not part of the current implementation task.
 - State routing and module-dependency guidance exists across route, runtime, and script docs but may need a shorter “where to look first” index.
 - Generated docs/search payload follow-through is documented, but a compact checklist may be useful after the change-log workflow is implemented.
 - The new `_docs_logs/` system still needs migration, generated indexes, report UI, and close-out helper support before it replaces the old logs.
-
