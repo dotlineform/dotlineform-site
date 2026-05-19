@@ -48,12 +48,12 @@ This makes the change log less useful as technical memory over time.
 - keep detailed change entries out of `_docs/` and out of the normal Studio Docs Viewer index
 - allow a change-history scope or search corpus to use weighting and filters that fit changelog lookup
 - preserve existing historical entries during migration
+- include existing Search change-log entries in the same structured history corpus
 - make the migration scriptable and repeatable enough to avoid manual section cutting
 
 ## Non-Goals
 
 - do not rewrite the meaning of existing historical entries during the first migration
-- do not merge the site change log with the Search change log unless that is promoted as a later decision
 - do not make every minor activity-log event a permanent change entry
 - do not require a runtime database for v1
 - do not remove the existing Studio docs scope as the place for stable operational documentation
@@ -106,7 +106,8 @@ Generated files:
 
 - `generated/*.json` are derived projections for search, reports, and compact indexes
 - `reports/*.json` are migration and validation diagnostics
-- generated files may be committed or regenerated depending on the final build policy, but they are not the source of truth
+- generated files are not the source of truth
+- staging and commits remain manual during development, as with current generated-output practice
 
 ## Record Format
 
@@ -220,11 +221,29 @@ Expected outputs:
 - JSONL filename rules, initially one file per month
 - required and optional record fields
 - generated year, month, domain, related-doc, related-file, and change-request index strategy
-- decision on whether generated outputs are committed or rebuilt on demand
-- decision on whether the human-readable view is a report page, compact doc page, or both
+- automatic generated-output rebuild behavior after log entries change
+- report-driven human-readable view under [Site Docs](/docs/?scope=studio&doc=site-docs), with iterative filters starting by scope/domain
 - search weighting rules for change-history records
 
-### Step 2. Document The Ongoing Authoring Workflow
+### Step 2. Document The Development Workflow
+
+Create `_docs/development-workflow.md` under [Site Docs](/docs/?scope=studio&doc=site-docs) so AGENTS.md can reference it before and during implementation work.
+Part of this work should review the current AGENTS.md content and move detailed procedural guidance into the workflow document where that guidance does not need to be read for every task.
+AGENTS.md should become more directional: it should tell Codex which workflow sections to consult for the current class of work rather than carrying every detailed rule inline.
+
+This document should cover the project workflow around:
+
+- when to create or update change requests
+- how to close out completed change requests
+- how to create structured change-log entries from current implementation context
+- how to create structured change-log entries from a completed change request
+- how direct changes without a change request should still be logged
+- what docs, generated payloads, and search artifacts need to be updated after work
+- technical development checks that frequently matter in this repo, including state routing, module dependencies, UI design, docs ownership, search policy, and generated-data follow-through
+
+AGENTS.md should point to this workflow document so Codex sees the close-out and log-entry obligations as part of normal work, while task-specific details can be read only when relevant.
+
+### Step 3. Document The Ongoing Log Authoring Workflow
 
 Document how new change-log records are created after the migration.
 
@@ -238,32 +257,35 @@ Expected workflow:
 - keep the change request doc manually managed as the planning and close-out artifact
 - when a request is completed, create one or more `_docs_logs/entries/*.jsonl` records for the actual implemented changes
 - include `change_request_doc_id` in each related log entry
-- add a compact reference list back to the completed change request, linking to created log entry ids or the generated report/search view
+- add a compact reference list back to the completed change request when its closure/cleanup task calls for it, linking to created log entry ids or the generated report/search view
 - move or mark the change request according to the existing request archive practice
 - for changes without a request, create a log entry directly with source metadata, related files, related docs, domains, and subjects
 
 This keeps change requests readable and manually curated while making the durable implementation history structured and searchable.
 
-### Step 3. Add A Helper Script For New Log Entries
+### Step 4. Add Codex-Oriented Helpers For New Log Entries
 
-Add a repo-local helper script that can create or preview new `_docs_logs/` entries.
+Add repo-local helper support that Codex can use to create or preview new `_docs_logs/` entries.
+This may be a script if useful, but the primary contract is a clear documented workflow and validation path rather than a manually-run operator command.
 
-The script should support:
+The helper support should support:
 
 - seeding a log entry from a change request doc id
-- creating a log entry from direct CLI fields when no change request exists
+- creating a log entry from current implementation context when no change request exists
 - deriving date, title, status, candidate domains, related docs, and related files
 - appending to the correct monthly JSONL file
 - validating the resulting record against `_docs_logs/schema.json`
-- optionally updating the completed change request with references to created log entry ids
+- updating the completed change request with references to created log entry ids when the request's closure/cleanup task requires it
+- triggering the generated index/search rebuild after entries are added or changed
 - dry-run output before writing
 
-The script should not decide whether a change request is complete on its own.
-Completion remains a manual docs-management decision.
+The helper should not decide whether a change request is complete on its own.
+Completion remains a manual docs-management decision driven by the request's task list and closure workflow.
 
-### Step 4. Script The Migration From Existing Logs
+### Step 5. Script The Migration From Existing Logs
 
-Use one-off Python scripts to parse the current change-log files, split each dated `## [YYYY-MM-DD] ...` section into an atomic entry, infer initial metadata, and write JSONL records under `_docs_logs/entries/`.
+Use one-off Python scripts to parse the current site and Search change-log files, split each dated `## [YYYY-MM-DD] ...` section into an atomic entry, infer initial metadata, and write JSONL records under `_docs_logs/entries/`.
+Search change logs should be included in the same implementation and represented with `domain: search` rather than maintained as a separate documentation system.
 
 The scripts should be dry-run first and report:
 
@@ -275,8 +297,9 @@ The scripts should be dry-run first and report:
 - duplicate or ambiguous titles
 
 The first migration can preserve existing prose exactly and only add conservative metadata.
+There should be no assumption of a large manual curation pass after migration.
 
-### Step 5. Generate Search And Index Projections
+### Step 6. Generate Search And Index Projections
 
 Build generated projections from the JSONL source records.
 
@@ -291,8 +314,9 @@ Required generated outputs:
 - migration review report for low-confidence metadata
 
 The search projection should weight title, date, domains, subjects, related docs, related files, change request doc id, summary, and effect ahead of boilerplate section labels.
+Generated `_docs_logs/generated/*.json` outputs should rebuild automatically when log entries are added or changed.
 
-### Step 6. Replace Long Archives With Compact Human Views
+### Step 7. Replace Long Archives With Compact Human Views
 
 After the generated entries are reviewed, replace the current long-form archive pages with compact summaries or generated index links.
 
@@ -302,6 +326,16 @@ The current [Site Change Log](/docs/?scope=studio&doc=site-change-log) should be
 - month archive indexes
 - domain indexes
 - migration notes
+
+The human-facing change-history report should live under [Site Docs](/docs/?scope=studio&doc=site-docs).
+Its v1 display should provide:
+
+- scope/domain filter
+- title
+- date
+- summary paragraph for each log entry
+
+Additional filter granularity can be designed iteratively after the basic report is useful.
 
 ## Migration Script Notes
 
@@ -320,15 +354,22 @@ A practical migration can be handled by small repo-local Python scripts:
 
 The scripts should not delete or rewrite the original log files until the generated entries have been reviewed.
 
-## Open Decisions
+## Decisions
 
-- whether generated `_docs_logs/generated/*.json` files are committed or rebuilt locally on demand
-- whether Search change-log entries should stay separate or later join the same change-history scope with `domain: search`
-- whether individual entries need a direct rendered detail view, or whether search result snippets plus generated indexes are enough
-- how much metadata should be manually curated after the first scripted pass
-- whether future change-log writes should be authored as atomic `_docs_logs/` records first, with summary/index pages generated from them
-- exact command shape for seeding entries from a completed change request
-- whether updating completed request docs with log-entry references should be automatic, prompted, or manual-only
+- generated `_docs_logs/generated/*.json` files should rebuild automatically when log entries are added or changed
+- staging and commits remain manual during development
+- Search change-log entries are included in the same implementation with `domain: search`
+- individual rendered entry detail views are not needed for v1
+- search result snippets, generated indexes, and a Docs Viewer report under [Site Docs](/docs/?scope=studio&doc=site-docs) are enough for v1
+- the v1 report should start with scope/domain filtering plus title, date, and summary for each entry
+- additional report filters should be designed iteratively
+- no substantial manual metadata curation is expected after the first scripted migration
+- future change-log records should be authored as atomic `_docs_logs/` records, with summary/index views produced from generated JSON
+- seeding and populating entries is expected to be Codex-driven from current context or a change request doc
+- helper scripts are useful only insofar as they support Codex-driven workflow, validation, and generated-output refresh
+- completed request docs should be updated with log-entry references when a defined closure/cleanup task calls for it
+- AGENTS.md should point to `_docs/development-workflow.md`, a [Site Docs](/docs/?scope=studio&doc=site-docs) child doc that includes this close-out behavior
+- detailed procedural guidance that does not need to be loaded for every task should move from AGENTS.md into the development workflow doc, leaving AGENTS.md as a concise directional entrypoint
 
 ## Benefits And Risks
 
