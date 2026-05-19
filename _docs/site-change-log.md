@@ -3,15 +3,13 @@ doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
 last_updated: 2026-05-19
-parent_id: ""
-sort_order: 28000
+parent_id: archive
+sort_order: 81000
 ---
+
 # Site Change Log
 
-The detailed site and Studio change history has moved to structured docs-log records under `_docs_logs/entries/`.
-
-This page remains as the compact public entry point for historical change-log links.
-Use the manage-only [Change History](/docs/?scope=studio&doc=change-history&mode=manage) report for date and domain browsing across migrated entries.
+This log has been deprecated. Use the manage-only [Change History](/docs/?scope=studio&doc=change-history&mode=manage) report for date and domain browsing across migrated entries. The change log process is described in [Development Workflow](/docs/?scope=studio&doc=development-workflow)
 
 ## Current Source Model
 

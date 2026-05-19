@@ -8,7 +8,7 @@ sort_order: 23000
 ---
 # Change Requests
 
-This section stores proposed and in-progress changes that need to stay visible before, during, or after implementation.
+This section stores proposed and in-progress feature or infrastructure changes. When implementation is complete or closed, the request is manually moved to [Archive](/docs/?scope=studio&doc=archive).
 
 Use it for:
 
@@ -25,48 +25,3 @@ Do not use it for:
 - changelog entries for already-completed work
 
 Those still belong in the owning reference docs and change logs.
-
-## Current Requests
-
-- [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)
-- [Change Log Entry Model Request](/docs/?scope=studio&doc=site-request-change-log-entry-model)
-- [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization)
-- [Docs Viewer New Scope Button Request](/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button)
-- [Docs Markdown Package Import Request](/docs/?scope=studio&doc=site-request-docs-markdown-package-import)
-- [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)
-- [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup)
-- [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)
-- [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
-- [Local Docs Data Server Reads Request](/docs/?scope=studio&doc=site-request-local-docs-data-server-reads)
-- [Docs Viewer Router Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-router-extraction)
-- [Docs Viewer Report Components Request](/docs/?scope=studio&doc=site-request-docs-viewer-report-components)
-- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)
-- [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)
-- [Moments Prose Source Model Request](/docs/?scope=studio&doc=site-request-moments-prose-source-model)
-- [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
-- [Catalogue Moment Editor Request](/docs/?scope=studio&doc=site-request-catalogue-moment-editor)
-- [Catalogue Delete Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup)
-- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)
-- [JSON Schema Adoption Request](/docs/?scope=studio&doc=site-request-json-schema-adoption)
-- [Work-Owned Files And Links Request](/docs/?scope=studio&doc=site-request-work-owned-files-links)
-- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)
-- [Catalogue Media And Detail Section Schema Request](/docs/?scope=studio&doc=site-request-catalogue-media-section-schema)
-- [Catalogue Source And Registry Drift Verification Request](/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification)
-- [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)
-- [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)
-- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)
-- [Catalogue Unified Editor Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup)
-- [Library Import Generated Parent Nodes Request](/docs/?scope=studio&doc=site-request-library-import-generated-parent-nodes)
-- [Modal Composition Pattern Request](/docs/?scope=studio&doc=ui-request-modal-composition-pattern)
-
-## Completed Requests
-
-- [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)
-- [Studio Data Sharing Module Implementation Request](/docs/?scope=studio&doc=site-request-studio-import-export-module)
-- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)
-- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
-- [R2 Media Upload Automation Request](/docs/?scope=studio&doc=site-request-r2-media-upload-automation)
-- [Docs HTML Inline Raster Media Request](/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media)
-- [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)
-- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)
-- [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)

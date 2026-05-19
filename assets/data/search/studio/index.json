@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-f3ffc7d3fbc4497c9084c31d5cfe6920",
-    "generated_at_utc": "2026-05-19T19:24:47Z",
+    "version": "blake2b-b8a65209fc70a7d6390ee121ecdbded4",
+    "generated_at_utc": "2026-05-19T19:49:29Z",
     "count": 267
   },
   "entries": [
@@ -651,32 +651,6 @@
       "search_text": "search-overview search overview search overview 2026-05-11 21:30 2026 05 11 21 30"
     },
     {
-      "id": "site-change-log-guidance",
-      "kind": "doc",
-      "title": "Site Change Log Guidance",
-      "href": "/docs/?scope=studio&doc=site-change-log-guidance",
-      "last_updated": "2026-05-06 20:58",
-      "parent_id": "site-change-log",
-      "parent_title": "Site Change Log",
-      "display_meta": "2026-05-06 20:58 • Site Change Log",
-      "search_terms": [
-        "site-change-log-guidance",
-        "site",
-        "change",
-        "log",
-        "guidance",
-        "site change log guidance",
-        "site change log",
-        "2026-05-06 20:58",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "58"
-      ],
-      "search_text": "site-change-log-guidance site change log guidance site change log guidance site change log 2026-05-06 20:58 2026 05 06 20 58"
-    },
-    {
       "id": "site-docs",
       "kind": "doc",
       "title": "Site Docs",
@@ -1283,31 +1257,6 @@
       "search_text": "data-models-shared data models shared shared patterns patterns architecture 2026-05-06 21:10 2026 05 06 21 10"
     },
     {
-      "id": "site-change-log-2026-05",
-      "kind": "doc",
-      "title": "Site Change Log Archive: May 2026",
-      "href": "/docs/?scope=studio&doc=site-change-log-2026-05",
-      "last_updated": "2026-05-19",
-      "parent_id": "site-change-log",
-      "parent_title": "Site Change Log",
-      "display_meta": "2026-05-19 • Site Change Log",
-      "search_terms": [
-        "site-change-log-2026-05",
-        "site",
-        "change",
-        "log",
-        "2026",
-        "05",
-        "site change log archive: may 2026",
-        "archive",
-        "may",
-        "site change log",
-        "2026-05-19",
-        "19"
-      ],
-      "search_text": "site-change-log-2026-05 site change log 2026 05 site change log archive: may 2026 archive may site change log 2026-05-19 19"
-    },
-    {
       "id": "site-request-studio-audits-page",
       "kind": "doc",
       "title": "Studio Audits Page Request",
@@ -1797,32 +1746,6 @@
       "search_text": "search-index-schema search index schema search index schema 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
-      "id": "site-change-log-2026-04",
-      "kind": "doc",
-      "title": "Site Change Log Archive: April 2026",
-      "href": "/docs/?scope=studio&doc=site-change-log-2026-04",
-      "last_updated": "2026-05-19",
-      "parent_id": "site-change-log",
-      "parent_title": "Site Change Log",
-      "display_meta": "2026-05-19 • Site Change Log",
-      "search_terms": [
-        "site-change-log-2026-04",
-        "site",
-        "change",
-        "log",
-        "2026",
-        "04",
-        "site change log archive: april 2026",
-        "archive",
-        "april",
-        "site change log",
-        "2026-05-19",
-        "05",
-        "19"
-      ],
-      "search_text": "site-change-log-2026-04 site change log 2026 04 site change log archive: april 2026 archive april site change log 2026-05-19 05 19"
-    },
-    {
       "id": "site-shell-runtime",
       "kind": "doc",
       "title": "Site Shell Runtime",
@@ -2293,34 +2216,6 @@
         "01"
       ],
       "search_text": "search-ranking-model search ranking model search ranking model 2026-04-01 2026 04 01"
-    },
-    {
-      "id": "site-change-log-2026-03-and-earlier",
-      "kind": "doc",
-      "title": "Site Change Log Archive: March 2026 And Earlier",
-      "href": "/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier",
-      "last_updated": "2026-05-19",
-      "parent_id": "site-change-log",
-      "parent_title": "Site Change Log",
-      "display_meta": "2026-05-19 • Site Change Log",
-      "search_terms": [
-        "site-change-log-2026-03-and-earlier",
-        "site",
-        "change",
-        "log",
-        "2026",
-        "03",
-        "and",
-        "earlier",
-        "site change log archive: march 2026 and earlier",
-        "archive",
-        "march",
-        "site change log",
-        "2026-05-19",
-        "05",
-        "19"
-      ],
-      "search_text": "site-change-log-2026-03-and-earlier site change log 2026 03 and earlier site change log archive: march 2026 and earlier archive march site change log 2026-05-19 05 19"
     },
     {
       "id": "sorting-architecture",
@@ -5433,26 +5328,6 @@
       "search_text": "library-export-ui library export ui library export - ui refinements refinements archive 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
-      "id": "site-change-log",
-      "kind": "doc",
-      "title": "Site Change Log",
-      "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-05-19",
-      "display_meta": "2026-05-19",
-      "search_terms": [
-        "site-change-log",
-        "site",
-        "change",
-        "log",
-        "site change log",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "site-change-log site change log site change log 2026-05-19 2026 05 19"
-    },
-    {
       "id": "site-request-studio-import-export-module",
       "kind": "doc",
       "title": "Studio Data Sharing Module Implementation Request",
@@ -6830,6 +6705,131 @@
         "11"
       ],
       "search_text": "search-change-log search change log search change log archive 2026-05-11 2026 05 11"
+    },
+    {
+      "id": "site-change-log-2026-03-and-earlier",
+      "kind": "doc",
+      "title": "Site Change Log Archive: March 2026 And Earlier",
+      "href": "/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier",
+      "last_updated": "2026-05-19",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-19 • Archive",
+      "search_terms": [
+        "site-change-log-2026-03-and-earlier",
+        "site",
+        "change",
+        "log",
+        "2026",
+        "03",
+        "and",
+        "earlier",
+        "site change log archive: march 2026 and earlier",
+        "archive",
+        "march",
+        "2026-05-19",
+        "05",
+        "19"
+      ],
+      "search_text": "site-change-log-2026-03-and-earlier site change log 2026 03 and earlier site change log archive: march 2026 and earlier archive march 2026-05-19 05 19"
+    },
+    {
+      "id": "site-change-log-2026-04",
+      "kind": "doc",
+      "title": "Site Change Log Archive: April 2026",
+      "href": "/docs/?scope=studio&doc=site-change-log-2026-04",
+      "last_updated": "2026-05-19",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-19 • Archive",
+      "search_terms": [
+        "site-change-log-2026-04",
+        "site",
+        "change",
+        "log",
+        "2026",
+        "04",
+        "site change log archive: april 2026",
+        "archive",
+        "april",
+        "2026-05-19",
+        "05",
+        "19"
+      ],
+      "search_text": "site-change-log-2026-04 site change log 2026 04 site change log archive: april 2026 archive april 2026-05-19 05 19"
+    },
+    {
+      "id": "site-change-log-2026-05",
+      "kind": "doc",
+      "title": "Site Change Log Archive: May 2026",
+      "href": "/docs/?scope=studio&doc=site-change-log-2026-05",
+      "last_updated": "2026-05-19",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-19 • Archive",
+      "search_terms": [
+        "site-change-log-2026-05",
+        "site",
+        "change",
+        "log",
+        "2026",
+        "05",
+        "site change log archive: may 2026",
+        "archive",
+        "may",
+        "2026-05-19",
+        "19"
+      ],
+      "search_text": "site-change-log-2026-05 site change log 2026 05 site change log archive: may 2026 archive may 2026-05-19 19"
+    },
+    {
+      "id": "site-change-log-guidance",
+      "kind": "doc",
+      "title": "Site Change Log Guidance",
+      "href": "/docs/?scope=studio&doc=site-change-log-guidance",
+      "last_updated": "2026-05-06 20:58",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-06 20:58 • Archive",
+      "search_terms": [
+        "site-change-log-guidance",
+        "site",
+        "change",
+        "log",
+        "guidance",
+        "site change log guidance",
+        "archive",
+        "2026-05-06 20:58",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "58"
+      ],
+      "search_text": "site-change-log-guidance site change log guidance site change log guidance archive 2026-05-06 20:58 2026 05 06 20 58"
+    },
+    {
+      "id": "site-change-log",
+      "kind": "doc",
+      "title": "Site Change Log",
+      "href": "/docs/?scope=studio&doc=site-change-log",
+      "last_updated": "2026-05-19",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-19 • Archive",
+      "search_terms": [
+        "site-change-log",
+        "site",
+        "change",
+        "log",
+        "site change log",
+        "archive",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "site-change-log site change log site change log archive 2026-05-19 2026 05 19"
     }
   ]
 }
