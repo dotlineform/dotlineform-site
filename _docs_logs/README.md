@@ -104,9 +104,50 @@ Keep records compact:
 
 ### Current Implementation State
 
-The source model and schema exist.
-Migration, helper tooling, generated indexes, and report UI are still part of the change-log entry model implementation.
+The source model, schema, authoring workflow, and entry helper exist.
+Migration, generated indexes, and report UI are still part of the change-log entry model implementation.
 Until those are implemented, follow the active request rather than hand-maintaining large JSONL data files.
+
+## Helper Script
+
+Use `scripts/docs_logs/log_entry.py` to preview or append one log entry.
+The script previews by default; it writes only with `--write`.
+
+Preview a direct entry:
+
+```bash
+./scripts/docs_logs/log_entry.py \
+  --title "Added Example Workflow" \
+  --summary "Added a short example workflow for structured log entries." \
+  --domain workflow \
+  --subject docs-logs \
+  --related-doc development-workflow \
+  --related-file _docs/development-workflow.md \
+  --source-file _docs/development-workflow.md
+```
+
+Seed from a change request:
+
+```bash
+./scripts/docs_logs/log_entry.py \
+  --from-change-request site-request-change-log-entry-model \
+  --title "Added Docs Log Entry Helper" \
+  --summary "Added a helper for previewing and appending structured docs-log entries." \
+  --domain workflow \
+  --domain docs-viewer \
+  --related-file scripts/docs_logs/log_entry.py
+```
+
+Append the row after reviewing the preview:
+
+```bash
+./scripts/docs_logs/log_entry.py ... --write
+```
+
+Add `--update-change-request` with `--write` when the completed request has a closure task that should reference the created log entry id.
+
+The helper validates required fields and common id/list formats with standard-library checks.
+When generated log indexes are implemented, the helper will run the generated rebuild hook after writes unless `--no-rebuild-generated` is passed.
 
 ## Generated Outputs
 

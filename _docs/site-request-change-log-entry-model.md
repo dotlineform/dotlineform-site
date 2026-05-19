@@ -16,6 +16,7 @@ Status:
 - Step 1 completed: `_docs_logs/` source conventions and schema scaffold added
 - Step 2 completed: development workflow doc added under Site Docs and AGENTS.md now points to it
 - Step 3 completed: ongoing log authoring workflow documented in `_docs_logs/README.md`
+- Step 4 completed: Codex-oriented log entry helper added
 
 ## Summary
 
@@ -279,6 +280,10 @@ Expected workflow:
 This keeps change requests readable and manually curated while making the durable implementation history structured and searchable.
 
 ### Step 4. Add Codex-Oriented Helpers For New Log Entries
+
+Status:
+
+- completed
 
 Add repo-local helper support that Codex can use to create or preview new `_docs_logs/` entries.
 This may be a script if useful, but the primary contract is a clear documented workflow and validation path rather than a manually-run operator command.
