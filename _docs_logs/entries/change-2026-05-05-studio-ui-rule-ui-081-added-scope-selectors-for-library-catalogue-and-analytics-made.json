@@ -1,0 +1,72 @@
+{
+  "id": "change-2026-05-05-studio-ui-rule-ui-081-added-scope-selectors-for-library-catalogue-and-analytics-made",
+  "date": "2026-05-05",
+  "title": "UI-081: added scope selectors for library, catalogue, and analytics, made export config filtering...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "library",
+    "scripts",
+    "config",
+    "data-models",
+    "analytics",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-081",
+    "/studio/export/, /studio/import/",
+    "shared workflow shell"
+  ],
+  "summary": "the import/export workflow UI was named and wired as Library-only even though Catalogue and Analytics need the same export, staging, and preview workflow shell for future LLM review work. Outcome: added scope selectors for library, catalogue, and analytics, made export config filtering and import staging/preview calls use the selected scope, allowed staged JSON/JSONL preview folders for the three workflow scopes, and kept Library source-write apply buttons disabled for non-Library scopes.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 451,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-05 / UI-081\n\n- status: adopted\n- route: `/studio/export/`, `/studio/import/`\n- issue: the import/export workflow UI was named and wired as Library-only even though Catalogue and Analytics need the same export, staging, and preview workflow shell for future LLM review work.\n- triage: shared workflow shell\n- reasoning: scope-specific config shapes and write actions can be designed later, but the Studio route should already separate workflow scope from route implementation. The page should not fail just because a future scope has no enabled configs yet.\n- outcome: added scope selectors for `library`, `catalogue`, and `analytics`, made export config filtering and import staging/preview calls use the selected scope, allowed staged JSON/JSONL preview folders for the three workflow scopes, and kept Library source-write apply buttons disabled for non-Library scopes.\n- files changed:\n  - `studio/export/index.md`\n  - `studio/import/index.md`\n  - `assets/studio/js/data-export.js`\n  - `assets/studio/js/data-import.js`\n  - `assets/studio/css/studio.css`\n  - `assets/studio/data/studio_config.json`\n  - `scripts/docs/docs_import.py`\n  - `scripts/docs/docs_management_server.py`\n  - `_docs/library-export.md`\n  - `_docs/library-import.md`\n  - `_docs/scripts-docs-import.md`\n  - `_docs/scripts-docs-management-server.md`\n- local verification:\n  - open Library import/export with default scope and confirm existing Library behavior still loads\n  - open `?scope=catalogue` and `?scope=analytics` and confirm the shell stays ready with scope-specific status text\n  - run the Docs import service test covering Catalogue staging preview\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "scope-specific config shapes and write actions can be designed later, but the Studio route should already separate workflow scope from route implementation.",
+  "area": "/studio/export/, /studio/import/ / shared workflow shell",
+  "related_files": [
+    "`studio/export/index.md`",
+    "`studio/import/index.md`",
+    "`assets/studio/js/data-export.js`",
+    "`assets/studio/js/data-import.js`",
+    "`assets/studio/css/studio.css`",
+    "`assets/studio/data/studio_config.json`",
+    "`scripts/docs/docs_import.py`",
+    "`scripts/docs/docs_management_server.py`",
+    "`_docs/library-export.md`",
+    "`_docs/library-import.md`",
+    "`_docs/scripts-docs-import.md`",
+    "`_docs/scripts-docs-management-server.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/export/index.md`",
+      "`studio/import/index.md`",
+      "`assets/studio/js/data-export.js`",
+      "`assets/studio/js/data-import.js`",
+      "`assets/studio/css/studio.css`",
+      "`assets/studio/data/studio_config.json`",
+      "`scripts/docs/docs_import.py`",
+      "`scripts/docs/docs_management_server.py`",
+      "`_docs/library-export.md`",
+      "`_docs/library-import.md`",
+      "`_docs/scripts-docs-import.md`",
+      "`_docs/scripts-docs-management-server.md`"
+    ]
+  },
+  "verification": [
+    "open Library import/export with default scope and confirm existing Library behavior still loads",
+    "open `?scope=catalogue` and `?scope=analytics` and confirm the shell stays ready with scope-specific status text",
+    "run the Docs import service test covering Catalogue staging preview"
+  ]
+}

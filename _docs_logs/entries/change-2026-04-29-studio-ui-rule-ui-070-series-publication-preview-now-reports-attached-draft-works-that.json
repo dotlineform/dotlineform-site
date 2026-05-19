@@ -1,0 +1,53 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-070-series-publication-preview-now-reports-attached-draft-works-that",
+  "date": "2026-04-29",
+  "title": "UI-070: series publication preview now reports attached draft works that will be promoted...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "scripts",
+    "config",
+    "data-models",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-070",
+    "/studio/catalogue-series/, /studio/catalogue-work/",
+    "publication workflow bootstrap"
+  ],
+  "summary": "the draft bootstrap workflow needed a way to publish a new draft series and its draft member works without first requiring an impossible standalone work publish. Outcome: series publication preview now reports attached draft works that will be promoted, series publication apply writes series.json and works.json together, and work publication blockers enforce the published-series prerequisite outside the series bootstrap flow.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 691,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-070\n\n- status: adopted\n- route: `/studio/catalogue-series/`, `/studio/catalogue-work/`\n- issue: the draft bootstrap workflow needed a way to publish a new draft series and its draft member works without first requiring an impossible standalone work publish.\n- triage: publication workflow bootstrap\n- reasoning: standalone work publish should require an already published series, because a work without a visible series has no normal public catalogue route into it. A new draft series with draft works is the exception that creates that visible parent and children together.\n- permanent rule: series publish is the bootstrap boundary for new catalogue groups. Publishing a draft series must atomically publish all attached draft works; standalone work publish remains blocked unless the work already belongs to a published series.\n- outcome: series publication preview now reports attached draft works that will be promoted, series publication apply writes `series.json` and `works.json` together, and work publication blockers enforce the published-series prerequisite outside the series bootstrap flow.\n- files changed:\n  - `scripts/studio/catalogue_write_server.py`\n  - `assets/studio/js/catalogue-series-editor.js`\n  - `assets/studio/data/studio_config.json`\n  - `_docs/catalogue-series-editor.md`\n  - `_docs/catalogue-work-editor.md`\n  - `_docs/scripts-catalogue-write-server.md`\n- verification:\n  - preview publish for draft series `002` and confirm draft work `00640` is reported as a bootstrap-published work with no primary-work publication blocker\n  - preview standalone publish for draft work `00640` while series `002` is draft and confirm it is blocked until the work belongs to a published series\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "standalone work publish should require an already published series, because a work without a visible series has no normal public catalogue route into it.",
+  "area": "/studio/catalogue-series/, /studio/catalogue-work/ / publication workflow bootstrap",
+  "related_files": [
+    "`scripts/studio/catalogue_write_server.py`",
+    "`assets/studio/js/catalogue-series-editor.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`_docs/catalogue-series-editor.md`",
+    "`_docs/catalogue-work-editor.md`",
+    "`_docs/scripts-catalogue-write-server.md`"
+  ],
+  "affected": {
+    "files": [
+      "`scripts/studio/catalogue_write_server.py`",
+      "`assets/studio/js/catalogue-series-editor.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`_docs/catalogue-series-editor.md`",
+      "`_docs/catalogue-work-editor.md`",
+      "`_docs/scripts-catalogue-write-server.md`"
+    ]
+  }
+}

@@ -289,4 +289,4 @@ Reason:
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
 - [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
-- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)

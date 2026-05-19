@@ -26,7 +26,6 @@
   "effect": "Work and Series status now reads as display state through span-based `tagStudio__input--readonlyDisplay` surfaces while preserving the existing draft/save validation flow. The input primitive demo also shows Readonly Display with normal text color. `Publish` and `Unpublish` remain the only visible commands that change publication status.",
   "related_docs": [
     "catalogue-work-editor",
-    "studio-ui-rules",
     "site-change-log"
   ],
   "related_files": [
@@ -48,7 +47,6 @@
     ],
     "docs": [
       "catalogue-work-editor",
-      "studio-ui-rules",
       "site-change-log"
     ]
   }

@@ -135,7 +135,7 @@ Likely scope-owned routes to verify:
 
 ## Manual Verification
 
-- open `/docs/?scope=studio&doc=studio-ui-rules`
+- open `/docs/?scope=studio&doc=ui`
 - add the doc to favourites from the star action
 - confirm a bookmark pill appears above the viewer area
 - rename the pill label and reload the page

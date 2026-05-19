@@ -25,9 +25,6 @@
   },
   "area": "Studio / series editor / member works",
   "effect": "`/studio/catalogue-series/` now uses a single `member works` heading, the `work_id` link is the only navigation affordance to the work editor, `Add` and `Remove` use the shared default width, and the member search only appears when the list exceeds the visible cap.",
-  "related_docs": [
-    "studio-ui-rules"
-  ],
   "related_files": [
     "studio/catalogue-series/index.md",
     "assets/studio/js/catalogue-series-editor.js",
@@ -42,9 +39,6 @@
       "assets/studio/data/studio_config.json",
       "assets/studio/js/studio-config.js",
       "assets/studio/css/studio.css"
-    ],
-    "docs": [
-      "studio-ui-rules"
     ]
   }
 }

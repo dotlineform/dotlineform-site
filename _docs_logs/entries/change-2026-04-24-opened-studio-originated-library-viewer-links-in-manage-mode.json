@@ -26,8 +26,7 @@
   "area": "Studio / Library / docs viewer management",
   "effect": "The Studio Library dashboard now opens the Library viewer at `/library/?mode=manage`, and Library-scope import results now open the imported doc at `/library/?doc=<doc_id>&mode=manage`. Public Library links outside Studio remain unchanged.",
   "related_docs": [
-    "studio-runtime",
-    "studio-ui-rules"
+    "studio-runtime"
   ],
   "related_files": [
     "studio/library/index.md",
@@ -39,8 +38,7 @@
       "scripts/docs/docs_management_server.py"
     ],
     "docs": [
-      "studio-runtime",
-      "studio-ui-rules"
+      "studio-runtime"
     ]
   }
 }

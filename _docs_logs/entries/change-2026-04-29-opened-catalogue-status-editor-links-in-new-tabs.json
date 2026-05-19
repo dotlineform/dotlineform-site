@@ -23,8 +23,7 @@
   "area": "Studio / catalogue status",
   "effect": "Row id links still route to the focused editor for the record family, but now open in a new browser tab with `rel=\"noopener\"`.",
   "related_docs": [
-    "catalogue-status",
-    "studio-ui-rules"
+    "catalogue-status"
   ],
   "related_files": [
     "assets/studio/js/catalogue-status.js"
@@ -34,8 +33,7 @@
       "assets/studio/js/catalogue-status.js"
     ],
     "docs": [
-      "catalogue-status",
-      "studio-ui-rules"
+      "catalogue-status"
     ]
   }
 }

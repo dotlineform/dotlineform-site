@@ -1,0 +1,56 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-051-studio-catalogue-series-mode-new-creates-draft-series-records",
+  "date": "2026-04-29",
+  "title": "UI-051: /studio/catalogue-series/?mode=new creates draft series records from the main series editor, uses a...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "config",
+    "data-models"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-051",
+    "/studio/catalogue-series/",
+    "parent-record unified create/edit workflow"
+  ],
+  "summary": "series creation still lived on a separate route even though series is a top-level catalogue record like works and should follow the same explicit new mode pattern. Outcome: /studio/catalogue-series/?mode=new creates draft series records from the main series editor, uses a config-backed series_type select, and keeps member/prose/build/delete actions disabled until create succeeds.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1098,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-051\n\n- status: adopted\n- route: `/studio/catalogue-series/`\n- issue: series creation still lived on a separate route even though series is a top-level catalogue record like works and should follow the same explicit `new` mode pattern.\n- triage: parent-record unified create/edit workflow\n- reasoning: top-level catalogue records can share an editor route for create and edit when the draft create step is source-only and edit-mode workflows still own publication readiness. Series needs this pattern, but without inheriting work-detail's parent-scoped create model.\n- permanent rule: parent catalogue records that adopt unified create/edit should expose `New` beside `Open`, use `?mode=new` for draft creation, default create-only values from config where useful, keep publish/build/delete-only actions disabled until the source record exists, and return to normal edit mode after create.\n- outcome: `/studio/catalogue-series/?mode=new` creates draft series records from the main series editor, uses a config-backed `series_type` select, and keeps member/prose/build/delete actions disabled until create succeeds.\n- follow-up: fixed the new-mode initialization path so disabled member controls are bound in editor state before the member list refresh runs.\n- files changed:\n  - `studio/catalogue-series/index.md`\n  - `assets/studio/js/catalogue-series-editor.js`\n  - `assets/studio/js/catalogue-series-fields.js`\n  - `assets/studio/data/studio_config.json`\n  - `assets/studio/js/studio-config.js`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - open `/studio/catalogue-series/?mode=new` and confirm create mode renders with suggested id, draft status, config-backed `series_type`, and disabled edit-only actions\n  - create a draft series and confirm the route switches to `?series=<series_id>`\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "top-level catalogue records can share an editor route for create and edit when the draft create step is source-only and edit-mode workflows still own publication readiness.",
+  "area": "/studio/catalogue-series/ / parent-record unified create/edit workflow",
+  "related_files": [
+    "`studio/catalogue-series/index.md`",
+    "`assets/studio/js/catalogue-series-editor.js`",
+    "`assets/studio/js/catalogue-series-fields.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`assets/studio/js/studio-config.js`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/catalogue-series/index.md`",
+      "`assets/studio/js/catalogue-series-editor.js`",
+      "`assets/studio/js/catalogue-series-fields.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`assets/studio/js/studio-config.js`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "open `/studio/catalogue-series/?mode=new` and confirm create mode renders with suggested id, draft status, config-backed `series_type`, and disabled edit-only actions",
+    "create a draft series and confirm the route switches to `?series=<series_id>`"
+  ]
+}

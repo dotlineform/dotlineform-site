@@ -27,8 +27,7 @@
   "effect": "`/studio/`, `/studio/analytics/`, `/studio/library/`, and `/studio/search/` now use the same shared panel-link primitive. The panel height is fixed, hover/focus behavior still applies to the whole card, and the panel primitive reference now defines the image-fill option and short-copy requirement.",
   "related_docs": [
     "ui-catalogue",
-    "studio-ui-framework",
-    "studio-ui-rules"
+    "studio-ui-framework"
   ],
   "related_files": [
     "assets/studio/css/studio.css",
@@ -49,8 +48,7 @@
     ],
     "docs": [
       "ui-catalogue",
-      "studio-ui-framework",
-      "studio-ui-rules"
+      "studio-ui-framework"
     ]
   }
 }

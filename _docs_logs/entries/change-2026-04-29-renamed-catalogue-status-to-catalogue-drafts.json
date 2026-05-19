@@ -26,8 +26,7 @@
   "area": "Studio / catalogue drafts",
   "effect": "The page title is now `Catalogue Drafts`. The visible filter pills are `series`, `works`, `work details`, and `moments`, in that order. The older `all`, `works`, `work details`, and `series` non-published-family pills were removed, and draft work-detail and draft moment filters were added. Legacy `?view=draft-works` and `?view=draft-series` URLs still map to the matching family filters.",
   "related_docs": [
-    "catalogue-status",
-    "studio-ui-rules"
+    "catalogue-status"
   ],
   "related_files": [
     "studio/catalogue-status/index.md",
@@ -43,8 +42,7 @@
       "assets/studio/js/studio-config.js"
     ],
     "docs": [
-      "catalogue-status",
-      "studio-ui-rules"
+      "catalogue-status"
     ]
   }
 }

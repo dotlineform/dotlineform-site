@@ -29,8 +29,7 @@
   "effect": "Some source material is already authored as Markdown and should not be forced through the HTML conversion path.",
   "related_docs": [
     "user-guide-docs-html-import",
-    "scripts-docs-management-server",
-    "studio-ui-rules"
+    "scripts-docs-management-server"
   ],
   "related_files": [
     "studio/docs-import/index.md",

@@ -1,0 +1,62 @@
+{
+  "id": "change-2026-04-27-studio-ui-rule-ui-040-added-a-delete-command-to-the-moment-editor-and",
+  "date": "2026-04-27",
+  "title": "UI-040: added a Delete command to the moment editor and extended the shared...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "search",
+    "build",
+    "scripts",
+    "config",
+    "data-models",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-040",
+    "/studio/catalogue-moment/",
+    "local workflow completion for the catalogue editor family"
+  ],
+  "summary": "the moment editor could save and rebuild existing moments but delete only removed source metadata, leaving generated artifacts, media, and search records behind. Outcome: added a Delete command to the moment editor and extended the shared catalogue delete preview/apply endpoints to support kind: \"moment\" with generated artifact cleanup, local media cleanup, moments-index update, and catalogue search rebuild.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1348,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-27 / UI-040\n\n- status: adopted\n- route: `/studio/catalogue-moment/`\n- issue: the moment editor could save and rebuild existing moments but delete only removed source metadata, leaving generated artifacts, media, and search records behind.\n- triage: local workflow completion for the catalogue editor family\n- reasoning: moment delete should match the user-facing meaning of deleting the item. The write service should preview server-side impact, block on validation issues, confirm in the browser, apply with record-hash conflict protection, and remove generated/site artifacts plus search entries in the same operation.\n- outcome: added a Delete command to the moment editor and extended the shared catalogue delete preview/apply endpoints to support `kind: \"moment\"` with generated artifact cleanup, local media cleanup, moments-index update, and catalogue search rebuild.\n- files changed:\n  - `studio/catalogue-moment/index.md`\n  - `assets/studio/js/catalogue-moment-editor.js`\n  - `assets/studio/data/studio_config.json`\n  - `scripts/studio/catalogue_write_server.py`\n  - `_docs/catalogue-moment-editor.md`\n  - `_docs/scripts-catalogue-write-server.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - open `/studio/catalogue-moment/?moment=keys`, confirm Delete is disabled when the local catalogue server is unavailable, then run delete preview/apply against the write server in dry-run mode for a known moment\n- follow-up:\n  - decide whether work/detail/series Studio deletes should adopt the same generated-artifact/search cleanup boundary\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "moment delete should match the user-facing meaning of deleting the item.",
+  "area": "/studio/catalogue-moment/ / local workflow completion for the catalogue editor family",
+  "related_files": [
+    "`studio/catalogue-moment/index.md`",
+    "`assets/studio/js/catalogue-moment-editor.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`scripts/studio/catalogue_write_server.py`",
+    "`_docs/catalogue-moment-editor.md`",
+    "`_docs/scripts-catalogue-write-server.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/catalogue-moment/index.md`",
+      "`assets/studio/js/catalogue-moment-editor.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`scripts/studio/catalogue_write_server.py`",
+      "`_docs/catalogue-moment-editor.md`",
+      "`_docs/scripts-catalogue-write-server.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "open `/studio/catalogue-moment/?moment=keys`, confirm Delete is disabled when the local catalogue server is unavailable, then run delete preview/apply against the write server in dry-run mode for a known moment",
+    "follow-up:",
+    "decide whether work/detail/series Studio deletes should adopt the same generated-artifact/search cleanup boundary"
+  ]
+}

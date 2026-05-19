@@ -24,8 +24,7 @@
   "area": "Studio UI / catalogue editor family",
   "effect": "The current-record sections on the work, work-detail, work-file, work-link, and series editors now present one consistent information-display style: bordered shells with transparent backgrounds and normal text color, while still preserving links and structured readiness content inside the same surfaces. The bulk import page now uses that same treatment for its workbook path and preview-summary values.",
   "related_docs": [
-    "studio-ui-framework",
-    "studio-ui-rules"
+    "studio-ui-framework"
   ],
   "related_files": [
     "assets/studio/js/catalogue-work-editor.js",
@@ -47,8 +46,7 @@
       "studio/bulk-add-work/index.md"
     ],
     "docs": [
-      "studio-ui-framework",
-      "studio-ui-rules"
+      "studio-ui-framework"
     ]
   }
 }

@@ -1,0 +1,57 @@
+{
+  "id": "change-2026-04-24-studio-ui-rule-ui-030-make-viewable-now-detects-non-viewable-ancestors-and-prompts",
+  "date": "2026-04-24",
+  "title": "UI-030: Make viewable now detects non-viewable ancestors and prompts before including them.",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "search",
+    "library",
+    "build",
+    "scripts",
+    "config",
+    "data-models",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-030",
+    "/docs/?mode=manage, /library/?mode=manage",
+    "local workflow refinement"
+  ],
+  "summary": "making one draft/non-viewable docs-viewer page viewable can leave it undiscoverable if a parent remains non-viewable, while making a parent viewable may or may not imply that descendants should also appear. Outcome: Make viewable now detects non-viewable ancestors and prompts before including them.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1550,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-24 / UI-030\n\n- status: adopted\n- route: `/docs/?mode=manage`, `/library/?mode=manage`\n- issue: making one draft/non-viewable docs-viewer page viewable can leave it undiscoverable if a parent remains non-viewable, while making a parent viewable may or may not imply that descendants should also appear.\n- triage: local workflow refinement\n- reasoning: viewability is a tree workflow, not only a single-doc field toggle. The UI should preserve the one-button action but make implicit tree effects explicit before writing source files.\n- outcome: `Make viewable` now detects non-viewable ancestors and prompts before including them. If the selected doc has descendants, it prompts for `all` or `selected`; cancel writes nothing. The action sends one bulk docs-management request so the source changes and docs/search rebuild happen once.\n- files changed:\n  - `assets/js/docs-viewer.js`\n  - `assets/studio/data/studio_config.json`\n  - `scripts/docs/docs_management_server.py`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - open a non-viewable child under a non-viewable parent in manage mode and confirm the ancestor prompt appears before write\n  - open a non-viewable parent with children and confirm `selected`, `all`, and cancel paths behave as described\n- follow-up:\n  - replace native browser prompts with a structured modal if more docs-management bulk actions are added\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "viewability is a tree workflow, not only a single-doc field toggle.",
+  "area": "/docs/?mode=manage, /library/?mode=manage / local workflow refinement",
+  "related_files": [
+    "`assets/js/docs-viewer.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`scripts/docs/docs_management_server.py`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`assets/js/docs-viewer.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`scripts/docs/docs_management_server.py`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "open a non-viewable child under a non-viewable parent in manage mode and confirm the ancestor prompt appears before write",
+    "open a non-viewable parent with children and confirm `selected`, `all`, and cancel paths behave as described",
+    "follow-up:",
+    "replace native browser prompts with a structured modal if more docs-management bulk actions are added"
+  ]
+}

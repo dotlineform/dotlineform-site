@@ -25,8 +25,7 @@
   "effect": "Nested panels are now documented as a supported panel composition, direct child panels inherit a subordinate inner-surface treatment from the shared primitive, and the UI catalogue docs now state that shared defects should be fixed at source even when that exposes legacy drift.",
   "related_docs": [
     "ui-catalogue",
-    "studio-ui-framework",
-    "studio-ui-rules"
+    "studio-ui-framework"
   ],
   "related_files": [
     "studio/ui-catalogue/panel/index.md",
@@ -43,8 +42,7 @@
     ],
     "docs": [
       "ui-catalogue",
-      "studio-ui-framework",
-      "studio-ui-rules"
+      "studio-ui-framework"
     ]
   }
 }

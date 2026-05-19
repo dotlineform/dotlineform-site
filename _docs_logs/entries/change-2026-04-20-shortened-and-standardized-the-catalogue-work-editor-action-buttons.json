@@ -27,8 +27,7 @@
   "area": "Studio work editor / command buttons",
   "effect": "The work editor’s main panel now uses small standard-width buttons consistently, and the supporting doc distinguishes `Save` from `Rebuild` more clearly. `Enter` in the search field still opens the current work selection, while `Open` remains an explicit button affordance.",
   "related_docs": [
-    "catalogue-work-editor",
-    "studio-ui-rules"
+    "catalogue-work-editor"
   ],
   "related_files": [
     "studio/catalogue-work/index.md",
@@ -44,8 +43,7 @@
       "assets/studio/js/catalogue-work-editor.js"
     ],
     "docs": [
-      "catalogue-work-editor",
-      "studio-ui-rules"
+      "catalogue-work-editor"
     ]
   }
 }

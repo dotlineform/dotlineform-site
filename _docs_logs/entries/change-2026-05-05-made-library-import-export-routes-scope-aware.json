@@ -35,8 +35,7 @@
     "library-import",
     "scripts-docs-import",
     "scripts-docs-management-server",
-    "config-studio-config-json",
-    "studio-ui-rules"
+    "config-studio-config-json"
   ],
   "related_files": [
     "var/docs/import-staging/<scope>/",

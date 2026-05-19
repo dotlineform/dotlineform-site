@@ -27,8 +27,7 @@
   "effect": "The work editor now searches series by title, displays selected series as title-first chips with ids as secondary context, and still saves canonical `series_ids` to work source records. Bulk mode keeps the existing raw id/diff input until bulk add/remove picker semantics are designed.",
   "related_docs": [
     "catalogue-work-editor",
-    "site-request-catalogue-work-unified-editor",
-    "studio-ui-rules"
+    "site-request-catalogue-work-unified-editor"
   ],
   "related_files": [
     "assets/studio/js/catalogue-work-fields.js",
@@ -48,8 +47,7 @@
     ],
     "docs": [
       "catalogue-work-editor",
-      "site-request-catalogue-work-unified-editor",
-      "studio-ui-rules"
+      "site-request-catalogue-work-unified-editor"
     ]
   }
 }

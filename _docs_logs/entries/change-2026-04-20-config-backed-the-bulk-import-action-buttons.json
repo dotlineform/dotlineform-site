@@ -25,9 +25,6 @@
   },
   "area": "Studio / bulk import / command buttons",
   "effect": "`/studio/bulk-add-work/` now renders its visible runtime copy from config, and the `Preview` / `Import` buttons use the standard width.",
-  "related_docs": [
-    "studio-ui-rules"
-  ],
   "related_files": [
     "studio/bulk-add-work/index.md",
     "assets/studio/js/bulk-add-work.js",
@@ -40,9 +37,6 @@
       "assets/studio/js/bulk-add-work.js",
       "assets/studio/data/studio_config.json",
       "assets/studio/js/studio-config.js"
-    ],
-    "docs": [
-      "studio-ui-rules"
     ]
   }
 }

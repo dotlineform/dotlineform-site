@@ -22,9 +22,6 @@
   },
   "area": "Studio / Library dashboard",
   "effect": "The Library dashboard had become a routine navigation surface. Descriptive panel cards added extra reading where the page now needs direct route access.",
-  "related_docs": [
-    "studio-ui-rules"
-  ],
   "related_files": [
     "studio/library/index.md"
   ]

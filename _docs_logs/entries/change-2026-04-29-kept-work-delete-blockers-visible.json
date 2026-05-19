@@ -24,8 +24,7 @@
   "area": "Studio / catalogue work editor",
   "effect": "Clicking `Delete` now leaves the blocker visible in the status area. For `00640`, the page reports that series `002` must be reassigned before the work can be deleted.",
   "related_docs": [
-    "catalogue-work-editor",
-    "studio-ui-rules"
+    "catalogue-work-editor"
   ],
   "related_files": [
     "assets/studio/js/catalogue-work-editor.js"
@@ -35,8 +34,7 @@
       "assets/studio/js/catalogue-work-editor.js"
     ],
     "docs": [
-      "catalogue-work-editor",
-      "studio-ui-rules"
+      "catalogue-work-editor"
     ]
   }
 }

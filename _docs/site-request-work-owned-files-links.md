@@ -404,13 +404,13 @@ Move any new UI copy into `assets/studio/data/studio_config.json`.
 
 Remove obsolete file/link route labels once the routes are retired.
 
-### Task 7. Update Studio UI Rules
+### Task 7. Record UI History
 
 Status:
 
 - implemented
 
-Record the UI outcome in `studio-ui-rules.md` because this changes a repeated catalogue editor pattern:
+Record the UI outcome in structured docs-log entries because this changes a repeated catalogue editor pattern:
 
 - files and links are metadata sections on the owning editor
 - child metadata should not get separate editor routes unless it has an independent workflow

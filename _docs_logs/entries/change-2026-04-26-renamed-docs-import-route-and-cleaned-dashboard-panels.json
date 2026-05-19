@@ -32,8 +32,7 @@
     "user-guide-docs-html-import",
     "studio-runtime",
     "studio",
-    "scripts-docs-management-server",
-    "studio-ui-rules"
+    "scripts-docs-management-server"
   ],
   "related_files": [
     "studio/docs-import/index.md",
@@ -54,8 +53,7 @@
       "user-guide-docs-html-import",
       "studio-runtime",
       "studio",
-      "scripts-docs-management-server",
-      "studio-ui-rules"
+      "scripts-docs-management-server"
     ]
   }
 }

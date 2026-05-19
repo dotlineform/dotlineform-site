@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2e842790c6c01a0fb1c5faf455ad62a3",
-    "generated_at_utc": "2026-05-19T20:06:08Z",
-    "count": 286
+    "version": "blake2b-857433837b12e66fe6edc7f18edc1633",
+    "generated_at_utc": "2026-05-19T20:24:29Z",
+    "count": 285
   },
   "entries": [
     {
@@ -3031,31 +3031,6 @@
         "51"
       ],
       "search_text": "studio-audits studio audits studio audits 2026-05-06 20:51 2026 05 06 20 51"
-    },
-    {
-      "id": "studio-ui-rules",
-      "kind": "doc",
-      "title": "Studio UI Rules And Decision Log",
-      "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-05-13",
-      "parent_id": "ui",
-      "parent_title": "UI",
-      "display_meta": "2026-05-13 • UI",
-      "search_terms": [
-        "studio-ui-rules",
-        "studio",
-        "ui",
-        "rules",
-        "studio ui rules and decision log",
-        "and",
-        "decision",
-        "log",
-        "2026-05-13",
-        "2026",
-        "05",
-        "13"
-      ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log 2026-05-13 2026 05 13"
     },
     {
       "id": "tag-aliases",

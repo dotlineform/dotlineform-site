@@ -28,7 +28,6 @@
     "ui-primitive-input",
     "ui-primitive-list",
     "ui-primitive-panel",
-    "ui-pattern-reopenable-command-result",
-    "studio-ui-rules"
+    "ui-pattern-reopenable-command-result"
   ]
 }

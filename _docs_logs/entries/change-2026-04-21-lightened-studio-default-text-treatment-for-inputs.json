@@ -22,8 +22,7 @@
   "area": "Studio UI / shared input contract",
   "effect": "Search placeholders, file placeholders, disabled field values, and other default-value surfaces now read more clearly as unentered or unavailable state without washing out the normal muted label/meta layer.",
   "related_docs": [
-    "studio-ui-framework",
-    "studio-ui-rules"
+    "studio-ui-framework"
   ],
   "related_files": [
     "assets/studio/css/studio.css"
@@ -33,8 +32,7 @@
       "assets/studio/css/studio.css"
     ],
     "docs": [
-      "studio-ui-framework",
-      "studio-ui-rules"
+      "studio-ui-framework"
     ]
   }
 }

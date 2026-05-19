@@ -31,7 +31,6 @@
     "user-guide",
     "new-pipeline-studio-e2e-checklist",
     "site-request-catalogue-series-unified-editor",
-    "studio-ui-rules",
     "config-studio-config-json"
   ],
   "related_files": [
@@ -53,7 +52,6 @@
       "user-guide",
       "new-pipeline-studio-e2e-checklist",
       "site-request-catalogue-series-unified-editor",
-      "studio-ui-rules",
       "config-studio-config-json"
     ]
   }

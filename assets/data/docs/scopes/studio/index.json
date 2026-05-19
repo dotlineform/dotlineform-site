@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T20:06:26Z",
+  "generated_at": "2026-05-19T20:24:28Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -55,7 +55,7 @@
       "source_path": "ui-primitive-button.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-button.json",
-      "content_text_length": 2024
+      "content_text_length": 2037
     },
     {
       "scope": "studio",
@@ -709,7 +709,7 @@
       "source_path": "ui-primitive-input.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-input",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-input.json",
-      "content_text_length": 2072
+      "content_text_length": 2061
     },
     {
       "scope": "studio",
@@ -876,7 +876,7 @@
       "source_path": "studio-ui-start.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-start",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-start.json",
-      "content_text_length": 4371
+      "content_text_length": 4440
     },
     {
       "scope": "studio",
@@ -1182,7 +1182,7 @@
       "source_path": "ui-primitive-list.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-list",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-list.json",
-      "content_text_length": 3377
+      "content_text_length": 3402
     },
     {
       "scope": "studio",
@@ -1278,7 +1278,7 @@
       "source_path": "studio-ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework.json",
-      "content_text_length": 849
+      "content_text_length": 816
     },
     {
       "scope": "studio",
@@ -1503,7 +1503,7 @@
       "source_path": "site-request-catalogue-work-unified-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-work-unified-editor.json",
-      "content_text_length": 23375,
+      "content_text_length": 23378,
       "ui_status": "in-progress"
     },
     {
@@ -1602,7 +1602,7 @@
       "source_path": "ui-primitive-panel.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-panel",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-panel.json",
-      "content_text_length": 2729
+      "content_text_length": 2764
     },
     {
       "scope": "studio",
@@ -1682,7 +1682,7 @@
       "source_path": "studio-ui-conformance.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-conformance",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-conformance.json",
-      "content_text_length": 11016
+      "content_text_length": 10917
     },
     {
       "scope": "studio",
@@ -1945,22 +1945,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-ui-rules",
-      "title": "Studio UI Rules And Decision Log",
-      "added_date": "2026-04-24",
-      "last_updated": "2026-05-13",
-      "parent_id": "ui",
-      "sort_order": 5000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-ui-rules.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json",
-      "content_text_length": 173448
-    },
-    {
-      "scope": "studio",
       "doc_id": "tag-aliases",
       "title": "Tag Aliases",
       "added_date": "2026-03-31",
@@ -2118,7 +2102,7 @@
       "source_path": "ui-pattern-reopenable-command-result.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-reopenable-command-result.json",
-      "content_text_length": 3213
+      "content_text_length": 3238
     },
     {
       "scope": "studio",
@@ -2395,7 +2379,7 @@
       "source_path": "studio-docs-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-docs-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-docs-inventory.json",
-      "content_text_length": 2646
+      "content_text_length": 2703
     },
     {
       "scope": "studio",
@@ -2983,7 +2967,7 @@
       "source_path": "ui.md",
       "viewer_url": "/docs/?scope=studio&doc=ui",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui.json",
-      "content_text_length": 2122
+      "content_text_length": 2139
     },
     {
       "scope": "studio",
@@ -3559,7 +3543,7 @@
       "source_path": "studio-ui-polish.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-ui-polish",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-ui-polish.json",
-      "content_text_length": 395
+      "content_text_length": 502
     },
     {
       "scope": "studio",
@@ -3671,7 +3655,7 @@
       "source_path": "new-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline.json",
-      "content_text_length": 2357
+      "content_text_length": 2342
     },
     {
       "scope": "studio",
@@ -3922,7 +3906,7 @@
       "source_path": "site-request-local-docs-data-server-reads.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-local-docs-data-server-reads",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-local-docs-data-server-reads.json",
-      "content_text_length": 10526,
+      "content_text_length": 10509,
       "ui_status": "done"
     },
     {
@@ -3990,7 +3974,7 @@
       "source_path": "site-request-work-owned-files-links.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-work-owned-files-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-work-owned-files-links.json",
-      "content_text_length": 11906,
+      "content_text_length": 11910,
       "ui_status": "done"
     },
     {
@@ -4211,7 +4195,7 @@
       "source_path": "docs-viewer-favourites-task.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-task.json",
-      "content_text_length": 5900,
+      "content_text_length": 5887,
       "ui_status": "done"
     },
     {
@@ -4293,7 +4277,7 @@
       "source_path": "site-request-catalogue-series-unified-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-series-unified-editor.json",
-      "content_text_length": 20932,
+      "content_text_length": 20926,
       "ui_status": "done"
     },
     {

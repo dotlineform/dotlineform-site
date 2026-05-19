@@ -22,7 +22,6 @@
   "area": "Docs Viewer management / modal composition",
   "effect": "Priority 12 of the modal composition migration is in progress with the highest-risk include debt removed. Docs Viewer management modals now share the default-width action-row class and focus containment helper before the remaining browser verification pass.",
   "related_docs": [
-    "studio-ui-rules",
     "modal-composition-migration-tracker"
   ],
   "related_files": [
@@ -41,7 +40,6 @@
       "assets/docs-viewer/css/docs-viewer-management.css"
     ],
     "docs": [
-      "studio-ui-rules",
       "modal-composition-migration-tracker"
     ]
   }

@@ -1,0 +1,60 @@
+{
+  "id": "change-2026-04-20-studio-ui-rule-ui-009-the-first-button-primitive-draft-was-still-mixing-command",
+  "date": "2026-04-20",
+  "title": "UI-009: the first button primitive draft was still mixing command buttons with navigation-style...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-009",
+    "/studio/ui-catalogue/button/",
+    "systemic"
+  ],
+  "summary": "the first button primitive draft was still mixing command buttons with navigation-style anchor buttons and toolbar-forward assumptions.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 2234,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-20 / UI-009\n\n- status: adopted\n- route: `/studio/ui-catalogue/button/`\n- issue: the first button primitive draft was still mixing command buttons with navigation-style anchor buttons and toolbar-forward assumptions. The requirement is actually narrower: buttons are commands only, toolbar is optional and separate, and the initial contract should stay minimal.\n- triage: systemic\n- reasoning: keeping the primitive small is more important than speculating about future button families. The button page should establish role boundaries, two sizes, standard width guidance, and modal default-action behavior without pulling in link patterns, toolbar patterns, or special destructive styling.\n- permanent rule: Studio buttons are command controls only. Navigation actions should move to a link pattern. The shared button contract currently defines two sizes, a standard width target, bold default-modal action, and no special destructive styling by default. Do not use a panel as the grouping device when buttons need a boundary.\n- enforcement point: `studio/ui-catalogue/button/index.md`, `_includes/studio_ui_catalogue_button_demo.html`, `_includes/ui_catalogue_notes/button.md`, `assets/studio/css/studio.css`, and the button guidance in `studio-ui-framework.md`\n- files changed:\n  - `studio/ui-catalogue/button/index.md`\n  - `_includes/studio_ui_catalogue_button_demo.html`\n  - `_includes/ui_catalogue_notes/button.md`\n  - `assets/studio/css/studio.css`\n  - `_docs/studio-ui-framework.md`\n  - `_docs/studio-ui-rules.md`\n  - `_docs/site-change-log.md`\n- local verification:\n  - inspect `/studio/ui-catalogue/button/` on desktop and mobile\n  - confirm the page no longer shows anchor-as-button or toolbar-subset examples\n  - confirm modal default action is bold and default-width behavior is shown with `OK` and `Cancel`\n- follow-up:\n  - run a later consistency sweep on live Studio pages for navigation-like buttons and overlong labels such as `Save Tags`\n",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "missing outcome field"
+    ]
+  },
+  "effect": "keeping the primitive small is more important than speculating about future button families.",
+  "area": "/studio/ui-catalogue/button/ / systemic",
+  "related_files": [
+    "`studio/ui-catalogue/button/index.md`",
+    "`_includes/studio_ui_catalogue_button_demo.html`",
+    "`_includes/ui_catalogue_notes/button.md`",
+    "`assets/studio/css/studio.css`",
+    "`_docs/studio-ui-framework.md`",
+    "`_docs/studio-ui-rules.md`",
+    "`_docs/site-change-log.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/ui-catalogue/button/index.md`",
+      "`_includes/studio_ui_catalogue_button_demo.html`",
+      "`_includes/ui_catalogue_notes/button.md`",
+      "`assets/studio/css/studio.css`",
+      "`_docs/studio-ui-framework.md`",
+      "`_docs/studio-ui-rules.md`",
+      "`_docs/site-change-log.md`"
+    ]
+  },
+  "verification": [
+    "inspect `/studio/ui-catalogue/button/` on desktop and mobile",
+    "confirm the page no longer shows anchor-as-button or toolbar-subset examples",
+    "confirm modal default action is bold and default-width behavior is shown with `OK` and `Cancel`",
+    "follow-up:",
+    "run a later consistency sweep on live Studio pages for navigation-like buttons and overlong labels such as `Save Tags`"
+  ]
+}

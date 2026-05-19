@@ -72,4 +72,4 @@ Input state should follow the owning page state:
 - changing an input should clear stale result actions when those results depend on the previous input
 - validation feedback should stay near the field or command area that caused it
 
-Historical input guidance currently buried in [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules) should move here as stable rules are promoted.
+Historical input guidance from structured UI change-history entries should move here as stable rules are promoted.

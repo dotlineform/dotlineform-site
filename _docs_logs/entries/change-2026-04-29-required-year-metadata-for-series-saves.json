@@ -28,8 +28,7 @@
   "effect": "`/studio/catalogue-series/` now blocks `Save` when `year` or `year_display` is blank, and `POST /catalogue/series/save` rejects direct payloads missing either field. Historical records that already lack those fields must be filled before they can be saved through the editor.",
   "related_docs": [
     "scripts-catalogue-write-server",
-    "site-request-catalogue-series-unified-editor",
-    "studio-ui-rules"
+    "site-request-catalogue-series-unified-editor"
   ],
   "related_files": [
     "assets/studio/js/catalogue-series-fields.js",
@@ -47,8 +46,7 @@
     ],
     "docs": [
       "scripts-catalogue-write-server",
-      "site-request-catalogue-series-unified-editor",
-      "studio-ui-rules"
+      "site-request-catalogue-series-unified-editor"
     ]
   }
 }

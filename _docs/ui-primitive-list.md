@@ -98,4 +98,4 @@ List state should make the current data context clear:
 - search controls should appear only when useful for the list size or workflow
 - route-local result actions should not be embedded in rows unless the row itself is the result target
 
-Stable list rules from [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules) should move here as they are retired from the log.
+Stable list rules from structured UI change-history entries should move here when they need to become permanent reference guidance.

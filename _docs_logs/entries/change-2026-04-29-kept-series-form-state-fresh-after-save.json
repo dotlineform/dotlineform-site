@@ -24,18 +24,12 @@
   },
   "area": "Studio / catalogue series",
   "effect": "Saving a series status change, including changing series `002` to `draft`, keeps the saved status visible immediately after save. Generated lookup JSON is still used when opening series records and for preview context.",
-  "related_docs": [
-    "studio-ui-rules"
-  ],
   "related_files": [
     "assets/studio/js/catalogue-series-editor.js"
   ],
   "affected": {
     "files": [
       "assets/studio/js/catalogue-series-editor.js"
-    ],
-    "docs": [
-      "studio-ui-rules"
     ]
   }
 }

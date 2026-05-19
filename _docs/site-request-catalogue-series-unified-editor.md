@@ -450,7 +450,7 @@ Expected docs:
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Testing](/docs/?scope=studio&doc=testing)
 - [User Guide](/docs/?scope=studio&doc=user-guide)
-- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules), if a reusable route-migration or create-mode rule changes
+- structured docs-log entries, if a reusable route-migration or create-mode rule changes
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 
 Verification should cover:

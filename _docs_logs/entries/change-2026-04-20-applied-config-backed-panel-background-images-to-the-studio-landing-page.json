@@ -28,7 +28,6 @@
   "effect": "`/studio/` now uses the image-fill panel-link variation for all four landing panels, and the selected background-image width is configured through `_data/studio_panel_images.json`.",
   "related_docs": [
     "studio-ui-framework",
-    "studio-ui-rules",
     "config-studio-config-json",
     "ui-catalogue"
   ],
@@ -43,7 +42,6 @@
     ],
     "docs": [
       "studio-ui-framework",
-      "studio-ui-rules",
       "config-studio-config-json",
       "ui-catalogue"
     ]

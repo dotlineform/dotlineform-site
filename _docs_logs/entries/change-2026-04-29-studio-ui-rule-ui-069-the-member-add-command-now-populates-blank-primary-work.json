@@ -1,0 +1,41 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-069-the-member-add-command-now-populates-blank-primary-work",
+  "date": "2026-04-29",
+  "title": "UI-069: the member-add command now populates blank primary_work_id when the accepted work changes...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-069",
+    "/studio/catalogue-series/",
+    "draft workflow ergonomics"
+  ],
+  "summary": "a newly created draft series can reasonably start without primary_work_id, but the first member work normally becomes the eventual primary work for publish readiness. Outcome: the member-add command now populates blank primary_work_id when the accepted work changes the member count from zero to one, then revalidates the editor in the normal save flow.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 711,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-069\n\n- status: adopted\n- route: `/studio/catalogue-series/`\n- issue: a newly created draft series can reasonably start without `primary_work_id`, but the first member work normally becomes the eventual primary work for publish readiness.\n- triage: draft workflow ergonomics\n- reasoning: `primary_work_id` remains a publication requirement rather than a draft-save requirement, but the editor should remove mechanical data entry when the intent is unambiguous. The first accepted member work is the only member available and is therefore the best primary candidate.\n- permanent rule: when adding the first member work to a series with blank `primary_work_id`, the Series editor should auto-fill `primary_work_id` with that work id. Later member additions must not overwrite an existing primary value.\n- outcome: the member-add command now populates blank `primary_work_id` when the accepted work changes the member count from zero to one, then revalidates the editor in the normal save flow.\n- files changed:\n  - `assets/studio/js/catalogue-series-editor.js`\n  - `_docs/catalogue-series-editor.md`\n- verification:\n  - open a saved draft series with no member works and blank `primary_work_id`, add a valid work id, and confirm the primary field fills with that work id without saving immediately\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "primary_work_id remains a publication requirement rather than a draft-save requirement, but the editor should remove mechanical data entry when the intent is unambiguous.",
+  "area": "/studio/catalogue-series/ / draft workflow ergonomics",
+  "related_files": [
+    "`assets/studio/js/catalogue-series-editor.js`",
+    "`_docs/catalogue-series-editor.md`"
+  ],
+  "affected": {
+    "files": [
+      "`assets/studio/js/catalogue-series-editor.js`",
+      "`_docs/catalogue-series-editor.md`"
+    ]
+  }
+}

@@ -80,4 +80,4 @@ Panel usage should be evaluated as page composition:
 - keep command feedback adjacent to the relevant controls rather than adding a separate generic panel
 - promote repeated panel compositions into documented patterns before copying page-local classes
 
-Stable panel rules from [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules) should move here as that log is retired.
+Stable panel rules from structured UI change-history entries should move here when they need to become permanent reference guidance.

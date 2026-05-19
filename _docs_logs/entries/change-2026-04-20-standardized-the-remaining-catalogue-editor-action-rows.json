@@ -26,9 +26,6 @@
   },
   "area": "Studio editor family / command buttons",
   "effect": "`/studio/catalogue-work-file/`, `/studio/catalogue-work-link/`, and `/studio/catalogue-series/` now use small standard-width buttons with the shorter labels, `Enter` in each search field still acts as an alternative to clicking `Open`, and the supporting docs now distinguish `Save` from `Rebuild` explicitly.",
-  "related_docs": [
-    "studio-ui-rules"
-  ],
   "related_files": [
     "studio/catalogue-work-file/index.md",
     "studio/catalogue-work-link/index.md",
@@ -49,9 +46,6 @@
       "assets/studio/js/catalogue-work-file-editor.js",
       "assets/studio/js/catalogue-work-link-editor.js",
       "assets/studio/js/catalogue-series-editor.js"
-    ],
-    "docs": [
-      "studio-ui-rules"
     ]
   }
 }

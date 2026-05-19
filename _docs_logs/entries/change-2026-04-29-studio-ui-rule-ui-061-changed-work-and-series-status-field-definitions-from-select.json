@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-061-changed-work-and-series-status-field-definitions-from-select",
+  "date": "2026-04-29",
+  "title": "UI-061: changed Work and Series status field definitions from select controls to readonly...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-061",
+    "/studio/catalogue-work/, /studio/catalogue-series/",
+    "field-control semantics / publication workflow"
+  ],
+  "summary": "after publication state moved to Publish / Unpublish, the Work and Series editors still rendered status with disabled dropdown controls. Outcome: changed Work and Series status field definitions from select controls to readonly text fields, and taught both route-local renderers to render readonly fields as span-based tagStudio__input--readonlyDisplay surfaces.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 869,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-061\n\n- status: adopted\n- route: `/studio/catalogue-work/`, `/studio/catalogue-series/`\n- issue: after publication state moved to `Publish` / `Unpublish`, the Work and Series editors still rendered `status` with disabled dropdown controls.\n- triage: field-control semantics / publication workflow\n- reasoning: a disabled dropdown implies a choice exists but is temporarily unavailable. Once status changes are owned by explicit publication commands, the field should read as state display rather than as a dormant editor control.\n- permanent rule: publication `status` fields in catalogue editors that use the explicit publication command model render with the shared non-input Readonly Display treatment, not disabled selects or focusable readonly inputs. Status changes stay owned by `Publish` and `Unpublish`.\n- outcome: changed Work and Series status field definitions from select controls to readonly text fields, and taught both route-local renderers to render readonly fields as span-based `tagStudio__input--readonlyDisplay` surfaces.\n- files changed:\n  - `assets/studio/js/catalogue-work-fields.js`\n  - `assets/studio/js/catalogue-work-editor.js`\n  - `assets/studio/js/catalogue-series-fields.js`\n  - `assets/studio/js/catalogue-series-editor.js`\n  - `_docs/catalogue-work-editor.md`\n  - `_docs/catalogue-series-editor.md`\n- verification:\n  - open `/studio/catalogue-work/?work=<work_id>` and confirm `status` uses a span-based `tagStudio__input--readonlyDisplay`, not a dropdown or focusable input\n  - open `/studio/catalogue-series/?series=<series_id>` and confirm `status` uses a span-based `tagStudio__input--readonlyDisplay`, not a dropdown or focusable input\n  - confirm `Publish` / `Unpublish` remain the only visible commands that change publication state\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "a disabled dropdown implies a choice exists but is temporarily unavailable.",
+  "area": "/studio/catalogue-work/, /studio/catalogue-series/ / field-control semantics / publication workflow",
+  "related_files": [
+    "`assets/studio/js/catalogue-work-fields.js`",
+    "`assets/studio/js/catalogue-work-editor.js`",
+    "`assets/studio/js/catalogue-series-fields.js`",
+    "`assets/studio/js/catalogue-series-editor.js`",
+    "`_docs/catalogue-work-editor.md`",
+    "`_docs/catalogue-series-editor.md`"
+  ],
+  "affected": {
+    "files": [
+      "`assets/studio/js/catalogue-work-fields.js`",
+      "`assets/studio/js/catalogue-work-editor.js`",
+      "`assets/studio/js/catalogue-series-fields.js`",
+      "`assets/studio/js/catalogue-series-editor.js`",
+      "`_docs/catalogue-work-editor.md`",
+      "`_docs/catalogue-series-editor.md`"
+    ]
+  }
+}

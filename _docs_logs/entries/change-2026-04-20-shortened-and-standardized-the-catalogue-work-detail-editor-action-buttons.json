@@ -27,8 +27,7 @@
   "area": "Studio work-detail editor / command buttons",
   "effect": "The work-detail editor now uses the same small standard-width action row as the work editor, and the supporting doc distinguishes `Save` from `Rebuild` while noting that `Enter` in the search field is an alternative to clicking `Open`.",
   "related_docs": [
-    "catalogue-work-detail-editor",
-    "studio-ui-rules"
+    "catalogue-work-detail-editor"
   ],
   "related_files": [
     "studio/catalogue-work-detail/index.md",
@@ -44,8 +43,7 @@
       "assets/studio/js/catalogue-work-detail-editor.js"
     ],
     "docs": [
-      "catalogue-work-detail-editor",
-      "studio-ui-rules"
+      "catalogue-work-detail-editor"
     ]
   }
 }

@@ -27,8 +27,7 @@
     "studio-ui-conformance",
     "design",
     "studio-ui-start",
-    "site-docs",
-    "studio-ui-rules"
+    "site-docs"
   ],
   "affected": {
     "docs": [
@@ -36,8 +35,7 @@
       "studio-ui-conformance",
       "design",
       "studio-ui-start",
-      "site-docs",
-      "studio-ui-rules"
+      "site-docs"
     ]
   }
 }

@@ -28,7 +28,6 @@
   "related_docs": [
     "studio-runtime",
     "new-pipeline-studio-e2e-checklist",
-    "studio-ui-rules",
     "site-request-catalogue-unified-editor-cleanup",
     "site-change-log"
   ],
@@ -53,7 +52,6 @@
     "docs": [
       "studio-runtime",
       "new-pipeline-studio-e2e-checklist",
-      "studio-ui-rules",
       "site-request-catalogue-unified-editor-cleanup",
       "site-change-log"
     ]

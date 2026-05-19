@@ -32,8 +32,7 @@
     "scripts-catalogue-write-server",
     "scripts-build-catalogue-json",
     "scripts-generate-work-pages",
-    "scripts-copy-draft-media",
-    "studio-ui-rules"
+    "scripts-copy-draft-media"
   ],
   "related_files": [
     "assets/studio/js/catalogue-series-editor.js",
@@ -69,8 +68,7 @@
       "scripts-catalogue-write-server",
       "scripts-build-catalogue-json",
       "scripts-generate-work-pages",
-      "scripts-copy-draft-media",
-      "studio-ui-rules"
+      "scripts-copy-draft-media"
     ]
   }
 }

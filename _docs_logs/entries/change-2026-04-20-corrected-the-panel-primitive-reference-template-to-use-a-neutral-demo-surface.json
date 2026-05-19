@@ -25,8 +25,7 @@
   "effect": "The panel catalogue page now shows the primitive on a neutral surface, implementation notes focus on concrete code-level warnings, and the Studio UI docs now define neutral-surface rendering as the default pattern for future primitive pages.",
   "related_docs": [
     "ui-catalogue",
-    "studio-ui-framework",
-    "studio-ui-rules"
+    "studio-ui-framework"
   ],
   "related_files": [
     "studio/ui-catalogue/panel/index.md",
@@ -43,8 +42,7 @@
     ],
     "docs": [
       "ui-catalogue",
-      "studio-ui-framework",
-      "studio-ui-rules"
+      "studio-ui-framework"
     ]
   }
 }

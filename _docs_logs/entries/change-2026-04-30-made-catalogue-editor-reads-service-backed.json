@@ -32,7 +32,6 @@
     "studio",
     "studio-runtime",
     "scripts-catalogue-write-server",
-    "studio-ui-rules",
     "site-change-log"
   ],
   "related_files": [
@@ -70,7 +69,6 @@
       "studio",
       "studio-runtime",
       "scripts-catalogue-write-server",
-      "studio-ui-rules",
       "site-change-log"
     ]
   }

@@ -25,7 +25,6 @@
   "effect": "Once the dense list became a shared primitive, the Studio works page no longer needed to own the same presentation through route-local `worksList__*` styling.",
   "related_docs": [
     "studio-works",
-    "studio-ui-rules",
     "site-change-log"
   ],
   "related_files": [

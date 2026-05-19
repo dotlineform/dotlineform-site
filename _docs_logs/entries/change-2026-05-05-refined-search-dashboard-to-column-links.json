@@ -24,8 +24,7 @@
   "effect": "Search is a Studio domain entry page. The shared column-link pattern is a better fit for routine navigation than bespoke descriptive panels.",
   "related_docs": [
     "new-pipeline-refine-search",
-    "ui-pattern-column-links",
-    "studio-ui-rules"
+    "ui-pattern-column-links"
   ],
   "related_files": [
     "studio/search/index.md"

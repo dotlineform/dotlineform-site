@@ -28,8 +28,7 @@
   "related_docs": [
     "catalogue-status",
     "new-pipeline-studio-e2e-checklist",
-    "site-request-catalogue-series-unified-editor",
-    "studio-ui-rules"
+    "site-request-catalogue-series-unified-editor"
   ],
   "related_files": [
     "studio/catalogue/index.md",
@@ -48,8 +47,7 @@
     "docs": [
       "catalogue-status",
       "new-pipeline-studio-e2e-checklist",
-      "site-request-catalogue-series-unified-editor",
-      "studio-ui-rules"
+      "site-request-catalogue-series-unified-editor"
     ]
   }
 }

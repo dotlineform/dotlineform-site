@@ -26,8 +26,7 @@
   "area": "Studio work editor / navigation surfaces",
   "effect": "The `work details` header is cleaner, the search appears only when at least one grouped section exceeds the visible row limit, and the three `new` entry points now read as links rather than buttons. The related config keys were renamed from `*_button` to `*_link` to match that role change.",
   "related_docs": [
-    "catalogue-work-editor",
-    "studio-ui-rules"
+    "catalogue-work-editor"
   ],
   "related_files": [
     "studio/catalogue-work/index.md",
@@ -45,8 +44,7 @@
       "assets/studio/css/studio.css"
     ],
     "docs": [
-      "catalogue-work-editor",
-      "studio-ui-rules"
+      "catalogue-work-editor"
     ]
   }
 }

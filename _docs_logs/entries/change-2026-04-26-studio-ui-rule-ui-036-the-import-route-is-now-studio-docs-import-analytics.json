@@ -1,0 +1,70 @@
+{
+  "id": "change-2026-04-26-studio-ui-rule-ui-036-the-import-route-is-now-studio-docs-import-analytics",
+  "date": "2026-04-26",
+  "title": "UI-036: the import route is now /studio/docs-import/, Analytics links to it with scope=analysis...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "library",
+    "config",
+    "data-models",
+    "analytics",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-036",
+    "/studio/analytics/, /studio/library/, /studio/docs-import/",
+    "local dashboard information architecture refinement"
+  ],
+  "summary": "the shared docs HTML import page still had a Library-specific route name, and the Analytics dashboard represented one related tag-tool cluster as four equal route-entry panels. Outcome: the import route is now /studio/docs-import/, Analytics links to it with scope=analysis, Library links to it with scope=library, and the four Analytics tag route-entry panels were merged into one Tag tools panel with plain links.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1420,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-26 / UI-036\n\n- status: adopted\n- route: `/studio/analytics/`, `/studio/library/`, `/studio/docs-import/`\n- issue: the shared docs HTML import page still had a Library-specific route name, and the Analytics dashboard represented one related tag-tool cluster as four equal route-entry panels.\n- triage: local dashboard information architecture refinement\n- reasoning: route names should describe the workflow rather than one default scope when the page supports multiple docs scopes. Dashboard panels should represent meaningful user choices; closely related maintenance links can live as plain links inside one panel when separate cards create visual noise.\n- outcome: the import route is now `/studio/docs-import/`, Analytics links to it with `scope=analysis`, Library links to it with `scope=library`, and the four Analytics tag route-entry panels were merged into one Tag tools panel with plain links.\n- files changed:\n  - `studio/docs-import/index.md`\n  - `studio/analytics/index.md`\n  - `studio/library/index.md`\n  - `assets/studio/js/studio-config.js`\n  - `assets/studio/data/studio_config.json`\n  - `_docs/user-guide-docs-html-import.md`\n  - `_docs/studio-runtime.md`\n  - `_docs/studio.md`\n  - `_docs/scripts-docs-management-server.md`\n  - `_docs/studio-ui-rules.md`\n  - `_docs/site-change-log.md`\n- local verification:\n  - inspect `/studio/analytics/` and confirm it has one Analysis import panel, one Tag tools panel with four plain links, and one Analytics plan panel\n  - inspect `/studio/library/` and confirm its Import panel links to `/studio/docs-import/?scope=library`\n  - open `/studio/docs-import/?scope=analysis` and `/studio/docs-import/?scope=library` and confirm the selector defaults to the requested scope\n- follow-up:\n  - use scoped query defaults for future cross-scope command pages when a dashboard enters the command with a natural domain default\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "route names should describe the workflow rather than one default scope when the page supports multiple docs scopes.",
+  "area": "/studio/analytics/, /studio/library/, /studio/docs-import/ / local dashboard information architecture refinement",
+  "related_files": [
+    "`studio/docs-import/index.md`",
+    "`studio/analytics/index.md`",
+    "`studio/library/index.md`",
+    "`assets/studio/js/studio-config.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`_docs/user-guide-docs-html-import.md`",
+    "`_docs/studio-runtime.md`",
+    "`_docs/studio.md`",
+    "`_docs/scripts-docs-management-server.md`",
+    "`_docs/studio-ui-rules.md`",
+    "`_docs/site-change-log.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/docs-import/index.md`",
+      "`studio/analytics/index.md`",
+      "`studio/library/index.md`",
+      "`assets/studio/js/studio-config.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`_docs/user-guide-docs-html-import.md`",
+      "`_docs/studio-runtime.md`",
+      "`_docs/studio.md`",
+      "`_docs/scripts-docs-management-server.md`",
+      "`_docs/studio-ui-rules.md`",
+      "`_docs/site-change-log.md`"
+    ]
+  },
+  "verification": [
+    "inspect `/studio/analytics/` and confirm it has one Analysis import panel, one Tag tools panel with four plain links, and one Analytics plan panel",
+    "inspect `/studio/library/` and confirm its Import panel links to `/studio/docs-import/?scope=library`",
+    "open `/studio/docs-import/?scope=analysis` and `/studio/docs-import/?scope=library` and confirm the selector defaults to the requested scope",
+    "follow-up:",
+    "use scoped query defaults for future cross-scope command pages when a dashboard enters the command with a natural domain default"
+  ]
+}

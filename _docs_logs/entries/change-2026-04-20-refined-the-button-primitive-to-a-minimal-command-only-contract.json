@@ -24,8 +24,7 @@
   "area": "design system / UI catalogue",
   "effect": "The button primitive page now focuses on small and medium command buttons, default-width behavior, modal default-action emphasis, destructive commands without special styling, and the explicit warning not to use panels as button-group boundaries.",
   "related_docs": [
-    "studio-ui-framework",
-    "studio-ui-rules"
+    "studio-ui-framework"
   ],
   "related_files": [
     "studio/ui-catalogue/button/index.md",
@@ -41,8 +40,7 @@
       "assets/studio/css/studio.css"
     ],
     "docs": [
-      "studio-ui-framework",
-      "studio-ui-rules"
+      "studio-ui-framework"
     ]
   }
 }

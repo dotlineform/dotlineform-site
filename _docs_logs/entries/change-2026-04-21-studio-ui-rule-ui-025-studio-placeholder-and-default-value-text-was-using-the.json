@@ -1,0 +1,57 @@
+{
+  "id": "change-2026-04-21-studio-ui-rule-ui-025-studio-placeholder-and-default-value-text-was-using-the",
+  "date": "2026-04-21",
+  "title": "UI-025: Studio placeholder and default-value text was using the same muted tone as...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "search"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-025",
+    "Studio shared input default-text treatment",
+    "systemic"
+  ],
+  "summary": "Studio placeholder and default-value text was using the same muted tone as ordinary labels and helper text, which made default text too close to entered content.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1835,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-21 / UI-025\n\n- status: adopted\n- route: Studio shared input default-text treatment\n- issue: Studio placeholder and default-value text was using the same muted tone as ordinary labels and helper text, which made default text too close to entered content. That was especially noticeable beside native empty date fields, whose browser-supplied placeholder parts already appear lighter.\n- triage: systemic\n- reasoning: default text is not the same semantic layer as ordinary muted UI copy. It needs a lighter dedicated tone so search placeholders, file placeholders, disabled values, and default-value displays all read clearly as unentered or unavailable state.\n- permanent rule: Studio inputs should use a dedicated lighter default-text tone for placeholder text, default-value displays, and disabled values. Do not reuse the ordinary muted label/meta tone for default text.\n- enforcement point: `assets/studio/css/studio.css`, `_docs/studio-ui-framework.md`, `_includes/ui_catalogue_notes/input.md`\n- files changed:\n  - `assets/studio/css/studio.css`\n  - `_docs/studio-ui-framework.md`\n  - `_includes/ui_catalogue_notes/input.md`\n  - `_docs/studio-ui-rules.md`\n  - `_docs/site-change-log.md`\n- local verification:\n  - confirm search placeholders on `/studio/catalogue-work/` are visibly lighter than entered text\n  - confirm the file placeholder on `/studio/catalogue-moment/?file=<moment_id>.md` uses the same lighter default-text treatment\n  - confirm the input primitive page still demonstrates muted default text clearly\n- follow-up:\n  - none\n",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "missing outcome field"
+    ]
+  },
+  "effect": "default text is not the same semantic layer as ordinary muted UI copy.",
+  "area": "Studio shared input default-text treatment / systemic",
+  "related_files": [
+    "`assets/studio/css/studio.css`",
+    "`_docs/studio-ui-framework.md`",
+    "`_includes/ui_catalogue_notes/input.md`",
+    "`_docs/studio-ui-rules.md`",
+    "`_docs/site-change-log.md`"
+  ],
+  "affected": {
+    "files": [
+      "`assets/studio/css/studio.css`",
+      "`_docs/studio-ui-framework.md`",
+      "`_includes/ui_catalogue_notes/input.md`",
+      "`_docs/studio-ui-rules.md`",
+      "`_docs/site-change-log.md`"
+    ]
+  },
+  "verification": [
+    "confirm search placeholders on `/studio/catalogue-work/` are visibly lighter than entered text",
+    "confirm the file placeholder on `/studio/catalogue-moment/?file=<moment_id>.md` uses the same lighter default-text treatment",
+    "confirm the input primitive page still demonstrates muted default text clearly",
+    "follow-up:",
+    "none"
+  ]
+}

@@ -30,8 +30,7 @@
   "related_docs": [
     "project-state-page",
     "scripts-project-state-report",
-    "scripts-catalogue-write-server",
-    "studio-ui-rules"
+    "scripts-catalogue-write-server"
   ],
   "related_files": [
     "scripts/project_state_report.py",
@@ -60,8 +59,7 @@
     "docs": [
       "project-state-page",
       "scripts-project-state-report",
-      "scripts-catalogue-write-server",
-      "studio-ui-rules"
+      "scripts-catalogue-write-server"
     ]
   }
 }

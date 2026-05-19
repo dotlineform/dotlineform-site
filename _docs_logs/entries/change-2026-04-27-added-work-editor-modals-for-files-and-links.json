@@ -30,8 +30,7 @@
   "related_docs": [
     "site-request-work-owned-files-links",
     "catalogue-work-editor",
-    "user-guide",
-    "studio-ui-rules"
+    "user-guide"
   ],
   "related_files": [
     "studio/catalogue-work/index.md",
@@ -55,8 +54,7 @@
     "docs": [
       "site-request-work-owned-files-links",
       "catalogue-work-editor",
-      "user-guide",
-      "studio-ui-rules"
+      "user-guide"
     ]
   }
 }

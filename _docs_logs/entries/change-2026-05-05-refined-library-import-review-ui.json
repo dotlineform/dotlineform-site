@@ -29,8 +29,7 @@
   "related_docs": [
     "library-import-ui",
     "library-import",
-    "config-studio-config-json",
-    "studio-ui-rules"
+    "config-studio-config-json"
   ],
   "related_files": [
     "studio/import/index.md",

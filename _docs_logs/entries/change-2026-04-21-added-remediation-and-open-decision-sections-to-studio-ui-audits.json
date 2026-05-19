@@ -25,14 +25,12 @@
   "related_docs": [
     "change-requests",
     "studio-ui-conformance",
-    "ui-audits",
-    "studio-ui-rules"
+    "ui-audits"
   ],
   "affected": {
     "docs": [
       "studio-ui-conformance",
-      "ui-audits",
-      "studio-ui-rules"
+      "ui-audits"
     ]
   }
 }

@@ -26,8 +26,7 @@
   "related_docs": [
     "docs-viewer-management",
     "scripts-docs-management-server",
-    "ui-framework",
-    "studio-ui-rules"
+    "ui-framework"
   ],
   "related_files": [
     "assets/js/docs-viewer.js",
@@ -41,8 +40,7 @@
     "docs": [
       "docs-viewer-management",
       "scripts-docs-management-server",
-      "ui-framework",
-      "studio-ui-rules"
+      "ui-framework"
     ]
   }
 }

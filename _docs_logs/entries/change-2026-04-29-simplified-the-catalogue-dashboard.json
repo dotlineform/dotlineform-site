@@ -23,9 +23,6 @@
   },
   "area": "Studio / catalogue dashboard",
   "effect": "The dashboard no longer shows descriptive intro, route descriptions, guidance, or workflow summary cards. It now shows series, works, work-detail, and moment counts; two fixed-width route columns for `Edit` and `Review`; and an `Admin` section with stacked activity-report links.",
-  "related_docs": [
-    "studio-ui-rules"
-  ],
   "related_files": [
     "studio/catalogue/index.md",
     "assets/css/main.css",
@@ -36,9 +33,6 @@
       "studio/catalogue/index.md",
       "assets/css/main.css",
       "assets/studio/js/studio-dashboard.js"
-    ],
-    "docs": [
-      "studio-ui-rules"
     ]
   }
 }

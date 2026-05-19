@@ -22,7 +22,6 @@
   "area": "Studio UI workflow",
   "effect": "[Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules) now captures issue triage and systemic rules, while [Change Requests](/docs/?scope=studio&doc=change-requests) holds feature specs and task docs such as the Docs Viewer favourites request.",
   "related_docs": [
-    "studio-ui-rules",
     "change-requests"
   ]
 }

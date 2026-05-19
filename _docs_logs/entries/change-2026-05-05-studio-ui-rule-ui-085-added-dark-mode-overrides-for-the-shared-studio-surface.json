@@ -1,0 +1,47 @@
+{
+  "id": "change-2026-05-05-studio-ui-rule-ui-085-added-dark-mode-overrides-for-the-shared-studio-surface",
+  "date": "2026-05-05",
+  "title": "UI-085: added dark-mode overrides for the shared Studio surface token set and made...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "build"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-085",
+    "/studio/import/",
+    "shared primitive token defect"
+  ],
+  "summary": "in dark mode, Studio panels still used fixed light surfaces while field labels and disabled control text resolved through dark-mode muted text tokens, leaving pale grey text on white panels. Outcome: added dark-mode overrides for the shared Studio surface token set and made Studio inputs inherit the page text color explicitly; documented the panel primitive contrast rule.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 380,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-05 / UI-085\n\n- status: adopted\n- route: `/studio/import/`\n- issue: in dark mode, Studio panels still used fixed light surfaces while field labels and disabled control text resolved through dark-mode muted text tokens, leaving pale grey text on white panels.\n- triage: shared primitive token defect\n- reasoning: panel surface, border, body text, muted text, and control tokens need to switch theme together. Fixing one route locally would leave the same low-contrast combination available on every Studio panel.\n- outcome: added dark-mode overrides for the shared Studio surface token set and made Studio inputs inherit the page text color explicitly; documented the panel primitive contrast rule.\n- files changed:\n  - `assets/studio/css/studio.css`\n  - `_docs/ui-primitive-panel.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - build the site\n  - open `/studio/import/` in dark theme and confirm the panel, controls, labels, and disabled text render on one coherent dark surface\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "panel surface, border, body text, muted text, and control tokens need to switch theme together.",
+  "area": "/studio/import/ / shared primitive token defect",
+  "related_files": [
+    "`assets/studio/css/studio.css`",
+    "`_docs/ui-primitive-panel.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`assets/studio/css/studio.css`",
+      "`_docs/ui-primitive-panel.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "build the site",
+    "open `/studio/import/` in dark theme and confirm the panel, controls, labels, and disabled text render on one coherent dark surface"
+  ]
+}

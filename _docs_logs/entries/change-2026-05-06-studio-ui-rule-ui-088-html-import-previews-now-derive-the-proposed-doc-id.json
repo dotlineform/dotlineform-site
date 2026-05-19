@@ -1,0 +1,54 @@
+{
+  "id": "change-2026-05-06-studio-ui-rule-ui-088-html-import-previews-now-derive-the-proposed-doc-id",
+  "date": "2026-05-06",
+  "title": "UI-088: HTML import previews now derive the proposed doc_id from the staged filename...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "scripts",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-088",
+    "/studio/docs-import/",
+    "local workflow refinement"
+  ],
+  "summary": "new Markdown docs created by staged HTML import were deriving the doc_id and filename from the imported document title, which can be much longer and less file-like than the staged source filename. Outcome: HTML import previews now derive the proposed doc_id from the staged filename stem.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 328,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-06 / UI-088\n\n- status: adopted\n- route: `/studio/docs-import/`\n- issue: new Markdown docs created by staged HTML import were deriving the `doc_id` and filename from the imported document title, which can be much longer and less file-like than the staged source filename.\n- triage: local workflow refinement\n- reasoning: the staged filename is already the user's compact source handle for the import artifact. The HTML title should remain the display title, but it should not force verbose source filenames or ids.\n- outcome: HTML import previews now derive the proposed `doc_id` from the staged filename stem. Create writes therefore save `<staged-filename-stem>.md`, while overwrite still preserves the existing target doc id and filename.\n- files changed:\n  - `scripts/docs/docs_html_import.py`\n  - `tests/python/test_docs_import_service.py`\n  - `_docs/scripts-docs-management-server.md`\n  - `_docs/user-guide-docs-html-import.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - import a staged HTML file whose filename is shorter than its HTML title and confirm the created Markdown filename uses the staged filename stem\n  - confirm the imported page title still uses the HTML title\n- follow-up:\n  - keep create-time identifiers tied to source handles when an import workflow already exposes a deliberate staged filename\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "the staged filename is already the user's compact source handle for the import artifact.",
+  "area": "/studio/docs-import/ / local workflow refinement",
+  "related_files": [
+    "`scripts/docs/docs_html_import.py`",
+    "`tests/python/test_docs_import_service.py`",
+    "`_docs/scripts-docs-management-server.md`",
+    "`_docs/user-guide-docs-html-import.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`scripts/docs/docs_html_import.py`",
+      "`tests/python/test_docs_import_service.py`",
+      "`_docs/scripts-docs-management-server.md`",
+      "`_docs/user-guide-docs-html-import.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "import a staged HTML file whose filename is shorter than its HTML title and confirm the created Markdown filename uses the staged filename stem",
+    "confirm the imported page title still uses the HTML title",
+    "follow-up:",
+    "keep create-time identifiers tied to source handles when an import workflow already exposes a deliberate staged filename"
+  ]
+}

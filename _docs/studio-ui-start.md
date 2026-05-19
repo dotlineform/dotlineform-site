@@ -99,13 +99,12 @@ Ask this before fixing:
 If it is systemic:
 
 - fix the shared source where possible
-- update the permanent decision log
 - update the shared framework doc if the contract changed
+- create a structured docs-log entry when the change is meaningful enough to preserve as implementation history
 
 Relevant references:
 
 - [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
-- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 
 ## Close-Out Checklist
@@ -114,8 +113,8 @@ Before finishing Studio UI work:
 
 - update `studio_config.json` if visible runtime copy changed
 - update shared docs if the contract changed
-- update [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules) if the issue is systemic
 - update [Site Change Log](/docs/?scope=studio&doc=site-change-log) for meaningful Studio/site changes
+- create a structured docs-log entry for meaningful systemic UI decisions or implementations
 - save any formal page-level conformance review in [UI Audits](/docs/?scope=studio&doc=ui-audits)
 - verify desktop and mobile behavior
 - run `./scripts/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts

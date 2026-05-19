@@ -1,0 +1,62 @@
+{
+  "id": "change-2026-04-20-studio-ui-rule-ui-011-the-series-tag-editor-s-button-related-status-and",
+  "date": "2026-04-20",
+  "title": "UI-011: the series tag editor’s button-related status and warning text was rendering in...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "analytics"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-011",
+    "/studio/analytics/series-tag-editor/, /studio/ui-catalogue/button/",
+    "systemic"
+  ],
+  "summary": "the series tag editor’s button-related status and warning text was rendering in a shared message area far above the Add / Save controls, which made the feedback feel detached from the related field and commands.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 2188,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-20 / UI-011\n\n- status: adopted\n- route: `/studio/analytics/series-tag-editor/`, `/studio/ui-catalogue/button/`\n- issue: the series tag editor’s button-related status and warning text was rendering in a shared message area far above the `Add` / `Save` controls, which made the feedback feel detached from the related field and commands.\n- triage: systemic\n- reasoning: command feedback belongs to the command area, not to a distant generic message block. The button primitive needs to state that placement rule explicitly, and the live series tag editor should follow it so the primitive page reflects a real page pattern.\n- permanent rule: button-related status, warning, and success copy must stay adjacent to the related command area. Place it on the same row only if space allows; otherwise put it in a dedicated row immediately below the relevant button row. Keep broader page context hints separate from local command feedback.\n- enforcement point: `studio/analytics/series-tag-editor/index.md`, `studio/ui-catalogue/button/index.md`, `_includes/studio_ui_catalogue_button_demo.html`, `_includes/ui_catalogue_notes/button.md`, and the button/message guidance in `studio-ui-framework.md`\n- files changed:\n  - `studio/analytics/series-tag-editor/index.md`\n  - `assets/studio/css/studio.css`\n  - `studio/ui-catalogue/button/index.md`\n  - `_includes/studio_ui_catalogue_button_demo.html`\n  - `_includes/ui_catalogue_notes/button.md`\n  - `_docs/studio-ui-framework.md`\n  - `_docs/studio-ui-rules.md`\n  - `_docs/site-change-log.md`\n- local verification:\n  - inspect `/studio/analytics/series-tag-editor/` on desktop and mobile and confirm the feedback row sits directly below the `Add` / `Save` row inside the editor panel\n  - inspect `/studio/ui-catalogue/button/` and confirm the first example and canonical markup show local button feedback placement\n- follow-up:\n  - review modal command feedback after the basic page sweep and apply the same adjacency rule where relevant\n",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "missing outcome field"
+    ]
+  },
+  "effect": "command feedback belongs to the command area, not to a distant generic message block.",
+  "area": "/studio/analytics/series-tag-editor/, /studio/ui-catalogue/button/ / systemic",
+  "related_files": [
+    "`studio/analytics/series-tag-editor/index.md`",
+    "`assets/studio/css/studio.css`",
+    "`studio/ui-catalogue/button/index.md`",
+    "`_includes/studio_ui_catalogue_button_demo.html`",
+    "`_includes/ui_catalogue_notes/button.md`",
+    "`_docs/studio-ui-framework.md`",
+    "`_docs/studio-ui-rules.md`",
+    "`_docs/site-change-log.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/analytics/series-tag-editor/index.md`",
+      "`assets/studio/css/studio.css`",
+      "`studio/ui-catalogue/button/index.md`",
+      "`_includes/studio_ui_catalogue_button_demo.html`",
+      "`_includes/ui_catalogue_notes/button.md`",
+      "`_docs/studio-ui-framework.md`",
+      "`_docs/studio-ui-rules.md`",
+      "`_docs/site-change-log.md`"
+    ]
+  },
+  "verification": [
+    "inspect `/studio/analytics/series-tag-editor/` on desktop and mobile and confirm the feedback row sits directly below the `Add` / `Save` row inside the editor panel",
+    "inspect `/studio/ui-catalogue/button/` and confirm the first example and canonical markup show local button feedback placement",
+    "follow-up:",
+    "review modal command feedback after the basic page sweep and apply the same adjacency rule where relevant"
+  ]
+}

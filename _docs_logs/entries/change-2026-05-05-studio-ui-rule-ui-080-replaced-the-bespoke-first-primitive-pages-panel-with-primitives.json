@@ -1,0 +1,60 @@
+{
+  "id": "change-2026-05-05-studio-ui-rule-ui-080-replaced-the-bespoke-first-primitive-pages-panel-with-primitives",
+  "date": "2026-05-05",
+  "title": "UI-080: replaced the bespoke First Primitive Pages panel with Primitives and Composition Patterns...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "library",
+    "build"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-080",
+    "/studio/ui-catalogue/",
+    "shared composition pattern"
+  ],
+  "summary": "the UI Catalogue index still used a bespoke panel/list block after the same compact two-column route-link layout had appeared on Catalogue and Library dashboards. Outcome: replaced the bespoke First Primitive Pages panel with Primitives and Composition Patterns columns using the shared catalogueDashboardRoutes / catalogueDashboardColumn / catalogueDashboardPills classes, added live pattern pages for reopenable command results and column links, and added a matching Column Links pattern doc under UI Catalogue.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 477,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-05 / UI-080\n\n- status: adopted\n- route: `/studio/ui-catalogue/`\n- issue: the UI Catalogue index still used a bespoke panel/list block after the same compact two-column route-link layout had appeared on Catalogue and Library dashboards.\n- triage: shared composition pattern\n- reasoning: the catalogue index is another route-entry surface. Reusing the existing column-link dashboard composition keeps dashboard-like pages visually consistent and gives the pattern a stable documentation target before more entry pages copy it.\n- outcome: replaced the bespoke `First Primitive Pages` panel with `Primitives` and `Composition Patterns` columns using the shared `catalogueDashboardRoutes` / `catalogueDashboardColumn` / `catalogueDashboardPills` classes, added live pattern pages for reopenable command results and column links, and added a matching Column Links pattern doc under UI Catalogue.\n- files changed:\n  - `studio/ui-catalogue/index.md`\n  - `studio/ui-catalogue/reopenable-command-result/index.md`\n  - `studio/ui-catalogue/column-links/index.md`\n  - `assets/studio/css/studio.css`\n  - `_docs/ui-pattern-reopenable-command-result.md`\n  - `_docs/ui-pattern-column-links.md`\n  - `_docs/ui-catalogue.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - build the Studio docs data and site\n  - open `/studio/ui-catalogue/` and confirm it uses the same two-column pill-link pattern as `/studio/library/`\n  - open the two new pattern pages and confirm their static ready-state roots pass the Studio ready-state audit\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "the catalogue index is another route-entry surface.",
+  "area": "/studio/ui-catalogue/ / shared composition pattern",
+  "related_files": [
+    "`studio/ui-catalogue/index.md`",
+    "`studio/ui-catalogue/reopenable-command-result/index.md`",
+    "`studio/ui-catalogue/column-links/index.md`",
+    "`assets/studio/css/studio.css`",
+    "`_docs/ui-pattern-reopenable-command-result.md`",
+    "`_docs/ui-pattern-column-links.md`",
+    "`_docs/ui-catalogue.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/ui-catalogue/index.md`",
+      "`studio/ui-catalogue/reopenable-command-result/index.md`",
+      "`studio/ui-catalogue/column-links/index.md`",
+      "`assets/studio/css/studio.css`",
+      "`_docs/ui-pattern-reopenable-command-result.md`",
+      "`_docs/ui-pattern-column-links.md`",
+      "`_docs/ui-catalogue.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "build the Studio docs data and site",
+    "open `/studio/ui-catalogue/` and confirm it uses the same two-column pill-link pattern as `/studio/library/`",
+    "open the two new pattern pages and confirm their static ready-state roots pass the Studio ready-state audit"
+  ]
+}

@@ -28,8 +28,7 @@
     "design",
     "studio-ui-start",
     "ui-catalogue",
-    "studio-ui-framework",
-    "studio-ui-rules"
+    "studio-ui-framework"
   ],
   "affected": {
     "docs": [
@@ -37,8 +36,7 @@
       "design",
       "studio-ui-start",
       "ui-catalogue",
-      "studio-ui-framework",
-      "studio-ui-rules"
+      "studio-ui-framework"
     ]
   }
 }

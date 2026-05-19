@@ -1,0 +1,56 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-048-studio-catalogue-work-detail-work-work-id-mode-new",
+  "date": "2026-04-29",
+  "title": "UI-048: /studio/catalogue-work-detail/?work=<work_id>&mode=new creates draft details under a locked parent work and opens /studio/catalogue-work-detail/?detail=<detail_uid>...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "search",
+    "build",
+    "config",
+    "data-models"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-048",
+    "/studio/catalogue-work-detail/",
+    "systemic child-record editor workflow rule"
+  ],
+  "summary": "work-detail create/edit needed a unified implementation route without making details feel like standalone dashboard records. Outcome: /studio/catalogue-work-detail/?work=<work_id>&mode=new creates draft details under a locked parent work and opens /studio/catalogue-work-detail/?detail=<detail_uid> after create.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1134,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-048\n\n- status: adopted\n- route: `/studio/catalogue-work-detail/`\n- issue: work-detail create/edit needed a unified implementation route without making details feel like standalone dashboard records.\n- triage: systemic child-record editor workflow rule\n- reasoning: child records that only make sense through a parent should still share create/edit helpers and routes when they use one source schema, but new mode must keep the parent record visible and locked rather than asking the user to search globally for a parent.\n- permanent rule: for parent-owned child records, unified Studio create mode should be entered with a parent id in the URL, show the parent as read-only context, disable build/delete/update actions until the child source record exists, and return to normal edit mode after create.\n- outcome: `/studio/catalogue-work-detail/?work=<work_id>&mode=new` creates draft details under a locked parent work and opens `/studio/catalogue-work-detail/?detail=<detail_uid>` after create.\n- files changed:\n  - `assets/studio/js/catalogue-work-detail-editor.js`\n  - `assets/studio/data/studio_config.json`\n  - `_docs/catalogue-work-detail-editor.md`\n  - `_docs/site-request-catalogue-work-detail-unified-editor.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - open `/studio/catalogue-work-detail/?work=<work_id>&mode=new` and confirm the parent work is locked, the suggested detail id is prefilled, and create-only controls render\n- open `/studio/catalogue-work-detail/?mode=new` and confirm missing parent work is blocked\n- create a draft detail and confirm the route switches to `?detail=<detail_uid>`\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "child records that only make sense through a parent should still share create/edit helpers and routes when they use one source schema, but new mode must keep the parent record visible and locked rather than asking the user to search globally for a parent.",
+  "area": "/studio/catalogue-work-detail/ / systemic child-record editor workflow rule",
+  "related_files": [
+    "`assets/studio/js/catalogue-work-detail-editor.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`_docs/catalogue-work-detail-editor.md`",
+    "`_docs/site-request-catalogue-work-detail-unified-editor.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`assets/studio/js/catalogue-work-detail-editor.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`_docs/catalogue-work-detail-editor.md`",
+      "`_docs/site-request-catalogue-work-detail-unified-editor.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "open `/studio/catalogue-work-detail/?work=<work_id>&mode=new` and confirm the parent work is locked, the suggested detail id is prefilled, and create-only controls render",
+    "open `/studio/catalogue-work-detail/?mode=new` and confirm missing parent work is blocked",
+    "create a draft detail and confirm the route switches to `?detail=<detail_uid>`"
+  ]
+}

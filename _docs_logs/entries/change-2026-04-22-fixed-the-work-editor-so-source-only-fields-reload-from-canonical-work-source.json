@@ -25,8 +25,7 @@
   "area": "Studio catalogue work editor",
   "effect": "The work editor now keeps a canonical source-record map in memory for single-record and bulk-edit baselines, computes stale-write hashes from the full source record, and still reloads the focused lookup payload only for detail/file/link lists, preview, and readiness context. End-to-end smoke testing confirmed both `Save` with deferred publication and fresh-page `Save` plus `Update site now` against the current catalogue write server implementation.",
   "related_docs": [
-    "catalogue-work-editor",
-    "studio-ui-rules"
+    "catalogue-work-editor"
   ],
   "related_files": [
     "assets/studio/js/catalogue-work-editor.js",
@@ -38,8 +37,7 @@
       "assets/studio/js/catalogue-work-editor.js"
     ],
     "docs": [
-      "catalogue-work-editor",
-      "studio-ui-rules"
+      "catalogue-work-editor"
     ]
   }
 }

@@ -23,8 +23,7 @@
   "area": "Studio / UI",
   "effect": "Image panels are design-time compositions. Keeping one text treatment avoids per-theme image swaps and makes image/overlay choice the design responsibility.",
   "related_docs": [
-    "ui-primitive-panel",
-    "studio-ui-rules"
+    "ui-primitive-panel"
   ],
   "related_files": [
     "assets/studio/css/studio.css",

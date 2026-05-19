@@ -1,0 +1,50 @@
+{
+  "id": "change-2026-05-07-studio-ui-rule-ui-095-the-result-panel-now-renders-staged-media-paths-r2",
+  "date": "2026-05-07",
+  "title": "UI-095: the result panel now renders staged media paths, R2 keys, and media...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "build",
+    "config",
+    "data-models"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-095",
+    "/studio/docs-import/",
+    "local workflow refinement with transitional payload support"
+  ],
+  "summary": "inline raster extraction can create multiple staged media files from one source import, while the existing result panel only displayed singular media fields for standalone image and file imports. Outcome: the result panel now renders staged media paths, R2 keys, and media tokens from either singular or plural media plans, with escaped line-separated values for multi-image imports.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 191,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-07 / UI-095\n\n- status: adopted\n- route: `/studio/docs-import/`\n- issue: inline raster extraction can create multiple staged media files from one source import, while the existing result panel only displayed singular media fields for standalone image and file imports.\n- triage: local workflow refinement with transitional payload support\n- reasoning: Docs Import should report every generated staged file, expected R2 key, and media token in the command result so the manual R2 handoff remains explicit. The UI also needs to keep reading the older singular `media_plan` contract for standalone media imports while supporting the new plural `media_plans` contract for extracted inline raster images.\n- outcome: the result panel now renders staged media paths, R2 keys, and media tokens from either singular or plural media plans, with escaped line-separated values for multi-image imports.\n- files changed:\n  - `studio/docs-import/index.md`\n  - `assets/studio/js/docs-html-import.js`\n  - `assets/studio/data/studio_config.json`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - smoke `/studio/docs-import/` on desktop and mobile and confirm image/file imports still show one media result while inline raster imports show every staged path, R2 key, and media token without overflowing the result panel\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "Docs Import should report every generated staged file, expected R2 key, and media token in the command result so the manual R2 handoff remains explicit.",
+  "area": "/studio/docs-import/ / local workflow refinement with transitional payload support",
+  "related_files": [
+    "`studio/docs-import/index.md`",
+    "`assets/studio/js/docs-html-import.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/docs-import/index.md`",
+      "`assets/studio/js/docs-html-import.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "smoke `/studio/docs-import/` on desktop and mobile and confirm image/file imports still show one media result while inline raster imports show every staged path, R2 key, and media token without overflowing the result panel"
+  ]
+}

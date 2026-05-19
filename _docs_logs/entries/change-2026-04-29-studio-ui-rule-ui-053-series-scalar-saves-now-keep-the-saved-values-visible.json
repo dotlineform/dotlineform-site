@@ -1,0 +1,45 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-053-series-scalar-saves-now-keep-the-saved-values-visible",
+  "date": "2026-04-29",
+  "title": "UI-053: series scalar saves now keep the saved values visible immediately after save...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "build"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-053",
+    "/studio/catalogue-series/",
+    "save-state hydration bug"
+  ],
+  "summary": "saving a series status change could leave the old status visible until a browser refresh. Outcome: series scalar saves now keep the saved values visible immediately after save, including status changes such as published to draft.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1059,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-053\n\n- status: adopted\n- route: `/studio/catalogue-series/`\n- issue: saving a series status change could leave the old status visible until a browser refresh.\n- triage: save-state hydration bug\n- reasoning: series saves were still resetting the active form from generated lookup JSON immediately after the source write response. That lookup can be stale for a moment, so the form should trust the write response record just as the work-detail editor now does.\n- permanent rule: series editor saves follow the shared source-save baseline rule: reset the active editor record, draft baseline, and hash from the write response; use generated lookup JSON for opening records and previews, not for replacing freshly saved form state.\n- outcome: series scalar saves now keep the saved values visible immediately after save, including status changes such as `published` to `draft`.\n- files changed:\n  - `assets/studio/js/catalogue-series-editor.js`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - change series `002` status to `draft`, save, and confirm the field remains `draft` without a browser refresh\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "series saves were still resetting the active form from generated lookup JSON immediately after the source write response.",
+  "area": "/studio/catalogue-series/ / save-state hydration bug",
+  "related_files": [
+    "`assets/studio/js/catalogue-series-editor.js`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`assets/studio/js/catalogue-series-editor.js`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "change series `002` status to `draft`, save, and confirm the field remains `draft` without a browser refresh"
+  ]
+}

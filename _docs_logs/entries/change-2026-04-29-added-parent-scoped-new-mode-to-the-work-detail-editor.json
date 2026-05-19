@@ -26,8 +26,7 @@
   "effect": "New mode shows the parent work as read-only context, pre-fills the suggested next `detail_id`, keeps `status` visible and draft-only, disables build/delete/update actions until create succeeds, writes only through `POST /catalogue/work-detail/create`, and then opens the created detail in normal edit mode.",
   "related_docs": [
     "catalogue-work-detail-editor",
-    "site-request-catalogue-work-detail-unified-editor",
-    "studio-ui-rules"
+    "site-request-catalogue-work-detail-unified-editor"
   ],
   "related_files": [
     "assets/studio/js/catalogue-work-detail-editor.js",
@@ -41,8 +40,7 @@
     ],
     "docs": [
       "catalogue-work-detail-editor",
-      "site-request-catalogue-work-detail-unified-editor",
-      "studio-ui-rules"
+      "site-request-catalogue-work-detail-unified-editor"
     ]
   }
 }

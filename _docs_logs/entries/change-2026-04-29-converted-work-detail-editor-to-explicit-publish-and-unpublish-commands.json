@@ -29,7 +29,6 @@
   "related_docs": [
     "catalogue-work-detail-editor",
     "site-request-catalogue-publication-workflow",
-    "studio-ui-rules",
     "site-change-log"
   ],
   "related_files": [
@@ -51,7 +50,6 @@
     "docs": [
       "catalogue-work-detail-editor",
       "site-request-catalogue-publication-workflow",
-      "studio-ui-rules",
       "site-change-log"
     ]
   }

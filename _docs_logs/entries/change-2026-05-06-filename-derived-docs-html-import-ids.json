@@ -25,8 +25,7 @@
   "effect": "Imported HTML titles can be descriptive and long, while the staged filename is usually the compact source handle the user chose for the import.",
   "related_docs": [
     "scripts-docs-management-server",
-    "user-guide-docs-html-import",
-    "studio-ui-rules"
+    "user-guide-docs-html-import"
   ],
   "related_files": [
     "/scripts/docs/docs_html_import.py",

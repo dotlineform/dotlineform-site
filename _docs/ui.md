@@ -14,7 +14,7 @@ It exists to unify guidance that is currently split between:
 
 - [UI Framework](/docs/?scope=studio&doc=ui-framework)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
-- stable rules currently buried in [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- stable rules promoted out of the retired Studio UI rules log
 
 ## Direction
 
@@ -73,4 +73,4 @@ Until the migration is complete:
 
 - use [UI Framework](/docs/?scope=studio&doc=ui-framework) for existing site-wide interaction defaults
 - use [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework) for existing Studio primitive and modal guidance
-- promote durable guidance from [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules) into this doc or the matching primitive/pattern doc before retiring that guidance from the decision log
+- promote durable guidance from structured UI change-history entries into this doc or the matching primitive/pattern doc when a historical decision should become permanent reference guidance

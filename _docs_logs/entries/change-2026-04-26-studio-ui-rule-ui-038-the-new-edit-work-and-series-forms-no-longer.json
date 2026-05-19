@@ -1,0 +1,50 @@
+{
+  "id": "change-2026-04-26-studio-ui-rule-ui-038-the-new-edit-work-and-series-forms-no-longer",
+  "date": "2026-04-26",
+  "title": "UI-038: the new/edit work and series forms no longer render or submit work_prose_file...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-038",
+    "/studio/catalogue-new-work/, /studio/catalogue-work/, /studio/catalogue-new-series/, /studio/catalogue-series/",
+    "local workflow cleanup with shared editor-family impact"
+  ],
+  "summary": "the work and series forms still exposed legacy prose filename fields after prose publication moved to ID-derived _docs_catalogue/ Markdown. Outcome: the new/edit work and series forms no longer render or submit work_prose_file or series_prose_file; prose remains available through the import readiness/action flow.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1387,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-26 / UI-038\n\n- status: adopted\n- route: `/studio/catalogue-new-work/`, `/studio/catalogue-work/`, `/studio/catalogue-new-series/`, `/studio/catalogue-series/`\n- issue: the work and series forms still exposed legacy prose filename fields after prose publication moved to ID-derived `_docs_catalogue/` Markdown.\n- triage: local workflow cleanup with shared editor-family impact\n- reasoning: fields that no longer control publication should not stay in main edit forms. Keeping them visible would imply that changing the value affects public prose, while the actual workflow is staged Markdown import plus scoped site update.\n- outcome: the new/edit work and series forms no longer render or submit `work_prose_file` or `series_prose_file`; prose remains available through the import readiness/action flow.\n- files changed:\n  - `assets/studio/js/catalogue-new-work-editor.js`\n  - `assets/studio/js/catalogue-work-editor.js`\n  - `assets/studio/js/catalogue-new-series-editor.js`\n  - `assets/studio/js/catalogue-series-editor.js`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - inspect the four catalogue work/series routes and confirm the legacy prose filename fields are absent\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "fields that no longer control publication should not stay in main edit forms.",
+  "area": "/studio/catalogue-new-work/, /studio/catalogue-work/, /studio/catalogue-new-series/, /studio/catalogue-series/ / local workflow cleanup with shared editor-family impact",
+  "related_files": [
+    "`assets/studio/js/catalogue-new-work-editor.js`",
+    "`assets/studio/js/catalogue-work-editor.js`",
+    "`assets/studio/js/catalogue-new-series-editor.js`",
+    "`assets/studio/js/catalogue-series-editor.js`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`assets/studio/js/catalogue-new-work-editor.js`",
+      "`assets/studio/js/catalogue-work-editor.js`",
+      "`assets/studio/js/catalogue-new-series-editor.js`",
+      "`assets/studio/js/catalogue-series-editor.js`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "inspect the four catalogue work/series routes and confirm the legacy prose filename fields are absent"
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "id": "change-2026-04-20-studio-ui-rule-ui-013-the-detail-file-link-navigation-sections-were-still-mixing",
+  "date": "2026-04-20",
+  "title": "UI-013: the detail/file/link navigation sections were still mixing navigation entry points with button...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "search",
+    "config",
+    "data-models"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-013",
+    "/studio/catalogue-work/",
+    "systemic"
+  ],
+  "summary": "the detail/file/link navigation sections were still mixing navigation entry points with button styling, and the detail search field was always visible in the header even when no detail rows were hidden.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 2139,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-20 / UI-013\n\n- status: adopted\n- route: `/studio/catalogue-work/`\n- issue: the detail/file/link navigation sections were still mixing navigation entry points with button styling, and the detail search field was always visible in the header even when no detail rows were hidden.\n- triage: systemic\n- reasoning: these sections are navigation surfaces, not command rows. The `new` actions should read as links, not buttons, and the detail search only adds value when the fixed per-section limit is hiding rows from the page. Moving the search below the heading also keeps the section header cleaner.\n- permanent rule: on navigation-summary sections, route-entry actions should render as links rather than command buttons. Per-section search should appear only when it is needed to reach items that are not already visible within the fixed on-page list limit.\n- enforcement point: `studio/catalogue-work/index.md`, `assets/studio/js/catalogue-work-editor.js`, `assets/studio/data/studio_config.json`, `assets/studio/js/studio-config.js`, `assets/studio/css/studio.css`, and `_docs/catalogue-work-editor.md`\n- files changed:\n  - `studio/catalogue-work/index.md`\n  - `assets/studio/js/catalogue-work-editor.js`\n  - `assets/studio/data/studio_config.json`\n  - `assets/studio/js/studio-config.js`\n  - `assets/studio/css/studio.css`\n  - `_docs/catalogue-work-editor.md`\n  - `_docs/studio-ui-rules.md`\n  - `_docs/site-change-log.md`\n- local verification:\n  - inspect `/studio/catalogue-work/?work=<id>` for a work with more than 10 detail rows and confirm the detail search appears below the section title\n  - inspect the same route for a work with 10-or-fewer detail rows and confirm the detail search is hidden\n  - confirm `new work detail →`, `new file →`, and `new link →` render as links rather than button-shaped controls\n- follow-up:\n  - when the site-wide link primitive is defined, review whether these route-entry links should adopt that shared treatment instead of keeping a page-local style\n",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "missing outcome field"
+    ]
+  },
+  "effect": "these sections are navigation surfaces, not command rows.",
+  "area": "/studio/catalogue-work/ / systemic",
+  "related_files": [
+    "`studio/catalogue-work/index.md`",
+    "`assets/studio/js/catalogue-work-editor.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`assets/studio/js/studio-config.js`",
+    "`assets/studio/css/studio.css`",
+    "`_docs/catalogue-work-editor.md`",
+    "`_docs/studio-ui-rules.md`",
+    "`_docs/site-change-log.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/catalogue-work/index.md`",
+      "`assets/studio/js/catalogue-work-editor.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`assets/studio/js/studio-config.js`",
+      "`assets/studio/css/studio.css`",
+      "`_docs/catalogue-work-editor.md`",
+      "`_docs/studio-ui-rules.md`",
+      "`_docs/site-change-log.md`"
+    ]
+  },
+  "verification": [
+    "inspect `/studio/catalogue-work/?work=<id>` for a work with more than 10 detail rows and confirm the detail search appears below the section title",
+    "inspect the same route for a work with 10-or-fewer detail rows and confirm the detail search is hidden",
+    "confirm `new work detail →`, `new file →`, and `new link →` render as links rather than button-shaped controls",
+    "follow-up:",
+    "when the site-wide link primitive is defined, review whether these route-entry links should adopt that shared treatment instead of keeping a page-local style"
+  ]
+}

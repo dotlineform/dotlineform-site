@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-05-06-studio-ui-rule-ui-087-kept-the-success-status-message-for-zero-result-audits",
+  "date": "2026-05-06",
+  "title": "UI-087: kept the success status message for zero-result audits and hid/cleared the secondary...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-087",
+    "/studio/docs-broken-links/",
+    "route-local command-result cleanup"
+  ],
+  "summary": "running the Docs Broken Links audit for a scope with no findings displayed two near-duplicate empty-success messages. Outcome: kept the success status message for zero-result audits and hid/cleared the secondary empty paragraph in that path.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 348,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-06 / UI-087\n\n- status: adopted\n- route: `/studio/docs-broken-links/`\n- issue: running the Docs Broken Links audit for a scope with no findings displayed two near-duplicate empty-success messages.\n- triage: route-local command-result cleanup\n- reasoning: the status line is already the command result surface for this route. Showing a second empty paragraph with equivalent copy adds noise without adding a distinct next action.\n- outcome: kept the success status message for zero-result audits and hid/cleared the secondary empty paragraph in that path.\n- files changed:\n  - `assets/studio/js/docs-broken-links.js`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - run a mocked `/studio/docs-broken-links/` audit returning zero entries and confirm only one visible no-results message is shown\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "the status line is already the command result surface for this route.",
+  "area": "/studio/docs-broken-links/ / route-local command-result cleanup",
+  "related_files": [
+    "`assets/studio/js/docs-broken-links.js`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`assets/studio/js/docs-broken-links.js`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "run a mocked `/studio/docs-broken-links/` audit returning zero entries and confirm only one visible no-results message is shown"
+  ]
+}

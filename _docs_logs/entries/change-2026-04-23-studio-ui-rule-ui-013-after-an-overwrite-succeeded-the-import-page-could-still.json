@@ -1,0 +1,54 @@
+{
+  "id": "change-2026-04-23-studio-ui-rule-ui-013-after-an-overwrite-succeeded-the-import-page-could-still",
+  "date": "2026-04-23",
+  "title": "UI-013: after an overwrite succeeded, the import page could still show the earlier...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "build",
+    "scripts",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-013",
+    "/studio/docs-import/",
+    "systemic"
+  ],
+  "summary": "after an overwrite succeeded, the import page could still show the earlier collision warning in its final warnings list, which made the success state read as contradictory even though the write had already completed.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1627,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-23 / UI-013\n\n- status: adopted\n- route: `/studio/docs-import/`\n- issue: after an overwrite succeeded, the import page could still show the earlier collision warning in its final warnings list, which made the success state read as contradictory even though the write had already completed.\n- triage: systemic\n- reasoning: this is a command-feedback boundary issue, not just a wording glitch. Warning copy that belongs only to a pre-confirmation state must not leak into the final success state, otherwise the user cannot tell whether the action really completed.\n- permanent rule: for Studio command flows with preview or confirmation steps, the final success payload and final success UI must only show warnings that still apply after completion. Pre-confirmation blockers or overwrite warnings must be cleared or filtered once the action succeeds.\n- enforcement point: Studio command/result pages such as `/studio/docs-import/` and the corresponding localhost server responses\n- files changed:\n  - `scripts/docs/docs_management_server.py`\n  - `scripts/docs/docs_html_import.py`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - run a collision import on `/studio/docs-import/`\n  - confirm the overwrite-required warning appears before confirmation\n  - confirm the final success state does not keep the same collision warning afterward\n- follow-up:\n  - apply the same rule to future preview-then-apply Studio flows if they add multi-step confirmation states\n",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "missing outcome field"
+    ]
+  },
+  "effect": "this is a command-feedback boundary issue, not just a wording glitch.",
+  "area": "/studio/docs-import/ / systemic",
+  "related_files": [
+    "`scripts/docs/docs_management_server.py`",
+    "`scripts/docs/docs_html_import.py`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`scripts/docs/docs_management_server.py`",
+      "`scripts/docs/docs_html_import.py`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "run a collision import on `/studio/docs-import/`",
+    "confirm the overwrite-required warning appears before confirmation",
+    "confirm the final success state does not keep the same collision warning afterward",
+    "follow-up:",
+    "apply the same rule to future preview-then-apply Studio flows if they add multi-step confirmation states"
+  ]
+}

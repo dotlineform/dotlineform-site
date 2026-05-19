@@ -1,0 +1,79 @@
+{
+  "id": "change-2026-04-22-studio-ui-rule-ui-027-the-catalogue-editor-family-exposed-separate-top-level-save",
+  "date": "2026-04-22",
+  "title": "UI-027: the catalogue editor family exposed separate top-level Save and Rebuild buttons even...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "config",
+    "data-models",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-027",
+    "/studio/catalogue-work/, /studio/catalogue-work-detail/, /studio/catalogue-work-file/, /studio/catalogue-work-link/, /studio/catalogue-series/",
+    "systemic"
+  ],
+  "summary": "the catalogue editor family exposed separate top-level Save and Rebuild buttons even though the real user-facing distinction was usually “save source only” versus “save and publish/update now”.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1784,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-22 / UI-027\n\n- status: adopted\n- route: `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, `/studio/catalogue-work-file/`, `/studio/catalogue-work-link/`, `/studio/catalogue-series/`\n- issue: the catalogue editor family exposed separate top-level `Save` and `Rebuild` buttons even though the real user-facing distinction was usually “save source only” versus “save and publish/update now”. The `Rebuild` label leaked internal pipeline language into the main editing flow.\n- triage: systemic\n- reasoning: deferred publication is a legitimate workflow, especially for draft-heavy bulk editing, but the main command surface should describe that product choice rather than the underlying build mechanism.\n- permanent rule: in catalogue editors, the primary command should be `Save`, paired with an adjacent `Update site now` choice that controls whether the save also publishes runtime changes immediately. If publication remains pending after save, expose `Update site now` as a secondary follow-up action near the runtime status rather than as a peer primary button.\n- enforcement point: `studio/catalogue-work/index.md`, `studio/catalogue-work-detail/index.md`, `studio/catalogue-work-file/index.md`, `studio/catalogue-work-link/index.md`, `studio/catalogue-series/index.md`, their editor scripts, and `assets/studio/data/studio_config.json`\n- files changed:\n  - `studio/catalogue-work/index.md`\n  - `studio/catalogue-work-detail/index.md`\n  - `studio/catalogue-work-file/index.md`\n  - `studio/catalogue-work-link/index.md`\n  - `studio/catalogue-series/index.md`\n  - `assets/studio/css/studio.css`\n  - `assets/studio/js/catalogue-work-editor.js`\n  - `assets/studio/js/catalogue-work-detail-editor.js`\n  - `assets/studio/js/catalogue-work-file-editor.js`\n  - `assets/studio/js/catalogue-work-link-editor.js`\n  - `assets/studio/js/catalogue-series-editor.js`\n  - `assets/studio/data/studio_config.json`\n  - `assets/studio/js/studio-config.js`\n  - `_docs/studio-ui-rules.md`\n  - `_docs/site-change-log.md`\n- local verification:\n  - confirm the main action row on each catalogue editor now shows `Save`, `Delete`, and an `Update site now` toggle instead of a top-level `Rebuild` button\n  - confirm a follow-up `Update site now` action appears only when runtime publication is pending\n- follow-up:\n  - none\n",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "missing outcome field"
+    ]
+  },
+  "effect": "deferred publication is a legitimate workflow, especially for draft-heavy bulk editing, but the main command surface should describe that product choice rather than the underlying build mechanism.",
+  "area": "/studio/catalogue-work/, /studio/catalogue-work-detail/, /studio/catalogue-work-file/, /studio/catalogue-work-link/, /studio/catalogue-series/ / systemic",
+  "related_files": [
+    "`studio/catalogue-work/index.md`",
+    "`studio/catalogue-work-detail/index.md`",
+    "`studio/catalogue-work-file/index.md`",
+    "`studio/catalogue-work-link/index.md`",
+    "`studio/catalogue-series/index.md`",
+    "`assets/studio/css/studio.css`",
+    "`assets/studio/js/catalogue-work-editor.js`",
+    "`assets/studio/js/catalogue-work-detail-editor.js`",
+    "`assets/studio/js/catalogue-work-file-editor.js`",
+    "`assets/studio/js/catalogue-work-link-editor.js`",
+    "`assets/studio/js/catalogue-series-editor.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`assets/studio/js/studio-config.js`",
+    "`_docs/studio-ui-rules.md`",
+    "`_docs/site-change-log.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/catalogue-work/index.md`",
+      "`studio/catalogue-work-detail/index.md`",
+      "`studio/catalogue-work-file/index.md`",
+      "`studio/catalogue-work-link/index.md`",
+      "`studio/catalogue-series/index.md`",
+      "`assets/studio/css/studio.css`",
+      "`assets/studio/js/catalogue-work-editor.js`",
+      "`assets/studio/js/catalogue-work-detail-editor.js`",
+      "`assets/studio/js/catalogue-work-file-editor.js`",
+      "`assets/studio/js/catalogue-work-link-editor.js`",
+      "`assets/studio/js/catalogue-series-editor.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`assets/studio/js/studio-config.js`",
+      "`_docs/studio-ui-rules.md`",
+      "`_docs/site-change-log.md`"
+    ]
+  },
+  "verification": [
+    "confirm the main action row on each catalogue editor now shows `Save`, `Delete`, and an `Update site now` toggle instead of a top-level `Rebuild` button",
+    "confirm a follow-up `Update site now` action appears only when runtime publication is pending",
+    "follow-up:",
+    "none"
+  ]
+}

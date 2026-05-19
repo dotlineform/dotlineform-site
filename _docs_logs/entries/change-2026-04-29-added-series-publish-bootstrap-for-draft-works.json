@@ -29,8 +29,7 @@
   "effect": "Series publish preview reports attached draft works that will be promoted. Series publish apply writes `series.json` and `works.json` atomically, refreshes lookup payloads, and runs the scoped public update. Standalone work publish is blocked unless the work already belongs to at least one published series.",
   "related_docs": [
     "catalogue-work-editor",
-    "scripts-catalogue-write-server",
-    "studio-ui-rules"
+    "scripts-catalogue-write-server"
   ],
   "related_files": [
     "scripts/studio/catalogue_write_server.py",
@@ -47,8 +46,7 @@
     ],
     "docs": [
       "catalogue-work-editor",
-      "scripts-catalogue-write-server",
-      "studio-ui-rules"
+      "scripts-catalogue-write-server"
     ]
   }
 }

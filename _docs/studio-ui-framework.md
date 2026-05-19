@@ -39,4 +39,3 @@ The split child docs cover:
 - [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
 - [UI Framework](/docs/?scope=studio&doc=ui-framework)
 - [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
-- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)

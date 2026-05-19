@@ -1,0 +1,60 @@
+{
+  "id": "change-2026-05-07-studio-ui-rule-ui-091-added-studio-library-documents-linked-it-from-the-library",
+  "date": "2026-05-07",
+  "title": "UI-091: added /studio/library-documents/, linked it from the Library dashboard, rendered generated Library docs...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "library",
+    "build",
+    "config",
+    "data-models"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-091",
+    "/studio/library-documents/",
+    "shared primitive reuse"
+  ],
+  "summary": "Library needed a compact generated-document review page without borrowing the export workflow's selection behavior or creating another page-local table style. Outcome: added /studio/library-documents/, linked it from the Library dashboard, rendered generated Library docs with tagStudioList--dense, added sortable doc_id, added_date, and title columns, opened row links in Library manage mode, and added independent viewable and parent filter pills.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 246,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-07 / UI-091\n\n- status: adopted\n- route: `/studio/library-documents/`\n- issue: Library needed a compact generated-document review page without borrowing the export workflow's selection behavior or creating another page-local table style.\n- triage: shared primitive reuse\n- reasoning: this page is read-only review, so it should use the dense list primitive for scan-table presentation and keep export-specific checkbox hierarchy behavior out of the route. The viewable dot can reuse the same small green status treatment as export, while parent state is derived directly from generated `parent_id` relationships.\n- outcome: added `/studio/library-documents/`, linked it from the Library dashboard, rendered generated Library docs with `tagStudioList--dense`, added sortable `doc_id`, `added_date`, and `title` columns, opened row links in Library manage mode, and added independent `viewable` and `parent` filter pills.\n- files changed:\n  - `studio/library-documents/index.md`\n  - `assets/studio/js/library-documents.js`\n  - `assets/studio/css/studio.css`\n  - `assets/studio/data/studio_config.json`\n  - `assets/studio/js/studio-config.js`\n  - `studio/library/index.md`\n  - `_docs/library-documents.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - build the Studio docs data and site\n  - smoke `/studio/library-documents/` on desktop and mobile and confirm sorting, filter pills, green viewable dots, and parent ticks\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "this page is read-only review, so it should use the dense list primitive for scan-table presentation and keep export-specific checkbox hierarchy behavior out of the route.",
+  "area": "/studio/library-documents/ / shared primitive reuse",
+  "related_files": [
+    "`studio/library-documents/index.md`",
+    "`assets/studio/js/library-documents.js`",
+    "`assets/studio/css/studio.css`",
+    "`assets/studio/data/studio_config.json`",
+    "`assets/studio/js/studio-config.js`",
+    "`studio/library/index.md`",
+    "`_docs/library-documents.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/library-documents/index.md`",
+      "`assets/studio/js/library-documents.js`",
+      "`assets/studio/css/studio.css`",
+      "`assets/studio/data/studio_config.json`",
+      "`assets/studio/js/studio-config.js`",
+      "`studio/library/index.md`",
+      "`_docs/library-documents.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "build the Studio docs data and site",
+    "smoke `/studio/library-documents/` on desktop and mobile and confirm sorting, filter pills, green viewable dots, and parent ticks"
+  ]
+}

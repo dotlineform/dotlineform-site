@@ -1,0 +1,59 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-066-removed-the-old-studio-catalogue-new-pages-removed-the",
+  "date": "2026-04-29",
+  "title": "UI-066: removed the old /studio/catalogue-new-* pages, removed the retired work/detail/series create controllers, and...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "config",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-066",
+    "/studio/catalogue-new-work/, /studio/catalogue-new-work-detail/, /studio/catalogue-new-series/",
+    "route compatibility cleanup"
+  ],
+  "summary": "the old create URLs and their compatibility docs no longer serve a current workflow after create/edit moved into the unified editors. Outcome: removed the old /studio/catalogue-new-* pages, removed the retired work/detail/series create controllers, and removed compatibility docs for the old route pages.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 759,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-066\n\n- status: adopted\n- route: `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, `/studio/catalogue-new-series/`\n- issue: the old create URLs and their compatibility docs no longer serve a current workflow after create/edit moved into the unified editors.\n- triage: route compatibility cleanup\n- reasoning: stale route redirects add a second thing to explain without adding a useful action. The active create/edit behavior belongs in the unified catalogue editors, and internal navigation should point there directly.\n- permanent rule: retired Studio create routes should be removed once active navigation points at the unified editor route. They must not keep standalone controllers, active config route keys, active UI text blocks, or page-level compatibility docs.\n- outcome: removed the old `/studio/catalogue-new-*` pages, removed the retired work/detail/series create controllers, and removed compatibility docs for the old route pages.\n- files changed:\n  - `studio/catalogue-new-work/index.md`\n  - `studio/catalogue-new-work-detail/index.md`\n  - `studio/catalogue-new-series/index.md`\n  - `assets/studio/js/catalogue-new-work-editor.js`\n  - `assets/studio/js/catalogue-new-work-detail-editor.js`\n  - `assets/studio/js/catalogue-new-series-editor.js`\n  - `_docs/catalogue-new-work-editor.md`\n  - `_docs/catalogue-new-work-detail-editor.md`\n  - `_docs/catalogue-new-series-editor.md`\n  - `_docs/studio-runtime.md`\n- verification:\n  - confirm active Catalogue navigation points to the unified editor routes\n  - confirm no active page imports the removed standalone controllers\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "stale route redirects add a second thing to explain without adding a useful action.",
+  "area": "/studio/catalogue-new-work/, /studio/catalogue-new-work-detail/, /studio/catalogue-new-series/ / route compatibility cleanup",
+  "related_files": [
+    "`studio/catalogue-new-work/index.md`",
+    "`studio/catalogue-new-work-detail/index.md`",
+    "`studio/catalogue-new-series/index.md`",
+    "`assets/studio/js/catalogue-new-work-editor.js`",
+    "`assets/studio/js/catalogue-new-work-detail-editor.js`",
+    "`assets/studio/js/catalogue-new-series-editor.js`",
+    "`_docs/catalogue-new-work-editor.md`",
+    "`_docs/catalogue-new-work-detail-editor.md`",
+    "`_docs/catalogue-new-series-editor.md`",
+    "`_docs/studio-runtime.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/catalogue-new-work/index.md`",
+      "`studio/catalogue-new-work-detail/index.md`",
+      "`studio/catalogue-new-series/index.md`",
+      "`assets/studio/js/catalogue-new-work-editor.js`",
+      "`assets/studio/js/catalogue-new-work-detail-editor.js`",
+      "`assets/studio/js/catalogue-new-series-editor.js`",
+      "`_docs/catalogue-new-work-editor.md`",
+      "`_docs/catalogue-new-work-detail-editor.md`",
+      "`_docs/catalogue-new-series-editor.md`",
+      "`_docs/studio-runtime.md`"
+    ]
+  }
+}

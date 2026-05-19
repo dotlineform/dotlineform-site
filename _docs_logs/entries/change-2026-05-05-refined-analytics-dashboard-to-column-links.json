@@ -27,8 +27,7 @@
   "effect": "Analytics is a Studio domain entry page like Catalogue and Library. The shared column-link pattern is a better fit for routine navigation than bespoke descriptive panels.",
   "related_docs": [
     "new-pipeline-refine-analytics",
-    "ui-pattern-column-links",
-    "studio-ui-rules"
+    "ui-pattern-column-links"
   ],
   "related_files": [
     "studio/analytics/index.md"

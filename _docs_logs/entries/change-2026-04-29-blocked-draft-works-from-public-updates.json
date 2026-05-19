@@ -30,8 +30,7 @@
   "related_docs": [
     "catalogue-work-editor",
     "scripts-catalogue-write-server",
-    "scripts-build-catalogue-json",
-    "studio-ui-rules"
+    "scripts-build-catalogue-json"
   ],
   "related_files": [
     "assets/studio/js/catalogue-work-editor.js",
@@ -51,8 +50,7 @@
     "docs": [
       "catalogue-work-editor",
       "scripts-catalogue-write-server",
-      "scripts-build-catalogue-json",
-      "studio-ui-rules"
+      "scripts-build-catalogue-json"
     ]
   }
 }

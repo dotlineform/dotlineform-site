@@ -1,0 +1,47 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-068-work-delete-preview-now-ignores-draft-series-primary-references",
+  "date": "2026-04-29",
+  "title": "UI-068: work delete preview now ignores draft-series primary references as blockers, delete validation...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "scripts",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-068",
+    "/studio/catalogue-series/, /studio/catalogue-work/",
+    "draft/publish workflow boundary"
+  ],
+  "summary": "draft series were treated as hard primary-work dependents during work delete, even though primary_work_id is only required when publishing a series. Outcome: work delete preview now ignores draft-series primary references as blockers, delete validation clears draft-series primary_work_id references before validating the remaining source set, and delete apply writes that series cleanup with the work deletion.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 726,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-068\n\n- status: adopted\n- route: `/studio/catalogue-series/`, `/studio/catalogue-work/`\n- issue: draft series were treated as hard primary-work dependents during work delete, even though `primary_work_id` is only required when publishing a series.\n- triage: draft/publish workflow boundary\n- reasoning: draft records are allowed to be incomplete. Published series need a valid primary work because the public thumbnail and published series surface depend on it, but draft series should not prevent deletion of a draft work solely because they currently point at it as `primary_work_id`.\n- permanent rule: `primary_work_id` is a publication requirement for series, not a draft create/save requirement. Work delete should block published-series primary dependencies, while draft-series primary references to the deleted work can be cleared as source cleanup.\n- outcome: work delete preview now ignores draft-series primary references as blockers, delete validation clears draft-series `primary_work_id` references before validating the remaining source set, and delete apply writes that series cleanup with the work deletion.\n- files changed:\n  - `scripts/studio/catalogue_write_server.py`\n  - `_docs/catalogue-series-editor.md`\n  - `_docs/catalogue-work-editor.md`\n  - `_docs/scripts-catalogue-write-server.md`\n- verification:\n  - preview work delete for `00640` and confirm there are no blockers or validation errors while series `002` is draft\n  - preview publish for series `002` and confirm publication is still blocked until it has a valid published primary/member work\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "draft records are allowed to be incomplete.",
+  "area": "/studio/catalogue-series/, /studio/catalogue-work/ / draft/publish workflow boundary",
+  "related_files": [
+    "`scripts/studio/catalogue_write_server.py`",
+    "`_docs/catalogue-series-editor.md`",
+    "`_docs/catalogue-work-editor.md`",
+    "`_docs/scripts-catalogue-write-server.md`"
+  ],
+  "affected": {
+    "files": [
+      "`scripts/studio/catalogue_write_server.py`",
+      "`_docs/catalogue-series-editor.md`",
+      "`_docs/catalogue-work-editor.md`",
+      "`_docs/scripts-catalogue-write-server.md`"
+    ]
+  }
+}

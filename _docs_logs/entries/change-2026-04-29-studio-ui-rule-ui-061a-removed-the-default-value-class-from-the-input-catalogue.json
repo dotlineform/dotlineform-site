@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-061a-removed-the-default-value-class-from-the-input-catalogue",
+  "date": "2026-04-29",
+  "title": "UI-061A: removed the default-value class from the input catalogue Readonly Display example and...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-061A",
+    "/studio/ui-catalogue/input/, /studio/catalogue-work/, /studio/catalogue-series/",
+    "shared input primitive conformance"
+  ],
+  "summary": "the input primitive demo accidentally combined the Readonly Display class with the muted default-value class, while catalogue editor status fields used native readonly inputs rather than the primitive's non-input display shape. Outcome: removed the default-value class from the input catalogue Readonly Display example and changed Work/Series readonly field rendering to use the same span-based display surface.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 890,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-061A\n\n- status: adopted\n- route: `/studio/ui-catalogue/input/`, `/studio/catalogue-work/`, `/studio/catalogue-series/`\n- issue: the input primitive demo accidentally combined the Readonly Display class with the muted default-value class, while catalogue editor `status` fields used native readonly inputs rather than the primitive's non-input display shape.\n- triage: shared input primitive conformance\n- reasoning: Readonly Display is for values that are display-only by design. It should keep normal text color and avoid input focus/selection behavior unless a route explicitly needs native input affordances.\n- permanent rule: the default Readonly Display primitive uses a non-input element with `tagStudio__input tagStudio__input--readonlyDisplay` and normal text color. Do not add `tagStudio__input--defaultValue` unless the specific value is intentionally a muted default.\n- outcome: removed the default-value class from the input catalogue Readonly Display example and changed Work/Series readonly field rendering to use the same span-based display surface.\n- files changed:\n  - `_includes/studio_ui_catalogue_input_demo.html`\n  - `studio/ui-catalogue/input/index.md`\n  - `assets/studio/js/catalogue-work-editor.js`\n  - `assets/studio/js/catalogue-series-editor.js`\n  - `_includes/ui_catalogue_notes/input.md`\n  - `_docs/studio-ui-framework.md`\n- verification:\n  - inspect `/studio/ui-catalogue/input/` and confirm the Readonly Display sample uses normal text color\n  - inspect Work and Series `status` fields and confirm they use the same non-input display surface\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "Readonly Display is for values that are display-only by design.",
+  "area": "/studio/ui-catalogue/input/, /studio/catalogue-work/, /studio/catalogue-series/ / shared input primitive conformance",
+  "related_files": [
+    "`_includes/studio_ui_catalogue_input_demo.html`",
+    "`studio/ui-catalogue/input/index.md`",
+    "`assets/studio/js/catalogue-work-editor.js`",
+    "`assets/studio/js/catalogue-series-editor.js`",
+    "`_includes/ui_catalogue_notes/input.md`",
+    "`_docs/studio-ui-framework.md`"
+  ],
+  "affected": {
+    "files": [
+      "`_includes/studio_ui_catalogue_input_demo.html`",
+      "`studio/ui-catalogue/input/index.md`",
+      "`assets/studio/js/catalogue-work-editor.js`",
+      "`assets/studio/js/catalogue-series-editor.js`",
+      "`_includes/ui_catalogue_notes/input.md`",
+      "`_docs/studio-ui-framework.md`"
+    ]
+  }
+}

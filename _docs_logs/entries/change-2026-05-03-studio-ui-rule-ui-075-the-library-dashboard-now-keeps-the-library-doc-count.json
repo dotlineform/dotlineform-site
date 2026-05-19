@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-05-03-studio-ui-rule-ui-075-the-library-dashboard-now-keeps-the-library-doc-count",
+  "date": "2026-05-03",
+  "title": "UI-075: the Library dashboard now keeps the Library doc count, removes descriptive intro/card...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "library"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-075",
+    "/studio/library/",
+    "local dashboard alignment"
+  ],
+  "summary": "the Library dashboard still used descriptive panel cards after the Catalogue dashboard had moved to compact route columns for routine navigation. Outcome: the Library dashboard now keeps the Library doc count, removes descriptive intro/card copy, and presents Manage and Data columns with pill links for Library manage mode, HTML Import, and export.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 586,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-03 / UI-075\n\n- status: adopted\n- route: `/studio/library/`\n- issue: the Library dashboard still used descriptive panel cards after the Catalogue dashboard had moved to compact route columns for routine navigation.\n- triage: local dashboard alignment\n- reasoning: Library now has a small set of stable admin routes. Matching the Catalogue dashboard's compact route-column pattern makes the domain dashboard faster to scan and keeps descriptive prose out of routine navigation.\n- outcome: the Library dashboard now keeps the Library doc count, removes descriptive intro/card copy, and presents `Manage` and `Data` columns with pill links for Library manage mode, HTML Import, and export.\n- files changed:\n  - `studio/library/index.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - open `/studio/library/` on desktop and mobile and confirm the layout shows two route columns\n  - confirm `Library` opens `/library/?mode=manage&doc=library`, `HTML Import` opens `/studio/docs-import/?scope=library`, and `export` opens `/studio/export/`\n- follow-up:\n  - consider a shared dashboard-route-column name if non-Catalogue dashboards continue to reuse this compact pattern\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "Library now has a small set of stable admin routes.",
+  "area": "/studio/library/ / local dashboard alignment",
+  "related_files": [
+    "`studio/library/index.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/library/index.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "open `/studio/library/` on desktop and mobile and confirm the layout shows two route columns",
+    "confirm `Library` opens `/library/?mode=manage&doc=library`, `HTML Import` opens `/studio/docs-import/?scope=library`, and `export` opens `/studio/export/`",
+    "follow-up:",
+    "consider a shared dashboard-route-column name if non-Catalogue dashboards continue to reuse this compact pattern"
+  ]
+}

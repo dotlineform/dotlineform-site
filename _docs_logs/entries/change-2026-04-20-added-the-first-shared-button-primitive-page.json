@@ -24,8 +24,7 @@
   "area": "design system / UI catalogue",
   "effect": "The new button primitive page established the first command-button scope and created a base page to refine further. The UI catalogue index now links to both the button and panel primitive pages.",
   "related_docs": [
-    "ui-catalogue",
-    "studio-ui-rules"
+    "ui-catalogue"
   ],
   "related_files": [
     "studio/ui-catalogue/button/index.md",
@@ -41,8 +40,7 @@
       "studio/ui-catalogue/index.md"
     ],
     "docs": [
-      "ui-catalogue",
-      "studio-ui-rules"
+      "ui-catalogue"
     ]
   }
 }

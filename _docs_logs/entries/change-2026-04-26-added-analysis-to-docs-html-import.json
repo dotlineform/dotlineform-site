@@ -29,8 +29,7 @@
   "effect": "The import page now preserves `?scope=analysis`, posts `analysis` to the docs-management server, and links import results to `/analysis/?doc=<doc_id>&mode=manage`. New Analysis imports use the same review-first visibility default as Library imports.",
   "related_docs": [
     "user-guide-docs-html-import",
-    "scripts-docs-management-server",
-    "studio-ui-rules"
+    "scripts-docs-management-server"
   ],
   "related_files": [
     "assets/studio/js/docs-html-import.js",
@@ -47,8 +46,7 @@
     ],
     "docs": [
       "user-guide-docs-html-import",
-      "scripts-docs-management-server",
-      "studio-ui-rules"
+      "scripts-docs-management-server"
     ]
   }
 }

@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-05-07-studio-ui-rule-ui-097-the-result-panel-now-stacks-all-result-fields-in",
+  "date": "2026-05-07",
+  "title": "UI-097: the result panel now stacks all result fields in one column and...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-097",
+    "/studio/docs-import/",
+    "route-local command-result layout refinement"
+  ],
+  "summary": "the Docs Import result panel used a two-column result grid, which made multi-line media paths, R2 keys, and media tokens harder to scan after inline media extraction. Outcome: the result panel now stacks all result fields in one column and renders result values, summary counts, and warning messages at --text-sm.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 159,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-07 / UI-097\n\n- status: adopted\n- route: `/studio/docs-import/`\n- issue: the Docs Import result panel used a two-column result grid, which made multi-line media paths, R2 keys, and media tokens harder to scan after inline media extraction.\n- triage: route-local command-result layout refinement\n- reasoning: Docs Import results are operational messages rather than comparable table fields. Stacking each field vertically preserves full-width reading space for long paths and keeps the panel compact by using the small text token for message values.\n- outcome: the result panel now stacks all result fields in one column and renders result values, summary counts, and warning messages at `--text-sm`.\n- files changed:\n  - `assets/studio/css/studio.css`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - smoke `/studio/docs-import/` on desktop and mobile and confirm result fields stack vertically, long media values wrap within the panel, and message text uses the small text size\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "Docs Import results are operational messages rather than comparable table fields.",
+  "area": "/studio/docs-import/ / route-local command-result layout refinement",
+  "related_files": [
+    "`assets/studio/css/studio.css`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`assets/studio/css/studio.css`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "smoke `/studio/docs-import/` on desktop and mobile and confirm result fields stack vertically, long media values wrap within the panel, and message text uses the small text size"
+  ]
+}

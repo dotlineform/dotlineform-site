@@ -1,0 +1,56 @@
+{
+  "id": "change-2026-04-27-studio-ui-rule-ui-039-added-a-dedicated-moment-editor-with-search-open-source",
+  "date": "2026-04-27",
+  "title": "UI-039: added a dedicated moment editor with search/open, source metadata fields, save plus...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "search",
+    "config",
+    "data-models",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-039",
+    "/studio/catalogue-moment/",
+    "local workflow completion for the catalogue editor family"
+  ],
+  "summary": "existing moments had no normal editor surface, so routine metadata changes depended on the import page or direct JSON edits. Outcome: added a dedicated moment editor with search/open, source metadata fields, save plus optional site update, readiness panels, and staged prose import.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1369,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-27 / UI-039\n\n- status: adopted\n- route: `/studio/catalogue-moment/`\n- issue: existing moments had no normal editor surface, so routine metadata changes depended on the import page or direct JSON edits.\n- triage: local workflow completion for the catalogue editor family\n- reasoning: import and edit are different workflows. The import page should stay file-driven for introducing staged prose, while the editor should reopen one canonical source record, show readiness, save metadata, and run the same scoped update model as work and series editors.\n- outcome: added a dedicated moment editor with search/open, source metadata fields, save plus optional site update, readiness panels, and staged prose import.\n- files changed:\n  - `studio/catalogue-moment/index.md`\n  - `assets/studio/js/catalogue-moment-editor.js`\n  - `assets/studio/data/studio_config.json`\n  - `assets/studio/js/studio-config.js`\n  - `_docs/catalogue-moment-editor.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - open `/studio/catalogue-moment/?moment=keys` and confirm the record loads, save controls are disabled when the local server is unavailable, and readiness sections render without overlapping the summary rail\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "import and edit are different workflows.",
+  "area": "/studio/catalogue-moment/ / local workflow completion for the catalogue editor family",
+  "related_files": [
+    "`studio/catalogue-moment/index.md`",
+    "`assets/studio/js/catalogue-moment-editor.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`assets/studio/js/studio-config.js`",
+    "`_docs/catalogue-moment-editor.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/catalogue-moment/index.md`",
+      "`assets/studio/js/catalogue-moment-editor.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`assets/studio/js/studio-config.js`",
+      "`_docs/catalogue-moment-editor.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "open `/studio/catalogue-moment/?moment=keys` and confirm the record loads, save controls are disabled when the local server is unavailable, and readiness sections render without overlapping the summary rail"
+  ]
+}

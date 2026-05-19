@@ -1,0 +1,63 @@
+{
+  "id": "change-2026-04-25-studio-ui-rule-ui-031-drag-drop-now-uses-row-position-the-upper-main",
+  "date": "2026-04-25",
+  "title": "UI-031: drag/drop now uses row position: the upper/main row area moves inside the...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "library",
+    "build",
+    "config",
+    "data-models"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-031",
+    "/docs/?mode=manage, /library/?mode=manage",
+    "shared docs-viewer interaction refinement"
+  ],
+  "summary": "docs-viewer drag/drop could not populate an empty node because \"drop inside\" was inferred from existing children, so empty intended sections such as Archive behaved only as sibling targets. Outcome: drag/drop now uses row position: the upper/main row area moves inside the target node, while the lower edge moves after it.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1526,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-25 / UI-031\n\n- status: adopted\n- route: `/docs/?mode=manage`, `/library/?mode=manage`\n- issue: docs-viewer drag/drop could not populate an empty node because \"drop inside\" was inferred from existing children, so empty intended sections such as Archive behaved only as sibling targets.\n- triage: shared docs-viewer interaction refinement\n- reasoning: tree editability should not depend on a separate source schema flag or on whether a node already has children. Any doc node can become a parent through the viewer, and loadability/visibility should come from generated doc metadata such as `viewable`.\n- outcome: drag/drop now uses row position: the upper/main row area moves inside the target node, while the lower edge moves after it. The index toolbar adds an icon-only one-step Undo for the most recent successful move in the current viewer session.\n- files changed:\n  - `_includes/docs_viewer_shell.html`\n  - `assets/js/docs-viewer.js`\n  - `assets/css/main.css`\n  - `assets/studio/data/studio_config.json`\n  - `_docs/ui-request-docs-viewer-index-drag-undo-task.md`\n  - `_docs/docs-viewer-management.md`\n  - `_docs/ui-framework.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - in manage mode, drag a root doc onto empty Archive and confirm it becomes a child\n  - use the index Undo action and confirm the doc returns to its prior parent/order\n  - drag a doc onto an ordinary node without children and confirm that node gains a child while remaining loadable\n- follow-up:\n  - consider a more explicit visual drop-zone affordance if row-position targeting proves too subtle in manual use\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "tree editability should not depend on a separate source schema flag or on whether a node already has children.",
+  "area": "/docs/?mode=manage, /library/?mode=manage / shared docs-viewer interaction refinement",
+  "related_files": [
+    "`_includes/docs_viewer_shell.html`",
+    "`assets/js/docs-viewer.js`",
+    "`assets/css/main.css`",
+    "`assets/studio/data/studio_config.json`",
+    "`_docs/ui-request-docs-viewer-index-drag-undo-task.md`",
+    "`_docs/docs-viewer-management.md`",
+    "`_docs/ui-framework.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`_includes/docs_viewer_shell.html`",
+      "`assets/js/docs-viewer.js`",
+      "`assets/css/main.css`",
+      "`assets/studio/data/studio_config.json`",
+      "`_docs/ui-request-docs-viewer-index-drag-undo-task.md`",
+      "`_docs/docs-viewer-management.md`",
+      "`_docs/ui-framework.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "in manage mode, drag a root doc onto empty Archive and confirm it becomes a child",
+    "use the index Undo action and confirm the doc returns to its prior parent/order",
+    "drag a doc onto an ordinary node without children and confirm that node gains a child while remaining loadable",
+    "follow-up:",
+    "consider a more explicit visual drop-zone affordance if row-position targeting proves too subtle in manual use"
+  ]
+}

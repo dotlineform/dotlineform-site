@@ -22,18 +22,12 @@
   },
   "area": "Studio / catalogue series editor",
   "effect": "The first accepted member work fills blank `primary_work_id` immediately in the editor. Later member additions do not overwrite an existing primary value, and publish validation still requires a valid published primary work.",
-  "related_docs": [
-    "studio-ui-rules"
-  ],
   "related_files": [
     "assets/studio/js/catalogue-series-editor.js"
   ],
   "affected": {
     "files": [
       "assets/studio/js/catalogue-series-editor.js"
-    ],
-    "docs": [
-      "studio-ui-rules"
     ]
   }
 }

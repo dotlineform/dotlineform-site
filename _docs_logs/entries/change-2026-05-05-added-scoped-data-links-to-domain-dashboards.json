@@ -25,8 +25,7 @@
   "area": "Studio / Dashboards",
   "effect": "After import/export became scope-aware, domain dashboards should route users directly to the relevant scoped data workflow instead of relying on defaults or leaving Catalogue without data entry points.",
   "related_docs": [
-    "ui-pattern-column-links",
-    "studio-ui-rules"
+    "ui-pattern-column-links"
   ],
   "related_files": [
     "studio/catalogue/index.md",

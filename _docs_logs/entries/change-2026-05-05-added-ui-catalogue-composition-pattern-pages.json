@@ -27,8 +27,7 @@
   "related_docs": [
     "ui-catalogue",
     "ui-pattern-reopenable-command-result",
-    "ui-pattern-column-links",
-    "studio-ui-rules"
+    "ui-pattern-column-links"
   ],
   "related_files": [
     "studio/ui-catalogue/index.md",

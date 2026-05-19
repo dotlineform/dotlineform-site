@@ -1,0 +1,65 @@
+{
+  "id": "change-2026-04-28-studio-ui-rule-ui-045-studio-catalogue-work-owns-work-create-edit-through-mode",
+  "date": "2026-04-28",
+  "title": "UI-045: /studio/catalogue-work/ owns work create/edit through ?mode=new and ?work=<work_id>, the retired work-create route...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "config",
+    "data-models"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-045",
+    "/studio/catalogue-work/, /studio/catalogue-new-work/, /studio/catalogue-status/, /studio/catalogue/",
+    "systemic catalogue editor workflow cleanup"
+  ],
+  "summary": "work creation and work editing used separate Studio surfaces, which made field consistency and follow-up draft discovery harder to reason about. Outcome: /studio/catalogue-work/ owns work create/edit through ?mode=new and ?work=<work_id>, the retired work-create route has been removed, and Catalogue Status now has ?view=draft-works.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1174,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-28 / UI-045\n\n- status: adopted\n- route: `/studio/catalogue-work/`, `/studio/catalogue-new-work/`, `/studio/catalogue-status/`, `/studio/catalogue/`\n- issue: work creation and work editing used separate Studio surfaces, which made field consistency and follow-up draft discovery harder to reason about.\n- triage: systemic catalogue editor workflow cleanup\n- reasoning: create/edit should be explicit modes of the same record editor when they share the same source schema. The mode switch can be a command button, but the route, field renderer, validation helpers, and page docs should converge so future series and moments work can reuse the pattern.\n- permanent rule: when a Studio record family adopts unified create/edit, use one editor route with an explicit `new` mode, remove the old create route, retire the old create route key from active config, and provide an obvious draft/status recovery view from Catalogue navigation.\n- outcome: `/studio/catalogue-work/` owns work create/edit through `?mode=new` and `?work=<work_id>`, the retired work-create route has been removed, and Catalogue Status now has `?view=draft-works`.\n- files changed:\n  - `studio/catalogue-work/index.md`\n  - `studio/catalogue-new-work/index.md`\n  - `studio/catalogue/index.md`\n  - `assets/studio/js/catalogue-work-editor.js`\n  - `assets/studio/js/catalogue-status.js`\n  - `assets/studio/data/studio_config.json`\n  - `assets/studio/js/studio-config.js`\n  - `_docs/catalogue-work-editor.md`\n  - `_docs/catalogue-new-work-editor.md`\n  - `_docs/catalogue-status.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - open `/studio/catalogue-work/?mode=new` and confirm the editor is in create mode\n  - open `/studio/catalogue-status/?view=draft-works` and confirm only draft works are listed\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "create/edit should be explicit modes of the same record editor when they share the same source schema.",
+  "area": "/studio/catalogue-work/, /studio/catalogue-new-work/, /studio/catalogue-status/, /studio/catalogue/ / systemic catalogue editor workflow cleanup",
+  "related_files": [
+    "`studio/catalogue-work/index.md`",
+    "`studio/catalogue-new-work/index.md`",
+    "`studio/catalogue/index.md`",
+    "`assets/studio/js/catalogue-work-editor.js`",
+    "`assets/studio/js/catalogue-status.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`assets/studio/js/studio-config.js`",
+    "`_docs/catalogue-work-editor.md`",
+    "`_docs/catalogue-new-work-editor.md`",
+    "`_docs/catalogue-status.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/catalogue-work/index.md`",
+      "`studio/catalogue-new-work/index.md`",
+      "`studio/catalogue/index.md`",
+      "`assets/studio/js/catalogue-work-editor.js`",
+      "`assets/studio/js/catalogue-status.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`assets/studio/js/studio-config.js`",
+      "`_docs/catalogue-work-editor.md`",
+      "`_docs/catalogue-new-work-editor.md`",
+      "`_docs/catalogue-status.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "open `/studio/catalogue-work/?mode=new` and confirm the editor is in create mode",
+    "open `/studio/catalogue-status/?view=draft-works` and confirm only draft works are listed"
+  ]
+}

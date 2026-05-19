@@ -1,0 +1,56 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-049-the-work-editor-now-links-to-studio-catalogue-work",
+  "date": "2026-04-29",
+  "title": "UI-049: the work editor now links to /studio/catalogue-work-detail/?work=<work_id>&mode=new, the retired detail-create route has...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "config",
+    "data-models"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-049",
+    "/studio/catalogue-work/, /studio/catalogue-new-work-detail/, /studio/catalogue/",
+    "route migration for parent-owned child records"
+  ],
+  "summary": "after the work-detail editor gained parent-scoped new mode, active links still pointed at the standalone create route and the Catalogue dashboard still presented detail creation as a top-level create workflow. Outcome: the work editor now links to /studio/catalogue-work-detail/?work=<work_id>&mode=new, the retired detail-create route has been removed, and the Catalogue dashboard no longer includes Create New Detail.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 1154,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-049\n\n- status: adopted\n- route: `/studio/catalogue-work/`, `/studio/catalogue-new-work-detail/`, `/studio/catalogue/`\n- issue: after the work-detail editor gained parent-scoped new mode, active links still pointed at the standalone create route and the Catalogue dashboard still presented detail creation as a top-level create workflow.\n- triage: route migration for parent-owned child records\n- reasoning: the UI should reinforce the parent-first model. Active navigation should use the unified editor route and dashboard copy should not present child-detail creation as a standalone primary action.\n- permanent rule: after a parent-owned child editor gains unified create mode, update parent-page entry links immediately, remove the retired create route, remove active config keys for the retired route, and remove dashboard create links that bypass parent context.\n- outcome: the work editor now links to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`, the retired detail-create route has been removed, and the Catalogue dashboard no longer includes `Create New Detail`.\n- files changed:\n  - `studio/catalogue-work/index.md`\n  - `studio/catalogue-new-work-detail/index.md`\n  - `studio/catalogue/index.md`\n  - `assets/studio/js/catalogue-work-editor.js`\n  - `assets/studio/data/studio_config.json`\n  - `assets/studio/js/studio-config.js`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - click `new work detail` from a loaded work and confirm the URL contains `?work=<work_id>&mode=new`\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "the UI should reinforce the parent-first model.",
+  "area": "/studio/catalogue-work/, /studio/catalogue-new-work-detail/, /studio/catalogue/ / route migration for parent-owned child records",
+  "related_files": [
+    "`studio/catalogue-work/index.md`",
+    "`studio/catalogue-new-work-detail/index.md`",
+    "`studio/catalogue/index.md`",
+    "`assets/studio/js/catalogue-work-editor.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`assets/studio/js/studio-config.js`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/catalogue-work/index.md`",
+      "`studio/catalogue-new-work-detail/index.md`",
+      "`studio/catalogue/index.md`",
+      "`assets/studio/js/catalogue-work-editor.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`assets/studio/js/studio-config.js`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "click `new work detail` from a loaded work and confirm the URL contains `?work=<work_id>&mode=new`"
+  ]
+}

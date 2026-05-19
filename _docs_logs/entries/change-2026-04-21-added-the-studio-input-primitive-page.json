@@ -26,8 +26,7 @@
   "effect": "`/studio/ui-catalogue/input/` now gives the project one implementation reference for text fields, dropdowns, stepped numeric value assignment, readonly field display, and muted default-value states. The base `.tagStudio__input` class stays focused on the shared shell, while `tagStudioField` owns width, label, and add-on composition.",
   "related_docs": [
     "ui-catalogue",
-    "studio-ui-framework",
-    "studio-ui-rules"
+    "studio-ui-framework"
   ],
   "related_files": [
     "assets/studio/css/studio.css",
@@ -44,8 +43,7 @@
     ],
     "docs": [
       "ui-catalogue",
-      "studio-ui-framework",
-      "studio-ui-rules"
+      "studio-ui-framework"
     ]
   }
 }

@@ -24,8 +24,7 @@
   "effect": "Panel-link copy now wraps to the panel width itself, the `/studio/` entry cards use a narrower centered composition, and the primitive docs now explicitly include design guidance where sizing and composition choices affect correct reuse.",
   "related_docs": [
     "ui-catalogue",
-    "studio-ui-framework",
-    "studio-ui-rules"
+    "studio-ui-framework"
   ],
   "related_files": [
     "assets/studio/css/studio.css",
@@ -38,8 +37,7 @@
     ],
     "docs": [
       "ui-catalogue",
-      "studio-ui-framework",
-      "studio-ui-rules"
+      "studio-ui-framework"
     ]
   }
 }

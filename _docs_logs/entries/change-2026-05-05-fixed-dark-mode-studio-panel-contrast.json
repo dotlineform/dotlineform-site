@@ -21,8 +21,7 @@
   "area": "Studio / UI",
   "effect": "The previous token mix left field labels and disabled controls nearly invisible in dark mode because the panel stayed white while muted text became pale grey.",
   "related_docs": [
-    "ui-primitive-panel",
-    "studio-ui-rules"
+    "ui-primitive-panel"
   ],
   "related_files": [
     "assets/studio/css/studio.css"

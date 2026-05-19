@@ -27,8 +27,7 @@
   "related_docs": [
     "library-export",
     "config-library-export-configs",
-    "scripts-docs-export",
-    "studio-ui-rules"
+    "scripts-docs-export"
   ],
   "related_files": [
     "assets/studio/data/library_export_configs.json",

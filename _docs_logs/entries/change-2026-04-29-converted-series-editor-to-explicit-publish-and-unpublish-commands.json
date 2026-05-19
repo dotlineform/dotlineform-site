@@ -28,7 +28,6 @@
   "effect": "The series status field is now read-only, `Save` never changes publication status, draft saves stay source-only, and published saves request the internal public catalogue update without showing a rebuild/update command. Draft series expose `Publish` when the saved form is clean and valid; published series expose `Unpublish`, which ignores unsaved form edits after confirmation and uses the shared publication preview/apply endpoints to clean public output.",
   "related_docs": [
     "site-request-catalogue-publication-workflow",
-    "studio-ui-rules",
     "site-change-log"
   ],
   "related_files": [
@@ -47,7 +46,6 @@
     ],
     "docs": [
       "site-request-catalogue-publication-workflow",
-      "studio-ui-rules",
       "site-change-log"
     ]
   }

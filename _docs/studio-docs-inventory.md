@@ -20,16 +20,15 @@ Scanned `_docs/*.md` after the structured change-history refactor and the 2026-0
 
 Summary:
 
-- Total Markdown docs: `311`
-- Over 200 lines: `127`
-- Over 300 lines: `77`
-- Over 500 lines: `18`
-- Over 1000 lines: `1`
+- Total Markdown docs: `310`
+- Over 200 lines: `126`
+- Over 300 lines: `76`
+- Over 500 lines: `17`
+- Over 1000 lines: `0`
 
-Highest-priority split candidates:
+Completed Priority 1 migration on 2026-05-19:
 
-1. `_docs/studio-ui-rules.md` - `2474` lines  
-   Pending user review before splitting. This is mostly chronological decision-log material. It already has a “Retirement Direction” section, so it should probably become a short current-rules page plus monthly/quarterly UI decision-log child docs.
+- `_docs/studio-ui-rules.md` migrated into 108 structured `_docs_logs/entries/` records, then removed from the normal Studio docs source. Durable UI guidance should be promoted separately into [UI](/docs/?scope=studio&doc=ui), [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start), UI primitive docs, or UI pattern docs when later review identifies stable rules worth preserving as reference material.
 
 Completed non-Priority-1 splits on 2026-05-19:
 

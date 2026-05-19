@@ -1,0 +1,67 @@
+{
+  "id": "change-2026-05-04-studio-ui-rule-ui-077-removed-the-intro-and-idle-helper-messages-changed-selection",
+  "date": "2026-05-04",
+  "title": "UI-077: removed the intro and idle helper messages, changed selection copy to selected-document...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "library",
+    "scripts",
+    "config",
+    "data-models",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-077",
+    "/studio/export/",
+    "route-local refinement"
+  ],
+  "summary": "the Library export route still used passive helper text, a persistent result panel, and command placement that made the export controls less compact than the rest of the Library Studio surface. Outcome: removed the intro and idle helper messages, changed selection copy to selected-document count only, moved Run export beside the export-pattern dropdown, moved the missing-summary option under that dropdown, converted Select all and Clear to pills directly above the list, and replaced the result panel with a shared Studio modal.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 543,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-04 / UI-077\n\n- status: adopted\n- route: `/studio/export/`\n- issue: the Library export route still used passive helper text, a persistent result panel, and command placement that made the export controls less compact than the rest of the Library Studio surface.\n- triage: route-local refinement\n- reasoning: Library export is a command page with one primary setup row and one checklist. The useful persistent state is selection, while completed export details are better treated as an interruptible result that can be dismissed after the file path has been noted.\n- outcome: removed the intro and idle helper messages, changed selection copy to selected-document count only, moved Run export beside the export-pattern dropdown, moved the missing-summary option under that dropdown, converted Select all and Clear to pills directly above the list, and replaced the result panel with a shared Studio modal.\n- files changed:\n  - `studio/export/index.md`\n  - `assets/studio/js/data-export.js`\n  - `assets/studio/css/studio.css`\n  - `assets/studio/data/studio_config.json`\n  - `assets/studio/js/studio-config.js`\n  - `scripts/docs/docs_management_server.py`\n  - `tests/python/test_docs_import_service.py`\n  - `_docs/library-export-ui.md`\n  - `_docs/library-export.md`\n  - `_docs/config-studio-config-json.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - open `/studio/export/` and confirm the control row, checklist pills, and empty idle status render correctly on desktop and mobile\n  - run an export with the docs-management service available and confirm the result opens in a modal with a filename-only read-only text box\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "Library export is a command page with one primary setup row and one checklist.",
+  "area": "/studio/export/ / route-local refinement",
+  "related_files": [
+    "`studio/export/index.md`",
+    "`assets/studio/js/data-export.js`",
+    "`assets/studio/css/studio.css`",
+    "`assets/studio/data/studio_config.json`",
+    "`assets/studio/js/studio-config.js`",
+    "`scripts/docs/docs_management_server.py`",
+    "`tests/python/test_docs_import_service.py`",
+    "`_docs/library-export-ui.md`",
+    "`_docs/library-export.md`",
+    "`_docs/config-studio-config-json.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/export/index.md`",
+      "`assets/studio/js/data-export.js`",
+      "`assets/studio/css/studio.css`",
+      "`assets/studio/data/studio_config.json`",
+      "`assets/studio/js/studio-config.js`",
+      "`scripts/docs/docs_management_server.py`",
+      "`tests/python/test_docs_import_service.py`",
+      "`_docs/library-export-ui.md`",
+      "`_docs/library-export.md`",
+      "`_docs/config-studio-config-json.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "open `/studio/export/` and confirm the control row, checklist pills, and empty idle status render correctly on desktop and mobile",
+    "run an export with the docs-management service available and confirm the result opens in a modal with a filename-only read-only text box"
+  ]
+}

@@ -24,18 +24,12 @@
   },
   "area": "Studio / catalogue work details",
   "effect": "Saving a detail title now keeps the edited title visible after `Save` or `Save + Update site`; generated lookup JSON is still used when opening records.",
-  "related_docs": [
-    "studio-ui-rules"
-  ],
   "related_files": [
     "assets/studio/js/catalogue-work-detail-editor.js"
   ],
   "affected": {
     "files": [
       "assets/studio/js/catalogue-work-detail-editor.js"
-    ],
-    "docs": [
-      "studio-ui-rules"
     ]
   }
 }

@@ -27,7 +27,6 @@
   "effect": "The summary sentence is replaced by filter pills, all result columns are sortable, and `from page` is now the second column before `linked page`.",
   "related_docs": [
     "docs-broken-links",
-    "studio-ui-rules",
     "site-change-log"
   ],
   "related_files": [
@@ -45,7 +44,6 @@
     ],
     "docs": [
       "docs-broken-links",
-      "studio-ui-rules",
       "site-change-log"
     ]
   }

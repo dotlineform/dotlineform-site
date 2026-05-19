@@ -24,9 +24,6 @@
   },
   "area": "design system / Studio command buttons",
   "effect": "`/studio/series-tag-editor/` now uses `Add` and `Save` with the standard small/default-width button treatment, and the first button primitive example now shows the field-row use case rather than a standalone button.",
-  "related_docs": [
-    "studio-ui-rules"
-  ],
   "related_files": [
     "studio/series-tag-editor/index.md",
     "studio/ui-catalogue/button/index.md",
@@ -39,9 +36,6 @@
       "studio/ui-catalogue/button/index.md",
       "_includes/studio_ui_catalogue_button_demo.html",
       "_includes/ui_catalogue_notes/button.md"
-    ],
-    "docs": [
-      "studio-ui-rules"
     ]
   }
 }

@@ -32,7 +32,6 @@
     "catalogue-work-editor",
     "scripts-catalogue-write-server",
     "site-request-catalogue-publication-workflow",
-    "studio-ui-rules",
     "site-change-log"
   ],
   "related_files": [
@@ -53,7 +52,6 @@
       "catalogue-work-editor",
       "scripts-catalogue-write-server",
       "site-request-catalogue-publication-workflow",
-      "studio-ui-rules",
       "site-change-log"
     ]
   }

@@ -28,7 +28,6 @@
   "effect": "The command appears immediately after the current-record image and caption, sends the unsaved changed field names to `POST /catalogue/build-preview`, and shows the field-aware summary, rules, artifacts, and reasons in a modal. For a download-only edit, the modal reports the narrowed `work_local_public_metadata` scope instead of a broad series/search/media update.",
   "related_docs": [
     "catalogue-work-editor",
-    "studio-ui-rules",
     "site-change-log"
   ],
   "related_files": [
@@ -44,7 +43,6 @@
     ],
     "docs": [
       "catalogue-work-editor",
-      "studio-ui-rules",
       "site-change-log"
     ]
   }

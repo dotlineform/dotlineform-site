@@ -1,0 +1,55 @@
+{
+  "id": "change-2026-05-07-studio-ui-rule-ui-096-changed-the-normal-collision-recovery-flow-to-a-file",
+  "date": "2026-05-07",
+  "title": "UI-096: changed the normal collision recovery flow to a File already exists modal...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "scripts",
+    "config",
+    "data-models",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-096",
+    "/studio/docs-import/",
+    "route-specific workflow correction using shared modal shell"
+  ],
+  "summary": "the Docs Import collision flow described a title conflict even though the blocking condition is an existing Markdown source filename/doc_id, and the prompt lived as an inline warning panel below the command controls. Outcome: changed the normal collision recovery flow to a File already exists modal with a full-width doc_id input seeded from the colliding id, OK for replacement_doc_id, Replace for explicit overwrite, and Cancel to leave the import unwritten.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 173,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-07 / UI-096\n\n- status: adopted\n- route: `/studio/docs-import/`\n- issue: the Docs Import collision flow described a title conflict even though the blocking condition is an existing Markdown source filename/doc_id, and the prompt lived as an inline warning panel below the command controls.\n- triage: route-specific workflow correction using shared modal shell\n- reasoning: filename collisions are safer when the UI asks for the exact value that will change, which is the `doc_id` and resulting filename stem. A modal keeps the blocking decision focused and lets the page keep its normal command state, while the shared modal shell owns the action-row and dialog styling.\n- outcome: changed the normal collision recovery flow to a `File already exists` modal with a full-width `doc_id` input seeded from the colliding id, OK for `replacement_doc_id`, Replace for explicit overwrite, and Cancel to leave the import unwritten. The staged-file control now occupies half the content width on desktop so the `publish into` field sits beside it.\n- files changed:\n  - `studio/docs-import/index.md`\n  - `assets/studio/js/docs-html-import.js`\n  - `assets/studio/css/studio.css`\n  - `assets/studio/data/studio_config.json`\n  - `scripts/docs/docs_management_server.py`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - smoke `/studio/docs-import/` on desktop and mobile and confirm filename collisions open the modal, OK submits the edited `doc_id`, Replace overwrites the existing file, Cancel closes without writing, and the desktop controls keep the staged-file field at half width with `publish into` beside it\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "filename collisions are safer when the UI asks for the exact value that will change, which is the doc_id and resulting filename stem.",
+  "area": "/studio/docs-import/ / route-specific workflow correction using shared modal shell",
+  "related_files": [
+    "`studio/docs-import/index.md`",
+    "`assets/studio/js/docs-html-import.js`",
+    "`assets/studio/css/studio.css`",
+    "`assets/studio/data/studio_config.json`",
+    "`scripts/docs/docs_management_server.py`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/docs-import/index.md`",
+      "`assets/studio/js/docs-html-import.js`",
+      "`assets/studio/css/studio.css`",
+      "`assets/studio/data/studio_config.json`",
+      "`scripts/docs/docs_management_server.py`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "smoke `/studio/docs-import/` on desktop and mobile and confirm filename collisions open the modal, OK submits the edited `doc_id`, Replace overwrites the existing file, Cancel closes without writing, and the desktop controls keep the staged-file field at half width with `publish into` beside it"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-059-removed-the-visible-series-save-time-public-update-checkbox",
+  "date": "2026-04-29",
+  "title": "UI-059: removed the visible series save-time public update checkbox and follow-up update button...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "config",
+    "data-models",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-059",
+    "/studio/catalogue-series/",
+    "command model / publication workflow"
+  ],
+  "summary": "the series editor still exposed publication as a save-time Update site now checkbox plus a follow-up update button, even though the target workflow separates metadata save, publish, and unpublish. Outcome: removed the visible series save-time public update checkbox and follow-up update button, added a config-backed Publish / Unpublish command, made status read-only, and wired publication state changes through the shared catalogue publication preview/apply endpoints.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 933,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-059\n\n- status: adopted\n- route: `/studio/catalogue-series/`\n- issue: the series editor still exposed publication as a save-time `Update site now` checkbox plus a follow-up update button, even though the target workflow separates metadata save, publish, and unpublish.\n- triage: command model / publication workflow\n- reasoning: a published-series save should update public output internally, while changing public visibility should be an explicit command. The editor should not ask the user to understand rebuild timing or use a checkbox to change publication semantics.\n- permanent rule: series publication state changes happen through the single publication command. `Save` does not change status; saved published series run the internal public update; `Publish` moves a clean draft to `published`; `Unpublish` changes only status back to `draft`, ignores unsaved form edits after confirmation, and cleans generated public output.\n- outcome: removed the visible series save-time public update checkbox and follow-up update button, added a config-backed `Publish` / `Unpublish` command, made status read-only, and wired publication state changes through the shared catalogue publication preview/apply endpoints.\n- files changed:\n  - `studio/catalogue-series/index.md`\n  - `assets/studio/js/catalogue-series-editor.js`\n  - `assets/studio/js/studio-transport.js`\n  - `assets/studio/data/studio_config.json`\n  - `_docs/catalogue-series-editor.md`\n  - `_docs/site-request-catalogue-publication-workflow.md`\n- verification:\n  - open `/studio/catalogue-series/?series=002` and confirm a saved draft shows `Publish`, no `Update site now` checkbox, and disabled status editing\n  - publish preview/apply for a valid draft series and confirm the form reloads as `published`\n  - open a published series and confirm `Unpublish` remains available even with dirty form edits, then confirm cancel writes nothing\n  - unpublish dry-run or test record and confirm source status returns to `draft` and public cleanup impact is reported by the server\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "a published-series save should update public output internally, while changing public visibility should be an explicit command.",
+  "area": "/studio/catalogue-series/ / command model / publication workflow",
+  "related_files": [
+    "`studio/catalogue-series/index.md`",
+    "`assets/studio/js/catalogue-series-editor.js`",
+    "`assets/studio/js/studio-transport.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`_docs/catalogue-series-editor.md`",
+    "`_docs/site-request-catalogue-publication-workflow.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/catalogue-series/index.md`",
+      "`assets/studio/js/catalogue-series-editor.js`",
+      "`assets/studio/js/studio-transport.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`_docs/catalogue-series-editor.md`",
+      "`_docs/site-request-catalogue-publication-workflow.md`"
+    ]
+  }
+}

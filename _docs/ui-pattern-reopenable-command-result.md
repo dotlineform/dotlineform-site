@@ -109,5 +109,5 @@ The route owns visibility and invalidation of the `results` action.
 
 ## Migration Notes
 
-Related historical notes currently live in [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules).
+Related historical notes from the retired Studio UI rules log now live in structured docs-log entries.
 Move stable guidance here when retiring that log content.

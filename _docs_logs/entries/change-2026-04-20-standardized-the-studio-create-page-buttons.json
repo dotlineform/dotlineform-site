@@ -26,9 +26,6 @@
   },
   "area": "Studio / create editors / command buttons",
   "effect": "`/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, `/studio/catalogue-new-work-file/`, `/studio/catalogue-new-work-link/`, and `/studio/catalogue-new-series/` now all show a standard-width `Create` button, with config-backed label support across the whole set.",
-  "related_docs": [
-    "studio-ui-rules"
-  ],
   "related_files": [
     "studio/catalogue-new-work/index.md",
     "studio/catalogue-new-work-detail/index.md",
@@ -57,9 +54,6 @@
       "assets/studio/js/catalogue-new-work-file-editor.js",
       "assets/studio/js/catalogue-new-work-link-editor.js",
       "assets/studio/js/catalogue-new-series-editor.js"
-    ],
-    "docs": [
-      "studio-ui-rules"
     ]
   }
 }

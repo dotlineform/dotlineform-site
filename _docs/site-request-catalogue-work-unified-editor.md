@@ -490,7 +490,7 @@ Update route references after the unified page is stable:
 - `_docs/catalogue-new-work-editor.md` or a replacement compatibility note
 - `_docs/studio-runtime.md`
 - `_docs/user-guide.md`
-- `_docs/studio-ui-rules.md` if a reusable Studio mode-toggle rule emerges
+- structured docs-log entries if a reusable Studio mode-toggle rule emerges
 - draft-work list route or dashboard/status documentation, depending on the chosen implementation
 
 Acceptance checks:

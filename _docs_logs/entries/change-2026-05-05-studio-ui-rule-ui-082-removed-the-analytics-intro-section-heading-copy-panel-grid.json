@@ -1,0 +1,53 @@
+{
+  "id": "change-2026-05-05-studio-ui-rule-ui-082-removed-the-analytics-intro-section-heading-copy-panel-grid",
+  "date": "2026-05-05",
+  "title": "UI-082: removed the Analytics intro, section heading copy, panel grid, and metric meta...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "library",
+    "build",
+    "analytics"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-082",
+    "/studio/analytics/",
+    "shared composition pattern"
+  ],
+  "summary": "the Analytics dashboard still used intro copy, descriptive panel cards, and metric meta text after Catalogue and Library had moved to compact column-link entry pages. Outcome: removed the Analytics intro, section heading copy, panel grid, and metric meta text; replaced the route panels with Data and Tags columns using the shared catalogueDashboardRoutes / catalogueDashboardColumn / catalogueDashboardPills classes; and kept Analytics import/export links scope-aware.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 433,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-05-05 / UI-082\n\n- status: adopted\n- route: `/studio/analytics/`\n- issue: the Analytics dashboard still used intro copy, descriptive panel cards, and metric meta text after Catalogue and Library had moved to compact column-link entry pages.\n- triage: shared composition pattern\n- reasoning: Analytics is now another Studio domain entry point. Its dashboard should route operators into data workflows and tag tools with the same compact pattern rather than maintaining a page-local card grid.\n- outcome: removed the Analytics intro, section heading copy, panel grid, and metric meta text; replaced the route panels with `Data` and `Tags` columns using the shared `catalogueDashboardRoutes` / `catalogueDashboardColumn` / `catalogueDashboardPills` classes; and kept Analytics import/export links scope-aware.\n- files changed:\n  - `studio/analytics/index.md`\n  - `_docs/refine-analytics.md`\n  - `_docs/ui-pattern-column-links.md`\n  - `_docs/studio-ui-rules.md`\n- local verification:\n  - build the Studio docs data and site\n  - open `/studio/analytics/` and confirm it no longer uses card panels or descriptive dashboard copy\n  - confirm the route uses the shared column-links classes and exposes scope-aware Analytics import/export links\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "Analytics is now another Studio domain entry point.",
+  "area": "/studio/analytics/ / shared composition pattern",
+  "related_files": [
+    "`studio/analytics/index.md`",
+    "`_docs/refine-analytics.md`",
+    "`_docs/ui-pattern-column-links.md`",
+    "`_docs/studio-ui-rules.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/analytics/index.md`",
+      "`_docs/refine-analytics.md`",
+      "`_docs/ui-pattern-column-links.md`",
+      "`_docs/studio-ui-rules.md`"
+    ]
+  },
+  "verification": [
+    "build the Studio docs data and site",
+    "open `/studio/analytics/` and confirm it no longer uses card panels or descriptive dashboard copy",
+    "confirm the route uses the shared column-links classes and exposes scope-aware Analytics import/export links"
+  ]
+}

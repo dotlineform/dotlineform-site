@@ -1,0 +1,64 @@
+{
+  "id": "change-2026-04-20-studio-ui-rule-ui-006-the-image-fill-panel-link-example-had-drifted-into",
+  "date": "2026-04-20",
+  "title": "UI-006: the image-fill panel-link example had drifted into treating white text as the...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-006",
+    "/studio/ui-catalogue/panel/",
+    "systemic"
+  ],
+  "summary": "the image-fill panel-link example had drifted into treating white text as the default primitive behavior, even though dark text is the site-wide default.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 2306,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-20 / UI-006\n\n- status: adopted\n- route: `/studio/ui-catalogue/panel/`\n- issue: the image-fill panel-link example had drifted into treating white text as the default primitive behavior, even though dark text is the site-wide default. The catalogue also was not yet showing the contrast override as an explicit reusable code pattern.\n- triage: systemic\n- reasoning: the image-fill behavior and the contrast treatment are different concerns. The primitive should stay neutral by default and the working reference should show common design-led overrides in code when they materially affect how the primitive is applied on real pages.\n- permanent rule: `tagStudio__panelLink--image` keeps the default dark text and centered `cover` image behavior. Use `tagStudio__panelLink--imageContrast` as the explicit override when a selected image needs white text and a stronger overlay. Studio panel-link background images should be selected at design time from `assets/studio/img/panel-backgrounds/`.\n- enforcement point: `.tagStudio__panelLink--image` and `.tagStudio__panelLink--imageContrast` in `assets/studio/css/studio.css`, plus the panel primitive examples and notes\n- files changed:\n  - `assets/studio/css/studio.css`\n  - `assets/studio/img/panel-backgrounds/.gitkeep`\n  - `studio/ui-catalogue/panel/index.md`\n  - `_includes/studio_ui_catalogue_panel_demo.html`\n  - `_includes/ui_catalogue_notes/panel.md`\n  - `_docs/ui-catalogue.md`\n  - `_docs/studio-ui-framework.md`\n  - `_docs/studio-ui-rules.md`\n  - `_docs/site-change-log.md`\n- local verification:\n  - inspect `/studio/ui-catalogue/panel/` and confirm the base image panel keeps dark text\n  - confirm the contrast override example uses white text and a stronger overlay\n  - confirm the code samples show both the neutral image variant and the explicit contrast override\n- follow-up:\n  - add actual design-time background image files under `assets/studio/img/panel-backgrounds/` before wiring image panels onto live Studio routes\n",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "missing outcome field"
+    ]
+  },
+  "effect": "the image-fill behavior and the contrast treatment are different concerns.",
+  "area": "/studio/ui-catalogue/panel/ / systemic",
+  "related_files": [
+    "`assets/studio/css/studio.css`",
+    "`assets/studio/img/panel-backgrounds/.gitkeep`",
+    "`studio/ui-catalogue/panel/index.md`",
+    "`_includes/studio_ui_catalogue_panel_demo.html`",
+    "`_includes/ui_catalogue_notes/panel.md`",
+    "`_docs/ui-catalogue.md`",
+    "`_docs/studio-ui-framework.md`",
+    "`_docs/studio-ui-rules.md`",
+    "`_docs/site-change-log.md`"
+  ],
+  "affected": {
+    "files": [
+      "`assets/studio/css/studio.css`",
+      "`assets/studio/img/panel-backgrounds/.gitkeep`",
+      "`studio/ui-catalogue/panel/index.md`",
+      "`_includes/studio_ui_catalogue_panel_demo.html`",
+      "`_includes/ui_catalogue_notes/panel.md`",
+      "`_docs/ui-catalogue.md`",
+      "`_docs/studio-ui-framework.md`",
+      "`_docs/studio-ui-rules.md`",
+      "`_docs/site-change-log.md`"
+    ]
+  },
+  "verification": [
+    "inspect `/studio/ui-catalogue/panel/` and confirm the base image panel keeps dark text",
+    "confirm the contrast override example uses white text and a stronger overlay",
+    "confirm the code samples show both the neutral image variant and the explicit contrast override",
+    "follow-up:",
+    "add actual design-time background image files under `assets/studio/img/panel-backgrounds/` before wiring image panels onto live Studio routes"
+  ]
+}

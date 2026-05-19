@@ -27,7 +27,6 @@ Related references:
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 - [UI Audits](/docs/?scope=studio&doc=ui-audits)
-- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 
 ## Goal
@@ -46,8 +45,7 @@ Use these sources in this order:
 
 1. UI Catalogue docs and isolated demo pages under `/studio/ui-catalogue/demos/`
 2. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
-3. [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
-4. Relevant page/runtime docs if they define route-specific behavior that does not conflict with the shared Studio contract
+3. Relevant page/runtime docs if they define route-specific behavior that does not conflict with the shared Studio contract
 
 Do not treat UI Catalogue demo rendering as a live CSS check. For production conformance, map the demo pattern into the live namespace, then verify the live route through UI Audit.
 
@@ -314,9 +312,8 @@ If a user or future Codex session asks to check whether page X conforms to Studi
 2. this document
 3. [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
 4. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
-5. [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
-6. [UI Audits](/docs/?scope=studio&doc=ui-audits)
-7. the page-specific audit doc if one exists
+5. [UI Audits](/docs/?scope=studio&doc=ui-audits)
+6. the page-specific audit doc if one exists
 
 ## Recommended Output Template
 

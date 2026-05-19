@@ -23,8 +23,7 @@
   "area": "Studio UI / shared form fields",
   "effect": "The work/series editor family now keeps numeric fields visually plain unless a page explicitly needs step controls, and catalogue-style two-column form rows now center labels against single-line controls while leaving multiline rows top-aligned. The input primitive page now describes increment controls as opt-in rather than default numeric behavior.",
   "related_docs": [
-    "studio-ui-framework",
-    "studio-ui-rules"
+    "studio-ui-framework"
   ],
   "related_files": [
     "assets/studio/css/studio.css",
@@ -46,8 +45,7 @@
       "_includes/ui_catalogue_notes/input.md"
     ],
     "docs": [
-      "studio-ui-framework",
-      "studio-ui-rules"
+      "studio-ui-framework"
     ]
   }
 }

@@ -32,8 +32,7 @@
     "catalogue-work-editor",
     "catalogue-work-detail-editor",
     "studio-config-and-save-flow",
-    "scripts-catalogue-write-server",
-    "studio-ui-rules"
+    "scripts-catalogue-write-server"
   ],
   "related_files": [
     "scripts/studio/catalogue_write_server.py",
@@ -72,8 +71,7 @@
       "catalogue-work-editor",
       "catalogue-work-detail-editor",
       "studio-config-and-save-flow",
-      "scripts-catalogue-write-server",
-      "studio-ui-rules"
+      "scripts-catalogue-write-server"
     ]
   }
 }

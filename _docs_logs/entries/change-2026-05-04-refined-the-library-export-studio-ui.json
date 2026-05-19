@@ -30,8 +30,7 @@
   "related_docs": [
     "library-export-ui",
     "library-export",
-    "config-studio-config-json",
-    "studio-ui-rules"
+    "config-studio-config-json"
   ],
   "related_files": [
     "studio/export/index.md",

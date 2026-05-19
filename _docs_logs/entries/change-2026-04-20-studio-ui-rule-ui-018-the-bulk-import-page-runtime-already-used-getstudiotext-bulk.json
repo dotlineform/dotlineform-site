@@ -1,0 +1,60 @@
+{
+  "id": "change-2026-04-20-studio-ui-rule-ui-018-the-bulk-import-page-runtime-already-used-getstudiotext-bulk",
+  "date": "2026-04-20",
+  "title": "UI-018: the bulk import page runtime already used getStudioText(..., \"bulk_add_work.*\"), but there was...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "config",
+    "data-models",
+    "runtime"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-018",
+    "/studio/bulk-add-work/",
+    "systemic"
+  ],
+  "summary": "the bulk import page runtime already used getStudioText(..., \"bulk_add_work.*\"), but there was no matching ui_text.bulk_add_work block, so the visible page copy and action labels were still coming from fallback strings.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 2092,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-20 / UI-018\n\n- status: adopted\n- route: `/studio/bulk-add-work/`\n- issue: the bulk import page runtime already used `getStudioText(..., \"bulk_add_work.*\")`, but there was no matching `ui_text.bulk_add_work` block, so the visible page copy and action labels were still coming from fallback strings. The action buttons also had not yet adopted the shared default width.\n- triage: systemic\n- reasoning: this is the same config-backed UI-copy issue already surfaced on other Studio pages. The bulk import page should follow the same rule: visible runtime copy comes from config, and shared command buttons use the shared width unless a later page review establishes a deliberate exception.\n- permanent rule: if a Studio runtime reads `ui_text.<scope>.*`, the matching config block must exist in both config sources and should include the visible runtime copy actually used by the page. On the bulk import page, action labels should stay concise and use the shared default button width.\n- enforcement point: `studio/bulk-add-work/index.md`, `assets/studio/js/bulk-add-work.js`, `assets/studio/data/studio_config.json`, and `assets/studio/js/studio-config.js`\n- files changed:\n  - `studio/bulk-add-work/index.md`\n  - `assets/studio/js/bulk-add-work.js`\n  - `assets/studio/data/studio_config.json`\n  - `assets/studio/js/studio-config.js`\n  - `_docs/studio-ui-rules.md`\n  - `_docs/site-change-log.md`\n- local verification:\n  - inspect `/studio/bulk-add-work/` and confirm the visible headings, labels, and status-capable copy resolve from config\n  - confirm the buttons read `Preview` and `Import`\n  - confirm both buttons use the shared default width\n- follow-up:\n  - leave the broader bulk-import page wording and structure review for a later pass\n",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "missing outcome field"
+    ]
+  },
+  "effect": "this is the same config-backed UI-copy issue already surfaced on other Studio pages.",
+  "area": "/studio/bulk-add-work/ / systemic",
+  "related_files": [
+    "`studio/bulk-add-work/index.md`",
+    "`assets/studio/js/bulk-add-work.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`assets/studio/js/studio-config.js`",
+    "`_docs/studio-ui-rules.md`",
+    "`_docs/site-change-log.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/bulk-add-work/index.md`",
+      "`assets/studio/js/bulk-add-work.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`assets/studio/js/studio-config.js`",
+      "`_docs/studio-ui-rules.md`",
+      "`_docs/site-change-log.md`"
+    ]
+  },
+  "verification": [
+    "inspect `/studio/bulk-add-work/` and confirm the visible headings, labels, and status-capable copy resolve from config",
+    "confirm the buttons read `Preview` and `Import`",
+    "confirm both buttons use the shared default width",
+    "follow-up:",
+    "leave the broader bulk-import page wording and structure review for a later pass"
+  ]
+}

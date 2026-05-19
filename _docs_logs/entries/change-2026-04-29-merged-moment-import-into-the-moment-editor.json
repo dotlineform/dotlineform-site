@@ -29,8 +29,7 @@
   "effect": "The Moment editor now has a `New` command beside `Open`. `New` switches the shared metadata form into draft import mode, shows the staged source-file input, and replaces record actions with `Preview` and `Import`. A successful import writes draft prose and metadata, then opens the imported draft in the editor. The legacy `/studio/catalogue-moment-import/` route redirects to the editor and preserves `?file=<filename>` for staged-file links. Dashboard and activity links now target the Moment editor for moment scopes.",
   "related_docs": [
     "catalogue-moment-editor",
-    "site-request-catalogue-publication-workflow",
-    "studio-ui-rules"
+    "site-request-catalogue-publication-workflow"
   ],
   "related_files": [
     "studio/catalogue-moment/index.md",
@@ -54,8 +53,7 @@
     ],
     "docs": [
       "catalogue-moment-editor",
-      "site-request-catalogue-publication-workflow",
-      "studio-ui-rules"
+      "site-request-catalogue-publication-workflow"
     ]
   }
 }

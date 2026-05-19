@@ -23,13 +23,11 @@
   "area": "Studio UI docs / audit workflow",
   "effect": "Studio page audits now have a clear outcome-precedence rule: report real covered-area failures as `non-conforming`, and report coverage gaps alongside them rather than using gaps to replace the result. `blocked by coverage gaps` is now reserved for coverage-only cases.",
   "related_docs": [
-    "studio-ui-conformance",
-    "studio-ui-rules"
+    "studio-ui-conformance"
   ],
   "affected": {
     "docs": [
-      "studio-ui-conformance",
-      "studio-ui-rules"
+      "studio-ui-conformance"
     ]
   }
 }

@@ -27,8 +27,7 @@
   "effect": "Published series still block deleting their primary work. Draft series that point at a deleted work have `primary_work_id` cleared during the work delete transaction. Publishing still requires a valid published primary/member work.",
   "related_docs": [
     "catalogue-work-editor",
-    "scripts-catalogue-write-server",
-    "studio-ui-rules"
+    "scripts-catalogue-write-server"
   ],
   "related_files": [
     "scripts/studio/catalogue_write_server.py"
@@ -39,8 +38,7 @@
     ],
     "docs": [
       "catalogue-work-editor",
-      "scripts-catalogue-write-server",
-      "studio-ui-rules"
+      "scripts-catalogue-write-server"
     ]
   }
 }

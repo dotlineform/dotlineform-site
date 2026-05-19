@@ -1,0 +1,65 @@
+{
+  "id": "change-2026-04-20-studio-ui-rule-ui-016-the-member-work-section-duplicated-its-own-heading-exposed",
+  "date": "2026-04-20",
+  "title": "UI-016: the member-work section duplicated its own heading, exposed both a work_id link...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "docs-viewer",
+    "catalogue",
+    "search",
+    "config",
+    "data-models"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-016",
+    "/studio/catalogue-series/",
+    "systemic"
+  ],
+  "summary": "the member-work section duplicated its own heading, exposed both a work_id link and an Open work button for the same navigation target, showed member search even when the capped list was not truncated, and had not aligned Add Work / Remove with the current default-width button standard.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 2037,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-20 / UI-016\n\n- status: adopted\n- route: `/studio/catalogue-series/`\n- issue: the member-work section duplicated its own heading, exposed both a `work_id` link and an `Open work` button for the same navigation target, showed member search even when the capped list was not truncated, and had not aligned `Add Work` / `Remove` with the current default-width button standard.\n- triage: systemic\n- reasoning: this section mixes navigation and membership commands inside a capped list surface. Keeping one heading, one navigation affordance, and conditional search makes the section easier to read and matches the work-detail list pattern already adopted elsewhere.\n- permanent rule: in capped record lists, only show local search when the list is actually truncated. If a row already has a clear link to the target record, do not duplicate the same navigation inside the row action cluster. Keep row actions focused on local state changes.\n- enforcement point: `studio/catalogue-series/index.md`, `assets/studio/js/catalogue-series-editor.js`, `assets/studio/data/studio_config.json`, `assets/studio/js/studio-config.js`, and `_docs/catalogue-series-editor.md`\n- files changed:\n  - `studio/catalogue-series/index.md`\n  - `assets/studio/js/catalogue-series-editor.js`\n  - `assets/studio/data/studio_config.json`\n  - `assets/studio/js/studio-config.js`\n  - `assets/studio/css/studio.css`\n  - `_docs/catalogue-series-editor.md`\n  - `_docs/studio-ui-rules.md`\n  - `_docs/site-change-log.md`\n- local verification:\n  - inspect `/studio/catalogue-series/?series=139` and confirm the section has one `member works` heading\n  - confirm the search row sits below the heading and only appears when more than 10 members are present\n  - confirm member rows use the `work_id` link for navigation and only keep membership action buttons\n- follow-up:\n  - review whether `Make primary` should adopt a shared width rule separately rather than inferring it from this pass\n",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "missing outcome field"
+    ]
+  },
+  "effect": "this section mixes navigation and membership commands inside a capped list surface.",
+  "area": "/studio/catalogue-series/ / systemic",
+  "related_files": [
+    "`studio/catalogue-series/index.md`",
+    "`assets/studio/js/catalogue-series-editor.js`",
+    "`assets/studio/data/studio_config.json`",
+    "`assets/studio/js/studio-config.js`",
+    "`assets/studio/css/studio.css`",
+    "`_docs/catalogue-series-editor.md`",
+    "`_docs/studio-ui-rules.md`",
+    "`_docs/site-change-log.md`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/catalogue-series/index.md`",
+      "`assets/studio/js/catalogue-series-editor.js`",
+      "`assets/studio/data/studio_config.json`",
+      "`assets/studio/js/studio-config.js`",
+      "`assets/studio/css/studio.css`",
+      "`_docs/catalogue-series-editor.md`",
+      "`_docs/studio-ui-rules.md`",
+      "`_docs/site-change-log.md`"
+    ]
+  },
+  "verification": [
+    "inspect `/studio/catalogue-series/?series=139` and confirm the section has one `member works` heading",
+    "confirm the search row sits below the heading and only appears when more than 10 members are present",
+    "confirm member rows use the `work_id` link for navigation and only keep membership action buttons",
+    "follow-up:",
+    "review whether `Make primary` should adopt a shared width rule separately rather than inferring it from this pass"
+  ]
+}

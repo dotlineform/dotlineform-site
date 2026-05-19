@@ -24,8 +24,7 @@
   "effect": "The upper half of a docs-tree row now means \"move inside\"; the lower half means \"move after\" and renders a visible insert line after the target row. Drop handling uses the last highlighted target as a fallback when the final drop event cannot resolve a row cleanly. Manage-mode capability probing retries briefly before failing closed, and stale retry attempts cannot overwrite a newer successful capability check.",
   "related_docs": [
     "docs-viewer-management",
-    "ui-framework",
-    "studio-ui-rules"
+    "ui-framework"
   ],
   "related_files": [
     "assets/js/docs-viewer.js",
@@ -38,8 +37,7 @@
     ],
     "docs": [
       "docs-viewer-management",
-      "ui-framework",
-      "studio-ui-rules"
+      "ui-framework"
     ]
   }
 }

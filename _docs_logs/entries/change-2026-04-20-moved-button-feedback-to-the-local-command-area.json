@@ -25,8 +25,7 @@
   "area": "design system / Studio command buttons",
   "effect": "`/studio/series-tag-editor/` now keeps `status`, `save warning`, and `save result` directly below the command row inside the editor panel, while the higher message section keeps only the broader context hint. The button primitive page now shows local feedback placement as part of the baseline command-button pattern.",
   "related_docs": [
-    "studio-ui-framework",
-    "studio-ui-rules"
+    "studio-ui-framework"
   ],
   "related_files": [
     "studio/series-tag-editor/index.md",
@@ -44,8 +43,7 @@
       "_includes/ui_catalogue_notes/button.md"
     ],
     "docs": [
-      "studio-ui-framework",
-      "studio-ui-rules"
+      "studio-ui-framework"
     ]
   }
 }

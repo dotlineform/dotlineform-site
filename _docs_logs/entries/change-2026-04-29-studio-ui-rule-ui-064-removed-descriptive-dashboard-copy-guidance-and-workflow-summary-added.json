@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-04-29-studio-ui-rule-ui-064-removed-descriptive-dashboard-copy-guidance-and-workflow-summary-added",
+  "date": "2026-04-29",
+  "title": "UI-064: removed descriptive dashboard copy, Guidance, and Workflow Summary; added series/work/work-detail/moment counts; replaced...",
+  "status": "implemented",
+  "type": "decision",
+  "domains": [
+    "studio-ui",
+    "catalogue",
+    "analytics"
+  ],
+  "subjects": [
+    "studio-ui-rule",
+    "UI-064",
+    "/studio/catalogue/",
+    "page-specific navigation simplification"
+  ],
+  "summary": "the Catalogue dashboard had too much explanatory text and too many card-style route groups for a routine operational entry page. Outcome: removed descriptive dashboard copy, Guidance, and Workflow Summary; added series/work/work-detail/moment counts; replaced route panels with two compact Edit and Review pill columns; and added a plain Admin stacked-link section.",
+  "source": {
+    "file": "_docs/studio-ui-rules.md",
+    "line": 803,
+    "archive": "studio-ui-rules"
+  },
+  "body": "## UI Rule Log 2026-04-29 / UI-064\n\n- status: adopted\n- route: `/studio/catalogue/`\n- issue: the Catalogue dashboard had too much explanatory text and too many card-style route groups for a routine operational entry page.\n- triage: page-specific navigation simplification\n- reasoning: Catalogue is a repeated-use admin surface. The useful first scan is counts plus direct route entry, not instructional copy. Static route-entry links can use compact pill styling when they are simple navigation choices rather than rich panels.\n- permanent rule: domain dashboards may use terse metric cards and fixed-width pill-link columns for high-frequency route entry. Reserve descriptive panels and guidance links for pages where they materially help orientation.\n- outcome: removed descriptive dashboard copy, Guidance, and Workflow Summary; added series/work/work-detail/moment counts; replaced route panels with two compact `Edit` and `Review` pill columns; and added a plain `Admin` stacked-link section.\n- files changed:\n  - `studio/catalogue/index.md`\n  - `assets/css/main.css`\n  - `assets/studio/js/studio-dashboard.js`\n- verification:\n  - open `/studio/catalogue/` on desktop and mobile and confirm the counts load\n  - confirm `Edit` and `Review` render as two equal-width pill columns on desktop and stack on mobile\n  - confirm the only lower text header is `Admin` with a link to Studio Activity\n",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "effect": "Catalogue is a repeated-use admin surface.",
+  "area": "/studio/catalogue/ / page-specific navigation simplification",
+  "related_files": [
+    "`studio/catalogue/index.md`",
+    "`assets/css/main.css`",
+    "`assets/studio/js/studio-dashboard.js`"
+  ],
+  "affected": {
+    "files": [
+      "`studio/catalogue/index.md`",
+      "`assets/css/main.css`",
+      "`assets/studio/js/studio-dashboard.js`"
+    ]
+  }
+}

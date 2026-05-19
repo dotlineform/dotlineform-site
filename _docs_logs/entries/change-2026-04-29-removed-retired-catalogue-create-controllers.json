@@ -25,8 +25,7 @@
   "effect": "The old `assets/studio/js/catalogue-new-work-editor.js`, `assets/studio/js/catalogue-new-work-detail-editor.js`, and `assets/studio/js/catalogue-new-series-editor.js` controllers were removed. The temporary redirect pages and compatibility docs were removed in a later cleanup entry.",
   "related_docs": [
     "studio-runtime",
-    "site-request-catalogue-unified-editor-cleanup",
-    "studio-ui-rules"
+    "site-request-catalogue-unified-editor-cleanup"
   ],
   "related_files": [
     "assets/studio/js/catalogue-new-work-editor.js",
@@ -42,8 +41,7 @@
     ],
     "docs": [
       "studio-runtime",
-      "site-request-catalogue-unified-editor-cleanup",
-      "studio-ui-rules"
+      "site-request-catalogue-unified-editor-cleanup"
     ]
   }
 }

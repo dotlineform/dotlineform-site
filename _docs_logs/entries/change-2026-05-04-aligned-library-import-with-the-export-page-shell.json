@@ -28,8 +28,7 @@
   "effect": "Library import v2 should begin with review-oriented UI changes before source-write wiring. Sharing the export page structure keeps the Library data workflows predictable while the apply contracts remain intentionally unavailable.",
   "related_docs": [
     "library-import",
-    "library-import-export-v2",
-    "studio-ui-rules"
+    "library-import-export-v2"
   ],
   "related_files": [
     "studio/import/index.md",
