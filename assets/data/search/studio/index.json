@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4fbe2818af2e0ba815c82fd7538020c5",
-    "generated_at_utc": "2026-05-19T19:11:06Z",
-    "count": 253
+    "version": "blake2b-f3ffc7d3fbc4497c9084c31d5cfe6920",
+    "generated_at_utc": "2026-05-19T19:24:47Z",
+    "count": 267
   },
   "entries": [
     {
@@ -127,10 +127,10 @@
       "kind": "doc",
       "title": "Catalogue Scope",
       "href": "/docs/?scope=studio&doc=data-models-catalogue",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-19",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-09 21:28 • Catalogue",
+      "display_meta": "2026-05-19 • Catalogue",
       "search_terms": [
         "data-models-catalogue",
         "data",
@@ -138,14 +138,12 @@
         "catalogue",
         "catalogue scope",
         "scope",
-        "2026-05-09 21:28",
+        "2026-05-19",
         "2026",
         "05",
-        "09",
-        "21",
-        "28"
+        "19"
       ],
-      "search_text": "data-models-catalogue data models catalogue catalogue scope scope 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "data-models-catalogue data models catalogue catalogue scope scope 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-script-structural-review-catalogue-write-server",
@@ -804,6 +802,85 @@
         "10"
       ],
       "search_text": "ui-framework ui framework ui framework 2026-05-11 14:10 2026 05 11 14 10"
+    },
+    {
+      "id": "data-models-catalogue-source",
+      "kind": "doc",
+      "title": "Catalogue Source Model",
+      "href": "/docs/?scope=studio&doc=data-models-catalogue-source",
+      "last_updated": "2026-05-19",
+      "parent_id": "data-models-catalogue",
+      "parent_title": "Catalogue Scope",
+      "display_meta": "2026-05-19 • Catalogue Scope",
+      "search_terms": [
+        "data-models-catalogue-source",
+        "data",
+        "models",
+        "catalogue",
+        "source",
+        "catalogue source model",
+        "model",
+        "catalogue scope",
+        "scope",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "data-models-catalogue-source data models catalogue source catalogue source model model catalogue scope scope 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "data-models-catalogue-indexes",
+      "kind": "doc",
+      "title": "Catalogue Indexes And Payloads",
+      "href": "/docs/?scope=studio&doc=data-models-catalogue-indexes",
+      "last_updated": "2026-05-19",
+      "parent_id": "data-models-catalogue",
+      "parent_title": "Catalogue Scope",
+      "display_meta": "2026-05-19 • Catalogue Scope",
+      "search_terms": [
+        "data-models-catalogue-indexes",
+        "data",
+        "models",
+        "catalogue",
+        "indexes",
+        "catalogue indexes and payloads",
+        "and",
+        "payloads",
+        "catalogue scope",
+        "scope",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "data-models-catalogue-indexes data models catalogue indexes catalogue indexes and payloads and payloads catalogue scope scope 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "data-models-catalogue-maintenance",
+      "kind": "doc",
+      "title": "Catalogue Model Maintenance",
+      "href": "/docs/?scope=studio&doc=data-models-catalogue-maintenance",
+      "last_updated": "2026-05-19",
+      "parent_id": "data-models-catalogue",
+      "parent_title": "Catalogue Scope",
+      "display_meta": "2026-05-19 • Catalogue Scope",
+      "search_terms": [
+        "data-models-catalogue-maintenance",
+        "data",
+        "models",
+        "catalogue",
+        "maintenance",
+        "catalogue model maintenance",
+        "model",
+        "catalogue scope",
+        "scope",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "data-models-catalogue-maintenance data models catalogue maintenance catalogue model maintenance model catalogue scope scope 2026-05-19 2026 05 19"
     },
     {
       "id": "development-workflow",
@@ -2015,10 +2092,10 @@
       "kind": "doc",
       "title": "Catalogue Write Server",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-19",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-09 21:28 • Servers",
+      "display_meta": "2026-05-19 • Servers",
       "search_terms": [
         "scripts-catalogue-write-server",
         "scripts",
@@ -2027,14 +2104,12 @@
         "server",
         "catalogue write server",
         "servers",
-        "2026-05-09 21:28",
+        "2026-05-19",
         "2026",
         "05",
-        "09",
-        "21",
-        "28"
+        "19"
       ],
-      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-js-config-structural-review-config-ownership",
@@ -2338,6 +2413,83 @@
         "00"
       ],
       "search_text": "tag-registry tag registry tag registry analytics 2026-05-09 16:00 2026 05 09 16 00"
+    },
+    {
+      "id": "scripts-catalogue-write-server-endpoints",
+      "kind": "doc",
+      "title": "Catalogue Write Server Endpoints",
+      "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server-endpoints",
+      "last_updated": "2026-05-19",
+      "parent_id": "scripts-catalogue-write-server",
+      "parent_title": "Catalogue Write Server",
+      "display_meta": "2026-05-19 • Catalogue Write Server",
+      "search_terms": [
+        "scripts-catalogue-write-server-endpoints",
+        "scripts",
+        "catalogue",
+        "write",
+        "server",
+        "endpoints",
+        "catalogue write server endpoints",
+        "catalogue write server",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "scripts-catalogue-write-server-endpoints scripts catalogue write server endpoints catalogue write server endpoints catalogue write server 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "scripts-catalogue-write-server-build-lookup",
+      "kind": "doc",
+      "title": "Catalogue Write Server Build And Lookup",
+      "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server-build-lookup",
+      "last_updated": "2026-05-19",
+      "parent_id": "scripts-catalogue-write-server",
+      "parent_title": "Catalogue Write Server",
+      "display_meta": "2026-05-19 • Catalogue Write Server",
+      "search_terms": [
+        "scripts-catalogue-write-server-build-lookup",
+        "scripts",
+        "catalogue",
+        "write",
+        "server",
+        "build",
+        "lookup",
+        "catalogue write server build and lookup",
+        "and",
+        "catalogue write server",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "scripts-catalogue-write-server-build-lookup scripts catalogue write server build lookup catalogue write server build and lookup and catalogue write server 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "scripts-catalogue-write-server-operations",
+      "kind": "doc",
+      "title": "Catalogue Write Server Operations",
+      "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server-operations",
+      "last_updated": "2026-05-19",
+      "parent_id": "scripts-catalogue-write-server",
+      "parent_title": "Catalogue Write Server",
+      "display_meta": "2026-05-19 • Catalogue Write Server",
+      "search_terms": [
+        "scripts-catalogue-write-server-operations",
+        "scripts",
+        "catalogue",
+        "write",
+        "server",
+        "operations",
+        "catalogue write server operations",
+        "catalogue write server",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "scripts-catalogue-write-server-operations scripts catalogue write server operations catalogue write server operations catalogue write server 2026-05-19 2026 05 19"
     },
     {
       "id": "scripts-verify-catalogue-field-registry",
@@ -4545,10 +4697,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-19 14:30",
+      "last_updated": "2026-05-19",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-19 14:30 • Docs Viewer",
+      "display_meta": "2026-05-19 • Docs Viewer",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -4558,14 +4710,12 @@
         "docs management server",
         "docs viewer",
         "viewer",
-        "2026-05-19 14:30",
+        "2026-05-19",
         "2026",
         "05",
-        "19",
-        "14",
-        "30"
+        "19"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-19 14:30 2026 05 19 14 30"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-19 2026 05 19"
     },
     {
       "id": "scripts-publish-media-to-r2",
@@ -4643,6 +4793,136 @@
         "01"
       ],
       "search_text": "new-pipeline-studio-implementation-plan new pipeline studio implementation plan studio implementation plan archive 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "scripts-docs-management-server-generated-reads",
+      "kind": "doc",
+      "title": "Docs Management Server Generated Reads",
+      "href": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
+      "last_updated": "2026-05-19",
+      "parent_id": "scripts-docs-management-server",
+      "parent_title": "Docs Management Server",
+      "display_meta": "2026-05-19 • Docs Management Server",
+      "search_terms": [
+        "scripts-docs-management-server-generated-reads",
+        "scripts",
+        "docs",
+        "management",
+        "server",
+        "generated",
+        "reads",
+        "docs management server generated reads",
+        "docs management server",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "scripts-docs-management-server-generated-reads scripts docs management server generated reads docs management server generated reads docs management server 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "scripts-docs-management-server-import-rebuild",
+      "kind": "doc",
+      "title": "Docs Management Server Import And Rebuild",
+      "href": "/docs/?scope=studio&doc=scripts-docs-management-server-import-rebuild",
+      "last_updated": "2026-05-19",
+      "parent_id": "scripts-docs-management-server",
+      "parent_title": "Docs Management Server",
+      "display_meta": "2026-05-19 • Docs Management Server",
+      "search_terms": [
+        "scripts-docs-management-server-import-rebuild",
+        "scripts",
+        "docs",
+        "management",
+        "server",
+        "import",
+        "rebuild",
+        "docs management server import and rebuild",
+        "and",
+        "docs management server",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "scripts-docs-management-server-import-rebuild scripts docs management server import rebuild docs management server import and rebuild and docs management server 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "scripts-docs-management-server-data-sharing",
+      "kind": "doc",
+      "title": "Docs Management Server Data Sharing",
+      "href": "/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing",
+      "last_updated": "2026-05-19",
+      "parent_id": "scripts-docs-management-server",
+      "parent_title": "Docs Management Server",
+      "display_meta": "2026-05-19 • Docs Management Server",
+      "search_terms": [
+        "scripts-docs-management-server-data-sharing",
+        "scripts",
+        "docs",
+        "management",
+        "server",
+        "data",
+        "sharing",
+        "docs management server data sharing",
+        "docs management server",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "scripts-docs-management-server-data-sharing scripts docs management server data sharing docs management server data sharing docs management server 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "scripts-docs-management-server-write-actions",
+      "kind": "doc",
+      "title": "Docs Management Server Write Actions",
+      "href": "/docs/?scope=studio&doc=scripts-docs-management-server-write-actions",
+      "last_updated": "2026-05-19",
+      "parent_id": "scripts-docs-management-server",
+      "parent_title": "Docs Management Server",
+      "display_meta": "2026-05-19 • Docs Management Server",
+      "search_terms": [
+        "scripts-docs-management-server-write-actions",
+        "scripts",
+        "docs",
+        "management",
+        "server",
+        "write",
+        "actions",
+        "docs management server write actions",
+        "docs management server",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "scripts-docs-management-server-write-actions scripts docs management server write actions docs management server write actions docs management server 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "scripts-docs-management-server-operations",
+      "kind": "doc",
+      "title": "Docs Management Server Operations",
+      "href": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
+      "last_updated": "2026-05-19",
+      "parent_id": "scripts-docs-management-server",
+      "parent_title": "Docs Management Server",
+      "display_meta": "2026-05-19 • Docs Management Server",
+      "search_terms": [
+        "scripts-docs-management-server-operations",
+        "scripts",
+        "docs",
+        "management",
+        "server",
+        "operations",
+        "docs management server operations",
+        "docs management server",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "scripts-docs-management-server-operations scripts docs management server operations docs management server operations docs management server 2026-05-19 2026 05 19"
     },
     {
       "id": "scripts-delete-work",
@@ -5904,10 +6184,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-17",
+      "last_updated": "2026-05-19",
       "parent_id": "archive",
       "parent_title": "Archive",
-      "display_meta": "2026-05-17 • Archive",
+      "display_meta": "2026-05-19 • Archive",
       "search_terms": [
         "docs-viewer-management",
         "docs",
@@ -5915,12 +6195,86 @@
         "management",
         "docs viewer management",
         "archive",
-        "2026-05-17",
+        "2026-05-19",
         "2026",
         "05",
-        "17"
+        "19"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management archive 2026-05-17 2026 05 17"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management archive 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "docs-viewer-management-current",
+      "kind": "doc",
+      "title": "Docs Viewer Management Current State",
+      "href": "/docs/?scope=studio&doc=docs-viewer-management-current",
+      "last_updated": "2026-05-19",
+      "parent_id": "docs-viewer-management",
+      "parent_title": "Docs Viewer Management",
+      "display_meta": "2026-05-19 • Docs Viewer Management",
+      "search_terms": [
+        "docs-viewer-management-current",
+        "docs",
+        "viewer",
+        "management",
+        "current",
+        "docs viewer management current state",
+        "state",
+        "docs viewer management",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "docs-viewer-management-current docs viewer management current docs viewer management current state state docs viewer management 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "docs-viewer-management-contract",
+      "kind": "doc",
+      "title": "Docs Viewer Management Contract",
+      "href": "/docs/?scope=studio&doc=docs-viewer-management-contract",
+      "last_updated": "2026-05-19",
+      "parent_id": "docs-viewer-management",
+      "parent_title": "Docs Viewer Management",
+      "display_meta": "2026-05-19 • Docs Viewer Management",
+      "search_terms": [
+        "docs-viewer-management-contract",
+        "docs",
+        "viewer",
+        "management",
+        "contract",
+        "docs viewer management contract",
+        "docs viewer management",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "docs-viewer-management-contract docs viewer management contract docs viewer management contract docs viewer management 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "docs-viewer-management-write-model",
+      "kind": "doc",
+      "title": "Docs Viewer Management Write Model",
+      "href": "/docs/?scope=studio&doc=docs-viewer-management-write-model",
+      "last_updated": "2026-05-19",
+      "parent_id": "docs-viewer-management",
+      "parent_title": "Docs Viewer Management",
+      "display_meta": "2026-05-19 • Docs Viewer Management",
+      "search_terms": [
+        "docs-viewer-management-write-model",
+        "docs",
+        "viewer",
+        "management",
+        "write",
+        "model",
+        "docs viewer management write model",
+        "docs viewer management",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "docs-viewer-management-write-model docs viewer management write model docs viewer management write model docs viewer management 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-catalogue-series-unified-editor",

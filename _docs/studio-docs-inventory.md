@@ -16,32 +16,30 @@ It should be updated following any subsequent review or document-splitting.
 
 ## Current Review
 
-Scanned `_docs/*.md` after the structured change-history refactor.
+Scanned `_docs/*.md` after the structured change-history refactor and the 2026-05-19 non-Priority-1 split pass.
 
 Summary:
 
-- Total Markdown docs: `277`
-- Over 200 lines: `126`
-- Over 300 lines: `84`
-- Over 500 lines: `25`
-- Over 1000 lines: `2`
+- Total Markdown docs: `292`
+- Over 200 lines: `128`
+- Over 300 lines: `82`
+- Over 500 lines: `20`
+- Over 1000 lines: `1`
 
 Highest-priority split candidates:
 
 1. `_docs/studio-ui-rules.md` - `2474` lines  
-   This is mostly chronological decision-log material. It already has a “Retirement Direction” section, so it should probably become a short current-rules page plus monthly/quarterly UI decision-log child docs.
+   Pending user review before splitting. This is mostly chronological decision-log material. It already has a “Retirement Direction” section, so it should probably become a short current-rules page plus monthly/quarterly UI decision-log child docs.
 
-2. `_docs/scripts-docs-management-server.md` - `799` lines  
-   Covers startup, endpoint reference, generated reads, source-config settings, mutations, rebuilds, Data Sharing, security, and verification. Strong candidate for children like endpoint reference, generated reads, source settings, write/rebuild behavior, and Data Sharing integration.
+Completed non-Priority-1 splits on 2026-05-19:
 
-3. `_docs/scripts-catalogue-write-server.md` - `757` lines  
-   Similar issue: endpoint inventory, module ownership, delete/publication/import/build behavior, security, and artifacts are all in one page. Split by endpoint family or operational responsibility.
+- Priority 2: `_docs/scripts-docs-management-server.md` split into an overview plus generated reads/config, import/rebuild, Data Sharing, write actions, and operations child docs.
 
-4. `_docs/docs-viewer-management.md` - `739` lines
-   Combines management mode behavior, local service expectations, modal workflows, move/order behavior, import integration, and verification notes. Good candidate for child docs around management runtime, write actions, import integration, and ordering/rebuild behavior.
+- Priority 3: `_docs/scripts-catalogue-write-server.md` split into an overview plus endpoint reference, build/lookup, and operations child docs.
 
-5. `_docs/data-models-catalogue.md` - `554` lines  
-   Mixes source records, field registry, work-owned files, moments, indexes, per-record payloads, and search model. Good split candidates: source model, moment model, generated indexes/payloads, catalogue search model.
+- Priority 4: `_docs/docs-viewer-management.md` split into an archived index plus current state, contract, and write-model child docs.
+
+- Priority 5: `_docs/data-models-catalogue.md` split into an overview plus source model, indexes/payloads, and maintenance child docs.
 
 Secondary candidates:
 
@@ -50,4 +48,3 @@ Secondary candidates:
 - `_docs/search-build-pipeline.md` - `495` lines; spans Catalogue, Studio, Library, and Analysis adapters.
 - `_docs/local-setup.md` - `461` lines; setup, recovery, environment, and Codex notes could be separated.
 - `_docs/docs-viewer-portable-setup.md` - `462` lines; the file manifest/setup procedure looks like a natural child doc.
-
