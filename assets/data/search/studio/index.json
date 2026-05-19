@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b8a65209fc70a7d6390ee121ecdbded4",
-    "generated_at_utc": "2026-05-19T19:49:29Z",
-    "count": 267
+    "version": "blake2b-2e842790c6c01a0fb1c5faf455ad62a3",
+    "generated_at_utc": "2026-05-19T20:06:08Z",
+    "count": 286
   },
   "entries": [
     {
@@ -1159,10 +1159,10 @@
       "kind": "doc",
       "title": "Local Setup",
       "href": "/docs/?scope=studio&doc=local-setup",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-19",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-05-09 21:28 • Site Docs",
+      "display_meta": "2026-05-19 • Site Docs",
       "search_terms": [
         "local-setup",
         "local",
@@ -1171,14 +1171,12 @@
         "site docs",
         "site",
         "docs",
-        "2026-05-09 21:28",
+        "2026-05-19",
         "2026",
         "05",
-        "09",
-        "21",
-        "28"
+        "19"
       ],
-      "search_text": "local-setup local setup local setup site docs site docs 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "local-setup local setup local setup site docs site docs 2026-05-19 2026 05 19"
     },
     {
       "id": "modal-composition-migration-tracker",
@@ -1211,24 +1209,22 @@
       "kind": "doc",
       "title": "Search Field Registry",
       "href": "/docs/?scope=studio&doc=search-field-registry",
-      "last_updated": "2026-05-11 12:50",
+      "last_updated": "2026-05-19",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 12:50 • Search",
+      "display_meta": "2026-05-19 • Search",
       "search_terms": [
         "search-field-registry",
         "search",
         "field",
         "registry",
         "search field registry",
-        "2026-05-11 12:50",
+        "2026-05-19",
         "2026",
         "05",
-        "11",
-        "12",
-        "50"
+        "19"
       ],
-      "search_text": "search-field-registry search field registry search field registry 2026-05-11 12:50 2026 05 11 12 50"
+      "search_text": "search-field-registry search field registry search field registry 2026-05-19 2026 05 19"
     },
     {
       "id": "data-models-shared",
@@ -1430,6 +1426,173 @@
       "search_text": "user-guide user guide user guide 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
+      "id": "local-setup-toolchain",
+      "kind": "doc",
+      "title": "Local Setup Toolchain",
+      "href": "/docs/?scope=studio&doc=local-setup-toolchain",
+      "last_updated": "2026-05-19",
+      "parent_id": "local-setup",
+      "parent_title": "Local Setup",
+      "display_meta": "2026-05-19 • Local Setup",
+      "search_terms": [
+        "local-setup-toolchain",
+        "local",
+        "setup",
+        "toolchain",
+        "local setup toolchain",
+        "local setup",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "local-setup-toolchain local setup toolchain local setup toolchain local setup 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "search-field-registry-table",
+      "kind": "doc",
+      "title": "Search Field Registry Table",
+      "href": "/docs/?scope=studio&doc=search-field-registry-table",
+      "last_updated": "2026-05-19",
+      "parent_id": "search-field-registry",
+      "parent_title": "Search Field Registry",
+      "display_meta": "2026-05-19 • Search Field Registry",
+      "search_terms": [
+        "search-field-registry-table",
+        "search",
+        "field",
+        "registry",
+        "table",
+        "search field registry table",
+        "search field registry",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "search-field-registry-table search field registry table search field registry table search field registry 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "local-setup-environment",
+      "kind": "doc",
+      "title": "Local Setup Environment",
+      "href": "/docs/?scope=studio&doc=local-setup-environment",
+      "last_updated": "2026-05-19",
+      "parent_id": "local-setup",
+      "parent_title": "Local Setup",
+      "display_meta": "2026-05-19 • Local Setup",
+      "search_terms": [
+        "local-setup-environment",
+        "local",
+        "setup",
+        "environment",
+        "local setup environment",
+        "local setup",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "local-setup-environment local setup environment local setup environment local setup 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "search-field-registry-definitions",
+      "kind": "doc",
+      "title": "Search Field Definitions",
+      "href": "/docs/?scope=studio&doc=search-field-registry-definitions",
+      "last_updated": "2026-05-19",
+      "parent_id": "search-field-registry",
+      "parent_title": "Search Field Registry",
+      "display_meta": "2026-05-19 • Search Field Registry",
+      "search_terms": [
+        "search-field-registry-definitions",
+        "search",
+        "field",
+        "registry",
+        "definitions",
+        "search field definitions",
+        "search field registry",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "search-field-registry-definitions search field registry definitions search field definitions search field registry 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "local-setup-recovery",
+      "kind": "doc",
+      "title": "Local Setup Recovery",
+      "href": "/docs/?scope=studio&doc=local-setup-recovery",
+      "last_updated": "2026-05-19",
+      "parent_id": "local-setup",
+      "parent_title": "Local Setup",
+      "display_meta": "2026-05-19 • Local Setup",
+      "search_terms": [
+        "local-setup-recovery",
+        "local",
+        "setup",
+        "recovery",
+        "local setup recovery",
+        "local setup",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "local-setup-recovery local setup recovery local setup recovery local setup 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "search-field-registry-policy",
+      "kind": "doc",
+      "title": "Search Field Policy",
+      "href": "/docs/?scope=studio&doc=search-field-registry-policy",
+      "last_updated": "2026-05-19",
+      "parent_id": "search-field-registry",
+      "parent_title": "Search Field Registry",
+      "display_meta": "2026-05-19 • Search Field Registry",
+      "search_terms": [
+        "search-field-registry-policy",
+        "search",
+        "field",
+        "registry",
+        "policy",
+        "search field policy",
+        "search field registry",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "search-field-registry-policy search field registry policy search field policy search field registry 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "local-setup-github-codex",
+      "kind": "doc",
+      "title": "Local Setup GitHub And Codex Notes",
+      "href": "/docs/?scope=studio&doc=local-setup-github-codex",
+      "last_updated": "2026-05-19",
+      "parent_id": "local-setup",
+      "parent_title": "Local Setup",
+      "display_meta": "2026-05-19 • Local Setup",
+      "search_terms": [
+        "local-setup-github-codex",
+        "local",
+        "setup",
+        "github",
+        "codex",
+        "local setup github and codex notes",
+        "and",
+        "notes",
+        "local setup",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "local-setup-github-codex local setup github codex local setup github and codex notes and notes local setup 2026-05-19 2026 05 19"
+    },
+    {
       "id": "site-request-js-config-structural-review-catalogue-editor-boundary",
       "kind": "doc",
       "title": "Catalogue Editor Boundary Spec Slice",
@@ -1571,10 +1734,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-setup",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-19",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 • Docs Viewer",
+      "display_meta": "2026-05-19 • Docs Viewer",
       "search_terms": [
         "docs-viewer-portable-setup",
         "docs",
@@ -1583,12 +1746,12 @@
         "setup",
         "docs viewer portable setup",
         "docs viewer",
-        "2026-05-14",
+        "2026-05-19",
         "2026",
         "05",
-        "14"
+        "19"
       ],
-      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup docs viewer 2026-05-14 2026 05 14"
+      "search_text": "docs-viewer-portable-setup docs viewer portable setup docs viewer portable setup docs viewer 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-field-aware-build-scoping-inventory",
@@ -1813,22 +1976,22 @@
       "kind": "doc",
       "title": "Studio UI Framework",
       "href": "/docs/?scope=studio&doc=studio-ui-framework",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-19",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-07 • UI",
+      "display_meta": "2026-05-19 • UI",
       "search_terms": [
         "studio-ui-framework",
         "studio",
         "ui",
         "framework",
         "studio ui framework",
-        "2026-05-07",
+        "2026-05-19",
         "2026",
         "05",
-        "07"
+        "19"
       ],
-      "search_text": "studio-ui-framework studio ui framework studio ui framework 2026-05-07 2026 05 07"
+      "search_text": "studio-ui-framework studio ui framework studio ui framework 2026-05-19 2026 05 19"
     },
     {
       "id": "tag-editor",
@@ -1910,6 +2073,184 @@
         "45"
       ],
       "search_text": "site-request-script-structural-review-tag-write-server site request script structural review tag write server tag write server slices slices script structural review request 2026-05-09 21:45 2026 05 09 21 45"
+    },
+    {
+      "id": "docs-viewer-portable-files",
+      "kind": "doc",
+      "title": "Docs Viewer Portable File Manifest",
+      "href": "/docs/?scope=studio&doc=docs-viewer-portable-files",
+      "last_updated": "2026-05-19",
+      "parent_id": "docs-viewer-portable-setup",
+      "parent_title": "Docs Viewer Portable Setup",
+      "display_meta": "2026-05-19 • Docs Viewer Portable Setup",
+      "search_terms": [
+        "docs-viewer-portable-files",
+        "docs",
+        "viewer",
+        "portable",
+        "files",
+        "docs viewer portable file manifest",
+        "file",
+        "manifest",
+        "docs viewer portable setup",
+        "setup",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "studio-ui-framework-primitives",
+      "kind": "doc",
+      "title": "Studio UI Framework Primitives",
+      "href": "/docs/?scope=studio&doc=studio-ui-framework-primitives",
+      "last_updated": "2026-05-19",
+      "parent_id": "studio-ui-framework",
+      "parent_title": "Studio UI Framework",
+      "display_meta": "2026-05-19 • Studio UI Framework",
+      "search_terms": [
+        "studio-ui-framework-primitives",
+        "studio",
+        "ui",
+        "framework",
+        "primitives",
+        "studio ui framework primitives",
+        "studio ui framework",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-ui-framework-primitives studio ui framework primitives studio ui framework primitives studio ui framework 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "docs-viewer-portable-source-shape",
+      "kind": "doc",
+      "title": "Docs Viewer Portable Source Shape",
+      "href": "/docs/?scope=studio&doc=docs-viewer-portable-source-shape",
+      "last_updated": "2026-05-19",
+      "parent_id": "docs-viewer-portable-setup",
+      "parent_title": "Docs Viewer Portable Setup",
+      "display_meta": "2026-05-19 • Docs Viewer Portable Setup",
+      "search_terms": [
+        "docs-viewer-portable-source-shape",
+        "docs",
+        "viewer",
+        "portable",
+        "source",
+        "shape",
+        "docs viewer portable source shape",
+        "docs viewer portable setup",
+        "setup",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "docs-viewer-portable-source-shape docs viewer portable source shape docs viewer portable source shape docs viewer portable setup setup 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "studio-ui-framework-modal-contract",
+      "kind": "doc",
+      "title": "Studio UI Framework Modal Contract",
+      "href": "/docs/?scope=studio&doc=studio-ui-framework-modal-contract",
+      "last_updated": "2026-05-19",
+      "parent_id": "studio-ui-framework",
+      "parent_title": "Studio UI Framework",
+      "display_meta": "2026-05-19 • Studio UI Framework",
+      "search_terms": [
+        "studio-ui-framework-modal-contract",
+        "studio",
+        "ui",
+        "framework",
+        "modal",
+        "contract",
+        "studio ui framework modal contract",
+        "studio ui framework",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-ui-framework-modal-contract studio ui framework modal contract studio ui framework modal contract studio ui framework 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "docs-viewer-portable-scope-setup",
+      "kind": "doc",
+      "title": "Docs Viewer Portable Scope Setup",
+      "href": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
+      "last_updated": "2026-05-19",
+      "parent_id": "docs-viewer-portable-setup",
+      "parent_title": "Docs Viewer Portable Setup",
+      "display_meta": "2026-05-19 • Docs Viewer Portable Setup",
+      "search_terms": [
+        "docs-viewer-portable-scope-setup",
+        "docs",
+        "viewer",
+        "portable",
+        "scope",
+        "setup",
+        "docs viewer portable scope setup",
+        "docs viewer portable setup",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup docs viewer portable scope setup docs viewer portable setup 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "studio-ui-framework-modal-implementation",
+      "kind": "doc",
+      "title": "Studio UI Framework Modal Implementation",
+      "href": "/docs/?scope=studio&doc=studio-ui-framework-modal-implementation",
+      "last_updated": "2026-05-19",
+      "parent_id": "studio-ui-framework",
+      "parent_title": "Studio UI Framework",
+      "display_meta": "2026-05-19 • Studio UI Framework",
+      "search_terms": [
+        "studio-ui-framework-modal-implementation",
+        "studio",
+        "ui",
+        "framework",
+        "modal",
+        "implementation",
+        "studio ui framework modal implementation",
+        "studio ui framework",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-ui-framework-modal-implementation studio ui framework modal implementation studio ui framework modal implementation studio ui framework 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "studio-ui-framework-review-coverage",
+      "kind": "doc",
+      "title": "Studio UI Framework Review And Coverage",
+      "href": "/docs/?scope=studio&doc=studio-ui-framework-review-coverage",
+      "last_updated": "2026-05-19",
+      "parent_id": "studio-ui-framework",
+      "parent_title": "Studio UI Framework",
+      "display_meta": "2026-05-19 • Studio UI Framework",
+      "search_terms": [
+        "studio-ui-framework-review-coverage",
+        "studio",
+        "ui",
+        "framework",
+        "review",
+        "coverage",
+        "studio ui framework review and coverage",
+        "and",
+        "studio ui framework",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-ui-framework-review-coverage studio ui framework review coverage studio ui framework review and coverage and studio ui framework 2026-05-19 2026 05 19"
     },
     {
       "id": "catalogue",
@@ -3565,24 +3906,22 @@
       "kind": "doc",
       "title": "Search Build Pipeline",
       "href": "/docs/?scope=studio&doc=search-build-pipeline",
-      "last_updated": "2026-05-11 21:30",
+      "last_updated": "2026-05-19",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 21:30 • Search",
+      "display_meta": "2026-05-19 • Search",
       "search_terms": [
         "search-build-pipeline",
         "search",
         "build",
         "pipeline",
         "search build pipeline",
-        "2026-05-11 21:30",
+        "2026-05-19",
         "2026",
         "05",
-        "11",
-        "21",
-        "30"
+        "19"
       ],
-      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-05-11 21:30 2026 05 11 21 30"
+      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-05-19 2026 05 19"
     },
     {
       "id": "new-pipeline-source-model",
@@ -3657,6 +3996,130 @@
         "25"
       ],
       "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-08 19:25 2026 05 08 19 25"
+    },
+    {
+      "id": "search-build-pipeline-architecture",
+      "kind": "doc",
+      "title": "Search Build Pipeline Architecture",
+      "href": "/docs/?scope=studio&doc=search-build-pipeline-architecture",
+      "last_updated": "2026-05-19",
+      "parent_id": "search-build-pipeline",
+      "parent_title": "Search Build Pipeline",
+      "display_meta": "2026-05-19 • Search Build Pipeline",
+      "search_terms": [
+        "search-build-pipeline-architecture",
+        "search",
+        "build",
+        "pipeline",
+        "architecture",
+        "search build pipeline architecture",
+        "search build pipeline",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "search-build-pipeline-architecture search build pipeline architecture search build pipeline architecture search build pipeline 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "search-build-pipeline-catalogue",
+      "kind": "doc",
+      "title": "Search Build Pipeline Catalogue Scope",
+      "href": "/docs/?scope=studio&doc=search-build-pipeline-catalogue",
+      "last_updated": "2026-05-19",
+      "parent_id": "search-build-pipeline",
+      "parent_title": "Search Build Pipeline",
+      "display_meta": "2026-05-19 • Search Build Pipeline",
+      "search_terms": [
+        "search-build-pipeline-catalogue",
+        "search",
+        "build",
+        "pipeline",
+        "catalogue",
+        "search build pipeline catalogue scope",
+        "scope",
+        "search build pipeline",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "search-build-pipeline-catalogue search build pipeline catalogue search build pipeline catalogue scope scope search build pipeline 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "search-build-pipeline-studio",
+      "kind": "doc",
+      "title": "Search Build Pipeline Studio Scope",
+      "href": "/docs/?scope=studio&doc=search-build-pipeline-studio",
+      "last_updated": "2026-05-19",
+      "parent_id": "search-build-pipeline",
+      "parent_title": "Search Build Pipeline",
+      "display_meta": "2026-05-19 • Search Build Pipeline",
+      "search_terms": [
+        "search-build-pipeline-studio",
+        "search",
+        "build",
+        "pipeline",
+        "studio",
+        "search build pipeline studio scope",
+        "scope",
+        "search build pipeline",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "search-build-pipeline-studio search build pipeline studio search build pipeline studio scope scope search build pipeline 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "search-build-pipeline-library",
+      "kind": "doc",
+      "title": "Search Build Pipeline Library Scope",
+      "href": "/docs/?scope=studio&doc=search-build-pipeline-library",
+      "last_updated": "2026-05-19",
+      "parent_id": "search-build-pipeline",
+      "parent_title": "Search Build Pipeline",
+      "display_meta": "2026-05-19 • Search Build Pipeline",
+      "search_terms": [
+        "search-build-pipeline-library",
+        "search",
+        "build",
+        "pipeline",
+        "library",
+        "search build pipeline library scope",
+        "scope",
+        "search build pipeline",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "search-build-pipeline-library search build pipeline library search build pipeline library scope scope search build pipeline 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "search-build-pipeline-analysis",
+      "kind": "doc",
+      "title": "Search Build Pipeline Analysis Scope",
+      "href": "/docs/?scope=studio&doc=search-build-pipeline-analysis",
+      "last_updated": "2026-05-19",
+      "parent_id": "search-build-pipeline",
+      "parent_title": "Search Build Pipeline",
+      "display_meta": "2026-05-19 • Search Build Pipeline",
+      "search_terms": [
+        "search-build-pipeline-analysis",
+        "search",
+        "build",
+        "pipeline",
+        "analysis",
+        "search build pipeline analysis scope",
+        "scope",
+        "search build pipeline",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "search-build-pipeline-analysis search build pipeline analysis search build pipeline analysis scope scope search build pipeline 2026-05-19 2026 05 19"
     },
     {
       "id": "docs-viewer-semantic-references",
