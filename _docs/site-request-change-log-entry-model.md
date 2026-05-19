@@ -14,6 +14,7 @@ Status:
 
 - In progress
 - Step 1 completed: `_docs_logs/` source conventions and schema scaffold added
+- Step 2 completed: development workflow doc added under Site Docs and AGENTS.md now points to it
 
 ## Summary
 
@@ -231,6 +232,10 @@ Expected outputs:
 - search weighting rules for change-history records
 
 ### Step 2. Document The Development Workflow
+
+Status:
+
+- completed
 
 Create `_docs/development-workflow.md` under [Site Docs](/docs/?scope=studio&doc=site-docs) so AGENTS.md can reference it before and during implementation work.
 Part of this work should review the current AGENTS.md content and move detailed procedural guidance into the workflow document where that guidance does not need to be read for every task.

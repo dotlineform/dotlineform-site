@@ -1,0 +1,163 @@
+---
+doc_id: development-workflow
+title: Development Workflow
+added_date: 2026-05-19
+last_updated: 2026-05-19
+parent_id: site-docs
+sort_order: 1500
+viewable: true
+---
+# Development Workflow
+
+This document is the repo-specific lifecycle guide for major new features, behavior changes, refactors, and meaningful documentation changes.
+
+Use it to decide what to read, what to update, and how to close work out.
+It is intentionally a router to focused docs rather than a replacement for them.
+
+## Fast Path
+
+For any non-trivial change:
+
+1. Classify the work: feature, bugfix, refactor, documentation, generated-data change, UI change, or workflow change.
+2. Read the owning section docs before editing.
+3. Decide whether the work needs a change request.
+4. Keep implementation scoped to the owning runtime, script, data model, or UI primitive.
+5. Run targeted verification proportional to the blast radius.
+6. Update owning docs and generated payloads when source docs or generated contracts change.
+7. Close out with a concise summary, remaining risks, and follow-up tasks.
+8. When the structured change-log system is implemented, write `_docs_logs/` entries for meaningful completed work.
+
+## 1. Classify The Work
+
+Use the smallest owning area that explains the change:
+
+- Site architecture or route/runtime behavior: [Architecture](/docs/?scope=studio&doc=architecture)
+- Studio route behavior: [Studio](/docs/?scope=studio&doc=studio)
+- UI primitives, modal patterns, or layout behavior: [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start), [UI Framework](/docs/?scope=studio&doc=ui-framework), and [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- Generated/runtime data contracts: [Data Models](/docs/?scope=studio&doc=data-models)
+- Checked-in config: [Config](/docs/?scope=studio&doc=config)
+- Docs Viewer behavior: [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
+- Search behavior, schema, ranking, or build flow: [Search](/docs/?scope=studio&doc=search)
+- Scripts, local services, and command behavior: [Scripts](/docs/?scope=studio&doc=scripts)
+- Local setup, dependency, or environment behavior: [Local Setup](/docs/?scope=studio&doc=local-setup) and [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)
+- Test strategy and check profiles: [Testing](/docs/?scope=studio&doc=testing), [Run Checks](/docs/?scope=studio&doc=scripts-run-checks), and [Pytest](/docs/?scope=studio&doc=testing-pytest)
+
+If the owning area is unclear, start with [Site Docs](/docs/?scope=studio&doc=site-docs), then narrow from there.
+
+## 2. Decide Whether A Change Request Is Needed
+
+Use [Change Requests](/docs/?scope=studio&doc=change-requests) for work that needs a visible product, workflow, or implementation plan before it is complete.
+
+A change request is usually useful when the work:
+
+- changes user workflow or operational behavior
+- spans multiple files, modules, routes, or generated artifacts
+- involves uncertain requirements or tradeoffs
+- creates a new convention, data model, or local-service behavior
+- should remain visible after the implementation conversation ends
+
+Small bugfixes, narrow docs edits, and mechanical cleanup usually do not need a new request.
+
+Keep change requests manually curated.
+They are planning and close-out artifacts, not the durable implementation log.
+
+## 3. Shape The Implementation
+
+Prefer existing repo boundaries:
+
+- Extend shared modules and primitives before creating one-off route-local patterns.
+- Keep UI shell, validation, data mutation, and generated-output behavior separate.
+- Keep config ownership in checked-in config docs and loader modules.
+- Keep generated data flowing from source records through scripts; do not edit generated payloads as source.
+- Keep source docs under the owning scope and use Docs Viewer links for published doc references.
+
+For UI work, start with [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start).
+For search work, start with [Search](/docs/?scope=studio&doc=search) and update search child docs when schema, ranking, normalization, UI, build flow, or validation changes materially.
+For scripts or local services, use [Scripts](/docs/?scope=studio&doc=scripts) and the script-specific child doc.
+
+## 4. Implement In A Focused Slice
+
+Keep the implementation slice small enough to verify and summarize.
+
+During implementation:
+
+- preserve existing Jekyll, Liquid, JavaScript, CSS, and Python conventions
+- prefer structured parsers or config APIs over ad hoc string manipulation
+- keep unrelated refactors out of the change
+- avoid widening local write-service paths or CORS behavior
+- use dry-run behavior for generators before write runs unless the task explicitly requires writing
+- keep user-specific paths, tokens, and local credentials out of tracked docs and source
+
+If a request grows beyond a single safe slice, stop at a checkpoint with completed work, checks run, risks, and the next slice.
+
+## 5. Verify Proportionally
+
+Choose the smallest useful check set:
+
+- Docs-only source changes: source review is usually enough unless generated payloads or docs search need to be rebuilt.
+- Python changes: run a syntax check or focused pytest with the configured Python interpreter.
+- Script/generator changes: run dry-run behavior and summarize what would be written.
+- Data model or generated contract changes: verify the owning builder, generated output shape, and affected docs.
+- UI/layout changes: verify desktop and mobile behavior when practical.
+- Broad behavior changes: use [Run Checks](/docs/?scope=studio&doc=scripts-run-checks) with the narrowest relevant profile.
+
+Use explicit toolchain paths where the repo requires them.
+See [Local Setup](/docs/?scope=studio&doc=local-setup), [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies), and [Testing](/docs/?scope=studio&doc=testing).
+
+## 6. Update Docs And Generated Artifacts
+
+When behavior changes, update the owning reference doc in the same change.
+
+Common follow-through:
+
+- `_docs/` changes require Studio docs-viewer payload follow-through.
+- `_docs_library/` changes require Library docs-viewer payload follow-through.
+- Search behavior or schema changes require relevant Search child docs and search payload rebuilds.
+- Script behavior changes require the script-specific child doc under [Scripts](/docs/?scope=studio&doc=scripts).
+- Config behavior changes require the owning config doc under [Config](/docs/?scope=studio&doc=config).
+- Data contract changes require the relevant child doc under [Data Models](/docs/?scope=studio&doc=data-models).
+
+Do not assume Jekyll alone updates Docs Viewer content.
+Generated docs/search payloads are separate artifacts.
+
+## 7. Close Out The Work
+
+A close-out should include:
+
+- changed files and the purpose of the change
+- verification run and result
+- generated payloads updated or intentionally not rebuilt
+- remaining risks or follow-up tasks
+- request status updates when the work was driven by a change request
+
+For change requests:
+
+- mark completed tasks clearly
+- move or mark the request according to the current request/archive practice
+- when the structured log system is ready, add references from the completed request to the relevant `_docs_logs/` entry ids when the request has a closure/cleanup task for that
+
+## 8. Record Durable Change History
+
+The current site and search change logs are being replaced by a structured `_docs_logs/` corpus.
+The implementation request is [Change Log Entry Model Request](/docs/?scope=studio&doc=site-request-change-log-entry-model).
+
+When that system is implemented:
+
+- create structured log entries for meaningful completed changes
+- include `change_request_doc_id` when a log entry implements or closes a request
+- include related docs and files so Codex can trace decisions later
+- let generated indexes and reports provide human browsing
+
+Until the structured system is ready, continue following existing change-log guidance for meaningful UI, build flow, validation, or architecture changes.
+
+## Documentation Review Candidates
+
+This workflow exposes a few areas where the docs are useful but may need later review.
+These are not part of the current implementation task.
+
+- AGENTS.md still carries detailed procedural guidance that could move into this workflow doc once the workflow is stable.
+- Studio UI guidance is split across [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start), framework docs, primitive docs, and the long UI decision log; the decision log likely needs pruning or archival.
+- State routing and module-dependency guidance exists across route, runtime, and script docs but may need a shorter “where to look first” index.
+- Generated docs/search payload follow-through is documented, but a compact checklist may be useful after the change-log workflow is implemented.
+- The new `_docs_logs/` system still needs migration, generated indexes, report UI, and close-out helper support before it replaces the old logs.
+

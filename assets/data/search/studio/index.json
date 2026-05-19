@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4b7b5774cc2c5afc230f02dcd2bf2e62",
-    "generated_at_utc": "2026-05-19T13:06:31Z",
-    "count": 251
+    "version": "blake2b-c32208ac713de5cc75890677a9c3f3a6",
+    "generated_at_utc": "2026-05-19T14:48:29Z",
+    "count": 252
   },
   "entries": [
     {
@@ -683,21 +683,19 @@
       "kind": "doc",
       "title": "Site Docs",
       "href": "/docs/?scope=studio&doc=site-docs",
-      "last_updated": "2026-05-09 12:19",
-      "display_meta": "2026-05-09 12:19",
+      "last_updated": "2026-05-19",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "site-docs",
         "site",
         "docs",
         "site docs",
-        "2026-05-09 12:19",
+        "2026-05-19",
         "2026",
         "05",
-        "09",
-        "12",
         "19"
       ],
-      "search_text": "site-docs site docs site docs 2026-05-09 12:19 2026 05 09 12 19"
+      "search_text": "site-docs site docs site docs 2026-05-19 2026 05 19"
     },
     {
       "id": "studio-data-sharing",
@@ -806,6 +804,30 @@
         "10"
       ],
       "search_text": "ui-framework ui framework ui framework 2026-05-11 14:10 2026 05 11 14 10"
+    },
+    {
+      "id": "development-workflow",
+      "kind": "doc",
+      "title": "Development Workflow",
+      "href": "/docs/?scope=studio&doc=development-workflow",
+      "last_updated": "2026-05-19",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-05-19 • Site Docs",
+      "search_terms": [
+        "development-workflow",
+        "development",
+        "workflow",
+        "development workflow",
+        "site docs",
+        "site",
+        "docs",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "development-workflow development workflow development workflow site docs site docs 2026-05-19 2026 05 19"
     },
     {
       "id": "catalogue-status",

@@ -2,7 +2,7 @@
 doc_id: site-docs
 title: Site Docs
 added_date: 2026-04-19
-last_updated: "2026-05-09 12:19"
+last_updated: 2026-05-19
 parent_id: ""
 sort_order: 1000
 viewable: true
@@ -36,6 +36,8 @@ Use it as the default entry point for `/docs/`.
 
 ## Supporting Docs
 
+- **[Development Workflow](/docs/?scope=studio&doc=development-workflow)**
+  end-to-end lifecycle guidance for human and Codex implementation work.
 - **[Site Change Log](/docs/?scope=studio&doc=site-change-log)**
   meaningful non-search site and Studio history.
 - **[Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)**

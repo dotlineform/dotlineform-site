@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T14:36:36Z",
+  "generated_at": "2026-05-19T14:48:29Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -419,7 +419,7 @@
       "doc_id": "site-docs",
       "title": "Site Docs",
       "added_date": "2026-04-19",
-      "last_updated": "2026-05-09 12:19",
+      "last_updated": "2026-05-19",
       "parent_id": "",
       "sort_order": 1000,
       "published": true,
@@ -428,7 +428,7 @@
       "source_path": "site-docs.md",
       "viewer_url": "/docs/?scope=studio&doc=site-docs",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-docs.json",
-      "content_text_length": 1540
+      "content_text_length": 1632
     },
     {
       "scope": "studio",
@@ -494,6 +494,22 @@
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-framework.json",
       "content_text_length": 11325
+    },
+    {
+      "scope": "studio",
+      "doc_id": "development-workflow",
+      "title": "Development Workflow",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "site-docs",
+      "sort_order": 1500,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "development-workflow.md",
+      "viewer_url": "/docs/?scope=studio&doc=development-workflow",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/development-workflow.json",
+      "content_text_length": 7389
     },
     {
       "scope": "studio",
@@ -4096,7 +4112,7 @@
       "source_path": "site-request-change-log-entry-model.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-change-log-entry-model",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-change-log-entry-model.json",
-      "content_text_length": 16963,
+      "content_text_length": 17077,
       "ui_status": "in-progress"
     },
     {

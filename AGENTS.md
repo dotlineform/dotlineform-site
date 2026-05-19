@@ -1,6 +1,7 @@
 ## General behaviour
 
 - when prompted to 'read Agents.md', note any actions needed before continuing.
+- for major features, behavior changes, refactors, and meaningful docs changes, use `_docs/development-workflow.md` as the lifecycle guide and follow its links to task-specific docs.
 - consider whether edits are implied by the current request. If the request is analysis-only, exploratory, uses words like 'check' or 'confirm', or includes a '?', do not make edits without asking first.
 - when edits are implied, briefly state the intended change set and ask for confirmation before editing unless the request is trivial.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
