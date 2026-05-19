@@ -3,10 +3,11 @@ doc_id: studio-docs-inventory
 title: Studio Docs Inventory
 added_date: 2026-05-19
 last_updated: 2026-05-19
+ui_status: urgent
 parent_id: studio
 sort_order: 7505
 published: true
-viewable: true
+hidden: false
 ---
 # Studio Document Inventory
 
