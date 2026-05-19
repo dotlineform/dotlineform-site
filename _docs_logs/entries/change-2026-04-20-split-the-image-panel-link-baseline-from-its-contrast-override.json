@@ -1,0 +1,53 @@
+{
+  "id": "change-2026-04-20-split-the-image-panel-link-baseline-from-its-contrast-override",
+  "date": "2026-04-20",
+  "title": "Split the image panel-link baseline from its contrast override",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui"
+  ],
+  "summary": "Adjusted the shared image panel-link variation so it keeps the standard dark text by default, added an explicit contrast override for darker images, and created a dedicated Studio asset folder for design-time panel background images.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3082,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** design system / primitive guidance\n\n**Summary:**\nAdjusted the shared image panel-link variation so it keeps the standard dark text by default, added an explicit contrast override for darker images, and created a dedicated Studio asset folder for design-time panel background images.\n\n**Reason:**\nThe first image-panel demo had implicitly made white text look like the primitive default. That was inconsistent with the rest of the site and hid an important distinction between the base image-fill behavior and a common contrast override.\n\n**Effect:**\n`tagStudio__panelLink--image` now remains a neutral image-fill variation with centered `cover` behavior, `tagStudio__panelLink--imageContrast` is the explicit white-text override for darker images, the panel primitive page shows both code samples, and Studio background images now have a dedicated asset folder at `assets/studio/img/panel-backgrounds/`.\n\n**Affected files/docs:**\n- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)\n- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n- `assets/studio/css/studio.css`\n- `assets/studio/img/panel-backgrounds/.gitkeep`\n- `studio/ui-catalogue/panel/index.md`\n- `_includes/studio_ui_catalogue_panel_demo.html`\n- `_includes/ui_catalogue_notes/panel.md`\n\n**Notes:**\nAdd real design-time image assets under `assets/studio/img/panel-backgrounds/` before adopting the image-panel variation on live Studio pages.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "design system / primitive guidance",
+  "effect": "`tagStudio__panelLink--image` now remains a neutral image-fill variation with centered `cover` behavior, `tagStudio__panelLink--imageContrast` is the explicit white-text override for darker images, the panel primitive page shows both code samples, and Studio background images now have a dedicated asset folder at `assets/studio/img/panel-backgrounds/`.",
+  "related_docs": [
+    "ui-catalogue",
+    "studio-ui-framework",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "assets/studio/css/studio.css",
+    "assets/studio/img/panel-backgrounds/.gitkeep",
+    "studio/ui-catalogue/panel/index.md",
+    "_includes/studio_ui_catalogue_panel_demo.html",
+    "_includes/ui_catalogue_notes/panel.md",
+    "assets/studio/img/panel-backgrounds/"
+  ],
+  "affected": {
+    "files": [
+      "assets/studio/css/studio.css",
+      "assets/studio/img/panel-backgrounds/.gitkeep",
+      "studio/ui-catalogue/panel/index.md",
+      "_includes/studio_ui_catalogue_panel_demo.html",
+      "_includes/ui_catalogue_notes/panel.md"
+    ],
+    "docs": [
+      "ui-catalogue",
+      "studio-ui-framework",
+      "studio-ui-rules"
+    ]
+  }
+}

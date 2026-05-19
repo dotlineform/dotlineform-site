@@ -1,0 +1,40 @@
+{
+  "id": "change-2026-05-09-split-docs-and-search-build-implementation-ownership-from-stable-wrappers",
+  "date": "2026-05-09",
+  "title": "Split docs and search build implementation ownership from stable wrappers",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "build",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Moved the Docs Viewer builder implementation to `scripts/docs/build_docs.rb` and the search builder implementation to `scripts/search/build_search.rb`. The top-level `./scripts/build_docs.rb` and `./scripts/build_search.rb` commands remain as thin stable wrappers for existing runbooks, local services, and docs examples.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1599,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** scripts / docs / search / maintainability\n\n**Summary:**\nMoved the Docs Viewer builder implementation to `scripts/docs/build_docs.rb` and the search builder implementation to `scripts/search/build_search.rb`.\nThe top-level `./scripts/build_docs.rb` and `./scripts/build_search.rb` commands remain as thin stable wrappers for existing runbooks, local services, and docs examples.\n\n**Files changed/docs:**\n\n- `scripts/docs/build_docs.rb`\n- `scripts/search/build_search.rb`\n- `scripts/build_docs.rb`\n- `scripts/build_search.rb`\n- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization)\n\n**Impact:**\nDocs and Search now have domain-owned implementation paths without forcing broad command-path churn.\nThe top-level wrappers are the stable public command API, not temporary compatibility modules.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "scripts / docs / search / maintainability",
+  "related_docs": [
+    "scripts-docs-builder",
+    "search-build-pipeline",
+    "site-request-scripts-directory-organization"
+  ],
+  "related_files": [
+    "scripts/docs/build_docs.rb",
+    "scripts/search/build_search.rb",
+    "/scripts/build_docs.rb",
+    "/scripts/build_search.rb",
+    "scripts/build_docs.rb",
+    "scripts/build_search.rb"
+  ],
+  "change_request_doc_id": "site-request-scripts-directory-organization"
+}

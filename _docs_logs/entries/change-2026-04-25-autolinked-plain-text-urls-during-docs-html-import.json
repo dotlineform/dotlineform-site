@@ -1,0 +1,41 @@
+{
+  "id": "change-2026-04-25-autolinked-plain-text-urls-during-docs-html-import",
+  "date": "2026-04-25",
+  "title": "Autolinked plain-text URLs during docs HTML import",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Updated the docs HTML importer so plain-text `http://` and `https://` URLs in imported prose become Markdown autolinks.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1763,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / docs viewer / docs HTML import\n\n**Summary:**\nUpdated the docs HTML importer so plain-text `http://` and `https://` URLs in imported prose become Markdown autolinks.\n\n**Reason:**\nSome imported reference sections contain bare source URLs rather than `<a href>` elements. Keeping those as plain text made the resulting Library docs less useful even though the URLs were valid external references.\n\n**Effect:**\nFuture HTML imports convert bare prose URLs to clickable Markdown autolinks while preserving existing anchor conversion and leaving code/preformatted text alone.\n\n**Affected files/docs:**\n\n- `scripts/docs/docs_html_import.py`\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Docs HTML Import](/docs/?scope=studio&doc=user-guide-docs-html-import)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / docs viewer / docs HTML import",
+  "effect": "Future HTML imports convert bare prose URLs to clickable Markdown autolinks while preserving existing anchor conversion and leaving code/preformatted text alone.",
+  "related_docs": [
+    "scripts-docs-management-server",
+    "user-guide-docs-html-import"
+  ],
+  "related_files": [
+    "scripts/docs/docs_html_import.py"
+  ],
+  "affected": {
+    "files": [
+      "scripts/docs/docs_html_import.py"
+    ],
+    "docs": [
+      "scripts-docs-management-server",
+      "user-guide-docs-html-import"
+    ]
+  }
+}

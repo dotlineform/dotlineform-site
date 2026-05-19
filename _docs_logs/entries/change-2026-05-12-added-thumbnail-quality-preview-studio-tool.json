@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-05-12-added-thumbnail-quality-preview-studio-tool",
+  "date": "2026-05-12",
+  "title": "Added Thumbnail Quality Preview Studio Tool",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "search",
+    "catalogue",
+    "studio-ui",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Added `/studio/thumbnail-quality/` as a local comparison surface for thumbnail filesize and visual-quality tradeoffs. The page reads generated comparison data from `assets/studio/data/thumbnail_quality_preview.json`, displays source-image rows with current pipeline output plus lower-quality variants, and exposes a `Refresh` command backed by the Catalogue Write Server. The generator reads source images from `$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/` and writes isolated Studio preview assets without changing production thumbnail folders.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 650,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio catalogue media / thumbnail optimisation\n\n**Summary:**\nAdded `/studio/thumbnail-quality/` as a local comparison surface for thumbnail filesize and visual-quality tradeoffs.\nThe page reads generated comparison data from `assets/studio/data/thumbnail_quality_preview.json`, displays source-image rows with current pipeline output plus lower-quality variants, and exposes a `Refresh` command backed by the Catalogue Write Server.\nThe generator reads source images from `$DOTLINEFORM_PROJECTS_BASE_DIR/thumbnail-quality-preview/` and writes isolated Studio preview assets without changing production thumbnail folders.\n\n**Files changed/docs:**\n\n- `scripts/media/build_thumbnail_quality_preview.py`\n- `scripts/catalogue/catalogue_routes.py`\n- `scripts/catalogue/catalogue_write_server.py`\n- `studio/thumbnail-quality/index.md`\n- `assets/studio/js/thumbnail-quality.js`\n- `assets/studio/css/studio.css`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/data/ui_text/thumbnail-quality.json`\n- [Thumbnail Quality Page](/docs/?scope=studio&doc=thumbnail-quality-page)\n\n**Impact:**\nThumbnail settings can now be judged from source-derived previews before changing production `srcset` dimensions or compression quality.\nThe refresh path is explicit and local-only, so preview regeneration remains separate from catalogue publishing and remote media upload.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio catalogue media / thumbnail optimisation",
+  "related_docs": [
+    "thumbnail-quality-page"
+  ],
+  "related_files": [
+    "assets/studio/data/thumbnail_quality_preview.json",
+    "scripts/media/build_thumbnail_quality_preview.py",
+    "scripts/catalogue/catalogue_routes.py",
+    "scripts/catalogue/catalogue_write_server.py",
+    "studio/thumbnail-quality/index.md",
+    "assets/studio/js/thumbnail-quality.js",
+    "assets/studio/css/studio.css",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/data/ui_text/thumbnail-quality.json"
+  ]
+}

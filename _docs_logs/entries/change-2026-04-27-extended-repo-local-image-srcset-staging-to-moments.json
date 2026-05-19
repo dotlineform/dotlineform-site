@@ -1,0 +1,56 @@
+{
+  "id": "change-2026-04-27-extended-repo-local-image-srcset-staging-to-moments",
+  "date": "2026-04-27",
+  "title": "Extended repo-local image srcset staging to moments",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "workflow",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Moment imports now use the same repo-local image staging and thumbnail promotion workflow as work and work-detail scoped builds.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1397,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Catalogue pipeline / Studio\n\n**Summary:**\nMoment imports now use the same repo-local image staging and thumbnail promotion workflow as work and work-detail scoped builds.\n\n**Reason:**\nMoments were the remaining catalogue image path still excluded from the new local media workflow. Their source metadata now lives in canonical catalogue JSON, so the build can resolve `source_image_file`, stage the renamed source image, create srcset derivatives, and publish thumbnails consistently.\n\n**Effect:**\n`/studio/catalogue-moment-import/` preview/apply now reports and runs local moment media generation. Source images are staged under `var/catalogue/media/moments/make_srcset_images/`, primary and thumbnail derivatives are generated under `var/catalogue/media/moments/srcset_images/`, generated thumbnails are copied into `assets/moments/img/`, and generated primary derivatives remain staged for remote publishing. Missing moment images block only the media step, not prose/metadata import.\n\n**Affected files/docs:**\n\n- `scripts/catalogue_json_build.py`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)\n- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Catalogue pipeline / Studio",
+  "effect": "`/studio/catalogue-moment-import/` preview/apply now reports and runs local moment media generation. Source images are staged under `var/catalogue/media/moments/make_srcset_images/`, primary and thumbnail derivatives are generated under `var/catalogue/media/moments/srcset_images/`, generated thumbnails are copied into `assets/moments/img/`, and generated primary derivatives remain staged for remote publishing. Missing moment images block only the media step, not prose/metadata import.",
+  "related_docs": [
+    "catalogue-moment-editor",
+    "scripts-build-catalogue-json",
+    "scripts-catalogue-write-server"
+  ],
+  "related_files": [
+    "scripts/catalogue_json_build.py",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js",
+    "var/catalogue/media/moments/make_srcset_images/",
+    "var/catalogue/media/moments/srcset_images/",
+    "assets/moments/img/"
+  ],
+  "affected": {
+    "files": [
+      "scripts/catalogue_json_build.py",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/js/studio-config.js"
+    ],
+    "docs": [
+      "catalogue-moment-editor",
+      "scripts-build-catalogue-json",
+      "scripts-catalogue-write-server"
+    ]
+  }
+}

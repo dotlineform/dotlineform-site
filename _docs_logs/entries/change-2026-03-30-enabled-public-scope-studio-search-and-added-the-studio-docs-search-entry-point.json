@@ -1,0 +1,58 @@
+{
+  "id": "change-2026-03-30-enabled-public-scope-studio-search-and-added-the-studio-docs-search-entry-point",
+  "date": "2026-03-30",
+  "title": "Enabled public `scope=studio` search and added the Studio docs search entry point",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "studio-ui",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Enabled the `studio` search scope in policy, added a search icon CTA to `/docs/`, and extended the shared search runtime so Studio docs records render and rank correctly in the public search shell.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 738,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** UI\n\n**Summary:**  \nEnabled the `studio` search scope in policy, added a search icon CTA to `/docs/`, and extended the shared search runtime so Studio docs records render and rank correctly in the public search shell.\n\n**Reason:**  \nThe first Studio search artifact already existed, so the next step was to expose it through the same scope-led `/search/` route model already used by `catalogue`.\n\n**Effect:**  \n`/search/?scope=studio` now loads a live Studio docs search index, the docs page provides the scope-owned CTA, and the search page returns to `/docs/` via the scope-driven back link.\n\n**Affected files/docs:**  \n- `_includes/docs_viewer_shell.html`\n- `docs/index.md`\n- `assets/data/search/policy.json`\n- `assets/js/search/search-page.js`\n- `assets/css/main.css`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- [Search Overview](/docs/?scope=studio&doc=search-overview)\n- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)\n- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)\n\n**Notes:**  \nThis change enables Studio docs search only. It does not add `library` search or change the long-term search-pipeline ownership model.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "UI",
+  "effect": "`/search/?scope=studio` now loads a live Studio docs search index, the docs page provides the scope-owned CTA, and the search page returns to `/docs/` via the scope-driven back link.",
+  "related_docs": [
+    "search-overview",
+    "search-public-ui-contract",
+    "search-ui-behaviour"
+  ],
+  "related_files": [
+    "_includes/docs_viewer_shell.html",
+    "docs/index.md",
+    "assets/data/search/policy.json",
+    "assets/js/search/search-page.js",
+    "assets/css/main.css",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js"
+  ],
+  "affected": {
+    "files": [
+      "_includes/docs_viewer_shell.html",
+      "docs/index.md",
+      "assets/data/search/policy.json",
+      "assets/js/search/search-page.js",
+      "assets/css/main.css",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/js/studio-config.js"
+    ],
+    "docs": [
+      "search-overview",
+      "search-public-ui-contract",
+      "search-ui-behaviour"
+    ]
+  }
+}

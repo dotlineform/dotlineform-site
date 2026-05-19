@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-11-extracted-catalogue-moment-editor-selection-behavior",
+  "date": "2026-05-11",
+  "title": "Extracted Catalogue Moment Editor selection behavior",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "search",
+    "catalogue",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Added `assets/studio/js/catalogue-moment-selection.js` as the route-local selection module for the Catalogue Moment Editor. The module owns Moment search matching, popup rendering, Open button resolution, popup click handling, and initial route selection.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 993,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio runtime / Catalogue editor JavaScript / maintainability\n\n**Summary:**\nAdded `assets/studio/js/catalogue-moment-selection.js` as the route-local selection module for the Catalogue Moment Editor.\nThe module owns Moment search matching, popup rendering, Open button resolution, popup click handling, and initial route selection.\n\n**Files changed/docs:**\n\n- `assets/studio/js/catalogue-moment-editor.js`\n- `assets/studio/js/catalogue-moment-selection.js`\n- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)\n- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)\n- [Catalogue JavaScript Runtime Consistency Request](/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency)\n\n**Impact:**\nThe Moment route entry module keeps generated-data reads, normal edit construction, preview refresh, import-mode setup, post-import opening, dirty-state orchestration, context wiring, and route-ready state.\nSelection behavior now follows the same route-local module pattern as Work and Series without moving edit-mode construction out of the route coordinator.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio runtime / Catalogue editor JavaScript / maintainability",
+  "related_docs": [
+    "catalogue-moment-editor",
+    "studio-runtime",
+    "site-request-catalogue-js-runtime-consistency"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-moment-selection.js",
+    "assets/studio/js/catalogue-moment-editor.js"
+  ],
+  "change_request_doc_id": "site-request-catalogue-js-runtime-consistency"
+}

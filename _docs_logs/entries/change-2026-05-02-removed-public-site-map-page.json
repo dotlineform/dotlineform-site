@@ -1,0 +1,58 @@
+{
+  "id": "change-2026-05-02-removed-public-site-map-page",
+  "date": "2026-05-02",
+  "title": "Removed public site map page",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "workflow"
+  ],
+  "summary": "Removed the retired `/site_map/` page and its dedicated sitemap data build path.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 1193,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** site route cleanup\n\n**Summary:**\nRemoved the retired `/site_map/` page and its dedicated sitemap data build path.\n\n**Reason:**\nThe page is no longer required, and its generated `_data/sitemap.yml` source only supported that route plus a now-obsolete audit precheck.\n\n**Effect:**\nThe public site no longer builds `/site_map/`. Studio Works no longer links to it, `studio_config.json` no longer advertises a site-map route, and the site consistency audit now keeps generated link/query checks without validating the removed sitemap data file.\n\n**Affected files/docs:**\n\n- `site_map.html`\n- `_data/sitemap.yml`\n- `scripts/build_sitemap_data.py`\n- `studio/studio-works/index.md`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- `scripts/audit_site_consistency.py`\n- [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "site route cleanup",
+  "effect": "The public site no longer builds `/site_map/`. Studio Works no longer links to it, `studio_config.json` no longer advertises a site-map route, and the site consistency audit now keeps generated link/query checks without validating the removed sitemap data file.",
+  "related_docs": [
+    "scripts-audit-site-consistency",
+    "site-change-log"
+  ],
+  "related_files": [
+    "site_map.html",
+    "_data/sitemap.yml",
+    "scripts/build_sitemap_data.py",
+    "studio/studio-works/index.md",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js",
+    "scripts/audit_site_consistency.py",
+    "studio_config.json"
+  ],
+  "affected": {
+    "files": [
+      "site_map.html",
+      "_data/sitemap.yml",
+      "scripts/build_sitemap_data.py",
+      "studio/studio-works/index.md",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/js/studio-config.js",
+      "scripts/audit_site_consistency.py"
+    ],
+    "docs": [
+      "scripts-audit-site-consistency",
+      "site-change-log"
+    ]
+  }
+}

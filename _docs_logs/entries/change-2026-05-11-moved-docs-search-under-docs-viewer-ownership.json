@@ -1,0 +1,67 @@
+{
+  "id": "change-2026-05-11-moved-docs-search-under-docs-viewer-ownership",
+  "date": "2026-05-11",
+  "title": "Moved Docs search under Docs Viewer ownership",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "config"
+  ],
+  "summary": "Split the stable `./scripts/build_search.rb` command into a dispatcher backed by `scripts/search/adapter_registry.json`. Catalogue search now runs through the Catalogue adapter in `scripts/search/build_search.rb`, while configured Docs Viewer scopes run through the Docs Viewer-owned builder in `scripts/docs/build_search.rb`.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 11,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** search build architecture / Docs Viewer portability\n\n**Summary:**\nSplit the stable `./scripts/build_search.rb` command into a dispatcher backed by `scripts/search/adapter_registry.json`.\nCatalogue search now runs through the Catalogue adapter in `scripts/search/build_search.rb`, while configured Docs Viewer scopes run through the Docs Viewer-owned builder in `scripts/docs/build_search.rb`.\n\n**Reason:**\nPortable Docs Viewer installs need inline docs search without copying the Catalogue/public search product.\nDocs search scopes now derive from `scripts/docs/docs_scopes.json` instead of hardcoded `studio`, `library`, and `analysis` entries in the generic search config.\n\n**Effect:**\n`./scripts/build_search.rb --scope <scope> --write` remains the supported command for Catalogue and docs scopes.\nDocs-search output remains under `assets/data/search/<scope>/index.json`, and Catalogue search behavior remains stable behind its adapter.\n\n**Affected files/docs:**\n\n- `scripts/build_search.rb`\n- `scripts/docs/build_search.rb`\n- `scripts/search/build_search.rb`\n- `scripts/search/adapter_registry.json`\n- `scripts/search/build_config.json`\n- `scripts/docs/build_docs.rb`\n- `assets/docs-viewer/data/docs-viewer-config.json`\n- [Search Overview](/docs/?scope=studio&doc=search-overview)\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json)\n- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)\n- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "search build architecture / Docs Viewer portability",
+  "effect": "`./scripts/build_search.rb --scope <scope> --write` remains the supported command for Catalogue and docs scopes. Docs-search output remains under `assets/data/search/<scope>/index.json`, and Catalogue search behavior remains stable behind its adapter.",
+  "related_docs": [
+    "search-overview",
+    "search-build-pipeline",
+    "config-search-build-json",
+    "docs-viewer-portable-setup",
+    "site-request-portable-docs-viewer"
+  ],
+  "related_files": [
+    "scripts/build_search.rb",
+    "scripts/docs/build_search.rb",
+    "scripts/search/build_search.rb",
+    "scripts/search/adapter_registry.json",
+    "scripts/search/build_config.json",
+    "scripts/docs/build_docs.rb",
+    "assets/docs-viewer/data/docs-viewer-config.json",
+    "/scripts/build_search.rb",
+    "scripts/docs/docs_scopes.json",
+    "assets/data/search/<scope>/index.json"
+  ],
+  "change_request_doc_id": "site-request-portable-docs-viewer",
+  "affected": {
+    "files": [
+      "scripts/build_search.rb",
+      "scripts/docs/build_search.rb",
+      "scripts/search/build_search.rb",
+      "scripts/search/adapter_registry.json",
+      "scripts/search/build_config.json",
+      "scripts/docs/build_docs.rb",
+      "assets/docs-viewer/data/docs-viewer-config.json"
+    ],
+    "docs": [
+      "search-overview",
+      "search-build-pipeline",
+      "config-search-build-json",
+      "docs-viewer-portable-setup",
+      "site-request-portable-docs-viewer"
+    ]
+  }
+}

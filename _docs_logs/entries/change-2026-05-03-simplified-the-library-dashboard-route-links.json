@@ -1,0 +1,31 @@
+{
+  "id": "change-2026-05-03-simplified-the-library-dashboard-route-links",
+  "date": "2026-05-03",
+  "title": "Simplified the Library dashboard route links",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "search",
+    "catalogue",
+    "library"
+  ],
+  "summary": "Aligned `/studio/library/` with the compact `/studio/catalogue/` dashboard pattern.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 310,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Library dashboard\n\n**Summary:**\nAligned `/studio/library/` with the compact `/studio/catalogue/` dashboard pattern.\n\n**Reason:**\nThe Library dashboard had become a routine navigation surface. Descriptive panel cards added extra reading where the page now needs direct route access.\n\n**Changes:**\nRemoved the Library dashboard intro, card descriptions, and panel links.\nThe dashboard now keeps the Library doc count and shows two route columns: `Manage` for Library manage mode and HTML Import, and `Data` for export.\n\n**Files changed:**\n\n- `studio/library/index.md`\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n\n**Impact:**\nLibrary admin routes are now faster to scan and visually consistent with the Catalogue dashboard.\nThe Library link now lands directly on `/library/?mode=manage&doc=library`.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Library dashboard",
+  "effect": "The Library dashboard had become a routine navigation surface. Descriptive panel cards added extra reading where the page now needs direct route access.",
+  "related_docs": [
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/library/index.md"
+  ]
+}

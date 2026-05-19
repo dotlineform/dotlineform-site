@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-04-18-completed-source-readiness-preview-media-and-local-media-generation-refinements",
+  "date": "2026-04-18",
+  "title": "Completed source-readiness, preview-media, and local-media generation refinements",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "workflow"
+  ],
+  "summary": "Extended Studio to report source readiness, show focused preview media, and surface local derivative generation state.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3553,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio media workflow\n\n**Summary:**\nExtended Studio to report source readiness, show focused preview media, and surface local derivative generation state.\n\n**Reason:**\nEditing metadata alone was not enough once Studio started coordinating source prose, source media, generated previews, and local derivative generation.\n\n**Effect:**\nWork, series, and detail editors now surface source readiness in the summary rail, work and series offer narrow `Import prose + rebuild` actions, detail preview resolves its own source media path, work and detail editors show compact current-record previews, work-detail rows on the work editor use thumbnail-led navigation, scoped rebuilds run a bounded local thumbnail-generation step for works, work details, and moments, and Studio Activity records generated local media alongside rebuild outcomes.\n\n**Affected files/docs:**\n- `/studio/catalogue-work/`\n- `/studio/catalogue-work-detail/`\n- `/studio/catalogue-series/`\n- [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)\n- [Studio Activity](/docs/?scope=studio&doc=studio-activity)\n\n**Notes:**\nThis entry covers the later media/readiness refinements that followed the first editor surfaces.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio media workflow",
+  "effect": "Work, series, and detail editors now surface source readiness in the summary rail, work and series offer narrow `Import prose + rebuild` actions, detail preview resolves its own source media path, work and detail editors show compact current-record previews, work-detail rows on the work editor use thumbnail-led navigation, scoped rebuilds run a bounded local thumbnail-generation step for works, work details, and moments, and Studio Activity records generated local media alongside rebuild outcomes.",
+  "related_docs": [
+    "new-pipeline-studio-implementation-plan",
+    "studio-activity"
+  ],
+  "affected": {
+    "docs": [
+      "new-pipeline-studio-implementation-plan",
+      "studio-activity"
+    ]
+  }
+}

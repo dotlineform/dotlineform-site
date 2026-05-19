@@ -1,0 +1,46 @@
+{
+  "id": "change-2026-04-24-excluded-local-docs-runtime-state-from-jekyll-watch-input",
+  "date": "2026-04-24",
+  "title": "Excluded local docs runtime state from Jekyll watch input",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "build",
+    "scripts",
+    "config",
+    "runtime"
+  ],
+  "summary": "Excluded `var/` from Jekyll so local docs-management runtime files no longer trigger `jekyll serve` regeneration events.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 2051,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / docs viewer / local runtime\n\n**Summary:**\nExcluded `var/` from Jekyll so local docs-management runtime files no longer trigger `jekyll serve` regeneration events.\n\n**Reason:**\nDocs-management writes create short-lived watcher-suppression markers under `var/docs/watch-suppressions/`. During local imports, the docs live watcher can remove a completed marker before Jekyll's own file watcher stats it, causing a noisy `No such file or directory @ rb_file_s_stat` message even though the docs write and same-scope rebuild succeeded.\n\n**Effect:**\nLocal backups, staged imports, logs, and watcher-suppression markers under `var/docs/` remain available to Studio tooling but are no longer treated as Jekyll site input. This keeps `jekyll serve` focused on publishable source files and avoids transient file-watch races from local operational state.\n\n**Affected files/docs:**\n\n- `_config.yml`\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / docs viewer / local runtime",
+  "effect": "Local backups, staged imports, logs, and watcher-suppression markers under `var/docs/` remain available to Studio tooling but are no longer treated as Jekyll site input. This keeps `jekyll serve` focused on publishable source files and avoids transient file-watch races from local operational state.",
+  "related_docs": [
+    "scripts-docs-management-server",
+    "scripts-docs-live-rebuild-watcher"
+  ],
+  "related_files": [
+    "_config.yml",
+    "var/",
+    "var/docs/watch-suppressions/",
+    "var/docs/"
+  ],
+  "affected": {
+    "files": [
+      "_config.yml"
+    ],
+    "docs": [
+      "scripts-docs-management-server",
+      "scripts-docs-live-rebuild-watcher"
+    ]
+  }
+}

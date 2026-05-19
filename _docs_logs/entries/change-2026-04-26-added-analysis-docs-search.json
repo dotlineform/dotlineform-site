@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-04-26-added-analysis-docs-search",
+  "date": "2026-04-26",
+  "title": "Added Analysis docs search",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "build",
+    "scripts",
+    "data-models",
+    "config"
+  ],
+  "summary": "Added an `analysis` docs-search scope for the new public `/analysis/` docs viewer.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 240,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** docs search build flow\n\n**Summary:**\nAdded an `analysis` docs-search scope for the new public `/analysis/` docs viewer.\n\n**Reason:**\nThe Analysis viewer needs inline search that stays separate from Library, Studio docs, and catalogue search.\n\n**Effect:**\n`scripts/build_search.rb` now supports `--scope analysis`, reading `assets/data/docs/scopes/analysis/index.json` and writing `assets/data/search/analysis/index.json`. The shared search build config declares Analysis as a docs-index-backed scope with the same targeted `doc_id` update policy used by Studio and Library docs search.\n\n**Affected files/docs:**\n\n- `scripts/build_search.rb`\n- `scripts/search/build_config.json`\n- `assets/data/search/analysis/index.json`\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Analysis Scope](/docs/?scope=studio&doc=data-models-analysis)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "docs search build flow",
+  "effect": "`scripts/build_search.rb` now supports `--scope analysis`, reading `assets/data/docs/scopes/analysis/index.json` and writing `assets/data/search/analysis/index.json`. The shared search build config declares Analysis as a docs-index-backed scope with the same targeted `doc_id` update policy used by Studio and Library docs search.",
+  "related_docs": [
+    "search-build-pipeline",
+    "data-models-analysis"
+  ],
+  "related_files": [
+    "scripts/build_search.rb",
+    "scripts/search/build_config.json",
+    "assets/data/search/analysis/index.json",
+    "assets/data/docs/scopes/analysis/index.json"
+  ],
+  "affected": {
+    "files": [
+      "scripts/build_search.rb",
+      "scripts/search/build_config.json",
+      "assets/data/search/analysis/index.json"
+    ],
+    "docs": [
+      "search-build-pipeline",
+      "data-models-analysis"
+    ]
+  }
+}

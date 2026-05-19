@@ -1,0 +1,44 @@
+{
+  "id": "change-2026-04-01-extended-removed-row-cleanup-to-local-staged-and-derivative-media",
+  "date": "2026-04-01",
+  "title": "Extended removed-row cleanup to local staged and derivative media",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "analytics"
+  ],
+  "summary": "`build_catalogue.py` now removes stale repo-local media outputs when workbook rows are removed.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 4075,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** scripts\n\n**Summary:**  \n`build_catalogue.py` now removes stale repo-local media outputs when workbook rows are removed.\n\n**Reason:**  \nCleaning only repo-owned route stubs and JSON still left stale staged inputs, srcset outputs, and staged downloads on the local media side. Those files are owned by the same catalogue pipeline and should be cleaned by the same removed-row pass.\n\n**Effect:**  \nRemoved work, work-detail, and moment rows now also delete matching files from the local `make_srcset_images` input folders, the generated `primary/` and `thumb/` srcset folders, and staged work downloads under `works/files/`. Aggregate catalogue JSON and search rebuilds still run afterward from the current workbook state.\n\n**Affected files/docs:**  \n- `scripts/build_catalogue.py`\n- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)\n- [Scripts](/docs/?scope=studio&doc=scripts)\n\n**Notes:**  \nThis still does not touch canonical source media under `DOTLINEFORM_PROJECTS_BASE_DIR` or remote media such as R2.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "scripts",
+  "effect": "Removed work, work-detail, and moment rows now also delete matching files from the local `make_srcset_images` input folders, the generated `primary/` and `thumb/` srcset folders, and staged work downloads under `works/files/`. Aggregate catalogue JSON and search rebuilds still run afterward from the current workbook state.",
+  "related_docs": [
+    "scripts-main-pipeline",
+    "scripts"
+  ],
+  "related_files": [
+    "scripts/build_catalogue.py",
+    "build_catalogue.py"
+  ],
+  "affected": {
+    "files": [
+      "scripts/build_catalogue.py"
+    ],
+    "docs": [
+      "scripts-main-pipeline",
+      "scripts"
+    ]
+  }
+}

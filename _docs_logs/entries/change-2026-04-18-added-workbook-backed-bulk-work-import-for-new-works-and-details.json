@@ -1,0 +1,40 @@
+{
+  "id": "change-2026-04-18-added-workbook-backed-bulk-work-import-for-new-works-and-details",
+  "date": "2026-04-18",
+  "title": "Added workbook-backed bulk work import for new works and details",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "data-models",
+    "workflow"
+  ],
+  "summary": "Added the bulk work import flow at `/studio/bulk-add-work/`.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3503,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio import workflow\n\n**Summary:**\nAdded the bulk work import flow at `/studio/bulk-add-work/`.\n\n**Reason:**\nEven in the JSON-led catalogue workflow, a bounded import path is still useful for bringing in batches of new works and work details from workbook data.\n\n**Effect:**\nThe bulk import UI now supports one-way preview/apply import from the configured workbook source into canonical JSON for new works and new work details.\n\n**Affected files/docs:**\n- `/studio/bulk-add-work/`\n- `_data/pipeline.json`\n- [Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)\n\n**Notes:**\nLater follow-up work moved the workbook path to `data/works_bulk_import.xlsx`.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio import workflow",
+  "effect": "The bulk import UI now supports one-way preview/apply import from the configured workbook source into canonical JSON for new works and new work details.",
+  "related_docs": [
+    "bulk-add-work"
+  ],
+  "related_files": [
+    "_data/pipeline.json",
+    "data/works_bulk_import.xlsx"
+  ],
+  "affected": {
+    "files": [
+      "_data/pipeline.json"
+    ],
+    "docs": [
+      "bulk-add-work"
+    ]
+  }
+}

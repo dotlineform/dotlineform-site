@@ -1,0 +1,42 @@
+{
+  "id": "change-2026-05-10-extracted-public-catalogue-runtime-helpers",
+  "date": "2026-05-10",
+  "title": "Extracted public catalogue runtime helpers",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "search",
+    "catalogue",
+    "studio-ui",
+    "build",
+    "scripts",
+    "config",
+    "runtime"
+  ],
+  "summary": "Added `assets/js/public-catalogue-runtime.js` as the shared helper boundary for public catalogue fetches, generated-data URLs, text/slug/size normalization, work payload caching, and thumbnail URL/srcset construction. The public work, work-detail, and series layouts now call the helper while keeping route-specific DOM rendering, pagination, context hydration, and query preservation local. `assets/js/work.js` now uses the shared fetch/URL/ID helpers while retaining public work/detail navigation and keyboard behavior.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1320,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Public site runtime / JavaScript config structural review\n\n**Summary:**\nAdded `assets/js/public-catalogue-runtime.js` as the shared helper boundary for public catalogue fetches, generated-data URLs, text/slug/size normalization, work payload caching, and thumbnail URL/srcset construction.\nThe public work, work-detail, and series layouts now call the helper while keeping route-specific DOM rendering, pagination, context hydration, and query preservation local.\n`assets/js/work.js` now uses the shared fetch/URL/ID helpers while retaining public work/detail navigation and keyboard behavior.\n\n**Files changed/docs:**\n\n- `assets/js/public-catalogue-runtime.js`\n- `assets/js/work.js`\n- `_layouts/work.html`\n- `_layouts/work_details.html`\n- `_layouts/series.html`\n- [Public Runtime Extraction Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction)\n- [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)\n- [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)\n\n**Impact:**\nPublic catalogue helper behavior is now testable and cacheable as an asset without converting the public routes into a client-side app.\nRenderer ownership remains route-local, so generated payload schemas, public URLs, and Liquid-rendered media contracts stay unchanged.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Public site runtime / JavaScript config structural review",
+  "related_docs": [
+    "site-request-js-config-structural-review-public-runtime-extraction",
+    "site-shell-runtime",
+    "site-request-js-config-structural-review"
+  ],
+  "related_files": [
+    "assets/js/public-catalogue-runtime.js",
+    "assets/js/work.js",
+    "_layouts/work.html",
+    "_layouts/work_details.html",
+    "_layouts/series.html"
+  ]
+}

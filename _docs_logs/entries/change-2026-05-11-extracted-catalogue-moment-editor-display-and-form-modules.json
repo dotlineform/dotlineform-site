@@ -1,0 +1,36 @@
+{
+  "id": "change-2026-05-11-extracted-catalogue-moment-editor-display-and-form-modules",
+  "date": "2026-05-11",
+  "title": "Extracted Catalogue Moment Editor display and form modules",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "catalogue",
+    "build",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Added `assets/studio/js/catalogue-moment-form.js` and `assets/studio/js/catalogue-moment-sections.js` as route-local display modules for the Catalogue Moment Editor. The form module owns field DOM construction, value reads/writes, readonly display, and validation messages; the sections module owns normal edit summary, readiness, and build-impact rendering.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1015,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio runtime / Catalogue editor JavaScript / maintainability\n\n**Summary:**\nAdded `assets/studio/js/catalogue-moment-form.js` and `assets/studio/js/catalogue-moment-sections.js` as route-local display modules for the Catalogue Moment Editor.\nThe form module owns field DOM construction, value reads/writes, readonly display, and validation messages; the sections module owns normal edit summary, readiness, and build-impact rendering.\n\n**Files changed/docs:**\n\n- `assets/studio/js/catalogue-moment-editor.js`\n- `assets/studio/js/catalogue-moment-form.js`\n- `assets/studio/js/catalogue-moment-sections.js`\n- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)\n- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)\n- [Catalogue JavaScript Runtime Consistency Request](/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency)\n\n**Impact:**\nThe Moment route entry module keeps lifecycle, service availability, generated-data reads, search/open behavior, import mode coordination, post-import opening, dirty-state orchestration, context wiring, and route-ready state.\nDisplay concerns now match the Work and Series route-local module pattern without introducing a generic cross-editor form abstraction.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio runtime / Catalogue editor JavaScript / maintainability",
+  "related_docs": [
+    "catalogue-moment-editor",
+    "studio-runtime",
+    "site-request-catalogue-js-runtime-consistency"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-moment-form.js",
+    "assets/studio/js/catalogue-moment-sections.js",
+    "assets/studio/js/catalogue-moment-editor.js"
+  ],
+  "change_request_doc_id": "site-request-catalogue-js-runtime-consistency"
+}

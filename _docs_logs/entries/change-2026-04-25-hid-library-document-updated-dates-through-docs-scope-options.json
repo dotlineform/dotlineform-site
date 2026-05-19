@@ -1,0 +1,50 @@
+{
+  "id": "change-2026-04-25-hid-library-document-updated-dates-through-docs-scope-options",
+  "date": "2026-04-25",
+  "title": "Hid Library document updated dates through docs scope options",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "library",
+    "build",
+    "scripts"
+  ],
+  "summary": "Added a generated docs-viewer scope option for document-view updated-date display, and disabled that row for Library while keeping it visible for Studio Docs.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1711,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer / Library\n\n**Summary:**\nAdded a generated docs-viewer scope option for document-view updated-date display, and disabled that row for Library while keeping it visible for Studio Docs.\n\n**Reason:**\nLibrary reading pages should stay cleaner and less operational than Studio Docs. The existing scope-option model already handles Library-specific viewer behavior without hard-coding scope checks in the shared runtime.\n\n**Effect:**\n`scripts/build_docs.rb` now emits `viewer_options.show_updated_date`. Studio sets it to `true`; Library sets it to `false`. The shared viewer hides only the document metadata-row `Updated ...` text when the option is false. Recently-added still uses `added_date`, and docs search still uses `last_updated`.\n\n**Affected files/docs:**\n\n- `scripts/build_docs.rb`\n- `assets/js/docs-viewer.js`\n- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)\n- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)\n- [Shared Patterns](/docs/?scope=studio&doc=data-models-shared)\n- [Library Scope](/docs/?scope=studio&doc=data-models-library)\n- [Studio Scope](/docs/?scope=studio&doc=data-models-studio)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer / Library",
+  "effect": "`scripts/build_docs.rb` now emits `viewer_options.show_updated_date`. Studio sets it to `true`; Library sets it to `false`. The shared viewer hides only the document metadata-row `Updated ...` text when the option is false. Recently-added still uses `added_date`, and docs search still uses `last_updated`.",
+  "related_docs": [
+    "docs-viewer-overview",
+    "scripts-docs-builder",
+    "data-models-shared",
+    "data-models-library",
+    "data-models-studio"
+  ],
+  "related_files": [
+    "scripts/build_docs.rb",
+    "assets/js/docs-viewer.js"
+  ],
+  "affected": {
+    "files": [
+      "scripts/build_docs.rb",
+      "assets/js/docs-viewer.js"
+    ],
+    "docs": [
+      "docs-viewer-overview",
+      "scripts-docs-builder",
+      "data-models-shared",
+      "data-models-library",
+      "data-models-studio"
+    ]
+  }
+}

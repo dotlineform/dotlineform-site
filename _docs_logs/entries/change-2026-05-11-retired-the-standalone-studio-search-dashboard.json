@@ -1,0 +1,40 @@
+{
+  "id": "change-2026-05-11-retired-the-standalone-studio-search-dashboard",
+  "date": "2026-05-11",
+  "title": "Retired the standalone Studio Search dashboard",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "config",
+    "runtime"
+  ],
+  "summary": "Removed the `/studio/search/` dashboard and its Studio nav/home entry. Catalogue search now has a Catalogue dashboard entry, while future Docs Viewer search metrics or configuration belong in Docs Viewer manage mode.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 852,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio routing / search ownership\n\n**Summary:**\nRemoved the `/studio/search/` dashboard and its Studio nav/home entry.\nCatalogue search now has a Catalogue dashboard entry, while future Docs Viewer search metrics or configuration belong in Docs Viewer manage mode.\n\n**Files changed/docs:**\n\n- `studio/search/index.md`\n- `studio/index.md`\n- `studio/catalogue/index.md`\n- `_includes/studio_header_nav.html`\n- `assets/studio/js/studio-dashboard.js`\n- [Search](/docs/?scope=studio&doc=search)\n- [Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)\n- [Studio](/docs/?scope=studio&doc=studio)\n- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)\n- [Search Change Log](/docs/?scope=studio&doc=search-change-log)\n\n**Impact:**\nStudio no longer exposes a standalone Search domain route.\nCatalogue search configuration belongs under Catalogue, and document-domain search management belongs under Docs Viewer management.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio routing / search ownership",
+  "related_docs": [
+    "search",
+    "new-pipeline-refine-search",
+    "studio",
+    "studio-runtime",
+    "search-change-log"
+  ],
+  "related_files": [
+    "studio/search/index.md",
+    "studio/index.md",
+    "studio/catalogue/index.md",
+    "_includes/studio_header_nav.html",
+    "assets/studio/js/studio-dashboard.js"
+  ]
+}

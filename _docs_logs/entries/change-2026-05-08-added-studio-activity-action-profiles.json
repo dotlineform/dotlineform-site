@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-08-added-studio-activity-action-profiles",
+  "date": "2026-05-08",
+  "title": "Added Studio activity action profiles",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "catalogue",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Added a thin server-side action-profile layer for catalogue-side Studio Activity logging before expanding into create, delete, and publication actions.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2715,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / activity reporting\n\n**Summary:**\nAdded a thin server-side action-profile layer for catalogue-side Studio Activity logging before expanding into create, delete, and publication actions.\n\n**Files changed:**\n\n- `scripts/studio/catalogue_write_server.py`\n- `tests/python/test_studio_activity_context.py`\n- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)\n- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n\n**Impact:**\nThe Batch A save paths now share profile-driven context normalization and build-row mapping while keeping source writes, lookup refreshes, builds, and future cleanup decisions in the owning handlers.\nTests compare the runtime profiles with the visible activity contract registry so later batches are less likely to drift.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Studio / activity reporting",
+  "related_docs": [
+    "site-request-studio-unified-activity-log",
+    "site-request-studio-unified-activity-log-inventory",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/studio/catalogue_write_server.py",
+    "tests/python/test_studio_activity_context.py"
+  ]
+}

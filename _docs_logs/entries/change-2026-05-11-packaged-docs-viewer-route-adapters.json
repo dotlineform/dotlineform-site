@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-11-packaged-docs-viewer-route-adapters",
+  "date": "2026-05-11",
+  "title": "Packaged Docs Viewer route adapters",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library"
+  ],
+  "summary": "Added read-only and management route adapter includes for Docs Viewer routes. The current `/docs/`, `/library/`, and `/analysis/` route pages now consume those adapters instead of passing shell flags directly. Public read-only routes ignore and normalize away `scope` and `mode` query parameters, while `/docs/` remains the only management-capable shell.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 752,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer portability / route integration\n\n**Summary:**\nAdded read-only and management route adapter includes for Docs Viewer routes.\nThe current `/docs/`, `/library/`, and `/analysis/` route pages now consume those adapters instead of passing shell flags directly.\nPublic read-only routes ignore and normalize away `scope` and `mode` query parameters, while `/docs/` remains the only management-capable shell.\n\n**Files changed/docs:**\n\n- `_includes/docs_viewer_readonly_route.html`\n- `_includes/docs_viewer_management_route.html`\n- `assets/docs-viewer/js/docs-viewer.js`\n- `docs/index.md`\n- `library/index.md`\n- `analysis/index.md`\n- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)\n- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)\n\n**Impact:**\nAdding a read-only docs corpus is now a small route file plus a scope-config entry.\nThe route contract is explicit enough for a later local UI to generate read-only scopes without exposing management hooks on public routes.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Docs Viewer portability / route integration",
+  "related_docs": [
+    "docs-viewer-portable-setup",
+    "site-request-portable-docs-viewer"
+  ],
+  "related_files": [
+    "_includes/docs_viewer_readonly_route.html",
+    "_includes/docs_viewer_management_route.html",
+    "assets/docs-viewer/js/docs-viewer.js",
+    "docs/index.md",
+    "library/index.md",
+    "analysis/index.md"
+  ],
+  "change_request_doc_id": "site-request-portable-docs-viewer"
+}

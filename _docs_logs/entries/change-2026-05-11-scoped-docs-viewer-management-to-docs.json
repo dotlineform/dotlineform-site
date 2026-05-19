@@ -1,0 +1,42 @@
+{
+  "id": "change-2026-05-11-scoped-docs-viewer-management-to-docs",
+  "date": "2026-05-11",
+  "title": "Scoped Docs Viewer management to `/docs/`",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "studio-ui",
+    "build",
+    "config",
+    "runtime"
+  ],
+  "summary": "Made Docs Viewer management an explicit `/docs/` route capability. The public `/library/` and `/analysis/` viewers now render as read-only shells without localhost management configuration or management-only CSS, while `/docs/` can switch between `studio`, `library`, and `analysis` scopes.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 947,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer runtime / public payload boundary / management UI\n\n**Summary:**\nMade Docs Viewer management an explicit `/docs/` route capability.\nThe public `/library/` and `/analysis/` viewers now render as read-only shells without localhost management configuration or management-only CSS, while `/docs/` can switch between `studio`, `library`, and `analysis` scopes.\n\n**Files changed/docs:**\n\n- `_includes/docs_viewer_shell.html`\n- `docs/index.md`\n- `library/index.md`\n- `analysis/index.md`\n- `assets/js/docs-viewer.js`\n- `assets/css/main.css`\n- `assets/css/docs-viewer-management.css`\n- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)\n- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)\n\n**Impact:**\nThe public site no longer exposes a useful `?mode=manage` surface on public docs routes.\nDocs Import is now opened from the `/docs/` management toolbar in an embedded modal seeded with the active scope, with full importer ownership still tracked as a follow-up extraction from the existing Studio route.\nThe local `bin/dev-studio` overlay separately configures read-only generated-data reads for public viewer shells so `/library/` and `/analysis/` still work while generated docs/search JSON is excluded from local Jekyll.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Docs Viewer runtime / public payload boundary / management UI",
+  "related_docs": [
+    "docs-viewer-runtime-boundary",
+    "docs-viewer-management"
+  ],
+  "related_files": [
+    "_includes/docs_viewer_shell.html",
+    "docs/index.md",
+    "library/index.md",
+    "analysis/index.md",
+    "assets/js/docs-viewer.js",
+    "assets/css/main.css",
+    "assets/css/docs-viewer-management.css",
+    "bin/dev-studio"
+  ]
+}

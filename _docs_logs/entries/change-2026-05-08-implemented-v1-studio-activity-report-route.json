@@ -1,0 +1,31 @@
+{
+  "id": "change-2026-05-08-implemented-v1-studio-activity-report-route",
+  "date": "2026-05-08",
+  "title": "Implemented v1 Studio activity report route",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio-ui",
+    "scripts"
+  ],
+  "summary": "Added `/studio/activity/`, backed by the unified activity feed, with columns for date-time, status, page, user action, and script purpose. Status markers open a detail modal with the row's persisted activity descriptions.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2760,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / activity reporting\n\n**Summary:**\nAdded `/studio/activity/`, backed by the unified activity feed, with columns for date-time, status, page, user action, and script purpose.\nStatus markers open a detail modal with the row's persisted activity descriptions.\n\n**Files changed:**\n\n- [Studio Activity](/docs/?scope=studio&doc=studio-activity)\n- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)\n- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)\n- [Studio](/docs/?scope=studio&doc=studio)\n\n**Impact:**\nThe v1 correlated activity feed now has a user-facing Studio route alongside the then-existing split activity reports during validation.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Studio / activity reporting",
+  "related_docs": [
+    "studio-activity",
+    "site-request-studio-unified-activity-log",
+    "site-request-studio-unified-activity-log-inventory",
+    "studio"
+  ]
+}

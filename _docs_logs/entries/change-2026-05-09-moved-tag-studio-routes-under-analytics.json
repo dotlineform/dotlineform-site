@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-05-09-moved-tag-studio-routes-under-analytics",
+  "date": "2026-05-09",
+  "title": "Moved tag Studio routes under Analytics",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "search",
+    "catalogue",
+    "scripts",
+    "data-models",
+    "config",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Moved the tag registry, tag aliases, tag groups, series tags, and series tag editor pages from top-level Studio routes into the Analytics namespace. The old routes were removed without compatibility redirects or aliases, and route config, activity metadata, dashboard links, docs, and smoke-test route references now use `/studio/analytics/...`.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2092,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Analytics / routing\n\n**Summary:**\nMoved the tag registry, tag aliases, tag groups, series tags, and series tag editor pages from top-level Studio routes into the Analytics namespace.\nThe old routes were removed without compatibility redirects or aliases, and route config, activity metadata, dashboard links, docs, and smoke-test route references now use `/studio/analytics/...`.\n\n**Files changed/docs:**\n\n- `studio/analytics/tag-registry/index.md`\n- `studio/analytics/tag-aliases/index.md`\n- `studio/analytics/tag-groups/index.md`\n- `studio/analytics/series-tags/index.md`\n- `studio/analytics/series-tag-editor/index.md`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/data/activity_contract.json`\n- [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup)\n- [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)\n\n**Impact:**\nAnalytics route ownership is now explicit before the tag write-server structural review continues.\nLocal bookmarks and any missed hardcoded links to the old `/studio/tag-*`, `/studio/series-tags/`, or `/studio/series-tag-editor/` routes now fail instead of being masked by aliases.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Studio / Analytics / routing",
+  "related_docs": [
+    "site-request-analytics-tag-route-cleanup",
+    "site-request-script-structural-review-tag-write-server"
+  ],
+  "related_files": [
+    "studio/analytics/tag-registry/index.md",
+    "studio/analytics/tag-aliases/index.md",
+    "studio/analytics/tag-groups/index.md",
+    "studio/analytics/series-tags/index.md",
+    "studio/analytics/series-tag-editor/index.md",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/data/activity_contract.json"
+  ]
+}

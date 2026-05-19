@@ -1,0 +1,56 @@
+{
+  "id": "change-2026-04-29-removed-redundant-per-series-runtime-fields",
+  "date": "2026-04-29",
+  "title": "Removed redundant per-series runtime fields",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Removed `series.works` and `series.primary_work_id` from generated per-series payloads at `assets/series/index/<series_id>.json`.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 140,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue generation / generated series data\n\n**Summary:**\nRemoved `series.works` and `series.primary_work_id` from generated per-series payloads at `assets/series/index/<series_id>.json`.\n\n**Reason:**\nThose fields duplicated aggregate runtime data and made stale draft cleanup look ambiguous. Public series grids already read membership from `assets/data/series_index.json` and `assets/data/works_index.json`.\n\n**Effect:**\nPer-series JSON now carries page-local series metadata and optional prose HTML only. Aggregate series data remains the canonical source for membership, primary-work thumbnail context, and public series-page grids. Delete cleanup also strips the obsolete fields from older per-series payloads when it touches them.\n\n**Affected files/docs:**\n\n- `scripts/generate_work_pages.py`\n- `scripts/studio/catalogue_write_server.py`\n- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n- [Catalogue Unified Editor Cleanup](/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "catalogue generation / generated series data",
+  "effect": "Per-series JSON now carries page-local series metadata and optional prose HTML only. Aggregate series data remains the canonical source for membership, primary-work thumbnail context, and public series-page grids. Delete cleanup also strips the obsolete fields from older per-series payloads when it touches them.",
+  "related_docs": [
+    "data-models-catalogue",
+    "scripts-generate-work-pages",
+    "site-request-catalogue-unified-editor-cleanup",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "scripts/studio/catalogue_write_server.py",
+    "assets/series/index/<series_id>.json",
+    "assets/data/series_index.json",
+    "assets/data/works_index.json"
+  ],
+  "change_request_doc_id": "site-request-catalogue-unified-editor-cleanup",
+  "affected": {
+    "files": [
+      "scripts/generate_work_pages.py",
+      "scripts/studio/catalogue_write_server.py"
+    ],
+    "docs": [
+      "data-models-catalogue",
+      "scripts-generate-work-pages",
+      "site-request-catalogue-unified-editor-cleanup",
+      "site-change-log"
+    ]
+  }
+}

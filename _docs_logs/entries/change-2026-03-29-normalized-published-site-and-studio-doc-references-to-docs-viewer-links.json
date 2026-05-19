@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-03-29-normalized-published-site-and-studio-doc-references-to-docs-viewer-links",
+  "date": "2026-03-29",
+  "title": "Normalized published site and Studio doc references to docs-viewer links",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "studio-ui",
+    "scripts",
+    "workflow",
+    "analytics"
+  ],
+  "summary": "Updated published site and Studio docs so references to other published docs now use `/docs/?scope=studio&doc=...` links instead of raw filenames or legacy doc URLs.",
+  "source": {
+    "file": "_docs/site-change-log-2026-03-and-earlier.md",
+    "line": 190,
+    "archive": "2026-03-and-earlier"
+  },
+  "body": "**Status:** implemented\n\n**Area:** architecture\n\n**Summary:**  \nUpdated published site and Studio docs so references to other published docs now use `/docs/?scope=studio&doc=...` links instead of raw filenames or legacy doc URLs.\n\n**Reason:**  \nThe docs set is increasingly used through the in-site viewer. Linking published docs through the viewer makes cross-document navigation consistent and keeps repo file references reserved for actual source files and unpublished notes.\n\n**Effect:**  \nPublished docs now read more cleanly as a connected documentation system, while literal output paths, unpublished docs, and non-doc repo files remain explicit where needed.\n\n**Affected files/docs:**  \n- [Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)\n- [Scripts](/docs/?scope=studio&doc=scripts)\n- [UI Framework](/docs/?scope=studio&doc=ui-framework)\n- [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)\n- [Studio](/docs/?scope=studio&doc=studio)\n- [Tag Editor](/docs/?scope=studio&doc=tag-editor)\n- [Series Tags](/docs/?scope=studio&doc=series-tags)\n\n**Notes:**  \nThis change updates documentation navigation only; it does not change site runtime or pipeline behaviour.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "architecture",
+  "effect": "Published docs now read more cleanly as a connected documentation system, while literal output paths, unpublished docs, and non-doc repo files remain explicit where needed.",
+  "related_docs": [
+    "site-change-log-guidance",
+    "scripts",
+    "ui-framework",
+    "css-audit-spec",
+    "studio",
+    "tag-editor",
+    "series-tags"
+  ],
+  "affected": {
+    "docs": [
+      "site-change-log-guidance",
+      "scripts",
+      "ui-framework",
+      "css-audit-spec",
+      "studio",
+      "tag-editor",
+      "series-tags"
+    ]
+  }
+}

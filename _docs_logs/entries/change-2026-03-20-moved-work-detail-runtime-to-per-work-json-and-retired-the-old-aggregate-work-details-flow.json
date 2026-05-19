@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-03-20-moved-work-detail-runtime-to-per-work-json-and-retired-the-old-aggregate-work-details-flow",
+  "date": "2026-03-20",
+  "title": "Moved work-detail runtime to per-work JSON and retired the old aggregate work-details flow",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "studio-ui",
+    "scripts",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Shifted work-detail runtime behaviour so work detail pages resolve from per-work JSON instead of relying on the old aggregate work details index flow.",
+  "source": {
+    "file": "_docs/site-change-log-2026-03-and-earlier.md",
+    "line": 263,
+    "archive": "2026-03-and-earlier"
+  },
+  "body": "**Status:** implemented\n\n**Area:** works\n\n**Summary:**  \nShifted work-detail runtime behaviour so work detail pages resolve from per-work JSON instead of relying on the old aggregate work details index flow.\n\n**Reason:**  \nThe older aggregate flow added unnecessary coupling and no longer matched the JSON-first direction of the site data model.\n\n**Effect:**  \nWork detail runtime became simpler and closer to the canonical per-work data flow. The retired aggregate path and related sitemap/runtime dependencies were removed.\n\n**Affected files/docs:**  \n- `_layouts/work_details.html`\n- `_layouts/work.html`\n- `scripts/generate_work_pages.py`\n- `scripts/audit_site_consistency.py`\n- [Data Flow](/docs/?scope=studio&doc=data-flow)\n\n**Notes:**  \nThis was part of the wider JSON-first site architecture shift.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "works",
+  "effect": "Work detail runtime became simpler and closer to the canonical per-work data flow. The retired aggregate path and related sitemap/runtime dependencies were removed.",
+  "related_docs": [
+    "data-flow"
+  ],
+  "related_files": [
+    "_layouts/work_details.html",
+    "_layouts/work.html",
+    "scripts/generate_work_pages.py",
+    "scripts/audit_site_consistency.py"
+  ],
+  "affected": {
+    "files": [
+      "_layouts/work_details.html",
+      "_layouts/work.html",
+      "scripts/generate_work_pages.py",
+      "scripts/audit_site_consistency.py"
+    ],
+    "docs": [
+      "data-flow"
+    ]
+  }
+}

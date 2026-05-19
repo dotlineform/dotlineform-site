@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-03-29-search-specific-history-moved-out-of-the-general-site-history",
+  "date": "2026-03-29",
+  "title": "Search-specific history moved out of the general site history",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "workflow"
+  ],
+  "summary": "Confirmed that search history should live in [Search Change Log](/docs/?scope=studio&doc=search-change-log) rather than the broader site log.",
+  "source": {
+    "file": "_docs/site-change-log-2026-03-and-earlier.md",
+    "line": 240,
+    "archive": "2026-03-and-earlier"
+  },
+  "body": "**Status:** implemented\n\n**Area:** architecture\n\n**Summary:**  \nConfirmed that search history should live in [Search Change Log](/docs/?scope=studio&doc=search-change-log) rather than the broader site log.\n\n**Reason:**  \nSearch now has its own artifact, UI surface, policy surface, and document set, so combining it with wider site history would make both logs less useful.\n\n**Effect:**  \nThe site log remains focused on the wider site and non-search Studio development, while search history is reviewed through its own dedicated log.\n\n**Affected files/docs:**  \n- [Search Change Log](/docs/?scope=studio&doc=search-change-log)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n- [Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)\n\n**Notes:**  \nFor changes that materially affect both areas, add short entries to both logs.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "architecture",
+  "effect": "The site log remains focused on the wider site and non-search Studio development, while search history is reviewed through its own dedicated log.",
+  "related_docs": [
+    "search-change-log",
+    "site-change-log",
+    "site-change-log-guidance"
+  ],
+  "affected": {
+    "docs": [
+      "search-change-log",
+      "site-change-log",
+      "site-change-log-guidance"
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-05-15-added-docs-viewer-scope-lifecycle-preview-contract",
+  "date": "2026-05-15",
+  "title": "Added Docs Viewer Scope Lifecycle Preview Contract",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "build",
+    "scripts",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Added the first server-side slice for Docs Viewer scope lifecycle work. The docs-management server now advertises scope lifecycle preview support, reads a backfilled scope ownership manifest, and exposes preview endpoints for new-scope creation and manifest-backed scope deletion.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 376,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer management / docs-management server\n\n**Summary:**\nAdded the first server-side slice for Docs Viewer scope lifecycle work.\nThe docs-management server now advertises scope lifecycle preview support, reads a backfilled scope ownership manifest, and exposes preview endpoints for new-scope creation and manifest-backed scope deletion.\n\n**Effect:**\nExisting Studio, Library, and Analysis scopes are recorded as system-owned and are not delete-eligible through the lifecycle contract.\nThe preview endpoints validate scope ids, source roots, default doc ids, publishing mode, and public route paths before reporting planned file changes, commands, and URLs.\nApply/write behavior remains intentionally unadvertised until the allowlisted file-write implementation is complete.\n\n**Affected files/docs:**\n\n- `scripts/docs/docs_scope_manifest.py`\n- `scripts/docs/docs_scope_manifest.json`\n- `scripts/docs/docs_management_server.py`\n- `scripts/docs/docs_management_routes.py`\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer management / docs-management server",
+  "effect": "Existing Studio, Library, and Analysis scopes are recorded as system-owned and are not delete-eligible through the lifecycle contract. The preview endpoints validate scope ids, source roots, default doc ids, publishing mode, and public route paths before reporting planned file changes, commands, and URLs. Apply/write behavior remains intentionally unadvertised until the allowlisted file-write implementation is complete.",
+  "related_docs": [
+    "scripts-docs-management-server",
+    "docs-viewer-new-scopes-builder"
+  ],
+  "related_files": [
+    "scripts/docs/docs_scope_manifest.py",
+    "scripts/docs/docs_scope_manifest.json",
+    "scripts/docs/docs_management_server.py",
+    "scripts/docs/docs_management_routes.py"
+  ],
+  "affected": {
+    "files": [
+      "scripts/docs/docs_scope_manifest.py",
+      "scripts/docs/docs_scope_manifest.json",
+      "scripts/docs/docs_management_server.py",
+      "scripts/docs/docs_management_routes.py"
+    ],
+    "docs": [
+      "scripts-docs-management-server",
+      "docs-viewer-new-scopes-builder"
+    ]
+  }
+}

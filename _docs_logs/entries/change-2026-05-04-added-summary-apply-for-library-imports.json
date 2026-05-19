@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-05-04-added-summary-apply-for-library-imports",
+  "date": "2026-05-04",
+  "title": "Added summary apply for Library imports",
+  "status": "implemented",
+  "type": "maintenance",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "studio-ui",
+    "scripts",
+    "data-models",
+    "config",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "The Library import page can now apply selected staged summaries to canonical Library source documents. `Update summary` enables only for selected document preview rows, runs a preflight against the staged record indexes and current `_docs_library/` files, shows a shared OK/Cancel confirmation modal, then writes only the selected summary changes. The docs-management endpoint creates a timestamped `data-import-summary-apply` backup under the existing `var/docs/backups/` root before writing and runs targeted Library docs-search updates for changed ids.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3841,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Library import\n\n**Summary:**\nThe Library import page can now apply selected staged summaries to canonical Library source documents.\n`Update summary` enables only for selected document preview rows, runs a preflight against the staged record indexes and current `_docs_library/` files, shows a shared OK/Cancel confirmation modal, then writes only the selected summary changes.\nThe docs-management endpoint creates a timestamped `data-import-summary-apply` backup under the existing `var/docs/backups/` root before writing and runs targeted Library docs-search updates for changed ids.\n\n**Reason:**\nTask 7 needed the first narrow source-write path before hierarchy writes.\nKeeping the apply action summary-only makes the import flow useful for missing-summary cleanup without mixing it with full-content or relationship changes.\n\n**Files changed:**\n\n- `assets/studio/js/data-import.js`\n- `assets/studio/js/studio-transport.js`\n- `assets/studio/data/studio_config.json`\n- `scripts/docs/docs_management_server.py`\n- `tests/python/test_docs_import_service.py`\n- `tests/smoke/data_import.py`\n- [Library Import](/docs/?scope=studio&doc=library-import)\n- [Library Export/Import v2](/docs/?scope=studio&doc=library-import-export-v2)\n- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)\n\n**Impact:**\nSelected staged summary rows can update Library source safely with preflight reporting and backups.\nHierarchy, `sort_order`, and full-content applies remain separate future contracts.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Library import",
+  "effect": "Task 7 needed the first narrow source-write path before hierarchy writes. Keeping the apply action summary-only makes the import flow useful for missing-summary cleanup without mixing it with full-content or relationship changes.",
+  "related_docs": [
+    "library-import",
+    "library-import-export-v2",
+    "scripts-docs-import",
+    "scripts-docs-management-server",
+    "config-studio-config-json"
+  ],
+  "related_files": [
+    "_docs_library/",
+    "var/docs/backups/",
+    "assets/studio/js/data-import.js",
+    "assets/studio/js/studio-transport.js",
+    "assets/studio/data/studio_config.json",
+    "scripts/docs/docs_management_server.py",
+    "tests/python/test_docs_import_service.py",
+    "tests/smoke/data_import.py"
+  ]
+}

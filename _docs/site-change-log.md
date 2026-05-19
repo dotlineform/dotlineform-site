@@ -15,7 +15,7 @@ Use the manage-only [Change History](/docs/?scope=studio&doc=change-history&mode
 
 ## Current Source Model
 
-- canonical detailed entries: `_docs_logs/entries/*.jsonl`
+- canonical detailed entries: `_docs_logs/entries/*.json`
 - generated local projections: `_docs_logs/generated/*.json`
 - migration diagnostics: `_docs_logs/reports/migration-review.json`
 - entry helper: `./scripts/docs_logs/log_entry.py`
@@ -33,7 +33,7 @@ The old long-form archive pages are retained as compact migration stubs so exist
 
 ## Migration Summary
 
-The first migration converted 469 dated site and Search change-log sections into structured JSONL records.
+The migration converted dated site and Search change-log sections into structured per-entry JSON records.
 
 Migrated source files:
 
@@ -43,9 +43,4 @@ Migrated source files:
 - `_docs/site-change-log-2026-03-and-earlier.md`
 - `_docs/search-change-log.md`
 
-Migrated entry buckets:
-
-- `_docs_logs/entries/2025-08.jsonl`
-- `_docs_logs/entries/2026-03.jsonl`
-- `_docs_logs/entries/2026-04.jsonl`
-- `_docs_logs/entries/2026-05.jsonl`
+Migrated entries now live as flat files under `_docs_logs/entries/change-YYYY-MM-DD-entry-slug.json`.

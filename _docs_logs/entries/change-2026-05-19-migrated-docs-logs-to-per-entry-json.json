@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-19-migrated-docs-logs-to-per-entry-json",
+  "date": "2026-05-19",
+  "title": "Migrated Docs Logs To Per-Entry JSON",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "workflow",
+    "data-models",
+    "scripts"
+  ],
+  "summary": "Migrated canonical docs-log entries from monthly JSONL buckets to flat per-entry JSON files and updated the docs-log helper, migration, and index scripts to use the new source shape.",
+  "source": {
+    "file": "_docs/site-request-change-log-entry-model.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "docs-logs",
+    "change-history"
+  ],
+  "change_request_doc_id": "site-request-change-log-entry-model",
+  "related_docs": [
+    "change-history",
+    "site-change-log",
+    "site-request-change-log-entry-model"
+  ],
+  "related_files": [
+    "_docs_logs/schema.json",
+    "scripts/docs_logs/log_entry.py",
+    "scripts/docs_logs/build_indexes.py",
+    "scripts/docs_logs/migrate_legacy_logs.py",
+    "_docs_logs/README.md",
+    "_docs_logs/entries/README.md",
+    "_docs/site-request-change-log-entry-model.md"
+  ],
+  "effect": "Codex and scripts can now retrieve individual change-history records without opening large month files, while generated indexes and the manage-only change-history report keep the same projection shape."
+}

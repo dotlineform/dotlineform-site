@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-05-06-normalized-export-import-workflow-folders",
+  "date": "2026-05-06",
+  "title": "Normalized export/import workflow folders",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "library",
+    "studio-ui",
+    "scripts",
+    "config",
+    "workflow",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Moved Library export/import working artifacts to a data-domain-first layout under `var/studio/export-import/library/`. The `documents` adapter now declares the Library export, staging, and preview roots used by the docs-management service.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3399,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Data workflows\n\n**Summary:**\nMoved Library export/import working artifacts to a data-domain-first layout under `var/studio/export-import/library/`.\nThe `documents` adapter now declares the Library export, staging, and preview roots used by the docs-management service.\n\n**Reason:**\nThe shared export/import shell should not encode Docs Viewer folder names as the universal workflow layout.\nKeeping folders under the adapter registry makes the path contract explicit and keeps future domains from inheriting document-specific paths.\n\n**Files changed:**\n\n- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)\n- [Export Import Adapters](/docs/?scope=studio&doc=config-export-import-adapters)\n- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)\n- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)\n- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)\n\n**Impact:**\nExports now write under `var/studio/export-import/library/exports/`.\nStaged import files are read from `var/studio/export-import/library/import-staging/`, and generated previews write under `var/studio/export-import/library/import-preview/`.\nOld local files under the previous test folders are not migrated.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Data workflows",
+  "effect": "The shared export/import shell should not encode Docs Viewer folder names as the universal workflow layout. Keeping folders under the adapter registry makes the path contract explicit and keeps future domains from inheriting document-specific paths.",
+  "related_docs": [
+    "site-request-export-import-adapters",
+    "config-export-import-adapters",
+    "config-library-export-configs",
+    "scripts-docs-export",
+    "scripts-docs-import"
+  ],
+  "related_files": [
+    "var/studio/export-import/library/",
+    "var/studio/export-import/library/exports/",
+    "var/studio/export-import/library/import-staging/",
+    "var/studio/export-import/library/import-preview/"
+  ],
+  "change_request_doc_id": "site-request-export-import-adapters"
+}

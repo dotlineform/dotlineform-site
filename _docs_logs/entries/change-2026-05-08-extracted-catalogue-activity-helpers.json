@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-08-extracted-catalogue-activity-helpers",
+  "date": "2026-05-08",
+  "title": "Extracted catalogue activity helpers",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Completed the second implementation slice of the script structural review by moving catalogue-specific Studio Activity profiles, context normalization, and row builders out of the catalogue write server. Added a small shared route-constant module so activity profiles and route dispatch no longer duplicate endpoint strings. Switched the write server to namespaced `activity.*`, `invalidation.*`, and `routes.*` references so extracted helpers are not re-presented as server-owned names. Updated the structural-review request to make that the required slice discipline: conservative slices should still close with clean ownership, not deferred cleanup.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2461,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / scripts / maintainability\n\n**Summary:**\nCompleted the second implementation slice of the script structural review by moving catalogue-specific Studio Activity profiles, context normalization, and row builders out of the catalogue write server.\nAdded a small shared route-constant module so activity profiles and route dispatch no longer duplicate endpoint strings.\nSwitched the write server to namespaced `activity.*`, `invalidation.*`, and `routes.*` references so extracted helpers are not re-presented as server-owned names.\nUpdated the structural-review request to make that the required slice discipline: conservative slices should still close with clean ownership, not deferred cleanup.\n\n**Files changed/docs:**\n\n- `scripts/catalogue_activity.py`\n- `scripts/catalogue_routes.py`\n- `scripts/studio/catalogue_write_server.py`\n- `tests/python/test_studio_activity_context.py`\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)\n\n**Impact:**\n`scripts/catalogue_activity.py` now owns the catalogue activity contract helpers while the write server keeps endpoint orchestration and append timing.\n`scripts/catalogue_routes.py` is the single endpoint path source, and the write server now uses explicit module-qualified references instead of re-exporting moved helper names.\nThe focused activity test now exercises the extracted activity and invalidation modules directly.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio / scripts / maintainability",
+  "related_docs": [
+    "scripts-catalogue-write-server",
+    "site-request-script-structural-review"
+  ],
+  "related_files": [
+    "scripts/catalogue_activity.py",
+    "scripts/catalogue_routes.py",
+    "scripts/studio/catalogue_write_server.py",
+    "tests/python/test_studio_activity_context.py"
+  ],
+  "change_request_doc_id": "site-request-script-structural-review"
+}

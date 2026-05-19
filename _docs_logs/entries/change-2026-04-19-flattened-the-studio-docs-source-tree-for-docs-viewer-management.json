@@ -1,0 +1,44 @@
+{
+  "id": "change-2026-04-19-flattened-the-studio-docs-source-tree-for-docs-viewer-management",
+  "date": "2026-04-19",
+  "title": "Flattened the Studio docs source tree for Docs Viewer management",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "build",
+    "scripts"
+  ],
+  "summary": "Flattened Studio docs into `_docs/*.md` and aligned the builder and management planning with that flat-source model.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3265,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer / docs infrastructure\n\n**Summary:**\nFlattened Studio docs into `_docs/*.md` and aligned the builder and management planning with that flat-source model.\n\n**Reason:**\nViewer-side docs management depends on front-matter-driven hierarchy rather than filesystem folders. Keeping Studio docs nested on disk would make tree edits more confusing and harder to validate.\n\n**Effect:**\nStudio docs now live directly under `_docs/`, the shared docs-builder contract rejects nested Markdown docs, and Docs Viewer management can treat the visible tree as metadata-only.\n\n**Affected files/docs:**\n- `_docs/*.md`\n- `scripts/build_docs.rb`\n- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)\n- [Docs Viewer Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)\n\n**Notes:**\nThis was the enabling storage change for local Docs Viewer management.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer / docs infrastructure",
+  "effect": "Studio docs now live directly under `_docs/`, the shared docs-builder contract rejects nested Markdown docs, and Docs Viewer management can treat the visible tree as metadata-only.",
+  "related_docs": [
+    "docs-viewer-management",
+    "docs-viewer-source-organisation"
+  ],
+  "related_files": [
+    "_docs/*.md",
+    "scripts/build_docs.rb",
+    "_docs/"
+  ],
+  "affected": {
+    "files": [
+      "_docs/*.md",
+      "scripts/build_docs.rb"
+    ],
+    "docs": [
+      "docs-viewer-management",
+      "docs-viewer-source-organisation"
+    ]
+  }
+}

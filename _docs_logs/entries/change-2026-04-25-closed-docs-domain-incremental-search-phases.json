@@ -1,0 +1,38 @@
+{
+  "id": "change-2026-04-25-closed-docs-domain-incremental-search-phases",
+  "date": "2026-04-25",
+  "title": "Closed docs-domain incremental search phases",
+  "status": "unknown",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "build"
+  ],
+  "summary": "Closed the four-phase docs-domain incremental search implementation and split catalogue targeted search into its own follow-on plan.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 355,
+    "archive": "search"
+  },
+  "body": "**Status:** documented\n\n**Area:** search build orchestration\n\n**Summary:**\nClosed the four-phase docs-domain incremental search implementation and split catalogue targeted search into its own follow-on plan.\n\n**Reason:**\nThe completed docs-domain work now has a stable boundary, while catalogue targeted search has different dependency risks across works, series, moments, tag assignments, and tag registry labels.\n\n**Effect:**\nThe incremental orchestration plan now carries a top-level completed status for Phases 1-4. Catalogue targeted search is tracked separately with observations, proposed CLI shapes, affected-record rules, builder/orchestration boundaries, validation requirements, and a narrow first implementation slice.\n\n**Affected files/docs:**\n\n- [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan)\n- [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan)\n- [Search](/docs/?scope=studio&doc=search)",
+  "migration": {
+    "confidence": "low",
+    "warnings": []
+  },
+  "area": "search build orchestration",
+  "effect": "The incremental orchestration plan now carries a top-level completed status for Phases 1-4. Catalogue targeted search is tracked separately with observations, proposed CLI shapes, affected-record rules, builder/orchestration boundaries, validation requirements, and a narrow first implementation slice.",
+  "related_docs": [
+    "search-incremental-orchestration-plan",
+    "search-catalogue-targeted-plan",
+    "search"
+  ],
+  "affected": {
+    "docs": [
+      "search-incremental-orchestration-plan",
+      "search-catalogue-targeted-plan",
+      "search"
+    ]
+  }
+}

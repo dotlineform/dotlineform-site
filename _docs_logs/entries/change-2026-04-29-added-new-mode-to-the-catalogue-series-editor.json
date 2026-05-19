@@ -1,0 +1,52 @@
+{
+  "id": "change-2026-04-29-added-new-mode-to-the-catalogue-series-editor",
+  "date": "2026-04-29",
+  "title": "Added new mode to the catalogue series editor",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "data-models",
+    "config"
+  ],
+  "summary": "Added `?mode=new` support to `/studio/catalogue-series/`, including a `New` command, draft-only create behavior, required create fields, and a config-backed `series_type` select.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 811,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue series\n\n**Summary:**\nAdded `?mode=new` support to `/studio/catalogue-series/`, including a `New` command, draft-only create behavior, required create fields, and a config-backed `series_type` select.\n\n**Reason:**\nThe series unified editor request needs create and edit behavior on one route before the legacy new-series route can be retired.\n\n**Effect:**\nThe series editor can now create draft series source records through `POST /catalogue/series/create`. Create mode defaults `series_type` to `primary`, requires `title`, `series_type`, `year`, and `year_display`, disables member/prose/build/delete actions until the source record exists, and opens the created series in normal edit mode.\n\n**Affected files/docs:**\n\n- `studio/catalogue-series/index.md`\n- `assets/studio/js/catalogue-series-editor.js`\n- `assets/studio/js/catalogue-series-fields.js`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- Catalogue Series Editor\n- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)\n- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue series",
+  "effect": "The series editor can now create draft series source records through `POST /catalogue/series/create`. Create mode defaults `series_type` to `primary`, requires `title`, `series_type`, `year`, and `year_display`, disables member/prose/build/delete actions until the source record exists, and opens the created series in normal edit mode.",
+  "related_docs": [
+    "site-request-catalogue-series-unified-editor",
+    "config-studio-config-json"
+  ],
+  "related_files": [
+    "studio/catalogue-series/index.md",
+    "assets/studio/js/catalogue-series-editor.js",
+    "assets/studio/js/catalogue-series-fields.js",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js"
+  ],
+  "change_request_doc_id": "site-request-catalogue-series-unified-editor",
+  "affected": {
+    "files": [
+      "studio/catalogue-series/index.md",
+      "assets/studio/js/catalogue-series-editor.js",
+      "assets/studio/js/catalogue-series-fields.js",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/js/studio-config.js"
+    ],
+    "docs": [
+      "site-request-catalogue-series-unified-editor",
+      "config-studio-config-json"
+    ]
+  }
+}

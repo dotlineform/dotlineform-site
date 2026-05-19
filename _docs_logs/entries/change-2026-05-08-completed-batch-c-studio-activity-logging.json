@@ -1,0 +1,59 @@
+{
+  "id": "change-2026-05-08-completed-batch-c-studio-activity-logging",
+  "date": "2026-05-08",
+  "title": "Completed Batch C Studio activity logging",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "scripts",
+    "data-models",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Completed the remaining Batch C unified activity coverage for docs import/export/import apply, docs broken-links audits, Studio audits, and tag write actions.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2614,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / activity reporting\n\n**Summary:**\nCompleted the remaining Batch C unified activity coverage for docs import/export/import apply, docs broken-links audits, Studio audits, and tag write actions.\n\n**Files changed:**\n\n- `assets/studio/data/activity_contract.json`\n- `scripts/studio_activity.py`\n- `scripts/docs/docs_management_server.py`\n- `scripts/studio/audit_service.py`\n- `scripts/studio/tag_write_server.py`\n- `assets/studio/js/activity-log.js`\n- `assets/studio/js/data-export.js`\n- `assets/studio/js/data-import.js`\n- `assets/studio/js/docs-broken-links.js`\n- `assets/studio/js/docs-html-import.js`\n- `assets/studio/js/studio-audits.js`\n- `assets/studio/js/series-tags.js`\n- `assets/studio/js/tag-studio.js`\n- `assets/studio/js/tag-studio-save.js`\n- `assets/studio/js/tag-registry-service.js`\n- `assets/studio/js/tag-aliases-service.js`\n- `tests/python/test_studio_activity_feed.py`\n- [Studio Activity](/docs/?scope=studio&doc=studio-activity)\n- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Studio Audit Service](/docs/?scope=studio&doc=scripts-studio-audit-service)\n- [Studio Data Export](/docs/?scope=studio&doc=studio-data-export)\n- [Studio Data Import](/docs/?scope=studio&doc=studio-data-import)\n- [Series Tags](/docs/?scope=studio&doc=series-tags)\n- [Tag Editor](/docs/?scope=studio&doc=tag-editor)\n- [Tag Registry](/docs/?scope=studio&doc=tag-registry)\n- [Tag Aliases](/docs/?scope=studio&doc=tag-aliases)\n\n**Impact:**\nThe unified activity log now records covered Batch C utility writes and report runs with contract-backed page/action context.\nPreview-only and cancelled confirmation flows stay excluded, while confirmed writes and output-generating actions emit concise modal details and affected record groups.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio / activity reporting",
+  "related_docs": [
+    "studio-activity",
+    "site-request-studio-unified-activity-log-inventory",
+    "scripts-docs-management-server",
+    "scripts-studio-audit-service",
+    "studio-data-export",
+    "studio-data-import",
+    "series-tags",
+    "tag-editor",
+    "tag-registry",
+    "tag-aliases"
+  ],
+  "related_files": [
+    "assets/studio/data/activity_contract.json",
+    "scripts/studio_activity.py",
+    "scripts/docs/docs_management_server.py",
+    "scripts/studio/audit_service.py",
+    "scripts/studio/tag_write_server.py",
+    "assets/studio/js/activity-log.js",
+    "assets/studio/js/data-export.js",
+    "assets/studio/js/data-import.js",
+    "assets/studio/js/docs-broken-links.js",
+    "assets/studio/js/docs-html-import.js",
+    "assets/studio/js/studio-audits.js",
+    "assets/studio/js/series-tags.js",
+    "assets/studio/js/tag-studio.js",
+    "assets/studio/js/tag-studio-save.js",
+    "assets/studio/js/tag-registry-service.js",
+    "assets/studio/js/tag-aliases-service.js",
+    "tests/python/test_studio_activity_feed.py"
+  ],
+  "change_request_doc_id": "site-request-studio-unified-activity-log-inventory"
+}

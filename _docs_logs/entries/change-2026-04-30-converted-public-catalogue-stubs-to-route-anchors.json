@@ -1,0 +1,78 @@
+{
+  "id": "change-2026-04-30-converted-public-catalogue-stubs-to-route-anchors",
+  "date": "2026-04-30",
+  "title": "Converted public catalogue stubs to route anchors",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "studio-ui",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Generated collection Markdown files for works, work details, series, and moments now act as metadata-free route anchors. Public layouts derive route identity from `page.slug`, load runtime content from generated JSON, and use config-backed loading/unavailable text.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 42,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue generation / public runtime / Studio write flow\n\n**Summary:**\nGenerated collection Markdown files for works, work details, series, and moments now act as metadata-free route anchors. Public layouts derive route identity from `page.slug`, load runtime content from generated JSON, and use config-backed loading/unavailable text.\n\n**Reason:**\nMutable front matter and route-stub checksums made metadata-only catalogue edits rewrite Jekyll collection pages. That created avoidable rebuild churn and made field-aware build scoping harder to reason about.\n\n**Effect:**\n`generate_work_pages.py` now emits empty-front-matter stubs for new public collection routes and skips existing stubs unless `--force` is used to normalize older generated files. Work-detail routes derive the parent work id from the `detail_uid` prefix. The site consistency audit now validates route-anchor filenames and generated JSON references instead of requiring metadata fields in stubs. Studio lookup payloads and write endpoints no longer use full-record `record_hash`/`expected_record_hash` concurrency tokens; local saves apply against the current source record with validation and backups as the safety layer.\n\n**Affected files/docs:**\n\n- `_config.yml`\n- `_layouts/work.html`\n- `_layouts/work_details.html`\n- `_layouts/series.html`\n- `_layouts/moment.html`\n- `assets/js/moment.js`\n- `scripts/generate_work_pages.py`\n- `scripts/audit_site_consistency.py`\n- `scripts/catalogue_lookup.py`\n- `scripts/studio/catalogue_write_server.py`\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n- [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency)\n- [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Route-Anchor Collection Stubs Spec](/docs/?scope=studio&doc=site-request-route-anchor-collection-stubs)\n- [Studio Record Hash Simplification Analysis](/docs/?scope=studio&doc=site-request-studio-record-hash-simplification)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "catalogue generation / public runtime / Studio write flow",
+  "effect": "`generate_work_pages.py` now emits empty-front-matter stubs for new public collection routes and skips existing stubs unless `--force` is used to normalize older generated files. Work-detail routes derive the parent work id from the `detail_uid` prefix. The site consistency audit now validates route-anchor filenames and generated JSON references instead of requiring metadata fields in stubs. Studio lookup payloads and write endpoints no longer use full-record `record_hash`/`expected_record_hash` concurrency tokens; local saves apply against the current source record with validation and backups as the safety layer.",
+  "related_docs": [
+    "scripts-generate-work-pages",
+    "scripts-audit-site-consistency",
+    "scripts-catalogue-lookup",
+    "scripts-catalogue-write-server",
+    "site-request-route-anchor-collection-stubs",
+    "site-request-studio-record-hash-simplification",
+    "site-change-log"
+  ],
+  "related_files": [
+    "_config.yml",
+    "_layouts/work.html",
+    "_layouts/work_details.html",
+    "_layouts/series.html",
+    "_layouts/moment.html",
+    "assets/js/moment.js",
+    "scripts/generate_work_pages.py",
+    "scripts/audit_site_consistency.py",
+    "scripts/catalogue_lookup.py",
+    "scripts/studio/catalogue_write_server.py",
+    "generate_work_pages.py"
+  ],
+  "affected": {
+    "files": [
+      "_config.yml",
+      "_layouts/work.html",
+      "_layouts/work_details.html",
+      "_layouts/series.html",
+      "_layouts/moment.html",
+      "assets/js/moment.js",
+      "scripts/generate_work_pages.py",
+      "scripts/audit_site_consistency.py",
+      "scripts/catalogue_lookup.py",
+      "scripts/studio/catalogue_write_server.py"
+    ],
+    "docs": [
+      "scripts-generate-work-pages",
+      "scripts-audit-site-consistency",
+      "scripts-catalogue-lookup",
+      "scripts-catalogue-write-server",
+      "site-request-route-anchor-collection-stubs",
+      "site-request-studio-record-hash-simplification",
+      "site-change-log"
+    ]
+  }
+}

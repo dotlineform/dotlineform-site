@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-05-01-started-compatibility-cleanup-inventory",
+  "date": "2026-05-01",
+  "title": "Started compatibility cleanup inventory",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "workflow"
+  ],
+  "summary": "Added the first inventory document for the catalogue compatibility cleanup request.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 1654,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue source model / documentation\n\n**Summary:**\nAdded the first inventory document for the catalogue compatibility cleanup request.\n\n**Reason:**\nThe compatibility cleanup needs a place to classify retained workbook-era and transitional paths before deciding what to keep, narrow, move, or remove. The active `data/works_bulk_import.xlsx` flow also needed to be distinguished from retired canonical editing through `data/works.xlsx`.\n\n**Effect:**\nThe request now points Task 1 at a short child doc, [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory), with initial findings for the active bulk-import workbook adapter, workbook import helpers, deprecated workbook references, direct generator clean-exit behavior, source provenance metadata, and work file/link compatibility records.\n\n**Affected files/docs:**\n\n- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)\n- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "catalogue source model / documentation",
+  "effect": "The request now points Task 1 at a short child doc, [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory), with initial findings for the active bulk-import workbook adapter, workbook import helpers, deprecated workbook references, direct generator clean-exit behavior, source provenance metadata, and work file/link compatibility records.",
+  "related_docs": [
+    "site-request-catalogue-compatibility-cleanup-inventory",
+    "site-request-catalogue-compatibility-cleanup",
+    "site-change-log"
+  ],
+  "related_files": [
+    "data/works_bulk_import.xlsx",
+    "data/works.xlsx"
+  ],
+  "affected": {
+    "docs": [
+      "site-request-catalogue-compatibility-cleanup",
+      "site-request-catalogue-compatibility-cleanup-inventory",
+      "site-change-log"
+    ]
+  }
+}

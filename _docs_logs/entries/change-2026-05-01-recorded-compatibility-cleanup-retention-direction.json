@@ -1,0 +1,42 @@
+{
+  "id": "change-2026-05-01-recorded-compatibility-cleanup-retention-direction",
+  "date": "2026-05-01",
+  "title": "Recorded compatibility cleanup retention direction",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "workflow"
+  ],
+  "summary": "Resolved the first compatibility cleanup inventory questions and recorded the cleanup policy for upcoming implementation slices.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 1633,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue source model / documentation\n\n**Summary:**\nResolved the first compatibility cleanup inventory questions and recorded the cleanup policy for upcoming implementation slices.\n\n**Reason:**\nThe cleanup should not preserve compatibility artifacts under new names. Decisions needed to be made from the perspective of the current JSON-source pipeline rather than from the old `data/works.xlsx` workflow.\n\n**Effect:**\nThe inventory now records that workbook row helpers should move beside the active bulk-import adapter, `data/works.xlsx` provenance and stale doc references should be removed, and `work_files` / `work_links` compatibility maps are not needed by current editor, lookup, delete, or validation paths. The parent request now marks retention-policy work as in progress.\n\n**Affected files/docs:**\n\n- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)\n- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "catalogue source model / documentation",
+  "effect": "The inventory now records that workbook row helpers should move beside the active bulk-import adapter, `data/works.xlsx` provenance and stale doc references should be removed, and `work_files` / `work_links` compatibility maps are not needed by current editor, lookup, delete, or validation paths. The parent request now marks retention-policy work as in progress.",
+  "related_docs": [
+    "site-request-catalogue-compatibility-cleanup",
+    "site-request-catalogue-compatibility-cleanup-inventory",
+    "site-change-log"
+  ],
+  "related_files": [
+    "data/works.xlsx"
+  ],
+  "affected": {
+    "docs": [
+      "site-request-catalogue-compatibility-cleanup",
+      "site-request-catalogue-compatibility-cleanup-inventory",
+      "site-change-log"
+    ]
+  }
+}

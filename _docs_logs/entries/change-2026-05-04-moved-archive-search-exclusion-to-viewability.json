@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-05-04-moved-archive-search-exclusion-to-viewability",
+  "date": "2026-05-04",
+  "title": "Moved Archive search exclusion to viewability",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "build",
+    "scripts"
+  ],
+  "summary": "Renamed the Archive docs parent from `_archive` to `archive` and stopped treating Archive as a hard-coded docs-search exclusion.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 219,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** docs search build flow\n\n**Summary:**\nRenamed the Archive docs parent from `_archive` to `archive` and stopped treating Archive as a hard-coded docs-search exclusion.\n\n**Reason:**\nDocs Viewer now has an explicit `viewable` flag, so search visibility should follow the same metadata rule for `archive` as for every other doc.\n\n**Effect:**\n`scripts/build_search.rb` now excludes docs-domain entries when `viewable: false` or when a targeted update removes a missing doc. `archive` is absent from Library and Studio docs search only when its generated docs-index row is non-viewable.\n\n**Affected files/docs:**\n\n- `scripts/build_search.rb`\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "docs search build flow",
+  "effect": "`scripts/build_search.rb` now excludes docs-domain entries when `viewable: false` or when a targeted update removes a missing doc. `archive` is absent from Library and Studio docs search only when its generated docs-index row is non-viewable.",
+  "related_docs": [
+    "search-build-pipeline",
+    "docs-viewer-overview"
+  ],
+  "related_files": [
+    "scripts/build_search.rb",
+    "_archive"
+  ],
+  "affected": {
+    "files": [
+      "scripts/build_search.rb"
+    ],
+    "docs": [
+      "search-build-pipeline",
+      "docs-viewer-overview"
+    ]
+  }
+}

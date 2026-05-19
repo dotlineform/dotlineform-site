@@ -1,0 +1,39 @@
+{
+  "id": "change-2026-05-10-versioned-studio-route-module-entries",
+  "date": "2026-05-10",
+  "title": "Versioned Studio route module entries",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "search",
+    "studio-ui",
+    "build",
+    "scripts",
+    "config",
+    "runtime"
+  ],
+  "summary": "Added `_includes/studio_module_script.html` as the shared Jekyll helper for Studio ES module entry scripts. All Studio route pages that load `assets/studio/js/*.js` now use the helper, which appends the same `site.time`-derived asset-version query used by the default layout's classic scripts and CSS.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1547,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio runtime / JavaScript config / maintainability\n\n**Summary:**\nAdded `_includes/studio_module_script.html` as the shared Jekyll helper for Studio ES module entry scripts.\nAll Studio route pages that load `assets/studio/js/*.js` now use the helper, which appends the same `site.time`-derived asset-version query used by the default layout's classic scripts and CSS.\n\n**Files changed/docs:**\n\n- `_includes/studio_module_script.html`\n- `studio/**/index.md`\n- `scripts/checks/audit_studio_ready_state.py`\n- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)\n- [Audit Studio Ready State](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)\n- [Studio Module Asset Versioning Slice](/docs/?scope=studio&doc=site-request-js-config-structural-review-module-versioning)\n\n**Impact:**\nThe route/template layer now owns Studio entry-module cache busting.\nRoute controllers keep their existing import paths and behavior, while route entry requests are less likely to reuse stale browser-cached modules after local builds or deploys.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio runtime / JavaScript config / maintainability",
+  "related_docs": [
+    "studio-runtime",
+    "scripts-audit-studio-ready-state",
+    "site-request-js-config-structural-review-module-versioning"
+  ],
+  "related_files": [
+    "_includes/studio_module_script.html",
+    "assets/studio/js/*.js",
+    "studio/**/index.md",
+    "scripts/checks/audit_studio_ready_state.py"
+  ],
+  "change_request_doc_id": "site-request-js-config-structural-review-module-versioning"
+}

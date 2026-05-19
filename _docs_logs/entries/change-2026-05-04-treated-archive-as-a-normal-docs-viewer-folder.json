@@ -1,0 +1,46 @@
+{
+  "id": "change-2026-05-04-treated-archive-as-a-normal-docs-viewer-folder",
+  "date": "2026-05-04",
+  "title": "Treated Archive as a normal Docs Viewer folder",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Renamed the Archive docs parent from `_archive` to `archive` and removed structural Archive behavior from the docs viewer, docs builder, docs search builder, Library export list, and docs-management server.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 4115,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer / docs search\n\n**Summary:**\nRenamed the Archive docs parent from `_archive` to `archive` and removed structural Archive behavior from the docs viewer, docs builder, docs search builder, Library export list, and docs-management server.\n\n**Reason:**\nThe `viewable` flag now provides the visibility contract directly. Keeping `_archive` preserved a hidden-file naming problem and made Archive behave differently from other folders.\n\n**Changes:**\nStudio and Library Archive docs now use `doc_id: archive` and set `viewable: false`.\nGenerated viewer options no longer mark `archive` as non-loadable or manage-only.\nDocs search excludes non-viewable docs rather than excluding `archive` by id.\nThe docs-management server lets `archive` be edited, moved, deleted when it has no children, and made viewable; the Archive command uses `archive` as its conventional destination parent and no-ops if invoked on `archive` itself.\nLibrary export now includes generated Archive docs according to the same selection rules as other docs.\n\n**Files changed:**\n\n- `_docs/archive.md`\n- `_docs_library/archive.md`\n- `scripts/build_docs.rb`\n- `scripts/build_search.rb`\n- `scripts/docs/docs_management_server.py`\n- `assets/js/docs-viewer.js`\n- `assets/studio/js/data-export.js`\n- `assets/studio/data/library_export_configs.json`\n- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n\n**Impact:**\nArchive behavior is simpler and more consistent with the rest of the docs tree.\nThe main risk is accidental public exposure if `archive` or archived child docs are manually changed to `viewable: true`; that is now an explicit metadata decision rather than hidden structural behavior.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer / docs search",
+  "effect": "The `viewable` flag now provides the visibility contract directly. Keeping `_archive` preserved a hidden-file naming problem and made Archive behave differently from other folders.",
+  "related_docs": [
+    "docs-viewer-overview",
+    "search-build-pipeline",
+    "scripts-docs-management-server"
+  ],
+  "related_files": [
+    "_archive",
+    "_docs/archive.md",
+    "_docs_library/archive.md",
+    "scripts/build_docs.rb",
+    "scripts/build_search.rb",
+    "scripts/docs/docs_management_server.py",
+    "assets/js/docs-viewer.js",
+    "assets/studio/js/data-export.js",
+    "assets/studio/data/library_export_configs.json"
+  ]
+}

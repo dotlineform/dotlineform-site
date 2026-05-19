@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-05-05-refined-library-import-review-ui",
+  "date": "2026-05-05",
+  "title": "Refined Library import review UI",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "search",
+    "library",
+    "studio-ui",
+    "build",
+    "data-models",
+    "config",
+    "analytics"
+  ],
+  "summary": "The Library import route now keeps staged-file selection and preview/apply commands in one compact row. It removes staged-file path/format/size/modified metadata from the page, removes generated preview-file paths from document row metadata, and shows preview/apply completion details in a shared modal with a single `Close` button. The modal presents counts as a compact vertical label/value stack with right-aligned values and issues below the counts. Preview completion messages now use context-aware singular/plural wording for generated preview files. A small `results` button appears beside the preview success message while that message remains current, allowing the last preview result modal to be reopened.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3747,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Library import\n\n**Summary:**\nThe Library import route now keeps staged-file selection and preview/apply commands in one compact row.\nIt removes staged-file path/format/size/modified metadata from the page, removes generated preview-file paths from document row metadata, and shows preview/apply completion details in a shared modal with a single `Close` button.\nThe modal presents counts as a compact vertical label/value stack with right-aligned values and issues below the counts.\nPreview completion messages now use context-aware singular/plural wording for generated preview files.\nA small `results` button appears beside the preview success message while that message remains current, allowing the last preview result modal to be reopened.\n\n**Reason:**\nThe route is now a repeated review/apply workflow.\nPersistent file and result details made the page harder to scan after the document list became the main working surface.\n\n**Files changed:**\n\n- `studio/import/index.md`\n- `assets/studio/js/data-import.js`\n- `assets/studio/js/studio-modal.js`\n- `assets/studio/css/studio.css`\n- `assets/studio/data/studio_config.json`\n- `tests/smoke/data_import.py`\n- [Library Import UI Refinements](/docs/?scope=studio&doc=library-import-ui)\n- [Library Import](/docs/?scope=studio&doc=library-import)\n- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n\n**Impact:**\nLibrary import is more compact and consistent with the Library export result-modal pattern.\nThe result modal no longer exposes source export id, generated timestamp, or preview-file paths in the main UI; those remain available through staged/generated files and service payloads when needed.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Library import",
+  "effect": "The route is now a repeated review/apply workflow. Persistent file and result details made the page harder to scan after the document list became the main working surface.",
+  "related_docs": [
+    "library-import-ui",
+    "library-import",
+    "config-studio-config-json",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/import/index.md",
+    "assets/studio/js/data-import.js",
+    "assets/studio/js/studio-modal.js",
+    "assets/studio/css/studio.css",
+    "assets/studio/data/studio_config.json",
+    "tests/smoke/data_import.py"
+  ]
+}

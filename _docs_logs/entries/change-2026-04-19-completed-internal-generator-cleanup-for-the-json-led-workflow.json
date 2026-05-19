@@ -1,0 +1,50 @@
+{
+  "id": "change-2026-04-19-completed-internal-generator-cleanup-for-the-json-led-workflow",
+  "date": "2026-04-19",
+  "title": "Completed internal generator cleanup for the JSON-led workflow",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "scripts",
+    "data-models",
+    "config",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Removed the remaining workbook-oriented runtime path from the internal generator flow and aligned the bulk-import workbook configuration.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3405,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue pipeline\n\n**Summary:**\nRemoved the remaining workbook-oriented runtime path from the internal generator flow and aligned the bulk-import workbook configuration.\n\n**Reason:**\nThe live catalogue workflow is now JSON-led, so the residual workbook branch and workbook-specific defaults were creating unnecessary complexity and stale assumptions.\n\n**Effect:**\n`generate_work_pages.py` now runs only the internal JSON-source path, moment-scoped rebuilds share that same internal boundary, `_data/pipeline.json` now points bulk import at `data/works_bulk_import.xlsx`, and the importer no longer assumes `data/works.xlsx`.\n\n**Affected files/docs:**\n- `scripts/generate_work_pages.py`\n- `_data/pipeline.json`\n- `/studio/bulk-add-work/`\n- `AGENTS.md`\n- [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)\n\n**Notes:**\nThis closes out the workbook-oriented runtime assumptions without changing the hosted public site model.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "catalogue pipeline",
+  "effect": "`generate_work_pages.py` now runs only the internal JSON-source path, moment-scoped rebuilds share that same internal boundary, `_data/pipeline.json` now points bulk import at `data/works_bulk_import.xlsx`, and the importer no longer assumes `data/works.xlsx`.",
+  "related_docs": [
+    "new-pipeline-studio-implementation-plan"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "_data/pipeline.json",
+    "AGENTS.md",
+    "generate_work_pages.py",
+    "data/works_bulk_import.xlsx",
+    "data/works.xlsx"
+  ],
+  "affected": {
+    "files": [
+      "scripts/generate_work_pages.py",
+      "_data/pipeline.json",
+      "AGENTS.md"
+    ],
+    "docs": [
+      "new-pipeline-studio-implementation-plan"
+    ]
+  }
+}

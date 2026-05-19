@@ -1,0 +1,39 @@
+{
+  "id": "change-2026-04-01-preserved-workbook-formulas-during-generator-writes",
+  "date": "2026-04-01",
+  "title": "Preserved workbook formulas during generator writes",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "scripts"
+  ],
+  "summary": "`generate_work_pages.py` now reads workbook values from a `data_only=True` workbook while saving updates through a separate non-`data_only` workbook.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3882,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** workbook writes\n\n**Summary:**  \n`generate_work_pages.py` now reads workbook values from a `data_only=True` workbook while saving updates through a separate non-`data_only` workbook.\n\n**Reason:**  \nThe previous write path saved the same `data_only=True` workbook instance that was used for reading. That risks stripping formulas from the workbook when the generator updates status, `published_date`, or image dimensions.\n\n**Effect:**  \nWrite runs now preserve existing workbook formulas while keeping the current generated-file and workbook-update behavior. This clears the way for supported formula-driven helper columns in `Works`, such as series-title lookup aids, without the generator destroying those formulas on save.\n\n**Affected files/docs:**  \n- `scripts/generate_work_pages.py`\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n\n**Notes:**  \nThe generator still relies on Excel's cached formula values when reading with `data_only=True`. If a formula result has not been calculated and saved by Excel yet, the read value may still be empty or stale.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "workbook writes",
+  "effect": "Write runs now preserve existing workbook formulas while keeping the current generated-file and workbook-update behavior. This clears the way for supported formula-driven helper columns in `Works`, such as series-title lookup aids, without the generator destroying those formulas on save.",
+  "related_docs": [
+    "scripts-generate-work-pages"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "generate_work_pages.py"
+  ],
+  "affected": {
+    "files": [
+      "scripts/generate_work_pages.py"
+    ],
+    "docs": [
+      "scripts-generate-work-pages"
+    ]
+  }
+}

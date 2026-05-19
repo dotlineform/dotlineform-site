@@ -1,0 +1,50 @@
+{
+  "id": "change-2026-04-29-renamed-catalogue-status-to-catalogue-drafts",
+  "date": "2026-04-29",
+  "title": "Renamed Catalogue Status to Catalogue Drafts",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui",
+    "data-models",
+    "config"
+  ],
+  "summary": "Changed `/studio/catalogue-status/` into a draft-only Catalogue Drafts page.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 307,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue drafts\n\n**Summary:**\nChanged `/studio/catalogue-status/` into a draft-only Catalogue Drafts page.\n\n**Reason:**\nThe older status page mixed draft recovery with broader non-published status filters. The active workflow now needs a concise draft queue across the source families that support draft records.\n\n**Effect:**\nThe page title is now `Catalogue Drafts`. The visible filter pills are `series`, `works`, `work details`, and `moments`, in that order. The older `all`, `works`, `work details`, and `series` non-published-family pills were removed, and draft work-detail and draft moment filters were added. Legacy `?view=draft-works` and `?view=draft-series` URLs still map to the matching family filters.\n\n**Affected files/docs:**\n\n- `studio/catalogue-status/index.md`\n- `assets/studio/js/catalogue-status.js`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- [Catalogue Drafts](/docs/?scope=studio&doc=catalogue-status)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue drafts",
+  "effect": "The page title is now `Catalogue Drafts`. The visible filter pills are `series`, `works`, `work details`, and `moments`, in that order. The older `all`, `works`, `work details`, and `series` non-published-family pills were removed, and draft work-detail and draft moment filters were added. Legacy `?view=draft-works` and `?view=draft-series` URLs still map to the matching family filters.",
+  "related_docs": [
+    "catalogue-status",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/catalogue-status/index.md",
+    "assets/studio/js/catalogue-status.js",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js"
+  ],
+  "affected": {
+    "files": [
+      "studio/catalogue-status/index.md",
+      "assets/studio/js/catalogue-status.js",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/js/studio-config.js"
+    ],
+    "docs": [
+      "catalogue-status",
+      "studio-ui-rules"
+    ]
+  }
+}

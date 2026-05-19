@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-13-moved-catalogue-lookup-planning-to-the-field-registry",
+  "date": "2026-05-13",
+  "title": "Moved Catalogue Lookup Planning To The Field Registry",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "catalogue",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Single work, work-detail, and series saves now use the catalogue field registry as the authority for whether a changed field affects `studio-lookup`. `scripts/catalogue/catalogue_lookup_refresh.py` derives the exact lookup files to rewrite from serializer dependency descriptors in `scripts/catalogue/catalogue_lookup.py`, so the old duplicate work/detail/series invalidation registries have been removed from `scripts/catalogue/catalogue_invalidation.py`.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 522,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Catalogue Studio lookup / field registry\n\n**Summary:**\nSingle work, work-detail, and series saves now use the catalogue field registry as the authority for whether a changed field affects `studio-lookup`.\n`scripts/catalogue/catalogue_lookup_refresh.py` derives the exact lookup files to rewrite from serializer dependency descriptors in `scripts/catalogue/catalogue_lookup.py`, so the old duplicate work/detail/series invalidation registries have been removed from `scripts/catalogue/catalogue_invalidation.py`.\n\n**Files changed/docs:**\n\n- `scripts/catalogue/catalogue_lookup.py`\n- `scripts/catalogue/catalogue_lookup_refresh.py`\n- `scripts/catalogue/catalogue_write_server.py`\n- `scripts/catalogue/catalogue_invalidation.py`\n- `tests/python/test_catalogue_lookup_refresh.py`\n- `tests/python/test_catalogue_invalidation.py`\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)\n\n**Impact:**\nFields such as work `project_subfolder` now stay on the one-record lookup refresh path without needing a second invalidation registry entry.\nFull lookup refresh remains the fallback for unknown or mixed registry dependency classes.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Catalogue Studio lookup / field registry",
+  "related_docs": [
+    "scripts-catalogue-write-server",
+    "site-request-catalogue-lookup-invalidation"
+  ],
+  "related_files": [
+    "scripts/catalogue/catalogue_lookup_refresh.py",
+    "scripts/catalogue/catalogue_lookup.py",
+    "scripts/catalogue/catalogue_invalidation.py",
+    "scripts/catalogue/catalogue_write_server.py",
+    "tests/python/test_catalogue_lookup_refresh.py",
+    "tests/python/test_catalogue_invalidation.py"
+  ],
+  "change_request_doc_id": "site-request-catalogue-lookup-invalidation"
+}

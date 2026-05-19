@@ -1,0 +1,53 @@
+{
+  "id": "change-2026-04-21-clarified-numeric-field-and-label-alignment-rules-for-studio-forms",
+  "date": "2026-04-21",
+  "title": "Clarified numeric field and label-alignment rules for Studio forms",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "studio-ui"
+  ],
+  "summary": "Updated the shared Studio form contract so numeric metadata fields now default to plain input boxes rather than native number widgets, and replaced the create/editor-family label-padding offset with an explicit centered-vs-top-aligned field-row rule.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 2691,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio UI / shared form fields\n\n**Summary:**\nUpdated the shared Studio form contract so numeric metadata fields now default to plain input boxes rather than native number widgets, and replaced the create/editor-family label-padding offset with an explicit centered-vs-top-aligned field-row rule.\n\n**Reason:**\nThe earlier behavior was still letting storage type imply UI behavior. That was weak product guidance for Studio pages where numeric values are often just edited as plain text-box fields. The field-row label alignment also depended on local padding, which was visually fragile and did not state the real design rule clearly enough.\n\n**Effect:**\nThe work/series editor family now keeps numeric fields visually plain unless a page explicitly needs step controls, and catalogue-style two-column form rows now center labels against single-line controls while leaving multiline rows top-aligned. The input primitive page now describes increment controls as opt-in rather than default numeric behavior.\n\n**Affected files/docs:**\n- [Input primitive page](/studio/ui-catalogue/input/)\n- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n- `assets/studio/css/studio.css`\n- `assets/studio/js/catalogue-new-work-editor.js`\n- `assets/studio/js/catalogue-new-series-editor.js`\n- `assets/studio/js/catalogue-work-editor.js`\n- `assets/studio/js/catalogue-series-editor.js`\n- `_includes/studio_ui_catalogue_input_demo.html`\n- `_includes/ui_catalogue_notes/input.md`",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio UI / shared form fields",
+  "effect": "The work/series editor family now keeps numeric fields visually plain unless a page explicitly needs step controls, and catalogue-style two-column form rows now center labels against single-line controls while leaving multiline rows top-aligned. The input primitive page now describes increment controls as opt-in rather than default numeric behavior.",
+  "related_docs": [
+    "studio-ui-framework",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "assets/studio/css/studio.css",
+    "assets/studio/js/catalogue-new-work-editor.js",
+    "assets/studio/js/catalogue-new-series-editor.js",
+    "assets/studio/js/catalogue-work-editor.js",
+    "assets/studio/js/catalogue-series-editor.js",
+    "_includes/studio_ui_catalogue_input_demo.html",
+    "_includes/ui_catalogue_notes/input.md"
+  ],
+  "affected": {
+    "files": [
+      "assets/studio/css/studio.css",
+      "assets/studio/js/catalogue-new-work-editor.js",
+      "assets/studio/js/catalogue-new-series-editor.js",
+      "assets/studio/js/catalogue-work-editor.js",
+      "assets/studio/js/catalogue-series-editor.js",
+      "_includes/studio_ui_catalogue_input_demo.html",
+      "_includes/ui_catalogue_notes/input.md"
+    ],
+    "docs": [
+      "studio-ui-framework",
+      "studio-ui-rules"
+    ]
+  }
+}

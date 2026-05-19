@@ -1,0 +1,32 @@
+{
+  "id": "change-2026-05-05-added-docs-toolkit-extraction-request",
+  "date": "2026-05-05",
+  "title": "Added Docs Toolkit extraction request",
+  "status": "proposed",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "build",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Added a change request to explore whether the Docs Viewer, generated docs/search pipeline, local docs-management server, and scope-aware export/import workflow should become a reusable docs toolkit that other repositories can track from a master version.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3474,
+    "archive": "current"
+  },
+  "body": "**Status:** proposed\n\n**Area:** Docs / Tooling\n\n**Summary:**\nAdded a change request to explore whether the Docs Viewer, generated docs/search pipeline, local docs-management server, and scope-aware export/import workflow should become a reusable docs toolkit that other repositories can track from a master version.\n\n**Reason:**\nThe combined docs viewer and export/import workflow is becoming a useful local tool beyond this site, but reuse needs a managed upstream model instead of copied files.\n\n**Files changed:**\n\n- [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)\n- [Change Requests](/docs/?scope=studio&doc=change-requests)\n\n**Impact:**\nThe extraction idea now has a stable planning target with goals, non-goals, install-shape options, open questions, and acceptance criteria.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs / Tooling",
+  "effect": "The combined docs viewer and export/import workflow is becoming a useful local tool beyond this site, but reuse needs a managed upstream model instead of copied files.",
+  "related_docs": [
+    "site-request-docs-toolkit-extraction",
+    "change-requests"
+  ],
+  "change_request_doc_id": "site-request-docs-toolkit-extraction"
+}

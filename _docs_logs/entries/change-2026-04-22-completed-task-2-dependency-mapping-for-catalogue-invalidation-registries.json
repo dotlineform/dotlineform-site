@@ -1,0 +1,44 @@
+{
+  "id": "change-2026-04-22-completed-task-2-dependency-mapping-for-catalogue-invalidation-registries",
+  "date": "2026-04-22",
+  "title": "Completed Task 2 dependency mapping for catalogue invalidation registries",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Completed the current dependency-mapping pass for the invalidation registries by adding explicit detail, work-file, work-link, and series field mappings, and by tightening the earlier work and moment mappings to reflect the actual derived payloads they feed.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 2321,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue write server / lookup invalidation planning\n\n**Summary:**\nCompleted the current dependency-mapping pass for the invalidation registries by adding explicit detail, work-file, work-link, and series field mappings, and by tightening the earlier work and moment mappings to reflect the actual derived payloads they feed.\n\n**Reason:**\nTask 2 needed to move beyond the initial work/moment foundation and capture the current payload dependencies for every saveable catalogue record family. Without that, later incremental routing would still be based partly on intuition rather than the actual lookup/search builder outputs.\n\n**Effect:**\nThe write server now contains explicit field-to-artifact mappings for work, detail, work-file, work-link, series, and moment records. Unknown fields still collapse to `full`, and runtime refresh behavior is still unchanged for now. The next task can route actual writes through this now-complete registry set instead of having to discover the dependency surface at the same time.\n\n**Affected files/docs:**\n- `scripts/studio/catalogue_write_server.py`\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "catalogue write server / lookup invalidation planning",
+  "effect": "The write server now contains explicit field-to-artifact mappings for work, detail, work-file, work-link, series, and moment records. Unknown fields still collapse to `full`, and runtime refresh behavior is still unchanged for now. The next task can route actual writes through this now-complete registry set instead of having to discover the dependency surface at the same time.",
+  "related_docs": [
+    "scripts-catalogue-write-server",
+    "site-request-catalogue-lookup-invalidation"
+  ],
+  "related_files": [
+    "scripts/studio/catalogue_write_server.py"
+  ],
+  "change_request_doc_id": "site-request-catalogue-lookup-invalidation",
+  "affected": {
+    "files": [
+      "scripts/studio/catalogue_write_server.py"
+    ],
+    "docs": [
+      "scripts-catalogue-write-server",
+      "site-request-catalogue-lookup-invalidation"
+    ]
+  }
+}

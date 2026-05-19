@@ -1,0 +1,57 @@
+{
+  "id": "change-2026-03-30-moved-studio-docs-search-inline-into-docs-and-returned-search-to-catalogue-only",
+  "date": "2026-03-30",
+  "title": "Moved Studio docs search inline into `/docs/` and returned `/search/` to catalogue-only",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Removed the `/docs/` link-out to `/search/?scope=studio`, added always-visible inline search inside the docs viewer, and disabled `studio` on the dedicated `/search/` page so catalogue search and docs-domain search now use different UI surfaces.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 709,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** UI\n\n**Summary:**  \nRemoved the `/docs/` link-out to `/search/?scope=studio`, added always-visible inline search inside the docs viewer, and disabled `studio` on the dedicated `/search/` page so catalogue search and docs-domain search now use different UI surfaces.\n\n**Reason:**  \nFor Studio docs, inline search is a better fit than a separate page because the sidebar remains active and the search results can replace only the right content pane without losing context. The dedicated `/search/` page remains the right fit for the catalogue.\n\n**Effect:**  \n`/docs/` now owns Studio docs search directly, `assets/js/docs-viewer.js` lazily loads `assets/data/search/studio/index.json` when `q` is present, and `/search/` is once again the dedicated catalogue search surface.\n\n**Affected files/docs:**  \n- `_includes/docs_viewer_shell.html`\n- `docs/index.md`\n- `assets/js/docs-viewer.js`\n- `assets/css/main.css`\n- `assets/data/search/policy.json`\n- [Search Overview](/docs/?scope=studio&doc=search-overview)\n- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)\n- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)\n- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)\n\n**Notes:**  \nThis change intentionally removes the transitional dual-UI state for Studio search. The dedicated `/search/` page now documents and serves the catalogue scope only.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "UI",
+  "effect": "`/docs/` now owns Studio docs search directly, `assets/js/docs-viewer.js` lazily loads `assets/data/search/studio/index.json` when `q` is present, and `/search/` is once again the dedicated catalogue search surface.",
+  "related_docs": [
+    "search-overview",
+    "search-public-ui-contract",
+    "search-ui-behaviour",
+    "docs-viewer-runtime-boundary"
+  ],
+  "related_files": [
+    "_includes/docs_viewer_shell.html",
+    "docs/index.md",
+    "assets/js/docs-viewer.js",
+    "assets/css/main.css",
+    "assets/data/search/policy.json",
+    "assets/data/search/studio/index.json"
+  ],
+  "affected": {
+    "files": [
+      "_includes/docs_viewer_shell.html",
+      "docs/index.md",
+      "assets/js/docs-viewer.js",
+      "assets/css/main.css",
+      "assets/data/search/policy.json"
+    ],
+    "docs": [
+      "search-overview",
+      "search-public-ui-contract",
+      "search-ui-behaviour",
+      "docs-viewer-runtime-boundary"
+    ]
+  }
+}

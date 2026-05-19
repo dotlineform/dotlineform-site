@@ -1,0 +1,46 @@
+{
+  "id": "change-2026-05-07-enabled-markdown-files-in-docs-import",
+  "date": "2026-05-07",
+  "title": "Enabled Markdown files in Docs Import",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "scripts",
+    "data-models",
+    "config",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Extended `/studio/docs-import/` so staged body-only Markdown files can be imported alongside staged HTML files.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3036,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Docs Import\n\n**Summary:**\nExtended `/studio/docs-import/` so staged body-only Markdown files can be imported alongside staged HTML files.\n\n**Reason:**\nSome source material is already authored as Markdown and should not be forced through the HTML conversion path.\n\n**Files changed:**\n\n- `studio/docs-import/index.md`\n- `studio/library/index.md`\n- `assets/studio/js/docs-html-import.js`\n- `assets/studio/js/studio-transport.js`\n- `assets/studio/data/studio_config.json`\n- `scripts/docs/docs_html_import.py`\n- `scripts/docs/docs_management_server.py`\n- `tests/python/test_docs_import_service.py`\n- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Studio UI Rules](/docs/?scope=studio&doc=studio-ui-rules)\n\n**Impact:**\nThe import page now lists `.html`, `.htm`, `.md`, and `.markdown` files from `var/docs/import-staging/`.\nMarkdown imports are treated as body-only source, derive `doc_id` from the staged filename, derive title from the first `# H1` when present, and get normal Docs Viewer front matter during create or overwrite.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Docs Import",
+  "effect": "Some source material is already authored as Markdown and should not be forced through the HTML conversion path.",
+  "related_docs": [
+    "user-guide-docs-html-import",
+    "scripts-docs-management-server",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/docs-import/index.md",
+    "studio/library/index.md",
+    "assets/studio/js/docs-html-import.js",
+    "assets/studio/js/studio-transport.js",
+    "assets/studio/data/studio_config.json",
+    "scripts/docs/docs_html_import.py",
+    "scripts/docs/docs_management_server.py",
+    "tests/python/test_docs_import_service.py",
+    "var/docs/import-staging/"
+  ]
+}

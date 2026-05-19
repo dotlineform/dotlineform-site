@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-09-started-tag-write-server-structural-review-slices",
+  "date": "2026-05-09",
+  "title": "Started tag write-server structural review slices",
+  "status": "implemented",
+  "type": "verification",
+  "domains": [
+    "scripts",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Implemented the first tag write-server structural review slice. `scripts/tag_routes.py` now owns tag local-service endpoint constants, POST route inventory, and OPTIONS coverage, while `scripts/studio/tag_write_server.py` keeps HTTP orchestration and dispatches through `Handler.POST_HANDLERS`. The focused route test is included in the `quick` run-checks profile.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2067,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Analytics / scripts / maintainability\n\n**Summary:**\nImplemented the first tag write-server structural review slice.\n`scripts/tag_routes.py` now owns tag local-service endpoint constants, POST route inventory, and OPTIONS coverage, while `scripts/studio/tag_write_server.py` keeps HTTP orchestration and dispatches through `Handler.POST_HANDLERS`.\nThe focused route test is included in the `quick` run-checks profile.\n\n**Files changed/docs:**\n\n- `scripts/tag_routes.py`\n- `scripts/studio/tag_write_server.py`\n- `scripts/run_checks.py`\n- `tests/python/test_tag_routes.py`\n- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)\n- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)\n- [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)\n\n**Impact:**\nEndpoint URLs, payloads, write behavior, dry-run behavior, backups, and allowlists are unchanged.\nFuture tag endpoint additions now have one route inventory plus a dispatch coverage test instead of duplicated literals in preflight and POST handling.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Studio / Analytics / scripts / maintainability",
+  "related_docs": [
+    "scripts-tag-write-server",
+    "site-request-script-structural-review",
+    "site-request-script-structural-review-tag-write-server"
+  ],
+  "related_files": [
+    "scripts/tag_routes.py",
+    "scripts/studio/tag_write_server.py",
+    "scripts/run_checks.py",
+    "tests/python/test_tag_routes.py"
+  ]
+}

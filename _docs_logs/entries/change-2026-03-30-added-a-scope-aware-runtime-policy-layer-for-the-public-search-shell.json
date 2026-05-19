@@ -1,0 +1,51 @@
+{
+  "id": "change-2026-03-30-added-a-scope-aware-runtime-policy-layer-for-the-public-search-shell",
+  "date": "2026-03-30",
+  "title": "Added a scope-aware runtime policy layer for the public search shell",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Added a dedicated runtime search-policy artifact, pointed shared config at it, and refactored the public search page to validate `scope` against policy before loading any scope-owned index.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 819,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** architecture\n\n**Summary:**  \nAdded a dedicated runtime search-policy artifact, pointed shared config at it, and refactored the public search page to validate `scope` against policy before loading any scope-owned index.\n\n**Reason:**  \nThe public search route already uses explicit `scope`, but the runtime still hardcoded `catalogue` and several shell-level behavior values. That needed to be corrected before `scope=studio` is added so the shared `/search/` page becomes properly scope-native first.\n\n**Effect:**  \n`/search/?scope=catalogue` still works as before, but the shell now reads debounce, batching, scope labels, back-link routing, and scope enablement from `assets/data/search/policy.json`. `studio` and `library` now resolve to explicit unsupported-scope states instead of falling through to a broken fetch, and missing-scope behavior is now part of the same policy-led shell contract.\n\n**Affected files/docs:**  \n- `assets/data/search/policy.json`\n- `assets/js/search/search-policy.js`\n- `assets/js/search/search-page.js`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- `_docs/search-config-implementation-note.md`\n- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)\n\n**Notes:**  \nThis phase does not add a Studio search index yet. Ranking logic and build-time entry generation remain in code.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "architecture",
+  "effect": "`/search/?scope=catalogue` still works as before, but the shell now reads debounce, batching, scope labels, back-link routing, and scope enablement from `assets/data/search/policy.json`. `studio` and `library` now resolve to explicit unsupported-scope states instead of falling through to a broken fetch, and missing-scope behavior is now part of the same policy-led shell contract.",
+  "related_docs": [
+    "search-ui-behaviour"
+  ],
+  "related_files": [
+    "assets/data/search/policy.json",
+    "assets/js/search/search-policy.js",
+    "assets/js/search/search-page.js",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js",
+    "_docs/search-config-implementation-note.md"
+  ],
+  "affected": {
+    "files": [
+      "assets/data/search/policy.json",
+      "assets/js/search/search-policy.js",
+      "assets/js/search/search-page.js",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/js/studio-config.js",
+      "_docs/search-config-implementation-note.md"
+    ],
+    "docs": [
+      "search-ui-behaviour"
+    ]
+  }
+}

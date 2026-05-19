@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-04-20-refined-the-button-primitive-to-a-minimal-command-only-contract",
+  "date": "2026-04-20",
+  "title": "Refined the button primitive to a minimal command-only contract",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui"
+  ],
+  "summary": "Refined the first button primitive page so it treats buttons as commands only, removes navigation-style and toolbar-forward examples, and introduces the initial two-size and standard-width contract without forcing a full live-page sweep yet.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3004,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** design system / UI catalogue\n\n**Summary:**\nRefined the first button primitive page so it treats buttons as commands only, removes navigation-style and toolbar-forward examples, and introduces the initial two-size and standard-width contract without forcing a full live-page sweep yet.\n\n**Reason:**\nThe initial draft was still too broad. The clearer design direction is to keep buttons minimal, separate them from links and pills, and postpone toolbar decisions until that primitive is defined explicitly.\n\n**Effect:**\nThe button primitive page now focuses on small and medium command buttons, default-width behavior, modal default-action emphasis, destructive commands without special styling, and the explicit warning not to use panels as button-group boundaries.\n\n**Affected files/docs:**\n- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n- `studio/ui-catalogue/button/index.md`\n- `_includes/studio_ui_catalogue_button_demo.html`\n- `_includes/ui_catalogue_notes/button.md`\n- `assets/studio/css/studio.css`\n\n**Notes:**\nThis still leaves a later consistency sweep for existing pages that use anchor-styled command buttons or longer labels such as `Save Tags`.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "design system / UI catalogue",
+  "effect": "The button primitive page now focuses on small and medium command buttons, default-width behavior, modal default-action emphasis, destructive commands without special styling, and the explicit warning not to use panels as button-group boundaries.",
+  "related_docs": [
+    "studio-ui-framework",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/ui-catalogue/button/index.md",
+    "_includes/studio_ui_catalogue_button_demo.html",
+    "_includes/ui_catalogue_notes/button.md",
+    "assets/studio/css/studio.css"
+  ],
+  "affected": {
+    "files": [
+      "studio/ui-catalogue/button/index.md",
+      "_includes/studio_ui_catalogue_button_demo.html",
+      "_includes/ui_catalogue_notes/button.md",
+      "assets/studio/css/studio.css"
+    ],
+    "docs": [
+      "studio-ui-framework",
+      "studio-ui-rules"
+    ]
+  }
+}

@@ -12,9 +12,6 @@ March 2026 and earlier long-form entries have been migrated to structured docs-l
 
 Use the manage-only [Change History](/docs/?scope=studio&doc=change-history&mode=manage) report for detailed browsing.
 
-Source records:
-
-- `_docs_logs/entries/2025-08.jsonl`
-- `_docs_logs/entries/2026-03.jsonl`
+Source records now live as flat per-entry JSON files under `_docs_logs/entries/`.
 
 Return to [Site Change Log](/docs/?scope=studio&doc=site-change-log).

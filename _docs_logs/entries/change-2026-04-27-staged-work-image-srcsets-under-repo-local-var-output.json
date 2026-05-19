@@ -1,0 +1,55 @@
+{
+  "id": "change-2026-04-27-staged-work-image-srcsets-under-repo-local-var-output",
+  "date": "2026-04-27",
+  "title": "Staged work image srcsets under repo-local var output",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Scoped work and work-detail rebuilds now copy source images into `var/catalogue/media/`, generate primary and thumbnail srcset derivatives there, and automatically copy generated thumbnails into the repo-owned `assets/` image folders.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1421,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Catalogue pipeline / Studio\n\n**Summary:**\nScoped work and work-detail rebuilds now copy source images into `var/catalogue/media/`, generate primary and thumbnail srcset derivatives there, and automatically copy generated thumbnails into the repo-owned `assets/` image folders.\n\n**Reason:**\nThe legacy workflow already copied and renamed source images before srcset generation, but its staging area lived outside the repo and thumbnail promotion into `assets/` was manual. The Studio-driven workflow needs the same operational shape with local staging that is easy to inspect and with thumbnail publication handled by the build action.\n\n**Effect:**\n`Save + Rebuild` and explicit scoped build actions for works/details now prepare renamed source images, create local primary and thumbnail derivatives, and publish thumbnails to `assets/works/img/` or `assets/work_details/img/`. Primary derivatives remain staged in `var/catalogue/media/` for the existing remote media/R2 handoff; no remote upload is performed.\n\n**Affected files/docs:**\n\n- `scripts/catalogue_json_build.py`\n- `.gitignore`\n- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)\n- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)\n- [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Catalogue pipeline / Studio",
+  "effect": "`Save + Rebuild` and explicit scoped build actions for works/details now prepare renamed source images, create local primary and thumbnail derivatives, and publish thumbnails to `assets/works/img/` or `assets/work_details/img/`. Primary derivatives remain staged in `var/catalogue/media/` for the existing remote media/R2 handoff; no remote upload is performed.",
+  "related_docs": [
+    "scripts-build-catalogue-json",
+    "scripts-catalogue-write-server",
+    "catalogue-work-editor",
+    "catalogue-work-detail-editor",
+    "scripts-srcset-builder"
+  ],
+  "related_files": [
+    "scripts/catalogue_json_build.py",
+    "var/catalogue/media/",
+    "assets/",
+    "assets/works/img/",
+    "assets/work_details/img/"
+  ],
+  "affected": {
+    "files": [
+      "scripts/catalogue_json_build.py"
+    ],
+    "docs": [
+      "scripts-build-catalogue-json",
+      "scripts-catalogue-write-server",
+      "catalogue-work-editor",
+      "catalogue-work-detail-editor",
+      "scripts-srcset-builder"
+    ]
+  }
+}

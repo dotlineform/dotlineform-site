@@ -1,0 +1,42 @@
+{
+  "id": "change-2026-05-03-added-library-export-validation-and-reporting",
+  "date": "2026-05-03",
+  "title": "Added Library export validation and reporting",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "library",
+    "scripts",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Completed Library export Task 7 by adding explicit v1 validation decisions and clearer export issue reporting.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 425,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Library / Studio docs export\n\n**Summary:**\nCompleted Library export Task 7 by adding explicit v1 validation decisions and clearer export issue reporting.\n\n**Reason:**\nThe export infrastructure was working, but needed a concrete blocker-versus-warning contract before treating v1 as stable enough to verify and document end to end.\n\n**Changes:**\nThe export engine now validates config shape, target format and record-shape combinations, field mappings, output paths, source-text transforms, truncation limits, selected document ids, required fields, and empty selections before writing.\nReports now include `failed` counts, `skipped_summary`, and `issue_counts`.\nThe Studio Library export result UI now distinguishes warnings from blocking issues and shows failed counts.\n\n**Files changed:**\n\n- `scripts/docs/docs_export.py`\n- `scripts/docs/docs_management_server.py`\n- `assets/studio/js/data-export.js`\n- `assets/studio/data/studio_config.json`\n- `tests/python/test_docs_export.py`\n- [Library Export v1](/docs/?scope=studio&doc=library-export)\n- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)\n- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)\n\n**Impact:**\nBad configs, bad selections, and unsafe output paths now fail before export writes, while expected skipped documents and truncation remain visible as warnings.\nBatching and total character limits remain deferred until real usage requires them.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Library / Studio docs export",
+  "effect": "The export infrastructure was working, but needed a concrete blocker-versus-warning contract before treating v1 as stable enough to verify and document end to end.",
+  "related_docs": [
+    "library-export",
+    "config-library-export-configs",
+    "scripts-docs-export",
+    "scripts-docs-management-server",
+    "config-studio-config-json"
+  ],
+  "related_files": [
+    "scripts/docs/docs_export.py",
+    "scripts/docs/docs_management_server.py",
+    "assets/studio/js/data-export.js",
+    "assets/studio/data/studio_config.json",
+    "tests/python/test_docs_export.py"
+  ]
+}

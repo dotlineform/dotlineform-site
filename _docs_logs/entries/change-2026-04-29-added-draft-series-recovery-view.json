@@ -1,0 +1,55 @@
+{
+  "id": "change-2026-04-29-added-draft-series-recovery-view",
+  "date": "2026-04-29",
+  "title": "Added draft-series recovery view",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui",
+    "data-models",
+    "config"
+  ],
+  "summary": "Extended Catalogue Status with a focused draft-series view and added a Catalogue dashboard link for reopening draft series records.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 678,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue status / series editor\n\n**Summary:**\nExtended Catalogue Status with a focused draft-series view and added a Catalogue dashboard link for reopening draft series records.\n\n**Reason:**\nAfter the series editor gained unified draft creation, draft series needed the same recovery path that draft works already have. The all-status page listed non-published series, but a focused `?view=draft-series` route makes newly created source-only series easier to find after the create session ends.\n\n**Effect:**\n`/studio/catalogue-status/?view=draft-series` now filters to draft series, shows the primary work reference when present, and links each row to `/studio/catalogue-series/?series=<series_id>`. The Catalogue dashboard now includes `Review Draft Series` beside `Review Draft Works`.\n\n**Affected files/docs:**\n\n- `studio/catalogue/index.md`\n- `assets/studio/js/catalogue-status.js`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)\n- [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)\n- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue status / series editor",
+  "effect": "`/studio/catalogue-status/?view=draft-series` now filters to draft series, shows the primary work reference when present, and links each row to `/studio/catalogue-series/?series=<series_id>`. The Catalogue dashboard now includes `Review Draft Series` beside `Review Draft Works`.",
+  "related_docs": [
+    "catalogue-status",
+    "new-pipeline-studio-e2e-checklist",
+    "site-request-catalogue-series-unified-editor",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/catalogue/index.md",
+    "assets/studio/js/catalogue-status.js",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js"
+  ],
+  "change_request_doc_id": "site-request-catalogue-series-unified-editor",
+  "affected": {
+    "files": [
+      "studio/catalogue/index.md",
+      "assets/studio/js/catalogue-status.js",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/js/studio-config.js"
+    ],
+    "docs": [
+      "catalogue-status",
+      "new-pipeline-studio-e2e-checklist",
+      "site-request-catalogue-series-unified-editor",
+      "studio-ui-rules"
+    ]
+  }
+}

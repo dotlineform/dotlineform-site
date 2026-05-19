@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-15-isolated-ui-catalogue-demo-namespace",
+  "date": "2026-05-15",
+  "title": "Isolated UI Catalogue Demo Namespace",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "catalogue",
+    "studio-ui"
+  ],
+  "summary": "Moved UI Catalogue primitive and pattern pages into an isolated demo route and code namespace. The catalogue now publishes demo pages under `/studio/ui-catalogue/demos/`, renders demo-only `uiCatalogueDemo*` markup, and uses `assets/ui-catalogue/` CSS/JS instead of importing live Studio component CSS.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 452,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** UI Catalogue / Studio design system\n\n**Summary:**\nMoved UI Catalogue primitive and pattern pages into an isolated demo route and code namespace.\nThe catalogue now publishes demo pages under `/studio/ui-catalogue/demos/`, renders demo-only `uiCatalogueDemo*` markup, and uses `assets/ui-catalogue/` CSS/JS instead of importing live Studio component CSS.\n\n**Files changed/docs:**\n\n- `assets/ui-catalogue/css/ui-catalogue-demo.css`\n- `assets/ui-catalogue/js/ui-catalogue-demo.js`\n- `studio/ui-catalogue/demos/`\n- `assets/studio/css/studio.css`\n- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)\n- [UI Audits](/docs/?scope=studio&doc=ui-audits)\n- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)\n\n**Impact:**\nThe UI Catalogue is now a designer/developer demo resource rather than a dual-purpose live CSS check.\nLive page verification moves to UI Audit, where each audit maps the demo pattern into the production namespace and checks the real route.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "UI Catalogue / Studio design system",
+  "related_docs": [
+    "ui-catalogue",
+    "ui-audits",
+    "studio-ui-conformance"
+  ],
+  "related_files": [
+    "assets/ui-catalogue/",
+    "assets/ui-catalogue/css/ui-catalogue-demo.css",
+    "assets/ui-catalogue/js/ui-catalogue-demo.js",
+    "studio/ui-catalogue/demos/",
+    "assets/studio/css/studio.css"
+  ]
+}

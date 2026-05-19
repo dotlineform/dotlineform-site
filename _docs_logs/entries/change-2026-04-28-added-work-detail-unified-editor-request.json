@@ -1,0 +1,36 @@
+{
+  "id": "change-2026-04-28-added-work-detail-unified-editor-request",
+  "date": "2026-04-28",
+  "title": "Added work-detail unified editor request",
+  "status": "unknown",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue"
+  ],
+  "summary": "Added a separate request for unifying work-detail create/edit implementation while keeping work-detail navigation parent-work-context-driven.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 990,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** planned\n\n**Area:** Studio / catalogue work details\n\n**Summary:**\nAdded a separate request for unifying work-detail create/edit implementation while keeping work-detail navigation parent-work-context-driven.\n\n**Reason:**\nWork details differ from works and series because users normally find and create them from the parent work page, not as isolated dashboard records.\n\n**Effect:**\nThe new request documents a parent-scoped route contract, migration plan, implementation tasks, benefits, and risks for eventually retiring the standalone new-work-detail implementation without changing the intended user workflow.\n\n**Affected files/docs:**\n\n- [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)\n- [Catalogue Work Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor)",
+  "migration": {
+    "confidence": "low",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Studio / catalogue work details",
+  "effect": "The new request documents a parent-scoped route contract, migration plan, implementation tasks, benefits, and risks for eventually retiring the standalone new-work-detail implementation without changing the intended user workflow.",
+  "related_docs": [
+    "site-request-catalogue-work-detail-unified-editor",
+    "site-request-catalogue-work-unified-editor"
+  ],
+  "affected": {
+    "docs": [
+      "site-request-catalogue-work-detail-unified-editor",
+      "site-request-catalogue-work-unified-editor"
+    ]
+  }
+}

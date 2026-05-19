@@ -1,0 +1,38 @@
+{
+  "id": "change-2026-05-10-extracted-catalogue-work-editor-action-workflows",
+  "date": "2026-05-10",
+  "title": "Extracted Catalogue Work Editor action workflows",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "catalogue",
+    "build",
+    "scripts",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Added `assets/studio/js/catalogue-work-actions.js` as the route-local action workflow module for the Catalogue Work Editor. The module now owns save, create, build-preview refresh, field-aware build preview, build, prose import, publish/unpublish, media refresh, and delete orchestration.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1152,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio runtime / Catalogue editor JavaScript / maintainability\n\n**Summary:**\nAdded `assets/studio/js/catalogue-work-actions.js` as the route-local action workflow module for the Catalogue Work Editor.\nThe module now owns save, create, build-preview refresh, field-aware build preview, build, prose import, publish/unpublish, media refresh, and delete orchestration.\n\n**Files changed/docs:**\n\n- `assets/studio/js/catalogue-work-editor.js`\n- `assets/studio/js/catalogue-work-actions.js`\n- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)\n- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)\n- [JavaScript Payload And Runtime Cleanup Request](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup)\n- [JavaScript Payload And Runtime Cleanup Inventory](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory)\n\n**Impact:**\nThe work editor route entry module keeps route startup, validation display, modal composition, route-state option construction, search/open behavior, and rendering refresh.\nWrite and build workflow sequencing now sits behind an explicit route context, reducing controller maintenance risk while adding one module transfer to the route.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Studio runtime / Catalogue editor JavaScript / maintainability",
+  "related_docs": [
+    "catalogue-work-editor",
+    "studio-runtime",
+    "site-request-js-payload-runtime-cleanup",
+    "site-request-js-payload-runtime-cleanup-inventory"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-work-actions.js",
+    "assets/studio/js/catalogue-work-editor.js"
+  ]
+}

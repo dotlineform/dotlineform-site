@@ -1,0 +1,39 @@
+{
+  "id": "change-2026-05-01-completed-compatibility-cleanup-planning-pass",
+  "date": "2026-05-01",
+  "title": "Completed compatibility cleanup planning pass",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "workflow"
+  ],
+  "summary": "Completed the first inventory and retention-policy pass for compatibility cleanup, leaving Task 3 ready for implementation slices.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 1612,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue source model / cleanup planning\n\n**Summary:**\nCompleted the first inventory and retention-policy pass for compatibility cleanup, leaving Task 3 ready for implementation slices.\n\n**Reason:**\nCode cleanup should not begin until the retained compatibility paths, removal decisions, implementation order, and verification expectations are explicit.\n\n**Effect:**\nThe inventory now records additional findings for the generator's worksheet-shaped projection, deprecated workbook-led scripts, stale workbook workflow docs, and activity keys for retired file/link maps. The parent request marks Tasks 1 and 2 complete and Task 3 ready.\n\n**Affected files/docs:**\n\n- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)\n- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "catalogue source model / cleanup planning",
+  "effect": "The inventory now records additional findings for the generator's worksheet-shaped projection, deprecated workbook-led scripts, stale workbook workflow docs, and activity keys for retired file/link maps. The parent request marks Tasks 1 and 2 complete and Task 3 ready.",
+  "related_docs": [
+    "site-request-catalogue-compatibility-cleanup",
+    "site-request-catalogue-compatibility-cleanup-inventory",
+    "site-change-log"
+  ],
+  "affected": {
+    "docs": [
+      "site-request-catalogue-compatibility-cleanup",
+      "site-request-catalogue-compatibility-cleanup-inventory",
+      "site-change-log"
+    ]
+  }
+}

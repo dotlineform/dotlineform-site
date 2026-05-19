@@ -20,7 +20,7 @@ Status:
 - Step 5 completed: legacy site and Search change-log migration script added and run
 - Step 6 completed: generated date, domain, related-doc, related-file, change-request, and search projections added
 - Step 7 completed: compact change-log archive stubs and manage-only change-history report added
-- Step 8 pending: migrate canonical entries from monthly JSONL to flat per-entry JSON files
+- Step 8 completed: canonical entries migrated from monthly JSONL to flat per-entry JSON files
 
 ## Summary
 
@@ -76,7 +76,7 @@ Keep two layers:
 - a dedicated `_docs_logs/` source root for detailed change entries
 
 Detailed entries should not be stored in `_docs/`.
-They should be stored as structured JSONL records under `_docs_logs/`.
+They should be stored as structured per-entry JSON records under `_docs_logs/`.
 The records should be optimized for retrieval, search indexing, validation, and script processing rather than normal human reading in the Docs Viewer.
 
 ## File Layout
@@ -91,9 +91,9 @@ _docs_logs/
   README.md
   schema.json
   entries/
-    2026-05.jsonl
-    2026-04.jsonl
-    2026-03-and-earlier.jsonl
+    change-2026-05-19-added-manage-only-change-history-report.json
+    change-2026-05-19-added-targeted-docs-payload-rebuilds.json
+    change-2026-04-30-converted-public-catalogue-stubs-to-route-anchors.json
   generated/
     by-date.json
     by-domain.json
@@ -107,7 +107,7 @@ _docs_logs/
 Source files:
 
 - `entries/*.json` should be canonical source records after the per-entry migration
-- legacy `entries/*.jsonl` monthly files are an intermediate migration format and should be retired after Step 8
+- legacy `entries/*.jsonl` monthly files were an intermediate migration format and were retired in Step 8
 - `schema.json` validates the record contract
 - `README.md` documents authoring and migration rules
 
@@ -233,7 +233,7 @@ Status:
 
 - completed
 
-Create the `_docs_logs/` source conventions, JSONL record schema, generated index structure, and search policy.
+Create the `_docs_logs/` source conventions, structured record schema, generated index structure, and search policy.
 
 V1 should treat `_docs_logs/` as the canonical source root for detailed change entries.
 The normal `_docs/` tree should keep only the compact Studio-facing summary and the request/planning docs.
@@ -242,7 +242,7 @@ Expected outputs:
 
 - `schema.json`
 - `_docs_logs/README.md`
-- JSONL filename rules, initially one file per month
+- source filename rules, initially JSONL by month and later flat per-entry JSON
 - required and optional record fields
 - generated year, month, domain, related-doc, related-file, and change-request index strategy
 - automatic generated-output rebuild behavior after log entries change
@@ -287,7 +287,7 @@ The workflow should cover two paths:
 Expected workflow:
 
 - keep the change request doc manually managed as the planning and close-out artifact
-- when a request is completed, create one or more `_docs_logs/entries/*.jsonl` records for the actual implemented changes
+- when a request is completed, create one or more `_docs_logs/entries/*.json` records for the actual implemented changes
 - include `change_request_doc_id` in each related log entry
 - add a compact reference list back to the completed change request when its closure/cleanup task calls for it, linking to created log entry ids or the generated report/search view
 - move or mark the change request according to the existing request archive practice
@@ -309,7 +309,7 @@ The helper support should support:
 - seeding a log entry from a change request doc id
 - creating a log entry from current implementation context when no change request exists
 - deriving date, title, status, candidate domains, related docs, and related files
-- appending to the correct monthly JSONL file
+- writing a flat per-entry JSON file
 - validating the resulting record against `_docs_logs/schema.json`
 - updating the completed change request with references to created log entry ids when the request's closure/cleanup task requires it
 - triggering the generated index/search rebuild after entries are added or changed
@@ -324,7 +324,7 @@ Status:
 
 - completed
 
-Use one-off Python scripts to parse the current site and Search change-log files, split each dated `## [YYYY-MM-DD] ...` section into an atomic entry, infer initial metadata, and write JSONL records under `_docs_logs/entries/`.
+Use one-off Python scripts to parse the current site and Search change-log files, split each dated `## [YYYY-MM-DD] ...` section into an atomic entry, infer initial metadata, and write structured records under `_docs_logs/entries/`.
 Search change logs should be included in the same implementation and represented with `domain: search` rather than maintained as a separate documentation system.
 
 The scripts should be dry-run first and report:
@@ -342,7 +342,7 @@ There should be no assumption of a large manual curation pass after migration.
 Implementation notes:
 
 - `scripts/docs_logs/migrate_legacy_logs.py` parses the current site log, May archive, April archive, March-and-earlier archive, and Search change log.
-- The initial migration wrote 469 records across `_docs_logs/entries/2025-08.jsonl`, `_docs_logs/entries/2026-03.jsonl`, `_docs_logs/entries/2026-04.jsonl`, and `_docs_logs/entries/2026-05.jsonl`.
+- The initial migration wrote monthly JSONL buckets, which Step 8 later converted to flat per-entry JSON files.
 - `_docs_logs/reports/migration-review.json` records the migration summary and entries that need metadata review.
 
 ### Step 6. Generate Search And Index Projections
@@ -351,7 +351,7 @@ Status:
 
 - completed
 
-Build generated projections from the JSONL source records.
+Build generated projections from the JSON source records.
 
 Required generated outputs:
 
@@ -368,7 +368,7 @@ Generated `_docs_logs/generated/*.json` outputs should rebuild automatically whe
 
 Implementation notes:
 
-- `scripts/docs_logs/build_indexes.py` validates `_docs_logs/entries/*.jsonl` and writes the generated projections.
+- `scripts/docs_logs/build_indexes.py` validates `_docs_logs/entries/*.json` and writes the generated projections.
 - `scripts/docs_logs/log_entry.py` now has an implemented generated rebuild hook through `build_indexes.py`.
 - Generated v1 outputs are `_docs_logs/generated/by-date.json`, `_docs_logs/generated/by-domain.json`, `_docs_logs/generated/by-related-doc.json`, `_docs_logs/generated/by-related-file.json`, `_docs_logs/generated/by-change-request.json`, and `_docs_logs/generated/search-index.json`.
 
@@ -396,7 +396,7 @@ Its v1 display should provide:
 - summary paragraph for each log entry
 
 The generated JSON projections and migration reports are large local build artifacts, not tracked source.
-Track canonical `_docs_logs/entries/*.jsonl` records, ignore `_docs_logs/generated/*.json` and `_docs_logs/reports/*.json`, and rebuild generated projections locally from source records.
+Track canonical `_docs_logs/entries/*.json` records, ignore `_docs_logs/generated/*.json` and `_docs_logs/reports/*.json`, and rebuild generated projections locally from source records.
 
 The v1 report should be manage-only without adding a new front-matter field.
 Use an ordinary Studio docs report page with `viewer_report_access: manage`, place it under a dedicated report-tree root such as `change-history-reports`, and add that root to the Studio scope's `manage_only_tree_root_ids`.
@@ -416,11 +416,11 @@ Additional filter granularity can be designed iteratively after the basic report
 
 Status:
 
-- pending
+- completed
 
 Replace the monthly JSONL canonical source files with one flat JSON file per change entry.
 
-The current monthly JSONL files are script-friendly, but they are inefficient for Codex context because reading one entry can require opening a large month file.
+The previous monthly JSONL files were script-friendly, but they were inefficient for Codex context because reading one entry could require opening a large month file.
 The canonical source should optimize for selective retrieval by Codex and scripts.
 
 Target layout:
@@ -460,6 +460,13 @@ Expected result:
 - generated indexes and the manage-only change-history report keep the same output shape
 - script behavior remains deterministic, with flat per-entry JSON files as the sole canonical source
 
+Implementation notes:
+
+- Existing monthly JSONL rows were converted into 470 flat `_docs_logs/entries/<id>.json` files, then this Step 8 implementation added its own structured entry.
+- The retired monthly JSONL files were removed from `_docs_logs/entries/`.
+- `scripts/docs_logs/log_entry.py`, `scripts/docs_logs/build_indexes.py`, and `scripts/docs_logs/migrate_legacy_logs.py` now use per-entry JSON files.
+- Focused tests cover per-entry read/write behavior and duplicate-id handling.
+
 ## Migration Script Notes
 
 A practical migration can be handled by small repo-local Python scripts:
@@ -468,7 +475,7 @@ A practical migration can be handled by small repo-local Python scripts:
 - extract `Status`, `Area`, `Summary`, `Effect`, and `Affected files/docs` blocks where present
 - infer domain tags from `Area`, related docs, related files, and title keywords
 - generate stable slugs from date and title
-- write atomic JSONL records under `_docs_logs/entries/`
+- write atomic JSON records under `_docs_logs/entries/`
 - validate generated records against `_docs_logs/schema.json`
 - infer `change_request_doc_id` when existing changelog prose clearly names a request doc
 - generate month, year, domain, and related-file indexes
@@ -512,4 +519,5 @@ Risks:
 
 ## Change Log Entries
 
+- `change-2026-05-19-migrated-docs-logs-to-per-entry-json`
 - `change-2026-05-19-added-manage-only-change-history-report`

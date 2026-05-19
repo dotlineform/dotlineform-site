@@ -1,0 +1,51 @@
+{
+  "id": "change-2026-04-27-reduced-forced-scoped-catalogue-build-noise",
+  "date": "2026-04-27",
+  "title": "Reduced forced scoped catalogue build noise",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Added a narrow published-record refresh mode for scoped catalogue builds and kept broad force behavior reserved for intentional rewrites.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1479,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Catalogue pipeline\n\n**Summary:**\nAdded a narrow published-record refresh mode for scoped catalogue builds and kept broad force behavior reserved for intentional rewrites.\n\n**Reason:**\nWork, series, and moment scoped updates need to recompute selected published payloads, especially prose payloads, without rewriting unchanged aggregate JSON or catalogue search output solely because `generated_at_utc` changed.\n\n**Effect:**\nNormal scoped catalogue builds now pass `--refresh-published` to the internal generator instead of broad `--force`. Unchanged payloads still skip by content version, catalogue search is only forced when an explicit force run is requested, and already-published records keep their existing `published_date` unless they transition from `draft` to `published`. The scoped helper also now supports direct `--series-id` preview/write runs.\n\n**Affected files/docs:**\n\n- `scripts/generate_work_pages.py`\n- `scripts/catalogue_json_build.py`\n- `scripts/studio/catalogue_write_server.py`\n- [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)\n- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Catalogue pipeline",
+  "effect": "Normal scoped catalogue builds now pass `--refresh-published` to the internal generator instead of broad `--force`. Unchanged payloads still skip by content version, catalogue search is only forced when an explicit force run is requested, and already-published records keep their existing `published_date` unless they transition from `draft` to `published`. The scoped helper also now supports direct `--series-id` preview/write runs.",
+  "related_docs": [
+    "site-request-work-series-prose-source-model",
+    "scripts-build-catalogue-json",
+    "scripts-generate-work-pages"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "scripts/catalogue_json_build.py",
+    "scripts/studio/catalogue_write_server.py"
+  ],
+  "change_request_doc_id": "site-request-work-series-prose-source-model",
+  "affected": {
+    "files": [
+      "scripts/generate_work_pages.py",
+      "scripts/catalogue_json_build.py",
+      "scripts/studio/catalogue_write_server.py"
+    ],
+    "docs": [
+      "site-request-work-series-prose-source-model",
+      "scripts-build-catalogue-json",
+      "scripts-generate-work-pages"
+    ]
+  }
+}

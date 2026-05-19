@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-08-extracted-catalogue-lookup-refresh-helpers",
+  "date": "2026-05-08",
+  "title": "Extracted catalogue lookup refresh helpers",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "catalogue",
+    "build",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Completed the eighth implementation slice of the script structural review by moving Studio catalogue lookup refresh execution into `scripts/catalogue_lookup_refresh.py`. The write server keeps refresh timing, response insertion, local service logging, and Studio Activity append timing, while the extracted module owns full and focused refresh writes plus the `lookup_refresh` result payload shape. The series-save member-work fallback now correctly forces a full lookup refresh when the save changes work membership.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2319,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / scripts / maintainability\n\n**Summary:**\nCompleted the eighth implementation slice of the script structural review by moving Studio catalogue lookup refresh execution into `scripts/catalogue_lookup_refresh.py`.\nThe write server keeps refresh timing, response insertion, local service logging, and Studio Activity append timing, while the extracted module owns full and focused refresh writes plus the `lookup_refresh` result payload shape.\nThe series-save member-work fallback now correctly forces a full lookup refresh when the save changes work membership.\n\n**Files changed/docs:**\n\n- `scripts/catalogue_lookup_refresh.py`\n- `scripts/studio/catalogue_write_server.py`\n- `scripts/run_checks.py`\n- `tests/python/test_catalogue_lookup_refresh.py`\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)\n- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)\n\n**Impact:**\nLookup refresh execution now has direct-module coverage for full, work, detail, and series refresh result payloads, and the write server is left with endpoint orchestration rather than payload-writing loops.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio / scripts / maintainability",
+  "related_docs": [
+    "scripts-catalogue-write-server",
+    "scripts-run-checks",
+    "site-request-script-structural-review-catalogue-write-server"
+  ],
+  "related_files": [
+    "scripts/catalogue_lookup_refresh.py",
+    "scripts/studio/catalogue_write_server.py",
+    "scripts/run_checks.py",
+    "tests/python/test_catalogue_lookup_refresh.py"
+  ],
+  "change_request_doc_id": "site-request-script-structural-review-catalogue-write-server"
+}

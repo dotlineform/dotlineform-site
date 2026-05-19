@@ -1,0 +1,85 @@
+{
+  "id": "change-2026-05-03-completed-primary-studio-ready-state-route-adoption",
+  "date": "2026-05-03",
+  "title": "Completed primary Studio ready-state route adoption",
+  "status": "unknown",
+  "type": "verification",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "workflow",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Adopted the shared `data-studio-ready` / `data-studio-busy` route contract on Series Tag Editor, Series Tags, Studio Works, Tag Aliases, Tag Groups, and Tag Registry.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 876,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** partially implemented\n\n**Area:** Studio runtime / smoke testing\n\n**Summary:**\nAdopted the shared `data-studio-ready` / `data-studio-busy` route contract on Series Tag Editor, Series Tags, Studio Works, Tag Aliases, Tag Groups, and Tag Registry.\n\n**Reason:**\nThese were the remaining primary async or service-backed Studio routes in the ready-state request. They load tag data, assignment data, generated catalogue indexes, group descriptions, or work indexes before route state is stable, and several run local write-server commands.\n\n**Effect:**\n`#seriesTagEditorRoot`, `#series-tags`, `#worksStudioRoot`, `#tag-aliases`, `#tag-groups`, and `#tag-registry` now expose route, ready, busy, mode, service availability where applicable, and record-loaded attributes. Primary async and service-backed Studio routes now have the shared smoke-test readiness contract; only lower-priority dashboards, landing pages, and reference pages remain.\n\n**Affected files/docs:**\n\n- `assets/studio/js/series-tag-editor-page.js`\n- `assets/studio/js/tag-studio.js`\n- `assets/studio/js/series-tags.js`\n- `assets/studio/js/studio-works.js`\n- `assets/studio/js/tag-aliases.js`\n- `assets/studio/js/tag-groups.js`\n- `assets/studio/js/tag-registry.js`\n- `studio/series-tag-editor/index.md`\n- `studio/series-tags/index.md`\n- `studio/studio-works/index.md`\n- `studio/tag-aliases/index.md`\n- `studio/tag-groups/index.md`\n- `studio/tag-registry/index.md`\n- [Tag Editor](/docs/?scope=studio&doc=tag-editor)\n- [Series Tags](/docs/?scope=studio&doc=series-tags)\n- [Studio Works](/docs/?scope=studio&doc=studio-works)\n- [Tag Aliases](/docs/?scope=studio&doc=tag-aliases)\n- [Tag Groups](/docs/?scope=studio&doc=tag-groups)\n- [Tag Registry](/docs/?scope=studio&doc=tag-registry)\n- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)\n- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)\n- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "low",
+    "warnings": []
+  },
+  "area": "Studio runtime / smoke testing",
+  "effect": "`#seriesTagEditorRoot`, `#series-tags`, `#worksStudioRoot`, `#tag-aliases`, `#tag-groups`, and `#tag-registry` now expose route, ready, busy, mode, service availability where applicable, and record-loaded attributes. Primary async and service-backed Studio routes now have the shared smoke-test readiness contract; only lower-priority dashboards, landing pages, and reference pages remain.",
+  "related_docs": [
+    "tag-editor",
+    "series-tags",
+    "studio-works",
+    "tag-aliases",
+    "tag-groups",
+    "tag-registry",
+    "studio-runtime",
+    "studio-smoke-testing",
+    "site-request-studio-ready-state-contract",
+    "site-change-log"
+  ],
+  "related_files": [
+    "assets/studio/js/series-tag-editor-page.js",
+    "assets/studio/js/tag-studio.js",
+    "assets/studio/js/series-tags.js",
+    "assets/studio/js/studio-works.js",
+    "assets/studio/js/tag-aliases.js",
+    "assets/studio/js/tag-groups.js",
+    "assets/studio/js/tag-registry.js",
+    "studio/series-tag-editor/index.md",
+    "studio/series-tags/index.md",
+    "studio/studio-works/index.md",
+    "studio/tag-aliases/index.md",
+    "studio/tag-groups/index.md",
+    "studio/tag-registry/index.md"
+  ],
+  "change_request_doc_id": "site-request-studio-ready-state-contract",
+  "affected": {
+    "files": [
+      "assets/studio/js/series-tag-editor-page.js",
+      "assets/studio/js/tag-studio.js",
+      "assets/studio/js/series-tags.js",
+      "assets/studio/js/studio-works.js",
+      "assets/studio/js/tag-aliases.js",
+      "assets/studio/js/tag-groups.js",
+      "assets/studio/js/tag-registry.js",
+      "studio/series-tag-editor/index.md",
+      "studio/series-tags/index.md",
+      "studio/studio-works/index.md",
+      "studio/tag-aliases/index.md",
+      "studio/tag-groups/index.md",
+      "studio/tag-registry/index.md"
+    ],
+    "docs": [
+      "tag-editor",
+      "series-tags",
+      "studio-works",
+      "tag-aliases",
+      "tag-groups",
+      "tag-registry",
+      "studio-runtime",
+      "studio-smoke-testing",
+      "site-request-studio-ready-state-contract",
+      "site-change-log"
+    ]
+  }
+}

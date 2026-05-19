@@ -1,0 +1,27 @@
+{
+  "id": "change-2026-05-08-moved-studio-activity-link-to-studio-resources",
+  "date": "2026-05-08",
+  "title": "Moved Studio Activity link to Studio resources",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "search",
+    "catalogue"
+  ],
+  "summary": "Moved the Activity link from the Catalogue dashboard admin block into the Studio home Resources section.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2530,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / navigation\n\n**Summary:**\nMoved the Activity link from the Catalogue dashboard admin block into the Studio home Resources section.\n\n**Files changed:**\n\n- `studio/index.md`\n- `studio/catalogue/index.md`\n\n**Impact:**\nThe Studio Activity report now sits with other cross-Studio resources on `/studio/`, and `/studio/catalogue/` no longer shows a separate Admin heading.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio / navigation",
+  "related_files": [
+    "studio/index.md",
+    "studio/catalogue/index.md"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-09-extracted-catalogue-generation-index-builders",
+  "date": "2026-05-09",
+  "title": "Extracted catalogue generation index builders",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "search",
+    "catalogue",
+    "build",
+    "scripts"
+  ],
+  "summary": "Moved pure series/work aggregate context and index payload construction out of `scripts/generate_work_pages.py` into `scripts/catalogue_generation_indexes.py`. The generator still owns CLI orchestration, path binding, existing-version checks, writes, and dry-run reporting.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1853,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue generation / scripts / maintainability\n\n**Summary:**\nMoved pure series/work aggregate context and index payload construction out of `scripts/generate_work_pages.py` into `scripts/catalogue_generation_indexes.py`.\nThe generator still owns CLI orchestration, path binding, existing-version checks, writes, and dry-run reporting.\n\n**Files changed/docs:**\n\n- `scripts/catalogue_generation_indexes.py`\n- `scripts/catalogue_generation_common.py`\n- `scripts/generate_work_pages.py`\n- `scripts/run_checks.py`\n- `tests/python/test_catalogue_generation_indexes.py`\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n- [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)\n\n**Impact:**\nSeries sort rules, published series membership, primary-work validation, works index payloads, and Studio work-storage payloads now have direct focused tests without changing generated artifact schemas or command behavior.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "catalogue generation / scripts / maintainability",
+  "related_docs": [
+    "scripts-generate-work-pages",
+    "site-request-script-structural-review-generate-work-pages"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "scripts/catalogue_generation_indexes.py",
+    "scripts/catalogue_generation_common.py",
+    "scripts/run_checks.py",
+    "tests/python/test_catalogue_generation_indexes.py"
+  ],
+  "change_request_doc_id": "site-request-script-structural-review-generate-work-pages"
+}

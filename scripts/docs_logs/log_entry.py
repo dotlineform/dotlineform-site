@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Preview or append structured docs-log JSONL entries."""
+"""Preview or write structured docs-log JSON entries."""
 
 from __future__ import annotations
 
@@ -309,38 +309,31 @@ def validate_record(record: dict[str, Any]) -> list[str]:
     return errors
 
 
-def jsonl_path(root: Path, change_date: str) -> Path:
-    return root / "_docs_logs" / "entries" / f"{change_date[:7]}.jsonl"
+def entry_path(root: Path, entry_id: str) -> Path:
+    return root / "_docs_logs" / "entries" / f"{entry_id}.json"
 
 
 def existing_ids(root: Path) -> set[str]:
     ids: set[str] = set()
-    for path in (root / "_docs_logs" / "entries").glob("*.jsonl"):
-        for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
-            if not line.strip():
-                continue
-            try:
-                row = json.loads(line)
-            except json.JSONDecodeError as exc:
-                raise ValueError(f"{path}:{line_number}: invalid JSONL row: {exc}") from exc
-            entry_id = row.get("id")
-            if isinstance(entry_id, str):
-                ids.add(entry_id)
+    for path in (root / "_docs_logs" / "entries").glob("*.json"):
+        try:
+            row = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"{path}: invalid JSON: {exc}") from exc
+        if not isinstance(row, dict):
+            raise ValueError(f"{path}: expected JSON object")
+        entry_id = row.get("id")
+        if isinstance(entry_id, str):
+            ids.add(entry_id)
     return ids
 
 
-def append_record(root: Path, record: dict[str, Any]) -> Path:
-    path = jsonl_path(root, record["date"])
+def write_record(root: Path, record: dict[str, Any]) -> Path:
+    path = entry_path(root, record["id"])
     path.parent.mkdir(parents=True, exist_ok=True)
     if record["id"] in existing_ids(root):
         raise ValueError(f"docs log entry already exists: {record['id']}")
-    encoded = json.dumps(record, ensure_ascii=False, separators=(",", ":"))
-    if path.exists() and path.read_text(encoding="utf-8") and not path.read_text(encoding="utf-8").endswith("\n"):
-        prefix = "\n"
-    else:
-        prefix = ""
-    with path.open("a", encoding="utf-8") as handle:
-        handle.write(prefix + encoded + "\n")
+    path.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return path
 
 
@@ -401,7 +394,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--area", help="Legacy changelog area text.")
     parser.add_argument("--body", help="Preserved prose when structured fields are insufficient.")
     parser.add_argument("--verification", action="append", help="Verification note. Repeat or comma-separate.")
-    parser.add_argument("--write", action="store_true", help="Append the JSONL row. Default is preview only.")
+    parser.add_argument("--write", action="store_true", help="Write the per-entry JSON file. Default is preview only.")
     parser.add_argument("--update-change-request", action="store_true", help="Add the entry id to the source change request doc.")
     parser.add_argument("--no-rebuild-generated", action="store_true", help="Do not run the generated index rebuild hook after writing.")
     return parser
@@ -420,12 +413,12 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         print(json.dumps(record, indent=2, ensure_ascii=False))
         if not args.write:
-            print("preview only; pass --write to append this entry")
+            print("preview only; pass --write to create this entry")
             if args.update_change_request and record.get("change_request_doc_id"):
                 update_change_request(root, record["change_request_doc_id"], record["id"], dry_run=True)
             return 0
-        path = append_record(root, record)
-        print(f"appended: {repo_relative(root, path)}")
+        path = write_record(root, record)
+        print(f"wrote: {repo_relative(root, path)}")
         if args.update_change_request and record.get("change_request_doc_id"):
             update_change_request(root, record["change_request_doc_id"], record["id"], dry_run=False)
         maybe_rebuild_generated(root, dry_run=False, skip=args.no_rebuild_generated)

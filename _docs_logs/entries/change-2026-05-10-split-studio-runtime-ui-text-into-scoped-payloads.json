@@ -1,0 +1,44 @@
+{
+  "id": "change-2026-05-10-split-studio-runtime-ui-text-into-scoped-payloads",
+  "date": "2026-05-10",
+  "title": "Split Studio runtime UI text into scoped payloads",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "studio-ui",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Reduced `assets/studio/data/studio_config.json` to a small bootstrap manifest by moving Studio UI-copy groups into scoped payloads under `assets/studio/data/ui_text/`. The Studio config loader now has scoped text loading and route-level caching, and config-backed Studio routes request their own text bundle before first render.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1293,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio runtime / JavaScript config structural review\n\n**Summary:**\nReduced `assets/studio/data/studio_config.json` to a small bootstrap manifest by moving Studio UI-copy groups into scoped payloads under `assets/studio/data/ui_text/`.\nThe Studio config loader now has scoped text loading and route-level caching, and config-backed Studio routes request their own text bundle before first render.\n\n**Files changed/docs:**\n\n- `assets/studio/data/studio_config.json`\n- `assets/studio/data/ui_text/*.json`\n- `assets/studio/js/studio-config.js`\n- `assets/js/docs-viewer.js`\n- `_includes/docs_viewer_shell.html`\n- `scripts/checks/check_runtime_payload_budgets.py`\n- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)\n- [Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)\n- [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)\n\n**Impact:**\nStudio routes no longer receive UI copy in the bootstrap payload.\n`studio_config.json` owns scoped text paths but no direct `ui_text` payload.\nMissing scoped bundles log visible fallback warnings while preserving existing `getStudioText(...)` fallback behavior.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio runtime / JavaScript config structural review",
+  "related_docs": [
+    "config-studio-config-json",
+    "config-studio-config-js",
+    "site-request-js-config-structural-review"
+  ],
+  "related_files": [
+    "assets/studio/data/studio_config.json",
+    "assets/studio/data/ui_text/",
+    "assets/studio/data/ui_text/*.json",
+    "assets/studio/js/studio-config.js",
+    "assets/js/docs-viewer.js",
+    "_includes/docs_viewer_shell.html",
+    "scripts/checks/check_runtime_payload_budgets.py",
+    "studio_config.json"
+  ],
+  "change_request_doc_id": "site-request-js-config-structural-review"
+}

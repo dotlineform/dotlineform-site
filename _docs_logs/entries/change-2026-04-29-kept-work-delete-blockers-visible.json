@@ -1,0 +1,42 @@
+{
+  "id": "change-2026-04-29-kept-work-delete-blockers-visible",
+  "date": "2026-04-29",
+  "title": "Kept work delete blockers visible",
+  "status": "implemented",
+  "type": "bugfix",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "studio-ui",
+    "runtime"
+  ],
+  "summary": "Fixed the Work editor delete flow so server-side delete blockers remain visible after the editor state refreshes.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 262,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue work editor\n\n**Summary:**\nFixed the Work editor delete flow so server-side delete blockers remain visible after the editor state refreshes.\n\n**Reason:**\nDeleting work `00640` looked like a no-op. The delete preview correctly returned a blocker because the work is `primary_work_id` for series `002`, but the page immediately overwrote that blocker with the generic loaded-work status.\n\n**Effect:**\nClicking `Delete` now leaves the blocker visible in the status area. For `00640`, the page reports that series `002` must be reassigned before the work can be deleted.\n\n**Affected files/docs:**\n\n- `assets/studio/js/catalogue-work-editor.js`\n- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue work editor",
+  "effect": "Clicking `Delete` now leaves the blocker visible in the status area. For `00640`, the page reports that series `002` must be reassigned before the work can be deleted.",
+  "related_docs": [
+    "catalogue-work-editor",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-work-editor.js"
+  ],
+  "affected": {
+    "files": [
+      "assets/studio/js/catalogue-work-editor.js"
+    ],
+    "docs": [
+      "catalogue-work-editor",
+      "studio-ui-rules"
+    ]
+  }
+}

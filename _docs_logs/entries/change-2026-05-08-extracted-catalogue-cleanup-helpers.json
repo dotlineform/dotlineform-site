@@ -1,0 +1,41 @@
+{
+  "id": "change-2026-05-08-extracted-catalogue-cleanup-helpers",
+  "date": "2026-05-08",
+  "title": "Extracted catalogue cleanup helpers",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Completed the third implementation slice of the script structural review by moving generated public-artifact cleanup discovery, allowlist checks, generated JSON cleanup payload mutation, and cleanup file deletion helpers out of the catalogue write server. The write server now calls those helpers through the explicit `catalogue_cleanup.*` namespace while keeping HTTP handlers, source writes, transaction backup timing, and response assembly in place. Shared catalogue id-list and detail-uid normalization now lives in `scripts/catalogue_source.py` so the extraction does not duplicate request/source identity helpers.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2434,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / scripts / maintainability\n\n**Summary:**\nCompleted the third implementation slice of the script structural review by moving generated public-artifact cleanup discovery, allowlist checks, generated JSON cleanup payload mutation, and cleanup file deletion helpers out of the catalogue write server.\nThe write server now calls those helpers through the explicit `catalogue_cleanup.*` namespace while keeping HTTP handlers, source writes, transaction backup timing, and response assembly in place.\nShared catalogue id-list and detail-uid normalization now lives in `scripts/catalogue_source.py` so the extraction does not duplicate request/source identity helpers.\n\n**Files changed/docs:**\n\n- `scripts/catalogue_cleanup.py`\n- `scripts/catalogue_source.py`\n- `scripts/studio/catalogue_write_server.py`\n- `scripts/run_checks.py`\n- `tests/python/test_catalogue_cleanup.py`\n- [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)\n- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)\n\n**Impact:**\nGenerated cleanup behavior now has a direct module owner and focused coverage for preview counts, allowlist rejection, and generated payload mutation.\nDelete and unpublish endpoint contracts remain unchanged; transaction-helper extraction remains a later slice.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio / scripts / maintainability",
+  "related_docs": [
+    "scripts-catalogue-source",
+    "scripts-catalogue-write-server",
+    "scripts-run-checks",
+    "site-request-script-structural-review"
+  ],
+  "related_files": [
+    "scripts/catalogue_source.py",
+    "scripts/catalogue_cleanup.py",
+    "scripts/studio/catalogue_write_server.py",
+    "scripts/run_checks.py",
+    "tests/python/test_catalogue_cleanup.py"
+  ],
+  "change_request_doc_id": "site-request-script-structural-review"
+}

@@ -1,0 +1,42 @@
+{
+  "id": "change-2026-05-12-added-docs-viewer-report-components",
+  "date": "2026-05-12",
+  "title": "Added Docs Viewer Report Components",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "studio-ui",
+    "build",
+    "scripts"
+  ],
+  "summary": "Added a Docs Viewer report mount point backed by `viewer_report` metadata in generated doc payloads. The first report module, `docs_index_table`, renders scope-aware generated-docs tables with filter buttons, sortable columns, route-backed report state, and Docs Viewer row links. Library Documents now uses that report in `/docs/` manage mode with `viewer_report_scope: library`, so the Library dashboard can link to the report-backed doc instead of the separate Studio route as the primary review surface.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 595,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer / Library document review\n\n**Summary:**\nAdded a Docs Viewer report mount point backed by `viewer_report` metadata in generated doc payloads.\nThe first report module, `docs_index_table`, renders scope-aware generated-docs tables with filter buttons, sortable columns, route-backed report state, and Docs Viewer row links.\nLibrary Documents now uses that report in `/docs/` manage mode with `viewer_report_scope: library`, so the Library dashboard can link to the report-backed doc instead of the separate Studio route as the primary review surface.\n\n**Files changed/docs:**\n\n- `scripts/docs/build_docs.rb`\n- `_includes/docs_viewer_shell.html`\n- `assets/docs-viewer/js/docs-viewer.js`\n- `assets/docs-viewer/js/docs-viewer-reports.js`\n- `assets/docs-viewer/js/reports/docs-index-table-report.js`\n- `assets/docs-viewer/css/docs-viewer-reports.css`\n- `studio/library/index.md`\n- [Library Documents](/docs/?scope=studio&doc=library-documents)\n- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)\n- [Docs Viewer Report Components Request](/docs/?scope=studio&doc=site-request-docs-viewer-report-components)\n\n**Impact:**\nReport-backed docs stay normal Docs Viewer documents for navigation, movement, visibility, and bookmarks while the document pane can host a reusable report component.\nThe report access contract keeps management reports out of public read-only contexts and leaves config/source writes, imports, exports, and rebuild commands outside this report framework.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Docs Viewer / Library document review",
+  "related_docs": [
+    "library-documents",
+    "docs-viewer-overview",
+    "site-request-docs-viewer-report-components"
+  ],
+  "related_files": [
+    "scripts/docs/build_docs.rb",
+    "_includes/docs_viewer_shell.html",
+    "assets/docs-viewer/js/docs-viewer.js",
+    "assets/docs-viewer/js/docs-viewer-reports.js",
+    "assets/docs-viewer/js/reports/docs-index-table-report.js",
+    "assets/docs-viewer/css/docs-viewer-reports.css",
+    "studio/library/index.md"
+  ],
+  "change_request_doc_id": "site-request-docs-viewer-report-components"
+}

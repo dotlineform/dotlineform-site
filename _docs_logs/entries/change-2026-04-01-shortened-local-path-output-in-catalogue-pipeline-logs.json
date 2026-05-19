@@ -1,0 +1,54 @@
+{
+  "id": "change-2026-04-01-shortened-local-path-output-in-catalogue-pipeline-logs",
+  "date": "2026-04-01",
+  "title": "Shortened local path output in catalogue pipeline logs",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts"
+  ],
+  "summary": "Catalogue pipeline command echoes and step logs now avoid printing machine-specific absolute filesystem roots during normal runs.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3926,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** build pipeline\n\n**Summary:**  \nCatalogue pipeline command echoes and step logs now avoid printing machine-specific absolute filesystem roots during normal runs.\n\n**Reason:**  \nThe previous output was noisy and leaked long local absolute paths for interpreters, repo files, canonical source media, staged media, and temporary manifest files. That made routine logs harder to scan and less portable.\n\n**Effect:**  \n`build_catalogue.py`, `copy_draft_media_files.py`, `make_srcset_images.py`, and `generate_work_pages.py` now render repo-owned paths as repo-relative, canonical source paths as `[projects]/...`, and temporary paths as `[tmp]/...`. Runtime behavior is unchanged; this is a display-only logging cleanup.\n\n**Affected files/docs:**  \n- `scripts/display_paths.py`\n- `scripts/build_catalogue.py`\n- `scripts/copy_draft_media_files.py`\n- `scripts/make_srcset_images.py`\n- `scripts/generate_work_pages.py`\n- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n\n**Notes:**  \nThis change only affects human-readable output. The underlying commands and file writes still use the full resolved paths internally.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "build pipeline",
+  "effect": "`build_catalogue.py`, `copy_draft_media_files.py`, `make_srcset_images.py`, and `generate_work_pages.py` now render repo-owned paths as repo-relative, canonical source paths as `[projects]/...`, and temporary paths as `[tmp]/...`. Runtime behavior is unchanged; this is a display-only logging cleanup.",
+  "related_docs": [
+    "scripts-main-pipeline",
+    "scripts-generate-work-pages"
+  ],
+  "related_files": [
+    "scripts/display_paths.py",
+    "scripts/build_catalogue.py",
+    "scripts/copy_draft_media_files.py",
+    "scripts/make_srcset_images.py",
+    "scripts/generate_work_pages.py",
+    "build_catalogue.py",
+    "copy_draft_media_files.py",
+    "make_srcset_images.py",
+    "generate_work_pages.py"
+  ],
+  "affected": {
+    "files": [
+      "scripts/display_paths.py",
+      "scripts/build_catalogue.py",
+      "scripts/copy_draft_media_files.py",
+      "scripts/make_srcset_images.py",
+      "scripts/generate_work_pages.py"
+    ],
+    "docs": [
+      "scripts-main-pipeline",
+      "scripts-generate-work-pages"
+    ]
+  }
+}

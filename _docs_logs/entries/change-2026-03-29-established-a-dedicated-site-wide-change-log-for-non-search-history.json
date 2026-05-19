@@ -1,0 +1,41 @@
+{
+  "id": "change-2026-03-29-established-a-dedicated-site-wide-change-log-for-non-search-history",
+  "date": "2026-03-29",
+  "title": "Established a dedicated site-wide change log for non-search history",
+  "status": "implemented",
+  "type": "documentation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "workflow"
+  ],
+  "summary": "Added a dedicated [Site Change Log](/docs/?scope=studio&doc=site-change-log) plus supporting guidance so meaningful non-search site and Studio changes now have a focused historical record separate from search.",
+  "source": {
+    "file": "_docs/site-change-log-2026-03-and-earlier.md",
+    "line": 217,
+    "archive": "2026-03-and-earlier"
+  },
+  "body": "**Status:** implemented\n\n**Area:** architecture\n\n**Summary:**  \nAdded a dedicated [Site Change Log](/docs/?scope=studio&doc=site-change-log) plus supporting guidance so meaningful non-search site and Studio changes now have a focused historical record separate from search.\n\n**Reason:**  \nSearch has become complex enough to justify its own subsystem log. The rest of the site still needs a concise historical record, but should not be mixed into the search log.\n\n**Effect:**  \nFuture review of non-search development can now happen without reconstructing history from scattered commits or overloading the search change log.\n\n**Affected files/docs:**  \n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n- [Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)\n- `AGENTS.md`\n\n**Notes:**  \nThis log should be updated for meaningful non-search site, Studio, and pipeline changes as part of normal close-out.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "architecture",
+  "effect": "Future review of non-search development can now happen without reconstructing history from scattered commits or overloading the search change log.",
+  "related_docs": [
+    "site-change-log",
+    "site-change-log-guidance"
+  ],
+  "related_files": [
+    "AGENTS.md"
+  ],
+  "affected": {
+    "files": [
+      "AGENTS.md"
+    ],
+    "docs": [
+      "site-change-log",
+      "site-change-log-guidance"
+    ]
+  }
+}

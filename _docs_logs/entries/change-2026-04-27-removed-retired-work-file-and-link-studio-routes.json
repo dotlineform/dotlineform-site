@@ -1,0 +1,81 @@
+{
+  "id": "change-2026-04-27-removed-retired-work-file-and-link-studio-routes",
+  "date": "2026-04-27",
+  "title": "Removed retired work file and link Studio routes",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "config"
+  ],
+  "summary": "Removed the retired standalone work-file and work-link Studio pages, route scripts, old source JSON files, focused file/link lookup payloads, and generator artifact switches.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1140,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue cleanup\n\n**Summary:**\nRemoved the retired standalone work-file and work-link Studio pages, route scripts, old source JSON files, focused file/link lookup payloads, and generator artifact switches.\n\n**Reason:**\nFiles and links are now work-owned `downloads` and `links` metadata in `works.json`. Keeping the old source files, focused lookup records, and Studio pages made the retired child-record pattern look partially supported.\n\n**Effect:**\nNormal file/link editing now lives only on `/studio/catalogue-work/`. The lookup builder no longer emits `catalogue_lookup/work_files/` or `catalogue_lookup/work_links/` payloads, `studio_config.json` no longer advertises the retired routes or data files, and `generate_work_pages.py` no longer accepts `work-files` or `work-links` as independent artifacts. External referenced files are untouched.\n\n**Affected files/docs:**\n\n- `studio/catalogue-work-file/index.md`\n- `studio/catalogue-new-work-file/index.md`\n- `studio/catalogue-work-link/index.md`\n- `studio/catalogue-new-work-link/index.md`\n- `assets/studio/js/catalogue-work-file-editor.js`\n- `assets/studio/js/catalogue-new-work-file-editor.js`\n- `assets/studio/js/catalogue-work-link-editor.js`\n- `assets/studio/js/catalogue-new-work-link-editor.js`\n- `assets/studio/data/catalogue/work_files.json`\n- `assets/studio/data/catalogue/work_links.json`\n- `scripts/generate_work_pages.py`\n- `scripts/build_catalogue.py`\n- `scripts/catalogue_source.py`\n- `scripts/catalogue_lookup.py`\n- `assets/studio/data/studio_config.json`\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n- [Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)\n- [Work-Owned Files And Links Request](/docs/?scope=studio&doc=site-request-work-owned-files-links)\n- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue cleanup",
+  "effect": "Normal file/link editing now lives only on `/studio/catalogue-work/`. The lookup builder no longer emits `catalogue_lookup/work_files/` or `catalogue_lookup/work_links/` payloads, `studio_config.json` no longer advertises the retired routes or data files, and `generate_work_pages.py` no longer accepts `work-files` or `work-links` as independent artifacts. External referenced files are untouched.",
+  "related_docs": [
+    "scripts-generate-work-pages",
+    "new-pipeline-source-model",
+    "site-request-work-owned-files-links",
+    "catalogue-work-editor"
+  ],
+  "related_files": [
+    "studio/catalogue-work-file/index.md",
+    "studio/catalogue-new-work-file/index.md",
+    "studio/catalogue-work-link/index.md",
+    "studio/catalogue-new-work-link/index.md",
+    "assets/studio/js/catalogue-work-file-editor.js",
+    "assets/studio/js/catalogue-new-work-file-editor.js",
+    "assets/studio/js/catalogue-work-link-editor.js",
+    "assets/studio/js/catalogue-new-work-link-editor.js",
+    "assets/studio/data/catalogue/work_files.json",
+    "assets/studio/data/catalogue/work_links.json",
+    "scripts/generate_work_pages.py",
+    "scripts/build_catalogue.py",
+    "scripts/catalogue_source.py",
+    "scripts/catalogue_lookup.py",
+    "assets/studio/data/studio_config.json",
+    "works.json",
+    "studio_config.json",
+    "generate_work_pages.py"
+  ],
+  "change_request_doc_id": "site-request-work-owned-files-links",
+  "affected": {
+    "files": [
+      "studio/catalogue-work-file/index.md",
+      "studio/catalogue-new-work-file/index.md",
+      "studio/catalogue-work-link/index.md",
+      "studio/catalogue-new-work-link/index.md",
+      "assets/studio/js/catalogue-work-file-editor.js",
+      "assets/studio/js/catalogue-new-work-file-editor.js",
+      "assets/studio/js/catalogue-work-link-editor.js",
+      "assets/studio/js/catalogue-new-work-link-editor.js",
+      "assets/studio/data/catalogue/work_files.json",
+      "assets/studio/data/catalogue/work_links.json",
+      "scripts/generate_work_pages.py",
+      "scripts/build_catalogue.py",
+      "scripts/catalogue_source.py",
+      "scripts/catalogue_lookup.py",
+      "assets/studio/data/studio_config.json"
+    ],
+    "docs": [
+      "scripts-generate-work-pages",
+      "new-pipeline-source-model",
+      "site-request-work-owned-files-links",
+      "catalogue-work-editor"
+    ]
+  }
+}

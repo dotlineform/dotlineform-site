@@ -1,0 +1,45 @@
+{
+  "id": "change-2026-05-08-started-batch-c-studio-activity-logging-for-catalogue-service-actions",
+  "date": "2026-05-08",
+  "title": "Started Batch C Studio activity logging for catalogue-service actions",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "catalogue",
+    "scripts",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Started Batch C by wiring workbook import apply, moment import apply, and project-state report generation into the unified Studio activity contract and feed.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2657,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / activity reporting\n\n**Summary:**\nStarted Batch C by wiring workbook import apply, moment import apply, and project-state report generation into the unified Studio activity contract and feed.\n\n**Files changed:**\n\n- `assets/studio/data/activity_contract.json`\n- `scripts/studio/catalogue_write_server.py`\n- `assets/studio/js/bulk-add-work.js`\n- `assets/studio/js/catalogue-moment-editor.js`\n- `assets/studio/js/project-state.js`\n- `tests/python/test_studio_activity_context.py`\n- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)\n- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)\n- [Studio Activity](/docs/?scope=studio&doc=studio-activity)\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)\n- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)\n- [Project State Page](/docs/?scope=studio&doc=project-state-page)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n\n**Impact:**\nThe first Batch C slice now reports durable import/report actions while keeping preview-only commands excluded.\nWorkbook import adds import and lookup-refresh rows, moment import adds a source-import row, and project-state generation adds a report row with summary counts.\nDocs import/export, audits, and tag writes remain in the rest of Batch C.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Studio / activity reporting",
+  "related_docs": [
+    "site-request-studio-unified-activity-log",
+    "site-request-studio-unified-activity-log-inventory",
+    "studio-activity",
+    "scripts-catalogue-write-server",
+    "bulk-add-work",
+    "catalogue-moment-editor",
+    "project-state-page",
+    "site-change-log"
+  ],
+  "related_files": [
+    "assets/studio/data/activity_contract.json",
+    "scripts/studio/catalogue_write_server.py",
+    "assets/studio/js/bulk-add-work.js",
+    "assets/studio/js/catalogue-moment-editor.js",
+    "assets/studio/js/project-state.js",
+    "tests/python/test_studio_activity_context.py"
+  ]
+}

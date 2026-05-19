@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build generated indexes from structured docs-log JSONL entries."""
+"""Build generated indexes from structured docs-log JSON entries."""
 
 from __future__ import annotations
 
@@ -42,28 +42,27 @@ def repo_relative(root: Path, path: Path) -> str:
         return path.as_posix()
 
 
-def read_jsonl_entries(root: Path) -> list[dict[str, Any]]:
+def read_entries(root: Path) -> list[dict[str, Any]]:
     entries_dir = root / "_docs_logs" / "entries"
     records: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
-    for path in sorted(entries_dir.glob("*.jsonl")):
-        for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
-            if not line.strip():
-                continue
-            try:
-                record = json.loads(line)
-            except json.JSONDecodeError as exc:
-                raise ValueError(f"{repo_relative(root, path)}:{line_number}: invalid JSON: {exc}") from exc
-            if not isinstance(record, dict):
-                raise ValueError(f"{repo_relative(root, path)}:{line_number}: expected JSON object")
-            errors = validate_record(record)
-            if errors:
-                raise ValueError(f"{repo_relative(root, path)}:{line_number}: {'; '.join(errors)}")
-            entry_id = record["id"]
-            if entry_id in seen_ids:
-                raise ValueError(f"{repo_relative(root, path)}:{line_number}: duplicate id: {entry_id}")
-            seen_ids.add(entry_id)
-            records.append(record)
+    for path in sorted(entries_dir.glob("*.json")):
+        try:
+            record = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"{repo_relative(root, path)}: invalid JSON: {exc}") from exc
+        if not isinstance(record, dict):
+            raise ValueError(f"{repo_relative(root, path)}: expected JSON object")
+        errors = validate_record(record)
+        if errors:
+            raise ValueError(f"{repo_relative(root, path)}: {'; '.join(errors)}")
+        entry_id = record["id"]
+        if path.stem != entry_id:
+            raise ValueError(f"{repo_relative(root, path)}: filename must match id: {entry_id}")
+        if entry_id in seen_ids:
+            raise ValueError(f"{repo_relative(root, path)}: duplicate id: {entry_id}")
+        seen_ids.add(entry_id)
+        records.append(record)
     return sort_records(records)
 
 
@@ -222,7 +221,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         root = repo_root()
-        records = read_jsonl_entries(root)
+        records = read_entries(root)
         outputs = build_outputs(records)
         summary = {
             "entry_count": len(records),

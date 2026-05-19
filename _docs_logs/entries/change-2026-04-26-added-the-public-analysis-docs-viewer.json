@@ -1,0 +1,65 @@
+{
+  "id": "change-2026-04-26-added-the-public-analysis-docs-viewer",
+  "date": "2026-04-26",
+  "title": "Added the public Analysis docs viewer",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "studio-ui",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Added a public `/analysis/` docs viewer backed by a new `analysis` docs scope, generated Analysis docs payloads, and an inline Analysis search artifact.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1657,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer / Analysis\n\n**Summary:**\nAdded a public `/analysis/` docs viewer backed by a new `analysis` docs scope, generated Analysis docs payloads, and an inline Analysis search artifact.\n\n**Reason:**\nAnalysis needs a concrete public-facing document surface for portfolio interpretation, series/work analysis, tags, dimensions, and LLM-assisted review output without mixing that material into Library or Studio docs.\n\n**Effect:**\nThe public nav now orders the main content surfaces as `works`, `analysis`, and `library`. Analysis source docs live under `_docs_analysis/`, with nested `series/` and `works/` folders reserved for future ID-addressable content such as `series-001` and `work-00008`. Viewer organisation still comes from `doc_id`, `parent_id`, and `sort_order`.\n\n**Affected files/docs:**\n\n- `analysis/index.md`\n- `_docs_analysis/`\n- `scripts/build_docs.rb`\n- `scripts/build_search.rb`\n- `scripts/search/build_config.json`\n- `scripts/docs/docs_management_server.py`\n- `scripts/docs/docs_live_rebuild_watcher.py`\n- `_layouts/default.html`\n- [Analysis Docs Viewer Request](/docs/?scope=studio&doc=site-request-analysis-doc-viewer)\n- [Analysis Scope](/docs/?scope=studio&doc=data-models-analysis)\n- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer / Analysis",
+  "effect": "The public nav now orders the main content surfaces as `works`, `analysis`, and `library`. Analysis source docs live under `_docs_analysis/`, with nested `series/` and `works/` folders reserved for future ID-addressable content such as `series-001` and `work-00008`. Viewer organisation still comes from `doc_id`, `parent_id`, and `sort_order`.",
+  "related_docs": [
+    "site-request-analysis-doc-viewer",
+    "data-models-analysis",
+    "scripts-docs-builder",
+    "search-build-pipeline"
+  ],
+  "related_files": [
+    "analysis/index.md",
+    "_docs_analysis/",
+    "scripts/build_docs.rb",
+    "scripts/build_search.rb",
+    "scripts/search/build_config.json",
+    "scripts/docs/docs_management_server.py",
+    "scripts/docs/docs_live_rebuild_watcher.py",
+    "_layouts/default.html"
+  ],
+  "change_request_doc_id": "site-request-analysis-doc-viewer",
+  "affected": {
+    "files": [
+      "analysis/index.md",
+      "_docs_analysis/",
+      "scripts/build_docs.rb",
+      "scripts/build_search.rb",
+      "scripts/search/build_config.json",
+      "scripts/docs/docs_management_server.py",
+      "scripts/docs/docs_live_rebuild_watcher.py",
+      "_layouts/default.html"
+    ],
+    "docs": [
+      "site-request-analysis-doc-viewer",
+      "data-models-analysis",
+      "scripts-docs-builder",
+      "search-build-pipeline"
+    ]
+  }
+}

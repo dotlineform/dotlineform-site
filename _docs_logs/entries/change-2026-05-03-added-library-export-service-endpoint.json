@@ -1,0 +1,44 @@
+{
+  "id": "change-2026-05-03-added-library-export-service-endpoint",
+  "date": "2026-05-03",
+  "title": "Added Library export service endpoint",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "studio-ui",
+    "scripts",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Added the local docs-management endpoint that lets Studio run configured Library exports.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 514,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Library / Studio docs export\n\n**Summary:**\nAdded the local docs-management endpoint that lets Studio run configured Library exports.\n\n**Reason:**\nThe Library export page could select configs and documents, but needed a loopback-only service path to create export files without giving the browser arbitrary filesystem write access.\n\n**Changes:**\n`POST /docs/export` now calls the shared export engine in-process, validates config id, scope, explicit `doc_ids`, `select_all`, and `missing_summary_only`, and writes only through the export engine's `var/docs/exports/` path allowlist.\nThe Studio transport layer exposes the endpoint, and `/studio/export/` now probes the docs-management service, enables Run when available, posts selected docs/config options, and displays output path, format, counts, warnings, and errors.\n\n**Files changed:**\n\n- `scripts/docs/docs_management_server.py`\n- `assets/studio/js/studio-transport.js`\n- `assets/studio/js/data-export.js`\n- `studio/export/index.md`\n- `assets/studio/css/studio.css`\n- `assets/studio/data/studio_config.json`\n- [Library Export v1](/docs/?scope=studio&doc=library-export)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)\n\n**Impact:**\nThe Library export workflow is now end-to-end from Studio selection to generated file output.\nThe main remaining risk is validation/reporting depth for unusual configs or missing required fields, which is tracked by the next Library export task.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Library / Studio docs export",
+  "effect": "The Library export page could select configs and documents, but needed a loopback-only service path to create export files without giving the browser arbitrary filesystem write access.",
+  "related_docs": [
+    "library-export",
+    "scripts-docs-management-server",
+    "scripts-docs-export"
+  ],
+  "related_files": [
+    "var/docs/exports/",
+    "scripts/docs/docs_management_server.py",
+    "assets/studio/js/studio-transport.js",
+    "assets/studio/js/data-export.js",
+    "studio/export/index.md",
+    "assets/studio/css/studio.css",
+    "assets/studio/data/studio_config.json"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "change-2026-04-29-migrated-work-detail-create-navigation-to-the-unified-route",
+  "date": "2026-04-29",
+  "title": "Migrated work-detail create navigation to the unified route",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Moved active work-detail create navigation to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`, converted `/studio/catalogue-new-work-detail/` into a compatibility redirect, and removed the standalone detail-create route from active Studio config.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 898,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue work details\n\n**Summary:**\nMoved active work-detail create navigation to `/studio/catalogue-work-detail/?work=<work_id>&mode=new`, converted `/studio/catalogue-new-work-detail/` into a compatibility redirect, and removed the standalone detail-create route from active Studio config.\n\n**Reason:**\nAfter parent-scoped new mode landed on the main work-detail editor, keeping active links and dashboard copy pointed at the legacy create page would split testing and keep presenting details as standalone records.\n\n**Effect:**\nThe work page now opens detail creation directly on the unified editor route. Old links with `?work=<work_id>` redirect to the same unified route, while missing-parent legacy links redirect to the work editor. The Catalogue dashboard no longer promotes `Create New Detail` as a primary workflow.\n\n**Affected files/docs:**\n\n- `studio/catalogue-work/index.md`\n- `studio/catalogue-new-work-detail/index.md`\n- `studio/catalogue/index.md`\n- `assets/studio/js/catalogue-work-editor.js`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)\n- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)\n- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)\n- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)\n- [Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)\n- [Catalogue Work Detail Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue work details",
+  "effect": "The work page now opens detail creation directly on the unified editor route. Old links with `?work=<work_id>` redirect to the same unified route, while missing-parent legacy links redirect to the work editor. The Catalogue dashboard no longer promotes `Create New Detail` as a primary workflow.",
+  "related_docs": [
+    "catalogue-work-editor",
+    "catalogue-work-detail-editor",
+    "studio-runtime",
+    "new-pipeline-studio-e2e-checklist",
+    "site-request-catalogue-work-detail-unified-editor"
+  ],
+  "related_files": [
+    "studio/catalogue-work/index.md",
+    "studio/catalogue-new-work-detail/index.md",
+    "studio/catalogue/index.md",
+    "assets/studio/js/catalogue-work-editor.js",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js"
+  ],
+  "change_request_doc_id": "site-request-catalogue-work-detail-unified-editor",
+  "affected": {
+    "files": [
+      "studio/catalogue-work/index.md",
+      "studio/catalogue-new-work-detail/index.md",
+      "studio/catalogue/index.md",
+      "assets/studio/js/catalogue-work-editor.js",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/js/studio-config.js"
+    ],
+    "docs": [
+      "catalogue-work-editor",
+      "catalogue-work-detail-editor",
+      "studio-runtime",
+      "new-pipeline-studio-e2e-checklist",
+      "site-request-catalogue-work-detail-unified-editor"
+    ]
+  }
+}

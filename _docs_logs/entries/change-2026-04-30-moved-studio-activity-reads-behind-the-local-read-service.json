@@ -1,0 +1,59 @@
+{
+  "id": "change-2026-04-30-moved-studio-activity-reads-behind-the-local-read-service",
+  "date": "2026-04-30",
+  "title": "Moved Studio activity reads behind the local read service",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "The Studio activity surface reads its generated JSON through `GET /catalogue/read` instead of fetching the file directly from Jekyll-served assets.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 15,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / local catalogue runtime\n\n**Summary:**\nThe Studio activity surface reads its generated JSON through `GET /catalogue/read` instead of fetching the file directly from Jekyll-served assets.\n\n**Reason:**\nRoutine source saves and scoped builds update `assets/studio/data/activity_log.json` and local generator logs. Those writes are useful Studio runtime state, but they should not wake Jekyll for an extra regeneration pass.\n\n**Effect:**\nThe Catalogue Write Server now serves the allowlisted `activity_log` read key. Jekyll excludes the mutable activity file and `logs/`, so save and build updates remain visible in Studio while avoiding watcher churn. The tradeoff matches other mutable Studio reads: the activity page expects the local Studio runtime rather than a stale static fallback.\n\n**Affected files/docs:**\n\n- `_config.yml`\n- `assets/studio/js/activity.js`\n- `assets/studio/js/studio-data.js`\n- `scripts/studio/catalogue_write_server.py`\n- [Studio Activity](/docs/?scope=studio&doc=studio-activity)\n- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)\n- [Studio Data Models](/docs/?scope=studio&doc=data-models-studio)\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / local catalogue runtime",
+  "effect": "The Catalogue Write Server now serves the allowlisted `activity_log` read key. Jekyll excludes the mutable activity file and `logs/`, so save and build updates remain visible in Studio while avoiding watcher churn. The tradeoff matches other mutable Studio reads: the activity page expects the local Studio runtime rather than a stale static fallback.",
+  "related_docs": [
+    "studio-activity",
+    "studio-runtime",
+    "data-models-studio",
+    "scripts-catalogue-write-server",
+    "site-change-log"
+  ],
+  "related_files": [
+    "_config.yml",
+    "assets/studio/js/activity.js",
+    "assets/studio/js/studio-data.js",
+    "scripts/studio/catalogue_write_server.py",
+    "assets/studio/data/activity_log.json"
+  ],
+  "affected": {
+    "files": [
+      "_config.yml",
+      "assets/studio/js/activity.js",
+      "assets/studio/js/studio-data.js",
+      "scripts/studio/catalogue_write_server.py"
+    ],
+    "docs": [
+      "studio-activity",
+      "studio-runtime",
+      "data-models-studio",
+      "scripts-catalogue-write-server",
+      "site-change-log"
+    ]
+  }
+}

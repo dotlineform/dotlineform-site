@@ -27,7 +27,7 @@ The report reads the local generated docs-log search projection through the Docs
 - `_docs_logs/generated/search-index.json`
 - `GET /docs/generated/docs-log?projection=search-index`
 
-The projection is generated from `_docs_logs/entries/*.jsonl`.
+The projection is generated from `_docs_logs/entries/*.json`.
 Run `./scripts/docs_logs/build_indexes.py --write` after changing entries.
 
 ## Availability
@@ -42,7 +42,7 @@ The report tree root is listed in the Studio scope's `manage_only_tree_root_ids`
 
 - `_docs/change-history-reports.md`
 - `_docs/change-history.md`
-- `_docs_logs/entries/*.jsonl`
+- `_docs_logs/entries/*.json`
 - `scripts/docs_logs/build_indexes.py`
 - `scripts/docs_logs/migrate_legacy_logs.py`
 - `assets/docs-viewer/js/reports/change-history-report.js`

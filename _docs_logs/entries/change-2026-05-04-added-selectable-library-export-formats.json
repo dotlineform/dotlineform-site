@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-05-04-added-selectable-library-export-formats",
+  "date": "2026-05-04",
+  "title": "Added selectable Library export formats",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "studio-ui",
+    "scripts",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Library export configs now declare selectable output formats with `target.supported_formats`, while `target.format` remains the default. The Studio Library export page shows JSON and JSONL options, disables unsupported combinations, sends `target_format` to `POST /docs/export`, and shows the selected format in the result modal. Document-row exports can now write JSON arrays as well as JSONL rows when the config supports both.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3874,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Library export\n\n**Summary:**\nLibrary export configs now declare selectable output formats with `target.supported_formats`, while `target.format` remains the default.\nThe Studio Library export page shows JSON and JSONL options, disables unsupported combinations, sends `target_format` to `POST /docs/export`, and shows the selected format in the result modal.\nDocument-row exports can now write JSON arrays as well as JSONL rows when the config supports both.\n\n**Reason:**\nTask 6 needed user-visible format choice without making broad format assumptions across every export pattern.\nKeeping supported formats config-declared lets the CLI, service endpoint, and Studio UI share the same validation boundary.\n\n**Files changed:**\n\n- `assets/studio/data/library_export_configs.json`\n- `assets/studio/data/library_export_configs.schema.json`\n- `scripts/docs/docs_export.py`\n- `scripts/docs/docs_management_server.py`\n- `studio/export/index.md`\n- `assets/studio/js/data-export.js`\n- `assets/studio/css/studio.css`\n- `tests/python/test_docs_export.py`\n- `tests/python/test_docs_management_server.py`\n- `tests/smoke/data_export.py`\n- [Library Export](/docs/?scope=studio&doc=library-export)\n- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)\n- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n\n**Impact:**\nSummary and full-content exports default to JSONL but can be written as JSON arrays.\nParent-child relationship exports remain JSON-only.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Library export",
+  "effect": "Task 6 needed user-visible format choice without making broad format assumptions across every export pattern. Keeping supported formats config-declared lets the CLI, service endpoint, and Studio UI share the same validation boundary.",
+  "related_docs": [
+    "library-export",
+    "config-library-export-configs",
+    "scripts-docs-export",
+    "scripts-docs-management-server"
+  ],
+  "related_files": [
+    "assets/studio/data/library_export_configs.json",
+    "assets/studio/data/library_export_configs.schema.json",
+    "scripts/docs/docs_export.py",
+    "scripts/docs/docs_management_server.py",
+    "studio/export/index.md",
+    "assets/studio/js/data-export.js",
+    "assets/studio/css/studio.css",
+    "tests/python/test_docs_export.py",
+    "tests/python/test_docs_management_server.py",
+    "tests/smoke/data_export.py"
+  ]
+}

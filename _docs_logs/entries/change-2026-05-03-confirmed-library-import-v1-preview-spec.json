@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-03-confirmed-library-import-v1-preview-spec",
+  "date": "2026-05-03",
+  "title": "Confirmed Library import v1 preview spec",
+  "status": "unknown",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "library",
+    "data-models",
+    "workflow",
+    "analytics"
+  ],
+  "summary": "Expanded and confirmed [Library Import v1](/docs/?scope=studio&doc=library-import) as a permissive preview-first spec for staged JSON and JSONL data files returned from Library export or external review workflows.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 284,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** planned\n\n**Area:** Library / Studio data import\n\n**Summary:**\nExpanded and confirmed [Library Import v1](/docs/?scope=studio&doc=library-import) as a permissive preview-first spec for staged JSON and JSONL data files returned from Library export or external review workflows.\n\n**Reason:**\nThe export workflow now produces local data artifacts, but the next step needs a safe review path before external edits, summaries, or structure recommendations can affect canonical Library source.\n\n**Changes:**\nThe spec now defines the product boundary, confirmed staging and preview roots, supported input types, document-centric Markdown preview behavior, report issue categories, Studio workflow, v1 decisions, remaining open questions, and initial implementation tasks.\nThe confirmed v1 imports from `var/docs/import-staging/library/`, writes one preview Markdown file per imported document under `var/docs/import-preview/library/`, keeps diagnostics in the Studio report, and does not perform apply-style flight checks.\nRelationship imports are the v1 exception to document-centric previews: one staged relationships file produces one Markdown preview of the whole candidate tree.\n[Library](/docs/?scope=studio&doc=library) now links to the import-preview spec from its candidate phases.\n\n**Files changed:**\n\n- [Library Import v1](/docs/?scope=studio&doc=library-import)\n- [Library](/docs/?scope=studio&doc=library)\n\n**Impact:**\nLibrary import work now has a conservative v1 direction: parse and preview staged data first, accept imperfect files for inspection, and defer canonical source writes until apply behavior is explicitly scoped and validated.",
+  "migration": {
+    "confidence": "low",
+    "warnings": []
+  },
+  "area": "Library / Studio data import",
+  "effect": "The export workflow now produces local data artifacts, but the next step needs a safe review path before external edits, summaries, or structure recommendations can affect canonical Library source.",
+  "related_docs": [
+    "library-import",
+    "library"
+  ],
+  "related_files": [
+    "var/docs/import-staging/library/",
+    "var/docs/import-preview/library/"
+  ]
+}

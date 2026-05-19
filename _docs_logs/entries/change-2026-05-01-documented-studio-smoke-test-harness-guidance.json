@@ -1,0 +1,47 @@
+{
+  "id": "change-2026-05-01-documented-studio-smoke-test-harness-guidance",
+  "date": "2026-05-01",
+  "title": "Documented Studio smoke-test harness guidance",
+  "status": "implemented",
+  "type": "documentation",
+  "domains": [
+    "docs-viewer",
+    "workflow"
+  ],
+  "summary": "Added a dedicated Studio smoke-testing reference, recorded future Studio ready-state work as a separate change request, and updated `AGENTS.md` so future Codex sessions use the same Playwright interaction rules.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 1730,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / testing\n\n**Summary:**\nAdded a dedicated Studio smoke-testing reference, recorded future Studio ready-state work as a separate change request, and updated `AGENTS.md` so future Codex sessions use the same Playwright interaction rules.\n\n**Reason:**\nRecent Work editor smoke tests showed that async-rendered Studio pages can create false pointer-click failures when tests interact before the route has settled. The immediate need is a stable harness rule; the broader product improvement belongs in its own request.\n\n**Effect:**\nCodex-run Studio smoke tests now have documented guidance for route readiness waits, hit-testable pointer clicks, and setup-only DOM activation. The separate ready-state request tracks a future shared `data-studio-ready` / `data-studio-busy` contract.\n\n**Affected files/docs:**\n\n- `AGENTS.md`\n- [Studio](/docs/?scope=studio&doc=studio)\n- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)\n- [Change Requests](/docs/?scope=studio&doc=change-requests)\n- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / testing",
+  "effect": "Codex-run Studio smoke tests now have documented guidance for route readiness waits, hit-testable pointer clicks, and setup-only DOM activation. The separate ready-state request tracks a future shared `data-studio-ready` / `data-studio-busy` contract.",
+  "related_docs": [
+    "studio",
+    "studio-smoke-testing",
+    "change-requests",
+    "site-request-studio-ready-state-contract",
+    "site-change-log"
+  ],
+  "related_files": [
+    "AGENTS.md"
+  ],
+  "change_request_doc_id": "site-request-studio-ready-state-contract",
+  "affected": {
+    "files": [
+      "AGENTS.md"
+    ],
+    "docs": [
+      "studio",
+      "studio-smoke-testing",
+      "change-requests",
+      "site-request-studio-ready-state-contract",
+      "site-change-log"
+    ]
+  }
+}

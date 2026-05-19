@@ -1,0 +1,39 @@
+{
+  "id": "change-2026-05-02-verified-catalogue-media-section-migration-and-runtime-output",
+  "date": "2026-05-02",
+  "title": "Verified catalogue media-section migration and runtime output",
+  "status": "implemented",
+  "type": "verification",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "data-models",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Completed the final verification pass for the catalogue media-section migration across source data, generated work JSON, focused lookup files, Studio create/edit payloads, and the Jekyll build path.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 1093,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue build / Studio verification\n\n**Summary:**\nCompleted the final verification pass for the catalogue media-section migration across source data, generated work JSON, focused lookup files, Studio create/edit payloads, and the Jekyll build path.\n\n**Reason:**\nThe migrated detail schema affects canonical source records, generated public work JSON, Studio editing payloads, and field-aware build scoping, so closeout needed evidence that the runtime contract stayed stable after the write migration.\n\n**Effect:**\nThe migration dry-run now reports no pending source changes, target source validation passes, representative catalogue build previews select the expected outputs, and generated runtime payloads preserve existing section labels without carrying legacy detail `project_subfolder`.\n\n**Affected files/docs:**\n\n- [Catalogue Media Section Schema Request](/docs/?scope=studio&doc=site-request-catalogue-media-section-schema)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "catalogue build / Studio verification",
+  "effect": "The migration dry-run now reports no pending source changes, target source validation passes, representative catalogue build previews select the expected outputs, and generated runtime payloads preserve existing section labels without carrying legacy detail `project_subfolder`.",
+  "related_docs": [
+    "site-request-catalogue-media-section-schema",
+    "site-change-log"
+  ],
+  "change_request_doc_id": "site-request-catalogue-media-section-schema",
+  "affected": {
+    "docs": [
+      "site-request-catalogue-media-section-schema",
+      "site-change-log"
+    ]
+  }
+}

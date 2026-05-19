@@ -107,7 +107,7 @@ def test_build_records_suffixes_duplicate_generated_ids() -> None:
     assert "duplicate generated id; numeric suffix added" in records[1]["migration"]["warnings"]
 
 
-def test_write_jsonl_records_groups_by_month_and_refuses_existing_output() -> None:
+def test_write_entry_records_creates_per_entry_json_and_refuses_existing_output() -> None:
     records = [
         {
             "id": "change-2026-05-19-one",
@@ -134,17 +134,57 @@ def test_write_jsonl_records_groups_by_month_and_refuses_existing_output() -> No
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         (root / "_config.yml").write_text("title: test\n", encoding="utf-8")
-        written = migration.write_jsonl_records(root, records)
+        written = migration.write_entry_records(root, records)
         try:
-            migration.write_jsonl_records(root, records)
+            migration.write_entry_records(root, records)
         except FileExistsError as exc:
             error = str(exc)
         else:
             error = ""
 
-        may = root / "_docs_logs" / "entries" / "2026-05.jsonl"
-        april = root / "_docs_logs" / "entries" / "2026-04.jsonl"
-        assert written == ["_docs_logs/entries/2026-04.jsonl", "_docs_logs/entries/2026-05.jsonl"]
-        assert may.read_text(encoding="utf-8").count("\n") == 1
-        assert april.read_text(encoding="utf-8").count("\n") == 1
+        may = root / "_docs_logs" / "entries" / "change-2026-05-19-one.json"
+        april = root / "_docs_logs" / "entries" / "change-2026-04-30-two.json"
+        assert written == [
+            "_docs_logs/entries/change-2026-04-30-two.json",
+            "_docs_logs/entries/change-2026-05-19-one.json",
+        ]
+        assert may.exists()
+        assert april.exists()
         assert "already exists" in error
+
+
+def test_write_entry_records_rejects_duplicate_ids() -> None:
+    records = [
+        {
+            "id": "change-2026-05-19-one",
+            "date": "2026-05-19",
+            "title": "One",
+            "status": "implemented",
+            "type": "implementation",
+            "domains": ["site"],
+            "summary": "One.",
+            "source": {"file": "_docs/site-change-log.md"},
+        },
+        {
+            "id": "change-2026-05-19-one",
+            "date": "2026-05-19",
+            "title": "One Copy",
+            "status": "implemented",
+            "type": "implementation",
+            "domains": ["site"],
+            "summary": "One copy.",
+            "source": {"file": "_docs/site-change-log.md"},
+        },
+    ]
+
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        (root / "_config.yml").write_text("title: test\n", encoding="utf-8")
+        try:
+            migration.write_entry_records(root, records)
+        except ValueError as exc:
+            error = str(exc)
+        else:
+            error = ""
+
+    assert "duplicate generated ids" in error

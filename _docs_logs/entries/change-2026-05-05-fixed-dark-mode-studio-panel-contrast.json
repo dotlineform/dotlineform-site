@@ -1,0 +1,30 @@
+{
+  "id": "change-2026-05-05-fixed-dark-mode-studio-panel-contrast",
+  "date": "2026-05-05",
+  "title": "Fixed dark-mode Studio panel contrast",
+  "status": "implemented",
+  "type": "bugfix",
+  "domains": [
+    "studio-ui"
+  ],
+  "summary": "Studio panels now switch their surface, border, muted text, default-value, and control tokens together in dark mode. This prevents light panels from combining with dark-mode muted text on routes such as `/studio/import/`.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3518,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / UI\n\n**Summary:**\nStudio panels now switch their surface, border, muted text, default-value, and control tokens together in dark mode.\nThis prevents light panels from combining with dark-mode muted text on routes such as `/studio/import/`.\n\n**Reason:**\nThe previous token mix left field labels and disabled controls nearly invisible in dark mode because the panel stayed white while muted text became pale grey.\n\n**Files changed:**\n\n- `assets/studio/css/studio.css`\n- [Panel Primitive](/docs/?scope=studio&doc=ui-primitive-panel)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n\n**Impact:**\nShared Studio panels and controls have coherent dark-mode contrast instead of relying on route-local overrides.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / UI",
+  "effect": "The previous token mix left field labels and disabled controls nearly invisible in dark mode because the panel stayed white while muted text became pale grey.",
+  "related_docs": [
+    "ui-primitive-panel",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "assets/studio/css/studio.css"
+  ]
+}

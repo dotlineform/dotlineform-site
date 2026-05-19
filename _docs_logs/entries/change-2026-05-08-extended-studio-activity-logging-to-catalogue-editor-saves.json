@@ -1,0 +1,39 @@
+{
+  "id": "change-2026-05-08-extended-studio-activity-logging-to-catalogue-editor-saves",
+  "date": "2026-05-08",
+  "title": "Extended Studio activity logging to catalogue editor saves",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "catalogue",
+    "scripts",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Completed Batch A for unified Studio activity logging by wiring single-record save actions on the work, work detail, series, and moment catalogue editors into the structured activity contract and feed.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2736,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / activity reporting\n\n**Summary:**\nCompleted Batch A for unified Studio activity logging by wiring single-record save actions on the work, work detail, series, and moment catalogue editors into the structured activity contract and feed.\n\n**Files changed:**\n\n- `assets/studio/data/activity_contract.json`\n- `scripts/studio/catalogue_write_server.py`\n- `assets/studio/js/catalogue-work-detail-editor.js`\n- `assets/studio/js/catalogue-series-editor.js`\n- `assets/studio/js/catalogue-moment-editor.js`\n- [Studio Unified Activity Log Request](/docs/?scope=studio&doc=site-request-studio-unified-activity-log)\n- [Activity Log Coverage Inventory](/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n\n**Impact:**\nSingle metadata saves now produce correlated activity rows for canonical source writes, lookup refreshes where they actually occur, published-data rebuilds when attempted, and catalogue search rebuilds when attempted.\nBatch findings are recorded in the request so later create/delete/publication coverage can reuse the same approach without over-expanding this slice.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Studio / activity reporting",
+  "related_docs": [
+    "site-request-studio-unified-activity-log",
+    "site-request-studio-unified-activity-log-inventory",
+    "site-change-log"
+  ],
+  "related_files": [
+    "assets/studio/data/activity_contract.json",
+    "scripts/studio/catalogue_write_server.py",
+    "assets/studio/js/catalogue-work-detail-editor.js",
+    "assets/studio/js/catalogue-series-editor.js",
+    "assets/studio/js/catalogue-moment-editor.js"
+  ]
+}

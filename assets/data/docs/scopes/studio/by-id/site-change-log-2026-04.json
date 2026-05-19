@@ -11,5 +11,5 @@
   "viewable": true,
   "source_path": "site-change-log-2026-04.md",
   "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-04",
-  "content_html": "<h1 id=\"site-change-log-archive-april-2026\">Site Change Log Archive: April 2026</h1>\n\n<p>April 2026 long-form entries have been migrated to structured docs-log records.</p>\n\n<p>Use the manage-only <a href=\"/docs/?scope=studio&doc=change-history\">Change History</a> report for detailed browsing.</p>\n\n<p>Source records:</p>\n\n<ul>\n  <li><code class=\"language-plaintext highlighter-rouge\">_docs_logs/entries/2026-04.jsonl</code></li>\n</ul>\n\n<p>Return to <a href=\"/docs/?scope=studio&doc=site-change-log\">Site Change Log</a>.</p>\n"
+  "content_html": "<h1 id=\"site-change-log-archive-april-2026\">Site Change Log Archive: April 2026</h1>\n\n<p>April 2026 long-form entries have been migrated to structured docs-log records.</p>\n\n<p>Use the manage-only <a href=\"/docs/?scope=studio&doc=change-history\">Change History</a> report for detailed browsing.</p>\n\n<p>Source records now live as flat per-entry JSON files under <code class=\"language-plaintext highlighter-rouge\">_docs_logs/entries/</code>.</p>\n\n<p>Return to <a href=\"/docs/?scope=studio&doc=site-change-log\">Site Change Log</a>.</p>\n"
 }

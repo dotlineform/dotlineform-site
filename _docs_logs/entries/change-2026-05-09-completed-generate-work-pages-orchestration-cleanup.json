@@ -1,0 +1,32 @@
+{
+  "id": "change-2026-05-09-completed-generate-work-pages-orchestration-cleanup",
+  "date": "2026-05-09",
+  "title": "Completed generate-work-pages orchestration cleanup",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "catalogue",
+    "scripts",
+    "data-models"
+  ],
+  "summary": "Implemented Slice 7 of the generate-work-pages structural review. `scripts/generate_work_pages.py` now has a smaller orchestration surface after removing retired Studio-series route generation, removing unused legacy helper functions, and consolidating repeated aggregate JSON version/write decisions behind one generator-local helper.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1767,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue generation / scripts / maintainability\n\n**Summary:**\nImplemented Slice 7 of the generate-work-pages structural review.\n`scripts/generate_work_pages.py` now has a smaller orchestration surface after removing retired Studio-series route generation, removing unused legacy helper functions, and consolidating repeated aggregate JSON version/write decisions behind one generator-local helper.\n\n**Files changed/docs:**\n\n- `scripts/generate_work_pages.py`\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n- [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)\n\n**Impact:**\nThe supported catalogue build contract, generated schemas, output paths, `--only`, `--refresh-published`, `--force`, and dry-run/write behavior are unchanged.\nThe generator remains responsible for CLI/path binding, Markdown rendering, source write-back, and artifact-specific reporting while extracted modules own the pure catalogue generation rules.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "catalogue generation / scripts / maintainability",
+  "related_docs": [
+    "scripts-generate-work-pages",
+    "site-request-script-structural-review-generate-work-pages"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py"
+  ],
+  "change_request_doc_id": "site-request-script-structural-review-generate-work-pages"
+}

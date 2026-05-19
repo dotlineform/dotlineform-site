@@ -1,0 +1,51 @@
+{
+  "id": "change-2026-04-22-aligned-live-docs-management-writes-with-same-scope-docs-search-rebuilds",
+  "date": "2026-04-22",
+  "title": "Aligned live docs-management writes with same-scope docs-search rebuilds",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "build",
+    "scripts",
+    "workflow",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Updated the local docs-management flow so successful docs writes now rebuild same-scope docs search consistently, and deprecated the older Studio tag-server `/build-docs` path from the live docs workflow.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 634,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** docs-domain search build flow\n\n**Summary:**  \nUpdated the local docs-management flow so successful docs writes now rebuild same-scope docs search consistently, and deprecated the older Studio tag-server `/build-docs` path from the live docs workflow.\n\n**Reason:**  \nThe docs viewer and docs search are separate generated artifacts, but live docs-management actions should not leave them out of sync or depend on the operator remembering a second rebuild step.\n\n**Effect:**  \nDocs create, move, archive, delete, metadata edit, and explicit docs rebuild actions now keep the current scope's docs-viewer payloads and docs-search artifact aligned through the docs-management service. Low-level manual commands remain split as `build_docs.rb` and `build_search.rb`.\n\n**Affected files/docs:**  \n- `scripts/docs/docs_management_server.py`\n- `scripts/studio/tag_write_server.py`\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "docs-domain search build flow",
+  "effect": "Docs create, move, archive, delete, metadata edit, and explicit docs rebuild actions now keep the current scope's docs-viewer payloads and docs-search artifact aligned through the docs-management service. Low-level manual commands remain split as `build_docs.rb` and `build_search.rb`.",
+  "related_docs": [
+    "search-build-pipeline",
+    "docs-viewer-management",
+    "scripts-docs-management-server"
+  ],
+  "related_files": [
+    "scripts/docs/docs_management_server.py",
+    "scripts/studio/tag_write_server.py",
+    "build_docs.rb",
+    "build_search.rb"
+  ],
+  "affected": {
+    "files": [
+      "scripts/docs/docs_management_server.py",
+      "scripts/studio/tag_write_server.py"
+    ],
+    "docs": [
+      "search-build-pipeline",
+      "docs-viewer-management",
+      "scripts-docs-management-server"
+    ]
+  }
+}

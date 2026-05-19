@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-03-added-library-import-verification-to-check-profiles",
+  "date": "2026-05-03",
+  "title": "Added Library import verification to check profiles",
+  "status": "implemented",
+  "type": "verification",
+  "domains": [
+    "library",
+    "scripts"
+  ],
+  "summary": "Completed Library import Task 8 by adding the retained Library import route smoke test to the `studio-smoke` check profile.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 69,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Library / Studio data import / verification\n\n**Summary:**\nCompleted Library import Task 8 by adding the retained Library import route smoke test to the `studio-smoke` check profile.\n\n**Reason:**\nParser, renderer, and service verification existed, but the Studio route smoke test still needed to be part of the standard retained check runner.\n\n**Changes:**\n`tests/smoke/data_import.py` can now serve a built site root through a temporary loopback HTTP server for repeatable route checks.\n`./scripts/run_checks.py --profile studio-smoke` now builds the temporary Jekyll site and runs the Library import smoke with the docs-management service blocked.\n\n**Files changed:**\n\n- `tests/smoke/data_import.py`\n- `scripts/run_checks.py`\n- [Library Import v1](/docs/?scope=studio&doc=library-import)\n- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)\n- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)\n- [Testing](/docs/?scope=studio&doc=testing)\n- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)\n\n**Impact:**\nLibrary import v1 now has retained verification for parser behavior, service handlers, and the Studio route unavailable-service state.\nThe smoke profile now requires Playwright browser availability, so sandboxed runs may need the same browser permission handling as other Studio smoke tests.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Library / Studio data import / verification",
+  "effect": "Parser, renderer, and service verification existed, but the Studio route smoke test still needed to be part of the standard retained check runner.",
+  "related_docs": [
+    "library-import",
+    "scripts-docs-import",
+    "scripts-run-checks",
+    "testing",
+    "studio-smoke-testing"
+  ],
+  "related_files": [
+    "tests/smoke/data_import.py",
+    "scripts/run_checks.py"
+  ]
+}

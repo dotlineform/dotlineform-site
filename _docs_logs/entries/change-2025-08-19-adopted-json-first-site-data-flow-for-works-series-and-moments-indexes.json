@@ -1,0 +1,51 @@
+{
+  "id": "change-2025-08-19-adopted-json-first-site-data-flow-for-works-series-and-moments-indexes",
+  "date": "2025-08-19",
+  "title": "Adopted JSON-first site data flow for works, series, and moments indexes",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Shifted the main site toward generated JSON artifacts as the primary runtime data layer for works, series, and moments, with lighter collection stubs and index-driven runtime behaviour.",
+  "source": {
+    "file": "_docs/site-change-log-2026-03-and-earlier.md",
+    "line": 288,
+    "archive": "2026-03-and-earlier"
+  },
+  "body": "**Status:** implemented\n\n**Area:** build pipeline\n\n**Summary:**  \nShifted the main site toward generated JSON artifacts as the primary runtime data layer for works, series, and moments, with lighter collection stubs and index-driven runtime behaviour.\n\n**Reason:**  \nThe site needed a more consistent and maintainable data flow than page-heavy or mixed-source runtime patterns.\n\n**Effect:**  \nThe site now relies more heavily on generated JSON contracts and index artifacts, which simplified runtime logic and created a clearer basis for later features such as Studio tooling and search.\n\n**Affected files/docs:**  \n- `scripts/generate_work_pages.py`\n- `assets/data/works_index.json`\n- `assets/data/series_index.json`\n- `assets/data/moments_index.json`\n- [Data Flow](/docs/?scope=studio&doc=data-flow)\n- [Scripts](/docs/?scope=studio&doc=scripts)\n\n**Notes:**  \nThis entry summarizes the broader architectural shift rather than one single commit.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "build pipeline",
+  "effect": "The site now relies more heavily on generated JSON contracts and index artifacts, which simplified runtime logic and created a clearer basis for later features such as Studio tooling and search.",
+  "related_docs": [
+    "data-flow",
+    "scripts"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "assets/data/works_index.json",
+    "assets/data/series_index.json",
+    "assets/data/moments_index.json"
+  ],
+  "affected": {
+    "files": [
+      "scripts/generate_work_pages.py",
+      "assets/data/works_index.json",
+      "assets/data/series_index.json",
+      "assets/data/moments_index.json"
+    ],
+    "docs": [
+      "data-flow",
+      "scripts"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "id": "change-2026-05-05-made-library-import-export-routes-scope-aware",
+  "date": "2026-05-05",
+  "title": "Made Library import/export routes scope-aware",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "library",
+    "studio-ui",
+    "scripts",
+    "data-models",
+    "config",
+    "workflow",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "`/studio/export/` and `/studio/import/` now expose a scope selector for `library`, `catalogue`, and `analytics`. Library remains the default scope. Export config filtering now uses the selected scope and handles future scopes with no enabled configs without failing the page. Import staged-file listing and preview generation now use `var/docs/import-staging/<scope>/` and `var/docs/import-preview/<scope>/` for the supported workflow scopes. Source-write apply actions remain enabled only for Library.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3648,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Data workflows\n\n**Summary:**\n`/studio/export/` and `/studio/import/` now expose a scope selector for `library`, `catalogue`, and `analytics`.\nLibrary remains the default scope.\nExport config filtering now uses the selected scope and handles future scopes with no enabled configs without failing the page.\nImport staged-file listing and preview generation now use `var/docs/import-staging/<scope>/` and `var/docs/import-preview/<scope>/` for the supported workflow scopes.\nSource-write apply actions remain enabled only for Library.\n\n**Reason:**\nCatalogue and Analytics need the same export/stage/preview workflow shape for future LLM review work, but their record shapes, config details, and write actions are not defined yet.\nThe shared page and service infrastructure can support those scopes before the scope-specific contracts are designed.\n\n**Files changed:**\n\n- `studio/export/index.md`\n- `studio/import/index.md`\n- `assets/studio/js/data-export.js`\n- `assets/studio/js/data-import.js`\n- `assets/studio/css/studio.css`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- `scripts/docs/docs_import.py`\n- `scripts/docs/docs_management_server.py`\n- `tests/python/test_docs_import_service.py`\n- [Library Export](/docs/?scope=studio&doc=library-export)\n- [Library Import](/docs/?scope=studio&doc=library-import)\n- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n\n**Impact:**\nThe workflow shell is ready for Catalogue and Analytics configs.\nUntil those configs and source-write contracts exist, non-Library export scopes show no enabled configs and non-Library import scopes support staged preview only.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Data workflows",
+  "effect": "Catalogue and Analytics need the same export/stage/preview workflow shape for future LLM review work, but their record shapes, config details, and write actions are not defined yet. The shared page and service infrastructure can support those scopes before the scope-specific contracts are designed.",
+  "related_docs": [
+    "library-export",
+    "library-import",
+    "scripts-docs-import",
+    "scripts-docs-management-server",
+    "config-studio-config-json",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "var/docs/import-staging/<scope>/",
+    "var/docs/import-preview/<scope>/",
+    "studio/export/index.md",
+    "studio/import/index.md",
+    "assets/studio/js/data-export.js",
+    "assets/studio/js/data-import.js",
+    "assets/studio/css/studio.css",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js",
+    "scripts/docs/docs_import.py",
+    "scripts/docs/docs_management_server.py",
+    "tests/python/test_docs_import_service.py"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "change-2026-04-24-added-desktop-docs-viewer-index-collapse",
+  "date": "2026-04-24",
+  "title": "Added desktop Docs Viewer index collapse",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "studio-ui"
+  ],
+  "summary": "Added a shared desktop/tablet collapse control for the Docs Viewer index panel.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1929,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer\n\n**Summary:**\nAdded a shared desktop/tablet collapse control for the Docs Viewer index panel.\n\n**Reason:**\nLonger Library docs needed more available reading width while keeping the index panel discoverable and easy to restore.\n\n**Effect:**\nThe shared Docs Viewer now shows a small index-panel toggle on non-mobile layouts. Collapsing the panel shrinks the left column to a narrow rail, hides the tree, widens the capped Docs Viewer reading measure, and leaves the control visible for expansion. The document metadata path now shows ancestor docs only instead of repeating the current title above the H1. The collapsed state is stored per viewer scope. Mobile keeps the existing stacked layout and does not show the control.\n\n**Affected files/docs:**\n\n- `_includes/docs_viewer_shell.html`\n- `assets/css/main.css`\n- `assets/js/docs-viewer.js`\n- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)\n- [UI Framework](/docs/?scope=studio&doc=ui-framework)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer",
+  "effect": "The shared Docs Viewer now shows a small index-panel toggle on non-mobile layouts. Collapsing the panel shrinks the left column to a narrow rail, hides the tree, widens the capped Docs Viewer reading measure, and leaves the control visible for expansion. The document metadata path now shows ancestor docs only instead of repeating the current title above the H1. The collapsed state is stored per viewer scope. Mobile keeps the existing stacked layout and does not show the control.",
+  "related_docs": [
+    "docs-viewer-overview",
+    "ui-framework"
+  ],
+  "related_files": [
+    "_includes/docs_viewer_shell.html",
+    "assets/css/main.css",
+    "assets/js/docs-viewer.js"
+  ],
+  "affected": {
+    "files": [
+      "_includes/docs_viewer_shell.html",
+      "assets/css/main.css",
+      "assets/js/docs-viewer.js"
+    ],
+    "docs": [
+      "docs-viewer-overview",
+      "ui-framework"
+    ]
+  }
+}

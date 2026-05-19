@@ -1,0 +1,51 @@
+{
+  "id": "change-2026-04-25-clarified-search-build-targeted-policy-config",
+  "date": "2026-04-25",
+  "title": "Clarified search build targeted policy config",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "config"
+  ],
+  "summary": "Replaced boolean search build targeted flags with explicit `targeted_policy` values.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 331,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** search build architecture\n\n**Summary:**\nReplaced boolean search build targeted flags with explicit `targeted_policy` values.\n\n**Reason:**\nCatalogue targeted search needs to support a future additive-only slice without implying that all catalogue changes are safe for targeted updates. A true/false flag was too broad for that distinction.\n\n**Effect:**\n`scripts/search/build_config.json` now uses `targeted_policy` values such as `record_update`, `additive_only`, and `full_rebuild`. `scripts/build_search.rb` validates those policy values, rejects obsolete boolean `targeted` flags, and requires `targeted_operations` for targetable policies. This made the later additive catalogue slice explicit instead of relying on a broad true/false flag.\n\n**Affected files/docs:**\n\n- `scripts/search/build_config.json`\n- `scripts/build_search.rb`\n- [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json)\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan)\n- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "search build architecture",
+  "effect": "`scripts/search/build_config.json` now uses `targeted_policy` values such as `record_update`, `additive_only`, and `full_rebuild`. `scripts/build_search.rb` validates those policy values, rejects obsolete boolean `targeted` flags, and requires `targeted_operations` for targetable policies. This made the later additive catalogue slice explicit instead of relying on a broad true/false flag.",
+  "related_docs": [
+    "config-search-build-json",
+    "search-build-pipeline",
+    "search-catalogue-targeted-plan",
+    "search-validation-checklist"
+  ],
+  "related_files": [
+    "scripts/search/build_config.json",
+    "scripts/build_search.rb"
+  ],
+  "affected": {
+    "files": [
+      "scripts/search/build_config.json",
+      "scripts/build_search.rb"
+    ],
+    "docs": [
+      "config-search-build-json",
+      "search-build-pipeline",
+      "search-catalogue-targeted-plan",
+      "search-validation-checklist"
+    ]
+  }
+}

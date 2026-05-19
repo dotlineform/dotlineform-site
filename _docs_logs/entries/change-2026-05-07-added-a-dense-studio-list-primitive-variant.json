@@ -1,0 +1,38 @@
+{
+  "id": "change-2026-05-07-added-a-dense-studio-list-primitive-variant",
+  "date": "2026-05-07",
+  "title": "Added a dense Studio list primitive variant",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "search",
+    "catalogue",
+    "studio-ui",
+    "analytics"
+  ],
+  "summary": "Added `tagStudioList--dense` as a shared list primitive variant based on the `/studio/studio-works/` scan-table design.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3066,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio UI / List Primitive\n\n**Summary:**\nAdded `tagStudioList--dense` as a shared list primitive variant based on the `/studio/studio-works/` scan-table design.\n\n**Reason:**\nThe works list density is useful beyond the works route, but copying `worksList__*` classes would mix page-specific semantics into unrelated Studio pages.\n\n**Files changed:**\n\n- `assets/studio/css/studio.css`\n- `studio/ui-catalogue/list/index.md`\n- `_includes/studio_ui_catalogue_list_demo.html`\n- `_includes/ui_catalogue_notes/list.md`\n- [List Primitive](/docs/?scope=studio&doc=ui-primitive-list)\n- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)\n- [Studio UI Rules](/docs/?scope=studio&doc=studio-ui-rules)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n\n**Impact:**\nStudio pages can now opt into a dense sortable list with `--text-xs` type, no row dividers, and a bold title column while keeping their own column templates and row semantics.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio UI / List Primitive",
+  "effect": "The works list density is useful beyond the works route, but copying `worksList__*` classes would mix page-specific semantics into unrelated Studio pages.",
+  "related_docs": [
+    "ui-primitive-list",
+    "studio-ui-framework",
+    "studio-ui-rules",
+    "site-change-log"
+  ],
+  "related_files": [
+    "assets/studio/css/studio.css",
+    "studio/ui-catalogue/list/index.md",
+    "_includes/studio_ui_catalogue_list_demo.html",
+    "_includes/ui_catalogue_notes/list.md"
+  ]
+}

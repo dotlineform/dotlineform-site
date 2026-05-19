@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-03-switched-library-export-filename-timestamps-to-local-time",
+  "date": "2026-05-03",
+  "title": "Switched Library export filename timestamps to local time",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "library",
+    "scripts",
+    "config",
+    "runtime"
+  ],
+  "summary": "Changed Library export filename timestamps to use the local runtime timezone while keeping export metadata timestamps in UTC.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 366,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Library / Studio docs export\n\n**Summary:**\nChanged Library export filename timestamps to use the local runtime timezone while keeping export metadata timestamps in UTC.\n\n**Reason:**\nStudio-facing output filenames should match the operator's local clock. The previous UTC filename timestamp appeared one hour behind local time during British Summer Time.\n\n**Changes:**\n`./scripts/docs/docs_export.py` now separates UTC `generated_at` metadata from the local timestamp used in `{timestamp}` filename substitution.\nDocs now call out that `output.timestamp_format` formats the local filename timestamp, not the UTC metadata timestamp.\n\n**Files changed:**\n\n- `scripts/docs/docs_export.py`\n- `tests/python/test_docs_export.py`\n- [Library Export v1](/docs/?scope=studio&doc=library-export)\n- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)\n- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)\n\n**Impact:**\nExport paths shown in Studio now align with the local machine clock, while export payload metadata remains timezone-stable.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Library / Studio docs export",
+  "effect": "Studio-facing output filenames should match the operator's local clock. The previous UTC filename timestamp appeared one hour behind local time during British Summer Time.",
+  "related_docs": [
+    "library-export",
+    "scripts-docs-export",
+    "config-library-export-configs"
+  ],
+  "related_files": [
+    "/scripts/docs/docs_export.py",
+    "scripts/docs/docs_export.py",
+    "tests/python/test_docs_export.py"
+  ]
+}

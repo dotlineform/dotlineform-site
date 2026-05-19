@@ -1,0 +1,32 @@
+{
+  "id": "change-2026-05-09-closed-script-structural-review-request",
+  "date": "2026-05-09",
+  "title": "Closed script structural review request",
+  "status": "unknown",
+  "type": "documentation",
+  "domains": [
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Closed the parent script structural review request after completing the five high-value tracks: catalogue write server, docs management server, tag write server, generate work pages, and catalogue JSON build. The lower-priority audit and docs import/export candidates remain documented as deferred watch-list items rather than active implementation work.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1652,
+    "archive": "current"
+  },
+  "body": "**Status:** done\n\n**Area:** scripts / maintainability / planning\n\n**Summary:**\nClosed the parent script structural review request after completing the five high-value tracks: catalogue write server, docs management server, tag write server, generate work pages, and catalogue JSON build.\nThe lower-priority audit and docs import/export candidates remain documented as deferred watch-list items rather than active implementation work.\n\n**Files changed/docs:**\n\n- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)\n- [Change Requests](/docs/?scope=studio&doc=change-requests)\n\n**Impact:**\nThe current structural-review queue is closed without starting broad low-priority refactors.\nFuture work should use a narrower request if one of the deferred candidates develops concrete maintenance pain or new requirements.",
+  "migration": {
+    "confidence": "low",
+    "warnings": []
+  },
+  "area": "scripts / maintainability / planning",
+  "related_docs": [
+    "site-request-script-structural-review",
+    "change-requests"
+  ],
+  "change_request_doc_id": "site-request-script-structural-review"
+}

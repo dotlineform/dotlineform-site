@@ -1,0 +1,44 @@
+{
+  "id": "change-2026-05-06-stabilized-shared-data-export-import-routes",
+  "date": "2026-05-06",
+  "title": "Stabilized shared data export/import routes",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "search",
+    "library",
+    "studio-ui",
+    "data-models",
+    "config",
+    "workflow"
+  ],
+  "summary": "Moved the active Studio export/import shells to `/studio/export/` and `/studio/import/`. The browser modules, route-ready names, DOM ids, CSS classes, Studio config route keys, and UI text namespaces now use shared `data_export` and `data_import` naming. The Library-specific export config file remains Library-named because it is the current documents-adapter config contract.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3316,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Data workflows\n\n**Summary:**\nMoved the active Studio export/import shells to `/studio/export/` and `/studio/import/`.\nThe browser modules, route-ready names, DOM ids, CSS classes, Studio config route keys, and UI text namespaces now use shared `data_export` and `data_import` naming.\nThe Library-specific export config file remains Library-named because it is the current documents-adapter config contract.\n\n**Reason:**\nThe shared route shell should be the stable target before Catalogue and Analytics workflow requirements grow.\nKeeping active routes neutral avoids preserving the old Library route names as compatibility aliases while still leaving Library domain docs and adapter configs explicit.\n\n**Files changed:**\n\n- [Studio Data Export](/docs/?scope=studio&doc=studio-data-export)\n- [Studio Data Import](/docs/?scope=studio&doc=studio-data-import)\n- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)\n- [Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)\n- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)\n- `studio/export/index.md`\n- `studio/import/index.md`\n- `assets/studio/js/data-export.js`\n- `assets/studio/js/data-import.js`\n- `tests/smoke/data_export.py`\n- `tests/smoke/data_import.py`\n\n**Impact:**\nLibrary dashboard links and future Catalogue/Analytics dashboard links all target the same shared shell with `scope=...`.\nThe old `/studio/library-export/` and `/studio/library-import/` pages are removed rather than retained as aliases.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Data workflows",
+  "effect": "The shared route shell should be the stable target before Catalogue and Analytics workflow requirements grow. Keeping active routes neutral avoids preserving the old Library route names as compatibility aliases while still leaving Library domain docs and adapter configs explicit.",
+  "related_docs": [
+    "studio-data-export",
+    "studio-data-import",
+    "config-studio-config-json",
+    "config-studio-config-js",
+    "site-request-export-import-adapters"
+  ],
+  "related_files": [
+    "studio/export/index.md",
+    "studio/import/index.md",
+    "assets/studio/js/data-export.js",
+    "assets/studio/js/data-import.js",
+    "tests/smoke/data_export.py",
+    "tests/smoke/data_import.py"
+  ],
+  "change_request_doc_id": "site-request-export-import-adapters"
+}

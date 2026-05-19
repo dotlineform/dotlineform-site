@@ -1,0 +1,36 @@
+{
+  "id": "change-2026-03-30-defined-the-public-search-route-and-scope-led-ui-contract",
+  "date": "2026-03-30",
+  "title": "Defined the public search route and scope-led UI contract",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search"
+  ],
+  "summary": "Added a dedicated public-search contract doc that defines `/search/` as the shared public route, uses `scope` plus `q` as the URL contract, and establishes scope-owned page CTAs as the preferred public entry model.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 987,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** architecture\n\n**Summary:**  \nAdded a dedicated public-search contract doc that defines `/search/` as the shared public route, uses `scope` plus `q` as the URL contract, and establishes scope-owned page CTAs as the preferred public entry model.\n\n**Reason:**  \nSearch is about to grow beyond the current Studio-first catalogue scope. The public route and UI model needed to be clarified before a larger modular refactor adds domain-specific search artifacts and policy/config.\n\n**Effect:**  \nThe search docs now explicitly prefer a scope-led public model such as `/search/?scope=catalogue&q=...`, reserve future scope names such as `studio` and `library`, and avoid an ambiguous top-level public nav item called `search` as the default interaction pattern.\n\n**Affected files/docs:**  \n- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)\n- [Search](/docs/?scope=studio&doc=search)\n- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)\n\n**Notes:**  \nThis is a documentation-level contract decision. The public `/search/` route and the modular domain search architecture are not implemented yet.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "architecture",
+  "effect": "The search docs now explicitly prefer a scope-led public model such as `/search/?scope=catalogue&q=...`, reserve future scope names such as `studio` and `library`, and avoid an ambiguous top-level public nav item called `search` as the default interaction pattern.",
+  "related_docs": [
+    "search-public-ui-contract",
+    "search",
+    "search-ui-behaviour"
+  ],
+  "affected": {
+    "docs": [
+      "search-public-ui-contract",
+      "search",
+      "search-ui-behaviour"
+    ]
+  }
+}

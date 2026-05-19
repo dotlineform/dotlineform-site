@@ -1,0 +1,33 @@
+{
+  "id": "change-2026-05-05-refined-search-dashboard-to-column-links",
+  "date": "2026-05-05",
+  "title": "Refined Search dashboard to column links",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "search",
+    "scripts",
+    "workflow"
+  ],
+  "summary": "`/studio/search/` now matches the compact dashboard structure used by the other Studio domain dashboards. The page keeps its metrics, removes intro and panel-card descriptive copy, and groups routes into `interface` and `documents` columns using the shared Column Links pattern. The documents column links to the Search plan and Search change log.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3573,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Search\n\n**Summary:**\n`/studio/search/` now matches the compact dashboard structure used by the other Studio domain dashboards.\nThe page keeps its metrics, removes intro and panel-card descriptive copy, and groups routes into `interface` and `documents` columns using the shared Column Links pattern.\nThe documents column links to the Search plan and Search change log.\n\n**Reason:**\nSearch is a Studio domain entry page.\nThe shared column-link pattern is a better fit for routine navigation than bespoke descriptive panels.\n\n**Files changed:**\n\n- `studio/search/index.md`\n- [Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)\n- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n\n**Impact:**\nCatalogue, Library, Analytics, and Search dashboards now share the same compact route-entry language.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Search",
+  "effect": "Search is a Studio domain entry page. The shared column-link pattern is a better fit for routine navigation than bespoke descriptive panels.",
+  "related_docs": [
+    "new-pipeline-refine-search",
+    "ui-pattern-column-links",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/search/index.md"
+  ]
+}

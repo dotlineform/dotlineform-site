@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-04-26-added-the-studio-list-primitive-catalogue-page",
+  "date": "2026-04-26",
+  "title": "Added the Studio list primitive catalogue page",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui"
+  ],
+  "summary": "Added a published list primitive page to the Studio UI catalogue covering simple, sortable, and thumbnail list versions, then tightened the contract for width, column sizing, row alignment, links, and primitive text scale.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1687,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio UI / design system\n\n**Summary:**\nAdded a published list primitive page to the Studio UI catalogue covering simple, sortable, and thumbnail list versions, then tightened the contract for width, column sizing, row alignment, links, and primitive text scale.\n\n**Reason:**\nStudio already had shared `tagStudioList__*` shell classes, but the reusable list contract was not visible as a live primitive. Defining the versions first gives future list mapping and cleanup work a clearer baseline.\n\n**Effect:**\nThe UI catalogue now links to `/studio/ui-catalogue/list/`, the shared list documentation names common cell, link, row-alignment, sort-indicator, width-wrapper, and thumbnail pieces, and the docs viewer explains when to use simple, sortable, or thumbnail list variants.\n\n**Affected files/docs:**\n\n- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)\n- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)\n- `studio/ui-catalogue/list/index.md`\n- `_includes/studio_ui_catalogue_list_demo.html`\n- `_includes/ui_catalogue_notes/list.md`\n- `assets/studio/css/studio.css`",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio UI / design system",
+  "effect": "The UI catalogue now links to `/studio/ui-catalogue/list/`, the shared list documentation names common cell, link, row-alignment, sort-indicator, width-wrapper, and thumbnail pieces, and the docs viewer explains when to use simple, sortable, or thumbnail list variants.",
+  "related_docs": [
+    "ui-catalogue",
+    "studio-ui-framework"
+  ],
+  "related_files": [
+    "studio/ui-catalogue/list/index.md",
+    "_includes/studio_ui_catalogue_list_demo.html",
+    "_includes/ui_catalogue_notes/list.md",
+    "assets/studio/css/studio.css"
+  ],
+  "affected": {
+    "files": [
+      "studio/ui-catalogue/list/index.md",
+      "_includes/studio_ui_catalogue_list_demo.html",
+      "_includes/ui_catalogue_notes/list.md",
+      "assets/studio/css/studio.css"
+    ],
+    "docs": [
+      "ui-catalogue",
+      "studio-ui-framework"
+    ]
+  }
+}

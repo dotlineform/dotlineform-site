@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-04-29-added-catalogue-publication-workflow-request",
+  "date": "2026-04-29",
+  "title": "Added catalogue publication workflow request",
+  "status": "unknown",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "workflow"
+  ],
+  "summary": "Added a catalogue-wide change request for replacing save-time publication checkboxes with explicit `Publish`, `Unpublish`, and `Rebuild` commands.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 704,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** specified\n\n**Area:** Studio / catalogue workflow\n\n**Summary:**\nAdded a catalogue-wide change request for replacing save-time publication checkboxes with explicit `Publish`, `Unpublish`, and `Rebuild` commands.\n\n**Reason:**\nThe series draft/publication issue showed that a checkbox is the wrong interaction model for changing public visibility. The same distinction between source save, public visibility, and runtime rebuild needs to be consistent across works, work details, series, and moments.\n\n**Effect:**\nThe new request defines the shared command vocabulary, record-family rules, implementation tasks, benefits, risks, and open questions for a future catalogue-wide publication workflow pass.\n\n**Affected files/docs:**\n\n- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)\n- [Change Requests](/docs/?scope=studio&doc=change-requests)",
+  "migration": {
+    "confidence": "low",
+    "warnings": []
+  },
+  "area": "Studio / catalogue workflow",
+  "effect": "The new request defines the shared command vocabulary, record-family rules, implementation tasks, benefits, risks, and open questions for a future catalogue-wide publication workflow pass.",
+  "related_docs": [
+    "site-request-catalogue-publication-workflow",
+    "change-requests"
+  ],
+  "change_request_doc_id": "site-request-catalogue-publication-workflow",
+  "affected": {
+    "docs": [
+      "site-request-catalogue-publication-workflow",
+      "change-requests"
+    ]
+  }
+}

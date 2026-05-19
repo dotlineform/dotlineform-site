@@ -1,0 +1,54 @@
+{
+  "id": "change-2026-04-26-switched-work-and-series-prose-generation-to-repo-local-sources",
+  "date": "2026-04-26",
+  "title": "Switched work and series prose generation to repo-local sources",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models"
+  ],
+  "summary": "Work and series prose rendering now uses ID-derived Markdown files under `_docs_catalogue/` while preserving the public JSON payload shape.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1552,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Catalogue pipeline\n\n**Summary:**\nWork and series prose rendering now uses ID-derived Markdown files under `_docs_catalogue/` while preserving the public JSON payload shape.\n\n**Reason:**\nThe staged import flow writes permanent repo-local prose sources, so publication needs to read those files instead of legacy external prose filename fields.\n\n**Effect:**\n`generate_work_pages.py` reads `_docs_catalogue/works/<work_id>.md` and `_docs_catalogue/series/<series_id>.md` when rendering `content_html`. Missing prose stays optional. Planner prose fingerprinting now watches those same repo-local files, and `work_prose_file` / `series_prose_file` no longer control public prose rendering.\n\n**Affected files/docs:**\n\n- `scripts/generate_work_pages.py`\n- `scripts/build_catalogue.py`\n- [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)\n- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Catalogue pipeline",
+  "effect": "`generate_work_pages.py` reads `_docs_catalogue/works/<work_id>.md` and `_docs_catalogue/series/<series_id>.md` when rendering `content_html`. Missing prose stays optional. Planner prose fingerprinting now watches those same repo-local files, and `work_prose_file` / `series_prose_file` no longer control public prose rendering.",
+  "related_docs": [
+    "site-request-work-series-prose-source-model",
+    "scripts-generate-work-pages",
+    "scripts-build-catalogue-json",
+    "data-models-catalogue"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "scripts/build_catalogue.py",
+    "_docs_catalogue/",
+    "generate_work_pages.py",
+    "_docs_catalogue/works/<work_id>.md",
+    "_docs_catalogue/series/<series_id>.md"
+  ],
+  "change_request_doc_id": "site-request-work-series-prose-source-model",
+  "affected": {
+    "files": [
+      "scripts/generate_work_pages.py",
+      "scripts/build_catalogue.py"
+    ],
+    "docs": [
+      "site-request-work-series-prose-source-model",
+      "scripts-generate-work-pages",
+      "scripts-build-catalogue-json",
+      "data-models-catalogue"
+    ]
+  }
+}

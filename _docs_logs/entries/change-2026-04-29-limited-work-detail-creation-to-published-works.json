@@ -1,0 +1,62 @@
+{
+  "id": "change-2026-04-29-limited-work-detail-creation-to-published-works",
+  "date": "2026-04-29",
+  "title": "Limited work detail creation to published works",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "studio-ui",
+    "scripts",
+    "data-models",
+    "config",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Changed work-detail creation so details can only be added after the parent work is published.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 164,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue detail workflow\n\n**Summary:**\nChanged work-detail creation so details can only be added after the parent work is published.\n\n**Reason:**\nSeries publish now bootstraps attached draft works. Details should remain a separate follow-up process rather than becoming another cascading publication level.\n\n**Effect:**\nDraft works no longer expose an active `new work detail` link. Work Detail new mode blocks draft parents, direct work-detail create rejects unpublished parents, and workbook detail import preview blocks draft-parent rows.\n\n**Affected files/docs:**\n\n- `assets/studio/js/catalogue-work-editor.js`\n- `assets/studio/js/catalogue-work-detail-editor.js`\n- `assets/studio/js/catalogue-work-detail-fields.js`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/css/studio.css`\n- `scripts/studio/catalogue_write_server.py`\n- `scripts/catalogue_workbook_import.py`\n- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)\n- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue detail workflow",
+  "effect": "Draft works no longer expose an active `new work detail` link. Work Detail new mode blocks draft parents, direct work-detail create rejects unpublished parents, and workbook detail import preview blocks draft-parent rows.",
+  "related_docs": [
+    "catalogue-work-editor",
+    "catalogue-work-detail-editor",
+    "scripts-catalogue-write-server",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-work-editor.js",
+    "assets/studio/js/catalogue-work-detail-editor.js",
+    "assets/studio/js/catalogue-work-detail-fields.js",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/css/studio.css",
+    "scripts/studio/catalogue_write_server.py",
+    "scripts/catalogue_workbook_import.py"
+  ],
+  "affected": {
+    "files": [
+      "assets/studio/js/catalogue-work-editor.js",
+      "assets/studio/js/catalogue-work-detail-editor.js",
+      "assets/studio/js/catalogue-work-detail-fields.js",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/css/studio.css",
+      "scripts/studio/catalogue_write_server.py",
+      "scripts/catalogue_workbook_import.py"
+    ],
+    "docs": [
+      "catalogue-work-editor",
+      "catalogue-work-detail-editor",
+      "scripts-catalogue-write-server",
+      "studio-ui-rules"
+    ]
+  }
+}

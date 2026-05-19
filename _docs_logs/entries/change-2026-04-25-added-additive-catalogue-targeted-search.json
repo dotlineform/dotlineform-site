@@ -1,0 +1,51 @@
+{
+  "id": "change-2026-04-25-added-additive-catalogue-targeted-search",
+  "date": "2026-04-25",
+  "title": "Added additive catalogue targeted search",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "config"
+  ],
+  "summary": "Added an additive-only targeted catalogue search mode for new work, series, and moment records.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 307,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue search build flow\n\n**Summary:**\nAdded an additive-only targeted catalogue search mode for new work, series, and moment records.\n\n**Reason:**\nNew catalogue records do not require existing search entries to be invalidated under the current schema, so they can be inserted without a full catalogue search rebuild. Existing-record edits, removals, tag changes, and work-detail changes still have broader dependency risks.\n\n**Effect:**\n`scripts/build_search.rb` now accepts `--only-records kind:id,...` for `catalogue` scope, with supported kinds `work`, `series`, and `moment`. Targeted catalogue mode inserts missing records from the current generated catalogue source JSON, treats identical existing records as unchanged, refuses changed existing records, and does not support `--remove-missing`. `scripts/search/build_config.json` marks the catalogue scope and catalogue source families used for additive records with `targeted_policy: \"additive_only\"` and `targeted_operations: [\"create\"]`.\n\n**Affected files/docs:**\n\n- `scripts/build_search.rb`\n- `scripts/search/build_config.json`\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Search Build Config JSON](/docs/?scope=studio&doc=config-search-build-json)\n- [Catalogue Targeted Search Plan](/docs/?scope=studio&doc=search-catalogue-targeted-plan)\n- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "catalogue search build flow",
+  "effect": "`scripts/build_search.rb` now accepts `--only-records kind:id,...` for `catalogue` scope, with supported kinds `work`, `series`, and `moment`. Targeted catalogue mode inserts missing records from the current generated catalogue source JSON, treats identical existing records as unchanged, refuses changed existing records, and does not support `--remove-missing`. `scripts/search/build_config.json` marks the catalogue scope and catalogue source families used for additive records with `targeted_policy: \"additive_only\"` and `targeted_operations: [\"create\"]`.",
+  "related_docs": [
+    "search-build-pipeline",
+    "config-search-build-json",
+    "search-catalogue-targeted-plan",
+    "search-validation-checklist"
+  ],
+  "related_files": [
+    "scripts/build_search.rb",
+    "scripts/search/build_config.json"
+  ],
+  "affected": {
+    "files": [
+      "scripts/build_search.rb",
+      "scripts/search/build_config.json"
+    ],
+    "docs": [
+      "search-build-pipeline",
+      "config-search-build-json",
+      "search-catalogue-targeted-plan",
+      "search-validation-checklist"
+    ]
+  }
+}

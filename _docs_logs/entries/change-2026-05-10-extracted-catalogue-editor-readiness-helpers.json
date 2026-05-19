@@ -1,0 +1,40 @@
+{
+  "id": "change-2026-05-10-extracted-catalogue-editor-readiness-helpers",
+  "date": "2026-05-10",
+  "title": "Extracted Catalogue editor readiness helpers",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "config",
+    "runtime"
+  ],
+  "summary": "Added `assets/studio/js/catalogue-editor-readiness.js` as the second runtime extraction from the Catalogue editor boundary plan. The work, work-detail, series, and moment editor controllers now share readiness item selection, item summary normalization, status tone selection, media-preview fallback shaping, and generated-status text formatting. Route controllers still own DOM rendering, action enablement, state checks, and config-backed visible copy.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1468,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio runtime / Catalogue editor JavaScript / maintainability\n\n**Summary:**\nAdded `assets/studio/js/catalogue-editor-readiness.js` as the second runtime extraction from the Catalogue editor boundary plan.\nThe work, work-detail, series, and moment editor controllers now share readiness item selection, item summary normalization, status tone selection, media-preview fallback shaping, and generated-status text formatting.\nRoute controllers still own DOM rendering, action enablement, state checks, and config-backed visible copy.\n\n**Files changed/docs:**\n\n- `assets/studio/js/catalogue-editor-readiness.js`\n- `assets/studio/js/catalogue-work-editor.js`\n- `assets/studio/js/catalogue-work-detail-editor.js`\n- `assets/studio/js/catalogue-series-editor.js`\n- `assets/studio/js/catalogue-moment-editor.js`\n- [Catalogue Editor Extraction Plan](/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-extraction-plan)\n- [JavaScript And Browser Config Structural Review Request](/docs/?scope=studio&doc=site-request-js-config-structural-review)\n\n**Impact:**\nReadiness behavior now has a shared pure helper boundary without moving route-specific rendering or editor workflow policy.\nSlice C can proceed to record hashing and display helpers with less controller noise.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Studio runtime / Catalogue editor JavaScript / maintainability",
+  "related_docs": [
+    "site-request-js-config-structural-review-catalogue-editor-extraction-plan",
+    "site-request-js-config-structural-review"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-editor-readiness.js",
+    "assets/studio/js/catalogue-work-editor.js",
+    "assets/studio/js/catalogue-work-detail-editor.js",
+    "assets/studio/js/catalogue-series-editor.js",
+    "assets/studio/js/catalogue-moment-editor.js"
+  ]
+}

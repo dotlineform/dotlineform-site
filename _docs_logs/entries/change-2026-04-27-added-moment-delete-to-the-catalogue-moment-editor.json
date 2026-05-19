@@ -1,0 +1,54 @@
+{
+  "id": "change-2026-04-27-added-moment-delete-to-the-catalogue-moment-editor",
+  "date": "2026-04-27",
+  "title": "Added Moment Delete To The Catalogue Moment Editor",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui",
+    "scripts",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Added source-record delete support for `/studio/catalogue-moment/`.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1324,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue\n\n**Summary:**\nAdded source-record delete support for `/studio/catalogue-moment/`.\n\n**Reason:**\nThe new moment editor could reopen, save, rebuild, and import prose for existing moments, but it still lacked the delete action already present in the work, detail, and series editors.\n\n**Effect:**\nThe moment editor now exposes `Delete`, previews impact through `POST /catalogue/delete-preview`, confirms in the browser, and applies through `POST /catalogue/delete-apply` with record-hash conflict protection. The operation removes the canonical moment metadata record, generated moment page/json artifacts, published thumbnails, repo-local staged media, the moments-index entry, and the catalogue search record. Canonical prose, canonical source images, and remote uploaded media remain untouched.\n\n**Affected files/docs:**\n\n- `studio/catalogue-moment/index.md`\n- `assets/studio/js/catalogue-moment-editor.js`\n- `assets/studio/data/studio_config.json`\n- `scripts/studio/catalogue_write_server.py`\n- [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue",
+  "effect": "The moment editor now exposes `Delete`, previews impact through `POST /catalogue/delete-preview`, confirms in the browser, and applies through `POST /catalogue/delete-apply` with record-hash conflict protection. The operation removes the canonical moment metadata record, generated moment page/json artifacts, published thumbnails, repo-local staged media, the moments-index entry, and the catalogue search record. Canonical prose, canonical source images, and remote uploaded media remain untouched.",
+  "related_docs": [
+    "catalogue-moment-editor",
+    "scripts-catalogue-write-server",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/catalogue-moment/index.md",
+    "assets/studio/js/catalogue-moment-editor.js",
+    "assets/studio/data/studio_config.json",
+    "scripts/studio/catalogue_write_server.py"
+  ],
+  "affected": {
+    "files": [
+      "studio/catalogue-moment/index.md",
+      "assets/studio/js/catalogue-moment-editor.js",
+      "assets/studio/data/studio_config.json",
+      "scripts/studio/catalogue_write_server.py"
+    ],
+    "docs": [
+      "catalogue-moment-editor",
+      "scripts-catalogue-write-server",
+      "studio-ui-rules"
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "id": "change-2026-04-24-added-generated-added-date-metadata-for-docs-scopes",
+  "date": "2026-04-24",
+  "title": "Added generated `added_date` metadata for docs scopes",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "library",
+    "build",
+    "scripts",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Added `added_date` as generated docs metadata for all docs scopes and backfilled existing published docs from their current `last_updated` values.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1952,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer / docs data model\n\n**Summary:**\nAdded `added_date` as generated docs metadata for all docs scopes and backfilled existing published docs from their current `last_updated` values.\n\n**Reason:**\nThe recently-added list needed a stable date field that reflects when a doc entered the corpus. Reusing `last_updated` would make ordinary metadata/content edits reorder older docs as if they had just been added.\n\n**Effect:**\nGenerated docs indexes and per-doc payloads now include `added_date`. New docs and new HTML imports write both `added_date` and `last_updated`, while overwrite, metadata, move, and archive flows preserve `added_date`. The recently-added list now sorts and displays from `added_date`; doc view metadata and docs search continue to use `last_updated`.\n\n**Affected files/docs:**\n\n- `scripts/build_docs.rb`\n- `scripts/docs/docs_management_server.py`\n- `assets/js/docs-viewer.js`\n- `_docs/*.md`\n- `_docs_library/*.md`\n- [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)\n- [Data Models: Studio Scope](/docs/?scope=studio&doc=data-models-studio)\n- [Data Models: Library Scope](/docs/?scope=studio&doc=data-models-library)\n- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer / docs data model",
+  "effect": "Generated docs indexes and per-doc payloads now include `added_date`. New docs and new HTML imports write both `added_date` and `last_updated`, while overwrite, metadata, move, and archive flows preserve `added_date`. The recently-added list now sorts and displays from `added_date`; doc view metadata and docs search continue to use `last_updated`.",
+  "related_docs": [
+    "docs-viewer-overview",
+    "data-models-studio",
+    "data-models-library",
+    "scripts-docs-builder",
+    "scripts-docs-management-server"
+  ],
+  "related_files": [
+    "scripts/build_docs.rb",
+    "scripts/docs/docs_management_server.py",
+    "assets/js/docs-viewer.js",
+    "_docs/*.md",
+    "_docs_library/*.md"
+  ],
+  "affected": {
+    "files": [
+      "scripts/build_docs.rb",
+      "scripts/docs/docs_management_server.py",
+      "assets/js/docs-viewer.js",
+      "_docs/*.md",
+      "_docs_library/*.md"
+    ],
+    "docs": [
+      "docs-viewer-overview",
+      "data-models-studio",
+      "data-models-library",
+      "scripts-docs-builder",
+      "scripts-docs-management-server"
+    ]
+  }
+}

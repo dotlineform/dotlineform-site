@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-09-extracted-catalogue-source-update-planners",
+  "date": "2026-05-09",
+  "title": "Extracted catalogue source update planners",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "catalogue",
+    "scripts",
+    "config"
+  ],
+  "summary": "Moved pure work/work-detail source update planning out of `scripts/generate_work_pages.py` into `scripts/catalogue_generation_source_updates.py`. The generator still owns configured path binding, image dimension reads, warning print wording, applying planned updates only during `--write`, source validation, and canonical source write-back.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1809,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue generation / scripts / maintainability\n\n**Summary:**\nMoved pure work/work-detail source update planning out of `scripts/generate_work_pages.py` into `scripts/catalogue_generation_source_updates.py`.\nThe generator still owns configured path binding, image dimension reads, warning print wording, applying planned updates only during `--write`, source validation, and canonical source write-back.\n\n**Files changed/docs:**\n\n- `scripts/catalogue_generation_source_updates.py`\n- `scripts/generate_work_pages.py`\n- `scripts/run_checks.py`\n- `tests/python/test_catalogue_generation_source_updates.py`\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n- [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)\n\n**Impact:**\nFirst-time publication status/date updates, work publish-transition records for `/recent/`, source image path warnings, and dimension update suppression now have direct focused tests without changing canonical source write-back timing or generated artifact schemas.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "catalogue generation / scripts / maintainability",
+  "related_docs": [
+    "scripts-generate-work-pages",
+    "site-request-script-structural-review-generate-work-pages"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "scripts/catalogue_generation_source_updates.py",
+    "scripts/run_checks.py",
+    "tests/python/test_catalogue_generation_source_updates.py"
+  ],
+  "change_request_doc_id": "site-request-script-structural-review-generate-work-pages"
+}

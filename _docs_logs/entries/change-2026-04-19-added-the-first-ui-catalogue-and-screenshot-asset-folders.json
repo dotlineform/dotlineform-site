@@ -1,0 +1,40 @@
+{
+  "id": "change-2026-04-19-added-the-first-ui-catalogue-and-screenshot-asset-folders",
+  "date": "2026-04-19",
+  "title": "Added the first UI catalogue and screenshot asset folders",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue"
+  ],
+  "summary": "Added a dedicated UI catalogue parent doc with first-pass primitive child docs and matching versioned asset folders for screenshots and visual references.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3218,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** design system / docs structure\n\n**Summary:**\nAdded a dedicated UI catalogue parent doc with first-pass primitive child docs and matching versioned asset folders for screenshots and visual references.\n\n**Reason:**\nShared primitives were becoming hard to keep visible inside larger framework docs, and visual component guidance needs a stable home for screenshots as the catalogue grows.\n\n**Effect:**\n[UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) now sits under [Design](/docs/?scope=studio&doc=design), the first primitive docs cover `panel`, `button`, `input`, `list shell`, `toolbar`, and `modal shell`, and screenshot assets now have dedicated repo paths under `assets/docs/ui-catalogue/`.\n\n**Affected files/docs:**\n- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)\n- [Design](/docs/?scope=studio&doc=design)\n- `assets/docs/ui-catalogue/`\n\n**Notes:**\nThis establishes the structure for future per-primitive and more complex component docs.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "design system / docs structure",
+  "effect": "[UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) now sits under [Design](/docs/?scope=studio&doc=design), the first primitive docs cover `panel`, `button`, `input`, `list shell`, `toolbar`, and `modal shell`, and screenshot assets now have dedicated repo paths under `assets/docs/ui-catalogue/`.",
+  "related_docs": [
+    "ui-catalogue",
+    "design"
+  ],
+  "related_files": [
+    "assets/docs/ui-catalogue/"
+  ],
+  "affected": {
+    "files": [
+      "assets/docs/ui-catalogue/"
+    ],
+    "docs": [
+      "ui-catalogue",
+      "design"
+    ]
+  }
+}

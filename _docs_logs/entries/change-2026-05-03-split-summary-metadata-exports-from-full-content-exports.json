@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-03-split-summary-metadata-exports-from-full-content-exports",
+  "date": "2026-05-03",
+  "title": "Split summary metadata exports from full-content exports",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "library",
+    "scripts",
+    "data-models",
+    "config"
+  ],
+  "summary": "Changed the `library-document-summaries` export so it no longer includes full document body text.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 486,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Library / Studio docs export\n\n**Summary:**\nChanged the `library-document-summaries` export so it no longer includes full document body text.\n\n**Reason:**\nDocument summaries should be a summary metadata export. Body text for generation or external analysis belongs to the full-content export.\n\n**Changes:**\nThe summary export config now writes identity, parent, headings, current summary, `last_updated`, and `viewable` only.\nIts body-text field mapping, character limit, and truncation behavior were removed.\nLibrary export and semantic-enrichment docs now point body-text use cases to `library-full-document-content`.\n\n**Files changed:**\n\n- `assets/studio/data/library_export_configs.json`\n- [Library Export v1](/docs/?scope=studio&doc=library-export)\n- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)\n- [Library Semantic Enrichment Spec](/docs/?scope=studio&doc=library-semantic-enrichment-spec)\n- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)\n\n**Impact:**\nSummary audits can run without duplicating full content in the output, while full text remains available through the dedicated full-content config.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Library / Studio docs export",
+  "effect": "Document summaries should be a summary metadata export. Body text for generation or external analysis belongs to the full-content export.",
+  "related_docs": [
+    "library-export",
+    "config-library-export-configs",
+    "library-semantic-enrichment-spec",
+    "scripts-docs-export"
+  ],
+  "related_files": [
+    "assets/studio/data/library_export_configs.json"
+  ]
+}

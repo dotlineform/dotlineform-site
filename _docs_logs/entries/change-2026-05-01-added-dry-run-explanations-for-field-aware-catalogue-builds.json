@@ -1,0 +1,54 @@
+{
+  "id": "change-2026-05-01-added-dry-run-explanations-for-field-aware-catalogue-builds",
+  "date": "2026-05-01",
+  "title": "Added dry-run explanations for field-aware catalogue builds",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Field-aware catalogue build plans now include concise explanation rows for the artifact families selected by the registry.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 1827,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue build planning\n\n**Summary:**\nField-aware catalogue build plans now include concise explanation rows for the artifact families selected by the registry.\n\n**Reason:**\nAfter preview and save-time builds began using narrowed rules, dry-runs needed to show why a plan selected `work-json`, catalogue search, local media, fallback artifacts, or no public build work.\n\n**Effect:**\nCLI previews print grouped `Field-aware reasons` lines, and `POST /catalogue/build-preview` plus dry-run save-time `apply_build` responses expose `field_plan.explanations[]`. Unknown fields and mixed dependency classes now explain conservative fallback selection.\n\n**Affected files/docs:**\n\n- `scripts/catalogue_field_registry.py`\n- `scripts/catalogue_json_build.py`\n- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)\n- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue build planning",
+  "effect": "CLI previews print grouped `Field-aware reasons` lines, and `POST /catalogue/build-preview` plus dry-run save-time `apply_build` responses expose `field_plan.explanations[]`. Unknown fields and mixed dependency classes now explain conservative fallback selection.",
+  "related_docs": [
+    "scripts-build-catalogue-json",
+    "scripts-catalogue-write-server",
+    "data-models-catalogue",
+    "site-request-field-aware-build-scoping",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/catalogue_field_registry.py",
+    "scripts/catalogue_json_build.py"
+  ],
+  "change_request_doc_id": "site-request-field-aware-build-scoping",
+  "affected": {
+    "files": [
+      "scripts/catalogue_field_registry.py",
+      "scripts/catalogue_json_build.py"
+    ],
+    "docs": [
+      "scripts-build-catalogue-json",
+      "scripts-catalogue-write-server",
+      "data-models-catalogue",
+      "site-request-field-aware-build-scoping",
+      "site-change-log"
+    ]
+  }
+}

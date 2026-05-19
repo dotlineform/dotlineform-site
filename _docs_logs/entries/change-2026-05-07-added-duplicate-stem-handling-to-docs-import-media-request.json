@@ -1,0 +1,30 @@
+{
+  "id": "change-2026-05-07-added-duplicate-stem-handling-to-docs-import-media-request",
+  "date": "2026-05-07",
+  "title": "Added duplicate stem handling to Docs Import media request",
+  "status": "proposed",
+  "type": "implementation",
+  "domains": [
+    "site"
+  ],
+  "summary": "Updated the Docs Import media request so proposed `doc_id` collisions prompt for a replacement title instead of auto-appending a suffix.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2952,
+    "archive": "current"
+  },
+  "body": "**Status:** proposed\n\n**Area:** Studio / Docs Import\n\n**Summary:**\nUpdated the Docs Import media request so proposed `doc_id` collisions prompt for a replacement title instead of auto-appending a suffix.\n\n**Reason:**\nWhen a staged file stem already matches an existing Markdown source file, the user should control the new title and resulting `doc_id` while still getting the current name as an easy starting point.\n\n**Files changed:**\n\n- [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n\n**Impact:**\nThe request now requires collision detection during preview, a replacement-title prompt seeded with the current name, server-side `doc_id` regeneration, and a second collision check before apply.",
+  "migration": {
+    "confidence": "low",
+    "warnings": [
+      "domain fallback used"
+    ]
+  },
+  "area": "Studio / Docs Import",
+  "effect": "When a staged file stem already matches an existing Markdown source file, the user should control the new title and resulting `doc_id` while still getting the current name as an easy starting point.",
+  "related_docs": [
+    "site-request-docs-import-source-registry-media",
+    "site-change-log"
+  ],
+  "change_request_doc_id": "site-request-docs-import-source-registry-media"
+}

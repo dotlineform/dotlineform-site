@@ -1,0 +1,46 @@
+{
+  "id": "change-2026-05-07-implemented-docs-import-source-registry-and-media-support",
+  "date": "2026-05-07",
+  "title": "Implemented Docs Import source registry and media support",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "scripts",
+    "data-models",
+    "config",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Implemented the Docs Import source registry and expanded staged imports beyond HTML and Markdown.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2921,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Docs Import\n\n**Summary:**\nImplemented the Docs Import source registry and expanded staged imports beyond HTML and Markdown.\n\n**Reason:**\nDocs Import needed a structured importer boundary before adding text, standalone SVG, R2-backed image wrappers, and downloadable file wrappers.\n\n**Files changed:**\n\n- `scripts/docs/docs_html_import.py`\n- `scripts/docs/docs_management_server.py`\n- `studio/docs-import/index.md`\n- `assets/studio/js/docs-html-import.js`\n- `assets/studio/data/studio_config.json`\n- `tests/python/test_docs_import_service.py`\n- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Studio UI Rules](/docs/?scope=studio&doc=studio-ui-rules)\n- [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)\n- [Change Requests](/docs/?scope=studio&doc=change-requests)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n\n**Impact:**\nThe route now lists HTML, Markdown, text, SVG, raster image, and file-media staged files.\nText imports autolink plain URLs, HTML and standalone SVG share SVG safety behavior, image and file imports generate <code>&#91;&#91;media:docs/&lt;scope&gt;/...&#93;&#93;</code> wrappers with manual R2 copy warnings, and source-stem collisions prompt for a replacement title instead of silently suffixing.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Docs Import",
+  "effect": "Docs Import needed a structured importer boundary before adding text, standalone SVG, R2-backed image wrappers, and downloadable file wrappers.",
+  "related_docs": [
+    "user-guide-docs-html-import",
+    "scripts-docs-management-server",
+    "studio-ui-rules",
+    "site-request-docs-import-source-registry-media",
+    "change-requests",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/docs/docs_html_import.py",
+    "scripts/docs/docs_management_server.py",
+    "studio/docs-import/index.md",
+    "assets/studio/js/docs-html-import.js",
+    "assets/studio/data/studio_config.json",
+    "tests/python/test_docs_import_service.py"
+  ],
+  "change_request_doc_id": "site-request-docs-import-source-registry-media"
+}

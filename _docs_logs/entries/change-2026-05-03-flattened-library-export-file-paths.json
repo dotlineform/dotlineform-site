@@ -1,0 +1,38 @@
+{
+  "id": "change-2026-05-03-flattened-library-export-file-paths",
+  "date": "2026-05-03",
+  "title": "Flattened Library export file paths",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "library",
+    "scripts",
+    "data-models",
+    "config"
+  ],
+  "summary": "Changed Library export output paths to put the timestamp in the filename rather than in a per-run directory.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 459,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Library / Studio docs export\n\n**Summary:**\nChanged Library export output paths to put the timestamp in the filename rather than in a per-run directory.\n\n**Reason:**\nA flat scope directory is easier to scan and copy for manual external use.\n\n**Changes:**\nExport configs now write files such as `var/docs/exports/library/library-document-summaries-20260503-161507.jsonl`.\nThe export config schema and docs now require `var/docs/exports/{scope}/{export_id}-{timestamp}.json` or `.jsonl`.\n\n**Files changed:**\n\n- `assets/studio/data/library_export_configs.json`\n- `assets/studio/data/library_export_configs.schema.json`\n- [Library Export v1](/docs/?scope=studio&doc=library-export)\n- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)\n- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)\n\n**Impact:**\nExport artifacts remain under the same allowlisted root, but repeated runs now collect directly under the scope folder.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Library / Studio docs export",
+  "effect": "A flat scope directory is easier to scan and copy for manual external use.",
+  "related_docs": [
+    "library-export",
+    "config-library-export-configs",
+    "scripts-docs-export"
+  ],
+  "related_files": [
+    "var/docs/exports/library/library-document-summaries-20260503-161507.jsonl",
+    "var/docs/exports/{scope}/{export_id}-{timestamp}.json",
+    "assets/studio/data/library_export_configs.json",
+    "assets/studio/data/library_export_configs.schema.json"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "id": "change-2026-03-30-added-lightweight-build-version-cache-busting-to-shared-shell-assets",
+  "date": "2026-03-30",
+  "title": "Added lightweight build-version cache busting to shared shell assets",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui",
+    "build",
+    "config",
+    "runtime"
+  ],
+  "summary": "Added a lightweight build-version query token to shared shell CSS and JS asset URLs, using the current build timestamp rather than a separate fingerprint pipeline.",
+  "source": {
+    "file": "_docs/site-change-log-2026-03-and-earlier.md",
+    "line": 133,
+    "archive": "2026-03-and-earlier"
+  },
+  "body": "**Status:** implemented\n\n**Area:** architecture\n\n**Summary:**  \nAdded a lightweight build-version query token to shared shell CSS and JS asset URLs, using the current build timestamp rather than a separate fingerprint pipeline.\n\n**Reason:**  \nLocal review was vulnerable to stale browser caches after JS/CSS renames or runtime changes, especially while the public search surface was moving and being renamed.\n\n**Effect:**  \nShared shell assets now reload more reliably after a rebuild, the default layout publishes the current asset version in page metadata, and the search runtime can align its own module/data cache busting with that same build token.\n\n**Affected files/docs:**  \n- `_layouts/default.html`\n- `_layouts/work.html`\n- `_layouts/work_details.html`\n- `_layouts/series.html`\n- `_layouts/moment.html`\n- `search/index.md`\n- `assets/js/search/search-page.js`\n- `assets/studio/js/studio-config.js`\n- [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)\n\n**Notes:**  \nThis is a pragmatic cache-busting layer for the current static setup. It is not a full hashed-asset pipeline.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "architecture",
+  "effect": "Shared shell assets now reload more reliably after a rebuild, the default layout publishes the current asset version in page metadata, and the search runtime can align its own module/data cache busting with that same build token.",
+  "related_docs": [
+    "site-shell-runtime"
+  ],
+  "related_files": [
+    "_layouts/default.html",
+    "_layouts/work.html",
+    "_layouts/work_details.html",
+    "_layouts/series.html",
+    "_layouts/moment.html",
+    "search/index.md",
+    "assets/js/search/search-page.js",
+    "assets/studio/js/studio-config.js"
+  ],
+  "affected": {
+    "files": [
+      "_layouts/default.html",
+      "_layouts/work.html",
+      "_layouts/work_details.html",
+      "_layouts/series.html",
+      "_layouts/moment.html",
+      "search/index.md",
+      "assets/js/search/search-page.js",
+      "assets/studio/js/studio-config.js"
+    ],
+    "docs": [
+      "site-shell-runtime"
+    ]
+  }
+}

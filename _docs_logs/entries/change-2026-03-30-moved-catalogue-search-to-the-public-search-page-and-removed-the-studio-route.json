@@ -1,0 +1,62 @@
+{
+  "id": "change-2026-03-30-moved-catalogue-search-to-the-public-search-page-and-removed-the-studio-route",
+  "date": "2026-03-30",
+  "title": "Moved catalogue search to the public `/search/` page and removed the Studio route",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui",
+    "data-models",
+    "config"
+  ],
+  "summary": "Moved the current catalogue search page from `/studio/search/` to the public `/search/` route, removed the Studio page entirely, and added a catalogue search entry point to the `/series/` toolbar.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 929,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** UI\n\n**Summary:**  \nMoved the current catalogue search page from `/studio/search/` to the public `/search/` route, removed the Studio page entirely, and added a catalogue search entry point to the `/series/` toolbar.\n\n**Reason:**  \nThe agreed search contract now uses one public top-level search route with explicit scope context. Search needed to move out of Studio before later scope expansion so the public UI, route vocabulary, and entry-point model all align.\n\n**Effect:**  \n`/search/?scope=catalogue` is now the current public route, `/studio/search/` no longer exists, the `/series/` toolbar now includes a search CTA for the catalogue scope, and the public search page shows explicit scope context while continuing to use the same in-memory catalogue search runtime.\n\n**Affected files/docs:**  \n- `search/index.md`\n- `studio/search/index.md`\n- `series/index.md`\n- `assets/css/main.css`\n- `assets/studio/js/studio-search.js`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- [Search](/docs/?scope=studio&doc=search)\n- [Search Overview](/docs/?scope=studio&doc=search-overview)\n- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)\n- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)\n- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)\n\n**Notes:**  \nThe runtime is still the same shared search module and still only supports the `catalogue` scope. This change is route and entry-point migration, not the later modular multi-domain refactor.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "UI",
+  "effect": "`/search/?scope=catalogue` is now the current public route, `/studio/search/` no longer exists, the `/series/` toolbar now includes a search CTA for the catalogue scope, and the public search page shows explicit scope context while continuing to use the same in-memory catalogue search runtime.",
+  "related_docs": [
+    "search",
+    "search-overview",
+    "search-public-ui-contract",
+    "search-ui-behaviour",
+    "search-validation-checklist"
+  ],
+  "related_files": [
+    "search/index.md",
+    "studio/search/index.md",
+    "series/index.md",
+    "assets/css/main.css",
+    "assets/studio/js/studio-search.js",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js"
+  ],
+  "affected": {
+    "files": [
+      "search/index.md",
+      "studio/search/index.md",
+      "series/index.md",
+      "assets/css/main.css",
+      "assets/studio/js/studio-search.js",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/js/studio-config.js"
+    ],
+    "docs": [
+      "search",
+      "search-overview",
+      "search-public-ui-contract",
+      "search-ui-behaviour",
+      "search-validation-checklist"
+    ]
+  }
+}

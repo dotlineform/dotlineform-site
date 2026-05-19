@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-05-17-extracted-docs-viewer-management-capability-and-config-coordination",
+  "date": "2026-05-17",
+  "title": "Extracted Docs Viewer Management Capability And Config Coordination",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "studio-ui",
+    "build",
+    "scripts",
+    "config"
+  ],
+  "summary": "Moved Docs Viewer management capability helpers, capability probe/retry coordination, and management UI-text config application into dedicated modules. The management controller still owns DOM lookup, route event binding, drag/drop, context menu behavior, import/settings modal loading, metadata payload collection, busy/message/reload callbacks, and navigation.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 235,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer management / JavaScript maintainability\n\n**Summary:**\nMoved Docs Viewer management capability helpers, capability probe/retry coordination, and management UI-text config application into dedicated modules.\nThe management controller still owns DOM lookup, route event binding, drag/drop, context menu behavior, import/settings modal loading, metadata payload collection, busy/message/reload callbacks, and navigation.\n\n**Effect:**\n`docs-viewer-management.js` is smaller and no longer embeds capability probing or the full management UI-text merge inline.\nLifecycle helper logic now has one pure source that the lazy scope lifecycle flow reuses without making the lifecycle module eager.\nThe JavaScript payload inventory now records capability/config coordination as complete and points the next Docs Viewer management cleanup at drag/drop/context-menu ownership.\n\n**Affected files/docs:**\n\n- `assets/docs-viewer/js/docs-viewer-management.js`\n- `assets/docs-viewer/js/docs-viewer-management-capabilities.js`\n- `assets/docs-viewer/js/docs-viewer-management-config.js`\n- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js`\n- [Studio JavaScript Payload Inventory](/docs/?scope=studio&doc=studio-javascript-payload-inventory)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer management / JavaScript maintainability",
+  "effect": "`docs-viewer-management.js` is smaller and no longer embeds capability probing or the full management UI-text merge inline. Lifecycle helper logic now has one pure source that the lazy scope lifecycle flow reuses without making the lifecycle module eager. The JavaScript payload inventory now records capability/config coordination as complete and points the next Docs Viewer management cleanup at drag/drop/context-menu ownership.",
+  "related_docs": [
+    "studio-javascript-payload-inventory"
+  ],
+  "related_files": [
+    "assets/docs-viewer/js/docs-viewer-management.js",
+    "assets/docs-viewer/js/docs-viewer-management-capabilities.js",
+    "assets/docs-viewer/js/docs-viewer-management-config.js",
+    "assets/docs-viewer/js/docs-viewer-scope-lifecycle.js",
+    "docs-viewer-management.js"
+  ],
+  "affected": {
+    "files": [
+      "assets/docs-viewer/js/docs-viewer-management.js",
+      "assets/docs-viewer/js/docs-viewer-management-capabilities.js",
+      "assets/docs-viewer/js/docs-viewer-management-config.js",
+      "assets/docs-viewer/js/docs-viewer-scope-lifecycle.js"
+    ],
+    "docs": [
+      "studio-javascript-payload-inventory"
+    ]
+  }
+}

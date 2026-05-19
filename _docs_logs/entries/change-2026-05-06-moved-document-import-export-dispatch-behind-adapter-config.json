@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-06-moved-document-import-export-dispatch-behind-adapter-config",
+  "date": "2026-05-06",
+  "title": "Moved document import/export dispatch behind adapter config",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "library",
+    "scripts",
+    "config",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Added the explicit export/import adapter registry and routed the Library document export/import behavior through the configured `documents` adapter. The active import service endpoints are now neutral dispatch endpoints instead of Library-named service routes.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3426,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Data workflows\n\n**Summary:**\nAdded the explicit export/import adapter registry and routed the Library document export/import behavior through the configured `documents` adapter.\nThe active import service endpoints are now neutral dispatch endpoints instead of Library-named service routes.\n\n**Reason:**\nThe first implementation should target the shell-adapter architecture directly so old route names and migration artifacts do not become long-lived compatibility layers.\n\n**Files changed:**\n\n- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)\n- [Library Import](/docs/?scope=studio&doc=library-import)\n- [Library Export](/docs/?scope=studio&doc=library-export)\n- [Export Import Adapters](/docs/?scope=studio&doc=config-export-import-adapters)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n\n**Impact:**\n`data_domain` and `operation` now resolve exactly one configured adapter before the docs-management service runs document-specific import/export logic.\nUnconfigured domains fail closed, and the removed Library-named import endpoints are not retained as aliases.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Data workflows",
+  "effect": "The first implementation should target the shell-adapter architecture directly so old route names and migration artifacts do not become long-lived compatibility layers.",
+  "related_docs": [
+    "site-request-export-import-adapters",
+    "library-import",
+    "library-export",
+    "config-export-import-adapters",
+    "scripts-docs-management-server"
+  ],
+  "change_request_doc_id": "site-request-export-import-adapters"
+}

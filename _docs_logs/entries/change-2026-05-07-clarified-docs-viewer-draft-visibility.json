@@ -1,0 +1,23 @@
+{
+  "id": "change-2026-05-07-clarified-docs-viewer-draft-visibility",
+  "date": "2026-05-07",
+  "title": "Clarified Docs Viewer draft visibility",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search"
+  ],
+  "summary": "Changed manage-mode draft visibility from a hidden `drafts` toggle and bold index styling to always-visible non-viewable docs with a `✏️` prefix, plus a checked-by-default `show viewable` toggle.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2824,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer / Management\n\n**Summary:**\nChanged manage-mode draft visibility from a hidden `drafts` toggle and bold index styling to always-visible non-viewable docs with a `✏️` prefix, plus a checked-by-default `show viewable` toggle.\n\n**Impact:**\nThe Edit modal status dropdown now includes `draft` across all scopes. Saving `draft` writes `viewable: false`; saving any non-draft status writes `viewable: true`.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Docs Viewer / Management"
+}

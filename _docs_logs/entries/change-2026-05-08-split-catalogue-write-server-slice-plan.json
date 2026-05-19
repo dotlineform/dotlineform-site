@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-08-split-catalogue-write-server-slice-plan",
+  "date": "2026-05-08",
+  "title": "Split catalogue write-server slice plan",
+  "status": "unknown",
+  "type": "cleanup",
+  "domains": [
+    "catalogue",
+    "build",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Moved the detailed `scripts/studio/catalogue_write_server.py` restructuring notes out of the high-level script structural review request into a dedicated child doc. The new slice doc records implemented Slices 1-7 and adds the foreseeable Slice 8-14 path for lookup refresh execution, save/build follow-through, source mutation planners, save/create transaction execution, delete/publication planners, delete/publication apply orchestration, and final handler cleanup.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2343,
+    "archive": "current"
+  },
+  "body": "**Status:** documented\n\n**Area:** Studio / scripts / maintainability\n\n**Summary:**\nMoved the detailed `scripts/studio/catalogue_write_server.py` restructuring notes out of the high-level script structural review request into a dedicated child doc.\nThe new slice doc records implemented Slices 1-7 and adds the foreseeable Slice 8-14 path for lookup refresh execution, save/build follow-through, source mutation planners, save/create transaction execution, delete/publication planners, delete/publication apply orchestration, and final handler cleanup.\n\n**Files changed/docs:**\n\n- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)\n- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n\n**Impact:**\nThe parent request stays readable as a broad structural-review brief, while the catalogue write-server work now has an explicit completion plan and risk sequence.",
+  "migration": {
+    "confidence": "low",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Studio / scripts / maintainability",
+  "related_docs": [
+    "site-request-script-structural-review",
+    "site-request-script-structural-review-catalogue-write-server",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/studio/catalogue_write_server.py"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "change-2026-04-24-filtered-docs-search-by-viewable",
+  "date": "2026-04-24",
+  "title": "Filtered docs search by `viewable`",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "build",
+    "scripts",
+    "workflow"
+  ],
+  "summary": "Docs-domain search now includes only generated docs whose docs index row is not `viewable: false`.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 529,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** docs-domain search build flow\n\n**Summary:**\nDocs-domain search now includes only generated docs whose docs index row is not `viewable: false`.\n\n**Reason:**\nLibrary imports can now be generated for manage-mode review before they are ready for the public/default Library viewer. Those draft docs should not appear in inline docs search until they are made viewable.\n\n**Effect:**\n`scripts/build_search.rb` skips non-viewable rows from the generated Studio and Library docs indexes. Single-doc `Make viewable` actions use the existing same-scope full search rebuild for correctness; bulk visibility changes should batch source writes into one rebuild or wait for a separate incremental docs-search design.\n\n**Affected files/docs:**\n\n- `scripts/build_search.rb`\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Viewability Workflow Spec](/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "docs-domain search build flow",
+  "effect": "`scripts/build_search.rb` skips non-viewable rows from the generated Studio and Library docs indexes. Single-doc `Make viewable` actions use the existing same-scope full search rebuild for correctness; bulk visibility changes should batch source writes into one rebuild or wait for a separate incremental docs-search design.",
+  "related_docs": [
+    "search-build-pipeline",
+    "docs-viewer-draft-publishing-spec"
+  ],
+  "related_files": [
+    "scripts/build_search.rb"
+  ],
+  "affected": {
+    "files": [
+      "scripts/build_search.rb"
+    ],
+    "docs": [
+      "search-build-pipeline",
+      "docs-viewer-draft-publishing-spec"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "change-2026-05-07-added-docs-import-registry-and-media-support-request",
+  "date": "2026-05-07",
+  "title": "Added Docs Import registry and media support request",
+  "status": "proposed",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer"
+  ],
+  "summary": "Added a change request for making Docs Import format-extensible and supporting standalone text, SVG, and raster image files.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3015,
+    "archive": "current"
+  },
+  "body": "**Status:** proposed\n\n**Area:** Studio / Docs Import\n\n**Summary:**\nAdded a change request for making Docs Import format-extensible and supporting standalone text, SVG, and raster image files.\n\n**Reason:**\nThe current source import flow now handles HTML and body-only Markdown, but future standalone media imports need a clearer registry boundary, asset-copy plan, and SVG safety policy before implementation.\n\n**Files changed:**\n\n- [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)\n- [Change Requests](/docs/?scope=studio&doc=change-requests)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n\n**Impact:**\nThe request proposes a source importer registry, `.txt` import, standalone SVG wrapper-doc import, and raster image import that copies assets under `assets/docs/imports/<scope>/<doc_id>/` before generating wrapper Markdown.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Docs Import",
+  "effect": "The current source import flow now handles HTML and body-only Markdown, but future standalone media imports need a clearer registry boundary, asset-copy plan, and SVG safety policy before implementation.",
+  "related_docs": [
+    "site-request-docs-import-source-registry-media",
+    "change-requests",
+    "site-change-log"
+  ],
+  "related_files": [
+    "assets/docs/imports/<scope>/<doc_id>/"
+  ],
+  "change_request_doc_id": "site-request-docs-import-source-registry-media"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "change-2026-05-14-integrated-pytest-into-run-checks",
+  "date": "2026-05-14",
+  "title": "Integrated Pytest Into Run Checks",
+  "status": "implemented",
+  "type": "verification",
+  "domains": [
+    "catalogue",
+    "scripts",
+    "workflow"
+  ],
+  "summary": "`./scripts/run_checks.py` now runs grouped pytest commands for the Python portions of the `quick`, `catalogue`, and `docs` profiles while keeping the existing run-log and profile contract. Pytest is now listed in `requirements.txt`, and the testing docs describe focused pytest usage, direct interpreter targeting, and the retained direct-script fallback for narrow checks.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 500,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Testing / validation\n\n**Summary:**\n`./scripts/run_checks.py` now runs grouped pytest commands for the Python portions of the `quick`, `catalogue`, and `docs` profiles while keeping the existing run-log and profile contract.\nPytest is now listed in `requirements.txt`, and the testing docs describe focused pytest usage, direct interpreter targeting, and the retained direct-script fallback for narrow checks.\n\n**Files changed/docs:**\n\n- `scripts/run_checks.py`\n- `requirements.txt`\n- `AGENTS.md`\n- [Testing](/docs/?scope=studio&doc=testing)\n- [Pytest](/docs/?scope=studio&doc=testing-pytest)\n- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)\n\n**Impact:**\nCodex can run clearer focused Python checks with the configured Miniconda interpreter and `-m pytest`, while normal close-out still reports `./scripts/run_checks.py` profiles and `var/test-runs/.../summary.md`.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Testing / validation",
+  "related_docs": [
+    "testing",
+    "testing-pytest",
+    "scripts-run-checks"
+  ],
+  "related_files": [
+    "/scripts/run_checks.py",
+    "requirements.txt",
+    "scripts/run_checks.py",
+    "AGENTS.md",
+    "var/test-runs/.../summary.md"
+  ]
+}

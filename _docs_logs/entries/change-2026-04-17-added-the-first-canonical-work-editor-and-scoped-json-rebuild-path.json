@@ -1,0 +1,42 @@
+{
+  "id": "change-2026-04-17-added-the-first-canonical-work-editor-and-scoped-json-rebuild-path",
+  "date": "2026-04-17",
+  "title": "Added the first canonical work editor and scoped JSON rebuild path",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Added the first canonical single-work editor together with the scoped JSON-source rebuild flow.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3672,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio catalogue pipeline\n\n**Summary:**\nAdded the first canonical single-work editor together with the scoped JSON-source rebuild flow.\n\n**Reason:**\nStudio needed a practical proof that individual work metadata could be edited safely against canonical JSON without relying on workbook editing.\n\n**Effect:**\n`/studio/catalogue-work/` became the first canonical work metadata editor, local preview/apply plus `Save + Rebuild` were added for work edits, Studio transport/config wiring gained separate catalogue local-service health probing, and the catalogue write server response now returns the normalized saved record plus saved timestamp for editor baseline refresh.\n\n**Affected files/docs:**\n- `/studio/catalogue-work/`\n- `scripts/studio/catalogue_write_server.py`\n- Catalogue Work\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n\n**Notes:**\nThis was the first end-to-end canonical JSON editor in the Studio catalogue workflow.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio catalogue pipeline",
+  "effect": "`/studio/catalogue-work/` became the first canonical work metadata editor, local preview/apply plus `Save + Rebuild` were added for work edits, Studio transport/config wiring gained separate catalogue local-service health probing, and the catalogue write server response now returns the normalized saved record plus saved timestamp for editor baseline refresh.",
+  "related_docs": [
+    "scripts-catalogue-write-server"
+  ],
+  "related_files": [
+    "scripts/studio/catalogue_write_server.py"
+  ],
+  "affected": {
+    "files": [
+      "scripts/studio/catalogue_write_server.py"
+    ],
+    "docs": [
+      "scripts-catalogue-write-server"
+    ]
+  }
+}

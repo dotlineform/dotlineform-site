@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-03-30-removed-visible-kind-filters-from-the-studio-search-page-and-required-scope-context",
+  "date": "2026-03-30",
+  "title": "Removed visible kind filters from the Studio search page and required scope context",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "data-models",
+    "config"
+  ],
+  "summary": "Updated the current Studio search page so it always searches across all indexed catalogue kinds, no longer exposes the `all` / `works` / `series` / `moments` filter buttons, and requires a valid `scope` URL parameter before the page becomes usable.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 961,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** UI\n\n**Summary:**  \nUpdated the current Studio search page so it always searches across all indexed catalogue kinds, no longer exposes the `all` / `works` / `series` / `moments` filter buttons, and requires a valid `scope` URL parameter before the page becomes usable.\n\n**Reason:**  \nThe search UI needs to align with the newer scope-led public-search direction before the route moves out of Studio. Exposing per-kind buttons no longer matches that direction, while a required URL scope makes the page behavior closer to the future public contract.\n\n**Effect:**  \n`/studio/search/?scope=catalogue` is now the valid Studio route, the visible filter row is gone, catalogue search remains internally mixed across works, series, and moments, and loading the page without a valid scope now shows a missing-context message instead of an ambiguous fallback search UI.\n\n**Affected files/docs:**  \n- `studio/search/index.md`\n- `assets/studio/js/studio-search.js`\n- `assets/studio/data/studio_config.json`\n- [Search Overview](/docs/?scope=studio&doc=search-overview)\n- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)\n- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)\n\n**Notes:**  \nThis change intentionally does not remove the underlying internal support for per-kind filtering from the search runtime; it only removes that granularity from the current UI.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "UI",
+  "effect": "`/studio/search/?scope=catalogue` is now the valid Studio route, the visible filter row is gone, catalogue search remains internally mixed across works, series, and moments, and loading the page without a valid scope now shows a missing-context message instead of an ambiguous fallback search UI.",
+  "related_docs": [
+    "search-overview",
+    "search-ui-behaviour",
+    "search-validation-checklist"
+  ],
+  "related_files": [
+    "studio/search/index.md",
+    "assets/studio/js/studio-search.js",
+    "assets/studio/data/studio_config.json"
+  ],
+  "affected": {
+    "files": [
+      "studio/search/index.md",
+      "assets/studio/js/studio-search.js",
+      "assets/studio/data/studio_config.json"
+    ],
+    "docs": [
+      "search-overview",
+      "search-ui-behaviour",
+      "search-validation-checklist"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "change-2026-04-29-required-year-metadata-for-series-saves",
+  "date": "2026-04-29",
+  "title": "Required year metadata for series saves",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "studio-ui",
+    "scripts",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Edit-mode series saves now require `year` and `year_display`, matching the required metadata already enforced by new-mode series creation.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 652,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue series\n\n**Summary:**\nEdit-mode series saves now require `year` and `year_display`, matching the required metadata already enforced by new-mode series creation.\n\n**Reason:**\nThe unified series editor could create a valid draft with year metadata, then later allow those same fields to be cleared on `Save`. The save path needed the same user-facing field errors plus a write-server guard for direct endpoint calls.\n\n**Effect:**\n`/studio/catalogue-series/` now blocks `Save` when `year` or `year_display` is blank, and `POST /catalogue/series/save` rejects direct payloads missing either field. Historical records that already lack those fields must be filled before they can be saved through the editor.\n\n**Affected files/docs:**\n\n- `assets/studio/js/catalogue-series-fields.js`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- `scripts/studio/catalogue_write_server.py`\n- Catalogue Series Editor\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue series",
+  "effect": "`/studio/catalogue-series/` now blocks `Save` when `year` or `year_display` is blank, and `POST /catalogue/series/save` rejects direct payloads missing either field. Historical records that already lack those fields must be filled before they can be saved through the editor.",
+  "related_docs": [
+    "scripts-catalogue-write-server",
+    "site-request-catalogue-series-unified-editor",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-series-fields.js",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js",
+    "scripts/studio/catalogue_write_server.py"
+  ],
+  "change_request_doc_id": "site-request-catalogue-series-unified-editor",
+  "affected": {
+    "files": [
+      "assets/studio/js/catalogue-series-fields.js",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/js/studio-config.js",
+      "scripts/studio/catalogue_write_server.py"
+    ],
+    "docs": [
+      "scripts-catalogue-write-server",
+      "site-request-catalogue-series-unified-editor",
+      "studio-ui-rules"
+    ]
+  }
+}

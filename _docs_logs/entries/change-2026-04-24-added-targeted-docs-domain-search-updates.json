@@ -1,0 +1,47 @@
+{
+  "id": "change-2026-04-24-added-targeted-docs-domain-search-updates",
+  "date": "2026-04-24",
+  "title": "Added targeted docs-domain search updates",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "build",
+    "scripts"
+  ],
+  "summary": "Added a targeted `doc_id` update mode to `scripts/build_search.rb` for `studio` and `library` search artifacts.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 486,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** docs-domain search build flow\n\n**Summary:**\nAdded a targeted `doc_id` update mode to `scripts/build_search.rb` for `studio` and `library` search artifacts.\n\n**Reason:**\nDocs-management and later watcher orchestration need a search-owned way to update affected docs-domain entries without always rebuilding the full same-scope search artifact.\n\n**Effect:**\n`scripts/build_search.rb` now accepts `--only-doc-ids` plus `--remove-missing` for `studio` and `library`. Targeted mode loads the existing docs-domain search artifact, rebuilds only the affected `doc_id` entries from the generated docs index, removes affected ids that are missing, non-viewable, or `archive`, recomputes header metadata, and reports diagnostic counts. `catalogue` targeted mode is explicitly refused and remains full-rebuild-only.\n\n**Affected files/docs:**\n\n- `scripts/build_search.rb`\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Search Overview](/docs/?scope=studio&doc=search-overview)\n- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)\n- [Incremental Search Orchestration Plan](/docs/?scope=studio&doc=search-incremental-orchestration-plan)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "docs-domain search build flow",
+  "effect": "`scripts/build_search.rb` now accepts `--only-doc-ids` plus `--remove-missing` for `studio` and `library`. Targeted mode loads the existing docs-domain search artifact, rebuilds only the affected `doc_id` entries from the generated docs index, removes affected ids that are missing, non-viewable, or `archive`, recomputes header metadata, and reports diagnostic counts. `catalogue` targeted mode is explicitly refused and remains full-rebuild-only.",
+  "related_docs": [
+    "search-build-pipeline",
+    "search-overview",
+    "search-validation-checklist",
+    "search-incremental-orchestration-plan"
+  ],
+  "related_files": [
+    "scripts/build_search.rb"
+  ],
+  "affected": {
+    "files": [
+      "scripts/build_search.rb"
+    ],
+    "docs": [
+      "search-build-pipeline",
+      "search-overview",
+      "search-validation-checklist",
+      "search-incremental-orchestration-plan"
+    ]
+  }
+}

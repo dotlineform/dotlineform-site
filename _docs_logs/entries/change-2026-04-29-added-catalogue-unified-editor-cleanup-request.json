@@ -1,0 +1,36 @@
+{
+  "id": "change-2026-04-29-added-catalogue-unified-editor-cleanup-request",
+  "date": "2026-04-29",
+  "title": "Added catalogue unified editor cleanup request",
+  "status": "proposed",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build"
+  ],
+  "summary": "Added an umbrella change request for cleanup work that should follow the work, work-detail, and series editor unification work.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 605,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** proposed\n\n**Area:** Studio / catalogue editors / generated catalogue data\n\n**Summary:**\nAdded an umbrella change request for cleanup work that should follow the work, work-detail, and series editor unification work.\n\n**Reason:**\nThe unified editor changes intentionally kept some legacy route artifacts and compatibility concerns separate from behavior fixes. The current series JSON investigation also surfaced a generated per-series membership field that is part of the payload contract but not consumed by the public series grid.\n\n**Effect:**\nThe cleanup backlog now has one request covering retired `catalogue-new-*` routes/controllers/docs, final shared-helper review, old URL compatibility policy, and the generated series runtime contract.\n\n**Affected files/docs:**\n\n- [Change Requests](/docs/?scope=studio&doc=change-requests)\n- [Catalogue Unified Editor Cleanup Request](/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue editors / generated catalogue data",
+  "effect": "The cleanup backlog now has one request covering retired `catalogue-new-*` routes/controllers/docs, final shared-helper review, old URL compatibility policy, and the generated series runtime contract.",
+  "related_docs": [
+    "change-requests",
+    "site-request-catalogue-unified-editor-cleanup"
+  ],
+  "change_request_doc_id": "site-request-catalogue-unified-editor-cleanup",
+  "affected": {
+    "docs": [
+      "change-requests",
+      "site-request-catalogue-unified-editor-cleanup"
+    ]
+  }
+}

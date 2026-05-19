@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-05-17-extracted-docs-viewer-management-interactions",
+  "date": "2026-05-17",
+  "title": "Extracted Docs Viewer Management Interactions",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "studio-ui",
+    "build",
+    "scripts",
+    "config"
+  ],
+  "summary": "Moved Docs Viewer management nav drag/drop event handling, transient drag/drop visual state, context-menu active-doc state, context-menu positioning, and context-menu action dispatch into a dedicated interaction module. The management controller still coordinates toolbar rendering, status-pill events, modal entry points, metadata payload collection, settings reads, busy/message/reload callbacks, and navigation.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 212,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer management / JavaScript maintainability\n\n**Summary:**\nMoved Docs Viewer management nav drag/drop event handling, transient drag/drop visual state, context-menu active-doc state, context-menu positioning, and context-menu action dispatch into a dedicated interaction module.\nThe management controller still coordinates toolbar rendering, status-pill events, modal entry points, metadata payload collection, settings reads, busy/message/reload callbacks, and navigation.\n\n**Effect:**\n`docs-viewer-management.js` is now below the 1,000-line review threshold and no longer embeds drag/drop or right-click ownership inline.\nThe pure drag/drop helper module remains focused on placement and move-undo helpers, while write orchestration stays in `docs-viewer-management-actions.js`.\nThe JavaScript payload inventory now records Docs Viewer management interaction extraction as complete and removes the management controller from the over-threshold priority list.\n\n**Affected files/docs:**\n\n- `assets/docs-viewer/js/docs-viewer-management.js`\n- `assets/docs-viewer/js/docs-viewer-management-interactions.js`\n- `assets/docs-viewer/js/docs-viewer.js`\n- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)\n- [Studio JavaScript Payload Inventory](/docs/?scope=studio&doc=studio-javascript-payload-inventory)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer management / JavaScript maintainability",
+  "effect": "`docs-viewer-management.js` is now below the 1,000-line review threshold and no longer embeds drag/drop or right-click ownership inline. The pure drag/drop helper module remains focused on placement and move-undo helpers, while write orchestration stays in `docs-viewer-management-actions.js`. The JavaScript payload inventory now records Docs Viewer management interaction extraction as complete and removes the management controller from the over-threshold priority list.",
+  "related_docs": [
+    "docs-viewer-management",
+    "studio-javascript-payload-inventory"
+  ],
+  "related_files": [
+    "assets/docs-viewer/js/docs-viewer-management.js",
+    "assets/docs-viewer/js/docs-viewer-management-interactions.js",
+    "assets/docs-viewer/js/docs-viewer.js",
+    "docs-viewer-management.js",
+    "docs-viewer-management-actions.js"
+  ],
+  "affected": {
+    "files": [
+      "assets/docs-viewer/js/docs-viewer-management.js",
+      "assets/docs-viewer/js/docs-viewer-management-interactions.js",
+      "assets/docs-viewer/js/docs-viewer.js"
+    ],
+    "docs": [
+      "docs-viewer-management",
+      "studio-javascript-payload-inventory"
+    ]
+  }
+}

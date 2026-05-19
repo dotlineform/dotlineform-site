@@ -1,0 +1,50 @@
+{
+  "id": "change-2026-04-20-added-explicit-nested-panel-support-and-strengthened-the-primitive-catalogue-method",
+  "date": "2026-04-20",
+  "title": "Added explicit nested-panel support and strengthened the primitive-catalogue method",
+  "status": "implemented",
+  "type": "verification",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui"
+  ],
+  "summary": "Extended the panel primitive reference with a deliberate nested-panel variation and updated the catalogue docs so primitive pages are treated as shared-system pressure tests rather than protective demos.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3164,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** design system / primitive governance\n\n**Summary:**\nExtended the panel primitive reference with a deliberate nested-panel variation and updated the catalogue docs so primitive pages are treated as shared-system pressure tests rather than protective demos.\n\n**Reason:**\nContainer primitives can validly compose with themselves. If the catalogue hides that case or explains it away as surrounding-environment noise, live pages can keep accumulating one-off compensation that masks shared primitive defects.\n\n**Effect:**\nNested panels are now documented as a supported panel composition, direct child panels inherit a subordinate inner-surface treatment from the shared primitive, and the UI catalogue docs now state that shared defects should be fixed at source even when that exposes legacy drift.\n\n**Affected files/docs:**\n- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)\n- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n- `studio/ui-catalogue/panel/index.md`\n- `_includes/studio_ui_catalogue_panel_demo.html`\n- `_includes/ui_catalogue_notes/panel.md`\n- `assets/studio/css/studio.css`\n\n**Notes:**\nThis is an intentional shared-source change. A future cleanup pass should look for live pages that still compensate locally for panel composition.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "design system / primitive governance",
+  "effect": "Nested panels are now documented as a supported panel composition, direct child panels inherit a subordinate inner-surface treatment from the shared primitive, and the UI catalogue docs now state that shared defects should be fixed at source even when that exposes legacy drift.",
+  "related_docs": [
+    "ui-catalogue",
+    "studio-ui-framework",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/ui-catalogue/panel/index.md",
+    "_includes/studio_ui_catalogue_panel_demo.html",
+    "_includes/ui_catalogue_notes/panel.md",
+    "assets/studio/css/studio.css"
+  ],
+  "affected": {
+    "files": [
+      "studio/ui-catalogue/panel/index.md",
+      "_includes/studio_ui_catalogue_panel_demo.html",
+      "_includes/ui_catalogue_notes/panel.md",
+      "assets/studio/css/studio.css"
+    ],
+    "docs": [
+      "ui-catalogue",
+      "studio-ui-framework",
+      "studio-ui-rules"
+    ]
+  }
+}

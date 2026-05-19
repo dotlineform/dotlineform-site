@@ -1,0 +1,45 @@
+{
+  "id": "change-2026-04-20-added-a-studio-ui-preflight-entry-doc",
+  "date": "2026-04-20",
+  "title": "Added a Studio UI preflight entry doc",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "studio-ui",
+    "workflow"
+  ],
+  "summary": "Added [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start) as a short Studio UI landing/preflight doc, then updated the longer framework docs and `AGENTS.md` to point to it as the first stop for Studio UI work.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 2743,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio UI docs / implementation workflow\n\n**Summary:**\nAdded [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start) as a short Studio UI landing/preflight doc, then updated the longer framework docs and `AGENTS.md` to point to it as the first stop for Studio UI work.\n\n**Reason:**\nRecent Studio UI work exposed that the longer framework docs are useful as reference but weak as an operational entry point. Important implementation checks such as primitive reuse, config-backed copy, local-vs-systemic triage, and close-out steps were present in the docs set but not prominent enough at the moment of implementation.\n\n**Effect:**\nStudio UI work now has a short checklist-style entry doc that can be given to Codex directly, while the longer framework docs remain detailed reference material rather than the first place a task has to start.\n\n**Affected files/docs:**\n- [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)\n- [Design](/docs/?scope=studio&doc=design)\n- [Studio](/docs/?scope=studio&doc=studio)\n- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)\n- `AGENTS.md`",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio UI docs / implementation workflow",
+  "effect": "Studio UI work now has a short checklist-style entry doc that can be given to Codex directly, while the longer framework docs remain detailed reference material rather than the first place a task has to start.",
+  "related_docs": [
+    "studio-ui-start",
+    "design",
+    "studio",
+    "studio-ui-framework"
+  ],
+  "related_files": [
+    "AGENTS.md"
+  ],
+  "affected": {
+    "files": [
+      "AGENTS.md"
+    ],
+    "docs": [
+      "studio-ui-start",
+      "design",
+      "studio",
+      "studio-ui-framework"
+    ]
+  }
+}

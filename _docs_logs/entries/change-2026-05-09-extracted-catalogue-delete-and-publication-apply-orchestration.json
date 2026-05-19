@@ -1,0 +1,38 @@
+{
+  "id": "change-2026-05-09-extracted-catalogue-delete-and-publication-apply-orchestration",
+  "date": "2026-05-09",
+  "title": "Extracted catalogue delete and publication apply orchestration",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "catalogue",
+    "build",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Completed the thirteenth implementation slice of the script structural review by moving delete apply planning, publication source/build orchestration, and cleanup transaction execution out of `scripts/studio/catalogue_write_server.py`. The write server still owns endpoint request parsing, final response assembly, and Studio Activity append timing.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2199,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / scripts / maintainability\n\n**Summary:**\nCompleted the thirteenth implementation slice of the script structural review by moving delete apply planning, publication source/build orchestration, and cleanup transaction execution out of `scripts/studio/catalogue_write_server.py`.\nThe write server still owns endpoint request parsing, final response assembly, and Studio Activity append timing.\n\n**Files changed/docs:**\n\n- `scripts/catalogue_delete_plans.py`\n- `scripts/catalogue_publication.py`\n- `scripts/catalogue_transactions.py`\n- `scripts/studio/catalogue_write_server.py`\n- `tests/python/test_catalogue_delete_plans.py`\n- `tests/python/test_catalogue_publication.py`\n- `tests/python/test_catalogue_transactions.py`\n- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)\n\n**Impact:**\nDelete and publication apply paths now have direct-module coverage for payload planning, cleanup transaction backups, rollback behavior, search rebuild hooks, and moment-specific response keys.\nDestructive endpoint response contracts and activity logging remain visible in the local write server.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio / scripts / maintainability",
+  "related_docs": [
+    "site-request-script-structural-review-catalogue-write-server"
+  ],
+  "related_files": [
+    "scripts/studio/catalogue_write_server.py",
+    "scripts/catalogue_delete_plans.py",
+    "scripts/catalogue_publication.py",
+    "scripts/catalogue_transactions.py",
+    "tests/python/test_catalogue_delete_plans.py",
+    "tests/python/test_catalogue_publication.py",
+    "tests/python/test_catalogue_transactions.py"
+  ],
+  "change_request_doc_id": "site-request-script-structural-review-catalogue-write-server"
+}

@@ -1,0 +1,53 @@
+{
+  "id": "change-2026-05-03-added-docs-viewer-export-source-text-extraction",
+  "date": "2026-05-03",
+  "title": "Added Docs Viewer export source-text extraction",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "library",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "workflow"
+  ],
+  "summary": "Extended the Docs Viewer export engine with deterministic plain-text extraction from rendered docs payload HTML.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 580,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Library / Studio docs export\n\n**Summary:**\nExtended the Docs Viewer export engine with deterministic plain-text extraction from rendered docs payload HTML.\n\n**Reason:**\nSummary and full-content Library export configs need body text suitable for LLM upload and external review without exposing raw HTML.\n\n**Effect:**\n`source_text` field mappings now convert rendered HTML into text with paragraphs, headings, lists, quote text, optional code omission, and character truncation. Image handling is config-driven at the field-mapping level, and full-content exports extract available image/SVG text while emitting `[image]` for otherwise empty visuals.\n\n**Affected files/docs:**\n\n- `scripts/docs/docs_export.py`\n- `assets/studio/data/library_export_configs.json`\n- `assets/studio/data/library_export_configs.schema.json`\n- [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)\n- [Library Export v1](/docs/?scope=studio&doc=library-export)\n- [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n\n**Benefits:**\nThe summary and full-content export configs are now runnable, and image/SVG semantics are preserved when the source provides useful text.\n\n**Risks:**\nThe extractor is intentionally text-oriented; it does not attempt visual interpretation of images or diagrams without author-provided text.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Library / Studio docs export",
+  "effect": "`source_text` field mappings now convert rendered HTML into text with paragraphs, headings, lists, quote text, optional code omission, and character truncation. Image handling is config-driven at the field-mapping level, and full-content exports extract available image/SVG text while emitting `[image]` for otherwise empty visuals.",
+  "related_docs": [
+    "scripts-docs-export",
+    "library-export",
+    "config-library-export-configs",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/docs/docs_export.py",
+    "assets/studio/data/library_export_configs.json",
+    "assets/studio/data/library_export_configs.schema.json"
+  ],
+  "affected": {
+    "files": [
+      "scripts/docs/docs_export.py",
+      "assets/studio/data/library_export_configs.json",
+      "assets/studio/data/library_export_configs.schema.json"
+    ],
+    "docs": [
+      "scripts-docs-export",
+      "library-export",
+      "config-library-export-configs",
+      "site-change-log"
+    ]
+  }
+}

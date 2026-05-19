@@ -1,0 +1,39 @@
+{
+  "id": "change-2026-05-18-added-docs-image-hover-titles",
+  "date": "2026-05-18",
+  "title": "Added Docs Image Hover Titles",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "build",
+    "scripts"
+  ],
+  "summary": "Docs Viewer payload generation now adds a missing image `title` attribute from the rendered image `alt` text. Images with explicit titles keep their authored title.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 126,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer builder / rendered docs content\n\n**Summary:**\nDocs Viewer payload generation now adds a missing image `title` attribute from the rendered image `alt` text.\nImages with explicit titles keep their authored title.\n\n**Effect:**\nDocs images now expose their alt text on hover in normal browsers without changing source Markdown syntax or accessibility alt text.\n\n**Affected files/docs:**\n\n- `scripts/docs/build_docs.rb`\n- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer builder / rendered docs content",
+  "effect": "Docs images now expose their alt text on hover in normal browsers without changing source Markdown syntax or accessibility alt text.",
+  "related_docs": [
+    "scripts-docs-builder"
+  ],
+  "related_files": [
+    "scripts/docs/build_docs.rb"
+  ],
+  "affected": {
+    "files": [
+      "scripts/docs/build_docs.rb"
+    ],
+    "docs": [
+      "scripts-docs-builder"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "change-2026-04-22-made-the-reserved-archive-docs-node-structural-and-non-loadable",
+  "date": "2026-04-22",
+  "title": "Made the reserved `archive` docs node structural and non-loadable",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "build",
+    "scripts",
+    "data-models",
+    "workflow"
+  ],
+  "summary": "Updated the docs viewer so the reserved `archive` node now behaves as a structural section only. Direct navigation to `archive` now opens the first archived child doc instead of trying to load `archive.json`.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 2463,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** docs viewer / docs build pipeline\n\n**Summary:**\nUpdated the docs viewer so the reserved `archive` node now behaves as a structural section only. Direct navigation to `archive` now opens the first archived child doc instead of trying to load `archive.json`.\n\n**Reason:**\nThe docs-management contract already treats `archive` as a protected reserved `doc_id`, but the generated payload path for that id becomes `archive.json`. Jekyll does not reliably publish that leading-underscore asset under `_site`, which caused a viewer 404 when the Archive node itself was opened.\n\n**Effect:**\nThe Archive row still exists in the tree and still owns archived children, but it is no longer treated as a normal loadable document target. Docs search also stops exposing `archive` as a result because it is a structural node rather than a viewable content page. Empty Archive buckets now fall back to the scope's default doc instead of trying to load `archive.json` through rendered viewer links.\n\n**Rejected options:**\n- at the time, renaming `_archive` to `archive`, because that would have widened the change into the docs-management contract, archive API semantics, and existing source docs\n- escaping the generated payload filename for `_archive`, because that would have spread a one-off storage rule into the builder output contract instead of fixing the runtime meaning directly\n\n**Affected files/docs:**\n- `assets/js/docs-viewer.js`\n- `scripts/build_search.rb`\n- [Docs Viewer Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)\n- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)\n- [Search Change Log](/docs/?scope=studio&doc=search-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "docs viewer / docs build pipeline",
+  "effect": "The Archive row still exists in the tree and still owns archived children, but it is no longer treated as a normal loadable document target. Docs search also stops exposing `archive` as a result because it is a structural node rather than a viewable content page. Empty Archive buckets now fall back to the scope's default doc instead of trying to load `archive.json` through rendered viewer links.",
+  "related_docs": [
+    "docs-viewer-source-organisation",
+    "docs-viewer-management",
+    "search-change-log"
+  ],
+  "related_files": [
+    "assets/js/docs-viewer.js",
+    "scripts/build_search.rb",
+    "archive.json",
+    "_site",
+    "_archive"
+  ],
+  "affected": {
+    "files": [
+      "assets/js/docs-viewer.js",
+      "scripts/build_search.rb"
+    ],
+    "docs": [
+      "docs-viewer-source-organisation",
+      "docs-viewer-management",
+      "search-change-log"
+    ]
+  }
+}

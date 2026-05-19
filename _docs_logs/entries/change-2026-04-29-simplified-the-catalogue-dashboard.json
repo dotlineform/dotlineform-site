@@ -1,0 +1,44 @@
+{
+  "id": "change-2026-04-29-simplified-the-catalogue-dashboard",
+  "date": "2026-04-29",
+  "title": "Simplified the Catalogue dashboard",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui"
+  ],
+  "summary": "Reduced `/studio/catalogue/` to catalogue counts, compact Edit and Review route pills, and a plain Admin link stack.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 331,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue dashboard\n\n**Summary:**\nReduced `/studio/catalogue/` to catalogue counts, compact Edit and Review route pills, and a plain Admin link stack.\n\n**Reason:**\nThe Catalogue dashboard had accumulated explanatory text, guidance links, and workflow summary cards that slowed down routine navigation.\n\n**Effect:**\nThe dashboard no longer shows descriptive intro, route descriptions, guidance, or workflow summary cards. It now shows series, works, work-detail, and moment counts; two fixed-width route columns for `Edit` and `Review`; and an `Admin` section with stacked activity-report links.\n\n**Affected files/docs:**\n\n- `studio/catalogue/index.md`\n- `assets/css/main.css`\n- `assets/studio/js/studio-dashboard.js`\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue dashboard",
+  "effect": "The dashboard no longer shows descriptive intro, route descriptions, guidance, or workflow summary cards. It now shows series, works, work-detail, and moment counts; two fixed-width route columns for `Edit` and `Review`; and an `Admin` section with stacked activity-report links.",
+  "related_docs": [
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/catalogue/index.md",
+    "assets/css/main.css",
+    "assets/studio/js/studio-dashboard.js"
+  ],
+  "affected": {
+    "files": [
+      "studio/catalogue/index.md",
+      "assets/css/main.css",
+      "assets/studio/js/studio-dashboard.js"
+    ],
+    "docs": [
+      "studio-ui-rules"
+    ]
+  }
+}

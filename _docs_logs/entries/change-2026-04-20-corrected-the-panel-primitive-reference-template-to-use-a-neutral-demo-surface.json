@@ -1,0 +1,50 @@
+{
+  "id": "change-2026-04-20-corrected-the-panel-primitive-reference-template-to-use-a-neutral-demo-surface",
+  "date": "2026-04-20",
+  "title": "Corrected the panel primitive reference template to use a neutral demo surface",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui"
+  ],
+  "summary": "Updated the first UI primitive reference so shared panels are shown without enclosing section panels and with vertically stacked variants.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3191,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** design system / Studio UI catalogue\n\n**Summary:**\nUpdated the first UI primitive reference so shared panels are shown without enclosing section panels and with vertically stacked variants.\n\n**Reason:**\nThe original page nested the live panel examples inside outer panel shells, which made the editor variant look like it overlapped its container and blurred the line between a primitive defect and a page-composition problem.\n\n**Effect:**\nThe panel catalogue page now shows the primitive on a neutral surface, implementation notes focus on concrete code-level warnings, and the Studio UI docs now define neutral-surface rendering as the default pattern for future primitive pages.\n\n**Affected files/docs:**\n- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)\n- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n- `studio/ui-catalogue/panel/index.md`\n- `_includes/studio_ui_catalogue_panel_demo.html`\n- `_includes/ui_catalogue_notes/panel.md`\n- `assets/studio/css/studio.css`\n\n**Notes:**\nThis change improves the primitive-reference contract rather than changing the shared panel shell itself.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "design system / Studio UI catalogue",
+  "effect": "The panel catalogue page now shows the primitive on a neutral surface, implementation notes focus on concrete code-level warnings, and the Studio UI docs now define neutral-surface rendering as the default pattern for future primitive pages.",
+  "related_docs": [
+    "ui-catalogue",
+    "studio-ui-framework",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/ui-catalogue/panel/index.md",
+    "_includes/studio_ui_catalogue_panel_demo.html",
+    "_includes/ui_catalogue_notes/panel.md",
+    "assets/studio/css/studio.css"
+  ],
+  "affected": {
+    "files": [
+      "studio/ui-catalogue/panel/index.md",
+      "_includes/studio_ui_catalogue_panel_demo.html",
+      "_includes/ui_catalogue_notes/panel.md",
+      "assets/studio/css/studio.css"
+    ],
+    "docs": [
+      "ui-catalogue",
+      "studio-ui-framework",
+      "studio-ui-rules"
+    ]
+  }
+}

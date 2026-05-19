@@ -1,0 +1,45 @@
+{
+  "id": "change-2026-04-29-factored-shared-catalogue-series-editor-helpers",
+  "date": "2026-04-29",
+  "title": "Factored shared catalogue series editor helpers",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "build"
+  ],
+  "summary": "Added a shared series source helper module and moved the current new-series and edit-series controllers onto shared field definitions, id normalization, draft shaping, validation helpers, next-id suggestion, and create/save payload helpers.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 837,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue series\n\n**Summary:**\nAdded a shared series source helper module and moved the current new-series and edit-series controllers onto shared field definitions, id normalization, draft shaping, validation helpers, next-id suggestion, and create/save payload helpers.\n\n**Reason:**\nThe series unified editor work needs one source-field contract before adding `?mode=new` to the main series editor route.\n\n**Effect:**\nThe current `/studio/catalogue-series/` and `/studio/catalogue-new-series/` route behavior remains unchanged, but both paths now depend on the same series helper surface.\n\n**Affected files/docs:**\n\n- `assets/studio/js/catalogue-series-fields.js`\n- `assets/studio/js/catalogue-series-editor.js`\n- `assets/studio/js/catalogue-new-series-editor.js`\n- [Catalogue Series Unified Editor Request](/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue series",
+  "effect": "The current `/studio/catalogue-series/` and `/studio/catalogue-new-series/` route behavior remains unchanged, but both paths now depend on the same series helper surface.",
+  "related_docs": [
+    "site-request-catalogue-series-unified-editor"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-series-fields.js",
+    "assets/studio/js/catalogue-series-editor.js",
+    "assets/studio/js/catalogue-new-series-editor.js"
+  ],
+  "change_request_doc_id": "site-request-catalogue-series-unified-editor",
+  "affected": {
+    "files": [
+      "assets/studio/js/catalogue-series-fields.js",
+      "assets/studio/js/catalogue-series-editor.js",
+      "assets/studio/js/catalogue-new-series-editor.js"
+    ],
+    "docs": [
+      "site-request-catalogue-series-unified-editor"
+    ]
+  }
+}

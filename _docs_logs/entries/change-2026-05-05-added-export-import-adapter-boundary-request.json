@@ -1,0 +1,31 @@
+{
+  "id": "change-2026-05-05-added-export-import-adapter-boundary-request",
+  "date": "2026-05-05",
+  "title": "Added export/import adapter boundary request",
+  "status": "proposed",
+  "type": "implementation",
+  "domains": [
+    "catalogue",
+    "library",
+    "workflow",
+    "analytics"
+  ],
+  "summary": "Added a change request to adopt an adapter-based export/import architecture before more Library, Analytics, or Catalogue requirements are added to the shared workflow shell. The current Library document workflow is identified as the first adapter implementation target.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3451,
+    "archive": "current"
+  },
+  "body": "**Status:** proposed\n\n**Area:** Studio / Data workflows\n\n**Summary:**\nAdded a change request to adopt an adapter-based export/import architecture before more Library, Analytics, or Catalogue requirements are added to the shared workflow shell.\nThe current Library document workflow is identified as the first adapter implementation target.\n\n**Reason:**\nLibrary import/export is document-specific, while future Analytics and Catalogue workflows need domain-specific validation and apply behavior against structured site data.\nThe adapter boundary keeps shared lifecycle behavior reusable without making document preview semantics universal.\n\n**Files changed:**\n\n- [Export Import Adapter Boundary Request](/docs/?scope=studio&doc=site-request-export-import-adapters)\n- [Change Requests](/docs/?scope=studio&doc=change-requests)\n\n**Impact:**\nFuture export/import requirements now have a stable planning target that separates shared shell responsibilities from scope-specific adapter behavior.\nFollow-up review resolved the initial direction: adapters map to data domains rather than route scopes, Library should use a general documents adapter with Library config, neutral export/import routes are preferred, and user-facing workflow folders should be data-domain-first.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Data workflows",
+  "effect": "Library import/export is document-specific, while future Analytics and Catalogue workflows need domain-specific validation and apply behavior against structured site data. The adapter boundary keeps shared lifecycle behavior reusable without making document preview semantics universal.",
+  "related_docs": [
+    "site-request-export-import-adapters",
+    "change-requests"
+  ],
+  "change_request_doc_id": "site-request-export-import-adapters"
+}

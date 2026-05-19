@@ -1,0 +1,41 @@
+{
+  "id": "change-2026-05-12-consolidated-docs-management-server-packaging",
+  "date": "2026-05-12",
+  "title": "Consolidated Docs Management Server Packaging",
+  "status": "implemented",
+  "type": "documentation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "The local Docs Management server packaging is now documented as a portable loopback server boundary with a standalone project-local start command. Generated docs-index and payload reads now resolve through each scope's configured output path in `scripts/docs/docs_scopes.json`, and `bin/dev-studio` validates `DOCS_STARTUP_REBUILD_SCOPES` from that same scope config instead of a hardcoded scope list.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 677,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer portability / local management server\n\n**Summary:**\nThe local Docs Management server packaging is now documented as a portable loopback server boundary with a standalone project-local start command.\nGenerated docs-index and payload reads now resolve through each scope's configured output path in `scripts/docs/docs_scopes.json`, and `bin/dev-studio` validates `DOCS_STARTUP_REBUILD_SCOPES` from that same scope config instead of a hardcoded scope list.\n\n**Files changed/docs:**\n\n- `bin/dev-studio`\n- `scripts/docs/docs_generated_reads.py`\n- `tests/python/test_docs_generated_reads.py`\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)\n- [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)\n- [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)\n\n**Impact:**\nA downstream Docs Viewer install has one documented local-management server command, while public/static builds continue to avoid exposing the server.\nAdding a new configured docs scope no longer requires editing `bin/dev-studio` for startup docs/docs-search rebuild eligibility.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Docs Viewer portability / local management server",
+  "related_docs": [
+    "scripts-docs-management-server",
+    "scripts-dev-studio",
+    "docs-viewer-portable-setup",
+    "site-request-portable-docs-viewer"
+  ],
+  "related_files": [
+    "scripts/docs/docs_scopes.json",
+    "bin/dev-studio",
+    "scripts/docs/docs_generated_reads.py",
+    "tests/python/test_docs_generated_reads.py"
+  ],
+  "change_request_doc_id": "site-request-portable-docs-viewer"
+}

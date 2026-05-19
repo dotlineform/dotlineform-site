@@ -7,7 +7,7 @@ import argparse
 import json
 import re
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -298,8 +298,8 @@ def build_records(entries: list[LegacyEntry]) -> list[dict[str, Any]]:
     return records
 
 
-def jsonl_path(root: Path, change_date: str) -> Path:
-    return root / "_docs_logs" / "entries" / f"{change_date[:7]}.jsonl"
+def entry_path(root: Path, entry_id: str) -> Path:
+    return root / "_docs_logs" / "entries" / f"{entry_id}.json"
 
 
 def build_report(records: list[dict[str, Any]], source_files: list[str]) -> dict[str, Any]:
@@ -352,18 +352,21 @@ def build_report(records: list[dict[str, Any]], source_files: list[str]) -> dict
     }
 
 
-def write_jsonl_records(root: Path, records: list[dict[str, Any]], replace: bool = False) -> list[str]:
-    grouped: dict[Path, list[dict[str, Any]]] = defaultdict(list)
+def write_entry_records(root: Path, records: list[dict[str, Any]], replace: bool = False) -> list[str]:
+    duplicate_ids = sorted(entry_id for entry_id, count in Counter(str(record["id"]) for record in records).items() if count > 1)
+    if duplicate_ids:
+        raise ValueError(f"duplicate generated ids: {', '.join(duplicate_ids)}")
+
+    paths: dict[Path, dict[str, Any]] = {}
     for record in records:
-        grouped[jsonl_path(root, str(record["date"]))].append(record)
+        paths[entry_path(root, str(record["id"]))] = record
 
     written: list[str] = []
-    for path, path_records in sorted(grouped.items()):
+    for path, record in sorted(paths.items()):
         if path.exists() and path.read_text(encoding="utf-8").strip() and not replace:
             raise FileExistsError(f"{repo_relative(root, path)} already exists; pass --replace to overwrite migration output")
         path.parent.mkdir(parents=True, exist_ok=True)
-        encoded = "\n".join(json.dumps(record, ensure_ascii=False, separators=(",", ":")) for record in path_records)
-        path.write_text(f"{encoded}\n", encoding="utf-8")
+        path.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         written.append(repo_relative(root, path))
     return written
 
@@ -381,8 +384,8 @@ def load_entries(root: Path, source_files: list[str]) -> list[LegacyEntry]:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-file", action="append", help="Legacy changelog Markdown file. Repeatable.")
-    parser.add_argument("--write", action="store_true", help="Write monthly JSONL records and migration report.")
-    parser.add_argument("--replace", action="store_true", help="Overwrite existing monthly migration JSONL outputs.")
+    parser.add_argument("--write", action="store_true", help="Write per-entry JSON records and migration report.")
+    parser.add_argument("--replace", action="store_true", help="Overwrite existing per-entry migration JSON outputs.")
     parser.add_argument("--report-path", default="_docs_logs/reports/migration-review.json", help="Migration report path.")
     parser.add_argument("--json", action="store_true", help="Print the full migration report as JSON.")
     return parser
@@ -407,9 +410,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"domains: {len(summary['domains'])}")
             print(f"entries needing review: {summary['warnings']}")
         if not args.write:
-            print("preview only; pass --write to create JSONL records and the migration report")
+            print("preview only; pass --write to create JSON records and the migration report")
             return 0
-        written = write_jsonl_records(root, records, replace=args.replace)
+        written = write_entry_records(root, records, replace=args.replace)
         report_path = root / args.report_path
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

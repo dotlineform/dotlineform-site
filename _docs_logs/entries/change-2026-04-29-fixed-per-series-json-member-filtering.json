@@ -1,0 +1,47 @@
+{
+  "id": "change-2026-04-29-fixed-per-series-json-member-filtering",
+  "date": "2026-04-29",
+  "title": "Fixed per-series JSON member filtering",
+  "status": "implemented",
+  "type": "bugfix",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "workflow"
+  ],
+  "summary": "Fixed the generator path that populates published member works in `assets/series/index/<series_id>.json`.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 584,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue generation / generated series data\n\n**Summary:**\nFixed the generator path that populates published member works in `assets/series/index/<series_id>.json`.\n\n**Reason:**\nThe generator filtered per-series membership through `work_meta_by_id.status`, but that metadata map intentionally does not include work publication status. As a result, regenerated per-series payloads could emit `series.works: []` for published series even when the aggregate `assets/data/series_index.json` still had the correct visible grid membership.\n\n**Effect:**\nPer-series JSON generation used an internal `work_status_by_id` lookup sourced directly from canonical work status data. That compatibility field was later removed from per-series runtime JSON; the public series grid continues to render from the aggregate series and works indexes.\n\n**Affected files/docs:**\n\n- `scripts/generate_work_pages.py`\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "catalogue generation / generated series data",
+  "effect": "Per-series JSON generation used an internal `work_status_by_id` lookup sourced directly from canonical work status data. That compatibility field was later removed from per-series runtime JSON; the public series grid continues to render from the aggregate series and works indexes.",
+  "related_docs": [
+    "scripts-generate-work-pages",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "assets/series/index/<series_id>.json",
+    "assets/data/series_index.json"
+  ],
+  "affected": {
+    "files": [
+      "scripts/generate_work_pages.py"
+    ],
+    "docs": [
+      "scripts-generate-work-pages",
+      "site-change-log"
+    ]
+  }
+}

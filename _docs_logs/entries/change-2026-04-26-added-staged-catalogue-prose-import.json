@@ -1,0 +1,61 @@
+{
+  "id": "change-2026-04-26-added-staged-catalogue-prose-import",
+  "date": "2026-04-26",
+  "title": "Added staged catalogue prose import",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Added a work/series prose import step that reads ID-based staged Markdown from `var/docs/catalogue/import-staging/`, validates it, and writes permanent repo-local prose source under `_docs_catalogue/`.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1576,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue\n\n**Summary:**\nAdded a work/series prose import step that reads ID-based staged Markdown from `var/docs/catalogue/import-staging/`, validates it, and writes permanent repo-local prose source under `_docs_catalogue/`.\n\n**Reason:**\nWork and series prose source is moving out of externally resolved project folders and into a repo-managed Markdown source tree while keeping public work and series payloads stable.\n\n**Effect:**\nThe work and series editors now expose `Import staged prose` when the matching staged Markdown file exists. The catalogue write server previews staged prose, rejects front matter, requires overwrite confirmation for different existing permanent prose, and writes without backup for this explicit prose flow. Generator lookup now reads the new permanent source roots.\n\n**Affected files/docs:**\n\n- `scripts/studio/catalogue_write_server.py`\n- `scripts/catalogue_json_build.py`\n- `assets/studio/js/catalogue-work-editor.js`\n- `assets/studio/js/catalogue-series-editor.js`\n- `assets/studio/js/studio-transport.js`\n- `assets/studio/data/studio_config.json`\n- [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)\n- Catalogue Series Editor",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue",
+  "effect": "The work and series editors now expose `Import staged prose` when the matching staged Markdown file exists. The catalogue write server previews staged prose, rejects front matter, requires overwrite confirmation for different existing permanent prose, and writes without backup for this explicit prose flow. Generator lookup now reads the new permanent source roots.",
+  "related_docs": [
+    "site-request-work-series-prose-source-model",
+    "scripts-catalogue-write-server",
+    "catalogue-work-editor"
+  ],
+  "related_files": [
+    "scripts/studio/catalogue_write_server.py",
+    "scripts/catalogue_json_build.py",
+    "assets/studio/js/catalogue-work-editor.js",
+    "assets/studio/js/catalogue-series-editor.js",
+    "assets/studio/js/studio-transport.js",
+    "assets/studio/data/studio_config.json",
+    "var/docs/catalogue/import-staging/",
+    "_docs_catalogue/"
+  ],
+  "change_request_doc_id": "site-request-work-series-prose-source-model",
+  "affected": {
+    "files": [
+      "scripts/studio/catalogue_write_server.py",
+      "scripts/catalogue_json_build.py",
+      "assets/studio/js/catalogue-work-editor.js",
+      "assets/studio/js/catalogue-series-editor.js",
+      "assets/studio/js/studio-transport.js",
+      "assets/studio/data/studio_config.json"
+    ],
+    "docs": [
+      "site-request-work-series-prose-source-model",
+      "scripts-catalogue-write-server",
+      "catalogue-work-editor"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "change-2026-05-09-moved-analytics-tag-scripts-into-package-boundary",
+  "date": "2026-05-09",
+  "title": "Moved Analytics tag scripts into package boundary",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "scripts",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Moved the tag write service and extracted tag helper modules into `scripts/analytics/`. The service remains named `tag_write_server.py` because the current write surface is still tag-specific; a broader `analytics_server.py` name remains deferred until non-tag Analytics writes share the same local-service contract. `bin/dev-studio`, tests, and active script docs now use the new Analytics package path.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1623,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** scripts / analytics / maintainability\n\n**Summary:**\nMoved the tag write service and extracted tag helper modules into `scripts/analytics/`.\nThe service remains named `tag_write_server.py` because the current write surface is still tag-specific; a broader `analytics_server.py` name remains deferred until non-tag Analytics writes share the same local-service contract.\n`bin/dev-studio`, tests, and active script docs now use the new Analytics package path.\n\n**Files changed/docs:**\n\n- `scripts/analytics/tag_write_server.py`\n- `scripts/analytics/tag_routes.py`\n- `scripts/analytics/tag_activity.py`\n- `scripts/analytics/tag_source_model.py`\n- `scripts/analytics/tag_assignment_service.py`\n- `scripts/analytics/tag_registry_mutations.py`\n- `scripts/analytics/tag_alias_mutations.py`\n- `scripts/analytics/tag_promotion_mutations.py`\n- `scripts/analytics/tag_write_transactions.py`\n- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)\n- [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization)\n\n**Impact:**\nAnalytics tag behavior now has the same concrete package-level ownership as Catalogue.\n`scripts/studio/audit_service.py` stays under Studio runtime because it is not domain-specific write behavior.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "scripts / analytics / maintainability",
+  "related_docs": [
+    "scripts-tag-write-server",
+    "site-request-scripts-directory-organization"
+  ],
+  "related_files": [
+    "scripts/analytics/",
+    "tag_write_server.py",
+    "analytics_server.py",
+    "bin/dev-studio",
+    "scripts/analytics/tag_write_server.py",
+    "scripts/analytics/tag_routes.py",
+    "scripts/analytics/tag_activity.py",
+    "scripts/analytics/tag_source_model.py",
+    "scripts/analytics/tag_assignment_service.py",
+    "scripts/analytics/tag_registry_mutations.py",
+    "scripts/analytics/tag_alias_mutations.py",
+    "scripts/analytics/tag_promotion_mutations.py",
+    "scripts/analytics/tag_write_transactions.py",
+    "scripts/studio/audit_service.py"
+  ],
+  "change_request_doc_id": "site-request-scripts-directory-organization"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "change-2026-05-08-extracted-catalogue-prose-import-helpers",
+  "date": "2026-05-08",
+  "title": "Extracted catalogue prose import helpers",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Completed the sixth implementation slice of the script structural review by moving staged prose import and draft moment source import helpers out of the catalogue write server. `scripts/catalogue_prose_import.py` now owns prose import target normalization, staged Markdown validation, preview payloads, no-backup prose writes, and draft moment import metadata/prose application. The write server keeps endpoint conflict handling, allowlist set ownership, local logging, moment-import Studio Activity append timing, and response assembly.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2385,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / scripts / maintainability\n\n**Summary:**\nCompleted the sixth implementation slice of the script structural review by moving staged prose import and draft moment source import helpers out of the catalogue write server.\n`scripts/catalogue_prose_import.py` now owns prose import target normalization, staged Markdown validation, preview payloads, no-backup prose writes, and draft moment import metadata/prose application.\nThe write server keeps endpoint conflict handling, allowlist set ownership, local logging, moment-import Studio Activity append timing, and response assembly.\n\n**Files changed/docs:**\n\n- `scripts/catalogue_prose_import.py`\n- `scripts/catalogue_transactions.py`\n- `scripts/studio/catalogue_write_server.py`\n- `scripts/run_checks.py`\n- `tests/python/test_catalogue_prose_import.py`\n- `tests/python/test_catalogue_transactions.py`\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)\n- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)\n\n**Impact:**\nStaged prose preview/apply behavior and draft moment import application now have focused direct-module coverage.\nThe endpoint payloads remain server-assembled, and no-backup prose writes now use the same transaction helper module that owns other catalogue write mechanics.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio / scripts / maintainability",
+  "related_docs": [
+    "scripts-catalogue-write-server",
+    "scripts-run-checks",
+    "site-request-script-structural-review"
+  ],
+  "related_files": [
+    "scripts/catalogue_prose_import.py",
+    "scripts/catalogue_transactions.py",
+    "scripts/studio/catalogue_write_server.py",
+    "scripts/run_checks.py",
+    "tests/python/test_catalogue_prose_import.py",
+    "tests/python/test_catalogue_transactions.py"
+  ],
+  "change_request_doc_id": "site-request-script-structural-review"
+}

@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-04-20-added-the-first-shared-button-primitive-page",
+  "date": "2026-04-20",
+  "title": "Added the first shared button primitive page",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui"
+  ],
+  "summary": "Added `/studio/ui-catalogue/button/` as the first published reference page for shared command buttons, using the same page template approach as the panel primitive while keeping the scope focused on command actions rather than pills.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3030,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** design system / UI catalogue\n\n**Summary:**\nAdded `/studio/ui-catalogue/button/` as the first published reference page for shared command buttons, using the same page template approach as the panel primitive while keeping the scope focused on command actions rather than pills.\n\n**Reason:**\nCurrent Studio pages already share one baseline button class, but the product still mixes together command buttons, toolbar subsets, modal actions, and pill-like controls conceptually. The first pass needed to establish the role boundary before visual refinement.\n\n**Effect:**\nThe new button primitive page established the first command-button scope and created a base page to refine further. The UI catalogue index now links to both the button and panel primitive pages.\n\n**Affected files/docs:**\n- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n- `studio/ui-catalogue/button/index.md`\n- `_includes/studio_ui_catalogue_button_demo.html`\n- `_includes/ui_catalogue_notes/button.md`\n- `studio/ui-catalogue/index.md`\n\n**Notes:**\nThis first draft was intentionally broad enough to expose drift. The later refinement on the same day narrowed it to a stricter command-only contract.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "design system / UI catalogue",
+  "effect": "The new button primitive page established the first command-button scope and created a base page to refine further. The UI catalogue index now links to both the button and panel primitive pages.",
+  "related_docs": [
+    "ui-catalogue",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/ui-catalogue/button/index.md",
+    "_includes/studio_ui_catalogue_button_demo.html",
+    "_includes/ui_catalogue_notes/button.md",
+    "studio/ui-catalogue/index.md"
+  ],
+  "affected": {
+    "files": [
+      "studio/ui-catalogue/button/index.md",
+      "_includes/studio_ui_catalogue_button_demo.html",
+      "_includes/ui_catalogue_notes/button.md",
+      "studio/ui-catalogue/index.md"
+    ],
+    "docs": [
+      "ui-catalogue",
+      "studio-ui-rules"
+    ]
+  }
+}

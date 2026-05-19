@@ -1,0 +1,59 @@
+{
+  "id": "change-2026-05-01-rewrote-stale-workbook-workflow-docs",
+  "date": "2026-05-01",
+  "title": "Rewrote stale workbook workflow docs",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "workflow"
+  ],
+  "summary": "Rewrote current catalogue docs and archived workflow guides so they no longer route users through retired workbook-led or standalone file/link workflows.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 1510,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** documentation / compatibility cleanup\n\n**Summary:**\nRewrote current catalogue docs and archived workflow guides so they no longer route users through retired workbook-led or standalone file/link workflows.\n\n**Reason:**\nThe live catalogue source is canonical JSON maintained through Studio and scoped JSON builds. Keeping old workflow detail in current docs made the source boundary look ambiguous.\n\n**Effect:**\nThe current pipeline map now describes the JSON-source workflow. Deprecated workbook-led script/use-case pages are concise archive stubs that point to current references. Catalogue source, search, delete cleanup, lookup invalidation, work-owned file/link, and planning docs now describe work-owned downloads/links and scoped JSON builds rather than retired workflow paths.\n\n**Affected files/docs:**\n\n- `AGENTS.md`\n- [Current Pipeline Map](/docs/?scope=studio&doc=new-pipeline-current-pipeline-map)\n- [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)\n- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)\n- [Delete Work](/docs/?scope=studio&doc=scripts-delete-work)\n- [Copy Draft Media](/docs/?scope=studio&doc=scripts-copy-draft-media)\n- [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)\n- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)\n- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "documentation / compatibility cleanup",
+  "effect": "The current pipeline map now describes the JSON-source workflow. Deprecated workbook-led script/use-case pages are concise archive stubs that point to current references. Catalogue source, search, delete cleanup, lookup invalidation, work-owned file/link, and planning docs now describe work-owned downloads/links and scoped JSON builds rather than retired workflow paths.",
+  "related_docs": [
+    "new-pipeline-current-pipeline-map",
+    "pipeline-use-cases",
+    "scripts-main-pipeline",
+    "scripts-delete-work",
+    "scripts-copy-draft-media",
+    "scripts-catalogue-source",
+    "site-request-catalogue-compatibility-cleanup",
+    "site-request-catalogue-compatibility-cleanup-inventory",
+    "site-change-log"
+  ],
+  "related_files": [
+    "AGENTS.md"
+  ],
+  "affected": {
+    "files": [
+      "AGENTS.md"
+    ],
+    "docs": [
+      "new-pipeline-current-pipeline-map",
+      "pipeline-use-cases",
+      "scripts-main-pipeline",
+      "scripts-delete-work",
+      "scripts-copy-draft-media",
+      "scripts-catalogue-source",
+      "site-request-catalogue-compatibility-cleanup",
+      "site-request-catalogue-compatibility-cleanup-inventory",
+      "site-change-log"
+    ]
+  }
+}

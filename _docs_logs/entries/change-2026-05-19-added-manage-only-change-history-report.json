@@ -1,0 +1,41 @@
+{
+  "id": "change-2026-05-19-added-manage-only-change-history-report",
+  "date": "2026-05-19",
+  "title": "Added Manage-Only Change History Report",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "workflow",
+    "search"
+  ],
+  "summary": "Replaced the long site change-log archives with compact migration stubs and added a manage-only Docs Viewer report for browsing structured docs-log entries by domain.",
+  "source": {
+    "file": "_docs/site-request-change-log-entry-model.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "docs-logs",
+    "change-history-report"
+  ],
+  "change_request_doc_id": "site-request-change-log-entry-model",
+  "related_docs": [
+    "site-change-log",
+    "change-history",
+    "change-history-reports",
+    "docs-viewer-reports",
+    "site-request-change-log-entry-model"
+  ],
+  "related_files": [
+    "_docs/site-change-log.md",
+    "_docs/change-history.md",
+    "_docs/change-history-reports.md",
+    "assets/docs-viewer/js/reports/change-history-report.js",
+    "scripts/docs/docs_management_server.py",
+    "scripts/docs/build_search.rb"
+  ],
+  "effect": "Detailed change history now lives in structured JSONL records with local generated projections, while public docs stay compact and manage mode provides the richer browsing surface.",
+  "verification": [
+    "18 focused pytest checks passed; Studio docs/search rebuilds passed; temporary docs-management endpoint returned 469 generated change-history entries."
+  ]
+}

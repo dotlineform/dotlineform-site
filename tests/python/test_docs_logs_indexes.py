@@ -15,6 +15,7 @@ if str(SCRIPTS_DOCS_LOGS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DOCS_LOGS_DIR))
 
 import build_indexes  # noqa: E402
+import log_entry  # noqa: E402
 
 
 def sample_record(entry_id: str, change_date: str, title: str, domain: str) -> dict[str, object]:
@@ -52,21 +53,62 @@ def test_build_outputs_groups_entries_by_required_indexes() -> None:
     assert outputs["search_index"]["entries"][0]["search_text"]["trace"].count("scripts-docs-builder") == 1
 
 
-def test_read_jsonl_entries_validates_and_sorts_records() -> None:
+def test_read_entries_validates_and_sorts_records() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         (root / "_config.yml").write_text("title: test\n", encoding="utf-8")
-        entries_path = root / "_docs_logs" / "entries" / "2026-05.jsonl"
-        entries_path.parent.mkdir(parents=True)
         records = [
             sample_record("change-2026-05-18-two", "2026-05-18", "Two", "search"),
             sample_record("change-2026-05-19-one", "2026-05-19", "One", "docs-viewer"),
         ]
-        entries_path.write_text("\n".join(json.dumps(record) for record in records) + "\n", encoding="utf-8")
+        entries_dir = root / "_docs_logs" / "entries"
+        entries_dir.mkdir(parents=True)
+        for record in records:
+            (entries_dir / f"{record['id']}.json").write_text(json.dumps(record), encoding="utf-8")
 
-        loaded = build_indexes.read_jsonl_entries(root)
+        loaded = build_indexes.read_entries(root)
 
     assert [record["id"] for record in loaded] == ["change-2026-05-19-one", "change-2026-05-18-two"]
+
+
+def test_read_entries_rejects_duplicate_ids() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        (root / "_config.yml").write_text("title: test\n", encoding="utf-8")
+        entries_dir = root / "_docs_logs" / "entries"
+        entries_dir.mkdir(parents=True)
+        first = sample_record("change-2026-05-19-one", "2026-05-19", "One", "docs-viewer")
+        duplicate = sample_record("change-2026-05-19-one", "2026-05-18", "Duplicate", "search")
+        (entries_dir / "change-2026-05-19-one.json").write_text(json.dumps(first), encoding="utf-8")
+        (entries_dir / "change-2026-05-19-one-copy.json").write_text(json.dumps(duplicate), encoding="utf-8")
+
+        try:
+            build_indexes.read_entries(root)
+        except ValueError as exc:
+            error = str(exc)
+        else:
+            error = ""
+
+    assert "filename must match id" in error or "duplicate id" in error
+
+
+def test_log_entry_writes_per_entry_json_and_refuses_duplicate_id() -> None:
+    with tempfile.TemporaryDirectory() as temp_path:
+        root = Path(temp_path)
+        (root / "_config.yml").write_text("title: test\n", encoding="utf-8")
+        record = sample_record("change-2026-05-19-one", "2026-05-19", "One", "docs-viewer")
+
+        path = log_entry.write_record(root, record)
+        try:
+            log_entry.write_record(root, record)
+        except ValueError as exc:
+            error = str(exc)
+        else:
+            error = ""
+
+        assert path == root / "_docs_logs" / "entries" / "change-2026-05-19-one.json"
+        assert json.loads(path.read_text(encoding="utf-8"))["id"] == "change-2026-05-19-one"
+        assert "already exists" in error
 
 
 def test_write_outputs_creates_expected_generated_files() -> None:

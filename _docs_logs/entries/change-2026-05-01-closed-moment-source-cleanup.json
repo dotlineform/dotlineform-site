@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-01-closed-moment-source-cleanup",
+  "date": "2026-05-01",
+  "title": "Closed moment source cleanup",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "data-models",
+    "workflow"
+  ],
+  "summary": "Closed the moment source cleanup request after verifying the current JSON metadata plus body-only prose workflow.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 1220,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** moment source cleanup\n\n**Summary:**\nClosed the moment source cleanup request after verifying the current JSON metadata plus body-only prose workflow.\n\n**Reason:**\nThe implementation slices had already removed front-matter detection, external moment source scanning, manifest support, standalone moment deletion, deprecated preflight coupling, and stale current-workflow docs. The request needed a final verification record before being marked complete.\n\n**Effect:**\nRepresentative moment build previews, generator dry-runs, catalogue search dry-run, staged body-only import preview, and moment delete preview now document the close-out state. Destructive import-apply and delete-apply checks were intentionally left as manual checks for a prepared test moment.\n\n**Affected files/docs:**\n\n- [Moment Source Cleanup](/docs/?scope=studio&doc=site-request-moment-source-cleanup)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "moment source cleanup",
+  "effect": "Representative moment build previews, generator dry-runs, catalogue search dry-run, staged body-only import preview, and moment delete preview now document the close-out state. Destructive import-apply and delete-apply checks were intentionally left as manual checks for a prepared test moment.",
+  "related_docs": [
+    "site-request-moment-source-cleanup",
+    "site-change-log"
+  ],
+  "change_request_doc_id": "site-request-moment-source-cleanup",
+  "affected": {
+    "docs": [
+      "site-request-moment-source-cleanup",
+      "site-change-log"
+    ]
+  }
+}

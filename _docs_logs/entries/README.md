@@ -1,13 +1,12 @@
 # Entries
 
-Canonical change-history records live here as monthly JSONL files.
+Canonical change-history records live here as flat per-entry JSON files.
 
-Use one JSON object per line.
-Validate every row against `_docs_logs/schema.json`.
+Use one JSON object per file.
+Each filename must match the entry `id`:
 
-Initial migrated files:
+```text
+change-YYYY-MM-DD-entry-slug.json
+```
 
-- `2025-08.jsonl`
-- `2026-03.jsonl`
-- `2026-04.jsonl`
-- `2026-05.jsonl`
+Validate every entry against `_docs_logs/schema.json`.

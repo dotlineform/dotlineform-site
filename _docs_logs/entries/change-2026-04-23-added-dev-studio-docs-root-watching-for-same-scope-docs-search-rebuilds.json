@@ -1,0 +1,52 @@
+{
+  "id": "change-2026-04-23-added-dev-studio-docs-root-watching-for-same-scope-docs-search-rebuilds",
+  "date": "2026-04-23",
+  "title": "Added `dev-studio` docs-root watching for same-scope docs-search rebuilds",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "build",
+    "scripts",
+    "data-models"
+  ],
+  "summary": "Updated `bin/dev-studio` so it now performs a startup `studio` docs-search rebuild and starts a local watcher that rebuilds same-scope docs search when `_docs/*.md` or `_docs_library/*.md` change.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 612,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** docs-domain search build flow\n\n**Summary:**  \nUpdated `bin/dev-studio` so it now performs a startup `studio` docs-search rebuild and starts a local watcher that rebuilds same-scope docs search when `_docs/*.md` or `_docs_library/*.md` change.\n\n**Reason:**  \nOnce Task 6 made live docs-management actions rebuild same-scope docs search automatically, the remaining gap was the normal integrated dev runner. Editing docs source files directly while `dev-studio` was already running still relied on the operator to remember a manual docs-search rebuild.\n\n**Effect:**  \nWhile `bin/dev-studio` is running, `_docs/*.md` changes now rebuild `studio` docs plus `assets/data/search/studio/index.json`, and `_docs_library/*.md` changes rebuild `library` docs plus `assets/data/search/library/index.json`. Manual low-level commands remain available as fallback tooling.\n\n**Affected files/docs:**  \n- `bin/dev-studio`\n- `scripts/docs/docs_live_rebuild_watcher.py`\n- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)\n- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "docs-domain search build flow",
+  "effect": "While `bin/dev-studio` is running, `_docs/*.md` changes now rebuild `studio` docs plus `assets/data/search/studio/index.json`, and `_docs_library/*.md` changes rebuild `library` docs plus `assets/data/search/library/index.json`. Manual low-level commands remain available as fallback tooling.",
+  "related_docs": [
+    "scripts-dev-studio",
+    "scripts-docs-live-rebuild-watcher",
+    "search-build-pipeline"
+  ],
+  "related_files": [
+    "bin/dev-studio",
+    "scripts/docs/docs_live_rebuild_watcher.py",
+    "_docs/*.md",
+    "_docs_library/*.md",
+    "assets/data/search/studio/index.json",
+    "assets/data/search/library/index.json"
+  ],
+  "affected": {
+    "files": [
+      "bin/dev-studio",
+      "scripts/docs/docs_live_rebuild_watcher.py"
+    ],
+    "docs": [
+      "scripts-dev-studio",
+      "scripts-docs-live-rebuild-watcher",
+      "search-build-pipeline"
+    ]
+  }
+}

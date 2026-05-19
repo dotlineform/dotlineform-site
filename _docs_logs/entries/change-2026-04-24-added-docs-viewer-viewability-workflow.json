@@ -1,0 +1,63 @@
+{
+  "id": "change-2026-04-24-added-docs-viewer-viewability-workflow",
+  "date": "2026-04-24",
+  "title": "Added Docs Viewer viewability workflow",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "library",
+    "studio-ui",
+    "build",
+    "scripts",
+    "data-models",
+    "config",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Added a separate `viewable` docs flag so generated docs can be hidden from the public/default Docs Viewer while remaining reviewable in manage mode.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1900,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer / docs management\n\n**Summary:**\nAdded a separate `viewable` docs flag so generated docs can be hidden from the public/default Docs Viewer while remaining reviewable in manage mode.\n\n**Reason:**\nBulk Library imports need to enter the generated docs system without immediately appearing as a long unstructured public root list. The existing `published` flag already means pipeline inclusion, so public visibility needed a separate field.\n\n**Effect:**\nGenerated docs indexes and per-doc payloads now include `published` and `viewable`. Public/default Docs Viewer trees, recently-added lists, and direct doc routing use viewable docs only. Manage mode has a `drafts` checkbox that adds non-viewable docs to the tree while retaining visible docs for context, plus a bulk-backed `Make viewable` action for a selected draft. That action prompts before making required non-viewable ancestors or optional descendants viewable, then writes the affected docs and runs one same-scope docs/search rebuild. Library create/import defaults to `published: true`, `viewable: false`; Studio create/import defaults to `published: true`, `viewable: true`.\n\n**Affected files/docs:**\n\n- `scripts/build_docs.rb`\n- `scripts/docs/docs_management_server.py`\n- `_includes/docs_viewer_shell.html`\n- `assets/js/docs-viewer.js`\n- `assets/css/main.css`\n- `assets/studio/data/studio_config.json`\n- [Viewability Workflow Spec](/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec)\n- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Data Models: Studio Scope](/docs/?scope=studio&doc=data-models-studio)\n- [Data Models: Library Scope](/docs/?scope=studio&doc=data-models-library)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer / docs management",
+  "effect": "Generated docs indexes and per-doc payloads now include `published` and `viewable`. Public/default Docs Viewer trees, recently-added lists, and direct doc routing use viewable docs only. Manage mode has a `drafts` checkbox that adds non-viewable docs to the tree while retaining visible docs for context, plus a bulk-backed `Make viewable` action for a selected draft. That action prompts before making required non-viewable ancestors or optional descendants viewable, then writes the affected docs and runs one same-scope docs/search rebuild. Library create/import defaults to `published: true`, `viewable: false`; Studio create/import defaults to `published: true`, `viewable: true`.",
+  "related_docs": [
+    "docs-viewer-draft-publishing-spec",
+    "scripts-docs-builder",
+    "scripts-docs-management-server",
+    "data-models-studio",
+    "data-models-library"
+  ],
+  "related_files": [
+    "scripts/build_docs.rb",
+    "scripts/docs/docs_management_server.py",
+    "_includes/docs_viewer_shell.html",
+    "assets/js/docs-viewer.js",
+    "assets/css/main.css",
+    "assets/studio/data/studio_config.json"
+  ],
+  "affected": {
+    "files": [
+      "scripts/build_docs.rb",
+      "scripts/docs/docs_management_server.py",
+      "_includes/docs_viewer_shell.html",
+      "assets/js/docs-viewer.js",
+      "assets/css/main.css",
+      "assets/studio/data/studio_config.json"
+    ],
+    "docs": [
+      "docs-viewer-draft-publishing-spec",
+      "scripts-docs-builder",
+      "scripts-docs-management-server",
+      "data-models-studio",
+      "data-models-library"
+    ]
+  }
+}

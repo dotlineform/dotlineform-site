@@ -1,0 +1,58 @@
+{
+  "id": "change-2026-03-29-reviewed-and-split-the-search-document-set-into-focused-implementation-docs",
+  "date": "2026-03-29",
+  "title": "Reviewed and split the search document set into focused implementation docs",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "build",
+    "data-models",
+    "config",
+    "workflow"
+  ],
+  "summary": "Replaced the earlier broad v1 planning-only search notes with a focused documentation set covering overview, schema, field policy, normalization, ranking, UI behaviour, build pipeline, validation, config architecture, and change-log maintenance.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 1062,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** architecture\n\n**Summary:**  \nReplaced the earlier broad v1 planning-only search notes with a focused documentation set covering overview, schema, field policy, normalization, ranking, UI behaviour, build pipeline, validation, config architecture, and change-log maintenance.\n\n**Reason:**  \nThe search system had moved beyond a single planning note. Review and future changes required smaller documents tied directly to the implemented v1 behaviour.\n\n**Effect:**  \nSearch can now be reviewed one concern at a time, and future implementation changes have a clearer documentation surface to update alongside code.\n\n**Affected files/docs:**  \n- [Search Overview](/docs/?scope=studio&doc=search-overview)\n- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)\n- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)\n- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules)\n- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)\n- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)\n- `_docs/search-config-architecture.md`\n- [Search Change Log Guidance](/docs/?scope=studio&doc=search-change-log-guidance)\n\n**Notes:**  \nThis documentation split is now part of the review surface for future search work and should be maintained alongside implementation changes.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "architecture",
+  "effect": "Search can now be reviewed one concern at a time, and future implementation changes have a clearer documentation surface to update alongside code.",
+  "related_docs": [
+    "search-overview",
+    "search-index-schema",
+    "search-field-registry",
+    "search-normalisation-rules",
+    "search-ranking-model",
+    "search-ui-behaviour",
+    "search-build-pipeline",
+    "search-validation-checklist",
+    "search-change-log-guidance"
+  ],
+  "related_files": [
+    "_docs/search-config-architecture.md"
+  ],
+  "affected": {
+    "files": [
+      "_docs/search-config-architecture.md"
+    ],
+    "docs": [
+      "search-overview",
+      "search-index-schema",
+      "search-field-registry",
+      "search-normalisation-rules",
+      "search-ranking-model",
+      "search-ui-behaviour",
+      "search-build-pipeline",
+      "search-validation-checklist",
+      "search-change-log-guidance"
+    ]
+  }
+}

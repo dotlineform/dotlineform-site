@@ -1,0 +1,36 @@
+{
+  "id": "change-2026-05-09-extracted-catalogue-source-write-executor",
+  "date": "2026-05-09",
+  "title": "Extracted catalogue source write executor",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Completed the eleventh implementation slice of the script structural review by adding a shared source JSON write executor to `scripts/catalogue_transactions.py`. Save, create, bulk-save, and workbook-import apply handlers still perform endpoint-specific allowlist checks in `scripts/studio/catalogue_write_server.py`, then delegate payload-map validation, dry-run write suppression, atomic JSON writes, rollback behavior, and backup response-path formatting to the transaction module.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2250,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / scripts / maintainability\n\n**Summary:**\nCompleted the eleventh implementation slice of the script structural review by adding a shared source JSON write executor to `scripts/catalogue_transactions.py`.\nSave, create, bulk-save, and workbook-import apply handlers still perform endpoint-specific allowlist checks in `scripts/studio/catalogue_write_server.py`, then delegate payload-map validation, dry-run write suppression, atomic JSON writes, rollback behavior, and backup response-path formatting to the transaction module.\n\n**Files changed/docs:**\n\n- `scripts/catalogue_transactions.py`\n- `scripts/studio/catalogue_write_server.py`\n- `tests/python/test_catalogue_transactions.py`\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)\n\n**Impact:**\nSource-write mechanics for save/create-style flows now have direct executor coverage while endpoint response assembly, lookup/build/activity timing, and write allowlist visibility remain in the write server.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio / scripts / maintainability",
+  "related_docs": [
+    "scripts-catalogue-write-server",
+    "site-request-script-structural-review-catalogue-write-server"
+  ],
+  "related_files": [
+    "scripts/catalogue_transactions.py",
+    "scripts/studio/catalogue_write_server.py",
+    "tests/python/test_catalogue_transactions.py"
+  ],
+  "change_request_doc_id": "site-request-script-structural-review-catalogue-write-server"
+}

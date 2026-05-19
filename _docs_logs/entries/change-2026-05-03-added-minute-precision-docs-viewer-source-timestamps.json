@@ -1,0 +1,54 @@
+{
+  "id": "change-2026-05-03-added-minute-precision-docs-viewer-source-timestamps",
+  "date": "2026-05-03",
+  "title": "Added minute-precision Docs Viewer source timestamps",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "library",
+    "build",
+    "scripts",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Docs Viewer management writes now record new `added_date` values and changed `last_updated` values with hour/minute precision.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 731,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer / Studio docs management\n\n**Summary:**\nDocs Viewer management writes now record new `added_date` values and changed `last_updated` values with hour/minute precision.\n\n**Reason:**\nLibrary export workflows need a more useful source-version marker than a date-only field, and minute precision is generally useful for same-day docs maintenance.\n\n**Effect:**\nNewly created or imported docs write `added_date` and `last_updated` as `YYYY-MM-DD HH:MM`. Metadata, viewability, move/restore, and archive writes preserve existing `added_date` and refresh `last_updated` to the current minute. Existing date-only docs remain valid and do not need migration.\n\n**Affected files/docs:**\n\n- `scripts/docs/docs_management_server.py`\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)\n- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)\n- [Shared Patterns](/docs/?scope=studio&doc=data-models-shared)\n- [Library Scope](/docs/?scope=studio&doc=data-models-library)\n- [Library Export v1](/docs/?scope=studio&doc=library-export)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer / Studio docs management",
+  "effect": "Newly created or imported docs write `added_date` and `last_updated` as `YYYY-MM-DD HH:MM`. Metadata, viewability, move/restore, and archive writes preserve existing `added_date` and refresh `last_updated` to the current minute. Existing date-only docs remain valid and do not need migration.",
+  "related_docs": [
+    "scripts-docs-management-server",
+    "scripts-docs-builder",
+    "docs-viewer-management",
+    "data-models-shared",
+    "data-models-library",
+    "library-export",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/docs/docs_management_server.py"
+  ],
+  "affected": {
+    "files": [
+      "scripts/docs/docs_management_server.py"
+    ],
+    "docs": [
+      "scripts-docs-management-server",
+      "scripts-docs-builder",
+      "docs-viewer-management",
+      "data-models-shared",
+      "data-models-library",
+      "library-export",
+      "site-change-log"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "change-2026-05-09-advanced-tag-write-server-transaction-ownership",
+  "date": "2026-05-09",
+  "title": "Advanced tag write-server transaction ownership",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "scripts",
+    "data-models",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Implemented Slice 7 of the tag write-server structural review. `scripts/tag_write_transactions.py` now owns timestamped backup names, single-file JSON writes with backup, multi-file JSON writes with shared-stamp backups, temporary-file cleanup, and rollback for replaced or newly created files after failed multi-file writes. `scripts/studio/tag_write_server.py` still owns HTTP request parsing, source artifact loading, request value sanitization, preview/apply response mapping, dry-run write suppression, write allowlist checks, local logging, and Studio Activity append timing. The focused tag write-transaction test is included in the `quick` run-checks profile.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1935,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Analytics / scripts / maintainability\n\n**Summary:**\nImplemented Slice 7 of the tag write-server structural review.\n`scripts/tag_write_transactions.py` now owns timestamped backup names, single-file JSON writes with backup, multi-file JSON writes with shared-stamp backups, temporary-file cleanup, and rollback for replaced or newly created files after failed multi-file writes.\n`scripts/studio/tag_write_server.py` still owns HTTP request parsing, source artifact loading, request value sanitization, preview/apply response mapping, dry-run write suppression, write allowlist checks, local logging, and Studio Activity append timing.\nThe focused tag write-transaction test is included in the `quick` run-checks profile.\n\n**Files changed/docs:**\n\n- `scripts/tag_write_transactions.py`\n- `scripts/studio/tag_write_server.py`\n- `scripts/run_checks.py`\n- `tests/python/test_tag_write_transactions.py`\n- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)\n- [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)\n- [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)\n\n**Impact:**\nEndpoint URLs, request payloads, response payload keys, dry-run behavior, backup naming behavior, and write allowlists are unchanged.\nThe remaining Slice 8 work can focus on handler cleanup and final boundary decisions rather than low-level file transaction mechanics.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "Studio / Analytics / scripts / maintainability",
+  "related_docs": [
+    "scripts-tag-write-server",
+    "site-request-script-structural-review",
+    "site-request-script-structural-review-tag-write-server"
+  ],
+  "related_files": [
+    "scripts/tag_write_transactions.py",
+    "scripts/studio/tag_write_server.py",
+    "scripts/run_checks.py",
+    "tests/python/test_tag_write_transactions.py"
+  ]
+}

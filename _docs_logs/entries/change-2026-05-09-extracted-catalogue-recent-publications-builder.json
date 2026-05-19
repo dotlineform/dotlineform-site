@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-09-extracted-catalogue-recent-publications-builder",
+  "date": "2026-05-09",
+  "title": "Extracted catalogue recent-publications builder",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models"
+  ],
+  "summary": "Moved pure recent-publications normalization, merge rules, published-target filtering, sorting, and `recent_index_v1` payload construction out of `scripts/generate_work_pages.py` into `scripts/catalogue_generation_recent.py`. The generator still owns recent-index file loading, path binding, version comparison, JSON writes, and dry-run/write reporting.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1831,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue generation / scripts / maintainability\n\n**Summary:**\nMoved pure recent-publications normalization, merge rules, published-target filtering, sorting, and `recent_index_v1` payload construction out of `scripts/generate_work_pages.py` into `scripts/catalogue_generation_recent.py`.\nThe generator still owns recent-index file loading, path binding, version comparison, JSON writes, and dry-run/write reporting.\n\n**Files changed/docs:**\n\n- `scripts/catalogue_generation_recent.py`\n- `scripts/generate_work_pages.py`\n- `scripts/run_checks.py`\n- `tests/python/test_catalogue_generation_recent.py`\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n- [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)\n\n**Impact:**\nThe stateful `/recent/` ledger behavior now has direct focused tests for retained entries, series publish entries, grouped work publish entries, latest-series absorption, cap behavior, and deterministic ordering without changing generated artifact schemas or output paths.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "catalogue generation / scripts / maintainability",
+  "related_docs": [
+    "scripts-generate-work-pages",
+    "site-request-script-structural-review-generate-work-pages"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "scripts/catalogue_generation_recent.py",
+    "scripts/run_checks.py",
+    "tests/python/test_catalogue_generation_recent.py"
+  ],
+  "change_request_doc_id": "site-request-script-structural-review-generate-work-pages"
+}

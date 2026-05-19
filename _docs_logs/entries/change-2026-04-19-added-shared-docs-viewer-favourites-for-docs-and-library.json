@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-04-19-added-shared-docs-viewer-favourites-for-docs-and-library",
+  "date": "2026-04-19",
+  "title": "Added shared Docs Viewer favourites for docs and library",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "library",
+    "studio-ui"
+  ],
+  "summary": "Added browser-style document favourites shared by `/docs/` and `/library/`.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3307,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer\n\n**Summary:**\nAdded browser-style document favourites shared by `/docs/` and `/library/`.\n\n**Reason:**\nFrequently used docs needed a quicker return path than the tree alone, especially once the shared viewer started carrying search and management controls.\n\n**Effect:**\nThe shared Docs Viewer now supports IndexedDB-backed favourites, star-based add/remove, compact editable bookmark pills, and a full-width viewer-level controls band above the index and content panels.\n\n**Affected files/docs:**\n- `_includes/docs_viewer_shell.html`\n- `assets/js/docs-viewer.js`\n- `assets/css/main.css`\n- Docs Viewer Favourites Spec\n- Docs Viewer Favourites Task\n\n**Notes:**\nPrivate browsing still limits persistence, so this remains a browser-local feature rather than a hosted user-account feature.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs Viewer",
+  "effect": "The shared Docs Viewer now supports IndexedDB-backed favourites, star-based add/remove, compact editable bookmark pills, and a full-width viewer-level controls band above the index and content panels.",
+  "related_files": [
+    "_includes/docs_viewer_shell.html",
+    "assets/js/docs-viewer.js",
+    "assets/css/main.css"
+  ],
+  "affected": {
+    "files": [
+      "_includes/docs_viewer_shell.html",
+      "assets/js/docs-viewer.js",
+      "assets/css/main.css"
+    ]
+  }
+}

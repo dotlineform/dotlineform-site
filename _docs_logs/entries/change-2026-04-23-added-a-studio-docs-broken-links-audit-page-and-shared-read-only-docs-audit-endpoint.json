@@ -1,0 +1,63 @@
+{
+  "id": "change-2026-04-23-added-a-studio-docs-broken-links-audit-page-and-shared-read-only-docs-audit-endpoint",
+  "date": "2026-04-23",
+  "title": "Added a Studio docs broken-links audit page and shared read-only docs audit endpoint",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "studio-ui",
+    "scripts",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Added `/studio/docs-broken-links/`, a reusable Python docs-links audit, and a new read-only docs-management endpoint so Studio can run a strict docs broken-links check for either the `studio` or `library` docs scope.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 2146,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** docs viewer / Studio\n\n**Summary:**\nAdded `/studio/docs-broken-links/`, a reusable Python docs-links audit, and a new read-only docs-management endpoint so Studio can run a strict docs broken-links check for either the `studio` or `library` docs scope.\n\n**Reason:**\nDocs maintenance needed a practical Studio surface for two concrete failure cases: links to docs that no longer exist and links whose visible text no longer matches the current target doc title. The repo also needed that logic outside the browser so the same check can be reused from the terminal.\n\n**Effect:**\nStudio now has a dedicated docs broken-links page with scope selection and a results list linking directly to the target and source pages. The audit reports `not found` and strict `wrong title` issues, including intentionally shortened labels that no longer match the target doc title exactly. The same logic now lives in `./scripts/docs/docs_broken_links.py` and is exposed through `POST /docs/broken-links` on the localhost docs-management service. Same-doc fragment links are ignored because they do not affect page-level docs structure, and archived deprecated docs no longer carry `Deprecated: ` in front-matter titles.\n\n**Affected files/docs:**\n- `studio/docs-broken-links/index.md`\n- `assets/studio/js/docs-broken-links.js`\n- `assets/studio/js/studio-transport.js`\n- `assets/studio/js/studio-config.js`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/css/studio.css`\n- `scripts/docs/docs_broken_links.py`\n- `scripts/docs/docs_management_server.py`\n- [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)\n- [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "docs viewer / Studio",
+  "effect": "Studio now has a dedicated docs broken-links page with scope selection and a results list linking directly to the target and source pages. The audit reports `not found` and strict `wrong title` issues, including intentionally shortened labels that no longer match the target doc title exactly. The same logic now lives in `./scripts/docs/docs_broken_links.py` and is exposed through `POST /docs/broken-links` on the localhost docs-management service. Same-doc fragment links are ignored because they do not affect page-level docs structure, and archived deprecated docs no longer carry `Deprecated: ` in front-matter titles.",
+  "related_docs": [
+    "docs-broken-links",
+    "scripts-docs-broken-links",
+    "scripts-docs-management-server"
+  ],
+  "related_files": [
+    "studio/docs-broken-links/index.md",
+    "assets/studio/js/docs-broken-links.js",
+    "assets/studio/js/studio-transport.js",
+    "assets/studio/js/studio-config.js",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/css/studio.css",
+    "scripts/docs/docs_broken_links.py",
+    "scripts/docs/docs_management_server.py",
+    "/scripts/docs/docs_broken_links.py"
+  ],
+  "affected": {
+    "files": [
+      "studio/docs-broken-links/index.md",
+      "assets/studio/js/docs-broken-links.js",
+      "assets/studio/js/studio-transport.js",
+      "assets/studio/js/studio-config.js",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/css/studio.css",
+      "scripts/docs/docs_broken_links.py",
+      "scripts/docs/docs_management_server.py"
+    ],
+    "docs": [
+      "docs-broken-links",
+      "scripts-docs-broken-links",
+      "scripts-docs-management-server"
+    ]
+  }
+}

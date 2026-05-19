@@ -1,0 +1,40 @@
+{
+  "id": "change-2026-05-08-implemented-r2-media-upload-automation",
+  "date": "2026-05-08",
+  "title": "Implemented R2 media upload automation",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models"
+  ],
+  "summary": "Added `./scripts/publish_media_to_r2.py`, a dry-run-first Cloudflare R2 publisher for catalogue primary-image derivatives.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 2798,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Catalogue / media publishing\n\n**Summary:**\nAdded `./scripts/publish_media_to_r2.py`, a dry-run-first Cloudflare R2 publisher for catalogue primary-image derivatives.\n\n**Files changed:**\n\n- `scripts/publish_media_to_r2.py`\n- `tests/python/test_publish_media_to_r2.py`\n- `.gitignore`\n- [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2)\n- [Scripts](/docs/?scope=studio&doc=scripts)\n- [Local Setup](/docs/?scope=studio&doc=local-setup)\n- [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments)\n- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)\n- [R2 Media Upload Automation Request](/docs/?scope=studio&doc=site-request-r2-media-upload-automation)\n- [Change Requests](/docs/?scope=studio&doc=change-requests)\n\n**Impact:**\nCatalogue work, work-detail, and moment primary variants can now be previewed or uploaded to R2 from the CLI.\nThe publisher loads credentials from environment variables or the gitignored local env file, skips unchanged objects, blocks changed remote objects unless `--force` is explicit, supports exact-id remote primary deletion with `--delete --write`, and keeps docs media publishing out of scope for this milestone.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Catalogue / media publishing",
+  "related_docs": [
+    "scripts-publish-media-to-r2",
+    "scripts",
+    "local-setup",
+    "scripts-cloud-environments",
+    "scripts-build-catalogue-json",
+    "site-request-r2-media-upload-automation",
+    "change-requests"
+  ],
+  "related_files": [
+    "/scripts/publish_media_to_r2.py",
+    "scripts/publish_media_to_r2.py",
+    "tests/python/test_publish_media_to_r2.py"
+  ],
+  "change_request_doc_id": "site-request-r2-media-upload-automation"
+}

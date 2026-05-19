@@ -1,0 +1,33 @@
+{
+  "id": "change-2026-05-11-embedded-docs-import-in-the-docs-viewer-management-modal",
+  "date": "2026-05-11",
+  "title": "Embedded Docs Import in the Docs Viewer management modal",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "studio-ui"
+  ],
+  "summary": "Moved the Docs Import UI out of the iframe-style handoff and into the Docs Viewer management modal. The importer markup now lives in a shared include, and `assets/studio/js/docs-html-import.js` exports an initializer used by the modal.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 925,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs Viewer management / Docs Import UI ownership\n\n**Summary:**\nMoved the Docs Import UI out of the iframe-style handoff and into the Docs Viewer management modal.\nThe importer markup now lives in a shared include, and `assets/studio/js/docs-html-import.js` exports an initializer used by the modal.\n\n**Files changed/docs:**\n\n- `_includes/docs_viewer_shell.html`\n- `_includes/docs_import_shell.html`\n- `assets/js/docs-viewer.js`\n- `assets/studio/js/docs-html-import.js`\n- [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)\n- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)\n\n**Impact:**\nDocs Import is now packaged with the Docs Viewer management surface and seeded from the active `/docs/?scope=...` route.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Docs Viewer management / Docs Import UI ownership",
+  "related_docs": [
+    "user-guide-docs-html-import",
+    "docs-viewer-management"
+  ],
+  "related_files": [
+    "assets/studio/js/docs-html-import.js",
+    "_includes/docs_viewer_shell.html",
+    "_includes/docs_import_shell.html",
+    "assets/js/docs-viewer.js"
+  ]
+}

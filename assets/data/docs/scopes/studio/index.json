@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T17:30:51Z",
+  "generated_at": "2026-05-19T17:38:31Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -121,7 +121,7 @@
       "source_path": "change-history.md",
       "viewer_url": "/docs/?scope=studio&doc=change-history",
       "content_url": "/assets/data/docs/scopes/studio/by-id/change-history.json",
-      "content_text_length": 886,
+      "content_text_length": 884,
       "ui_status": "report",
       "viewer_report": "change_history",
       "viewer_report_access": "manage"
@@ -779,7 +779,7 @@
       "source_path": "site-change-log-2026-05.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-05",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-05.json",
-      "content_text_length": 219
+      "content_text_length": 251
     },
     {
       "scope": "studio",
@@ -1102,7 +1102,7 @@
       "source_path": "site-change-log-2026-04.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-04",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-04.json",
-      "content_text_length": 221
+      "content_text_length": 253
     },
     {
       "scope": "studio",
@@ -1426,7 +1426,7 @@
       "source_path": "site-change-log-2026-03-and-earlier.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-2026-03-and-earlier.json",
-      "content_text_length": 266
+      "content_text_length": 265
     },
     {
       "scope": "studio",
@@ -3371,7 +3371,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 1360
+      "content_text_length": 1303
     },
     {
       "scope": "studio",
@@ -4150,7 +4150,7 @@
       "source_path": "site-request-change-log-entry-model.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-change-log-entry-model",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-change-log-entry-model.json",
-      "content_text_length": 22702,
+      "content_text_length": 23326,
       "ui_status": "in-progress"
     },
     {

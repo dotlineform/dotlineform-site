@@ -1,0 +1,54 @@
+{
+  "id": "change-2026-05-03-added-studio-ready-state-audit-hardening",
+  "date": "2026-05-03",
+  "title": "Added Studio ready-state audit hardening",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "studio-ui",
+    "scripts",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Added a read-only Studio ready-state audit and included it in the lightweight `quick` check profile.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 814,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio runtime / checks\n\n**Summary:**\nAdded a read-only Studio ready-state audit and included it in the lightweight `quick` check profile.\n\n**Reason:**\nThe static ready-state framework gives low-behavior Studio pages a useful baseline, but future async features should not accidentally keep using static readiness after adding data loads, service checks, route commands, or extra route scripts.\n\n**Effect:**\n`./scripts/audit_studio_ready_state.py --strict` now checks Studio route templates for ready/busy baseline attributes, static/dashboard marker mixups, dashboard loader wiring, and static-route drift. `./scripts/run_checks.py --profile quick` runs the audit in strict mode so this contract is enforced during normal lightweight verification.\n\n**Affected files/docs:**\n\n- `scripts/audit_studio_ready_state.py`\n- `scripts/run_checks.py`\n- [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)\n- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)\n- [Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)\n- [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)\n- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio runtime / checks",
+  "effect": "`./scripts/audit_studio_ready_state.py --strict` now checks Studio route templates for ready/busy baseline attributes, static/dashboard marker mixups, dashboard loader wiring, and static-route drift. `./scripts/run_checks.py --profile quick` runs the audit in strict mode so this contract is enforced during normal lightweight verification.",
+  "related_docs": [
+    "scripts-audit-studio-ready-state",
+    "scripts-run-checks",
+    "studio-smoke-testing",
+    "studio-ui-start",
+    "site-request-studio-ready-state-contract",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/audit_studio_ready_state.py",
+    "scripts/run_checks.py"
+  ],
+  "change_request_doc_id": "site-request-studio-ready-state-contract",
+  "affected": {
+    "files": [
+      "scripts/audit_studio_ready_state.py",
+      "scripts/run_checks.py"
+    ],
+    "docs": [
+      "scripts-audit-studio-ready-state",
+      "scripts-run-checks",
+      "studio-smoke-testing",
+      "studio-ui-start",
+      "site-request-studio-ready-state-contract",
+      "site-change-log"
+    ]
+  }
+}

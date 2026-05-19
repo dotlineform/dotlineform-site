@@ -1,0 +1,36 @@
+{
+  "id": "change-2026-05-05-added-scoped-data-links-to-domain-dashboards",
+  "date": "2026-05-05",
+  "title": "Added scoped data links to domain dashboards",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "search",
+    "catalogue",
+    "library",
+    "studio-ui",
+    "workflow"
+  ],
+  "summary": "`/studio/catalogue/` now includes a `Data` column with export and import pills linked to the shared workflow routes with `?scope=catalogue`. `/studio/library/` now makes its existing export and import pills explicit with `?scope=library`. The Column Links pattern supports a three-column modifier for Catalogue while keeping two-column dashboards unchanged.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3598,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / Dashboards\n\n**Summary:**\n`/studio/catalogue/` now includes a `Data` column with export and import pills linked to the shared workflow routes with `?scope=catalogue`.\n`/studio/library/` now makes its existing export and import pills explicit with `?scope=library`.\nThe Column Links pattern supports a three-column modifier for Catalogue while keeping two-column dashboards unchanged.\n\n**Reason:**\nAfter import/export became scope-aware, domain dashboards should route users directly to the relevant scoped data workflow instead of relying on defaults or leaving Catalogue without data entry points.\n\n**Files changed:**\n\n- `studio/catalogue/index.md`\n- `studio/library/index.md`\n- `assets/css/main.css`\n- [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n\n**Impact:**\nCatalogue, Library, and Analytics now all expose scoped data workflow links from their dashboards.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / Dashboards",
+  "effect": "After import/export became scope-aware, domain dashboards should route users directly to the relevant scoped data workflow instead of relying on defaults or leaving Catalogue without data entry points.",
+  "related_docs": [
+    "ui-pattern-column-links",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "studio/catalogue/index.md",
+    "studio/library/index.md",
+    "assets/css/main.css"
+  ]
+}

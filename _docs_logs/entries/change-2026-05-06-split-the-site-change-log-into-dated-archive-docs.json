@@ -1,0 +1,30 @@
+{
+  "id": "change-2026-05-06-split-the-site-change-log-into-dated-archive-docs",
+  "date": "2026-05-06",
+  "title": "Split the site change log into dated archive docs",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "workflow"
+  ],
+  "summary": "Kept the stable Site Change Log doc as the current entry point and moved older entries into dated archive child docs. The main log now carries the newest entries plus links to the May 2026, April 2026, and March 2026-and-earlier archives.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 3290,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Docs / Architecture\n\n**Summary:**\nKept the stable Site Change Log doc as the current entry point and moved older entries into dated archive child docs.\nThe main log now carries the newest entries plus links to the May 2026, April 2026, and March 2026-and-earlier archives.\n\n**Reason:**\nThe single source file had grown past 7,300 lines, making routine close-out edits, review, and docs payload inspection harder than necessary.\nKeeping a compact current page preserves the existing docs-viewer link while moving historical reading into focused archive docs.\n\n**Files changed:**\n\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)\n- [Site Change Log Archive: May 2026](/docs/?scope=studio&doc=site-change-log-2026-05)\n- [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)\n- [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)\n- [Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)\n\n**Impact:**\nNew change-log entries still go into the stable `site-change-log` doc first.\nOlder history remains published and searchable through archive child docs under the same docs-viewer section.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Docs / Architecture",
+  "effect": "The single source file had grown past 7,300 lines, making routine close-out edits, review, and docs payload inspection harder than necessary. Keeping a compact current page preserves the existing docs-viewer link while moving historical reading into focused archive docs.",
+  "related_docs": [
+    "site-change-log",
+    "site-change-log-2026-05",
+    "site-change-log-2026-04",
+    "site-change-log-2026-03-and-earlier",
+    "site-change-log-guidance"
+  ]
+}

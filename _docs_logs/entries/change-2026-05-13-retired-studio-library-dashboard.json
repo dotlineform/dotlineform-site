@@ -1,0 +1,39 @@
+{
+  "id": "change-2026-05-13-retired-studio-library-dashboard",
+  "date": "2026-05-13",
+  "title": "Retired Studio Library Dashboard",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "data-models",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Removed the standalone `/studio/library/` dashboard after its links moved to owning surfaces. Library document management and Docs Import live in `/docs/` manage mode, Library Documents review lives in the report-backed Docs Viewer document, and Library data import/export use the scoped shared data routes.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 570,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio navigation / Library workflows\n\n**Summary:**\nRemoved the standalone `/studio/library/` dashboard after its links moved to owning surfaces.\nLibrary document management and Docs Import live in `/docs/` manage mode, Library Documents review lives in the report-backed Docs Viewer document, and Library data import/export use the scoped shared data routes.\n\n**Files changed/docs:**\n\n- `studio/library/index.md`\n- `studio/index.md`\n- `_includes/studio_header_nav.html`\n- `assets/studio/js/studio-dashboard.js`\n- `_data/studio_panel_images.json`\n- [Studio](/docs/?scope=studio&doc=studio)\n- [Library](/docs/?scope=studio&doc=library)\n- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)\n\n**Impact:**\nStudio no longer presents Library as a separate dashboard domain, and the shared dashboard script no longer probes the docs-management server solely to hydrate a Library document count.\nLibrary workflows remain reachable from their direct owner routes.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio navigation / Library workflows",
+  "related_docs": [
+    "studio",
+    "library",
+    "studio-runtime"
+  ],
+  "related_files": [
+    "studio/library/index.md",
+    "studio/index.md",
+    "_includes/studio_header_nav.html",
+    "assets/studio/js/studio-dashboard.js",
+    "_data/studio_panel_images.json"
+  ]
+}

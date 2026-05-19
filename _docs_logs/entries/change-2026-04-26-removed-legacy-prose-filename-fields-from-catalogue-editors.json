@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-04-26-removed-legacy-prose-filename-fields-from-catalogue-editors",
+  "date": "2026-04-26",
+  "title": "Removed legacy prose filename fields from catalogue editors",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "catalogue"
+  ],
+  "summary": "Removed `work_prose_file` and `series_prose_file` from the new/edit work and series Studio forms.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1526,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue\n\n**Summary:**\nRemoved `work_prose_file` and `series_prose_file` from the new/edit work and series Studio forms.\n\n**Reason:**\nWork and series prose publication now uses ID-derived Markdown under `_docs_catalogue/`, so the legacy filename fields should not remain editable publication controls.\n\n**Effect:**\nNew work, work editor, new series, and series editor forms no longer render or submit the legacy prose filename fields. Existing source records are preserved, and prose import continues through the staged Markdown readiness/action flow.\n\n**Affected files/docs:**\n\n- `assets/studio/js/catalogue-new-work-editor.js`\n- `assets/studio/js/catalogue-work-editor.js`\n- `assets/studio/js/catalogue-new-series-editor.js`\n- `assets/studio/js/catalogue-series-editor.js`\n- [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)\n- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)\n- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)\n- Catalogue Series Editor",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue",
+  "effect": "New work, work editor, new series, and series editor forms no longer render or submit the legacy prose filename fields. Existing source records are preserved, and prose import continues through the staged Markdown readiness/action flow.",
+  "related_docs": [
+    "site-request-work-series-prose-source-model",
+    "catalogue-work-editor"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-new-work-editor.js",
+    "assets/studio/js/catalogue-work-editor.js",
+    "assets/studio/js/catalogue-new-series-editor.js",
+    "assets/studio/js/catalogue-series-editor.js",
+    "_docs_catalogue/"
+  ],
+  "change_request_doc_id": "site-request-work-series-prose-source-model",
+  "affected": {
+    "files": [
+      "assets/studio/js/catalogue-new-work-editor.js",
+      "assets/studio/js/catalogue-work-editor.js",
+      "assets/studio/js/catalogue-new-series-editor.js",
+      "assets/studio/js/catalogue-series-editor.js"
+    ],
+    "docs": [
+      "site-request-work-series-prose-source-model",
+      "catalogue-work-editor"
+    ]
+  }
+}

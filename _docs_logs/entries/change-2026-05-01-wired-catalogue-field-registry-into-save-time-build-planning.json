@@ -1,0 +1,53 @@
+{
+  "id": "change-2026-05-01-wired-catalogue-field-registry-into-save-time-build-planning",
+  "date": "2026-05-01",
+  "title": "Wired catalogue field registry into save-time build planning",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Single-record catalogue saves now resolve changed fields through `assets/studio/data/catalogue_field_registry.json` before running save-time public builds.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 1878,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue build planning\n\n**Summary:**\nSingle-record catalogue saves now resolve changed fields through `assets/studio/data/catalogue_field_registry.json` before running save-time public builds.\n\n**Reason:**\nSmall metadata saves should not automatically select local media generation, catalogue search, or broad page/index refreshes when the registry says the changed fields affect only focused payloads or Studio-only source data.\n\n**Effect:**\nWork, work-detail, series, and moment save endpoints can pass narrowed `generate_only`, `rebuild_search`, and `generate_local_media` values into the scoped build runner. Unknown fields, mixed rule classes, bulk saves, create/delete flows, imports, publication actions, and cross-family series saves retain conservative fallback.\n\n**Affected files/docs:**\n\n- `scripts/studio/catalogue_write_server.py`\n- `scripts/catalogue_json_build.py`\n- [Field-Aware Catalogue Build Scoping Request](/docs/?scope=studio&doc=site-request-field-aware-build-scoping)\n- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)\n- [Data Models: Catalogue](/docs/?scope=studio&doc=data-models-catalogue)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue build planning",
+  "effect": "Work, work-detail, series, and moment save endpoints can pass narrowed `generate_only`, `rebuild_search`, and `generate_local_media` values into the scoped build runner. Unknown fields, mixed rule classes, bulk saves, create/delete flows, imports, publication actions, and cross-family series saves retain conservative fallback.",
+  "related_docs": [
+    "site-request-field-aware-build-scoping",
+    "scripts-catalogue-write-server",
+    "data-models-catalogue",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/studio/catalogue_write_server.py",
+    "scripts/catalogue_json_build.py",
+    "assets/studio/data/catalogue_field_registry.json"
+  ],
+  "change_request_doc_id": "site-request-field-aware-build-scoping",
+  "affected": {
+    "files": [
+      "scripts/studio/catalogue_write_server.py",
+      "scripts/catalogue_json_build.py"
+    ],
+    "docs": [
+      "site-request-field-aware-build-scoping",
+      "scripts-catalogue-write-server",
+      "data-models-catalogue",
+      "site-change-log"
+    ]
+  }
+}

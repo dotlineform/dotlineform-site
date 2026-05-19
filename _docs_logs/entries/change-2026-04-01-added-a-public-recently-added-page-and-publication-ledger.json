@@ -1,0 +1,60 @@
+{
+  "id": "change-2026-04-01-added-a-public-recently-added-page-and-publication-ledger",
+  "date": "2026-04-01",
+  "title": "Added a public recently added page and publication ledger",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui",
+    "build",
+    "scripts",
+    "data-models"
+  ],
+  "summary": "Added a public `/recent/` page plus a generated `assets/data/recent_index.json` ledger for recent first-time series and work publications.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3780,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue\n\n**Summary:**  \nAdded a public `/recent/` page plus a generated `assets/data/recent_index.json` ledger for recent first-time series and work publications.\n\n**Reason:**  \nThe public catalogue needed a lightweight way to surface newly published work without treating later title edits, series edits, or work moves as fresh additions. That requires a small persistent event ledger rather than a page derived only from current catalogue state.\n\n**Effect:**  \n`generate_work_pages.py` now records first-time `draft -> published` transitions into a capped recent-publications index, prunes entries whose target series or work has been deleted, and groups multiple newly published works in the same existing series into one entry anchored to the first work from that run. The public `/recent/` page renders that ledger, `/series/` now links to it with a `recently added` control, and series/work pages now show `← recently added` when opened from that route.\n\n**Affected files/docs:**  \n- `scripts/generate_work_pages.py`\n- `scripts/backfill_recent_index_from_git_history.py`\n- `recent/index.md`\n- `series/index.md`\n- `_layouts/series.html`\n- `_layouts/work.html`\n- `assets/css/main.css`\n- `assets/data/recent_index.json`\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)\n\n**Notes:**  \nThe initial `/recent/` ledger can be seeded from workbook git history with `scripts/backfill_recent_index_from_git_history.py`. That one-off backfill only records provable `draft -> published` transitions and drops any historic series entry that cannot be mapped confidently onto a current live series ID.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "catalogue",
+  "effect": "`generate_work_pages.py` now records first-time `draft -> published` transitions into a capped recent-publications index, prunes entries whose target series or work has been deleted, and groups multiple newly published works in the same existing series into one entry anchored to the first work from that run. The public `/recent/` page renders that ledger, `/series/` now links to it with a `recently added` control, and series/work pages now show `← recently added` when opened from that route.",
+  "related_docs": [
+    "scripts-generate-work-pages",
+    "data-models-catalogue"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "scripts/backfill_recent_index_from_git_history.py",
+    "recent/index.md",
+    "series/index.md",
+    "_layouts/series.html",
+    "_layouts/work.html",
+    "assets/css/main.css",
+    "assets/data/recent_index.json",
+    "generate_work_pages.py"
+  ],
+  "affected": {
+    "files": [
+      "scripts/generate_work_pages.py",
+      "scripts/backfill_recent_index_from_git_history.py",
+      "recent/index.md",
+      "series/index.md",
+      "_layouts/series.html",
+      "_layouts/work.html",
+      "assets/css/main.css",
+      "assets/data/recent_index.json"
+    ],
+    "docs": [
+      "scripts-generate-work-pages",
+      "data-models-catalogue"
+    ]
+  }
+}

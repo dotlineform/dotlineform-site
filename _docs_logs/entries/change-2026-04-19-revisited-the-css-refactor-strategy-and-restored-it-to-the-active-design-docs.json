@@ -1,0 +1,38 @@
+{
+  "id": "change-2026-04-19-revisited-the-css-refactor-strategy-and-restored-it-to-the-active-design-docs",
+  "date": "2026-04-19",
+  "title": "Revisited the CSS refactor strategy and restored it to the active design docs",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "studio-ui"
+  ],
+  "summary": "Updated the CSS refactor guidance so it reflects the current UI-system direction rather than an older point-in-time cleanup note.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 3241,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** design system / CSS governance\n\n**Summary:**\nUpdated the CSS refactor guidance so it reflects the current UI-system direction rather than an older point-in-time cleanup note.\n\n**Reason:**\nThe original refactor doc had drifted out of view during newer work and its `last_updated` date no longer reflected the fact that it had been revisited conceptually.\n\n**Effect:**\n[CSS Refactor](/docs/?scope=studio&doc=css-refactor) now records the current strategy: formalize tokens, primitives, compositions, and behavior boundaries first; avoid defaulting passive visual shells to JS web components; and keep the document visible from [Design](/docs/?scope=studio&doc=design).\n\n**Affected files/docs:**\n- [CSS Refactor](/docs/?scope=studio&doc=css-refactor)\n- [Design](/docs/?scope=studio&doc=design)\n- [UI Framework](/docs/?scope=studio&doc=ui-framework)\n- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)\n\n**Notes:**\nThis is documentation and governance work, not a runtime UI change.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "design system / CSS governance",
+  "effect": "[CSS Refactor](/docs/?scope=studio&doc=css-refactor) now records the current strategy: formalize tokens, primitives, compositions, and behavior boundaries first; avoid defaulting passive visual shells to JS web components; and keep the document visible from [Design](/docs/?scope=studio&doc=design).",
+  "related_docs": [
+    "css-refactor",
+    "design",
+    "ui-framework",
+    "studio-ui-framework"
+  ],
+  "affected": {
+    "docs": [
+      "css-refactor",
+      "design",
+      "ui-framework",
+      "studio-ui-framework"
+    ]
+  }
+}

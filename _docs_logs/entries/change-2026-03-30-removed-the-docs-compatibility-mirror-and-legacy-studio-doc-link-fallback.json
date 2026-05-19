@@ -1,0 +1,50 @@
+{
+  "id": "change-2026-03-30-removed-the-docs-compatibility-mirror-and-legacy-studio-doc-link-fallback",
+  "date": "2026-03-30",
+  "title": "Removed the docs compatibility mirror and legacy Studio doc-link fallback",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "build",
+    "scripts",
+    "workflow"
+  ],
+  "summary": "Removed the flat Studio docs compatibility output and retired the old legacy-link fallback from the docs builder so the published docs data contract is now scope-owned only.",
+  "source": {
+    "file": "_docs/site-change-log-2026-03-and-earlier.md",
+    "line": 15,
+    "archive": "2026-03-and-earlier"
+  },
+  "body": "**Status:** implemented\n\n**Area:** architecture\n\n**Summary:**  \nRemoved the flat Studio docs compatibility output and retired the old legacy-link fallback from the docs builder so the published docs data contract is now scope-owned only.\n\n**Reason:**  \nThe repo now uses explicit scope-owned viewer routes and scoped docs JSON outputs. Keeping the old mirror and legacy path rewrite added dormant complexity without protecting any core site functionality.\n\n**Effect:**  \nThe docs builder now writes only `assets/data/docs/scopes/studio/` and `assets/data/docs/scopes/library/`, legacy `/docs/.../` path rewriting is gone, Studio source-doc links now use `/docs/?scope=studio&doc=...`, and the shared docs viewer normalizes incoming Studio viewer URLs onto the scoped route.\n\n**Affected files/docs:**  \n- `scripts/build_docs.rb`\n- `assets/js/docs-viewer.js`\n- `AGENTS.md`\n- `studio/index.md`\n- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "architecture",
+  "effect": "The docs builder now writes only `assets/data/docs/scopes/studio/` and `assets/data/docs/scopes/library/`, legacy `/docs/.../` path rewriting is gone, Studio source-doc links now use `/docs/?scope=studio&doc=...`, and the shared docs viewer normalizes incoming Studio viewer URLs onto the scoped route.",
+  "related_docs": [
+    "scripts-docs-builder"
+  ],
+  "related_files": [
+    "scripts/build_docs.rb",
+    "assets/js/docs-viewer.js",
+    "AGENTS.md",
+    "studio/index.md",
+    "assets/data/docs/scopes/studio/",
+    "assets/data/docs/scopes/library/"
+  ],
+  "affected": {
+    "files": [
+      "scripts/build_docs.rb",
+      "assets/js/docs-viewer.js",
+      "AGENTS.md",
+      "studio/index.md"
+    ],
+    "docs": [
+      "scripts-docs-builder"
+    ]
+  }
+}

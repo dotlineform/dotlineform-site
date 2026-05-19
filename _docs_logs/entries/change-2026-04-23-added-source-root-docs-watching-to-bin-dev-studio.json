@@ -1,0 +1,58 @@
+{
+  "id": "change-2026-04-23-added-source-root-docs-watching-to-bin-dev-studio",
+  "date": "2026-04-23",
+  "title": "Added source-root docs watching to `bin/dev-studio`",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "library",
+    "build",
+    "scripts",
+    "workflow",
+    "runtime"
+  ],
+  "summary": "Updated `bin/dev-studio` so it now performs a startup `studio` docs-search rebuild and starts a local docs watcher that rebuilds same-scope docs payloads plus same-scope docs search while the dev runner is active.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 2195,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** docs build pipeline / local development workflow\n\n**Summary:**\nUpdated `bin/dev-studio` so it now performs a startup `studio` docs-search rebuild and starts a local docs watcher that rebuilds same-scope docs payloads plus same-scope docs search while the dev runner is active.\n\n**Reason:**\nThe preferred Task 7 direction was to treat `dev-studio` as the normal integrated local workflow, watch docs source roots rather than generated outputs, and keep docs-viewer data plus docs search aligned without depending on manual follow-up commands during ordinary editing.\n\n**Effect:**\n`bin/dev-studio` now starts with `studio` docs, `studio` docs search, and catalogue lookup fresh, then watches `_docs/*.md` as `studio` and `_docs_library/*.md` as `library`. Source changes are debounced, rebuild one scope at a time, and trigger one more pass if more source edits arrive during a rebuild. The watcher ignores generated outputs, so it does not loop on its own writes.\n\n**Affected files/docs:**\n- `bin/dev-studio`\n- `scripts/docs/docs_live_rebuild_watcher.py`\n- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)\n- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)\n- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)\n- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)\n- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)\n- [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "docs build pipeline / local development workflow",
+  "effect": "`bin/dev-studio` now starts with `studio` docs, `studio` docs search, and catalogue lookup fresh, then watches `_docs/*.md` as `studio` and `_docs_library/*.md` as `library`. Source changes are debounced, rebuild one scope at a time, and trigger one more pass if more source edits arrive during a rebuild. The watcher ignores generated outputs, so it does not loop on its own writes.",
+  "related_docs": [
+    "scripts-dev-studio",
+    "scripts-docs-live-rebuild-watcher",
+    "scripts-docs-builder",
+    "search-build-pipeline",
+    "studio-runtime",
+    "site-request-docs-build-incremental"
+  ],
+  "related_files": [
+    "bin/dev-studio",
+    "scripts/docs/docs_live_rebuild_watcher.py",
+    "_docs/*.md",
+    "_docs_library/*.md"
+  ],
+  "change_request_doc_id": "site-request-docs-build-incremental",
+  "affected": {
+    "files": [
+      "bin/dev-studio",
+      "scripts/docs/docs_live_rebuild_watcher.py"
+    ],
+    "docs": [
+      "scripts-dev-studio",
+      "scripts-docs-live-rebuild-watcher",
+      "scripts-docs-builder",
+      "search-build-pipeline",
+      "studio-runtime",
+      "site-request-docs-build-incremental"
+    ]
+  }
+}

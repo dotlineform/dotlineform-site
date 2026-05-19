@@ -1,0 +1,59 @@
+{
+  "id": "change-2026-05-10-added-dedicated-search-performance-instrumentation",
+  "date": "2026-05-10",
+  "title": "Added dedicated search performance instrumentation",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "studio-ui",
+    "build",
+    "data-models",
+    "config",
+    "runtime"
+  ],
+  "summary": "Added opt-in instrumentation for the dedicated `/search/` route. The runtime can now report scope payload bytes, load timing, parse timing, normalization timing, entry counts, query evaluation timing, sort timing, render timing, match counts, and visible counts.",
+  "source": {
+    "file": "_docs/search-change-log.md",
+    "line": 152,
+    "archive": "search"
+  },
+  "body": "**Status:** implemented\n\n**Area:** public search runtime\n\n**Summary:**\nAdded opt-in instrumentation for the dedicated `/search/` route.\nThe runtime can now report scope payload bytes, load timing, parse timing, normalization timing, entry counts, query evaluation timing, sort timing, render timing, match counts, and visible counts.\n\n**Reason:**\nFuture worker extraction, lazy aggregate loading, or index slimming should be based on observed browser cost rather than assumptions about payload size.\n\n**Effect:**\nInstrumentation is disabled by default.\n`?searchPerf=1` or `?debug=search-performance` shows a compact debug panel, while `?searchPerf=console` writes compact snapshots to the browser console.\nWhen instrumentation is enabled, static index reads use a local byte-counting fetch path so payload bytes and JSON parse timing can be measured.\nSearch ranking, matching, generated index schemas, URL behavior, and normal public browsing output are unchanged.\n\n**Affected files/docs:**\n\n- `assets/js/search/search-performance.js`\n- `assets/js/search/search-page.js`\n- `search/index.md`\n- `assets/css/main.css`\n- `assets/studio/data/studio_config.json`\n- `assets/studio/js/studio-config.js`\n- [Search Overview](/docs/?scope=studio&doc=search-overview)\n- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)\n- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)\n- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "public search runtime",
+  "effect": "Instrumentation is disabled by default. `?searchPerf=1` or `?debug=search-performance` shows a compact debug panel, while `?searchPerf=console` writes compact snapshots to the browser console. When instrumentation is enabled, static index reads use a local byte-counting fetch path so payload bytes and JSON parse timing can be measured. Search ranking, matching, generated index schemas, URL behavior, and normal public browsing output are unchanged.",
+  "related_docs": [
+    "search-overview",
+    "search-ui-behaviour",
+    "search-validation-checklist",
+    "config-studio-config-json"
+  ],
+  "related_files": [
+    "assets/js/search/search-performance.js",
+    "assets/js/search/search-page.js",
+    "search/index.md",
+    "assets/css/main.css",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js"
+  ],
+  "affected": {
+    "files": [
+      "assets/js/search/search-performance.js",
+      "assets/js/search/search-page.js",
+      "search/index.md",
+      "assets/css/main.css",
+      "assets/studio/data/studio_config.json",
+      "assets/studio/js/studio-config.js"
+    ],
+    "docs": [
+      "search-overview",
+      "search-ui-behaviour",
+      "search-validation-checklist",
+      "config-studio-config-json"
+    ]
+  }
+}

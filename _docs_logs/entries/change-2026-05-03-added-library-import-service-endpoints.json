@@ -1,0 +1,41 @@
+{
+  "id": "change-2026-05-03-added-library-import-service-endpoints",
+  "date": "2026-05-03",
+  "title": "Added Library import service endpoints",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "library",
+    "scripts",
+    "analytics",
+    "runtime"
+  ],
+  "summary": "Completed Library import Task 5 by adding docs-management endpoints for staged Library import files and Markdown preview generation.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 161,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Library / Studio data import\n\n**Summary:**\nCompleted Library import Task 5 by adding docs-management endpoints for staged Library import files and Markdown preview generation.\n\n**Reason:**\nThe import engine can parse staged files and write review previews, but Studio needs a localhost service boundary before a UI can list files or trigger preview creation.\n\n**Changes:**\n`GET /docs/data-import/files?scope=library` now lists staged `.json` and `.jsonl` files under `var/docs/import-staging/library/`.\n`POST /docs/data-import/preview` now parses the selected staged file, runs current-Library lookup, renders previews through the shared import engine, and writes them under `var/docs/import-preview/library/` unless the server is running with `--dry-run`.\nService logs include scope, staged filename, dry-run state, import type, counts, issue counts, and preview paths, but not staged payload content or document body text.\nFocused service tests cover file listing, preview writing, dry-run preview reporting, and non-Library scope rejection.\n\n**Files changed:**\n\n- `scripts/docs/docs_management_server.py`\n- `tests/python/test_docs_import_service.py`\n- `scripts/run_checks.py`\n- [Library Import v1](/docs/?scope=studio&doc=library-import)\n- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)\n- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n- [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)\n- [Library Scope](/docs/?scope=studio&doc=data-models-library)\n\n**Impact:**\nLibrary import now has a safe browser-to-filesystem boundary for local preview files.\nIt still does not apply summaries, relationships, or content changes to canonical Library source.",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Library / Studio data import",
+  "effect": "The import engine can parse staged files and write review previews, but Studio needs a localhost service boundary before a UI can list files or trigger preview creation.",
+  "related_docs": [
+    "library-import",
+    "scripts-docs-import",
+    "scripts-docs-management-server",
+    "scripts-run-checks",
+    "data-models-library"
+  ],
+  "related_files": [
+    "var/docs/import-staging/library/",
+    "var/docs/import-preview/library/",
+    "scripts/docs/docs_management_server.py",
+    "tests/python/test_docs_import_service.py",
+    "scripts/run_checks.py"
+  ]
+}

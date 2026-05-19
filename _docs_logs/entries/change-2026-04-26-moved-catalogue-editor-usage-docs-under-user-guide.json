@@ -1,0 +1,39 @@
+{
+  "id": "change-2026-04-26-moved-catalogue-editor-usage-docs-under-user-guide",
+  "date": "2026-04-26",
+  "title": "Moved catalogue editor usage docs under User Guide",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "docs-viewer",
+    "catalogue"
+  ],
+  "summary": "Reparented the catalogue work, series, detail, file, and link editor docs from `Studio` to `User Guide`.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 1503,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Documentation\n\n**Summary:**\nReparented the catalogue work, series, detail, file, and link editor docs from `Studio` to `User Guide`.\n\n**Reason:**\nThose documents primarily explain how to use Studio UI pages. Technical contracts, generated payload behavior, and implementation details should stay in Studio and data/script docs, while practical page workflows belong under User Guide.\n\n**Effect:**\nThe User Guide now lists the catalogue editor docs alongside other task-focused guides. `Studio` remains the technical admin overview and points readers to User Guide for practical page-use docs.\n\n**Affected files/docs:**\n\n- [User Guide](/docs/?scope=studio&doc=user-guide)\n- [Studio](/docs/?scope=studio&doc=studio)\n- [Work And Series Prose Source Model Request](/docs/?scope=studio&doc=site-request-work-series-prose-source-model)\n- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)\n- Catalogue Series Editor",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Documentation",
+  "effect": "The User Guide now lists the catalogue editor docs alongside other task-focused guides. `Studio` remains the technical admin overview and points readers to User Guide for practical page-use docs.",
+  "related_docs": [
+    "user-guide",
+    "studio",
+    "site-request-work-series-prose-source-model",
+    "catalogue-work-editor"
+  ],
+  "change_request_doc_id": "site-request-work-series-prose-source-model",
+  "affected": {
+    "docs": [
+      "user-guide",
+      "studio",
+      "site-request-work-series-prose-source-model",
+      "catalogue-work-editor"
+    ]
+  }
+}

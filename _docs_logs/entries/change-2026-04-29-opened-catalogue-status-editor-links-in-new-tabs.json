@@ -1,0 +1,41 @@
+{
+  "id": "change-2026-04-29-opened-catalogue-status-editor-links-in-new-tabs",
+  "date": "2026-04-29",
+  "title": "Opened Catalogue Status editor links in new tabs",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "studio-ui"
+  ],
+  "summary": "Changed Catalogue Status row links so opening a work, work detail, or series editor preserves the report in the current tab.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 563,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue status\n\n**Summary:**\nChanged Catalogue Status row links so opening a work, work detail, or series editor preserves the report in the current tab.\n\n**Reason:**\nCatalogue Status is used as a review queue. Replacing the report when opening a draft work or series interrupted the review workflow.\n\n**Effect:**\nRow id links still route to the focused editor for the record family, but now open in a new browser tab with `rel=\"noopener\"`.\n\n**Affected files/docs:**\n\n- `assets/studio/js/catalogue-status.js`\n- [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue status",
+  "effect": "Row id links still route to the focused editor for the record family, but now open in a new browser tab with `rel=\"noopener\"`.",
+  "related_docs": [
+    "catalogue-status",
+    "studio-ui-rules"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-status.js"
+  ],
+  "affected": {
+    "files": [
+      "assets/studio/js/catalogue-status.js"
+    ],
+    "docs": [
+      "catalogue-status",
+      "studio-ui-rules"
+    ]
+  }
+}

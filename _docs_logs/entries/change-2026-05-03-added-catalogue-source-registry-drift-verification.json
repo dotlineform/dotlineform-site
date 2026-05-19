@@ -1,0 +1,53 @@
+{
+  "id": "change-2026-05-03-added-catalogue-source-registry-drift-verification",
+  "date": "2026-05-03",
+  "title": "Added catalogue source/registry drift verification",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "scripts",
+    "data-models",
+    "workflow"
+  ],
+  "summary": "Extended the catalogue field-registry verifier so it also checks source-schema coverage and optional source serialization behavior.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 757,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** catalogue pipeline / checks\n\n**Summary:**\nExtended the catalogue field-registry verifier so it also checks source-schema coverage and optional source serialization behavior.\n\n**Reason:**\nThe canonical source serializers and field-aware build registry are intentionally separate contracts, but that separation made it easy to add a source field without registry coverage or add a registry field that the source schema did not know about.\n\n**Effect:**\n`./scripts/verify_catalogue_field_registry.py` now fails for unknown registry fields, uncovered editable source fields, duplicate field ownership, and identity/derived fields misclassified as normal metadata edits. It also checks omit-empty behavior for `project_subfolder`, `details_subfolder`, and `sort_order`. The catalogue check profile inherits the stronger guardrail through the existing verifier wrapper.\n\n**Affected files/docs:**\n\n- `scripts/catalogue_source.py`\n- `scripts/moment_sources.py`\n- `scripts/verify_catalogue_field_registry.py`\n- [Catalogue Field Registry Verification](/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry)\n- [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)\n- [Catalogue Source And Registry Drift Verification Request](/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "catalogue pipeline / checks",
+  "effect": "`./scripts/verify_catalogue_field_registry.py` now fails for unknown registry fields, uncovered editable source fields, duplicate field ownership, and identity/derived fields misclassified as normal metadata edits. It also checks omit-empty behavior for `project_subfolder`, `details_subfolder`, and `sort_order`. The catalogue check profile inherits the stronger guardrail through the existing verifier wrapper.",
+  "related_docs": [
+    "scripts-verify-catalogue-field-registry",
+    "scripts-catalogue-source",
+    "site-request-catalogue-source-registry-drift-verification",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/catalogue_source.py",
+    "scripts/moment_sources.py",
+    "scripts/verify_catalogue_field_registry.py",
+    "/scripts/verify_catalogue_field_registry.py"
+  ],
+  "change_request_doc_id": "site-request-catalogue-source-registry-drift-verification",
+  "affected": {
+    "files": [
+      "scripts/catalogue_source.py",
+      "scripts/moment_sources.py",
+      "scripts/verify_catalogue_field_registry.py"
+    ],
+    "docs": [
+      "scripts-verify-catalogue-field-registry",
+      "scripts-catalogue-source",
+      "site-request-catalogue-source-registry-drift-verification",
+      "site-change-log"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-10-removed-catalogue-work-editor-full-source-startup-read",
+  "date": "2026-05-10",
+  "title": "Removed Catalogue Work Editor full source startup read",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "search",
+    "catalogue",
+    "build",
+    "scripts",
+    "data-models",
+    "runtime"
+  ],
+  "summary": "Stopped the Catalogue Work Editor from loading the full `catalogue_works` source payload during initial startup. The route now uses `catalogue_lookup_work_search` for search, known-id, duplicate-id, and next-id behavior, while single and bulk record opens continue to load editable records from per-work lookup payloads.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1254,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio runtime / Catalogue editor JavaScript / performance\n\n**Summary:**\nStopped the Catalogue Work Editor from loading the full `catalogue_works` source payload during initial startup.\nThe route now uses `catalogue_lookup_work_search` for search, known-id, duplicate-id, and next-id behavior, while single and bulk record opens continue to load editable records from per-work lookup payloads.\n\n**Files changed/docs:**\n\n- `assets/studio/js/catalogue-work-editor.js`\n- [JavaScript Payload And Runtime Cleanup Request](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup)\n\n**Impact:**\nInitial work-editor startup no longer requests `assets/studio/data/catalogue/works.json`, removing an avoidable payload of about 1.29 MB raw before transfer compression.\nThe route still preserves per-record load, new mode, bulk mode, save, publish, delete, and build-preview behavior.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio runtime / Catalogue editor JavaScript / performance",
+  "related_docs": [
+    "site-request-js-payload-runtime-cleanup"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-work-editor.js",
+    "assets/studio/data/catalogue/works.json"
+  ],
+  "change_request_doc_id": "site-request-js-payload-runtime-cleanup"
+}

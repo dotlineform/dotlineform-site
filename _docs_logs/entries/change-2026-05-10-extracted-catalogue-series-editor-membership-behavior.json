@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-10-extracted-catalogue-series-editor-membership-behavior",
+  "date": "2026-05-10",
+  "title": "Extracted Catalogue Series Editor membership behavior",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "search",
+    "catalogue",
+    "scripts",
+    "runtime"
+  ],
+  "summary": "Added `assets/studio/js/catalogue-series-membership.js` as the route-local membership module for the Catalogue Series Editor. The module now owns focused membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, capped member-list rendering, member search rendering, and add/remove/make-primary mutations.",
+  "source": {
+    "file": "_docs/site-change-log.md",
+    "line": 1107,
+    "archive": "current"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio runtime / Catalogue editor JavaScript / maintainability\n\n**Summary:**\nAdded `assets/studio/js/catalogue-series-membership.js` as the route-local membership module for the Catalogue Series Editor.\nThe module now owns focused membership state, current-member entry shaping, membership dirty checks, changed work-update shaping, saved lookup membership shaping, capped member-list rendering, member search rendering, and add/remove/make-primary mutations.\n\n**Files changed/docs:**\n\n- `assets/studio/js/catalogue-series-editor.js`\n- `assets/studio/js/catalogue-series-membership.js`\n- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)\n- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)\n- [Catalogue JavaScript Runtime Consistency Request](/docs/?scope=studio&doc=site-request-catalogue-js-runtime-consistency)\n\n**Impact:**\nThe Series route entry module keeps route bootstrap, query handling, mode transitions, validation orchestration, command workflow sequencing, public build preview, and final status/result copy.\nMembership-specific source and work-update rules now have a focused owner, setting up a later Series action workflow extraction.",
+  "migration": {
+    "confidence": "medium",
+    "warnings": []
+  },
+  "area": "Studio runtime / Catalogue editor JavaScript / maintainability",
+  "related_docs": [
+    "catalogue-series-editor",
+    "studio-runtime",
+    "site-request-catalogue-js-runtime-consistency"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-series-membership.js",
+    "assets/studio/js/catalogue-series-editor.js"
+  ],
+  "change_request_doc_id": "site-request-catalogue-js-runtime-consistency"
+}

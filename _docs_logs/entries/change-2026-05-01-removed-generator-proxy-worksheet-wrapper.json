@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-05-01-removed-generator-proxy-worksheet-wrapper",
+  "date": "2026-05-01",
+  "title": "Removed generator proxy worksheet wrapper",
+  "status": "implemented",
+  "type": "cleanup",
+  "domains": [
+    "docs-viewer",
+    "catalogue",
+    "scripts",
+    "workflow"
+  ],
+  "summary": "Removed the internal proxy worksheet/cell wrapper from `generate_work_pages.py`.",
+  "source": {
+    "file": "_docs/site-change-log-2026-05.md",
+    "line": 1435,
+    "archive": "2026-05"
+  },
+  "body": "**Status:** implemented\n\n**Area:** generator / compatibility cleanup\n\n**Summary:**\nRemoved the internal proxy worksheet/cell wrapper from `generate_work_pages.py`.\n\n**Reason:**\nAfter source write-back moved onto canonical source records, the proxy worksheet objects no longer represented a real persistence boundary. They were only preserving a workbook-shaped abstraction around generator read loops.\n\n**Effect:**\nThe generator now uses mutable row-list projections for the remaining header-indexed read loops. Series iteration no longer uses any proxy row wrapper, and work/detail same-run status and dimension updates mutate those row lists directly while also updating canonical source records.\n\n**Affected files/docs:**\n\n- `scripts/generate_work_pages.py`\n- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)\n- [Compatibility Cleanup](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup)\n- [Inventory](/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "medium",
+    "warnings": [
+      "multiple candidate change request docs"
+    ]
+  },
+  "area": "generator / compatibility cleanup",
+  "effect": "The generator now uses mutable row-list projections for the remaining header-indexed read loops. Series iteration no longer uses any proxy row wrapper, and work/detail same-run status and dimension updates mutate those row lists directly while also updating canonical source records.",
+  "related_docs": [
+    "scripts-generate-work-pages",
+    "site-request-catalogue-compatibility-cleanup",
+    "site-request-catalogue-compatibility-cleanup-inventory",
+    "site-change-log"
+  ],
+  "related_files": [
+    "scripts/generate_work_pages.py",
+    "generate_work_pages.py"
+  ],
+  "affected": {
+    "files": [
+      "scripts/generate_work_pages.py"
+    ],
+    "docs": [
+      "scripts-generate-work-pages",
+      "site-request-catalogue-compatibility-cleanup",
+      "site-request-catalogue-compatibility-cleanup-inventory",
+      "site-change-log"
+    ]
+  }
+}

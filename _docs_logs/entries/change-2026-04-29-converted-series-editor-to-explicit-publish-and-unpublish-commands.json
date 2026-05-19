@@ -1,0 +1,54 @@
+{
+  "id": "change-2026-04-29-converted-series-editor-to-explicit-publish-and-unpublish-commands",
+  "date": "2026-04-29",
+  "title": "Converted series editor to explicit Publish and Unpublish commands",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "docs-viewer",
+    "search",
+    "catalogue",
+    "studio-ui",
+    "data-models",
+    "config",
+    "workflow"
+  ],
+  "summary": "Updated the Series editor so publication is controlled by a single `Publish` / `Unpublish` command instead of save-time public update controls.",
+  "source": {
+    "file": "_docs/site-change-log-2026-04.md",
+    "line": 495,
+    "archive": "2026-04"
+  },
+  "body": "**Status:** implemented\n\n**Area:** Studio / catalogue series / publication workflow\n\n**Summary:**\nUpdated the Series editor so publication is controlled by a single `Publish` / `Unpublish` command instead of save-time public update controls.\n\n**Reason:**\nThe publication workflow request defines `Save`, `Publish`, and `Unpublish` as separate user intentions. The Series editor was the first target because it exposed the confusing `Update site now` checkbox problem.\n\n**Effect:**\nThe series status field is now read-only, `Save` never changes publication status, draft saves stay source-only, and published saves request the internal public catalogue update without showing a rebuild/update command. Draft series expose `Publish` when the saved form is clean and valid; published series expose `Unpublish`, which ignores unsaved form edits after confirmation and uses the shared publication preview/apply endpoints to clean public output.\n\n**Affected files/docs:**\n\n- `studio/catalogue-series/index.md`\n- `assets/studio/js/catalogue-series-editor.js`\n- `assets/studio/js/studio-transport.js`\n- `assets/studio/data/studio_config.json`\n- Catalogue Series Editor\n- [Catalogue Publication Workflow Request](/docs/?scope=studio&doc=site-request-catalogue-publication-workflow)\n- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)\n- [Site Change Log](/docs/?scope=studio&doc=site-change-log)",
+  "migration": {
+    "confidence": "high",
+    "warnings": []
+  },
+  "area": "Studio / catalogue series / publication workflow",
+  "effect": "The series status field is now read-only, `Save` never changes publication status, draft saves stay source-only, and published saves request the internal public catalogue update without showing a rebuild/update command. Draft series expose `Publish` when the saved form is clean and valid; published series expose `Unpublish`, which ignores unsaved form edits after confirmation and uses the shared publication preview/apply endpoints to clean public output.",
+  "related_docs": [
+    "site-request-catalogue-publication-workflow",
+    "studio-ui-rules",
+    "site-change-log"
+  ],
+  "related_files": [
+    "studio/catalogue-series/index.md",
+    "assets/studio/js/catalogue-series-editor.js",
+    "assets/studio/js/studio-transport.js",
+    "assets/studio/data/studio_config.json"
+  ],
+  "change_request_doc_id": "site-request-catalogue-publication-workflow",
+  "affected": {
+    "files": [
+      "studio/catalogue-series/index.md",
+      "assets/studio/js/catalogue-series-editor.js",
+      "assets/studio/js/studio-transport.js",
+      "assets/studio/data/studio_config.json"
+    ],
+    "docs": [
+      "site-request-catalogue-publication-workflow",
+      "studio-ui-rules",
+      "site-change-log"
+    ]
+  }
+}
