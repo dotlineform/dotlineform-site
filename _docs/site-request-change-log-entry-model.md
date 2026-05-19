@@ -13,6 +13,7 @@ hidden: false
 Status:
 
 - In progress
+- Step 1 completed: `_docs_logs/` source conventions and schema scaffold added
 
 ## Summary
 
@@ -208,6 +209,10 @@ Human-readable browsing can be provided by a generated report or compact index v
 ## Main Implementation Steps
 
 ### Step 1. Define The Change-Entry Source Model And Scope
+
+Status:
+
+- completed
 
 Create the `_docs_logs/` source conventions, JSONL record schema, generated index structure, and search policy.
 
