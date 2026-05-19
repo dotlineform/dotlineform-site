@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T21:09:57Z",
+  "generated_at": "2026-05-19T21:31:27Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -519,7 +519,7 @@
     {
       "scope": "studio",
       "doc_id": "studio-ui-framework-primitives",
-      "title": "Studio UI Framework Primitives",
+      "title": "UI Framework Primitives",
       "added_date": "2026-05-19",
       "last_updated": "2026-05-19",
       "parent_id": "ui-catalogue",
@@ -1622,22 +1622,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-ui-conformance",
-      "title": "Studio UI Conformance Spec",
-      "added_date": "2026-04-21",
-      "last_updated": "2026-05-15",
-      "parent_id": "ui",
-      "sort_order": 4000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-ui-conformance.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-ui-conformance",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-conformance.json",
-      "content_text_length": 10917
-    },
-    {
-      "scope": "studio",
       "doc_id": "tag-registry",
       "title": "Tag Registry",
       "added_date": "2026-03-31",
@@ -1651,6 +1635,22 @@
       "viewer_url": "/docs/?scope=studio&doc=tag-registry",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-registry.json",
       "content_text_length": 7336
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-ui-conformance",
+      "title": "UI Conformance Spec",
+      "added_date": "2026-04-21",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui",
+      "sort_order": 4000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-ui-conformance.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-ui-conformance",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-conformance.json",
+      "content_text_length": 10917
     },
     {
       "scope": "studio",
@@ -1816,22 +1816,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "ui-primitive-modal-shell",
-      "title": "Modal Shell Primitive",
-      "added_date": "2026-05-15",
-      "last_updated": "2026-05-15",
-      "parent_id": "ui-catalogue",
-      "sort_order": 5000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "ui-primitive-modal-shell.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-modal-shell.json",
-      "content_text_length": 7570
-    },
-    {
-      "scope": "studio",
       "doc_id": "site-request-js-config-structural-review-public-runtime-extraction",
       "title": "Public Runtime Extraction Slice",
       "added_date": "2026-05-10",
@@ -1913,6 +1897,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "studio-ui-framework-modal-contract",
+      "title": "Modal Contract",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "ui-catalogue",
+      "sort_order": 5500,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-ui-framework-modal-contract.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-modal-contract",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-modal-contract.json",
+      "content_text_length": 2815
+    },
+    {
+      "scope": "studio",
       "doc_id": "docs-viewer-new-scopes-builder",
       "title": "New Scopes Builder",
       "added_date": "2026-05-15",
@@ -1929,24 +1929,8 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-ui-framework-modal-contract",
-      "title": "Studio UI Framework Modal Contract",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
-      "parent_id": "ui-catalogue",
-      "sort_order": 5500,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-ui-framework-modal-contract.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-modal-contract",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-modal-contract.json",
-      "content_text_length": 2820
-    },
-    {
-      "scope": "studio",
       "doc_id": "studio-ui-framework-modal-implementation",
-      "title": "Studio UI Framework Modal Implementation",
+      "title": "Modal Implementation",
       "added_date": "2026-05-19",
       "last_updated": "2026-05-19",
       "parent_id": "ui-catalogue",
@@ -1957,7 +1941,23 @@
       "source_path": "studio-ui-framework-modal-implementation.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-modal-implementation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-modal-implementation.json",
-      "content_text_length": 4139
+      "content_text_length": 4111
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-primitive-modal-shell",
+      "title": "Modal Shell Primitive",
+      "added_date": "2026-05-15",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui-catalogue",
+      "sort_order": 5875,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "ui-primitive-modal-shell.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-modal-shell.json",
+      "content_text_length": 7570
     },
     {
       "scope": "studio",

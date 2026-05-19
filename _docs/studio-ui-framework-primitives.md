@@ -1,12 +1,13 @@
 ---
 doc_id: studio-ui-framework-primitives
-title: Studio UI Framework Primitives
+title: UI Framework Primitives
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: ui-catalogue
 sort_order: 1500
+hidden: false
 ---
-# Studio UI Framework Primitives
+# UI Framework Primitives
 
 ## Studio Naming Boundary
 

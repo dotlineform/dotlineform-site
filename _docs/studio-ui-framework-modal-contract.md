@@ -1,16 +1,17 @@
 ---
 doc_id: studio-ui-framework-modal-contract
-title: Studio UI Framework Modal Contract
+title: Modal Contract
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: ui-catalogue
 sort_order: 5500
+hidden: false
 ---
-# Studio UI Framework Modal Contract
+# Modal Contract
 
-## Studio Modal Types
+## Modal Types
 
-Studio should use a small standardized set of modal types. The framework defines the modal shell, required slots, and UI interaction contract. Application code defines the actual content, validation rules, and mutation behavior.
+The site should use a small standardized set of modal types. The framework defines the modal shell, required slots, and UI interaction contract. Application code defines the actual content, validation rules, and mutation behavior.
 
 ### `confirm`
 

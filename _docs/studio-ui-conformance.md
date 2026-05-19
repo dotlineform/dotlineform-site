@@ -1,12 +1,13 @@
 ---
 doc_id: studio-ui-conformance
-title: Studio UI Conformance Spec
+title: UI Conformance Spec
 added_date: 2026-04-21
 last_updated: 2026-05-15
 parent_id: ui
 sort_order: 4000
+hidden: false
 ---
-# Studio UI Conformance Spec
+# UI Conformance Spec
 
 This document defines the current conformance test for Studio UI pages.
 

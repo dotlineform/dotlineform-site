@@ -1,14 +1,12 @@
 ---
 doc_id: studio-ui-framework-modal-implementation
-title: Studio UI Framework Modal Implementation
+title: Modal Implementation
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: ui-catalogue
 sort_order: 5750
 ---
-# Studio UI Framework Modal Implementation
-
-## Studio Modal Implementation
+# Modal Implementation
 
 ### Shared Controller
 
