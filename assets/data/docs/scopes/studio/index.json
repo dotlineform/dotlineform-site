@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T18:33:43Z",
+  "generated_at": "2026-05-19T18:39:23Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2131,15 +2131,15 @@
       "title": "Studio Docs Inventory",
       "added_date": "2026-05-19",
       "last_updated": "2026-05-19",
-      "parent_id": "",
-      "sort_order": 7500,
+      "parent_id": "studio",
+      "sort_order": 7505,
       "published": true,
       "hidden": false,
       "viewable": true,
       "source_path": "studio-docs-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-docs-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-docs-inventory.json",
-      "content_text_length": 2702
+      "content_text_length": 3598
     },
     {
       "scope": "studio",

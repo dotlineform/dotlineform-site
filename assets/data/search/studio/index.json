@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cb0f22bb62c7b7e6eaba62ae1d6eae64",
-    "generated_at_utc": "2026-05-19T18:33:09Z",
+    "version": "blake2b-587df135e8fb418a55e06ab965e56396",
+    "generated_at_utc": "2026-05-19T18:39:07Z",
     "count": 253
   },
   "entries": [
@@ -3345,7 +3345,9 @@
       "title": "Studio Docs Inventory",
       "href": "/docs/?scope=studio&doc=studio-docs-inventory",
       "last_updated": "2026-05-19",
-      "display_meta": "2026-05-19",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-19 • Studio",
       "search_terms": [
         "studio-docs-inventory",
         "studio",

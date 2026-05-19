@@ -1,53 +1,62 @@
 ---
 doc_id: studio-docs-inventory
 title: Studio Docs Inventory
-added_date: "2026-05-19"
-last_updated: "2026-05-19"
-parent_id: ""
-sort_order: 7500
+added_date: 2026-05-19
+last_updated: 2026-05-19
+parent_id: studio
+sort_order: 7505
 published: true
 viewable: true
 ---
-
 # Studio Document Inventory
 
 This document is used to identify any large documents in Studio scope that are good candidates for splitting into logical child-documents. The aim is to improve search and readability of long complex documents, especially where they are frequently used for reference during development.
 
-It should be updated follwing any subsequent review or document-splitting.
+It should be updated following any subsequent review or document-splitting.
 
-# Current review
+## Current Review
 
-Scanned `_docs/*.md` under `/Users/dlf/Developer/dotlineform/dotlineform-site`.
+Scanned `_docs/*.md` after the structured change-history refactor.
 
 Summary:
-- Total Markdown docs: `273`
-- Over 200 lines: `129`
-- Over 300 lines: `87`
-- Over 500 lines: `27`
-- Over 1000 lines: `5`
+
+- Total Markdown docs: `277`
+- Over 200 lines: `126`
+- Over 300 lines: `84`
+- Over 500 lines: `25`
+- Over 1000 lines: `2`
+
+Change-log refactor follow-up:
+
+- `_docs/site-change-log.md` is no longer a split candidate. It is now a compact `46` line public entry point.
+- The dated site change-log archive docs are compact stubs at `17` lines each.
+- `_docs/change-history.md` is a compact manage-only report doc at `50` lines.
+- Detailed durable change history now lives in `_docs_logs/entries/*.json`, with generated projections under `_docs_logs/generated/*.json`.
+- `_docs/search-change-log.md` remains a long historical doc at `1167` lines. Its entries have been migrated into `_docs_logs/`, so it is now a cleanup/stub candidate rather than an active reference-doc split candidate.
 
 Highest-priority split candidates:
 
-1. [site-change-log.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/site-change-log.md:1) - `4217` lines  
-   Despite saying it should stay compact, it is larger than its archive children. I’d keep only recent/current entries here and move older May entries into dated children.
-
-2. [studio-ui-rules.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/studio-ui-rules.md:1) - `2474` lines  
+1. `_docs/studio-ui-rules.md` - `2474` lines  
    This is mostly chronological decision-log material. It already has a “Retirement Direction” section, so it should probably become a short current-rules page plus monthly/quarterly UI decision-log child docs.
 
-3. [scripts-docs-management-server.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/scripts-docs-management-server.md:1) - `799` lines  
+2. `_docs/scripts-docs-management-server.md` - `799` lines  
    Covers startup, endpoint reference, generated reads, source-config settings, mutations, rebuilds, Data Sharing, security, and verification. Strong candidate for children like endpoint reference, generated reads, source settings, write/rebuild behavior, and Data Sharing integration.
 
-4. [scripts-catalogue-write-server.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/scripts-catalogue-write-server.md:1) - `757` lines  
+3. `_docs/scripts-catalogue-write-server.md` - `757` lines  
    Similar issue: endpoint inventory, module ownership, delete/publication/import/build behavior, security, and artifacts are all in one page. Split by endpoint family or operational responsibility.
 
-5. [data-models-catalogue.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/data-models-catalogue.md:1) - `554` lines  
+4. `_docs/docs-viewer-management.md` - `739` lines
+   Combines management mode behavior, local service expectations, modal workflows, move/order behavior, import integration, and verification notes. Good candidate for child docs around management runtime, write actions, import integration, and ordering/rebuild behavior.
+
+5. `_docs/data-models-catalogue.md` - `554` lines  
    Mixes source records, field registry, work-owned files, moments, indexes, per-record payloads, and search model. Good split candidates: source model, moment model, generated indexes/payloads, catalogue search model.
 
 Secondary candidates:
-- [studio-ui-framework.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/studio-ui-framework.md:1) - `541` lines; modal guidance and shared primitives could become focused children.
-- [search-field-registry.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/search-field-registry.md:1) - `558` lines; long but partly justified as a registry. Could split field definitions from policy.
-- [search-build-pipeline.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/search-build-pipeline.md:1) - `495` lines; spans Catalogue, Studio, Library, and Analysis adapters.
-- [local-setup.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/local-setup.md:1) - `461` lines; setup, recovery, environment, and Codex notes could be separated.
-- [docs-viewer-portable-setup.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/docs-viewer-portable-setup.md:1) - `462` lines; the file manifest/setup procedure looks like a natural child doc.
 
-I’d treat long `site-request-*`, archived implementation plans, and monthly change-log archives as lower priority unless they are still used as active reference docs. Their length is less harmful if they are historical records rather than current operating guidance.
+- `_docs/studio-ui-framework.md` - `541` lines; modal guidance and shared primitives could become focused children.
+- `_docs/search-field-registry.md` - `558` lines; long but partly justified as a registry. Could split field definitions from policy.
+- `_docs/search-build-pipeline.md` - `495` lines; spans Catalogue, Studio, Library, and Analysis adapters.
+- `_docs/local-setup.md` - `461` lines; setup, recovery, environment, and Codex notes could be separated.
+- `_docs/docs-viewer-portable-setup.md` - `462` lines; the file manifest/setup procedure looks like a natural child doc.
+
+Treat long `site-request-*`, archived implementation plans, and migrated historical change-log docs as lower priority unless they are still used as active reference docs. Their length is less harmful when they are historical records rather than current operating guidance, but migrated change logs should eventually become compact stubs to avoid duplicate historical ledgers.
