@@ -2,7 +2,7 @@
 doc_id: scripts-docs-import
 title: Documents Returned Package Script
 added_date: "2026-05-03 20:25"
-last_updated: "2026-05-13 20:20"
+last_updated: "2026-05-19 14:30"
 parent_id: docs-viewer
 sort_order: 10000
 ---
@@ -129,9 +129,10 @@ Returned-package apply behavior is owned by the documents Data Sharing adapter a
 When an apply action writes Library Markdown source:
 
 - the source service creates the configured backup before writing changed source docs
-- the write/rebuild helper rebuilds same-scope Docs Viewer payloads after the source write succeeds
+- the write/rebuild helper rebuilds targeted same-scope Docs Viewer payloads after the source write succeeds
 - docs search is updated for the affected ids when the adapter can provide a targeted set
-- the apply response includes `rebuild.steps`, `rebuild.search`, and `rebuild.diagnostics`
+- the apply response includes `rebuild.steps`, `rebuild.docs`, `rebuild.search`, and `rebuild.diagnostics`
+- `rebuild.docs` reports whether docs payloads used targeted mode or a full fallback
 - `rebuild.diagnostics.docs` comes from the docs builder diagnostics line
 - `rebuild.diagnostics.search` describes the full or targeted search update
 - activity rows are attached by the docs-management server after successful apply handling

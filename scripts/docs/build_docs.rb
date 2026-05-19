@@ -93,7 +93,8 @@ class DocsDataBuilder
     non_loadable_doc_ids: [],
     manage_only_tree_root_ids: [],
     show_updated_date: true,
-    allow_unresolved_parent_ids: false
+    allow_unresolved_parent_ids: false,
+    only_doc_ids: nil
   )
     @scope_id = scope_id.to_s
     @source_dir = Pathname(source_dir).expand_path
@@ -106,6 +107,7 @@ class DocsDataBuilder
     @manage_only_tree_root_ids = normalize_doc_ids(manage_only_tree_root_ids)
     @show_updated_date = show_updated_date != false
     @allow_unresolved_parent_ids = allow_unresolved_parent_ids == true
+    @only_doc_ids = only_doc_ids.nil? ? nil : normalize_doc_ids(only_doc_ids)
     @repo_root = Pathname(__dir__).parent.parent.realpath
     @output_url_base = output_url_base_for(@output_dir)
     @site_config = load_site_config
@@ -119,10 +121,14 @@ class DocsDataBuilder
     docs = load_docs
     validate_docs!(docs)
 
-    semantic_references_by_doc = {}
-    item_payloads = docs.to_h do |doc|
+    target_doc_ids = targeted_build? ? @only_doc_ids : docs.map(&:doc_id)
+    validate_targeted_build_prerequisites!(docs, target_doc_ids) if targeted_build?
+    semantic_references_by_doc = targeted_build? ? existing_reference_records_by_doc(docs, target_doc_ids) : {}
+    docs_for_item_build = docs.select { |doc| target_doc_ids.include?(doc.doc_id) }
+    item_payloads = docs_for_item_build.to_h do |doc|
       [doc.doc_id, item_entry(doc, docs, semantic_references_by_doc)]
     end
+    docs_for_item_build.each { |doc| semantic_references_by_doc[doc.doc_id] ||= [] }
     docs_index = docs.sort_by { |doc| doc_sort_key(doc) }.map { |doc| index_entry(doc, docs, item_payloads[doc.doc_id]) }
     viewer_options = viewer_options_payload
     index_payload = {
@@ -131,14 +137,15 @@ class DocsDataBuilder
       "docs" => docs_index
     }
     reference_payloads = build_reference_payloads(docs, semantic_references_by_doc)
-    write_plan = build_write_plan(index_payload, item_payloads, reference_payloads)
+    write_plan = build_write_plan(index_payload, item_payloads, reference_payloads, target_doc_ids: targeted_build? ? target_doc_ids : nil)
 
     unless write
       dry_run_summary(index_payload, item_payloads, reference_payloads, write_plan)
       diagnostics = diagnostics_payload(
         docs: docs,
         write_plan: write_plan,
-        elapsed_seconds: elapsed_seconds_since(started_at)
+        elapsed_seconds: elapsed_seconds_since(started_at),
+        target_doc_ids: targeted_build? ? target_doc_ids : nil
       )
       print_diagnostics(diagnostics)
       return {
@@ -154,7 +161,8 @@ class DocsDataBuilder
     diagnostics = diagnostics_payload(
       docs: docs,
       write_plan: write_plan,
-      elapsed_seconds: elapsed_seconds_since(started_at)
+      elapsed_seconds: elapsed_seconds_since(started_at),
+      target_doc_ids: targeted_build? ? target_doc_ids : nil
     )
     print_diagnostics(diagnostics)
     {
@@ -185,6 +193,23 @@ class DocsDataBuilder
       "manage_only_tree_root_ids" => @manage_only_tree_root_ids,
       "show_updated_date" => @show_updated_date
     }
+  end
+
+  def targeted_build?
+    !@only_doc_ids.nil?
+  end
+
+  def validate_targeted_build_prerequisites!(docs, target_doc_ids)
+    raise "Targeted docs build requires existing scope index; run a full-scope build first" unless @output_dir.join("index.json").file?
+    raise "Targeted docs build requires existing references index; run a full-scope build first" unless references_dir.join("index.json").file?
+
+    missing_payload_ids = docs
+      .map(&:doc_id)
+      .reject { |doc_id| target_doc_ids.include?(doc_id) }
+      .reject { |doc_id| @items_dir.join("#{doc_id}.json").file? }
+    return if missing_payload_ids.empty?
+
+    raise "Targeted docs build requires existing payloads for unselected docs; run a full-scope build first: #{missing_payload_ids.join(', ')}"
   end
 
   def load_docs
@@ -339,6 +364,7 @@ class DocsDataBuilder
   end
 
   def index_entry(doc, docs, item_payload)
+    item_payload ||= load_json_file(@items_dir.join("#{doc.doc_id}.json"))
     entry = {
       "scope" => doc.scope_id,
       "doc_id" => doc.doc_id,
@@ -655,9 +681,11 @@ class DocsDataBuilder
     puts "  would remove stale reference by-target payloads: #{write_plan[:stale_reference_target_keys].length}"
   end
 
-  def diagnostics_payload(docs:, write_plan:, elapsed_seconds:)
+  def diagnostics_payload(docs:, write_plan:, elapsed_seconds:, target_doc_ids: nil)
     {
       "scope" => @scope_id,
+      "build_mode" => target_doc_ids.nil? ? "full" : "targeted",
+      "only_doc_ids" => target_doc_ids || [],
       "source_files_scanned" => @source_files_scanned,
       "docs_emitted" => docs.length,
       "doc_payloads_changed" => write_plan[:changed_item_ids].length,
@@ -740,7 +768,7 @@ class DocsDataBuilder
     puts "Reference by-target payloads removed: #{write_plan[:stale_reference_target_keys].length}. Path: #{references_by_target_dir}"
   end
 
-  def build_write_plan(index_payload, item_payloads, reference_payloads)
+  def build_write_plan(index_payload, item_payloads, reference_payloads, target_doc_ids: nil)
     index_text = json_text(index_payload)
     existing_index_text = read_text(@output_dir.join("index.json"))
     changed_item_ids = []
@@ -755,18 +783,20 @@ class DocsDataBuilder
 
     existing_item_ids = existing_doc_payload_ids(@items_dir)
     desired_item_ids = item_payloads.keys.sort
-    reference_plan = build_reference_write_plan(reference_payloads)
+    reference_plan = build_reference_write_plan(reference_payloads, target_doc_ids: target_doc_ids)
+    stale_item_ids = existing_item_ids - desired_item_ids
+    stale_item_ids &= target_doc_ids if target_doc_ids
 
     {
       index_write: existing_index_text != index_text,
       index_text: index_text,
       changed_item_ids: changed_item_ids.sort,
-      stale_item_ids: (existing_item_ids - desired_item_ids).sort,
+      stale_item_ids: stale_item_ids.sort,
       item_text_by_id: item_text_by_id
     }.merge(reference_plan)
   end
 
-  def build_reference_write_plan(reference_payloads)
+  def build_reference_write_plan(reference_payloads, target_doc_ids: nil)
     reference_index_text = json_text(reference_payloads.fetch(:index))
     changed_doc_ids = []
     doc_text_by_id = {}
@@ -787,13 +817,28 @@ class DocsDataBuilder
     {
       reference_index_write: read_text(references_dir.join("index.json")) != reference_index_text,
       reference_index_text: reference_index_text,
-      changed_reference_doc_ids: changed_doc_ids.sort,
-      stale_reference_doc_ids: (existing_reference_doc_ids - reference_payloads.fetch(:by_doc).keys.sort).sort,
+      changed_reference_doc_ids: target_doc_ids ? (changed_doc_ids & target_doc_ids).sort : changed_doc_ids.sort,
+      stale_reference_doc_ids: stale_reference_doc_ids(reference_payloads, target_doc_ids),
       reference_doc_text_by_id: doc_text_by_id,
       changed_reference_target_keys: changed_target_keys.sort,
       stale_reference_target_keys: (existing_reference_target_keys - reference_payloads.fetch(:by_target).keys.sort).sort,
       reference_target_text_by_key: target_text_by_key
     }
+  end
+
+  def stale_reference_doc_ids(reference_payloads, target_doc_ids)
+    stale_ids = existing_reference_doc_ids - reference_payloads.fetch(:by_doc).keys.sort
+    stale_ids &= target_doc_ids if target_doc_ids
+    stale_ids.sort
+  end
+
+  def existing_reference_records_by_doc(docs, target_doc_ids)
+    doc_ids = docs.map(&:doc_id) - target_doc_ids
+    doc_ids.each_with_object({}) do |doc_id, memo|
+      payload = load_json_file(references_by_doc_dir.join("#{doc_id}.json"))
+      refs = payload.is_a?(Hash) ? payload["references"] : nil
+      memo[doc_id] = refs if refs.is_a?(Array)
+    end
   end
 
   def existing_doc_payload_ids(items_dir)
@@ -1403,7 +1448,8 @@ options = {
   source: nil,
   output: nil,
   viewer_base_url: nil,
-  write: false
+  write: false,
+  only_doc_ids: nil
 }
 
 OptionParser.new do |parser|
@@ -1425,6 +1471,10 @@ OptionParser.new do |parser|
     options[:viewer_base_url] = value
   end
 
+  parser.on("--only-doc-ids IDS", "Comma-separated doc ids for a targeted docs payload rebuild") do |value|
+    options[:only_doc_ids] = value.to_s.split(",").map(&:strip).reject(&:empty?)
+  end
+
   parser.on("--write", "Write generated files") do
     options[:write] = true
   end
@@ -1442,6 +1492,10 @@ if [options[:source], options[:output], options[:viewer_base_url]].any? && selec
   raise "--source, --output, and --viewer-base-url can only be used when exactly one scope is selected"
 end
 
+if !options[:only_doc_ids].nil? && selected_scopes.length != 1
+  raise "--only-doc-ids can only be used when exactly one scope is selected"
+end
+
 write_docs_viewer_browser_config(scope_configs) if options[:write]
 
 selected_scopes.each do |config|
@@ -1455,7 +1509,8 @@ selected_scopes.each do |config|
     non_loadable_doc_ids: config.non_loadable_doc_ids,
     manage_only_tree_root_ids: config.manage_only_tree_root_ids,
     show_updated_date: config.show_updated_date,
-    allow_unresolved_parent_ids: config.allow_unresolved_parent_ids
+    allow_unresolved_parent_ids: config.allow_unresolved_parent_ids,
+    only_doc_ids: options[:only_doc_ids]
   )
   builder.run(write: options[:write])
 end

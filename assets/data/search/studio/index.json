@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2f4bf67892ea35760e04eb42f81c2b98",
-    "generated_at_utc": "2026-05-19T11:53:39Z",
+    "version": "blake2b-fd7335f66db4951beae89128e354b16b",
+    "generated_at_utc": "2026-05-19T12:07:48Z",
     "count": 250
   },
   "entries": [
@@ -3880,10 +3880,10 @@
       "kind": "doc",
       "title": "Documents Returned Package Script",
       "href": "/docs/?scope=studio&doc=scripts-docs-import",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-19 14:30",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 20:20 • Docs Viewer",
+      "display_meta": "2026-05-19 14:30 • Docs Viewer",
       "search_terms": [
         "scripts-docs-import",
         "scripts",
@@ -3896,13 +3896,14 @@
         "script",
         "docs viewer",
         "viewer",
-        "2026-05-13 20:20",
+        "2026-05-19 14:30",
         "2026",
         "05",
-        "13",
-        "20"
+        "19",
+        "14",
+        "30"
       ],
-      "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-05-13 20:20 2026 05 13 20"
+      "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-05-19 14:30 2026 05 19 14 30"
     },
     {
       "id": "search-validation-checklist",
@@ -4554,10 +4555,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-17",
+      "last_updated": "2026-05-19 14:30",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-17 • Docs Viewer",
+      "display_meta": "2026-05-19 14:30 • Docs Viewer",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -4567,12 +4568,14 @@
         "docs management server",
         "docs viewer",
         "viewer",
-        "2026-05-17",
+        "2026-05-19 14:30",
         "2026",
         "05",
-        "17"
+        "19",
+        "14",
+        "30"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-17 2026 05 17"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-19 14:30 2026 05 19 14 30"
     },
     {
       "id": "scripts-publish-media-to-r2",
@@ -4679,10 +4682,10 @@
       "kind": "doc",
       "title": "Docs Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-19 14:30",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 20:20 • Docs Viewer",
+      "display_meta": "2026-05-19 14:30 • Docs Viewer",
       "search_terms": [
         "scripts-docs-live-rebuild-watcher",
         "scripts",
@@ -4693,13 +4696,14 @@
         "docs live rebuild watcher",
         "docs viewer",
         "viewer",
-        "2026-05-13 20:20",
+        "2026-05-19 14:30",
         "2026",
         "05",
-        "13",
-        "20"
+        "19",
+        "14",
+        "30"
       ],
-      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher docs viewer viewer 2026-05-13 20:20 2026 05 13 20"
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher docs viewer viewer 2026-05-19 14:30 2026 05 19 14 30"
     },
     {
       "id": "config-search-build-json",
@@ -4926,10 +4930,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-05-18 19:10",
+      "last_updated": "2026-05-19 14:30",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-18 19:10 • Docs Viewer",
+      "display_meta": "2026-05-19 14:30 • Docs Viewer",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -4938,14 +4942,14 @@
         "docs viewer builder",
         "viewer",
         "docs viewer",
-        "2026-05-18 19:10",
+        "2026-05-19 14:30",
         "2026",
         "05",
-        "18",
         "19",
-        "10"
+        "14",
+        "30"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-18 19:10 2026 05 18 19 10"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-19 14:30 2026 05 19 14 30"
     },
     {
       "id": "llm",

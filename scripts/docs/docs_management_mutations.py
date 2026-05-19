@@ -64,6 +64,7 @@ class ManagementMutationPlan:
     source_writes: tuple[SourceWrite, ...] = ()
     source_deletes: tuple[SourceDelete, ...] = ()
     suppression_reason: Optional[str] = None
+    build_doc_ids: Optional[list[str]] = None
     search_doc_ids: Optional[list[str]] = None
     log_event_name: Optional[str] = None
     log_details: Dict[str, Any] = field(default_factory=dict)
@@ -150,6 +151,7 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         },
         source_writes=(SourceWrite(target_path, source_text),),
         suppression_reason="docs-create",
+        build_doc_ids=[doc_id],
         search_doc_ids=[doc_id],
         log_event_name="docs-create",
         log_details={"scope": scope, "doc_id": doc_id, "path": path},
@@ -318,6 +320,7 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         },
         source_writes=(SourceWrite(target.path, source_model.format_source(updated_front_matter, target.body)),),
         suppression_reason="docs-update-metadata",
+        build_doc_ids=[target.doc_id],
         search_doc_ids=search_doc_ids,
         log_event_name="docs-update-metadata",
         log_details={
@@ -441,6 +444,7 @@ def plan_viewability_update(
             for target in changed_targets
         ),
         suppression_reason=suppression_reason,
+        build_doc_ids=[target.doc_id for target in changed_targets],
         search_doc_ids=[target.doc_id for target in changed_targets],
         log_event_name=operation,
         log_details={
@@ -515,6 +519,7 @@ def plan_update_viewability(repo_root: Path, body: Dict[str, Any]) -> Management
         source_writes=plan.source_writes,
         source_deletes=plan.source_deletes,
         suppression_reason=plan.suppression_reason,
+        build_doc_ids=plan.build_doc_ids,
         search_doc_ids=plan.search_doc_ids,
         log_event_name=plan.log_event_name,
         log_details=plan.log_details,
@@ -579,6 +584,7 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
             for doc, parent_id, sort_order in changed_placements
         ),
         suppression_reason="docs-move",
+        build_doc_ids=[doc.doc_id for doc in touched_docs],
         search_doc_ids=[moving_doc.doc_id] if moving_doc.parent_id != moved_parent_id else [],
         log_event_name="docs-move" if touched_docs else None,
         log_details={
@@ -672,6 +678,7 @@ def plan_restore_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
             for doc, parent_id, sort_order in changed_records
         ),
         suppression_reason="docs-restore-move",
+        build_doc_ids=[doc.doc_id for doc in touched_docs],
         search_doc_ids=[doc.doc_id for doc, parent_id, _sort_order in changed_records if doc.parent_id != parent_id],
         log_event_name="docs-restore-move" if touched_docs else None,
         log_details={
@@ -732,6 +739,7 @@ def plan_normalize_order(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
             for doc, parent_id, sort_order in changed_placements
         ),
         suppression_reason="docs-normalize-order",
+        build_doc_ids=[doc.doc_id for doc in touched_docs],
         search_doc_ids=[],
         log_event_name="docs-normalize-order" if touched_docs else None,
         log_details={
@@ -814,6 +822,7 @@ def plan_archive(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPla
         },
         source_writes=(SourceWrite(target.path, source_model.format_source(updated_front_matter, target.body)),),
         suppression_reason="docs-archive",
+        build_doc_ids=[target.doc_id],
         search_doc_ids=[target.doc_id],
         log_event_name="docs-archive",
         log_details={"scope": scope, "doc_id": target.doc_id, "path": relative_path(repo_root, target.path)},
@@ -919,6 +928,7 @@ def plan_delete_apply(repo_root: Path, body: Dict[str, Any]) -> ManagementMutati
         },
         source_deletes=(SourceDelete(target.path),),
         suppression_reason="docs-delete",
+        build_doc_ids=[target.doc_id],
         search_doc_ids=[target.doc_id],
         log_event_name="docs-delete",
         log_details={"scope": scope, "doc_id": target.doc_id, "path": relative_path(repo_root, target.path)},

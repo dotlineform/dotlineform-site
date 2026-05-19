@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: Docs Viewer Builder
 added_date: 2026-04-23
-last_updated: "2026-05-18 19:10"
+last_updated: "2026-05-19 14:30"
 parent_id: docs-viewer
 sort_order: 20000
 ---
@@ -66,6 +66,7 @@ This config is the shared source of truth for docs scope ids, Markdown source ro
 - writes incremental semantic-reference relationship artifacts under `references/`
 - writes `assets/docs-viewer/data/docs-viewer-config.json` from `scripts/docs/docs_scopes.json`, including route/scope data and the `docs_viewer` browser settings used by public and management routes
 - writes incrementally: unchanged payloads are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
+- supports targeted same-scope payload rebuilds through `--only-doc-ids` when an orchestration layer has already proven the affected ids are safe
 
 ## Publishing Rules
 
@@ -187,8 +188,22 @@ Flags:
   override output directory for generated JSON payloads for a single selected scope
 - `--viewer-base-url URL`
   override viewer route base used when generating `viewer_url` values and rewritten internal doc links for a single selected scope
+- `--only-doc-ids IDS`
+  comma-separated doc ids for a targeted same-scope payload rebuild; this requires exactly one selected scope and is intended for docs-management and watcher orchestration, not broad manual cleanup
 - `--write`
   persist generated files; if omitted, the script prints a dry-run summary only
+
+Targeted dry run:
+
+```bash
+./scripts/build_docs.rb --scope studio --only-doc-ids docs-build-management-import-export-improvements
+```
+
+Targeted write:
+
+```bash
+./scripts/build_docs.rb --scope studio --write --only-doc-ids docs-build-management-import-export-improvements
+```
 
 ## Diagnostics
 
@@ -203,6 +218,8 @@ The diagnostics payload is console output only. It does not change the generated
 Current fields:
 
 - `scope`
+- `build_mode`
+- `only_doc_ids`
 - `source_files_scanned`
 - `docs_emitted`
 - `doc_payloads_changed`
@@ -231,6 +248,9 @@ Current fields:
   - stale `by-id/<doc_id>.json` payloads are removed when the rebuilt scope no longer generates that doc
   - unchanged semantic-reference by-doc and by-target payloads are not rewritten
   - stale semantic-reference by-doc and by-target payloads are removed when references or source docs no longer generate them
+- targeted `--only-doc-ids` writes still rebuild the scope index from current source metadata, but render and write only selected per-doc payloads; unchanged unselected rows keep their existing generated payload text length
+- targeted semantic-reference writes rebuild the selected docs' by-doc records and derive by-target buckets from the refreshed selected records plus existing unselected by-doc records, so stale target buckets are removed when a selected doc changes or drops references
+- targeted writes require existing full-scope generated output for the scope; use a full `./scripts/build_docs.rb --scope <scope> --write` first when initializing or repairing an output tree
 - if you want a scope-specific rebuild, use `--scope studio`, `--scope analysis`, or `--scope library` explicitly
 
 Jekyll verification builds:

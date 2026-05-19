@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T11:53:47Z",
+  "generated_at": "2026-05-19T12:12:56Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -167,7 +167,7 @@
       "source_path": "docs-build-management-import-export-improvements.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-build-management-import-export-improvements",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-build-management-import-export-improvements.json",
-      "content_text_length": 9631,
+      "content_text_length": 10785,
       "ui_status": "in-progress"
     },
     {
@@ -2457,7 +2457,7 @@
       "doc_id": "scripts-docs-import",
       "title": "Documents Returned Package Script",
       "added_date": "2026-05-03 20:25",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-19 14:30",
       "parent_id": "docs-viewer",
       "sort_order": 10000,
       "published": true,
@@ -2466,7 +2466,7 @@
       "source_path": "scripts-docs-import.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-import.json",
-      "content_text_length": 7213
+      "content_text_length": 7318
     },
     {
       "scope": "studio",
@@ -2905,7 +2905,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-17",
+      "last_updated": "2026-05-19 14:30",
       "parent_id": "docs-viewer",
       "sort_order": 15000,
       "published": true,
@@ -2914,7 +2914,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 37909
+      "content_text_length": 39305
     },
     {
       "scope": "studio",
@@ -2985,7 +2985,7 @@
       "doc_id": "scripts-docs-live-rebuild-watcher",
       "title": "Docs Live Rebuild Watcher",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-19 14:30",
       "parent_id": "docs-viewer",
       "sort_order": 16000,
       "published": true,
@@ -2994,7 +2994,7 @@
       "source_path": "scripts-docs-live-rebuild-watcher.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-live-rebuild-watcher.json",
-      "content_text_length": 5065
+      "content_text_length": 5322
     },
     {
       "scope": "studio",
@@ -3145,7 +3145,7 @@
       "doc_id": "scripts-docs-builder",
       "title": "Docs Viewer Builder",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-18 19:10",
+      "last_updated": "2026-05-19 14:30",
       "parent_id": "docs-viewer",
       "sort_order": 20000,
       "published": true,
@@ -3154,7 +3154,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 13004
+      "content_text_length": 14307
     },
     {
       "scope": "studio",
@@ -3317,7 +3317,7 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json",
-      "content_text_length": 173039
+      "content_text_length": 174155
     },
     {
       "scope": "studio",

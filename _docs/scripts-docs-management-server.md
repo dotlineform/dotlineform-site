@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: 2026-05-17
+last_updated: "2026-05-19 14:30"
 parent_id: docs-viewer
 sort_order: 15000
 ---
@@ -47,9 +47,13 @@ Exposed endpoints:
 - `GET /docs/generated/index`
 - `GET /docs/generated/payload`
 - `GET /docs/generated/search`
+- `GET /docs/generated/references`
+- `GET /docs/generated/reference-target`
 - `GET /docs/index`
 - `GET /docs/doc`
 - `GET /docs/search`
+- `GET /docs/references`
+- `GET /docs/reference-target`
 - `GET /docs/source-config`
 - `GET /docs/source-config-settings`
 - `POST /docs/source-config-settings`
@@ -105,7 +109,7 @@ Current behavior:
 - creates Analysis docs as `published: true`, `viewable: false`
 - creates Library docs as `published: true`, `viewable: false`
 - writes new or changed docs with minute-precision `added_date` and `last_updated` values in `YYYY-MM-DD HH:MM` form while preserving existing date-only values
-- rebuilds scope-owned docs payloads after successful writes
+- rebuilds scope-owned docs payloads after successful writes, using targeted docs payload ids when the mutation planner can provide an explicit safe set
 - runs targeted docs-search updates after successful writes when affected doc ids are explicit
 - coordinates successful source writes with the docs live watcher so `bin/dev-studio` does not immediately run a redundant second same-scope rebuild for the same changed source file
 
@@ -125,6 +129,12 @@ Search update behavior:
 - internal targeted calls pass `--remove-missing` so missing and non-viewable ids can be reconciled safely
 - `POST /docs/rebuild` remains a full same-scope docs-search rebuild
 
+Docs payload rebuild behavior:
+
+- create, source import create/overwrite, metadata, viewability, move, restore move, normalize order, archive, delete, and Library returned-package apply writes pass explicit docs payload ids into `./scripts/build_docs.rb --scope <scope> --write --only-doc-ids <ids>`
+- source-config settings writes and explicit `POST /docs/rebuild` remain full same-scope docs payload rebuilds
+- rebuild responses include `rebuild.docs.mode`, `rebuild.docs.doc_ids`, and `rebuild.docs.reason` alongside the existing `rebuild.search` object so callers can tell whether docs payloads used targeted mode or a full fallback
+
 `GET /capabilities` reports:
 
 - whether docs management is available
@@ -143,6 +153,8 @@ Read-only generated-data endpoints:
 - `GET /docs/generated/index?scope=<scope>`
 - `GET /docs/generated/payload?scope=<scope>&doc_id=<doc_id>`; `doc=<doc_id>` is also accepted
 - `GET /docs/generated/search?scope=<scope>`
+- `GET /docs/generated/references?scope=<scope>`
+- `GET /docs/generated/reference-target?scope=<scope>&target_kind=<kind>&target_id=<id>`
 
 Compatibility aliases:
 
@@ -159,6 +171,8 @@ Generated-read behavior:
 - payload reads require a safe `doc_id`, require that `doc_id` to be present in the generated scope index, and then resolve only the configured scope output path plus `by-id/<doc_id>.json`
 - payload reads allow non-viewable docs when those docs are present in the generated index, because local manage mode needs to inspect and update non-viewable docs
 - search reads resolve only `assets/data/search/<scope>/index.json`
+- references reads resolve only the configured scope output path plus `references/index.json`
+- reference-target reads resolve only configured semantic-reference target buckets under the selected scope
 - missing scope, unsupported scope, missing generated files, and non-indexed payload ids return validation or 404 errors rather than filesystem paths chosen by the browser
 - these endpoints are read-only and do not write source or generated files
 
@@ -299,7 +313,7 @@ Import behavior:
 - creates an import-specific backup before overwrite using a light-touch same-day replacement rule
 - writes decoded inline raster media files only during create or overwrite, not during preview-only responses
 - `preview_only: true` forces a non-writing preview response even when the server is not running with `--dry-run`
-- successful create/overwrite writes rebuild the same-scope docs payloads and run targeted docs-search updates for affected ids
+- successful create/overwrite writes rebuild targeted same-scope docs payloads and run targeted docs-search updates for affected ids
 
 `POST /docs/import-html` remains a compatibility alias for older callers through route dispatch and delegates to the same source import handler.
 
@@ -316,7 +330,8 @@ Rebuild behavior:
 - `scope` must be one of the configured scope ids in `scripts/docs/docs_scopes.json`
 - rebuilds generated docs payloads for the requested scope
 - rebuilds the docs-search artifact for the requested scope
-- includes a `diagnostics` object alongside the existing `ok`, `steps`, and `search` keys
+- includes `docs` and `diagnostics` objects alongside the existing `ok`, `steps`, and `search` keys
+- `docs` reports the docs payload rebuild mode, selected doc ids, and the reason for targeted mode or full fallback
 - `diagnostics.docs` is parsed from the docs builder diagnostics line and reports source files scanned, emitted docs, changed/removed generated payload counts, semantic-reference changed/removed counts, warning count, warning messages, and elapsed seconds
 - `diagnostics.search` reports the search mode, affected ids for targeted updates, and any parsed changed/removed/unchanged/write counts exposed by the search builder output
 - each row in `steps` keeps the existing `command`, `returncode`, `stdout`, and `stderr` fields and now also reports `elapsed_seconds`
@@ -445,7 +460,7 @@ Library import summary-apply behavior:
 - selected rows with missing staged records, missing `doc_id`, duplicate `doc_id`, missing summary text, or unchanged summary text are skipped
 - source writes update only `summary`, preserve or initialize `added_date`, and refresh `last_updated`
 - successful writes create a timestamped `documents-summary-apply` backup bundle under `var/docs/backups/` before writing source files
-- successful writes rebuild Library docs payloads and run targeted docs-search updates for changed ids
+- successful writes rebuild targeted Library docs payloads and run targeted docs-search updates for changed ids
 - server `--dry-run` mode validates and reports without writing even when `confirm: true`
 
 Runtime role:
@@ -482,7 +497,7 @@ Library import hierarchy-apply behavior:
 - unknown non-empty staged `parent_id` values are warnings and are allowed
 - source writes update only `parent_id`, preserve current `sort_order`, preserve or initialize `added_date`, and refresh `last_updated`
 - successful writes create a timestamped `documents-hierarchy-apply` backup bundle under `var/docs/backups/` before writing source files
-- successful writes rebuild Library docs payloads and run targeted docs-search updates for changed ids
+- successful writes rebuild targeted Library docs payloads and run targeted docs-search updates for changed ids
 - server `--dry-run` mode validates and reports without writing even when `confirm: true`
 
 Runtime role:
@@ -544,7 +559,7 @@ Metadata-update behavior:
 - `sort_order` accepts a non-negative integer, blank, or `append`
 - `append` stores the next available sparse `sort_order` under the requested `parent_id`
 - sparse order spacing uses `1000` between normalized siblings
-- always rebuilds docs payloads for the scope
+- always rebuilds docs payloads for the scope, using targeted docs payload ids for changed source docs
 - runs a targeted same-scope docs-search update for affected ids after a successful write
 - skips docs-search updates when `ui_status` is the only changed field, because status emoji are viewer-only metadata
 - keeps docs-search updates enabled for `viewable` changes so non-viewable docs are removed from search and newly viewable docs are added back
@@ -579,7 +594,7 @@ Viewability-update behavior:
 - the single-doc endpoint is preserved for callers that already use `doc_id`
 - the bulk endpoint accepts explicit `doc_ids`; `include_descendants: true` expands each requested doc to include its descendants from canonical docs source data
 - no-op requests write no files, create no backup, and do not rebuild docs/search
-- changed bulk requests copy only changed source files into the backup bundle, then run one docs rebuild and one targeted docs-search update for the scope
+- changed bulk requests copy only changed source files into the backup bundle, then run one targeted docs payload rebuild and one targeted docs-search update for the scope
 - the Docs Viewer manage-mode `Make viewable` action now uses the bulk endpoint so it can include required ancestors and optional descendants in one write/rebuild
 - successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
 
@@ -606,8 +621,8 @@ Move behavior:
 - moves refresh `last_updated` on each source doc whose placement front matter is rewritten
 - moves usually rewrite only the moved doc; they may rewrite multiple sibling docs when fallback normalization changes order values
 - successful move responses include `undo_records` for every doc whose placement changed
-- same-parent reorder rebuilds the current scope docs payloads without a docs-search update
-- reparenting rebuilds the current scope docs payloads and runs a targeted docs-search update for the moved doc
+- same-parent reorder rebuilds targeted current-scope docs payloads without a docs-search update
+- reparenting rebuilds targeted current-scope docs payloads and runs a targeted docs-search update for the moved doc
 - successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
 
 `POST /docs/restore-move` expects:
@@ -633,7 +648,7 @@ Restore-move behavior:
 - accepts integer or blank `sort_order`
 - writes only records whose current placement differs from the supplied restore record
 - refreshes `last_updated` on each restored source doc whose placement front matter is rewritten
-- rebuilds the current scope docs payloads and runs targeted docs-search updates only for changed docs whose parent changed
+- rebuilds targeted current-scope docs payloads and runs targeted docs-search updates only for changed docs whose parent changed
 - successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
 
 `POST /docs/normalize-order` expects either a single sibling group:
@@ -663,7 +678,7 @@ Normalize-order behavior:
 - the Docs Viewer `Actions` menu opens a modal for current sibling group, selected-doc children, root sibling group, or whole-scope repair
 - writes only docs whose `sort_order` changes
 - creates no backup bundle
-- rebuilds the current scope docs payloads without a docs-search update
+- rebuilds targeted current-scope docs payloads without a docs-search update
 
 `POST /docs/archive` expects:
 
@@ -710,7 +725,7 @@ Apply behavior:
 - requires explicit confirmation
 - re-runs preview validation before delete
 - deletes the Markdown source file when no blockers remain
-- rebuilds the current scope docs payloads and runs a targeted docs-search removal/update after delete
+- rebuilds targeted current-scope docs payloads and runs a targeted docs-search removal/update after delete
 - successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
 
 Scope lifecycle preview endpoints:

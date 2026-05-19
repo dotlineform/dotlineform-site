@@ -437,6 +437,7 @@ def handle_import_source(
                 [collision_doc.path],
                 write_import_artifacts,
                 suppression_reason="docs-import-html-overwrite",
+                docs_doc_ids=[collision_doc.doc_id],
                 search_doc_ids=search_doc_ids,
             )
         dependencies.log_event(
@@ -530,6 +531,7 @@ def handle_import_source(
             [target_path],
             write_import_artifacts,
             suppression_reason="docs-import-html-create",
+            docs_doc_ids=[doc_id],
             search_doc_ids=[doc_id],
         )
     dependencies.log_event(

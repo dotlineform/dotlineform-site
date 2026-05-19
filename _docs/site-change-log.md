@@ -17,6 +17,34 @@ Archives:
 - [Site Change Log Archive: April 2026](/docs/?scope=studio&doc=site-change-log-2026-04)
 - [Site Change Log Archive: March 2026 And Earlier](/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier)
 
+## [2026-05-19] Added Targeted Docs Payload Rebuilds
+
+**Status:** implemented
+
+**Area:** Docs Viewer builder / management
+
+**Summary:**
+`./scripts/build_docs.rb --scope <scope> --write --only-doc-ids <ids>` now supports targeted same-scope docs payload rebuilds.
+Docs-management writes, source imports, Library returned-package apply flows, and the live watcher pass explicit docs payload ids when the affected-id set is safe.
+Rebuild responses now include `rebuild.docs` with mode, ids, and reason alongside the existing search and diagnostics payloads.
+
+**Effect:**
+Small docs source writes can avoid rendering every per-doc payload while preserving full-scope index correctness and semantic-reference by-target cleanup.
+Explicit rebuilds and source-config settings changes remain full-scope fallbacks.
+
+**Affected files/docs:**
+
+- `scripts/docs/build_docs.rb`
+- `scripts/docs/docs_write_rebuild.py`
+- `scripts/docs/docs_live_rebuild_watcher.py`
+- `scripts/docs/docs_management_mutations.py`
+- `scripts/docs/docs_import_source_service.py`
+- `scripts/docs/documents_data_sharing_adapter.py`
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
+- [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
+
 ## [2026-05-19] Added Docs Rebuild Diagnostics
 
 **Status:** implemented

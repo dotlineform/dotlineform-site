@@ -489,6 +489,7 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
             plan.changed_paths,
             write_operation,
             suppression_reason=plan.suppression_reason or "docs-management",
+            docs_doc_ids=plan.build_doc_ids,
             search_doc_ids=plan.search_doc_ids,
         )
         if plan.log_event_name:

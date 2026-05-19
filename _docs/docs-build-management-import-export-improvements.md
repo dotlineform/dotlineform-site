@@ -85,7 +85,7 @@ Risks:
 
 ## Slice 2: Affected-Doc Build Input
 
-Status: planned.
+Status: completed in the affected-doc build slice.
 
 Purpose:
 
@@ -126,6 +126,15 @@ Risks:
 - parent/title metadata can affect rows outside the edited doc
 - resolver-data changes can make targeted docs rebuilds unsafe unless they trigger full-scope fallback
 - watcher suppression must not hide a needed full rebuild after a management write
+
+Implementation note:
+
+- `scripts/docs/build_docs.rb` now accepts `--only-doc-ids` for a single selected scope and reports `build_mode` plus `only_doc_ids` in builder diagnostics.
+- Targeted docs payload rebuilds still build the scope index from current source metadata, render selected per-doc payloads only, and derive semantic-reference by-target artifacts from refreshed selected by-doc records plus existing unselected by-doc records.
+- `scripts/docs/docs_write_rebuild.py` now returns a `rebuild.docs` object with mode, ids, and reason, and passes targeted docs ids separately from targeted search ids.
+- Targeted orchestration falls back to a full docs payload rebuild when existing generated output is missing or incomplete.
+- Docs-management mutation planners, source imports, Library returned-package apply flows, and the live watcher now pass docs payload ids only when they have an explicit affected-id set; source-config settings and explicit rebuilds stay full-scope.
+- Focused tests cover targeted command shaping, and a temp-output smoke check covered semantic-reference by-doc and by-target stale removal under targeted rebuild.
 
 ## Slice 3: Import Export Management Closeout
 

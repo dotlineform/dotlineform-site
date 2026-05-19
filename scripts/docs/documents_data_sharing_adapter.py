@@ -488,6 +488,7 @@ def apply_summary_updates(
             [doc.path for doc in rewrite_docs],
             lambda: [source_model.write_text_atomic(doc.path, rewritten_sources[doc.doc_id]) for doc in rewrite_docs],
             suppression_reason="docs-import-summary-apply",
+            docs_doc_ids=[item["doc_id"] for item in updates],
             search_doc_ids=[item["doc_id"] for item in updates],
         )
 
@@ -630,6 +631,7 @@ def apply_hierarchy_updates(
             [doc.path for doc in rewrite_docs],
             lambda: [source_model.write_text_atomic(doc.path, rewritten_sources[doc.doc_id]) for doc in rewrite_docs],
             suppression_reason="docs-import-hierarchy-apply",
+            docs_doc_ids=[item["doc_id"] for item in updates],
             search_doc_ids=[item["doc_id"] for item in updates],
         )
 

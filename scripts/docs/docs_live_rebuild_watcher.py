@@ -206,9 +206,14 @@ def rebuild_scope(
     repo_root: Path,
     bundle_bin: str,
     scope: str,
+    docs_doc_ids: Optional[list[str]] = None,
     search_doc_ids: Optional[list[str]] = None,
 ) -> bool:
-    commands = [("docs", [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"])]
+    docs_command = [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"]
+    docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
+    if docs_doc_ids is not None and docs_target_doc_ids:
+        docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
+    commands = [("docs", docs_command)]
     if search_doc_ids is None:
         commands.append(("search", [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"]))
         log(f"Rebuilding {scope} docs and full docs search.")
@@ -365,6 +370,7 @@ def main() -> int:
 
                 current_doc_snapshot, snapshot_error = try_parsed_doc_snapshot(repo_root, ready_scope)
                 search_doc_ids = None
+                docs_doc_ids = None
                 if snapshot_error:
                     log(f"{ready_scope} targeted search fallback; affected ids unavailable: {snapshot_error}")
                 else:
@@ -377,12 +383,19 @@ def main() -> int:
                     if fallback_reason:
                         log(f"{ready_scope} targeted search fallback; affected ids unavailable: {fallback_reason}")
                     else:
+                        docs_doc_ids = search_doc_ids
                         log(
                             f"{ready_scope} affected docs for targeted search: "
                             f"{affected_doc_ids_log_text(search_doc_ids)}."
                         )
 
-                rebuild_succeeded = rebuild_scope(repo_root, bundle_bin, ready_scope, search_doc_ids=search_doc_ids)
+                rebuild_succeeded = rebuild_scope(
+                    repo_root,
+                    bundle_bin,
+                    ready_scope,
+                    docs_doc_ids=docs_doc_ids,
+                    search_doc_ids=search_doc_ids,
+                )
                 post_rebuild_snapshot = snapshot_scope(states[ready_scope]["root"], ready_scope)
                 if post_rebuild_snapshot != states[ready_scope]["snapshot"]:
                     previous_snapshot = states[ready_scope]["snapshot"]

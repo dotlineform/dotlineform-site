@@ -45,6 +45,45 @@ def ordered_search_doc_ids(doc_ids: list[str]) -> list[str]:
     return ordered
 
 
+def ordered_docs_doc_ids(doc_ids: list[str]) -> list[str]:
+    return ordered_search_doc_ids(doc_ids)
+
+
+def targeted_docs_build_fallback_reason(repo_root: Path, scope: str, target_doc_ids: list[str]) -> str:
+    try:
+        config = load_docs_scope_configs(repo_root)[scope]
+    except (KeyError, FileNotFoundError, ValueError) as exc:
+        return f"full-scope fallback: docs scope config unavailable: {exc}"
+
+    output_dir = repo_root / config.output
+    index_path = output_dir / "index.json"
+    references_index_path = output_dir / "references" / "index.json"
+    if not index_path.exists():
+        return "full-scope fallback: existing docs index missing"
+    if not references_index_path.exists():
+        return "full-scope fallback: existing references index missing"
+
+    try:
+        index_payload = json.loads(index_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return f"full-scope fallback: existing docs index unreadable: {exc}"
+    docs = index_payload.get("docs") if isinstance(index_payload, dict) else None
+    if not isinstance(docs, list):
+        return "full-scope fallback: existing docs index has no docs array"
+
+    target_set = set(target_doc_ids)
+    missing_payload_ids: list[str] = []
+    for item in docs:
+        if not isinstance(item, dict):
+            continue
+        doc_id = str(item.get("doc_id") or "").strip()
+        if doc_id and doc_id not in target_set and not (output_dir / "by-id" / f"{doc_id}.json").exists():
+            missing_payload_ids.append(doc_id)
+    if missing_payload_ids:
+        return "full-scope fallback: existing payloads missing for unselected docs"
+    return ""
+
+
 def extract_docs_builder_diagnostics(stdout: str) -> list[Dict[str, Any]]:
     diagnostics: list[Dict[str, Any]] = []
     for line in stdout.splitlines():
@@ -121,12 +160,29 @@ def rebuild_scope_outputs(
     scope: str,
     include_search: bool = True,
     search_doc_ids: Optional[list[str]] = None,
+    docs_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     bundle_bin = detect_bundle_bin()
     if not bundle_bin:
         raise RuntimeError("bundle executable not found")
 
-    commands = [("docs", [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"])]
+    docs_mode = "full"
+    docs_target_doc_ids: list[str] = []
+    docs_reason = "full-scope fallback: no targeted docs payload ids provided"
+    docs_command = [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"]
+    if docs_doc_ids is not None:
+        docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids)
+        if docs_target_doc_ids:
+            fallback_reason = targeted_docs_build_fallback_reason(repo_root, scope, docs_target_doc_ids)
+            if fallback_reason:
+                docs_reason = fallback_reason
+            else:
+                docs_mode = "targeted"
+                docs_reason = "targeted docs payload ids provided"
+                docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
+        else:
+            docs_reason = "full-scope fallback: targeted docs payload ids normalized empty"
+    commands = [("docs", docs_command)]
     search = {"mode": "none", "doc_ids": []}
     if include_search:
         if search_doc_ids is None:
@@ -172,6 +228,7 @@ def rebuild_scope_outputs(
         "ok": True,
         "steps": steps,
         "search": search,
+        "docs": {"mode": docs_mode, "doc_ids": docs_target_doc_ids, "reason": docs_reason},
         "diagnostics": {
             "docs": docs_diagnostics,
             "search": search_diagnostics,
@@ -188,6 +245,7 @@ def perform_source_write_and_rebuild(
     suppression_reason: str,
     include_search: bool = True,
     search_doc_ids: Optional[list[str]] = None,
+    docs_doc_ids: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     root = scope_root(repo_root, scope)
     filenames = sorted(
@@ -213,6 +271,7 @@ def perform_source_write_and_rebuild(
             scope,
             include_search=include_search,
             search_doc_ids=search_doc_ids,
+            docs_doc_ids=docs_doc_ids,
         )
     except Exception:
         if filenames:

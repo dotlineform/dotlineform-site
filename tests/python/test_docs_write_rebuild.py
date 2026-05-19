@@ -58,6 +58,11 @@ def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
         write_rebuild.detect_bundle_bin = original_bundle
 
     assert result["ok"] is True
+    assert result["docs"] == {
+        "mode": "full",
+        "doc_ids": [],
+        "reason": "full-scope fallback: no targeted docs payload ids provided",
+    }
     assert result["search"] == {"mode": "full", "doc_ids": []}
     assert calls == [
         (["/tmp/bundle", "exec", "ruby", "scripts/build_docs.rb", "--scope", "studio", "--write"], calls[0][1]),
@@ -142,6 +147,85 @@ def test_rebuild_scope_outputs_preserves_targeted_search_command() -> None:
         "child,parent",
         "--remove-missing",
     ]
+
+
+def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
+    calls: list[list[str]] = []
+    original_bundle = with_fake_bundle()
+    original_run = write_rebuild.subprocess.run
+    original_fallback = write_rebuild.targeted_docs_build_fallback_reason
+
+    def fake_run(command, **_kwargs):
+        calls.append(list(command))
+        return Completed()
+
+    write_rebuild.subprocess.run = fake_run
+    write_rebuild.targeted_docs_build_fallback_reason = lambda *_args, **_kwargs: ""
+    try:
+        with tempfile.TemporaryDirectory() as temp_path:
+            result = write_rebuild.rebuild_scope_outputs(
+                Path(temp_path),
+                "studio",
+                include_search=False,
+                docs_doc_ids=["body-doc", "", "body-doc", "linked-doc"],
+            )
+    finally:
+        write_rebuild.subprocess.run = original_run
+        write_rebuild.targeted_docs_build_fallback_reason = original_fallback
+        write_rebuild.detect_bundle_bin = original_bundle
+
+    assert result["docs"] == {
+        "mode": "targeted",
+        "doc_ids": ["body-doc", "linked-doc"],
+        "reason": "targeted docs payload ids provided",
+    }
+    assert result["search"] == {"mode": "none", "doc_ids": []}
+    assert calls == [
+        [
+            "/tmp/bundle",
+            "exec",
+            "ruby",
+            "scripts/build_docs.rb",
+            "--scope",
+            "studio",
+            "--write",
+            "--only-doc-ids",
+            "body-doc,linked-doc",
+        ]
+    ]
+
+
+def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing() -> None:
+    calls: list[list[str]] = []
+    original_bundle = with_fake_bundle()
+    original_run = write_rebuild.subprocess.run
+    original_fallback = write_rebuild.targeted_docs_build_fallback_reason
+
+    def fake_run(command, **_kwargs):
+        calls.append(list(command))
+        return Completed()
+
+    write_rebuild.subprocess.run = fake_run
+    write_rebuild.targeted_docs_build_fallback_reason = lambda *_args, **_kwargs: "full-scope fallback: existing docs index missing"
+    try:
+        with tempfile.TemporaryDirectory() as temp_path:
+            result = write_rebuild.rebuild_scope_outputs(
+                Path(temp_path),
+                "studio",
+                include_search=False,
+                docs_doc_ids=["body-doc"],
+            )
+    finally:
+        write_rebuild.subprocess.run = original_run
+        write_rebuild.targeted_docs_build_fallback_reason = original_fallback
+        write_rebuild.detect_bundle_bin = original_bundle
+
+    assert result["docs"] == {
+        "mode": "full",
+        "doc_ids": ["body-doc"],
+        "reason": "full-scope fallback: existing docs index missing",
+    }
+    assert calls == [["/tmp/bundle", "exec", "ruby", "scripts/build_docs.rb", "--scope", "studio", "--write"]]
 
 
 def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
@@ -330,6 +414,8 @@ def main() -> None:
     test_rebuild_scope_outputs_preserves_full_command_shapes()
     test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics()
     test_rebuild_scope_outputs_preserves_targeted_search_command()
+    test_rebuild_scope_outputs_passes_targeted_docs_command()
+    test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing()
     test_rebuild_scope_outputs_skips_empty_targeted_search()
     test_perform_source_write_and_rebuild_marks_pending_then_complete()
     test_perform_source_write_and_rebuild_clears_pending_on_exception()
