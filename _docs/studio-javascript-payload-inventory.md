@@ -121,7 +121,7 @@ Each section should summarise:
 
 - Separate generated-payload loading and loadable-doc visibility state for when new scope or payload behavior grows.
 - Keep management dynamic-loading behind the existing lazy boundary; improve that boundary only if management boot, capability loading, or report loading changes materially.
-- Avoid reopening router or document-rendering work just for line count; those responsibilities already have focused modules.
+- Router or document-rendering already have focused modules.
 - A further split is only useful if it reduces shared-runtime coupling or route-load cost.
 - Do not turn the entry file into a thin pass-through layer if it makes the viewer boot sequence harder to inspect.
 
