@@ -102,6 +102,7 @@ Measured on 2026-05-20, after the Data Sharing Review apply-orchestration extrac
 
 The full ranked priority table now lives in [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 That child document lists all 129 browser JavaScript files with rank, file, risk score, and focus.
+[Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) keeps the Docs Viewer-specific subset and follow-up tasks separate from the all-script mitigation pass.
 
 The detailed sections below cover the top five highest-risk current improvement priorities after manual review.
 When files have the same score, use the ranked child table order for the detail set and watch list.

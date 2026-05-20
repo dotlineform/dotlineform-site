@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T19:42:33Z",
+  "generated_at": "2026-05-20T20:43:43Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2232,7 +2232,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 17951,
+      "content_text_length": 18088,
       "ui_status": "urgent"
     },
     {
@@ -2349,6 +2349,22 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-python-ruby-script-inventory.json",
       "content_text_length": 17285,
       "ui_status": "urgent"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer-javascript-inventory",
+      "title": "Docs Viewer JavaScript Inventory",
+      "added_date": "2026-05-20",
+      "last_updated": "2026-05-20",
+      "parent_id": "studio-javascript-payload-inventory",
+      "sort_order": 7020,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-javascript-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-javascript-inventory.json",
+      "content_text_length": 19141
     },
     {
       "scope": "studio",
@@ -2660,7 +2676,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 4543
+      "content_text_length": 4661
     },
     {
       "scope": "studio",

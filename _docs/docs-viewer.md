@@ -67,6 +67,7 @@ Those boundaries are intentional:
 - [New Scopes Builder](/docs/?scope=studio&doc=docs-viewer-new-scopes-builder) records the technical design, route-creation model, publishing choices, and implementation notes for the local New scope workflow.
 - [Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation) explains the current source roots and how docs trees are organised by `parent_id` and `sort_order`.
 - [Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) records when scope differences should stay in shells or data and when a true runtime fork would be justified.
+- [JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) tracks the Docs Viewer-specific browser JavaScript risk scores, priorities, and follow-up tasks.
 - [Viewability Workflow Spec](/docs/?scope=studio&doc=docs-viewer-draft-publishing-spec) records the separate `viewable: true | false` visibility workflow while preserving `published` as the docs generation gate.
 - [Import Source Registry Spec](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec) documents staged source-format dispatch, preview payloads, media planning, and service write boundaries for Docs Import.
 - [Docs Viewer Favourites Spec](/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec) captures the current shared bookmark/favourites request for `/docs/` and `/library/`.

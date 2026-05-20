@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a8dc3853cb6e92e95109388e2e1c681d",
-    "generated_at_utc": "2026-05-20T20:04:49Z",
-    "count": 285
+    "version": "blake2b-eeb0169d17a06fed19b4b71367a43512",
+    "generated_at_utc": "2026-05-20T20:43:34Z",
+    "count": 286
   },
   "entries": [
     {
@@ -3647,6 +3647,31 @@
         "19"
       ],
       "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "docs-viewer-javascript-inventory",
+      "kind": "doc",
+      "title": "Docs Viewer JavaScript Inventory",
+      "href": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
+      "last_updated": "2026-05-20",
+      "parent_id": "studio-javascript-payload-inventory",
+      "parent_title": "JavaScript Inventory Priorities",
+      "display_meta": "2026-05-20 • JavaScript Inventory Priorities",
+      "search_terms": [
+        "docs-viewer-javascript-inventory",
+        "docs",
+        "viewer",
+        "javascript",
+        "inventory",
+        "docs viewer javascript inventory",
+        "javascript inventory priorities",
+        "priorities",
+        "2026-05-20",
+        "2026",
+        "05",
+        "20"
+      ],
+      "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory javascript inventory priorities priorities 2026-05-20 2026 05 20"
     },
     {
       "id": "studio-docs-inventory",
