@@ -14,10 +14,12 @@ Route:
 
 - `/studio/docs-broken-links/`
 
-Use it to run a broken-links check for one docs scope at a time:
+Use it to run a broken-links check for one configured docs scope at a time.
+The scope menu is rendered from the shared Docs Viewer config:
 
 - `studio`
 - `library`
+- `analysis`
 
 ## What It Checks
 

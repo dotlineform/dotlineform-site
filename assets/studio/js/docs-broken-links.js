@@ -10,6 +10,12 @@ import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
+import {
+  isDocsViewerPath,
+  loadDocsViewerScopeOptions,
+  normalizedDocsViewerScope,
+  selectedDocsViewerScopeFromUrl
+} from "./docs-viewer-scope-options.js";
 
 const DEFAULT_SORT_KEY = "fromPage";
 const DEFAULT_SORT_DIR = "asc";
@@ -60,13 +66,24 @@ function markRouteReady(state, ready) {
   setStudioRouteReady(state.root, ready, routeStateDetail(state));
 }
 
-function manageModeHref(href) {
+function scopeTextKey(scopeId) {
+  return `docs_broken_links.scope_option_${normalizeText(scopeId).replace(/[^a-z0-9]+/gi, "_").toLowerCase()}`;
+}
+
+function renderScopeOptions(config, scopeConfigs) {
+  return scopeConfigs.map((scope) => {
+    const scopeId = scope.scopeId;
+    const label = getStudioText(config, scopeTextKey(scopeId), scopeId);
+    return `<option value="${escapeHtml(scopeId)}">${escapeHtml(label)}</option>`;
+  }).join("");
+}
+
+function manageModeHref(href, scopeConfigs) {
   const raw = normalizeText(href);
   if (!raw || raw === "#") return raw || "#";
   try {
     const url = new URL(raw, window.location.href);
-    const path = url.pathname.replace(/\/+$/, "");
-    if (path === "/docs" || path === "/library") {
+    if (isDocsViewerPath(url.pathname, scopeConfigs)) {
       url.searchParams.set("mode", "manage");
       if (url.origin === window.location.origin) {
         return `${url.pathname}${url.search}${url.hash}`;
@@ -79,9 +96,9 @@ function manageModeHref(href) {
   return raw;
 }
 
-function linkHtml(label, href) {
+function linkHtml(label, href, scopeConfigs) {
   const text = normalizeText(label) || normalizeText(href) || "link";
-  const url = manageModeHref(href);
+  const url = manageModeHref(href, scopeConfigs);
   return `<a class="docsBrokenLinksRow__link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(text)}</a>`;
 }
 
@@ -130,12 +147,12 @@ function sortButton(state, sortKey, label) {
   `;
 }
 
-function renderRows(config, entries) {
+function renderRows(state, entries) {
   const labels = {
-    problem: getStudioText(config, "docs_broken_links.column_problem", "problem"),
-    linkedPage: getStudioText(config, "docs_broken_links.column_linked_page", "linked page"),
-    link: getStudioText(config, "docs_broken_links.column_link", "link"),
-    fromPage: getStudioText(config, "docs_broken_links.column_from_page", "from page")
+    problem: getStudioText(state.config, "docs_broken_links.column_problem", "problem"),
+    linkedPage: getStudioText(state.config, "docs_broken_links.column_linked_page", "linked page"),
+    link: getStudioText(state.config, "docs_broken_links.column_link", "link"),
+    fromPage: getStudioText(state.config, "docs_broken_links.column_from_page", "from page")
   };
 
   return entries.map((entry) => {
@@ -146,13 +163,13 @@ function renderRows(config, entries) {
           <span class="docsBrokenLinksRow__problem" data-problem="${escapeHtml(problem)}">${escapeHtml(problem)}</span>
         </span>
         <span class="docsBrokenLinksRow__cell" data-label="${escapeHtml(labels.fromPage)}">
-          ${linkHtml(entry.from_page_text, entry.from_page_url)}
+          ${linkHtml(entry.from_page_text, entry.from_page_url, state.scopeConfigs)}
         </span>
         <span class="docsBrokenLinksRow__cell" data-label="${escapeHtml(labels.linkedPage)}">
-          ${linkHtml(entry.linked_page_text, entry.linked_page_url)}
+          ${linkHtml(entry.linked_page_text, entry.linked_page_url, state.scopeConfigs)}
         </span>
         <span class="docsBrokenLinksRow__cell" data-label="${escapeHtml(labels.link)}">
-          ${linkHtml(entry.link_text, entry.link_url)}
+          ${linkHtml(entry.link_text, entry.link_url, state.scopeConfigs)}
         </span>
       </li>
     `;
@@ -185,19 +202,9 @@ function renderResults(state) {
       ${sortButton(state, "linkedPage", linkedPageLabel)}
       ${sortButton(state, "link", linkLabel)}
     </div>
-    <ol class="tagStudioList__rows">${renderRows(state.config, entries)}</ol>
+    <ol class="tagStudioList__rows">${renderRows(state, entries)}</ol>
   `;
   state.listWrap.hidden = false;
-}
-
-function selectedScopeFromUrl() {
-  try {
-    const url = new URL(window.location.href);
-    const scope = normalizeText(url.searchParams.get("scope")).toLowerCase();
-    return scope === "library" ? "library" : "studio";
-  } catch (_error) {
-    return "studio";
-  }
 }
 
 function persistSelectedScope(scope) {
@@ -211,7 +218,8 @@ function persistSelectedScope(scope) {
 }
 
 async function runAudit(state) {
-  const scope = normalizeText(state.scopeSelect.value).toLowerCase() === "library" ? "library" : "studio";
+  const scope = normalizedDocsViewerScope(state.scopeConfigs, state.scopeSelect.value);
+  state.scopeSelect.value = scope;
   persistSelectedScope(scope);
   state.isRunning = true;
   syncRouteBusyState(state);
@@ -297,6 +305,7 @@ async function init() {
 
   try {
     const config = await loadStudioConfigWithText("docs_broken_links");
+    const scopeOptions = await loadDocsViewerScopeOptions();
     const serviceAvailable = await probeDocsManagementHealth();
 
     setText(
@@ -304,16 +313,13 @@ async function init() {
       getStudioText(
         config,
         "docs_broken_links.intro",
-        "Run a strict docs-viewer link audit for Studio or Library docs."
+        "Run a strict docs-viewer link audit for configured docs scopes."
       )
     );
     setText(scopeLabel, getStudioText(config, "docs_broken_links.scope_label", "scope"));
     setText(runButton, getStudioText(config, "docs_broken_links.run_button", "Run broken links"));
-    scopeSelect.innerHTML = `
-      <option value="studio">${escapeHtml(getStudioText(config, "docs_broken_links.scope_option_studio", "studio"))}</option>
-      <option value="library">${escapeHtml(getStudioText(config, "docs_broken_links.scope_option_library", "library"))}</option>
-    `;
-    scopeSelect.value = selectedScopeFromUrl();
+    scopeSelect.innerHTML = renderScopeOptions(config, scopeOptions.scopes);
+    scopeSelect.value = selectedDocsViewerScopeFromUrl(scopeOptions.scopes, scopeOptions.defaultScopeId);
     scopeSelect.addEventListener("change", () => {
       persistSelectedScope(scopeSelect.value);
     });
@@ -326,6 +332,7 @@ async function init() {
       listWrap,
       emptyNode,
       root,
+      scopeConfigs: scopeOptions.scopes,
       serviceAvailable,
       isRunning: false,
       entries: [],

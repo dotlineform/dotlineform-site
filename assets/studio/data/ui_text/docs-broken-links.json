@@ -1,8 +1,9 @@
 {
-  "intro": "Run a docs-viewer broken-link audit for Studio or Library docs.",
+  "intro": "Run a docs-viewer broken-link audit for configured docs scopes.",
   "scope_label": "scope",
   "scope_option_studio": "studio",
   "scope_option_library": "library",
+  "scope_option_analysis": "analysis",
   "run_button": "Run broken links",
   "idle_status": "Select a scope and run the audit.",
   "service_unavailable": "Docs management service unavailable. Start bin/dev-studio to run the audit.",
