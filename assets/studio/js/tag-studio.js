@@ -14,28 +14,16 @@ import {
   probeStudioHealth
 } from "./studio-transport.js";
 import {
-  buildSeriesWorkOptions,
-  cloneWorkStateMap,
-  compareTagDisplay,
   configureTagStudioDomain,
-  createResolvedEntries,
-  buildEditorStateDiff,
-  getSeriesAssignment,
-  getSeriesIndexRow,
   makeResolvedEntry,
   nextWeight,
   normalize,
-  normalizeAliasTargets,
   normalizeAssignmentRows,
-  normalizeAssignmentTags,
   normalizeWorkId,
-  pushMapList,
-  sanitizeTag,
   splitWorkInputTokens
 } from "./tag-studio-domain.js";
 import {
   equalOfflineSeriesRows,
-  getOfflineAssignmentsSeriesEntry,
   normalizeOfflineSeriesRow,
   readOfflineAssignmentsSession,
   removeOfflineAssignmentsSeriesEntry,
@@ -66,6 +54,15 @@ import {
   renderPopup,
   renderWorkPopup
 } from "./tag-studio-suggestions.js";
+import {
+  applyPersistedBaseline,
+  buildPersistedSeriesRow,
+  buildStateDiff,
+  buildTagStudioState,
+  getOrderedSelectedWorkIds,
+  restoreSelectionFromQuery,
+  writeSelectionToQuery
+} from "./tag-studio-state.js";
 import {
   setStudioRouteBusy,
   setStudioRouteReady
@@ -149,7 +146,7 @@ async function initTagStudio() {
     ]);
     const offlineSession = readOfflineAssignmentsSession();
 
-    const state = buildState(
+    const state = buildTagStudioState({
       mount,
       seriesId,
       registryJson,
@@ -158,8 +155,10 @@ async function initTagStudio() {
       seriesIndexJson,
       worksIndexJson,
       config,
-      offlineSession
-    );
+      offlineSession,
+      studioGroups: STUDIO_GROUPS,
+      defaultWeight: DEFAULT_WEIGHT
+    });
     restoreSelectionFromQuery(state);
     renderShell(state);
     if (!state.refs) return;
@@ -183,202 +182,6 @@ async function initTagStudio() {
       recordLoaded: false
     });
   }
-}
-
-function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson, seriesIndexJson, worksIndexJson, config, offlineSession) {
-  const tags = Array.isArray(registryJson && registryJson.tags) ? registryJson.tags : [];
-  const tagsById = new Map();
-  const slugMap = new Map();
-  const labelMap = new Map();
-  const activeTags = [];
-
-  for (const rawTag of tags) {
-    const tag = sanitizeTag(rawTag);
-    if (!tag) continue;
-
-    tagsById.set(tag.tag_id, tag);
-    pushMapList(slugMap, tag.slug, tag);
-    pushMapList(labelMap, normalize(tag.label), tag);
-
-    if (tag.status === "active") {
-      activeTags.push(tag);
-    }
-  }
-
-  activeTags.sort((a, b) => a.tag_id.localeCompare(b.tag_id));
-  const activeTagsBySlug = activeTags.slice().sort((a, b) => {
-    const bySlug = a.slug.localeCompare(b.slug, undefined, { sensitivity: "base" });
-    if (bySlug !== 0) return bySlug;
-    return a.tag_id.localeCompare(b.tag_id);
-  });
-
-  const aliases = new Map();
-  const rawAliases = aliasesJson && typeof aliasesJson.aliases === "object" ? aliasesJson.aliases : {};
-  for (const [aliasInput, targetInput] of Object.entries(rawAliases)) {
-    const aliasKey = normalize(aliasInput);
-    if (!aliasKey) continue;
-    const targetTagIds = normalizeAliasTargets(targetInput);
-    if (!targetTagIds.length) continue;
-    aliases.set(aliasKey, targetTagIds);
-  }
-  const aliasOptions = buildAliasOptions(aliases, tagsById);
-
-  const seriesIndexMap = seriesIndexJson && typeof seriesIndexJson.series === "object" ? seriesIndexJson.series : {};
-  const worksIndexMap = worksIndexJson && typeof worksIndexJson.works === "object" ? worksIndexJson.works : {};
-  const seriesRow = getSeriesIndexRow(seriesIndexMap, seriesId);
-  const seriesWorkOptions = buildSeriesWorkOptions(seriesId, seriesRow, worksIndexMap);
-  const seriesWorkIds = new Set(seriesWorkOptions.map((item) => item.workId));
-
-  const assignmentsSeries = assignmentsJson && typeof assignmentsJson.series === "object" ? assignmentsJson.series : {};
-  const repoSeriesAssignment = getSeriesAssignment(assignmentsSeries, seriesId);
-  const offlineSeriesEntry = getOfflineAssignmentsSeriesEntry(offlineSession, seriesId);
-  const seriesAssignment = offlineSeriesEntry ? offlineSeriesEntry.staged_row : repoSeriesAssignment;
-  const seriesEntries = createResolvedEntries(
-    normalizeAssignmentTags(seriesAssignment && seriesAssignment.tags),
-    tagsById
-  ).entries;
-
-  const rawWorkAssignments = seriesAssignment && typeof seriesAssignment.works === "object" ? seriesAssignment.works : {};
-  const workEntriesById = new Map();
-  const selectedWorkIds = [];
-  const baselineWorkStateById = new Map();
-  let nextEntryId = 1;
-
-  Object.keys(rawWorkAssignments).forEach((rawWorkId) => {
-    const workId = normalizeWorkId(rawWorkId);
-    if (!workId) return;
-    const workRow = rawWorkAssignments[rawWorkId];
-    const tags = workRow && typeof workRow === "object" ? workRow.tags : [];
-    const rows = normalizeAssignmentTags(tags);
-    const entries = createResolvedEntries(rows, tagsById, nextEntryId);
-    workEntriesById.set(workId, entries.entries);
-    baselineWorkStateById.set(workId, normalizeAssignmentRows(rows));
-    if (seriesWorkIds.has(workId)) {
-      selectedWorkIds.push(workId);
-    }
-    nextEntryId = entries.nextEntryId;
-  });
-
-  return {
-    mount,
-    routeRoot: document.getElementById("seriesTagEditorRoot"),
-    config,
-    studioGroups: STUDIO_GROUPS,
-    defaultWeight: DEFAULT_WEIGHT,
-    seriesId,
-    tagsById,
-    slugMap,
-    labelMap,
-    aliases,
-    activeTagsBySlug,
-    aliasOptions,
-    seriesEntries,
-    baselineSeriesRows: normalizeAssignmentRows(seriesAssignment && seriesAssignment.tags),
-    workEntriesById,
-    seriesWorkOptions,
-    seriesWorkIds,
-    selectedWorkIds,
-    baselineWorkStateById,
-    selectedWorkId: "",
-    lastBroadcastSelectedWorkId: null,
-    statusText: "",
-    statusKind: "",
-    refs: null,
-    offlineSession,
-    hasOfflineStagedSeries: Boolean(offlineSeriesEntry),
-    offlineBaseSeriesRow: offlineSeriesEntry && offlineSeriesEntry.base_row_snapshot
-      ? normalizeOfflineSeriesRow(offlineSeriesEntry.base_row_snapshot)
-      : normalizeOfflineSeriesRow(repoSeriesAssignment),
-    offlineBaseSeriesUpdatedAt: offlineSeriesEntry
-      ? String(offlineSeriesEntry.base_series_updated_at_utc || "")
-      : String(repoSeriesAssignment && repoSeriesAssignment.updated_at_utc || ""),
-    offlineAutosaveTimer: 0,
-    saveModeProbePending: false,
-    lastSaveModeHealthOk: false,
-    serverAvailableWhileOfflineNotified: false,
-    modalSnippet: "",
-    saveMode: "offline",
-    saveModeResolved: false,
-    isBusy: false
-  };
-}
-
-function buildStateDiff(state) {
-  return buildEditorStateDiff(state, getOrderedSelectedWorkIds(state));
-}
-
-function buildPersistedSeriesRow(diff) {
-  const row = {
-    tags: normalizeAssignmentRows(diff && diff.nextSeriesRows)
-  };
-  const works = {};
-  const nextWorkStateById = diff && diff.nextWorkStateById instanceof Map ? diff.nextWorkStateById : new Map();
-
-  for (const [workId, tags] of Array.from(nextWorkStateById.entries()).sort((a, b) => a[0].localeCompare(b[0]))) {
-    works[workId] = {
-      tags: normalizeAssignmentRows(tags)
-    };
-  }
-
-  if (Object.keys(works).length) row.works = works;
-  return row;
-}
-
-function applyPersistedBaseline(state, diff) {
-  state.baselineSeriesRows = normalizeAssignmentRows(diff.nextSeriesRows);
-  state.baselineWorkStateById = cloneWorkStateMap(diff.nextWorkStateById);
-}
-
-function restoreSelectionFromQuery(state) {
-  const searchParams = new URLSearchParams(window.location.search);
-  const worksParam = String(searchParams.get("works") || "").trim();
-  if (!worksParam) {
-    writeSelectionToQuery(state);
-    return;
-  }
-
-  const selectedWorkIds = [];
-  const seen = new Set();
-  for (const rawPart of worksParam.split(",")) {
-    const workId = normalizeWorkId(rawPart);
-    if (!workId || seen.has(workId) || !state.seriesWorkIds.has(workId)) continue;
-    seen.add(workId);
-    selectedWorkIds.push(workId);
-    if (!state.workEntriesById.has(workId)) {
-      state.workEntriesById.set(workId, []);
-    }
-  }
-
-  state.selectedWorkIds = selectedWorkIds;
-
-  const activeWorkId = normalizeWorkId(searchParams.get("active"));
-  if (activeWorkId && selectedWorkIds.includes(activeWorkId)) {
-    state.selectedWorkId = activeWorkId;
-  } else {
-    state.selectedWorkId = selectedWorkIds.length ? selectedWorkIds[0] : "";
-  }
-
-  writeSelectionToQuery(state);
-}
-
-function writeSelectionToQuery(state) {
-  if (!window.history || typeof window.history.replaceState !== "function") return;
-
-  const url = new URL(window.location.href);
-  const selectedWorkIds = getOrderedSelectedWorkIds(state);
-  if (selectedWorkIds.length) {
-    url.searchParams.set("works", selectedWorkIds.join(","));
-    if (state.selectedWorkId && selectedWorkIds.includes(state.selectedWorkId)) {
-      url.searchParams.set("active", state.selectedWorkId);
-    } else {
-      url.searchParams.delete("active");
-    }
-  } else {
-    url.searchParams.delete("works");
-    url.searchParams.delete("active");
-  }
-
-  window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
 function renderShell(state) {
@@ -1046,31 +849,6 @@ function getSeriesTagIdSet(state) {
   return out;
 }
 
-function buildAliasOptions(aliases, tagsById) {
-  const out = [];
-  for (const [alias, targets] of aliases.entries()) {
-    const resolved = [];
-    const seen = new Set();
-    for (const targetTagId of targets) {
-      const normalizedTagId = normalize(targetTagId);
-      if (!normalizedTagId || seen.has(normalizedTagId)) continue;
-      const tag = tagsById.get(normalizedTagId);
-      if (!tag) continue;
-      seen.add(normalizedTagId);
-      resolved.push({
-        tagId: normalizedTagId,
-        group: tag.group,
-        label: tag.label
-      });
-    }
-    if (!resolved.length) continue;
-    resolved.sort(compareTagDisplay);
-    out.push({ alias, targets: resolved });
-  }
-  out.sort((a, b) => a.alias.localeCompare(b.alias, undefined, { sensitivity: "base" }));
-  return out;
-}
-
 function renderSaveState(state) {
   const metrics = computeMetrics(state);
   const hasSelectedWork = Boolean(state.selectedWorkId);
@@ -1302,20 +1080,6 @@ function setSaveResult(state, kind, text) {
 function getSelectedWorkEntries(state) {
   if (!state.selectedWorkId) return [];
   return state.workEntriesById.get(state.selectedWorkId) || [];
-}
-
-function getSelectedWorkOption(state) {
-  if (!state.selectedWorkId) return null;
-  return state.seriesWorkOptions.find((item) => item.workId === state.selectedWorkId) || null;
-}
-
-function getOrderedSelectedWorkOptions(state) {
-  const selected = new Set(state.selectedWorkIds);
-  return state.seriesWorkOptions.filter((item) => selected.has(item.workId));
-}
-
-function getOrderedSelectedWorkIds(state) {
-  return getOrderedSelectedWorkOptions(state).map((item) => item.workId);
 }
 
 function hasPendingSaveChanges(state) {

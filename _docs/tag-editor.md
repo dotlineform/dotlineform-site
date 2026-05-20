@@ -53,6 +53,7 @@ Supporting modules:
 - `assets/studio/js/tag-assignments-offline.js`
 - `assets/studio/js/tag-studio-render.js`
 - `assets/studio/js/tag-studio-suggestions.js`
+- `assets/studio/js/tag-studio-state.js`
 - `assets/studio/js/tag-studio-save.js`
 
 Top-level structure in the page template:
@@ -405,7 +406,8 @@ Primary page state:
 
 Primary editor state:
 
-- editor state object is created by `buildState(...)` in `tag-studio.js`
+- editor state object is created by `buildTagStudioState(...)` in `tag-studio-state.js`
+- `tag-studio.js` owns route orchestration and mutates that state through event handlers
 
 Key editor state areas:
 
@@ -420,6 +422,7 @@ Key editor state areas:
 Business/state helpers live in:
 
 - `assets/studio/js/tag-studio-domain.js`
+- `assets/studio/js/tag-studio-state.js`
 
 ## Data Access / Query Params / JSON Parsing
 

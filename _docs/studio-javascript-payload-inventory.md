@@ -37,19 +37,19 @@ Re-run this inventory after material Studio or Docs Viewer JavaScript refactors.
 
 ## Current Summary
 
-Measured on 2026-05-20, after the Tag Studio render/suggestion extraction pass.
+Measured on 2026-05-20, after the Tag Studio state extraction pass.
 
-- Browser JavaScript files under `assets/`: 123
-- Total browser JavaScript lines under `assets/`: 40,839
+- Browser JavaScript files under `assets/`: 124
+- Total browser JavaScript lines under `assets/`: 40,870
 - Files over the 1,000-line review threshold: 5
 - Files in the 900-1,000 line watch band: 5
-- Over-threshold raw size total: 199.6 KiB
-- Over-threshold gzip size total: 42.6 KiB
+- Over-threshold raw size total: 191.4 KiB
+- Over-threshold gzip size total: 40.9 KiB
 
 The over-threshold set is still maintenance-driven more than transfer-driven.
 No route loads all over-threshold files together.
 
-The modal extraction pass reduced several large mixed route controllers while adding focused route-local modal modules. The Docs Viewer management write-action, capability/config, interaction, and document-controller extractions continued that pattern. The Tag Studio render/suggestion pass follows the same tradeoff: total JavaScript lines increased because selected-work/context rendering, grouped chip rendering, and popup suggestion rendering now have named route-local modules, but the main route controller is smaller and no longer embeds those responsibilities inline.
+The modal extraction pass reduced several large mixed route controllers while adding focused route-local modal modules. The Docs Viewer management write-action, capability/config, interaction, and document-controller extractions continued that pattern. The Tag Studio render/suggestion/state passes follow the same tradeoff: total JavaScript lines increased because selected-work/context rendering, grouped chip rendering, popup suggestion rendering, initial editor state construction, assignment baseline helpers, and selected-work URL synchronization now have named route-local modules, but the main route controller is smaller and no longer embeds those responsibilities inline.
 
 The extraction plan is now complete: [Modal Responsibility Extraction Plan](/docs/?scope=studio&doc=modal-responsibility-extraction-plan).
 The next modal-related work is pattern standardization, not further modal extraction: [Modal Composition Pattern Request](/docs/?scope=studio&doc=ui-request-modal-composition-pattern).
@@ -58,9 +58,9 @@ The next modal-related work is pattern standardization, not further modal extrac
 
 ### `assets/studio/js/tag-studio.js`
 
-- Lines: 1,385
-- Raw: 43.0 KiB
-- Gzip: 9.4 KiB
+- Lines: 1,149
+- Raw: 34.8 KiB
+- Gzip: 7.6 KiB
 - Classification: mixed route controller
 - Maintenance risk: high
 - Transfer-size risk: low
@@ -68,8 +68,9 @@ The next modal-related work is pattern standardization, not further modal extrac
 The save preview modal rendering and wiring now live in `assets/studio/js/tag-studio-modals.js`.
 Selected-work/context rendering and grouped chip rendering now live in `assets/studio/js/tag-studio-render.js`.
 Work and tag suggestion popup filtering/rendering now lives in `assets/studio/js/tag-studio-suggestions.js`.
-The route still owns editor state construction, selected-work URL synchronization, tag/work mutation decisions, save/probe decisions, clipboard write behavior, status wording, and offline staging.
-Next cleanup should target state construction/selection helpers or save/offline orchestration before adding more tag editor workflow.
+Initial editor state construction, assignment baseline helpers, state diff helpers, selected-work ordering, and selected-work URL synchronization now live in `assets/studio/js/tag-studio-state.js`.
+The route still owns tag/work mutation decisions, save/probe decisions, clipboard write behavior, status wording, and offline staging.
+Next cleanup should target save/offline orchestration before adding more tag editor workflow.
 
 ### `assets/studio/js/tag-aliases.js`
 
@@ -168,13 +169,13 @@ Do not reopen router or document-rendering work just for line count.
 Further cleanup should be tied to concrete generated-payload loading, visibility/loadable-doc state, or management dynamic-loading changes.
 Docs Viewer files remain in this inventory because `/docs/` is the Studio documentation and management surface.
 
-The Tag Studio route is still over the threshold after modal, render, and suggestion extraction. Its next likely slices are state construction/selection helpers or save/offline orchestration. The Tag Aliases and Tag Registry routes are still over the threshold after modal extraction; their next likely slices are list/control rendering, import parsing/submission, and service orchestration. Avoid opening another modal-extraction slice for those files unless new modal responsibilities are introduced.
+The Tag Studio route is still over the threshold after modal, render, suggestion, and state extraction. Its next likely slice is save/offline orchestration. The Tag Aliases and Tag Registry routes are still over the threshold after modal extraction; their next likely slices are list/control rendering, import parsing/submission, and service orchestration. Avoid opening another modal-extraction slice for those files unless new modal responsibilities are introduced.
 
 ## Remaining Extraction Options
 
 The modal extraction pass is complete. Remaining candidates are broader route-controller refactors:
 
-- Tag Studio: split state construction/selection helpers or save/offline orchestration from the remaining route controller.
+- Tag Studio: split save/offline orchestration from the remaining route controller.
 - Docs Viewer entry controller: retain the current boundary unless generated-payload loading, visibility/loadable-doc state, or management dynamic-loading changes materially.
 - Tag Aliases and Tag Registry: split list/control rendering, import parsing/submission, or service orchestration from route state and validation decisions.
 - Data Sharing Review: split preview table rendering or apply-action orchestration if the workflow grows.
