@@ -3,9 +3,10 @@ doc_id: docs-viewer-javascript-inventory
 title: Docs Viewer JavaScript Inventory
 added_date: 2026-05-20
 last_updated: 2026-05-20
+ui_status: review
 parent_id: studio-javascript-payload-inventory
 sort_order: 7020
-hidden: false
+viewable: true
 ---
 # Docs Viewer JavaScript Inventory
 
@@ -18,6 +19,16 @@ Use this document after material Docs Viewer feature additions or refactors to c
 - management-only workflows stay behind the lazy management boundary
 - import, report, modal, status, and write orchestration work has a clear owner
 - the all-script JavaScript risk-reduction work can be reviewed separately from remaining Docs Viewer-specific follow-up
+
+## Upcoming Index Panel Work
+
+A forthcoming change request is expected to introduce a generic Docs Viewer index panel with `collapsed`, `normal`, and `expanded` states.
+The initial panel content will remain the existing tree index, but the expanded state is intended to create a reusable workspace for later semantic or graph-based index surfaces.
+The graph index itself should be a separate project.
+
+Treat that change request as distinct from this inventory, but use this inventory to identify prerequisite risk work before implementation.
+The likely prerequisite is to establish a focused index panel/layout owner so `assets/docs-viewer/js/docs-viewer.js` does not absorb another broad interactive-surface responsibility.
+Related follow-up should preserve `assets/docs-viewer/js/docs-viewer-sidebar.js` as the tree renderer inside the panel rather than making the tree index own panel state.
 
 ## Current Summary
 
