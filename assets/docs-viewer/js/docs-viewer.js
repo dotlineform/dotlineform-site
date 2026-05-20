@@ -25,6 +25,9 @@ import {
   initDocsViewerConfigController
 } from "./docs-viewer-config-controller.js";
 import {
+  initDocsViewerDocumentController
+} from "./docs-viewer-document-controller.js";
+import {
   initDocsViewerSearchController
 } from "./docs-viewer-search-controller.js";
 import {
@@ -101,6 +104,7 @@ import {
   var managementController = null;
   var managementControllerRequestPromise = null;
   var bookmarkController = null;
+  var documentController = null;
 
   var state = {
     allDocs: [],
@@ -280,6 +284,31 @@ import {
     updatedEl: updatedEl,
     viewerTargetDocId: viewerTargetDocId,
     viewerUrl: viewerUrl
+  });
+  documentController = initDocsViewerDocumentController({
+    allowManagement: allowManagement,
+    checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
+    content: content,
+    dataRequestOptions: dataRequestOptions,
+    hasActiveQuery: hasActiveQuery,
+    managementBaseUrl: function () { return managementBaseUrl; },
+    meta: meta,
+    more: more,
+    renderBookmarkToggle: renderBookmarkToggle,
+    renderBookmarkUi: renderBookmarkUi,
+    renderManagementUi: renderManagementUi,
+    renderMeta: renderMeta,
+    renderSearchMode: renderSearchMode,
+    renderSidebar: renderSidebar,
+    renderStatusPills: renderStatusPills,
+    reportRegistryUrl: function () { return reportRegistryUrl; },
+    results: results,
+    scopeConfigs: function () { return state.scopeConfigs; },
+    setRecentModeActive: setRecentModeActive,
+    setStatus: setStatus,
+    state: state,
+    viewerScope: function () { return viewerScope; },
+    viewerUrlForScope: viewerUrlForScope
   });
   var searchController = initDocsViewerSearchController({
     applyCurrentRoute: applyCurrentRoute,
@@ -671,119 +700,6 @@ import {
     return "[" + title + "](" + url + ")";
   }
 
-  function fetchDocsIndexForScope(scope) {
-    var targetScope = String(scope || viewerScope || "").trim().toLowerCase();
-    var targetConfig = state.scopeConfigsById.get(targetScope);
-    if (!targetConfig || !targetConfig.indexUrl) {
-      return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
-    }
-    return fetchIndexWithRetry(dataRequestOptions({
-      indexUrl: appendAssetVersion(targetConfig.indexUrl),
-      viewerScope: targetScope,
-      reloadNonce: "",
-      reloadExpectedDocId: ""
-    }));
-  }
-
-  function docsScopeDataBaseUrl(scope) {
-    var targetScope = String(scope || viewerScope || "").trim().toLowerCase();
-    var targetConfig = state.scopeConfigsById.get(targetScope);
-    var indexUrl = targetConfig ? String(targetConfig.indexUrl || "") : "";
-    return indexUrl.replace(/\/index\.json(?:[?#].*)?$/, "");
-  }
-
-  function referenceTargetSlug(target) {
-    var bucketUrl = String(target && target.bucket_url || "").trim();
-    if (bucketUrl) {
-      try {
-        var url = new URL(bucketUrl, window.location.origin);
-        var filename = url.pathname.split("/").pop() || "";
-        if (filename.slice(-5) === ".json") return filename.slice(0, -5);
-      } catch (error) {
-        // Fall through to the target id encoding below.
-      }
-    }
-    return encodeURIComponent(String(target && target.target_id || "").trim());
-  }
-
-  function fetchDocsReferencesIndexForScope(scope) {
-    var targetScope = String(scope || viewerScope || "").trim().toLowerCase();
-    var baseUrl = docsScopeDataBaseUrl(targetScope);
-    if (!baseUrl) {
-      return Promise.reject(new Error("Docs scope is not configured: " + targetScope));
-    }
-    return fetchPreferredGeneratedJson(
-      appendAssetVersion(baseUrl + "/references/index.json"),
-      "Failed to load docs references",
-      managementReloadPath("/docs/generated/references", { scope: targetScope }),
-      dataRequestOptions({
-        viewerScope: targetScope,
-        reloadNonce: "",
-        reloadExpectedDocId: ""
-      })
-    );
-  }
-
-  function fetchDocsReferenceTargetForScope(scope, target) {
-    var targetScope = String(scope || viewerScope || "").trim().toLowerCase();
-    var targetKind = String(target && target.target_kind || "").trim();
-    var targetSlug = referenceTargetSlug(target);
-    var staticUrl = String(target && target.bucket_url || "").trim();
-    if (!staticUrl) {
-      var baseUrl = docsScopeDataBaseUrl(targetScope);
-      staticUrl = baseUrl + "/references/by-target/" + encodeURIComponent(targetKind) + "/" + targetSlug + ".json";
-    }
-    return fetchPreferredGeneratedJson(
-      appendAssetVersion(staticUrl),
-      "Failed to load docs reference target",
-      managementReloadPath("/docs/generated/reference-target", {
-        scope: targetScope,
-        target_kind: targetKind,
-        target_slug: targetSlug
-      }),
-      dataRequestOptions({
-        viewerScope: targetScope,
-        reloadNonce: "",
-        reloadExpectedDocId: ""
-      })
-    );
-  }
-
-  function reportContext(doc, payload) {
-    return {
-      allowManagement: allowManagement,
-      checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
-      content: content,
-      doc: doc,
-      fetchDocsReferenceTarget: fetchDocsReferenceTargetForScope,
-      fetchDocsReferencesIndex: fetchDocsReferencesIndexForScope,
-      fetchDocsIndex: fetchDocsIndexForScope,
-      managementBaseUrl: managementBaseUrl,
-      managementMode: state.managementMode,
-      payload: payload,
-      reportRegistryUrl: reportRegistryUrl,
-      setStatus: setStatus,
-      scopeConfigs: state.scopeConfigs.slice(),
-      viewerScope: viewerScope,
-      viewerUrlForScope: viewerUrlForScope
-    };
-  }
-
-  function payloadHasReport(payload) {
-    return Boolean(payload && String(payload.viewer_report || "").trim());
-  }
-
-  function maybeMountDocsViewerReport(doc, payload) {
-    if (!payloadHasReport(payload)) return;
-    import("./docs-viewer-reports.js")
-      .then(function (module) {
-        return module.mountDocsViewerReport(reportContext(doc, payload));
-      })
-      .catch(function (error) {
-        console.warn("docs_viewer: report controller unavailable", error);
-      });
-  }
-
   function isManageOnlyTreeDoc(doc) {
     if (!doc || state.manageOnlyTreeRootIds.size === 0) return false;
     var visited = new Set();
@@ -952,67 +868,24 @@ import {
     });
   }
 
-  function scrollToHash(hash) {
-    if (!hash) {
-      window.scrollTo({ top: 0, behavior: "auto" });
-      return;
-    }
-
-    var target = document.getElementById(hash);
-    if (!target) return;
-
-    target.scrollIntoView({ block: "start", behavior: "auto" });
-  }
-
   function hideDocPane() {
-    meta.hidden = true;
-    content.hidden = true;
-    renderBookmarkToggle();
-    renderStatusPills();
+    documentController.hideDocPane();
   }
 
   function showDocPane() {
-    setRecentModeActive(false);
-    content.hidden = false;
-    results.hidden = true;
-    more.hidden = true;
-    more.innerHTML = "";
+    documentController.showDocPane();
   }
 
   function showSearchPane() {
-    hideDocPane();
-    results.hidden = false;
+    documentController.showSearchPane();
   }
 
   function showRecentPane() {
-    hideDocPane();
-    setRecentModeActive(true);
-    results.hidden = false;
+    documentController.showRecentPane();
   }
 
   function renderPayload(doc, payload, hash) {
-    state.statusMenuOpen = false;
-    state.selectedDocId = doc.doc_id;
-    renderSidebar();
-    renderBookmarkUi();
-    renderManagementUi();
-
-    if (hasActiveQuery()) {
-      setRecentModeActive(false);
-      renderSearchMode();
-      return;
-    }
-
-    showDocPane();
-    renderMeta(doc);
-    content.innerHTML = payload.content_html || "";
-    maybeMountDocsViewerReport(doc, payload);
-    document.title = doc.title + " | dotlineform";
-    setStatus("", false);
-
-    window.requestAnimationFrame(function () {
-      scrollToHash(hash);
-    });
+    documentController.renderPayload(doc, payload, hash);
   }
 
   function setHistory(docId, hash, query, mode) {
@@ -1038,21 +911,11 @@ import {
   }
 
   function handleMissingDoc() {
-    setStatus("Document not found.", true);
-    hideDocPane();
-    content.textContent = "";
-    results.innerHTML = "";
-    more.innerHTML = "";
-    more.hidden = true;
-    renderManagementUi();
+    documentController.handleMissingDoc();
   }
 
   function renderDocLoadingState(doc) {
-    renderSidebar();
-    showDocPane();
-    renderMeta(doc);
-    setStatus("Loading " + doc.title + "...", false);
-    content.textContent = "";
+    documentController.renderDocLoadingState(doc);
   }
 
   function fetchDocPayload(doc, docId) {
@@ -1065,8 +928,7 @@ import {
   }
 
   function handlePayloadError(error) {
-    setStatus(error.message || "Failed to load document.", true);
-    content.textContent = "";
+    documentController.handlePayloadError(error);
   }
 
   function loadDoc(docId, options) {

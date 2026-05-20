@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: 2026-05-15
+last_updated: 2026-05-20
 parent_id: ""
 sort_order: 9000
 hidden: false
@@ -22,6 +22,7 @@ The current implementation uses:
 - scope-specific route shells to define the route, scope, and generated data URLs
 - one shared shell include in `_includes/docs_viewer_shell.html`
 - one shared runtime entry module in `assets/docs-viewer/js/docs-viewer.js`
+- document pane, payload rendering, and report mount handoff in `assets/docs-viewer/js/docs-viewer-document-controller.js`
 - pure tree and visibility helpers in `assets/docs-viewer/js/docs-viewer-tree.js`
 - pure inline-search and recently-added helpers in `assets/docs-viewer/js/docs-viewer-search.js`
 - bookmark record and storage helpers in `assets/docs-viewer/js/docs-viewer-favourites.js`

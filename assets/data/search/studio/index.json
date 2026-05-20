@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8aba4d9f5b5e6507c0799676a449e885",
-    "generated_at_utc": "2026-05-19T21:31:12Z",
+    "version": "blake2b-59baf8b7e0cec8b7fcd9b37a7cb7943a",
+    "generated_at_utc": "2026-05-20T10:33:45Z",
     "count": 285
   },
   "entries": [
@@ -451,22 +451,22 @@
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-20",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 • Docs Viewer",
+      "display_meta": "2026-05-20 • Docs Viewer",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
         "docs viewer",
-        "2026-05-14",
+        "2026-05-20",
         "2026",
         "05",
-        "14"
+        "20"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-05-14 2026 05 14"
+      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-05-20 2026 05 20"
     },
     {
       "id": "site-request-portable-docs-viewer",
@@ -2101,10 +2101,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable File Manifest",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-files",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-20",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Docs Viewer Portable Setup",
-      "display_meta": "2026-05-19 • Docs Viewer Portable Setup",
+      "display_meta": "2026-05-20 • Docs Viewer Portable Setup",
       "search_terms": [
         "docs-viewer-portable-files",
         "docs",
@@ -2116,12 +2116,12 @@
         "manifest",
         "docs viewer portable setup",
         "setup",
-        "2026-05-19",
+        "2026-05-20",
         "2026",
         "05",
-        "19"
+        "20"
       ],
-      "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-19 2026 05 19"
+      "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-20 2026 05 20"
     },
     {
       "id": "docs-viewer-portable-source-shape",
@@ -2825,31 +2825,6 @@
       "search_text": "site-request-library-import-generated-parent-nodes site request library import generated parent nodes library import generated parent nodes request change requests change requests 2026-05-04 23:26 2026 05 04 23 26"
     },
     {
-      "id": "ui-primitive-modal-shell",
-      "kind": "doc",
-      "title": "Modal Shell Primitive",
-      "href": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
-      "last_updated": "2026-05-15",
-      "parent_id": "ui-catalogue",
-      "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-15 • UI Catalogue",
-      "search_terms": [
-        "ui-primitive-modal-shell",
-        "ui",
-        "primitive",
-        "modal",
-        "shell",
-        "modal shell primitive",
-        "ui catalogue",
-        "catalogue",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "ui-primitive-modal-shell ui primitive modal shell modal shell primitive ui catalogue catalogue 2026-05-15 2026 05 15"
-    },
-    {
       "id": "site-request-js-config-structural-review-public-runtime-extraction",
       "kind": "doc",
       "title": "Public Runtime Extraction Slice",
@@ -3054,6 +3029,31 @@
         "19"
       ],
       "search_text": "studio-ui-framework-modal-implementation studio ui framework modal implementation modal implementation ui catalogue catalogue 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "ui-primitive-modal-shell",
+      "kind": "doc",
+      "title": "Modal Shell Primitive",
+      "href": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui-catalogue",
+      "parent_title": "UI Catalogue",
+      "display_meta": "2026-05-15 • UI Catalogue",
+      "search_terms": [
+        "ui-primitive-modal-shell",
+        "ui",
+        "primitive",
+        "modal",
+        "shell",
+        "modal shell primitive",
+        "ui catalogue",
+        "catalogue",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "ui-primitive-modal-shell ui primitive modal shell modal shell primitive ui catalogue catalogue 2026-05-15 2026 05 15"
     },
     {
       "id": "analytics",
@@ -3609,10 +3609,10 @@
       "kind": "doc",
       "title": "Studio JavaScript Payload Inventory",
       "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "last_updated": "2026-05-17",
+      "last_updated": "2026-05-20",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-17 • Studio",
+      "display_meta": "2026-05-20 • Studio",
       "search_terms": [
         "studio-javascript-payload-inventory",
         "studio",
@@ -3620,12 +3620,12 @@
         "payload",
         "inventory",
         "studio javascript payload inventory",
-        "2026-05-17",
+        "2026-05-20",
         "2026",
         "05",
-        "17"
+        "20"
       ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory studio javascript payload inventory 2026-05-17 2026 05 17"
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory studio javascript payload inventory 2026-05-20 2026 05 20"
     },
     {
       "id": "studio-python-ruby-script-inventory",
@@ -3794,10 +3794,10 @@
       "kind": "doc",
       "title": "Docs Viewer Reports",
       "href": "/docs/?scope=studio&doc=docs-viewer-reports",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-20",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 • Docs Viewer",
+      "display_meta": "2026-05-20 • Docs Viewer",
       "search_terms": [
         "docs-viewer-reports",
         "docs",
@@ -3805,12 +3805,12 @@
         "reports",
         "docs viewer reports",
         "docs viewer",
-        "2026-05-14",
+        "2026-05-20",
         "2026",
         "05",
-        "14"
+        "20"
       ],
-      "search_text": "docs-viewer-reports docs viewer reports docs viewer reports docs viewer 2026-05-14 2026 05 14"
+      "search_text": "docs-viewer-reports docs viewer reports docs viewer reports docs viewer 2026-05-20 2026 05 20"
     },
     {
       "id": "search",
@@ -4105,19 +4105,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-15",
-      "display_meta": "2026-05-15",
+      "last_updated": "2026-05-20",
+      "display_meta": "2026-05-20",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-15",
+        "2026-05-20",
         "2026",
         "05",
-        "15"
+        "20"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-15 2026 05 15"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-20 2026 05 20"
     },
     {
       "id": "docs-viewer-source-config-report",
@@ -4754,10 +4754,10 @@
       "kind": "doc",
       "title": "Docs Viewer Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-05-14",
+      "last_updated": "2026-05-20",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 • Docs Viewer",
+      "display_meta": "2026-05-20 • Docs Viewer",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -4766,12 +4766,12 @@
         "boundary",
         "docs viewer runtime boundary",
         "docs viewer",
-        "2026-05-14",
+        "2026-05-20",
         "2026",
         "05",
-        "14"
+        "20"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-14 2026 05 14"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-20 2026 05 20"
     },
     {
       "id": "scripts-generate-work-pages",
@@ -6434,10 +6434,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management Current State",
       "href": "/docs/?scope=studio&doc=docs-viewer-management-current",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-20",
       "parent_id": "docs-viewer-management",
       "parent_title": "Docs Viewer Management",
-      "display_meta": "2026-05-19 • Docs Viewer Management",
+      "display_meta": "2026-05-20 • Docs Viewer Management",
       "search_terms": [
         "docs-viewer-management-current",
         "docs",
@@ -6447,12 +6447,12 @@
         "docs viewer management current state",
         "state",
         "docs viewer management",
-        "2026-05-19",
+        "2026-05-20",
         "2026",
         "05",
-        "19"
+        "20"
       ],
-      "search_text": "docs-viewer-management-current docs viewer management current docs viewer management current state state docs viewer management 2026-05-19 2026 05 19"
+      "search_text": "docs-viewer-management-current docs viewer management current docs viewer management current state state docs viewer management 2026-05-20 2026 05 20"
     },
     {
       "id": "docs-viewer-management-contract",

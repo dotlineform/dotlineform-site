@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: Overview
 added_date: 2026-04-24
-last_updated: 2026-05-14
+last_updated: 2026-05-20
 parent_id: docs-viewer
 sort_order: 1000
 ---
@@ -73,11 +73,12 @@ Current helper modules:
 - `assets/docs-viewer/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
 - `assets/docs-viewer/js/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering
 - `assets/docs-viewer/js/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers
+- `assets/docs-viewer/js/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/missing/error states, and report mount handoff
 - `assets/docs-viewer/js/docs-viewer-reports.js` owns report lookup and access checks
 - `assets/docs-viewer/js/reports/docs-index-table-report.js` owns the reusable docs-index table report
 
 This runtime is shared across the current docs scopes.
-It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and switches between document and search modes.
+It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and delegates document/search pane rendering to focused controllers.
 
 When a route shell has `data-generated-base-url` and that local server advertises generated-data read capability, the runtime reads the active scope index, document payloads, and docs-search index through that server.
 The local `bin/dev-studio` overlay uses this path because generated docs/search JSON is excluded from the Jekyll watch surface.

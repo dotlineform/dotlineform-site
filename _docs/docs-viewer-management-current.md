@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management-current
 title: Docs Viewer Management Current State
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-20
 parent_id: docs-viewer-management
 sort_order: 54100
 ---
@@ -102,6 +102,7 @@ Implemented now:
 - `assets/docs-viewer/js/docs-viewer-management-config.js` owns management UI-text/config application
 - `assets/docs-viewer/js/docs-viewer-management-render.js` owns management-only markup helpers for status pills, metadata parent/status controls, and settings warnings
 - `assets/docs-viewer/js/docs-viewer.js` keeps the reader/search/history controller plus a small management bridge for shared state and lazy controller loading
+- `assets/docs-viewer/js/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/error states, and report mount handoff
 
 Not implemented yet:
 

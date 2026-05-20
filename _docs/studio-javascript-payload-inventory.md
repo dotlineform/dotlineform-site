@@ -2,7 +2,7 @@
 doc_id: studio-javascript-payload-inventory
 title: Studio JavaScript Payload Inventory
 added_date: 2026-05-14
-last_updated: 2026-05-17
+last_updated: 2026-05-20
 ui_status: urgent
 parent_id: studio
 sort_order: 7000
@@ -37,19 +37,19 @@ Re-run this inventory after material Studio or Docs Viewer JavaScript refactors.
 
 ## Current Summary
 
-Measured on 2026-05-17, after the Docs Viewer management drag/drop/context-menu extraction pass.
+Measured on 2026-05-20, after the Docs Viewer document-controller extraction pass.
 
-- Browser JavaScript files under `assets/`: 118
-- Total browser JavaScript lines under `assets/`: 39,705
+- Browser JavaScript files under `assets/`: 121
+- Total browser JavaScript lines under `assets/`: 40,728
 - Files over the 1,000-line review threshold: 5
 - Files in the 900-1,000 line watch band: 5
-- Over-threshold raw size total: 218.9 KiB
-- Over-threshold gzip size total: 46.1 KiB
+- Over-threshold raw size total: 218.0 KiB
+- Over-threshold gzip size total: 45.9 KiB
 
 The over-threshold set is still maintenance-driven more than transfer-driven.
 No route loads all over-threshold files together.
 
-The modal extraction pass reduced several large mixed route controllers while adding focused route-local modal modules. The Docs Viewer management write-action, capability/config, and interaction extractions continued that pattern: total JavaScript lines increased because write orchestration, capability probing, config application, and management interactions now have named modules, but the management controller is smaller and no longer embeds every create/update/delete/move flow, capability retry, UI-text merge, drag/drop event, or context-menu dispatch inline.
+The modal extraction pass reduced several large mixed route controllers while adding focused route-local modal modules. The Docs Viewer management write-action, capability/config, interaction, and document-controller extractions continued that pattern: total JavaScript lines increased because write orchestration, capability probing, config application, management interactions, document pane rendering, and report mount handoff now have named modules, but the management and entry controllers are smaller and no longer embed those responsibilities inline.
 
 The extraction plan is now complete: [Modal Responsibility Extraction Plan](/docs/?scope=studio&doc=modal-responsibility-extraction-plan).
 The next modal-related work is pattern standardization, not further modal extraction: [Modal Composition Pattern Request](/docs/?scope=studio&doc=ui-request-modal-composition-pattern).
@@ -99,11 +99,11 @@ Next cleanup should target list/control rendering, import parsing/submission, or
 
 ### `assets/docs-viewer/js/docs-viewer.js`
 
-- Lines: 1,264
-- Raw: 41.3 KiB
-- Gzip: 8.9 KiB
+- Lines: 1,205
+- Raw: 40.4 KiB
+- Gzip: 8.7 KiB
 - Classification: mixed shared viewer runtime controller
-- Maintenance risk: high
+- Maintenance risk: medium
 - Transfer-size risk: medium
 
 Recent extractions moved the largest non-route responsibilities out of the entry controller:
@@ -112,17 +112,19 @@ Recent extractions moved the largest non-route responsibilities out of the entry
 - Config/scope boot and viewer UI text merging now live in `assets/docs-viewer/js/docs-viewer-config-controller.js`.
 - Sidebar/nav/meta rendering and trail display now live in `assets/docs-viewer/js/docs-viewer-sidebar.js`.
 - Search loading, recent/search result rendering, result batching, and debounced search input binding now live in `assets/docs-viewer/js/docs-viewer-search-controller.js`.
+- Document pane visibility, loading/missing/error states, final payload rendering, report context creation, and report mounting handoff now live in `assets/docs-viewer/js/docs-viewer-document-controller.js`.
 - Result-row and bookmark-row markup helpers live in `assets/docs-viewer/js/docs-viewer-render.js`.
 - URL building, anchor route parsing, history writes, requested-doc resolution, canonical route correction, popstate route orchestration, and payload-load orchestration now live in `assets/docs-viewer/js/docs-viewer-router.js`.
 - Status-pill markup and events stay behind the lazy management-controller boundary.
 
-The remaining entry controller responsibilities are route callback binding, generated-payload fetch dependencies, final payload rendering, reports entry, and management dynamic-loading.
-Maintenance risk remains high because the entry controller still binds several cross-module runtime dependencies.
-This is not an acceptable long-term resting point: avoid adding route behavior directly to the entry controller unless the same change also reduces the routing surface there.
+The remaining entry controller responsibilities are shared state setup, route callback binding, generated-payload fetch dependencies, visibility/loadable-doc state, search/bookmark/sidebar controller wiring, and management dynamic-loading.
+Maintenance risk is lower after the document-controller extraction, but the file remains over the review threshold because it is still the shared runtime composition point.
+This is an acceptable short-term resting point only if new document rendering, report, search, bookmark, sidebar, or management behavior continues to land in the focused controllers instead of back in the entry module.
 
 The router extraction is complete for URL building, anchor route parsing, history writes, requested-doc resolution, canonical route correction, popstate route orchestration, and payload-load orchestration.
 Do not reopen router work just for line count.
-Future entry-controller cleanup should be triggered by concrete changes to generated-payload loading, final payload rendering, report ownership, or management dynamic-loading.
+The document-controller extraction completes the near-term Docs Viewer entry cleanup slice.
+Any further split should be justified by concrete generated-payload loading, visibility/loadable-doc state, or management dynamic-loading changes rather than line count alone.
 
 ### `assets/studio/js/data-sharing-review.js`
 
@@ -145,23 +147,23 @@ These files are below the 1,000-line review threshold but close enough to watch 
 | --- | ---: | ---: | ---: | --- |
 | `assets/studio/js/tag-aliases-modals.js` | 964 | 35.2 KiB | 6.2 KiB | Under threshold and route-local. Keep it modal-focused rather than adding service or list rendering. |
 | `assets/studio/js/tag-registry-modals.js` | 963 | 35.3 KiB | 6.6 KiB | Under threshold and route-local. Keep it modal-focused rather than adding service or list rendering. |
-| `assets/docs-viewer/js/docs-html-import.js` | 960 | 33.2 KiB | 7.3 KiB | Under threshold and lazy management-only import flow. Keep service orchestration and modal rendering delegated. |
+| `assets/docs-viewer/js/docs-html-import.js` | 990 | 35.0 KiB | 7.7 KiB | Under threshold and lazy management-only import flow. Keep service orchestration and modal rendering delegated. |
 | `assets/studio/js/catalogue-work-actions.js` | 951 | 40.3 KiB | 6.6 KiB | Under threshold and route-local. Keep it action-workflow focused rather than adding form or section rendering. |
-| `assets/docs-viewer/js/docs-viewer-management.js` | 918 | 31.9 KiB | 5.9 KiB | Under threshold after modal, action, capability/config, and interaction extractions. Keep it a management coordinator rather than adding interaction or write flow bodies back inline. |
+| `assets/docs-viewer/js/docs-viewer-management.js` | 930 | 32.4 KiB | 5.9 KiB | Under threshold after modal, action, capability/config, and interaction extractions. Keep it a management coordinator rather than adding interaction or write flow bodies back inline. |
 
 ## Current Priority
 
 1. `assets/studio/js/tag-studio.js`
-2. `assets/docs-viewer/js/docs-viewer.js`, evaluate any further reduction only when a concrete route or payload-rendering change needs it
-3. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
-4. `assets/studio/js/data-sharing-review.js`
+2. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
+3. `assets/studio/js/data-sharing-review.js`
+4. `assets/docs-viewer/js/docs-viewer.js`, keep the current entry-controller boundary and avoid adding extracted responsibilities back inline
 
 The Docs Viewer management controller is no longer over the review threshold after the drag/drop/context-menu extraction.
 Do not open another Docs Viewer management split just for line count unless new management workflow growth pushes the coordinator back over the threshold or reintroduces mixed ownership.
 
-The Docs Viewer entry controller remains over the review threshold after the sidebar, search, config, and router extractions.
-Do not reopen router work just for line count.
-Future entry-controller cleanup should be tied to concrete generated-payload loading, final payload rendering, report ownership, or management dynamic-loading changes.
+The Docs Viewer entry controller remains over the review threshold after the sidebar, search, config, router, and document-controller extractions.
+Do not reopen router or document-rendering work just for line count.
+Further cleanup should be tied to concrete generated-payload loading, visibility/loadable-doc state, or management dynamic-loading changes.
 Docs Viewer files remain in this inventory because `/docs/` is the Studio documentation and management surface.
 
 The Tag Studio, Tag Aliases, and Tag Registry routes are still over the threshold after modal extraction. Their next likely slices are rendering helpers, inline suggestion/autocomplete popup ownership, import parsing/submission, and service orchestration. Avoid opening another modal-extraction slice for those files unless new modal responsibilities are introduced.
@@ -171,7 +173,7 @@ The Tag Studio, Tag Aliases, and Tag Registry routes are still over the threshol
 The modal extraction pass is complete. Remaining candidates are broader route-controller refactors:
 
 - Tag Studio: split editor rendering groups and inline work/tag suggestion popup behavior from save/probe orchestration.
-- Docs Viewer entry controller: split only when a concrete change touches generated payload loading, final payload rendering, report ownership, or management dynamic-loading.
+- Docs Viewer entry controller: retain the current boundary unless generated-payload loading, visibility/loadable-doc state, or management dynamic-loading changes materially.
 - Tag Aliases and Tag Registry: split list/control rendering, import parsing/submission, or service orchestration from route state and validation decisions.
 - Data Sharing Review: split preview table rendering or apply-action orchestration if the workflow grows.
 

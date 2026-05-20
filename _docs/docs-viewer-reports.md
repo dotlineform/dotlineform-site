@@ -2,7 +2,7 @@
 doc_id: docs-viewer-reports
 title: Docs Viewer Reports
 added_date: 2026-05-13
-last_updated: 2026-05-14
+last_updated: 2026-05-20
 parent_id: docs-viewer
 sort_order: 8000
 viewer_report: reports_list
@@ -40,9 +40,8 @@ If a report is not available in the current context, the document pane shows a s
 
 ## Runtime Design
 
-The main Docs Viewer runtime stays thin.
-It detects report metadata on the loaded document payload, creates a small report context, and delegates to the report controller.
-It does not own report filtering, sorting, row rendering, or report-specific data shaping.
+The Docs Viewer document controller detects report metadata on the loaded document payload, creates a small report context, and delegates to the report controller.
+The entry runtime wires the document controller but does not own report filtering, sorting, row rendering, or report-specific data shaping.
 
 The report controller:
 

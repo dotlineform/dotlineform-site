@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: Docs Viewer Runtime Boundary
 added_date: 2026-03-31
-last_updated: 2026-05-14
+last_updated: 2026-05-20
 parent_id: docs-viewer
 sort_order: 13000
 ---
@@ -42,6 +42,7 @@ Current shared implementation:
 - `assets/docs-viewer/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the entry controller
 - `assets/docs-viewer/js/docs-viewer-bookmarks.js` for bookmark state, rendering, IndexedDB storage orchestration, and events imported by the entry controller
 - `assets/docs-viewer/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the bookmark controller
+- `assets/docs-viewer/js/docs-viewer-document-controller.js` for document pane visibility, loading/missing/error states, final payload rendering, and report mount context imported by the entry controller
 - `assets/docs-viewer/js/docs-viewer-render.js` for read-oriented result and bookmark markup helpers imported by the entry and bookmark controllers
 - `assets/docs-viewer/js/docs-viewer-router.js` for URL building, anchor route parsing, browser history writes, requested-doc resolution, canonical route correction, popstate orchestration, and payload-load orchestration imported by the entry controller
 - `_includes/docs_viewer_shell.html`

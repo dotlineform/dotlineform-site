@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-files
 title: Docs Viewer Portable File Manifest
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-20
 parent_id: docs-viewer-portable-setup
 sort_order: 3100
 ---
@@ -44,6 +44,7 @@ Copy the shared viewer runtime files:
 - `assets/docs-viewer/js/docs-viewer.js`
 - `assets/docs-viewer/js/docs-viewer-config-controller.js`
 - `assets/docs-viewer/js/docs-viewer-data.js`
+- `assets/docs-viewer/js/docs-viewer-document-controller.js`
 - `assets/docs-viewer/js/docs-viewer-tree.js`
 - `assets/docs-viewer/js/docs-viewer-sidebar.js`
 - `assets/docs-viewer/js/docs-viewer-search.js`
@@ -52,18 +53,26 @@ Copy the shared viewer runtime files:
 - `assets/docs-viewer/js/docs-viewer-favourites.js`
 - `assets/docs-viewer/js/docs-viewer-render.js`
 - `assets/docs-viewer/js/docs-viewer-reports.js`
+- `assets/docs-viewer/js/docs-viewer-router.js`
 - `assets/docs-viewer/js/reports/`
 
 For management mode, also copy:
 
 - `assets/docs-viewer/js/docs-viewer-management.js`
-- `assets/docs-viewer/js/docs-viewer-management-render.js`
+- `assets/docs-viewer/js/docs-viewer-management-actions.js`
+- `assets/docs-viewer/js/docs-viewer-management-capabilities.js`
 - `assets/docs-viewer/js/docs-viewer-management-client.js`
+- `assets/docs-viewer/js/docs-viewer-management-config.js`
+- `assets/docs-viewer/js/docs-viewer-management-interactions.js`
+- `assets/docs-viewer/js/docs-viewer-management-modals.js`
+- `assets/docs-viewer/js/docs-viewer-management-render.js`
+- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js`
 - `assets/docs-viewer/js/docs-viewer-drag-drop.js`
 
 For Docs Import inside the management modal, also copy:
 
 - `assets/docs-viewer/js/docs-html-import.js`
+- `assets/docs-viewer/js/docs-html-import-modals.js`
 
 ### CSS
 
