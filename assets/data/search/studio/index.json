@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d2e745f7d980ea94373e16648bd07cbc",
-    "generated_at_utc": "2026-05-20T18:59:18Z",
+    "version": "blake2b-a8dc3853cb6e92e95109388e2e1c681d",
+    "generated_at_utc": "2026-05-20T20:04:49Z",
     "count": 285
   },
   "entries": [
@@ -159,8 +159,7 @@
       "href": "/docs/?scope=studio&doc=new-pipeline-current-pipeline-map",
       "last_updated": "2026-05-09 21:28",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-09 21:28 • Archive",
+      "display_meta": "2026-05-09 21:28",
       "search_terms": [
         "new-pipeline-current-pipeline-map",
         "new",
@@ -168,7 +167,6 @@
         "current",
         "map",
         "current pipeline map",
-        "archive",
         "2026-05-09 21:28",
         "2026",
         "05",
@@ -176,7 +174,7 @@
         "21",
         "28"
       ],
-      "search_text": "new-pipeline-current-pipeline-map new pipeline current map current pipeline map archive 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "new-pipeline-current-pipeline-map new pipeline current map current pipeline map 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
       "id": "data-models",
@@ -2420,21 +2418,19 @@
       "href": "/docs/?scope=studio&doc=pipeline-use-cases",
       "last_updated": "2026-05-01",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-01 • Archive",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "pipeline-use-cases",
         "pipeline",
         "use",
         "cases",
         "pipeline use cases",
-        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "pipeline-use-cases pipeline use cases pipeline use cases archive 2026-05-01 2026 05 01"
+      "search_text": "pipeline-use-cases pipeline use cases pipeline use cases 2026-05-01 2026 05 01"
     },
     {
       "id": "search-ranking-model",
@@ -3058,8 +3054,7 @@
       "href": "/docs/?scope=studio&doc=scripts-main-pipeline",
       "last_updated": "2026-05-09 21:28",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-09 21:28 • Archive",
+      "display_meta": "2026-05-09 21:28",
       "search_terms": [
         "scripts-main-pipeline",
         "scripts",
@@ -3068,7 +3063,6 @@
         "build catalogue",
         "build",
         "catalogue",
-        "archive",
         "2026-05-09 21:28",
         "2026",
         "05",
@@ -3076,7 +3070,7 @@
         "21",
         "28"
       ],
-      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue archive 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
       "id": "catalogue-moment-editor",
@@ -3859,8 +3853,7 @@
       "href": "/docs/?scope=studio&doc=new-pipeline-source-model",
       "last_updated": "2026-05-02",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "new-pipeline-source-model",
         "new",
@@ -3868,13 +3861,12 @@
         "source",
         "model",
         "source model",
-        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "new-pipeline-source-model new pipeline source model source model archive 2026-05-02 2026 05 02"
+      "search_text": "new-pipeline-source-model new pipeline source model source model 2026-05-02 2026 05 02"
     },
     {
       "id": "scripts-srcset-builder",
@@ -4178,8 +4170,7 @@
       "href": "/docs/?scope=studio&doc=site-request-export-import-adapters",
       "last_updated": "2026-05-13 18:15",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-13 18:15 • Archive",
+      "display_meta": "2026-05-13 18:15",
       "search_terms": [
         "site-request-export-import-adapters",
         "site",
@@ -4190,7 +4181,6 @@
         "export import adapter boundary request",
         "adapter",
         "boundary",
-        "archive",
         "2026-05-13 18:15",
         "2026",
         "05",
@@ -4198,7 +4188,7 @@
         "18",
         "15"
       ],
-      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary archive 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "site-request-js-payload-runtime-cleanup",
@@ -4315,8 +4305,7 @@
       "href": "/docs/?scope=studio&doc=scripts-copy-draft-media",
       "last_updated": "2026-05-01",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-01 • Archive",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "scripts-copy-draft-media",
         "scripts",
@@ -4324,13 +4313,12 @@
         "draft",
         "media",
         "copy draft media",
-        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media archive 2026-05-01 2026 05 01"
+      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media 2026-05-01 2026 05 01"
     },
     {
       "id": "scripts-docs-import",
@@ -4561,8 +4549,7 @@
       "href": "/docs/?scope=studio&doc=new-pipeline-web-system-spec",
       "last_updated": "2026-05-09 21:28",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-09 21:28 • Archive",
+      "display_meta": "2026-05-09 21:28",
       "search_terms": [
         "new-pipeline-web-system-spec",
         "new",
@@ -4572,7 +4559,6 @@
         "spec",
         "web system specification",
         "specification",
-        "archive",
         "2026-05-09 21:28",
         "2026",
         "05",
@@ -4580,7 +4566,7 @@
         "21",
         "28"
       ],
-      "search_text": "new-pipeline-web-system-spec new pipeline web system spec web system specification specification archive 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "new-pipeline-web-system-spec new pipeline web system spec web system specification specification 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
       "id": "search-catalogue-targeted-plan",
@@ -4640,8 +4626,7 @@
       "href": "/docs/?scope=studio&doc=new-pipeline-implementation-plan",
       "last_updated": "2026-05-01",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-01 • Archive",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "new-pipeline-implementation-plan",
         "new",
@@ -4649,13 +4634,12 @@
         "implementation",
         "plan",
         "implementation plan",
-        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "new-pipeline-implementation-plan new pipeline implementation plan implementation plan archive 2026-05-01 2026 05 01"
+      "search_text": "new-pipeline-implementation-plan new pipeline implementation plan implementation plan 2026-05-01 2026 05 01"
     },
     {
       "id": "scripts-build-catalogue-json",
@@ -4782,8 +4766,7 @@
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "last_updated": "2026-05-09 21:28",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-09 21:28 • Archive",
+      "display_meta": "2026-05-09 21:28",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -4791,7 +4774,6 @@
         "work",
         "pages",
         "generate work pages",
-        "archive",
         "2026-05-09 21:28",
         "2026",
         "05",
@@ -4799,7 +4781,7 @@
         "21",
         "28"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages archive 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
       "id": "config-studio-config-js",
@@ -4833,8 +4815,7 @@
       "href": "/docs/?scope=studio&doc=import-export",
       "last_updated": "2026-05-13 18:15",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-13 18:15 • Archive",
+      "display_meta": "2026-05-13 18:15",
       "search_terms": [
         "import-export",
         "import",
@@ -4842,7 +4823,6 @@
         "import/export historical notes",
         "historical",
         "notes",
-        "archive",
         "2026-05-13 18:15",
         "2026",
         "05",
@@ -4850,7 +4830,7 @@
         "18",
         "15"
       ],
-      "search_text": "import-export import export import/export historical notes historical notes archive 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "import-export import export import/export historical notes historical notes 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "config-pipeline-json",
@@ -5025,8 +5005,7 @@
       "href": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan",
       "last_updated": "2026-05-01",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-01 • Archive",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "new-pipeline-studio-implementation-plan",
         "new",
@@ -5035,13 +5014,12 @@
         "implementation",
         "plan",
         "studio implementation plan",
-        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "new-pipeline-studio-implementation-plan new pipeline studio implementation plan studio implementation plan archive 2026-05-01 2026 05 01"
+      "search_text": "new-pipeline-studio-implementation-plan new pipeline studio implementation plan studio implementation plan 2026-05-01 2026 05 01"
     },
     {
       "id": "scripts-docs-management-server-generated-reads",
@@ -5180,21 +5158,19 @@
       "href": "/docs/?scope=studio&doc=scripts-delete-work",
       "last_updated": "2026-05-01",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-01 • Archive",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "scripts-delete-work",
         "scripts",
         "delete",
         "work",
         "delete work",
-        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "scripts-delete-work scripts delete work delete work archive 2026-05-01 2026 05 01"
+      "search_text": "scripts-delete-work scripts delete work delete work 2026-05-01 2026 05 01"
     },
     {
       "id": "scripts-docs-live-rebuild-watcher",
@@ -5304,8 +5280,7 @@
       "href": "/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist",
       "last_updated": "2026-05-09 21:28",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-09 21:28 • Archive",
+      "display_meta": "2026-05-09 21:28",
       "search_terms": [
         "new-pipeline-studio-e2e-checklist",
         "new",
@@ -5314,7 +5289,6 @@
         "e2e",
         "checklist",
         "studio e2e checklist",
-        "archive",
         "2026-05-09 21:28",
         "2026",
         "05",
@@ -5322,7 +5296,7 @@
         "21",
         "28"
       ],
-      "search_text": "new-pipeline-studio-e2e-checklist new pipeline studio e2e checklist studio e2e checklist archive 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "new-pipeline-studio-e2e-checklist new pipeline studio e2e checklist studio e2e checklist 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
       "id": "new-pipeline-refine-analytics",
@@ -5331,8 +5305,7 @@
       "href": "/docs/?scope=studio&doc=new-pipeline-refine-analytics",
       "last_updated": "2026-05-09 16:00",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-09 16:00 • Archive",
+      "display_meta": "2026-05-09 16:00",
       "search_terms": [
         "new-pipeline-refine-analytics",
         "new",
@@ -5341,7 +5314,6 @@
         "analytics",
         "analytics plan",
         "plan",
-        "archive",
         "2026-05-09 16:00",
         "2026",
         "05",
@@ -5349,7 +5321,7 @@
         "16",
         "00"
       ],
-      "search_text": "new-pipeline-refine-analytics new pipeline refine analytics analytics plan plan archive 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "new-pipeline-refine-analytics new pipeline refine analytics analytics plan plan 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "docs-broken-links",
@@ -5410,8 +5382,7 @@
       "href": "/docs/?scope=studio&doc=new-pipeline-studio-ui-polish",
       "last_updated": "2026-04-19",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-04-19 • Archive",
+      "display_meta": "2026-04-19",
       "search_terms": [
         "new-pipeline-studio-ui-polish",
         "new",
@@ -5420,13 +5391,12 @@
         "ui",
         "polish",
         "studio ui polish",
-        "archive",
         "2026-04-19",
         "2026",
         "04",
         "19"
       ],
-      "search_text": "new-pipeline-studio-ui-polish new pipeline studio ui polish studio ui polish archive 2026-04-19 2026 04 19"
+      "search_text": "new-pipeline-studio-ui-polish new pipeline studio ui polish studio ui polish 2026-04-19 2026 04 19"
     },
     {
       "id": "testing",
@@ -5495,8 +5465,7 @@
       "href": "/docs/?scope=studio&doc=new-pipeline-refine-search",
       "last_updated": "2026-05-11",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-11 • Archive",
+      "display_meta": "2026-05-11",
       "search_terms": [
         "new-pipeline-refine-search",
         "new",
@@ -5505,13 +5474,12 @@
         "search",
         "search plan",
         "plan",
-        "archive",
         "2026-05-11",
         "2026",
         "05",
         "11"
       ],
-      "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan archive 2026-05-11 2026 05 11"
+      "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan 2026-05-11 2026 05 11"
     },
     {
       "id": "config-docs-viewer",
@@ -5563,21 +5531,19 @@
       "href": "/docs/?scope=studio&doc=new-pipeline",
       "last_updated": "2026-05-01",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-01 • Archive",
+      "display_meta": "2026-05-01",
       "search_terms": [
         "new-pipeline",
         "new",
         "pipeline",
         "new catalogue pipeline",
         "catalogue",
-        "archive",
         "2026-05-01",
         "2026",
         "05",
         "01"
       ],
-      "search_text": "new-pipeline new pipeline new catalogue pipeline catalogue archive 2026-05-01 2026 05 01"
+      "search_text": "new-pipeline new pipeline new catalogue pipeline catalogue 2026-05-01 2026 05 01"
     },
     {
       "id": "library-semantic-enrichment-spec",
@@ -5586,8 +5552,7 @@
       "href": "/docs/?scope=studio&doc=library-semantic-enrichment-spec",
       "last_updated": "2026-05-06 18:12",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-06 18:12 • Archive",
+      "display_meta": "2026-05-06 18:12",
       "search_terms": [
         "library-semantic-enrichment-spec",
         "library",
@@ -5595,7 +5560,6 @@
         "enrichment",
         "spec",
         "library semantic enrichment spec",
-        "archive",
         "2026-05-06 18:12",
         "2026",
         "05",
@@ -5603,7 +5567,7 @@
         "18",
         "12"
       ],
-      "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec archive 2026-05-06 18:12 2026 05 06 18 12"
+      "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
       "id": "library-export",
@@ -5612,15 +5576,13 @@
       "href": "/docs/?scope=studio&doc=library-export",
       "last_updated": "2026-05-06 18:12",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-06 18:12 • Archive",
+      "display_meta": "2026-05-06 18:12",
       "search_terms": [
         "library-export",
         "library",
         "export",
         "library export v1",
         "v1",
-        "archive",
         "2026-05-06 18:12",
         "2026",
         "05",
@@ -5628,7 +5590,7 @@
         "18",
         "12"
       ],
-      "search_text": "library-export library export library export v1 v1 archive 2026-05-06 18:12 2026 05 06 18 12"
+      "search_text": "library-export library export library export v1 v1 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
       "id": "library-import",
@@ -5637,15 +5599,13 @@
       "href": "/docs/?scope=studio&doc=library-import",
       "last_updated": "2026-05-06 18:12",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-06 18:12 • Archive",
+      "display_meta": "2026-05-06 18:12",
       "search_terms": [
         "library-import",
         "library",
         "import",
         "library import v1",
         "v1",
-        "archive",
         "2026-05-06 18:12",
         "2026",
         "05",
@@ -5653,7 +5613,7 @@
         "18",
         "12"
       ],
-      "search_text": "library-import library import library import v1 v1 archive 2026-05-06 18:12 2026 05 06 18 12"
+      "search_text": "library-import library import library import v1 v1 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
       "id": "library-export-ui",
@@ -5662,8 +5622,7 @@
       "href": "/docs/?scope=studio&doc=library-export-ui",
       "last_updated": "2026-05-06 18:12",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-06 18:12 • Archive",
+      "display_meta": "2026-05-06 18:12",
       "search_terms": [
         "library-export-ui",
         "library",
@@ -5671,7 +5630,6 @@
         "ui",
         "library export - ui refinements",
         "refinements",
-        "archive",
         "2026-05-06 18:12",
         "2026",
         "05",
@@ -5679,7 +5637,7 @@
         "18",
         "12"
       ],
-      "search_text": "library-export-ui library export ui library export - ui refinements refinements archive 2026-05-06 18:12 2026 05 06 18 12"
+      "search_text": "library-export-ui library export ui library export - ui refinements refinements 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
       "id": "site-request-studio-import-export-module",
@@ -5688,8 +5646,7 @@
       "href": "/docs/?scope=studio&doc=site-request-studio-import-export-module",
       "last_updated": "2026-05-13 18:15",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-13 18:15 • Archive",
+      "display_meta": "2026-05-13 18:15",
       "search_terms": [
         "site-request-studio-import-export-module",
         "site",
@@ -5702,7 +5659,6 @@
         "data",
         "sharing",
         "implementation",
-        "archive",
         "2026-05-13 18:15",
         "2026",
         "05",
@@ -5710,7 +5666,7 @@
         "18",
         "15"
       ],
-      "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation archive 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "library-import-export-v2",
@@ -5719,8 +5675,7 @@
       "href": "/docs/?scope=studio&doc=library-import-export-v2",
       "last_updated": "2026-05-06 18:12",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-06 18:12 • Archive",
+      "display_meta": "2026-05-06 18:12",
       "search_terms": [
         "library-import-export-v2",
         "library",
@@ -5728,7 +5683,6 @@
         "export",
         "v2",
         "library export/import v2",
-        "archive",
         "2026-05-06 18:12",
         "2026",
         "05",
@@ -5736,7 +5690,7 @@
         "18",
         "12"
       ],
-      "search_text": "library-import-export-v2 library import export v2 library export/import v2 archive 2026-05-06 18:12 2026 05 06 18 12"
+      "search_text": "library-import-export-v2 library import export v2 library export/import v2 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
       "id": "library-import-ui",
@@ -5745,8 +5699,7 @@
       "href": "/docs/?scope=studio&doc=library-import-ui",
       "last_updated": "2026-05-06 18:13",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-06 18:13 • Archive",
+      "display_meta": "2026-05-06 18:13",
       "search_terms": [
         "library-import-ui",
         "library",
@@ -5754,7 +5707,6 @@
         "ui",
         "library import - ui refinements",
         "refinements",
-        "archive",
         "2026-05-06 18:13",
         "2026",
         "05",
@@ -5762,7 +5714,7 @@
         "18",
         "13"
       ],
-      "search_text": "library-import-ui library import ui library import - ui refinements refinements archive 2026-05-06 18:13 2026 05 06 18 13"
+      "search_text": "library-import-ui library import ui library import - ui refinements refinements 2026-05-06 18:13 2026 05 06 18 13"
     },
     {
       "id": "scripts-fix-missing-title-sort",
@@ -5771,8 +5723,7 @@
       "href": "/docs/?scope=studio&doc=scripts-fix-missing-title-sort",
       "last_updated": "2026-05-09 21:28",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-09 21:28 • Archive",
+      "display_meta": "2026-05-09 21:28",
       "search_terms": [
         "scripts-fix-missing-title-sort",
         "scripts",
@@ -5782,7 +5733,6 @@
         "sort",
         "legacy title sort fix",
         "legacy",
-        "archive",
         "2026-05-09 21:28",
         "2026",
         "05",
@@ -5790,7 +5740,7 @@
         "21",
         "28"
       ],
-      "search_text": "scripts-fix-missing-title-sort scripts fix missing title sort legacy title sort fix legacy archive 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "scripts-fix-missing-title-sort scripts fix missing title sort legacy title sort fix legacy 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
       "id": "site-request-docs-viewer-report-components",
@@ -5799,8 +5749,7 @@
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-report-components",
       "last_updated": "2026-05-13 11:14",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-13 11:14 • Archive",
+      "display_meta": "2026-05-13 11:14",
       "search_terms": [
         "site-request-docs-viewer-report-components",
         "site",
@@ -5810,7 +5759,6 @@
         "report",
         "components",
         "docs viewer report components request",
-        "archive",
         "2026-05-13 11:14",
         "2026",
         "05",
@@ -5818,7 +5766,7 @@
         "11",
         "14"
       ],
-      "search_text": "site-request-docs-viewer-report-components site request docs viewer report components docs viewer report components request archive 2026-05-13 11:14 2026 05 13 11 14"
+      "search_text": "site-request-docs-viewer-report-components site request docs viewer report components docs viewer report components request 2026-05-13 11:14 2026 05 13 11 14"
     },
     {
       "id": "site-request-import-export-system-review",
@@ -5827,8 +5775,7 @@
       "href": "/docs/?scope=studio&doc=site-request-import-export-system-review",
       "last_updated": "2026-05-13 11:48",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-13 11:48 • Archive",
+      "display_meta": "2026-05-13 11:48",
       "search_terms": [
         "site-request-import-export-system-review",
         "site",
@@ -5838,7 +5785,6 @@
         "system",
         "review",
         "import/export system review request",
-        "archive",
         "2026-05-13 11:48",
         "2026",
         "05",
@@ -5846,7 +5792,7 @@
         "11",
         "48"
       ],
-      "search_text": "site-request-import-export-system-review site request import export system review import/export system review request archive 2026-05-13 11:48 2026 05 13 11 48"
+      "search_text": "site-request-import-export-system-review site request import export system review import/export system review request 2026-05-13 11:48 2026 05 13 11 48"
     },
     {
       "id": "site-request-analytics-tag-route-cleanup",
@@ -5855,8 +5801,7 @@
       "href": "/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup",
       "last_updated": "2026-05-13 13:28",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-13 13:28 • Archive",
+      "display_meta": "2026-05-13 13:28",
       "search_terms": [
         "site-request-analytics-tag-route-cleanup",
         "site",
@@ -5866,14 +5811,13 @@
         "route",
         "cleanup",
         "analytics tag route cleanup request",
-        "archive",
         "2026-05-13 13:28",
         "2026",
         "05",
         "13",
         "28"
       ],
-      "search_text": "site-request-analytics-tag-route-cleanup site request analytics tag route cleanup analytics tag route cleanup request archive 2026-05-13 13:28 2026 05 13 28"
+      "search_text": "site-request-analytics-tag-route-cleanup site request analytics tag route cleanup analytics tag route cleanup request 2026-05-13 13:28 2026 05 13 28"
     },
     {
       "id": "site-request-docs-build-incremental",
@@ -5882,8 +5826,7 @@
       "href": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
       "last_updated": "2026-05-13 20:31",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-13 20:31 • Archive",
+      "display_meta": "2026-05-13 20:31",
       "search_terms": [
         "site-request-docs-build-incremental",
         "site",
@@ -5892,7 +5835,6 @@
         "build",
         "incremental",
         "docs build incremental request",
-        "archive",
         "2026-05-13 20:31",
         "2026",
         "05",
@@ -5900,7 +5842,7 @@
         "20",
         "31"
       ],
-      "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request archive 2026-05-13 20:31 2026 05 13 20 31"
+      "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request 2026-05-13 20:31 2026 05 13 20 31"
     },
     {
       "id": "site-request-local-docs-data-server-reads",
@@ -5909,8 +5851,7 @@
       "href": "/docs/?scope=studio&doc=site-request-local-docs-data-server-reads",
       "last_updated": "2026-05-11",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-11 • Archive",
+      "display_meta": "2026-05-11",
       "search_terms": [
         "site-request-local-docs-data-server-reads",
         "site",
@@ -5921,13 +5862,12 @@
         "server",
         "reads",
         "local docs data server reads request",
-        "archive",
         "2026-05-11",
         "2026",
         "05",
         "11"
       ],
-      "search_text": "site-request-local-docs-data-server-reads site request local docs data server reads local docs data server reads request archive 2026-05-11 2026 05 11"
+      "search_text": "site-request-local-docs-data-server-reads site request local docs data server reads local docs data server reads request 2026-05-11 2026 05 11"
     },
     {
       "id": "site-request-docs-viewer-config-settings",
@@ -5936,8 +5876,7 @@
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-config-settings",
       "last_updated": "2026-05-14 14:45",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-14 14:45 • Archive",
+      "display_meta": "2026-05-14 14:45",
       "search_terms": [
         "site-request-docs-viewer-config-settings",
         "site",
@@ -5948,14 +5887,13 @@
         "settings",
         "docs viewer config and settings request",
         "and",
-        "archive",
         "2026-05-14 14:45",
         "2026",
         "05",
         "14",
         "45"
       ],
-      "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and archive 2026-05-14 14:45 2026 05 14 45"
+      "search_text": "site-request-docs-viewer-config-settings site request docs viewer config settings docs viewer config and settings request and 2026-05-14 14:45 2026 05 14 45"
     },
     {
       "id": "ui-status-emoji",
@@ -5964,15 +5902,13 @@
       "href": "/docs/?scope=studio&doc=ui-status-emoji",
       "last_updated": "2026-05-11 17:50",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-11 17:50 • Archive",
+      "display_meta": "2026-05-11 17:50",
       "search_terms": [
         "ui-status-emoji",
         "ui",
         "status",
         "emoji",
         "ui status emoji",
-        "archive",
         "2026-05-11 17:50",
         "2026",
         "05",
@@ -5980,7 +5916,7 @@
         "17",
         "50"
       ],
-      "search_text": "ui-status-emoji ui status emoji ui status emoji archive 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "ui-status-emoji ui status emoji ui status emoji 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "site-request-moments-prose-source-model",
@@ -5989,8 +5925,7 @@
       "href": "/docs/?scope=studio&doc=site-request-moments-prose-source-model",
       "last_updated": "2026-05-02",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "site-request-moments-prose-source-model",
         "site",
@@ -6000,13 +5935,12 @@
         "source",
         "model",
         "moments prose source model request",
-        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "site-request-moments-prose-source-model site request moments prose source model moments prose source model request archive 2026-05-02 2026 05 02"
+      "search_text": "site-request-moments-prose-source-model site request moments prose source model moments prose source model request 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-work-owned-files-links",
@@ -6015,8 +5949,7 @@
       "href": "/docs/?scope=studio&doc=site-request-work-owned-files-links",
       "last_updated": "2026-05-02",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "site-request-work-owned-files-links",
         "site",
@@ -6027,13 +5960,12 @@
         "links",
         "work-owned files and links request",
         "and",
-        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "site-request-work-owned-files-links site request work owned files links work-owned files and links request and archive 2026-05-02 2026 05 02"
+      "search_text": "site-request-work-owned-files-links site request work owned files links work-owned files and links request and 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-studio-ready-state-contract",
@@ -6042,8 +5974,7 @@
       "href": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
       "last_updated": "2026-05-15",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-15 • Archive",
+      "display_meta": "2026-05-15",
       "search_terms": [
         "site-request-studio-ready-state-contract",
         "site",
@@ -6053,13 +5984,12 @@
         "state",
         "contract",
         "studio ready state contract request",
-        "archive",
         "2026-05-15",
         "2026",
         "05",
         "15"
       ],
-      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request archive 2026-05-15 2026 05 15"
+      "search_text": "site-request-studio-ready-state-contract site request studio ready state contract studio ready state contract request 2026-05-15 2026 05 15"
     },
     {
       "id": "site-request-work-series-prose-source-model",
@@ -6068,8 +5998,7 @@
       "href": "/docs/?scope=studio&doc=site-request-work-series-prose-source-model",
       "last_updated": "2026-05-02",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "site-request-work-series-prose-source-model",
         "site",
@@ -6081,13 +6010,12 @@
         "model",
         "work and series prose source model request",
         "and",
-        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and archive 2026-05-02 2026 05 02"
+      "search_text": "site-request-work-series-prose-source-model site request work series prose source model work and series prose source model request and 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-media-section-schema",
@@ -6096,8 +6024,7 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-media-section-schema",
       "last_updated": "2026-05-02",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "site-request-catalogue-media-section-schema",
         "site",
@@ -6109,13 +6036,12 @@
         "catalogue media and detail section schema request",
         "and",
         "detail",
-        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request and detail archive 2026-05-02 2026 05 02"
+      "search_text": "site-request-catalogue-media-section-schema site request catalogue media section schema catalogue media and detail section schema request and detail 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-delete-cleanup",
@@ -6124,8 +6050,7 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup",
       "last_updated": "2026-05-08 00:00",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-08 00:00 • Archive",
+      "display_meta": "2026-05-08 00:00",
       "search_terms": [
         "site-request-catalogue-delete-cleanup",
         "site",
@@ -6134,14 +6059,13 @@
         "delete",
         "cleanup",
         "catalogue delete cleanup request",
-        "archive",
         "2026-05-08 00:00",
         "2026",
         "05",
         "08",
         "00"
       ],
-      "search_text": "site-request-catalogue-delete-cleanup site request catalogue delete cleanup catalogue delete cleanup request archive 2026-05-08 00:00 2026 05 08 00"
+      "search_text": "site-request-catalogue-delete-cleanup site request catalogue delete cleanup catalogue delete cleanup request 2026-05-08 00:00 2026 05 08 00"
     },
     {
       "id": "site-request-analysis-doc-viewer",
@@ -6150,8 +6074,7 @@
       "href": "/docs/?scope=studio&doc=site-request-analysis-doc-viewer",
       "last_updated": "2026-05-02",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "site-request-analysis-doc-viewer",
         "site",
@@ -6161,13 +6084,12 @@
         "viewer",
         "analysis docs viewer request",
         "docs",
-        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "site-request-analysis-doc-viewer site request analysis doc viewer analysis docs viewer request docs archive 2026-05-02 2026 05 02"
+      "search_text": "site-request-analysis-doc-viewer site request analysis doc viewer analysis docs viewer request docs 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-docs-import-source-registry-media",
@@ -6176,8 +6098,7 @@
       "href": "/docs/?scope=studio&doc=site-request-docs-import-source-registry-media",
       "last_updated": "2026-05-12 10:25",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-12 10:25 • Archive",
+      "display_meta": "2026-05-12 10:25",
       "search_terms": [
         "site-request-docs-import-source-registry-media",
         "site",
@@ -6190,7 +6111,6 @@
         "docs import source registry and media support request",
         "and",
         "support",
-        "archive",
         "2026-05-12 10:25",
         "2026",
         "05",
@@ -6198,7 +6118,7 @@
         "10",
         "25"
       ],
-      "search_text": "site-request-docs-import-source-registry-media site request docs import source registry media docs import source registry and media support request and support archive 2026-05-12 10:25 2026 05 12 10 25"
+      "search_text": "site-request-docs-import-source-registry-media site request docs import source registry media docs import source registry and media support request and support 2026-05-12 10:25 2026 05 12 10 25"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",
@@ -6207,8 +6127,7 @@
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec",
       "last_updated": "2026-05-09 16:00",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-09 16:00 • Archive",
+      "display_meta": "2026-05-09 16:00",
       "search_terms": [
         "ui-request-docs-viewer-favourites-spec",
         "ui",
@@ -6218,7 +6137,6 @@
         "favourites",
         "spec",
         "docs viewer favourites spec",
-        "archive",
         "2026-05-09 16:00",
         "2026",
         "05",
@@ -6226,7 +6144,7 @@
         "16",
         "00"
       ],
-      "search_text": "ui-request-docs-viewer-favourites-spec ui request docs viewer favourites spec docs viewer favourites spec archive 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "ui-request-docs-viewer-favourites-spec ui request docs viewer favourites spec docs viewer favourites spec 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "site-request-field-aware-build-scoping",
@@ -6235,8 +6153,7 @@
       "href": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping",
       "last_updated": "2026-05-02",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "site-request-field-aware-build-scoping",
         "site",
@@ -6247,13 +6164,12 @@
         "scoping",
         "field-aware catalogue build scoping",
         "catalogue",
-        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping catalogue archive 2026-05-02 2026 05 02"
+      "search_text": "site-request-field-aware-build-scoping site request field aware build scoping field-aware catalogue build scoping catalogue 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-moment-editor",
@@ -6262,8 +6178,7 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-moment-editor",
       "last_updated": "2026-05-10 23:43",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-10 23:43 • Archive",
+      "display_meta": "2026-05-10 23:43",
       "search_terms": [
         "site-request-catalogue-moment-editor",
         "site",
@@ -6272,7 +6187,6 @@
         "moment",
         "editor",
         "catalogue moment editor request",
-        "archive",
         "2026-05-10 23:43",
         "2026",
         "05",
@@ -6280,7 +6194,7 @@
         "23",
         "43"
       ],
-      "search_text": "site-request-catalogue-moment-editor site request catalogue moment editor catalogue moment editor request archive 2026-05-10 23:43 2026 05 10 23 43"
+      "search_text": "site-request-catalogue-moment-editor site request catalogue moment editor catalogue moment editor request 2026-05-10 23:43 2026 05 10 23 43"
     },
     {
       "id": "site-request-catalogue-compatibility-cleanup",
@@ -6289,8 +6203,7 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup",
       "last_updated": "2026-05-02",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "site-request-catalogue-compatibility-cleanup",
         "site",
@@ -6299,13 +6212,12 @@
         "compatibility",
         "cleanup",
         "compatibility cleanup",
-        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "site-request-catalogue-compatibility-cleanup site request catalogue compatibility cleanup compatibility cleanup archive 2026-05-02 2026 05 02"
+      "search_text": "site-request-catalogue-compatibility-cleanup site request catalogue compatibility cleanup compatibility cleanup 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-moment-source-cleanup",
@@ -6314,8 +6226,7 @@
       "href": "/docs/?scope=studio&doc=site-request-moment-source-cleanup",
       "last_updated": "2026-05-11 13:03",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-11 13:03 • Archive",
+      "display_meta": "2026-05-11 13:03",
       "search_terms": [
         "site-request-moment-source-cleanup",
         "site",
@@ -6324,7 +6235,6 @@
         "source",
         "cleanup",
         "moment source cleanup",
-        "archive",
         "2026-05-11 13:03",
         "2026",
         "05",
@@ -6332,7 +6242,7 @@
         "13",
         "03"
       ],
-      "search_text": "site-request-moment-source-cleanup site request moment source cleanup moment source cleanup archive 2026-05-11 13:03 2026 05 11 13 03"
+      "search_text": "site-request-moment-source-cleanup site request moment source cleanup moment source cleanup 2026-05-11 13:03 2026 05 11 13 03"
     },
     {
       "id": "site-request-catalogue-source-registry-drift-verification",
@@ -6341,8 +6251,7 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification",
       "last_updated": "2026-05-03",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-03 • Archive",
+      "display_meta": "2026-05-03",
       "search_terms": [
         "site-request-catalogue-source-registry-drift-verification",
         "site",
@@ -6354,13 +6263,12 @@
         "verification",
         "catalogue source and registry drift verification request",
         "and",
-        "archive",
         "2026-05-03",
         "2026",
         "05",
         "03"
       ],
-      "search_text": "site-request-catalogue-source-registry-drift-verification site request catalogue source registry drift verification catalogue source and registry drift verification request and archive 2026-05-03 2026 05 03"
+      "search_text": "site-request-catalogue-source-registry-drift-verification site request catalogue source registry drift verification catalogue source and registry drift verification request and 2026-05-03 2026 05 03"
     },
     {
       "id": "ui-request-docs-viewer-favourites-task",
@@ -6369,8 +6277,7 @@
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
       "last_updated": "2026-05-11 17:50",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-11 17:50 • Archive",
+      "display_meta": "2026-05-11 17:50",
       "search_terms": [
         "ui-request-docs-viewer-favourites-task",
         "ui",
@@ -6380,7 +6287,6 @@
         "favourites",
         "task",
         "docs viewer favourites",
-        "archive",
         "2026-05-11 17:50",
         "2026",
         "05",
@@ -6388,7 +6294,7 @@
         "17",
         "50"
       ],
-      "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites archive 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "docs-viewer-management",
@@ -6397,21 +6303,19 @@
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
       "last_updated": "2026-05-19",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-19 • Archive",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "docs-viewer-management",
         "docs",
         "viewer",
         "management",
         "docs viewer management",
-        "archive",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management archive 2026-05-19 2026 05 19"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management 2026-05-19 2026 05 19"
     },
     {
       "id": "docs-viewer-management-current",
@@ -6494,8 +6398,7 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-series-unified-editor",
       "last_updated": "2026-05-02",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "site-request-catalogue-series-unified-editor",
         "site",
@@ -6505,13 +6408,12 @@
         "unified",
         "editor",
         "catalogue series unified editor",
-        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "site-request-catalogue-series-unified-editor site request catalogue series unified editor catalogue series unified editor archive 2026-05-02 2026 05 02"
+      "search_text": "site-request-catalogue-series-unified-editor site request catalogue series unified editor catalogue series unified editor 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-work-detail-unified-editor",
@@ -6520,8 +6422,7 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-work-detail-unified-editor",
       "last_updated": "2026-05-02",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-02 • Archive",
+      "display_meta": "2026-05-02",
       "search_terms": [
         "site-request-catalogue-work-detail-unified-editor",
         "site",
@@ -6532,13 +6433,12 @@
         "unified",
         "editor",
         "catalogue work detail unified editor request",
-        "archive",
         "2026-05-02",
         "2026",
         "05",
         "02"
       ],
-      "search_text": "site-request-catalogue-work-detail-unified-editor site request catalogue work detail unified editor catalogue work detail unified editor request archive 2026-05-02 2026 05 02"
+      "search_text": "site-request-catalogue-work-detail-unified-editor site request catalogue work detail unified editor catalogue work detail unified editor request 2026-05-02 2026 05 02"
     },
     {
       "id": "site-request-catalogue-publication-workflow",
@@ -6547,8 +6447,7 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-publication-workflow",
       "last_updated": "2026-04-29",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-04-29 • Archive",
+      "display_meta": "2026-04-29",
       "search_terms": [
         "site-request-catalogue-publication-workflow",
         "site",
@@ -6557,13 +6456,12 @@
         "publication",
         "workflow",
         "catalogue publication workflow",
-        "archive",
         "2026-04-29",
         "2026",
         "04",
         "29"
       ],
-      "search_text": "site-request-catalogue-publication-workflow site request catalogue publication workflow catalogue publication workflow archive 2026-04-29 2026 04 29"
+      "search_text": "site-request-catalogue-publication-workflow site request catalogue publication workflow catalogue publication workflow 2026-04-29 2026 04 29"
     },
     {
       "id": "site-request-catalogue-unified-editor-cleanup",
@@ -6572,8 +6470,7 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-unified-editor-cleanup",
       "last_updated": "2026-05-03",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-03 • Archive",
+      "display_meta": "2026-05-03",
       "search_terms": [
         "site-request-catalogue-unified-editor-cleanup",
         "site",
@@ -6583,13 +6480,12 @@
         "editor",
         "cleanup",
         "catalogue unified editor cleanup request",
-        "archive",
         "2026-05-03",
         "2026",
         "05",
         "03"
       ],
-      "search_text": "site-request-catalogue-unified-editor-cleanup site request catalogue unified editor cleanup catalogue unified editor cleanup request archive 2026-05-03 2026 05 03"
+      "search_text": "site-request-catalogue-unified-editor-cleanup site request catalogue unified editor cleanup catalogue unified editor cleanup request 2026-05-03 2026 05 03"
     },
     {
       "id": "ui-request-docs-html-import-spec",
@@ -6598,8 +6494,7 @@
       "href": "/docs/?scope=studio&doc=ui-request-docs-html-import-spec",
       "last_updated": "2026-05-03",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-03 • Archive",
+      "display_meta": "2026-05-03",
       "search_terms": [
         "ui-request-docs-html-import-spec",
         "ui",
@@ -6609,13 +6504,12 @@
         "import",
         "spec",
         "docs html import spec",
-        "archive",
         "2026-05-03",
         "2026",
         "05",
         "03"
       ],
-      "search_text": "ui-request-docs-html-import-spec ui request docs html import spec docs html import spec archive 2026-05-03 2026 05 03"
+      "search_text": "ui-request-docs-html-import-spec ui request docs html import spec docs html import spec 2026-05-03 2026 05 03"
     },
     {
       "id": "ui-request-docs-html-import-task",
@@ -6624,8 +6518,7 @@
       "href": "/docs/?scope=studio&doc=ui-request-docs-html-import-task",
       "last_updated": "2026-05-03",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-03 • Archive",
+      "display_meta": "2026-05-03",
       "search_terms": [
         "ui-request-docs-html-import-task",
         "ui",
@@ -6635,13 +6528,12 @@
         "import",
         "task",
         "docs html import task",
-        "archive",
         "2026-05-03",
         "2026",
         "05",
         "03"
       ],
-      "search_text": "ui-request-docs-html-import-task ui request docs html import task docs html import task archive 2026-05-03 2026 05 03"
+      "search_text": "ui-request-docs-html-import-task ui request docs html import task docs html import task 2026-05-03 2026 05 03"
     },
     {
       "id": "ui-request-docs-viewer-index-drag-undo-task",
@@ -6650,8 +6542,7 @@
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-index-drag-undo-task",
       "last_updated": "2026-05-11",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-11 • Archive",
+      "display_meta": "2026-05-11",
       "search_terms": [
         "ui-request-docs-viewer-index-drag-undo-task",
         "ui",
@@ -6663,13 +6554,12 @@
         "undo",
         "task",
         "docs viewer index drag undo",
-        "archive",
         "2026-05-11",
         "2026",
         "05",
         "11"
       ],
-      "search_text": "ui-request-docs-viewer-index-drag-undo-task ui request docs viewer index drag undo task docs viewer index drag undo archive 2026-05-11 2026 05 11"
+      "search_text": "ui-request-docs-viewer-index-drag-undo-task ui request docs viewer index drag undo task docs viewer index drag undo 2026-05-11 2026 05 11"
     },
     {
       "id": "site-request-docs-html-inline-raster-media",
@@ -6678,8 +6568,7 @@
       "href": "/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media",
       "last_updated": "2026-05-12 10:25",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-12 10:25 • Archive",
+      "display_meta": "2026-05-12 10:25",
       "search_terms": [
         "site-request-docs-html-inline-raster-media",
         "site",
@@ -6690,7 +6579,6 @@
         "raster",
         "media",
         "docs html inline raster media request",
-        "archive",
         "2026-05-12 10:25",
         "2026",
         "05",
@@ -6698,7 +6586,7 @@
         "10",
         "25"
       ],
-      "search_text": "site-request-docs-html-inline-raster-media site request docs html inline raster media docs html inline raster media request archive 2026-05-12 10:25 2026 05 12 10 25"
+      "search_text": "site-request-docs-html-inline-raster-media site request docs html inline raster media docs html inline raster media request 2026-05-12 10:25 2026 05 12 10 25"
     },
     {
       "id": "site-request-script-structural-review",
@@ -6707,8 +6595,7 @@
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review",
       "last_updated": "2026-05-09 21:45",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-09 21:45 • Archive",
+      "display_meta": "2026-05-09 21:45",
       "search_terms": [
         "site-request-script-structural-review",
         "site",
@@ -6717,7 +6604,6 @@
         "structural",
         "review",
         "script structural review request",
-        "archive",
         "2026-05-09 21:45",
         "2026",
         "05",
@@ -6725,7 +6611,7 @@
         "21",
         "45"
       ],
-      "search_text": "site-request-script-structural-review site request script structural review script structural review request archive 2026-05-09 21:45 2026 05 09 21 45"
+      "search_text": "site-request-script-structural-review site request script structural review script structural review request 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "site-request-studio-unified-activity-log",
@@ -6734,8 +6620,7 @@
       "href": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log",
       "last_updated": "2026-05-08 20:20",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-08 20:20 • Archive",
+      "display_meta": "2026-05-08 20:20",
       "search_terms": [
         "site-request-studio-unified-activity-log",
         "site",
@@ -6745,14 +6630,13 @@
         "activity",
         "log",
         "studio unified activity log request",
-        "archive",
         "2026-05-08 20:20",
         "2026",
         "05",
         "08",
         "20"
       ],
-      "search_text": "site-request-studio-unified-activity-log site request studio unified activity log studio unified activity log request archive 2026-05-08 20:20 2026 05 08 20"
+      "search_text": "site-request-studio-unified-activity-log site request studio unified activity log studio unified activity log request 2026-05-08 20:20 2026 05 08 20"
     },
     {
       "id": "site-request-scripts-directory-organization",
@@ -6761,8 +6645,7 @@
       "href": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
       "last_updated": "2026-05-09 22:35",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-09 22:35 • Archive",
+      "display_meta": "2026-05-09 22:35",
       "search_terms": [
         "site-request-scripts-directory-organization",
         "site",
@@ -6771,7 +6654,6 @@
         "directory",
         "organization",
         "scripts directory organization request",
-        "archive",
         "2026-05-09 22:35",
         "2026",
         "05",
@@ -6779,7 +6661,7 @@
         "22",
         "35"
       ],
-      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request archive 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "site-request-scripts-directory-organization site request scripts directory organization scripts directory organization request 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "site-request-catalogue-lookup-invalidation",
@@ -6788,8 +6670,7 @@
       "href": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
       "last_updated": "2026-05-13",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-13 • Archive",
+      "display_meta": "2026-05-13",
       "search_terms": [
         "site-request-catalogue-lookup-invalidation",
         "site",
@@ -6798,13 +6679,12 @@
         "lookup",
         "invalidation",
         "catalogue lookup invalidation request",
-        "archive",
         "2026-05-13",
         "2026",
         "05",
         "13"
       ],
-      "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request archive 2026-05-13 2026 05 13"
+      "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request 2026-05-13 2026 05 13"
     },
     {
       "id": "site-request-js-config-structural-review",
@@ -6813,8 +6693,7 @@
       "href": "/docs/?scope=studio&doc=site-request-js-config-structural-review",
       "last_updated": "2026-05-10 19:10",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-10 19:10 • Archive",
+      "display_meta": "2026-05-10 19:10",
       "search_terms": [
         "site-request-js-config-structural-review",
         "site",
@@ -6827,14 +6706,13 @@
         "javascript",
         "and",
         "browser",
-        "archive",
         "2026-05-10 19:10",
         "2026",
         "05",
         "10",
         "19"
       ],
-      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser archive 2026-05-10 19:10 2026 05 10 19"
+      "search_text": "site-request-js-config-structural-review site request js config structural review javascript and browser config structural review request javascript and browser 2026-05-10 19:10 2026 05 10 19"
     },
     {
       "id": "site-request-docs-viewer-router-extraction",
@@ -6843,8 +6721,7 @@
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-router-extraction",
       "last_updated": "2026-05-14",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-14 • Archive",
+      "display_meta": "2026-05-14",
       "search_terms": [
         "site-request-docs-viewer-router-extraction",
         "site",
@@ -6854,13 +6731,12 @@
         "router",
         "extraction",
         "docs viewer router extraction request",
-        "archive",
         "2026-05-14",
         "2026",
         "05",
         "14"
       ],
-      "search_text": "site-request-docs-viewer-router-extraction site request docs viewer router extraction docs viewer router extraction request archive 2026-05-14 2026 05 14"
+      "search_text": "site-request-docs-viewer-router-extraction site request docs viewer router extraction docs viewer router extraction request 2026-05-14 2026 05 14"
     },
     {
       "id": "ui-request-modal-composition-pattern",
@@ -6869,8 +6745,7 @@
       "href": "/docs/?scope=studio&doc=ui-request-modal-composition-pattern",
       "last_updated": "2026-05-15",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-15 • Archive",
+      "display_meta": "2026-05-15",
       "search_terms": [
         "ui-request-modal-composition-pattern",
         "ui",
@@ -6879,13 +6754,12 @@
         "composition",
         "pattern",
         "modal composition pattern request",
-        "archive",
         "2026-05-15",
         "2026",
         "05",
         "15"
       ],
-      "search_text": "ui-request-modal-composition-pattern ui request modal composition pattern modal composition pattern request archive 2026-05-15 2026 05 15"
+      "search_text": "ui-request-modal-composition-pattern ui request modal composition pattern modal composition pattern request 2026-05-15 2026 05 15"
     },
     {
       "id": "site-request-docs-viewer-new-scope-button",
@@ -6894,8 +6768,7 @@
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button",
       "last_updated": "2026-05-15",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-15 • Archive",
+      "display_meta": "2026-05-15",
       "search_terms": [
         "site-request-docs-viewer-new-scope-button",
         "site",
@@ -6906,13 +6779,12 @@
         "scope",
         "button",
         "docs viewer new scope button request",
-        "archive",
         "2026-05-15",
         "2026",
         "05",
         "15"
       ],
-      "search_text": "site-request-docs-viewer-new-scope-button site request docs viewer new scope button docs viewer new scope button request archive 2026-05-15 2026 05 15"
+      "search_text": "site-request-docs-viewer-new-scope-button site request docs viewer new scope button docs viewer new scope button request 2026-05-15 2026 05 15"
     },
     {
       "id": "site-request-docs-semantic-references",
@@ -6948,8 +6820,7 @@
       "href": "/docs/?scope=studio&doc=site-request-docs-markdown-package-import",
       "last_updated": "2026-05-18",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-18 • Archive",
+      "display_meta": "2026-05-18",
       "search_terms": [
         "site-request-docs-markdown-package-import",
         "site",
@@ -6959,13 +6830,12 @@
         "package",
         "import",
         "docs markdown package import request",
-        "archive",
         "2026-05-18",
         "2026",
         "05",
         "18"
       ],
-      "search_text": "site-request-docs-markdown-package-import site request docs markdown package import docs markdown package import request archive 2026-05-18 2026 05 18"
+      "search_text": "site-request-docs-markdown-package-import site request docs markdown package import docs markdown package import request 2026-05-18 2026 05 18"
     },
     {
       "id": "site-request-change-log-entry-model",
@@ -6974,8 +6844,7 @@
       "href": "/docs/?scope=studio&doc=site-request-change-log-entry-model",
       "last_updated": "2026-05-19",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-19 • Archive",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "site-request-change-log-entry-model",
         "site",
@@ -6985,13 +6854,12 @@
         "entry",
         "model",
         "change log entry model request",
-        "archive",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "site-request-change-log-entry-model site request change log entry model change log entry model request archive 2026-05-19 2026 05 19"
+      "search_text": "site-request-change-log-entry-model site request change log entry model change log entry model request 2026-05-19 2026 05 19"
     },
     {
       "id": "search-change-log-guidance",
@@ -7000,8 +6868,7 @@
       "href": "/docs/?scope=studio&doc=search-change-log-guidance",
       "last_updated": "2026-05-11 12:50",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-11 12:50 • Archive",
+      "display_meta": "2026-05-11 12:50",
       "search_terms": [
         "search-change-log-guidance",
         "search",
@@ -7009,7 +6876,6 @@
         "log",
         "guidance",
         "search change log guidance",
-        "archive",
         "2026-05-11 12:50",
         "2026",
         "05",
@@ -7017,7 +6883,7 @@
         "12",
         "50"
       ],
-      "search_text": "search-change-log-guidance search change log guidance search change log guidance archive 2026-05-11 12:50 2026 05 11 12 50"
+      "search_text": "search-change-log-guidance search change log guidance search change log guidance 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
       "id": "search-change-log",
@@ -7026,21 +6892,19 @@
       "href": "/docs/?scope=studio&doc=search-change-log",
       "last_updated": "2026-05-11",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-11 • Archive",
+      "display_meta": "2026-05-11",
       "search_terms": [
         "search-change-log",
         "search",
         "change",
         "log",
         "search change log",
-        "archive",
         "2026-05-11",
         "2026",
         "05",
         "11"
       ],
-      "search_text": "search-change-log search change log search change log archive 2026-05-11 2026 05 11"
+      "search_text": "search-change-log search change log search change log 2026-05-11 2026 05 11"
     },
     {
       "id": "site-change-log-2026-03-and-earlier",
@@ -7049,8 +6913,7 @@
       "href": "/docs/?scope=studio&doc=site-change-log-2026-03-and-earlier",
       "last_updated": "2026-05-19",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-19 • Archive",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "site-change-log-2026-03-and-earlier",
         "site",
@@ -7076,8 +6939,7 @@
       "href": "/docs/?scope=studio&doc=site-change-log-2026-04",
       "last_updated": "2026-05-19",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-19 • Archive",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "site-change-log-2026-04",
         "site",
@@ -7101,8 +6963,7 @@
       "href": "/docs/?scope=studio&doc=site-change-log-2026-05",
       "last_updated": "2026-05-19",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-19 • Archive",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "site-change-log-2026-05",
         "site",
@@ -7125,8 +6986,7 @@
       "href": "/docs/?scope=studio&doc=site-change-log-guidance",
       "last_updated": "2026-05-06 20:58",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-06 20:58 • Archive",
+      "display_meta": "2026-05-06 20:58",
       "search_terms": [
         "site-change-log-guidance",
         "site",
@@ -7134,7 +6994,6 @@
         "log",
         "guidance",
         "site change log guidance",
-        "archive",
         "2026-05-06 20:58",
         "2026",
         "05",
@@ -7142,7 +7001,7 @@
         "20",
         "58"
       ],
-      "search_text": "site-change-log-guidance site change log guidance site change log guidance archive 2026-05-06 20:58 2026 05 06 20 58"
+      "search_text": "site-change-log-guidance site change log guidance site change log guidance 2026-05-06 20:58 2026 05 06 20 58"
     },
     {
       "id": "site-change-log",
@@ -7151,21 +7010,19 @@
       "href": "/docs/?scope=studio&doc=site-change-log",
       "last_updated": "2026-05-19",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-19 • Archive",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "archive",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "site-change-log site change log site change log archive 2026-05-19 2026 05 19"
+      "search_text": "site-change-log site change log site change log 2026-05-19 2026 05 19"
     },
     {
       "id": "studio-ui-framework",
@@ -7174,21 +7031,19 @@
       "href": "/docs/?scope=studio&doc=studio-ui-framework",
       "last_updated": "2026-05-19",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-19 • Archive",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "studio-ui-framework",
         "studio",
         "ui",
         "framework",
         "studio ui framework",
-        "archive",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "studio-ui-framework studio ui framework studio ui framework archive 2026-05-19 2026 05 19"
+      "search_text": "studio-ui-framework studio ui framework studio ui framework 2026-05-19 2026 05 19"
     },
     {
       "id": "design",
@@ -7197,17 +7052,15 @@
       "href": "/docs/?scope=studio&doc=design",
       "last_updated": "2026-05-15",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-15 • Archive",
+      "display_meta": "2026-05-15",
       "search_terms": [
         "design",
-        "archive",
         "2026-05-15",
         "2026",
         "05",
         "15"
       ],
-      "search_text": "design archive 2026-05-15 2026 05 15"
+      "search_text": "design 2026-05-15 2026 05 15"
     },
     {
       "id": "studio-ui-framework-review-coverage",
@@ -7216,8 +7069,7 @@
       "href": "/docs/?scope=studio&doc=studio-ui-framework-review-coverage",
       "last_updated": "2026-05-19",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-19 • Archive",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "studio-ui-framework-review-coverage",
         "studio",
@@ -7227,13 +7079,12 @@
         "coverage",
         "studio ui framework review and coverage",
         "and",
-        "archive",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "studio-ui-framework-review-coverage studio ui framework review coverage studio ui framework review and coverage and archive 2026-05-19 2026 05 19"
+      "search_text": "studio-ui-framework-review-coverage studio ui framework review coverage studio ui framework review and coverage and 2026-05-19 2026 05 19"
     },
     {
       "id": "css-refactor",
@@ -7242,14 +7093,12 @@
       "href": "/docs/?scope=studio&doc=css-refactor",
       "last_updated": "2026-05-06 20:00",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-06 20:00 • Archive",
+      "display_meta": "2026-05-06 20:00",
       "search_terms": [
         "css-refactor",
         "css",
         "refactor",
         "css refactor",
-        "archive",
         "2026-05-06 20:00",
         "2026",
         "05",
@@ -7257,7 +7106,7 @@
         "20",
         "00"
       ],
-      "search_text": "css-refactor css refactor css refactor archive 2026-05-06 20:00 2026 05 06 20 00"
+      "search_text": "css-refactor css refactor css refactor 2026-05-06 20:00 2026 05 06 20 00"
     },
     {
       "id": "studio-ui-start",
@@ -7266,21 +7115,19 @@
       "href": "/docs/?scope=studio&doc=studio-ui-start",
       "last_updated": "2026-05-15",
       "parent_id": "archive",
-      "parent_title": "Archive",
-      "display_meta": "2026-05-15 • Archive",
+      "display_meta": "2026-05-15",
       "search_terms": [
         "studio-ui-start",
         "studio",
         "ui",
         "start",
         "ui start",
-        "archive",
         "2026-05-15",
         "2026",
         "05",
         "15"
       ],
-      "search_text": "studio-ui-start studio ui start ui start archive 2026-05-15 2026 05 15"
+      "search_text": "studio-ui-start studio ui start ui start 2026-05-15 2026 05 15"
     }
   ]
 }

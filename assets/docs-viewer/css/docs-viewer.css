@@ -205,6 +205,11 @@
   min-width: 0;
 }
 
+.docsViewer.is-busy,
+.docsViewer.is-busy *{
+  cursor: wait;
+}
+
 .docsViewer__searchRow{
   display: flex;
   flex-wrap: wrap;
@@ -582,6 +587,15 @@
   max-width: var(--docs-viewer-measure);
   margin-left: 0;
   margin-right: auto;
+}
+
+.docsViewer__panelStatus{
+  max-width: var(--docs-viewer-measure);
+  margin: 0 0 0.85rem;
+}
+
+.docsViewer__panelStatus.is-error{
+  color: var(--docs-viewer-link-hover);
 }
 
 .docsViewer__content img{

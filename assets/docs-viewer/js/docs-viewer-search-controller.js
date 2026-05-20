@@ -18,6 +18,7 @@ import {
 
 export function initDocsViewerSearchController(context) {
   var state = context.state;
+  var resultsStatus = context.resultsStatus;
   var results = context.results;
   var more = context.more;
   var searchInput = context.searchInput;
@@ -49,6 +50,8 @@ export function initDocsViewerSearchController(context) {
       return state.searchRequestPromise;
     }
 
+    var stopBusy = typeof context.startBusy === "function" ? context.startBusy() : function () {};
+
     state.searchRequestPromise = fetchPreferredGeneratedJson(
       currentSearchIndexUrl(),
       "Failed to load search data",
@@ -65,10 +68,25 @@ export function initDocsViewerSearchController(context) {
         throw error;
       })
       .finally(function () {
+        stopBusy();
         state.searchRequestPromise = null;
       });
 
     return state.searchRequestPromise;
+  }
+
+  function setResultsStatus(message, isError) {
+    if (!resultsStatus) {
+      if (isError && typeof context.setStatus === "function") context.setStatus(message, true);
+      return;
+    }
+    resultsStatus.textContent = String(message || "");
+    resultsStatus.hidden = !message;
+    resultsStatus.classList.toggle("is-error", Boolean(isError));
+  }
+
+  function clearResultsStatus() {
+    setResultsStatus("", false);
   }
 
   function displayRecentMetaForDoc(doc) {
@@ -98,14 +116,14 @@ export function initDocsViewerSearchController(context) {
     document.title = "Recently Added | dotlineform";
     var recentDocs = collectRecentDocs(state.docs.filter(isDocViewable), state.recentLimit);
     if (!recentDocs.length) {
-      context.setStatus("No recently added docs.", false);
+      setResultsStatus("No recently added docs.", false);
       results.innerHTML = "";
       more.innerHTML = "";
       more.hidden = true;
       return;
     }
 
-    context.setStatus(recentDocs.length === 1 ? "1 recently added doc" : recentDocs.length + " recently added docs", false);
+    setResultsStatus(recentDocs.length === 1 ? "1 recently added doc" : recentDocs.length + " recently added docs", false);
     results.innerHTML = recentDocs.map(renderRecentResultEntry).join("");
     more.innerHTML = "";
     more.hidden = true;
@@ -115,7 +133,7 @@ export function initDocsViewerSearchController(context) {
     if (!searchIsEnabled() || !context.hasActiveQuery()) return;
     context.setRecentModeActive(false);
     context.showSearchPane();
-    context.setStatus(state.searchLoaded ? "Searching..." : "Loading search index...", false);
+    clearResultsStatus();
     results.innerHTML = "";
     more.innerHTML = "";
     more.hidden = true;
@@ -124,10 +142,18 @@ export function initDocsViewerSearchController(context) {
 
   function renderSearchMode() {
     if (!searchIsEnabled()) {
-      context.setStatus("Search unavailable.", true);
-      context.hideDocPane();
-      results.hidden = true;
-      more.hidden = true;
+      if (searchControlsAvailable()) {
+        context.showSearchPane();
+        setResultsStatus("Search unavailable.", true);
+        results.innerHTML = "";
+        more.innerHTML = "";
+        more.hidden = true;
+      } else {
+        context.setStatus("Search unavailable.", true);
+        context.hideDocPane();
+        if (results) results.hidden = true;
+        if (more) more.hidden = true;
+      }
       return;
     }
 
@@ -150,7 +176,7 @@ export function initDocsViewerSearchController(context) {
         })
         .catch(function (error) {
           if (!context.hasActiveQuery()) return;
-          context.setStatus(error.message || "Failed to load search data.", true);
+          setResultsStatus(error.message || "Failed to load search data.", true);
           results.innerHTML = "";
           more.innerHTML = "";
           more.hidden = true;
@@ -160,7 +186,7 @@ export function initDocsViewerSearchController(context) {
 
     var matches = collectSearchMatches(state.searchEntries, query);
     if (!matches.length) {
-      context.setStatus("No results.", false);
+      setResultsStatus("No results.", false);
       results.innerHTML = "";
       more.innerHTML = "";
       more.hidden = true;
@@ -168,7 +194,7 @@ export function initDocsViewerSearchController(context) {
     }
 
     var visible = matches.slice(0, state.searchVisibleCount);
-    context.setStatus(matches.length === 1
+    setResultsStatus(matches.length === 1
       ? "1 result"
       : matches.length > visible.length
         ? "Showing " + visible.length + " of " + matches.length + " results"

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T19:03:16Z",
+  "generated_at": "2026-05-20T19:42:33Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -417,7 +417,8 @@
       "source_path": "site-docs.md",
       "viewer_url": "/docs/?scope=studio&doc=site-docs",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-docs.json",
-      "content_text_length": 1369
+      "content_text_length": 1375,
+      "summary": "This section contains technical reference documents that apply to the site as a whole."
     },
     {
       "scope": "studio",
@@ -3927,7 +3928,7 @@
       "source_path": "_tmp.md",
       "viewer_url": "/docs/?scope=studio&doc=_tmp",
       "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp.json",
-      "content_text_length": 1
+      "content_text_length": 512
     },
     {
       "scope": "studio",

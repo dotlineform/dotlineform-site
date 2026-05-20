@@ -3,15 +3,14 @@ doc_id: site-docs
 title: Site Docs
 added_date: 2026-04-19
 last_updated: 2026-05-19
+summary: This section contains technical reference documents that apply to the site as a whole.
 parent_id: ""
 sort_order: 1000
 viewable: true
 ---
 # Site Docs
 
-This is the top-level map for the current site documentation.
-
-## Main Sections
+For documentation about the site's main features and design, see the following sections:
 
 - **[Studio](/docs/?scope=studio&doc=studio)**
   Studio routes, page wiring, and Studio-specific behavior.
@@ -32,7 +31,7 @@ This is the top-level map for the current site documentation.
 - **[Search](/docs/?scope=studio&doc=search)**
   dedicated catalogue search plus inline docs-domain search.
 
-## Supporting Docs
+## Key Docs
 
 - **[Development Workflow](/docs/?scope=studio&doc=development-workflow)**
   end-to-end lifecycle guidance for human and Codex implementation work, including rules for maintaining the site change log.

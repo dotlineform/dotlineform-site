@@ -165,6 +165,7 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function showDocPane() {
+    if (typeof context.clearResultsStatus === "function") context.clearResultsStatus();
     context.setRecentModeActive(false);
     if (content) content.hidden = false;
     if (results) results.hidden = true;
@@ -172,6 +173,19 @@ export function initDocsViewerDocumentController(context) {
       more.hidden = true;
       more.innerHTML = "";
     }
+  }
+
+  function renderDocumentStatus(message, isError, options) {
+    var settings = options || {};
+    showDocPane();
+    if (settings.hideMeta && meta) meta.hidden = true;
+    if (!content) return;
+    content.textContent = "";
+    var status = document.createElement("p");
+    status.className = "docsViewer__panelStatus muted small";
+    status.classList.toggle("is-error", Boolean(isError));
+    status.textContent = String(message || "");
+    content.appendChild(status);
   }
 
   function showSearchPane() {
@@ -211,9 +225,7 @@ export function initDocsViewerDocumentController(context) {
   }
 
   function handleMissingDoc() {
-    context.setStatus("Document not found.", true);
-    hideDocPane();
-    content.textContent = "";
+    renderDocumentStatus("Document not found.", true, { hideMeta: true });
     results.innerHTML = "";
     more.innerHTML = "";
     more.hidden = true;
@@ -224,13 +236,11 @@ export function initDocsViewerDocumentController(context) {
     context.renderSidebar();
     showDocPane();
     context.renderMeta(doc);
-    context.setStatus("Loading " + doc.title + "...", false);
     content.textContent = "";
   }
 
   function handlePayloadError(error) {
-    context.setStatus(error.message || "Failed to load document.", true);
-    content.textContent = "";
+    renderDocumentStatus(error.message || "Failed to load document.", true);
   }
 
   return {

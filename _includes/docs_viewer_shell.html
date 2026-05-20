@@ -118,7 +118,7 @@
       {%- endif -%}
     </div>
     {%- endif -%}
-    <p class="docsViewer__status muted small" id="docsViewerStatus">Loading docs...</p>
+    <p class="docsViewer__status muted small" id="docsViewerStatus" hidden></p>
     <div class="docsViewer__bookmarkRow" id="docsViewerBookmarkRow" hidden></div>
   </div>
 
@@ -353,6 +353,7 @@
     <div class="docsViewer__content content" id="docsViewerContent">
       <noscript>This docs viewer requires JavaScript to load the generated docs index.</noscript>
     </div>
+    <p class="docsViewer__panelStatus muted small" id="docsViewerResultsStatus" hidden></p>
     <ol class="docsViewer__results" id="docsViewerResults" hidden></ol>
     <div class="docsViewer__more" id="docsViewerMore" hidden></div>
   </article>

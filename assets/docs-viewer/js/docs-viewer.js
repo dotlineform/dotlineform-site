@@ -66,6 +66,7 @@ import {
   var scopeSelect = document.getElementById("docsViewerScopeSelect");
   var recentButton = document.getElementById("docsViewerRecentButton");
   var searchInput = document.getElementById("docsViewerSearchInput");
+  var resultsStatus = document.getElementById("docsViewerResultsStatus");
   var results = document.getElementById("docsViewerResults");
   var more = document.getElementById("docsViewerMore");
 
@@ -263,6 +264,7 @@ import {
     showHidden: true,
     reloadNonce: "",
     reloadExpectedDocId: "",
+    pendingBusyCount: 0,
     moveUndo: null,
     metadataEditingDocId: "",
     metadataRestoreFocusId: "",
@@ -289,6 +291,7 @@ import {
   documentController = initDocsViewerDocumentController({
     allowManagement: allowManagement,
     checkGeneratedDataReadCapability: checkGeneratedDataReadCapability,
+    clearResultsStatus: clearResultsStatus,
     content: content,
     dataRequestOptions: dataRequestOptions,
     hasActiveQuery: hasActiveQuery,
@@ -321,6 +324,7 @@ import {
     hasActiveQuery: hasActiveQuery,
     more: more,
     recentButton: recentButton,
+    resultsStatus: resultsStatus,
     resolveDocId: resolveDocId,
     results: results,
     searchBatchSize: SEARCH_BATCH_SIZE,
@@ -332,6 +336,7 @@ import {
     setStatus: setStatus,
     showRecentPane: showRecentPane,
     showSearchPane: showSearchPane,
+    startBusy: startBusy,
     state: state,
     viewerScope: function () { return viewerScope; },
     viewerTargetDocId: viewerTargetDocId,
@@ -839,6 +844,31 @@ import {
     status.classList.toggle("is-error", Boolean(isError));
   }
 
+  function clearResultsStatus() {
+    if (!resultsStatus) return;
+    resultsStatus.textContent = "";
+    resultsStatus.hidden = true;
+    resultsStatus.classList.remove("is-error");
+  }
+
+  function syncBusyState() {
+    var isBusy = state.pendingBusyCount > 0;
+    root.classList.toggle("is-busy", isBusy);
+    root.setAttribute("aria-busy", isBusy ? "true" : "false");
+  }
+
+  function startBusy() {
+    state.pendingBusyCount += 1;
+    syncBusyState();
+    var stopped = false;
+    return function stopBusy() {
+      if (stopped) return;
+      stopped = true;
+      state.pendingBusyCount = Math.max(0, state.pendingBusyCount - 1);
+      syncBusyState();
+    };
+  }
+
   function hideContextMenu() {
     if (managementController) {
       managementController.hideContextMenu();
@@ -921,12 +951,13 @@ import {
   }
 
   function fetchDocPayload(doc, docId) {
+    var stopBusy = startBusy();
     return fetchPreferredGeneratedJson(
       doc.content_url,
       "Failed to load " + doc.content_url,
       managementReloadPath("/docs/generated/payload", { scope: viewerScope, doc_id: docId }),
       dataRequestOptions({ useSearchCapability: false })
-    );
+    ).finally(stopBusy);
   }
 
   function handlePayloadError(error) {
@@ -1101,6 +1132,7 @@ import {
   }
 
   function loadIndex() {
+    var stopBusy = startBusy();
     return fetchIndexWithRetry(dataRequestOptions({
       indexUrl: indexUrl,
       viewerScope: viewerScope
@@ -1114,6 +1146,9 @@ import {
         hideDocPane();
         content.textContent = "";
         throw error;
+      })
+      .finally(function () {
+        stopBusy();
       });
   }
 
@@ -1173,6 +1208,7 @@ import {
     storeName: BOOKMARK_STORE_NAME
   });
   bindLinkInterception();
+  var stopInitialBusy = startBusy();
   loadDocsViewerConfig()
     .then(function () {
       renderSidebarCollapsedState();
@@ -1196,6 +1232,9 @@ import {
       content.textContent = "";
       if (results) results.hidden = true;
       if (more) more.hidden = true;
+    })
+    .finally(function () {
+      stopInitialBusy();
     });
 
   function cssEscape(value) {
