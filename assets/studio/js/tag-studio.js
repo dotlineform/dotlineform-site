@@ -16,7 +16,6 @@ import {
 import {
   buildSeriesWorkOptions,
   cloneWorkStateMap,
-  compareEntries,
   compareTagDisplay,
   configureTagStudioDomain,
   createResolvedEntries,
@@ -29,7 +28,6 @@ import {
   normalizeAliasTargets,
   normalizeAssignmentRows,
   normalizeAssignmentTags,
-  normalizeManualWeight,
   normalizeWorkId,
   pushMapList,
   sanitizeTag,
@@ -57,6 +55,18 @@ import {
   wireTagStudioSaveModalEvents
 } from "./tag-studio-modals.js";
 import {
+  renderContextHint,
+  renderGroups,
+  renderSelectedWork
+} from "./tag-studio-render.js";
+import {
+  getMatchingWorkOptions,
+  hidePopup,
+  hideWorkPopup,
+  renderPopup,
+  renderWorkPopup
+} from "./tag-studio-suggestions.js";
+import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
@@ -66,13 +76,10 @@ import {
 } from "./studio-ui.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
-const POPUP_TAG_MATCH_CAP = 12;
-const POPUP_ALIAS_MATCH_CAP = 12;
-const POPUP_WORK_MATCH_CAP = 12;
 const WEIGHT_VALUES = [0.3, 0.6, 0.9];
 const DEFAULT_WEIGHT = 0.6;
 const UI = seriesTagEditorUi;
-const { className: UI_CLASS, selector: UI_SELECTOR, state: UI_STATE } = UI;
+const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagStudio);
@@ -256,6 +263,8 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson,
     mount,
     routeRoot: document.getElementById("seriesTagEditorRoot"),
     config,
+    studioGroups: STUDIO_GROUPS,
+    defaultWeight: DEFAULT_WEIGHT,
     seriesId,
     tagsById,
     slugMap,
@@ -1024,207 +1033,9 @@ function clearOfflineAutosave(state) {
   state.offlineAutosaveTimer = 0;
 }
 
-function renderSelectedWork(state) {
-  const selected = getOrderedSelectedWorkOptions(state);
-  if (!selected.length) {
-    state.refs.selectedWork.innerHTML = "";
-    return;
-  }
-  state.refs.selectedWork.innerHTML = selected.map((item) => {
-    const titleText = item.title ? ` ${escapeHtml(item.title)}` : "";
-    const activeState = item.workId === state.selectedWorkId ? ` data-state="${UI_STATE.active}"` : "";
-    return `
-      <span class="${UI_CLASS.selectedWorkPill}"${activeState} title="${escapeHtml(item.workId)}${titleText}">
-        <button type="button" class="${UI_CLASS.selectedWorkButton}" data-activate-work-id="${escapeHtml(item.workId)}" aria-pressed="${item.workId === state.selectedWorkId ? "true" : "false"}">
-          <span class="${UI_CLASS.selectedWorkId}">${escapeHtml(item.workId)}</span>
-        </button>
-        <button
-          type="button"
-          class="${UI_CLASS.chipRemove}"
-          data-clear-selected-work="${escapeHtml(item.workId)}"
-          aria-label="${escapeHtml(studioText(state.config, "remove_selected_work_aria_label", "Remove selected work {work_id}", { work_id: item.workId }))}"
-        >x</button>
-      </span>
-    `;
-  }).join("");
-}
-
-function renderContextHint(state) {
-  if (!state.refs.contextHint) return;
-  if (!state.selectedWorkId) {
-    state.refs.contextHint.textContent = studioText(
-      state.config,
-      "context_hint_default",
-      "No work selected: edit series tags directly. Select a work to switch to work-only overrides."
-    );
-    return;
-  }
-  state.refs.contextHint.textContent = studioText(
-    state.config,
-    "context_hint_selected",
-    "Monochrome pills are inherited from the series. Colored pills are saved as work-only overrides."
-  );
-}
-
-function renderWorkPopup(state) {
-  const queryRaw = String(state.refs.workInput.value || "").trim();
-  if (!queryRaw) {
-    hideWorkPopup(state);
-    return;
-  }
-
-  const matches = getMatchingWorkOptions(state, queryRaw).slice(0, POPUP_WORK_MATCH_CAP);
-  if (!matches.length) {
-    hideWorkPopup(state);
-    return;
-  }
-
-  state.refs.workPopupList.innerHTML = `
-    <div class="${UI_CLASS.suggest}">
-      <section class="${UI_CLASS.suggestSection}">
-        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(studioText(state.config, "popup_heading_works", "works"))}</p>
-        <div class="${UI_CLASS.suggestWorkRows}">
-          ${matches.map((item) => `
-            <button type="button" class="${UI_CLASS.suggestWorkButton}" data-popup-work-id="${escapeHtml(item.workId)}">
-              <span class="${UI_CLASS.suggestWorkId}">${escapeHtml(item.workId)}</span>
-              <span class="${UI_CLASS.suggestWorkTitle}">${escapeHtml(item.title || "")}</span>
-            </button>
-          `).join("")}
-        </div>
-      </section>
-    </div>
-  `;
-  state.refs.workPopup.hidden = false;
-}
-
-function hideWorkPopup(state) {
-  state.refs.workPopup.hidden = true;
-  state.refs.workPopupList.innerHTML = "";
-}
-
-function getMatchingWorkOptions(state, query) {
-  const normalizedQuery = normalize(query);
-  if (!normalizedQuery) return [];
-  return state.seriesWorkOptions.filter((item) => {
-    if (item.workId.startsWith(normalizedQuery)) return true;
-    if (item.shortWorkId.startsWith(normalizedQuery)) return true;
-    return item.titleKey.startsWith(normalizedQuery);
-  });
-}
-
-function renderPopup(state) {
-  const query = normalize(state.refs.input.value);
-  if (!query) {
-    hidePopup(state);
-    return;
-  }
-
-  const selectedTagIds = getEditableTagIdSet(state);
-  const inheritedTagIds = getSeriesTagIdSet(state);
-  const tagMatches = state.activeTagsBySlug
-    .filter((tag) => {
-      if (!tag.slug.startsWith(query)) return false;
-      if (selectedTagIds.has(tag.tag_id)) return false;
-      if (state.selectedWorkId && inheritedTagIds.has(tag.tag_id)) return false;
-      return true;
-    })
-    .slice(0, POPUP_TAG_MATCH_CAP);
-  const aliasMatches = getPopupAliasMatches(state, query, selectedTagIds, state.selectedWorkId ? inheritedTagIds : new Set()).slice(0, POPUP_ALIAS_MATCH_CAP);
-
-  if (!tagMatches.length && !aliasMatches.length) {
-    hidePopup(state);
-    return;
-  }
-
-  const tagSection = tagMatches.length
-    ? `
-      <section class="${UI_CLASS.suggestSection}">
-        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(studioText(state.config, "popup_heading_tags", "tags"))}</p>
-        <div class="${UI_CLASS.suggestTagRows}">
-          ${tagMatches.map((tag) => `
-            <button
-              type="button"
-              class="${classNames(UI_CLASS.popupPill, chipGroupClass(tag.group))}"
-              data-popup-tag-id="${escapeHtml(tag.tag_id)}"
-              title="${escapeHtml(tag.tag_id)}"
-            >
-              ${escapeHtml(tag.label)}
-            </button>
-          `).join("")}
-        </div>
-      </section>
-    `
-    : "";
-
-  const aliasSection = aliasMatches.length
-    ? `
-      <section class="${UI_CLASS.suggestSection}">
-        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(studioText(state.config, "popup_heading_aliases", "aliases"))}</p>
-        <div class="${UI_CLASS.suggestAliasRows}">
-          ${aliasMatches.map((entry) => `
-            <div class="${UI_CLASS.suggestAliasRow}">
-              <span
-                class="${classNames(UI_CLASS.popupPill, UI_CLASS.suggestAliasPill)}"
-                data-popup-alias="${escapeHtml(entry.alias)}"
-                title="${escapeHtml(entry.alias)}"
-              >
-                ${escapeHtml(entry.alias)}
-              </span>
-              <div class="${UI_CLASS.suggestAliasTargets}">
-                ${entry.targets.map((target) => `
-                  <button
-                    type="button"
-                    class="${classNames(UI_CLASS.popupPill, chipGroupClass(target.group), UI_CLASS.suggestAliasTarget)}"
-                    data-popup-alias-target="${escapeHtml(target.tagId)}"
-                    data-popup-alias-source="${escapeHtml(entry.alias)}"
-                    title="${escapeHtml(target.tagId)}"
-                  >
-                    ${escapeHtml(target.label)}
-                  </button>
-                `).join("")}
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      </section>
-    `
-    : "";
-
-  state.refs.popupList.innerHTML = `
-    <div class="${UI_CLASS.suggest}">
-      ${tagSection}
-      ${aliasSection}
-    </div>
-  `;
-  state.refs.popup.hidden = false;
-}
-
-function hidePopup(state) {
-  state.refs.popup.hidden = true;
-  state.refs.popupList.innerHTML = "";
-}
-
-function getPopupAliasMatches(state, query, selectedTagIds, inheritedTagIds) {
-  return state.aliasOptions
-    .filter((entry) => entry.alias.startsWith(query))
-    .map((entry) => ({
-      alias: entry.alias,
-      targets: entry.targets.filter((target) => !selectedTagIds.has(target.tagId) && !inheritedTagIds.has(target.tagId))
-    }))
-    .filter((entry) => entry.targets.length > 0);
-}
-
 function getEditableEntries(state) {
   if (!state.selectedWorkId) return state.seriesEntries;
   return getSelectedWorkEntries(state);
-}
-
-function getEditableTagIdSet(state) {
-  const out = new Set();
-  for (const entry of getEditableEntries(state)) {
-    out.add(entry.canonicalId);
-  }
-  return out;
 }
 
 function getSeriesTagIdSet(state) {
@@ -1258,263 +1069,6 @@ function buildAliasOptions(aliases, tagsById) {
   }
   out.sort((a, b) => a.alias.localeCompare(b.alias, undefined, { sensitivity: "base" }));
   return out;
-}
-
-function createEmptyMarkerState() {
-  return {
-    current: new Map(),
-    deleted: []
-  };
-}
-
-function getOfflineBaseWorkRows(state, workId) {
-  const normalizedWorkId = normalizeWorkId(workId);
-  const works = state.offlineBaseSeriesRow && state.offlineBaseSeriesRow.works && typeof state.offlineBaseSeriesRow.works === "object"
-    ? state.offlineBaseSeriesRow.works
-    : {};
-  const row = normalizedWorkId && works[normalizedWorkId] && typeof works[normalizedWorkId] === "object"
-    ? works[normalizedWorkId]
-    : null;
-  return normalizeAssignmentRows(row && row.tags);
-}
-
-function buildEntryRow(entry) {
-  if (!entry || !entry.canonicalId) return null;
-  const row = {
-    tag_id: normalize(entry.canonicalId),
-    w_manual: normalizeManualWeight(entry.wManual, DEFAULT_WEIGHT)
-  };
-  if (entry.alias) row.alias = normalize(entry.alias);
-  return row;
-}
-
-function equalAssignmentTagRow(left, right) {
-  if (!left || !right) return false;
-  return left.tag_id === right.tag_id
-    && left.w_manual === right.w_manual
-    && String(left.alias || "") === String(right.alias || "");
-}
-
-function makeHistoricalEntry(state, row, entryId) {
-  if (!row || !row.tag_id) return null;
-  const tag = state.tagsById.get(normalize(row.tag_id));
-  if (!tag) return null;
-  return makeResolvedEntry(entryId, row.tag_id, tag, row.w_manual, row.alias);
-}
-
-function buildEntryMarkerState(state, entries, baseRows, scopeKey) {
-  const current = new Map();
-  const deleted = [];
-  const normalizedBaseRows = normalizeAssignmentRows(baseRows);
-  const baseByTagId = new Map(normalizedBaseRows.map((row) => [row.tag_id, row]));
-  const currentTagIds = new Set();
-
-  for (const entry of Array.isArray(entries) ? entries : []) {
-    const currentRow = buildEntryRow(entry);
-    if (!currentRow) continue;
-    currentTagIds.add(currentRow.tag_id);
-    const baseRow = baseByTagId.get(currentRow.tag_id) || null;
-    if (!baseRow || !equalAssignmentTagRow(baseRow, currentRow)) {
-      current.set(currentRow.tag_id, "local");
-    }
-  }
-
-  for (const row of normalizedBaseRows) {
-    if (currentTagIds.has(row.tag_id)) continue;
-    const deletedEntry = makeHistoricalEntry(state, row, `${scopeKey}:${row.tag_id}`);
-    if (deletedEntry) deleted.push(deletedEntry);
-  }
-  deleted.sort(compareEntries);
-
-  return { current, deleted };
-}
-
-function renderGroups(state) {
-  const inheritedByGroup = new Map(STUDIO_GROUPS.map((group) => [group, []]));
-  for (const entry of state.seriesEntries) {
-    if (!inheritedByGroup.has(entry.group)) continue;
-    inheritedByGroup.get(entry.group).push(entry);
-  }
-  const showOfflineMarkers = state.saveMode !== "post";
-  const seriesMarkerState = showOfflineMarkers
-    ? buildEntryMarkerState(state, state.seriesEntries, state.offlineBaseSeriesRow && state.offlineBaseSeriesRow.tags, "series")
-    : createEmptyMarkerState();
-  const inheritedDeletedByGroup = new Map(STUDIO_GROUPS.map((group) => [group, []]));
-  for (const entry of seriesMarkerState.deleted) {
-    if (!inheritedDeletedByGroup.has(entry.group)) continue;
-    inheritedDeletedByGroup.get(entry.group).push(entry);
-  }
-
-  const overrideByGroup = new Map(STUDIO_GROUPS.map((group) => [group, []]));
-  for (const entry of getSelectedWorkEntries(state)) {
-    if (!overrideByGroup.has(entry.group)) continue;
-    overrideByGroup.get(entry.group).push(entry);
-  }
-  const selectedWorkId = state.selectedWorkId;
-  const overrideMarkerState = showOfflineMarkers && selectedWorkId
-    ? buildEntryMarkerState(state, getSelectedWorkEntries(state), getOfflineBaseWorkRows(state, selectedWorkId), `work:${selectedWorkId}`)
-    : createEmptyMarkerState();
-  const overrideDeletedByGroup = new Map(STUDIO_GROUPS.map((group) => [group, []]));
-  for (const entry of overrideMarkerState.deleted) {
-    if (!overrideDeletedByGroup.has(entry.group)) continue;
-    overrideDeletedByGroup.get(entry.group).push(entry);
-  }
-
-  for (const group of STUDIO_GROUPS) {
-    inheritedByGroup.get(group).sort(compareEntries);
-    inheritedDeletedByGroup.get(group).sort(compareEntries);
-    overrideByGroup.get(group).sort(compareEntries);
-    overrideDeletedByGroup.get(group).sort(compareEntries);
-  }
-
-  const rowsHtml = STUDIO_GROUPS.map((group) => {
-    const inherited = inheritedByGroup.get(group) || [];
-    const inheritedDeleted = inheritedDeletedByGroup.get(group) || [];
-    const overrides = overrideByGroup.get(group) || [];
-    const overrideDeleted = overrideDeletedByGroup.get(group) || [];
-    const inheritedHtml = selectedWorkId
-      ? inherited.map((entry) => renderInheritedChip(state, entry, false, seriesMarkerState.current.get(entry.canonicalId) || "")).join("")
-      : inherited.map((entry) => renderSeriesEditableChip(state, entry, seriesMarkerState.current.get(entry.canonicalId) || "")).join("");
-    const inheritedDeletedHtml = selectedWorkId
-      ? inheritedDeleted.map((entry) => renderDeletedChip(state, entry, {
-        inherited: true,
-        scope: "series",
-        titleKey: "inherited_tag_title",
-        titleFallback: "Inherited from series: {tag_id}"
-      })).join("")
-      : inheritedDeleted.map((entry) => renderDeletedChip(state, entry, {
-        inherited: false,
-        scope: "series",
-        titleKey: "series_tag_title",
-        titleFallback: "Series tag {tag_id}"
-      })).join("");
-    const overrideHtml = overrides
-      .map((entry) => renderOverrideChip(state, entry, overrideMarkerState.current.get(entry.canonicalId) || ""))
-      .join("");
-    const overrideDeletedHtml = overrideDeleted.map((entry) => renderDeletedChip(state, entry, {
-      inherited: false,
-      scope: "work",
-      titleKey: "work_override_title",
-      titleFallback: "Work override {tag_id}"
-    })).join("");
-    const emptyHtml = (!inheritedHtml && !inheritedDeletedHtml && !overrideHtml && !overrideDeletedHtml)
-      ? `<span class="${UI_CLASS.empty}">${escapeHtml(studioText(state.config, "empty_state", "none"))}</span>`
-      : "";
-    return `
-      <div class="${UI_CLASS.groupRow}">
-        <span class="${classNames(UI_CLASS.groupRowLabel, UI_CLASS.chip, chipGroupClass(group))}">${escapeHtml(group)}</span>
-        <div class="${UI_CLASS.groupRowChips}">
-          ${inheritedHtml}
-          ${inheritedDeletedHtml}
-          ${overrideHtml}
-          ${overrideDeletedHtml}
-          ${emptyHtml}
-        </div>
-      </div>
-    `;
-  }).join("");
-
-  state.refs.groups.innerHTML = `<div class="${UI_CLASS.groups}">${rowsHtml}</div>`;
-}
-
-function renderChipCaption(state, marker) {
-  if (!marker) return "";
-  const key = marker === "delete" ? "chip_caption_delete" : "chip_caption_local";
-  const fallback = marker === "delete" ? "delete" : "local";
-  const className = marker === "delete" ? UI_CLASS.chipCaptionDelete : UI_CLASS.chipCaptionLocal;
-  return `<span class="${classNames(UI_CLASS.chipCaption, className)}">${escapeHtml(studioText(state.config, key, fallback))}</span>`;
-}
-
-function renderChipLabel(state, entry, marker) {
-  return `
-    <span class="${UI_CLASS.chipText}">
-      <span class="${classNames(
-        UI_CLASS.chipTag,
-        marker === "local" ? UI_CLASS.chipTagLocal : "",
-        marker === "delete" ? UI_CLASS.chipTagDelete : ""
-      )}">${escapeHtml(entry.label)}</span>
-      ${renderChipCaption(state, marker)}
-    </span>
-  `;
-}
-
-function renderSeriesEditableChip(state, entry, marker = "") {
-  return `
-    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
-      <button
-        type="button"
-        class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}"
-        data-cycle-weight-entry-id="${entry.entryId}"
-        title="${escapeHtml(studioText(state.config, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
-        aria-label="${escapeHtml(studioText(state.config, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
-      ></button>
-      ${renderChipLabel(state, entry, marker)}
-      <button
-        type="button"
-        class="${UI_CLASS.chipRemove}"
-        data-remove-entry-id="${entry.entryId}"
-        aria-label="${escapeHtml(studioText(state.config, "remove_series_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
-      >x</button>
-    </span>
-  `;
-}
-
-function renderInheritedChip(state, entry, useColorChip, marker = "") {
-  if (useColorChip) {
-    return `
-      <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
-        <span class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}" aria-hidden="true"></span>
-        ${renderChipLabel(state, entry, marker)}
-      </span>
-    `;
-  }
-  return `
-    <span class="${classNames(UI_CLASS.chip, UI_CLASS.chipInherited)}" title="${escapeHtml(studioText(state.config, "inherited_tag_title", "Inherited from series: {tag_id}", { tag_id: entry.canonicalId }))}">
-      <span class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}" aria-hidden="true"></span>
-      ${renderChipLabel(state, entry, marker)}
-    </span>
-  `;
-}
-
-function renderOverrideChip(state, entry, marker = "") {
-  return `
-    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, "work_override_title", "Work override {tag_id}", { tag_id: entry.canonicalId }))}">
-      <button
-        type="button"
-        class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}"
-        data-cycle-weight-entry-id="${entry.entryId}"
-        title="${escapeHtml(studioText(state.config, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
-        aria-label="${escapeHtml(studioText(state.config, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
-      ></button>
-      ${renderChipLabel(state, entry, marker)}
-      <button
-        type="button"
-        class="${UI_CLASS.chipRemove}"
-        data-remove-entry-id="${entry.entryId}"
-        aria-label="${escapeHtml(studioText(state.config, "remove_work_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
-      >x</button>
-    </span>
-  `;
-}
-
-function renderDeletedChip(state, entry, options = {}) {
-  const inherited = Boolean(options.inherited);
-  const titleKey = options.titleKey || "series_tag_title";
-  const titleFallback = options.titleFallback || "Series tag {tag_id}";
-  const restoreScope = options.scope || "series";
-  return `
-    <span class="${classNames(UI_CLASS.chip, inherited ? UI_CLASS.chipInherited : chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, titleKey, titleFallback, { tag_id: entry.canonicalId }))}">
-      <span class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}" aria-hidden="true"></span>
-      ${renderChipLabel(state, entry, "delete")}
-      <button
-        type="button"
-        class="${UI_CLASS.chipRemove}"
-        data-restore-tag-id="${escapeHtml(entry.canonicalId)}"
-        data-restore-scope="${escapeHtml(restoreScope)}"
-        aria-label="${escapeHtml(studioText(state.config, "restore_deleted_tag_aria_label", "Restore {tag_id}", { tag_id: entry.canonicalId }))}"
-      >⤺</button>
-    </span>
-  `;
 }
 
 function renderSaveState(state) {
@@ -1781,13 +1335,6 @@ function broadcastSelectedWorkChange(state) {
   }));
 }
 
-function weightDotClass(weight) {
-  const normalized = normalizeManualWeight(weight, DEFAULT_WEIGHT);
-  if (normalized === 0.3) return UI_CLASS.weightDotLow;
-  if (normalized === 0.9) return UI_CLASS.weightDotHigh;
-  return UI_CLASS.weightDotMid;
-}
-
 function escapeHtml(value) {
   return String(value || "")
     .replace(/&/g, "&amp;")
@@ -1799,14 +1346,6 @@ function escapeHtml(value) {
 
 function renderFatalError(mount, message) {
   mount.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(message)}</div>`;
-}
-
-function classNames(...tokens) {
-  return tokens.filter(Boolean).join(" ");
-}
-
-function chipGroupClass(group) {
-  return `${UI_CLASS.chipGroupPrefix}${group}`;
 }
 
 function buildWorkSelectionSummary(state, added, unknown, invalid) {

@@ -51,6 +51,8 @@ Supporting modules:
 - `assets/studio/js/studio-ui.js`
 - `assets/studio/js/tag-studio-domain.js`
 - `assets/studio/js/tag-assignments-offline.js`
+- `assets/studio/js/tag-studio-render.js`
+- `assets/studio/js/tag-studio-suggestions.js`
 - `assets/studio/js/tag-studio-save.js`
 
 Top-level structure in the page template:
@@ -189,6 +191,8 @@ JS owner:
 - `renderShell(state)`
 - work-related handlers in `wireEvents(state)`
   in `assets/studio/js/tag-studio.js`
+- selected-work rendering in `assets/studio/js/tag-studio-render.js`
+- work suggestion popup rendering in `assets/studio/js/tag-studio-suggestions.js`
 
 Meaning:
 
@@ -211,8 +215,7 @@ DOM / CSS:
 
 JS owner:
 
-- `renderContextHint(state)`
-  in `assets/studio/js/tag-studio.js`
+- `renderContextHint(state)` in `assets/studio/js/tag-studio-render.js`
 
 Meaning:
 
@@ -235,7 +238,7 @@ DOM / CSS:
 
 JS owner:
 
-- group rendering functions in `assets/studio/js/tag-studio.js`
+- group rendering functions in `assets/studio/js/tag-studio-render.js`
 
 Meaning:
 
@@ -286,7 +289,7 @@ DOM / CSS:
 
 JS owner:
 
-- popup rendering functions in `assets/studio/js/tag-studio.js`
+- popup rendering functions in `assets/studio/js/tag-studio-suggestions.js`
 
 Meaning:
 
@@ -300,7 +303,7 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - `data-role` defines JS selectors
 - `data-state` and ARIA define runtime state
 
-`assets/studio/js/studio-ui.js` holds the role selectors plus the generated style class tokens used by `tag-studio.js`.
+`assets/studio/js/studio-ui.js` holds the role selectors plus the generated style class tokens used by `tag-studio.js`, `tag-studio-render.js`, and `tag-studio-suggestions.js`.
 
 ### Status and save feedback
 
@@ -473,9 +476,9 @@ If a change request refers to:
 - “series metadata”
   - start with `.tagStudioPage__context` and `series-tag-editor-page.js`
 - “works”
-  - start with `.tagStudio__inputRow--work` and selected-work rendering in `tag-studio.js`
+  - start with `.tagStudio__inputRow--work` and selected-work rendering in `tag-studio-render.js`
 - “tag suggestions”
-  - start with `.tagStudio__popup` / `.tagStudioSuggest__*`
+  - start with `.tagStudio__popup` / `.tagStudioSuggest__*` and `tag-studio-suggestions.js`
 - “save modal”
   - start with `tag-studio-modals.js` plus shared modal styles in `studio.css`
 

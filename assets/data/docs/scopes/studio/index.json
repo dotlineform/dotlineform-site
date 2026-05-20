@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T10:37:20Z",
+  "generated_at": "2026-05-20T11:28:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1294,7 +1294,7 @@
       "source_path": "tag-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-editor.json",
-      "content_text_length": 10366
+      "content_text_length": 10708
     },
     {
       "scope": "studio",
@@ -2313,7 +2313,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 12610,
+      "content_text_length": 12980,
       "ui_status": "urgent"
     },
     {
