@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-adc6f94ae46fb1ee5f3712d2b1ad7405",
-    "generated_at_utc": "2026-05-20T18:40:26Z",
-    "count": 286
+    "version": "blake2b-d2e745f7d980ea94373e16648bd07cbc",
+    "generated_at_utc": "2026-05-20T18:59:18Z",
+    "count": 285
   },
   "entries": [
     {
@@ -5763,24 +5763,6 @@
         "13"
       ],
       "search_text": "library-import-ui library import ui library import - ui refinements refinements archive 2026-05-06 18:13 2026 05 06 18 13"
-    },
-    {
-      "id": "archive",
-      "kind": "doc",
-      "title": "Archive",
-      "href": "/docs/?scope=studio&doc=archive",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
-      "search_terms": [
-        "archive",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "archive 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "scripts-fix-missing-title-sort",

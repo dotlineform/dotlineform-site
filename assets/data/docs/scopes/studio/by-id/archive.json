@@ -7,9 +7,10 @@
   "parent_id": "",
   "sort_order": 31000,
   "published": true,
-  "hidden": false,
-  "viewable": true,
+  "hidden": true,
+  "viewable": false,
   "source_path": "archive.md",
   "viewer_url": "/docs/?scope=studio&doc=archive",
-  "content_html": "<h1 id=\"archive\">Archive</h1>\n\n<p>This section keeps deprecated or superseded docs that remain useful as historical reference.</p>\n"
+  "content_html": "<h1 id=\"archive\">Archive</h1>\n\n<p>This section keeps deprecated or superseded docs that may remain useful as historical reference. For current guidance, start at <a href=\"/docs/?scope=studio&doc=site-docs\">Site Docs</a>.</p>\n",
+  "summary": "This section is for deprecated or no longer maintained documents. Refer to change logs for previous implementation notes."
 }
