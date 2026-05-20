@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T14:38:45Z",
+  "generated_at": "2026-05-20T14:49:55Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2231,7 +2231,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 16139,
+      "content_text_length": 16269,
       "ui_status": "urgent"
     },
     {
@@ -2330,7 +2330,7 @@
       "source_path": "javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-inventory.json",
-      "content_text_length": 10742
+      "content_text_length": 10837
     },
     {
       "scope": "studio",

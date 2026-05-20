@@ -89,49 +89,50 @@ For `tag-registry.js`, for example, list/control rendering is meaningful not bec
 
 ## Current Summary
 
-Measured on 2026-05-20, after the site-wide JavaScript prioritisation pass.
+Measured on 2026-05-20, after the Data Sharing Review preview-render extraction.
 
-- Browser JavaScript files under `assets/`: 127
-- Total browser JavaScript lines under `assets/`: 40,987
-- Files over the 1,000-line review threshold: 3
+- Browser JavaScript files under `assets/`: 128
+- Total browser JavaScript lines under `assets/`: 41,029
+- Files over the 1,000-line review threshold: 2
 - Files in the 900-1,000 line watch band: 7
 - Priority score threshold used for the current table: 16 or higher
 
 ## Current Priorities
 
 The full ranked priority table now lives in [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
-That child document lists all 127 browser JavaScript files with rank, file, score, and focus.
+That child document lists all 128 browser JavaScript files with rank, file, score, and focus.
 
-The detailed sections below cover the top five current improvement priorities after manual review.
+The detailed sections below cover the current improvement priorities after manual review.
 High-scoring recently improved files stay in the child table, but are not automatically top-detail priorities unless the next slice would still remove a complete responsibility or clarify a reusable boundary.
 
 ## Top Priority Details
 
 ### `assets/studio/js/data-sharing-review.js`
 
-- Priority score: 18
-- Lines: 1,109
-- Raw: 41.6 KiB
-- Gzip: 8.9 KiB
-- Classification: mixed route controller
-- Line pressure: 2
+- Priority score: 16
+- Lines: 849
+- Raw: 31.6 KiB
+- Gzip: 6.5 KiB
+- Classification: route workflow controller with extracted preview rendering
+- Line pressure: 0
 
 **Why This Is Priority Work**
 
-- This route owns returned-package loading, staged package listing, preview rendering, selected-row state, action-menu state, preflight calls, apply calls, result shaping, activity context, and route busy/ready state.
-- Result modal and apply-confirmation modal behavior now lives in `assets/studio/js/data-sharing-review-modals.js`, but the main controller still mixes workflow policy, rendered review state, and mutation orchestration.
-- The route is not only large; it controls write-facing review/apply behavior where state ownership mistakes can create confusing or unsafe local workflow outcomes.
+- Preview row normalization, preview list rendering, checkbox syncing, and selected record-index projection now live in `assets/studio/js/data-sharing-review-render.js`.
+- Result modal and apply-confirmation modal behavior now lives in `assets/studio/js/data-sharing-review-modals.js`.
+- The route still owns returned-package loading, staged package listing, action-menu state, preflight calls, apply calls, result shaping, activity context, and route busy/ready state.
+- The remaining risk is write-facing review/apply behavior where state ownership mistakes can create confusing or unsafe local workflow outcomes.
 
 **Meaningful Improvement Slices**
 
-- Extract preview table rendering and selection-state projection into a route-local render module.
 - Extract apply-action orchestration into a controller/service-adapter module that owns preflight, apply, result payload shaping, and status transitions.
+- Consider extracting returned-package file loading and file-select population only if it clarifies the boundary between route readiness and package review workflow.
 - Keep workflow-domain adapter decisions explicit so library and tags package support do not grow as conditional branches inside the route shell.
 
 **Deferral Criteria**
 
-- Do not prioritise a cosmetic split that only moves helper functions.
-- A useful slice should remove one complete responsibility from the route and leave a smaller public surface between rendered state, selected package state, and service mutation.
+- Do not reopen preview rendering unless new row behavior changes the render contract.
+- A useful next slice should remove apply orchestration or workflow-adapter policy from the route and leave a smaller public surface between selected package state and service mutation.
 
 ### `assets/studio/js/tag-registry.js`
 

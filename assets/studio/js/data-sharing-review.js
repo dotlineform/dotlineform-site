@@ -16,6 +16,15 @@ import {
   showDataSharingReviewResultModal
 } from "./data-sharing-review-modals.js";
 import {
+  buildDataSharingReviewPreviewRows,
+  renderDataSharingReviewPreviewList,
+  selectableDataSharingReviewPreviewIds,
+  selectedDataSharingReviewRecordIndices,
+  syncDataSharingReviewPreviewCheckboxes,
+  updateDataSharingReviewSelectionFromChange,
+  updateDataSharingReviewSelectionSummary
+} from "./data-sharing-review-render.js";
+import {
   workflowCapabilityForOperation,
   workflowDomainForKey,
   workflowDomainFromUrl,
@@ -264,22 +273,8 @@ function selectedFile(state) {
 function resetResult(state) {
   state.selectedPreviewIds.clear();
   state.previewRows = [];
-  renderPreviewList(state);
+  renderDataSharingReviewPreviewList(state);
   updateSelectionSummary(state);
-}
-
-function issueLabel(issue) {
-  const code = normalizeText(issue && issue.code);
-  const level = normalizeText(issue && issue.level);
-  const docId = normalizeText(issue && issue.doc_id);
-  const message = normalizeText(issue && issue.message);
-  const prefix = [level, code].filter(Boolean).join(" ");
-  const suffix = docId ? ` (${docId})` : "";
-  return `${prefix ? `${prefix}: ` : ""}${message}${suffix}`;
-}
-
-function issueItems(issues) {
-  return Array.isArray(issues) ? issues.map(issueLabel).filter(Boolean) : [];
 }
 
 function hideResultButton(state) {
@@ -293,269 +288,14 @@ function maybeShowResultButton(state, summary) {
   state.resultButton.hidden = !currentSummary || currentSummary !== state.lastImportResult.summary;
 }
 
-function previewRowId(item, index) {
-  return normalizeText(item && item.id)
-    || normalizeText(item && item.path)
-    || normalizeText(item && item.doc_id)
-    || `preview-${index + 1}`;
-}
-
-function recordRowId(record, index) {
-  const recordIndex = Number.isInteger(record && record.record_index) ? record.record_index : index;
-  const docId = normalizeText(record && record.doc_id) || "missing-doc-id";
-  return `${docId}-record-${recordIndex + 1}`;
-}
-
-function previewFilesByRecord(previewFiles) {
-  const byRecordIndex = new Map();
-  const byDocId = new Map();
-  const treeFiles = [];
-  (Array.isArray(previewFiles) ? previewFiles : []).forEach((item, index) => {
-    if (!item || typeof item !== "object") return;
-    const kind = normalizeText(item.kind);
-    if (kind === "relationship_tree") {
-      treeFiles.push({ item, index });
-      return;
-    }
-    const recordIndex = Number.isInteger(item.record_index) ? item.record_index : null;
-    if (recordIndex !== null && !byRecordIndex.has(recordIndex)) byRecordIndex.set(recordIndex, item);
-    const docId = normalizeText(item.doc_id);
-    if (docId && !byDocId.has(docId)) byDocId.set(docId, item);
-  });
-  return { byRecordIndex, byDocId, treeFiles };
-}
-
-function duplicateDocIds(records) {
-  const counts = new Map();
-  records.forEach((record) => {
-    const docId = normalizeText(record && record.doc_id);
-    if (!docId) return;
-    counts.set(docId, Number(counts.get(docId) || 0) + 1);
-  });
-  return new Set(Array.from(counts.entries()).filter(([, count]) => count > 1).map(([docId]) => docId));
-}
-
-function rowMetaParts(state, { docId, duplicate, currentLibrary }) {
-  const parts = [];
-  parts.push(
-    docId
-      || getStudioText(state.config, "data_sharing_review.missing_doc_id", "missing doc_id")
-  );
-  if (duplicate) {
-    parts.push(getStudioText(state.config, "data_sharing_review.duplicate_doc_id", "duplicate doc_id"));
-  }
-  if (currentLibrary && currentLibrary.exists === false) {
-    parts.push(getStudioText(
-      state.config,
-      "data_sharing_review.not_current_scope",
-      "not in current {scope_label}",
-      { scope_label: scopeTitle(state) }
-    ));
-  }
-  return parts.filter(Boolean);
-}
-
-function buildDocumentRows(state, payload, previewLookup) {
-  const records = Array.isArray(payload && payload.records) ? payload.records : [];
-  const duplicates = duplicateDocIds(records);
-  return records.map((record, index) => {
-    const recordIndex = Number.isInteger(record && record.record_index) ? record.record_index : index;
-    const docId = normalizeText(record && record.doc_id);
-    const previewFile = previewLookup.byRecordIndex.get(recordIndex) || previewLookup.byDocId.get(docId) || null;
-    const path = normalizeText(previewFile && previewFile.path);
-    const currentLibrary = record && typeof record.current_library === "object" ? record.current_library : null;
-    const duplicate = docId ? duplicates.has(docId) : false;
-    return {
-      id: recordRowId(record, index),
-      type: "document",
-      docId,
-      parentId: normalizeText(record && record.parent_id),
-      recordIndex,
-      duplicate,
-      kind: normalizeText(previewFile && previewFile.kind) || "document",
-      path,
-      title: normalizeText(record && record.title)
-        || getStudioText(state.config, "data_sharing_review.missing_title", "missing title"),
-      meta: rowMetaParts(state, { docId, duplicate, currentLibrary }).join(" · "),
-      depth: 0,
-      selectable: true,
-      issues: Array.isArray(record && record.issues) ? record.issues : []
-    };
-  });
-}
-
-function orderDocumentRows(rows) {
-  const ids = new Set(rows.map((row) => row.docId).filter(Boolean));
-  const childrenByParent = new Map();
-  rows.forEach((row) => {
-    const parentId = row.parentId && row.parentId !== row.docId ? row.parentId : "";
-    if (!childrenByParent.has(parentId)) childrenByParent.set(parentId, []);
-    childrenByParent.get(parentId).push(row);
-  });
-
-  const roots = rows.filter((row) => !row.parentId || !ids.has(row.parentId) || row.parentId === row.docId);
-  const ordered = [];
-  const rendered = new Set();
-
-  const visit = (row, depth, activeDocIds) => {
-    if (!row || rendered.has(row.id)) return;
-    row.depth = depth;
-    ordered.push(row);
-    rendered.add(row.id);
-    if (!row.docId || activeDocIds.has(row.docId)) return;
-    const nextActive = new Set(activeDocIds);
-    nextActive.add(row.docId);
-    (childrenByParent.get(row.docId) || []).forEach((child) => visit(child, depth + 1, nextActive));
-  };
-
-  roots.forEach((row) => visit(row, 0, new Set()));
-  rows.forEach((row) => visit(row, 0, new Set()));
-  return ordered;
-}
-
-function buildTreeRows(state, previewLookup) {
-  return previewLookup.treeFiles.map(({ item, index }) => {
-    const path = normalizeText(item.path);
-    const count = Number(item.record_count || 0);
-    const countText = getStudioText(
-      state.config,
-      "data_sharing_review.relationship_tree_count",
-      "{count} records",
-      { count }
-    );
-    return {
-      id: previewRowId(item, index),
-      type: "relationship_tree",
-      docId: "",
-      parentId: "",
-      recordIndex: null,
-      duplicate: false,
-      kind: "relationship_tree",
-      path,
-      title: getStudioText(state.config, "data_sharing_review.relationship_tree_title", "Relationship tree"),
-      meta: countText,
-      depth: 0,
-      selectable: false,
-      issues: []
-    };
-  });
-}
-
-function buildPreviewRows(state, payload) {
-  const genericRows = Array.isArray(payload && payload.review_rows) ? payload.review_rows : [];
-  if (genericRows.length) {
-    return genericRows.map((row, index) => normalizeReviewRow(state, row, index)).filter(Boolean);
-  }
-  const previewLookup = previewFilesByRecord(payload && payload.preview_files);
-  const treeRows = buildTreeRows(state, previewLookup);
-  const documentRows = orderDocumentRows(buildDocumentRows(state, payload, previewLookup));
-  return [...treeRows, ...documentRows];
-}
-
-function normalizeReviewRow(state, row, index) {
-  if (!row || typeof row !== "object") return null;
-  const recordIndex = Number.isInteger(row.record_index) ? row.record_index : null;
-  const issueTexts = issueItems(row.issues);
-  const metaParts = [
-    normalizeText(row.meta),
-    recordIndex === null
-      ? ""
-      : getStudioText(state.config, "data_sharing_review.record_index_meta", "row {record_index}", { record_index: recordIndex + 1 }),
-    issueTexts.length
-      ? getStudioText(state.config, "data_sharing_review.row_issues_meta", "{count} issue(s)", { count: issueTexts.length })
-      : ""
-  ].filter(Boolean);
-  return {
-    id: previewRowId(row, index),
-    type: normalizeText(row.type) || getStudioText(state.config, "data_sharing_review.row_type_record", "record"),
-    title: normalizeText(row.title) || getStudioText(state.config, "data_sharing_review.missing_title", "missing title"),
-    meta: metaParts.join(" · "),
-    recordIndex,
-    selectable: row.selectable !== false && Number.isInteger(recordIndex),
-    issues: Array.isArray(row.issues) ? row.issues : [],
-    depth: Math.max(0, Number(row.depth || 0))
-  };
-}
-
-function renderPreviewRow(row) {
-  const depth = Math.max(0, Number(row.depth || 0));
-  const treeClass = row.type === "relationship_tree" ? " dataSharingReviewList__row--tree" : "";
-  const disabled = row.selectable === false ? " disabled" : "";
-  const checkedValue = row.selectable === false ? " aria-disabled=\"true\"" : "";
-  return `
-    <li class="tagStudioList__row tagStudioList__row--center dataSharingReviewList__row${treeClass}" data-data-sharing-review-preview="${escapeHtml(row.id)}" data-data-sharing-review-depth="${depth}" style="--data-sharing-review-depth: ${depth};">
-      <label class="dataSharingReviewList__label">
-        <input class="dataSharingReviewList__checkbox" type="checkbox" value="${escapeHtml(row.id)}"${disabled}${checkedValue}>
-        <span class="dataSharingReviewList__title"><span class="dataSharingReviewList__type">${escapeHtml(row.type)}</span><span class="dataSharingReviewList__titleText">${escapeHtml(row.title)}</span></span>
-        ${row.meta ? `<span class="dataSharingReviewList__meta">${escapeHtml(row.meta)}</span>` : ""}
-      </label>
-    </li>
-  `;
-}
-
-function renderPreviewList(state) {
-  if (!state.previewRows.length) {
-    const emptyState = getStudioText(
-      state.config,
-      "data_sharing_review.empty_state",
-      "Generate a preview to list staged documents."
-    );
-    state.listNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(emptyState)}</p>`;
-    return;
-  }
-  state.listNode.innerHTML = `<ul class="tagStudioList__rows dataSharingReviewList__rows">${state.previewRows.map(renderPreviewRow).join("")}</ul>`;
-  syncPreviewCheckboxes(state);
-}
-
-function selectablePreviewIds(state) {
-  return state.previewRows
-    .filter((row) => row.selectable !== false)
-    .map((row) => row.id)
-    .filter(Boolean);
-}
-
-function selectedRecordIndices(state) {
-  return state.previewRows
-    .filter((row) => state.selectedPreviewIds.has(row.id) && row.selectable !== false && Number.isInteger(row.recordIndex))
-    .map((row) => row.recordIndex);
-}
-
-function syncPreviewCheckboxes(state) {
-  state.listNode.querySelectorAll("[data-data-sharing-review-preview]").forEach((row) => {
-    const rowId = normalizeText(row.getAttribute("data-data-sharing-review-preview"));
-    const checkbox = row.querySelector("input[type='checkbox']");
-    if (!(checkbox instanceof HTMLInputElement)) return;
-    checkbox.checked = state.selectedPreviewIds.has(rowId);
-  });
-}
 
 function updateSelectionSummary(state) {
-  const count = state.selectedPreviewIds.size;
-  setText(
-    state.selectionSummary,
-    getStudioText(
-      state.config,
-      count === 1
-        ? "data_sharing_review.selection_summary_one"
-        : "data_sharing_review.selection_summary",
-      count === 1 ? "1 preview selected." : "{count} previews selected.",
-      { count }
-    )
-  );
+  updateDataSharingReviewSelectionSummary(state);
   syncApplyActionState(state);
 }
 
 function handlePreviewListChange(state, event) {
-  const target = event.target;
-  if (!(target instanceof HTMLInputElement)) return;
-  const row = target.closest("[data-data-sharing-review-preview]");
-  const rowId = normalizeText(row ? row.getAttribute("data-data-sharing-review-preview") : "");
-  if (!rowId) return;
-  if (target.checked) {
-    state.selectedPreviewIds.add(rowId);
-  } else {
-    state.selectedPreviewIds.delete(rowId);
-  }
+  if (!updateDataSharingReviewSelectionFromChange(state, event)) return;
   updateSelectionSummary(state);
 }
 
@@ -596,9 +336,9 @@ function renderResult(state, payload, failed = false) {
     countRows: previewCountRows(state, payload.counts),
     issues: payload.issues
   };
-  state.previewRows = failed ? [] : buildPreviewRows(state, payload);
+  state.previewRows = failed ? [] : buildDataSharingReviewPreviewRows(state, payload);
   state.selectedPreviewIds.clear();
-  renderPreviewList(state);
+  renderDataSharingReviewPreviewList(state);
   updateSelectionSummary(state);
   state.lastImportResult = failed ? null : result;
   showDataSharingReviewResultModal(state, result, { restoreFocus: state.previewButton });
@@ -606,7 +346,7 @@ function renderResult(state, payload, failed = false) {
 
 function setControlsDisabled(state, disabled) {
   const supportsApply = scopeSupportsSourceApply(state);
-  const selectedRecordCount = selectedRecordIndices(state).length;
+  const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
   const disableApplyMenu = disabled || !supportsApply || !state.serviceAvailable || !state.applyButtons.size;
   state.fileSelect.disabled = disabled || !state.files.length;
   state.previewButton.disabled = disabled || !state.serviceAvailable || !state.files.length;
@@ -626,7 +366,7 @@ function setControlsDisabled(state, disabled) {
 
 function syncApplyActionState(state) {
   const supportsApply = scopeSupportsSourceApply(state);
-  const selectedRecordCount = selectedRecordIndices(state).length;
+  const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
   const disableApplyMenu = state.isRunning || !supportsApply || !state.serviceAvailable || !state.applyButtons.size;
   state.actionMenuButton.disabled = disableApplyMenu;
   if (disableApplyMenu) hideApplyActionsMenu(state);
@@ -799,7 +539,7 @@ async function runApplyAction(state, actionId) {
   if (!action || action.status !== "active") return;
   hideResultButton(state);
   const stagedFilename = selectedFileName(state);
-  const recordIndices = selectedRecordIndices(state);
+  const recordIndices = selectedDataSharingReviewRecordIndices(state);
   if (!stagedFilename || !recordIndices.length) {
     setStatus(
       state.statusNode,
@@ -964,7 +704,7 @@ async function init() {
         button.title = unsupportedApplyTitle;
       });
     }
-    renderPreviewList(state);
+    renderDataSharingReviewPreviewList(state);
     updateSelectionSummary(state);
     setControlsDisabled(state, true);
 
@@ -1067,13 +807,13 @@ async function init() {
       if (state.lastImportResult) showDataSharingReviewResultModal(state, state.lastImportResult, { restoreFocus: state.resultButton });
     });
     state.selectAllButton.addEventListener("click", () => {
-      selectablePreviewIds(state).forEach((rowId) => state.selectedPreviewIds.add(rowId));
-      syncPreviewCheckboxes(state);
+      selectableDataSharingReviewPreviewIds(state).forEach((rowId) => state.selectedPreviewIds.add(rowId));
+      syncDataSharingReviewPreviewCheckboxes(state);
       updateSelectionSummary(state);
     });
     state.clearButton.addEventListener("click", () => {
       state.selectedPreviewIds.clear();
-      syncPreviewCheckboxes(state);
+      syncDataSharingReviewPreviewCheckboxes(state);
       updateSelectionSummary(state);
     });
     state.listNode.addEventListener("change", (event) => handlePreviewListChange(state, event));
