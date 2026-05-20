@@ -531,7 +531,7 @@ export function initDocsViewerManagement(context) {
       title: title,
       summary: String(metadataSummaryInput.value || "").replace(/\s+/g, " ").trim(),
       ui_status: selectedStatus,
-      hidden: metadataHiddenInput.checked,
+      viewable: !metadataHiddenInput.checked,
       parent_id: parentId,
       sort_order: payloadSortOrder
     };

@@ -271,8 +271,8 @@ def plan_update_metadata(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
         else:
             updated_front_matter.pop("ui_status", None)
     if hidden_or_viewable_was_provided:
-        updated_front_matter["hidden"] = hidden
-        updated_front_matter.pop("viewable", None)
+        updated_front_matter["viewable"] = viewable
+        updated_front_matter.pop("hidden", None)
     updated_front_matter["parent_id"] = parent_id
     if sort_order is None:
         updated_front_matter.pop("sort_order", None)
@@ -439,7 +439,7 @@ def plan_viewability_update(
         source_writes=tuple(
             SourceWrite(
                 target.path,
-                source_model.rewrite_doc_source(target, {"published": True, "hidden": next_hidden, "viewable": None}),
+                source_model.rewrite_doc_source(target, {"published": True, "viewable": next_viewable, "hidden": None}),
             )
             for target in changed_targets
         ),

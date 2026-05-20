@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cb47b2c15970171b44bd7e180e913cd1",
-    "generated_at_utc": "2026-05-20T15:51:09Z",
-    "count": 287
+    "version": "blake2b-adc6f94ae46fb1ee5f3712d2b1ad7405",
+    "generated_at_utc": "2026-05-20T18:40:26Z",
+    "count": 286
   },
   "entries": [
     {
@@ -7299,17 +7299,6 @@
         "15"
       ],
       "search_text": "studio-ui-start studio ui start ui start archive 2026-05-15 2026 05 15"
-    },
-    {
-      "id": "_tmp",
-      "kind": "doc",
-      "title": "Tmp",
-      "href": "/docs/?scope=studio&doc=_tmp",
-      "search_terms": [
-        "_tmp",
-        "tmp"
-      ],
-      "search_text": "_tmp tmp"
     }
   ]
 }

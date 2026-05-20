@@ -130,7 +130,7 @@ export function applyScopeDelete(scopeId, options) {
 export function updateManagedDocsViewability(docIds, hidden, options) {
   return fetchManagementJson("/docs/update-viewability-bulk", "POST", scopedPayload({
     doc_ids: docIds,
-    hidden: Boolean(hidden)
+    viewable: !Boolean(hidden)
   }, options), options);
 }
 

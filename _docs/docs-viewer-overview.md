@@ -166,6 +166,7 @@ Current report behavior:
 Current visibility behavior:
 
 - generated docs indexes can carry `viewable: false` rows that remain generated and manageable
+- source front matter should use `viewable: false`; older `hidden: true` records still read as non-viewable for compatibility
 - public/default viewer navigation, inline search, and recently-added lists include only docs where `viewable !== false`
 - public/default viewer discovery also excludes descendants of a non-viewable parent, without changing descendant `viewable` values
 - `archive` is a normal doc id and parent folder; if it should be hidden, set `viewable: false` in front matter

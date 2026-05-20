@@ -174,7 +174,7 @@ def test_metadata_status_only_plan_suppresses_search_target() -> None:
     assert 'last_updated: "2026-05-01 10:00"' in plan.source_writes[0].text
 
 
-def test_metadata_hidden_plan_writes_hidden_and_removes_legacy_viewable() -> None:
+def test_metadata_hidden_plan_writes_viewable_and_removes_legacy_hidden() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         plan = mutations.plan_update_metadata(
@@ -192,8 +192,8 @@ def test_metadata_hidden_plan_writes_hidden_and_removes_legacy_viewable() -> Non
     assert plan.response["record"]["hidden"] is True
     assert plan.response["record"]["viewable"] is False
     assert plan.response["changes"]["hidden_changed"] is True
-    assert "hidden: true" in plan.source_writes[0].text
-    assert "viewable:" not in plan.source_writes[0].text
+    assert "viewable: false" in plan.source_writes[0].text
+    assert "hidden:" not in plan.source_writes[0].text
 
 
 def test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs() -> None:
@@ -215,6 +215,9 @@ def test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs() ->
     assert plan.backup_metadata is not None
     assert plan.backup_metadata["requested_doc_ids"] == ["target"]
     assert plan.search_doc_ids == ["target", "target-child"]
+    for write in plan.source_writes:
+        assert "viewable: false" in write.text
+        assert "hidden:" not in write.text
 
 
 def test_move_plan_writes_only_moved_doc_for_sparse_same_parent_reorder() -> None:
