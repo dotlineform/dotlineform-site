@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-59baf8b7e0cec8b7fcd9b37a7cb7943a",
-    "generated_at_utc": "2026-05-20T10:33:45Z",
-    "count": 285
+    "version": "blake2b-620476904c87541ba1bec321644237c8",
+    "generated_at_utc": "2026-05-20T14:01:58Z",
+    "count": 286
   },
   "entries": [
     {
@@ -3502,6 +3502,29 @@
       "search_text": "site-request-js-payload-runtime-cleanup-inventory site request js payload runtime cleanup inventory javascript payload and runtime cleanup inventory javascript and javascript and browser config structural review request browser config structural review 2026-05-11 00:35 2026 05 11 00 35"
     },
     {
+      "id": "studio-javascript-payload-inventory",
+      "kind": "doc",
+      "title": "JavaScript Payload Inventory",
+      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
+      "last_updated": "2026-05-20",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-20 • Studio",
+      "search_terms": [
+        "studio-javascript-payload-inventory",
+        "studio",
+        "javascript",
+        "payload",
+        "inventory",
+        "javascript payload inventory",
+        "2026-05-20",
+        "2026",
+        "05",
+        "20"
+      ],
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript payload inventory 2026-05-20 2026 05 20"
+    },
+    {
       "id": "registry-driven-scoring-architecture",
       "kind": "doc",
       "title": "Registry-Driven Scoring Architecture",
@@ -3603,29 +3626,6 @@
         "36"
       ],
       "search_text": "site-request-studio-activity-follow-ups site request studio activity follow ups studio activity follow-ups change requests change requests 2026-05-08 21:36 2026 05 08 21 36"
-    },
-    {
-      "id": "studio-javascript-payload-inventory",
-      "kind": "doc",
-      "title": "Studio JavaScript Payload Inventory",
-      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "last_updated": "2026-05-20",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-20 • Studio",
-      "search_terms": [
-        "studio-javascript-payload-inventory",
-        "studio",
-        "javascript",
-        "payload",
-        "inventory",
-        "studio javascript payload inventory",
-        "2026-05-20",
-        "2026",
-        "05",
-        "20"
-      ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory studio javascript payload inventory 2026-05-20 2026 05 20"
     },
     {
       "id": "studio-python-ruby-script-inventory",
@@ -7274,6 +7274,17 @@
         "00"
       ],
       "search_text": "css-refactor css refactor css refactor archive 2026-05-06 20:00 2026 05 06 20 00"
+    },
+    {
+      "id": "_tmp",
+      "kind": "doc",
+      "title": "Tmp",
+      "href": "/docs/?scope=studio&doc=_tmp",
+      "search_terms": [
+        "_tmp",
+        "tmp"
+      ],
+      "search_text": "_tmp tmp"
     }
   ]
 }

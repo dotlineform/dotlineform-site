@@ -1,6 +1,6 @@
 ---
 doc_id: studio-javascript-payload-inventory
-title: Studio JavaScript Payload Inventory
+title: JavaScript Payload Inventory
 added_date: 2026-05-14
 last_updated: 2026-05-20
 ui_status: urgent
@@ -8,32 +8,84 @@ parent_id: studio
 sort_order: 7000
 hidden: false
 ---
-# Studio JavaScript Payload Inventory
+# JavaScript Inventory
 
-This document records the current browser JavaScript size inventory for Studio and adjacent Docs Viewer management runtime files.
+This document records the current browser JavaScript inventory for key runtime files. Re-prioritise this inventory after material Studio or Docs Viewer JavaScript refactors.
 
-It turns the durable inventory guidance from [JavaScript Payload And Runtime Cleanup Inventory](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory) into the current Studio reference.
+## Criteria for prioritisation
 
-## Policy
+This document prioritises improvements to script modules based on four interdependent indicators.
 
-Any browser JavaScript file over 1,000 lines should be classified as one of:
+**Maintenance Risk**
+Maintenance risk is the cost and danger of changing behavior later.
 
-- route shell
-- mixed route controller
-- domain module
-- generated/runtime utility
+Useful indicators:
+- Mixed responsibilities: rendering, validation, service calls, state mutation, modal lifecycle, and data normalization in one module.
+- High edit frequency or repeated recent touches.
+- Bug-prone ownership: the same concept is updated in several places.
+- Hidden contracts: functions depend on broad `state` shape instead of explicit inputs.
+- Hard-to-test behavior: meaningful logic only runs through DOM events or route boot.
+- Large local helper clusters that are only implicitly related.
+- Many fallback paths: post/patch/offline/manual modes interleaved with UI code.
 
-Any mixed route controller over 1,000 lines should have either:
+**Structural Risk**
+Structural risk is whether the module shape matches the architecture we want.
 
-- a named extraction slice in the owning request or implementation plan
-- an explicit reason to stay large for the next implementation period
+Useful indicators:
+- Boundary mismatch: route controller owns work that belongs in domain/save/service/render/modal modules.
+- Dependency direction problems: lower-level helpers import route-level concepts, or modules form circular/near-circular knowledge.
+- State ownership ambiguity: several modules mutate the same state fields without a clear owner.
+- UI primitive drift: route invents markup/event patterns instead of using established Studio primitives.
+- Copy-pasted patterns that should become shared or route-local focused modules.
+- Entry controller doing implementation work instead of orchestration.
 
-Prioritize long mixed controllers that combine mutation orchestration, modal composition, generated-data reads, and rendering.
+**Performance Risk**
+Performance risk should be about actual route cost, not just file size.
 
-Treat transfer-size risk separately from maintenance risk.
-A large file is not automatically a runtime problem unless it is eagerly loaded on a high-traffic route or brings avoidable transitive payload.
+Useful indicators:
+- Eagerly loaded on common/high-traffic routes.
+- Large gzip/raw size on initial route load.
+- Heavy boot-time work before route-ready.
+- Repeated full-list renders where incremental rendering would matter.
+- Expensive filtering/sorting on every input event.
+- Large generated data reads or joins on the client.
+- Missed lazy boundary: modal/import/management code loaded before needed.
 
-Re-run this inventory after material Studio or Docs Viewer JavaScript refactors.
+**Architectural Leverage**
+This is the important prioritisation piece. A slice is meaningful when it improves future change velocity, not when it is merely small.
+
+Useful indicators:
+- Creates or reinforces a durable boundary already used elsewhere.
+- Removes a whole responsibility from a mixed controller.
+- Makes future related work land in the right module by default.
+- Reduces the amount of state a module must understand.
+- Makes behavior independently reviewable or testable.
+- Aligns sibling routes, like Tag Aliases and Tag Registry.
+- Prevents extracted responsibilities from being reintroduced inline.
+
+## Scoring model
+
+| Indicator | Score 0 | Score 1 | Score 2 | Score 3 |
+| --- | --- | --- | --- | --- |
+| Line pressure | <900 | 900-1,000 | 1,000-1,200 | >1,200 |
+| Mixed responsibility | single role | minor overlap | several roles | route owns most workflow layers |
+| State coupling | explicit inputs | limited state reads | broad state reads | broad reads and writes across concerns |
+| Change frequency | stable | occasional | recurring | frequent or active feature area |
+| Performance exposure | lazy/rare | route-local | common route | eager/high-cost/common |
+| Structural leverage | little | local cleanup | clear boundary | establishes/reinforces pattern across routes |
+| Testability gain | none | minor | focused verification possible | logic becomes independently testable |
+
+Priority should be based on **impact**, not ease:
+
+`priority = mixed responsibility + state coupling + change frequency + performance exposure + structural leverage + testability gain`
+
+Line pressure is a review trigger and tie-breaker, not the main score.
+
+## Application
+
+> Prefer extraction slices that remove a complete responsibility from a mixed controller and leave a clearer ownership boundary behind. Do not prioritise slices because they are narrow, mechanical, or easy. Prioritise slices that reduce future change risk, clarify state ownership, improve route-load behavior, or establish a repeatable module pattern for sibling routes.
+
+For `tag-registry.js`, for example, list/control rendering is meaningful not because it is easy, but because it matches the just-established `tag-aliases-render.js` boundary and would make the two sibling routes structurally consistent. That is a stronger argument than line count alone.
 
 ## Current Summary
 
@@ -41,20 +93,8 @@ Measured on 2026-05-20, after the Tag Aliases list/control and import-mode extra
 
 - Browser JavaScript files under `assets/`: 127
 - Total browser JavaScript lines under `assets/`: 40,987
-- Files over the 1,000-line review threshold: 3
-- Files in the 900-1,000 line watch band: 7
-- Over-threshold raw size total: 117.9 KiB
-- Over-threshold gzip size total: 25.4 KiB
 
-The over-threshold set is still maintenance-driven more than transfer-driven.
-No route loads all over-threshold files together.
-
-The modal extraction pass reduced several large mixed route controllers while adding focused route-local modal modules. The Docs Viewer management write-action, capability/config, interaction, and document-controller extractions continued that pattern. The Tag Studio render/suggestion/state/save passes follow the same tradeoff: total JavaScript lines increased because selected-work/context rendering, grouped chip rendering, popup suggestion rendering, initial editor state construction, assignment baseline helpers, selected-work URL synchronization, save-mode probing, local save submission, and offline autosave staging now have named route-local modules, but the main route controller is smaller and no longer embeds those responsibilities inline. The Tag Aliases route now follows the same boundary: list/control rendering and import-mode availability probing are route-local modules, leaving the main controller just under the review threshold.
-
-The extraction plan is now complete: [Modal Responsibility Extraction Plan](/docs/?scope=studio&doc=modal-responsibility-extraction-plan).
-The next modal-related work is pattern standardization, not further modal extraction: [Modal Composition Pattern Request](/docs/?scope=studio&doc=ui-request-modal-composition-pattern).
-
-## Current Inventory
+## Current Priorities
 
 ### `assets/studio/js/tag-registry.js`
 
@@ -65,9 +105,14 @@ The next modal-related work is pattern standardization, not further modal extrac
 - Maintenance risk: high
 - Transfer-size risk: low
 
-Existing domain/save/service split is useful but incomplete.
-Registry modal rendering, field population, delete impact display, import result display, popup option rendering, and modal event/lifecycle wiring now live in `assets/studio/js/tag-registry-modals.js`.
-The route still owns tag lookup, validation decisions, match filtering rules, import parsing/submission, service calls, patch fallback decisions, route busy/ready state, and list/control rendering.
+**Status**
+
+- Existing domain/save/service split is useful but incomplete.
+- Registry modal rendering, field population, delete impact display, import result display, popup option rendering, and modal event/lifecycle wiring now live in `assets/studio/js/tag-registry-modals.js`.
+- The route still owns tag lookup, validation decisions, match filtering rules, import parsing/submission, service calls, patch fallback decisions, route busy/ready state, and list/control rendering.
+
+**Next steps**
+
 Next cleanup should target list/control rendering, import parsing/submission, or service orchestration. Modal extraction is complete.
 
 ### `assets/docs-viewer/js/docs-viewer.js`
@@ -79,7 +124,7 @@ Next cleanup should target list/control rendering, import parsing/submission, or
 - Maintenance risk: medium
 - Transfer-size risk: medium
 
-Recent extractions moved the largest non-route responsibilities out of the entry controller:
+**Status**
 
 - Bookmark state, storage, rendering, and events now live in `assets/docs-viewer/js/docs-viewer-bookmarks.js`.
 - Config/scope boot and viewer UI text merging now live in `assets/docs-viewer/js/docs-viewer-config-controller.js`.
@@ -90,14 +135,10 @@ Recent extractions moved the largest non-route responsibilities out of the entry
 - URL building, anchor route parsing, history writes, requested-doc resolution, canonical route correction, popstate route orchestration, and payload-load orchestration now live in `assets/docs-viewer/js/docs-viewer-router.js`.
 - Status-pill markup and events stay behind the lazy management-controller boundary.
 
-The remaining entry controller responsibilities are shared state setup, route callback binding, generated-payload fetch dependencies, visibility/loadable-doc state, search/bookmark/sidebar controller wiring, and management dynamic-loading.
-Maintenance risk is lower after the document-controller extraction, but the file remains over the review threshold because it is still the shared runtime composition point.
-This is an acceptable short-term resting point only if new document rendering, report, search, bookmark, sidebar, or management behavior continues to land in the focused controllers instead of back in the entry module.
+**Next steps**
 
-The router extraction is complete for URL building, anchor route parsing, history writes, requested-doc resolution, canonical route correction, popstate route orchestration, and payload-load orchestration.
-Do not reopen router work just for line count.
-The document-controller extraction completes the near-term Docs Viewer entry cleanup slice.
-Any further split should be justified by concrete generated-payload loading, visibility/loadable-doc state, or management dynamic-loading changes rather than line count alone.
+- The remaining entry controller responsibilities are shared state setup, route callback binding, generated-payload fetch dependencies, visibility/loadable-doc state, search/bookmark/sidebar controller wiring, and management dynamic-loading.
+- Maintenance risk is lower after the document-controller extraction, but the file remains under review because it is still the shared runtime composition point.
 
 ### `assets/studio/js/data-sharing-review.js`
 
@@ -108,112 +149,16 @@ Any further split should be justified by concrete generated-payload loading, vis
 - Maintenance risk: medium
 - Transfer-size risk: low
 
-Result modal and apply-confirmation modal behavior now lives in `assets/studio/js/data-sharing-review-modals.js`.
-The route still owns returned package loading, staged package listing, preview row rendering, selection state, preflight/apply service calls, apply result payload shaping, activity context, status updates, and route busy state.
-Next cleanup should target preview table rendering or apply-action orchestration if the workflow grows further.
+**Status**
 
-## Watch Band
+- Result modal and apply-confirmation modal behavior now lives in `assets/studio/js/data-sharing-review-modals.js`.
+- The route still owns returned package loading, staged package listing, preview row rendering, selection state, preflight/apply service calls, apply result payload shaping, activity context, status updates, and route busy state.
 
-These files are below the 1,000-line review threshold but close enough to watch during future feature work.
+**Next steps**
 
-| File | Lines | Raw | Gzip | Notes |
-| --- | ---: | ---: | ---: | --- |
-| `assets/studio/js/tag-aliases.js` | 999 | 31.8 KiB | 6.4 KiB | Under threshold after modal, list/control rendering, and import-mode availability extraction. Keep list markup in `assets/studio/js/tag-aliases-render.js` and service availability probing in `assets/studio/js/tag-aliases-import-mode.js`. |
-| `assets/docs-viewer/js/docs-html-import.js` | 990 | 35.0 KiB | 7.7 KiB | Under threshold and lazy management-only import flow. Keep service orchestration and modal rendering delegated. |
-| `assets/studio/js/tag-aliases-modals.js` | 964 | 35.2 KiB | 6.2 KiB | Under threshold and route-local. Keep it modal-focused rather than adding service or list rendering. |
-| `assets/studio/js/tag-registry-modals.js` | 963 | 35.3 KiB | 6.6 KiB | Under threshold and route-local. Keep it modal-focused rather than adding service or list rendering. |
-| `assets/studio/js/tag-studio.js` | 955 | 28.4 KiB | 6.3 KiB | Under threshold after modal, render, suggestion, state, and save/offline extraction. Keep save/probe/offline orchestration in `assets/studio/js/tag-studio-save-controller.js`. |
-| `assets/studio/js/catalogue-work-actions.js` | 951 | 40.3 KiB | 6.6 KiB | Under threshold and route-local. Keep it action-workflow focused rather than adding form or section rendering. |
-| `assets/docs-viewer/js/docs-viewer-management.js` | 930 | 32.4 KiB | 5.9 KiB | Under threshold after modal, action, capability/config, and interaction extractions. Keep it a management coordinator rather than adding interaction or write flow bodies back inline. |
-
-## Current Priority
-
-1. `assets/studio/js/tag-registry.js`
-2. `assets/studio/js/data-sharing-review.js`
-3. `assets/docs-viewer/js/docs-viewer.js`, keep the current entry-controller boundary and avoid adding extracted responsibilities back inline
-
-The Docs Viewer management controller is no longer over the review threshold after the drag/drop/context-menu extraction.
-Do not open another Docs Viewer management split just for line count unless new management workflow growth pushes the coordinator back over the threshold or reintroduces mixed ownership.
-
-The Docs Viewer entry controller remains over the review threshold after the sidebar, search, config, router, and document-controller extractions.
-Do not reopen router or document-rendering work just for line count.
-Further cleanup should be tied to concrete generated-payload loading, visibility/loadable-doc state, or management dynamic-loading changes.
-Docs Viewer files remain in this inventory because `/docs/` is the Studio documentation and management surface.
-
-The Tag Studio route is no longer over the threshold after modal, render, suggestion, state, and save/offline extraction. Keep the current route boundary unless new tag editor workflow growth pushes it back over the threshold or reintroduces extracted responsibilities inline. The Tag Aliases route is also no longer over the threshold after modal, list/control rendering, and import-mode availability extraction. The Tag Registry route is still over the threshold after modal extraction; its next likely slices are list/control rendering, import parsing/submission, and service orchestration. Avoid opening another modal-extraction slice for those files unless new modal responsibilities are introduced.
-
-## Remaining Extraction Options
-
-The modal extraction pass is complete. Remaining candidates are broader route-controller refactors:
-
-- Tag Studio: no immediate split; keep save/offline orchestration in `assets/studio/js/tag-studio-save-controller.js` and monitor the route while it remains in the watch band.
-- Docs Viewer entry controller: retain the current boundary unless generated-payload loading, visibility/loadable-doc state, or management dynamic-loading changes materially.
-- Tag Aliases: no immediate split; keep list/control rendering in `assets/studio/js/tag-aliases-render.js` and import-mode probing in `assets/studio/js/tag-aliases-import-mode.js`.
-- Tag Registry: split list/control rendering, import parsing/submission, or service orchestration from route state and validation decisions.
-- Data Sharing Review: split preview table rendering or apply-action orchestration if the workflow grows.
-
-Do not count route bridge calls into extracted modal modules as remaining extraction debt. They keep opener ownership visible and are an acceptable controller boundary.
-
-## How To Rerun
-
-Run this from the repo root:
-
-```bash
-find assets -type f -name '*.js' -print0 | xargs -0 wc -l | sort -nr
-```
-
-Use this for the line, raw byte, and gzip byte inventory:
-
-```bash
-python3 - <<'PY'
-from pathlib import Path
-import gzip
-
-rows = []
-for p in Path('assets').rglob('*.js'):
-    data = p.read_bytes()
-    lines = data.count(b'\n') + (0 if data.endswith(b'\n') or not data else 1)
-    rows.append((lines, len(data), len(gzip.compress(data, compresslevel=9)), str(p)))
-
-for lines, raw, gz, path in sorted(rows, reverse=True):
-    print(f'{lines}\t{raw}\t{gz}\t{path}')
-PY
-```
-
-To summarize only the review threshold and watch band:
-
-```bash
-python3 - <<'PY'
-from pathlib import Path
-import gzip
-
-rows = []
-for p in Path('assets').rglob('*.js'):
-    data = p.read_bytes()
-    lines = data.count(b'\n') + (0 if data.endswith(b'\n') or not data else 1)
-    rows.append((lines, len(data), len(gzip.compress(data, compresslevel=9)), str(p)))
-
-over = [r for r in rows if r[0] > 1000]
-near = [r for r in rows if 900 <= r[0] <= 1000]
-
-print('files', len(rows))
-print('total_lines', sum(r[0] for r in rows))
-print('over_count', len(over), 'over_raw', sum(r[1] for r in over), 'over_gzip', sum(r[2] for r in over))
-print('near_count', len(near))
-
-for label, collection in [('over', sorted(over, reverse=True)), ('near', sorted(near, reverse=True))]:
-    print(label)
-    for lines, raw, gz, path in collection:
-        print(f'{path}\t{lines}\t{raw/1024:.1f} KiB\t{gz/1024:.1f} KiB')
-PY
-```
-
-When updating this doc, classify each over-threshold file by role and record why it should be split or why it can stay large for the next implementation period.
+- Next cleanup should target preview table rendering or apply-action orchestration.
 
 ## Related References
 
-- [Studio](/docs/?scope=studio&doc=studio)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
-- [JavaScript Payload And Runtime Cleanup Request](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup)
-- [JavaScript Payload And Runtime Cleanup Inventory](/docs/?scope=studio&doc=site-request-js-payload-runtime-cleanup-inventory)

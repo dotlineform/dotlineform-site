@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T13:39:04Z",
+  "generated_at": "2026-05-20T14:03:59Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2236,6 +2236,23 @@
     },
     {
       "scope": "studio",
+      "doc_id": "studio-javascript-payload-inventory",
+      "title": "JavaScript Payload Inventory",
+      "added_date": "2026-05-14",
+      "last_updated": "2026-05-20",
+      "parent_id": "studio",
+      "sort_order": 7000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-javascript-payload-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
+      "content_text_length": 7688,
+      "ui_status": "urgent"
+    },
+    {
+      "scope": "studio",
       "doc_id": "registry-driven-scoring-architecture",
       "title": "Registry-Driven Scoring Architecture",
       "added_date": "2026-04-16",
@@ -2298,23 +2315,6 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-activity-follow-ups.json",
       "content_text_length": 4406,
       "ui_status": "in-progress"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio-javascript-payload-inventory",
-      "title": "Studio JavaScript Payload Inventory",
-      "added_date": "2026-05-14",
-      "last_updated": "2026-05-20",
-      "parent_id": "studio",
-      "sort_order": 7000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-javascript-payload-inventory.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 12717,
-      "ui_status": "urgent"
     },
     {
       "scope": "studio",
@@ -4698,6 +4698,22 @@
       "viewer_url": "/docs/?scope=studio&doc=css-refactor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/css-refactor.json",
       "content_text_length": 4917
+    },
+    {
+      "scope": "studio",
+      "doc_id": "_tmp",
+      "title": "Tmp",
+      "added_date": "",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "_tmp.md",
+      "viewer_url": "/docs/?scope=studio&doc=_tmp",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp.json",
+      "content_text_length": 0
     }
   ]
 }
