@@ -37,38 +37,24 @@ Re-run this inventory after material Studio or Docs Viewer JavaScript refactors.
 
 ## Current Summary
 
-Measured on 2026-05-20, after the Tag Studio save/offline extraction pass.
+Measured on 2026-05-20, after the Tag Aliases list/control and import-mode extraction pass.
 
-- Browser JavaScript files under `assets/`: 125
-- Total browser JavaScript lines under `assets/`: 40,923
-- Files over the 1,000-line review threshold: 4
-- Files in the 900-1,000 line watch band: 6
-- Over-threshold raw size total: 156.6 KiB
-- Over-threshold gzip size total: 33.3 KiB
+- Browser JavaScript files under `assets/`: 127
+- Total browser JavaScript lines under `assets/`: 40,987
+- Files over the 1,000-line review threshold: 3
+- Files in the 900-1,000 line watch band: 7
+- Over-threshold raw size total: 117.9 KiB
+- Over-threshold gzip size total: 25.4 KiB
 
 The over-threshold set is still maintenance-driven more than transfer-driven.
 No route loads all over-threshold files together.
 
-The modal extraction pass reduced several large mixed route controllers while adding focused route-local modal modules. The Docs Viewer management write-action, capability/config, interaction, and document-controller extractions continued that pattern. The Tag Studio render/suggestion/state/save passes follow the same tradeoff: total JavaScript lines increased because selected-work/context rendering, grouped chip rendering, popup suggestion rendering, initial editor state construction, assignment baseline helpers, selected-work URL synchronization, save-mode probing, local save submission, and offline autosave staging now have named route-local modules, but the main route controller is smaller and no longer embeds those responsibilities inline.
+The modal extraction pass reduced several large mixed route controllers while adding focused route-local modal modules. The Docs Viewer management write-action, capability/config, interaction, and document-controller extractions continued that pattern. The Tag Studio render/suggestion/state/save passes follow the same tradeoff: total JavaScript lines increased because selected-work/context rendering, grouped chip rendering, popup suggestion rendering, initial editor state construction, assignment baseline helpers, selected-work URL synchronization, save-mode probing, local save submission, and offline autosave staging now have named route-local modules, but the main route controller is smaller and no longer embeds those responsibilities inline. The Tag Aliases route now follows the same boundary: list/control rendering and import-mode availability probing are route-local modules, leaving the main controller just under the review threshold.
 
 The extraction plan is now complete: [Modal Responsibility Extraction Plan](/docs/?scope=studio&doc=modal-responsibility-extraction-plan).
 The next modal-related work is pattern standardization, not further modal extraction: [Modal Composition Pattern Request](/docs/?scope=studio&doc=ui-request-modal-composition-pattern).
 
 ## Current Inventory
-
-### `assets/studio/js/tag-aliases.js`
-
-- Lines: 1,181
-- Raw: 38.7 KiB
-- Gzip: 7.9 KiB
-- Classification: mixed route controller
-- Maintenance risk: high
-- Transfer-size risk: low
-
-Existing domain/save/service split is useful but incomplete.
-Alias modal rendering, field population, popup option rendering, and modal event/lifecycle wiring now live in `assets/studio/js/tag-aliases-modals.js`.
-The route still owns alias/tag lookup, validation decisions, match filtering rules, import parsing/submission, service calls, patch fallback decisions, route busy/ready state, and list/control rendering.
-Next cleanup should target list/control rendering, import parsing/submission, or service orchestration. Modal extraction is complete.
 
 ### `assets/studio/js/tag-registry.js`
 
@@ -132,6 +118,7 @@ These files are below the 1,000-line review threshold but close enough to watch 
 
 | File | Lines | Raw | Gzip | Notes |
 | --- | ---: | ---: | ---: | --- |
+| `assets/studio/js/tag-aliases.js` | 999 | 31.8 KiB | 6.4 KiB | Under threshold after modal, list/control rendering, and import-mode availability extraction. Keep list markup in `assets/studio/js/tag-aliases-render.js` and service availability probing in `assets/studio/js/tag-aliases-import-mode.js`. |
 | `assets/docs-viewer/js/docs-html-import.js` | 990 | 35.0 KiB | 7.7 KiB | Under threshold and lazy management-only import flow. Keep service orchestration and modal rendering delegated. |
 | `assets/studio/js/tag-aliases-modals.js` | 964 | 35.2 KiB | 6.2 KiB | Under threshold and route-local. Keep it modal-focused rather than adding service or list rendering. |
 | `assets/studio/js/tag-registry-modals.js` | 963 | 35.3 KiB | 6.6 KiB | Under threshold and route-local. Keep it modal-focused rather than adding service or list rendering. |
@@ -141,7 +128,7 @@ These files are below the 1,000-line review threshold but close enough to watch 
 
 ## Current Priority
 
-1. `assets/studio/js/tag-aliases.js` and `assets/studio/js/tag-registry.js`
+1. `assets/studio/js/tag-registry.js`
 2. `assets/studio/js/data-sharing-review.js`
 3. `assets/docs-viewer/js/docs-viewer.js`, keep the current entry-controller boundary and avoid adding extracted responsibilities back inline
 
@@ -153,7 +140,7 @@ Do not reopen router or document-rendering work just for line count.
 Further cleanup should be tied to concrete generated-payload loading, visibility/loadable-doc state, or management dynamic-loading changes.
 Docs Viewer files remain in this inventory because `/docs/` is the Studio documentation and management surface.
 
-The Tag Studio route is no longer over the threshold after modal, render, suggestion, state, and save/offline extraction. Keep the current route boundary unless new tag editor workflow growth pushes it back over the threshold or reintroduces extracted responsibilities inline. The Tag Aliases and Tag Registry routes are still over the threshold after modal extraction; their next likely slices are list/control rendering, import parsing/submission, and service orchestration. Avoid opening another modal-extraction slice for those files unless new modal responsibilities are introduced.
+The Tag Studio route is no longer over the threshold after modal, render, suggestion, state, and save/offline extraction. Keep the current route boundary unless new tag editor workflow growth pushes it back over the threshold or reintroduces extracted responsibilities inline. The Tag Aliases route is also no longer over the threshold after modal, list/control rendering, and import-mode availability extraction. The Tag Registry route is still over the threshold after modal extraction; its next likely slices are list/control rendering, import parsing/submission, and service orchestration. Avoid opening another modal-extraction slice for those files unless new modal responsibilities are introduced.
 
 ## Remaining Extraction Options
 
@@ -161,7 +148,8 @@ The modal extraction pass is complete. Remaining candidates are broader route-co
 
 - Tag Studio: no immediate split; keep save/offline orchestration in `assets/studio/js/tag-studio-save-controller.js` and monitor the route while it remains in the watch band.
 - Docs Viewer entry controller: retain the current boundary unless generated-payload loading, visibility/loadable-doc state, or management dynamic-loading changes materially.
-- Tag Aliases and Tag Registry: split list/control rendering, import parsing/submission, or service orchestration from route state and validation decisions.
+- Tag Aliases: no immediate split; keep list/control rendering in `assets/studio/js/tag-aliases-render.js` and import-mode probing in `assets/studio/js/tag-aliases-import-mode.js`.
+- Tag Registry: split list/control rendering, import parsing/submission, or service orchestration from route state and validation decisions.
 - Data Sharing Review: split preview table rendering or apply-action orchestration if the workflow grows.
 
 Do not count route bridge calls into extracted modal modules as remaining extraction debt. They keep opener ownership visible and are an acceptable controller boundary.

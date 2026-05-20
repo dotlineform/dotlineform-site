@@ -10,18 +10,13 @@ import {
   loadStudioRegistryJson
 } from "./studio-data.js";
 import {
-  probeStudioHealth
-} from "./studio-transport.js";
-import {
   buildGroupDescriptionMap,
   buildRegistryLookup,
   buildRegistryOptions,
   configureTagAliasesDomain,
-  countAliasesByGroup,
   findAliasEntry as findNormalizedAliasEntry,
   getAliasEditValidation as getNormalizedAliasEditValidation,
   getEditTagMatches as getNormalizedEditTagMatches,
-  getVisibleAliases,
   isCreateAliasFlow as isCreateNormalizedAliasFlow,
   normalize,
   normalizeAliases,
@@ -55,7 +50,6 @@ import {
   closeTagAliasesEditModal,
   closeTagAliasesPromotionModal,
   collectTagAliasesModalRefs,
-  hideTagAliasesImportModal,
   openTagAliasesCreateModal,
   openTagAliasesDemoteModal,
   openTagAliasesEditModal,
@@ -73,6 +67,16 @@ import {
   wireTagAliasesModalEvents
 } from "./tag-aliases-modals.js";
 import {
+  probeTagAliasesImportMode,
+  renderTagAliasesImportAvailability,
+  syncTagAliasesImportModeFromControl as syncImportModeFromControl
+} from "./tag-aliases-import-mode.js";
+import {
+  renderTagAliasesControls as renderControls,
+  renderTagAliasesError as renderError,
+  renderTagAliasesList as renderList
+} from "./tag-aliases-render.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -86,7 +90,6 @@ const ALIAS_RE = /^[a-z0-9][a-z0-9-]*$/;
 const MAX_ALIAS_TAGS = 4;
 const EDIT_TAG_MATCH_CAP = 12;
 const DEMOTE_TAG_MATCH_CAP = 12;
-let GROUP_INFO_PAGE_PATH = "/studio/analytics/tag-groups/";
 const UI = tagAliasesUi;
 const { className: UI_CLASS, selector: UI_SELECTOR, state: UI_STATE } = UI;
 
@@ -147,7 +150,7 @@ async function initTagAliasesPage() {
     groups: STUDIO_GROUPS,
     maxAliasTags: MAX_ALIAS_TAGS
   });
-  GROUP_INFO_PAGE_PATH = getStudioRoute(config, "tag_groups");
+  const groupInfoPagePath = getStudioRoute(config, "tag_groups");
 
   const state = {
     mount,
@@ -160,7 +163,7 @@ async function initTagAliasesPage() {
     sortKey: "alias",
     sortDir: "asc",
     studioGroups: STUDIO_GROUPS,
-    groupInfoPagePath: GROUP_INFO_PAGE_PATH,
+    groupInfoPagePath,
     importMode: "add",
     saveMode: "patch",
     importAvailable: false,
@@ -346,22 +349,6 @@ function wireEvents(state) {
       void withRouteBusy(state, () => saveAliasEdit(state));
     }
   });
-}
-
-function syncImportModeFromControl(state) {
-  const mode = normalize(state.refs.importMode.value);
-  if (mode === "replace") {
-    state.importMode = "replace";
-  } else if (mode === "merge") {
-    state.importMode = "merge";
-  } else {
-    state.importMode = "add";
-  }
-}
-
-function closeImportModal(state) {
-  hideTagAliasesImportModal(state);
-  syncRouteBusyState(state);
 }
 
 function openPromotionModal(state, aliasKey, suggestedGroup) {
@@ -579,161 +566,17 @@ function syncAliasDerivedState(state) {
   state.registryOptions = buildRegistryOptions(state.registryById);
 }
 
-function renderControls(state) {
-  const counts = countAliasesByGroup(state.aliases);
-  const totalCount = state.aliases.length;
-  const allTagsLabel = aliasesText(state.config, "all_tags_filter", "All tags [{count}]", { count: totalCount });
-  const groupButtons = STUDIO_GROUPS.map((group) => {
-    const count = Number(counts[group] || 0);
-    const titleAttr = groupTitleAttr(state, group);
-    return `
-      <button
-        type="button"
-        class="${classNames(UI_CLASS.keyPill, chipGroupClass(group), UI_CLASS.groupFilterButton)}"
-        data-group="${escapeHtml(group)}"
-        ${stateAttr(state.filterGroup === group ? UI_STATE.active : "")}
-        ${titleAttr}
-      >
-        ${escapeHtml(group)} [${count}]
-      </button>
-    `;
-  }).join("");
-
-  state.refs.key.innerHTML = `
-    <button type="button" class="tagStudio__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(state.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(allTagsLabel)}</button>
-    ${groupButtons}
-    ${renderGroupInfoControl(state)}
-  `;
-}
-
-function groupTitleAttr(state, group) {
-  const description = String(state.groupDescriptions.get(group) || "").trim();
-  if (!description) return "";
-  return `title="${escapeHtml(description)}"`;
-}
-
-function renderGroupInfoControl(state) {
-  const title = aliasesText(state.config, "group_info_title", "Open group descriptions in a new tab");
-  const ariaLabel = aliasesText(state.config, "group_info_aria_label", "Open group descriptions in a new tab");
-  return `
-    <a
-      class="${classNames(UI_CLASS.keyPill, UI_CLASS.keyInfoButton)}"
-      href="${GROUP_INFO_PAGE_PATH}"
-      target="_blank"
-      rel="noopener noreferrer"
-      title="${escapeHtml(title)}"
-      aria-label="${escapeHtml(ariaLabel)}"
-    >
-      <em>i</em>
-    </a>
-  `;
-}
-
-function renderList(state) {
-  const visible = getVisibleAliases(state);
-  const aliasHeading = aliasesText(state.config, "table_heading_alias", "alias");
-  const tagsHeading = aliasesText(state.config, "group_tags_heading", "tags");
-
-  const headerHtml = `
-    <div class="${UI_CLASS.listHead}">
-      <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="alias"${stateAttr(state.sortKey === "alias" ? UI_STATE.active : "")}>
-        ${escapeHtml(aliasHeading)}${sortIndicator(state, "alias")}
-      </button>
-      <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="tags"${stateAttr(state.sortKey === "tags" ? UI_STATE.active : "")}>
-        ${escapeHtml(tagsHeading)}${sortIndicator(state, "tags")}
-      </button>
-    </div>
-  `;
-
-  if (!visible.length) {
-    state.refs.list.innerHTML = `${headerHtml}<p class="${UI_CLASS.empty}">${escapeHtml(aliasesText(state.config, "empty_state", "none"))}</p>`;
-    return;
-  }
-
-  state.refs.list.innerHTML = `
-    ${headerHtml}
-    <ul class="${UI_CLASS.listRows}">
-      ${visible.map((entry) => {
-        const sortedTargets = entry.resolvedTargets.slice().sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
-        return `
-        <li class="${UI_CLASS.listRow}">
-          <div class="${UI_CLASS.aliasCol}">
-            <span class="${UI_CLASS.chip}">
-              <button
-                type="button"
-                class="${UI_CLASS.aliasButton}"
-                data-edit-alias="${escapeHtml(entry.alias)}"
-                title="${escapeHtml(aliasesText(state.config, "alias_edit_title", "Edit alias {alias}", { alias: entry.alias }))}"
-                aria-label="${escapeHtml(aliasesText(state.config, "alias_edit_aria_label", "Edit alias {alias}", { alias: entry.alias }))}"
-              >
-                ${escapeHtml(entry.alias)}
-              </button>
-              <button
-                type="button"
-                class="${UI_CLASS.chipRemove}"
-                data-promote-alias="${escapeHtml(entry.alias)}"
-                aria-label="${escapeHtml(aliasesText(state.config, "alias_promote_aria_label", "Promote alias {alias}", { alias: entry.alias }))}"
-                title="${escapeHtml(aliasesText(state.config, "alias_promote_title", "Promote alias to canonical tag"))}"
-              >
-                →
-              </button>
-              <button
-                type="button"
-                class="${UI_CLASS.chipRemove}"
-                data-delete-alias="${escapeHtml(entry.alias)}"
-                aria-label="${escapeHtml(aliasesText(state.config, "alias_delete_aria_label", "Delete alias {alias}", { alias: entry.alias }))}"
-                title="${escapeHtml(aliasesText(state.config, "alias_delete_title", "Delete alias"))}"
-              >
-                ×
-              </button>
-            </span>
-          </div>
-          <div class="${UI_CLASS.tagsCol}">
-            <div class="${UI_CLASS.tagList}">
-              ${sortedTargets.map((target) => `
-                <span class="${classNames(UI_CLASS.chip, target.known ? chipGroupClass(target.group) : UI_CLASS.chipWarning)}" title="${escapeHtml(target.tagId)}">
-                  ${escapeHtml(String(target.label || "").toLowerCase())}
-                  ${target.known ? `
-                    <button
-                      type="button"
-                      class="${UI_CLASS.chipRemove}"
-                      data-demote-tag-id="${escapeHtml(target.tagId)}"
-                      title="${escapeHtml(aliasesText(state.config, "tag_demote_title", "Demote canonical tag to alias"))}"
-                      aria-label="${escapeHtml(aliasesText(state.config, "tag_demote_aria_label", "Demote {tag_id}", { tag_id: target.tagId }))}"
-                    >
-                      ←
-                    </button>
-                  ` : ""}
-                </span>
-              `).join("")}
-            </div>
-          </div>
-        </li>
-      `;
-      }).join("")}
-    </ul>
-  `;
-}
-
-function sortIndicator(state, key) {
-  if (state.sortKey !== key) return "";
-  return state.sortDir === "asc" ? " ↑" : " ↓";
+function renderImportAvailability(state) {
+  renderTagAliasesImportAvailability(state, {
+    onModalStateChange: () => syncRouteBusyState(state)
+  });
 }
 
 async function probeImportMode(state) {
-  const ok = await probeStudioHealth(500);
-  state.saveMode = ok ? "post" : "patch";
-  state.importAvailable = ok;
-  renderImportAvailability(state);
-  syncRouteBusyState(state);
-}
-
-function renderImportAvailability(state) {
-  const available = Boolean(state.importAvailable && state.saveMode === "post");
-  state.importAvailable = available;
-  if (state.refs.openImportModal) state.refs.openImportModal.disabled = !available;
-  if (state.refs.importButton) state.refs.importButton.disabled = !available;
-  if (!available && state.importModalOpen) closeImportModal(state);
+  await probeTagAliasesImportMode(state, {
+    onImportAvailabilityChange: () => renderImportAvailability(state),
+    onRouteStateChange: () => syncRouteBusyState(state)
+  });
 }
 
 async function handleImport(state) {
@@ -1153,29 +996,4 @@ async function copyPatchSnippet(state) {
 
 function aliasesText(config, key, fallback, tokens) {
   return getStudioText(config, `tag_aliases.${key}`, fallback, tokens);
-}
-
-function renderError(state, message) {
-  state.mount.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(message)}</div>`;
-}
-
-function classNames(...tokens) {
-  return tokens.filter(Boolean).join(" ");
-}
-
-function chipGroupClass(group) {
-  return `${UI_CLASS.chipGroupPrefix}${group}`;
-}
-
-function stateAttr(stateValue) {
-  return stateValue ? ` data-state="${escapeHtml(stateValue)}"` : "";
-}
-
-function escapeHtml(value) {
-  return String(value || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }
