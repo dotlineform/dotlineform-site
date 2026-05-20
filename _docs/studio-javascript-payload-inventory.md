@@ -1,6 +1,6 @@
 ---
 doc_id: studio-javascript-payload-inventory
-title: JavaScript Inventory Policy
+title: JavaScript Inventory Priorities
 added_date: 2026-05-14
 last_updated: 2026-05-20
 ui_status: urgent
@@ -8,7 +8,7 @@ parent_id: studio
 sort_order: 7000
 hidden: false
 ---
-# JavaScript Inventory Policy
+# JavaScript Inventory: Policy and Priorities
 
 This document describes the policy for updating the site-wide browser JavaScript inventory for key runtime files, and the key priorities. Re-prioritise this inventory after material browser JavaScript refactors.
 

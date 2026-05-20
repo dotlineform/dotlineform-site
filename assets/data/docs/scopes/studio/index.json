@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T14:35:40Z",
+  "generated_at": "2026-05-20T14:38:45Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2220,7 +2220,7 @@
     {
       "scope": "studio",
       "doc_id": "studio-javascript-payload-inventory",
-      "title": "JavaScript Inventory Policy",
+      "title": "JavaScript Inventory Priorities",
       "added_date": "2026-05-14",
       "last_updated": "2026-05-20",
       "parent_id": "studio",
@@ -2231,7 +2231,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 16095,
+      "content_text_length": 16139,
       "ui_status": "urgent"
     },
     {

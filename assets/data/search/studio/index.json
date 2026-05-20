@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e73aa8bd9149fe2d8d6156ee1cae4911",
-    "generated_at_utc": "2026-05-20T14:33:30Z",
+    "version": "blake2b-da79d8edfb59323d6154940169823241",
+    "generated_at_utc": "2026-05-20T14:38:13Z",
     "count": 287
   },
   "entries": [
@@ -3469,7 +3469,7 @@
     {
       "id": "studio-javascript-payload-inventory",
       "kind": "doc",
-      "title": "JavaScript Inventory Policy",
+      "title": "JavaScript Inventory Priorities",
       "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "last_updated": "2026-05-20",
       "parent_id": "studio",
@@ -3481,14 +3481,14 @@
         "javascript",
         "payload",
         "inventory",
-        "javascript inventory policy",
-        "policy",
+        "javascript inventory priorities",
+        "priorities",
         "2026-05-20",
         "2026",
         "05",
         "20"
       ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory policy policy 2026-05-20 2026 05 20"
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory priorities priorities 2026-05-20 2026 05 20"
     },
     {
       "id": "site-request-js-payload-runtime-cleanup-inventory",
@@ -3635,21 +3635,21 @@
       "href": "/docs/?scope=studio&doc=javascript-inventory",
       "last_updated": "2026-05-20",
       "parent_id": "studio-javascript-payload-inventory",
-      "parent_title": "JavaScript Inventory Policy",
-      "display_meta": "2026-05-20 • JavaScript Inventory Policy",
+      "parent_title": "JavaScript Inventory Priorities",
+      "display_meta": "2026-05-20 • JavaScript Inventory Priorities",
       "search_terms": [
         "javascript-inventory",
         "javascript",
         "inventory",
         "javascript inventory",
-        "javascript inventory policy",
-        "policy",
+        "javascript inventory priorities",
+        "priorities",
         "2026-05-20",
         "2026",
         "05",
         "20"
       ],
-      "search_text": "javascript-inventory javascript inventory javascript inventory javascript inventory policy policy 2026-05-20 2026 05 20"
+      "search_text": "javascript-inventory javascript inventory javascript inventory javascript inventory priorities priorities 2026-05-20 2026 05 20"
     },
     {
       "id": "studio-python-ruby-script-inventory",
