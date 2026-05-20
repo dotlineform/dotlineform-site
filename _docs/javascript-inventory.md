@@ -21,10 +21,10 @@ Measured on 2026-05-20.
 | 4 | `assets/docs-viewer/js/docs-html-import.js` | 17 | Docs import preview/write workflow and result rendering. |
 | 5 | `assets/studio/js/tag-studio.js` | 17 | Series tag editor route shell and extracted-module coordination. |
 | 6 | `assets/studio/js/data-sharing-prepare.js` | 17 | Data sharing package preparation workflow. |
-| 7 | `assets/studio/js/data-sharing-review.js` | 16 | Returned-package apply orchestration and route state. |
-| 8 | `assets/studio/js/tag-registry-modals.js` | 16 | Tag registry modal lifecycle and modal rendering. |
-| 9 | `assets/docs-viewer/js/docs-viewer-management.js` | 16 | Docs Viewer management coordinator. |
-| 10 | `assets/studio/js/series-tags.js` | 16 | Series tag analytics route and RAG display. |
+| 7 | `assets/studio/js/tag-registry-modals.js` | 16 | Tag registry modal lifecycle and modal rendering. |
+| 8 | `assets/docs-viewer/js/docs-viewer-management.js` | 16 | Docs Viewer management coordinator. |
+| 9 | `assets/studio/js/series-tags.js` | 16 | Series tag analytics route and RAG display. |
+| 10 | `assets/studio/js/data-sharing-review.js` | 14 | Returned-package review route shell and file/state coordination. |
 | 11 | `assets/studio/js/tag-aliases-modals.js` | 14 | Tag modal rendering and lifecycle helper. |
 | 12 | `assets/studio/js/catalogue-work-editor.js` | 14 | Catalogue editor route/controller. |
 | 13 | `assets/studio/js/catalogue-work-detail-editor.js` | 14 | Catalogue editor route/controller. |
@@ -78,68 +78,69 @@ Measured on 2026-05-20.
 | 61 | `assets/studio/js/tag-studio-modals.js` | 7 | Tag modal rendering and lifecycle helper. |
 | 62 | `assets/studio/js/catalogue-series-sections.js` | 7 | Catalogue section rendering/helper. |
 | 63 | `assets/studio/js/catalogue-moment-selection.js` | 7 | Catalogue selection UI helper. |
-| 64 | `assets/studio/js/tag-studio-render.js` | 6 | Tag route rendering helper. |
-| 65 | `assets/studio/js/data-sharing-review-render.js` | 6 | Data sharing review preview rendering helper. |
-| 66 | `assets/docs-viewer/js/docs-viewer-router.js` | 6 | Docs Viewer routing and history helper. |
-| 67 | `assets/studio/js/tag-aliases-service.js` | 6 | Tag service/write orchestration helper. |
-| 68 | `assets/docs-viewer/js/docs-viewer-reports.js` | 6 | Docs Viewer runtime support module. |
-| 69 | `assets/docs-viewer/js/docs-viewer-management-interactions.js` | 6 | Docs Viewer management support module. |
-| 70 | `assets/studio/js/tag-studio-save-controller.js` | 6 | Tag manual patch/save helper. |
-| 71 | `assets/docs-viewer/js/docs-html-import-modals.js` | 6 | Docs Viewer runtime support module. |
-| 72 | `assets/studio/js/tag-studio-suggestions.js` | 6 | Tag suggestion helper. |
-| 73 | `assets/js/work.js` | 6 | Public site runtime module. |
-| 74 | `assets/ui-catalogue/js/ui-catalogue-demo.js` | 6 | Catalogue route support module. |
-| 75 | `assets/studio/js/tag-aliases-domain.js` | 5 | Tag domain logic helper. |
-| 76 | `assets/studio/js/tag-studio-state.js` | 5 | Tag editor state helper. |
-| 77 | `assets/studio/js/studio-data.js` | 5 | Browser runtime support module. |
-| 78 | `assets/studio/js/tag-aliases-save.js` | 5 | Tag manual patch/save helper. |
-| 79 | `assets/studio/js/catalogue-series-form.js` | 5 | Catalogue route support module. |
-| 80 | `assets/js/search/search-policy.js` | 5 | Public catalogue/search route runtime. |
-| 81 | `assets/studio/js/studio-transport.js` | 5 | Studio service transport helper. |
-| 82 | `assets/docs-viewer/js/docs-viewer-management-client.js` | 5 | Docs Viewer management support module. |
-| 83 | `assets/studio/js/catalogue-moment-form.js` | 5 | Catalogue route support module. |
-| 84 | `assets/docs-viewer/js/docs-viewer-management-capabilities.js` | 5 | Docs Viewer management support module. |
-| 85 | `assets/studio/js/data-sharing-prepare-modals.js` | 5 | Data sharing modal/result helper. |
-| 86 | `assets/studio/js/catalogue-moment-sections.js` | 5 | Catalogue section rendering/helper. |
-| 87 | `assets/studio/js/data-sharing-review-modals.js` | 5 | Data sharing modal/result helper. |
-| 88 | `assets/studio/js/tag-studio-index.js` | 5 | Tag analytics index route. |
-| 89 | `assets/studio/js/tag-aliases-import-mode.js` | 5 | Tag route runtime. |
-| 90 | `assets/studio/js/studio-static-route.js` | 5 | Browser runtime support module. |
-| 91 | `assets/studio/js/catalogue-editor-action-modals.js` | 5 | Catalogue editor route/controller. |
-| 92 | `assets/studio/js/catalogue-work-detail-fields.js` | 4 | Catalogue route support module. |
-| 93 | `assets/studio/js/catalogue-series-fields.js` | 4 | Catalogue route support module. |
-| 94 | `assets/js/swipe-nav.js` | 4 | Public navigation enhancement. |
-| 95 | `assets/docs-viewer/js/docs-viewer-data.js` | 4 | Docs Viewer runtime support module. |
-| 96 | `assets/js/public-catalogue-runtime.js` | 4 | Public site runtime module. |
-| 97 | `assets/studio/js/activity-log-modals.js` | 4 | Activity log or activity context support. |
-| 98 | `assets/studio/js/tag-studio-domain.js` | 3 | Tag domain logic helper. |
-| 99 | `assets/studio/js/studio-ui.js` | 3 | Studio UI selector/class registry. |
-| 100 | `assets/studio/js/tag-registry-service.js` | 3 | Tag service/write orchestration helper. |
-| 101 | `assets/studio/js/catalogue-work-fields.js` | 3 | Catalogue route support module. |
-| 102 | `assets/studio/js/tag-registry-save.js` | 3 | Tag manual patch/save helper. |
-| 103 | `assets/studio/js/tag-registry-domain.js` | 3 | Tag domain logic helper. |
-| 104 | `assets/docs-viewer/js/docs-viewer-sidebar.js` | 3 | Docs Viewer runtime support module. |
-| 105 | `assets/studio/js/catalogue-moment-fields.js` | 3 | Catalogue route support module. |
-| 106 | `assets/studio/js/data-sharing-adapters.js` | 3 | Data sharing workflow adapter helper. |
-| 107 | `assets/js/theme-toggle.js` | 3 | Public site runtime module. |
-| 108 | `assets/js/search/search-performance.js` | 2 | Public catalogue/search route runtime. |
-| 109 | `assets/studio/js/catalogue-editor-embedded-items.js` | 2 | Catalogue editor route/controller. |
-| 110 | `assets/studio/js/catalogue-editor-modal-formatters.js` | 2 | Catalogue editor route/controller. |
-| 111 | `assets/docs-viewer/js/docs-viewer-favourites.js` | 2 | Docs Viewer bookmark/favourite support. |
-| 112 | `assets/studio/js/catalogue-media-preview.js` | 2 | Catalogue route support module. |
-| 113 | `assets/docs-viewer/js/docs-viewer-search.js` | 2 | Docs Viewer search helper or controller. |
-| 114 | `assets/studio/js/tag-studio-save.js` | 2 | Tag manual patch/save helper. |
-| 115 | `assets/docs-viewer/js/docs-viewer-drag-drop.js` | 2 | Docs Viewer runtime support module. |
-| 116 | `assets/studio/js/catalogue-editor-readiness.js` | 2 | Catalogue editor route/controller. |
-| 117 | `assets/docs-viewer/js/reports/reports-list-report.js` | 2 | Docs Viewer report module. |
-| 118 | `assets/docs-viewer/js/docs-viewer-management-render.js` | 2 | Docs Viewer management support module. |
-| 119 | `assets/studio/js/catalogue-editor-service-client.js` | 2 | Catalogue editor route/controller. |
-| 120 | `assets/studio/js/studio-route-state.js` | 2 | Studio route ready/busy state helper. |
-| 121 | `assets/docs-viewer/js/docs-viewer-tree.js` | 2 | Docs Viewer runtime support module. |
-| 122 | `assets/studio/js/catalogue-editor-records.js` | 2 | Catalogue editor route/controller. |
-| 123 | `assets/studio/js/catalogue-editor-dirty-state.js` | 2 | Catalogue editor route/controller. |
-| 124 | `assets/docs-viewer/js/docs-viewer-render.js` | 2 | Docs Viewer rendering helper. |
-| 125 | `assets/studio/js/tag-assignments-offline.js` | 1 | Tag route runtime. |
-| 126 | `assets/studio/js/analysis-tag-scoring.js` | 1 | Tag route runtime. |
-| 127 | `assets/js/site-nav.js` | 1 | Public navigation enhancement. |
-| 128 | `assets/studio/js/studio-activity-context.js` | 1 | Activity log or activity context support. |
+| 64 | `assets/studio/js/data-sharing-review-apply.js` | 7 | Data sharing review apply orchestration helper. |
+| 65 | `assets/studio/js/tag-studio-render.js` | 6 | Tag route rendering helper. |
+| 66 | `assets/studio/js/data-sharing-review-render.js` | 6 | Data sharing review preview rendering helper. |
+| 67 | `assets/docs-viewer/js/docs-viewer-router.js` | 6 | Docs Viewer routing and history helper. |
+| 68 | `assets/studio/js/tag-aliases-service.js` | 6 | Tag service/write orchestration helper. |
+| 69 | `assets/docs-viewer/js/docs-viewer-reports.js` | 6 | Docs Viewer runtime support module. |
+| 70 | `assets/docs-viewer/js/docs-viewer-management-interactions.js` | 6 | Docs Viewer management support module. |
+| 71 | `assets/studio/js/tag-studio-save-controller.js` | 6 | Tag manual patch/save helper. |
+| 72 | `assets/docs-viewer/js/docs-html-import-modals.js` | 6 | Docs Viewer runtime support module. |
+| 73 | `assets/studio/js/tag-studio-suggestions.js` | 6 | Tag suggestion helper. |
+| 74 | `assets/js/work.js` | 6 | Public site runtime module. |
+| 75 | `assets/ui-catalogue/js/ui-catalogue-demo.js` | 6 | Catalogue route support module. |
+| 76 | `assets/studio/js/tag-aliases-domain.js` | 5 | Tag domain logic helper. |
+| 77 | `assets/studio/js/tag-studio-state.js` | 5 | Tag editor state helper. |
+| 78 | `assets/studio/js/studio-data.js` | 5 | Browser runtime support module. |
+| 79 | `assets/studio/js/tag-aliases-save.js` | 5 | Tag manual patch/save helper. |
+| 80 | `assets/studio/js/catalogue-series-form.js` | 5 | Catalogue route support module. |
+| 81 | `assets/js/search/search-policy.js` | 5 | Public catalogue/search route runtime. |
+| 82 | `assets/studio/js/studio-transport.js` | 5 | Studio service transport helper. |
+| 83 | `assets/docs-viewer/js/docs-viewer-management-client.js` | 5 | Docs Viewer management support module. |
+| 84 | `assets/studio/js/catalogue-moment-form.js` | 5 | Catalogue route support module. |
+| 85 | `assets/docs-viewer/js/docs-viewer-management-capabilities.js` | 5 | Docs Viewer management support module. |
+| 86 | `assets/studio/js/data-sharing-prepare-modals.js` | 5 | Data sharing modal/result helper. |
+| 87 | `assets/studio/js/catalogue-moment-sections.js` | 5 | Catalogue section rendering/helper. |
+| 88 | `assets/studio/js/data-sharing-review-modals.js` | 5 | Data sharing modal/result helper. |
+| 89 | `assets/studio/js/tag-studio-index.js` | 5 | Tag analytics index route. |
+| 90 | `assets/studio/js/tag-aliases-import-mode.js` | 5 | Tag route runtime. |
+| 91 | `assets/studio/js/studio-static-route.js` | 5 | Browser runtime support module. |
+| 92 | `assets/studio/js/catalogue-editor-action-modals.js` | 5 | Catalogue editor route/controller. |
+| 93 | `assets/studio/js/catalogue-work-detail-fields.js` | 4 | Catalogue route support module. |
+| 94 | `assets/studio/js/catalogue-series-fields.js` | 4 | Catalogue route support module. |
+| 95 | `assets/js/swipe-nav.js` | 4 | Public navigation enhancement. |
+| 96 | `assets/docs-viewer/js/docs-viewer-data.js` | 4 | Docs Viewer runtime support module. |
+| 97 | `assets/js/public-catalogue-runtime.js` | 4 | Public site runtime module. |
+| 98 | `assets/studio/js/activity-log-modals.js` | 4 | Activity log or activity context support. |
+| 99 | `assets/studio/js/tag-studio-domain.js` | 3 | Tag domain logic helper. |
+| 100 | `assets/studio/js/studio-ui.js` | 3 | Studio UI selector/class registry. |
+| 101 | `assets/studio/js/tag-registry-service.js` | 3 | Tag service/write orchestration helper. |
+| 102 | `assets/studio/js/catalogue-work-fields.js` | 3 | Catalogue route support module. |
+| 103 | `assets/studio/js/tag-registry-save.js` | 3 | Tag manual patch/save helper. |
+| 104 | `assets/studio/js/tag-registry-domain.js` | 3 | Tag domain logic helper. |
+| 105 | `assets/docs-viewer/js/docs-viewer-sidebar.js` | 3 | Docs Viewer runtime support module. |
+| 106 | `assets/studio/js/catalogue-moment-fields.js` | 3 | Catalogue route support module. |
+| 107 | `assets/studio/js/data-sharing-adapters.js` | 3 | Data sharing workflow adapter helper. |
+| 108 | `assets/js/theme-toggle.js` | 3 | Public site runtime module. |
+| 109 | `assets/js/search/search-performance.js` | 2 | Public catalogue/search route runtime. |
+| 110 | `assets/studio/js/catalogue-editor-embedded-items.js` | 2 | Catalogue editor route/controller. |
+| 111 | `assets/studio/js/catalogue-editor-modal-formatters.js` | 2 | Catalogue editor route/controller. |
+| 112 | `assets/docs-viewer/js/docs-viewer-favourites.js` | 2 | Docs Viewer bookmark/favourite support. |
+| 113 | `assets/studio/js/catalogue-media-preview.js` | 2 | Catalogue route support module. |
+| 114 | `assets/docs-viewer/js/docs-viewer-search.js` | 2 | Docs Viewer search helper or controller. |
+| 115 | `assets/studio/js/tag-studio-save.js` | 2 | Tag manual patch/save helper. |
+| 116 | `assets/docs-viewer/js/docs-viewer-drag-drop.js` | 2 | Docs Viewer runtime support module. |
+| 117 | `assets/studio/js/catalogue-editor-readiness.js` | 2 | Catalogue editor route/controller. |
+| 118 | `assets/docs-viewer/js/reports/reports-list-report.js` | 2 | Docs Viewer report module. |
+| 119 | `assets/docs-viewer/js/docs-viewer-management-render.js` | 2 | Docs Viewer management support module. |
+| 120 | `assets/studio/js/catalogue-editor-service-client.js` | 2 | Catalogue editor route/controller. |
+| 121 | `assets/studio/js/studio-route-state.js` | 2 | Studio route ready/busy state helper. |
+| 122 | `assets/docs-viewer/js/docs-viewer-tree.js` | 2 | Docs Viewer runtime support module. |
+| 123 | `assets/studio/js/catalogue-editor-records.js` | 2 | Catalogue editor route/controller. |
+| 124 | `assets/studio/js/catalogue-editor-dirty-state.js` | 2 | Catalogue editor route/controller. |
+| 125 | `assets/docs-viewer/js/docs-viewer-render.js` | 2 | Docs Viewer rendering helper. |
+| 126 | `assets/studio/js/tag-assignments-offline.js` | 1 | Tag route runtime. |
+| 127 | `assets/studio/js/analysis-tag-scoring.js` | 1 | Tag route runtime. |
+| 128 | `assets/js/site-nav.js` | 1 | Public navigation enhancement. |
+| 129 | `assets/studio/js/studio-activity-context.js` | 1 | Activity log or activity context support. |

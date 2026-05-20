@@ -89,10 +89,10 @@ For `tag-registry.js`, for example, list/control rendering is meaningful not bec
 
 ## Current Summary
 
-Measured on 2026-05-20, after the Data Sharing Review preview-render extraction.
+Measured on 2026-05-20, after the Data Sharing Review apply-orchestration extraction.
 
-- Browser JavaScript files under `assets/`: 128
-- Total browser JavaScript lines under `assets/`: 41,029
+- Browser JavaScript files under `assets/`: 129
+- Total browser JavaScript lines under `assets/`: 41,066
 - Files over the 1,000-line review threshold: 2
 - Files in the 900-1,000 line watch band: 7
 - Priority score threshold used for the current table: 16 or higher
@@ -100,39 +100,12 @@ Measured on 2026-05-20, after the Data Sharing Review preview-render extraction.
 ## Current Priorities
 
 The full ranked priority table now lives in [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
-That child document lists all 128 browser JavaScript files with rank, file, score, and focus.
+That child document lists all 129 browser JavaScript files with rank, file, score, and focus.
 
 The detailed sections below cover the current improvement priorities after manual review.
 High-scoring recently improved files stay in the child table, but are not automatically top-detail priorities unless the next slice would still remove a complete responsibility or clarify a reusable boundary.
 
 ## Top Priority Details
-
-### `assets/studio/js/data-sharing-review.js`
-
-- Priority score: 16
-- Lines: 849
-- Raw: 31.6 KiB
-- Gzip: 6.5 KiB
-- Classification: route workflow controller with extracted preview rendering
-- Line pressure: 0
-
-**Why This Is Priority Work**
-
-- Preview row normalization, preview list rendering, checkbox syncing, and selected record-index projection now live in `assets/studio/js/data-sharing-review-render.js`.
-- Result modal and apply-confirmation modal behavior now lives in `assets/studio/js/data-sharing-review-modals.js`.
-- The route still owns returned-package loading, staged package listing, action-menu state, preflight calls, apply calls, result shaping, activity context, and route busy/ready state.
-- The remaining risk is write-facing review/apply behavior where state ownership mistakes can create confusing or unsafe local workflow outcomes.
-
-**Meaningful Improvement Slices**
-
-- Extract apply-action orchestration into a controller/service-adapter module that owns preflight, apply, result payload shaping, and status transitions.
-- Consider extracting returned-package file loading and file-select population only if it clarifies the boundary between route readiness and package review workflow.
-- Keep workflow-domain adapter decisions explicit so library and tags package support do not grow as conditional branches inside the route shell.
-
-**Deferral Criteria**
-
-- Do not reopen preview rendering unless new row behavior changes the render contract.
-- A useful next slice should remove apply orchestration or workflow-adapter policy from the route and leave a smaller public surface between selected package state and service mutation.
 
 ### `assets/studio/js/tag-registry.js`
 
@@ -251,6 +224,8 @@ These files scored high but are not in the top five detail set for the current p
 
 - `assets/studio/js/tag-aliases.js`: recently moved below threshold with modal, render, and import-mode extraction. Keep watching import parsing/submission and service orchestration, but do not immediately reopen it unless new alias workflow work is planned.
 - `assets/studio/js/tag-studio.js`: recently split across modal, render, suggestion, state, save, and offline modules. Keep new save/probe/offline work out of the route shell.
+- `assets/studio/js/data-sharing-review.js`: recently moved below threshold with preview-render and apply-orchestration extraction. Keep returned-package loading, route readiness, and workflow-domain adapter policy small; reopen only if review workflow behavior grows again.
+- `assets/studio/js/data-sharing-review-apply.js`: keep this apply-focused. Do not add preview rendering, route boot, or file-list loading here.
 - `assets/studio/js/tag-registry-modals.js`: large route-local modal module. Keep it modal-focused; split only if modal workflows themselves gain separate complete responsibilities.
 - `assets/docs-viewer/js/docs-viewer-management.js`: recent management action, capability/config, interaction, and modal extractions lowered line pressure. Reopen only if management workflow growth reintroduces mixed ownership.
 - `assets/studio/js/series-tags.js`: sub-threshold but stateful analytics route. Revisit when analytics scoring, RAG display, or series tag reporting changes.
