@@ -135,10 +135,12 @@ Each section should summarise:
 
 **Score Reduction Tasks**
 
-- Move list and control rendering into `assets/studio/js/tag-registry-render.js`, matching the Tag Aliases render boundary. Anticipated improvement: -1 to -2 from maintenance and architectural risk.
-- Extract import-mode probing into a route-local import-mode module if the behavior can mirror Tag Aliases cleanly. Anticipated improvement: -1 from maintenance or structural risk.
-- After rendering is extracted, define a service-orchestration boundary for save/import fallback decisions. Anticipated improvement: -1 to -2 from maintenance and structural risk.
-- Add focused verification for render output, import-mode availability, and fallback save behavior as each slice lands. Anticipated improvement: -1 from maintenance risk where logic no longer requires full route boot.
+| # | Status | Task |
+| ---: | --- | --- |
+| 1 | proposed | Move list and control rendering into `assets/studio/js/tag-registry-render.js`, matching the Tag Aliases render boundary. Anticipated improvement: -1 to -2 from maintenance and architectural risk. |
+| 2 | proposed | Extract import-mode probing into a route-local import-mode module if the behavior can mirror Tag Aliases cleanly. Anticipated improvement: -1 from maintenance or structural risk. |
+| 3 | proposed | After rendering is extracted, define a service-orchestration boundary for save/import fallback decisions. Anticipated improvement: -1 to -2 from maintenance and structural risk. |
+| 4 | proposed | Add focused verification for render output, import-mode availability, and fallback save behavior as each slice lands. Anticipated improvement: -1 from maintenance risk where logic no longer requires full route boot. |
 
 ### `assets/studio/js/data-sharing-prepare.js`
 
@@ -161,10 +163,12 @@ Each section should summarise:
 
 **Score Reduction Tasks**
 
-- Extract package workflow adapter behavior into a focused module that owns route-to-domain state projection. Anticipated improvement: -1 to -2 from structural and architectural risk.
-- Move preview/result rendering into a render module with explicit inputs. Anticipated improvement: -1 from maintenance risk, or -2 if route state reads shrink materially.
-- Define a preparation service/workflow boundary for write calls, fallback states, and package result shaping. Anticipated improvement: -1 to -2 from maintenance and structural risk.
-- Add focused checks for package-state projection, preparation result rendering, and fallback write behavior. Anticipated improvement: -1 from maintenance risk.
+| # | Status | Task |
+| ---: | --- | --- |
+| 1 | proposed | Extract package workflow adapter behavior into a focused module that owns route-to-domain state projection. Anticipated improvement: -1 to -2 from structural and architectural risk. |
+| 2 | proposed | Move preview/result rendering into a render module with explicit inputs. Anticipated improvement: -1 from maintenance risk, or -2 if route state reads shrink materially. |
+| 3 | proposed | Define a preparation service/workflow boundary for write calls, fallback states, and package result shaping. Anticipated improvement: -1 to -2 from maintenance and structural risk. |
+| 4 | proposed | Add focused checks for package-state projection, preparation result rendering, and fallback write behavior. Anticipated improvement: -1 from maintenance risk. |
 
 ### `assets/docs-viewer/js/docs-html-import.js`
 
@@ -186,10 +190,12 @@ Each section should summarise:
 
 **Score Reduction Tasks**
 
-- Move import result rendering into a focused render module for media plans, warnings, replacement docs, and final status markup. Anticipated improvement: -1 to -2 from maintenance and structural risk.
-- Extract preview/write orchestration into a workflow module that owns service calls, replacement decisions, and write-mode transitions. Anticipated improvement: -1 to -2 from maintenance and structural risk.
-- Keep scope selection and route readiness in the controller while passing explicit inputs to conversion and workflow modules. Anticipated improvement: -1 from architectural risk.
-- Add focused checks for preview, replacement, write-mode fallback, and result rendering. Anticipated improvement: -1 from maintenance risk.
+| # | Status | Task |
+| ---: | --- | --- |
+| 1 | proposed | Move import result rendering into a focused render module for media plans, warnings, replacement docs, and final status markup. Anticipated improvement: -1 to -2 from maintenance and structural risk. |
+| 2 | proposed | Extract preview/write orchestration into a workflow module that owns service calls, replacement decisions, and write-mode transitions. Anticipated improvement: -1 to -2 from maintenance and structural risk. |
+| 3 | proposed | Keep scope selection and route readiness in the controller while passing explicit inputs to conversion and workflow modules. Anticipated improvement: -1 from architectural risk. |
+| 4 | proposed | Add focused checks for preview, replacement, write-mode fallback, and result rendering. Anticipated improvement: -1 from maintenance risk. |
 
 ### `assets/docs-viewer/js/docs-viewer.js`
 
@@ -212,9 +218,11 @@ Each section should summarise:
 
 **Score Reduction Tasks**
 
-- Extract generated-payload loading and loadable-doc visibility state into a focused module when scope or payload behavior next changes. Anticipated improvement: -1 to -2 from maintenance and structural risk.
-- Audit the management lazy boundary and move any newly eager management setup back behind dynamic loading. Anticipated improvement: -1 to -2 from performance risk, depending on whether route-load exposure changes.
-- Add focused verification around payload loading, scope switching, and document visibility state after extraction. Anticipated improvement: -1 from maintenance risk by making the behavior reviewable outside full viewer boot.
+| # | Status | Task |
+| ---: | --- | --- |
+| 1 | proposed | Extract generated-payload loading and loadable-doc visibility state into a focused module when scope or payload behavior next changes. Anticipated improvement: -1 to -2 from maintenance and structural risk. |
+| 2 | proposed | Audit the management lazy boundary and move any newly eager management setup back behind dynamic loading. Anticipated improvement: -1 to -2 from performance risk, depending on whether route-load exposure changes. |
+| 3 | proposed | Add focused verification around payload loading, scope switching, and document visibility state after extraction. Anticipated improvement: -1 from maintenance risk by making the behavior reviewable outside full viewer boot. |
 
 ### `assets/studio/js/series-tags.js`
 
@@ -237,10 +245,12 @@ Each section should summarise:
 
 **Score Reduction Tasks**
 
-- Extract scoring calculation and interpretation into a focused analytics module if scoring behavior changes. Anticipated improvement: -1 to -2 from maintenance and architectural risk.
-- Move RAG/report rendering into a focused render module if display behavior grows. Anticipated improvement: -1 from maintenance or structural risk.
-- Pass explicit scoring/report inputs from the route shell rather than broad route state. Anticipated improvement: -1 from maintenance risk.
-- Add focused checks for score interpretation and RAG display output when those modules are extracted. Anticipated improvement: -1 from maintenance risk.
+| # | Status | Task |
+| ---: | --- | --- |
+| 1 | proposed | Extract scoring calculation and interpretation into a focused analytics module if scoring behavior changes. Anticipated improvement: -1 to -2 from maintenance and architectural risk. |
+| 2 | proposed | Move RAG/report rendering into a focused render module if display behavior grows. Anticipated improvement: -1 from maintenance or structural risk. |
+| 3 | proposed | Pass explicit scoring/report inputs from the route shell rather than broad route state. Anticipated improvement: -1 from maintenance risk. |
+| 4 | proposed | Add focused checks for score interpretation and RAG display output when those modules are extracted. Anticipated improvement: -1 from maintenance risk. |
 
 ## Watch Areas
 

@@ -1,5 +1,6 @@
 import {
   buildChildrenMap,
+  hasHiddenAncestor,
   compareDocs,
   isDocHidden,
   isDocViewable,
@@ -714,7 +715,7 @@ import {
 
   function shouldIncludeDoc(doc) {
     if (!state.managementMode && isManageOnlyTreeDoc(doc)) return false;
-    if (!state.managementMode) return isDocViewable(doc);
+    if (!state.managementMode) return isDocViewable(doc) && !hasHiddenAncestor(doc, state.allDocsById);
     return isDocViewable(doc) || state.showHidden;
   }
 

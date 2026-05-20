@@ -167,12 +167,14 @@ Current visibility behavior:
 
 - generated docs indexes can carry `viewable: false` rows that remain generated and manageable
 - public/default viewer navigation, inline search, and recently-added lists include only docs where `viewable !== false`
+- public/default viewer discovery also excludes descendants of a non-viewable parent, without changing descendant `viewable` values
 - `archive` is a normal doc id and parent folder; if it should be hidden, set `viewable: false` in front matter
 
 Current manage-mode draft behavior:
 
 - public/default tree rendering includes only docs whose generated index row is not `viewable: false`
 - manage mode always includes non-viewable docs in the tree
+- manage mode preserves the source hierarchy when non-viewable docs are included; children are not automatically changed when a parent is non-viewable
 - the manage toolbar has a `show viewable` checkbox, checked by default, that keeps viewable docs visible for context
 - unchecking `show viewable` gives a focused non-viewable/draft review tree
 - manage-mode direct links to a viewable doc auto-enable `show viewable` so links can land on the target
