@@ -11,9 +11,6 @@ import {
   loadStudioRegistryJson
 } from "./studio-data.js";
 import {
-  probeStudioHealth
-} from "./studio-transport.js";
-import {
   configureTagStudioDomain,
   makeResolvedEntry,
   nextWeight,
@@ -23,18 +20,10 @@ import {
   splitWorkInputTokens
 } from "./tag-studio-domain.js";
 import {
-  equalOfflineSeriesRows,
-  normalizeOfflineSeriesRow,
-  readOfflineAssignmentsSession,
-  removeOfflineAssignmentsSeriesEntry,
-  upsertOfflineAssignmentsSeriesEntry,
-  writeOfflineAssignmentsSession
+  readOfflineAssignmentsSession
 } from "./tag-assignments-offline.js";
 import {
-  buildSaveModeText as buildTagStudioSaveModeText,
-  buildTagSaveSuccessMessage,
-  postTags,
-  utcTimestamp
+  buildSaveModeText as buildTagStudioSaveModeText
 } from "./tag-studio-save.js";
 import {
   collectTagStudioSaveModalRefs,
@@ -55,8 +44,6 @@ import {
   renderWorkPopup
 } from "./tag-studio-suggestions.js";
 import {
-  applyPersistedBaseline,
-  buildPersistedSeriesRow,
   buildStateDiff,
   buildTagStudioState,
   getOrderedSelectedWorkIds,
@@ -64,10 +51,15 @@ import {
   writeSelectionToQuery
 } from "./tag-studio-state.js";
 import {
+  handleTagStudioSave,
+  probeTagStudioSaveMode,
+  renderTagStudioSaveMode,
+  syncTagStudioOfflineAutosave
+} from "./tag-studio-save-controller.js";
+import {
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   seriesTagEditorUi
 } from "./studio-ui.js";
@@ -165,7 +157,7 @@ async function initTagStudio() {
     wireEvents(state);
     renderAll(state);
     markRouteReady(state, true);
-    void probeSaveMode(state);
+    void probeTagStudioSaveMode(state, saveControllerCallbacks());
   } catch (error) {
     renderFatalError(
       mount,
@@ -234,7 +226,7 @@ function renderShell(state) {
 function wireEvents(state) {
   const reprobeSaveMode = () => {
     if (document.visibilityState === "hidden") return;
-    void probeSaveMode(state);
+    void probeTagStudioSaveMode(state, saveControllerCallbacks());
   };
 
   window.addEventListener("focus", reprobeSaveMode);
@@ -396,7 +388,7 @@ function wireEvents(state) {
   });
 
   state.refs.saveButton.addEventListener("click", () => {
-    void handleSave(state);
+    void handleTagStudioSave(state, saveControllerCallbacks());
   });
 
   wireTagStudioSaveModalEvents(state, {
@@ -801,39 +793,11 @@ function renderAll(state) {
   renderGroups(state);
   renderWorkPopup(state);
   renderPopup(state);
-  renderSaveMode(state);
+  renderTagStudioSaveMode(state);
   renderSaveState(state);
   broadcastSelectedWorkChange(state);
-  syncOfflineAutosave(state);
+  syncTagStudioOfflineAutosave(state, saveControllerCallbacks());
   syncRouteBusyState(state);
-}
-
-function syncOfflineAutosave(state) {
-  if (!state.saveModeResolved || state.saveMode !== "offline") {
-    clearOfflineAutosave(state);
-    return;
-  }
-
-  const diff = buildStateDiff(state);
-  if (!diff.seriesChanged && !diff.changedWorkIds.length) {
-    clearOfflineAutosave(state);
-    return;
-  }
-
-  if (state.offlineAutosaveTimer) {
-    window.clearTimeout(state.offlineAutosaveTimer);
-  }
-
-  state.offlineAutosaveTimer = window.setTimeout(() => {
-    state.offlineAutosaveTimer = 0;
-    stageOfflineState(state, { manual: false });
-  }, 700);
-}
-
-function clearOfflineAutosave(state) {
-  if (!state.offlineAutosaveTimer) return;
-  window.clearTimeout(state.offlineAutosaveTimer);
-  state.offlineAutosaveTimer = 0;
 }
 
 function getEditableEntries(state) {
@@ -871,175 +835,8 @@ function renderSaveState(state) {
     : "";
 }
 
-function renderSaveMode(state) {
-  if (!state.refs.saveMode) return;
-  state.refs.saveMode.textContent = buildTagStudioSaveModeText(state.config, state.saveMode, studioText);
-}
-
 function computeMetrics(state) {
   return { unresolvedCount: 0 };
-}
-
-async function probeSaveMode(state) {
-  if (state.saveModeProbePending) return;
-  state.saveModeProbePending = true;
-  const ok = await probeStudioHealth(500);
-  state.saveModeProbePending = false;
-  state.lastSaveModeHealthOk = ok;
-  state.saveMode = ok && !state.hasOfflineStagedSeries ? "post" : "offline";
-  state.saveModeResolved = true;
-
-  const importMessage = studioText(
-    state.config,
-    "save_result_server_available_import",
-    "Local server now available. Apply offline changes using Series Tags > Import."
-  );
-  if (ok && state.hasOfflineStagedSeries) {
-    if (!state.serverAvailableWhileOfflineNotified) {
-      state.serverAvailableWhileOfflineNotified = true;
-      setSaveResult(state, "success", importMessage);
-    }
-  } else {
-    if (state.serverAvailableWhileOfflineNotified && state.refs.saveResult && state.refs.saveResult.textContent === importMessage) {
-      setSaveResult(state, "", "");
-    }
-    state.serverAvailableWhileOfflineNotified = false;
-  }
-
-  renderSaveMode(state);
-  renderAll(state);
-  syncRouteBusyState(state);
-}
-
-function stageOfflineState(state, options = {}) {
-  clearOfflineAutosave(state);
-
-  const diff = buildStateDiff(state);
-  if (!diff.seriesChanged && !diff.changedWorkIds.length) {
-    if (options.manual) {
-      setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
-      renderStatus(state);
-    }
-    return false;
-  }
-
-  const stagedAt = utcTimestamp();
-  const stagedRow = buildPersistedSeriesRow(diff);
-  const baseRow = normalizeOfflineSeriesRow(state.offlineBaseSeriesRow);
-  let session = readOfflineAssignmentsSession();
-  let seriesCleared = false;
-
-  if (equalOfflineSeriesRows(stagedRow, baseRow)) {
-    session = removeOfflineAssignmentsSeriesEntry(session, state.seriesId, stagedAt);
-    seriesCleared = true;
-  } else {
-    session = upsertOfflineAssignmentsSeriesEntry(session, state.seriesId, {
-      base_series_updated_at_utc: state.offlineBaseSeriesUpdatedAt,
-      base_row_snapshot: baseRow,
-      staged_row: stagedRow,
-      staged_at_utc: stagedAt
-    }, stagedAt);
-  }
-
-  state.offlineSession = writeOfflineAssignmentsSession(session);
-  state.hasOfflineStagedSeries = !seriesCleared;
-  applyPersistedBaseline(state, diff);
-
-  if (options.manual) {
-    const removedCount = diff.changedWorkIds.filter((workId) => !diff.nextWorkStateById.has(workId)).length;
-    const savedCount = diff.changedWorkIds.length - removedCount;
-    setStatus(
-      state,
-      "success",
-      buildTagSaveSuccessMessage(
-        state.config,
-        { seriesSaved: diff.seriesChanged, savedCount, removedCount, savedAt: stagedAt },
-        studioText
-      )
-    );
-  }
-
-  setSaveResult(
-    state,
-    "success",
-    seriesCleared
-      ? studioText(state.config, "save_result_offline_cleared", "Series matches repo data. Offline session entry cleared.")
-      : studioText(state.config, "save_result_offline_staged", "Changes are staged in the offline session.")
-  );
-  renderAll(state);
-  return true;
-}
-
-async function handleSave(state) {
-  state.isBusy = true;
-  syncRouteBusyState(state);
-  try {
-    return await handleSaveInner(state);
-  } finally {
-    state.isBusy = false;
-    syncRouteBusyState(state);
-  }
-}
-
-async function handleSaveInner(state) {
-  const diff = buildStateDiff(state);
-  if (!diff.seriesChanged && !diff.changedWorkIds.length) {
-    setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
-    renderStatus(state);
-    return;
-  }
-
-  if (state.saveMode === "post") {
-    try {
-      const results = [];
-      const activityContext = buildStudioActivityContext({
-        pageId: "series-tag-editor",
-        actionId: "save-series-tags",
-        route: "/studio/analytics/series-tag-editor/",
-        controlId: "save",
-        controlSelector: "[data-role=\"save\"]",
-        recordIdField: "series_id",
-        recordId: state.seriesId
-      });
-      if (diff.seriesChanged) {
-        results.push(await postTags(state.seriesId, null, diff.nextSeriesRows, false, utcTimestamp, undefined, activityContext));
-      }
-      for (const workId of diff.changedWorkIds) {
-        const nextTags = diff.nextWorkStateById.get(workId) || [];
-        const keepWork = diff.nextWorkStateById.has(workId);
-        results.push(await postTags(state.seriesId, workId, nextTags, keepWork, utcTimestamp, undefined, activityContext));
-      }
-      const lastResult = results[results.length - 1] || {};
-      const savedAt = String(lastResult.updated_at_utc || utcTimestamp());
-      const removedCount = results.filter((result) => result && result.deleted).length;
-      const savedCount = diff.changedWorkIds.length - removedCount;
-      setStatus(
-        state,
-        "success",
-        buildTagSaveSuccessMessage(
-          state.config,
-          { seriesSaved: diff.seriesChanged, savedCount, removedCount, savedAt },
-          studioText
-        )
-      );
-      setSaveResult(state, "", "");
-      renderStatus(state);
-      applyPersistedBaseline(state, diff);
-      renderAll(state);
-      return;
-    } catch (error) {
-      state.saveMode = "offline";
-      state.saveModeResolved = true;
-      renderSaveMode(state);
-      stageOfflineState(state, { manual: false });
-      setStatus(state, "error", studioText(state.config, "save_status_local_failed", "Local save failed. Switched to offline mode."));
-      setSaveResult(state, "success", studioText(state.config, "save_result_local_failed", "Local server save failed. Changes are now staged in the offline session."));
-      renderAll(state);
-      return;
-    }
-  }
-
-  stageOfflineState(state, { manual: true });
 }
 
 function openSaveModal(state) {
@@ -1075,6 +872,15 @@ function setSaveResult(state, kind, text) {
     return;
   }
   delete state.refs.saveResult.dataset.state;
+}
+
+function saveControllerCallbacks() {
+  return {
+    renderAll,
+    renderStatus,
+    setSaveResult,
+    syncRouteBusyState
+  };
 }
 
 function getSelectedWorkEntries(state) {
