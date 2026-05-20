@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T14:03:59Z",
+  "generated_at": "2026-05-20T14:35:40Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2219,6 +2219,23 @@
     },
     {
       "scope": "studio",
+      "doc_id": "studio-javascript-payload-inventory",
+      "title": "JavaScript Inventory Policy",
+      "added_date": "2026-05-14",
+      "last_updated": "2026-05-20",
+      "parent_id": "studio",
+      "sort_order": 7000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-javascript-payload-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
+      "content_text_length": 16095,
+      "ui_status": "urgent"
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-js-payload-runtime-cleanup-inventory",
       "title": "JavaScript Payload And Runtime Cleanup Inventory",
       "added_date": "2026-05-10",
@@ -2233,23 +2250,6 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-payload-runtime-cleanup-inventory.json",
       "content_text_length": 4525,
       "ui_status": "done"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio-javascript-payload-inventory",
-      "title": "JavaScript Payload Inventory",
-      "added_date": "2026-05-14",
-      "last_updated": "2026-05-20",
-      "parent_id": "studio",
-      "sort_order": 7000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-javascript-payload-inventory.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 7688,
-      "ui_status": "urgent"
     },
     {
       "scope": "studio",
@@ -2315,6 +2315,22 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-activity-follow-ups.json",
       "content_text_length": 4406,
       "ui_status": "in-progress"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "javascript-inventory",
+      "title": "Javascript Inventory",
+      "added_date": "2026-05-20",
+      "last_updated": "2026-05-20",
+      "parent_id": "studio-javascript-payload-inventory",
+      "sort_order": 7010,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "javascript-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-inventory.json",
+      "content_text_length": 10742
     },
     {
       "scope": "studio",

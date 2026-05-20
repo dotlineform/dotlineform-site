@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-620476904c87541ba1bec321644237c8",
-    "generated_at_utc": "2026-05-20T14:01:58Z",
-    "count": 286
+    "version": "blake2b-e73aa8bd9149fe2d8d6156ee1cae4911",
+    "generated_at_utc": "2026-05-20T14:33:30Z",
+    "count": 287
   },
   "entries": [
     {
@@ -3467,6 +3467,30 @@
       "search_text": "data-flow data flow data flow catalogue 2026-05-11 14:10 2026 05 11 14 10"
     },
     {
+      "id": "studio-javascript-payload-inventory",
+      "kind": "doc",
+      "title": "JavaScript Inventory Policy",
+      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
+      "last_updated": "2026-05-20",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-20 • Studio",
+      "search_terms": [
+        "studio-javascript-payload-inventory",
+        "studio",
+        "javascript",
+        "payload",
+        "inventory",
+        "javascript inventory policy",
+        "policy",
+        "2026-05-20",
+        "2026",
+        "05",
+        "20"
+      ],
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory policy policy 2026-05-20 2026 05 20"
+    },
+    {
       "id": "site-request-js-payload-runtime-cleanup-inventory",
       "kind": "doc",
       "title": "JavaScript Payload And Runtime Cleanup Inventory",
@@ -3500,29 +3524,6 @@
         "35"
       ],
       "search_text": "site-request-js-payload-runtime-cleanup-inventory site request js payload runtime cleanup inventory javascript payload and runtime cleanup inventory javascript and javascript and browser config structural review request browser config structural review 2026-05-11 00:35 2026 05 11 00 35"
-    },
-    {
-      "id": "studio-javascript-payload-inventory",
-      "kind": "doc",
-      "title": "JavaScript Payload Inventory",
-      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "last_updated": "2026-05-20",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-20 • Studio",
-      "search_terms": [
-        "studio-javascript-payload-inventory",
-        "studio",
-        "javascript",
-        "payload",
-        "inventory",
-        "javascript payload inventory",
-        "2026-05-20",
-        "2026",
-        "05",
-        "20"
-      ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript payload inventory 2026-05-20 2026 05 20"
     },
     {
       "id": "registry-driven-scoring-architecture",
@@ -3626,6 +3627,29 @@
         "36"
       ],
       "search_text": "site-request-studio-activity-follow-ups site request studio activity follow ups studio activity follow-ups change requests change requests 2026-05-08 21:36 2026 05 08 21 36"
+    },
+    {
+      "id": "javascript-inventory",
+      "kind": "doc",
+      "title": "Javascript Inventory",
+      "href": "/docs/?scope=studio&doc=javascript-inventory",
+      "last_updated": "2026-05-20",
+      "parent_id": "studio-javascript-payload-inventory",
+      "parent_title": "JavaScript Inventory Policy",
+      "display_meta": "2026-05-20 • JavaScript Inventory Policy",
+      "search_terms": [
+        "javascript-inventory",
+        "javascript",
+        "inventory",
+        "javascript inventory",
+        "javascript inventory policy",
+        "policy",
+        "2026-05-20",
+        "2026",
+        "05",
+        "20"
+      ],
+      "search_text": "javascript-inventory javascript inventory javascript inventory javascript inventory policy policy 2026-05-20 2026 05 20"
     },
     {
       "id": "studio-python-ruby-script-inventory",
