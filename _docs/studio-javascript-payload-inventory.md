@@ -101,6 +101,10 @@ That child document lists all 129 browser JavaScript files with rank, file, scor
 The detailed sections below cover the top five highest-scoring current improvement priorities after manual review.
 When files have the same score, use the ranked child table order for the detail set and watch list.
 
+Each section should summarise:
+- why this is a priority area to optimise.
+- what direction improvements should go in, and areas that should be left alone, with reasons.
+
 ## Top Priority Details
 
 ### `assets/docs-viewer/js/docs-viewer.js`
@@ -111,24 +115,13 @@ When files have the same score, use the ranked child table order for the detail 
 
 **Why This Is Priority Work**
 
-- Bookmark state, storage, rendering, and events now live in `assets/docs-viewer/js/docs-viewer-bookmarks.js`.
-- Config/scope boot and viewer UI text merging now live in `assets/docs-viewer/js/docs-viewer-config-controller.js`.
-- Sidebar/nav/meta rendering and trail display now live in `assets/docs-viewer/js/docs-viewer-sidebar.js`.
-- Search loading, recent/search result rendering, result batching, and debounced search input binding now live in `assets/docs-viewer/js/docs-viewer-search-controller.js`.
-- Document pane visibility, loading/missing/error states, final payload rendering, report context creation, and report mounting handoff now live in `assets/docs-viewer/js/docs-viewer-document-controller.js`.
-- Result-row and bookmark-row markup helpers live in `assets/docs-viewer/js/docs-viewer-render.js`.
-- URL building, anchor route parsing, history writes, requested-doc resolution, canonical route correction, popstate route orchestration, and payload-load orchestration now live in `assets/docs-viewer/js/docs-viewer-router.js`.
-- Status-pill markup and events stay behind the lazy management-controller boundary.
 - This is a shared site runtime, not a single local tool route, so performance exposure and architectural consistency matter even when the remaining controller responsibilities are partly legitimate composition work.
 
-**Meaningful Improvement Slices**
+**Direction**
 
-- Separate generated-payload loading and loadable-doc visibility state if new scope or payload behavior grows.
+- Separate generated-payload loading and loadable-doc visibility state for when new scope or payload behavior grows.
 - Keep management dynamic-loading behind the existing lazy boundary; improve that boundary only if management boot, capability loading, or report loading changes materially.
 - Avoid reopening router or document-rendering work just for line count; those responsibilities already have focused modules.
-
-**Deferral Criteria**
-
 - A further split is only useful if it reduces shared-runtime coupling or route-load cost.
 - Do not turn the entry file into a thin pass-through layer if it makes the viewer boot sequence harder to inspect.
 
@@ -141,20 +134,16 @@ When files have the same score, use the ranked child table order for the detail 
 **Why This Is Priority Work**
 
 - Existing domain/save/service split is useful but incomplete.
-- Registry modal rendering, field population, delete impact display, import result display, popup option rendering, and modal event/lifecycle wiring now live in `assets/studio/js/tag-registry-modals.js`.
 - The route still owns tag lookup, validation decisions, match filtering rules, import parsing/submission, service calls, patch fallback decisions, route busy/ready state, and list/control rendering.
 - The strongest leverage is architectural consistency: Tag Aliases now has route-local render and import-mode modules, so Tag Registry can follow the same boundary and make future tag tooling easier to compare and maintain.
 
-**Meaningful Improvement Slices**
+**Direction**
 
 - Extract list/control rendering into `assets/studio/js/tag-registry-render.js`, following the Tag Aliases render boundary.
 - Extract import-mode availability probing if it can share or mirror the Tag Aliases import-mode boundary without hiding route-specific copy or write behavior.
 - Consider service orchestration only after rendering is out of the controller, because the remaining state surface will be easier to define.
-
-**Deferral Criteria**
-
 - Do not open another modal-extraction slice unless new modal responsibilities are introduced.
-- Do not extract tiny validation helpers only to reduce line count; validation should move only when it clarifies the domain/service boundary.
+- Validation should move only when it clarifies the domain/service boundary.
 
 ### `assets/studio/js/tag-aliases.js`
 
@@ -168,15 +157,11 @@ When files have the same score, use the ranked child table order for the detail 
 - The remaining controller still coordinates alias import parsing/submission, service calls, save behavior, route busy/ready state, and cross-module state handoff.
 - This route remains architecturally useful because it is the clearest sibling reference for Tag Registry boundaries.
 
-**Meaningful Improvement Slices**
+**Direction**
 
 - Revisit import parsing/submission only when alias import behavior changes materially.
 - Keep render and modal behavior out of the route shell.
 - Use the current Tag Aliases split as the comparison point for Tag Registry and future tag tooling.
-
-**Deferral Criteria**
-
-- Do not reopen this only to reduce route-shell size.
 - Do not merge extracted render, modal, or import-mode behavior back into the controller.
 
 ### `assets/docs-viewer/js/docs-html-import.js`
@@ -191,16 +176,11 @@ When files have the same score, use the ranked child table order for the detail 
 - It is lazy and management-only, so transfer-size risk is not the main reason to work on it.
 - The maintenance risk is high because Docs Import behavior spans HTML/Markdown conversion, media handling, create/overwrite semantics, and local write-service contracts.
 
-**Meaningful Improvement Slices**
+**Direction**
 
 - Extract import result rendering into a focused render module that owns media plans, warnings, replacement docs, and final status markup.
 - Extract preview/write orchestration into a workflow module that owns service calls, replacement decisions, and write-mode transitions.
 - Keep scope selection and route readiness separate from import conversion details.
-
-**Deferral Criteria**
-
-- Do not split only because the file is near the line-pressure threshold.
-- Prioritise this when Docs Import media handling, replacement behavior, or source-format support is changing; that is when the boundary improvement has the highest leverage.
 
 ### `assets/studio/js/tag-studio.js`
 
@@ -214,26 +194,22 @@ When files have the same score, use the ranked child table order for the detail 
 - The remaining controller still coordinates a broad editing workflow, route readiness, and cross-module handoff.
 - This route is a common tag-editing surface, so new save/probe/offline behavior can easily drift back into the shell if boundaries are not maintained.
 
-**Meaningful Improvement Slices**
+**Direction**
 
 - Keep new save, probe, offline, suggestion, and render behavior in the existing focused modules.
-- Extract only if a future change adds a complete responsibility that does not already have an owner.
+- Extract if a future change adds a complete responsibility that does not already have an owner.
 - Prefer tightening module contracts over creating another tiny helper split.
-
-**Deferral Criteria**
-
-- Do not reopen this only to reduce route-shell size.
 - Do not add new route-local patterns when an existing Tag Studio module already owns the behavior.
 
 ## Watch Areas
 
 These files are the next five priorities after the top five detail set for the current pass.
 
-- `assets/studio/js/data-sharing-prepare.js`: mirrors the Data Sharing Review architecture problem below the top-five set. Revisit when prepare/review workflow adapter work resumes.
-- `assets/studio/js/tag-registry-modals.js`: large route-local modal module. Keep it modal-focused; split only if modal workflows themselves gain separate complete responsibilities.
-- `assets/docs-viewer/js/docs-viewer-management.js`: recent management action, capability/config, interaction, and modal extractions lowered line pressure. Reopen only if management workflow growth reintroduces mixed ownership.
-- `assets/studio/js/series-tags.js`: sub-threshold but stateful analytics route. Revisit when analytics scoring, RAG display, or series tag reporting changes.
-- `assets/studio/js/data-sharing-review.js`: recently moved below threshold with preview-render and apply-orchestration extraction. Keep returned-package loading, route readiness, and workflow-domain adapter policy small; reopen only if review workflow behavior grows again.
+- `assets/studio/js/data-sharing-prepare.js`: mirrors the Data Sharing Review architecture problem below the top-five set. Visit when prepare/review workflow adapter work resumes.
+- `assets/studio/js/tag-registry-modals.js`: large route-local modal module. Keep it modal-focused; split if modal workflows themselves gain separate complete responsibilities.
+- `assets/docs-viewer/js/docs-viewer-management.js`: Visit if management workflow growth reintroduces mixed ownership.
+- `assets/studio/js/series-tags.js`: Visit when analytics scoring, RAG display, or series tag reporting changes.
+- `assets/studio/js/data-sharing-review.js`: Keep returned-package loading, route readiness, and workflow-domain adapter policy small; visit if review workflow behavior grows.
 
 ## Rerun Notes
 

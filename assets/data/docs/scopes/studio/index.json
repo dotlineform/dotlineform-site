@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T16:47:51Z",
+  "generated_at": "2026-05-20T17:12:30Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -105,7 +105,7 @@
       "source_path": "change-history.md",
       "viewer_url": "/docs/?scope=studio&doc=change-history",
       "content_url": "/assets/data/docs/scopes/studio/by-id/change-history.json",
-      "content_text_length": 1051,
+      "content_text_length": 0,
       "ui_status": "report",
       "viewer_report": "change_history",
       "viewer_report_access": "manage"
@@ -2215,7 +2215,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 14572,
+      "content_text_length": 12566,
       "ui_status": "urgent"
     },
     {
@@ -3641,8 +3641,7 @@
       "source_path": "change-history-reports.md",
       "viewer_url": "/docs/?scope=studio&doc=change-history-reports",
       "content_url": "/assets/data/docs/scopes/studio/by-id/change-history-reports.json",
-      "content_text_length": 254,
-      "ui_status": "report"
+      "content_text_length": 1257
     },
     {
       "scope": "studio",
