@@ -758,7 +758,8 @@ import {
   }
 
   function statusForIndexDoc(doc) {
-    if (!doc || isNonLoadableDoc(doc) || isManageOnlyTreeDoc(doc)) return null;
+    if (!doc || isNonLoadableDoc(doc)) return null;
+    if (!state.managementMode && isManageOnlyTreeDoc(doc)) return null;
     if (!isDocViewable(doc) && !state.managementMode) return null;
     var statusValue = String(doc.ui_status || "").trim();
     return statusValue ? state.uiStatusByValue.get(statusValue) || null : null;

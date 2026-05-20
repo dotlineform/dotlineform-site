@@ -11,13 +11,11 @@ viewable: true
 
 This is the top-level map for the current site documentation.
 
-Use it as the default entry point for `/docs/`.
-
 ## Main Sections
 
 - **[Studio](/docs/?scope=studio&doc=studio)**
   Studio routes, page wiring, and Studio-specific behavior.
-- **[Design](/docs/?scope=studio&doc=design)**
+- **[UI](/docs/?scope=studio&doc=ui)**
   site-wide UI rules, docs-viewer/search UI standards, Studio UI patterns, and CSS guidance.
 - **[Change Requests](/docs/?scope=studio&doc=change-requests)**
   proposed and in-progress request docs, including UI request specs and task breakdowns.
@@ -37,7 +35,7 @@ Use it as the default entry point for `/docs/`.
 ## Supporting Docs
 
 - **[Development Workflow](/docs/?scope=studio&doc=development-workflow)**
-  end-to-end lifecycle guidance for human and Codex implementation work.
+  end-to-end lifecycle guidance for human and Codex implementation work, including rules for maintaining the site change log.
 - **[Site Change Log](/docs/?scope=studio&doc=site-change-log)**
   meaningful non-search site and Studio history.
 - **[Change History Reports](/docs/?scope=studio&doc=change-history-reports&mode=manage)**
@@ -46,13 +44,3 @@ Use it as the default entry point for `/docs/`.
   checked-in dependency sources, critical versus workflow-specific packages, and local/cloud dependency expectations.
 - **[UI Audits](/docs/?scope=studio&doc=ui-audits)**
   saved page-level UI conformance reviews and follow-up audit records.
-- **[Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)**
-  rules for maintaining the site change log.
-
-## Practical Reading Order
-
-- start here when you need the right section quickly
-- use `Data Models` for schema and payload-contract questions
-- use `Config` for checked-in config ownership
-- use `Scripts` for build/write mechanics
-- use section docs such as `Studio`, `Search`, or `Docs Viewer` for runtime behavior

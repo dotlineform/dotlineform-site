@@ -66,7 +66,7 @@ For example:
 
 - Status configuration is scope-specific under `docs_viewer.ui_statuses_by_scope`.
 - `studio_config.json` remains the shared Docs Viewer config source for now. A route-level config hook is not needed unless a future scope cannot use that shared payload.
-- `ui_status` values on hidden, manage-only, or non-loadable docs are ignored by the viewer.
+- `ui_status` values on hidden docs are visible in manage mode; manage-only tree docs can show status while manage mode makes that tree visible; non-loadable docs are ignored by the viewer.
 - The emoji prefix appears only in the left index panel. It is a UI visual prompt, not part of search output, breadcrumb/path text, bookmark labels, or document titles.
 - The Edit modal only writes a status change when the user clicks `Save`.
 - The Edit modal treats `draft` as viewability state: selecting `draft` writes `viewable: false` and clears `ui_status`; selecting any non-draft status writes `viewable: true`.
@@ -115,7 +115,7 @@ Status: implemented.
 - Load configured statuses through the existing Docs Viewer config request.
 - Build a scope-specific lookup from `ui_status` to emoji/label.
 - Prefix the rendered index title with the configured emoji when the active doc record has a matching status.
-- Ignore `ui_status` for non-loadable and manage-only tree nodes.
+- Ignore `ui_status` for non-loadable nodes, and for manage-only tree nodes outside manage mode.
 - Do not add the emoji to search results, recent results, breadcrumb/path text, bookmark labels, or document content/header copy.
 - Make the prefix presentational unless a label is needed for assistive technology.
 
