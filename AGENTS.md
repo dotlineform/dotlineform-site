@@ -5,25 +5,22 @@
 - consider whether edits are implied by the current request. If the request is analysis-only, exploratory, uses words like 'check' or 'confirm', or includes a '?', do not make edits without asking first.
 - when edits are implied, briefly state the intended change set and ask for confirmation before editing unless the request is trivial.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
-- do not rebuild doc payloads.
+- do not rebuild doc payloads, this is done manually or by `bin/dev-studio`
 
 ## Project Priorities and Tradeoffs
 
-- This is a personal project. The user is effectively fulfilling developer, tester, and product roles together.
-- Optimize for decisions that help the user understand:
-- clean and elegant UI design
-- organized, maintainable code
-- evolving or uncertain requirements
-- best practice and where compromise is justified
-- how Codex should best be used to implement requirements
+- The user is effectively fulfilling developer, tester, and product roles together. Optimize for decisions that help the user understand:
+  - organized, maintainable code
+  - best practice and where compromise is justified
+  - how Codex should best be used to implement requirements
 - When discussing options, explain tradeoffs in a way that helps the user decide and iterate requirements, not just implement the first possible solution.
 
 ## Context and Batching
 
 - Treat the visible context window as a hard working budget; do not rely on automatic compaction succeeding.
-- Keep broad requests split into narrow, finishable slices that can be completed, verified, and summarized in one context window.
+- Keep broad requests split where possible into finishable slices that can be completed, verified, and summarized in one context window.
 - Prefer targeted file reads, scoped diffs, and concise command output over broad searches or full diffs that flood the transcript.
-- For long-running multi-batch work, leave a compact checkpoint before stopping or before context gets high:
+- For long-running multi-batch work, leave a compact handoff note before stopping or before context gets high, including:
   - completed slice and files changed
   - checks run and results
   - known risks or blockers
@@ -31,12 +28,54 @@
 - If a slice is growing beyond the remaining context budget, stop at a clean checkpoint rather than pushing into an interruption-prone state.
 - Before a long thread reaches context limit, produce a handoff note: changed files, decisions made, remaining tasks, commands run, and known risks.
 
-## Studio UI Guidance
+## UI Guidance
 
-- `_docs/studio-ui-start.md` is the first-stop Studio UI implementation checklist. Use it first for Studio UI work, then follow its links into the longer reference docs as needed.
-- `_docs/ui-framework.md` defines the site-wide UI interaction defaults plus the docs-viewer and public-search UI
-- Prefer extending shared `tagStudio*` primitives over borrowing another page's namespace or creating one-off patterns.
+- `_docs/ui.md` is the section containing UI guidance and maintenance rules.
+- `_docs/ui-framework.md` defines the site-wide UI interaction defaults.
 - Keep UI shell concerns separate from application logic, validation, and mutation behavior.
+
+## Implementation Style
+
+- Preserve existing Jekyll/Liquid conventions in this repo.
+- Prefer shared JS/CSS logic over duplicated inline logic.
+- When modifying CSS, consider whether there is an opportunity to refactor or consolidate shared styles.
+- The primary purpose of refactoring is to improve consistency and reliability of *.css
+- Keep comments concise and implementation-focused.
+- use studio_config.json (ui_text section) to store UI copy such as labels. 
+- For material new changes, new requirements, or refactors, state the main benefits and risks associated with:
+  - new changes
+  - new requirements
+  - refactors
+- For trivial or mechanical edits, a short summary is enough.
+
+## JavaScript Module Boundaries
+
+- Do not add new responsibilities to large route/controller files by default.
+- Before changing a Studio or Docs Viewer route controller, check whether the behavior belongs in an existing route-local module, shared module, render module, service/write module, domain module, modal module, or workflow module.
+- Prefer creating or extending a focused module when the change adds a complete responsibility such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, or route-state projection.
+- Keep route entry modules as orchestration shells where practical: boot/config, route readiness, event wiring, and handoff between focused modules.
+- Avoid cosmetic splits that only move tiny helpers; extract around stable ownership boundaries.
+- When changing JavaScript inventory priority files, consult `_docs/studio-javascript-payload-inventory.md`.
+
+## Studio Documentation and Search
+
+- Docs source is flat under `_docs/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders in _docs/.
+- The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not `_docs/` directly.
+- If `bin/dev-studio` or docs-watch is already running and expected to regenerate the payloads, do not rebuild doc payloads.
+- When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
+- Prefer explicit scope for docs search rebuilds:
+  - `./scripts/build_search.rb --scope studio --write`
+  - `./scripts/build_search.rb --scope library --write`
+- Do not treat all-scope rebuilds as the default path; use them only when the task intentionally spans both corpora.
+- When search behaviour, schema, ranking, normalization, UI, build flow, validation, or architecture changes materially, update the relevant child docs under `_docs/search.md` in the same change.
+
+## Change Log
+
+- The source model and authoring workflow for change logs are documented in `_docs_logs/README.md`.
+- Keep raw repo file paths for unpublished docs, literal output paths, and non-doc files such as scripts, JSON artifacts, `README.md`, or `AGENTS.md`.
+- Script-specific references for command usage, flags, outputs, and operational notes need to be documented under the parent doc for the scope that own the change, these are top level folders in Docs Viewer. Where a script or functionality crosses scopes (e.g. Catalogue + Library) then it is described under Studio parent. When a script of funmctionality applies across the site, it is described under Site parent.
+- Update the owning runtime, UI, or script doc when behavior, dependencies, or build/write responsibilities changed; do not spread partial schema notes across multiple sections.
+- When features are implemented or changed, update the associated docs in the same change.
 
 ## Runtime and Paths
 
@@ -137,57 +176,6 @@
 - Keep local write services bound to loopback and limit CORS to localhost origins only.
 - If a runtime smoke test is blocked by sandbox restrictions, state that clearly in the final summary.
 
-## Git and Change Hygiene
-
-- Do not commit unless explicitly requested.
-- Do not amend commits unless explicitly requested.
-- Never use destructive git commands (`reset --hard`, checkout/revert of unrelated changes) without explicit approval.
-- Ignore unrelated dirty files and do not revert user changes.
-
-## Implementation Style
-
-- Preserve existing Jekyll/Liquid conventions in this repo.
-- Prefer shared JS/CSS logic over duplicated inline logic.
-- When modifying CSS, consider whether there is an opportunity to refactor or consolidate shared styles.
-- The primary purpose of refactoring is to improve consistency and reliability of *.css
-- Keep comments concise and implementation-focused.
-- use studio_config.json (ui_text section) to store UI copy such as labels. 
-- For material new changes, new requirements, or refactors, state the main benefits and risks associated with:
-  - new changes
-  - new requirements
-  - refactors
-- For trivial or mechanical edits, a short summary is enough.
-
-## JavaScript Module Boundaries
-
-- Do not add new responsibilities to large route/controller files by default.
-- Before changing a Studio or Docs Viewer route controller, check whether the behavior belongs in an existing route-local module, shared module, render module, service/write module, domain module, modal module, or workflow module.
-- Prefer creating or extending a focused module when the change adds a complete responsibility such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, or route-state projection.
-- Keep route entry modules as orchestration shells where practical: boot/config, route readiness, event wiring, and handoff between focused modules.
-- Avoid cosmetic splits that only move tiny helpers; extract around stable ownership boundaries.
-- When changing JavaScript inventory priority files, consult `_docs/studio-javascript-payload-inventory.md`.
-
-## Studio Documentation and Search
-
-- Docs source is flat under `_docs/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders in _docs/.
-- The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not `_docs/` directly.
-- If `bin/dev-studio` or docs-watch is already running and expected to regenerate the payloads, do not rebuild doc payloads.
-- When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
-- Prefer explicit scope for docs search rebuilds:
-  - `./scripts/build_search.rb --scope studio --write`
-  - `./scripts/build_search.rb --scope library --write`
-- Do not treat all-scope rebuilds as the default path; use them only when the task intentionally spans both corpora.
-- When search behaviour, schema, ranking, normalization, UI, build flow, validation, or architecture changes materially, update the relevant child docs under `_docs/search.md` in the same change.
-
-## Change Log
-
-- `_docs/site-change-log.md` is the central change log. Only record changes when UI, build flow, validation, or architecture changes are significant and meaningful. Simple UI changes or minor code changes do not need change log entries. If in doubt, ask if a change log entry is required.
-- For meaningful search changes, update `_docs/search-change-log.md` in the same change set as part of normal close-out.
-- Keep raw repo file paths for unpublished docs, literal output paths, and non-doc files such as scripts, JSON artifacts, `README.md`, or `AGENTS.md`.
-- Script-specific references for command usage, flags, outputs, and operational notes need to be documented under the parent doc for the scope that own the change, these are top level folders in Docs Viewer. Where a script or functionality crosses scopes (e.g. Catalogue + Library) then it is described under Studio parent. When a script of funmctionality applies across the site, it is described under Site parent.
-- Update the owning runtime, UI, or script doc when behavior, dependencies, or build/write responsibilities changed; do not spread partial schema notes across multiple sections.
-- When features are implemented or changed, update the associated docs in the same change.
-
 ## Codex Cloud / Codespaces Runtime Contract
 
 - Treat local and cloud sessions as one workflow with the same command shapes and validation steps.
@@ -204,3 +192,10 @@
   - `R2_ENDPOINT`
 - Before reporting environment issues in Codex Cloud or Codespaces, run a version check pass for Python, Ruby, Bundler, and Jekyll.
 - Use dry-run generator commands first in cloud sessions unless an explicit write run was requested.
+
+## Git and Change Hygiene
+
+- Do not commit unless explicitly requested.
+- Do not amend commits unless explicitly requested.
+- Never use destructive git commands (`reset --hard`, checkout/revert of unrelated changes) without explicit approval.
+- Ignore unrelated dirty files and do not revert user changes.

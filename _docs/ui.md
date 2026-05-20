@@ -10,4 +10,4 @@ sort_order: 11000
 
 This section describes the site's shared UI design approach, audit and maintenance.
 
-Detailed implementation guidance is in [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue). This is the index for named primitives, composition patterns, and isolated demo pages.
+Detailed implementation guidance is in [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue), the index for named primitives, composition patterns, and isolated demo pages.

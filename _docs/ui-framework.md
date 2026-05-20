@@ -8,39 +8,94 @@ sort_order: 2500
 ---
 # UI Framework
 
-This is a legacy source doc.
-Its stable material is being consolidated into [UI](/docs/?scope=studio&doc=ui), so new framework guidance should go there.
-
 This document defines the current site-wide UI framework.
 
-It covers:
+References:
 
-- site-wide interaction defaults and JS hook rules
-- shared UI standards for the docs viewer
-- shared UI standards for the dedicated public search page
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
+- [UI Audits](/docs/?scope=studio&doc=ui-audits)
 
-It previously excluded Studio-specific shared primitives and modal patterns.
-That split is now being retired; use [UI](/docs/?scope=studio&doc=ui) as the unified framework target and [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) for named primitive and composition-pattern docs.
+## Design Steps
+
+For any UI task:
+
+1. Identify the UI type before editing.
+2. Check whether the page should use an existing shared primitive or composition.
+3. Check whether visible runtime copy should come from `studio_config.json`.
+4. Check whether the issue is local or systemic.
+5. Only then move into the detailed framework or page docs.
+
+### Identify The UI Type
+
+Decide which contract the change belongs to:
+
+- command button
+- link or route-entry action
+- pill or chip
+- panel or panel-link
+- input or search field
+- local command feedback/status
+- list shell or capped list
+- modal shell or modal action row
+- page-specific composition
+
+If the answer is unclear, stop and classify it first. Several recent inconsistencies came from mixing buttons, links, and route-local compositions.
+
+### Shared Primitive Check
+
+Before adding or changing UI:
+
+- check the isolated demo pages under `/studio/ui-catalogue/demos/`
+- map the demo structure into the shared layer or an owning route namespace before inventing unrelated markup or CSS
+- if the live page fails after mapping a catalogue pattern, use UI Audit to decide whether the issue is in the live route, the shared production primitive, or the demo pattern
+- if a pattern is repeated but not yet formalized, decide whether it is:
+  - a shared primitive
+  - a shared composition
+  - or a truly route-specific layout
+- use this is a prompt to call out the need to define a new shared primitive or composition pattern
+
+### UI Copy Check
+
+For Studio pages, visible runtime copy should normally come from `assets/studio/data/studio_config.json`.
+
+Check these points:
+
+- if the runtime calls `getStudioText(config, "<scope>.<key>")`, the matching `ui_text.<scope>` block must exist
+- do not let JS fallback strings become the real source of truth
+- route paths belong in config routes
+- visible button labels, headings, placeholders, status text, and other runtime copy belong in `ui_text`
+- build-time-only design selections for static pages belong in Jekyll data, not Studio runtime config
+
+Relevant references:
+
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+- [Studio Config And Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
+
+### Fast Rules
+
+Use these default checks on every Studio UI task:
+
+- buttons are commands, not navigation
+- route-entry actions should usually be links, not buttons
+- shared command buttons should use the shared size/width contract unless reviewed otherwise
+- command feedback should stay adjacent to the related control area
+- capped-list search should appear only when the list is actually truncated
+- if a row already has a clear link to the target record, do not duplicate that same navigation as a button
+- do not use a panel as a generic wrapper just to get a border around unrelated controls
+- if a static Studio route gains async data, service checks, or route commands, replace the static ready initializer with a route-specific ready/busy contract before treating it as smoke-test ready
+
+### Close-Out Checklist
+
+Before finishing Studio UI work:
+
+- update `studio_config.json` if visible runtime copy changed
+- update shared docs if the contract changed
+- create a structured docs-log entry for meaningful systemic UI decisions or implementations
+- verify desktop and mobile behavior
+- run `./scripts/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
 
 The goal is consistency without introducing a heavy component system. Pages should expose their major layout containers in template markup, keep JS focused on dynamic UI, and reuse stable hooks and shared primitives instead of borrowing unrelated page-specific class names.
-
-Related references:
-
-- [UI](/docs/?scope=studio&doc=ui)
-- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
-- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
-- [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
-- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
-- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
-- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
-
-## Scope
-
-This framework covers:
-
-- site-wide behavior contracts for progressive enhancement, navigation interactions, and DOM hooks
-- docs-viewer UI standards for `/docs/` and `/library/`
-- public search UI standards for `/catalogue/search/`
 
 ## Site UI Contract Boundary
 
@@ -130,6 +185,7 @@ These standards apply to the shared docs-viewer UI used by:
 
 - `/docs/`
 - `/library/`
+- `/analysis/`
 
 Detailed runtime behavior still belongs in the docs-viewer and search sections. This document only records the current UI standards.
 
@@ -212,78 +268,3 @@ The current shared treatment is:
 - drag/drop tree moves should normalize the destination sibling set to sparse unique sort orders so the requested placement is visible even when earlier metadata contains duplicate order values
 - the one-step move Undo control belongs to the index toolbar/header area because it reverses a tree operation, not a content edit
 
-## Public Search UI Standards
-
-These standards apply to the dedicated public search page:
-
-- `/catalogue/search/`
-
-Detailed search behavior, scope policy, and ranking are documented elsewhere. This section only records the current UI shape.
-
-### Page anatomy
-
-The current page should keep this structure:
-
-- back link to the owning scope surface
-- explicit visible scope label
-- one primary search input
-- one inline status line
-- one inline result list
-- one inline `more` control when results are incrementally expanded
-
-This remains a dedicated page, not a header-level overlay.
-
-### Scope visibility
-
-The active search scope must stay visible in page chrome, not only in the URL.
-
-Current UI signals:
-
-- back-link label
-- scope label beside the header area
-- scope-owned placeholder and ARIA copy
-
-### Result list shape
-
-Results should remain:
-
-- a single mixed ranked list
-- inline on the page
-- visibly typed by small kind labels
-- light on controls and chrome
-- able to expose secondary metadata links when the metadata is directly useful navigation, such as work result series titles
-
-The page should not introduce:
-
-- result grouping panels
-- floating suggestion menus
-- separate filter drawers
-- secondary result panes
-
-### Search input consistency
-
-The dedicated public search page and the docs viewer should keep their search inputs visually aligned where possible:
-
-- same overall pill-like shape
-- same focus treatment
-- same plain inline placement above results
-
-Minor scope-specific differences are acceptable, but divergence should be intentional.
-
-## Relationship To Other Documents
-
-Use this document for:
-
-- current site-wide UI standards
-- current docs-viewer UI standards
-- current public search page UI standards
-
-Use other docs for:
-
-- Studio shared primitives and modal patterns
-  - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
-- docs-viewer runtime fork rules
-  - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
-- public search route, scope vocabulary, and functional behavior
-  - [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
-  - [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)

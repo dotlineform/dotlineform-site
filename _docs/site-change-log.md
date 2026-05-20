@@ -11,6 +11,8 @@ sort_order: 81000
 
 This log has been deprecated. Use the manage-only [Change History](/docs/?scope=studio&doc=change-history&mode=manage) report for date and domain browsing across migrated entries. The change log process is described in [Development Workflow](/docs/?scope=studio&doc=development-workflow)
 
+---
+
 ## Current Source Model
 
 - canonical detailed entries: `_docs_logs/entries/*.json`

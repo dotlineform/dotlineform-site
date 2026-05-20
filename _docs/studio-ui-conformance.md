@@ -22,14 +22,6 @@ This is the audit contract, not the primitive reference itself.
 
 Use UI Catalogue primitive and pattern docs, isolated demo pages, and shared framework docs as the source rules. Use this document to define how those rules should be audited and reported.
 
-Related references:
-
-- [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
-- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
-- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
-- [UI Audits](/docs/?scope=studio&doc=ui-audits)
-- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
-
 ## Goal
 
 Make the following test valid and repeatable:
@@ -244,20 +236,14 @@ Record:
 
 ## Where Audit Output Lives
 
-Save page-level audit outputs in [UI Audits](/docs/?scope=studio&doc=ui-audits), using:
+Save page-level audit outputs as child docs of [UI Audits](/docs/?scope=studio&doc=ui-audits), using:
 
 - `doc_id: ui-audit-<page-key>-<yyyymmdd>`
 - source file: `_docs/ui-audit-<page-key>-<yyyymmdd>.md`
 
-This keeps page audit records separate from:
-
-- [Site Change Log](/docs/?scope=studio&doc=site-change-log), which records implementation history
-- [Design](/docs/?scope=studio&doc=design), which defines standards
-
 Working rule:
 
 - keep post-audit remediation, cleanup progress, and unresolved decisions in the audit doc itself
-- use [Site Change Log](/docs/?scope=studio&doc=site-change-log) only when a change has actually been implemented
 - use [Change Requests](/docs/?scope=studio&doc=change-requests) only when the audit exposes a real shared design task that needs its own spec or request doc
 
 ## What Should Be Flagged
@@ -309,12 +295,11 @@ Outcome precedence:
 
 If a user or future Codex session asks to check whether page X conforms to Studio UI standards, the expected reading order is:
 
-1. [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
-2. this document
+1. this document
+2. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 3. [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
-4. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
-5. [UI Audits](/docs/?scope=studio&doc=ui-audits)
-6. the page-specific audit doc if one exists
+4. [UI Audits](/docs/?scope=studio&doc=ui-audits)
+5. the page-specific audit doc if one exists under [UI Audits](/docs/?scope=studio&doc=ui-audits)
 
 ## Recommended Output Template
 
@@ -370,9 +355,7 @@ Verification:
 
 This audit spec is ahead of the current primitive catalogue coverage.
 
-That is deliberate.
-
-The spec makes it possible to say:
+That is deliberate. The spec makes it possible to say:
 
 - what can already be audited confidently
 - what is only partially covered

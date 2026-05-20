@@ -25,7 +25,7 @@ For any non-trivial change:
 5. Run targeted verification proportional to the blast radius.
 6. Update owning docs and generated payloads when source docs or generated contracts change.
 7. Close out with a concise summary, remaining risks, and follow-up tasks.
-8. When the structured change-log system is implemented, write `_docs_logs/` entries for meaningful completed work.
+8. Write `_docs_logs/` entries for meaningful completed work. More info: `_docs_logs/README.md`.
 
 ## 1. Classify The Work
 
@@ -71,7 +71,7 @@ Prefer existing repo boundaries:
 - Keep generated data flowing from source records through scripts; do not edit generated payloads as source.
 - Keep source docs under the owning scope and use Docs Viewer links for published doc references.
 
-For UI work, start with [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start).
+For UI work, start with [UI](/docs/?scope=studio&doc=ui) and child documents.
 For search work, start with [Search](/docs/?scope=studio&doc=search) and update search child docs when schema, ranking, normalization, UI, build flow, or validation changes materially.
 For scripts or local services, use [Scripts](/docs/?scope=studio&doc=scripts) and the script-specific child doc.
 
@@ -111,7 +111,6 @@ When behavior changes, update the owning reference doc in the same change.
 Common follow-through:
 
 - `_docs/` changes require Studio docs-viewer payload follow-through.
-- `_docs_library/` changes require Library docs-viewer payload follow-through.
 - Search behavior or schema changes require relevant Search child docs and search payload rebuilds.
 - Script behavior changes require the script-specific child doc under [Scripts](/docs/?scope=studio&doc=scripts).
 - Config behavior changes require the owning config doc under [Config](/docs/?scope=studio&doc=config).
@@ -138,19 +137,12 @@ For change requests:
 
 ## 8. Record Durable Change History
 
-The current site and search change logs are being replaced by a structured `_docs_logs/` corpus.
-The implementation request is [Change Log Entry Model Request](/docs/?scope=studio&doc=site-request-change-log-entry-model).
+The source model and authoring workflow for change logs are documented in `_docs_logs/README.md`.
 
-When that system is implemented:
-
-- create structured log entries for meaningful completed changes
+- create structured log entries `_docs_logs/` for meaningful completed changes
 - include `change_request_doc_id` when a log entry implements or closes a request
 - include related docs and files so Codex can trace decisions later
 - let generated indexes and reports provide human browsing
-
-The source model and authoring workflow are documented in `_docs_logs/README.md`.
-
-Until the structured system is ready, continue following existing change-log guidance for meaningful UI, build flow, validation, or architecture changes.
 
 ## Documentation Review Candidates
 

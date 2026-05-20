@@ -6,6 +6,11 @@ last_updated: "2026-05-06 20:00"
 parent_id: archive
 sort_order: 85000
 ---
+
+This doc is deprecated. Please refer to [UI](/docs/?scope=studio&doc=ui) and [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue).
+
+---
+
 # CSS Refactor
 
 This is the active cleanup strategy for the shared UI layer.

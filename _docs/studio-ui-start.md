@@ -3,9 +3,14 @@ doc_id: studio-ui-start
 title: UI Start
 added_date: 2026-04-21
 last_updated: 2026-05-15
-parent_id: ui
-sort_order: 2000
+parent_id: archive
+sort_order: 86000
 ---
+
+This doc is deprecated. Please refer to [UI](/docs/?scope=studio&doc=ui) and [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue).
+
+---
+
 # UI Start
 
 Use this as the first doc for UI work.

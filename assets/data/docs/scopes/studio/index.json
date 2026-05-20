@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T15:28:02Z",
+  "generated_at": "2026-05-20T16:24:11Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -514,7 +514,7 @@
       "source_path": "development-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/development-workflow.json",
-      "content_text_length": 7470
+      "content_text_length": 7064
     },
     {
       "scope": "studio",
@@ -880,22 +880,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-ui-start",
-      "title": "UI Start",
-      "added_date": "2026-04-21",
-      "last_updated": "2026-05-15",
-      "parent_id": "ui",
-      "sort_order": 2000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-ui-start.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-ui-start",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-start.json",
-      "content_text_length": 4306
-    },
-    {
-      "scope": "studio",
       "doc_id": "user-guide",
       "title": "User Guide",
       "added_date": "2026-04-23",
@@ -1036,7 +1020,7 @@
       "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-framework.json",
-      "content_text_length": 11325
+      "content_text_length": 11820
     },
     {
       "scope": "studio",
@@ -1343,7 +1327,7 @@
       "source_path": "ui-audits.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-audits",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audits.json",
-      "content_text_length": 3448
+      "content_text_length": 2697
     },
     {
       "scope": "studio",
@@ -1650,7 +1634,7 @@
       "source_path": "studio-ui-conformance.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-conformance",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-conformance.json",
-      "content_text_length": 10917
+      "content_text_length": 10634
     },
     {
       "scope": "studio",
@@ -2936,7 +2920,7 @@
       "source_path": "ui.md",
       "viewer_url": "/docs/?scope=studio&doc=ui",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui.json",
-      "content_text_length": 224
+      "content_text_length": 216
     },
     {
       "scope": "studio",
@@ -4665,7 +4649,7 @@
       "source_path": "studio-ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework.json",
-      "content_text_length": 816
+      "content_text_length": 61
     },
     {
       "scope": "studio",
@@ -4681,7 +4665,7 @@
       "source_path": "design.md",
       "viewer_url": "/docs/?scope=studio&doc=design",
       "content_url": "/assets/data/docs/scopes/studio/by-id/design.json",
-      "content_text_length": 1534
+      "content_text_length": 1603
     },
     {
       "scope": "studio",
@@ -4697,7 +4681,7 @@
       "source_path": "studio-ui-framework-review-coverage.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-review-coverage",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-review-coverage.json",
-      "content_text_length": 1739
+      "content_text_length": 1841
     },
     {
       "scope": "studio",
@@ -4713,7 +4697,23 @@
       "source_path": "css refactor.md",
       "viewer_url": "/docs/?scope=studio&doc=css-refactor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/css-refactor.json",
-      "content_text_length": 4917
+      "content_text_length": 4992
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-ui-start",
+      "title": "UI Start",
+      "added_date": "2026-04-21",
+      "last_updated": "2026-05-15",
+      "parent_id": "archive",
+      "sort_order": 86000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-ui-start.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-ui-start",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-start.json",
+      "content_text_length": 4377
     },
     {
       "scope": "studio",

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-da79d8edfb59323d6154940169823241",
-    "generated_at_utc": "2026-05-20T14:38:13Z",
+    "version": "blake2b-cb47b2c15970171b44bd7e180e913cd1",
+    "generated_at_utc": "2026-05-20T15:51:09Z",
     "count": 287
   },
   "entries": [
@@ -1381,28 +1381,6 @@
         "00"
       ],
       "search_text": "tag-groups tag groups tag groups analytics 2026-05-09 16:00 2026 05 09 16 00"
-    },
-    {
-      "id": "studio-ui-start",
-      "kind": "doc",
-      "title": "UI Start",
-      "href": "/docs/?scope=studio&doc=studio-ui-start",
-      "last_updated": "2026-05-15",
-      "parent_id": "ui",
-      "parent_title": "UI",
-      "display_meta": "2026-05-15 • UI",
-      "search_terms": [
-        "studio-ui-start",
-        "studio",
-        "ui",
-        "start",
-        "ui start",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "studio-ui-start studio ui start ui start 2026-05-15 2026 05 15"
     },
     {
       "id": "user-guide",
@@ -7298,6 +7276,29 @@
         "00"
       ],
       "search_text": "css-refactor css refactor css refactor archive 2026-05-06 20:00 2026 05 06 20 00"
+    },
+    {
+      "id": "studio-ui-start",
+      "kind": "doc",
+      "title": "UI Start",
+      "href": "/docs/?scope=studio&doc=studio-ui-start",
+      "last_updated": "2026-05-15",
+      "parent_id": "archive",
+      "parent_title": "Archive",
+      "display_meta": "2026-05-15 • Archive",
+      "search_terms": [
+        "studio-ui-start",
+        "studio",
+        "ui",
+        "start",
+        "ui start",
+        "archive",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "studio-ui-start studio ui start ui start archive 2026-05-15 2026 05 15"
     },
     {
       "id": "_tmp",

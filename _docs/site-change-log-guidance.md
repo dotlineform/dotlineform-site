@@ -8,6 +8,8 @@ sort_order: 80000
 ---
 This log has been deprecated. Logs are now in `_docs_logs/` and the change log process is described in [Development Workflow](/docs/?scope=studio&doc=development-workflow)
 
+---
+
 # Site Change Log Guidance
 
 ## Purpose
