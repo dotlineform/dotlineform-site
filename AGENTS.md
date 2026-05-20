@@ -158,6 +158,15 @@
   - refactors
 - For trivial or mechanical edits, a short summary is enough.
 
+## JavaScript Module Boundaries
+
+- Do not add new responsibilities to large route/controller files by default.
+- Before changing a Studio or Docs Viewer route controller, check whether the behavior belongs in an existing route-local module, shared module, render module, service/write module, domain module, modal module, or workflow module.
+- Prefer creating or extending a focused module when the change adds a complete responsibility such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, or route-state projection.
+- Keep route entry modules as orchestration shells where practical: boot/config, route readiness, event wiring, and handoff between focused modules.
+- Avoid cosmetic splits that only move tiny helpers; extract around stable ownership boundaries.
+- When changing JavaScript inventory priority files, consult `_docs/studio-javascript-payload-inventory.md`.
+
 ## Studio Documentation and Search
 
 - Docs source is flat under `_docs/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders in _docs/.

@@ -67,25 +67,23 @@ Useful indicators:
 
 | Indicator | Score 0 | Score 1 | Score 2 | Score 3 |
 | --- | --- | --- | --- | --- |
-| Line pressure | <900 | 900-1,000 | 1,000-1,200 | >1,200 |
 | Mixed responsibility | single role | minor overlap | several roles | route owns most workflow layers |
 | State coupling | explicit inputs | limited state reads | broad state reads | broad reads and writes across concerns |
 | Change frequency | stable | occasional | recurring | frequent or active feature area |
 | Performance exposure | lazy/rare | route-local | common route | eager/high-cost/common |
 | Structural leverage | little | local cleanup | clear boundary | establishes/reinforces pattern across routes |
 | Testability gain | none | minor | focused verification possible | logic becomes independently testable |
+| Line pressure | <600 | 600-800 | 800-1,000 | >1,000 |
 
 Priority should be based on **impact**, not ease:
 
 `priority = mixed responsibility + state coupling + change frequency + performance exposure + structural leverage + testability gain`
 
-Line pressure is a review trigger and tie-breaker, not the main score.
-
 ## Application
 
 > Prefer extraction slices that remove a complete responsibility from a mixed controller and leave a clearer ownership boundary behind. Do not prioritise slices because they are narrow, mechanical, or easy. Prioritise slices that reduce future change risk, clarify state ownership, improve route-load behavior, or establish a repeatable module pattern for sibling routes.
 
-For `tag-registry.js`, for example, list/control rendering is meaningful not because it is easy, but because it matches the just-established `tag-aliases-render.js` boundary and would make the two sibling routes structurally consistent. That is a stronger argument than line count alone.
+For `tag-registry.js`, for example, list/control rendering is meaningful not because it is easy, but because it matches the just-established `tag-aliases-render.js` boundary and would make the two sibling routes structurally consistent.
 
 ## Current Summary
 
@@ -93,8 +91,6 @@ Measured on 2026-05-20, after the Data Sharing Review apply-orchestration extrac
 
 - Browser JavaScript files under `assets/`: 129
 - Total browser JavaScript lines under `assets/`: 41,066
-- Files over the 1,000-line review threshold: 2
-- Files in the 900-1,000 line watch band: 7
 - Priority score threshold used for the current table: 16 or higher
 
 ## Current Priorities
@@ -110,11 +106,8 @@ High-scoring recently improved files stay in the child table, but are not automa
 ### `assets/studio/js/tag-registry.js`
 
 - Priority score: 17
-- Lines: 1,128
-- Raw: 36.0 KiB
-- Gzip: 7.8 KiB
 - Classification: mixed route controller
-- Line pressure: 2
+- Raw: 36.0 KiB
 
 **Why This Is Priority Work**
 
@@ -137,11 +130,8 @@ High-scoring recently improved files stay in the child table, but are not automa
 ### `assets/docs-viewer/js/docs-viewer.js`
 
 - Priority score: 18
-- Lines: 1,205
-- Raw: 40.4 KiB
-- Gzip: 8.7 KiB
 - Classification: mixed shared viewer runtime controller
-- Line pressure: 3
+- Raw: 40.4 KiB
 
 **Why This Is Priority Work**
 
@@ -169,11 +159,8 @@ High-scoring recently improved files stay in the child table, but are not automa
 ### `assets/docs-viewer/js/docs-html-import.js`
 
 - Priority score: 17
-- Lines: 990
-- Raw: 35.0 KiB
-- Gzip: 7.7 KiB
 - Classification: mixed management workflow controller
-- Line pressure: 1
+- Raw: 35.0 KiB
 
 **Why This Is Priority Work**
 
@@ -195,11 +182,8 @@ High-scoring recently improved files stay in the child table, but are not automa
 ### `assets/studio/js/data-sharing-prepare.js`
 
 - Priority score: 17
-- Lines: 836
-- Raw: 32.5 KiB
-- Gzip: 6.7 KiB
 - Classification: mixed route controller
-- Line pressure: 0
+- Raw: 32.5 KiB
 
 **Why This Is Priority Work**
 
@@ -215,7 +199,6 @@ High-scoring recently improved files stay in the child table, but are not automa
 
 **Deferral Criteria**
 
-- Do not defer just because the file is below 900 lines if data-sharing workflow changes are active.
 - Do defer if the next available slice does not clarify the prepare/review shared architecture.
 
 ## Watch Areas
