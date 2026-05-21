@@ -170,22 +170,25 @@ Each section should summarise:
 
 ### `assets/studio/js/series-tags.js`
 
-- Risk score: 9
-- Classification: mixed analytics/tag reporting route
-- Raw: 29.0 KiB
+- Risk score: 8
+- Score breakdown: maintenance 2, structural 2, performance 2, architectural 2.
+- Classification: medium-risk route orchestration shell
+- Raw: 18.5 KiB
 
-**Why This Is Priority Work**
+**Why This Remains In The Detail Set**
 
-- The route combines analytics scoring, RAG display, tag reporting, route readiness, and rendering coordination.
-- It is not the worst current controller, but the scoring/reporting concepts are cohesive enough to deserve clearer owners before more analytics behavior accumulates.
-- The main risk is maintainability and future ownership drift, not initial transfer size.
+- The route no longer owns analytics scoring interpretation, RAG/report markup, filter rendering, chip display, visible-row projection, or report sorting.
+- Scoring now lives in `assets/studio/js/analysis-tag-scoring.js`, and report/table rendering now lives in `assets/studio/js/series-tags-render.js` behind an explicit report input.
+- Focused smoke checks now cover score interpretation and Series Tags report/RAG display output without requiring full route boot.
+- Remaining risk comes from legitimate route orchestration plus still-inline offline session actions and import preview/apply service workflow.
+- The route is still eager and route-local, with several async data and service states, so future import/session changes should avoid rebuilding analytics or render behavior in the route shell.
 
 **Direction**
 
-- Extract analytics scoring or RAG display only as complete responsibilities with explicit inputs.
-- Keep route readiness and high-level event wiring in the route shell.
-- Prefer a focused reporting/rendering boundary over small helper splits.
-- Leave stable display code alone unless the next analytics change would otherwise expand the route shell.
+- Keep scoring calculation and RAG interpretation in `assets/studio/js/analysis-tag-scoring.js`.
+- Keep report/table rendering, row projection, tag chip display, and sort comparison in `assets/studio/js/series-tags-render.js`.
+- Keep route-shell work limited to boot, config/data loading, event wiring, route ready/busy state, modal coordination, and applying successful import/session changes back to local state.
+- If import preview/apply behavior or offline session actions grow materially, extract a focused workflow/service owner with explicit inputs for import payload, resolutions, activity context, and assignment reloads.
 
 **Score Reduction Tasks**
 
@@ -195,6 +198,7 @@ Each section should summarise:
 | 2 | done | Moved Series Tags report/table rendering into `assets/studio/js/series-tags-render.js`, including RAG indicator markup, filters, chip display, visible-row projection, and sort comparison. |
 | 3 | done | Passed an explicit Series Tags report input from the route shell into `assets/studio/js/series-tags-render.js` instead of handing over broad route state. |
 | 4 | done | Added focused smoke checks for score interpretation and Series Tags report rendering/RAG display output. |
+| 5 | proposed | If import/session workflow changes materially, extract import preview/apply and offline-session action handling into a focused workflow/service module. Anticipated improvement: -1 from maintenance or structural risk. |
 
 ### `assets/studio/js/data-sharing-prepare.js`
 
