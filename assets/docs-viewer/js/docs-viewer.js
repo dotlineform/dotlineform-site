@@ -38,6 +38,14 @@ import {
   initDocsViewerSidebarRenderer
 } from "./docs-viewer-sidebar.js";
 import {
+  buildIndexPanelStorageKey,
+  buildLegacySidebarStorageKey,
+  nextIndexPanelState,
+  persistIndexPanelState,
+  projectIndexPanelState,
+  readIndexPanelState
+} from "./docs-viewer-index-panel.js";
+import {
   applyViewerRoute,
   buildViewerUrl,
   buildViewerUrlForScope,
@@ -99,9 +107,9 @@ import {
   var RELOAD_RETRY_DELAY_MS = 250;
   var UI_STATUS_EMOJI_MAX_LENGTH = 8;
   var SIDEBAR_COLLAPSE_MEDIA = "(min-width: 821px)";
-  var SIDEBAR_STORAGE_PREFIX = "dotlineform-docs-viewer-sidebar:";
   var bookmarkScope = viewerScope || viewerPathname || "docs";
-  var sidebarStorageKey = SIDEBAR_STORAGE_PREFIX + bookmarkScope;
+  var indexPanelStorageKey = buildIndexPanelStorageKey(bookmarkScope);
+  var legacySidebarStorageKey = buildLegacySidebarStorageKey(bookmarkScope);
   var assetVersion = readAssetVersion(document);
   var managementController = null;
   var managementControllerRequestPromise = null;
@@ -271,7 +279,7 @@ import {
     nonLoadableDocIds: new Set(),
     manageOnlyTreeRootIds: new Set(),
     showUpdatedDate: true,
-    sidebarCollapsed: readSidebarCollapsedState()
+    indexPanelState: readCurrentIndexPanelState()
   };
   var sidebarRenderer = initDocsViewerSidebarRenderer({
     canDragCurrentDoc: canDragCurrentDoc,
@@ -528,8 +536,9 @@ import {
     includeScopeParam = values.includeScopeParam;
     viewerPathname = values.viewerPathname;
     bookmarkScope = viewerScope || viewerPathname || "docs";
-    sidebarStorageKey = SIDEBAR_STORAGE_PREFIX + bookmarkScope;
-    state.sidebarCollapsed = readSidebarCollapsedState();
+    indexPanelStorageKey = buildIndexPanelStorageKey(bookmarkScope);
+    legacySidebarStorageKey = buildLegacySidebarStorageKey(bookmarkScope);
+    state.indexPanelState = readCurrentIndexPanelState();
   }
 
   function loadDocsViewerConfig() {
@@ -589,43 +598,46 @@ import {
     return window.matchMedia(SIDEBAR_COLLAPSE_MEDIA).matches;
   }
 
-  function readSidebarCollapsedState() {
-    try {
-      return window.localStorage.getItem(sidebarStorageKey) === "collapsed";
-    } catch (error) {
-      return false;
-    }
+  function readCurrentIndexPanelState() {
+    return readIndexPanelState({
+      storage: window.localStorage,
+      storageKey: indexPanelStorageKey,
+      legacyStorageKey: legacySidebarStorageKey
+    });
   }
 
-  function persistSidebarCollapsedState() {
-    try {
-      window.localStorage.setItem(sidebarStorageKey, state.sidebarCollapsed ? "collapsed" : "expanded");
-    } catch (error) {
-      return;
-    }
+  function persistCurrentIndexPanelState() {
+    persistIndexPanelState({
+      storage: window.localStorage,
+      storageKey: indexPanelStorageKey,
+      state: state.indexPanelState
+    });
   }
 
-  function renderSidebarCollapsedState() {
-    var active = state.sidebarCollapsed && sidebarCollapseAvailable();
-    root.dataset.sidebarState = active ? "collapsed" : "expanded";
+  function renderIndexPanelState() {
+    var projection = projectIndexPanelState(state.indexPanelState, {
+      available: sidebarCollapseAvailable()
+    });
+    root.dataset.indexPanelState = projection.activeState;
+    root.dataset.sidebarState = projection.legacySidebarState;
     if (!sidebarToggle) return;
 
-    sidebarToggle.hidden = !sidebarCollapseAvailable();
-    sidebarToggle.setAttribute("aria-expanded", active ? "false" : "true");
-    sidebarToggle.setAttribute("aria-label", active ? "Expand docs index" : "Collapse docs index");
-    sidebarToggle.title = active ? "Expand docs index" : "Collapse docs index";
+    sidebarToggle.hidden = projection.toggleHidden;
+    sidebarToggle.setAttribute("aria-expanded", projection.toggleAriaExpanded);
+    sidebarToggle.setAttribute("aria-label", projection.toggleLabel);
+    sidebarToggle.title = projection.toggleLabel;
     var icon = sidebarToggle.querySelector(".docsViewer__sidebarToggleIcon");
     if (icon) {
-      icon.textContent = active ? "›" : "‹";
+      icon.textContent = projection.toggleIcon;
     }
   }
 
-  function toggleSidebarCollapsed() {
+  function toggleIndexPanelState() {
     if (!sidebarCollapseAvailable()) return;
-    state.sidebarCollapsed = !state.sidebarCollapsed;
-    persistSidebarCollapsedState();
+    state.indexPanelState = nextIndexPanelState(state.indexPanelState);
+    persistCurrentIndexPanelState();
     hideContextMenu();
-    renderSidebarCollapsedState();
+    renderIndexPanelState();
   }
 
   function loadViewerConfig() {
@@ -1040,7 +1052,7 @@ import {
 
     if (sidebarToggle) {
       sidebarToggle.addEventListener("click", function () {
-        toggleSidebarCollapsed();
+        toggleIndexPanelState();
       });
     }
 
@@ -1182,7 +1194,7 @@ import {
   window.addEventListener("scroll", hideContextMenu, { passive: true });
   window.addEventListener("resize", function () {
     hideContextMenu();
-    renderSidebarCollapsedState();
+    renderIndexPanelState();
   });
   window.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
@@ -1211,7 +1223,7 @@ import {
   var stopInitialBusy = startBusy();
   loadDocsViewerConfig()
     .then(function () {
-      renderSidebarCollapsedState();
+      renderIndexPanelState();
       return loadViewerConfig();
     })
     .then(function () {

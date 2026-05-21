@@ -49,7 +49,8 @@ Before the next feature/refactor batch, add small infrastructure that makes the 
 
 ### Inventory Guardrail
 
-Create a script that reads the source inventory table and reports:
+Create and use `scripts/checks/javascript_inventory_guardrail.py`.
+It reads the source inventory table and reports:
 
 - count of files by maintenance score
 - total lines by maintenance score
@@ -57,10 +58,14 @@ Create a script that reads the source inventory table and reports:
 - recent file-touch count from `git log --since=90 days --name-only`
 - top maintenance-risk files by combined line count and churn
 
-The first version should report only.
+The first version is report-only.
 Do not fail checks until the output is stable enough to avoid blocking useful work.
 
-Expected owner: a small script under `scripts/` plus a focused doc note in this section.
+Use:
+
+```bash
+./scripts/checks/javascript_inventory_guardrail.py
+```
 
 ### Maintenance Gate Checklist
 
@@ -123,8 +128,8 @@ Implement the Docs Viewer priority in small slices.
 
 ### Slice 1: Index Panel State Owner
 
-Create a focused module such as `assets/docs-viewer/js/docs-viewer-index-panel.js`.
-The exact name can change, but the owner should be about the panel/workspace, not the tree.
+Create `assets/docs-viewer/js/docs-viewer-index-panel.js`.
+The owner is about the panel/workspace, not the tree.
 
 The module should own:
 
@@ -168,7 +173,7 @@ Add a browser smoke check for the panel owner and route wiring:
 - tree item click behavior unchanged
 - mobile behavior unchanged for the first slice
 
-Prefer a focused module smoke for the state owner, then a narrow Docs Viewer route smoke for the layout behavior.
+Use `tests/smoke/docs_viewer_index_panel_modules.py` for the state owner and `tests/smoke/docs_viewer_index_panel_route.py` for the route wiring.
 
 ### Slice 5: Inventory And Follow-Through
 

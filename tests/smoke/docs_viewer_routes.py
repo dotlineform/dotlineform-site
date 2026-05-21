@@ -108,12 +108,67 @@ def assert_hash_target(page: Page, target_id: str, timeout_ms: int) -> None:
     )
 
 
+def assert_index_panel_toggle(page: Page, timeout_ms: int) -> None:
+    page.wait_for_function(
+        """selector => document.querySelector(selector)?.dataset.indexPanelState === 'normal'""",
+        arg=ROOT_SELECTOR,
+        timeout=timeout_ms,
+    )
+    toggle = page.locator("#docsViewerSidebarToggle")
+    toggle.click()
+    page.wait_for_function(
+        """selector => {
+            const root = document.querySelector(selector);
+            const content = document.querySelector('#docsViewerContent');
+            return root?.dataset.indexPanelState === 'expanded' &&
+                root?.dataset.sidebarState === 'expanded' &&
+                content &&
+                getComputedStyle(content.closest('.docsViewer__main')).display === 'none';
+        }""",
+        arg=ROOT_SELECTOR,
+        timeout=timeout_ms,
+    )
+    toggle.click()
+    page.wait_for_function(
+        """selector => {
+            const root = document.querySelector(selector);
+            const nav = document.querySelector('#docsViewerNav');
+            const main = document.querySelector('.docsViewer__main');
+            return root?.dataset.indexPanelState === 'collapsed' &&
+                root?.dataset.sidebarState === 'collapsed' &&
+                nav &&
+                getComputedStyle(nav).display === 'none' &&
+                main &&
+                getComputedStyle(main).display !== 'none';
+        }""",
+        arg=ROOT_SELECTOR,
+        timeout=timeout_ms,
+    )
+    toggle.click()
+    page.wait_for_function(
+        """selector => {
+            const root = document.querySelector(selector);
+            const nav = document.querySelector('#docsViewerNav');
+            const main = document.querySelector('.docsViewer__main');
+            return root?.dataset.indexPanelState === 'normal' &&
+                root?.dataset.sidebarState === 'expanded' &&
+                nav &&
+                getComputedStyle(nav).display !== 'none' &&
+                main &&
+                getComputedStyle(main).display !== 'none';
+        }""",
+        arg=ROOT_SELECTOR,
+        timeout=timeout_ms,
+    )
+
+
 def run_route_smoke(page: Page, base_url: str, timeout_ms: int) -> dict[str, object]:
     errors: list[str] = []
     page.on("pageerror", lambda exc: errors.append(str(exc)))
 
     page.goto(route_url(base_url, "/docs/?scope=studio&doc=docs-viewer"), wait_until="domcontentloaded")
     docs_title = wait_for_doc(page, "docs-viewer", timeout_ms)
+    assert_index_panel_toggle(page, timeout_ms)
     page.evaluate("window.__docsViewerRouteSmokeMarker = 'route-smoke'")
 
     page.locator(f"{CONTENT_SELECTOR} a[href*='doc=docs-viewer-overview']").first.click()

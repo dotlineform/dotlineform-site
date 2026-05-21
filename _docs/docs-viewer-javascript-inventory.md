@@ -29,24 +29,25 @@ Related follow-up should preserve `assets/docs-viewer/js/docs-viewer-sidebar.js`
 
 Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
-- Docs Viewer browser JavaScript files in the full inventory: 33
+- Docs Viewer browser JavaScript files in the full inventory: 34
 - Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 12
 - Main remaining risk themes: shared runtime composition, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and lazy management loading.
 
 | Score | Files |
 | ---: | ---: |
-| 9 | 1 |
-| 7 | 1 |
-| 6 | 5 |
+| 9 | 0 |
+| 8 | 1 |
+| 7 | 0 |
+| 6 | 6 |
 | 5 | 6 |
-| 4 | 20 |
+| 4 | 21 |
 
 ## Current Priorities
 
 | Docs rank | Full rank | File | Maint. | Struct. | Perf. | Arch. | Risk | Focus |
 | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | 1 | `assets/docs-viewer/js/docs-viewer.js` | 2 | 2 | 3 | 2 | 9 | Shared Docs Viewer runtime composition and route loading. |
-| 2 | 14 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | 2 | 2 | 1 | 2 | 7 | Docs Viewer management support module. |
+| 1 | 1 | `assets/docs-viewer/js/docs-viewer.js` | 2 | 2 | 3 | 1 | 8 | Shared Docs Viewer runtime after index-panel state owner extraction; route loading and payload composition remain. |
+| 2 | 9 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer management modal controller after transient modal shell and metadata parent-picker extraction. |
 | 3 | 15 | `assets/docs-viewer/js/docs-viewer-management.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer management coordinator after shared action workflow helper extraction. |
 | 4 | 18 | `assets/docs-viewer/js/docs-viewer-bookmarks.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer bookmark/favourite support. |
 | 5 | 19 | `assets/docs-viewer/js/docs-viewer-management-actions.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer management support module. |
@@ -78,14 +79,15 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 31 | 76 | `assets/docs-viewer/js/reports/semantic-references-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 32 | 77 | `assets/docs-viewer/js/reports/source-config-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 33 | 152 | `assets/docs-viewer/js/docs-viewer-management-action-workflow.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
+| 34 | 153 | `assets/docs-viewer/js/docs-viewer-index-panel.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, persistence migration, toggle projection, and document-pane visibility helper. |
 
 ## Follow-Up Notes
 
 ### `assets/docs-viewer/js/docs-viewer.js`
 
-- Current risk score: 9.
+- Current risk score: 8.
 - Track separately from the all-script target-score plan because it is the shared Docs Viewer entry runtime.
-- Useful future slices should reduce shared-runtime coupling or route-load cost, such as generated-payload loading, loadable-doc visibility state, index panel ownership, or management lazy-boundary hardening.
+- Useful future slices should reduce shared-runtime coupling or route-load cost, such as generated-payload loading, loadable-doc visibility state, index panel surface activation, or management lazy-boundary hardening.
 - Do not turn the entry file into a thin pass-through layer if that makes the viewer boot sequence harder to inspect.
 
 ### Docs Import And Management

@@ -28,9 +28,15 @@
 }
 
 @media (min-width: 821px){
+  .docsViewer[data-index-panel-state="collapsed"],
   .docsViewer[data-sidebar-state="collapsed"]{
     --docs-viewer-measure: min(96ch, 100%);
     grid-template-columns: 2.8rem minmax(0, 1fr);
+  }
+
+  .docsViewer[data-index-panel-state="expanded"]{
+    --docs-viewer-measure: min(120ch, 100%);
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -97,16 +103,27 @@
 }
 
 @media (min-width: 821px){
+  .docsViewer[data-index-panel-state="collapsed"] .docsViewer__sidebarInner,
   .docsViewer[data-sidebar-state="collapsed"] .docsViewer__sidebarInner{
     padding: 0.45rem;
   }
 
+  .docsViewer[data-index-panel-state="collapsed"] .docsViewer__sidebarHeader,
   .docsViewer[data-sidebar-state="collapsed"] .docsViewer__sidebarHeader{
     justify-content: center;
     margin-bottom: 0;
   }
 
+  .docsViewer[data-index-panel-state="collapsed"] .docsViewer__nav,
   .docsViewer[data-sidebar-state="collapsed"] .docsViewer__nav{
+    display: none;
+  }
+
+  .docsViewer[data-index-panel-state="expanded"] .docsViewer__sidebar{
+    grid-column: 1;
+  }
+
+  .docsViewer[data-index-panel-state="expanded"] .docsViewer__main{
     display: none;
   }
 }

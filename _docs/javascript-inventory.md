@@ -18,25 +18,25 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 
 ## Summary
 
-- Browser JavaScript files under `assets/`: 152
-- Total browser JavaScript lines under `assets/`: 42,586
+- Browser JavaScript files under `assets/`: 153
+- Total browser JavaScript lines under `assets/`: 42,796
 - Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 56
 - Target score: 4, meaning every risk category is at the low-risk floor.
 
 | Score | Files |
 | ---: | ---: |
-| 9 | 1 |
-| 8 | 0 |
+| 9 | 0 |
+| 8 | 1 |
 | 7 | 5 |
 | 6 | 26 |
 | 5 | 25 |
-| 4 | 95 |
+| 4 | 96 |
 
 ## Current Inventory
 
 | Rank | File | Family | Maint. | Struct. | Perf. | Arch. | Risk | Focus |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | `assets/docs-viewer/js/docs-viewer.js` | Docs Viewer separate track | 2 | 2 | 3 | 2 | 9 | Shared Docs Viewer runtime composition and route loading. |
+| 1 | `assets/docs-viewer/js/docs-viewer.js` | Docs Viewer separate track | 2 | 2 | 3 | 1 | 8 | Shared Docs Viewer runtime after index-panel state owner extraction; route loading and payload composition remain. |
 | 2 | `assets/studio/js/tag-studio.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Series tag editor route shell after route-state projection extraction; editor interaction orchestration remains route-local. |
 | 3 | `assets/studio/js/catalogue-work-actions.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue action workflow helper after shared save outcome and preview blocker extraction. |
 | 4 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue editor route shell after shared boot/readiness helper extraction; action workflows remain separate. |
@@ -188,6 +188,7 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | 150 | `assets/docs-viewer/js/docs-viewer-management-modal-shell.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer transient management modal shell, focus lifecycle, and choice/text/confirm helper. |
 | 151 | `assets/docs-viewer/js/docs-viewer-management-parent-picker.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer metadata parent-picker matching, popup, active option, and resolution helper. |
 | 152 | `assets/docs-viewer/js/docs-viewer-management-action-workflow.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
+| 153 | `assets/docs-viewer/js/docs-viewer-index-panel.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, persistence migration, toggle projection, and document-pane visibility helper. |
 
 ## Rerun Notes
 
