@@ -44,6 +44,7 @@ Completed implementation history is recorded in `_docs_logs/`:
 
 - `change-2026-05-21-added-javascript-maintenance-guardrails-and-docs-viewer-index-panel-boundary`
 - `change-2026-05-21-added-javascript-maintenance-gate-workflow-guidance`
+- `change-2026-05-21-shared-catalogue-save-outcome-presentation-projection`
 
 Current stable follow-through:
 
@@ -54,7 +55,8 @@ Current stable follow-through:
 
 ## Next Action
 
-The next implementation step is to implement Task A1, the Catalogue work save outcome projection slice.
+Task A is implemented through the save, build, publication/prose-import, and bulk action presentation contract slices.
+The next implementation step is to define Task B against the remaining Catalogue editor route shell responsibilities.
 
 ## Next Priorities After Docs Viewer
 
@@ -72,7 +74,7 @@ Define them against the stable maintenance gate in [Development Workflow](/docs/
 
 ### Task A: Catalogue Action Workflow Contracts
 
-**Status:** Defined; next implementation task is Task A1.
+**Status:** A1-A8 implemented on 2026-05-21.
 
 Candidate files:
 
@@ -93,31 +95,49 @@ Current state:
 The focused owner remains `assets/studio/js/catalogue-editor-action-workflow.js`.
 Extend it with an explicit save outcome presentation projection that accepts a normalized outcome plus route-provided labels/tokens and returns a small view model for status text, result text, and UI tone.
 
-Task A1 implementation boundary:
+Implemented boundary:
 
-- first adopter: `assets/studio/js/catalogue-work-actions.js` single-work save path
-- move only the repeated save outcome-to-message decision into the shared owner
-- keep record mutation, lookup refresh, pending build target updates, and editor state updates in `catalogue-work-actions.js`
-- do not change bulk work saves, series saves, detail saves, publication, delete, build, or prose-import flows in A1
-- do not rescore inventory rows until at least one route/action module no longer owns the save outcome presentation contract directly
+- A1 moved the single-work save outcome presentation decision into `assets/studio/js/catalogue-editor-action-workflow.js`.
+- A2 adopted the same projection for the work bulk-save branch.
+- A3 adopted the projection in series and work-detail save flows, including the work-detail bulk-save branch.
+- A4 aligned moment save/build outcome normalization with `resolveCatalogueSaveBuildOutcome` and the shared presentation projection.
+- A5 revisited the inventory rows and updated owner notes without lowering numeric scores.
+- A6 added shared action presentation projection for build/public-update success and failure result shaping.
+- A7 adopted the shared action presentation projection for publication and prose-import result/status view models, while leaving preview, confirmation, focus restoration, and route-specific mutations in the route modules and existing modal owner.
+- A8 added shared bulk pending-build-target projection and routed bulk save/build status/result view models through the shared action presentation owner.
 
-Task A1 acceptance checks:
+Implemented acceptance checks:
 
-- extend `tests/smoke/catalogue_editor_action_workflow_modules.py` to cover the save outcome presentation projection for unchanged, saved, unpublished, applied, and partial public-update failure cases
-- keep the smoke import checks for `catalogue-work-actions.js`, `catalogue-work-detail-actions.js`, `catalogue-series-actions.js`, and `catalogue-moment-actions.js`
-- run the focused Catalogue action workflow module smoke after implementation
-- run a syntax check for the touched JavaScript files if using a JS checker remains practical for this repo
+- `tests/smoke/catalogue_editor_action_workflow_modules.py` covers save outcome projection for unchanged, saved, unpublished, applied, partial public-update failure, no-public-artifacts skip cases, generic action presentation projection, and pending build target projection.
+- The smoke keeps import checks for `catalogue-work-actions.js`, `catalogue-work-detail-actions.js`, `catalogue-series-actions.js`, and `catalogue-moment-actions.js`.
+- Touched JavaScript files passed `node --check`.
+- The focused Catalogue action workflow module smoke passed after implementation.
 
-Task A follow-up slices:
+Completed Task A slices:
 
-- A2: adopt the same projection in the work bulk-save branch if A1 keeps the work route behavior stable
-- A3: adopt the projection in series and work-detail save flows
-- A4: align moment save/build outcome normalization with `resolveCatalogueSaveBuildOutcome` after the shared projection is proven
-- A5: revisit inventory scores for `catalogue-work-actions.js`, `catalogue-series-actions.js`, `catalogue-work-detail-actions.js`, and `catalogue-moment-actions.js` only after ownership and smoke coverage actually reduce future-change risk
+- A1: single-work save path adopted the projection.
+- A2: work bulk-save branch adopted the projection.
+- A3: series and work-detail save flows adopted the projection.
+- A4: moment save/build normalization was aligned with the shared outcome helper.
+- A5: inventory notes were updated.
+- A6: build/public-update result shaping adopted the shared action presentation projection.
+- A7: publication and prose-import result/status view models adopted the shared action presentation projection; delete preview blockers and confirmations continue to use the existing shared blocker and modal helpers.
+- A8: bulk save/build status/result view models and pending build target selection adopted shared action workflow projections.
+
+Remaining route-local responsibilities after A8:
+
+- action availability rules, validation, and dirty-state checks
+- service request construction and activity context
+- record mutation, lookup refresh, selected id ownership, and search-record updates
+- route-specific preview refresh functions and DOM node ownership
+- post-delete navigation
+
+These remaining responsibilities are coherent route orchestration rather than cross-route action presentation contracts.
+They should be revisited only when Task B defines the route-shell boundary or when a new repeated action contract appears.
 
 ### Task B: Catalogue Editor Route Shell Boundaries
 
-**Status:** Pending definition after Task A identifies the shared action contract surface.
+**Status:** Pending definition after Task A completed the shared action workflow presentation contracts.
 
 Candidate files:
 
@@ -128,7 +148,7 @@ Candidate files:
 - `assets/studio/js/catalogue-editor-route-boot.js`
 - `assets/studio/js/catalogue-work-route-state.js`
 
-Define this task only after the action workflow contract is clear.
+Define this task only after the action workflow contracts are clear.
 The editor route shells should keep boot/config, required-element checks, event wiring, and handoff to focused owners.
 
 The task definition should specify:

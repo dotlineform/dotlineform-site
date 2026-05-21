@@ -21,6 +21,9 @@ import {
   CATALOGUE_ACTION_OUTCOME,
   extractCatalogueActionPreview,
   getCataloguePreviewBlocker,
+  projectCatalogueActionPresentation,
+  projectCatalogueSaveOutcomePresentation,
+  resolveCataloguePendingBuildTargets,
   resolveCatalogueSaveBuildOutcome
 } from "./catalogue-editor-action-workflow.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
@@ -41,6 +44,11 @@ function t(state, context, key, fallback, tokens = null) {
 
 function setTextWithState(context, node, text, state = "") {
   context.setTextWithState(node, text, state);
+}
+
+function applyActionPresentation(context, state, presentation) {
+  setTextWithState(context, state.resultNode, presentation.resultText, presentation.resultTone);
+  setTextWithState(context, state.statusNode, presentation.statusText, presentation.statusTone);
 }
 
 function buildPayload(state) {
@@ -150,6 +158,162 @@ function applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets) {
   state.rebuildPending = outcome.rebuildPending;
   state.bulkBuildTargets = outcome.buildTargets;
   return outcome;
+}
+
+function projectSingleDetailSavePresentation(state, context, response, outcome) {
+  const savedAt = { saved_at: outcome.stamp };
+  const loadedDetail = { detail_uid: state.currentDetailUid };
+  const statusFailed = `${t(state, context, "build_status_failed", "Site update failed.")} ${normalizeText(outcome.error)}`.trim();
+  return projectCatalogueSaveOutcomePresentation({
+    outcome,
+    changed: Boolean(response && response.changed),
+    resultLabels: {
+      savedAndUpdated: {
+        text: t(state, context, "save_result_success_applied", "Saved source changes and updated the parent work output at {saved_at}.", savedAt),
+        tone: "success"
+      },
+      savedUpdateFailed: {
+        text: t(state, context, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", savedAt),
+        tone: "warn"
+      },
+      savedUnpublished: {
+        text: t(state, context, "save_result_success_unpublished", "Source saved at {saved_at}.", savedAt),
+        tone: "success"
+      },
+      saved: {
+        text: t(state, context, "save_result_success", "Source saved at {saved_at}. Parent-work update still pending.", savedAt),
+        tone: "success"
+      },
+      unchanged: {
+        text: t(state, context, "save_result_unchanged", "Source already matches the current form values.")
+      }
+    },
+    statusLabels: {
+      savedAndUpdated: {
+        text: t(state, context, "build_status_success", "Site update completed."),
+        tone: "success"
+      },
+      savedUpdateFailed: {
+        text: statusFailed,
+        tone: "error"
+      },
+      loaded: {
+        text: t(state, context, "save_status_loaded", "Loaded detail {detail_uid}.", loadedDetail),
+        tone: "success"
+      }
+    }
+  });
+}
+
+function projectBulkDetailSavePresentation(state, context, response, outcome) {
+  const savedAt = {
+    count: String(response && response.changed_count || 0),
+    saved_at: outcome.stamp
+  };
+  const loadedCount = { count: String(state.bulkDetailUids.length) };
+  const statusFailed = `${t(state, context, "build_status_failed", "Site update failed.")} ${normalizeText(outcome.error)}`.trim();
+  return projectCatalogueSaveOutcomePresentation({
+    outcome,
+    changed: Boolean(response && response.changed),
+    resultLabels: {
+      savedAndUpdated: {
+        text: t(state, context, "bulk_save_result_success_applied", "Saved {count} detail records and updated the parent work output at {saved_at}.", savedAt),
+        tone: "success"
+      },
+      savedUpdateFailed: {
+        text: t(state, context, "bulk_save_result_success_partial", "Saved {count} detail records at {saved_at}, but the public update failed.", savedAt),
+        tone: "warn"
+      },
+      savedUnpublished: {
+        text: t(state, context, "bulk_save_result_success_unpublished", "Saved {count} draft detail records at {saved_at}.", savedAt),
+        tone: "success"
+      },
+      saved: {
+        text: t(state, context, "bulk_save_result_success", "Saved {count} detail records at {saved_at}. Parent-work update still pending.", savedAt),
+        tone: "success"
+      },
+      unchanged: {
+        text: t(state, context, "save_result_unchanged", "Source already matches the current form values.")
+      }
+    },
+    statusLabels: {
+      savedAndUpdated: {
+        text: t(state, context, "build_status_success", "Site update completed."),
+        tone: "success"
+      },
+      savedUpdateFailed: {
+        text: statusFailed,
+        tone: "error"
+      },
+      loaded: {
+        text: t(state, context, "bulk_status_loaded", "Loaded {count} detail records.", loadedCount),
+        tone: response && response.changed ? "success" : ""
+      }
+    }
+  });
+}
+
+function projectDetailBuildPresentation(state, context, { bulk = false, count = "", completedAt = "" } = {}) {
+  return projectCatalogueActionPresentation({
+    resultKey: bulk ? "bulkSuccess" : "success",
+    statusKey: "success",
+    resultLabels: {
+      bulkSuccess: {
+        text: t(state, context, "bulk_build_result_success", "Updated {count} parent work scopes at {completed_at}. Studio Activity updated.", {
+          count,
+          completed_at: completedAt
+        }),
+        tone: "success"
+      },
+      success: {
+        text: t(state, context, "build_result_success", "Parent work output updated at {completed_at}. Studio Activity updated.", { completed_at: completedAt }),
+        tone: "success"
+      }
+    },
+    statusLabels: {
+      success: {
+        text: t(state, context, "build_status_success", "Site update completed."),
+        tone: "success"
+      }
+    }
+  });
+}
+
+function projectDetailPublicationPresentation(state, context, action, response) {
+  const publicUpdateFailed = response && response.status === "public_update_failed";
+  const publicUpdateError = normalizeText(response && response.public_update && response.public_update.error);
+  return projectCatalogueActionPresentation({
+    resultKey: publicUpdateFailed ? "publicFailed" : action === "publish" ? "published" : "unpublished",
+    statusKey: publicUpdateFailed ? "publicFailed" : action === "publish" ? "published" : "unpublished",
+    resultLabels: {
+      publicFailed: {
+        text: t(state, context, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."),
+        tone: "warn"
+      },
+      published: {
+        text: t(state, context, "publication_result_published", "Detail is published and parent work output has been updated."),
+        tone: "success"
+      },
+      unpublished: {
+        text: t(state, context, "publication_result_unpublished", "Detail is draft again and public output has been cleaned up."),
+        tone: "success"
+      }
+    },
+    statusLabels: {
+      publicFailed: {
+        text: `${t(state, context, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${publicUpdateError}`.trim(),
+        tone: "error"
+      },
+      published: {
+        text: t(state, context, "publication_status_published", "Detail published."),
+        tone: "success"
+      },
+      unpublished: {
+        text: t(state, context, "publication_status_unpublished", "Detail unpublished."),
+        tone: "success"
+      }
+    }
+  });
 }
 
 export async function refreshWorkDetailBuildPreview(state, context) {
@@ -264,65 +428,7 @@ export async function saveCurrentDetail(state, context) {
         keepResult: true,
         buildTargets: state.bulkBuildTargets
       });
-      if (outcome.kind === "saved_and_updated") {
-        setTextWithState(
-          context,
-          state.resultNode,
-          t(state, context, "bulk_save_result_success_applied", "Saved {count} detail records and updated the parent work output at {saved_at}.", {
-            count: String(response.changed_count || 0),
-            saved_at: outcome.stamp
-          }),
-          "success"
-        );
-        setTextWithState(context, state.statusNode, t(state, context, "build_status_success", "Site update completed."), "success");
-      } else if (outcome.kind === "saved_update_failed") {
-        setTextWithState(
-          context,
-          state.resultNode,
-          t(state, context, "bulk_save_result_success_partial", "Saved {count} detail records at {saved_at}, but the public update failed.", {
-            count: String(response.changed_count || 0),
-            saved_at: outcome.stamp
-          }),
-          "warn"
-        );
-        setTextWithState(context, state.statusNode, `${t(state, context, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
-      } else if (outcome.kind === "saved_unpublished") {
-        setTextWithState(
-          context,
-          state.resultNode,
-          response.changed
-            ? t(state, context, "bulk_save_result_success_unpublished", "Saved {count} draft detail records at {saved_at}.", {
-              count: String(response.changed_count || 0),
-              saved_at: outcome.stamp
-            })
-            : t(state, context, "save_result_unchanged", "Source already matches the current form values."),
-          response.changed ? "success" : ""
-        );
-        setTextWithState(
-          context,
-          state.statusNode,
-          t(state, context, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(state.bulkDetailUids.length) }),
-          response.changed ? "success" : ""
-        );
-      } else {
-        setTextWithState(
-          context,
-          state.resultNode,
-          response.changed
-            ? t(state, context, "bulk_save_result_success", "Saved {count} detail records at {saved_at}. Parent-work update still pending.", {
-              count: String(response.changed_count || 0),
-              saved_at: outcome.stamp
-            })
-            : t(state, context, "save_result_unchanged", "Source already matches the current form values."),
-          response.changed ? "success" : ""
-        );
-        setTextWithState(
-          context,
-          state.statusNode,
-          t(state, context, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(state.bulkDetailUids.length) }),
-          response.changed ? "success" : ""
-        );
-      }
+      applyActionPresentation(context, state, projectBulkDetailSavePresentation(state, context, response, outcome));
       return;
     }
 
@@ -341,41 +447,7 @@ export async function saveCurrentDetail(state, context) {
       }
     });
     await refreshWorkDetailBuildPreview(state, context);
-    if (outcome.kind === "saved_and_updated") {
-      setTextWithState(
-        context,
-        state.resultNode,
-        t(state, context, "save_result_success_applied", "Saved source changes and updated the parent work output at {saved_at}.", { saved_at: outcome.stamp }),
-        "success"
-      );
-      setTextWithState(context, state.statusNode, t(state, context, "build_status_success", "Site update completed."), "success");
-    } else if (outcome.kind === "saved_update_failed") {
-      setTextWithState(
-        context,
-        state.resultNode,
-        t(state, context, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", { saved_at: outcome.stamp }),
-        "warn"
-      );
-      setTextWithState(context, state.statusNode, `${t(state, context, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
-    } else if (outcome.kind === "saved_unpublished") {
-      setTextWithState(
-        context,
-        state.resultNode,
-        t(state, context, "save_result_success_unpublished", "Source saved at {saved_at}.", { saved_at: outcome.stamp }),
-        response.changed ? "success" : ""
-      );
-      setTextWithState(context, state.statusNode, t(state, context, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: state.currentDetailUid }), "success");
-    } else {
-      setTextWithState(
-        context,
-        state.resultNode,
-        response.changed
-          ? t(state, context, "save_result_success", "Source saved at {saved_at}. Parent-work update still pending.", { saved_at: outcome.stamp })
-          : t(state, context, "save_result_unchanged", "Source already matches the current form values."),
-        response.changed ? "success" : ""
-      );
-      setTextWithState(context, state.statusNode, t(state, context, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: state.currentDetailUid }), "success");
-    }
+    applyActionPresentation(context, state, projectSingleDetailSavePresentation(state, context, response, outcome));
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
     const message = isConflict
@@ -449,12 +521,14 @@ export async function buildCurrentDetail(state, context) {
   setTextWithState(context, state.resultNode, "");
   try {
     if (state.mode === "bulk") {
-      const buildTargets = state.rebuildPending && state.bulkBuildTargets.length
-        ? state.bulkBuildTargets
-        : Array.from(new Set(state.bulkDetailUids.map((detailUid) => {
+      const buildTargets = resolveCataloguePendingBuildTargets({
+        rebuildPending: state.rebuildPending,
+        pendingTargets: state.bulkBuildTargets,
+        fallbackTargets: Array.from(new Set(state.bulkDetailUids.map((detailUid) => {
           const record = state.bulkRecords.get(detailUid);
           return normalizeWorkId(record && record.work_id);
-        }).filter(Boolean))).map((workId) => ({ work_id: workId, extra_series_ids: [] }));
+        }).filter(Boolean))).map((workId) => ({ work_id: workId, extra_series_ids: [] }))
+      });
       for (const target of buildTargets) {
         await applyCatalogueBuild({
           work_id: target.work_id,
@@ -465,16 +539,11 @@ export async function buildCurrentDetail(state, context) {
       state.bulkBuildTargets = [];
       await refreshWorkDetailBuildPreview(state, context);
       const completedAt = utcTimestamp();
-      setTextWithState(
-        context,
-        state.resultNode,
-        t(state, context, "bulk_build_result_success", "Updated {count} parent work scopes at {completed_at}. Studio Activity updated.", {
-          count: String(buildTargets.length),
-          completed_at: completedAt
-        }),
-        "success"
-      );
-      setTextWithState(context, state.statusNode, t(state, context, "build_status_success", "Site update completed."), "success");
+      applyActionPresentation(context, state, projectDetailBuildPresentation(state, context, {
+        bulk: true,
+        count: String(buildTargets.length),
+        completedAt
+      }));
       return;
     }
 
@@ -485,13 +554,7 @@ export async function buildCurrentDetail(state, context) {
     state.rebuildPending = false;
     await refreshWorkDetailBuildPreview(state, context);
     const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
-    setTextWithState(
-      context,
-      state.resultNode,
-      t(state, context, "build_result_success", "Parent work output updated at {completed_at}. Studio Activity updated.", { completed_at: completedAt }),
-      "success"
-    );
-    setTextWithState(context, state.statusNode, t(state, context, "build_status_success", "Site update completed."), "success");
+    applyActionPresentation(context, state, projectDetailBuildPresentation(state, context, { completedAt }));
   } catch (error) {
     setTextWithState(
       context,
@@ -605,19 +668,10 @@ export async function applyWorkDetailPublicationChange(state, context) {
     });
     await refreshWorkDetailBuildPreview(state, context);
 
+    const presentation = projectDetailPublicationPresentation(state, context, action, response);
+    applyActionPresentation(context, state, presentation);
     if (response.status === "public_update_failed") {
-      const error = normalizeText(response.public_update && response.public_update.error);
-      setTextWithState(context, state.statusNode, `${t(state, context, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${error}`.trim(), "error");
-      setTextWithState(context, state.resultNode, t(state, context, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."), "warn");
       return;
-    }
-
-    if (action === "publish") {
-      setTextWithState(context, state.statusNode, t(state, context, "publication_status_published", "Detail published."), "success");
-      setTextWithState(context, state.resultNode, t(state, context, "publication_result_published", "Detail is published and parent work output has been updated."), "success");
-    } else {
-      setTextWithState(context, state.statusNode, t(state, context, "publication_status_unpublished", "Detail unpublished."), "success");
-      setTextWithState(context, state.resultNode, t(state, context, "publication_result_unpublished", "Detail is draft again and public output has been cleaned up."), "success");
     }
   } catch (error) {
     const message = Number(error && error.status) === 409

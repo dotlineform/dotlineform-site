@@ -18,7 +18,10 @@ import {
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
 import {
   extractCatalogueActionPreview,
-  getCataloguePreviewBlocker
+  getCataloguePreviewBlocker,
+  projectCatalogueActionPresentation,
+  projectCatalogueSaveOutcomePresentation,
+  resolveCatalogueSaveBuildOutcome
 } from "./catalogue-editor-action-workflow.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import { utcTimestamp } from "./tag-studio-save.js";
@@ -34,6 +37,11 @@ function t(state, context, key, fallback, tokens = null) {
 
 function setTextWithState(context, node, text, state = "") {
   context.setTextWithState(node, text, state);
+}
+
+function applyActionPresentation(context, state, presentation) {
+  setTextWithState(context, state.resultNode, presentation.resultText, presentation.resultTone);
+  setTextWithState(context, state.statusNode, presentation.statusText, presentation.statusTone);
 }
 
 function buildMomentActivityContext(actionId, controlId, controlSelector, momentId) {
@@ -61,16 +69,116 @@ export function currentMomentIsDraft(state, context) {
 }
 
 function applySaveBuildOutcome(state, context, payload) {
-  if (!currentMomentIsPublished(state, context)) {
-    state.needsBuild = false;
-    return payload && payload.changed ? "saved_unpublished" : "unchanged";
-  }
-  if (payload && payload.build && !payload.build.ok) {
-    state.needsBuild = true;
-    return "partial";
-  }
-  state.needsBuild = false;
-  return payload && payload.changed ? "applied" : "unchanged";
+  const outcome = resolveCatalogueSaveBuildOutcome({
+    response: payload,
+    isPublished: currentMomentIsPublished(state, context)
+  });
+  state.needsBuild = outcome.rebuildPending;
+  return outcome;
+}
+
+function projectMomentSavePresentation(state, context, payload, outcome) {
+  const savedAt = { saved_at: outcome.stamp };
+  const savedStatus = t(state, context, "save_status_success", "Saved.");
+  return projectCatalogueSaveOutcomePresentation({
+    outcome,
+    changed: Boolean(payload && payload.changed),
+    resultLabels: {
+      savedAndUpdated: {
+        text: t(state, context, "save_result_success_applied", "Saved source changes and updated the public moment at {saved_at}.", savedAt),
+        tone: "success"
+      },
+      savedUpdateFailed: {
+        text: t(state, context, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", savedAt),
+        tone: "warning"
+      },
+      savedUnpublished: {
+        text: t(state, context, "save_result_success_unpublished", "Source saved at {saved_at}.", savedAt),
+        tone: "success"
+      },
+      saved: {
+        text: t(state, context, "save_result_success", "Source saved at {saved_at}.", savedAt),
+        tone: "success"
+      },
+      unchanged: {
+        text: t(state, context, "save_result_success", "Source saved at {saved_at}.", savedAt),
+        tone: "success"
+      }
+    },
+    statusLabels: {
+      savedAndUpdated: {
+        text: savedStatus,
+        tone: "success"
+      },
+      savedUpdateFailed: {
+        text: savedStatus,
+        tone: "success"
+      },
+      loaded: {
+        text: savedStatus,
+        tone: "success"
+      }
+    }
+  });
+}
+
+function projectMomentPublicationPresentation(state, context, action, payload) {
+  const publicUpdateFailed = payload && payload.status === "public_update_failed";
+  const publicUpdateError = normalizeText(payload && payload.public_update && payload.public_update.error);
+  return projectCatalogueActionPresentation({
+    resultKey: publicUpdateFailed ? "publicFailed" : action === "publish" ? "published" : "unpublished",
+    statusKey: publicUpdateFailed ? "publicFailed" : action === "publish" ? "published" : "unpublished",
+    resultLabels: {
+      publicFailed: {
+        text: t(state, context, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."),
+        tone: "warning"
+      },
+      published: {
+        text: t(state, context, "publication_result_published", "Moment is published and public output has been updated."),
+        tone: "success"
+      },
+      unpublished: {
+        text: t(state, context, "publication_result_unpublished", "Moment is draft again and public output has been cleaned up."),
+        tone: "success"
+      }
+    },
+    statusLabels: {
+      publicFailed: {
+        text: `${t(state, context, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${publicUpdateError}`.trim(),
+        tone: "error"
+      },
+      published: {
+        text: t(state, context, "publication_status_published", "Moment published."),
+        tone: "success"
+      },
+      unpublished: {
+        text: t(state, context, "publication_status_unpublished", "Moment unpublished."),
+        tone: "success"
+      }
+    }
+  });
+}
+
+function projectMomentProseImportPresentation(state, context, payload) {
+  return projectCatalogueActionPresentation({
+    resultKey: "success",
+    statusKey: "success",
+    resultLabels: {
+      success: {
+        text: t(state, context, "prose_import_result_success", "Prose imported to {target_path} at {completed_at}. The next site update will publish it.", {
+          target_path: payload && payload.target_path,
+          completed_at: payload && payload.imported_at_utc || utcTimestamp()
+        }),
+        tone: "success"
+      }
+    },
+    statusLabels: {
+      success: {
+        text: t(state, context, "prose_import_status_success", "Prose import completed."),
+        tone: "success"
+      }
+    }
+  });
 }
 
 export async function refreshBuildPreview(state, context) {
@@ -127,16 +235,7 @@ export async function saveCurrentMoment(state, context) {
     state.expectedRecordHash = payload.record_hash || await computeRecordHash(state.currentRecord);
     state.moments.set(state.currentMomentId, state.currentRecord);
     const outcome = applySaveBuildOutcome(state, context, payload);
-    if (outcome === "partial") {
-      setTextWithState(context, state.resultNode, t(state, context, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "warning");
-    } else if (outcome === "applied") {
-      setTextWithState(context, state.resultNode, t(state, context, "save_result_success_applied", "Saved source changes and updated the public moment at {saved_at}.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "success");
-    } else if (outcome === "saved_unpublished") {
-      setTextWithState(context, state.resultNode, t(state, context, "save_result_success_unpublished", "Source saved at {saved_at}.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "success");
-    } else {
-      setTextWithState(context, state.resultNode, t(state, context, "save_result_success", "Source saved at {saved_at}.", { saved_at: payload.saved_at_utc || utcTimestamp() }), "success");
-    }
-    setTextWithState(context, state.statusNode, "Saved.", "success");
+    applyActionPresentation(context, state, projectMomentSavePresentation(state, context, payload, outcome));
     await context.previewMoment(state.currentMomentId);
     context.renderSummary();
   } catch (error) {
@@ -245,18 +344,10 @@ export async function applyPublicationChange(state, context) {
     state.needsBuild = payload.status === "public_update_failed";
     await context.previewMoment(state.currentMomentId);
     context.renderSummary();
+    const presentation = projectMomentPublicationPresentation(state, context, action, payload);
+    applyActionPresentation(context, state, presentation);
     if (payload.status === "public_update_failed") {
-      const error = normalizeText(payload.public_update && payload.public_update.error);
-      setTextWithState(context, state.statusNode, `${t(state, context, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${error}`.trim(), "error");
-      setTextWithState(context, state.resultNode, t(state, context, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."), "warning");
       return;
-    }
-    if (action === "publish") {
-      setTextWithState(context, state.statusNode, t(state, context, "publication_status_published", "Moment published."), "success");
-      setTextWithState(context, state.resultNode, t(state, context, "publication_result_published", "Moment is published and public output has been updated."), "success");
-    } else {
-      setTextWithState(context, state.statusNode, t(state, context, "publication_status_unpublished", "Moment unpublished."), "success");
-      setTextWithState(context, state.resultNode, t(state, context, "publication_result_unpublished", "Moment is draft again and public output has been cleaned up."), "success");
     }
   } catch (error) {
     const message = Number(error && error.status) === 409
@@ -353,16 +444,7 @@ export async function importMomentProse(state, context) {
       confirm_overwrite: Boolean(preview.overwrite_required)
     });
     state.needsBuild = Boolean(payload.changed);
-    setTextWithState(context, state.statusNode, t(state, context, "prose_import_status_success", "Prose import completed."), "success");
-    setTextWithState(
-      context,
-      state.resultNode,
-      t(state, context, "prose_import_result_success", "Prose imported to {target_path} at {completed_at}. The next site update will publish it.", {
-        target_path: payload.target_path,
-        completed_at: payload.imported_at_utc || utcTimestamp()
-      }),
-      "success"
-    );
+    applyActionPresentation(context, state, projectMomentProseImportPresentation(state, context, payload));
     await context.previewMoment(state.currentMomentId);
     context.renderSummary();
   } catch (error) {

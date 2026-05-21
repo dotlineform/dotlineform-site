@@ -21,6 +21,8 @@ import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js
 import {
   extractCatalogueActionPreview,
   getCataloguePreviewBlocker,
+  projectCatalogueActionPresentation,
+  projectCatalogueSaveOutcomePresentation,
   resolveCatalogueSaveBuildOutcome
 } from "./catalogue-editor-action-workflow.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
@@ -44,6 +46,11 @@ function t(state, context, key, fallback, tokens = null) {
 
 function setTextWithState(context, node, text, state = "") {
   context.setTextWithState(node, text, state);
+}
+
+function applyActionPresentation(context, state, presentation) {
+  setTextWithState(context, state.resultNode, presentation.resultText, presentation.resultTone);
+  setTextWithState(context, state.statusNode, presentation.statusText, presentation.statusTone);
 }
 
 function buildSeriesActivityContext(actionId, controlId, controlSelector, seriesId) {
@@ -86,6 +93,130 @@ function applySaveBuildOutcome(state, response) {
     state.rebuildPending = outcome.rebuildPending;
   }
   return outcome;
+}
+
+function projectSeriesSavePresentation(state, context, response, outcome) {
+  const savedAt = { saved_at: outcome.stamp };
+  const loadedSeries = { series_id: state.currentSeriesId };
+  const statusFailed = `${t(state, context, "build_status_failed", "Site update failed.")} ${normalizeText(outcome.error)}`.trim();
+  return projectCatalogueSaveOutcomePresentation({
+    outcome,
+    changed: Boolean(response && response.changed),
+    resultLabels: {
+      savedAndUpdated: {
+        text: t(state, context, "save_result_success_applied", "Saved source changes and updated the public catalogue at {saved_at}.", savedAt),
+        tone: "success"
+      },
+      savedUpdateFailed: {
+        text: t(state, context, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", savedAt),
+        tone: "warn"
+      },
+      savedUnpublished: {
+        text: t(state, context, "save_result_success_unpublished", "Source saved at {saved_at}. Public update is unavailable while the series is not published.", savedAt),
+        tone: "success"
+      },
+      saved: {
+        text: t(state, context, "save_result_success", "Source saved at {saved_at}. Public catalogue update still pending.", savedAt),
+        tone: "success"
+      },
+      unchanged: {
+        text: t(state, context, "save_result_unchanged", "Source already matches the current form values.")
+      }
+    },
+    statusLabels: {
+      savedAndUpdated: {
+        text: t(state, context, "build_status_success", "Site update completed."),
+        tone: "success"
+      },
+      savedUpdateFailed: {
+        text: statusFailed,
+        tone: "error"
+      },
+      loaded: {
+        text: t(state, context, "save_status_loaded", "Loaded series {series_id}.", loadedSeries),
+        tone: "success"
+      }
+    }
+  });
+}
+
+function projectSeriesBuildPresentation(state, context, completedAt) {
+  return projectCatalogueActionPresentation({
+    resultKey: "success",
+    statusKey: "success",
+    resultLabels: {
+      success: {
+        text: t(state, context, "build_result_success", "Public catalogue updated at {completed_at}. Studio Activity updated.", { completed_at: completedAt }),
+        tone: "success"
+      }
+    },
+    statusLabels: {
+      success: {
+        text: t(state, context, "build_status_success", "Site update completed."),
+        tone: "success"
+      }
+    }
+  });
+}
+
+function projectSeriesPublicationPresentation(state, context, action, response) {
+  const publicUpdateFailed = response && response.status === "public_update_failed";
+  const publicUpdateError = normalizeText(response && response.public_update && response.public_update.error);
+  return projectCatalogueActionPresentation({
+    resultKey: publicUpdateFailed ? "publicFailed" : action === "publish" ? "published" : "unpublished",
+    statusKey: publicUpdateFailed ? "publicFailed" : action === "publish" ? "published" : "unpublished",
+    resultLabels: {
+      publicFailed: {
+        text: t(state, context, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."),
+        tone: "warn"
+      },
+      published: {
+        text: t(state, context, "publication_result_published", "Series and attached draft works are published, and public catalogue output has been updated."),
+        tone: "success"
+      },
+      unpublished: {
+        text: t(state, context, "publication_result_unpublished", "Series is draft again and public catalogue output has been cleaned up."),
+        tone: "success"
+      }
+    },
+    statusLabels: {
+      publicFailed: {
+        text: `${t(state, context, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${publicUpdateError}`.trim(),
+        tone: "error"
+      },
+      published: {
+        text: t(state, context, "publication_status_published", "Series published."),
+        tone: "success"
+      },
+      unpublished: {
+        text: t(state, context, "publication_status_unpublished", "Series unpublished."),
+        tone: "success"
+      }
+    }
+  });
+}
+
+function projectSeriesProseImportPresentation(state, context, importResponse) {
+  const completedAt = normalizeText(importResponse && importResponse.imported_at_utc) || utcTimestamp();
+  return projectCatalogueActionPresentation({
+    resultKey: "success",
+    statusKey: "success",
+    resultLabels: {
+      success: {
+        text: t(state, context, "prose_import_result_success", "Prose imported to {target_path} at {completed_at}. The next site update will publish it.", {
+          completed_at: completedAt,
+          target_path: normalizeText(importResponse && importResponse.target_path)
+        }),
+        tone: "success"
+      }
+    },
+    statusLabels: {
+      success: {
+        text: t(state, context, "prose_import_status_success", "Prose import completed."),
+        tone: "success"
+      }
+    }
+  });
 }
 
 export async function refreshBuildPreview(state, context) {
@@ -175,17 +306,7 @@ export async function importSeriesProse(state, context) {
       confirm_overwrite: confirmOverwrite
     });
     await refreshBuildPreview(state, context);
-    const completedAt = normalizeText(importResponse.imported_at_utc || utcTimestamp());
-    setTextWithState(
-      context,
-      state.resultNode,
-      t(state, context, "prose_import_result_success", "Prose imported to {target_path} at {completed_at}. The next site update will publish it.", {
-        completed_at: completedAt,
-        target_path: normalizeText(importResponse.target_path)
-      }),
-      "success"
-    );
-    setTextWithState(context, state.statusNode, t(state, context, "prose_import_status_success", "Prose import completed."), "success");
+    applyActionPresentation(context, state, projectSeriesProseImportPresentation(state, context, importResponse));
   } catch (error) {
     setTextWithState(
       context,
@@ -277,41 +398,7 @@ export async function saveCurrentSeries(state, context) {
       pendingBuildExtraWorkIds
     });
     await refreshBuildPreview(state, context);
-    if (outcome.kind === "saved_and_updated") {
-      setTextWithState(
-        context,
-        state.resultNode,
-        t(state, context, "save_result_success_applied", "Saved source changes and updated the public catalogue at {saved_at}.", { saved_at: outcome.stamp }),
-        "success"
-      );
-      setTextWithState(context, state.statusNode, t(state, context, "build_status_success", "Site update completed."), "success");
-    } else if (outcome.kind === "saved_update_failed") {
-      setTextWithState(
-        context,
-        state.resultNode,
-        t(state, context, "save_result_success_partial", "Source changes were saved at {saved_at}, but the public update failed.", { saved_at: outcome.stamp }),
-        "warn"
-      );
-      setTextWithState(context, state.statusNode, `${t(state, context, "build_status_failed", "Site update failed.")} ${outcome.error}`.trim(), "error");
-    } else if (outcome.kind === "saved_unpublished") {
-      setTextWithState(
-        context,
-        state.resultNode,
-        t(state, context, "save_result_success_unpublished", "Source saved at {saved_at}. Public update is unavailable while the series is not published.", { saved_at: outcome.stamp }),
-        "success"
-      );
-      setTextWithState(context, state.statusNode, t(state, context, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }), "success");
-    } else {
-      setTextWithState(
-        context,
-        state.resultNode,
-        response.changed
-          ? t(state, context, "save_result_success", "Source saved at {saved_at}. Public catalogue update still pending.", { saved_at: outcome.stamp })
-          : t(state, context, "save_result_unchanged", "Source already matches the current form values."),
-        response.changed ? "success" : ""
-      );
-      setTextWithState(context, state.statusNode, t(state, context, "save_status_loaded", "Loaded series {series_id}.", { series_id: state.currentSeriesId }), "success");
-    }
+    applyActionPresentation(context, state, projectSeriesSavePresentation(state, context, response, outcome));
   } catch (error) {
     const isConflict = Number(error && error.status) === 409;
     const message = isConflict
@@ -397,8 +484,7 @@ export async function buildCurrentSeries(state, context) {
     state.pendingBuildExtraWorkIds = [];
     await refreshBuildPreview(state, context);
     const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
-    setTextWithState(context, state.resultNode, t(state, context, "build_result_success", "Public catalogue updated at {completed_at}. Studio Activity updated.", { completed_at: completedAt }), "success");
-    setTextWithState(context, state.statusNode, t(state, context, "build_status_success", "Site update completed."), "success");
+    applyActionPresentation(context, state, projectSeriesBuildPresentation(state, context, completedAt));
   } catch (error) {
     setTextWithState(context, state.statusNode, `${t(state, context, "build_status_failed", "Site update failed.")} ${normalizeText(error && error.message)}`.trim(), "error");
   } finally {
@@ -509,19 +595,10 @@ export async function applyPublicationChange(state, context) {
     });
     await refreshBuildPreview(state, context);
 
+    const presentation = projectSeriesPublicationPresentation(state, context, action, response);
+    applyActionPresentation(context, state, presentation);
     if (response.status === "public_update_failed") {
-      const error = normalizeText(response.public_update && response.public_update.error);
-      setTextWithState(context, state.statusNode, `${t(state, context, "publication_status_public_failed", "Publication state changed, but the public update failed.")} ${error}`.trim(), "error");
-      setTextWithState(context, state.resultNode, t(state, context, "publication_result_public_failed", "Source status changed, but public artifacts did not finish updating."), "warn");
       return;
-    }
-
-    if (action === "publish") {
-      setTextWithState(context, state.statusNode, t(state, context, "publication_status_published", "Series published."), "success");
-      setTextWithState(context, state.resultNode, t(state, context, "publication_result_published", "Series and attached draft works are published, and public catalogue output has been updated."), "success");
-    } else {
-      setTextWithState(context, state.statusNode, t(state, context, "publication_status_unpublished", "Series unpublished."), "success");
-      setTextWithState(context, state.resultNode, t(state, context, "publication_result_unpublished", "Series is draft again and public catalogue output has been cleaned up."), "success");
     }
   } catch (error) {
     const message = Number(error && error.status) === 409

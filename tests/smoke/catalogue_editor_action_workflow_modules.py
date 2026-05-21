@@ -72,6 +72,74 @@ def assert_action_workflow_helpers(page: Page) -> None:
                 isPublished: true,
                 fallbackBuildTargets: [{ work_id: 'fallback' }]
             });
+            const skippedNoArtifacts = module.resolveCatalogueSaveBuildOutcome({
+                response: {
+                    changed: true,
+                    saved_at_utc: '2026-05-21T10:06:00Z',
+                    build_requested: false,
+                    build_skipped: { reason: 'no_public_build_artifacts' }
+                },
+                isPublished: true
+            });
+            const presentationLabels = {
+                resultLabels: {
+                    unchanged: { text: 'unchanged result', tone: '' },
+                    saved: { text: 'saved result', tone: 'success' },
+                    savedUnpublished: { text: 'unpublished result', tone: 'success' },
+                    savedAndUpdated: { text: 'applied result', tone: 'success' },
+                    savedUpdateFailed: { text: 'partial result', tone: 'warn' }
+                },
+                statusLabels: {
+                    loaded: { text: 'loaded status', tone: 'success' },
+                    savedAndUpdated: { text: 'build complete', tone: 'success' },
+                    savedUpdateFailed: { text: 'build failed', tone: 'error' }
+                }
+            };
+            const presentationUnchanged = module.projectCatalogueSaveOutcomePresentation({
+                outcome: unchanged,
+                changed: false,
+                ...presentationLabels
+            });
+            const presentationSaved = module.projectCatalogueSaveOutcomePresentation({
+                outcome: pending,
+                changed: true,
+                ...presentationLabels
+            });
+            const presentationUnpublished = module.projectCatalogueSaveOutcomePresentation({
+                outcome: unpublished,
+                changed: true,
+                ...presentationLabels
+            });
+            const presentationApplied = module.projectCatalogueSaveOutcomePresentation({
+                outcome: applied,
+                changed: true,
+                ...presentationLabels
+            });
+            const presentationFailed = module.projectCatalogueSaveOutcomePresentation({
+                outcome: failed,
+                changed: true,
+                ...presentationLabels
+            });
+            const actionPresentation = module.projectCatalogueActionPresentation({
+                resultKey: 'done',
+                statusKey: 'ready',
+                resultLabels: {
+                    done: { text: 'result done', tone: 'success' }
+                },
+                statusLabels: {
+                    ready: { text: 'status ready', tone: 'success' }
+                }
+            });
+            const pendingTargets = module.resolveCataloguePendingBuildTargets({
+                rebuildPending: true,
+                pendingTargets: [{ work_id: 'pending' }],
+                fallbackTargets: [{ work_id: 'fallback' }]
+            });
+            const fallbackTargets = module.resolveCataloguePendingBuildTargets({
+                rebuildPending: false,
+                pendingTargets: [{ work_id: 'pending' }],
+                fallbackTargets: [{ work_id: 'fallback' }]
+            });
             const preview = module.extractCatalogueActionPreview({
                 preview: { blocked: true, blockers: ['Blocked by parent status.'] }
             });
@@ -101,6 +169,15 @@ def assert_action_workflow_helpers(page: Page) -> None:
                 pending,
                 applied,
                 failed,
+                skippedNoArtifacts,
+                presentationUnchanged,
+                presentationSaved,
+                presentationUnpublished,
+                presentationApplied,
+                presentationFailed,
+                actionPresentation,
+                pendingTargets,
+                fallbackTargets,
                 publicationBlocker,
                 deleteBlocker,
                 noBlocker,
@@ -120,6 +197,46 @@ def assert_action_workflow_helpers(page: Page) -> None:
     assert result["failed"]["kind"] == "saved_update_failed"
     assert result["failed"]["error"] == "build failed"
     assert result["failed"]["buildTargets"][0]["work_id"] == "002"
+    assert result["skippedNoArtifacts"]["kind"] == "saved"
+    assert result["skippedNoArtifacts"]["rebuildPending"] is False
+    assert result["presentationUnchanged"] == {
+        "resultText": "unchanged result",
+        "resultTone": "",
+        "statusText": "loaded status",
+        "statusTone": "success",
+    }
+    assert result["presentationSaved"] == {
+        "resultText": "saved result",
+        "resultTone": "success",
+        "statusText": "loaded status",
+        "statusTone": "success",
+    }
+    assert result["presentationUnpublished"] == {
+        "resultText": "unpublished result",
+        "resultTone": "success",
+        "statusText": "loaded status",
+        "statusTone": "success",
+    }
+    assert result["presentationApplied"] == {
+        "resultText": "applied result",
+        "resultTone": "success",
+        "statusText": "build complete",
+        "statusTone": "success",
+    }
+    assert result["presentationFailed"] == {
+        "resultText": "partial result",
+        "resultTone": "warn",
+        "statusText": "build failed",
+        "statusTone": "error",
+    }
+    assert result["actionPresentation"] == {
+        "resultText": "result done",
+        "resultTone": "success",
+        "statusText": "status ready",
+        "statusTone": "success",
+    }
+    assert result["pendingTargets"][0]["work_id"] == "pending"
+    assert result["fallbackTargets"][0]["work_id"] == "fallback"
     assert result["publicationBlocker"] == "Blocked by parent status."
     assert result["deleteBlocker"] == "Delete requires removing members first."
     assert result["noBlocker"] == ""
