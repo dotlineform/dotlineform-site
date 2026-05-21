@@ -92,11 +92,11 @@ For `tag-registry.js`, for example, list/control rendering is meaningful not bec
 
 ## Current Summary
 
-Measured on 2026-05-21, after the Tag Registry verification slice.
+Measured on 2026-05-21, after the Data Sharing Prepare verification slice.
 
 - Browser JavaScript files under `assets/`: 133
 - Total browser JavaScript lines under `assets/`: 41,383
-- Current detail set floor: 8, using the ranked top five after Tag Registry mitigation.
+- Current detail set floor: 8, using the ranked top five after Data Sharing Prepare mitigation.
 
 ## Current Priorities
 
@@ -113,35 +113,6 @@ Each section should summarise:
 - which actionable tasks would reduce the risk score, and the anticipated score improvement from each task.
 
 ## Top Priority Details
-
-### `assets/studio/js/data-sharing-prepare.js`
-
-- Risk score: 11
-- Score breakdown: ?
-- Classification: mixed workflow route controller
-- Raw: 35.1 KiB
-
-**Why This Is Priority Work**
-
-- This route still mirrors the Data Sharing Review architecture problem: route readiness, package preparation, validation, workflow-state projection, preview rendering, service calls, and result handling are tightly coordinated in one place.
-- Data-sharing behavior changes tend to affect cross-file contracts, so broad route ownership makes future package workflow changes harder to review safely.
-- The existing review-side extraction gives a comparison point, but prepare still exposes high maintenance and structural risk.
-
-**Direction**
-
-- Mirror the Review route by extracting workflow-domain adapter behavior where package state crosses route and service boundaries.
-- Move preview/result rendering into a focused render module if it currently requires the route to understand full package detail shape.
-- Keep route readiness and top-level event wiring in the route shell.
-- Do not split small validators unless the split gives package workflow state a clearer owner.
-
-**Score Reduction Tasks**
-
-| # | Status | Task |
-| ---: | --- | --- |
-| 1 | done | Extracted package workflow adapter behavior into `assets/studio/js/data-sharing-prepare-workflow.js`, which owns prepare capability/profile interpretation, config and format projection, selection requirements, and prepare request shaping. |
-| 2 | done | Moved prepare list/control rendering, selection checkbox sync, and result modal body rendering into `assets/studio/js/data-sharing-prepare-render.js` with explicit route-state inputs. |
-| 3 | done | Defined `assets/studio/js/data-sharing-prepare-service.js` as the preparation service boundary for request validation, package write calls, and success/failure result shaping. |
-| 4 | done | Added focused module checks for package-state projection, preparation result rendering, and fallback write behavior. |
 
 ### `assets/docs-viewer/js/docs-html-import.js`
 
@@ -224,6 +195,38 @@ Each section should summarise:
 | 2 | proposed | Move RAG/report rendering into a focused render module if display behavior grows. Anticipated improvement: -1 from maintenance or structural risk. |
 | 3 | proposed | Pass explicit scoring/report inputs from the route shell rather than broad route state. Anticipated improvement: -1 from maintenance risk. |
 | 4 | proposed | Add focused checks for score interpretation and RAG display output when those modules are extracted. Anticipated improvement: -1 from maintenance risk. |
+
+### `assets/studio/js/data-sharing-prepare.js`
+
+- Risk score: 8
+- Score breakdown: maintenance 2, structural 2, performance 2, architectural 2.
+- Classification: medium-risk route orchestration shell
+- Raw: 18.0 KiB
+
+**Why This Remains In The Detail Set**
+
+- The route now has focused workflow, render, service, and modal owners, so package-state projection, list/result rendering, request validation, and success/failure result shaping no longer sit directly in the route shell.
+- Focused module smoke coverage now checks prepare request projection, result rendering, and write failure shaping without requiring full route boot.
+- Remaining route risk comes from legitimate orchestration responsibilities: route boot, adapter registry loading, generated docs-index loading, scope URL changes, event wiring, service availability, and ready/busy state.
+- The route still coordinates several async data and service states, so future prepare changes should keep behavior inside the focused owners rather than rebuilding mixed workflow logic here.
+
+**Direction**
+
+- Keep capability/profile interpretation and prepare request shaping in `assets/studio/js/data-sharing-prepare-workflow.js`.
+- Keep config/list/format/result rendering in `assets/studio/js/data-sharing-prepare-render.js`.
+- Keep request validation, package write calls, and result shaping in `assets/studio/js/data-sharing-prepare-service.js`.
+- Keep route-shell work limited to boot, config/data loading, scope routing, event wiring, modal coordination, and route ready/busy projection.
+- If generated docs-index loading or visible-doc tree projection changes materially, consider extracting that as a focused data-loading/projection helper with explicit inputs.
+
+**Score Reduction Tasks**
+
+| # | Status | Task |
+| ---: | --- | --- |
+| 1 | done | Extracted package workflow adapter behavior into `assets/studio/js/data-sharing-prepare-workflow.js`, which owns prepare capability/profile interpretation, config and format projection, selection requirements, and prepare request shaping. |
+| 2 | done | Moved prepare list/control rendering, selection checkbox sync, and result modal body rendering into `assets/studio/js/data-sharing-prepare-render.js` with explicit route-state inputs. |
+| 3 | done | Defined `assets/studio/js/data-sharing-prepare-service.js` as the preparation service boundary for request validation, package write calls, and success/failure result shaping. |
+| 4 | done | Added focused module checks for package-state projection, preparation result rendering, and fallback write behavior. |
+| 5 | proposed | If generated docs-index loading or visible-doc tree projection changes materially, extract it as a focused helper with explicit route inputs. Anticipated improvement: -1 from maintenance or architectural risk. |
 
 ### `assets/studio/js/tag-registry.js`
 
