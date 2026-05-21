@@ -96,6 +96,25 @@ Default rules:
 - Avoid cosmetic splits that only move tiny helpers. Extract around stable ownership boundaries such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, route-state projection, or domain logic.
 - Rescore only when future changes have a clearer destination, behavior has focused checks, or route-load/input-time work was actually reduced.
 
+Batch sizing:
+
+- Work by route family or coherent runtime surface, not by strict inventory rank.
+- A good batch usually moves one complete responsibility out of one route shell, applies one shared route-family pattern across sibling files, or installs one shared helper plus the routes that already need it.
+- A batch is too small when it only moves local helpers without changing ownership, testability, route-load behavior, or future-change destination.
+- A batch is too large when it spans unrelated route families, mixes public runtime and Studio-only risk, or requires several independent browser workflows to verify safely.
+- If a guardrail slice is needed first, define the follow-on score-moving slice, target score movement, and evidence required before rescoring.
+
+Task definition checklist:
+
+- target files and current inventory scores
+- responsibility being added, moved, pinned, or deliberately left in place
+- focused owner module after the slice
+- route/controller responsibilities that should remain local
+- behavior that must not be reintroduced into the high-risk file
+- acceptance checks and smoke-test file names
+- inventory rows to revisit after verification
+- owning docs and generated-payload follow-through
+
 For score-6 or score-7 controllers, leave a lightweight owner note in the relevant inventory or child doc when touched:
 
 - what remains in the controller

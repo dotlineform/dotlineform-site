@@ -3,7 +3,7 @@ doc_id: javascript-maintenance-risk-mitigation
 title: JavaScript Maintenance Risk Mitigation
 added_date: 2026-05-21
 last_updated: 2026-05-21
-ui_status: in-progress
+ui_status: done
 parent_id: studio-javascript-payload-inventory
 sort_order: 7012
 viewable: true
