@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-fef1ecaea2cb52f14f31b4eb160f6558",
-    "generated_at_utc": "2026-05-21T16:29:43Z",
-    "count": 287
+    "version": "blake2b-89d0dfe79d3da1263549ecb2e635b7e8",
+    "generated_at_utc": "2026-05-21T16:40:01Z",
+    "count": 288
   },
   "entries": [
     {
@@ -3643,6 +3643,32 @@
         "19"
       ],
       "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "javascript-maintenance-risk-mitigation",
+      "kind": "doc",
+      "title": "JavaScript Maintenance Risk Mitigation",
+      "href": "/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation",
+      "last_updated": "2026-05-21",
+      "parent_id": "studio-javascript-payload-inventory",
+      "parent_title": "JavaScript Inventory Policy",
+      "display_meta": "2026-05-21 • JavaScript Inventory Policy",
+      "search_terms": [
+        "javascript-maintenance-risk-mitigation",
+        "javascript",
+        "maintenance",
+        "risk",
+        "mitigation",
+        "javascript maintenance risk mitigation",
+        "javascript inventory policy",
+        "inventory",
+        "policy",
+        "2026-05-21",
+        "2026",
+        "05",
+        "21"
+      ],
+      "search_text": "javascript-maintenance-risk-mitigation javascript maintenance risk mitigation javascript maintenance risk mitigation javascript inventory policy inventory policy 2026-05-21 2026 05 21"
     },
     {
       "id": "javascript-inventory-implementation-plan",

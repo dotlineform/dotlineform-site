@@ -11,7 +11,7 @@ viewable: false
 
 ## javascript risk mitigation
 
-we are working on _docs/javascript-inventory-implementation-plan.md
+
 
 ---
 
@@ -20,3 +20,4 @@ we are working on _docs/javascript-inventory-implementation-plan.md
 <https://developers.openai.com/codex/skills>
 
 ---
+

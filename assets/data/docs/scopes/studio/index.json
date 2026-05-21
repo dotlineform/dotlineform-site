@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T16:30:30Z",
+  "generated_at": "2026-05-21T16:48:07Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2264,7 +2264,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 7664,
+      "content_text_length": 7703,
       "ui_status": "urgent"
     },
     {
@@ -2381,6 +2381,23 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-python-ruby-script-inventory.json",
       "content_text_length": 17285,
       "ui_status": "urgent"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "javascript-maintenance-risk-mitigation",
+      "title": "JavaScript Maintenance Risk Mitigation",
+      "added_date": "2026-05-21",
+      "last_updated": "2026-05-21",
+      "parent_id": "studio-javascript-payload-inventory",
+      "sort_order": 7012,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "javascript-maintenance-risk-mitigation.md",
+      "viewer_url": "/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-maintenance-risk-mitigation.json",
+      "content_text_length": 10088,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -3994,7 +4011,7 @@
       "source_path": "_tmp.md",
       "viewer_url": "/docs/?scope=studio&doc=_tmp",
       "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp.json",
-      "content_text_length": 316
+      "content_text_length": 248
     },
     {
       "scope": "studio",

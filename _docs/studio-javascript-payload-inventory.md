@@ -148,6 +148,7 @@ When checking route exposure, search checked-in route shells and includes while 
 ## Related References
 
 - [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
+- [JavaScript Maintenance Risk Mitigation](/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation)
 - [JavaScript Inventory Implementation Plan](/docs/?scope=studio&doc=javascript-inventory-implementation-plan)
 - [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
 - [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)
