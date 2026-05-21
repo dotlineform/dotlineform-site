@@ -1,0 +1,28 @@
+{
+  "id": "change-2026-05-21-added-javascript-maintenance-gate-workflow-guidance",
+  "date": "2026-05-21",
+  "title": "Added JavaScript Maintenance Gate Workflow Guidance",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "workflow",
+    "studio"
+  ],
+  "summary": "Moved durable JavaScript maintenance-gate rules into Development Workflow and defined the first Catalogue action workflow follow-up slice.",
+  "source": {
+    "file": "_docs/javascript-maintenance-risk-mitigation.md"
+  },
+  "subjects": [
+    "javascript-maintenance",
+    "catalogue-actions"
+  ],
+  "related_docs": [
+    "development-workflow",
+    "javascript-maintenance-risk-mitigation",
+    "javascript-inventory"
+  ],
+  "related_files": [
+    "_docs/development-workflow.md",
+    "_docs/javascript-maintenance-risk-mitigation.md"
+  ]
+}

@@ -74,6 +74,40 @@ Prefer existing repo boundaries:
 For UI work, start with [UI](/docs/?scope=studio&doc=ui) and child documents.
 For search work, start with [Search](/docs/?scope=studio&doc=search) and update search child docs when schema, ranking, normalization, UI, build flow, or validation changes materially.
 For scripts or local services, use [Scripts](/docs/?scope=studio&doc=scripts) and the script-specific child doc.
+For browser JavaScript maintenance-risk work, use [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory) for scoring, [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) for current rows, and the maintenance gate below before adding behavior to high-risk files.
+
+### JavaScript Maintenance Gate
+
+Use this gate before changing browser JavaScript files with maintenance score 2, total risk score 6 or higher, or recent churn that suggests ownership drift.
+
+Before editing, answer:
+
+- What complete responsibility is being added, changed, or moved?
+- Which module owns that responsibility after the change?
+- Does the route shell keep only orchestration, config handoff, event wiring, ready/busy projection, and calls into focused owners?
+- Is there a focused module smoke check for behavior that moved out of route boot?
+- Does the inventory score need revisiting after the slice?
+
+Default rules:
+
+- Do not add a new complete responsibility to a maintenance-score-2 file unless the same slice creates or extends the focused owner for that responsibility.
+- Prefer explicit input/output helpers over helper functions that read or mutate a broad route `state` object directly.
+- Define the owning surface before adding new UI behavior; do not let the current renderer or route shell become the owner by default.
+- Avoid cosmetic splits that only move tiny helpers. Extract around stable ownership boundaries such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, route-state projection, or domain logic.
+- Rescore only when future changes have a clearer destination, behavior has focused checks, or route-load/input-time work was actually reduced.
+
+For score-6 or score-7 controllers, leave a lightweight owner note in the relevant inventory or child doc when touched:
+
+- what remains in the controller
+- what moved to a focused owner
+- what future changes should use that owner
+- what should not be reintroduced into the controller
+
+Useful checks and follow-through:
+
+- Run `./scripts/checks/javascript_inventory_guardrail.py` before or after a JavaScript risk-reduction batch to inspect maintenance-score counts, line share, churn, overlap risk, and top risk files.
+- Use focused browser module smokes where practical: serve the site root through a temporary local static server, import browser modules directly in Playwright, stub config/data/service/DOM inputs, assert helper contracts without full route boot, and import affected route shells to catch syntax and dependency regressions.
+- After material JavaScript risk-reduction work, update [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory), and update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) when Docs Viewer-specific rows or follow-up tasks changed.
 
 ## 4. Implement In A Focused Slice
 

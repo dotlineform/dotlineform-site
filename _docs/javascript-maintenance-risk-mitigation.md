@@ -11,7 +11,7 @@ viewable: true
 # JavaScript Maintenance Risk Mitigation
 
 This document records the next course of action after the 2026-05-21 review of [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
-It sits between the policy and implementation-plan documents: the policy defines the scoring model, the implementation plan tracks completed batches, and this document defines the next mitigation rules and helper infrastructure.
+It sits between the policy and implementation-plan documents: the policy defines the scoring model, [Development Workflow](/docs/?scope=studio&doc=development-workflow) now carries durable maintenance-gate guidance, and this document tracks the current mitigation implementation queue.
 
 The immediate priority is to reduce systemic maintenance risk before adding new interactive surface area to the largest route controllers.
 The first script priority is the Docs Viewer entry runtime, especially the index panel boundary needed before future semantic or graph index work.
@@ -31,21 +31,17 @@ The recurring pattern is a post-refactor plateau:
 The next mitigation pass should therefore avoid broad "make files smaller" cleanup.
 It should first install rules and helpers that keep future changes out of risky controllers, then use those helpers in the highest-priority script slices.
 
-## Operating Rules
+## Durable Guidance
 
-Use these rules before starting another JavaScript risk-reduction batch.
+The reusable JavaScript maintenance gate now lives in [Development Workflow](/docs/?scope=studio&doc=development-workflow).
+Use that gate before changing browser JavaScript files with maintenance score 2, total risk score 6 or higher, or recent churn that suggests ownership drift.
 
-1. Do not add new complete responsibilities to a file with maintenance score 2 unless the same slice creates or extends the focused owner for that responsibility.
-2. Treat `assets/docs-viewer/js/docs-viewer.js` as the first script priority because upcoming index-panel work would otherwise add more layout and interaction state to the shared entry runtime.
-3. Prefer explicit input/output helpers over helper functions that read or mutate the route's broad `state` object directly.
-4. Keep route entry modules as orchestration shells: route boot, config handoff, event wiring, ready/busy projection, and calls into focused owners.
-5. A score should drop only when future changes have a clearer destination, behavior has focused checks, or route/input-time work was actually reduced.
-6. Score-5 files with only maintenance above the normal target are watch items; improve them opportunistically when nearby behavior is already changing.
-7. For new UI surface work, define the owning surface first. Do not let the current renderer or route shell become the owner by default.
+[JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory) remains the scoring authority.
+This document should not duplicate the durable rules; it records implementation-specific priorities, completed Docs Viewer slices, and the next concrete task definitions.
 
-## Helper Infrastructure First
+## Helper Infrastructure Status
 
-Before the next feature/refactor batch, add small infrastructure that makes the rules repeatable.
+The helper infrastructure from this mitigation pass is now in place or moved into durable workflow guidance.
 
 ### Inventory Guardrail
 
@@ -71,46 +67,21 @@ Use:
 
 ### Maintenance Gate Checklist
 
-**Status:** Draft checklist exists in this document; reusable enforcement is pending.
+**Status:** Moved to [Development Workflow](/docs/?scope=studio&doc=development-workflow) on 2026-05-21.
 
-Add a short checklist to use before changing any file with maintenance score 2:
-
-- What complete responsibility is being added or changed?
-- Which module owns that responsibility after the change?
-- Does the route shell keep only orchestration and handoff?
-- Is there a focused module smoke check for behavior that moved out of route boot?
-- Does the inventory score need updating after the slice?
-
-This checklist can live in this document first.
-If it proves useful, move it into a reusable script prompt or check profile later.
+Use the JavaScript maintenance gate in [Development Workflow](/docs/?scope=studio&doc=development-workflow) before changing maintenance-score-2 files, files with total risk score 6 or higher, or high-churn JavaScript route/controller files.
 
 ### Focused Module Smoke Pattern
 
-**Status:** Pattern documented; Docs Viewer index-panel module and route smoke checks added.
+**Status:** Pattern moved to [Development Workflow](/docs/?scope=studio&doc=development-workflow); Docs Viewer index-panel module and route smoke checks added.
 
-Standardize the smoke-test pattern already used by existing module checks:
-
-- serve the site root through a temporary local static server
-- import the browser module directly in Playwright
-- stub config, data, service, and DOM inputs
-- assert helper contracts without full route boot
-- import affected route shells only to catch syntax and dependency regressions
-
-Use this pattern for new owners before running broader browser route smoke tests.
+Use the workflow pattern for new owners before running broader browser route smoke tests.
 
 ### Controller Contract Notes
 
-**Status:** Pending.
+**Status:** Moved to [Development Workflow](/docs/?scope=studio&doc=development-workflow) on 2026-05-21.
 
-When a score-6 or score-7 controller is touched, leave a short owner note in the relevant inventory or child doc:
-
-- what remains in the controller
-- what moved to a focused owner
-- what future changes should use that owner
-- what should not be reintroduced into the controller
-
-This is intentionally lightweight.
-The goal is to prevent the next related feature from rediscovering the same boundary.
+Use the workflow owner-note rule when touching score-6 or score-7 controllers.
 
 ## First Script Priority: Docs Viewer Entry Runtime
 
@@ -203,14 +174,14 @@ After the Docs Viewer slice is implemented and verified:
 - [x] update this document for completed/pending task status
 - [x] update generated Docs Viewer payloads through the normal docs workflow rather than by hand
 - [x] add a focused tree-click behavior assertion for index-panel expanded mode
-- [ ] re-parent the durable risk-scoring and maintenance-gate guidance under [Development Workflow](/docs/?scope=studio&doc=development-workflow), editing it from current implementation planning into stable workflow guidance
+- [x] re-parent the durable risk-scoring and maintenance-gate guidance under [Development Workflow](/docs/?scope=studio&doc=development-workflow), editing it from current implementation planning into stable workflow guidance
 
 The target is not necessarily to move `docs-viewer.js` directly to score 4 in one slice.
 The target is to prevent the next index/graph feature from increasing shared entry-runtime risk.
 
 ## Next Action
 
-The next implementation step is the permanent guidance cleanup: split durable scoring/maintenance-gate policy under [Development Workflow](/docs/?scope=studio&doc=development-workflow), leaving JavaScript- and Docs Viewer-specific implementation details in the JavaScript inventory and Docs Viewer inventory docs.
+The next implementation step is to implement Task A1, the Catalogue work save outcome projection slice.
 
 ## Next Priorities After Docs Viewer
 
@@ -224,11 +195,11 @@ After the Docs Viewer index-panel boundary is in place, revisit the remaining sc
 Each slice should have a focused owner, a small smoke check, and an inventory rescore.
 
 Concrete task definitions are needed before starting those families.
-Define them after the durable guidance cleanup, so the tasks can reference the stable maintenance-gate workflow rather than this implementation note.
+Define them against the stable maintenance gate in [Development Workflow](/docs/?scope=studio&doc=development-workflow), so the task definitions stay aligned with the durable workflow guidance rather than this implementation note.
 
 ### Task A: Catalogue Action Workflow Contracts
 
-**Status:** Pending definition after durable guidance cleanup.
+**Status:** Defined; next implementation task is Task A1.
 
 Candidate files:
 
@@ -238,16 +209,38 @@ Candidate files:
 - `assets/studio/js/catalogue-moment-actions.js`
 - `assets/studio/js/catalogue-editor-action-workflow.js`
 
-Define the first slice around one concrete action contract, not around general file size.
-Likely contract candidates are save-result normalization, build-preview blocker shaping, or cross-entity affected-record summaries.
+First contract: source-save plus optional public-update outcome projection.
 
-The task definition should specify:
+Current state:
 
-- which action result shape is the owner contract
-- which route/action modules consume that shape
-- what remains route-specific after the shared contract exists
-- which focused module smoke covers preview, success, partial-failure, and fallback cases
-- which inventory rows can be rescored if the route/action files stop owning the contract directly
+- `assets/studio/js/catalogue-editor-action-workflow.js` already owns raw save/build outcome normalization through `resolveCatalogueSaveBuildOutcome`.
+- `assets/studio/js/catalogue-work-actions.js`, `assets/studio/js/catalogue-series-actions.js`, and `assets/studio/js/catalogue-work-detail-actions.js` still translate the same outcome kinds into route-local status/result messages.
+- `assets/studio/js/catalogue-moment-actions.js` still has its own local save/build outcome shape and should not be the first adopter.
+
+The focused owner remains `assets/studio/js/catalogue-editor-action-workflow.js`.
+Extend it with an explicit save outcome presentation projection that accepts a normalized outcome plus route-provided labels/tokens and returns a small view model for status text, result text, and UI tone.
+
+Task A1 implementation boundary:
+
+- first adopter: `assets/studio/js/catalogue-work-actions.js` single-work save path
+- move only the repeated save outcome-to-message decision into the shared owner
+- keep record mutation, lookup refresh, pending build target updates, and editor state updates in `catalogue-work-actions.js`
+- do not change bulk work saves, series saves, detail saves, publication, delete, build, or prose-import flows in A1
+- do not rescore inventory rows until at least one route/action module no longer owns the save outcome presentation contract directly
+
+Task A1 acceptance checks:
+
+- extend `tests/smoke/catalogue_editor_action_workflow_modules.py` to cover the save outcome presentation projection for unchanged, saved, unpublished, applied, and partial public-update failure cases
+- keep the smoke import checks for `catalogue-work-actions.js`, `catalogue-work-detail-actions.js`, `catalogue-series-actions.js`, and `catalogue-moment-actions.js`
+- run the focused Catalogue action workflow module smoke after implementation
+- run a syntax check for the touched JavaScript files if using a JS checker remains practical for this repo
+
+Task A follow-up slices:
+
+- A2: adopt the same projection in the work bulk-save branch if A1 keeps the work route behavior stable
+- A3: adopt the projection in series and work-detail save flows
+- A4: align moment save/build outcome normalization with `resolveCatalogueSaveBuildOutcome` after the shared projection is proven
+- A5: revisit inventory scores for `catalogue-work-actions.js`, `catalogue-series-actions.js`, `catalogue-work-detail-actions.js`, and `catalogue-moment-actions.js` only after ownership and smoke coverage actually reduce future-change risk
 
 ### Task B: Catalogue Editor Route Shell Boundaries
 
@@ -275,7 +268,7 @@ The task definition should specify:
 
 ### Task C: Tag Route Save And Modal Coordination
 
-**Status:** Pending definition after durable guidance cleanup.
+**Status:** Pending definition after Task A.
 
 Candidate files:
 
