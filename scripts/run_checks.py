@@ -102,6 +102,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/studio/audit_service.py",
                 "tests/smoke/docs_viewer_routes.py",
                 "tests/smoke/docs_viewer_management_modal.py",
+                "tests/smoke/data_sharing_prepare_modules.py",
                 "tests/smoke/ui_catalogue_modal_demo.py",
                 "tests/python/test_activity_contract.py",
                 "tests/python/test_local_env.py",
@@ -307,6 +308,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "--block-docs-service",
             ),
             "Smoke-check the Studio data sharing prepare route ready state with docs-management unavailable.",
+        ),
+        CheckCommand(
+            "data-sharing-prepare-module-smoke",
+            (
+                sys.executable,
+                "tests/smoke/data_sharing_prepare_modules.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check Data Sharing prepare state projection, result rendering, and write failure shaping.",
         ),
         CheckCommand(
             "activity-log-modal-smoke",
