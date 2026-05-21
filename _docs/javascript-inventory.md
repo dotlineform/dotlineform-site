@@ -2,7 +2,7 @@
 doc_id: javascript-inventory
 title: Javascript Inventory
 added_date: 2026-05-20
-last_updated: 2026-05-20
+last_updated: 2026-05-21
 parent_id: studio-javascript-payload-inventory
 sort_order: 7010
 hidden: false
@@ -11,15 +11,15 @@ hidden: false
 
 This document lists all browser JavaScript files under `assets/`, ranked descending by the risk score defined in [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory).
 
-Measured on 2026-05-20 and rescored against the four-risk model.
+Measured on 2026-05-21 and rescored against the four-risk model.
 
 | Rank | File | Risk score | Focus |
 | ---: | --- | ---: | --- |
-| 1 | `assets/studio/js/tag-registry.js` | 11 | Tag registry route controller and sibling boundary alignment. |
-| 2 | `assets/studio/js/data-sharing-prepare.js` | 11 | Data sharing package preparation workflow. |
-| 3 | `assets/docs-viewer/js/docs-html-import.js` | 10 | Docs import preview/write workflow and result rendering. |
-| 4 | `assets/docs-viewer/js/docs-viewer.js` | 9 | Shared Docs Viewer runtime composition and route loading. |
-| 5 | `assets/studio/js/series-tags.js` | 9 | Series tag analytics route and RAG display. |
+| 1 | `assets/studio/js/data-sharing-prepare.js` | 11 | Data sharing package preparation workflow. |
+| 2 | `assets/docs-viewer/js/docs-html-import.js` | 10 | Docs import preview/write workflow and result rendering. |
+| 3 | `assets/docs-viewer/js/docs-viewer.js` | 9 | Shared Docs Viewer runtime composition and route loading. |
+| 4 | `assets/studio/js/series-tags.js` | 9 | Series tag analytics route and RAG display. |
+| 5 | `assets/studio/js/tag-registry.js` | 8 | Tag registry route shell after render, import-mode, and workflow extraction. |
 | 6 | `assets/studio/js/tag-aliases.js` | 8 | Tag aliases route controller and remaining import/service workflow. |
 | 7 | `assets/studio/js/tag-studio.js` | 8 | Series tag editor route shell and extracted-module coordination. |
 | 8 | `assets/docs-viewer/js/docs-viewer-management.js` | 8 | Docs Viewer management coordinator. |

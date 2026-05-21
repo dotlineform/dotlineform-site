@@ -92,16 +92,16 @@ For `tag-registry.js`, for example, list/control rendering is meaningful not bec
 
 ## Current Summary
 
-Measured on 2026-05-20, after the Data Sharing Review apply-orchestration extraction.
+Measured on 2026-05-21, after the Tag Registry verification slice.
 
-- Browser JavaScript files under `assets/`: 129
-- Total browser JavaScript lines under `assets/`: 41,066
-- High-priority risk score threshold used for the current detail set: 9 or higher
+- Browser JavaScript files under `assets/`: 133
+- Total browser JavaScript lines under `assets/`: 41,383
+- Current detail set floor: 8, using the ranked top five after Tag Registry mitigation.
 
 ## Current Priorities
 
 The full ranked priority table now lives in [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
-That child document lists all 129 browser JavaScript files with rank, file, risk score, and focus.
+That child document lists all 133 browser JavaScript files with rank, file, risk score, and focus.
 [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) keeps the Docs Viewer-specific subset and follow-up tasks separate from the all-script mitigation pass.
 
 The detailed sections below cover the top five highest-risk current improvement priorities after manual review.
@@ -114,38 +114,10 @@ Each section should summarise:
 
 ## Top Priority Details
 
-### `assets/studio/js/tag-registry.js`
-
-- Risk score: 11
-- Classification: mixed route controller
-- Raw: 36.0 KiB
-
-**Why This Is Priority Work**
-
-- Existing domain/save/service/render/import-mode/workflow split is useful but incomplete.
-- The route still owns tag lookup, validation decisions, match filtering rules, user-facing mutation result handling, and route busy/ready state.
-- The strongest risk is architectural drift: Tag Aliases now has route-local render and import-mode modules, so Tag Registry is the sibling route most likely to accumulate future tag tooling in the wrong place if it does not follow the same boundary.
-
-**Direction**
-
-- Keep list/control rendering in `assets/studio/js/tag-registry-render.js`, following the Tag Aliases render boundary.
-- Keep import-mode availability probing in `assets/studio/js/tag-registry-import-mode.js`, following the Tag Aliases import-mode boundary.
-- Keep service orchestration and patch fallback decisions in `assets/studio/js/tag-registry-workflow.js`.
-- Do not open another modal-extraction slice unless new modal responsibilities are introduced.
-- Validation should move only when it clarifies the domain/service boundary.
-
-**Score Reduction Tasks**
-
-| # | Status | Task |
-| ---: | --- | --- |
-| 1 | done | Moved list and control rendering into `assets/studio/js/tag-registry-render.js`, matching the Tag Aliases render boundary. |
-| 2 | done | Extracted import-mode probing into `assets/studio/js/tag-registry-import-mode.js`, mirroring the Tag Aliases import-mode boundary. |
-| 3 | done | Defined `assets/studio/js/tag-registry-workflow.js` as the service-orchestration boundary for save/import fallback decisions. |
-| 4 | done | Added focused verification for render output, import-mode availability, and fallback save behavior, without requiring full route boot. Anticipated improvement: -1 from maintenance risk where logic no longer requires full route boot. |
-
 ### `assets/studio/js/data-sharing-prepare.js`
 
 - Risk score: 11
+- Score breakdown: ?
 - Classification: mixed workflow route controller
 - Raw: 35.1 KiB
 
@@ -166,7 +138,7 @@ Each section should summarise:
 
 | # | Status | Task |
 | ---: | --- | --- |
-| 1 | proposed | Extract package workflow adapter behavior into a focused module that owns route-to-domain state projection. Anticipated improvement: -1 to -2 from structural and architectural risk. |
+| 1 | done | Extracted package workflow adapter behavior into `assets/studio/js/data-sharing-prepare-workflow.js`, which owns prepare capability/profile interpretation, config and format projection, selection requirements, and prepare request shaping. |
 | 2 | proposed | Move preview/result rendering into a render module with explicit inputs. Anticipated improvement: -1 from maintenance risk, or -2 if route state reads shrink materially. |
 | 3 | proposed | Define a preparation service/workflow boundary for write calls, fallback states, and package result shaping. Anticipated improvement: -1 to -2 from maintenance and structural risk. |
 | 4 | proposed | Add focused checks for package-state projection, preparation result rendering, and fallback write behavior. Anticipated improvement: -1 from maintenance risk. |
@@ -252,6 +224,37 @@ Each section should summarise:
 | 2 | proposed | Move RAG/report rendering into a focused render module if display behavior grows. Anticipated improvement: -1 from maintenance or structural risk. |
 | 3 | proposed | Pass explicit scoring/report inputs from the route shell rather than broad route state. Anticipated improvement: -1 from maintenance risk. |
 | 4 | proposed | Add focused checks for score interpretation and RAG display output when those modules are extracted. Anticipated improvement: -1 from maintenance risk. |
+
+### `assets/studio/js/tag-registry.js`
+
+- Risk score: 8
+- Score breakdown: maintenance 2, structural 2, performance 2, architectural 2.
+- Classification: medium-risk route orchestration shell
+- Raw: 30.2 KiB
+
+**Why This Remains In The Detail Set**
+
+- The route now has focused domain, save, service, render, import-mode, modal, and workflow owners, so the original high-risk sibling-boundary gap has been mitigated.
+- Remaining route risk comes from legitimate orchestration responsibilities: route boot, data hydration, event wiring, modal state transitions, validation handoff, mutation result application, and ready/busy state.
+- The file is still route-local and moderately sized, so future tag-registry changes should continue to avoid pulling render, service, fallback, or domain behavior back into the route shell.
+
+**Direction**
+
+- Keep list/control rendering in `assets/studio/js/tag-registry-render.js`.
+- Keep import-mode availability probing in `assets/studio/js/tag-registry-import-mode.js`.
+- Keep service orchestration and patch fallback decisions in `assets/studio/js/tag-registry-workflow.js`.
+- Keep route-shell work limited to boot, data loading, event wiring, route state, modal coordination, and applying successful mutation results to local state.
+- Move validation or mutation-state projection only if future changes make either one a complete responsibility with explicit inputs.
+
+**Score Reduction Tasks**
+
+| # | Status | Task |
+| ---: | --- | --- |
+| 1 | done | Moved list and control rendering into `assets/studio/js/tag-registry-render.js`, matching the Tag Aliases render boundary. |
+| 2 | done | Extracted import-mode probing into `assets/studio/js/tag-registry-import-mode.js`, mirroring the Tag Aliases import-mode boundary. |
+| 3 | done | Defined `assets/studio/js/tag-registry-workflow.js` as the service-orchestration boundary for save/import fallback decisions. |
+| 4 | done | Added focused verification for render output, import-mode availability, and fallback save behavior, without requiring full route boot. |
+| 5 | proposed | If validation or mutation-state projection changes materially, extract it as a focused domain/workflow adapter with explicit inputs. Anticipated improvement: -1 from maintenance or architectural risk. |
 
 ## Watch Areas
 

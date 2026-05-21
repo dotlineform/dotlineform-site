@@ -22,7 +22,6 @@ import {
   clearDataSharingPrepareResultModal,
   showDataSharingPrepareResultModal
 } from "./data-sharing-prepare-modals.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   workflowCapabilityForOperation,
   workflowDomainForKey,
@@ -31,6 +30,17 @@ import {
   workflowScopeParamForKey,
   workflowDomainsForOperation
 } from "./data-sharing-adapters.js";
+import {
+  buildPreparePackageRequest,
+  defaultFormatForPrepareConfig,
+  enabledPrepareConfigsForScope,
+  prepareConfigSelection,
+  prepareProfilesForCapability,
+  prepareSelectionModel,
+  selectedPrepareConfig,
+  supportedFormatsForPrepareConfig,
+  usesPrepareDocumentSelection
+} from "./data-sharing-prepare-workflow.js";
 
 const DEFAULT_SCOPE = "library";
 const WORKFLOW_SCOPES = [
@@ -134,7 +144,7 @@ function routeStateDetail(state) {
   if (state && state.root) state.root.dataset.studioScope = state.scope;
   return {
     route: "data-sharing-prepare",
-    mode: prepareSelectionModel(state),
+    mode: prepareSelectionModel(state.prepareCapability),
     service: state.serviceAvailable ? "available" : "unavailable",
     recordLoaded: Boolean(state.docs.length || state.exportConfigs.length)
   };
@@ -160,30 +170,6 @@ function docsGeneratedIndexUrl(scope) {
   const url = new URL(DOCS_MANAGEMENT_ENDPOINTS.generatedIndex);
   url.searchParams.set("scope", scope);
   return url.href;
-}
-
-function enabledConfigsForScope(payload, scope) {
-  const configs = Array.isArray(payload?.configs) ? payload.configs : [];
-  return configs.filter((config) => {
-    if (!config || config.enabled === false) return false;
-    const scopes = Array.isArray(config.scopes) ? config.scopes : [];
-    return scopes.includes(scope);
-  });
-}
-
-function prepareSelectionModel(state) {
-  return normalizeText(state?.prepareCapability?.capability?.selection_model) || "documents";
-}
-
-function usesDocumentSelection(state) {
-  return prepareSelectionModel(state) === "documents";
-}
-
-function prepareProfilesForCapability(capabilityInfo) {
-  const profiles = Array.isArray(capabilityInfo?.capability?.sharing_profiles)
-    ? capabilityInfo.capability.sharing_profiles
-    : [];
-  return profiles.filter((profile) => profile && profile.enabled !== false);
 }
 
 function buildVisibleDocs(indexPayload) {
@@ -298,7 +284,7 @@ function syncCheckboxStates(state) {
 }
 
 function applySelectionFilter(state) {
-  if (!usesDocumentSelection(state)) {
+  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
     state.selectedIds.clear();
     return;
   }
@@ -309,7 +295,7 @@ function applySelectionFilter(state) {
 }
 
 function updateSelectionSummary(state) {
-  if (!usesDocumentSelection(state)) {
+  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
     setText(
       state.selectionSummary,
       getStudioText(
@@ -345,7 +331,7 @@ function listFilterCounts(state) {
 
 function renderListFilters(state) {
   const actions = state.filterNode.closest(".dataSharingPreparePage__listActions");
-  if (!usesDocumentSelection(state)) {
+  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
     if (actions) actions.hidden = true;
     state.filterNode.innerHTML = "";
     return;
@@ -365,30 +351,21 @@ function renderListFilters(state) {
 }
 
 function selectedConfig(state) {
-  const configId = normalizeText(state.configSelect.value);
-  return state.exportConfigs.find((config) => normalizeText(config.id) === configId) || null;
+  return selectedPrepareConfig(state.exportConfigs, state.configSelect.value);
 }
 
-function supportedFormatsForConfig(config) {
-  const target = config && typeof config.target === "object" ? config.target : {};
-  const configured = Array.isArray(target.supported_formats)
-    ? target.supported_formats.map(normalizeText).filter(Boolean)
-    : [];
-  const fallback = normalizeText(target.format);
-  const formats = configured.length ? configured : [fallback].filter(Boolean);
-  return formats.filter((format, index) => FORMAT_OPTIONS.some((item) => item.key === format) && formats.indexOf(format) === index);
+function supportedUiFormatsForConfig(config) {
+  return supportedFormatsForPrepareConfig(config)
+    .filter((format) => FORMAT_OPTIONS.some((item) => item.key === format));
 }
 
 function defaultFormatForConfig(config) {
-  const formats = supportedFormatsForConfig(config);
-  const target = config && typeof config.target === "object" ? config.target : {};
-  const preferred = normalizeText(target.format);
-  return formats.includes(preferred) ? preferred : formats[0] || "";
+  return defaultFormatForPrepareConfig(config, FORMAT_OPTIONS.map((item) => item.key));
 }
 
 function renderFormatOptions(state) {
   const config = selectedConfig(state);
-  const supportedFormats = supportedFormatsForConfig(config);
+  const supportedFormats = supportedUiFormatsForConfig(config);
   if (!config) {
     state.formatOptionsNode.innerHTML = "";
     state.targetFormat = "";
@@ -412,9 +389,9 @@ function renderFormatOptions(state) {
 
 function syncConfigOptions(state) {
   const config = selectedConfig(state);
-  const selection = config && typeof config.selection === "object" ? config.selection : {};
+  const selection = prepareConfigSelection(config);
   const supportsMissing = Boolean(selection.supports_missing_summary_only);
-  state.missingSummaryOnlyWrap.hidden = !usesDocumentSelection(state) || !supportsMissing;
+  state.missingSummaryOnlyWrap.hidden = !usesPrepareDocumentSelection(state.prepareCapability) || !supportsMissing;
   state.missingSummaryOnly.checked = supportsMissing && Boolean(selection.default_missing_summary_only);
   state.targetFormat = defaultFormatForConfig(config);
   renderFormatOptions(state);
@@ -445,7 +422,7 @@ function updateStatus(state) {
     state.runButton.disabled = true;
     return;
   }
-  if (usesDocumentSelection(state) && state.docsIndexError) {
+  if (usesPrepareDocumentSelection(state.prepareCapability) && state.docsIndexError) {
     setStatus(
       state.statusNode,
       "error",
@@ -510,7 +487,7 @@ function renderDocRow(state, doc) {
 }
 
 function renderDocList(state) {
-  if (!usesDocumentSelection(state)) {
+  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
     state.listNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(getStudioText(
       state.config,
       "data_sharing_prepare.profile_only_empty_state",
@@ -572,9 +549,9 @@ async function runPreparePackage(state) {
     updateStatus(state);
     return;
   }
-  const configId = normalizeText(config.id);
   const targetFormat = normalizeText(state.targetFormat);
-  if (!supportedFormatsForConfig(config).includes(targetFormat)) {
+  const usesDocumentSelection = usesPrepareDocumentSelection(state.prepareCapability);
+  if (!supportedUiFormatsForConfig(config).includes(targetFormat)) {
     setStatus(
       state.statusNode,
       "error",
@@ -582,10 +559,16 @@ async function runPreparePackage(state) {
     );
     return;
   }
-  const selection = config && typeof config.selection === "object" ? config.selection : {};
-  const selectAll = usesDocumentSelection(state) && normalizeText(selection.mode) === "all_matching";
-  const docIds = selectAll ? [] : Array.from(state.selectedIds);
-  if (usesDocumentSelection(state) && !selectAll && !docIds.length) {
+  const payload = buildPreparePackageRequest({
+    scope: state.scope,
+    config,
+    targetFormat,
+    selectedIds: state.selectedIds,
+    usesDocumentSelection,
+    missingSummaryOnlyAvailable: !state.missingSummaryOnlyWrap.hidden,
+    missingSummaryOnly: state.missingSummaryOnly.checked
+  });
+  if (usesDocumentSelection && !payload.select_all && !payload.doc_ids.length) {
     setStatus(
       state.statusNode,
       "error",
@@ -605,30 +588,12 @@ async function runPreparePackage(state) {
   );
 
   try {
-    const payload = await postJson(DATA_SHARING_ENDPOINTS.prepare, {
-      data_domain: state.scope,
-      config_id: configId,
-      target_format: targetFormat,
-      doc_ids: docIds,
-      select_all: selectAll,
-      missing_summary_only: usesDocumentSelection(state) && !state.missingSummaryOnlyWrap.hidden
-        ? Boolean(state.missingSummaryOnly.checked)
-        : null,
-      activity_context: buildStudioActivityContext({
-        pageId: "data-sharing-prepare",
-        actionId: "prepare-share-package",
-        route: "/studio/data-sharing/prepare/",
-        controlId: "dataSharingPrepareRun",
-        controlSelector: "#dataSharingPrepareRun",
-        recordIdField: "export_id",
-        recordId: `${state.scope}:${configId}`
-      })
-    });
-    showDataSharingPrepareResultModal(state, payload);
+    const resultPayload = await postJson(DATA_SHARING_ENDPOINTS.prepare, payload);
+    showDataSharingPrepareResultModal(state, resultPayload);
     setStatus(
       state.statusNode,
       "success",
-      payload.summary_text || getStudioText(state.config, "data_sharing_prepare.status_success", "Package prepared.")
+      resultPayload.summary_text || getStudioText(state.config, "data_sharing_prepare.status_success", "Package prepared.")
     );
   } catch (error) {
     const payload = error && error.payload ? error.payload : {};
@@ -727,11 +692,15 @@ async function init() {
           getStudioDataPath(state.config, "library_export_configs")
             || "/assets/studio/data/library_export_configs.json"
         );
-      state.exportConfigs = enabledConfigsForScope(exportConfigPayload, state.scope);
+      state.exportConfigs = enabledPrepareConfigsForScope(exportConfigPayload, state.scope);
     }
 
     let docsIndexPayload = { docs: [] };
-    if (usesDocumentSelection(state) && workflowDomainIsActive(state.workflowScopes, state.scope) && state.exportConfigs.length) {
+    if (
+      usesPrepareDocumentSelection(state.prepareCapability)
+      && workflowDomainIsActive(state.workflowScopes, state.scope)
+      && state.exportConfigs.length
+    ) {
       const docsIndexPath = getDocsScopeDataPath(state.config, state.scope, "index")
         || `/assets/data/docs/scopes/${encodeURIComponent(state.scope)}/index.json`;
       const docsIndexReadPath = state.serviceAvailable ? docsGeneratedIndexUrl(state.scope) : docsIndexPath;
