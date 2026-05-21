@@ -237,6 +237,11 @@ Run `docs-viewer-smoke` only when route-level management, modal, import, or scop
 
 ### Batch 6: Public Runtime And Search
 
+**Status:** Completed on 2026-05-21.
+Catalogue search now lazy-loads the opt-in performance instrumentation helper only when a query flag or local-storage setting enables it, leaving normal public search visits on the lighter JSON loader path.
+Query rendering now computes normalized query tokens once per render, uses one reusable result collator, and reuses the sorted match set when the `more` control only expands the visible count.
+`work.js` and `moment.js` were left unchanged because the completed slice did not find shared catalogue behavior duplicated across those page-local modules.
+
 **Primary files**
 
 - `assets/js/catalogue-search.js`

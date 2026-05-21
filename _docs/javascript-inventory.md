@@ -25,9 +25,9 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | Score | Files |
 | ---: | ---: |
 | 9 | 1 |
-| 8 | 1 |
+| 8 | 0 |
 | 7 | 5 |
-| 6 | 25 |
+| 6 | 26 |
 | 5 | 26 |
 | 4 | 94 |
 
@@ -36,12 +36,12 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | Rank | File | Family | Maint. | Struct. | Perf. | Arch. | Risk | Focus |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | 1 | `assets/docs-viewer/js/docs-viewer.js` | Docs Viewer separate track | 2 | 2 | 3 | 2 | 9 | Shared Docs Viewer runtime composition and route loading. |
-| 2 | `assets/js/catalogue-search.js` | Public runtime | 2 | 2 | 2 | 2 | 8 | Public catalogue/search route runtime. |
-| 3 | `assets/studio/js/tag-studio.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Series tag editor route shell after route-state projection extraction; editor interaction orchestration remains route-local. |
-| 4 | `assets/studio/js/catalogue-work-actions.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue action workflow helper after shared save outcome and preview blocker extraction. |
-| 5 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue editor route shell after shared boot/readiness helper extraction; action workflows remain separate. |
-| 6 | `assets/studio/js/bulk-add-work.js` | Studio routes and shared runtime | 2 | 2 | 2 | 1 | 7 | Bulk import/add route workflow. |
-| 7 | `assets/studio/js/tag-registry.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Tag registry route shell after render, import-mode, and workflow extraction. |
+| 2 | `assets/studio/js/tag-studio.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Series tag editor route shell after route-state projection extraction; editor interaction orchestration remains route-local. |
+| 3 | `assets/studio/js/catalogue-work-actions.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue action workflow helper after shared save outcome and preview blocker extraction. |
+| 4 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue editor route shell after shared boot/readiness helper extraction; action workflows remain separate. |
+| 5 | `assets/studio/js/bulk-add-work.js` | Studio routes and shared runtime | 2 | 2 | 2 | 1 | 7 | Bulk import/add route workflow. |
+| 6 | `assets/studio/js/tag-registry.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Tag registry route shell after render, import-mode, and workflow extraction. |
+| 7 | `assets/js/catalogue-search.js` | Public runtime | 2 | 2 | 1 | 1 | 6 | Public catalogue/search route runtime after lazy performance instrumentation loading, query-token reuse, and cached list expansion. |
 | 8 | `assets/docs-viewer/js/docs-viewer-management.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management coordinator after shared action workflow helper extraction. |
 | 9 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management modal controller after transient modal shell and metadata parent-picker extraction. |
 | 10 | `assets/studio/js/tag-aliases-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag modal rendering after shared shell/focus lifecycle extraction. |

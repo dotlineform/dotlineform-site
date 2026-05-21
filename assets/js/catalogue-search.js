@@ -1,15 +1,15 @@
-import {
-  createSearchPerformanceInstrumentation,
-  estimatePayloadBytes
-} from "./search/search-performance.js";
-
 let loadSearchPolicyFn = null;
 let getSearchRuntimePolicyFn = null;
 let getSearchScopePolicyFn = null;
 let getSearchMessageFn = null;
 let searchDepsPromise = null;
+let createSearchPerformanceInstrumentationFn = null;
+let estimatePayloadBytesFn = estimatePayloadBytesFallback;
+let searchPerformanceDepsPromise = null;
 
 const SITE_BASE_PATH = deriveSiteBasePath(import.meta.url);
+const SEARCH_PERFORMANCE_STORAGE_KEY = "dlf.search.performance";
+const SEARCH_PERFORMANCE_ENABLED_VALUES = new Set(["1", "true", "on", "yes", "panel", "console", "log"]);
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initSearchPage);
@@ -32,7 +32,7 @@ async function initSearchPage() {
   const performanceReport = document.getElementById("studioSearchPerformanceReport");
   if (!input || !status || !results || !more) return;
 
-  const instrumentation = createSearchPerformanceInstrumentation({
+  const instrumentation = await createSearchInstrumentation({
     panel: performancePanel,
     summary: performanceSummary,
     report: performanceReport
@@ -85,6 +85,8 @@ async function initSearchPage() {
       queryText: initialQuery,
       debounceId: null,
       visibleCount: runtimePolicy.initialBatchSize,
+      matchCache: null,
+      resultCollator: createResultCollator(),
       instrumentation
     };
     wireEvents(state);
@@ -160,7 +162,7 @@ async function loadStaticSearchIndexPayload(scopePolicy, instrumentation) {
   return {
     payload,
     source: "static",
-    payloadBytes: estimatePayloadBytes(text),
+    payloadBytes: estimatePayloadBytesFn(text),
     loadMs,
     parseMs: parseTimer.end()
   };
@@ -193,6 +195,69 @@ async function loadSearchDeps() {
     });
   }
   return searchDepsPromise;
+}
+
+async function createSearchInstrumentation(options) {
+  if (!shouldLoadSearchPerformanceDeps()) {
+    if (options.panel) options.panel.hidden = true;
+    return createDisabledSearchInstrumentation();
+  }
+
+  try {
+    await loadSearchPerformanceDeps();
+    return createSearchPerformanceInstrumentationFn(options);
+  } catch (error) {
+    console.warn("search_performance: disabled after instrumentation load failure", error);
+    if (options.panel) options.panel.hidden = true;
+    return createDisabledSearchInstrumentation();
+  }
+}
+
+async function loadSearchPerformanceDeps() {
+  if (!searchPerformanceDepsPromise) {
+    const assetVersion = readAssetVersion(import.meta.url);
+    searchPerformanceDepsPromise = import(withAssetVersion("./search/search-performance.js", assetVersion)).then((performanceModule) => {
+      createSearchPerformanceInstrumentationFn = performanceModule.createSearchPerformanceInstrumentation;
+      estimatePayloadBytesFn = performanceModule.estimatePayloadBytes;
+    });
+  }
+  return searchPerformanceDepsPromise;
+}
+
+function shouldLoadSearchPerformanceDeps() {
+  const location = typeof window !== "undefined" ? window.location : null;
+  const params = new URLSearchParams(location && location.search ? location.search : "");
+  const flag = firstNonEmpty([
+    params.get("searchPerf"),
+    params.get("search_performance"),
+    params.get("perf")
+  ]);
+  if (flag && SEARCH_PERFORMANCE_ENABLED_VALUES.has(flag.toLowerCase())) {
+    return true;
+  }
+  if (params.get("debug") === "search-performance") {
+    return true;
+  }
+
+  try {
+    const storage = typeof window !== "undefined" ? window.localStorage : null;
+    const stored = storage ? String(storage.getItem(SEARCH_PERFORMANCE_STORAGE_KEY) || "").trim().toLowerCase() : "";
+    return SEARCH_PERFORMANCE_ENABLED_VALUES.has(stored);
+  } catch (_error) {
+    return false;
+  }
+}
+
+function createDisabledSearchInstrumentation() {
+  return {
+    enabled: false,
+    mode: "",
+    getSnapshot: () => ({ enabled: false, mode: "", elapsedMs: 0, phases: [], scopes: [], queries: [] }),
+    markPhase: () => {},
+    recordScope: () => {},
+    recordQuery: () => {},
+    timer: () => ({ end: () => 0 })
+  };
 }
 
 function wireEvents(state) {
@@ -278,8 +343,9 @@ function renderResults(state) {
   const totalTimer = state.instrumentation.timer();
   const query = normalize(String(state.queryText || state.input.value || ""));
   state.queryText = query;
+  const queryTokens = query.split(" ").filter(Boolean);
 
-  if (!query || query.length < state.runtimePolicy.minQueryLength) {
+  if (!query || query.length < state.runtimePolicy.minQueryLength || !queryTokens.length) {
     state.status.dataset.state = "";
     state.status.textContent = searchText(state.policy, "prompt", "Enter a search query.");
     state.results.innerHTML = "";
@@ -287,24 +353,10 @@ function renderResults(state) {
     return;
   }
 
-  const matches = [];
-  const evaluateTimer = state.instrumentation.timer();
-  for (const entry of state.entries) {
-    if (state.filterKind !== "all" && entry.kind !== state.filterKind) continue;
-    const score = scoreEntry(entry, query);
-    if (score == null) continue;
-    matches.push({ entry, score });
-  }
-  const evaluateMs = evaluateTimer.end();
-
-  const sortTimer = state.instrumentation.timer();
-  matches.sort((a, b) => {
-    if (a.score !== b.score) return b.score - a.score;
-    const titleCmp = a.entry.title.localeCompare(b.entry.title, undefined, { sensitivity: "base", numeric: true });
-    if (titleCmp !== 0) return titleCmp;
-    return a.entry.id.localeCompare(b.entry.id, undefined, { sensitivity: "base", numeric: true });
-  });
-  const sortMs = sortTimer.end();
+  const matchResult = getSortedMatches(state, query, queryTokens);
+  const matches = matchResult.matches;
+  const evaluateMs = matchResult.evaluateMs;
+  const sortMs = matchResult.sortMs;
 
   const visible = matches.slice(0, state.visibleCount);
   const renderTimer = state.instrumentation.timer();
@@ -351,9 +403,39 @@ function renderResults(state) {
   });
 }
 
-function scoreEntry(entry, query) {
-  const queryTokens = query.split(" ").filter(Boolean);
-  if (!queryTokens.length) return null;
+function getSortedMatches(state, query, queryTokens) {
+  const cache = state.matchCache;
+  if (cache && cache.query === query && cache.filterKind === state.filterKind) {
+    return {
+      matches: cache.matches,
+      evaluateMs: 0,
+      sortMs: 0
+    };
+  }
+
+  const matches = [];
+  const evaluateTimer = state.instrumentation.timer();
+  for (const entry of state.entries) {
+    if (state.filterKind !== "all" && entry.kind !== state.filterKind) continue;
+    const score = scoreEntry(entry, query, queryTokens);
+    if (score == null) continue;
+    matches.push({ entry, score });
+  }
+  const evaluateMs = evaluateTimer.end();
+
+  const sortTimer = state.instrumentation.timer();
+  matches.sort((a, b) => compareSearchMatches(a, b, state.resultCollator));
+  const sortMs = sortTimer.end();
+
+  state.matchCache = {
+    query,
+    filterKind: state.filterKind,
+    matches
+  };
+  return { matches, evaluateMs, sortMs };
+}
+
+function scoreEntry(entry, query, queryTokens) {
   if (!matchesAllTokens(entry, queryTokens)) return null;
 
   if (entry.idNorm === query) return 900;
@@ -366,6 +448,31 @@ function scoreEntry(entry, query) {
   if (entry.mediumTypeNorm && entry.mediumTypeNorm.includes(query)) return 460;
   if (entry.seriesTypeNorm && entry.seriesTypeNorm.includes(query)) return 420;
   if (entry.searchText.includes(query)) return 320;
+  return null;
+}
+
+function compareSearchMatches(a, b, collator) {
+  if (a.score !== b.score) return b.score - a.score;
+  const titleCmp = compareSearchText(a.entry.title, b.entry.title, collator);
+  if (titleCmp !== 0) return titleCmp;
+  return compareSearchText(a.entry.id, b.entry.id, collator);
+}
+
+function compareSearchText(a, b, collator) {
+  if (collator && typeof collator.compare === "function") {
+    return collator.compare(String(a || ""), String(b || ""));
+  }
+  return String(a || "").localeCompare(String(b || ""));
+}
+
+function createResultCollator() {
+  try {
+    if (typeof Intl !== "undefined" && typeof Intl.Collator === "function") {
+      return new Intl.Collator(undefined, { sensitivity: "base", numeric: true });
+    }
+  } catch (_error) {
+    // Fall back to localeCompare if Intl.Collator is unavailable.
+  }
   return null;
 }
 
@@ -551,6 +658,18 @@ function applyTextTokens(text, tokens) {
 
 function searchMessage(policy, key, fallback) {
   return getSearchMessageFn ? getSearchMessageFn(policy, key, fallback) : fallback;
+}
+
+function estimatePayloadBytesFallback(text) {
+  return String(text || "").length;
+}
+
+function firstNonEmpty(values) {
+  for (const value of values) {
+    const text = String(value || "").trim();
+    if (text) return text;
+  }
+  return "";
 }
 
 function withAssetVersion(path, assetVersion) {

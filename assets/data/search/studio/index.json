@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8541a2d77456f345555dc3e659adbfd8",
-    "generated_at_utc": "2026-05-21T13:16:47Z",
+    "version": "blake2b-fef1ecaea2cb52f14f31b4eb160f6558",
+    "generated_at_utc": "2026-05-21T15:58:21Z",
     "count": 287
   },
   "entries": [
@@ -3549,24 +3549,22 @@
       "kind": "doc",
       "title": "Search UI Behaviour",
       "href": "/docs/?scope=studio&doc=search-ui-behaviour",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-21",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-05-11 14:10 • Search",
+      "display_meta": "2026-05-21 • Search",
       "search_terms": [
         "search-ui-behaviour",
         "search",
         "ui",
         "behaviour",
         "search ui behaviour",
-        "2026-05-11 14:10",
+        "2026-05-21",
         "2026",
         "05",
-        "11",
-        "14",
-        "10"
+        "21"
       ],
-      "search_text": "search-ui-behaviour search ui behaviour search ui behaviour 2026-05-11 14:10 2026 05 11 14 10"
+      "search_text": "search-ui-behaviour search ui behaviour search ui behaviour 2026-05-21 2026 05 21"
     },
     {
       "id": "site-request-studio-activity-follow-ups",

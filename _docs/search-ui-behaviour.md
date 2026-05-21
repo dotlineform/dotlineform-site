@@ -2,7 +2,7 @@
 doc_id: search-ui-behaviour
 title: Search UI Behaviour
 added_date: 2026-03-31
-last_updated: "2026-05-11 14:10"
+last_updated: 2026-05-21
 parent_id: search
 sort_order: 7000
 ---
@@ -140,6 +140,7 @@ The dedicated `/catalogue/search/` route has local-only performance instrumentat
 Default behaviour:
 
 - instrumentation is disabled
+- the performance instrumentation helper is not imported unless an opt-in flag or local-storage setting enables it
 - the debug panel is hidden
 - the normal static search-index loader remains in use
 - no analytics are sent
