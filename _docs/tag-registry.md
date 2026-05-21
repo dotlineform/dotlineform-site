@@ -43,6 +43,7 @@ Supporting modules:
 
 - `assets/studio/js/studio-ui.js`
 - `assets/studio/js/tag-registry-domain.js`
+- `assets/studio/js/tag-registry-import-mode.js`
 - `assets/studio/js/tag-registry-render.js`
 - `assets/studio/js/tag-registry-save.js`
 - `assets/studio/js/tag-registry-service.js`
@@ -104,7 +105,8 @@ DOM / CSS:
 JS owner:
 
 - `renderShell(state)` in `assets/studio/js/tag-registry.js`
-- import handlers in `wireEvents(state)`
+- import-mode availability helpers in `assets/studio/js/tag-registry-import-mode.js`
+- import submission handlers in `wireEvents(state)`
 
 Meaning:
 
@@ -300,6 +302,12 @@ Main render functions:
 - `renderTagRegistryControls(state)` in `assets/studio/js/tag-registry-render.js`
 - `renderTagRegistryList(state)` in `assets/studio/js/tag-registry-render.js`
 
+Import-mode helpers:
+
+- `syncTagRegistryImportModeFromControl(state)` in `assets/studio/js/tag-registry-import-mode.js`
+- `probeTagRegistryImportMode(state)` in `assets/studio/js/tag-registry-import-mode.js`
+- `renderTagRegistryImportAvailability(state)` in `assets/studio/js/tag-registry-import-mode.js`
+
 Main event wiring:
 
 - `wireEvents(state)`
@@ -312,6 +320,7 @@ The page controller owns:
 - delegating mutations to service helpers
 
 `assets/studio/js/tag-registry-render.js` owns the search/filter controls, group info control, list header, empty state, and registry row markup.
+`assets/studio/js/tag-registry-import-mode.js` owns import mode selection state, local write-service availability probing, and import button availability.
 
 ## UI Contract
 
@@ -321,7 +330,7 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - `data-role` defines JS selectors
 - `data-state` and ARIA define runtime state
 
-`assets/studio/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-registry.js`, `tag-registry-render.js`, and the route-local modal module.
+`assets/studio/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-registry.js`, `tag-registry-render.js`, `tag-registry-import-mode.js`, and the route-local modal module.
 
 ## State Handling
 
@@ -382,6 +391,7 @@ Save/service logic:
 These responsibilities are split across:
 
 - `tag-registry-domain.js`
+- `tag-registry-import-mode.js`
 - `tag-registry-save.js`
 - `tag-registry-service.js`
 

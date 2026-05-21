@@ -122,14 +122,14 @@ Each section should summarise:
 
 **Why This Is Priority Work**
 
-- Existing domain/save/service/render split is useful but incomplete.
+- Existing domain/save/service/render/import-mode split is useful but incomplete.
 - The route still owns tag lookup, validation decisions, match filtering rules, import parsing/submission, service calls, patch fallback decisions, and route busy/ready state.
 - The strongest risk is architectural drift: Tag Aliases now has route-local render and import-mode modules, so Tag Registry is the sibling route most likely to accumulate future tag tooling in the wrong place if it does not follow the same boundary.
 
 **Direction**
 
 - Keep list/control rendering in `assets/studio/js/tag-registry-render.js`, following the Tag Aliases render boundary.
-- Extract import-mode availability probing if it can share or mirror the Tag Aliases import-mode boundary without hiding route-specific copy or write behavior.
+- Keep import-mode availability probing in `assets/studio/js/tag-registry-import-mode.js`, following the Tag Aliases import-mode boundary.
 - Consider service orchestration only after rendering is out of the controller, because the remaining state surface will be easier to define.
 - Do not open another modal-extraction slice unless new modal responsibilities are introduced.
 - Validation should move only when it clarifies the domain/service boundary.
@@ -139,7 +139,7 @@ Each section should summarise:
 | # | Status | Task |
 | ---: | --- | --- |
 | 1 | done | Moved list and control rendering into `assets/studio/js/tag-registry-render.js`, matching the Tag Aliases render boundary. |
-| 2 | proposed | Extract import-mode probing into a route-local import-mode module if the behavior can mirror Tag Aliases cleanly. Anticipated improvement: -1 from maintenance or structural risk. |
+| 2 | done | Extracted import-mode probing into `assets/studio/js/tag-registry-import-mode.js`, mirroring the Tag Aliases import-mode boundary. |
 | 3 | proposed | After rendering is extracted, define a service-orchestration boundary for save/import fallback decisions. Anticipated improvement: -1 to -2 from maintenance and structural risk. |
 | 4 | proposed | Add focused verification for render output, import-mode availability, and fallback save behavior as each slice lands. Anticipated improvement: -1 from maintenance risk where logic no longer requires full route boot. |
 

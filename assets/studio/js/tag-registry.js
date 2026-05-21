@@ -15,9 +15,6 @@ import {
   loadStudioRegistryJson
 } from "./studio-data.js";
 import {
-  probeStudioHealth,
-} from "./studio-transport.js";
-import {
   buildAliasKeySet,
   buildRegistryOptions,
   configureTagRegistryDomain,
@@ -59,7 +56,6 @@ import {
   closeTagRegistryDemoteModal,
   closeTagRegistryEditModal,
   closeTagRegistryNewModal,
-  hideTagRegistryImportModal,
   openTagRegistryDeleteModal,
   openTagRegistryDemoteModal,
   openTagRegistryEditModal,
@@ -74,6 +70,11 @@ import {
   showTagRegistryPatchModal,
   wireTagRegistryModalEvents
 } from "./tag-registry-modals.js";
+import {
+  probeTagRegistryImportMode,
+  renderTagRegistryImportAvailability,
+  syncTagRegistryImportModeFromControl as syncImportModeFromControl
+} from "./tag-registry-import-mode.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
@@ -338,31 +339,17 @@ function wireEvents(state) {
   });
 }
 
-function syncImportModeFromControl(state) {
-  const mode = normalize(state.refs.importMode.value);
-  if (mode === "replace") {
-    state.importMode = "replace";
-  } else if (mode === "merge") {
-    state.importMode = "merge";
-  } else {
-    state.importMode = "add";
-  }
-}
-
 async function probeImportMode(state) {
-  const ok = await probeStudioHealth(500);
-  state.saveMode = ok ? "post" : "patch";
-  state.importAvailable = ok;
-  renderImportAvailability(state);
-  syncRouteBusyState(state);
+  await probeTagRegistryImportMode(state, {
+    onImportAvailabilityChange: () => renderImportAvailability(state),
+    onRouteStateChange: () => syncRouteBusyState(state)
+  });
 }
 
 function renderImportAvailability(state) {
-  const available = Boolean(state.importAvailable && state.saveMode === "post");
-  state.importAvailable = available;
-  if (state.refs.openImportModal) state.refs.openImportModal.disabled = !available;
-  if (state.refs.importButton) state.refs.importButton.disabled = !available;
-  if (!available && state.importModalOpen) closeImportModal(state);
+  renderTagRegistryImportAvailability(state, {
+    onModalStateChange: () => syncRouteBusyState(state)
+  });
 }
 
 async function loadRegistry(state, options = {}) {
@@ -421,11 +408,6 @@ function closeEditModal(state) {
 function openNewTagModal(state) {
   clearImportResult(state);
   openTagRegistryNewModal(state);
-  syncRouteBusyState(state);
-}
-
-function closeImportModal(state) {
-  hideTagRegistryImportModal(state);
   syncRouteBusyState(state);
 }
 
