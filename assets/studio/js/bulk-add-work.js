@@ -8,10 +8,15 @@ import {
   probeCatalogueHealth
 } from "./studio-transport.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
+  initializeStudioRouteState
 } from "./studio-route-state.js";
+import {
+  applyOperationalRunButtonState,
+  collectOperationalRouteElements,
+  markOperationalRouteReady,
+  renderOperationalServiceStatus,
+  syncOperationalRouteBusyState
+} from "./studio-operational-route.js";
 import { buildSaveModeText } from "./tag-studio-save.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 
@@ -39,21 +44,22 @@ function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `bulk_add_work.${key}`, fallback, tokens);
 }
 
-function routeStateDetail(state) {
-  return {
-    route: "bulk-add-work",
-    mode: state.preview ? "preview" : "idle",
-    service: state.serverAvailable ? "available" : "unavailable",
-    recordLoaded: Boolean(state.preview)
-  };
-}
-
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(state.root, Boolean(state.isBusy), routeStateDetail(state));
+  syncOperationalRouteBusyState(state, bulkAddWorkRouteOptions());
 }
 
 function markRouteReady(state, ready) {
-  setStudioRouteReady(state.root, ready, routeStateDetail(state));
+  markOperationalRouteReady(state, ready, bulkAddWorkRouteOptions());
+}
+
+function bulkAddWorkRouteOptions() {
+  return {
+    route: "bulk-add-work",
+    mode: (state) => state.preview ? "preview" : "idle",
+    serviceAvailable: (state) => state.serverAvailable,
+    isBusy: (state) => state.isBusy,
+    recordLoaded: (state) => Boolean(state.preview)
+  };
 }
 
 function modeLabel(state, mode) {
@@ -162,8 +168,18 @@ function renderPreviewDetails(state) {
 
 function updateState(state) {
   const preview = state.preview;
-  state.previewButton.disabled = state.isBusy || !state.serverAvailable;
-  state.applyButton.disabled = state.isBusy || !state.serverAvailable || !preview || preview.mode !== state.mode || !preview.ready_to_apply;
+  applyOperationalRunButtonState(state.previewButton, state, {
+    serviceAvailable: (routeState) => routeState.serverAvailable,
+    isBusy: (routeState) => routeState.isBusy
+  });
+  applyOperationalRunButtonState(state.applyButton, state, {
+    serviceAvailable: (routeState) => routeState.serverAvailable,
+    isBusy: (routeState) => routeState.isBusy,
+    canRun: (routeState) => {
+      const currentPreview = routeState.preview;
+      return Boolean(currentPreview && currentPreview.mode === routeState.mode && currentPreview.ready_to_apply);
+    }
+  });
   state.summaryNode.innerHTML = buildSummaryHtml(state, preview);
   renderPreviewDetails(state);
   syncRouteBusyState(state);
@@ -286,7 +302,31 @@ async function init() {
   const previewDetailsNode = document.getElementById("bulkAddWorkPreviewDetails");
   const previewButton = document.getElementById("bulkAddWorkPreview");
   const applyButton = document.getElementById("bulkAddWorkApply");
-  if (!root || !loadingNode || !emptyNode || !pageHeadingNode || !importHeadingNode || !modeLabelNode || !worksOptionNode || !workDetailsOptionNode || !workbookLabelNode || !summaryHeadingNode || !detailsHeadingNode || !modeNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !workbookNode || !summaryNode || !previewDetailsNode || !previewButton || !applyButton) {
+  const required = collectOperationalRouteElements({
+    root,
+    loadingNode,
+    emptyNode,
+    pageHeadingNode,
+    importHeadingNode,
+    modeLabelNode,
+    worksOptionNode,
+    workDetailsOptionNode,
+    workbookLabelNode,
+    summaryHeadingNode,
+    detailsHeadingNode,
+    modeNode,
+    saveModeNode,
+    contextNode,
+    statusNode,
+    warningNode,
+    resultNode,
+    workbookNode,
+    summaryNode,
+    previewDetailsNode,
+    previewButton,
+    applyButton
+  });
+  if (!required.ok) {
     return;
   }
 
@@ -332,7 +372,11 @@ async function init() {
       t(state, "context_hint", "Bulk import is one-way from {workbook} into canonical JSON. Use works mode for new works and work details mode for new detail rows.", { workbook: state.workbookPath })
     );
     if (!state.serverAvailable) {
-      setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Import is disabled."), "warn");
+      renderOperationalServiceStatus(statusNode, state, {
+        serviceAvailable: (routeState) => routeState.serverAvailable,
+        unavailableText: () => t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Import is disabled."),
+        unavailableState: "warn"
+      });
     }
 
     modeNode.addEventListener("change", () => {

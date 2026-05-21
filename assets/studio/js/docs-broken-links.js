@@ -5,10 +5,15 @@ import {
   probeDocsManagementHealth
 } from "./studio-transport.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
+  initializeStudioRouteState
 } from "./studio-route-state.js";
+import {
+  applyOperationalRunButtonState,
+  collectOperationalRouteElements,
+  markOperationalRouteReady,
+  renderOperationalServiceStatus,
+  syncOperationalRouteBusyState
+} from "./studio-operational-route.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   isDocsViewerPath,
@@ -49,21 +54,22 @@ function setStatus(node, state, message) {
   }
 }
 
-function routeStateDetail(state) {
+function docsBrokenLinksRouteOptions() {
   return {
     route: "docs-broken-links",
-    mode: state.entries.length ? "results" : "idle",
-    service: state.serviceAvailable ? "available" : "unavailable",
-    recordLoaded: state.entries.length > 0
+    mode: (state) => state.entries.length ? "results" : "idle",
+    serviceAvailable: (state) => state.serviceAvailable,
+    isBusy: (state) => state.isRunning,
+    recordLoaded: (state) => state.entries.length > 0
   };
 }
 
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(state.root, Boolean(state.isRunning), routeStateDetail(state));
+  syncOperationalRouteBusyState(state, docsBrokenLinksRouteOptions());
 }
 
 function markRouteReady(state, ready) {
-  setStudioRouteReady(state.root, ready, routeStateDetail(state));
+  markOperationalRouteReady(state, ready, docsBrokenLinksRouteOptions());
 }
 
 function scopeTextKey(scopeId) {
@@ -223,7 +229,10 @@ async function runAudit(state) {
   persistSelectedScope(scope);
   state.isRunning = true;
   syncRouteBusyState(state);
-  state.runButton.disabled = true;
+  applyOperationalRunButtonState(state.runButton, state, {
+    serviceAvailable: (routeState) => routeState.serviceAvailable,
+    isBusy: (routeState) => routeState.isRunning
+  });
   state.emptyNode.hidden = true;
   state.listWrap.hidden = true;
   state.listWrap.innerHTML = "";
@@ -281,7 +290,10 @@ async function runAudit(state) {
     );
   } finally {
     state.isRunning = false;
-    state.runButton.disabled = false;
+    applyOperationalRunButtonState(state.runButton, state, {
+      serviceAvailable: (routeState) => routeState.serviceAvailable,
+      isBusy: (routeState) => routeState.isRunning
+    });
     syncRouteBusyState(state);
   }
 }
@@ -296,9 +308,18 @@ async function init() {
   const statusNode = document.getElementById("docsBrokenLinksStatus");
   const listWrap = document.getElementById("docsBrokenLinksListWrap");
   const emptyNode = document.getElementById("docsBrokenLinksEmpty");
-  if (
-    !bootStatus || !root || !introNode || !scopeLabel || !scopeSelect || !runButton || !statusNode || !listWrap || !emptyNode
-  ) {
+  const required = collectOperationalRouteElements({
+    bootStatus,
+    root,
+    introNode,
+    scopeLabel,
+    scopeSelect,
+    runButton,
+    statusNode,
+    listWrap,
+    emptyNode
+  });
+  if (!required.ok) {
     return;
   }
   initializeStudioRouteState(root, { route: "docs-broken-links" });
@@ -358,18 +379,21 @@ async function init() {
 
     root.hidden = false;
     bootStatus.hidden = true;
+    applyOperationalRunButtonState(runButton, state, {
+      serviceAvailable: (routeState) => routeState.serviceAvailable,
+      isBusy: (routeState) => routeState.isRunning
+    });
 
     if (!serviceAvailable) {
-      runButton.disabled = true;
-      setStatus(
-        statusNode,
-        "error",
-        getStudioText(
+      renderOperationalServiceStatus(statusNode, state, {
+        serviceAvailable: (routeState) => routeState.serviceAvailable,
+        unavailableText: getStudioText(
           config,
           "docs_broken_links.service_unavailable",
           "Docs management service unavailable. Start bin/dev-studio to run the audit."
-        )
-      );
+        ),
+        unavailableState: "error"
+      });
       markRouteReady(state, true);
       return;
     }

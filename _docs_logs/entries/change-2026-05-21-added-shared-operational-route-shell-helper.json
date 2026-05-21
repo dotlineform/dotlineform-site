@@ -1,0 +1,30 @@
+{
+  "id": "change-2026-05-21-added-shared-operational-route-shell-helper",
+  "date": "2026-05-21",
+  "title": "Added Shared Operational Route Shell Helper",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "workflow"
+  ],
+  "summary": "Added a shared operational Studio route helper for required-element collection, ready/busy projection, service availability display, and run-button disabled state, then adopted it in Bulk Add Work and Docs Broken Links while leaving endpoint-specific workflow and rendering local.",
+  "source": {
+    "file": "_docs/javascript-maintenance-risk-mitigation.md"
+  },
+  "subjects": [
+    "javascript-maintenance",
+    "studio-routes"
+  ],
+  "related_docs": [
+    "javascript-maintenance-risk-mitigation",
+    "javascript-inventory"
+  ],
+  "related_files": [
+    "assets/studio/js/studio-operational-route.js",
+    "assets/studio/js/bulk-add-work.js",
+    "assets/studio/js/docs-broken-links.js",
+    "tests/smoke/studio_operational_route_modules.py",
+    "tests/smoke/operational_routes_ready_state.py"
+  ]
+}

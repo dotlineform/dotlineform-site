@@ -14,10 +14,6 @@ import {
   buildRegistryLookup,
   buildRegistryOptions,
   configureTagAliasesDomain,
-  findAliasEntry as findNormalizedAliasEntry,
-  getAliasEditValidation as getNormalizedAliasEditValidation,
-  getEditTagMatches as getNormalizedEditTagMatches,
-  isCreateAliasFlow as isCreateNormalizedAliasFlow,
   normalize,
   normalizeAliases,
   normalizeTimestamp
@@ -45,26 +41,37 @@ import {
 } from "./studio-modal.js";
 import {
   clearTagAliasesImportResult,
-  closeTagAliasesDemoteModal,
-  closeTagAliasesEditModal,
-  closeTagAliasesPromotionModal,
   collectTagAliasesModalRefs,
-  openTagAliasesCreateModal,
-  openTagAliasesDemoteModal,
-  openTagAliasesEditModal,
-  openTagAliasesPromotionModal,
   renderTagAliasesModals,
-  renderTagAliasesDemoteSelectionState,
-  renderTagAliasesDemoteTagPopup,
-  renderTagAliasesEditTagPopup,
-  renderTagAliasesEditModalState,
-  setTagAliasesDemoteStatus,
-  setTagAliasesEditStatus,
   setTagAliasesImportResult,
-  setTagAliasesPromotionStatus,
   showTagAliasesPatchModal,
   wireTagAliasesModalEvents
 } from "./tag-aliases-modals.js";
+import {
+  addAliasDemoteTag,
+  addAliasEditTag,
+  closeAliasDemoteModal,
+  closeAliasEditWorkflowModal,
+  closeAliasPromotionModal,
+  findTagAliasEntry,
+  getAliasDemoteValidation,
+  getAliasWorkflowEditValidation,
+  getAliasWorkflowStudioGroups,
+  isAliasCreateFlow,
+  openAliasCreateWorkflowModal,
+  openAliasDemoteModal,
+  openAliasEditWorkflowModal,
+  openAliasPromotionModal,
+  removeAliasDemoteTag,
+  removeAliasEditTag,
+  renderAliasDemoteTagPopup,
+  renderAliasEditTagPopup,
+  setAliasDemoteStatus,
+  setAliasEditStatus,
+  setAliasPromotionStatus,
+  updateAliasDemoteUi,
+  updateAliasEditUi
+} from "./tag-aliases-modal-workflow.js";
 import {
   probeTagAliasesImportMode,
   renderTagAliasesImportAvailability,
@@ -90,12 +97,11 @@ import {
 } from "./studio-ui.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
-const ALIAS_RE = /^[a-z0-9][a-z0-9-]*$/;
 const MAX_ALIAS_TAGS = 4;
 const EDIT_TAG_MATCH_CAP = 12;
 const DEMOTE_TAG_MATCH_CAP = 12;
 const UI = tagAliasesUi;
-const { className: UI_CLASS, selector: UI_SELECTOR, state: UI_STATE } = UI;
+const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagAliasesPage);
@@ -244,14 +250,14 @@ function wireEvents(state) {
   });
 
   state.refs.openNewAlias.addEventListener("click", () => {
-    openAliasCreateModal(state);
+    openAliasCreateWorkflowModal(state, modalWorkflowCallbacks());
   });
 
   state.mount.addEventListener("click", (event) => {
     const demoteButton = event.target.closest("button[data-demote-tag-id]");
     if (demoteButton) {
       const tagId = normalize(demoteButton.getAttribute("data-demote-tag-id"));
-      if (tagId) openDemoteModal(state, tagId);
+      if (tagId) openAliasDemoteModal(state, tagId, modalWorkflowCallbacks());
       return;
     }
 
@@ -272,7 +278,7 @@ function wireEvents(state) {
     const editButton = event.target.closest("button[data-edit-alias]");
     if (editButton) {
       const alias = normalize(editButton.getAttribute("data-edit-alias"));
-      if (alias) openAliasEditModal(state, alias);
+      if (alias) openAliasEditWorkflowModal(state, alias, modalWorkflowCallbacks());
       return;
     }
 
@@ -317,186 +323,32 @@ function wireEvents(state) {
     onPromotionSubmit: () => {
       void withRouteBusy(state, () => submitAliasPromotion(state));
     },
-    onDemoteSearch: () => renderDemoteTagPopup(state),
+    onDemoteSearch: () => renderAliasDemoteTagPopup(state, modalWorkflowCallbacks()),
     onDemoteTagSelect: (tagId) => {
-      addDemoteTag(state, tagId);
-      updateDemoteUi(state);
+      addAliasDemoteTag(state, tagId, modalWorkflowCallbacks());
+      updateAliasDemoteUi(state, modalWorkflowCallbacks());
     },
     onDemoteTagRemove: (tagId) => {
-      if (!state.demoteState) return;
-      const normalizedTagId = normalize(tagId);
-      if (!normalizedTagId) return;
-      state.demoteState.tags = state.demoteState.tags.filter((item) => item !== normalizedTagId);
-      updateDemoteUi(state);
+      removeAliasDemoteTag(state, tagId);
+      updateAliasDemoteUi(state, modalWorkflowCallbacks());
     },
     onDemoteSubmit: () => {
       void withRouteBusy(state, () => handleTagDemoteFromAliases(state));
     },
-    onEditInput: () => updateAliasEditUi(state),
-    onEditSearch: () => renderEditTagPopup(state),
+    onEditInput: () => updateAliasEditUi(state, modalWorkflowCallbacks()),
+    onEditSearch: () => renderAliasEditTagPopup(state, modalWorkflowCallbacks()),
     onEditTagSelect: (tagId) => {
-      addEditTag(state, tagId);
-      updateAliasEditUi(state);
+      addAliasEditTag(state, tagId, modalWorkflowCallbacks());
+      updateAliasEditUi(state, modalWorkflowCallbacks());
     },
     onEditTagRemove: (tagId) => {
-      if (!state.editState) return;
-      const normalizedTagId = normalize(tagId);
-      if (!normalizedTagId) return;
-      state.editState.tags = state.editState.tags.filter((item) => item !== normalizedTagId);
-      updateAliasEditUi(state);
+      removeAliasEditTag(state, tagId);
+      updateAliasEditUi(state, modalWorkflowCallbacks());
     },
     onEditSave: () => {
       void withRouteBusy(state, () => saveAliasEdit(state));
     }
   });
-}
-
-function openPromotionModal(state, aliasKey, suggestedGroup) {
-  openTagAliasesPromotionModal(state, aliasKey, suggestedGroup);
-  syncRouteBusyState(state);
-}
-
-function closePromotionModal(state) {
-  closeTagAliasesPromotionModal(state);
-  syncRouteBusyState(state);
-}
-
-function openDemoteModal(state, tagId) {
-  clearImportResult(state);
-  const canonicalTagId = normalize(tagId);
-  if (!canonicalTagId) return;
-  const tagInfo = state.registryById.get(canonicalTagId);
-  if (!tagInfo) {
-    setImportResult(
-      state,
-      "error",
-      aliasesText(state.config, "unknown_tag_selected", "Unknown tag selected: {tag_id}", { tag_id: canonicalTagId })
-    );
-    return;
-  }
-
-  openTagAliasesDemoteModal(state, {
-    canonicalTagId,
-    aliasKey: canonicalTagId.split(":", 2)[1] || canonicalTagId
-  });
-  syncRouteBusyState(state);
-}
-
-function closeDemoteModal(state) {
-  closeTagAliasesDemoteModal(state);
-  syncRouteBusyState(state);
-}
-
-function setDemoteStatus(state, kind, message) {
-  setTagAliasesDemoteStatus(state, kind, message);
-}
-
-function getDemoteValidation(state) {
-  if (!state.demoteState) return { valid: false, warning: "", tags: [] };
-  const selectedTags = Array.isArray(state.demoteState.tags) ? state.demoteState.tags.slice() : [];
-  let warning = "";
-
-  if (!selectedTags.length) {
-    warning = aliasesText(state.config, "target_tag_required", "At least one canonical target tag is required.");
-  } else if (selectedTags.length > MAX_ALIAS_TAGS) {
-    warning = aliasesText(state.config, "target_tags_max", "At most {max_tags} target tags are allowed.", { max_tags: MAX_ALIAS_TAGS });
-  } else {
-    const seenGroups = new Set();
-    for (const tagId of selectedTags) {
-      if (tagId === state.demoteState.tagId) {
-        warning = aliasesText(state.config, "demotion_target_self", "Target list must not include the demoted tag.");
-        break;
-      }
-      const info = state.registryById.get(tagId);
-      if (!info) {
-        warning = aliasesText(state.config, "unknown_tag_selected", "Unknown tag selected: {tag_id}", { tag_id: tagId });
-        break;
-      }
-      if (seenGroups.has(info.group)) {
-        warning = aliasesText(state.config, "target_tags_one_per_group", "Only one target tag per group is allowed ({group}).", { group: info.group });
-        break;
-      }
-      seenGroups.add(info.group);
-    }
-  }
-
-  return {
-    valid: !warning,
-    warning,
-    tags: selectedTags
-  };
-}
-
-function updateDemoteUi(state) {
-  if (!state.demoteState) return;
-  const validation = getDemoteValidation(state);
-  let statusKind = "";
-  let statusMessage = "";
-  if (validation.warning) {
-    const emptyWarning = aliasesText(state.config, "target_tag_required", "At least one canonical target tag is required.");
-    statusKind = validation.warning === emptyWarning ? "" : "error";
-    statusMessage = validation.warning;
-  }
-  renderTagAliasesDemoteSelectionState(state, {
-    canConfirm: validation.valid,
-    statusKind,
-    statusMessage
-  });
-}
-
-function getDemoteTagMatches(state, query) {
-  const normalizedQuery = normalize(query);
-  if (!normalizedQuery || !state.demoteState) {
-    return { matches: [], truncated: false };
-  }
-  const selected = new Set(state.demoteState.tags || []);
-  const allMatches = state.registryOptions.filter((item) => {
-    if (selected.has(item.tagId)) return false;
-    if (item.tagId === state.demoteState.tagId) return false;
-    const slug = item.tagId.split(":", 2)[1] || "";
-    return (
-      normalize(item.label).startsWith(normalizedQuery) ||
-      normalize(slug).startsWith(normalizedQuery)
-    );
-  });
-  return {
-    matches: allMatches.slice(0, DEMOTE_TAG_MATCH_CAP),
-    truncated: allMatches.length > DEMOTE_TAG_MATCH_CAP
-  };
-}
-
-function renderDemoteTagPopup(state) {
-  if (!state.demoteState) return;
-  const result = getDemoteTagMatches(state, state.refs.demoteTagSearch.value);
-  renderTagAliasesDemoteTagPopup(state, result);
-}
-
-function addDemoteTag(state, tagId) {
-  if (!state.demoteState) return;
-  const normalizedTagId = normalize(tagId);
-  if (!normalizedTagId || !state.registryById.has(normalizedTagId)) return;
-  if (normalizedTagId === state.demoteState.tagId) {
-    setDemoteStatus(state, "error", aliasesText(state.config, "demotion_target_self", "Target list must not include the demoted tag."));
-    return;
-  }
-  if (state.demoteState.tags.includes(normalizedTagId)) return;
-  if (state.demoteState.tags.length >= MAX_ALIAS_TAGS) {
-    setDemoteStatus(state, "error", aliasesText(state.config, "target_tags_max", "At most {max_tags} target tags are allowed.", { max_tags: MAX_ALIAS_TAGS }));
-    return;
-  }
-
-  const nextGroup = normalizedTagId.split(":", 1)[0];
-  const groupConflict = state.demoteState.tags.some((item) => item.split(":", 1)[0] === nextGroup);
-  if (groupConflict) {
-    setDemoteStatus(state, "error", aliasesText(state.config, "target_tags_one_per_group", "Only one target tag per group is allowed ({group}).", { group: nextGroup }));
-    return;
-  }
-
-  state.demoteState.tags.push(normalizedTagId);
-}
-
-function setPromotionStatus(state, kind, message) {
-  setTagAliasesPromotionStatus(state, kind, message);
 }
 
 async function loadData(state) {
@@ -618,115 +470,11 @@ async function handleAliasDelete(state, alias) {
   openPatchModal(state, patchResult.snippet);
 }
 
-function findAliasEntry(state, aliasKey) {
-  return findNormalizedAliasEntry(state.aliases, aliasKey);
-}
-
-function isCreateAliasFlow(state) {
-  return isCreateNormalizedAliasFlow(state.editState);
-}
-
-function openAliasEditModal(state, aliasKey) {
-  clearImportResult(state);
-  const entry = findAliasEntry(state, aliasKey);
-  if (!entry) {
-    setImportResult(state, "error", aliasesText(state.config, "alias_not_found", "Alias not found: {alias_key}", { alias_key: aliasKey }));
-    return;
-  }
-
-  openTagAliasesEditModal(state, entry);
-  updateAliasEditUi(state);
-  syncRouteBusyState(state);
-}
-
-function openAliasCreateModal(state) {
-  clearImportResult(state);
-  openTagAliasesCreateModal(state);
-  updateAliasEditUi(state);
-  syncRouteBusyState(state);
-}
-
-function closeAliasEditModal(state) {
-  closeTagAliasesEditModal(state);
-  syncRouteBusyState(state);
-}
-
-function getAliasEditValidation(state) {
-  return getNormalizedAliasEditValidation({
-    editState: state.editState,
-    aliasInput: state.refs.editAliasName.value,
-    descriptionInput: state.refs.editAliasDescription.value,
-    aliases: state.aliases,
-    registryById: state.registryById,
-    aliasRe: ALIAS_RE,
-    maxAliasTags: MAX_ALIAS_TAGS,
-    text: (key, fallback, tokens) => aliasesText(state.config, key, fallback, tokens)
-  });
-}
-
-function setAliasEditStatus(state, kind, message) {
-  setTagAliasesEditStatus(state, kind, message);
-}
-
-function updateAliasEditUi(state) {
-  if (!state.editState) return;
-  const validation = getAliasEditValidation(state);
-  state.refs.editAliasName.value = normalize(state.refs.editAliasName.value);
-  let statusKind = "";
-  let statusMessage = "";
-  if (validation.tagsWarning) {
-    statusKind = "error";
-    statusMessage = validation.tagsWarning;
-  }
-  renderTagAliasesEditModalState(state, {
-    warning: validation.warning || "",
-    canSave: validation.valid && validation.changed,
-    statusKind,
-    statusMessage
-  });
-}
-
-function getEditTagMatches(state, query) {
-  return getNormalizedEditTagMatches({
-    query,
-    editState: state.editState,
-    registryOptions: state.registryOptions,
-    cap: EDIT_TAG_MATCH_CAP
-  });
-}
-
-function renderEditTagPopup(state) {
-  if (!state.editState) return;
-  const query = state.refs.editTagSearch.value;
-  const result = getEditTagMatches(state, query);
-  renderTagAliasesEditTagPopup(state, result);
-}
-
-function addEditTag(state, tagId) {
-  if (!state.editState) return;
-  const normalizedTagId = normalize(tagId);
-  if (!normalizedTagId || !state.registryById.has(normalizedTagId)) return;
-  if (state.editState.tags.includes(normalizedTagId)) return;
-  if (state.editState.tags.length >= MAX_ALIAS_TAGS) {
-    setAliasEditStatus(state, "error", aliasesText(state.config, "max_tags_warning", "Select up to {max_tags} tags.", { max_tags: MAX_ALIAS_TAGS }));
-    return;
-  }
-
-  const nextGroup = normalizedTagId.split(":", 1)[0];
-  const groupConflict = state.editState.tags.some((item) => item.split(":", 1)[0] === nextGroup);
-  if (groupConflict) {
-    setAliasEditStatus(state, "error", aliasesText(state.config, "one_tag_per_group_warning", "Only one tag per group is allowed ({group}).", { group: nextGroup }));
-    return;
-  }
-
-  state.editState.tags.push(normalizedTagId);
-}
-
 async function saveAliasEdit(state) {
   if (!state.editState) return;
-  const validation = getAliasEditValidation(state);
+  const validation = getAliasWorkflowEditValidation(state, modalWorkflowCallbacks());
   if (!validation.valid || !validation.changed) return;
-  const isCreate = isCreateAliasFlow(state);
+  const isCreate = isAliasCreateFlow(state);
   const result = await saveTagAliasEdit({
     saveMode: state.saveMode,
     isCreate,
@@ -745,7 +493,7 @@ async function saveAliasEdit(state) {
     });
     renderControls(state);
     renderList(state);
-    closeAliasEditModal(state);
+    closeAliasEditWorkflowModal(state, modalWorkflowCallbacks());
     return;
   }
 
@@ -756,7 +504,7 @@ async function saveAliasEdit(state) {
   }
 
   const patchResult = result.patchResult;
-  closeAliasEditModal(state);
+  closeAliasEditWorkflowModal(state, modalWorkflowCallbacks());
   openPatchModal(state, patchResult.snippet);
 }
 
@@ -765,14 +513,14 @@ async function handleAliasPromote(state, alias) {
   if (!aliasKey) return;
   clearImportResult(state);
 
-  const entry = findAliasEntry(state, aliasKey);
+  const entry = findTagAliasEntry(state, aliasKey);
   if (!entry) {
     setImportResult(state, "error", aliasesText(state.config, "alias_not_found", "Alias not found: {alias_key}", { alias_key: aliasKey }));
     return;
   }
 
   const suggestedGroup = entry && Array.isArray(entry.groups) && entry.groups.length ? entry.groups[0] : "subject";
-  openPromotionModal(state, aliasKey, suggestedGroup);
+  openAliasPromotionModal(state, aliasKey, suggestedGroup, modalWorkflowCallbacks());
 }
 
 async function submitAliasPromotion(state) {
@@ -781,18 +529,18 @@ async function submitAliasPromotion(state) {
   const group = normalize(state.promotionState.group);
   if (!aliasKey) return;
   if (!group) {
-    setPromotionStatus(state, "", aliasesText(state.config, "promotion_group_required", "Choose a group."));
+    setAliasPromotionStatus(state, "", aliasesText(state.config, "promotion_group_required", "Choose a group."));
     return;
   }
-  if (!STUDIO_GROUPS.includes(group)) {
-    setPromotionStatus(
+  if (!getAliasWorkflowStudioGroups(state).includes(group)) {
+    setAliasPromotionStatus(
       state,
       "error",
       aliasesText(state.config, "promotion_group_invalid", "Promotion group must be one of: subject, domain, form, theme.")
     );
     return;
   }
-  closePromotionModal(state);
+  closeAliasPromotionModal(state, modalWorkflowCallbacks());
 
   if (state.saveMode === "post") {
     const preview = await previewTagAliasPromote({
@@ -833,9 +581,9 @@ async function handleTagDemoteFromAliases(state) {
   if (!state.demoteState) return;
   const canonicalTagId = normalize(state.demoteState.tagId);
   if (!canonicalTagId) return;
-  const validation = getDemoteValidation(state);
+  const validation = getAliasDemoteValidation(state, modalWorkflowCallbacks());
   if (!validation.valid) {
-    setDemoteStatus(state, "error", validation.warning || aliasesText(state.config, "invalid_target_tags", "Invalid target tags."));
+    setAliasDemoteStatus(state, "error", validation.warning || aliasesText(state.config, "invalid_target_tags", "Invalid target tags."));
     return;
   }
   const aliasTargets = validation.tags.slice().sort((a, b) => a.localeCompare(b));
@@ -847,7 +595,7 @@ async function handleTagDemoteFromAliases(state) {
       config: state.config
     });
     if (!preview.ok) {
-      setDemoteStatus(state, "error", preview.message);
+      setAliasDemoteStatus(state, "error", preview.message);
       setImportResult(state, "error", preview.message);
       return;
     }
@@ -882,12 +630,12 @@ async function handleTagDemoteFromAliases(state) {
   });
   if (!result.ok) {
     const message = result.message || aliasesText(state.config, "demotion_failed", "Demotion failed.");
-    setDemoteStatus(state, "error", message);
+    setAliasDemoteStatus(state, "error", message);
     setImportResult(state, "error", message);
     return;
   }
   if (result.mode === "post") {
-    closeDemoteModal(state);
+    closeAliasDemoteModal(state, modalWorkflowCallbacks());
     setImportResult(state, "success", String(result.response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
     applyTagAliasesDemoteProjection(state, {
       canonicalTagId,
@@ -900,7 +648,7 @@ async function handleTagDemoteFromAliases(state) {
   }
 
   const patchResult = result.patchResult;
-  closeDemoteModal(state);
+  closeAliasDemoteModal(state, modalWorkflowCallbacks());
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
 }
@@ -915,6 +663,18 @@ function setImportResult(state, kind, message) {
 
 function clearImportResult(state) {
   clearTagAliasesImportResult(state);
+}
+
+function modalWorkflowCallbacks() {
+  return {
+    clearImportResult,
+    demoteTagMatchCap: DEMOTE_TAG_MATCH_CAP,
+    editTagMatchCap: EDIT_TAG_MATCH_CAP,
+    maxAliasTags: MAX_ALIAS_TAGS,
+    setImportResult,
+    syncRouteBusyState,
+    text: (key, fallback, tokens) => aliasesText(null, key, fallback, tokens)
+  };
 }
 
 async function copyPatchSnippet(state) {

@@ -52,6 +52,8 @@ Completed implementation history is recorded in `_docs_logs/`:
 - `change-2026-05-21-added-shared-tag-route-save-session-helper`
 - `change-2026-05-21-extracted-tag-registry-modal-workflow-owner`
 - `change-2026-05-21-extracted-tag-studio-interaction-state-owner`
+- `change-2026-05-21-extracted-tag-aliases-modal-workflow-owner`
+- `change-2026-05-21-added-shared-operational-route-shell-helper`
 
 Current stable follow-through:
 
@@ -64,7 +66,8 @@ Current stable follow-through:
 
 Task A is implemented through the save, build, publication/prose-import, and bulk action presentation contract slices.
 Task B is implemented through route-shell state factory and event binder slices for the Work, Work Detail, Series, and Moment editors, plus the conditional Work action record/store synchronization extraction.
-The next maintenance-risk phase should start at Task C unless a regression exposes another repeated Catalogue action contract.
+Task C is implemented through shared Tag save-session, Registry modal workflow, Tag Studio interaction state, and Tag Aliases modal workflow slices.
+The next maintenance-risk phase should start at Task D unless a regression exposes another repeated Catalogue or Tag route contract.
 
 ## Next Priorities After Docs Viewer
 
@@ -412,7 +415,7 @@ Acceptance checks:
 
 ### Task C: Tag Route Save And Modal Coordination
 
-**Status:** C1-C3 implemented on 2026-05-21; C4 is the next closeout decision slice.
+**Status:** C1-C4 implemented on 2026-05-21.
 
 Candidate files and current scores:
 
@@ -506,22 +509,33 @@ Acceptance checks:
 
 #### C4: Tag Alias Route Closeout
 
+Status:
+
+- implemented
+
 Owner:
 
-- existing alias mutation/workflow owners unless review identifies a missing complete responsibility
+- `assets/studio/js/tag-aliases-modal-workflow.js`, separate from `tag-aliases-modals.js` rendering/lifecycle and the existing alias mutation/workflow owners
 
 Scope:
 
-- inspect `tag-aliases.js` after C1 to decide whether remaining risk is route orchestration or a missing owner
-- if a missing owner exists, extract one complete responsibility; otherwise record a no-extraction decision and rescore only if justified
+- moved Tag Aliases create/edit, promote, and demote modal interaction state, validation projection, tag selection, and popup matching out of `tag-aliases.js`
+- kept modal HTML rendering and event listener attachment in `tag-aliases-modals.js`
+- kept import orchestration, delete confirmation, service calls, post-save list refresh, and route ready/busy handoff in the route shell and existing workflow/state owners
 
 Expected score movement:
 
-- `assets/studio/js/tag-aliases.js`: target 5 -> 4 only if remaining save/offline/modal coordination has moved out and route-shell responsibilities are coherent
+- `assets/studio/js/tag-aliases.js`: 5 -> 4
+
+Acceptance checks:
+
+- `tests/smoke/tag_route_shell_modules.py` covers Tag Aliases modal workflow create/edit validation, edit tag selection/removal, demote validation, demote tag selection, and promotion state with stubbed state/callbacks
+- `tests/smoke/tag_aliases_ready_state.py` verifies the Tag Aliases route still loads and reaches the Studio ready state
+- `node --check` passes for `tag-aliases.js` and `tag-aliases-modal-workflow.js`
 
 ### Task D: Studio Shared Route Helper Contracts
 
-**Status:** Defined for score-moving implementation.
+**Status:** D1 implemented on 2026-05-21; D2 is the next score-moving slice.
 
 Candidate files and current scores:
 
@@ -539,9 +553,13 @@ The repeated pattern already exists: operational Studio routes duplicate route-s
 
 #### D1: Operational Route Shell Helper
 
+Status:
+
+- implemented
+
 Owner:
 
-- new shared owner near `assets/studio/js/studio-route-state.js`
+- `assets/studio/js/studio-operational-route.js`
 
 First adopters:
 
@@ -550,18 +568,18 @@ First adopters:
 
 Scope:
 
-- provide explicit helper contracts for required element collection, ready/busy projection, service availability display, and run-button disabled state
-- keep route-specific validation, endpoint names, result rendering, and payload shaping in route-local modules
+- provides explicit helper contracts for required element collection, ready/busy projection, service availability display, and run-button disabled state
+- keeps route-specific validation, endpoint names, result rendering, and payload shaping in route-local modules
 
 Expected score movement:
 
-- `assets/studio/js/bulk-add-work.js`: target 7 -> 6
-- `assets/studio/js/docs-broken-links.js`: target 6 -> 5
+- `assets/studio/js/bulk-add-work.js`: 7 -> 6
+- `assets/studio/js/docs-broken-links.js`: 6 -> 5
 
 Acceptance checks:
 
-- add focused smoke for the shared operational route shell helper
-- route smoke verifies both first adopters reach ready state with unavailable local service where applicable
+- `tests/smoke/studio_operational_route_modules.py` covers required-element collection, ready/busy projection, service availability display, run-button disabled projection, and first-adopter route imports
+- `tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work and Docs Broken Links reach the Studio ready state with local service probes blocked
 
 #### D2: Bulk Add Work Workflow Split
 

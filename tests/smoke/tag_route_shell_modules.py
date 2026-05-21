@@ -396,6 +396,158 @@ def assert_tag_studio_interactions(page: Page) -> None:
     assert result["statusKind"] == "success"
 
 
+def assert_tag_aliases_modal_workflow(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <section id="aliases">
+                <div id="promotionModal"></div>
+                <p id="promotionAliasMeta"></p>
+                <div id="promotionGroupKey"></div>
+                <p id="promotionStatus"></p>
+                <button id="confirmPromotion"></button>
+                <div id="demoteModal"></div>
+                <p id="demoteTagMeta"></p>
+                <input id="demoteTagSearch">
+                <div id="demoteTagPopupWrap" hidden><div id="demoteTagPopup"></div></div>
+                <div id="demoteGroupKey"></div>
+                <div id="demoteTagList"></div>
+                <p id="demoteStatus"></p>
+                <button id="confirmDemote"></button>
+                <div id="editModal"></div>
+                <p id="editModalTitle"></p>
+                <input id="editAliasName">
+                <p id="editAliasWarning"></p>
+                <textarea id="editAliasDescription"></textarea>
+                <input id="editTagSearch">
+                <div id="editTagPopupWrap" hidden><div id="editTagPopup"></div></div>
+                <div id="editGroupKey"></div>
+                <div id="editTagList"></div>
+                <p id="editStatus"></p>
+                <button id="saveEditAlias"></button>
+              </section>
+            `;
+            const module = await import('/assets/studio/js/tag-aliases-modal-workflow.js');
+            const calls = [];
+            const state = {
+                mount: document.getElementById('aliases'),
+                config: { ui_text: {} },
+                aliases: [{
+                    alias: 'old-alias',
+                    description: 'Old',
+                    targets: ['subject:alpha'],
+                    groups: ['subject']
+                }],
+                registryById: new Map([
+                    ['subject:alpha', { group: 'subject', label: 'alpha' }],
+                    ['domain:beta', { group: 'domain', label: 'beta' }],
+                    ['form:gamma', { group: 'form', label: 'gamma' }]
+                ]),
+                registryOptions: [
+                    { tagId: 'subject:alpha', group: 'subject', label: 'alpha' },
+                    { tagId: 'domain:beta', group: 'domain', label: 'beta' },
+                    { tagId: 'form:gamma', group: 'form', label: 'gamma' }
+                ],
+                groupDescriptions: new Map(),
+                groupInfoPagePath: '/studio/analytics/tag-groups/',
+                studioGroups: ['subject', 'domain', 'form', 'theme'],
+                promotionState: null,
+                demoteState: null,
+                editState: null,
+                refs: {
+                    promotionModal: document.getElementById('promotionModal'),
+                    promotionAliasMeta: document.getElementById('promotionAliasMeta'),
+                    promotionGroupKey: document.getElementById('promotionGroupKey'),
+                    promotionStatus: document.getElementById('promotionStatus'),
+                    confirmPromotion: document.getElementById('confirmPromotion'),
+                    demoteModal: document.getElementById('demoteModal'),
+                    demoteTagMeta: document.getElementById('demoteTagMeta'),
+                    demoteTagSearch: document.getElementById('demoteTagSearch'),
+                    demoteTagPopupWrap: document.getElementById('demoteTagPopupWrap'),
+                    demoteTagPopup: document.getElementById('demoteTagPopup'),
+                    demoteGroupKey: document.getElementById('demoteGroupKey'),
+                    demoteTagList: document.getElementById('demoteTagList'),
+                    demoteStatus: document.getElementById('demoteStatus'),
+                    confirmDemote: document.getElementById('confirmDemote'),
+                    editModal: document.getElementById('editModal'),
+                    editModalTitle: document.getElementById('editModalTitle'),
+                    editAliasName: document.getElementById('editAliasName'),
+                    editAliasWarning: document.getElementById('editAliasWarning'),
+                    editAliasDescription: document.getElementById('editAliasDescription'),
+                    editTagSearch: document.getElementById('editTagSearch'),
+                    editTagPopupWrap: document.getElementById('editTagPopupWrap'),
+                    editTagPopup: document.getElementById('editTagPopup'),
+                    editGroupKey: document.getElementById('editGroupKey'),
+                    editTagList: document.getElementById('editTagList'),
+                    editStatus: document.getElementById('editStatus'),
+                    saveEditAlias: document.getElementById('saveEditAlias')
+                }
+            };
+            const callbacks = {
+                maxAliasTags: 4,
+                editTagMatchCap: 2,
+                demoteTagMatchCap: 2,
+                clearImportResult: () => calls.push('clear'),
+                setImportResult: (_state, kind, message) => calls.push(`result:${kind}:${message}`),
+                syncRouteBusyState: () => calls.push('sync'),
+                text: (_key, fallback, tokens = null) => {
+                    if (!tokens) return fallback;
+                    return Object.entries(tokens).reduce((value, [token, replacement]) => value.replace(`{${token}}`, replacement), fallback);
+                }
+            };
+            module.openAliasCreateWorkflowModal(state, callbacks);
+            state.refs.editAliasName.value = 'New-Alias';
+            state.refs.editAliasDescription.value = 'Description';
+            module.addAliasEditTag(state, 'subject:alpha', callbacks);
+            module.addAliasEditTag(state, 'domain:beta', callbacks);
+            module.updateAliasEditUi(state, callbacks);
+            const editValidation = module.getAliasWorkflowEditValidation(state, callbacks);
+            const editMatches = module.getAliasEditTagMatches(state, 'g', callbacks);
+            module.removeAliasEditTag(state, 'domain:beta');
+            module.openAliasDemoteModal(state, 'form:gamma', callbacks);
+            module.addAliasDemoteTag(state, 'subject:alpha', callbacks);
+            module.addAliasDemoteTag(state, 'domain:beta', callbacks);
+            module.updateAliasDemoteUi(state, callbacks);
+            const demoteValidation = module.getAliasDemoteValidation(state, callbacks);
+            const demoteMatches = module.getAliasDemoteTagMatches(state, 'a', callbacks);
+            module.openAliasPromotionModal(state, 'old-alias', 'domain', callbacks);
+            return {
+                editAliasValue: state.refs.editAliasName.value,
+                editTags: state.editState.tags.slice(),
+                editValidation,
+                editSaveDisabled: state.refs.saveEditAlias.disabled,
+                editMatches,
+                demoteTagId: state.demoteState.tagId,
+                demoteTags: state.demoteState.tags.slice(),
+                demoteValidation,
+                demoteDisabled: state.refs.confirmDemote.disabled,
+                demoteMatches,
+                promotionState: state.promotionState,
+                promotionDisabled: state.refs.confirmPromotion.disabled,
+                calls
+            };
+        }"""
+    )
+    assert result["editAliasValue"] == "new-alias"
+    assert result["editTags"] == ["subject:alpha"]
+    assert result["editValidation"]["valid"] is True
+    assert result["editValidation"]["changed"] is True
+    assert result["editSaveDisabled"] is False
+    assert result["editMatches"]["matches"][0]["tagId"] == "form:gamma"
+    assert result["demoteTagId"] == "form:gamma"
+    assert result["demoteTags"] == ["subject:alpha", "domain:beta"]
+    assert result["demoteValidation"] == {
+        "valid": True,
+        "warning": "",
+        "tags": ["subject:alpha", "domain:beta"],
+    }
+    assert result["demoteDisabled"] is False
+    assert result["demoteMatches"]["matches"] == []
+    assert result["promotionState"] == {"aliasKey": "old-alias", "group": "domain"}
+    assert result["promotionDisabled"] is False
+    assert result["calls"] == ["clear", "sync", "clear", "sync", "sync"]
+
+
 def run(site_root: Path) -> None:
     server, base_url = start_static_server(site_root)
     try:
@@ -408,6 +560,7 @@ def run(site_root: Path) -> None:
             assert_tag_save_session_helpers(page)
             assert_tag_registry_modal_workflow(page)
             assert_tag_studio_interactions(page)
+            assert_tag_aliases_modal_workflow(page)
             browser.close()
             if errors:
                 raise AssertionError(f"page errors during Tag route shell module smoke: {errors!r}")
