@@ -162,6 +162,52 @@ def assert_index_panel_toggle(page: Page, timeout_ms: int) -> None:
     )
 
 
+def assert_index_panel_expanded_tree_click(page: Page, timeout_ms: int) -> None:
+    page.wait_for_function(
+        """selector => document.querySelector(selector)?.dataset.indexPanelState === 'normal'""",
+        arg=ROOT_SELECTOR,
+        timeout=timeout_ms,
+    )
+    page.locator("#docsViewerSidebarToggle").click()
+    page.wait_for_function(
+        """selector => {
+            const root = document.querySelector(selector);
+            const main = document.querySelector('.docsViewer__main');
+            return root?.dataset.indexPanelState === 'expanded' &&
+                main &&
+                getComputedStyle(main).display === 'none';
+        }""",
+        arg=ROOT_SELECTOR,
+        timeout=timeout_ms,
+    )
+    page.locator("#docsViewerNav a[data-doc-id='docs-viewer-overview']").first.click()
+    page.wait_for_function(
+        """([selector, docId]) => {
+            const heading = document.querySelector(`${selector} h1`);
+            return heading && heading.id === docId;
+        }""",
+        arg=[CONTENT_SELECTOR, "docs-viewer-overview"],
+        timeout=timeout_ms,
+    )
+    active_doc = query_value(page.url, "doc")
+    if active_doc != "docs-viewer-overview":
+        raise AssertionError(f"expected tree click to set doc='docs-viewer-overview', got {active_doc!r} in {page.url}")
+    page.wait_for_function(
+        """selector => {
+            const root = document.querySelector(selector);
+            const activeLink = document.querySelector("#docsViewerNav a[data-doc-id='docs-viewer-overview']");
+            const main = document.querySelector('.docsViewer__main');
+            return root?.dataset.indexPanelState === 'expanded' &&
+                activeLink?.classList.contains('is-active') &&
+                activeLink?.getAttribute('aria-current') === 'page' &&
+                main &&
+                getComputedStyle(main).display === 'none';
+        }""",
+        arg=ROOT_SELECTOR,
+        timeout=timeout_ms,
+    )
+
+
 def run_route_smoke(page: Page, base_url: str, timeout_ms: int) -> dict[str, object]:
     errors: list[str] = []
     page.on("pageerror", lambda exc: errors.append(str(exc)))

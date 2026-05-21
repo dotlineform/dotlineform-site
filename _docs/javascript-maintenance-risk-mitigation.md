@@ -179,7 +179,7 @@ Avoid naming that implies the tree itself is expanded.
 
 ### Slice 4: Focused Smoke Coverage
 
-**Status:** Partially completed on 2026-05-21.
+**Status:** Completed on 2026-05-21.
 
 Add a browser smoke check for the panel owner and route wiring:
 
@@ -190,7 +190,7 @@ Add a browser smoke check for the panel owner and route wiring:
 - mobile behavior unchanged for the first slice
 
 Use `tests/smoke/docs_viewer_index_panel_modules.py` for the state owner and `tests/smoke/docs_viewer_index_panel_route.py` for the route wiring.
-Tree item click behavior still needs a focused assertion in a follow-up slice.
+Tree item click behavior in expanded mode is covered by the route wiring smoke.
 
 ### Slice 5: Inventory And Follow-Through
 
@@ -202,7 +202,7 @@ After the Docs Viewer slice is implemented and verified:
 - [x] update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
 - [x] update this document for completed/pending task status
 - [x] update generated Docs Viewer payloads through the normal docs workflow rather than by hand
-- [ ] add a focused tree-click behavior assertion for index-panel expanded mode
+- [x] add a focused tree-click behavior assertion for index-panel expanded mode
 - [ ] re-parent the durable risk-scoring and maintenance-gate guidance under [Development Workflow](/docs/?scope=studio&doc=development-workflow), editing it from current implementation planning into stable workflow guidance
 
 The target is not necessarily to move `docs-viewer.js` directly to score 4 in one slice.
@@ -210,8 +210,7 @@ The target is to prevent the next index/graph feature from increasing shared ent
 
 ## Next Action
 
-The next implementation step is to add the focused tree-click behavior assertion for expanded index-panel mode.
-After that, start the permanent guidance cleanup: split durable scoring/maintenance-gate policy under [Development Workflow](/docs/?scope=studio&doc=development-workflow), leaving JavaScript- and Docs Viewer-specific implementation details in the JavaScript inventory and Docs Viewer inventory docs.
+The next implementation step is the permanent guidance cleanup: split durable scoring/maintenance-gate policy under [Development Workflow](/docs/?scope=studio&doc=development-workflow), leaving JavaScript- and Docs Viewer-specific implementation details in the JavaScript inventory and Docs Viewer inventory docs.
 
 ## Next Priorities After Docs Viewer
 

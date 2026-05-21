@@ -8,7 +8,13 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-from docs_viewer_routes import assert_index_panel_toggle, route_url, start_static_server, wait_for_doc
+from docs_viewer_routes import (
+    assert_index_panel_expanded_tree_click,
+    assert_index_panel_toggle,
+    route_url,
+    start_static_server,
+    wait_for_doc,
+)
 
 
 def run(site_root: Path, timeout_ms: int) -> None:
@@ -20,6 +26,7 @@ def run(site_root: Path, timeout_ms: int) -> None:
             page.goto(route_url(base_url, "/docs/?scope=studio&doc=docs-viewer"), wait_until="domcontentloaded")
             wait_for_doc(page, "docs-viewer", timeout_ms)
             assert_index_panel_toggle(page, timeout_ms)
+            assert_index_panel_expanded_tree_click(page, timeout_ms)
             browser.close()
     finally:
         server.shutdown()
