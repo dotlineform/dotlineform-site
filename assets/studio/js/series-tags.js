@@ -15,24 +15,10 @@ import {
   normalizeStudioValue as normalize
 } from "./studio-data.js";
 import {
-  buildOfflineAssignmentsExport,
-  clearOfflineAssignmentsSession,
-  equalOfflineSeriesRows,
-  getOfflineAssignmentsSeriesEntry,
-  readOfflineAssignmentsSession,
-  removeOfflineAssignmentsSeriesEntry,
-  writeOfflineAssignmentsSession
-} from "./tag-assignments-offline.js";
-import {
   probeStudioHealth,
   postJson,
   STUDIO_WRITE_ENDPOINTS
 } from "./studio-transport.js";
-import {
-  renderImportModal,
-  renderSessionModal,
-  wireSeriesTagsModalEvents
-} from "./series-tags-modals.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
@@ -51,6 +37,11 @@ let GROUP_INFO_PAGE_PATH = "/studio/analytics/tag-groups/";
 const SORTABLE_KEYS = new Set(["series", "status", "tags"]);
 const UI = seriesTagsUi;
 const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
+const EMPTY_OFFLINE_SESSION = {
+  version: "tag_assignments_offline_v1",
+  updated_at_utc: "",
+  series: {}
+};
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initSeriesTagsPage);
@@ -166,7 +157,11 @@ async function initSeriesTagsPage() {
       assignmentsSeries,
       registry,
       groupDescriptions: new Map(),
-      offlineSession: readOfflineAssignmentsSession(),
+      offlineSession: null,
+      offlineSessionActivated: false,
+      offlineSessionWorkflow: null,
+      modalModule: null,
+      modalEventsWired: false,
       importAvailable: false,
       importFile: null,
       importPayload: null,
@@ -267,30 +262,20 @@ function buildSeriesEditorUrl(config, seriesId) {
 
 function wireEvents(state) {
   window.addEventListener("pageshow", () => {
-    state.offlineSession = readOfflineAssignmentsSession();
-    renderPage(state);
+    if (!state.offlineSessionActivated) return;
+    void refreshActivatedOfflineSession(state);
   });
 
   if (state.refs.actions) {
     state.refs.actions.addEventListener("click", (event) => {
       const sessionButton = event.target.closest(UI_SELECTOR.openSessionModal);
       if (sessionButton && !sessionButton.disabled) {
-        state.sessionModalRestoreFocus = document.activeElement;
-        state.sessionModalFocusReady = false;
-        state.sessionModalOpen = true;
-        state.importModalOpen = false;
-        renderChrome(state);
-        syncRouteBusyState(state);
+        void withRouteBusy(state, () => openSeriesTagsSessionModal(state));
         return;
       }
       const importButton = event.target.closest(UI_SELECTOR.openImportModal);
       if (importButton && !importButton.disabled) {
-        state.importModalRestoreFocus = document.activeElement;
-        state.importModalFocusReady = false;
-        state.importModalOpen = true;
-        state.sessionModalOpen = false;
-        renderChrome(state);
-        syncRouteBusyState(state);
+        void withRouteBusy(state, () => openSeriesTagsImportModal(state));
       }
     });
   }
@@ -316,7 +301,52 @@ function wireEvents(state) {
     renderTable(state);
   });
 
-  wireSeriesTagsModalEvents(state, {
+}
+
+async function openSeriesTagsSessionModal(state) {
+  await activateOfflineSession(state);
+  await ensureSeriesTagsModalEvents(state);
+  state.sessionModalRestoreFocus = document.activeElement;
+  state.sessionModalFocusReady = false;
+  state.sessionModalOpen = true;
+  state.importModalOpen = false;
+  renderPage(state);
+  syncRouteBusyState(state);
+}
+
+async function openSeriesTagsImportModal(state) {
+  await ensureSeriesTagsModalEvents(state);
+  state.importModalRestoreFocus = document.activeElement;
+  state.importModalFocusReady = false;
+  state.importModalOpen = true;
+  state.sessionModalOpen = false;
+  renderChrome(state);
+  syncRouteBusyState(state);
+}
+
+async function refreshActivatedOfflineSession(state) {
+  await activateOfflineSession(state);
+  renderPage(state);
+}
+
+async function activateOfflineSession(state) {
+  const workflow = await ensureOfflineSessionWorkflow(state);
+  state.offlineSession = workflow.readTagAssignmentsOfflineSession();
+  state.offlineSessionActivated = true;
+  return state.offlineSession;
+}
+
+async function ensureOfflineSessionWorkflow(state) {
+  if (!state.offlineSessionWorkflow) {
+    state.offlineSessionWorkflow = await import("./tag-assignments-offline-session.js");
+  }
+  return state.offlineSessionWorkflow;
+}
+
+async function ensureSeriesTagsModalEvents(state) {
+  const modalModule = await ensureSeriesTagsModalModule(state);
+  if (state.modalEventsWired) return modalModule;
+  modalModule.wireSeriesTagsModalEvents(state, {
     onModalStateChange: () => {
       renderChrome(state);
       syncRouteBusyState(state);
@@ -327,11 +357,11 @@ function wireEvents(state) {
         return;
       }
       if (actionName === "download") {
-        handleDownloadSession(state);
+        void handleDownloadSession(state);
         return;
       }
       if (actionName === "clear") {
-        handleClearSession(state);
+        void handleClearSession(state);
       }
     },
     onImportAction: (actionName) => {
@@ -355,6 +385,15 @@ function wireEvents(state) {
       state.importResolutions[seriesId] = value;
     }
   });
+  state.modalEventsWired = true;
+  return modalModule;
+}
+
+async function ensureSeriesTagsModalModule(state) {
+  if (!state.modalModule) {
+    state.modalModule = await import("./series-tags-modals.js");
+  }
+  return state.modalModule;
 }
 
 function renderPage(state) {
@@ -368,13 +407,20 @@ function renderChrome(state) {
   renderImportModal(state);
 }
 
+function renderSessionModal(state) {
+  if (!state.modalModule || !state.offlineSessionActivated) return;
+  state.modalModule.renderSessionModal(state);
+}
+
+function renderImportModal(state) {
+  if (!state.modalModule) return;
+  state.modalModule.renderImportModal(state);
+}
+
 function renderActionButtons(state) {
-  const exportPayload = buildOfflineAssignmentsExport(state.offlineSession);
-  const stagedSeriesIds = Object.keys(exportPayload.series || {}).sort();
-  const hasStaged = stagedSeriesIds.length > 0;
   if (!state.refs.actions || !state.refs.openSessionModal || !state.refs.openImportModal) return;
   state.refs.openSessionModal.textContent = seriesTagsText(state.config, "session_open_button", "Session");
-  state.refs.openSessionModal.disabled = !hasStaged;
+  state.refs.openSessionModal.disabled = false;
   state.refs.openImportModal.textContent = seriesTagsText(state.config, "import_open_button", "Import");
   state.refs.openImportModal.disabled = !state.importAvailable;
 }
@@ -392,7 +438,7 @@ function buildSeriesTagsReportInput(state) {
     groupDescriptions: state.groupDescriptions,
     seriesData: state.seriesData,
     assignmentsSeries: state.assignmentsSeries,
-    offlineSession: state.offlineSession,
+    offlineSession: state.offlineSessionActivated ? state.offlineSession : EMPTY_OFFLINE_SESSION,
     registry: state.registry,
     filterGroup: state.filterGroup,
     sortKey: state.sortKey,
@@ -402,8 +448,8 @@ function buildSeriesTagsReportInput(state) {
 
 async function handleCopySession(state) {
   try {
-    const exportPayload = buildOfflineAssignmentsExport(state.offlineSession);
-    await navigator.clipboard.writeText(JSON.stringify(exportPayload, null, 2));
+    const workflow = await ensureOfflineSessionWorkflow(state);
+    await workflow.copyTagAssignmentsOfflineSession(state.offlineSession || EMPTY_OFFLINE_SESSION);
     setResult(state, "success", seriesTagsText(state.config, "session_copy_success", "Offline session JSON copied."));
   } catch (error) {
     setResult(state, "error", seriesTagsText(state.config, "session_copy_failed", "Copy failed. Select and copy manually."));
@@ -411,23 +457,16 @@ async function handleCopySession(state) {
   renderSessionModal(state);
 }
 
-function handleDownloadSession(state) {
-  const exportPayload = buildOfflineAssignmentsExport(state.offlineSession);
-  const blob = new Blob([`${JSON.stringify(exportPayload, null, 2)}\n`], { type: "application/json" });
-  const href = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = href;
-  link.download = `tag-assignments-offline-${timestampForFilename(exportPayload.updated_at_utc)}.json`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(href), 0);
+async function handleDownloadSession(state) {
+  const workflow = await ensureOfflineSessionWorkflow(state);
+  workflow.downloadTagAssignmentsOfflineSession(state.offlineSession || EMPTY_OFFLINE_SESSION);
   setResult(state, "success", seriesTagsText(state.config, "session_download_success", "Offline session JSON download started."));
   renderSessionModal(state);
 }
 
-function handleClearSession(state) {
-  state.offlineSession = clearOfflineAssignmentsSession();
+async function handleClearSession(state) {
+  const workflow = await ensureOfflineSessionWorkflow(state);
+  state.offlineSession = workflow.clearTagAssignmentsOfflineSession();
   setResult(state, "success", seriesTagsText(state.config, "session_clear_success", "Offline session cleared."));
   renderPage(state);
 }
@@ -496,7 +535,7 @@ async function handleApplyImport(state) {
         recordId: state.importFile && state.importFile.name ? state.importFile.name : "series-tags-import"
       })
     });
-    clearAppliedLocalSessionEntries(state);
+    await clearAppliedLocalSessionEntries(state);
     state.importPreview = null;
     state.importPayload = null;
     state.importResolutions = {};
@@ -510,28 +549,14 @@ async function handleApplyImport(state) {
   }
 }
 
-function clearAppliedLocalSessionEntries(state) {
-  if (!state.importPreview || !state.importPayload || !state.importPayload.series) return;
-  let session = state.offlineSession;
-  let changed = false;
-
-  for (const row of state.importPreview.series || []) {
-    const seriesId = normalize(row && row.series_id);
-    if (!seriesId) continue;
-    const status = String(row && row.status || "");
-    if (status === "invalid" || status === "missing") continue;
-    if (status === "conflict" && String(state.importResolutions[seriesId] || "skip") !== "overwrite") continue;
-
-    const importedEntry = state.importPayload.series[seriesId];
-    const localEntry = getOfflineAssignmentsSeriesEntry(session, seriesId);
-    if (!importedEntry || !localEntry) continue;
-    if (!equalOfflineSeriesRows(importedEntry.staged_row, localEntry.staged_row)) continue;
-    session = removeOfflineAssignmentsSeriesEntry(session, seriesId, new Date().toISOString());
-    changed = true;
-  }
-
-  if (!changed) return;
-  state.offlineSession = writeOfflineAssignmentsSession(session);
+async function clearAppliedLocalSessionEntries(state) {
+  const workflow = await ensureOfflineSessionWorkflow(state);
+  state.offlineSession = workflow.clearImportedOfflineAssignmentsEntries({
+    importPreview: state.importPreview,
+    importPayload: state.importPayload,
+    importResolutions: state.importResolutions
+  });
+  state.offlineSessionActivated = true;
 }
 
 function setResult(state, kind, text) {
@@ -545,12 +570,6 @@ function escapeHtml(value) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
-}
-
-function timestampForFilename(value) {
-  const text = String(value || "").trim();
-  if (!text) return "session";
-  return text.replace(/[^0-9A-Za-z]+/g, "-").replace(/^-+|-+$/g, "") || "session";
 }
 
 function seriesTagsText(config, key, fallback, tokens) {

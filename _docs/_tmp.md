@@ -9,8 +9,12 @@ viewable: false
 ---
 # tmp
 
+## javascript risk mitigation
+
 we are working on the tasks in _docs/studio-javascript-payload-inventory.md
-please start implementing tasks for tag-registry.js
+please proceed with task 5 for series-tags.js
+
+please re-score series-tags.js using the scoring criteria described in studio-javascript-payload-inventory.md, update the details section to align with the current state and also update the risk score in javascript-inventory.md
 
 ---
 

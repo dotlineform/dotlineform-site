@@ -5,14 +5,6 @@ import {
   probeStudioHealth
 } from "./studio-transport.js";
 import {
-  equalOfflineSeriesRows,
-  normalizeOfflineSeriesRow,
-  readOfflineAssignmentsSession,
-  removeOfflineAssignmentsSeriesEntry,
-  upsertOfflineAssignmentsSeriesEntry,
-  writeOfflineAssignmentsSession
-} from "./tag-assignments-offline.js";
-import {
   buildSaveModeText as buildTagStudioSaveModeText,
   buildTagSaveSuccessMessage,
   postTags,
@@ -31,25 +23,7 @@ export function renderTagStudioSaveMode(state) {
 }
 
 export function syncTagStudioOfflineAutosave(state, callbacks = {}) {
-  if (!state.saveModeResolved || state.saveMode !== "offline") {
-    clearTagStudioOfflineAutosave(state);
-    return;
-  }
-
-  const diff = buildStateDiff(state);
-  if (!diff.seriesChanged && !diff.changedWorkIds.length) {
-    clearTagStudioOfflineAutosave(state);
-    return;
-  }
-
-  if (state.offlineAutosaveTimer) {
-    window.clearTimeout(state.offlineAutosaveTimer);
-  }
-
-  state.offlineAutosaveTimer = window.setTimeout(() => {
-    state.offlineAutosaveTimer = 0;
-    stageTagStudioOfflineState(state, { manual: false }, callbacks);
-  }, 700);
+  clearTagStudioOfflineAutosave(state);
 }
 
 export function clearTagStudioOfflineAutosave(state) {
@@ -89,7 +63,7 @@ export async function probeTagStudioSaveMode(state, callbacks = {}) {
   syncRouteBusyState(callbacks, state);
 }
 
-export function stageTagStudioOfflineState(state, options = {}, callbacks = {}) {
+export async function stageTagStudioOfflineState(state, options = {}, callbacks = {}) {
   clearTagStudioOfflineAutosave(state);
 
   const diff = buildStateDiff(state);
@@ -103,24 +77,17 @@ export function stageTagStudioOfflineState(state, options = {}, callbacks = {}) 
 
   const stagedAt = utcTimestamp();
   const stagedRow = buildPersistedSeriesRow(diff);
-  const baseRow = normalizeOfflineSeriesRow(state.offlineBaseSeriesRow);
-  let session = readOfflineAssignmentsSession();
-  let seriesCleared = false;
+  const workflow = await import("./tag-assignments-offline-session.js");
+  const result = workflow.stageTagAssignmentsOfflineSeries({
+    seriesId: state.seriesId,
+    baseUpdatedAt: state.offlineBaseSeriesUpdatedAt,
+    baseRow: state.offlineBaseSeriesRow,
+    stagedRow,
+    stagedAt
+  });
 
-  if (equalOfflineSeriesRows(stagedRow, baseRow)) {
-    session = removeOfflineAssignmentsSeriesEntry(session, state.seriesId, stagedAt);
-    seriesCleared = true;
-  } else {
-    session = upsertOfflineAssignmentsSeriesEntry(session, state.seriesId, {
-      base_series_updated_at_utc: state.offlineBaseSeriesUpdatedAt,
-      base_row_snapshot: baseRow,
-      staged_row: stagedRow,
-      staged_at_utc: stagedAt
-    }, stagedAt);
-  }
-
-  state.offlineSession = writeOfflineAssignmentsSession(session);
-  state.hasOfflineStagedSeries = !seriesCleared;
+  state.offlineSession = result.session;
+  state.hasOfflineStagedSeries = !result.seriesCleared;
   applyPersistedBaseline(state, diff);
 
   if (options.manual) {
@@ -141,7 +108,7 @@ export function stageTagStudioOfflineState(state, options = {}, callbacks = {}) 
     callbacks,
     state,
     "success",
-    seriesCleared
+    result.seriesCleared
       ? studioText(state.config, "save_result_offline_cleared", "Series matches repo data. Offline session entry cleared.")
       : studioText(state.config, "save_result_offline_staged", "Changes are staged in the offline session.")
   );
@@ -210,15 +177,14 @@ async function handleTagStudioSaveInner(state, callbacks) {
       state.saveMode = "offline";
       state.saveModeResolved = true;
       renderTagStudioSaveMode(state);
-      stageTagStudioOfflineState(state, { manual: false }, callbacks);
       setStatus(state, "error", studioText(state.config, "save_status_local_failed", "Local save failed. Switched to offline mode."));
-      setSaveResult(callbacks, state, "success", studioText(state.config, "save_result_local_failed", "Local server save failed. Changes are now staged in the offline session."));
+      setSaveResult(callbacks, state, "warn", studioText(state.config, "save_result_local_failed", "Local server save failed. Press Save again to stage these changes in the offline session."));
       renderAll(callbacks, state);
       return;
     }
   }
 
-  stageTagStudioOfflineState(state, { manual: true }, callbacks);
+  await stageTagStudioOfflineState(state, { manual: true }, callbacks);
 }
 
 function setStatus(state, kind, text) {

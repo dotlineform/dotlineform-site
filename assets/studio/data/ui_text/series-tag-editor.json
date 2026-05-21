@@ -60,7 +60,7 @@
   "save_status_copy": "Patch guidance copied to clipboard.",
   "save_status_copy_failed": "Copy failed. Select and copy the patch guidance manually.",
   "save_status_local_failed": "Local save failed. Switched to offline mode.",
-  "save_result_local_failed": "Local server save failed. Changes are now staged in the offline session.",
+  "save_result_local_failed": "Local server save failed. Press Save again to stage these changes in the offline session.",
   "save_result_offline_staged": "Changes are staged in the offline session.",
   "save_result_offline_cleared": "Series matches repo data. Offline session entry cleared.",
   "save_result_server_available_import": "Local server now available. Apply offline changes using Series Tags > Import.",

@@ -20,9 +20,6 @@ import {
   splitWorkInputTokens
 } from "./tag-studio-domain.js";
 import {
-  readOfflineAssignmentsSession
-} from "./tag-assignments-offline.js";
-import {
   buildSaveModeText as buildTagStudioSaveModeText
 } from "./tag-studio-save.js";
 import {
@@ -136,8 +133,6 @@ async function initTagStudio() {
       loadSiteSeriesIndexJson(config),
       loadSiteWorksIndexJson(config)
     ]);
-    const offlineSession = readOfflineAssignmentsSession();
-
     const state = buildTagStudioState({
       mount,
       seriesId,
@@ -147,7 +142,7 @@ async function initTagStudio() {
       seriesIndexJson,
       worksIndexJson,
       config,
-      offlineSession,
+      offlineSession: null,
       studioGroups: STUDIO_GROUPS,
       defaultWeight: DEFAULT_WEIGHT
     });

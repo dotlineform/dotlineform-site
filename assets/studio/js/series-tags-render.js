@@ -5,8 +5,8 @@ import {
   buildStudioTagScore
 } from "./analysis-tag-scoring.js";
 import {
-  normalizeOfflineSeriesRow
-} from "./tag-assignments-offline.js";
+  normalizeAssignmentRows
+} from "./tag-studio-domain.js";
 import {
   seriesTagsUi
 } from "./studio-ui.js";
@@ -61,10 +61,16 @@ export function buildSeriesTagsRows(input) {
   return input.seriesData
     .map((series) => {
       const repoRow = normalizeRepoSeriesRow(input.assignmentsSeries, series.seriesId);
-      const offlineEntry = input.offlineSession.series && input.offlineSession.series[series.seriesId]
-        ? input.offlineSession.series[series.seriesId]
+      const offlineSession = input.offlineSession && typeof input.offlineSession === "object"
+        ? input.offlineSession
+        : {};
+      const offlineSeries = offlineSession.series && typeof offlineSession.series === "object"
+        ? offlineSession.series
+        : {};
+      const offlineEntry = offlineSeries[series.seriesId]
+        ? offlineSeries[series.seriesId]
         : null;
-      const effectiveRow = offlineEntry ? normalizeOfflineSeriesRow(offlineEntry.staged_row) : repoRow;
+      const effectiveRow = offlineEntry ? normalizeSeriesAssignmentRow(offlineEntry.staged_row) : repoRow;
       const assigned = effectiveRow.tags.map((row) => row.tag_id);
       const score = buildStudioTagScore(assigned, input.registry, input.config);
       const tags = buildSeriesDisplayTags(input, repoRow, effectiveRow)
@@ -231,7 +237,14 @@ function toTagDisplay(tagId, registry, marker = "") {
 
 function normalizeRepoSeriesRow(assignmentsSeries, seriesId) {
   const row = assignmentsSeries && assignmentsSeries[seriesId] ? assignmentsSeries[seriesId] : null;
-  return normalizeOfflineSeriesRow(row);
+  return normalizeSeriesAssignmentRow(row);
+}
+
+function normalizeSeriesAssignmentRow(row) {
+  const raw = row && typeof row === "object" ? row : {};
+  return {
+    tags: normalizeAssignmentRows(raw.tags)
+  };
 }
 
 function equalNormalizedAssignmentTag(left, right) {

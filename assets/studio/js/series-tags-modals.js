@@ -1,5 +1,4 @@
 import { getStudioText } from "./studio-config.js";
-import { buildOfflineAssignmentsExport } from "./tag-assignments-offline.js";
 import {
   renderStudioModalActions,
   renderStudioModalFrame
@@ -11,7 +10,7 @@ const { className: UI_CLASS } = UI;
 
 export function renderSessionModal(state) {
   if (!state.refs.sessionModalHost) return;
-  const exportPayload = buildOfflineAssignmentsExport(state.offlineSession);
+  const exportPayload = getSessionExportPayload(state);
   const stagedSeriesIds = Object.keys(exportPayload.series || {}).sort();
   const hasStaged = stagedSeriesIds.length > 0;
   const bodyHtml = `
@@ -338,4 +337,18 @@ function isFileInput(value) {
 
 function normalizeModalValue(value) {
   return String(value == null ? "" : value).trim().toLowerCase();
+}
+
+function getSessionExportPayload(state) {
+  const session = state && state.offlineSession && typeof state.offlineSession === "object"
+    ? state.offlineSession
+    : {};
+  const series = session.series && typeof session.series === "object"
+    ? session.series
+    : {};
+  return {
+    version: String(session.version || "tag_assignments_offline_v1"),
+    updated_at_utc: String(session.updated_at_utc || ""),
+    series
+  };
 }

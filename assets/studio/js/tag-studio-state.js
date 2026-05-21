@@ -14,10 +14,6 @@ import {
   pushMapList,
   sanitizeTag
 } from "./tag-studio-domain.js";
-import {
-  getOfflineAssignmentsSeriesEntry,
-  normalizeOfflineSeriesRow
-} from "./tag-assignments-offline.js";
 
 const DEFAULT_STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const DEFAULT_WEIGHT = 0.6;
@@ -82,7 +78,7 @@ export function buildTagStudioState(options) {
 
   const assignmentsSeries = assignmentsJson && typeof assignmentsJson.series === "object" ? assignmentsJson.series : {};
   const repoSeriesAssignment = getSeriesAssignment(assignmentsSeries, seriesId);
-  const offlineSeriesEntry = getOfflineAssignmentsSeriesEntry(offlineSession, seriesId);
+  const offlineSeriesEntry = null;
   const seriesAssignment = offlineSeriesEntry ? offlineSeriesEntry.staged_row : repoSeriesAssignment;
   const seriesEntries = createResolvedEntries(
     normalizeAssignmentTags(seriesAssignment && seriesAssignment.tags),
@@ -138,8 +134,8 @@ export function buildTagStudioState(options) {
     offlineSession,
     hasOfflineStagedSeries: Boolean(offlineSeriesEntry),
     offlineBaseSeriesRow: offlineSeriesEntry && offlineSeriesEntry.base_row_snapshot
-      ? normalizeOfflineSeriesRow(offlineSeriesEntry.base_row_snapshot)
-      : normalizeOfflineSeriesRow(repoSeriesAssignment),
+      ? normalizeSeriesAssignmentRow(offlineSeriesEntry.base_row_snapshot)
+      : normalizeSeriesAssignmentRow(repoSeriesAssignment),
     offlineBaseSeriesUpdatedAt: offlineSeriesEntry
       ? String(offlineSeriesEntry.base_series_updated_at_utc || "")
       : String(repoSeriesAssignment && repoSeriesAssignment.updated_at_utc || ""),
@@ -152,6 +148,28 @@ export function buildTagStudioState(options) {
     saveModeResolved: false,
     isBusy: false
   };
+}
+
+function normalizeSeriesAssignmentRow(row) {
+  const raw = row && typeof row === "object" ? row : {};
+  const works = {};
+
+  if (raw.works && typeof raw.works === "object") {
+    Object.keys(raw.works).forEach((rawWorkId) => {
+      const workId = normalizeWorkId(rawWorkId);
+      if (!workId) return;
+      const workRow = raw.works[rawWorkId];
+      works[workId] = {
+        tags: normalizeAssignmentRows(workRow && workRow.tags)
+      };
+    });
+  }
+
+  const out = {
+    tags: normalizeAssignmentRows(raw.tags)
+  };
+  if (Object.keys(works).length) out.works = works;
+  return out;
 }
 
 export function buildStateDiff(state) {
