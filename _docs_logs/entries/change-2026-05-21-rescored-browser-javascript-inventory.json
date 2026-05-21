@@ -1,0 +1,34 @@
+{
+  "id": "change-2026-05-21-rescored-browser-javascript-inventory",
+  "date": "2026-05-21",
+  "title": "Rescored browser JavaScript inventory",
+  "status": "implemented",
+  "type": "documentation",
+  "domains": [
+    "workflow",
+    "runtime",
+    "docs-viewer"
+  ],
+  "subjects": [
+    "javascript-inventory",
+    "risk-scoring",
+    "implementation-planning"
+  ],
+  "related_docs": [
+    "studio-javascript-payload-inventory",
+    "javascript-inventory",
+    "javascript-inventory-implementation-plan",
+    "docs-viewer-javascript-inventory"
+  ],
+  "related_files": [
+    "_docs/studio-javascript-payload-inventory.md",
+    "_docs/javascript-inventory.md",
+    "_docs/javascript-inventory-implementation-plan.md",
+    "_docs/docs-viewer-javascript-inventory.md"
+  ],
+  "summary": "Rescored the browser JavaScript inventory with explicit maintenance, structural, performance, and architectural risk columns; converted the parent JavaScript inventory document into policy-only guidance; and added a batch-oriented implementation plan for reducing normal browser JavaScript files toward the score-4 target while keeping docs-viewer.js separate.",
+  "effect": "Future JavaScript cleanup work can now be planned by route family and concrete ownership boundary instead of by stale total scores or payload size alone.",
+  "source": {
+    "file": "_docs/javascript-inventory-implementation-plan.md"
+  }
+}
