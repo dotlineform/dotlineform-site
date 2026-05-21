@@ -2,9 +2,7 @@ import {
   getStudioText
 } from "./studio-config.js";
 import {
-  collectRequiredElements,
   configureCatalogueEditorRouteRuntime,
-  createCatalogueEditorRouteStateOptions,
   initializeCatalogueEditorRoute,
   loadCatalogueEditorLookupMaps,
   markCatalogueEditorRouteReady,
@@ -71,16 +69,18 @@ import {
   refreshMomentMedia,
   saveCurrentMoment
 } from "./catalogue-moment-actions.js";
+import {
+  bindMomentEditorEvents
+} from "./catalogue-moment-editor-events.js";
+import {
+  MOMENT_ROUTE_STATE,
+  collectMomentEditorElements,
+  createMomentEditorState
+} from "./catalogue-moment-editor-state.js";
 
 function getFieldNodeValue(node) {
   return getMomentFieldNodeValue(node);
 }
-
-const MOMENT_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
-  route: "catalogue-moment",
-  importModeKey: "isImportMode",
-  busyKeys: ["isSaving", "isBuilding", "isDeleting", "importIsBusy"]
-});
 
 function syncRouteBusyState(state) {
   syncCatalogueEditorRouteBusyState(state, MOMENT_ROUTE_STATE);
@@ -382,69 +382,27 @@ function buildMomentRows(payload) {
 }
 
 function bindEvents(state) {
-  bindMomentSelectionControls(state, buildSelectionContext(state));
-  state.newButton.addEventListener("click", () => enterImportMode(state));
-  state.saveButton.addEventListener("click", () => saveCurrentMoment(state, buildActionContext(state)));
-  state.publicationButton.addEventListener("click", () => applyPublicationChange(state, buildActionContext(state)).catch((error) => console.warn("catalogue_moment_editor: publication failed", error)));
-  state.deleteButton.addEventListener("click", () => deleteCurrentMoment(state, buildActionContext(state)).catch((error) => console.warn("catalogue_moment_editor: delete failed", error)));
-  state.importFileNode.addEventListener("input", () => {
-    writeRequestedImportFile(state.importFileNode.value);
-    setTextWithState(state.importWarningNode, "");
-    setTextWithState(state.importResultNode, "");
-    clearImportPreview(state, buildImportContext(state));
-  });
-  state.importPreviewButton.addEventListener("click", () => {
-    previewMomentImport(state, buildImportContext(state)).catch((error) => console.warn("catalogue_moment_editor: import preview failed", error));
-  });
-  state.importApplyButton.addEventListener("click", () => {
-    applyMomentImport(state, buildImportContext(state)).catch((error) => console.warn("catalogue_moment_editor: import apply failed", error));
-  });
-  state.readinessNode.addEventListener("click", (event) => {
-    const mediaButton = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
-    if (mediaButton) {
-      refreshMomentMedia(state, buildActionContext(state)).catch((error) => console.warn("catalogue_moment_editor: media refresh failed", error));
-      return;
-    }
-    const button = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
-    if (!button) return;
-    importMomentProse(state, buildActionContext(state)).catch((error) => console.warn("catalogue_moment_editor: prose import failed", error));
+  bindMomentEditorEvents(state, {
+    bindSelectionControls: () => bindMomentSelectionControls(state, buildSelectionContext(state)),
+    enterImportMode: () => enterImportMode(state),
+    saveCurrentMoment: () => saveCurrentMoment(state, buildActionContext(state)),
+    applyPublicationChange: () => applyPublicationChange(state, buildActionContext(state)),
+    deleteCurrentMoment: () => deleteCurrentMoment(state, buildActionContext(state)),
+    updateImportFile: (value) => {
+      writeRequestedImportFile(value);
+      setTextWithState(state.importWarningNode, "");
+      setTextWithState(state.importResultNode, "");
+      clearImportPreview(state, buildImportContext(state));
+    },
+    previewMomentImport: () => previewMomentImport(state, buildImportContext(state)),
+    applyMomentImport: () => applyMomentImport(state, buildImportContext(state)),
+    refreshMomentMedia: () => refreshMomentMedia(state, buildActionContext(state)),
+    importMomentProse: () => importMomentProse(state, buildActionContext(state))
   });
 }
 
 async function init() {
-  const elements = collectRequiredElements({
-    root: "catalogueMomentRoot",
-    loadingNode: "catalogueMomentLoading",
-    emptyNode: "catalogueMomentEmpty",
-    searchNode: "catalogueMomentSearch",
-    popupNode: "catalogueMomentPopup",
-    popupListNode: "catalogueMomentPopupList",
-    openButton: "catalogueMomentOpen",
-    newButton: "catalogueMomentNew",
-    saveModeNode: "catalogueMomentSaveMode",
-    contextNode: "catalogueMomentContext",
-    statusNode: "catalogueMomentStatus",
-    warningNode: "catalogueMomentWarning",
-    resultNode: "catalogueMomentResult",
-    saveButton: "catalogueMomentSave",
-    publicationButton: "catalogueMomentPublication",
-    deleteButton: "catalogueMomentDelete",
-    fieldsNode: "catalogueMomentFields",
-    readonlyNode: "catalogueMomentReadonly",
-    sideHeadingNode: "catalogueMomentSideHeading",
-    summaryNode: "catalogueMomentSummary",
-    readinessNode: "catalogueMomentReadiness",
-    runtimeStateNode: "catalogueMomentRuntimeState",
-    buildImpactNode: "catalogueMomentBuildImpact",
-    importSourceNode: "catalogueMomentImportSource",
-    importFileLabelNode: "catalogueMomentImportFileLabel",
-    importFileNode: "catalogueMomentImportFile",
-    importFileDescriptionNode: "catalogueMomentImportFileDescription",
-    importSourceSummaryNode: "catalogueMomentImportSourceSummary",
-    importImageGuidanceNode: "catalogueMomentImportImageGuidance",
-    importPreviewButton: "catalogueMomentImportPreview",
-    importApplyButton: "catalogueMomentImportApply"
-  });
+  const elements = collectMomentEditorElements();
   if (!elements) return;
   const {
     root,
@@ -479,64 +437,7 @@ async function init() {
     importPreviewButton,
     importApplyButton
   } = elements;
-  const state = {
-    config: null,
-    root,
-    loadingNode,
-    emptyNode,
-    searchNode,
-    popupNode,
-    popupListNode,
-    openButton,
-    newButton,
-    saveModeNode,
-    contextNode,
-    statusNode,
-    warningNode,
-    resultNode,
-    saveButton,
-    publicationButton,
-    deleteButton,
-    fieldsNode,
-    readonlyNode,
-    sideHeadingNode,
-    summaryNode,
-    readinessNode,
-    runtimeStateNode,
-    buildImpactNode,
-    importSourceNode,
-    importStatusNode: statusNode,
-    importWarningNode: warningNode,
-    importResultNode: resultNode,
-    importFileLabelNode,
-    importFileNode,
-    importFileDescriptionNode,
-    importSourceSummaryNode,
-    importImageGuidanceNode,
-    importPreviewButton,
-    importApplyButton,
-    fieldNodes: new Map(),
-    fieldStatusNodes: new Map(),
-    readonlyNodes: new Map(),
-    moments: new Map(),
-    momentRows: [],
-    currentMomentId: "",
-    currentRecord: null,
-    expectedRecordHash: "",
-    preview: null,
-    previewReadiness: null,
-    buildPreview: null,
-    importPreview: null,
-    importBuild: null,
-    importSteps: [],
-    needsBuild: false,
-    serverAvailable: false,
-    isSaving: false,
-    isDeleting: false,
-    isBuilding: false,
-    importIsBusy: false,
-    isImportMode: false
-  };
+  const state = createMomentEditorState(elements);
   initializeCatalogueEditorRoute(root, "catalogue-moment");
 
   try {

@@ -3,9 +3,7 @@ import {
 } from "./studio-config.js";
 import { loadStudioLookupRecordJson } from "./studio-data.js";
 import {
-  collectRequiredElements,
   configureCatalogueEditorRouteRuntime,
-  createCatalogueEditorRouteStateOptions,
   initializeCatalogueEditorRoute,
   loadCatalogueEditorLookupMaps,
   revealCatalogueEditorRoute,
@@ -19,9 +17,6 @@ import {
   catalogueDraftHasChanges,
   catalogueSaveDisabled
 } from "./catalogue-editor-dirty-state.js";
-import {
-  loadCatalogueMediaConfig
-} from "./catalogue-media-preview.js";
 import {
   WORK_DETAIL_EDITABLE_FIELDS as EDITABLE_FIELDS,
   WORK_DETAIL_STATUS_OPTIONS as STATUS_OPTIONS,
@@ -65,6 +60,14 @@ import {
   openWorkDetailByUid,
   setWorkDetailSelectionPopupVisibility
 } from "./catalogue-work-detail-selection.js";
+import {
+  bindWorkDetailEditorEvents
+} from "./catalogue-work-detail-editor-events.js";
+import {
+  WORK_DETAIL_ROUTE_STATE,
+  collectWorkDetailEditorElements,
+  createWorkDetailEditorState
+} from "./catalogue-work-detail-editor-state.js";
 
 function buildBulkDraftFromRecords(records) {
   const drafts = records.map((record) => buildWorkDetailDraftFromRecord(record));
@@ -83,11 +86,6 @@ function buildBulkDraftFromRecords(records) {
   });
   return { draft, mixedFields };
 }
-
-const WORK_DETAIL_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
-  route: "catalogue-work-detail",
-  bulkIdsKey: "bulkDetailUids"
-});
 
 function syncRouteBusyState(state) {
   syncCatalogueEditorRouteBusyState(state, WORK_DETAIL_ROUTE_STATE);
@@ -447,30 +445,7 @@ function buildWorkDetailSelectionContext(state) {
 }
 
 async function init() {
-  const elements = collectRequiredElements({
-    root: "catalogueWorkDetailRoot",
-    loadingNode: "catalogueWorkDetailLoading",
-    emptyNode: "catalogueWorkDetailEmpty",
-    fieldsNode: "catalogueWorkDetailFields",
-    readonlyNode: "catalogueWorkDetailReadonly",
-    previewNode: "catalogueWorkDetailPreview",
-    summaryNode: "catalogueWorkDetailSummary",
-    readinessNode: "catalogueWorkDetailReadiness",
-    runtimeStateNode: "catalogueWorkDetailRuntimeState",
-    buildImpactNode: "catalogueWorkDetailBuildImpact",
-    searchNode: "catalogueWorkDetailSearchGlobal",
-    popupNode: "catalogueWorkDetailPopup",
-    popupListNode: "catalogueWorkDetailPopupList",
-    openButton: "catalogueWorkDetailOpen",
-    saveButton: "catalogueWorkDetailSave",
-    publicationButton: "catalogueWorkDetailPublication",
-    deleteButton: "catalogueWorkDetailDelete",
-    saveModeNode: "catalogueWorkDetailSaveMode",
-    contextNode: "catalogueWorkDetailContext",
-    statusNode: "catalogueWorkDetailStatus",
-    warningNode: "catalogueWorkDetailWarning",
-    resultNode: "catalogueWorkDetailResult"
-  });
+  const elements = collectWorkDetailEditorElements();
   if (!elements) return;
   const {
     root,
@@ -497,55 +472,7 @@ async function init() {
     resultNode
   } = elements;
 
-  const state = {
-    config: null,
-    mode: "single",
-    detailSearchByUid: new Map(),
-    workSearchById: new Map(),
-    currentLookup: null,
-    currentDetailUid: "",
-    currentWorkId: "",
-    currentRecord: null,
-    currentRecordHash: "",
-    bulkDetailUids: [],
-    bulkRecords: new Map(),
-    bulkRecordHashes: new Map(),
-    bulkMixedFields: new Set(),
-    bulkTouchedFields: new Set(),
-    bulkBuildTargets: [],
-    baselineDraft: null,
-    draft: {},
-    validationErrors: new Map(),
-    mediaConfig: loadCatalogueMediaConfig(root),
-    rebuildPending: false,
-    buildPreview: null,
-    isSaving: false,
-    isBuilding: false,
-    isDeleting: false,
-    serverAvailable: false,
-    root,
-    fieldWrappers: new Map(),
-    fieldNodes: new Map(),
-    fieldStatusNodes: new Map(),
-    readonlyNodes: new Map(),
-    searchNode,
-    popupNode,
-    popupListNode,
-    openButton,
-    saveButton,
-    publicationButton,
-    deleteButton,
-    saveModeNode,
-    contextNode,
-    statusNode,
-    warningNode,
-    resultNode,
-    previewNode,
-    summaryNode,
-    readinessNode,
-    runtimeStateNode,
-    buildImpactNode
-  };
+  const state = createWorkDetailEditorState(elements);
   initializeCatalogueEditorRoute(root, "catalogue-work-detail");
 
   const formContext = buildWorkDetailFormContext(state);
@@ -589,23 +516,13 @@ async function init() {
     ]);
     const selectionContext = buildWorkDetailSelectionContext(state);
     const actionContext = buildWorkDetailActionContext(state);
-    bindWorkDetailSelectionControls(state, selectionContext);
-    readinessNode.addEventListener("click", (event) => {
-      const button = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
-      if (!button) return;
-      refreshWorkDetailMedia(state, actionContext).catch((error) => {
-        console.warn("catalogue_work_detail_editor: unexpected media refresh failure", error);
-      });
+    bindWorkDetailEditorEvents(state, {
+      bindSelectionControls: () => bindWorkDetailSelectionControls(state, selectionContext),
+      refreshWorkDetailMedia: () => refreshWorkDetailMedia(state, actionContext),
+      saveCurrentDetail: () => saveCurrentDetail(state, actionContext),
+      applyPublicationChange: () => applyWorkDetailPublicationChange(state, actionContext),
+      deleteCurrentDetail: () => deleteCurrentDetail(state, actionContext)
     });
-    saveButton.addEventListener("click", () => saveCurrentDetail(state, actionContext).catch((error) => {
-      console.warn("catalogue_work_detail_editor: unexpected save failure", error);
-    }));
-    publicationButton.addEventListener("click", () => applyWorkDetailPublicationChange(state, actionContext).catch((error) => {
-      console.warn("catalogue_work_detail_editor: unexpected publication failure", error);
-    }));
-    deleteButton.addEventListener("click", () => deleteCurrentDetail(state, actionContext).catch((error) => {
-      console.warn("catalogue_work_detail_editor: unexpected delete failure", error);
-    }));
 
     await applyInitialWorkDetailRouteSelection(state, selectionContext);
 

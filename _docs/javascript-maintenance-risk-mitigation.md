@@ -47,6 +47,7 @@ Completed implementation history is recorded in `_docs_logs/`:
 - `change-2026-05-21-shared-catalogue-save-outcome-presentation-projection`
 - `change-2026-05-21-pinned-catalogue-editor-route-state-projection`
 - `change-2026-05-21-defined-score-moving-javascript-maintenance-slices`
+- `change-2026-05-21-extracted-catalogue-editor-route-shell-state-and-event-owners`
 
 Current stable follow-through:
 
@@ -57,8 +58,9 @@ Current stable follow-through:
 
 ## Next Action
 
-Task A is implemented through the save, build, publication/prose-import, and bulk action presentation contract slices, but the route/action family still needs score-moving follow-through.
-Task B now continues with the Catalogue editor route shells, starting with Work editor state construction and event-binding ownership because `assets/studio/js/catalogue-work-editor.js` remains score 7.
+Task A is implemented through the save, build, publication/prose-import, and bulk action presentation contract slices.
+Task B is implemented through route-shell state factory and event binder slices for the Work, Work Detail, Series, and Moment editors.
+The next conditional revisit is B8, which should inspect `assets/studio/js/catalogue-work-actions.js` only after the reduced route-shell noise exposes a repeated action-orchestration responsibility worth extracting.
 
 ## Next Priorities After Docs Viewer
 
@@ -140,7 +142,7 @@ They should be revisited only when Task B defines the route-shell boundary or wh
 
 ### Task B: Catalogue Editor Route Shell Boundaries
 
-**Status:** B1-B3 guardrails implemented on 2026-05-21; B4 is the next score-moving slice.
+**Status:** B1-B7 implemented on 2026-05-21; B8 is the next conditional revisit.
 
 Candidate files:
 
@@ -249,7 +251,7 @@ Decision:
 
 Status:
 
-- next score-moving slice
+- implemented
 
 Owner:
 
@@ -273,11 +275,16 @@ Acceptance checks:
 - `node --check` for Work editor and the new state module
 - Work ready-state smoke with catalogue service blocked still reaches `data-studio-ready="true"`
 
+Implementation notes:
+
+- `assets/studio/js/catalogue-work-editor-state.js` now owns Work editor required-element collection, initial state construction, derived section panel nodes, media config/modal host wiring, and Work route-state option projection.
+- `assets/studio/js/catalogue-work-editor.js` now consumes that state factory and keeps validation, route update coordination, rendering context construction, selection/action handoff, and calls into `catalogue-work-route-state.js`.
+
 #### B5: Work Editor Event Binder
 
 Status:
 
-- planned score-moving slice after B4
+- implemented
 
 Owner:
 
@@ -300,11 +307,17 @@ Acceptance checks:
 - Work ready-state smoke still passes with unavailable catalogue service
 - one representative DOM-trigger smoke should activate a bound callback without using direct DOM activation for the behavior under test
 
+Implementation notes:
+
+- `assets/studio/js/catalogue-work-editor-events.js` now owns Work editor DOM listener attachment and async warning wrappers.
+- Handler implementations remain in existing selection, embedded-item modal, action workflow, and route-state owners; the binder only invokes explicit callbacks.
+- `tests/smoke/catalogue_work_editor_state_modules.py` covers the state factory and uses Playwright DOM actions to verify bound callback activation.
+
 #### B6: Catalogue Sibling Route State Factories
 
 Status:
 
-- planned score-moving slice after B4 proves the pattern
+- implemented
 
 Owner:
 
@@ -329,11 +342,16 @@ Acceptance checks:
 - route-boot smoke still imports all four editor shells
 - representative route-ready smoke covers Work plus one sibling route
 
+Implementation notes:
+
+- `assets/studio/js/catalogue-work-detail-editor-state.js`, `assets/studio/js/catalogue-series-editor-state.js`, and `assets/studio/js/catalogue-moment-editor-state.js` now own required-element collection and initial state construction for their routes.
+- The sibling route shells still own validation, route-specific loaded/new/bulk or import transitions, membership/import workflow handoff, and update coordination.
+
 #### B7: Catalogue Sibling Event Binders
 
 Status:
 
-- planned score-moving slice after B5 proves the pattern
+- implemented
 
 Owner:
 
@@ -354,6 +372,12 @@ Acceptance checks:
 - binder module smoke verifies attached listeners and callback invocation for each route
 - route-ready smoke covers Work plus one sibling route
 - inventory notes explain what remains in each route shell
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-work-detail-editor-events.js`, `assets/studio/js/catalogue-series-editor-events.js`, and `assets/studio/js/catalogue-moment-editor-events.js` now own DOM listener attachment for the sibling Catalogue route shells.
+- `tests/smoke/catalogue_sibling_editor_state_modules.py` covers the three state factories and three event binders with stubbed nodes and Playwright-triggered DOM events.
+- Inventory rows were rescored to target 5 for the Work, Work Detail, Series, and Moment route shells. They did not move to score 4 because route-specific validation, loaded/new/bulk or import transitions, action context construction, and update coordination remain in the shells.
 
 #### B8: Catalogue Action Workflow Revisit
 

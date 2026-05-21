@@ -3,9 +3,7 @@ import {
 } from "./studio-config.js";
 import { loadStudioLookupRecordJson } from "./studio-data.js";
 import {
-  collectRequiredElements,
   configureCatalogueEditorRouteRuntime,
-  createCatalogueEditorRouteStateOptions,
   initializeCatalogueEditorRoute,
   loadCatalogueEditorLookupMaps,
   revealCatalogueEditorRoute,
@@ -70,10 +68,14 @@ import {
   renderSeriesReadiness,
   updateSeriesSummary
 } from "./catalogue-series-sections.js";
-
-const SERIES_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
-  route: "catalogue-series"
-});
+import {
+  bindSeriesEditorEvents
+} from "./catalogue-series-editor-events.js";
+import {
+  SERIES_ROUTE_STATE,
+  collectSeriesEditorElements,
+  createSeriesEditorState
+} from "./catalogue-series-editor-state.js";
 
 function syncRouteBusyState(state) {
   syncCatalogueEditorRouteBusyState(state, SERIES_ROUTE_STATE);
@@ -379,40 +381,7 @@ function openSeriesById(state, requestedSeriesId) {
 }
 
 async function init() {
-  const elements = collectRequiredElements({
-    root: "catalogueSeriesRoot",
-    loadingNode: "catalogueSeriesLoading",
-    emptyNode: "catalogueSeriesEmpty",
-    fieldsNode: "catalogueSeriesFields",
-    readonlyNode: "catalogueSeriesReadonly",
-    summaryNode: "catalogueSeriesSummary",
-    readinessNode: "catalogueSeriesReadiness",
-    runtimeStateNode: "catalogueSeriesRuntimeState",
-    buildImpactNode: "catalogueSeriesBuildImpact",
-    searchNode: "catalogueSeriesSearch",
-    popupNode: "catalogueSeriesPopup",
-    popupListNode: "catalogueSeriesPopupList",
-    openButton: "catalogueSeriesOpen",
-    newButton: "catalogueSeriesNew",
-    saveButton: "catalogueSeriesSave",
-    publicationButton: "catalogueSeriesPublication",
-    deleteButton: "catalogueSeriesDelete",
-    saveModeNode: "catalogueSeriesSaveMode",
-    contextNode: "catalogueSeriesContext",
-    statusNode: "catalogueSeriesStatus",
-    warningNode: "catalogueSeriesWarning",
-    resultNode: "catalogueSeriesResult",
-    metaNode: "catalogueSeriesMeta",
-    membersHeadingNode: "catalogueSeriesMembersHeading",
-    memberSearchRowNode: "catalogueSeriesMemberSearchRow",
-    memberSearchNode: "catalogueSeriesMemberSearch",
-    memberSearchMetaNode: "catalogueSeriesMemberSearchMeta",
-    memberAddNode: "catalogueSeriesMemberAdd",
-    memberAddButton: "catalogueSeriesMemberAddButton",
-    membersMetaNode: "catalogueSeriesMembersMeta",
-    membersStatusNode: "catalogueSeriesMembersStatus",
-    membersResultsNode: "catalogueSeriesMembersResults"
-  });
+  const elements = collectSeriesEditorElements();
   if (!elements) return;
   const {
     root,
@@ -448,60 +417,7 @@ async function init() {
     membersResultsNode
   } = elements;
 
-  const state = {
-    config: null,
-    mode: "single",
-    seriesById: new Map(),
-    workSearchById: new Map(),
-    seriesTypeOptions: getSeriesTypeOptions(null),
-    nextSuggestedSeriesId: "",
-    currentLookup: null,
-    currentSeriesId: "",
-    currentRecord: null,
-    currentRecordHash: "",
-    baselineDraft: null,
-    draft: {},
-    validationErrors: new Map(),
-    rebuildPending: false,
-    pendingBuildExtraWorkIds: [],
-    buildPreview: null,
-    isSaving: false,
-    isBuilding: false,
-    isDeleting: false,
-    serverAvailable: false,
-    root,
-    fieldNodes: new Map(),
-    fieldStatusNodes: new Map(),
-    readonlyNodes: new Map(),
-    memberSeriesIdsByWorkId: new Map(),
-    baselineMemberSeriesIdsByWorkId: new Map(),
-    searchNode,
-    popupNode,
-    popupListNode,
-    openButton,
-    newButton,
-    saveButton,
-    publicationButton,
-    deleteButton,
-    saveModeNode,
-    contextNode,
-    statusNode,
-    warningNode,
-    resultNode,
-    summaryNode,
-    readinessNode,
-    runtimeStateNode,
-    buildImpactNode,
-    metaNode,
-    memberSearchRowNode,
-    memberSearchNode,
-    memberSearchMetaNode,
-    memberAddNode,
-    memberAddButton,
-    membersMetaNode,
-    membersStatusNode,
-    membersResultsNode
-  };
+  const state = createSeriesEditorState(elements);
   initializeCatalogueEditorRoute(root, "catalogue-series");
 
   renderSeriesEditorFields(fieldsNode, state, {
@@ -556,34 +472,22 @@ async function init() {
         normalizeKey: (record) => normalizeWorkId(record.work_id)
       }
     ]);
-    bindSeriesSelectionControls(state, buildSeriesSelectionContext(state));
-    readinessNode.addEventListener("click", (event) => {
-      const button = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
-      if (!button) return;
-      importSeriesProse(state, buildSeriesActionContext(state)).catch((error) => console.warn("catalogue_series_editor: unexpected prose import failure", error));
-    });
-    newButton.addEventListener("click", () => setNewSeriesMode(state));
-    saveButton.addEventListener("click", () => saveCurrentSeries(state, buildSeriesActionContext(state)).catch((error) => console.warn("catalogue_series_editor: unexpected save failure", error)));
-    publicationButton.addEventListener("click", () => applyPublicationChange(state, buildSeriesActionContext(state)).catch((error) => console.warn("catalogue_series_editor: unexpected publication failure", error)));
-    deleteButton.addEventListener("click", () => deleteCurrentSeries(state, buildSeriesActionContext(state)).catch((error) => console.warn("catalogue_series_editor: unexpected delete failure", error)));
-    memberSearchNode.addEventListener("input", () => updateSeriesMemberList(state, membershipOptions(state)));
-    memberAddButton.addEventListener("click", () => {
-      if (addSeriesMember(state, membershipOptions(state))) updateEditorState(state);
-    });
-    memberAddNode.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter") return;
-      event.preventDefault();
-      if (addSeriesMember(state, membershipOptions(state))) updateEditorState(state);
-    });
-    membersResultsNode.addEventListener("click", (event) => {
-      const primaryButton = event.target && event.target.closest ? event.target.closest("[data-member-primary]") : null;
-      if (primaryButton) {
-        if (makeSeriesMemberPrimary(state, normalizeWorkId(primaryButton.getAttribute("data-member-primary")))) updateEditorState(state);
-        return;
-      }
-      const removeButton = event.target && event.target.closest ? event.target.closest("[data-member-remove]") : null;
-      if (removeButton) {
-        if (removeSeriesMember(state, normalizeWorkId(removeButton.getAttribute("data-member-remove")), membershipOptions(state))) updateEditorState(state);
+    bindSeriesEditorEvents(state, {
+      bindSelectionControls: () => bindSeriesSelectionControls(state, buildSeriesSelectionContext(state)),
+      importSeriesProse: () => importSeriesProse(state, buildSeriesActionContext(state)),
+      setNewSeriesMode: () => setNewSeriesMode(state),
+      saveCurrentSeries: () => saveCurrentSeries(state, buildSeriesActionContext(state)),
+      applyPublicationChange: () => applyPublicationChange(state, buildSeriesActionContext(state)),
+      deleteCurrentSeries: () => deleteCurrentSeries(state, buildSeriesActionContext(state)),
+      updateMemberList: () => updateSeriesMemberList(state, membershipOptions(state)),
+      addMember: () => {
+        if (addSeriesMember(state, membershipOptions(state))) updateEditorState(state);
+      },
+      makeMemberPrimary: (workId) => {
+        if (makeSeriesMemberPrimary(state, normalizeWorkId(workId))) updateEditorState(state);
+      },
+      removeMember: (workId) => {
+        if (removeSeriesMember(state, normalizeWorkId(workId), membershipOptions(state))) updateEditorState(state);
       }
     });
 

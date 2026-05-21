@@ -5,9 +5,7 @@ import {
   loadStudioLookupRecordJson
 } from "./studio-data.js";
 import {
-  collectRequiredElements,
   configureCatalogueEditorRouteRuntime,
-  createCatalogueEditorRouteStateOptions,
   loadCatalogueEditorLookupMaps,
   revealCatalogueEditorRoute,
   setCatalogueEditorTextWithState as setTextWithState,
@@ -76,12 +74,6 @@ import {
   setWorkSelectionPopupVisibility
 } from "./catalogue-work-selection.js";
 import {
-  loadCatalogueMediaConfig
-} from "./catalogue-media-preview.js";
-import {
-  createStudioModalHost
-} from "./studio-modal.js";
-import {
   WORK_DATE_RE as DATE_RE,
   WORK_DIMENSION_FIELD_KEYS,
   WORK_EDITABLE_FIELDS as EDITABLE_FIELDS,
@@ -95,13 +87,17 @@ import {
   parseSeriesIds,
   suggestNextWorkId
 } from "./catalogue-work-fields.js";
+import {
+  bindWorkEditorEvents
+} from "./catalogue-work-editor-events.js";
+import {
+  WORK_ROUTE_STATE,
+  collectWorkEditorElements,
+  createWorkEditorState,
+  createWorkRouteStateOptions
+} from "./catalogue-work-editor-state.js";
 
 const REQUIRED_WORK_FIELDS = ["title", "year", "year_display", "series_ids"];
-const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
-  route: "catalogue-work",
-  bulkIdsKey: "bulkWorkIds",
-  busyKeys: ["isSaving", "isBuilding", "isPreviewingBuild", "isDeleting"]
-});
 
 function changedWorkFieldNames(state) {
   if (state.mode !== "single" || !state.baselineDraft) return [];
@@ -456,7 +452,7 @@ function workFormOptions(state) {
 }
 
 function workRouteStateOptions(state, overrides = {}) {
-  return {
+  return createWorkRouteStateOptions(state, {
     text: (key, fallback, tokens) => t(state, key, fallback, tokens),
     setTextWithState,
     setOpenInputMode: () => setOpenInputMode(state),
@@ -464,9 +460,8 @@ function workRouteStateOptions(state, overrides = {}) {
     applyDraftToInputs: () => applyDraftToInputs(state, workFormOptions(state)),
     applyReadonly: () => applyReadonly(state),
     clearReadonlyFields: () => clearReadonlyFields(state),
-    updateEditorState: () => updateEditorState(state),
-    ...overrides
-  };
+    updateEditorState: () => updateEditorState(state)
+  }, overrides);
 }
 
 function workSelectionOptions(state) {
@@ -533,155 +528,6 @@ function updateSummary(state) {
   updateWorkSummary(state, workSectionOptions(state));
 }
 
-function collectWorkEditorElements() {
-  return collectRequiredElements({
-    root: "catalogueWorkRoot",
-    loadingNode: "catalogueWorkLoading",
-    emptyNode: "catalogueWorkEmpty",
-    fieldsNode: "catalogueWorkFields",
-    readonlyNode: "catalogueWorkReadonly",
-    previewNode: "catalogueWorkPreview",
-    summaryNode: "catalogueWorkSummary",
-    readinessNode: "catalogueWorkReadiness",
-    runtimeStateNode: "catalogueWorkRuntimeState",
-    buildImpactNode: "catalogueWorkBuildImpact",
-    detailsHeadingNode: "catalogueWorkDetailsHeading",
-    newDetailLinkNode: "catalogueWorkNewDetailLink",
-    detailSearchRowNode: "catalogueWorkDetailsSearchRow",
-    detailSearchNode: "catalogueWorkDetailSearch",
-    detailsMetaNode: "catalogueWorkDetailsMeta",
-    detailsResultsNode: "catalogueWorkDetailsResults",
-    filesHeadingNode: "catalogueWorkFilesHeading",
-    newFileLinkNode: "catalogueWorkNewFileLink",
-    filesMetaNode: "catalogueWorkFilesMeta",
-    filesResultsNode: "catalogueWorkFilesResults",
-    linksHeadingNode: "catalogueWorkLinksHeading",
-    newLinkLinkNode: "catalogueWorkNewLinkLink",
-    linksMetaNode: "catalogueWorkLinksMeta",
-    linksResultsNode: "catalogueWorkLinksResults",
-    searchNode: "catalogueWorkSearch",
-    popupNode: "catalogueWorkPopup",
-    popupListNode: "catalogueWorkPopupList",
-    openButton: "catalogueWorkOpen",
-    newButton: "catalogueWorkNew",
-    saveButton: "catalogueWorkSave",
-    publicationButton: "catalogueWorkPublication",
-    deleteButton: "catalogueWorkDelete",
-    saveModeNode: "catalogueWorkSaveMode",
-    contextNode: "catalogueWorkContext",
-    statusNode: "catalogueWorkStatus",
-    warningNode: "catalogueWorkWarning",
-    resultNode: "catalogueWorkResult",
-    metaNode: "catalogueWorkMeta"
-  });
-}
-
-function createWorkEditorState(elements) {
-  const {
-    root,
-    searchNode,
-    popupNode,
-    popupListNode,
-    openButton,
-    newButton,
-    saveButton,
-    publicationButton,
-    deleteButton,
-    saveModeNode,
-    contextNode,
-    statusNode,
-    warningNode,
-    resultNode,
-    previewNode,
-    summaryNode,
-    readinessNode,
-    runtimeStateNode,
-    buildImpactNode,
-    detailSearchRowNode,
-    detailSearchNode,
-    detailsMetaNode,
-    detailsResultsNode,
-    newDetailLinkNode,
-    filesMetaNode,
-    filesResultsNode,
-    newFileLinkNode,
-    linksMetaNode,
-    linksResultsNode,
-    newLinkLinkNode,
-    metaNode
-  } = elements;
-
-  return {
-    root,
-    config: null,
-    mode: "single",
-    workSearchById: new Map(),
-    seriesById: new Map(),
-    sourceWorkRecordsById: new Map(),
-    currentLookup: null,
-    currentWorkId: "",
-    currentRecord: null,
-    currentRecordHash: "",
-    nextSuggestedWorkId: "",
-    bulkWorkIds: [],
-    bulkRecords: new Map(),
-    bulkRecordHashes: new Map(),
-    bulkMixedFields: new Set(),
-    bulkTouchedFields: new Set(),
-    bulkBuildTargets: [],
-    baselineDraft: null,
-    draft: {},
-    validationErrors: new Map(),
-    mediaConfig: loadCatalogueMediaConfig(root),
-    rebuildPending: false,
-    pendingBuildExtraSeriesIds: [],
-    buildPreview: null,
-    isSaving: false,
-    isBuilding: false,
-    isPreviewingBuild: false,
-    isDeleting: false,
-    serverAvailable: false,
-    modalHost: createStudioModalHost({ root }),
-    activeModalController: null,
-    fieldNodes: new Map(),
-    fieldStatusNodes: new Map(),
-    readonlyNodes: new Map(),
-    searchNode,
-    popupNode,
-    popupListNode,
-    openButton,
-    newButton,
-    saveButton,
-    publicationButton,
-    deleteButton,
-    saveModeNode,
-    contextNode,
-    statusNode,
-    warningNode,
-    resultNode,
-    previewNode,
-    summaryNode,
-    readinessNode,
-    runtimeStateNode,
-    buildImpactNode,
-    detailSearchRowNode,
-    detailSearchNode,
-    detailsMetaNode,
-    detailsResultsNode,
-    detailsPanelNode: detailsResultsNode.closest("section"),
-    newDetailLinkNode,
-    filesMetaNode,
-    filesResultsNode,
-    filesPanelNode: filesResultsNode.closest("section"),
-    newFileLinkNode,
-    linksMetaNode,
-    linksResultsNode,
-    linksPanelNode: linksResultsNode.closest("section"),
-    newLinkLinkNode,
-    metaNode
-  };
-}
-
 function applyWorkEditorText(state, elements) {
   setOpenInputMode(state);
   applyWorkFormText(state, workFormOptions(state));
@@ -725,85 +571,6 @@ async function loadInitialWorkEditorData(state) {
   ]);
 }
 
-function bindWorkEditorEvents(state) {
-  bindWorkSelectionControls(state, workSelectionOptions(state));
-
-  state.detailSearchNode.addEventListener("input", () => {
-    updateDetailSections(state);
-  });
-
-  state.newFileLinkNode.addEventListener("click", () => {
-    openEmbeddedEntryModal(state, "download").catch((error) => {
-      console.warn("catalogue_work_editor: failed to open download modal", error);
-    });
-  });
-  state.newLinkLinkNode.addEventListener("click", () => {
-    openEmbeddedEntryModal(state, "link").catch((error) => {
-      console.warn("catalogue_work_editor: failed to open link modal", error);
-    });
-  });
-
-  state.filesResultsNode.addEventListener("click", (event) => {
-    const editButton = event.target && event.target.closest ? event.target.closest("[data-download-edit]") : null;
-    if (editButton) {
-      openEmbeddedEntryModal(state, "download", Number(editButton.getAttribute("data-download-edit"))).catch((error) => {
-        console.warn("catalogue_work_editor: failed to edit download", error);
-      });
-      return;
-    }
-    const deleteButtonNode = event.target && event.target.closest ? event.target.closest("[data-download-delete]") : null;
-    if (deleteButtonNode) {
-      deleteEmbeddedEntry(state, "download", Number(deleteButtonNode.getAttribute("data-download-delete"))).catch((error) => {
-        console.warn("catalogue_work_editor: failed to delete download", error);
-      });
-    }
-  });
-
-  state.linksResultsNode.addEventListener("click", (event) => {
-    const editButton = event.target && event.target.closest ? event.target.closest("[data-link-edit]") : null;
-    if (editButton) {
-      openEmbeddedEntryModal(state, "link", Number(editButton.getAttribute("data-link-edit"))).catch((error) => {
-        console.warn("catalogue_work_editor: failed to edit link", error);
-      });
-      return;
-    }
-    const deleteButtonNode = event.target && event.target.closest ? event.target.closest("[data-link-delete]") : null;
-    if (deleteButtonNode) {
-      deleteEmbeddedEntry(state, "link", Number(deleteButtonNode.getAttribute("data-link-delete"))).catch((error) => {
-        console.warn("catalogue_work_editor: failed to delete link", error);
-      });
-    }
-  });
-
-  state.newButton.addEventListener("click", () => {
-    setNewWorkMode(state, workRouteStateOptions(state));
-  });
-  state.readinessNode.addEventListener("click", (event) => {
-    const mediaButton = event.target && event.target.closest ? event.target.closest("[data-media-refresh]") : null;
-    if (mediaButton) {
-      refreshWorkMedia(state, workActionOptions(state)).catch((error) => {
-        console.warn("catalogue_work_editor: unexpected media refresh failure", error);
-      });
-      return;
-    }
-    const proseButton = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
-    if (!proseButton) return;
-    importWorkProse(state, workActionOptions(state)).catch((error) => {
-      console.warn("catalogue_work_editor: unexpected prose import failure", error);
-    });
-  });
-  state.saveButton.addEventListener("click", () => saveCurrentWork(state, workActionOptions(state)).catch((error) => {
-    console.warn("catalogue_work_editor: unexpected save failure", error);
-  }));
-  state.publicationButton.addEventListener("click", () => applyPublicationChange(state, workActionOptions(state)).catch((error) => {
-    console.warn("catalogue_work_editor: unexpected publication failure", error);
-  }));
-  state.deleteButton.addEventListener("click", () => deleteCurrentWork(state, workActionOptions(state)).catch((error) => {
-    console.warn("catalogue_work_editor: unexpected delete failure", error);
-  }));
-
-}
-
 function markWorkEditorLoaded(state, elements) {
   revealCatalogueEditorRoute(state, {
     loadingNode: elements.loadingNode,
@@ -829,7 +596,18 @@ async function init() {
     }
 
     await loadInitialWorkEditorData(state);
-    bindWorkEditorEvents(state);
+    bindWorkEditorEvents(state, {
+      bindSelectionControls: () => bindWorkSelectionControls(state, workSelectionOptions(state)),
+      updateDetailSections: () => updateDetailSections(state),
+      openEmbeddedEntryModal: (kind, index) => openEmbeddedEntryModal(state, kind, index),
+      deleteEmbeddedEntry: (kind, index) => deleteEmbeddedEntry(state, kind, index),
+      setNewWorkMode: () => setNewWorkMode(state, workRouteStateOptions(state)),
+      refreshWorkMedia: () => refreshWorkMedia(state, workActionOptions(state)),
+      importWorkProse: () => importWorkProse(state, workActionOptions(state)),
+      saveCurrentWork: () => saveCurrentWork(state, workActionOptions(state)),
+      applyPublicationChange: () => applyPublicationChange(state, workActionOptions(state)),
+      deleteCurrentWork: () => deleteCurrentWork(state, workActionOptions(state))
+    });
     await applyInitialWorkRouteSelection(state, workSelectionOptions(state));
     markWorkEditorLoaded(state, elements);
   } catch (error) {

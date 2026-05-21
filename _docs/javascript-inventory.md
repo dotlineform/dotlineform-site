@@ -19,8 +19,8 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 
 ## Summary
 
-- Browser JavaScript files under `assets/`: 153
-- Total browser JavaScript lines under `assets/`: 43,173
+- Browser JavaScript files under `assets/`: 161
+- Total browser JavaScript lines under `assets/`: 43,355
 - Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 56
 - Target score: 4 or lower, with 4 meaning every risk category is present but low.
 
@@ -28,10 +28,10 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | ---: | ---: |
 | 9 | 0 |
 | 8 | 1 |
-| 7 | 5 |
-| 6 | 26 |
-| 5 | 25 |
-| 4 | 96 |
+| 7 | 4 |
+| 6 | 23 |
+| 5 | 29 |
+| 4 | 104 |
 
 ## Current Inventory
 
@@ -40,7 +40,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 1 | `assets/docs-viewer/js/docs-viewer.js` | Docs Viewer separate track | 2 | 2 | 3 | 1 | 8 | Shared Docs Viewer runtime after index-panel state owner extraction; route loading and payload composition remain. |
 | 2 | `assets/studio/js/tag-studio.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Series tag editor route shell after route-state projection extraction; editor interaction orchestration remains route-local. |
 | 3 | `assets/studio/js/catalogue-work-actions.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Work action coordinator after shared save/build/action presentation projection and bulk build-target projection; service sequencing, record mutation, route refresh, delete navigation, and media refresh remain route-local. |
-| 4 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue editor route shell after shared boot/readiness and route-state projection helpers; action workflows remain separate. |
+| 4 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue work route shell after state construction moved to `catalogue-work-editor-state.js` and DOM event binding moved to `catalogue-work-editor-events.js`; validation, update coordination, selection/action context handoff, and Work-specific route-state transitions remain route-local. |
 | 5 | `assets/studio/js/bulk-add-work.js` | Studio routes and shared runtime | 2 | 2 | 2 | 1 | 7 | Bulk import/add route workflow. |
 | 6 | `assets/studio/js/tag-registry.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Tag registry route shell after render, import-mode, and workflow extraction. |
 | 7 | `assets/js/catalogue-search.js` | Public runtime | 2 | 2 | 1 | 1 | 6 | Public catalogue/search route runtime after lazy performance instrumentation loading, query-token reuse, and cached list expansion. |
@@ -49,9 +49,9 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 10 | `assets/studio/js/tag-aliases-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag modal rendering after shared shell/focus lifecycle extraction. |
 | 11 | `assets/studio/js/tag-registry-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag registry modal rendering after shared shell/focus lifecycle extraction. |
 | 12 | `assets/studio/js/tag-aliases.js` | Tag routes | 2 | 1 | 2 | 1 | 6 | Tag aliases route shell after mutation-state and workflow extraction. |
-| 13 | `assets/studio/js/catalogue-moment-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness and route-state projection helpers; import/action workflows remain separate. |
-| 14 | `assets/studio/js/catalogue-series-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness and route-state projection helpers; membership/action workflows remain separate. |
-| 15 | `assets/studio/js/catalogue-work-detail-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness and route-state projection helpers; action workflows remain separate. |
+| 13 | `assets/studio/js/catalogue-moment-editor.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue moment route shell after state construction moved to `catalogue-moment-editor-state.js` and DOM event binding moved to `catalogue-moment-editor-events.js`; import/action workflow context, preview sequencing, and dirty-state coordination remain route-local. |
+| 14 | `assets/studio/js/catalogue-series-editor.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue series route shell after state construction moved to `catalogue-series-editor-state.js` and DOM event binding moved to `catalogue-series-editor-events.js`; validation, membership workflow handoff, and action context coordination remain route-local. |
+| 15 | `assets/studio/js/catalogue-work-detail-editor.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue work-detail route shell after state construction moved to `catalogue-work-detail-editor-state.js` and DOM event binding moved to `catalogue-work-detail-editor-events.js`; validation, loaded/new/bulk transitions, and action context coordination remain route-local. |
 | 16 | `assets/docs-viewer/js/docs-viewer-bookmarks.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer bookmark/favourite support. |
 | 17 | `assets/docs-viewer/js/docs-viewer-management-actions.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management support module. |
 | 18 | `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer runtime support module. |
@@ -190,6 +190,14 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 151 | `assets/docs-viewer/js/docs-viewer-management-parent-picker.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer metadata parent-picker matching, popup, active option, and resolution helper. |
 | 152 | `assets/docs-viewer/js/docs-viewer-management-action-workflow.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
 | 153 | `assets/docs-viewer/js/docs-viewer-index-panel.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, persistence migration, toggle projection, and document-pane visibility helper. |
+| 154 | `assets/studio/js/catalogue-work-editor-state.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Work editor state factory for required elements, initial route state, derived panel nodes, media config, modal host, and route-state option projection. |
+| 155 | `assets/studio/js/catalogue-work-editor-events.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Work editor event binder that attaches DOM listeners and delegates to injected selection, embedded-item, action, and route-state callbacks. |
+| 156 | `assets/studio/js/catalogue-work-detail-editor-state.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Work-detail editor state factory for required elements, initial route state, media config, and shared route-state options. |
+| 157 | `assets/studio/js/catalogue-work-detail-editor-events.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Work-detail editor event binder that delegates media refresh and action button listeners to injected callbacks. |
+| 158 | `assets/studio/js/catalogue-series-editor-state.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Series editor state factory for required elements, initial route state, series type defaults, and membership state maps. |
+| 159 | `assets/studio/js/catalogue-series-editor-events.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Series editor event binder that delegates selection, actions, prose import, and membership events to injected callbacks. |
+| 160 | `assets/studio/js/catalogue-moment-editor-state.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Moment editor state factory for required elements, initial edit/import route state, import aliases, and preview state defaults. |
+| 161 | `assets/studio/js/catalogue-moment-editor-events.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Moment editor event binder that delegates selection, edit actions, import actions, media refresh, and prose import to injected callbacks. |
 
 ## Rerun Notes
 

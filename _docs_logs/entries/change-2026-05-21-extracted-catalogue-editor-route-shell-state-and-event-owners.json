@@ -1,0 +1,39 @@
+{
+  "id": "change-2026-05-21-extracted-catalogue-editor-route-shell-state-and-event-owners",
+  "date": "2026-05-21",
+  "title": "Extracted Catalogue Editor Route Shell State And Event Owners",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "catalogue",
+    "workflow"
+  ],
+  "summary": "Moved Catalogue Work, Work Detail, Series, and Moment editor state construction and DOM event binding into focused route-local modules with direct smoke coverage, reducing the editor route shells to lower-risk coordination surfaces.",
+  "source": {
+    "file": "_docs/javascript-maintenance-risk-mitigation.md"
+  },
+  "subjects": [
+    "javascript-maintenance",
+    "catalogue-route-shells"
+  ],
+  "related_docs": [
+    "javascript-maintenance-risk-mitigation",
+    "javascript-inventory"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-work-editor.js",
+    "assets/studio/js/catalogue-work-editor-state.js",
+    "assets/studio/js/catalogue-work-editor-events.js",
+    "assets/studio/js/catalogue-work-detail-editor.js",
+    "assets/studio/js/catalogue-work-detail-editor-state.js",
+    "assets/studio/js/catalogue-work-detail-editor-events.js",
+    "assets/studio/js/catalogue-series-editor.js",
+    "assets/studio/js/catalogue-series-editor-state.js",
+    "assets/studio/js/catalogue-series-editor-events.js",
+    "assets/studio/js/catalogue-moment-editor.js",
+    "assets/studio/js/catalogue-moment-editor-state.js",
+    "assets/studio/js/catalogue-moment-editor-events.js",
+    "tests/smoke/catalogue_work_editor_state_modules.py",
+    "tests/smoke/catalogue_sibling_editor_state_modules.py"
+  ]
+}
