@@ -40,6 +40,7 @@ Page controller:
 Supporting modules:
 
 - `assets/studio/js/studio-ui.js`
+- `assets/studio/js/series-tags-render.js`
 
 Top-level structure:
 
@@ -149,7 +150,7 @@ DOM / CSS:
 
 JS owner:
 
-- `renderTable(state)` in `assets/studio/js/series-tags.js`
+- `renderSeriesTagsReport(state)` in `assets/studio/js/series-tags-render.js`
 
 Meaning:
 
@@ -257,9 +258,9 @@ Main render functions:
 - `renderActionButtons(state)`
 - `renderSessionModal(state)`
 - `renderImportModal(state)`
-- `renderTable(state)`
-- `renderFilters(state)`
-- `buildSeriesRows(state)`
+- `renderTable(state)`, which delegates to `renderSeriesTagsReport(state)`
+- `renderSeriesTagsReport(state)`
+- `buildSeriesTagsRows(state)`
 
 Main event wiring:
 
@@ -330,6 +331,7 @@ Primary business logic:
 These responsibilities live mainly in:
 
 - `assets/studio/js/series-tags.js`
+- report/table rendering in `assets/studio/js/series-tags-render.js`
 - shared scoring helpers in `assets/studio/js/analysis-tag-scoring.js`
 - shared config helpers in `assets/studio/js/studio-config.js`
 
