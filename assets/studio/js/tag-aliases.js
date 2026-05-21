@@ -20,26 +20,25 @@ import {
   isCreateAliasFlow as isCreateNormalizedAliasFlow,
   normalize,
   normalizeAliases,
-  normalizeTimestamp,
+  normalizeTimestamp
 } from "./tag-aliases-domain.js";
 import {
-  buildManualPatchForAliasCreate,
-  buildManualPatchForAliasDelete,
-  buildManualPatchForAliasEdit,
-  buildManualPatchForAliasPromote,
-  buildManualPatchForDemote,
-  buildManualPatchForNewAliases,
-  readImportAliasesFromFile
-} from "./tag-aliases-save.js";
+  applyTagAliasesDeleteProjection,
+  applyTagAliasesDemoteProjection,
+  applyTagAliasesEditProjection,
+  applyTagAliasesPromoteProjection
+} from "./tag-aliases-state.js";
 import {
-  previewAliasPromote,
-  previewTagDemoteFromAliases,
-  submitAliasDelete,
-  submitAliasEdit,
-  submitAliasPromote,
-  submitAliasesImport,
-  submitTagDemoteFromAliases
-} from "./tag-aliases-service.js";
+  applyTagAliasesPatchFallback,
+  deleteTagAlias,
+  demoteTagAliasFromAliases,
+  importTagAliases,
+  previewTagAliasPromote,
+  previewTagAliasesTagDemote,
+  promoteTagAlias,
+  readTagAliasesImportFromFile,
+  saveTagAliasEdit
+} from "./tag-aliases-workflow.js";
 import {
   openConfirmDetailModal,
   openConfirmModal
@@ -522,50 +521,6 @@ async function loadData(state) {
   );
 }
 
-function makeAliasEntry(state, alias, description, targets, updatedAtUtc) {
-  const normalizedAlias = normalize(alias);
-  const normalizedDescription = String(description || "").trim();
-  const normalizedTargets = Array.isArray(targets) ? targets.map((tagId) => normalize(tagId)).filter(Boolean) : [];
-  const resolvedTargets = normalizedTargets.map((tagId) => {
-    const info = state.registryById.get(tagId);
-    return {
-      tagId,
-      group: info ? info.group : "",
-      label: info ? info.label : tagId,
-      known: Boolean(info)
-    };
-  });
-  const groups = Array.from(new Set(resolvedTargets.filter((item) => item.known).map((item) => item.group)));
-  const hasUnknown = resolvedTargets.some((item) => !item.known);
-  const normalizedUpdatedAt = normalizeTimestamp(updatedAtUtc) || state.aliasesUpdatedAt;
-  const updatedAtMs = normalizedUpdatedAt ? Date.parse(normalizedUpdatedAt) : null;
-  return {
-    alias: normalizedAlias,
-    value: {
-      description: normalizedDescription,
-      tags: normalizedTargets.slice()
-    },
-    description: normalizedDescription,
-    targets: normalizedTargets.slice(),
-    resolvedTargets,
-    groups,
-    hasUnknown,
-    updatedAtUtc: normalizedUpdatedAt,
-    updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : null
-  };
-}
-
-function replaceAliasEntry(state, entry, originalAlias = "") {
-  const normalizedOriginal = normalize(originalAlias);
-  state.aliases = state.aliases
-    .filter((item) => item && item.alias !== entry.alias && item.alias !== normalizedOriginal)
-    .concat([entry]);
-}
-
-function syncAliasDerivedState(state) {
-  state.registryOptions = buildRegistryOptions(state.registryById);
-}
-
 function renderImportAvailability(state) {
   renderTagAliasesImportAvailability(state, {
     onModalStateChange: () => syncRouteBusyState(state)
@@ -587,19 +542,19 @@ async function handleImport(state) {
 
   let importAliases = null;
   try {
-    importAliases = await readImportAliasesFromFile(state.selectedFile);
+    importAliases = await readTagAliasesImportFromFile(state.selectedFile);
   } catch (error) {
     setImportResult(state, "error", String(error.message || aliasesText(state.config, "invalid_import_file", "Invalid import file.")));
     return;
   }
 
-  const result = await submitAliasesImport({
+  const result = await importTagAliases({
     saveMode: state.saveMode,
     importMode: state.importMode,
     importAliases,
     filename: state.selectedFile ? String(state.selectedFile.name || "") : "",
     config: state.config,
-    state
+    patchContext: state
   });
   if (result.ok && result.mode === "post") {
     setImportResult(state, "success", result.summary);
@@ -610,13 +565,12 @@ async function handleImport(state) {
   }
 
   if (result.switchToPatch) {
-    state.saveMode = "patch";
-    state.importAvailable = false;
+    applyTagAliasesPatchFallback(state);
     renderImportAvailability(state);
     setImportResult(state, "error", result.message);
   }
 
-  const patchResult = result.patchResult || buildManualPatchForNewAliases(state, importAliases);
+  const patchResult = result.patchResult;
   setImportResult(state, patchResult.kind, patchResult.message);
   if (patchResult.snippet) {
     openPatchModal(state, patchResult.snippet);
@@ -639,28 +593,26 @@ async function handleAliasDelete(state, alias) {
     return;
   }
 
-  const result = await submitAliasDelete({
+  const result = await deleteTagAlias({
     saveMode: state.saveMode,
     aliasKey,
     config: state.config
   });
   if (result.ok && result.mode === "post") {
     setImportResult(state, "success", result.summary);
-    state.aliasesUpdatedAt = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.aliasesUpdatedAt;
-    state.aliases = state.aliases.filter((entry) => entry && entry.alias !== aliasKey);
+    applyTagAliasesDeleteProjection(state, { aliasKey, response: result.response });
     renderControls(state);
     renderList(state);
     return;
   }
 
   if (result.switchToPatch) {
-    state.saveMode = "patch";
-    state.importAvailable = false;
+    applyTagAliasesPatchFallback(state);
     renderImportAvailability(state);
     setImportResult(state, "error", result.message);
   }
 
-  const patchResult = result.patchResult || buildManualPatchForAliasDelete(aliasKey);
+  const patchResult = result.patchResult;
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
 }
@@ -774,7 +726,7 @@ async function saveAliasEdit(state) {
   const validation = getAliasEditValidation(state);
   if (!validation.valid || !validation.changed) return;
   const isCreate = isCreateAliasFlow(state);
-  const result = await submitAliasEdit({
+  const result = await saveTagAliasEdit({
     saveMode: state.saveMode,
     isCreate,
     originalAlias: state.editState.originalAlias,
@@ -785,12 +737,11 @@ async function saveAliasEdit(state) {
     if (result.summary) {
       setImportResult(state, "success", result.summary);
     }
-    state.aliasesUpdatedAt = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.aliasesUpdatedAt;
-    replaceAliasEntry(
-      state,
-      makeAliasEntry(state, validation.alias, validation.description, validation.tags, state.aliasesUpdatedAt),
-      state.editState.originalAlias
-    );
+    applyTagAliasesEditProjection(state, {
+      validation,
+      originalAlias: state.editState.originalAlias,
+      response: result.response
+    });
     renderControls(state);
     renderList(state);
     closeAliasEditModal(state);
@@ -798,24 +749,12 @@ async function saveAliasEdit(state) {
   }
 
   if (result.switchToPatch) {
-    state.saveMode = "patch";
-    state.importAvailable = false;
+    applyTagAliasesPatchFallback(state);
     renderImportAvailability(state);
     setAliasEditStatus(state, "error", result.message);
   }
 
-  const patchResult = result.patchResult || (isCreate
-    ? buildManualPatchForAliasCreate(
-        validation.alias,
-        validation.description,
-        validation.tags
-      )
-    : buildManualPatchForAliasEdit(
-        state.editState.originalAlias,
-        validation.alias,
-        validation.description,
-        validation.tags
-      ));
+  const patchResult = result.patchResult;
   closeAliasEditModal(state);
   openPatchModal(state, patchResult.snippet);
 }
@@ -855,7 +794,7 @@ async function submitAliasPromotion(state) {
   closePromotionModal(state);
 
   if (state.saveMode === "post") {
-    const preview = await previewAliasPromote({
+    const preview = await previewTagAliasPromote({
       aliasKey,
       group,
       config: state.config
@@ -866,7 +805,7 @@ async function submitAliasPromotion(state) {
     }
   }
 
-  const result = await submitAliasPromote({
+  const result = await promoteTagAlias({
     saveMode: state.saveMode,
     state,
     aliasKey,
@@ -878,17 +817,13 @@ async function submitAliasPromotion(state) {
   }
   if (result.mode === "post") {
     setImportResult(state, "success", result.summary);
-    const updatedAtUtc = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.aliasesUpdatedAt;
-    state.aliasesUpdatedAt = updatedAtUtc || state.aliasesUpdatedAt;
-    state.aliases = state.aliases.filter((entry) => entry && entry.alias !== aliasKey);
-    state.registryById.set(`${group}:${aliasKey}`, { group, label: aliasKey });
-    syncAliasDerivedState(state);
+    applyTagAliasesPromoteProjection(state, { aliasKey, group, response: result.response });
     renderControls(state);
     renderList(state);
     return;
   }
 
-  const patchResult = result.patchResult || buildManualPatchForAliasPromote(state, aliasKey, group);
+  const patchResult = result.patchResult;
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
 }
@@ -905,7 +840,7 @@ async function handleTagDemoteFromAliases(state) {
   const aliasTargets = validation.tags.slice().sort((a, b) => a.localeCompare(b));
 
   if (state.saveMode === "post") {
-    const preview = await previewTagDemoteFromAliases({
+    const preview = await previewTagAliasesTagDemote({
       canonicalTagId,
       aliasTargets,
       config: state.config
@@ -939,7 +874,7 @@ async function handleTagDemoteFromAliases(state) {
     }
   }
 
-  const result = await submitTagDemoteFromAliases({
+  const result = await demoteTagAliasFromAliases({
     saveMode: state.saveMode,
     canonicalTagId,
     aliasTargets
@@ -953,20 +888,17 @@ async function handleTagDemoteFromAliases(state) {
   if (result.mode === "post") {
     closeDemoteModal(state);
     setImportResult(state, "success", String(result.response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
-    const updatedAtUtc = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.aliasesUpdatedAt;
-    state.aliasesUpdatedAt = updatedAtUtc || state.aliasesUpdatedAt;
-    state.registryById.delete(canonicalTagId);
-    replaceAliasEntry(
-      state,
-      makeAliasEntry(state, canonicalTagId.split(":")[1] || canonicalTagId, "", aliasTargets, updatedAtUtc)
-    );
-    syncAliasDerivedState(state);
+    applyTagAliasesDemoteProjection(state, {
+      canonicalTagId,
+      aliasTargets,
+      response: result.response
+    });
     renderControls(state);
     renderList(state);
     return;
   }
 
-  const patchResult = result.patchResult || buildManualPatchForDemote(canonicalTagId, aliasTargets);
+  const patchResult = result.patchResult;
   closeDemoteModal(state);
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);

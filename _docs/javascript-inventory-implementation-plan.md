@@ -117,6 +117,11 @@ Run representative catalogue editor smoke only for future workflow slices that c
 
 ### Batch 3: Tag Route Shells
 
+**Status:** Completed on 2026-05-21.
+Tag Aliases now has focused mutation-state projection and save/import workflow helpers for post-save state updates, patch fallback, and import/apply result shaping.
+Tag Studio route-ready/busy detail projection now lives in a focused route-state helper, so save-mode and selected-work route state can be checked without full route boot.
+Tag Registry and Series Tags were left to rescore follow-through because their recent render, workflow, import, and offline-session owners remain in place.
+
 **Primary files**
 
 - `assets/studio/js/tag-aliases.js`
@@ -144,8 +149,9 @@ Tag Registry, Data Sharing Prepare, and Series Tags may already be lower after t
 
 **Verification**
 
-Run existing tag module smoke checks and add focused checks for any new state/workflow helper.
-Use browser smoke only when modal or route-ready behavior changes.
+Focused helper/module smoke: `tests/smoke/tag_route_shell_modules.py`.
+Existing overlap checks: `tests/smoke/tag_registry_modules.py` and `tests/smoke/tag_aliases_modal.py`.
+Use broader browser smoke only for future slices that materially change modal behavior, route-ready behavior, or editor save interactions beyond these helper contracts.
 
 ### Batch 4: Large Modal Modules
 

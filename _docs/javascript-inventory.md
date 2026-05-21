@@ -17,19 +17,19 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 
 ## Summary
 
-- Browser JavaScript files under `assets/`: 145
-- Total browser JavaScript lines under `assets/`: 42,420
+- Browser JavaScript files under `assets/`: 148
+- Total browser JavaScript lines under `assets/`: 42,564
 - Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 57
 - Target score: 4, meaning every risk category is at the low-risk floor.
 
 | Score | Files |
 | ---: | ---: |
 | 9 | 1 |
-| 8 | 3 |
-| 7 | 8 |
-| 6 | 20 |
+| 8 | 1 |
+| 7 | 9 |
+| 6 | 21 |
 | 5 | 26 |
-| 4 | 87 |
+| 4 | 90 |
 
 ## Current Inventory
 
@@ -37,16 +37,16 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | 1 | `assets/docs-viewer/js/docs-viewer.js` | Docs Viewer separate track | 2 | 2 | 3 | 2 | 9 | Shared Docs Viewer runtime composition and route loading. |
 | 2 | `assets/js/catalogue-search.js` | Public runtime | 2 | 2 | 2 | 2 | 8 | Public catalogue/search route runtime. |
-| 3 | `assets/studio/js/tag-aliases.js` | Tag routes | 2 | 2 | 2 | 2 | 8 | Tag aliases route controller and remaining import/service workflow. |
-| 4 | `assets/studio/js/tag-studio.js` | Tag routes | 2 | 2 | 2 | 2 | 8 | Series tag editor route shell and extracted-module coordination. |
-| 5 | `assets/studio/js/catalogue-work-actions.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue action workflow helper after shared save outcome and preview blocker extraction. |
-| 6 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue editor route shell after shared boot/readiness helper extraction; action workflows remain separate. |
-| 7 | `assets/studio/js/bulk-add-work.js` | Studio routes and shared runtime | 2 | 2 | 2 | 1 | 7 | Bulk import/add route workflow. |
-| 8 | `assets/studio/js/tag-registry.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Tag registry route shell after render, import-mode, and workflow extraction. |
-| 9 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | Docs Viewer non-entry | 2 | 2 | 1 | 2 | 7 | Docs Viewer management support module. |
-| 10 | `assets/docs-viewer/js/docs-viewer-management.js` | Docs Viewer non-entry | 2 | 2 | 1 | 2 | 7 | Docs Viewer management coordinator. |
-| 11 | `assets/studio/js/tag-aliases-modals.js` | Tag routes | 2 | 2 | 1 | 2 | 7 | Tag modal rendering and lifecycle helper. |
-| 12 | `assets/studio/js/tag-registry-modals.js` | Tag routes | 2 | 2 | 1 | 2 | 7 | Tag registry modal lifecycle and modal rendering. |
+| 3 | `assets/studio/js/tag-studio.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Series tag editor route shell after route-state projection extraction; editor interaction orchestration remains route-local. |
+| 4 | `assets/studio/js/catalogue-work-actions.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue action workflow helper after shared save outcome and preview blocker extraction. |
+| 5 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue editor route shell after shared boot/readiness helper extraction; action workflows remain separate. |
+| 6 | `assets/studio/js/bulk-add-work.js` | Studio routes and shared runtime | 2 | 2 | 2 | 1 | 7 | Bulk import/add route workflow. |
+| 7 | `assets/studio/js/tag-registry.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Tag registry route shell after render, import-mode, and workflow extraction. |
+| 8 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | Docs Viewer non-entry | 2 | 2 | 1 | 2 | 7 | Docs Viewer management support module. |
+| 9 | `assets/docs-viewer/js/docs-viewer-management.js` | Docs Viewer non-entry | 2 | 2 | 1 | 2 | 7 | Docs Viewer management coordinator. |
+| 10 | `assets/studio/js/tag-aliases-modals.js` | Tag routes | 2 | 2 | 1 | 2 | 7 | Tag modal rendering and lifecycle helper. |
+| 11 | `assets/studio/js/tag-registry-modals.js` | Tag routes | 2 | 2 | 1 | 2 | 7 | Tag registry modal lifecycle and modal rendering. |
+| 12 | `assets/studio/js/tag-aliases.js` | Tag routes | 2 | 1 | 2 | 1 | 6 | Tag aliases route shell after mutation-state and workflow extraction. |
 | 13 | `assets/studio/js/catalogue-moment-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness helper extraction; import/action workflows remain separate. |
 | 14 | `assets/studio/js/catalogue-series-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness helper extraction; membership/action workflows remain separate. |
 | 15 | `assets/studio/js/catalogue-work-detail-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness helper extraction; action workflows remain separate. |
@@ -180,6 +180,9 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | 143 | `assets/ui-catalogue/js/ui-catalogue-demo.js` | UI catalogue | 1 | 1 | 1 | 1 | 4 | Catalogue route support module. |
 | 144 | `assets/studio/js/catalogue-editor-route-boot.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Shared Catalogue editor boot, readiness, required-element, and lookup-loading helper. |
 | 145 | `assets/studio/js/catalogue-editor-action-workflow.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Shared Catalogue save outcome and action preview result contract helper. |
+| 146 | `assets/studio/js/tag-aliases-state.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag aliases mutation-state projection helper. |
+| 147 | `assets/studio/js/tag-aliases-workflow.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag aliases save/import workflow fallback helper. |
+| 148 | `assets/studio/js/tag-studio-route-state.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Series tag editor route ready/busy projection helper. |
 
 ## Rerun Notes
 

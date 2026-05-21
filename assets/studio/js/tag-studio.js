@@ -54,7 +54,11 @@ import {
   syncTagStudioOfflineAutosave
 } from "./tag-studio-save-controller.js";
 import {
-  setStudioRouteBusy,
+  buildTagStudioRouteStateDetail,
+  markTagStudioRouteReady,
+  syncTagStudioRouteBusyState
+} from "./tag-studio-route-state.js";
+import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 import {
@@ -73,25 +77,12 @@ if (document.readyState === "loading") {
   initTagStudio();
 }
 
-function routeRootForState(state) {
-  return state && state.routeRoot instanceof Element ? state.routeRoot : null;
-}
-
-function routeStateDetail(state) {
-  return {
-    route: "series-tag-editor",
-    mode: state && state.selectedWorkId ? "single" : "edit",
-    service: state && state.saveMode === "post" ? "available" : "unavailable",
-    recordLoaded: Boolean(state && state.seriesId)
-  };
-}
-
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(routeRootForState(state), Boolean(state && state.isBusy), routeStateDetail(state));
+  syncTagStudioRouteBusyState(state);
 }
 
 function markRouteReady(state, ready) {
-  setStudioRouteReady(routeRootForState(state), ready, routeStateDetail(state));
+  markTagStudioRouteReady(state, ready);
 }
 
 async function initTagStudio() {
@@ -105,10 +96,8 @@ async function initTagStudio() {
   } catch (error) {
     renderFatalError(mount, "Failed to load tag editor config.");
     setStudioRouteReady(routeRoot, true, {
-      route: "series-tag-editor",
-      mode: "empty",
-      service: "unavailable",
-      recordLoaded: false
+      ...buildTagStudioRouteStateDetail(null),
+      mode: "empty"
     });
     return;
   }
@@ -163,10 +152,8 @@ async function initTagStudio() {
       )
     );
     setStudioRouteReady(routeRoot, true, {
-      route: "series-tag-editor",
-      mode: "empty",
-      service: "unavailable",
-      recordLoaded: false
+      ...buildTagStudioRouteStateDetail(null),
+      mode: "empty"
     });
   }
 }
