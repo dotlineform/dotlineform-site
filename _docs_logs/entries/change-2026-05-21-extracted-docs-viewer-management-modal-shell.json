@@ -1,0 +1,30 @@
+{
+  "id": "change-2026-05-21-extracted-docs-viewer-management-modal-shell",
+  "date": "2026-05-21",
+  "title": "Extracted Docs Viewer Management Modal Shell",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "studio-ui"
+  ],
+  "summary": "Moved transient Docs Viewer management modal host, focus trap, confirm, text-input, and choice modal behavior into a focused shell helper while leaving metadata, import, settings, and parent-picker behavior in the management modal controller. Updated the management modal smoke fixture to pass the import workflow context explicitly.",
+  "source": {
+    "file": "_docs/javascript-inventory-implementation-plan.md"
+  },
+  "subjects": [
+    "management-modals",
+    "javascript-inventory"
+  ],
+  "related_docs": [
+    "javascript-inventory",
+    "javascript-inventory-implementation-plan"
+  ],
+  "related_files": [
+    "assets/docs-viewer/js/docs-viewer-management-modal-shell.js",
+    "assets/docs-viewer/js/docs-viewer-management-modals.js",
+    "tests/smoke/docs_viewer_management_modal.py",
+    "_docs/javascript-inventory.md",
+    "_docs/javascript-inventory-implementation-plan.md"
+  ]
+}

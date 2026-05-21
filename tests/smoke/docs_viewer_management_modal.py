@@ -872,10 +872,13 @@ def run_import_workflow_module_check(page: Page) -> None:
                 files: [{ filename: 'alpha.html', source_format: 'html' }],
                 scope: 'library',
                 includePromptMeta: true,
+                routePath: state.routePath,
+                managementBaseUrl: state.managementBaseUrl,
+                config: state.config,
                 onRunningChange: busy => busyStates.push({ busy, runDisabled: state.runButton.disabled })
             });
-            for (let tries = 0; tries < 25 && !state.pendingOverwriteResolver; tries += 1) {
-                await new Promise(resolve => window.setTimeout(resolve, 0));
+            for (let tries = 0; tries < 100 && !state.pendingOverwriteResolver; tries += 1) {
+                await new Promise(resolve => window.setTimeout(resolve, 10));
             }
             const confirmVisible = !state.warningNode.hidden && !state.confirmButton.hidden && state.statusNode.dataset.state === 'warn';
             if (!state.pendingOverwriteResolver) {
