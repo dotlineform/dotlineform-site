@@ -12,7 +12,7 @@ viewable: false
 ## javascript risk mitigation
 
 we are working on _docs/javascript-inventory-implementation-plan.md
-please proceed with batch 4
+please proceed with batch 5
 
 ---
 

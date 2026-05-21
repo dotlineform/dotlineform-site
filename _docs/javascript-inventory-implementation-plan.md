@@ -155,11 +155,12 @@ Use broader browser smoke only for future slices that materially change modal be
 
 ### Batch 4: Large Modal Modules
 
-**Status:** Tag modal shell slice completed on 2026-05-21; Docs Viewer transient modal shell slice completed on 2026-05-21.
+**Status:** Completed on 2026-05-21.
 Tag Aliases and Tag Registry now share a focused tag modal shell helper for open-modal detection, Escape/Tab focus lifecycle support, restore-focus handling, status projection, class composition, group-chip class projection, state attributes, and HTML escaping.
 Family-specific rendering, modal state, validation, and route callbacks remain in the aliases and registry modal modules.
 Docs Viewer transient confirm, text-input, choice, generic modal host, and focus-trap behavior now lives in a focused shell helper.
-The remaining Docs Viewer management modal controller owns metadata, import, settings, and parent-picker modal behavior.
+Docs Viewer metadata parent-picker matching, popup rendering, active-option navigation, selection, dismissal, and parent-id resolution now lives in a focused helper.
+The remaining Docs Viewer management modal controller owns metadata modal lifecycle, import modal lifecycle, and settings modal lifecycle.
 
 **Primary files**
 
@@ -168,6 +169,7 @@ The remaining Docs Viewer management modal controller owns metadata, import, set
 - `assets/studio/js/tag-modal-shell.js`
 - `assets/docs-viewer/js/docs-viewer-management-modals.js`
 - `assets/docs-viewer/js/docs-viewer-management-modal-shell.js`
+- `assets/docs-viewer/js/docs-viewer-management-parent-picker.js`
 - related small modal helpers where they share the same shell conventions
 
 **Why this batch should follow route-shell work**

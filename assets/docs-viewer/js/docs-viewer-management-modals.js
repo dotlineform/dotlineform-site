@@ -1,5 +1,4 @@
 import {
-  renderMetadataParentPopupMarkup,
   renderMetadataStatusOptionsMarkup,
   renderSettingsWarningsMarkup
 } from "./docs-viewer-management-render.js";
@@ -7,6 +6,9 @@ import {
   normalizeText,
   trapDocsViewerModalFocus
 } from "./docs-viewer-management-modal-shell.js";
+import {
+  createDocsViewerMetadataParentPicker
+} from "./docs-viewer-management-parent-picker.js";
 
 export {
   openDocsViewerChoiceModal,
@@ -42,10 +44,13 @@ export function createDocsViewerManagementModalController(options = {}) {
   var nav = options.nav || null;
   var callbacks = options.callbacks || {};
   var metadataModalResolve = null;
-  var metadataParentOptionRecords = [];
-  var metadataParentActiveIndex = -1;
   var settingsFieldState = null;
   var importModalCancelButton = null;
+  var metadataParentPicker = createDocsViewerMetadataParentPicker({
+    refs: refs,
+    state: state,
+    callbacks: callbacks
+  });
 
   function viewerScope() {
     return typeof callbacks.viewerScope === "function" ? callbacks.viewerScope() : "";
@@ -67,140 +72,12 @@ export function createDocsViewerManagementModalController(options = {}) {
     return Boolean(refs.settingsModal && !refs.settingsModal.hidden);
   }
 
-  function metadataParentOptions(doc) {
-    return typeof callbacks.metadataParentOptions === "function" ? callbacks.metadataParentOptions(doc) : [];
-  }
-
-  function metadataParentOptionTitle(option) {
-    if (!option || !option.value) return state.managementText.metadataParentRootOption;
-    return String(option.label || "").replace(/^(-\s*)+/, "");
-  }
-
-  function metadataParentOptionDisplay(option) {
-    return metadataParentOptionTitle(option);
-  }
-
-  function metadataParentMatchRank(option, query) {
-    var display = metadataParentOptionDisplay(option).toLowerCase();
-    var title = metadataParentOptionTitle(option).toLowerCase();
-    var value = String(option && option.value || "").toLowerCase();
-    if (value === query) return 0;
-    if (title === query || display === query) return 1;
-    if (value.startsWith(query)) return 2;
-    if (title.startsWith(query) || display.startsWith(query)) return 3;
-    if (value.includes(query)) return 4;
-    if (title.includes(query) || display.includes(query)) return 5;
-    return null;
-  }
-
-  function hideMetadataParentPopup() {
-    metadataParentOptionRecords = [];
-    metadataParentActiveIndex = -1;
-    if (refs.metadataParentPopup) {
-      refs.metadataParentPopup.hidden = true;
-      refs.metadataParentPopup.innerHTML = "";
-    }
-    if (refs.metadataParentInput) {
-      refs.metadataParentInput.setAttribute("aria-expanded", "false");
-      refs.metadataParentInput.removeAttribute("aria-activedescendant");
-    }
-  }
-
-  function setMetadataParentActiveIndex(index) {
-    if (!refs.metadataParentPopup || !refs.metadataParentInput) return;
-    metadataParentActiveIndex = index;
-    refs.metadataParentPopup.querySelectorAll("[data-parent-index]").forEach(function (button) {
-      var active = Number(button.getAttribute("data-parent-index")) === metadataParentActiveIndex;
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-selected", active ? "true" : "false");
-      if (active) {
-        refs.metadataParentInput.setAttribute("aria-activedescendant", button.id);
-      }
-    });
-    if (metadataParentActiveIndex < 0) {
-      refs.metadataParentInput.removeAttribute("aria-activedescendant");
-    }
-  }
-
-  function metadataParentMatches(doc, query) {
-    var normalizedQuery = String(query || "").trim().toLowerCase();
-    if (!normalizedQuery) return [];
-    return metadataParentOptions(doc).map(function (option, index) {
-      return {
-        index: index,
-        option: option,
-        rank: metadataParentMatchRank(option, normalizedQuery)
-      };
-    }).filter(function (match) {
-      return match.rank !== null;
-    }).sort(function (left, right) {
-      if (left.rank !== right.rank) return left.rank - right.rank;
-      return left.index - right.index;
-    }).slice(0, 14).map(function (match) {
-      return match.option;
-    });
-  }
-
-  function renderMetadataParentPopup(doc) {
-    if (!refs.metadataParentInput || !refs.metadataParentPopup) return;
-    var matches = metadataParentMatches(doc, refs.metadataParentInput.value);
-    metadataParentOptionRecords = matches;
-    if (!String(refs.metadataParentInput.value || "").trim()) {
-      hideMetadataParentPopup();
-      return;
-    }
-    if (!matches.length) {
-      refs.metadataParentPopup.innerHTML = renderMetadataParentPopupMarkup(matches, {
-        emptyText: state.managementText.metadataParentNoMatches
-      });
-      refs.metadataParentPopup.hidden = false;
-      refs.metadataParentInput.setAttribute("aria-expanded", "true");
-      metadataParentActiveIndex = -1;
-      refs.metadataParentInput.removeAttribute("aria-activedescendant");
-      return;
-    }
-    refs.metadataParentPopup.innerHTML = renderMetadataParentPopupMarkup(matches, {
-      optionTitle: metadataParentOptionTitle
-    });
-    refs.metadataParentPopup.hidden = false;
-    refs.metadataParentInput.setAttribute("aria-expanded", "true");
-    setMetadataParentActiveIndex(0);
-  }
-
-  function selectMetadataParentOption(index) {
-    var option = metadataParentOptionRecords[index];
-    if (!option || !refs.metadataParentInput) return;
-    refs.metadataParentInput.value = metadataParentOptionDisplay(option);
-    hideMetadataParentPopup();
-    refs.metadataParentInput.focus();
-  }
-
   function renderMetadataParentOptions(doc) {
-    if (!refs.metadataParentInput) return;
-    var currentParentId = String(doc && doc.parent_id || "").trim();
-    var options = metadataParentOptions(doc);
-    var currentOption = options.find(function (option) {
-      return option.value === currentParentId;
-    }) || options[0];
-    refs.metadataParentInput.value = metadataParentOptionDisplay(currentOption);
-    hideMetadataParentPopup();
+    metadataParentPicker.renderOptions(doc);
   }
 
   function resolveMetadataParentId(doc) {
-    if (!refs.metadataParentInput) return "";
-    var inputValue = String(refs.metadataParentInput.value || "").trim();
-    var rootLabel = state.managementText.metadataParentRootOption;
-    if (!inputValue || inputValue.toLowerCase() === rootLabel.toLowerCase()) return "";
-    var options = metadataParentOptions(doc);
-    var exactDocId = options.find(function (option) {
-      return option.value && option.value === inputValue;
-    });
-    if (exactDocId) return exactDocId.value;
-    var exactTitle = options.filter(function (option) {
-      return option.value && option.label.replace(/^(-\s*)+/, "") === inputValue;
-    });
-    if (exactTitle.length === 1) return exactTitle[0].value;
-    return null;
+    return metadataParentPicker.resolveParentId(doc);
   }
 
   function metadataStatusOptions() {
@@ -234,10 +111,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   }
 
   function dismissMetadataParentSuggestions() {
-    if (!refs.metadataParentInput) return;
-    refs.metadataParentInput.blur();
-    refs.metadataParentInput.value = "";
-    hideMetadataParentPopup();
+    metadataParentPicker.dismissSuggestions();
   }
 
   function focusWithoutScroll(target) {
@@ -444,7 +318,7 @@ export function createDocsViewerManagementModalController(options = {}) {
   function handleRootClick(event) {
     if (metadataModalOpen()) {
       if (refs.metadataParentPopup && !refs.metadataParentPopup.hidden && !event.target.closest(".docsViewer__parentPicker")) {
-        hideMetadataParentPopup();
+        metadataParentPicker.hidePopup();
       }
       var closeTrigger = event.target.closest("[data-metadata-close]");
       if (closeTrigger) {
@@ -484,7 +358,7 @@ export function createDocsViewerManagementModalController(options = {}) {
     }
     if (event.key === "Escape" && refs.metadataParentPopup && !refs.metadataParentPopup.hidden) {
       event.preventDefault();
-      hideMetadataParentPopup();
+      metadataParentPicker.hidePopup();
       return true;
     }
     if (event.key === "Escape" && metadataModalOpen()) {
@@ -533,43 +407,15 @@ export function createDocsViewerManagementModalController(options = {}) {
     if (refs.metadataParentInput) {
       refs.metadataParentInput.addEventListener("input", function () {
         var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-        if (doc) renderMetadataParentPopup(doc);
+        if (doc) metadataParentPicker.renderPopup(doc);
       });
       refs.metadataParentInput.addEventListener("focus", function () {
         var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-        if (doc) renderMetadataParentPopup(doc);
+        if (doc) metadataParentPicker.renderPopup(doc);
       });
       refs.metadataParentInput.addEventListener("keydown", function (event) {
-        if (!refs.metadataParentPopup || refs.metadataParentPopup.hidden) {
-          if (event.key === "ArrowDown") {
-            var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
-            if (doc) renderMetadataParentPopup(doc);
-          }
-          return;
-        }
-        if (event.key === "ArrowDown") {
-          event.preventDefault();
-          if (metadataParentOptionRecords.length) {
-            setMetadataParentActiveIndex(Math.min(metadataParentActiveIndex + 1, metadataParentOptionRecords.length - 1));
-          }
-          return;
-        }
-        if (event.key === "ArrowUp") {
-          event.preventDefault();
-          if (metadataParentOptionRecords.length) {
-            setMetadataParentActiveIndex(Math.max(metadataParentActiveIndex - 1, 0));
-          }
-          return;
-        }
-        if (event.key === "Enter" && metadataParentActiveIndex >= 0) {
-          event.preventDefault();
-          selectMetadataParentOption(metadataParentActiveIndex);
-          return;
-        }
-        if (event.key === "Escape") {
-          event.preventDefault();
-          hideMetadataParentPopup();
-        }
+        var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
+        metadataParentPicker.handleInputKeydown(event, doc);
       });
     }
     if (refs.metadataParentPopup) {
@@ -581,7 +427,7 @@ export function createDocsViewerManagementModalController(options = {}) {
       refs.metadataParentPopup.addEventListener("click", function (event) {
         var button = event.target.closest("[data-parent-index]");
         if (!button) return;
-        selectMetadataParentOption(Number(button.getAttribute("data-parent-index")));
+        metadataParentPicker.selectOption(Number(button.getAttribute("data-parent-index")));
       });
     }
   }
