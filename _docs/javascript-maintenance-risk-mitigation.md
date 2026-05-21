@@ -14,7 +14,6 @@ This document records the next course of action after the 2026-05-21 review of [
 It sits between the policy and implementation-plan documents: the policy defines the scoring model, [Development Workflow](/docs/?scope=studio&doc=development-workflow) now carries durable maintenance-gate guidance, and this document tracks the current mitigation implementation queue.
 
 The immediate priority is to reduce systemic maintenance risk before adding new interactive surface area to the largest route controllers.
-The first script priority is the Docs Viewer entry runtime, especially the index panel boundary needed before future semantic or graph index work.
 
 ## Diagnosis
 
@@ -37,147 +36,21 @@ The reusable JavaScript maintenance gate now lives in [Development Workflow](/do
 Use that gate before changing browser JavaScript files with maintenance score 2, total risk score 6 or higher, or recent churn that suggests ownership drift.
 
 [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory) remains the scoring authority.
-This document should not duplicate the durable rules; it records implementation-specific priorities, completed Docs Viewer slices, and the next concrete task definitions.
+This document should not duplicate the durable rules or completed task history; it records the current mitigation queue and the next concrete task definitions.
 
-## Helper Infrastructure Status
+## Completed Work
 
-The helper infrastructure from this mitigation pass is now in place or moved into durable workflow guidance.
+Completed implementation history is recorded in `_docs_logs/`:
 
-### Inventory Guardrail
+- `change-2026-05-21-added-javascript-maintenance-guardrails-and-docs-viewer-index-panel-boundary`
+- `change-2026-05-21-added-javascript-maintenance-gate-workflow-guidance`
 
-**Status:** Completed on 2026-05-21.
+Current stable follow-through:
 
-Create and use `scripts/checks/javascript_inventory_guardrail.py`.
-It reads the source inventory table and reports:
-
-- count of files by maintenance score
-- total lines by maintenance score
-- files where maintenance score 2 overlaps structural, performance, or architectural score 2
-- recent file-touch count from `git log --since=90 days --name-only`
-- top maintenance-risk files by combined line count and churn
-
-The first version is report-only.
-Do not fail checks until the output is stable enough to avoid blocking useful work.
-
-Use:
-
-```bash
-./scripts/checks/javascript_inventory_guardrail.py
-```
-
-### Maintenance Gate Checklist
-
-**Status:** Moved to [Development Workflow](/docs/?scope=studio&doc=development-workflow) on 2026-05-21.
-
-Use the JavaScript maintenance gate in [Development Workflow](/docs/?scope=studio&doc=development-workflow) before changing maintenance-score-2 files, files with total risk score 6 or higher, or high-churn JavaScript route/controller files.
-
-### Focused Module Smoke Pattern
-
-**Status:** Pattern moved to [Development Workflow](/docs/?scope=studio&doc=development-workflow); Docs Viewer index-panel module and route smoke checks added.
-
-Use the workflow pattern for new owners before running broader browser route smoke tests.
-
-### Controller Contract Notes
-
-**Status:** Moved to [Development Workflow](/docs/?scope=studio&doc=development-workflow) on 2026-05-21.
-
-Use the workflow owner-note rule when touching score-6 or score-7 controllers.
-
-## First Script Priority: Docs Viewer Entry Runtime
-
-The first implementation priority is `assets/docs-viewer/js/docs-viewer.js`.
-The Docs Viewer inventory already tracks it separately because it is the shared entry runtime and currently carries the highest browser JavaScript risk.
-
-The unpublished design note `_docs/_tmp-index-space.md` gives the near-term product direction:
-
-- the current binary sidebar state should become a tri-state index panel: `collapsed`, `normal`, and `expanded`
-- the current tree remains the initial panel content and keeps its current document-navigation behavior
-- expanded mode gives the panel the full content width and hides the document/search pane
-- expanded mode is not "a bigger tree"; it is a generic index workspace that can host future tree, semantic, graph, or relationship surfaces
-- mobile behavior should not change in the first slice
-- existing persisted `expanded` values should migrate to `normal`, because today's value means "not collapsed"
-
-This directly affects the risk mitigation work.
-The index-panel requirement should not be implemented as more sidebar conditionals in `docs-viewer.js`.
-It should create a focused panel/layout owner before the feature lands.
-
-## Docs Viewer Refactor Steps
-
-Implement the Docs Viewer priority in small slices.
-
-### Slice 1: Index Panel State Owner
-
-**Status:** Completed on 2026-05-21.
-
-Create `assets/docs-viewer/js/docs-viewer-index-panel.js`.
-The owner is about the panel/workspace, not the tree.
-
-The module should own:
-
-- valid panel states: `collapsed`, `normal`, `expanded`
-- legacy persistence migration from binary sidebar state
-- state transition order for the existing toggle control
-- label/title text projection for collapse, restore, and expand actions
-- data-attribute projection such as `data-index-panel-state`
-- helpers that answer whether the document/search pane should be visible
-
-`docs-viewer.js` should call this owner and apply the returned projection.
-It should not retain separate ad hoc booleans for the same panel state.
-
-### Slice 2: Entry Runtime Wiring
-
-**Status:** Completed on 2026-05-21.
-
-Replace the current sidebar state wiring in `docs-viewer.js` with the new panel owner.
-Keep this slice limited to state, persistence, labels, and shell data attributes.
-
-The tree renderer should remain in `docs-viewer-sidebar.js`.
-Tree clicks should keep their current behavior in all three panel states.
-No graph or semantic index code should be added in this slice.
-
-### Slice 3: Layout CSS
-
-**Status:** Completed on 2026-05-21.
-
-Update the Docs Viewer CSS so the shell responds to the panel state:
-
-- `collapsed`: current collapsed panel behavior
-- `normal`: current non-collapsed sidebar behavior
-- `expanded`: panel occupies the content area and the document/search pane is hidden
-
-Keep the CSS state names aligned with the JavaScript projection.
-Avoid naming that implies the tree itself is expanded.
-
-### Slice 4: Focused Smoke Coverage
-
-**Status:** Completed on 2026-05-21.
-
-Add a browser smoke check for the panel owner and route wiring:
-
-- initial state migration from legacy stored values
-- toggle sequence through `collapsed`, `normal`, and `expanded`
-- document/search pane hidden in expanded mode and restored outside it
-- tree item click behavior unchanged
-- mobile behavior unchanged for the first slice
-
-Use `tests/smoke/docs_viewer_index_panel_modules.py` for the state owner and `tests/smoke/docs_viewer_index_panel_route.py` for the route wiring.
-Tree item click behavior in expanded mode is covered by the route wiring smoke.
-
-### Slice 5: Inventory And Follow-Through
-
-**Status:** Partially completed on 2026-05-21.
-
-After the Docs Viewer slice is implemented and verified:
-
-- [x] update [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
-- [x] update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
-- [x] update this document for completed/pending task status
-- [x] update generated Docs Viewer payloads through the normal docs workflow rather than by hand
-- [x] add a focused tree-click behavior assertion for index-panel expanded mode
-- [x] re-parent the durable risk-scoring and maintenance-gate guidance under [Development Workflow](/docs/?scope=studio&doc=development-workflow), editing it from current implementation planning into stable workflow guidance
-
-The target is not necessarily to move `docs-viewer.js` directly to score 4 in one slice.
-The target is to prevent the next index/graph feature from increasing shared entry-runtime risk.
+- the JavaScript inventory guardrail is available at `scripts/checks/javascript_inventory_guardrail.py`
+- the reusable JavaScript maintenance gate lives in [Development Workflow](/docs/?scope=studio&doc=development-workflow)
+- the Docs Viewer index-panel state owner is in place at `assets/docs-viewer/js/docs-viewer-index-panel.js`
+- focused Docs Viewer index-panel module and route smoke checks exist under `tests/smoke/`
 
 ## Next Action
 

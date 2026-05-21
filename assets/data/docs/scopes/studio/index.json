@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T18:18:19Z",
+  "generated_at": "2026-05-21T18:25:10Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2397,7 +2397,7 @@
       "source_path": "javascript-maintenance-risk-mitigation.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-maintenance-risk-mitigation.json",
-      "content_text_length": 16736,
+      "content_text_length": 11583,
       "ui_status": "in-progress"
     },
     {
