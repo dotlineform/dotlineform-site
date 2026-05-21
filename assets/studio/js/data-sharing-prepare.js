@@ -1,9 +1,7 @@
 import {
-  DOCS_MANAGEMENT_ENDPOINTS,
   probeDataSharingHealth
 } from "./studio-transport.js";
 import {
-  getDocsScopeDataPath,
   getStudioDataPath,
   getStudioText,
   loadStudioConfigWithText
@@ -34,6 +32,9 @@ import {
   prepareSelectionModel,
   usesPrepareDocumentSelection
 } from "./data-sharing-prepare-workflow.js";
+import {
+  loadDataSharingPrepareDocsState
+} from "./data-sharing-prepare-docs.js";
 import {
   applyDataSharingPrepareSelectionFilter,
   dataSharingPrepareListFilters,
@@ -167,54 +168,6 @@ async function loadJson(path) {
     throw new Error(`HTTP ${response.status}`);
   }
   return response.json();
-}
-
-function docsGeneratedIndexUrl(scope) {
-  const url = new URL(DOCS_MANAGEMENT_ENDPOINTS.generatedIndex);
-  url.searchParams.set("scope", scope);
-  return url.href;
-}
-
-function buildVisibleDocs(indexPayload) {
-  const sourceDocs = Array.isArray(indexPayload?.docs) ? indexPayload.docs : [];
-  const docs = sourceDocs.filter((doc) => {
-    const docId = normalizeText(doc?.doc_id);
-    if (!docId) return false;
-    return doc.published !== false;
-  });
-
-  const visibleIds = new Set(docs.map((doc) => normalizeText(doc.doc_id)));
-  const childrenByParent = new Map();
-  docs.forEach((doc) => {
-    const parentId = normalizeText(doc.parent_id);
-    const effectiveParent = visibleIds.has(parentId) ? parentId : "";
-    if (!childrenByParent.has(effectiveParent)) childrenByParent.set(effectiveParent, []);
-    childrenByParent.get(effectiveParent).push(doc);
-  });
-
-  const orderedDocs = [];
-  const depthById = new Map();
-  const visit = (parentId, depth) => {
-    const children = childrenByParent.get(parentId) || [];
-    children.forEach((doc) => {
-      const docId = normalizeText(doc.doc_id);
-      orderedDocs.push(doc);
-      depthById.set(docId, depth);
-      visit(docId, depth + 1);
-    });
-  };
-  visit("", 0);
-
-  const orderedIds = new Set(orderedDocs.map((doc) => normalizeText(doc.doc_id)));
-  docs.forEach((doc) => {
-    const docId = normalizeText(doc.doc_id);
-    if (!orderedIds.has(docId)) {
-      orderedDocs.push(doc);
-      depthById.set(docId, 0);
-    }
-  });
-
-  return { docs: orderedDocs, childrenByParent, depthById };
 }
 
 function updateStatus(state) {
@@ -402,27 +355,20 @@ async function init() {
       state.exportConfigs = enabledPrepareConfigsForScope(exportConfigPayload, state.scope);
     }
 
-    let docsIndexPayload = { docs: [] };
-    if (
-      usesPrepareDocumentSelection(state.prepareCapability)
-      && workflowDomainIsActive(state.workflowScopes, state.scope)
-      && state.exportConfigs.length
-    ) {
-      const docsIndexPath = getDocsScopeDataPath(state.config, state.scope, "index")
-        || `/assets/data/docs/scopes/${encodeURIComponent(state.scope)}/index.json`;
-      const docsIndexReadPath = state.serviceAvailable ? docsGeneratedIndexUrl(state.scope) : docsIndexPath;
-      try {
-        docsIndexPayload = await loadJson(docsIndexReadPath);
-      } catch (error) {
-        console.warn("data_sharing_prepare: docs index load failed", state.scope, error);
-        state.docsIndexError = true;
-      }
-    }
-
-    const docsTree = buildVisibleDocs(docsIndexPayload);
-    state.docs = docsTree.docs;
-    state.childrenByParent = docsTree.childrenByParent;
-    state.depthById = docsTree.depthById;
+    const docsState = await loadDataSharingPrepareDocsState({
+      config: state.config,
+      scope: state.scope,
+      serviceAvailable: state.serviceAvailable,
+      prepareCapability: state.prepareCapability,
+      workflowActive: workflowDomainIsActive(state.workflowScopes, state.scope),
+      exportConfigCount: state.exportConfigs.length,
+      loadJson,
+      onError: (error) => console.warn("data_sharing_prepare: docs index load failed", state.scope, error)
+    });
+    state.docsIndexError = docsState.docsIndexError;
+    state.docs = docsState.docs;
+    state.childrenByParent = docsState.childrenByParent;
+    state.depthById = docsState.depthById;
     state.docsById = new Map(state.docs.map((doc) => [normalizeText(doc.doc_id), doc]));
 
     setText(state.scopeLabelNode, getStudioText(state.config, "data_sharing_prepare.scope_label", "scope"));

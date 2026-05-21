@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T12:30:52Z",
+  "generated_at": "2026-05-21T12:38:58Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2232,7 +2232,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 21190,
+      "content_text_length": 21167,
       "ui_status": "urgent"
     },
     {

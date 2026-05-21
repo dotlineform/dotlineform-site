@@ -15,16 +15,13 @@ import {
   normalizeStudioValue as normalize
 } from "./studio-data.js";
 import {
-  probeStudioHealth,
-  postJson,
-  STUDIO_WRITE_ENDPOINTS
+  probeStudioHealth
 } from "./studio-transport.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
 } from "./studio-route-state.js";
-import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   seriesTagsUi
 } from "./studio-ui.js";
@@ -161,6 +158,7 @@ async function initSeriesTagsPage() {
       offlineSessionActivated: false,
       offlineSessionWorkflow: null,
       modalModule: null,
+      importWorkflowModule: null,
       modalEventsWired: false,
       importAvailable: false,
       importFile: null,
@@ -396,6 +394,13 @@ async function ensureSeriesTagsModalModule(state) {
   return state.modalModule;
 }
 
+async function ensureSeriesTagsImportWorkflow(state) {
+  if (!state.importWorkflowModule) {
+    state.importWorkflowModule = await import("./series-tags-import-workflow.js");
+  }
+  return state.importWorkflowModule;
+}
+
 function renderPage(state) {
   renderChrome(state);
   renderTable(state);
@@ -478,75 +483,43 @@ async function probeImportAvailability(state) {
 }
 
 async function handlePreviewImport(state) {
-  if (!state.importFile) {
-    setResult(state, "error", seriesTagsText(state.config, "session_import_no_file", "No import file selected."));
-    renderImportModal(state);
-    return;
+  const workflow = await ensureSeriesTagsImportWorkflow(state);
+  const result = await workflow.previewSeriesTagsImport({
+    file: state.importFile,
+    config: state.config
+  });
+  if (Object.prototype.hasOwnProperty.call(result, "importPayload")) {
+    state.importPayload = result.importPayload;
   }
-
-  try {
-    state.importPayload = JSON.parse(await state.importFile.text());
-  } catch (error) {
-    setResult(state, "error", seriesTagsText(state.config, "session_import_invalid_json", "Import file is not valid JSON."));
-    renderImportModal(state);
-    return;
+  if (result.ok) {
+    state.importPreview = result.importPreview;
+    state.importResolutions = result.importResolutions;
   }
-
-  try {
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagAssignmentsPreview, {
-      import_assignments: state.importPayload,
-      import_filename: state.importFile.name || "",
-      client_time_utc: new Date().toISOString()
-    });
-    state.importPreview = response;
-    state.importResolutions = {};
-    for (const row of response.series || []) {
-      if (String(row && row.status || "") === "conflict") {
-        state.importResolutions[String(row.series_id || "").trim().toLowerCase()] = "skip";
-      }
-    }
-    setResult(state, "success", String(response.summary_text || seriesTagsText(state.config, "session_import_preview_success", "Import preview ready.")));
-  } catch (error) {
-    setResult(state, "error", String(error && error.message ? error.message : seriesTagsText(state.config, "session_import_preview_failed", "Import preview failed.")));
-  }
+  setResult(state, result.resultKind, result.resultText);
   renderImportModal(state);
 }
 
 async function handleApplyImport(state) {
-  if (!state.importPayload || !state.importPreview) {
-    setResult(state, "error", seriesTagsText(state.config, "session_import_apply_without_preview", "Preview the import before applying it."));
-    renderImportModal(state);
-    return;
-  }
-
-  try {
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagAssignments, {
-      import_assignments: state.importPayload,
-      import_filename: state.importFile && state.importFile.name ? state.importFile.name : "",
-      resolutions: state.importResolutions,
-      client_time_utc: new Date().toISOString(),
-      activity_context: buildStudioActivityContext({
-        pageId: "series-tags",
-        actionId: "import-series-tag-assignments",
-        route: "/studio/analytics/series-tags/",
-        controlId: "apply-import",
-        controlSelector: "[data-import-action=\"apply-import\"]",
-        recordIdField: "import_filename",
-        recordId: state.importFile && state.importFile.name ? state.importFile.name : "series-tags-import"
-      })
-    });
+  const workflow = await ensureSeriesTagsImportWorkflow(state);
+  const result = await workflow.applySeriesTagsImport({
+    config: state.config,
+    file: state.importFile,
+    importPayload: state.importPayload,
+    importPreview: state.importPreview,
+    importResolutions: state.importResolutions
+  });
+  setResult(state, result.resultKind, result.resultText);
+  if (result.ok) {
     await clearAppliedLocalSessionEntries(state);
     state.importPreview = null;
     state.importPayload = null;
     state.importResolutions = {};
     state.importFile = null;
-    state.assignmentsSeries = getStudioAssignmentsSeries(await loadStudioAssignmentsJson(state.config, { cache: "no-store" }));
-    setResult(state, "success", String(response.summary_text || seriesTagsText(state.config, "session_import_apply_success", "Import applied.")));
+    state.assignmentsSeries = result.assignmentsSeries;
     renderPage(state);
-  } catch (error) {
-    setResult(state, "error", String(error && error.message ? error.message : seriesTagsText(state.config, "session_import_apply_failed", "Import failed.")));
-    renderImportModal(state);
+    return;
   }
+  renderImportModal(state);
 }
 
 async function clearAppliedLocalSessionEntries(state) {

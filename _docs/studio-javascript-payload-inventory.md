@@ -203,7 +203,7 @@ Each section should summarise:
 | 3 | done | Passed an explicit Series Tags report input from the route shell into `assets/studio/js/series-tags-render.js` instead of handing over broad route state. |
 | 4 | done | Added focused smoke checks for score interpretation and Series Tags report rendering/RAG display output. |
 | 5 | done | Extracted offline-session handling for Series Tags and Series Tag Editor into `assets/studio/js/tag-assignments-offline-session.js`, with Series Tags loading session storage/modals only after the user opens the session or import flow and Series Tag Editor save-failure fallback requiring an explicit follow-up Save before staging offline changes. Tag Registry and Tag Aliases remain out of scope because they do not currently use offline sessions. |
-| 6 | proposed | If import preview/apply workflow changes materially, extract it into a focused workflow/service module. Anticipated improvement: -1 from maintenance or structural risk. |
+| 6 | done | Extracted import preview/apply orchestration into `assets/studio/js/series-tags-import-workflow.js`, with explicit inputs for import file, payload, preview, resolutions, activity context, and assignment reloads. |
 
 ### `assets/studio/js/data-sharing-prepare.js`
 
@@ -225,7 +225,7 @@ Each section should summarise:
 - Keep config/list/format/result rendering in `assets/studio/js/data-sharing-prepare-render.js`.
 - Keep request validation, package write calls, and result shaping in `assets/studio/js/data-sharing-prepare-service.js`.
 - Keep route-shell work limited to boot, config/data loading, scope routing, event wiring, modal coordination, and route ready/busy projection.
-- If generated docs-index loading or visible-doc tree projection changes materially, consider extracting that as a focused data-loading/projection helper with explicit inputs.
+- Keep generated docs-index loading and visible-doc tree projection in `assets/studio/js/data-sharing-prepare-docs.js`.
 
 **Score Reduction Tasks**
 
@@ -235,7 +235,7 @@ Each section should summarise:
 | 2 | done | Moved prepare list/control rendering, selection checkbox sync, and result modal body rendering into `assets/studio/js/data-sharing-prepare-render.js` with explicit route-state inputs. |
 | 3 | done | Defined `assets/studio/js/data-sharing-prepare-service.js` as the preparation service boundary for request validation, package write calls, and success/failure result shaping. |
 | 4 | done | Added focused module checks for package-state projection, preparation result rendering, and fallback write behavior. |
-| 5 | proposed | If generated docs-index loading or visible-doc tree projection changes materially, extract it as a focused helper with explicit route inputs. Anticipated improvement: -1 from maintenance or architectural risk. |
+| 5 | done | Extracted generated docs-index loading and visible-doc tree projection into `assets/studio/js/data-sharing-prepare-docs.js` with explicit route inputs for config, scope, service availability, workflow activity, and export-config availability. |
 
 ### `assets/studio/js/tag-registry.js`
 
@@ -256,7 +256,7 @@ Each section should summarise:
 - Keep import-mode availability probing in `assets/studio/js/tag-registry-import-mode.js`.
 - Keep service orchestration and patch fallback decisions in `assets/studio/js/tag-registry-workflow.js`.
 - Keep route-shell work limited to boot, data loading, event wiring, route state, modal coordination, and applying successful mutation results to local state.
-- Move validation or mutation-state projection only if future changes make either one a complete responsibility with explicit inputs.
+- Keep registry mutation-state projection in `assets/studio/js/tag-registry-state.js`.
 
 **Score Reduction Tasks**
 
@@ -266,7 +266,7 @@ Each section should summarise:
 | 2 | done | Extracted import-mode probing into `assets/studio/js/tag-registry-import-mode.js`, mirroring the Tag Aliases import-mode boundary. |
 | 3 | done | Defined `assets/studio/js/tag-registry-workflow.js` as the service-orchestration boundary for save/import fallback decisions. |
 | 4 | done | Added focused verification for render output, import-mode availability, and fallback save behavior, without requiring full route boot. |
-| 5 | proposed | If validation or mutation-state projection changes materially, extract it as a focused domain/workflow adapter with explicit inputs. Anticipated improvement: -1 from maintenance or architectural risk. |
+| 5 | done | Extracted mutation-state projection and delete-impact series projection into `assets/studio/js/tag-registry-state.js`, so edit/create/delete/demote handlers apply successful mutation results through a focused state helper. |
 
 ## Watch Areas
 

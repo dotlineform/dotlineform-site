@@ -6,7 +6,6 @@ import {
 } from "./studio-config.js";
 import {
   buildStudioGroupDescriptionMap,
-  getSeriesAssignmentTagIds,
   getStudioAssignmentsSeries,
   loadSiteSeriesIndexJson,
   loadStudioAssignmentsJson,
@@ -26,6 +25,14 @@ import {
   normalizeRegistryTags,
   normalizeTimestamp
 } from "./tag-registry-domain.js";
+import {
+  applyTagRegistryCreateProjection,
+  applyTagRegistryDeleteProjection,
+  applyTagRegistryDemoteProjection,
+  applyTagRegistryEditProjection,
+  buildTagRegistrySeriesMetaById,
+  getTagRegistryDeleteImpactSeries
+} from "./tag-registry-state.js";
 import {
   renderTagRegistryControls,
   renderTagRegistryError,
@@ -370,7 +377,7 @@ async function loadRegistry(state, options = {}) {
     ? getStudioAssignmentsSeries(assignmentsResult.value)
     : {};
   state.seriesMetaById = seriesIndexResult.status === "fulfilled"
-    ? buildSeriesMetaById(state.config, seriesIndexResult.value)
+    ? buildTagRegistrySeriesMetaById(state.config, seriesIndexResult.value)
     : new Map();
   state.groupDescriptions = buildStudioGroupDescriptionMap(groupsData, STUDIO_GROUPS);
   state.registryOptions = buildRegistryOptions(state.tags);
@@ -465,7 +472,7 @@ async function refreshDeleteImpactPreview(state) {
     state.deletePreview = result.summary;
     renderTagRegistryDeleteImpactPreview(state, {
       response: result.response,
-      affectedSeries: getDeleteImpactSeries(state, state.deleteTagId)
+      affectedSeries: getTagRegistryDeleteImpactSeries(state, state.deleteTagId)
     });
     return;
   }
@@ -489,19 +496,11 @@ async function handleTagEdit(state) {
 
   setEditStatus(state, "success", result.message);
   setImportResult(state, "success", result.summary);
-  const updatedAtUtc = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.registryUpdatedAt;
-  const updatedAtMs = updatedAtUtc ? Date.parse(updatedAtUtc) : null;
-  state.registryUpdatedAt = updatedAtUtc || state.registryUpdatedAt;
-  state.tags = state.tags.map((tag) => {
-    if (!tag || tag.tagId !== tagId) return tag;
-    return {
-      ...tag,
-      description,
-      updatedAtUtc,
-      updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : tag.updatedAtMs
-    };
+  applyTagRegistryEditProjection(state, {
+    tagId,
+    description,
+    response: result.response
   });
-  state.registryOptions = buildRegistryOptions(state.tags);
   renderControls(state);
   renderList(state);
   closeEditModal(state);
@@ -531,21 +530,10 @@ async function handleCreateTag(state) {
   if (result.ok && result.mode === "post") {
     closeNewTagModal(state);
     setImportResult(state, "success", result.summary);
-    const updatedAtUtc = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.registryUpdatedAt;
-    const updatedAtMs = updatedAtUtc ? Date.parse(updatedAtUtc) : null;
-    state.registryUpdatedAt = updatedAtUtc || state.registryUpdatedAt;
-    state.tags = state.tags
-      .filter((tag) => tag && tag.tagId !== validation.tagId)
-      .concat([{
-        group: validation.group,
-        tagId: validation.tagId,
-        label: validation.slug,
-        description: validation.description,
-        status: "active",
-        updatedAtUtc,
-        updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : null
-      }]);
-    state.registryOptions = buildRegistryOptions(state.tags);
+    applyTagRegistryCreateProjection(state, {
+      validation,
+      response: result.response
+    });
     renderControls(state);
     renderList(state);
     return;
@@ -606,9 +594,10 @@ async function handleDeleteFromModal(state) {
 
   closeDeleteModal(state);
   setImportResult(state, "success", result.summary);
-  state.registryUpdatedAt = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.registryUpdatedAt;
-  state.tags = state.tags.filter((tag) => tag && tag.tagId !== deletedTagId);
-  state.registryOptions = buildRegistryOptions(state.tags);
+  applyTagRegistryDeleteProjection(state, {
+    tagId: deletedTagId,
+    response: result.response
+  });
   renderControls(state);
   renderList(state);
 }
@@ -823,11 +812,11 @@ async function handleTagDemote(state) {
   if (result.mode === "post") {
     closeDemoteModal(state);
     setImportResult(state, "success", result.summary);
-    const updatedAtUtc = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.registryUpdatedAt;
-    state.registryUpdatedAt = updatedAtUtc || state.registryUpdatedAt;
-    state.tags = state.tags.filter((item) => item && item.tagId !== tag.tagId);
-    state.aliasKeys.add(aliasKey);
-    state.registryOptions = buildRegistryOptions(state.tags);
+    applyTagRegistryDemoteProjection(state, {
+      tagId: tag.tagId,
+      aliasKey,
+      response: result.response
+    });
     renderControls(state);
     renderList(state);
     return;
@@ -892,49 +881,6 @@ function openPatchModal(state, snippet) {
 
 function setImportResult(state, kind, message) {
   setTagRegistryImportResult(state, kind, message);
-}
-
-function getDeleteImpactSeries(state, tagId) {
-  const targetTagId = normalize(tagId);
-  if (!targetTagId) return [];
-  return Object.keys(state.assignmentsSeries || {})
-    .map((rawSeriesId) => ({
-      rawSeriesId,
-      seriesId: normalize(rawSeriesId)
-    }))
-    .filter(({ rawSeriesId, seriesId }) => seriesId && getSeriesAssignmentTagIds(state.assignmentsSeries, rawSeriesId).includes(targetTagId))
-    .map(({ seriesId }) => {
-      const meta = state.seriesMetaById.get(seriesId);
-      return {
-        seriesId,
-        title: meta && meta.title ? meta.title : seriesId,
-        url: buildSeriesEditorUrl(state.config, seriesId)
-      };
-    })
-    .sort((left, right) => left.title.localeCompare(right.title, undefined, { sensitivity: "base" }));
-}
-
-function buildSeriesMetaById(config, payload) {
-  const seriesMap = payload && payload.series && typeof payload.series === "object" ? payload.series : {};
-  const out = new Map();
-  Object.keys(seriesMap).forEach((rawSeriesId) => {
-    const seriesId = normalize(rawSeriesId);
-    if (!seriesId) return;
-    const row = seriesMap[rawSeriesId];
-    const title = String((row && row.title) || seriesId).trim();
-    out.set(seriesId, {
-      title,
-      url: buildSeriesEditorUrl(config, seriesId)
-    });
-  });
-  return out;
-}
-
-function buildSeriesEditorUrl(config, seriesId) {
-  const base = getStudioRoute(config, "series_tag_editor");
-  const normalizedSeriesId = normalize(seriesId);
-  if (!base || !normalizedSeriesId) return "";
-  return `${base}?series=${encodeURIComponent(normalizedSeriesId)}`;
 }
 
 function clearImportResult(state) {
