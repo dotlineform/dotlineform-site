@@ -3,9 +3,10 @@ doc_id: javascript-inventory-implementation-plan
 title: JavaScript Inventory Implementation Plan
 added_date: 2026-05-21
 last_updated: 2026-05-21
+ui_status: in-progress
 parent_id: studio-javascript-payload-inventory
 sort_order: 7015
-hidden: false
+viewable: true
 ---
 # JavaScript Inventory Implementation Plan
 
@@ -40,6 +41,10 @@ Each completed batch should update:
 
 ### Batch 1: Catalogue Editor Route Shells
 
+**Status:** Completed on 2026-05-21.
+The shared route boot/readiness helper now owns required-element collection, config loading, save-mode projection, catalogue server probing, lookup-map loading, route busy/ready projection, and init-error copy fallback for the catalogue editor family.
+The route shells still own entity-specific field rendering, selection contexts, validation, import, membership, and action handoff.
+
 **Primary files**
 
 - `assets/studio/js/catalogue-work-editor.js`
@@ -67,7 +72,8 @@ Most existing field, form, and section modules should stay at 4 or 5 unless thei
 
 **Verification**
 
-Run focused module checks for the extracted helper, then run the smallest relevant catalogue smoke or route-ready check for one representative editor plus any editor whose startup contract changed.
+Focused helper/module smoke: `tests/smoke/catalogue_editor_route_boot_modules.py`.
+The smoke imports the helper and the four refactored route shells, checks route ready/busy projection, and stubs config, lookup, and server-availability inputs.
 
 ### Batch 2: Catalogue Action Workflows
 

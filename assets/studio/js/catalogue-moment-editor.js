@@ -1,11 +1,16 @@
 import {
-  getStudioText,
-  loadStudioConfigWithText
+  getStudioText
 } from "./studio-config.js";
-import { loadStudioLookupJson } from "./studio-data.js";
 import {
-  probeCatalogueHealth
-} from "./studio-transport.js";
+  collectRequiredElements,
+  configureCatalogueEditorRouteRuntime,
+  initializeCatalogueEditorRoute,
+  loadCatalogueEditorLookupMaps,
+  markCatalogueEditorRouteReady,
+  revealCatalogueEditorRoute,
+  setCatalogueEditorTextWithState as setTextWithState,
+  syncCatalogueEditorRouteBusyState
+} from "./catalogue-editor-route-boot.js";
 import {
   previewCatalogueMoment
 } from "./catalogue-editor-service-client.js";
@@ -39,11 +44,8 @@ import {
   writeRequestedImportFile
 } from "./catalogue-moment-import.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
-} from "./studio-route-state.js";
-import { buildSaveModeText } from "./tag-studio-save.js";
+  buildSaveModeText
+} from "./tag-studio-save.js";
 import {
   applyMomentRecordToInputs,
   clearMomentFieldMessages,
@@ -73,38 +75,27 @@ function getFieldNodeValue(node) {
   return getMomentFieldNodeValue(node);
 }
 
-function setTextWithState(node, text, state = "") {
-  if (!node) return;
-  node.textContent = text || "";
-  if (state) node.dataset.state = state;
-  else delete node.dataset.state;
-}
-
 function routeModeForState(state) {
   if (state.isImportMode) return "import";
   if (state.currentRecord) return "single";
   return "empty";
 }
 
-function routeStateDetail(state) {
-  return {
-    route: "catalogue-moment",
-    mode: routeModeForState(state),
-    service: state.serverAvailable ? "available" : "unavailable",
-    recordLoaded: Boolean(state.currentRecord)
-  };
-}
-
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(
-    state.root,
-    Boolean(state.isSaving || state.isBuilding || state.isDeleting || state.importIsBusy),
-    routeStateDetail(state)
-  );
+  syncCatalogueEditorRouteBusyState(state, {
+    route: "catalogue-moment",
+    mode: routeModeForState,
+    recordLoaded: (currentState) => Boolean(currentState.currentRecord),
+    busyKeys: ["isSaving", "isBuilding", "isDeleting", "importIsBusy"]
+  });
 }
 
 function markRouteReady(state, ready) {
-  setStudioRouteReady(state.root, ready, routeStateDetail(state));
+  markCatalogueEditorRouteReady(state, ready, {
+    route: "catalogue-moment",
+    mode: routeModeForState,
+    recordLoaded: (currentState) => Boolean(currentState.currentRecord)
+  });
 }
 
 function t(state, key, fallback, tokens = null) {
@@ -429,45 +420,109 @@ function bindEvents(state) {
 }
 
 async function init() {
-  const root = document.getElementById("catalogueMomentRoot");
-  const loadingNode = document.getElementById("catalogueMomentLoading");
-  const emptyNode = document.getElementById("catalogueMomentEmpty");
-  const state = {
-    config: await loadStudioConfigWithText("catalogue_moment_editor"),
+  const elements = collectRequiredElements({
+    root: "catalogueMomentRoot",
+    loadingNode: "catalogueMomentLoading",
+    emptyNode: "catalogueMomentEmpty",
+    searchNode: "catalogueMomentSearch",
+    popupNode: "catalogueMomentPopup",
+    popupListNode: "catalogueMomentPopupList",
+    openButton: "catalogueMomentOpen",
+    newButton: "catalogueMomentNew",
+    saveModeNode: "catalogueMomentSaveMode",
+    contextNode: "catalogueMomentContext",
+    statusNode: "catalogueMomentStatus",
+    warningNode: "catalogueMomentWarning",
+    resultNode: "catalogueMomentResult",
+    saveButton: "catalogueMomentSave",
+    publicationButton: "catalogueMomentPublication",
+    deleteButton: "catalogueMomentDelete",
+    fieldsNode: "catalogueMomentFields",
+    readonlyNode: "catalogueMomentReadonly",
+    sideHeadingNode: "catalogueMomentSideHeading",
+    summaryNode: "catalogueMomentSummary",
+    readinessNode: "catalogueMomentReadiness",
+    runtimeStateNode: "catalogueMomentRuntimeState",
+    buildImpactNode: "catalogueMomentBuildImpact",
+    importSourceNode: "catalogueMomentImportSource",
+    importFileLabelNode: "catalogueMomentImportFileLabel",
+    importFileNode: "catalogueMomentImportFile",
+    importFileDescriptionNode: "catalogueMomentImportFileDescription",
+    importSourceSummaryNode: "catalogueMomentImportSourceSummary",
+    importImageGuidanceNode: "catalogueMomentImportImageGuidance",
+    importPreviewButton: "catalogueMomentImportPreview",
+    importApplyButton: "catalogueMomentImportApply"
+  });
+  if (!elements) return;
+  const {
     root,
     loadingNode,
     emptyNode,
-    searchNode: document.getElementById("catalogueMomentSearch"),
-    popupNode: document.getElementById("catalogueMomentPopup"),
-    popupListNode: document.getElementById("catalogueMomentPopupList"),
-    openButton: document.getElementById("catalogueMomentOpen"),
-    newButton: document.getElementById("catalogueMomentNew"),
-    saveModeNode: document.getElementById("catalogueMomentSaveMode"),
-    contextNode: document.getElementById("catalogueMomentContext"),
-    statusNode: document.getElementById("catalogueMomentStatus"),
-    warningNode: document.getElementById("catalogueMomentWarning"),
-    resultNode: document.getElementById("catalogueMomentResult"),
-    saveButton: document.getElementById("catalogueMomentSave"),
-    publicationButton: document.getElementById("catalogueMomentPublication"),
-    deleteButton: document.getElementById("catalogueMomentDelete"),
-    fieldsNode: document.getElementById("catalogueMomentFields"),
-    readonlyNode: document.getElementById("catalogueMomentReadonly"),
-    sideHeadingNode: document.getElementById("catalogueMomentSideHeading"),
-    summaryNode: document.getElementById("catalogueMomentSummary"),
-    readinessNode: document.getElementById("catalogueMomentReadiness"),
-    runtimeStateNode: document.getElementById("catalogueMomentRuntimeState"),
-    buildImpactNode: document.getElementById("catalogueMomentBuildImpact"),
-    importSourceNode: document.getElementById("catalogueMomentImportSource"),
-    importStatusNode: document.getElementById("catalogueMomentStatus"),
-    importWarningNode: document.getElementById("catalogueMomentWarning"),
-    importResultNode: document.getElementById("catalogueMomentResult"),
-    importFileLabelNode: document.getElementById("catalogueMomentImportFileLabel"),
-    importFileNode: document.getElementById("catalogueMomentImportFile"),
-    importFileDescriptionNode: document.getElementById("catalogueMomentImportFileDescription"),
-    importSourceSummaryNode: document.getElementById("catalogueMomentImportSourceSummary"),
-    importImageGuidanceNode: document.getElementById("catalogueMomentImportImageGuidance"),
-    importPreviewButton: document.getElementById("catalogueMomentImportPreview"),
-    importApplyButton: document.getElementById("catalogueMomentImportApply"),
+    searchNode,
+    popupNode,
+    popupListNode,
+    openButton,
+    newButton,
+    saveModeNode,
+    contextNode,
+    statusNode,
+    warningNode,
+    resultNode,
+    saveButton,
+    publicationButton,
+    deleteButton,
+    fieldsNode,
+    readonlyNode,
+    sideHeadingNode,
+    summaryNode,
+    readinessNode,
+    runtimeStateNode,
+    buildImpactNode,
+    importSourceNode,
+    importFileLabelNode,
+    importFileNode,
+    importFileDescriptionNode,
+    importSourceSummaryNode,
+    importImageGuidanceNode,
+    importPreviewButton,
+    importApplyButton
+  } = elements;
+  const state = {
+    config: null,
+    root,
+    loadingNode,
+    emptyNode,
+    searchNode,
+    popupNode,
+    popupListNode,
+    openButton,
+    newButton,
+    saveModeNode,
+    contextNode,
+    statusNode,
+    warningNode,
+    resultNode,
+    saveButton,
+    publicationButton,
+    deleteButton,
+    fieldsNode,
+    readonlyNode,
+    sideHeadingNode,
+    summaryNode,
+    readinessNode,
+    runtimeStateNode,
+    buildImpactNode,
+    importSourceNode,
+    importStatusNode: statusNode,
+    importWarningNode: warningNode,
+    importResultNode: resultNode,
+    importFileLabelNode,
+    importFileNode,
+    importFileDescriptionNode,
+    importSourceSummaryNode,
+    importImageGuidanceNode,
+    importPreviewButton,
+    importApplyButton,
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
     readonlyNodes: new Map(),
@@ -490,32 +545,32 @@ async function init() {
     importIsBusy: false,
     isImportMode: false
   };
-  initializeStudioRouteState(root, { route: "catalogue-moment" });
+  initializeCatalogueEditorRoute(root, "catalogue-moment");
 
   try {
-    state.serverAvailable = await probeCatalogueHealth();
-    state.saveModeNode.textContent = buildSaveModeText(
-      state.config,
-      state.serverAvailable ? "post" : "offline",
-      (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_moment_editor.${key}`, fallback, tokens)
-    );
-    state.searchNode.placeholder = t(state, "search_placeholder", "find moment by id or title");
-    state.openButton.textContent = t(state, "open_button", "Open");
-    state.newButton.textContent = t(state, "new_button", "New");
-    state.saveButton.textContent = t(state, "save_button", "Save");
-    state.publicationButton.textContent = t(state, "publish_button", "Publish");
-    state.deleteButton.textContent = t(state, "delete_button", "Delete");
-    state.importFileLabelNode.textContent = t(state, "import_file_label", "moment file");
-    state.importFileNode.placeholder = t(state, "import_file_placeholder", "keys.md");
-    state.importPreviewButton.textContent = t(state, "import_preview_button", "Preview");
-    state.importApplyButton.textContent = t(state, "import_button", "Import");
-    state.importFileDescriptionNode.textContent = t(state, "import_file_description", "filename only; the source file is resolved from var/docs/catalogue/import-staging/moments/");
+    await configureCatalogueEditorRouteRuntime(state, {
+      namespace: "catalogue_moment_editor",
+      saveModeNode: state.saveModeNode,
+      applyText: () => {
+        state.searchNode.placeholder = t(state, "search_placeholder", "find moment by id or title");
+        state.openButton.textContent = t(state, "open_button", "Open");
+        state.newButton.textContent = t(state, "new_button", "New");
+        state.saveButton.textContent = t(state, "save_button", "Save");
+        state.publicationButton.textContent = t(state, "publish_button", "Publish");
+        state.deleteButton.textContent = t(state, "delete_button", "Delete");
+        state.importFileLabelNode.textContent = t(state, "import_file_label", "moment file");
+        state.importFileNode.placeholder = t(state, "import_file_placeholder", "keys.md");
+        state.importPreviewButton.textContent = t(state, "import_preview_button", "Preview");
+        state.importApplyButton.textContent = t(state, "import_button", "Import");
+        state.importFileDescriptionNode.textContent = t(state, "import_file_description", "filename only; the source file is resolved from var/docs/catalogue/import-staging/moments/");
 
-    renderMomentEditorFields(state.fieldsNode, state, {
-      onFieldInput: () => onFieldInput(state)
+        renderMomentEditorFields(state.fieldsNode, state, {
+          onFieldInput: () => onFieldInput(state)
+        });
+        renderMomentReadonlyFields(state.readonlyNode, state);
+        bindEvents(state);
+      }
     });
-    renderMomentReadonlyFields(state.readonlyNode, state);
-    bindEvents(state);
     state.importFileNode.value = readRequestedImportFile();
 
     if (!state.serverAvailable) {
@@ -523,18 +578,27 @@ async function init() {
       setTextWithState(state.importStatusNode, t(state, "import_save_mode_unavailable_hint", "Local catalogue server unavailable. Moment import is disabled."), "warning");
       updateDirtyState(state);
       updateImportState(state, buildImportContext(state));
-      loadingNode.hidden = true;
-      root.hidden = false;
-      markRouteReady(state, true);
+      revealCatalogueEditorRoute(state, {
+        loadingNode,
+        routeState: {
+          route: "catalogue-moment",
+          mode: routeModeForState,
+          recordLoaded: (currentState) => Boolean(currentState.currentRecord)
+        }
+      });
       return;
     }
 
-    const payload = await loadStudioLookupJson(state.config, "catalogue_moments", {
-      cache: "no-store",
-      catalogueServerAvailable: state.serverAvailable
-    });
-    state.momentRows = buildMomentRows(payload);
-    state.moments = new Map(state.momentRows.map((row) => [row.moment_id, row]));
+    await loadCatalogueEditorLookupMaps(state, [
+      {
+        configKey: "catalogue_moments",
+        itemsFromPayload: (payload) => buildMomentRows(payload),
+        afterItems: (items) => {
+          state.momentRows = items;
+          state.moments = new Map(state.momentRows.map((row) => [row.moment_id, row]));
+        }
+      }
+    ]);
 
     loadingNode.hidden = true;
     root.hidden = false;

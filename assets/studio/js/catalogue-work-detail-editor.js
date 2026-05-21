@@ -1,25 +1,23 @@
 import {
-  getStudioText,
-  loadStudioConfigWithText
+  getStudioText
 } from "./studio-config.js";
-import { loadStudioLookupJson, loadStudioLookupRecordJson } from "./studio-data.js";
+import { loadStudioLookupRecordJson } from "./studio-data.js";
 import {
-  probeCatalogueHealth
-} from "./studio-transport.js";
+  collectRequiredElements,
+  configureCatalogueEditorRouteRuntime,
+  initializeCatalogueEditorRoute,
+  loadCatalogueEditorLookupMaps,
+  revealCatalogueEditorRoute,
+  setCatalogueEditorTextWithState as setTextWithState,
+  showCatalogueEditorInitError,
+  syncCatalogueEditorRouteBusyState
+} from "./catalogue-editor-route-boot.js";
 import {
   catalogueDeleteDisabled,
   catalogueDirtyWarningText,
   catalogueDraftHasChanges,
   catalogueSaveDisabled
 } from "./catalogue-editor-dirty-state.js";
-import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
-} from "./studio-route-state.js";
-import {
-  buildSaveModeText
-} from "./tag-studio-save.js";
 import {
   loadCatalogueMediaConfig
 } from "./catalogue-media-preview.js";
@@ -85,13 +83,6 @@ function buildBulkDraftFromRecords(records) {
   return { draft, mixedFields };
 }
 
-function setTextWithState(node, text, state = "") {
-  if (!node) return;
-  node.textContent = text || "";
-  if (state) node.dataset.state = state;
-  else delete node.dataset.state;
-}
-
 function routeModeForState(state) {
   if (state.mode === "new") return "new";
   if (state.mode === "bulk") return "bulk";
@@ -105,25 +96,12 @@ function routeRecordLoadedForState(state) {
   return false;
 }
 
-function routeStateDetail(state) {
-  return {
-    route: "catalogue-work-detail",
-    mode: routeModeForState(state),
-    service: state.serverAvailable ? "available" : "unavailable",
-    recordLoaded: routeRecordLoadedForState(state)
-  };
-}
-
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(
-    state.root,
-    Boolean(state.isSaving || state.isBuilding || state.isDeleting),
-    routeStateDetail(state)
-  );
-}
-
-function markRouteReady(state, ready) {
-  setStudioRouteReady(state.root, ready, routeStateDetail(state));
+  syncCatalogueEditorRouteBusyState(state, {
+    route: "catalogue-work-detail",
+    mode: routeModeForState,
+    recordLoaded: routeRecordLoadedForState
+  });
 }
 
 function buildDetailSearchRecord(detailUid, record) {
@@ -480,31 +458,55 @@ function buildWorkDetailSelectionContext(state) {
 }
 
 async function init() {
-  const root = document.getElementById("catalogueWorkDetailRoot");
-  const loadingNode = document.getElementById("catalogueWorkDetailLoading");
-  const emptyNode = document.getElementById("catalogueWorkDetailEmpty");
-  const fieldsNode = document.getElementById("catalogueWorkDetailFields");
-  const readonlyNode = document.getElementById("catalogueWorkDetailReadonly");
-  const previewNode = document.getElementById("catalogueWorkDetailPreview");
-  const summaryNode = document.getElementById("catalogueWorkDetailSummary");
-  const readinessNode = document.getElementById("catalogueWorkDetailReadiness");
-  const runtimeStateNode = document.getElementById("catalogueWorkDetailRuntimeState");
-  const buildImpactNode = document.getElementById("catalogueWorkDetailBuildImpact");
-  const searchNode = document.getElementById("catalogueWorkDetailSearchGlobal");
-  const popupNode = document.getElementById("catalogueWorkDetailPopup");
-  const popupListNode = document.getElementById("catalogueWorkDetailPopupList");
-  const openButton = document.getElementById("catalogueWorkDetailOpen");
-  const saveButton = document.getElementById("catalogueWorkDetailSave");
-  const publicationButton = document.getElementById("catalogueWorkDetailPublication");
-  const deleteButton = document.getElementById("catalogueWorkDetailDelete");
-  const saveModeNode = document.getElementById("catalogueWorkDetailSaveMode");
-  const contextNode = document.getElementById("catalogueWorkDetailContext");
-  const statusNode = document.getElementById("catalogueWorkDetailStatus");
-  const warningNode = document.getElementById("catalogueWorkDetailWarning");
-  const resultNode = document.getElementById("catalogueWorkDetailResult");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !publicationButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode) {
-    return;
-  }
+  const elements = collectRequiredElements({
+    root: "catalogueWorkDetailRoot",
+    loadingNode: "catalogueWorkDetailLoading",
+    emptyNode: "catalogueWorkDetailEmpty",
+    fieldsNode: "catalogueWorkDetailFields",
+    readonlyNode: "catalogueWorkDetailReadonly",
+    previewNode: "catalogueWorkDetailPreview",
+    summaryNode: "catalogueWorkDetailSummary",
+    readinessNode: "catalogueWorkDetailReadiness",
+    runtimeStateNode: "catalogueWorkDetailRuntimeState",
+    buildImpactNode: "catalogueWorkDetailBuildImpact",
+    searchNode: "catalogueWorkDetailSearchGlobal",
+    popupNode: "catalogueWorkDetailPopup",
+    popupListNode: "catalogueWorkDetailPopupList",
+    openButton: "catalogueWorkDetailOpen",
+    saveButton: "catalogueWorkDetailSave",
+    publicationButton: "catalogueWorkDetailPublication",
+    deleteButton: "catalogueWorkDetailDelete",
+    saveModeNode: "catalogueWorkDetailSaveMode",
+    contextNode: "catalogueWorkDetailContext",
+    statusNode: "catalogueWorkDetailStatus",
+    warningNode: "catalogueWorkDetailWarning",
+    resultNode: "catalogueWorkDetailResult"
+  });
+  if (!elements) return;
+  const {
+    root,
+    loadingNode,
+    emptyNode,
+    fieldsNode,
+    readonlyNode,
+    previewNode,
+    summaryNode,
+    readinessNode,
+    runtimeStateNode,
+    buildImpactNode,
+    searchNode,
+    popupNode,
+    popupListNode,
+    openButton,
+    saveButton,
+    publicationButton,
+    deleteButton,
+    saveModeNode,
+    contextNode,
+    statusNode,
+    warningNode,
+    resultNode
+  } = elements;
 
   const state = {
     config: null,
@@ -555,54 +557,51 @@ async function init() {
     runtimeStateNode,
     buildImpactNode
   };
-  initializeStudioRouteState(root, { route: "catalogue-work-detail" });
+  initializeCatalogueEditorRoute(root, "catalogue-work-detail");
 
   const formContext = buildWorkDetailFormContext(state);
   renderWorkDetailEditorFields(fieldsNode, state, formContext);
   renderWorkDetailReadonlyFields(readonlyNode, state, formContext);
 
   try {
-    const config = await loadStudioConfigWithText("catalogue_work_detail_editor");
-    state.config = config;
-    applyWorkDetailFieldLabels(state, formContext);
-    searchNode.placeholder = t(state, "search_placeholder", "find detail id(s): 00001-001, 00001-003-005");
-    openButton.textContent = t(state, "open_button", "Open");
-    saveButton.textContent = t(state, "save_button", "Save");
-    publicationButton.textContent = t(state, "publish_button", "Publish");
-    deleteButton.textContent = t(state, "delete_button", "Delete");
-
-    const serverAvailable = await probeCatalogueHealth();
-    state.serverAvailable = Boolean(serverAvailable);
-    saveModeNode.textContent = buildSaveModeText(config, state.serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_work_detail_editor.${key}`, fallback, tokens));
+    await configureCatalogueEditorRouteRuntime(state, {
+      namespace: "catalogue_work_detail_editor",
+      saveModeNode,
+      applyText: () => {
+        applyWorkDetailFieldLabels(state, formContext);
+        searchNode.placeholder = t(state, "search_placeholder", "find detail id(s): 00001-001, 00001-003-005");
+        openButton.textContent = t(state, "open_button", "Open");
+        saveButton.textContent = t(state, "save_button", "Save");
+        publicationButton.textContent = t(state, "publish_button", "Publish");
+        deleteButton.textContent = t(state, "delete_button", "Delete");
+      }
+    });
     if (!state.serverAvailable) {
       setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warn");
       updateEditorState(state);
-      root.hidden = false;
-      loadingNode.hidden = true;
-      markRouteReady(state, true);
+      revealCatalogueEditorRoute(state, {
+        loadingNode,
+        routeState: {
+          route: "catalogue-work-detail",
+          mode: routeModeForState,
+          recordLoaded: routeRecordLoadedForState
+        }
+      });
       return;
     }
 
-    const serverReadOptions = { cache: "no-store", catalogueServerAvailable: state.serverAvailable };
-    const [detailsPayload, worksPayload] = await Promise.all([
-      loadStudioLookupJson(config, "catalogue_lookup_work_detail_search", serverReadOptions),
-      loadStudioLookupJson(config, "catalogue_lookup_work_search", serverReadOptions)
+    await loadCatalogueEditorLookupMaps(state, [
+      {
+        configKey: "catalogue_lookup_work_detail_search",
+        target: state.detailSearchByUid,
+        normalizeKey: (record) => normalizeText(record.detail_uid)
+      },
+      {
+        configKey: "catalogue_lookup_work_search",
+        target: state.workSearchById,
+        normalizeKey: (record) => normalizeWorkId(record.work_id)
+      }
     ]);
-
-    const detailItems = Array.isArray(detailsPayload && detailsPayload.items) ? detailsPayload.items : [];
-    detailItems.forEach((record) => {
-      if (!record || typeof record !== "object") return;
-      const detailUid = normalizeText(record.detail_uid);
-      if (!detailUid) return;
-      state.detailSearchByUid.set(detailUid, record);
-    });
-    const workItems = Array.isArray(worksPayload && worksPayload.items) ? worksPayload.items : [];
-    workItems.forEach((record) => {
-      if (!record || typeof record !== "object") return;
-      const workId = normalizeWorkId(record.work_id);
-      if (!workId) return;
-      state.workSearchById.set(workId, record);
-    });
     const selectionContext = buildWorkDetailSelectionContext(state);
     const actionContext = buildWorkDetailActionContext(state);
     bindWorkDetailSelectionControls(state, selectionContext);
@@ -625,17 +624,21 @@ async function init() {
 
     await applyInitialWorkDetailRouteSelection(state, selectionContext);
 
-    root.hidden = false;
-    loadingNode.hidden = true;
-    markRouteReady(state, true);
+    revealCatalogueEditorRoute(state, {
+      loadingNode,
+      routeState: {
+        route: "catalogue-work-detail",
+        mode: routeModeForState,
+        recordLoaded: routeRecordLoadedForState
+      }
+    });
   } catch (error) {
     console.warn("catalogue_work_detail_editor: init failed", error);
-    try {
-      const config = await loadStudioConfigWithText("catalogue_work_detail_editor");
-      loadingNode.textContent = getStudioText(config, "catalogue_work_detail_editor.load_failed_error", "Failed to load catalogue source data for the work detail editor.");
-    } catch (_configError) {
-      loadingNode.textContent = "Failed to load catalogue source data for the work detail editor.";
-    }
+    await showCatalogueEditorInitError(
+      loadingNode,
+      "catalogue_work_detail_editor",
+      "Failed to load catalogue source data for the work detail editor."
+    );
   }
 }
 

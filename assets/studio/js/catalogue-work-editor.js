@@ -1,14 +1,16 @@
 import {
-  getStudioText,
-  loadStudioConfigWithText
+  getStudioText
 } from "./studio-config.js";
 import {
-  loadStudioLookupJson,
   loadStudioLookupRecordJson
 } from "./studio-data.js";
 import {
-  probeCatalogueHealth
-} from "./studio-transport.js";
+  configureCatalogueEditorRouteRuntime,
+  loadCatalogueEditorLookupMaps,
+  revealCatalogueEditorRoute,
+  setCatalogueEditorTextWithState as setTextWithState,
+  showCatalogueEditorInitError
+} from "./catalogue-editor-route-boot.js";
 import {
   catalogueDeleteDisabled,
   catalogueDirtyWarningText,
@@ -45,7 +47,6 @@ import {
 } from "./catalogue-work-form.js";
 import {
   initializeWorkRouteState,
-  markWorkRouteReady,
   setEmptySearchMode,
   setLoadedBulkWorks,
   setLoadedWorkRecord,
@@ -72,9 +73,6 @@ import {
   openWorkById,
   setWorkSelectionPopupVisibility
 } from "./catalogue-work-selection.js";
-import {
-  buildSaveModeText
-} from "./tag-studio-save.js";
 import {
   loadCatalogueMediaConfig
 } from "./catalogue-media-preview.js";
@@ -116,16 +114,6 @@ function changedWorkFieldNames(state) {
       }
     ]
   });
-}
-
-function setTextWithState(node, text, state = "") {
-  if (!node) return;
-  node.textContent = text || "";
-  if (state) {
-    node.dataset.state = state;
-  } else {
-    delete node.dataset.state;
-  }
 }
 
 function setOpenInputMode(state) {
@@ -706,37 +694,29 @@ function applyWorkEditorText(state, elements) {
 }
 
 async function configureWorkEditorRuntime(state, elements) {
-  const config = await loadStudioConfigWithText("catalogue_work_editor");
-  state.config = config;
-  applyWorkEditorText(state, elements);
-  const serverAvailable = await probeCatalogueHealth();
-  state.serverAvailable = Boolean(serverAvailable);
-  state.saveModeNode.textContent = buildSaveModeText(config, state.serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_work_editor.${key}`, fallback, tokens));
-  return state.serverAvailable;
+  return configureCatalogueEditorRouteRuntime(state, {
+    namespace: "catalogue_work_editor",
+    saveModeNode: state.saveModeNode,
+    applyText: () => applyWorkEditorText(state, elements)
+  });
 }
 
 async function loadInitialWorkEditorData(state) {
-  const serverReadOptions = { cache: "no-store", catalogueServerAvailable: state.serverAvailable };
-  const [worksPayload, seriesPayload] = await Promise.all([
-    loadStudioLookupJson(state.config, "catalogue_lookup_work_search", serverReadOptions),
-    loadStudioLookupJson(state.config, "catalogue_lookup_series_search", serverReadOptions)
+  await loadCatalogueEditorLookupMaps(state, [
+    {
+      configKey: "catalogue_lookup_work_search",
+      target: state.workSearchById,
+      normalizeKey: (record) => normalizeWorkId(record.work_id),
+      afterItems: (items) => {
+        state.nextSuggestedWorkId = suggestNextWorkId(items);
+      }
+    },
+    {
+      configKey: "catalogue_lookup_series_search",
+      target: state.seriesById,
+      normalizeKey: (record) => normalizeSeriesId(record.series_id)
+    }
   ]);
-
-  const workItems = Array.isArray(worksPayload && worksPayload.items) ? worksPayload.items : [];
-  state.nextSuggestedWorkId = suggestNextWorkId(workItems);
-  workItems.forEach((record) => {
-    if (!record || typeof record !== "object") return;
-    const workId = normalizeWorkId(record.work_id);
-    if (!workId) return;
-    state.workSearchById.set(workId, record);
-  });
-  const seriesItems = Array.isArray(seriesPayload && seriesPayload.items) ? seriesPayload.items : [];
-  seriesItems.forEach((record) => {
-    if (!record || typeof record !== "object") return;
-    const seriesId = normalizeSeriesId(record.series_id);
-    if (!seriesId) return;
-    state.seriesById.set(seriesId, record);
-  });
 }
 
 function bindWorkEditorEvents(state) {
@@ -819,18 +799,14 @@ function bindWorkEditorEvents(state) {
 }
 
 function markWorkEditorLoaded(state, elements) {
-  state.root.hidden = false;
-  elements.loadingNode.hidden = true;
-  markWorkRouteReady(state, true);
-}
-
-async function showWorkEditorInitError(loadingNode) {
-  try {
-    const config = await loadStudioConfigWithText("catalogue_work_editor");
-    loadingNode.textContent = getStudioText(config, "catalogue_work_editor.load_failed_error", "Failed to load catalogue source data for the work editor.");
-  } catch (_configError) {
-    loadingNode.textContent = "Failed to load catalogue source data for the work editor.";
-  }
+  revealCatalogueEditorRoute(state, {
+    loadingNode: elements.loadingNode,
+    routeState: {
+      route: "catalogue-work",
+      mode: () => state.mode === "new" ? "new" : state.mode === "bulk" ? "bulk" : state.currentRecord ? "single" : "empty",
+      recordLoaded: () => state.mode === "bulk" ? state.bulkWorkIds.length > 0 : state.mode === "single" ? Boolean(state.currentRecord) : false
+    }
+  });
 }
 
 async function init() {
@@ -856,7 +832,11 @@ async function init() {
     markWorkEditorLoaded(state, elements);
   } catch (error) {
     console.warn("catalogue_work_editor: init failed", error);
-    await showWorkEditorInitError(elements.loadingNode);
+    await showCatalogueEditorInitError(
+      elements.loadingNode,
+      "catalogue_work_editor",
+      "Failed to load catalogue source data for the work editor."
+    );
   }
 }
 

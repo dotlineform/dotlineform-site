@@ -1,25 +1,23 @@
 import {
-  getStudioText,
-  loadStudioConfigWithText
+  getStudioText
 } from "./studio-config.js";
-import { loadStudioLookupJson, loadStudioLookupRecordJson } from "./studio-data.js";
+import { loadStudioLookupRecordJson } from "./studio-data.js";
 import {
-  probeCatalogueHealth
-} from "./studio-transport.js";
+  collectRequiredElements,
+  configureCatalogueEditorRouteRuntime,
+  initializeCatalogueEditorRoute,
+  loadCatalogueEditorLookupMaps,
+  revealCatalogueEditorRoute,
+  setCatalogueEditorTextWithState as setTextWithState,
+  showCatalogueEditorInitError,
+  syncCatalogueEditorRouteBusyState
+} from "./catalogue-editor-route-boot.js";
 import {
   catalogueDeleteDisabled,
   catalogueDirtyWarningText,
   catalogueDraftHasChanges,
   catalogueSaveDisabled
 } from "./catalogue-editor-dirty-state.js";
-import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
-} from "./studio-route-state.js";
-import {
-  buildSaveModeText
-} from "./tag-studio-save.js";
 import {
   SERIES_EDITABLE_FIELDS as EDITABLE_FIELDS,
   buildSeriesDraftFromRecord,
@@ -72,38 +70,18 @@ import {
   updateSeriesSummary
 } from "./catalogue-series-sections.js";
 
-function setTextWithState(node, text, state = "") {
-  if (!node) return;
-  node.textContent = text || "";
-  if (state) node.dataset.state = state;
-  else delete node.dataset.state;
-}
-
 function routeModeForState(state) {
   if (state.mode === "new") return "new";
   if (state.currentRecord) return "single";
   return "empty";
 }
 
-function routeStateDetail(state) {
-  return {
-    route: "catalogue-series",
-    mode: routeModeForState(state),
-    service: state.serverAvailable ? "available" : "unavailable",
-    recordLoaded: Boolean(state.currentRecord)
-  };
-}
-
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(
-    state.root,
-    Boolean(state.isSaving || state.isBuilding || state.isDeleting),
-    routeStateDetail(state)
-  );
-}
-
-function markRouteReady(state, ready) {
-  setStudioRouteReady(state.root, ready, routeStateDetail(state));
+  syncCatalogueEditorRouteBusyState(state, {
+    route: "catalogue-series",
+    mode: routeModeForState,
+    recordLoaded: (currentState) => Boolean(currentState.currentRecord)
+  });
 }
 
 function setOpenInputMode(state) {
@@ -406,41 +384,74 @@ function openSeriesById(state, requestedSeriesId) {
 }
 
 async function init() {
-  const root = document.getElementById("catalogueSeriesRoot");
-  const loadingNode = document.getElementById("catalogueSeriesLoading");
-  const emptyNode = document.getElementById("catalogueSeriesEmpty");
-  const fieldsNode = document.getElementById("catalogueSeriesFields");
-  const readonlyNode = document.getElementById("catalogueSeriesReadonly");
-  const summaryNode = document.getElementById("catalogueSeriesSummary");
-  const readinessNode = document.getElementById("catalogueSeriesReadiness");
-  const runtimeStateNode = document.getElementById("catalogueSeriesRuntimeState");
-  const buildImpactNode = document.getElementById("catalogueSeriesBuildImpact");
-  const searchNode = document.getElementById("catalogueSeriesSearch");
-  const popupNode = document.getElementById("catalogueSeriesPopup");
-  const popupListNode = document.getElementById("catalogueSeriesPopupList");
-  const openButton = document.getElementById("catalogueSeriesOpen");
-  const newButton = document.getElementById("catalogueSeriesNew");
-  const saveButton = document.getElementById("catalogueSeriesSave");
-  const publicationButton = document.getElementById("catalogueSeriesPublication");
-  const deleteButton = document.getElementById("catalogueSeriesDelete");
-  const saveModeNode = document.getElementById("catalogueSeriesSaveMode");
-  const contextNode = document.getElementById("catalogueSeriesContext");
-  const statusNode = document.getElementById("catalogueSeriesStatus");
-  const warningNode = document.getElementById("catalogueSeriesWarning");
-  const resultNode = document.getElementById("catalogueSeriesResult");
-  const metaNode = document.getElementById("catalogueSeriesMeta");
-  const membersHeadingNode = document.getElementById("catalogueSeriesMembersHeading");
-  const memberSearchRowNode = document.getElementById("catalogueSeriesMemberSearchRow");
-  const memberSearchNode = document.getElementById("catalogueSeriesMemberSearch");
-  const memberSearchMetaNode = document.getElementById("catalogueSeriesMemberSearchMeta");
-  const memberAddNode = document.getElementById("catalogueSeriesMemberAdd");
-  const memberAddButton = document.getElementById("catalogueSeriesMemberAddButton");
-  const membersMetaNode = document.getElementById("catalogueSeriesMembersMeta");
-  const membersStatusNode = document.getElementById("catalogueSeriesMembersStatus");
-  const membersResultsNode = document.getElementById("catalogueSeriesMembersResults");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !newButton || !saveButton || !publicationButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchRowNode || !memberSearchNode || !memberSearchMetaNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
-    return;
-  }
+  const elements = collectRequiredElements({
+    root: "catalogueSeriesRoot",
+    loadingNode: "catalogueSeriesLoading",
+    emptyNode: "catalogueSeriesEmpty",
+    fieldsNode: "catalogueSeriesFields",
+    readonlyNode: "catalogueSeriesReadonly",
+    summaryNode: "catalogueSeriesSummary",
+    readinessNode: "catalogueSeriesReadiness",
+    runtimeStateNode: "catalogueSeriesRuntimeState",
+    buildImpactNode: "catalogueSeriesBuildImpact",
+    searchNode: "catalogueSeriesSearch",
+    popupNode: "catalogueSeriesPopup",
+    popupListNode: "catalogueSeriesPopupList",
+    openButton: "catalogueSeriesOpen",
+    newButton: "catalogueSeriesNew",
+    saveButton: "catalogueSeriesSave",
+    publicationButton: "catalogueSeriesPublication",
+    deleteButton: "catalogueSeriesDelete",
+    saveModeNode: "catalogueSeriesSaveMode",
+    contextNode: "catalogueSeriesContext",
+    statusNode: "catalogueSeriesStatus",
+    warningNode: "catalogueSeriesWarning",
+    resultNode: "catalogueSeriesResult",
+    metaNode: "catalogueSeriesMeta",
+    membersHeadingNode: "catalogueSeriesMembersHeading",
+    memberSearchRowNode: "catalogueSeriesMemberSearchRow",
+    memberSearchNode: "catalogueSeriesMemberSearch",
+    memberSearchMetaNode: "catalogueSeriesMemberSearchMeta",
+    memberAddNode: "catalogueSeriesMemberAdd",
+    memberAddButton: "catalogueSeriesMemberAddButton",
+    membersMetaNode: "catalogueSeriesMembersMeta",
+    membersStatusNode: "catalogueSeriesMembersStatus",
+    membersResultsNode: "catalogueSeriesMembersResults"
+  });
+  if (!elements) return;
+  const {
+    root,
+    loadingNode,
+    fieldsNode,
+    readonlyNode,
+    summaryNode,
+    readinessNode,
+    runtimeStateNode,
+    buildImpactNode,
+    searchNode,
+    popupNode,
+    popupListNode,
+    openButton,
+    newButton,
+    saveButton,
+    publicationButton,
+    deleteButton,
+    saveModeNode,
+    contextNode,
+    statusNode,
+    warningNode,
+    resultNode,
+    metaNode,
+    membersHeadingNode,
+    memberSearchRowNode,
+    memberSearchNode,
+    memberSearchMetaNode,
+    memberAddNode,
+    memberAddButton,
+    membersMetaNode,
+    membersStatusNode,
+    membersResultsNode
+  } = elements;
 
   const state = {
     config: null,
@@ -496,7 +507,7 @@ async function init() {
     membersStatusNode,
     membersResultsNode
   };
-  initializeStudioRouteState(root, { route: "catalogue-series" });
+  initializeCatalogueEditorRoute(root, "catalogue-series");
 
   renderSeriesEditorFields(fieldsNode, state, {
     text: (key, fallback, tokens = null) => t(state, key, fallback, tokens),
@@ -507,54 +518,53 @@ async function init() {
   });
 
   try {
-    const config = await loadStudioConfigWithText("catalogue_series_editor");
-    state.config = config;
-    state.seriesTypeOptions = getSeriesTypeOptions(config);
-    refreshSeriesTypeOptions(state);
-    searchNode.placeholder = t(state, "search_placeholder", "find series by title");
-    openButton.textContent = t(state, "open_button", "Open");
-    newButton.textContent = t(state, "new_button", "New");
-    saveButton.textContent = t(state, "save_button", "Save");
-    publicationButton.textContent = t(state, "publish_button", "Publish");
-    deleteButton.textContent = t(state, "delete_button", "Delete");
-    membersHeadingNode.textContent = t(state, "members_heading", "member works");
-    memberSearchNode.placeholder = t(state, "members_search_placeholder", "find member work by id");
-    memberAddNode.placeholder = t(state, "members_add_placeholder", "add work by id");
-    memberAddButton.textContent = t(state, "members_add_button", "Add");
-
-    const serverAvailable = await probeCatalogueHealth();
-    state.serverAvailable = Boolean(serverAvailable);
-    saveModeNode.textContent = buildSaveModeText(config, state.serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_series_editor.${key}`, fallback, tokens));
+    await configureCatalogueEditorRouteRuntime(state, {
+      namespace: "catalogue_series_editor",
+      saveModeNode,
+      applyText: (config) => {
+        state.seriesTypeOptions = getSeriesTypeOptions(config);
+        refreshSeriesTypeOptions(state);
+        searchNode.placeholder = t(state, "search_placeholder", "find series by title");
+        openButton.textContent = t(state, "open_button", "Open");
+        newButton.textContent = t(state, "new_button", "New");
+        saveButton.textContent = t(state, "save_button", "Save");
+        publicationButton.textContent = t(state, "publish_button", "Publish");
+        deleteButton.textContent = t(state, "delete_button", "Delete");
+        membersHeadingNode.textContent = t(state, "members_heading", "member works");
+        memberSearchNode.placeholder = t(state, "members_search_placeholder", "find member work by id");
+        memberAddNode.placeholder = t(state, "members_add_placeholder", "add work by id");
+        memberAddButton.textContent = t(state, "members_add_button", "Add");
+      }
+    });
     if (!state.serverAvailable) {
       setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warn");
       updateEditorState(state);
-      root.hidden = false;
-      loadingNode.hidden = true;
-      markRouteReady(state, true);
+      revealCatalogueEditorRoute(state, {
+        loadingNode,
+        routeState: {
+          route: "catalogue-series",
+          mode: routeModeForState,
+          recordLoaded: (currentState) => Boolean(currentState.currentRecord)
+        }
+      });
       return;
     }
 
-    const serverReadOptions = { cache: "no-store", catalogueServerAvailable: state.serverAvailable };
-    const [seriesPayload, worksPayload] = await Promise.all([
-      loadStudioLookupJson(config, "catalogue_lookup_series_search", serverReadOptions),
-      loadStudioLookupJson(config, "catalogue_lookup_work_search", serverReadOptions)
+    await loadCatalogueEditorLookupMaps(state, [
+      {
+        configKey: "catalogue_lookup_series_search",
+        target: state.seriesById,
+        normalizeKey: (record) => normalizeSeriesId(record.series_id),
+        afterItems: (items) => {
+          state.nextSuggestedSeriesId = suggestNextSeriesId(items);
+        }
+      },
+      {
+        configKey: "catalogue_lookup_work_search",
+        target: state.workSearchById,
+        normalizeKey: (record) => normalizeWorkId(record.work_id)
+      }
     ]);
-
-    const seriesItems = Array.isArray(seriesPayload && seriesPayload.items) ? seriesPayload.items : [];
-    seriesItems.forEach((record) => {
-      if (!record || typeof record !== "object") return;
-      const seriesId = normalizeSeriesId(record.series_id);
-      if (!seriesId) return;
-      state.seriesById.set(seriesId, record);
-    });
-    state.nextSuggestedSeriesId = suggestNextSeriesId(seriesItems);
-    const workItems = Array.isArray(worksPayload && worksPayload.items) ? worksPayload.items : [];
-    workItems.forEach((record) => {
-      if (!record || typeof record !== "object") return;
-      const workId = normalizeWorkId(record.work_id);
-      if (!workId) return;
-      state.workSearchById.set(workId, record);
-    });
     bindSeriesSelectionControls(state, buildSeriesSelectionContext(state));
     readinessNode.addEventListener("click", (event) => {
       const button = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
@@ -588,17 +598,21 @@ async function init() {
 
     await applyInitialSeriesRouteSelection(state, buildSeriesSelectionContext(state));
 
-    root.hidden = false;
-    loadingNode.hidden = true;
-    markRouteReady(state, true);
+    revealCatalogueEditorRoute(state, {
+      loadingNode,
+      routeState: {
+        route: "catalogue-series",
+        mode: routeModeForState,
+        recordLoaded: (currentState) => Boolean(currentState.currentRecord)
+      }
+    });
   } catch (error) {
     console.warn("catalogue_series_editor: init failed", error);
-    try {
-      const config = await loadStudioConfigWithText("catalogue_series_editor");
-      loadingNode.textContent = getStudioText(config, "catalogue_series_editor.load_failed_error", "Failed to load catalogue source data for the series editor.");
-    } catch (_configError) {
-      loadingNode.textContent = "Failed to load catalogue source data for the series editor.";
-    }
+    await showCatalogueEditorInitError(
+      loadingNode,
+      "catalogue_series_editor",
+      "Failed to load catalogue source data for the series editor."
+    );
   }
 }
 

@@ -396,6 +396,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check the Catalogue Series confirmation modal shell behavior.",
         ),
         CheckCommand(
+            "catalogue-editor-route-boot-module-smoke",
+            (
+                sys.executable,
+                "tests/smoke/catalogue_editor_route_boot_modules.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check shared Catalogue editor route boot, readiness, and lookup helpers.",
+        ),
+        CheckCommand(
             "tag-registry-module-smoke",
             (
                 sys.executable,
