@@ -92,11 +92,11 @@ For `tag-registry.js`, for example, list/control rendering is meaningful not bec
 
 ## Current Summary
 
-Measured on 2026-05-21, after the Data Sharing Prepare verification slice.
+Measured on 2026-05-21, after the Series Tags offline-session extraction slice.
 
 - Browser JavaScript files under `assets/`: 133
 - Total browser JavaScript lines under `assets/`: 41,383
-- Current detail set floor: 8, using the ranked top five after Data Sharing Prepare mitigation.
+- Current detail set floor: 8. The Series Tags detail remains below as recently mitigated context because this slice changed its score.
 
 ## Current Priorities
 
@@ -104,7 +104,7 @@ The full ranked priority table now lives in [Javascript Inventory](/docs/?scope=
 That child document lists all 133 browser JavaScript files with rank, file, risk score, and focus.
 [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) keeps the Docs Viewer-specific subset and follow-up tasks separate from the all-script mitigation pass.
 
-The detailed sections below cover the top five highest-risk current improvement priorities after manual review.
+The detailed sections below cover selected highest-risk current improvement priorities after manual review, plus recently mitigated context where a completed slice changed the score.
 When files have the same score, use the ranked child table order for the detail set and watch list.
 
 Each section should summarise:
@@ -170,28 +170,28 @@ Each section should summarise:
 
 ### `assets/studio/js/series-tags.js`
 
-- Risk score: 8
-- Score breakdown: maintenance 2, structural 2, performance 2, architectural 2.
-- Classification: medium-risk route orchestration shell
-- Raw: 18.5 KiB
+- Risk score: 7
+- Score breakdown: maintenance 2, structural 2, performance 2, architectural 1.
+- Classification: mitigated route orchestration shell
+- Raw: 18.6 KiB
 
-**Why This Remains In The Detail Set**
+**Why This Was Rescored**
 
 - The route no longer owns analytics scoring interpretation, RAG/report markup, filter rendering, chip display, visible-row projection, or report sorting.
 - Scoring now lives in `assets/studio/js/analysis-tag-scoring.js`, and report/table rendering now lives in `assets/studio/js/series-tags-render.js` behind an explicit report input.
-- Focused smoke checks now cover score interpretation and Series Tags report/RAG display output without requiring full route boot.
-- Remaining risk comes from legitimate route orchestration plus still-inline rare/off-path offline session handling and import preview/apply service workflow.
-- Offline session support is retained as a useful fallback and implementation model, but it is not part of the current central workflow.
-- Because offline sessions are rare, they should be the next extraction priority across Series Tags and Series Tag Editor: normal route paths should not load, initialise, read, write, render, or overlay offline-session data unless the user explicitly opens or chooses the offline/session flow.
-- The route is still eager and route-local, with several async data and service states, so future import changes should avoid rebuilding analytics or render behavior in the route shell.
+- Offline-session storage, export, clear, import-cleanup, and editor offline staging now live in `assets/studio/js/tag-assignments-offline-session.js`.
+- The normal Series Tags route path no longer reads local storage, overlays staged offline rows, or wires session/import modal behavior until the user opens the session or import flow.
+- The Series Tag Editor local-save failure path now switches to offline mode but requires an explicit follow-up Save before staging offline changes.
+- Remaining risk comes from legitimate route orchestration plus still-inline import preview/apply service workflow.
+- The route is still eager and route-local, with several async data and service states, so future import changes should avoid rebuilding analytics, render, modal, or offline-session behavior in the route shell.
 
 **Direction**
 
 - Keep scoring calculation and RAG interpretation in `assets/studio/js/analysis-tag-scoring.js`.
 - Keep report/table rendering, row projection, tag chip display, and sort comparison in `assets/studio/js/series-tags-render.js`.
-- Keep route-shell work limited to boot, config/data loading, event wiring, route ready/busy state, modal coordination, and applying successful import changes back to local state.
-- Extract offline-session handling into an explicitly activated module shared by Series Tags and Series Tag Editor. It should not read local storage, prepare export payloads, render session modals, overlay staged offline rows, or stage failed saves on the default route/save path.
-- In Series Tag Editor, the current automatic save-failure fallback to offline session should become an explicit user action or confirmation as part of this extraction.
+- Keep offline-session storage/write/export behavior in `assets/studio/js/tag-assignments-offline-session.js`.
+- Keep session/import modal rendering and focus lifecycle in `assets/studio/js/series-tags-modals.js`, loaded by the route only when the user activates a modal flow.
+- Keep route-shell work limited to boot, config/data loading, event wiring, route ready/busy state, dynamic module activation, modal coordination, and applying successful import changes back to local state.
 - If import preview/apply behavior grows materially, extract a focused workflow/service owner with explicit inputs for import payload, resolutions, activity context, and assignment reloads.
 
 **Score Reduction Tasks**
@@ -270,13 +270,13 @@ Each section should summarise:
 
 ## Watch Areas
 
-These files are the next five priorities after the top five detail set for the current pass.
+These files are notable watch areas after the current mitigation pass.
 
+- `assets/studio/js/series-tags.js`: now rescored to 7 after offline-session extraction. Revisit only if import preview/apply behavior grows materially or route boot starts taking on modal/offline responsibilities again.
 - `assets/studio/js/tag-aliases.js`: now a medium-risk reference state with useful render, modal, and import-mode owners. Revisit only when alias import parsing/submission changes materially.
-- `assets/studio/js/tag-studio.js`: medium risk because several good owners already exist. It still uses offline-session fallback behavior through the Series Tag Editor save/state path; apply the same explicitly activated extraction policy there if that route is revisited. Tag Registry and Tag Aliases do not currently use offline sessions.
+- `assets/studio/js/tag-studio.js`: medium risk because several good owners already exist. Offline staging now requires explicit activation through Save after fallback, so revisit only if route orchestration, editor state projection, or save-mode behavior grows materially.
 - `assets/studio/js/data-sharing-review.js`: medium risk after apply-orchestration extraction. Keep returned-package loading, route readiness, and workflow-domain adapter policy small.
 - `assets/studio/js/tag-registry-modals.js`: large route-local modal module. Keep it modal-focused; split if modal workflows themselves gain separate complete responsibilities.
-- `assets/docs-viewer/js/docs-viewer-management.js`: Visit if management workflow growth reintroduces mixed ownership.
 
 ## Rerun Notes
 

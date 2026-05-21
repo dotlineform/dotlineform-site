@@ -16,21 +16,21 @@ Measured on 2026-05-21 and rescored against the four-risk model.
 | Rank | File | Risk score | Focus |
 | ---: | --- | ---: | --- |
 | 1 | `assets/docs-viewer/js/docs-viewer.js` | 9 | Shared Docs Viewer runtime composition and route loading. |
-| 2 | `assets/studio/js/series-tags.js` | 8 | Series Tags route shell after scoring, report rendering, and explicit report-input extraction. |
-| 3 | `assets/docs-viewer/js/docs-html-import.js` | 8 | Docs import controller after explicit workflow handoff and focused module-smoke coverage. |
-| 4 | `assets/studio/js/data-sharing-prepare.js` | 8 | Data sharing package preparation route shell after workflow, render, service, and module-smoke coverage. |
-| 5 | `assets/studio/js/tag-registry.js` | 8 | Tag registry route shell after render, import-mode, and workflow extraction. |
-| 6 | `assets/studio/js/tag-aliases.js` | 8 | Tag aliases route controller and remaining import/service workflow. |
-| 7 | `assets/studio/js/tag-studio.js` | 8 | Series tag editor route shell and extracted-module coordination. |
-| 8 | `assets/docs-viewer/js/docs-viewer-management.js` | 8 | Docs Viewer management coordinator. |
-| 9 | `assets/studio/js/data-sharing-review.js` | 8 | Returned-package review route shell and file/state coordination. |
-| 10 | `assets/studio/js/catalogue-work-editor.js` | 8 | Catalogue editor route/controller. |
-| 11 | `assets/studio/js/catalogue-work-detail-editor.js` | 8 | Catalogue editor route/controller. |
-| 12 | `assets/studio/js/catalogue-series-editor.js` | 8 | Catalogue editor route/controller. |
-| 13 | `assets/studio/js/catalogue-moment-editor.js` | 8 | Catalogue editor route/controller. |
-| 14 | `assets/studio/js/docs-broken-links.js` | 8 | Docs broken-links audit route. |
-| 15 | `assets/studio/js/bulk-add-work.js` | 8 | Bulk import/add route workflow. |
-| 16 | `assets/studio/js/project-state.js` | 8 | Project state route workflow. |
+| 2 | `assets/docs-viewer/js/docs-html-import.js` | 8 | Docs import controller after explicit workflow handoff and focused module-smoke coverage. |
+| 3 | `assets/studio/js/data-sharing-prepare.js` | 8 | Data sharing package preparation route shell after workflow, render, service, and module-smoke coverage. |
+| 4 | `assets/studio/js/tag-registry.js` | 8 | Tag registry route shell after render, import-mode, and workflow extraction. |
+| 5 | `assets/studio/js/tag-aliases.js` | 8 | Tag aliases route controller and remaining import/service workflow. |
+| 6 | `assets/studio/js/tag-studio.js` | 8 | Series tag editor route shell and extracted-module coordination. |
+| 7 | `assets/docs-viewer/js/docs-viewer-management.js` | 8 | Docs Viewer management coordinator. |
+| 8 | `assets/studio/js/data-sharing-review.js` | 8 | Returned-package review route shell and file/state coordination. |
+| 9 | `assets/studio/js/catalogue-work-editor.js` | 8 | Catalogue editor route/controller. |
+| 10 | `assets/studio/js/catalogue-work-detail-editor.js` | 8 | Catalogue editor route/controller. |
+| 11 | `assets/studio/js/catalogue-series-editor.js` | 8 | Catalogue editor route/controller. |
+| 12 | `assets/studio/js/catalogue-moment-editor.js` | 8 | Catalogue editor route/controller. |
+| 13 | `assets/studio/js/docs-broken-links.js` | 8 | Docs broken-links audit route. |
+| 14 | `assets/studio/js/bulk-add-work.js` | 8 | Bulk import/add route workflow. |
+| 15 | `assets/studio/js/project-state.js` | 8 | Project state route workflow. |
+| 16 | `assets/studio/js/series-tags.js` | 7 | Series Tags route shell after scoring, report rendering, and offline-session activation extraction. |
 | 17 | `assets/studio/js/tag-registry-modals.js` | 7 | Tag registry modal lifecycle and modal rendering. |
 | 18 | `assets/studio/js/tag-aliases-modals.js` | 7 | Tag modal rendering and lifecycle helper. |
 | 19 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | 7 | Docs Viewer management support module. |
