@@ -223,6 +223,141 @@ After the Docs Viewer index-panel boundary is in place, revisit the remaining sc
 
 Each slice should have a focused owner, a small smoke check, and an inventory rescore.
 
+Concrete task definitions are needed before starting those families.
+Define them after the durable guidance cleanup, so the tasks can reference the stable maintenance-gate workflow rather than this implementation note.
+
+### Task A: Catalogue Action Workflow Contracts
+
+**Status:** Pending definition after durable guidance cleanup.
+
+Candidate files:
+
+- `assets/studio/js/catalogue-work-actions.js`
+- `assets/studio/js/catalogue-series-actions.js`
+- `assets/studio/js/catalogue-work-detail-actions.js`
+- `assets/studio/js/catalogue-moment-actions.js`
+- `assets/studio/js/catalogue-editor-action-workflow.js`
+
+Define the first slice around one concrete action contract, not around general file size.
+Likely contract candidates are save-result normalization, build-preview blocker shaping, or cross-entity affected-record summaries.
+
+The task definition should specify:
+
+- which action result shape is the owner contract
+- which route/action modules consume that shape
+- what remains route-specific after the shared contract exists
+- which focused module smoke covers preview, success, partial-failure, and fallback cases
+- which inventory rows can be rescored if the route/action files stop owning the contract directly
+
+### Task B: Catalogue Editor Route Shell Boundaries
+
+**Status:** Pending definition after Task A identifies the shared action contract surface.
+
+Candidate files:
+
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-moment-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-editor-route-boot.js`
+- `assets/studio/js/catalogue-work-route-state.js`
+
+Define this task only after the action workflow contract is clear.
+The editor route shells should keep boot/config, required-element checks, event wiring, and handoff to focused owners.
+
+The task definition should specify:
+
+- which route-state projection or readiness transition is being extracted or pinned
+- whether the shared owner is route-boot, route-state, readiness, selection, or action workflow
+- which editor route is the representative first adopter
+- which smoke or module test proves the route still loads and projects ready/busy state correctly
+- what should not be reintroduced into the editor shell
+
+### Task C: Tag Route Save And Modal Coordination
+
+**Status:** Pending definition after durable guidance cleanup.
+
+Candidate files:
+
+- `assets/studio/js/tag-studio.js`
+- `assets/studio/js/tag-registry.js`
+- `assets/studio/js/tag-aliases.js`
+- `assets/studio/js/tag-aliases-modals.js`
+- `assets/studio/js/tag-registry-modals.js`
+- `assets/studio/js/tag-modal-shell.js`
+- `assets/studio/js/tag-studio-save-controller.js`
+
+Define this task around the remaining coordination points where route state, save/offline probing, modal lifecycle, and user-facing fallback still meet.
+Do not reopen already completed modal-shell, render, import-mode, or route-state extractions unless the new slice depends on them.
+
+The task definition should specify:
+
+- whether the owner is a save workflow, modal workflow, offline/session workflow, or route-state projection
+- which route shell should become thinner first
+- which modal controller behavior is shared and which remains route-specific
+- what focused smoke covers unavailable-server fallback, patch rendering, and restored focus/status behavior
+- whether `tag-studio.js`, `tag-registry.js`, or `tag-aliases.js` can be rescored after the slice
+
+### Task D: Studio Shared Route Helper Contracts
+
+**Status:** Pending definition after the route-specific catalogue and tag slices reveal repeated patterns.
+
+Candidate files:
+
+- `assets/studio/js/bulk-add-work.js`
+- `assets/studio/js/data-sharing-review.js`
+- `assets/studio/js/docs-broken-links.js`
+- `assets/studio/js/project-state.js`
+- `assets/studio/js/studio-audits.js`
+- `assets/studio/js/thumbnail-quality.js`
+- `assets/studio/js/studio-route-state.js`
+- `assets/studio/js/studio-transport.js`
+
+This task should not start as a broad shared-runtime refactor.
+Define it around one repeated route-helper contract that is already used or clearly needed by at least two route families.
+
+The task definition should specify:
+
+- the repeated contract being pinned, such as ready/busy projection, local-service transport results, list rendering state, or route error display
+- the first two routes that prove the shared helper is real
+- the smallest module smoke that can pin the helper without full route boot
+- whether any route-level browser smoke is needed
+- which high-churn shared helper or route rows can be rescored
+
+### Task E: Public Runtime Performance-Only Follow-Up
+
+**Status:** Watch item; define only when public route-load or input-time behavior is being changed.
+
+Candidate files:
+
+- `assets/js/catalogue-search.js`
+- `assets/js/work.js`
+- `assets/js/moment.js`
+- `assets/js/public-catalogue-runtime.js`
+- `assets/js/search/search-performance.js`
+
+Do not start this task for cosmetic module splitting.
+Public runtime work should be tied to a measurable page-load, search-input, list-expansion, or media-route cost.
+
+The task definition should specify:
+
+- the measured runtime cost or user-visible behavior being changed
+- the performance or route smoke baseline before the change
+- the focused owner for the changed behavior
+- the public routes affected by the slice
+- whether the inventory score changes because load/input work was reduced, not merely because code moved
+
+### Task Definition Exit Criteria
+
+Before implementing any task above, add a compact task section to the owning request or inventory doc with:
+
+- target files and current inventory scores
+- responsibility being moved, pinned, or deliberately left in place
+- focused owner module
+- acceptance checks and smoke-test file names
+- inventory rows to revisit after verification
+- docs and generated-payload follow-through
+
 ## Exit Criteria
 
 The next maintenance-risk phase is successful when:
