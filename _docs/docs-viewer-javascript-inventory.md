@@ -2,7 +2,7 @@
 doc_id: docs-viewer-javascript-inventory
 title: Docs Viewer JavaScript Inventory
 added_date: 2026-05-20
-last_updated: 2026-05-20
+last_updated: 2026-05-21
 ui_status: review
 parent_id: studio-javascript-payload-inventory
 sort_order: 7020
@@ -90,7 +90,7 @@ Measured on 2026-05-20 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 **Direction**
 
-- Extract import result rendering into a focused render module that owns media plans, warnings, replacement docs, and final status markup.
+- Keep import result rendering in `assets/docs-viewer/js/docs-html-import-render.js`, which owns media plans, warnings, replacement docs, and final status markup.
 - Extract preview/write orchestration into a workflow module that owns service calls, replacement decisions, and write-mode transitions.
 - Keep scope selection and route readiness in the controller while passing explicit inputs to conversion and workflow modules.
 - Do not split small string-format helpers unless they belong to one of those complete responsibilities.
@@ -99,7 +99,7 @@ Measured on 2026-05-20 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 | # | Status | Task |
 | ---: | --- | --- |
-| 1 | proposed | Move import result rendering into a focused render module for media plans, warnings, replacement docs, and final status markup. Anticipated improvement: -1 to -2 from maintenance and structural risk. |
+| 1 | done | Moved import result rendering into `assets/docs-viewer/js/docs-html-import-render.js` for media plans, warnings, replacement docs, and final status markup. |
 | 2 | proposed | Extract preview/write orchestration into a workflow module that owns service calls, replacement decisions, and write-mode transitions. Anticipated improvement: -1 to -2 from maintenance and structural risk. |
 | 3 | proposed | Keep scope selection and route readiness in the controller with explicit inputs to conversion and workflow modules. Anticipated improvement: -1 from architectural risk. |
 | 4 | proposed | Add focused checks for preview, replacement, write-mode fallback, and result rendering. Anticipated improvement: -1 from maintenance risk. |

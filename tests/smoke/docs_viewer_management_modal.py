@@ -633,6 +633,143 @@ def run_filename_conflict_check(page: Page) -> None:
         raise AssertionError("filename-conflict modal did not return focus to opener")
 
 
+def run_import_render_module_check(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <main>
+                <div id="docsHtmlImportWarning" hidden>
+                  <h3 id="docsHtmlImportCollisionHeading"></h3>
+                  <p id="docsHtmlImportCollisionBody"></p>
+                  <p id="docsHtmlImportCollisionMeta"></p>
+                </div>
+                <button id="docsHtmlImportConfirm" type="button" hidden></button>
+                <button id="docsHtmlImportCancel" type="button" hidden></button>
+                <div id="docsHtmlImportResult" hidden>
+                  <h3 id="docsHtmlImportResultTitle"></h3>
+                  <dl id="docsHtmlImportResultGrid" class="docsViewerImport__resultGrid"></dl>
+                  <div id="docsHtmlImportWarnings" hidden>
+                    <h4 id="docsHtmlImportWarningsHeading"></h4>
+                    <ul id="docsHtmlImportWarningsList"></ul>
+                  </div>
+                </div>
+              </main>
+            `;
+            const render = await import('/assets/docs-viewer/js/docs-html-import-render.js');
+            const state = {
+                config: {
+                    docs_html_import: {
+                        result_title_all: 'Imported {count} source files',
+                        result_markdown_package_counts: '{chars} chars, {links} links, {images} images, {attachments} attachments',
+                        result_summary_counts: '{links} links, {images} images, {svg} SVG, {details} details blocks',
+                        image_media_result_type: 'image, {format} <= {max_width}px',
+                        attachment_media_result_type: 'attachment',
+                        warnings_heading: 'Import warnings',
+                        collision_heading: 'Overwrite warning',
+                        overwrite_required: 'Overwrite required: {doc_id} ({title}). Review the warning and confirm if you want to replace it.'
+                    }
+                },
+                warningNode: document.getElementById('docsHtmlImportWarning'),
+                collisionHeadingNode: document.getElementById('docsHtmlImportCollisionHeading'),
+                collisionBodyNode: document.getElementById('docsHtmlImportCollisionBody'),
+                collisionMetaNode: document.getElementById('docsHtmlImportCollisionMeta'),
+                confirmButton: document.getElementById('docsHtmlImportConfirm'),
+                cancelButton: document.getElementById('docsHtmlImportCancel'),
+                resultNode: document.getElementById('docsHtmlImportResult'),
+                resultTitleNode: document.getElementById('docsHtmlImportResultTitle'),
+                resultGridNode: document.getElementById('docsHtmlImportResultGrid'),
+                warningsWrap: document.getElementById('docsHtmlImportWarnings'),
+                warningsHeading: document.getElementById('docsHtmlImportWarningsHeading'),
+                warningsList: document.getElementById('docsHtmlImportWarningsList'),
+                pendingOverwriteDocId: ''
+            };
+            render.renderDocsHtmlImportResult(state, [
+                {
+                    scope: 'library',
+                    doc_id: 'alpha',
+                    staged_filename: 'alpha.md',
+                    import_preview: {
+                        source_format: 'markdown_package',
+                        source_stats: { chars: 42, links: 2, images: 1, attachments: 1 },
+                        warnings: ['Use & check'],
+                        media_plans: [
+                            {
+                                source_path: 'alpha-image-01.png',
+                                title: 'Diagram <One>',
+                                kind: 'image',
+                                media_path: 'docs/library/img/alpha-image-01.png',
+                                conversion: { format: 'webp', max_width: 640 }
+                            },
+                            {
+                                source_path: 'alpha.pdf',
+                                kind: 'attachment',
+                                media_token: '[[media:docs/library/files/alpha.pdf]]'
+                            }
+                        ]
+                    }
+                },
+                {
+                    scope: 'library',
+                    doc_id: 'beta',
+                    staged_filename: 'beta.html',
+                    import_preview: {
+                        source_format: 'html',
+                        source_stats: { links: 1, images: 0, svg: 0, details: 1 },
+                        warnings: ['Second warning'],
+                        media_plan: {
+                            source_path: 'beta-image.png',
+                            title: 'Beta image',
+                            kind: 'image',
+                            media_path: 'docs/library/img/beta-image.png'
+                        }
+                    }
+                }
+            ]);
+            render.renderDocsHtmlImportOverwriteWarning(state, {
+                collision: { doc_id: 'alpha', title: 'Alpha Doc' },
+                import_preview: { proposed_doc_id: 'alpha', title: 'Alpha Doc' }
+            });
+            window.__docsHtmlImportRenderSmoke = {
+                title: state.resultTitleNode.textContent.trim(),
+                rows: Array.from(state.resultGridNode.querySelectorAll('dd')).map(node => node.textContent.trim()),
+                warningsHeading: state.warningsHeading.textContent.trim(),
+                warnings: Array.from(state.warningsList.querySelectorAll('li')).map(node => node.textContent.trim()),
+                resultHidden: state.resultNode.hidden,
+                warningHidden: state.warningNode.hidden,
+                confirmHidden: state.confirmButton.hidden,
+                pendingOverwriteDocId: state.pendingOverwriteDocId,
+                collisionMeta: state.collisionMetaNode.textContent.trim(),
+                alphaScope: state.resultGridNode.querySelector('[data-doc-source-link]')?.dataset.scope || ''
+            };
+        }"""
+    )
+    state = page.evaluate("window.__docsHtmlImportRenderSmoke")
+    expected_rows = [
+        "alpha.md: alpha",
+        "42 chars, 2 links, 1 images, 1 attachments",
+        "Diagram <One> (alpha-image-01.png)",
+        "image, WEBP <= 640px: docs/library/img/alpha-image-01.png",
+        "alpha.pdf",
+        "attachment: [[media:docs/library/files/alpha.pdf]]",
+        "beta.html: beta",
+        "1 links, 0 images, 0 SVG, 1 details blocks",
+        "Beta image (beta-image.png)",
+        "attachment: docs/library/img/beta-image.png",
+    ]
+    if state["title"] != "Imported 2 source files" or state["rows"] != expected_rows:
+        raise AssertionError(f"import render rows changed: {state!r}")
+    if state["warningsHeading"] != "Import warnings":
+        raise AssertionError(f"import warnings heading changed: {state!r}")
+    if state["warnings"] != ["alpha.md: Use & check", "beta.html: Second warning"]:
+        raise AssertionError(f"import warnings changed: {state!r}")
+    if state["resultHidden"] or state["warningHidden"] or state["confirmHidden"]:
+        raise AssertionError(f"import render did not reveal expected panels: {state!r}")
+    if state["pendingOverwriteDocId"] != "alpha" or "alpha (Alpha Doc)" not in state["collisionMeta"]:
+        raise AssertionError(f"overwrite warning rendering changed: {state!r}")
+    if state["alphaScope"] != "library":
+        raise AssertionError(f"source link data attributes changed: {state!r}")
+
+
 def run_import_result_rows_check(page: Page) -> None:
     page.evaluate(
         """async () => {
@@ -1026,6 +1163,7 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
     run_transient_text_check(page)
     run_transient_choice_check(page)
     run_filename_conflict_check(page)
+    run_import_render_module_check(page)
     run_import_result_rows_check(page)
     run_scope_lifecycle_create_payload_check(page)
     run_delete_confirm_idle_check(page)
@@ -1040,6 +1178,7 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
             "transient-text",
             "transient-choice",
             "filename-conflict",
+            "import-render-module",
             "import-result-rows",
             "scope-lifecycle-create-payload",
             "delete-confirm-idle",
