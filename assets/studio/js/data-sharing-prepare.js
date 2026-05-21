@@ -1,7 +1,5 @@
 import {
-  DATA_SHARING_ENDPOINTS,
   DOCS_MANAGEMENT_ENDPOINTS,
-  postJson,
   probeDataSharingHealth
 } from "./studio-transport.js";
 import {
@@ -31,7 +29,6 @@ import {
   workflowDomainsForOperation
 } from "./data-sharing-adapters.js";
 import {
-  buildPreparePackageRequest,
   enabledPrepareConfigsForScope,
   prepareProfilesForCapability,
   prepareSelectionModel,
@@ -52,6 +49,11 @@ import {
   updateDataSharingPrepareSelectionFromChange,
   updateDataSharingPrepareSelectionSummary
 } from "./data-sharing-prepare-render.js";
+import {
+  buildDataSharingPrepareSubmission,
+  dataSharingPrepareRunningMessage,
+  runDataSharingPreparePackage
+} from "./data-sharing-prepare-service.js";
 
 const DEFAULT_SCOPE = "library";
 const WORKFLOW_SCOPES = [
@@ -290,31 +292,12 @@ async function runPreparePackage(state) {
     updateStatus(state);
     return;
   }
-  const targetFormat = normalizeText(state.targetFormat);
-  const usesDocumentSelection = usesPrepareDocumentSelection(state.prepareCapability);
-  if (!supportedUiFormatsForDataSharingPrepareConfig(config).includes(targetFormat)) {
-    setStatus(
-      state.statusNode,
-      "error",
-      getStudioText(state.config, "data_sharing_prepare.format_required", "Select a supported package format.")
-    );
-    return;
-  }
-  const payload = buildPreparePackageRequest({
-    scope: state.scope,
+  const submission = buildDataSharingPrepareSubmission(state, {
     config,
-    targetFormat,
-    selectedIds: state.selectedIds,
-    usesDocumentSelection,
-    missingSummaryOnlyAvailable: !state.missingSummaryOnlyWrap.hidden,
-    missingSummaryOnly: state.missingSummaryOnly.checked
+    supportedFormats: supportedUiFormatsForDataSharingPrepareConfig(config)
   });
-  if (usesDocumentSelection && !payload.select_all && !payload.doc_ids.length) {
-    setStatus(
-      state.statusNode,
-      "error",
-      getStudioText(state.config, "data_sharing_prepare.selection_required", "Select at least one document.")
-    );
+  if (!submission.ok) {
+    setStatus(state.statusNode, submission.statusState, submission.statusMessage);
     return;
   }
 
@@ -322,29 +305,12 @@ async function runPreparePackage(state) {
   state.isRunning = true;
   state.runButton.disabled = true;
   markBusy(state, true);
-  setStatus(
-    state.statusNode,
-    "",
-    getStudioText(state.config, "data_sharing_prepare.status_running", "Running Data Sharing prepare...")
-  );
+  setStatus(state.statusNode, "", dataSharingPrepareRunningMessage(state));
 
   try {
-    const resultPayload = await postJson(DATA_SHARING_ENDPOINTS.prepare, payload);
-    showDataSharingPrepareResultModal(state, resultPayload);
-    setStatus(
-      state.statusNode,
-      "success",
-      resultPayload.summary_text || getStudioText(state.config, "data_sharing_prepare.status_success", "Package prepared.")
-    );
-  } catch (error) {
-    const payload = error && error.payload ? error.payload : {};
-    showDataSharingPrepareResultModal(state, payload, true);
-    setStatus(
-      state.statusNode,
-      "error",
-      normalizeText(error && error.message)
-        || getStudioText(state.config, "data_sharing_prepare.status_failed", "Package preparation failed.")
-    );
+    const result = await runDataSharingPreparePackage(state, submission.request);
+    showDataSharingPrepareResultModal(state, result.payload, result.failed);
+    setStatus(state.statusNode, result.statusState, result.statusMessage);
   } finally {
     state.isRunning = false;
     state.runButton.disabled = !state.serviceAvailable;
