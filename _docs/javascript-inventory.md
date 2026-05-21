@@ -3,9 +3,10 @@ doc_id: javascript-inventory
 title: Javascript Inventory
 added_date: 2026-05-20
 last_updated: 2026-05-21
+ui_status: review
 parent_id: studio-javascript-payload-inventory
 sort_order: 7010
-hidden: false
+viewable: true
 ---
 # Javascript Inventory
 
