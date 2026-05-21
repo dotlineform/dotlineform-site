@@ -9,9 +9,6 @@ import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
   buildDeletePreviewPayload,
   buildImportSummary,
-  buildManualPatchForCreateTag,
-  buildManualPatchForDemote,
-  buildManualPatchForNewTags,
   buildMutationSummary,
   readImportRegistryPayload,
   utcTimestamp
@@ -146,8 +143,7 @@ export async function submitCreateTag(options) {
           "server_create_failed",
           "Server create failed; switched to patch mode. {message}",
           { message: String(error && error.message ? error.message : "").trim() }
-        ).trim(),
-        patchResult: buildManualPatchForCreateTag(newTagRow)
+        ).trim()
       };
     }
   }
@@ -155,7 +151,6 @@ export async function submitCreateTag(options) {
   return {
     ok: true,
     mode: "patch",
-    patchResult: buildManualPatchForCreateTag(newTagRow),
     state
   };
 }
@@ -246,8 +241,7 @@ export async function submitTagDemote(options) {
 
   return {
     ok: true,
-    mode: "patch",
-    patchResult: buildManualPatchForDemote(tagId, aliasTargets)
+    mode: "patch"
   };
 }
 
@@ -278,16 +272,14 @@ export async function submitRegistryImport(options) {
           "server_import_failed",
           "Server import failed; switched to patch mode. {message}",
           { message: String(error && error.message ? error.message : "").trim() }
-        ).trim(),
-        patchResult: buildManualPatchForNewTags(state, importRegistry)
+        ).trim()
       };
     }
   }
 
   return {
     ok: true,
-    mode: "patch",
-    patchResult: buildManualPatchForNewTags(state, importRegistry)
+    mode: "patch"
   };
 }
 

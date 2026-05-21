@@ -32,20 +32,16 @@ import {
   renderTagRegistryList
 } from "./tag-registry-render.js";
 import {
-  buildManualPatchForCreateTag,
-  buildManualPatchForDemote,
-  buildManualPatchForNewTags
-} from "./tag-registry-save.js";
-import {
-  previewDeleteImpact,
-  previewTagDemote,
-  readImportRegistryFromFile as readRegistryImportFromFile,
-  submitCreateTag,
-  submitDeleteTag,
-  submitRegistryImport,
-  submitTagDemote,
-  submitTagEdit
-} from "./tag-registry-service.js";
+  applyTagRegistryPatchFallback,
+  createTagRegistryTag,
+  deleteTagRegistryTag,
+  demoteTagRegistryTag,
+  importTagRegistryTags,
+  previewTagRegistryDeleteImpact,
+  previewTagRegistryDemote,
+  readTagRegistryImportFromFile,
+  saveTagRegistryEdit
+} from "./tag-registry-workflow.js";
 import {
   openConfirmDetailModal
 } from "./studio-modal.js";
@@ -455,7 +451,7 @@ async function refreshDeleteImpactPreview(state) {
   syncRouteBusyState(state);
   let result = null;
   try {
-    result = await previewDeleteImpact({
+    result = await previewTagRegistryDeleteImpact({
       saveMode: state.saveMode,
       tagId: state.deleteTagId,
       config: state.config
@@ -480,7 +476,7 @@ async function handleTagEdit(state) {
   if (!state.editTagId) return;
   const tagId = state.editTagId;
   const description = String(state.refs.editDescription.value || "").trim();
-  const result = await submitTagEdit({
+  const result = await saveTagRegistryEdit({
     saveMode: state.saveMode,
     tag: findTagById(state, tagId),
     description,
@@ -527,11 +523,10 @@ async function handleCreateTag(state) {
     description: validation.description
   };
 
-  const result = await submitCreateTag({
+  const result = await createTagRegistryTag({
     saveMode: state.saveMode,
     newTagRow,
-    config: state.config,
-    importMode: "add"
+    config: state.config
   });
   if (result.ok && result.mode === "post") {
     closeNewTagModal(state);
@@ -557,13 +552,12 @@ async function handleCreateTag(state) {
   }
 
   if (result.switchToPatch) {
-    state.saveMode = "patch";
-    state.importAvailable = false;
+    applyTagRegistryPatchFallback(state);
     renderImportAvailability(state);
     setNewTagStatus(state, "error", result.message);
   }
 
-  const patchResult = result.patchResult || buildManualPatchForCreateTag(newTagRow);
+  const patchResult = result.patchResult;
   closeNewTagModal(state);
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
@@ -600,7 +594,7 @@ function closeDeleteModal(state) {
 async function handleDeleteFromModal(state) {
   if (!state.deleteTagId) return;
   const deletedTagId = state.deleteTagId;
-  const result = await submitDeleteTag({
+  const result = await deleteTagRegistryTag({
     saveMode: state.saveMode,
     tag: findTagById(state, deletedTagId),
     config: state.config
@@ -768,7 +762,7 @@ async function handleTagDemote(state) {
   const aliasTargets = validation.tags.slice().sort((a, b) => a.localeCompare(b));
 
   if (state.saveMode === "post") {
-    const preview = await previewTagDemote({
+    const preview = await previewTagRegistryDemote({
       tagId: tag.tagId,
       aliasTargets,
       config: state.config
@@ -815,7 +809,7 @@ async function handleTagDemote(state) {
     }
   }
 
-  const result = await submitTagDemote({
+  const result = await demoteTagRegistryTag({
     saveMode: state.saveMode,
     tagId: tag.tagId,
     aliasTargets,
@@ -839,7 +833,7 @@ async function handleTagDemote(state) {
     return;
   }
 
-  const patchResult = result.patchResult || buildManualPatchForDemote(tag.tagId, aliasTargets);
+  const patchResult = result.patchResult;
   closeDemoteModal(state);
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
@@ -859,13 +853,13 @@ async function handleImport(state) {
     return;
   }
 
-  const result = await submitRegistryImport({
+  const result = await importTagRegistryTags({
     saveMode: state.saveMode,
     importMode: state.importMode,
     importRegistry,
     filename: state.selectedFile ? String(state.selectedFile.name || "") : "",
     config: state.config,
-    state
+    patchContext: state
   });
   if (result.ok && result.mode === "post") {
     setImportResult(state, "success", result.summary);
@@ -876,13 +870,12 @@ async function handleImport(state) {
   }
 
   if (result.switchToPatch) {
-    state.saveMode = "patch";
-    state.importAvailable = false;
+    applyTagRegistryPatchFallback(state);
     renderImportAvailability(state);
     setImportResult(state, "error", result.message);
   }
 
-  const patchResult = result.patchResult || buildManualPatchForNewTags(state, importRegistry);
+  const patchResult = result.patchResult;
   setImportResult(state, patchResult.kind, patchResult.message);
   if (patchResult.snippet) {
     openPatchModal(state, patchResult.snippet);
@@ -890,7 +883,7 @@ async function handleImport(state) {
 }
 
 async function readImportRegistryFromFile(file) {
-  return readRegistryImportFromFile(file, STUDIO_GROUPS);
+  return readTagRegistryImportFromFile(file, STUDIO_GROUPS);
 }
 
 function openPatchModal(state, snippet) {

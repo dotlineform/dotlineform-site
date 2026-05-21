@@ -47,6 +47,7 @@ Supporting modules:
 - `assets/studio/js/tag-registry-render.js`
 - `assets/studio/js/tag-registry-save.js`
 - `assets/studio/js/tag-registry-service.js`
+- `assets/studio/js/tag-registry-workflow.js`
 
 Top-level structure:
 
@@ -317,10 +318,11 @@ The page controller owns:
 - shell rendering
 - modal visibility
 - search/filter/sort wiring
-- delegating mutations to service helpers
+- user-facing mutation result handling
 
 `assets/studio/js/tag-registry-render.js` owns the search/filter controls, group info control, list header, empty state, and registry row markup.
 `assets/studio/js/tag-registry-import-mode.js` owns import mode selection state, local write-service availability probing, and import button availability.
+`assets/studio/js/tag-registry-workflow.js` owns service-call orchestration, patch fallback result selection, and patch fallback state transitions.
 
 ## UI Contract
 
@@ -394,6 +396,7 @@ These responsibilities are split across:
 - `tag-registry-import-mode.js`
 - `tag-registry-save.js`
 - `tag-registry-service.js`
+- `tag-registry-workflow.js`
 
 ## Change Guidance
 
