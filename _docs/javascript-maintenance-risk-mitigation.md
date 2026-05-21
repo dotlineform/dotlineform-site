@@ -49,6 +49,8 @@ Before the next feature/refactor batch, add small infrastructure that makes the 
 
 ### Inventory Guardrail
 
+**Status:** Completed on 2026-05-21.
+
 Create and use `scripts/checks/javascript_inventory_guardrail.py`.
 It reads the source inventory table and reports:
 
@@ -69,6 +71,8 @@ Use:
 
 ### Maintenance Gate Checklist
 
+**Status:** Draft checklist exists in this document; reusable enforcement is pending.
+
 Add a short checklist to use before changing any file with maintenance score 2:
 
 - What complete responsibility is being added or changed?
@@ -82,6 +86,8 @@ If it proves useful, move it into a reusable script prompt or check profile late
 
 ### Focused Module Smoke Pattern
 
+**Status:** Pattern documented; Docs Viewer index-panel module and route smoke checks added.
+
 Standardize the smoke-test pattern already used by existing module checks:
 
 - serve the site root through a temporary local static server
@@ -93,6 +99,8 @@ Standardize the smoke-test pattern already used by existing module checks:
 Use this pattern for new owners before running broader browser route smoke tests.
 
 ### Controller Contract Notes
+
+**Status:** Pending.
 
 When a score-6 or score-7 controller is touched, leave a short owner note in the relevant inventory or child doc:
 
@@ -128,6 +136,8 @@ Implement the Docs Viewer priority in small slices.
 
 ### Slice 1: Index Panel State Owner
 
+**Status:** Completed on 2026-05-21.
+
 Create `assets/docs-viewer/js/docs-viewer-index-panel.js`.
 The owner is about the panel/workspace, not the tree.
 
@@ -145,6 +155,8 @@ It should not retain separate ad hoc booleans for the same panel state.
 
 ### Slice 2: Entry Runtime Wiring
 
+**Status:** Completed on 2026-05-21.
+
 Replace the current sidebar state wiring in `docs-viewer.js` with the new panel owner.
 Keep this slice limited to state, persistence, labels, and shell data attributes.
 
@@ -153,6 +165,8 @@ Tree clicks should keep their current behavior in all three panel states.
 No graph or semantic index code should be added in this slice.
 
 ### Slice 3: Layout CSS
+
+**Status:** Completed on 2026-05-21.
 
 Update the Docs Viewer CSS so the shell responds to the panel state:
 
@@ -165,6 +179,8 @@ Avoid naming that implies the tree itself is expanded.
 
 ### Slice 4: Focused Smoke Coverage
 
+**Status:** Partially completed on 2026-05-21.
+
 Add a browser smoke check for the panel owner and route wiring:
 
 - initial state migration from legacy stored values
@@ -174,19 +190,28 @@ Add a browser smoke check for the panel owner and route wiring:
 - mobile behavior unchanged for the first slice
 
 Use `tests/smoke/docs_viewer_index_panel_modules.py` for the state owner and `tests/smoke/docs_viewer_index_panel_route.py` for the route wiring.
+Tree item click behavior still needs a focused assertion in a follow-up slice.
 
 ### Slice 5: Inventory And Follow-Through
 
+**Status:** Partially completed on 2026-05-21.
+
 After the Docs Viewer slice is implemented and verified:
 
-- update [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
-- update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
-- update this document if the panel boundary changes
-- update generated Docs Viewer payloads through the normal docs workflow rather than by hand
-- re-parent the durable risk-scoring and maintenance-gate guidance under [Development Workflow](/docs/?scope=studio&doc=development-workflow), editing it from current implementation planning into stable workflow guidance
+- [x] update [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
+- [x] update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
+- [x] update this document for completed/pending task status
+- [x] update generated Docs Viewer payloads through the normal docs workflow rather than by hand
+- [ ] add a focused tree-click behavior assertion for index-panel expanded mode
+- [ ] re-parent the durable risk-scoring and maintenance-gate guidance under [Development Workflow](/docs/?scope=studio&doc=development-workflow), editing it from current implementation planning into stable workflow guidance
 
 The target is not necessarily to move `docs-viewer.js` directly to score 4 in one slice.
 The target is to prevent the next index/graph feature from increasing shared entry-runtime risk.
+
+## Next Action
+
+The next implementation step is to add the focused tree-click behavior assertion for expanded index-panel mode.
+After that, start the permanent guidance cleanup: split durable scoring/maintenance-gate policy under [Development Workflow](/docs/?scope=studio&doc=development-workflow), leaving JavaScript- and Docs Viewer-specific implementation details in the JavaScript inventory and Docs Viewer inventory docs.
 
 ## Next Priorities After Docs Viewer
 

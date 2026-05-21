@@ -11,7 +11,8 @@ viewable: false
 
 ## javascript risk mitigation
 
-
+we are workinh on _docs/javascript-maintenance-risk-mitigation.md
+please continue with the next pending implementation
 
 ---
 
