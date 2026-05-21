@@ -15,10 +15,10 @@ const DEFAULT_STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const UI = seriesTagsUi;
 const { className: UI_CLASS, state: UI_STATE } = UI;
 
-export function renderSeriesTagsReport(state) {
-  const rowsHtml = buildSeriesTagsRows(state).map((row) => {
+export function renderSeriesTagsReport(input) {
+  const rowsHtml = buildSeriesTagsRows(input).map((row) => {
     const chips = row.visibleTags.length
-      ? row.visibleTags.map((tag) => renderTagChip(state, tag)).join("")
+      ? row.visibleTags.map((tag) => renderTagChip(input, tag)).join("")
       : "";
 
     return `
@@ -38,18 +38,18 @@ export function renderSeriesTagsReport(state) {
     `;
   }).join("");
 
-  state.refs.mount.innerHTML = `
+  input.mount.innerHTML = `
     <div class="seriesTags">
-      ${renderFilters(state)}
+      ${renderFilters(input)}
       <div class="tagStudioList__head seriesTags__head">
-        <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="series"${stateAttr(state.sortKey === "series" ? UI_STATE.active : "")}>
-          ${escapeHtml(seriesTagsText(state.config, "table_heading_series", "series"))}${sortIndicator(state, "series")}
+        <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="series"${stateAttr(input.sortKey === "series" ? UI_STATE.active : "")}>
+          ${escapeHtml(seriesTagsText(input.config, "table_heading_series", "series"))}${sortIndicator(input, "series")}
         </button>
-        <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="status"${stateAttr(state.sortKey === "status" ? UI_STATE.active : "")}>
-          ${escapeHtml(seriesTagsText(state.config, "table_heading_status", "status"))}${sortIndicator(state, "status")}
+        <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="status"${stateAttr(input.sortKey === "status" ? UI_STATE.active : "")}>
+          ${escapeHtml(seriesTagsText(input.config, "table_heading_status", "status"))}${sortIndicator(input, "status")}
         </button>
-        <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="tags"${stateAttr(state.sortKey === "tags" ? UI_STATE.active : "")}>
-          ${escapeHtml(seriesTagsText(state.config, "table_heading_tags", "tags"))}${sortIndicator(state, "tags")}
+        <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="tags"${stateAttr(input.sortKey === "tags" ? UI_STATE.active : "")}>
+          ${escapeHtml(seriesTagsText(input.config, "table_heading_tags", "tags"))}${sortIndicator(input, "tags")}
         </button>
       </div>
       <ul class="tagStudioList__rows seriesTags__rows">${rowsHtml}</ul>
@@ -57,21 +57,21 @@ export function renderSeriesTagsReport(state) {
   `;
 }
 
-export function buildSeriesTagsRows(state) {
-  return state.seriesData
+export function buildSeriesTagsRows(input) {
+  return input.seriesData
     .map((series) => {
-      const repoRow = normalizeRepoSeriesRow(state.assignmentsSeries, series.seriesId);
-      const offlineEntry = state.offlineSession.series && state.offlineSession.series[series.seriesId]
-        ? state.offlineSession.series[series.seriesId]
+      const repoRow = normalizeRepoSeriesRow(input.assignmentsSeries, series.seriesId);
+      const offlineEntry = input.offlineSession.series && input.offlineSession.series[series.seriesId]
+        ? input.offlineSession.series[series.seriesId]
         : null;
       const effectiveRow = offlineEntry ? normalizeOfflineSeriesRow(offlineEntry.staged_row) : repoRow;
       const assigned = effectiveRow.tags.map((row) => row.tag_id);
-      const score = buildStudioTagScore(assigned, state.registry, state.config);
-      const tags = buildSeriesDisplayTags(state, repoRow, effectiveRow)
+      const score = buildStudioTagScore(assigned, input.registry, input.config);
+      const tags = buildSeriesDisplayTags(input, repoRow, effectiveRow)
         .sort((a, b) => compareText(a.sortLabel, b.sortLabel));
-      const visibleTags = state.filterGroup === "all"
+      const visibleTags = input.filterGroup === "all"
         ? tags
-        : tags.filter((tag) => tag.group === state.filterGroup);
+        : tags.filter((tag) => tag.group === input.filterGroup);
       return {
         ...series,
         rag: score.rag,
@@ -82,10 +82,10 @@ export function buildSeriesTagsRows(state) {
         tagsSortKey: visibleTags.map((tag) => `${tag.sortLabel}:${tag.marker || ""}`).join(" | ")
       };
     })
-    .sort((left, right) => compareSeriesRows(state, left, right));
+    .sort((left, right) => compareSeriesRows(input, left, right));
 }
 
-function buildSeriesDisplayTags(state, repoRow, effectiveRow) {
+function buildSeriesDisplayTags(input, repoRow, effectiveRow) {
   const repoTags = new Map(repoRow.tags.map((row) => [row.tag_id, row]));
   const effectiveTags = new Map(effectiveRow.tags.map((row) => [row.tag_id, row]));
   const tagIds = Array.from(new Set([...repoTags.keys(), ...effectiveTags.keys()]));
@@ -95,26 +95,26 @@ function buildSeriesDisplayTags(state, repoRow, effectiveRow) {
     const repoTag = repoTags.get(tagId) || null;
     const effectiveTag = effectiveTags.get(tagId) || null;
     if (!repoTag && effectiveTag) {
-      display.push(toTagDisplay(tagId, state.registry, "local"));
+      display.push(toTagDisplay(tagId, input.registry, "local"));
       continue;
     }
     if (repoTag && !effectiveTag) {
-      display.push(toTagDisplay(tagId, state.registry, "delete"));
+      display.push(toTagDisplay(tagId, input.registry, "delete"));
       continue;
     }
     if (repoTag && effectiveTag) {
       const marker = equalNormalizedAssignmentTag(repoTag, effectiveTag) ? "" : "local";
-      display.push(toTagDisplay(tagId, state.registry, marker));
+      display.push(toTagDisplay(tagId, input.registry, marker));
     }
   }
 
   return display;
 }
 
-function renderTagChip(state, tag) {
+function renderTagChip(input, tag) {
   const caption = tag.marker
     ? `<span class="${classNames(UI_CLASS.chipCaption, tag.marker === "delete" ? UI_CLASS.chipCaptionDelete : UI_CLASS.chipCaptionLocal)}">${escapeHtml(seriesTagsText(
-      state.config,
+      input.config,
       tag.marker === "delete" ? "chip_caption_delete" : "chip_caption_local",
       tag.marker
     ))}</span>`
@@ -133,15 +133,15 @@ function renderTagChip(state, tag) {
   `;
 }
 
-function renderFilters(state) {
-  const groupButtons = getStudioGroups(state).map((group) => {
-    const titleAttr = groupTitleAttr(state, group);
+function renderFilters(input) {
+  const groupButtons = getStudioGroups(input).map((group) => {
+    const titleAttr = groupTitleAttr(input, group);
     return `
       <button
         type="button"
         class="${classNames(UI_CLASS.keyPill, chipGroupClass(group), UI_CLASS.groupFilterButton)}"
         data-group="${escapeHtml(group)}"
-        ${stateAttr(state.filterGroup === group ? UI_STATE.active : "")}
+        ${stateAttr(input.filterGroup === group ? UI_STATE.active : "")}
         ${titleAttr}
       >
         ${escapeHtml(group)}
@@ -151,27 +151,27 @@ function renderFilters(state) {
 
   return `
     <div class="${UI_CLASS.filters}">
-      <button type="button" class="tagStudio__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(state.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(seriesTagsText(state.config, "filter_all_tags", "All tags"))}</button>
+      <button type="button" class="tagStudio__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(input.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(seriesTagsText(input.config, "filter_all_tags", "All tags"))}</button>
       ${groupButtons}
-      ${renderGroupInfoControl(state)}
+      ${renderGroupInfoControl(input)}
     </div>
   `;
 }
 
-function getStudioGroups(state) {
-  return Array.isArray(state && state.studioGroups) && state.studioGroups.length
-    ? state.studioGroups
+function getStudioGroups(input) {
+  return Array.isArray(input && input.studioGroups) && input.studioGroups.length
+    ? input.studioGroups
     : DEFAULT_STUDIO_GROUPS;
 }
 
-function groupTitleAttr(state, group) {
-  const descriptions = state.groupDescriptions instanceof Map ? state.groupDescriptions : new Map();
+function groupTitleAttr(input, group) {
+  const descriptions = input.groupDescriptions instanceof Map ? input.groupDescriptions : new Map();
   const description = String(descriptions.get(group) || "").trim();
   return description ? `title="${escapeHtml(description)}"` : "";
 }
 
-function renderGroupInfoControl(state) {
-  const href = state.groupInfoPagePath || "";
+function renderGroupInfoControl(input) {
+  const href = input.groupInfoPagePath || "";
   if (!href) return "";
   return `
     <a
@@ -179,25 +179,25 @@ function renderGroupInfoControl(state) {
       href="${escapeHtml(href)}"
       target="_blank"
       rel="noopener"
-      title="${escapeHtml(seriesTagsText(state.config, "group_info_title", "Open group descriptions in a new tab"))}"
-      aria-label="${escapeHtml(seriesTagsText(state.config, "group_info_aria_label", "Open group descriptions in a new tab"))}"
+      title="${escapeHtml(seriesTagsText(input.config, "group_info_title", "Open group descriptions in a new tab"))}"
+      aria-label="${escapeHtml(seriesTagsText(input.config, "group_info_aria_label", "Open group descriptions in a new tab"))}"
     >i</a>
   `;
 }
 
-function compareSeriesRows(state, left, right) {
-  if (state.sortKey === "status") {
+function compareSeriesRows(input, left, right) {
+  if (input.sortKey === "status") {
     if (left.ragRank !== right.ragRank) {
-      return compareDir(left.ragRank, right.ragRank, state.sortDir);
+      return compareDir(left.ragRank, right.ragRank, input.sortDir);
     }
-    return compareDir(left.title, right.title, state.sortDir, compareText);
+    return compareDir(left.title, right.title, input.sortDir, compareText);
   }
-  if (state.sortKey === "tags") {
-    const byTags = compareDir(left.tagsSortKey, right.tagsSortKey, state.sortDir, compareText);
+  if (input.sortKey === "tags") {
+    const byTags = compareDir(left.tagsSortKey, right.tagsSortKey, input.sortDir, compareText);
     if (byTags !== 0) return byTags;
     return compareText(left.title, right.title);
   }
-  return compareDir(left.title, right.title, state.sortDir, compareText);
+  return compareDir(left.title, right.title, input.sortDir, compareText);
 }
 
 function compareDir(left, right, dir, compareFn = compareBasic) {

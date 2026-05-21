@@ -61,8 +61,8 @@ def main() -> int:
                         ['theme:memory', { group: 'theme', label: 'memory', status: 'active' }],
                         ['theme:old', { group: 'theme', label: 'old', status: 'candidate' }]
                     ]);
-                    const state = {
-                        refs: { mount: document.querySelector('#mount') },
+                    const reportInput = {
+                        mount: document.querySelector('#mount'),
                         config: {
                             ui_text: {
                                 series_tags: {
@@ -117,7 +117,7 @@ def main() -> int:
                         sortKey: 'status',
                         sortDir: 'asc'
                     };
-                    render.renderSeriesTagsReport(state);
+                    render.renderSeriesTagsReport(reportInput);
                     const allRows = Array.from(document.querySelectorAll('.seriesTags__row')).map(row => ({
                         title: row.querySelector('.seriesTags__col--title')?.textContent.trim() || '',
                         ragClass: row.querySelector('.rag')?.className || '',
@@ -125,8 +125,8 @@ def main() -> int:
                         ragLabel: row.querySelector('.rag')?.getAttribute('aria-label') || '',
                         chips: Array.from(row.querySelectorAll('.tagStudio__chip')).map(chip => chip.textContent.replace(/\\s+/g, ' ').trim())
                     }));
-                    state.filterGroup = 'theme';
-                    render.renderSeriesTagsReport(state);
+                    reportInput.filterGroup = 'theme';
+                    render.renderSeriesTagsReport(reportInput);
                     const themeRows = Array.from(document.querySelectorAll('.seriesTags__row')).map(row => ({
                         title: row.querySelector('.seriesTags__col--title')?.textContent.trim() || '',
                         chips: Array.from(row.querySelectorAll('.tagStudio__chip')).map(chip => chip.textContent.replace(/\\s+/g, ' ').trim())

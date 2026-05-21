@@ -193,7 +193,7 @@ Each section should summarise:
 | ---: | --- | --- |
 | 1 | done | Extracted scoring calculation and interpretation into `assets/studio/js/analysis-tag-scoring.js`, including RAG label and sort-rank interpretation for the Series Tags route. |
 | 2 | done | Moved Series Tags report/table rendering into `assets/studio/js/series-tags-render.js`, including RAG indicator markup, filters, chip display, visible-row projection, and sort comparison. |
-| 3 | proposed | Pass explicit scoring/report inputs from the route shell rather than broad route state. Anticipated improvement: -1 from maintenance risk. |
+| 3 | done | Passed an explicit Series Tags report input from the route shell into `assets/studio/js/series-tags-render.js` instead of handing over broad route state. |
 | 4 | done | Added focused smoke checks for score interpretation and Series Tags report rendering/RAG display output. |
 
 ### `assets/studio/js/data-sharing-prepare.js`

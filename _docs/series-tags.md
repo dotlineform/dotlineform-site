@@ -150,7 +150,7 @@ DOM / CSS:
 
 JS owner:
 
-- `renderSeriesTagsReport(state)` in `assets/studio/js/series-tags-render.js`
+- `renderSeriesTagsReport(input)` in `assets/studio/js/series-tags-render.js`
 
 Meaning:
 
@@ -258,9 +258,9 @@ Main render functions:
 - `renderActionButtons(state)`
 - `renderSessionModal(state)`
 - `renderImportModal(state)`
-- `renderTable(state)`, which delegates to `renderSeriesTagsReport(state)`
-- `renderSeriesTagsReport(state)`
-- `buildSeriesTagsRows(state)`
+- `renderTable(state)`, which builds a focused report input and delegates to `renderSeriesTagsReport(input)`
+- `renderSeriesTagsReport(input)`
+- `buildSeriesTagsRows(input)`
 
 Main event wiring:
 

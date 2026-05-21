@@ -380,7 +380,24 @@ function renderActionButtons(state) {
 }
 
 function renderTable(state) {
-  renderSeriesTagsReport(state);
+  renderSeriesTagsReport(buildSeriesTagsReportInput(state));
+}
+
+function buildSeriesTagsReportInput(state) {
+  return {
+    mount: state.refs.mount,
+    config: state.config,
+    studioGroups: state.studioGroups,
+    groupInfoPagePath: state.groupInfoPagePath,
+    groupDescriptions: state.groupDescriptions,
+    seriesData: state.seriesData,
+    assignmentsSeries: state.assignmentsSeries,
+    offlineSession: state.offlineSession,
+    registry: state.registry,
+    filterGroup: state.filterGroup,
+    sortKey: state.sortKey,
+    sortDir: state.sortDir
+  };
 }
 
 async function handleCopySession(state) {
