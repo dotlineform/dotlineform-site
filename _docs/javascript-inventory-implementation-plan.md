@@ -3,7 +3,7 @@ doc_id: javascript-inventory-implementation-plan
 title: JavaScript Inventory Implementation Plan
 added_date: 2026-05-21
 last_updated: 2026-05-21
-ui_status: done
+ui_status: in-progress
 parent_id: studio-javascript-payload-inventory
 sort_order: 7015
 viewable: true

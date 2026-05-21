@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T16:29:53Z",
+  "generated_at": "2026-05-21T16:30:30Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2397,7 +2397,7 @@
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-inventory-implementation-plan.json",
       "content_text_length": 16109,
-      "ui_status": "done"
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
