@@ -102,6 +102,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/studio/audit_service.py",
                 "tests/smoke/docs_viewer_routes.py",
                 "tests/smoke/docs_viewer_management_modal.py",
+                "tests/smoke/docs_html_import_modules.py",
                 "tests/smoke/data_sharing_prepare_modules.py",
                 "tests/smoke/ui_catalogue_modal_demo.py",
                 "tests/python/test_activity_contract.py",
@@ -271,6 +272,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             ),
             "Smoke-check Docs Viewer management modal semantics, action rows, focus behavior, and mobile sizing.",
         ),
+        CheckCommand(
+            "docs-html-import-module-smoke",
+            (
+                sys.executable,
+                "tests/smoke/docs_html_import_modules.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check Docs HTML Import preview, replacement, write failure fallback, and result rendering modules.",
+        ),
     ),
     "studio-smoke": (
         CheckCommand(
@@ -287,6 +298,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(JEKYLL_DESTINATION),
             ),
             "Smoke-check Docs Viewer direct route, search, link interception, history, hash, and Library scope behavior.",
+        ),
+        CheckCommand(
+            "docs-html-import-module-smoke",
+            (
+                sys.executable,
+                "tests/smoke/docs_html_import_modules.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check Docs HTML Import preview, replacement, write failure fallback, and result rendering modules.",
         ),
         CheckCommand(
             "ui-catalogue-modal-demo-smoke",
