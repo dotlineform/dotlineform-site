@@ -48,16 +48,30 @@ def parse_inventory_table(inventory_path: Path, repo_root: Path) -> list[Invento
         source_path = repo_root / path
         if not source_path.exists():
             raise FileNotFoundError(f"inventory row source is missing: {path}")
+        category_scores = {
+            "maintenance": int(cells[3]),
+            "structural": int(cells[4]),
+            "performance": int(cells[5]),
+            "architectural": int(cells[6]),
+        }
+        invalid_scores = {name: score for name, score in category_scores.items() if score < 0 or score > 3}
+        if invalid_scores:
+            formatted = ", ".join(f"{name}={score}" for name, score in invalid_scores.items())
+            raise ValueError(f"inventory row has category score outside 0..3 for {path}: {formatted}")
+        risk = int(cells[7])
+        expected_risk = sum(category_scores.values())
+        if risk != expected_risk:
+            raise ValueError(f"inventory row risk total mismatch for {path}: expected {expected_risk}, got {risk}")
         rows.append(
             InventoryRow(
                 rank=int(cells[0]),
                 path=path,
                 family=cells[2],
-                maintenance=int(cells[3]),
-                structural=int(cells[4]),
-                performance=int(cells[5]),
-                architectural=int(cells[6]),
-                risk=int(cells[7]),
+                maintenance=category_scores["maintenance"],
+                structural=category_scores["structural"],
+                performance=category_scores["performance"],
+                architectural=category_scores["architectural"],
+                risk=risk,
                 focus=cells[8],
                 lines=count_lines(source_path),
             )

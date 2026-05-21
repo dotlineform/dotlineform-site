@@ -19,8 +19,12 @@ Use the JavaScript inventory to decide where refactoring will reduce real future
 The inventory is not a payload-size leaderboard and it is not a mandate to split every large file.
 A high score means the current file shape exposes meaningful risk; a low score means the file's current role, ownership boundary, and route exposure are acceptable.
 
-The project target is a risk score of 4 for normal browser JavaScript files.
-A score of 4 is the floor of the model: maintenance, structural, performance, and architectural risk are each scored 1.
+This repo's code is Codex-authored and Codex-maintained.
+The inventory is therefore operational guidance for future Codex sessions as much as it is project documentation: it records where fast iterative development has left fragile ownership boundaries, and where future Codex work should slow down and create clearer helpers before adding behavior.
+
+The project target is a risk score of 4 or lower for normal browser JavaScript files.
+A score of 4 remains the normal acceptable target: maintenance, structural, performance, and architectural risk are each present but low.
+A category score of 0 is allowed only when that risk dimension is materially absent or inapplicable for a physically achievable reason.
 `assets/docs-viewer/js/docs-viewer.js` is tracked separately because it is the shared Docs Viewer entry runtime and needs its own feature-driven mitigation path.
 
 ## Risk Categories
@@ -71,19 +75,24 @@ Useful indicators:
 
 ## Scoring Model
 
-Each file receives a score from 1 to 3 for each risk category.
+Each file receives a score from 0 to 3 for each risk category.
 The total risk score is the sum of the four category scores.
 
-| Risk | Score 1: low risk | Score 2: medium risk | Score 3: high risk |
-| --- | --- | --- | --- |
-| Maintenance | focused role, explicit inputs, stable behavior, directly testable or small enough to review | some mixed concerns, recurring touches, broad reads, or moderate test friction | many mixed concerns, broad reads/writes, frequent edits, fallback paths, or hard-to-test behavior |
-| Structural | module shape matches its role and established route-family boundaries | partial split exists, but ownership or contracts remain incomplete | route/controller owns layers that belong in domain, service, render, modal, route-state, or workflow modules |
-| Performance | lazy, rare, small, public-cost-neutral, or no meaningful boot/input cost | route-local exposure, moderate size, repeated list work, or occasional input-time cost | public/shared eager exposure, large initial payload, heavy boot work, repeated full renders, or expensive input-time operations |
-| Architectural | clear owner exists for future changes and the file reinforces durable patterns | future changes may drift into the file because ownership is only partly clear | current shape is likely to attract unrelated future work, diverge from sibling patterns, or require unrelated concerns to be reviewed together |
+Use 0 carefully.
+It means "this category does not materially apply to this file in its current role," not "this seems easy."
+For example, an isolated Studio operational helper may have no meaningful performance requirement as long as it remains route-local, rare, and free of heavy boot or input-time work.
+
+| Risk | Score 0: absent or inapplicable | Score 1: low risk | Score 2: medium risk | Score 3: high risk |
+| --- | --- | --- | --- | --- |
+| Maintenance | no direct maintenance surface beyond preserving an isolated, stable, generated, declarative, or mechanically owned file | focused role, explicit inputs, stable behavior, directly testable or small enough to review | some mixed concerns, recurring touches, broad reads, or moderate test friction | many mixed concerns, broad reads/writes, frequent edits, fallback paths, or hard-to-test behavior |
+| Structural | no meaningful structural ownership decision exists beyond keeping the file isolated in its current role | module shape matches its role and established route-family boundaries | partial split exists, but ownership or contracts remain incomplete | route/controller owns layers that belong in domain, service, render, modal, route-state, or workflow modules |
+| Performance | no material runtime performance requirement for the file's current route exposure, data volume, and interaction pattern | lazy, rare, small, public-cost-neutral, or no meaningful boot/input cost | route-local exposure, moderate size, repeated list work, or occasional input-time cost | public/shared eager exposure, large initial payload, heavy boot work, repeated full renders, or expensive input-time operations |
+| Architectural | no plausible future-responsibility drift because the file is a stable isolated owner or future work has a clearly separate owner | clear owner exists for future changes and the file reinforces durable patterns | future changes may drift into the file because ownership is only partly clear | current shape is likely to attract unrelated future work, diverge from sibling patterns, or require unrelated concerns to be reviewed together |
 
 Risk bands:
 
-- 4: target state; currently acceptable.
+- 0-3: below the normal target; acceptable only when one or more category scores are legitimately absent or inapplicable.
+- 4: normal target state; currently acceptable.
 - 5: low-priority watch item; improve opportunistically when changing nearby behavior.
 - 6-7: medium priority; schedule as part of the relevant route-family batch.
 - 8-12: high priority; plan a focused mitigation slice before adding more behavior to that file.
@@ -101,6 +110,7 @@ Prioritise slices that reduce future change risk, clarify state ownership, impro
 A file should not be rescored down just because code moved elsewhere.
 Rescore downward only when at least one of these is true:
 
+- a category is now materially absent or inapplicable, justifying a score of 0
 - a complete responsibility has a focused owner with explicit inputs
 - route boot or input-time work was reduced
 - future related changes now have an obvious destination outside the route shell

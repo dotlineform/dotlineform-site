@@ -40,7 +40,7 @@ Use these rules before starting another JavaScript risk-reduction batch.
 3. Prefer explicit input/output helpers over helper functions that read or mutate the route's broad `state` object directly.
 4. Keep route entry modules as orchestration shells: route boot, config handoff, event wiring, ready/busy projection, and calls into focused owners.
 5. A score should drop only when future changes have a clearer destination, behavior has focused checks, or route/input-time work was actually reduced.
-6. Score-5 files with only maintenance above the floor are watch items; improve them opportunistically when nearby behavior is already changing.
+6. Score-5 files with only maintenance above the normal target are watch items; improve them opportunistically when nearby behavior is already changing.
 7. For new UI surface work, define the owning surface first. Do not let the current renderer or route shell become the owner by default.
 
 ## Helper Infrastructure First

@@ -13,7 +13,8 @@ viewable: true
 This document lists all browser JavaScript files under `assets/`, scored with the four-risk model defined in [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory).
 
 Rescored on 2026-05-21 from the current filesystem inventory.
-The minimum possible score is 4 because each file receives a score of 1 to 3 for maintenance, structural, performance, and architectural risk.
+Category scores may range from 0 to 3 under the current policy.
+The normal acceptable target remains 4 or lower; no current row uses a category score of 0.
 `assets/docs-viewer/js/docs-viewer.js` remains in the table for completeness, but implementation work for that shared entry runtime is tracked separately.
 
 ## Summary
@@ -21,7 +22,7 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 - Browser JavaScript files under `assets/`: 153
 - Total browser JavaScript lines under `assets/`: 42,796
 - Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 56
-- Target score: 4, meaning every risk category is at the low-risk floor.
+- Target score: 4 or lower, with 4 meaning every risk category is present but low.
 
 | Score | Files |
 | ---: | ---: |

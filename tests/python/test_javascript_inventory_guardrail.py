@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import collections
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -63,3 +64,25 @@ def test_summarize_counts_maintenance_risk_concentration() -> None:
     ]
     assert [item["path"] for item in summary["maintenance_2_overlap_files"]] == ["assets/a.js"]
     assert [item["path"] for item in summary["top_maintenance_risk_files"]] == ["assets/a.js", "assets/b.js"]
+
+
+def test_parse_inventory_table_allows_zero_category_scores() -> None:
+    with tempfile.TemporaryDirectory() as temp:
+        root = Path(temp)
+        source = root / "assets" / "example.js"
+        source.parent.mkdir(parents=True)
+        source.write_text("export const ok = true;\n", encoding="utf-8")
+        inventory = root / "inventory.md"
+        inventory.write_text(
+            "| Rank | File | Family | Maint. | Struct. | Perf. | Arch. | Risk | Focus |\n"
+            "| ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |\n"
+            "| 1 | `assets/example.js` | Example | 1 | 0 | 0 | 1 | 2 | Isolated helper. |\n",
+            encoding="utf-8",
+        )
+
+        rows = guardrail.parse_inventory_table(inventory, root)
+
+    assert len(rows) == 1
+    assert rows[0].risk == 2
+    assert rows[0].structural == 0
+    assert rows[0].performance == 0
