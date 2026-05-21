@@ -102,6 +102,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/studio/audit_service.py",
                 "tests/smoke/docs_viewer_routes.py",
                 "tests/smoke/docs_viewer_management_modal.py",
+                "tests/smoke/docs_viewer_management_action_workflow_modules.py",
                 "tests/smoke/docs_html_import_modules.py",
                 "tests/smoke/data_sharing_prepare_modules.py",
                 "tests/smoke/ui_catalogue_modal_demo.py",
@@ -271,6 +272,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(JEKYLL_DESTINATION),
             ),
             "Smoke-check Docs Viewer management modal semantics, action rows, focus behavior, and mobile sizing.",
+        ),
+        CheckCommand(
+            "docs-viewer-management-action-workflow-module-smoke",
+            (
+                sys.executable,
+                "tests/smoke/docs_viewer_management_action_workflow_modules.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check Docs Viewer management action workflow choices, payloads, and viewability target shaping.",
         ),
         CheckCommand(
             "docs-html-import-module-smoke",

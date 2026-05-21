@@ -23,17 +23,16 @@ import {
   isDocViewable
 } from "./docs-viewer-tree.js";
 import {
+  buildNormalizeOrderChoices,
+  normalizeOrderPayload,
+  resolveViewabilityTargetDocIds
+} from "./docs-viewer-management-action-workflow.js";
+import {
   buildDocsViewerDeletePreviewBody,
   openDocsViewerChoiceModal,
   openDocsViewerConfirmModal,
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
-
-function docTitleList(docs) {
-  return docs.map(function (item) {
-    return item.title || item.doc_id;
-  }).join(", ");
-}
 
 export function createDocsViewerManagementActionController(options) {
   var root = options.root;
@@ -94,131 +93,41 @@ export function createDocsViewerManagementActionController(options) {
     return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(targetDocId, summaryText) : Promise.resolve();
   }
 
-  function docLabel(doc) {
-    return doc && doc.title ? doc.title : (doc && doc.doc_id ? doc.doc_id : "");
-  }
-
-  function parentLabel(parentId) {
-    var normalized = String(parentId || "").trim();
-    if (!normalized) return state.managementText.normalizeOrderRootLabel;
-    return docLabel(state.docsById.get(normalized)) || normalized;
-  }
-
-  function normalizeOrderChoices(doc) {
-    var choices = [];
-    var seen = new Set();
-    function push(value, label) {
-      if (!value || seen.has(value)) return;
-      seen.add(value);
-      choices.push({ value: value, label: label });
-    }
-
-    if (doc) {
-      var currentParentId = String(doc.parent_id || "").trim();
-      push(
-        "parent:" + currentParentId,
-        context.formatText(state.managementText.normalizeOrderCurrentSiblingsLabel, {
-          parent: parentLabel(currentParentId)
-        })
-      );
-      push(
-        "parent:" + doc.doc_id,
-        context.formatText(state.managementText.normalizeOrderSelectedChildrenLabel, {
-          title: docLabel(doc)
-        })
-      );
-    }
-    push("parent:", state.managementText.normalizeOrderRootChoiceLabel);
-    push("whole", state.managementText.normalizeOrderWholeScopeLabel);
-    return choices;
-  }
-
-  function normalizeOrderPayload(choiceValue) {
-    var value = String(choiceValue || "").trim();
-    if (value === "whole") return { whole_scope: true };
-    if (value.indexOf("parent:") === 0) {
-      return { parent_id: value.slice("parent:".length) };
-    }
-    return null;
-  }
-
-  function collectAllDescendantDocIds(docId, bucket) {
-    state.allDocs.forEach(function (candidate) {
-      if ((candidate.parent_id || "") !== docId || bucket.has(candidate.doc_id)) return;
-      bucket.add(candidate.doc_id);
-      collectAllDescendantDocIds(candidate.doc_id, bucket);
-    });
-    return bucket;
-  }
-
-  function nonViewableAncestorDocs(doc) {
-    var ancestors = [];
-    var current = doc && doc.parent_id ? context.findAllDocById(doc.parent_id) : null;
-    while (current) {
-      if (!isDocViewable(current)) {
-        ancestors.unshift(current);
-      }
-      current = current.parent_id ? context.findAllDocById(current.parent_id) : null;
-    }
-    return ancestors;
-  }
-
   async function viewabilityTargetDocIds(doc) {
-    var ancestors = nonViewableAncestorDocs(doc);
-    if (ancestors.length) {
-      var ancestorMessage = context.formatText(state.managementText.viewableAncestorPrompt, {
-        titles: docTitleList(ancestors)
-      });
-      var confirmedAncestors = await openDocsViewerConfirmModal({
-        root: root,
-        title: state.managementText.viewableAncestorTitle,
-        body: ancestorMessage,
-        primaryLabel: state.managementText.confirmContinueButton,
-        cancelLabel: state.managementText.cancelButton
-      });
-      if (!confirmedAncestors) {
-        return null;
-      }
-    }
-
-    var includeDescendants = false;
-    var descendantIds = Array.from(collectAllDescendantDocIds(doc.doc_id, new Set()));
-    if (descendantIds.length) {
-      var descendantChoice = await openDocsViewerChoiceModal({
-        root: root,
-        title: state.managementText.viewableDescendantTitle,
-        body: state.managementText.viewableDescendantPrompt,
-        value: "selected",
-        choices: [
-          { value: "selected", label: state.managementText.viewableDescendantSelectedLabel },
-          { value: "all", label: state.managementText.viewableDescendantAllLabel }
-        ],
-        primaryLabel: state.managementText.confirmContinueButton,
-        cancelLabel: state.managementText.cancelButton
-      });
-      if (!descendantChoice || !descendantChoice.confirmed) {
-        return null;
-      }
-      var normalizedChoice = String(descendantChoice.value || "").trim().toLowerCase();
-      if (normalizedChoice === "all") {
-        includeDescendants = true;
-      } else if (normalizedChoice !== "selected") {
+    return resolveViewabilityTargetDocIds({
+      doc: doc,
+      allDocs: state.allDocs,
+      findDocById: context.findAllDocById,
+      confirmAncestors: function (detail) {
+        var ancestorMessage = context.formatText(state.managementText.viewableAncestorPrompt, {
+          titles: detail.titles
+        });
+        return openDocsViewerConfirmModal({
+          root: root,
+          title: state.managementText.viewableAncestorTitle,
+          body: ancestorMessage,
+          primaryLabel: state.managementText.confirmContinueButton,
+          cancelLabel: state.managementText.cancelButton
+        });
+      },
+      chooseDescendants: function () {
+        return openDocsViewerChoiceModal({
+          root: root,
+          title: state.managementText.viewableDescendantTitle,
+          body: state.managementText.viewableDescendantPrompt,
+          value: "selected",
+          choices: [
+            { value: "selected", label: state.managementText.viewableDescendantSelectedLabel },
+            { value: "all", label: state.managementText.viewableDescendantAllLabel }
+          ],
+          primaryLabel: state.managementText.confirmContinueButton,
+          cancelLabel: state.managementText.cancelButton
+        });
+      },
+      onInvalidChoice: function () {
         setManagementMessage(state.managementText.viewableInvalidChoice, true);
-        return null;
       }
-    }
-
-    var targetIds = new Set();
-    ancestors.forEach(function (ancestor) {
-      targetIds.add(ancestor.doc_id);
     });
-    targetIds.add(doc.doc_id);
-    if (includeDescendants) {
-      descendantIds.forEach(function (docId) {
-        targetIds.add(docId);
-      });
-    }
-    return Array.from(targetIds);
   }
 
   function metadataPayloadForStatus(doc, uiStatus) {
@@ -413,7 +322,12 @@ export function createDocsViewerManagementActionController(options) {
   async function handleNormalizeOrder() {
     if (state.managementBusy) return;
     var doc = currentSelectedDoc();
-    var choices = normalizeOrderChoices(doc);
+    var choices = buildNormalizeOrderChoices({
+      doc: doc,
+      docsById: state.docsById,
+      text: state.managementText,
+      formatText: context.formatText
+    });
     var result = await openDocsViewerChoiceModal({
       root: root,
       title: state.managementText.normalizeOrderTitle,

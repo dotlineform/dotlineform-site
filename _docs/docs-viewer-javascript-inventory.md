@@ -29,17 +29,17 @@ Related follow-up should preserve `assets/docs-viewer/js/docs-viewer-sidebar.js`
 
 Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
-- Docs Viewer browser JavaScript files in the full inventory: 32
+- Docs Viewer browser JavaScript files in the full inventory: 33
 - Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 12
 - Main remaining risk themes: shared runtime composition, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and lazy management loading.
 
 | Score | Files |
 | ---: | ---: |
 | 9 | 1 |
-| 7 | 2 |
-| 6 | 4 |
+| 7 | 1 |
+| 6 | 5 |
 | 5 | 6 |
-| 4 | 19 |
+| 4 | 20 |
 
 ## Current Priorities
 
@@ -47,7 +47,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | 1 | 1 | `assets/docs-viewer/js/docs-viewer.js` | 2 | 2 | 3 | 2 | 9 | Shared Docs Viewer runtime composition and route loading. |
 | 2 | 14 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | 2 | 2 | 1 | 2 | 7 | Docs Viewer management support module. |
-| 3 | 15 | `assets/docs-viewer/js/docs-viewer-management.js` | 2 | 2 | 1 | 2 | 7 | Docs Viewer management coordinator. |
+| 3 | 15 | `assets/docs-viewer/js/docs-viewer-management.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer management coordinator after shared action workflow helper extraction. |
 | 4 | 18 | `assets/docs-viewer/js/docs-viewer-bookmarks.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer bookmark/favourite support. |
 | 5 | 19 | `assets/docs-viewer/js/docs-viewer-management-actions.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer management support module. |
 | 6 | 20 | `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js` | 2 | 2 | 1 | 1 | 6 | Docs Viewer runtime support module. |
@@ -77,6 +77,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 30 | 75 | `assets/docs-viewer/js/reports/reports-list-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 31 | 76 | `assets/docs-viewer/js/reports/semantic-references-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 32 | 77 | `assets/docs-viewer/js/reports/source-config-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 33 | 152 | `assets/docs-viewer/js/docs-viewer-management-action-workflow.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
 
 ## Follow-Up Notes
 
@@ -92,6 +93,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Keep import result rendering in `assets/docs-viewer/js/docs-html-import-render.js`.
 - Keep preview/write orchestration in `assets/docs-viewer/js/docs-html-import-workflow.js`.
 - Keep management-only workflows behind the lazy management boundary.
+- Keep normalize-order choice shaping and make-viewable target resolution in `assets/docs-viewer/js/docs-viewer-management-action-workflow.js`.
 - Move command-specific write behavior to `assets/docs-viewer/js/docs-viewer-management-actions.js` or a workflow-specific module when it gains independent state.
 
 ### Reports, Search, And Bookmarks

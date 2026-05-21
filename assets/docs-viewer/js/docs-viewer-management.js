@@ -30,6 +30,9 @@ import {
 import {
   createDocsViewerManagementActionController
 } from "./docs-viewer-management-actions.js";
+import {
+  collectDescendantDocIds
+} from "./docs-viewer-management-action-workflow.js";
 
 export function initDocsViewerManagement(context) {
   var root = context.root;
@@ -201,17 +204,8 @@ export function initDocsViewerManagement(context) {
     }
   }
 
-  function collectAllDescendantDocIds(docId, bucket) {
-    state.allDocs.forEach(function (candidate) {
-      if ((candidate.parent_id || "") !== docId || bucket.has(candidate.doc_id)) return;
-      bucket.add(candidate.doc_id);
-      collectAllDescendantDocIds(candidate.doc_id, bucket);
-    });
-    return bucket;
-  }
-
   function metadataParentOptions(doc) {
-    var blockedIds = collectAllDescendantDocIds(doc.doc_id, new Set([doc.doc_id]));
+    var blockedIds = collectDescendantDocIds(state.allDocs, doc.doc_id, new Set([doc.doc_id]));
     var options = [{ value: "", label: state.managementText.metadataParentRootOption }];
     var docsByParent = buildChildrenMap(state.allDocs, {
       managementMode: state.managementMode,

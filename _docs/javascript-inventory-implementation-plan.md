@@ -197,11 +197,17 @@ Avoid rerunning every modal smoke unless shared modal shell behavior changed.
 
 ### Batch 5: Docs Viewer Non-Entry Modules
 
+**Status:** Completed on 2026-05-21.
+Docs Viewer management action decision shaping now has a focused workflow helper for normalize-order choices, normalize-order payloads, descendant collection, non-viewable ancestor discovery, and make-viewable target resolution.
+The management coordinator still owns lazy Docs Import and scope lifecycle boundaries, metadata modal payload collection, UI projection, and reload orchestration.
+The action controller still owns command invocation, busy/status projection, modal invocation, write calls, and reload handoff.
+
 **Primary files**
 
 - `assets/docs-viewer/js/docs-html-import.js`
 - `assets/docs-viewer/js/docs-viewer-management.js`
 - `assets/docs-viewer/js/docs-viewer-management-actions.js`
+- `assets/docs-viewer/js/docs-viewer-management-action-workflow.js`
 - `assets/docs-viewer/js/docs-viewer-management-modals.js`
 - `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js`
 - report/search/bookmark helpers that remain above score 4
@@ -225,6 +231,7 @@ The shared `docs-viewer.js` score is not part of this plan.
 
 **Verification**
 
+Focused helper/module smoke: `tests/smoke/docs_viewer_management_action_workflow_modules.py`.
 Use Docs Viewer module smoke checks first.
 Run `docs-viewer-smoke` only when route-level management, modal, import, or scope lifecycle behavior changes materially.
 

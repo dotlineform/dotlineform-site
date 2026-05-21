@@ -17,8 +17,8 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 
 ## Summary
 
-- Browser JavaScript files under `assets/`: 151
-- Total browser JavaScript lines under `assets/`: 42,529
+- Browser JavaScript files under `assets/`: 152
+- Total browser JavaScript lines under `assets/`: 42,586
 - Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 57
 - Target score: 4, meaning every risk category is at the low-risk floor.
 
@@ -26,10 +26,10 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | ---: | ---: |
 | 9 | 1 |
 | 8 | 1 |
-| 7 | 6 |
-| 6 | 24 |
+| 7 | 5 |
+| 6 | 25 |
 | 5 | 26 |
-| 4 | 93 |
+| 4 | 94 |
 
 ## Current Inventory
 
@@ -42,7 +42,7 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | 5 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue editor route shell after shared boot/readiness helper extraction; action workflows remain separate. |
 | 6 | `assets/studio/js/bulk-add-work.js` | Studio routes and shared runtime | 2 | 2 | 2 | 1 | 7 | Bulk import/add route workflow. |
 | 7 | `assets/studio/js/tag-registry.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Tag registry route shell after render, import-mode, and workflow extraction. |
-| 8 | `assets/docs-viewer/js/docs-viewer-management.js` | Docs Viewer non-entry | 2 | 2 | 1 | 2 | 7 | Docs Viewer management coordinator. |
+| 8 | `assets/docs-viewer/js/docs-viewer-management.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management coordinator after shared action workflow helper extraction. |
 | 9 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management modal controller after transient modal shell and metadata parent-picker extraction. |
 | 10 | `assets/studio/js/tag-aliases-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag modal rendering after shared shell/focus lifecycle extraction. |
 | 11 | `assets/studio/js/tag-registry-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag registry modal rendering after shared shell/focus lifecycle extraction. |
@@ -186,6 +186,7 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | 149 | `assets/studio/js/tag-modal-shell.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Shared tag modal shell, focus lifecycle, status, and escaping helper. |
 | 150 | `assets/docs-viewer/js/docs-viewer-management-modal-shell.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer transient management modal shell, focus lifecycle, and choice/text/confirm helper. |
 | 151 | `assets/docs-viewer/js/docs-viewer-management-parent-picker.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer metadata parent-picker matching, popup, active option, and resolution helper. |
+| 152 | `assets/docs-viewer/js/docs-viewer-management-action-workflow.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
 
 ## Rerun Notes
 
