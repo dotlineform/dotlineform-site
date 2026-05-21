@@ -18,6 +18,11 @@ import {
   formatCataloguePublicationPreview
 } from "./catalogue-editor-modal-formatters.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
+import {
+  extractCatalogueActionPreview,
+  getCataloguePreviewBlocker,
+  resolveCatalogueSaveBuildOutcome
+} from "./catalogue-editor-action-workflow.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import { utcTimestamp } from "./tag-studio-save.js";
 import {
@@ -70,26 +75,17 @@ export function currentSeriesIsDraft(state) {
 }
 
 function applySaveBuildOutcome(state, response) {
-  const build = response && response.build && typeof response.build === "object" ? response.build : null;
-  if (!currentSeriesIsPublished(state)) {
-    state.rebuildPending = false;
-    return { kind: response && response.changed ? "saved_unpublished" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (!response || !response.build_requested || !build) {
-    state.rebuildPending = Boolean(response && response.changed);
-    return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (build.ok) {
+  const outcome = resolveCatalogueSaveBuildOutcome({
+    response,
+    isPublished: currentSeriesIsPublished(state)
+  });
+  if (outcome.kind === "saved_and_updated") {
     state.rebuildPending = false;
     state.pendingBuildExtraWorkIds = [];
-    return { kind: "saved_and_updated", stamp: normalizeText(build.completed_at_utc || response.saved_at_utc) || utcTimestamp() };
+  } else {
+    state.rebuildPending = outcome.rebuildPending;
   }
-  state.rebuildPending = true;
-  return {
-    kind: "saved_update_failed",
-    stamp: normalizeText(response.saved_at_utc) || utcTimestamp(),
-    error: normalizeText(build.error)
-  };
+  return outcome;
 }
 
 export async function refreshBuildPreview(state, context) {
@@ -453,11 +449,12 @@ export async function applyPublicationChange(state, context) {
       activity_context: buildSeriesActivityContext(`${action}-series`, "catalogueSeriesPublication", "#catalogueSeriesPublication", state.currentSeriesId)
     };
     const previewResponse = await previewCataloguePublication(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    if ((preview && preview.blocked) || blockers.length) {
-      const message = blockers[0] || t(state, context, "publication_status_blocked", "Publication change is blocked.");
-      setTextWithState(context, state.statusNode, message, "error");
+    const preview = extractCatalogueActionPreview(previewResponse);
+    const blocker = getCataloguePreviewBlocker(preview, {
+      fallback: t(state, context, "publication_status_blocked", "Publication change is blocked.")
+    });
+    if (blocker) {
+      setTextWithState(context, state.statusNode, blocker, "error");
       return;
     }
 
@@ -551,12 +548,13 @@ export async function deleteCurrentSeries(state, context) {
       activity_context: buildSeriesActivityContext("delete-series", "catalogueSeriesDelete", "#catalogueSeriesDelete", state.currentSeriesId)
     };
     const previewResponse = await previewCatalogueDelete(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
-    if ((preview && preview.blocked) || blockers.length || validationErrors.length) {
-      const message = blockers[0] || validationErrors[0] || t(state, context, "delete_status_blocked", "Delete is blocked.");
-      setTextWithState(context, state.statusNode, message, "error");
+    const preview = extractCatalogueActionPreview(previewResponse);
+    const blocker = getCataloguePreviewBlocker(preview, {
+      includeValidationErrors: true,
+      fallback: t(state, context, "delete_status_blocked", "Delete is blocked.")
+    });
+    if (blocker) {
+      setTextWithState(context, state.statusNode, blocker, "error");
       state.isDeleting = false;
       context.updateEditorState();
       return;

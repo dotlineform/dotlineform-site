@@ -17,6 +17,12 @@ import {
   formatCataloguePublicationPreview
 } from "./catalogue-editor-modal-formatters.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
+import {
+  CATALOGUE_ACTION_OUTCOME,
+  extractCatalogueActionPreview,
+  getCataloguePreviewBlocker,
+  resolveCatalogueSaveBuildOutcome
+} from "./catalogue-editor-action-workflow.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import { utcTimestamp } from "./tag-studio-save.js";
 import {
@@ -125,51 +131,25 @@ export function updateWorkDetailPublishControls(state, context, { hasRecord, dir
 }
 
 function applySingleSaveBuildOutcome(state, response) {
-  const build = response && response.build && typeof response.build === "object" ? response.build : null;
-  if (!currentDetailIsPublished(state)) {
-    state.rebuildPending = false;
-    return { kind: response && response.changed ? "saved_unpublished" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (!response || !response.build_requested || !build) {
-    state.rebuildPending = Boolean(response && response.changed);
-    return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (build.ok) {
-    state.rebuildPending = false;
-    return { kind: "saved_and_updated", stamp: normalizeText(build.completed_at_utc || response.saved_at_utc) || utcTimestamp() };
-  }
-  state.rebuildPending = true;
-  return {
-    kind: "saved_update_failed",
-    stamp: normalizeText(response.saved_at_utc) || utcTimestamp(),
-    error: normalizeText(build.error)
-  };
+  const outcome = resolveCatalogueSaveBuildOutcome({
+    response,
+    isPublished: currentDetailIsPublished(state)
+  });
+  state.rebuildPending = outcome.rebuildPending;
+  return outcome;
 }
 
 function applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets) {
-  const build = response && response.build && typeof response.build === "object" ? response.build : null;
-  if (!bulkSelectionHasPublishedRecords(state)) {
-    state.rebuildPending = false;
-    state.bulkBuildTargets = [];
-    return { kind: response && response.changed ? "saved_unpublished" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (!response || !response.build_requested || !build) {
-    state.rebuildPending = Boolean(response && response.changed);
-    state.bulkBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : fallbackBuildTargets;
-    return { kind: response && response.changed ? "saved" : "unchanged", stamp: normalizeText(response && response.saved_at_utc) || utcTimestamp() };
-  }
-  if (build.ok) {
-    state.rebuildPending = false;
-    state.bulkBuildTargets = [];
-    return { kind: "saved_and_updated", stamp: normalizeText(build.completed_at_utc || response.saved_at_utc) || utcTimestamp() };
-  }
-  state.rebuildPending = true;
-  state.bulkBuildTargets = Array.isArray(build.remaining_targets) ? build.remaining_targets : fallbackBuildTargets;
-  return {
-    kind: "saved_update_failed",
-    stamp: normalizeText(response.saved_at_utc) || utcTimestamp(),
-    error: normalizeText(build.error)
-  };
+  const outcome = resolveCatalogueSaveBuildOutcome({
+    response,
+    isPublished: bulkSelectionHasPublishedRecords(state),
+    buildTargets: Array.isArray(response && response.build_targets) ? response.build_targets : fallbackBuildTargets,
+    fallbackBuildTargets,
+    unpublishedKind: CATALOGUE_ACTION_OUTCOME.SAVED_UNPUBLISHED
+  });
+  state.rebuildPending = outcome.rebuildPending;
+  state.bulkBuildTargets = outcome.buildTargets;
+  return outcome;
 }
 
 export async function refreshWorkDetailBuildPreview(state, context) {
@@ -567,11 +547,12 @@ export async function applyWorkDetailPublicationChange(state, context) {
       activity_context: buildWorkDetailActivityContext(`${action}-work-detail`, "catalogueWorkDetailPublication", "#catalogueWorkDetailPublication", state.currentDetailUid)
     };
     const previewResponse = await previewCataloguePublication(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    if ((preview && preview.blocked) || blockers.length) {
-      const message = blockers[0] || t(state, context, "publication_status_blocked", "Publication change is blocked.");
-      setTextWithState(context, state.statusNode, message, "error");
+    const preview = extractCatalogueActionPreview(previewResponse);
+    const blocker = getCataloguePreviewBlocker(preview, {
+      fallback: t(state, context, "publication_status_blocked", "Publication change is blocked.")
+    });
+    if (blocker) {
+      setTextWithState(context, state.statusNode, blocker, "error");
       return;
     }
 
@@ -703,12 +684,13 @@ export async function deleteCurrentDetail(state, context) {
       activity_context: buildWorkDetailActivityContext("delete-work-detail", "catalogueWorkDetailDelete", "#catalogueWorkDetailDelete", state.currentDetailUid)
     };
     const previewResponse = await previewCatalogueDelete(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
-    if ((preview && preview.blocked) || blockers.length || validationErrors.length) {
-      const message = blockers[0] || validationErrors[0] || t(state, context, "delete_status_blocked", "Delete is blocked.");
-      setTextWithState(context, state.statusNode, message, "error");
+    const preview = extractCatalogueActionPreview(previewResponse);
+    const blocker = getCataloguePreviewBlocker(preview, {
+      includeValidationErrors: true,
+      fallback: t(state, context, "delete_status_blocked", "Delete is blocked.")
+    });
+    if (blocker) {
+      setTextWithState(context, state.statusNode, blocker, "error");
       state.isDeleting = false;
       context.updateEditorState();
       return;

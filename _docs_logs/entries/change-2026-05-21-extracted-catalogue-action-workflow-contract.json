@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-21-extracted-catalogue-action-workflow-contract",
+  "date": "2026-05-21",
+  "title": "Extracted Catalogue Action Workflow Contract",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "catalogue",
+    "workflow"
+  ],
+  "summary": "Added a shared Catalogue editor action workflow helper for save/build outcome normalization and publication/delete preview blocker shaping, then wired the work, detail, series, and moment action modules to use it.",
+  "effect": "Catalogue action modules now share a directly tested result contract for save/build outcomes and preview blockers, reducing duplicated workflow shaping while keeping entity-specific payloads and route handoff local.",
+  "verification": [
+    "Passed tests/smoke/catalogue_editor_action_workflow_modules.py --site-root .",
+    "Passed tests/smoke/catalogue_editor_route_boot_modules.py --site-root .",
+    "Passed python py_compile for tests/smoke/catalogue_editor_action_workflow_modules.py."
+  ],
+  "source": {
+    "file": "_docs/javascript-inventory-implementation-plan.md"
+  },
+  "subjects": [
+    "javascript-inventory",
+    "catalogue-editor-actions"
+  ],
+  "related_docs": [
+    "javascript-inventory",
+    "javascript-inventory-implementation-plan"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-editor-action-workflow.js",
+    "assets/studio/js/catalogue-work-actions.js",
+    "assets/studio/js/catalogue-work-detail-actions.js",
+    "assets/studio/js/catalogue-series-actions.js",
+    "assets/studio/js/catalogue-moment-actions.js",
+    "tests/smoke/catalogue_editor_action_workflow_modules.py"
+  ]
+}

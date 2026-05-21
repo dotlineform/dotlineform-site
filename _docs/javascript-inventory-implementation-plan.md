@@ -77,6 +77,11 @@ The smoke imports the helper and the four refactored route shells, checks route 
 
 ### Batch 2: Catalogue Action Workflows
 
+**Status:** Completed on 2026-05-21.
+The shared catalogue action workflow helper now owns save/build outcome normalization and preview blocker extraction for publication and delete flows.
+The work, detail, series, and moment action modules still own entity-specific payload construction, local record updates, modal labels, and route handoff.
+Focused module smoke coverage checks the shared save result contract, delete/publication preview blocker shaping, and imports of the four action modules.
+
 **Primary files**
 
 - `assets/studio/js/catalogue-work-actions.js`
@@ -85,6 +90,7 @@ The smoke imports the helper and the four refactored route shells, checks route 
 - `assets/studio/js/catalogue-moment-actions.js`
 - `assets/studio/js/catalogue-editor-service-client.js`
 - `assets/studio/js/catalogue-editor-action-modals.js`
+- `assets/studio/js/catalogue-editor-action-workflow.js`
 
 **Why this batch is separate**
 
@@ -106,8 +112,8 @@ The detail/series/moment action modules should drop by 1 point if they share the
 
 **Verification**
 
-Use focused action helper tests first.
-Run representative catalogue editor smoke only for the workflows whose user-visible action behavior changed.
+Focused helper/module smoke: `tests/smoke/catalogue_editor_action_workflow_modules.py`.
+Run representative catalogue editor smoke only for future workflow slices that change user-visible action behavior beyond this shared result contract.
 
 ### Batch 3: Tag Route Shells
 

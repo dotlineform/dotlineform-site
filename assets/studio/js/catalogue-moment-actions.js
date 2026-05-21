@@ -16,6 +16,10 @@ import {
   formatCataloguePublicationPreview
 } from "./catalogue-editor-modal-formatters.js";
 import { confirmCatalogueActionModal } from "./catalogue-editor-action-modals.js";
+import {
+  extractCatalogueActionPreview,
+  getCataloguePreviewBlocker
+} from "./catalogue-editor-action-workflow.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import { utcTimestamp } from "./tag-studio-save.js";
 import {
@@ -186,11 +190,12 @@ export async function applyPublicationChange(state, context) {
       activity_context: buildMomentActivityContext(`${action}-moment`, "catalogueMomentPublication", "#catalogueMomentPublication", state.currentMomentId)
     };
     const previewResponse = await previewCataloguePublication(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    if ((preview && preview.blocked) || blockers.length) {
-      const message = blockers[0] || t(state, context, "publication_status_blocked", "Publication change is blocked.");
-      setTextWithState(context, state.statusNode, message, "error");
+    const preview = extractCatalogueActionPreview(previewResponse);
+    const blocker = getCataloguePreviewBlocker(preview, {
+      fallback: t(state, context, "publication_status_blocked", "Publication change is blocked.")
+    });
+    if (blocker) {
+      setTextWithState(context, state.statusNode, blocker, "error");
       return;
     }
     if (action === "unpublish") {
@@ -388,12 +393,13 @@ export async function deleteCurrentMoment(state, context) {
       activity_context: buildMomentActivityContext("delete-moment", "catalogueMomentDelete", "#catalogueMomentDelete", state.currentMomentId)
     };
     const previewResponse = await previewCatalogueDelete(request);
-    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
-    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
-    const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
-    if ((preview && preview.blocked) || blockers.length || validationErrors.length) {
-      const message = blockers[0] || validationErrors[0] || t(state, context, "delete_status_blocked", "Delete is blocked.");
-      setTextWithState(context, state.statusNode, message, "error");
+    const preview = extractCatalogueActionPreview(previewResponse);
+    const blocker = getCataloguePreviewBlocker(preview, {
+      includeValidationErrors: true,
+      fallback: t(state, context, "delete_status_blocked", "Delete is blocked.")
+    });
+    if (blocker) {
+      setTextWithState(context, state.statusNode, blocker, "error");
       state.isDeleting = false;
       context.updateEditorState();
       return;
