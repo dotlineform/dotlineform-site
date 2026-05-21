@@ -1,0 +1,47 @@
+{
+  "id": "change-2026-05-21-shared-public-runtime-for-moment-pages",
+  "date": "2026-05-21",
+  "title": "Shared Public Runtime For Moment Pages",
+  "status": "implemented",
+  "type": "refactor",
+  "domains": [
+    "runtime",
+    "catalogue"
+  ],
+  "summary": "Moved generic moment-page URL, fetch, text, sizing, and image-source helper use onto the shared public catalogue runtime.",
+  "source": {
+    "file": "_docs/javascript-inventory-implementation-plan.md"
+  },
+  "subjects": [
+    "public-runtime",
+    "moments"
+  ],
+  "related_docs": [
+    "javascript-inventory-implementation-plan",
+    "javascript-inventory"
+  ],
+  "related_files": [
+    "assets/js/moment.js",
+    "assets/js/public-catalogue-runtime.js",
+    "_layouts/moment.html",
+    "_docs/javascript-inventory-implementation-plan.md",
+    "_docs/javascript-inventory.md"
+  ],
+  "effect": "The public moment route now uses the same low-risk runtime helper surface as public work and series pages, reducing moment.js maintenance risk without changing the page rendering contract.",
+  "verification": [
+    "node --check assets/js/public-catalogue-runtime.js && node --check assets/js/moment.js && node --check assets/js/work.js",
+    "Browser smoke on http://127.0.0.1:4000/moments/4-stories/ confirmed title, body, hero image, srcset, script order, and no console errors.",
+    "Playwright desktop and mobile viewport smoke confirmed rendered title, body, hero image, and srcset."
+  ],
+  "affected": {
+    "files": [
+      "assets/js/moment.js",
+      "assets/js/public-catalogue-runtime.js",
+      "_layouts/moment.html"
+    ],
+    "docs": [
+      "javascript-inventory-implementation-plan",
+      "javascript-inventory"
+    ]
+  }
+}

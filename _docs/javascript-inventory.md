@@ -19,7 +19,7 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 
 - Browser JavaScript files under `assets/`: 152
 - Total browser JavaScript lines under `assets/`: 42,586
-- Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 57
+- Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 56
 - Target score: 4, meaning every risk category is at the low-risk floor.
 
 | Score | Files |
@@ -28,8 +28,8 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | 8 | 0 |
 | 7 | 5 |
 | 6 | 26 |
-| 5 | 26 |
-| 4 | 94 |
+| 5 | 25 |
+| 4 | 95 |
 
 ## Current Inventory
 
@@ -71,48 +71,48 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | 34 | `assets/docs-viewer/js/docs-html-import-workflow.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs import preview/write workflow helper. |
 | 35 | `assets/docs-viewer/js/docs-viewer-config-controller.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs Viewer config/scope setup. |
 | 36 | `assets/docs-viewer/js/docs-viewer-search-controller.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs Viewer search helper or controller. |
-| 37 | `assets/js/moment.js` | Public runtime | 2 | 1 | 1 | 1 | 5 | Public site runtime module. |
-| 38 | `assets/js/work.js` | Public runtime | 2 | 1 | 1 | 1 | 5 | Public site runtime module. |
-| 39 | `assets/studio/js/activity-log.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Activity log or activity context support. |
-| 40 | `assets/studio/js/catalogue-field-registry-review.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Catalogue route support module. |
-| 41 | `assets/studio/js/catalogue-series-selection.js` | Catalogue editors | 2 | 1 | 1 | 1 | 5 | Catalogue selection UI helper. |
-| 42 | `assets/studio/js/catalogue-work-detail-selection.js` | Catalogue editors | 2 | 1 | 1 | 1 | 5 | Catalogue selection UI helper. |
-| 43 | `assets/studio/js/catalogue-work-form.js` | Catalogue editors | 2 | 1 | 1 | 1 | 5 | Catalogue route support module. |
-| 44 | `assets/studio/js/catalogue-work-selection.js` | Catalogue editors | 2 | 1 | 1 | 1 | 5 | Catalogue selection UI helper. |
-| 45 | `assets/studio/js/data-sharing-review-apply.js` | Data sharing | 2 | 1 | 1 | 1 | 5 | Data sharing review apply orchestration helper. |
-| 46 | `assets/studio/js/series-tag-editor-page.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Tag route runtime. |
-| 47 | `assets/studio/js/studio-config.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Studio config loader/accessor. |
-| 48 | `assets/studio/js/studio-dashboard.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Browser runtime support module. |
-| 49 | `assets/studio/js/studio-modal.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Shared Studio modal primitive. |
-| 50 | `assets/studio/js/tag-aliases-service.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag service/write orchestration helper. |
-| 51 | `assets/studio/js/tag-groups.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag route runtime. |
-| 52 | `assets/studio/js/tag-studio-render.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag route rendering helper. |
-| 53 | `assets/studio/js/tag-studio-save-controller.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag manual patch/save helper. |
-| 54 | `assets/docs-viewer/js/docs-viewer-document-controller.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer document rendering/controller support. |
-| 55 | `assets/docs-viewer/js/docs-viewer-reports.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer runtime support module. |
-| 56 | `assets/docs-viewer/js/docs-viewer-router.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer routing and history helper. |
-| 57 | `assets/studio/js/catalogue-work-route-state.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue route support module. |
-| 58 | `assets/studio/js/series-tags-modals.js` | Tag routes | 1 | 2 | 1 | 1 | 5 | Tag modal rendering and lifecycle helper. |
-| 59 | `assets/docs-viewer/js/docs-html-import-modals.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 60 | `assets/docs-viewer/js/docs-html-import-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs import result rendering helper. |
-| 61 | `assets/docs-viewer/js/docs-viewer-data.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 62 | `assets/docs-viewer/js/docs-viewer-drag-drop.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 63 | `assets/docs-viewer/js/docs-viewer-favourites.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer bookmark/favourite support. |
-| 64 | `assets/docs-viewer/js/docs-viewer-management-capabilities.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 65 | `assets/docs-viewer/js/docs-viewer-management-client.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 66 | `assets/docs-viewer/js/docs-viewer-management-config.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 67 | `assets/docs-viewer/js/docs-viewer-management-interactions.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 68 | `assets/docs-viewer/js/docs-viewer-management-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 69 | `assets/docs-viewer/js/docs-viewer-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer rendering helper. |
-| 70 | `assets/docs-viewer/js/docs-viewer-search.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer search helper or controller. |
-| 71 | `assets/docs-viewer/js/docs-viewer-sidebar.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 72 | `assets/docs-viewer/js/docs-viewer-tree.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 73 | `assets/docs-viewer/js/reports/change-history-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 74 | `assets/docs-viewer/js/reports/docs-index-table-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 75 | `assets/docs-viewer/js/reports/reports-list-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 76 | `assets/docs-viewer/js/reports/semantic-references-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 77 | `assets/docs-viewer/js/reports/source-config-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 78 | `assets/js/public-catalogue-runtime.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public site runtime module. |
+| 37 | `assets/js/work.js` | Public runtime | 2 | 1 | 1 | 1 | 5 | Public site runtime module. |
+| 38 | `assets/studio/js/activity-log.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Activity log or activity context support. |
+| 39 | `assets/studio/js/catalogue-field-registry-review.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Catalogue route support module. |
+| 40 | `assets/studio/js/catalogue-series-selection.js` | Catalogue editors | 2 | 1 | 1 | 1 | 5 | Catalogue selection UI helper. |
+| 41 | `assets/studio/js/catalogue-work-detail-selection.js` | Catalogue editors | 2 | 1 | 1 | 1 | 5 | Catalogue selection UI helper. |
+| 42 | `assets/studio/js/catalogue-work-form.js` | Catalogue editors | 2 | 1 | 1 | 1 | 5 | Catalogue route support module. |
+| 43 | `assets/studio/js/catalogue-work-selection.js` | Catalogue editors | 2 | 1 | 1 | 1 | 5 | Catalogue selection UI helper. |
+| 44 | `assets/studio/js/data-sharing-review-apply.js` | Data sharing | 2 | 1 | 1 | 1 | 5 | Data sharing review apply orchestration helper. |
+| 45 | `assets/studio/js/series-tag-editor-page.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Tag route runtime. |
+| 46 | `assets/studio/js/studio-config.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Studio config loader/accessor. |
+| 47 | `assets/studio/js/studio-dashboard.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Browser runtime support module. |
+| 48 | `assets/studio/js/studio-modal.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Shared Studio modal primitive. |
+| 49 | `assets/studio/js/tag-aliases-service.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag service/write orchestration helper. |
+| 50 | `assets/studio/js/tag-groups.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag route runtime. |
+| 51 | `assets/studio/js/tag-studio-render.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag route rendering helper. |
+| 52 | `assets/studio/js/tag-studio-save-controller.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag manual patch/save helper. |
+| 53 | `assets/docs-viewer/js/docs-viewer-document-controller.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer document rendering/controller support. |
+| 54 | `assets/docs-viewer/js/docs-viewer-reports.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer runtime support module. |
+| 55 | `assets/docs-viewer/js/docs-viewer-router.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer routing and history helper. |
+| 56 | `assets/studio/js/catalogue-work-route-state.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue route support module. |
+| 57 | `assets/studio/js/series-tags-modals.js` | Tag routes | 1 | 2 | 1 | 1 | 5 | Tag modal rendering and lifecycle helper. |
+| 58 | `assets/docs-viewer/js/docs-html-import-modals.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 59 | `assets/docs-viewer/js/docs-html-import-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs import result rendering helper. |
+| 60 | `assets/docs-viewer/js/docs-viewer-data.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 61 | `assets/docs-viewer/js/docs-viewer-drag-drop.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 62 | `assets/docs-viewer/js/docs-viewer-favourites.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer bookmark/favourite support. |
+| 63 | `assets/docs-viewer/js/docs-viewer-management-capabilities.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 64 | `assets/docs-viewer/js/docs-viewer-management-client.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 65 | `assets/docs-viewer/js/docs-viewer-management-config.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 66 | `assets/docs-viewer/js/docs-viewer-management-interactions.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 67 | `assets/docs-viewer/js/docs-viewer-management-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 68 | `assets/docs-viewer/js/docs-viewer-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer rendering helper. |
+| 69 | `assets/docs-viewer/js/docs-viewer-search.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer search helper or controller. |
+| 70 | `assets/docs-viewer/js/docs-viewer-sidebar.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 71 | `assets/docs-viewer/js/docs-viewer-tree.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 72 | `assets/docs-viewer/js/reports/change-history-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 73 | `assets/docs-viewer/js/reports/docs-index-table-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 74 | `assets/docs-viewer/js/reports/reports-list-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 75 | `assets/docs-viewer/js/reports/semantic-references-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 76 | `assets/docs-viewer/js/reports/source-config-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 77 | `assets/js/public-catalogue-runtime.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public site runtime module. |
+| 78 | `assets/js/moment.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public moment route runtime after shared public catalogue runtime helper adoption. |
 | 79 | `assets/js/search/search-performance.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public catalogue/search route runtime. |
 | 80 | `assets/js/search/search-policy.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public catalogue/search route runtime. |
 | 81 | `assets/js/site-nav.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public navigation enhancement. |

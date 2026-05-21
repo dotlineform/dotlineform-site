@@ -240,7 +240,8 @@ Run `docs-viewer-smoke` only when route-level management, modal, import, or scop
 **Status:** Completed on 2026-05-21.
 Catalogue search now lazy-loads the opt-in performance instrumentation helper only when a query flag or local-storage setting enables it, leaving normal public search visits on the lighter JSON loader path.
 Query rendering now computes normalized query tokens once per render, uses one reusable result collator, and reuses the sorted match set when the `more` control only expands the visible count.
-`work.js` and `moment.js` were left unchanged because the completed slice did not find shared catalogue behavior duplicated across those page-local modules.
+`work.js` was left unchanged because the completed slice did not find a complete shared boundary to extract there.
+`moment.js` stayed as a low-watch follow-through item and was handled in Batch 7.
 
 **Primary files**
 
@@ -274,6 +275,11 @@ Use targeted public-route browser checks for search, work, or moment pages affec
 No Studio smoke run is needed for public-only changes.
 
 ### Batch 7: Low Watch Items And Opportunistic Cleanup
+
+**Status:** Completed on 2026-05-21.
+The public moment route now loads `public-catalogue-runtime.js` before `moment.js`, and `moment.js` consumes the shared public runtime for text coercion, baseurl trimming, positive-size normalization, payload fetches, moment payload URL construction, and generated image `src`/`srcset` assembly.
+`public-catalogue-runtime.js` gained the matching `momentPayloadUrl` helper alongside the existing work and series payload URL helpers.
+`work.js` remains a score-5 watch item because its current series navigation and keyboard navigation responsibilities are page-local and did not expose a clean shared boundary in this slice.
 
 **Primary files**
 

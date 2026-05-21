@@ -1,15 +1,17 @@
 (function () {
   var root = document.getElementById('momentPageRoot');
   if (!root) return;
+  var runtime = window.__dlfPublicCatalogueRuntime;
+  if (!runtime) return;
 
-  var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
-  var momentId = String(root.getAttribute('data-moment-id') || '').trim();
+  var baseurl = runtime.trimBaseurl(root.getAttribute('data-baseurl'));
+  var momentId = runtime.text(root.getAttribute('data-moment-id'));
   if (!momentId) return;
 
   var imgBase = String(root.getAttribute('data-img-base') || '');
-  var primarySuffix = String(root.getAttribute('data-primary-suffix') || 'primary').trim() || 'primary';
-  var assetFormat = String(root.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
-  var displayWidth = Number(root.getAttribute('data-primary-display-width') || '0');
+  var primarySuffix = runtime.text(root.getAttribute('data-primary-suffix')) || 'primary';
+  var assetFormat = runtime.text(root.getAttribute('data-asset-format')) || 'webp';
+  var displayWidth = runtime.toPositiveInteger(root.getAttribute('data-primary-display-width'));
   if (!Number.isFinite(displayWidth) || displayWidth <= 0) displayWidth = 1600;
   var loadingText = String(root.getAttribute('data-loading-text') || 'loading...');
   var unavailableText = String(root.getAttribute('data-unavailable-text') || 'info not available');
@@ -20,18 +22,10 @@
   } catch (e) {
     renderWidths = [];
   }
-  renderWidths = Array.isArray(renderWidths) ? renderWidths.map(function (value) {
-    var n = Number(value);
-    return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
-  }).filter(function (value) { return value > 0; }) : [];
-  if (!renderWidths.length) renderWidths = [800, 1200, 1600];
-
-  function text(value) {
-    return String(value == null ? '' : value).trim();
-  }
+  renderWidths = runtime.normalizePositiveSizes(renderWidths, [800, 1200, 1600]);
 
   function parseDateValue(raw) {
-    var dateText = text(raw);
+    var dateText = runtime.text(raw);
     if (!dateText) return null;
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateText)) {
       return new Date(dateText + 'T00:00:00Z');
@@ -41,7 +35,7 @@
   }
 
   function formatDate(meta) {
-    var display = text(meta && meta.date_display);
+    var display = runtime.text(meta && meta.date_display);
     if (display) return display;
     var parsed = parseDateValue(meta && meta.date);
     if (!parsed) return '';
@@ -53,7 +47,7 @@
         timeZone: 'UTC'
       }).format(parsed);
     } catch (e) {
-      return text(meta && meta.date);
+      return runtime.text(meta && meta.date);
     }
   }
 
@@ -62,12 +56,12 @@
     return raw
       .map(function (item) {
         if (!item || typeof item !== 'object') return null;
-        var file = text(item.file);
+        var file = runtime.text(item.file);
         if (!file) return null;
         return {
           file: file,
-          alt: text(item.alt),
-          caption: text(item.caption)
+          alt: runtime.text(item.alt),
+          caption: runtime.text(item.caption)
         };
       })
       .filter(Boolean);
@@ -76,25 +70,25 @@
   function normalizeMoment(raw) {
     var source = raw && typeof raw === 'object' ? raw : {};
     var normalized = {};
-    normalized.moment_id = text(source.moment_id) || momentId;
-    normalized.title = text(source.title) || normalized.moment_id || 'Untitled';
-    normalized.date = text(source.date);
-    normalized.date_display = text(source.date_display);
+    normalized.moment_id = runtime.text(source.moment_id) || momentId;
+    normalized.title = runtime.text(source.title) || normalized.moment_id || 'Untitled';
+    normalized.date = runtime.text(source.date);
+    normalized.date_display = runtime.text(source.date_display);
     normalized.images = normalizeImages(source.images);
-    normalized.width_px = Number(source.width_px);
-    normalized.height_px = Number(source.height_px);
+    normalized.width_px = runtime.toNumber(source.width_px);
+    normalized.height_px = runtime.toNumber(source.height_px);
     if (!Number.isFinite(normalized.width_px) || normalized.width_px <= 0) normalized.width_px = null;
     if (!Number.isFinite(normalized.height_px) || normalized.height_px <= 0) normalized.height_px = null;
     return normalized;
   }
 
   function deriveStem(meta, hero) {
-    var fallbackStem = text(hero && hero.file).replace(/^\/+/, '').split('/').pop().split('.')[0];
-    return text(meta && meta.moment_id) || fallbackStem;
+    var fallbackStem = runtime.text(hero && hero.file).replace(/^\/+/, '').split('/').pop().split('.')[0];
+    return runtime.text(meta && meta.moment_id) || fallbackStem;
   }
 
   function buildImageSources(meta, hero) {
-    var file = text(hero && hero.file);
+    var file = runtime.text(hero && hero.file);
     if (!file) return null;
     if (file.indexOf('://') !== -1) {
       return {
@@ -107,10 +101,8 @@
     var stem = deriveStem(meta, hero);
     if (!stem) return null;
     return {
-      src: imgBase + stem + '-' + primarySuffix + '-' + String(displayWidth) + '.' + assetFormat,
-      srcset: renderWidths.map(function (width) {
-        return imgBase + stem + '-' + primarySuffix + '-' + String(width) + '.' + assetFormat + ' ' + String(width) + 'w';
-      }).join(', '),
+      src: runtime.thumbUrl(imgBase, stem, primarySuffix, displayWidth, assetFormat),
+      srcset: runtime.thumbSrcset(imgBase, stem, renderWidths, primarySuffix, assetFormat),
       external: false
     };
   }
@@ -190,18 +182,9 @@
     applyContentHtml('<p>' + unavailableText + '</p>');
   }
 
-  function fetchJson(url) {
-    return fetch(url, { cache: 'default' })
-      .then(function (response) {
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-        return response.json();
-      });
-  }
-
   applyMetadata({ moment_id: momentId, title: loadingText });
 
-  var url = baseurl + '/assets/moments/index/' + encodeURIComponent(momentId) + '.json';
-  fetchJson(url)
+  runtime.fetchJson(runtime.momentPayloadUrl(momentId, baseurl))
     .then(function (payload) {
       var moment = (payload && payload.moment && typeof payload.moment === 'object') ? payload.moment : null;
       var contentHtml = payload && typeof payload.content_html === 'string' ? payload.content_html : null;

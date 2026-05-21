@@ -59,6 +59,10 @@
     return buildPath(baseurl, '/assets/series/index/' + encodeURIComponent(text(seriesId)) + '.json');
   }
 
+  function momentPayloadUrl(momentId, baseurl) {
+    return buildPath(baseurl, '/assets/moments/index/' + encodeURIComponent(text(momentId)) + '.json');
+  }
+
   function seriesIndexUrl(baseurl) {
     return buildPath(baseurl, '/assets/data/series_index.json');
   }
@@ -110,6 +114,7 @@
     buildPath: buildPath,
     workPayloadUrl: workPayloadUrl,
     seriesPayloadUrl: seriesPayloadUrl,
+    momentPayloadUrl: momentPayloadUrl,
     seriesIndexUrl: seriesIndexUrl,
     worksIndexUrl: worksIndexUrl,
     workUrl: workUrl,

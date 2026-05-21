@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T15:58:26Z",
+  "generated_at": "2026-05-21T16:09:54Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2347,7 +2347,7 @@
       "source_path": "javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-inventory.json",
-      "content_text_length": 19414
+      "content_text_length": 19469
     },
     {
       "scope": "studio",
@@ -2380,7 +2380,7 @@
       "source_path": "javascript-inventory-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-inventory-implementation-plan.json",
-      "content_text_length": 15426,
+      "content_text_length": 16109,
       "ui_status": "in-progress"
     },
     {
@@ -3978,7 +3978,7 @@
       "source_path": "_tmp.md",
       "viewer_url": "/docs/?scope=studio&doc=_tmp",
       "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp.json",
-      "content_text_length": 9926
+      "content_text_length": 9898
     },
     {
       "scope": "studio",
