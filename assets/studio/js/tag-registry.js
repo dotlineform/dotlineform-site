@@ -18,18 +18,11 @@ import {
   buildRegistryOptions,
   configureTagRegistryDomain,
   findTagById as findRegistryTagById,
-  getDemoteTagMatches as getRegistryDemoteTagMatches,
-  getDemoteValidation as getRegistryDemoteValidation,
-  getNewTagValidation as getRegistryNewTagValidation,
   normalize,
   normalizeRegistryTags,
   normalizeTimestamp
 } from "./tag-registry-domain.js";
 import {
-  applyTagRegistryCreateProjection,
-  applyTagRegistryDeleteProjection,
-  applyTagRegistryDemoteProjection,
-  applyTagRegistryEditProjection,
   buildTagRegistrySeriesMetaById,
   getTagRegistryDeleteImpactSeries
 } from "./tag-registry-state.js";
@@ -55,18 +48,7 @@ import {
 import {
   clearTagRegistryImportResult,
   collectTagRegistryModalRefs,
-  closeTagRegistryDeleteModal,
-  closeTagRegistryDemoteModal,
-  closeTagRegistryEditModal,
-  closeTagRegistryNewModal,
-  openTagRegistryDeleteModal,
-  openTagRegistryDemoteModal,
-  openTagRegistryEditModal,
-  openTagRegistryNewModal,
-  renderTagRegistryDemoteSelectionState,
-  renderTagRegistryDemoteTagPopup,
   renderTagRegistryDeleteImpactPreview,
-  renderTagRegistryNewTagModalState,
   renderTagRegistryModals,
   setTagRegistryImportResult,
   setTagRegistryDeleteImpactStatus,
@@ -84,8 +66,39 @@ import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 import {
+  bindTagSaveModeReprobe,
+  tagRouteServiceState,
+  withTagRouteBusy
+} from "./tag-route-save-session.js";
+import {
   tagRegistryUi
 } from "./studio-ui.js";
+import {
+  addTagRegistryDemoteTag,
+  applyTagRegistryCreatePatchResult,
+  applyTagRegistryCreatePostResult,
+  applyTagRegistryDeleteResult,
+  applyTagRegistryDemotePatchResult,
+  applyTagRegistryDemotePostResult,
+  applyTagRegistryEditResult,
+  closeTagRegistryDeleteWorkflow,
+  closeTagRegistryDemoteWorkflow,
+  closeTagRegistryEditWorkflow,
+  closeTagRegistryNewWorkflow,
+  getTagRegistryDemoteValidation,
+  getTagRegistryNewValidation,
+  openTagRegistryDeleteWorkflow,
+  openTagRegistryDemoteWorkflow,
+  openTagRegistryEditWorkflow,
+  openTagRegistryNewWorkflow,
+  renderTagRegistryDemoteWorkflowPopup,
+  setTagRegistryDeleteStatus,
+  setTagRegistryDemoteStatus,
+  setTagRegistryEditStatus,
+  setTagRegistryNewStatus,
+  updateTagRegistryDemoteWorkflow,
+  updateTagRegistryNewWorkflow
+} from "./tag-registry-modal-workflow.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const MAX_ALIAS_TAGS = 4;
@@ -105,7 +118,7 @@ function routeStateDetail(state) {
   return {
     route: "tag-registry",
     mode: state.importModalOpen ? "import" : state.editTagId || state.newTagState || state.demoteState || state.deleteTagId ? "edit" : "list",
-    service: state.saveMode === "post" ? "available" : "unavailable",
+    service: tagRouteServiceState(state),
     recordLoaded: Boolean(state.tags && state.tags.length)
   };
 }
@@ -119,14 +132,7 @@ function markRouteReady(state, ready) {
 }
 
 async function withRouteBusy(state, task) {
-  state.isBusy = true;
-  syncRouteBusyState(state);
-  try {
-    return await task();
-  } finally {
-    state.isBusy = false;
-    syncRouteBusyState(state);
-  }
+  return withTagRouteBusy(state, task, { syncRouteBusyState });
 }
 
 async function initTagRegistryPage() {
@@ -205,6 +211,9 @@ async function initTagRegistryPage() {
     return;
   }
 
+  bindTagSaveModeReprobe(() => {
+    void probeImportMode(state);
+  });
   void probeImportMode(state);
 }
 
@@ -395,61 +404,48 @@ function findTagById(state, tagId) {
   return findRegistryTagById(state.tags, tagId);
 }
 
+function modalWorkflowOptions(state) {
+  return {
+    text: (key, fallback, tokens) => registryText(state.config, key, fallback, tokens),
+    tagSlugRe: TAG_SLUG_RE,
+    studioGroups: STUDIO_GROUPS,
+    maxAliasTags: MAX_ALIAS_TAGS,
+    cap: DEMOTE_TAG_MATCH_CAP,
+    findTagById: (tagId) => findTagById(state, tagId),
+    clearImportResult: () => clearImportResult(state),
+    setImportResult: (kind, message) => setImportResult(state, kind, message),
+    syncRouteBusyState: () => syncRouteBusyState(state),
+    refreshDeleteImpactPreview: () => refreshDeleteImpactPreview(state),
+    renderControls: () => renderControls(state),
+    renderList: () => renderList(state),
+    applyPatchFallback: () => applyTagRegistryPatchFallback(state),
+    renderImportAvailability: () => renderImportAvailability(state),
+    openPatchModal: (snippet) => openPatchModal(state, snippet)
+  };
+}
+
 function openEditModal(state, tagId) {
-  const tag = findTagById(state, tagId);
-  if (!tag) return;
-  clearImportResult(state);
-  openTagRegistryEditModal(state, tag);
-  syncRouteBusyState(state);
+  openTagRegistryEditWorkflow(state, tagId, modalWorkflowOptions(state));
 }
 
 function closeEditModal(state) {
-  closeTagRegistryEditModal(state);
-  syncRouteBusyState(state);
+  closeTagRegistryEditWorkflow(state, modalWorkflowOptions(state));
 }
 
 function openNewTagModal(state) {
-  clearImportResult(state);
-  openTagRegistryNewModal(state);
-  syncRouteBusyState(state);
+  openTagRegistryNewWorkflow(state, modalWorkflowOptions(state));
 }
 
 function closeNewTagModal(state) {
-  closeTagRegistryNewModal(state);
-  syncRouteBusyState(state);
-}
-
-function setNewTagStatus(state, kind, message) {
-  setStatusText(state.refs.newTagStatus, kind, message);
+  closeTagRegistryNewWorkflow(state, modalWorkflowOptions(state));
 }
 
 function getNewTagValidation(state) {
-  return getRegistryNewTagValidation({
-    newTagState: state.newTagState,
-    slugInput: state.refs.newTagSlug.value,
-    descriptionInput: state.refs.newTagDescription.value,
-    tags: state.tags,
-    tagSlugRe: TAG_SLUG_RE,
-    studioGroups: STUDIO_GROUPS,
-    text: (key, fallback, tokens) => registryText(state.config, key, fallback, tokens)
-  });
+  return getTagRegistryNewValidation(state, modalWorkflowOptions(state));
 }
 
 function updateNewTagUi(state) {
-  if (!state.newTagState) return;
-  const slug = normalize(state.refs.newTagSlug.value);
-  if (state.refs.newTagSlug.value !== slug) {
-    state.refs.newTagSlug.value = slug;
-  }
-  state.newTagState.slug = slug;
-  state.newTagState.description = String(state.refs.newTagDescription.value || "").trim();
-
-  const validation = getNewTagValidation(state);
-  renderTagRegistryNewTagModalState(state, validation);
-}
-
-function setEditStatus(state, kind, message) {
-  setStatusText(state.refs.editStatus, kind, message);
+  updateTagRegistryNewWorkflow(state, modalWorkflowOptions(state));
 }
 
 async function refreshDeleteImpactPreview(state) {
@@ -490,20 +486,15 @@ async function handleTagEdit(state) {
     config: state.config
   });
   if (!result.ok) {
-    setEditStatus(state, result.code === "no_changes" ? "" : "error", result.message);
+    setTagRegistryEditStatus(state, result.code === "no_changes" ? "" : "error", result.message);
     return;
   }
 
-  setEditStatus(state, "success", result.message);
-  setImportResult(state, "success", result.summary);
-  applyTagRegistryEditProjection(state, {
+  applyTagRegistryEditResult(state, {
     tagId,
     description,
-    response: result.response
-  });
-  renderControls(state);
-  renderList(state);
-  closeEditModal(state);
+    result
+  }, modalWorkflowOptions(state));
 }
 
 async function handleCreateTag(state) {
@@ -528,55 +519,25 @@ async function handleCreateTag(state) {
     config: state.config
   });
   if (result.ok && result.mode === "post") {
-    closeNewTagModal(state);
-    setImportResult(state, "success", result.summary);
-    applyTagRegistryCreateProjection(state, {
+    applyTagRegistryCreatePostResult(state, {
       validation,
-      response: result.response
-    });
-    renderControls(state);
-    renderList(state);
+      result
+    }, modalWorkflowOptions(state));
     return;
   }
 
-  if (result.switchToPatch) {
-    applyTagRegistryPatchFallback(state);
-    renderImportAvailability(state);
-    setNewTagStatus(state, "error", result.message);
-  }
-
-  const patchResult = result.patchResult;
-  closeNewTagModal(state);
-  setImportResult(state, patchResult.kind, patchResult.message);
-  openPatchModal(state, patchResult.snippet);
-}
-
-function setDeleteStatus(state, kind, message) {
-  setStatusText(state.refs.deleteStatus, kind, message);
+  applyTagRegistryCreatePatchResult(state, {
+    result,
+    patchResult: result.patchResult
+  }, modalWorkflowOptions(state));
 }
 
 function openDeleteModal(state, tagId) {
-  clearImportResult(state);
-  const tag = findTagById(state, tagId);
-  if (!tag) {
-    setImportResult(state, "error", registryText(state.config, "selected_tag_missing", "Selected tag is no longer available."));
-    return;
-  }
-  openTagRegistryDeleteModal(state, tag);
-  syncRouteBusyState(state);
-
-  if (state.saveMode !== "post") {
-    setDeleteStatus(state, "error", registryText(state.config, "local_delete_required", "Local server is required for delete."));
-    setTagRegistryDeleteImpactStatus(state, "error", registryText(state.config, "delete_impact_unavailable_local", "Delete impact: unavailable (local server required)."));
-    return;
-  }
-
-  void refreshDeleteImpactPreview(state);
+  openTagRegistryDeleteWorkflow(state, tagId, modalWorkflowOptions(state));
 }
 
 function closeDeleteModal(state) {
-  closeTagRegistryDeleteModal(state);
-  syncRouteBusyState(state);
+  closeTagRegistryDeleteWorkflow(state, modalWorkflowOptions(state));
 }
 
 async function handleDeleteFromModal(state) {
@@ -588,135 +549,38 @@ async function handleDeleteFromModal(state) {
     config: state.config
   });
   if (!result.ok) {
-    setDeleteStatus(state, "error", result.message);
+    setTagRegistryDeleteStatus(state, "error", result.message);
     return;
   }
 
-  closeDeleteModal(state);
-  setImportResult(state, "success", result.summary);
-  applyTagRegistryDeleteProjection(state, {
+  applyTagRegistryDeleteResult(state, {
     tagId: deletedTagId,
-    response: result.response
-  });
-  renderControls(state);
-  renderList(state);
+    result
+  }, modalWorkflowOptions(state));
 }
 
 function openDemoteModal(state, tagId) {
-  clearImportResult(state);
-  const tag = findTagById(state, tagId);
-  if (!tag) {
-    setImportResult(state, "error", registryText(state.config, "selected_tag_missing", "Selected tag is no longer available."));
-    return;
-  }
-  const aliasKey = tag.tagId.split(":")[1] || tag.tagId;
-  if (state.aliasKeys.has(aliasKey)) {
-    setImportResult(
-      state,
-      "error",
-      registryText(
-        state.config,
-        "alias_exists_demote_error",
-        "Alias already exists: {alias_key}. Demotion overwrite is not permitted.",
-        { alias_key: aliasKey }
-      )
-    );
-    return;
-  }
-
-  openTagRegistryDemoteModal(state, { tag, aliasKey });
-  updateDemoteUi(state);
-  syncRouteBusyState(state);
+  openTagRegistryDemoteWorkflow(state, tagId, modalWorkflowOptions(state));
 }
 
 function closeDemoteModal(state) {
-  closeTagRegistryDemoteModal(state);
-  syncRouteBusyState(state);
-}
-
-function setDemoteStatus(state, kind, message) {
-  setStatusText(state.refs.demoteStatus, kind, message);
+  closeTagRegistryDemoteWorkflow(state, modalWorkflowOptions(state));
 }
 
 function getDemoteValidation(state) {
-  return getRegistryDemoteValidation({
-    demoteState: state.demoteState,
-    tags: state.tags,
-    maxAliasTags: MAX_ALIAS_TAGS,
-    text: (key, fallback, tokens) => registryText(state.config, key, fallback, tokens)
-  });
+  return getTagRegistryDemoteValidation(state, modalWorkflowOptions(state));
 }
 
 function updateDemoteUi(state) {
-  if (!state.demoteState) return;
-  const validation = getDemoteValidation(state);
-  let statusKind = "";
-  let statusMessage = "";
-  if (validation.warning) {
-    const emptyWarning = registryText(state.config, "demote_select_target_warning", "Select at least one target tag.");
-    statusKind = validation.warning === emptyWarning ? "" : "error";
-    statusMessage = validation.warning;
-  }
-  const selectedItems = state.demoteState.tags.map((tagId) => {
-    const info = findTagById(state, tagId);
-    return {
-      tagId,
-      group: info && STUDIO_GROUPS.includes(info.group) ? info.group : "warning",
-      label: info ? info.label : tagId
-    };
-  });
-  renderTagRegistryDemoteSelectionState(state, {
-    selectedItems,
-    canConfirm: validation.valid,
-    statusKind,
-    statusMessage
-  });
-}
-
-function getDemoteTagMatches(state, query) {
-  return getRegistryDemoteTagMatches({
-    query,
-    demoteState: state.demoteState,
-    registryOptions: state.registryOptions,
-    cap: DEMOTE_TAG_MATCH_CAP
-  });
+  updateTagRegistryDemoteWorkflow(state, modalWorkflowOptions(state));
 }
 
 function renderDemoteTagPopup(state) {
-  if (!state.demoteState) return;
-  const result = getDemoteTagMatches(state, state.refs.demoteTagSearch.value);
-  renderTagRegistryDemoteTagPopup(state, result);
+  renderTagRegistryDemoteWorkflowPopup(state, modalWorkflowOptions(state));
 }
 
 function addDemoteTag(state, tagId) {
-  if (!state.demoteState) return;
-  const normalizedTagId = normalize(tagId);
-  if (!normalizedTagId) return;
-  const tag = findTagById(state, normalizedTagId);
-  if (!tag) return;
-  if (normalizedTagId === state.demoteState.tagId) {
-    setDemoteStatus(state, "error", registryText(state.config, "demote_target_includes_self", "Target list must not include the demoted tag."));
-    return;
-  }
-  if (state.demoteState.tags.includes(normalizedTagId)) return;
-  if (state.demoteState.tags.length >= MAX_ALIAS_TAGS) {
-    setDemoteStatus(state, "error", registryText(state.config, "demote_max_tags_warning", "Select up to {max_tags} tags.", { max_tags: MAX_ALIAS_TAGS }));
-    return;
-  }
-  const nextGroup = tag.group;
-  const groupConflict = state.demoteState.tags.some((item) => {
-    const existing = findTagById(state, item);
-    return Boolean(existing && existing.group === nextGroup);
-  });
-  if (groupConflict) {
-    setDemoteStatus(
-      state,
-      "error",
-      registryText(state.config, "demote_one_per_group_warning", "Only one target tag per group is allowed ({group}).", { group: nextGroup })
-    );
-    return;
-  }
-  state.demoteState.tags.push(normalizedTagId);
+  addTagRegistryDemoteTag(state, tagId, modalWorkflowOptions(state));
 }
 
 async function handleTagDemote(state) {
@@ -724,7 +588,7 @@ async function handleTagDemote(state) {
   const tag = findTagById(state, state.demoteState.tagId);
   if (!tag) {
     const message = registryText(state.config, "selected_tag_missing", "Selected tag is no longer available.");
-    setDemoteStatus(state, "error", message);
+    setTagRegistryDemoteStatus(state, "error", message);
     setImportResult(state, "error", message);
     return;
   }
@@ -737,14 +601,14 @@ async function handleTagDemote(state) {
       "Alias already exists: {alias_key}. Demotion overwrite is not permitted.",
       { alias_key: aliasKey }
     );
-    setDemoteStatus(state, "error", message);
+    setTagRegistryDemoteStatus(state, "error", message);
     setImportResult(state, "error", message);
     return;
   }
 
   const validation = getDemoteValidation(state);
   if (!validation.valid) {
-    setDemoteStatus(state, "error", validation.warning || registryText(state.config, "demote_invalid_targets", "Invalid target tags."));
+    setTagRegistryDemoteStatus(state, "error", validation.warning || registryText(state.config, "demote_invalid_targets", "Invalid target tags."));
     return;
   }
 
@@ -758,7 +622,7 @@ async function handleTagDemote(state) {
     });
     if (!preview.ok) {
       const message = preview.message;
-      setDemoteStatus(state, "error", message);
+      setTagRegistryDemoteStatus(state, "error", message);
       setImportResult(state, "error", message);
       return;
     }
@@ -771,7 +635,7 @@ async function handleTagDemote(state) {
         "Alias already exists: {alias_key}. Demotion overwrite is not permitted.",
         { alias_key: aliasKey }
       );
-      setDemoteStatus(state, "error", message);
+      setTagRegistryDemoteStatus(state, "error", message);
       setImportResult(state, "error", message);
       return;
     }
@@ -805,27 +669,22 @@ async function handleTagDemote(state) {
     config: state.config
   });
   if (!result.ok) {
-    setDemoteStatus(state, "error", result.message);
+    setTagRegistryDemoteStatus(state, "error", result.message);
     setImportResult(state, "error", result.message);
     return;
   }
   if (result.mode === "post") {
-    closeDemoteModal(state);
-    setImportResult(state, "success", result.summary);
-    applyTagRegistryDemoteProjection(state, {
+    applyTagRegistryDemotePostResult(state, {
       tagId: tag.tagId,
       aliasKey,
-      response: result.response
-    });
-    renderControls(state);
-    renderList(state);
+      result
+    }, modalWorkflowOptions(state));
     return;
   }
 
-  const patchResult = result.patchResult;
-  closeDemoteModal(state);
-  setImportResult(state, patchResult.kind, patchResult.message);
-  openPatchModal(state, patchResult.snippet);
+  applyTagRegistryDemotePatchResult(state, {
+    patchResult: result.patchResult
+  }, modalWorkflowOptions(state));
 }
 
 async function handleImport(state) {
@@ -909,15 +768,4 @@ function setSelectOptionLabel(select, value, label) {
   if (!select) return;
   const option = select.querySelector(`option[value="${value}"]`);
   if (option) option.textContent = label;
-}
-
-function setStatusText(target, kind, message, baseClass = UI_CLASS.formStatus) {
-  if (!target) return;
-  target.textContent = message || "";
-  target.className = baseClass;
-  if (kind) {
-    target.dataset.state = kind;
-    return;
-  }
-  delete target.dataset.state;
 }

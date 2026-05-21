@@ -157,6 +157,43 @@ def assert_action_workflow_helpers(page: Page) -> None:
                 blockers: [],
                 validation_errors: ['ignored']
             });
+            const workRecordModule = await import('/assets/studio/js/catalogue-work-action-records.js');
+            const searchRecord = workRecordModule.projectWorkSearchRecord(' 001 ', {
+                title: 'Work title',
+                year_display: '2026',
+                status: 'published',
+                series_ids: ['009']
+            }, 'hash-001');
+            const state = {
+                sourceWorkRecordsById: new Map(),
+                workSearchById: new Map(),
+                bulkRecords: new Map(),
+                bulkRecordHashes: new Map()
+            };
+            const singleMutation = workRecordModule.applyWorkRecordMutation(state, {
+                workId: '002',
+                record: {
+                    title: 'Single work',
+                    year_display: '2025',
+                    status: 'draft',
+                    series_ids: ['008']
+                },
+                recordHash: 'hash-002'
+            });
+            const bulkMutations = workRecordModule.applyBulkWorkRecordMutations(state, [
+                {
+                    work_id: '003',
+                    record_hash: 'hash-003',
+                    record: {
+                        title: 'Bulk work',
+                        year_display: '2024',
+                        status: 'published',
+                        series_ids: ['007']
+                    }
+                },
+                { work_id: '', record_hash: 'ignored', record: { title: 'Ignored' } },
+                { work_id: '004', record_hash: 'ignored', record: null }
+            ]);
             await Promise.all([
                 import('/assets/studio/js/catalogue-work-actions.js'),
                 import('/assets/studio/js/catalogue-work-detail-actions.js'),
@@ -181,6 +218,13 @@ def assert_action_workflow_helpers(page: Page) -> None:
                 publicationBlocker,
                 deleteBlocker,
                 noBlocker,
+                searchRecord,
+                singleMutation,
+                bulkMutationCount: bulkMutations.length,
+                sourceRecordTitle: state.sourceWorkRecordsById.get('00003').title,
+                bulkRecordTitle: state.bulkRecords.get('00003').title,
+                bulkRecordHash: state.bulkRecordHashes.get('00003'),
+                bulkSearchRecord: state.workSearchById.get('00003'),
                 actionImports: true
             };
         }"""
@@ -240,6 +284,29 @@ def assert_action_workflow_helpers(page: Page) -> None:
     assert result["publicationBlocker"] == "Blocked by parent status."
     assert result["deleteBlocker"] == "Delete requires removing members first."
     assert result["noBlocker"] == ""
+    assert result["searchRecord"] == {
+        "work_id": "00001",
+        "title": "Work title",
+        "year_display": "2026",
+        "status": "published",
+        "series_ids": ["009"],
+        "record_hash": "hash-001",
+    }
+    assert result["singleMutation"]["workId"] == "00002"
+    assert result["singleMutation"]["recordHash"] == "hash-002"
+    assert result["singleMutation"]["searchRecord"]["title"] == "Single work"
+    assert result["bulkMutationCount"] == 1
+    assert result["sourceRecordTitle"] == "Bulk work"
+    assert result["bulkRecordTitle"] == "Bulk work"
+    assert result["bulkRecordHash"] == "hash-003"
+    assert result["bulkSearchRecord"] == {
+        "work_id": "00003",
+        "title": "Bulk work",
+        "year_display": "2024",
+        "status": "published",
+        "series_ids": ["007"],
+        "record_hash": "hash-003",
+    }
     assert result["actionImports"] is True
 
 

@@ -48,6 +48,10 @@ Completed implementation history is recorded in `_docs_logs/`:
 - `change-2026-05-21-pinned-catalogue-editor-route-state-projection`
 - `change-2026-05-21-defined-score-moving-javascript-maintenance-slices`
 - `change-2026-05-21-extracted-catalogue-editor-route-shell-state-and-event-owners`
+- `change-2026-05-21-extracted-work-action-record-synchronization`
+- `change-2026-05-21-added-shared-tag-route-save-session-helper`
+- `change-2026-05-21-extracted-tag-registry-modal-workflow-owner`
+- `change-2026-05-21-extracted-tag-studio-interaction-state-owner`
 
 Current stable follow-through:
 
@@ -59,8 +63,8 @@ Current stable follow-through:
 ## Next Action
 
 Task A is implemented through the save, build, publication/prose-import, and bulk action presentation contract slices.
-Task B is implemented through route-shell state factory and event binder slices for the Work, Work Detail, Series, and Moment editors.
-The next conditional revisit is B8, which should inspect `assets/studio/js/catalogue-work-actions.js` only after the reduced route-shell noise exposes a repeated action-orchestration responsibility worth extracting.
+Task B is implemented through route-shell state factory and event binder slices for the Work, Work Detail, Series, and Moment editors, plus the conditional Work action record/store synchronization extraction.
+The next maintenance-risk phase should start at Task C unless a regression exposes another repeated Catalogue action contract.
 
 ## Next Priorities After Docs Viewer
 
@@ -142,7 +146,7 @@ They should be revisited only when Task B defines the route-shell boundary or wh
 
 ### Task B: Catalogue Editor Route Shell Boundaries
 
-**Status:** B1-B7 implemented on 2026-05-21; B8 is the next conditional revisit.
+**Status:** B1-B8 implemented on 2026-05-21.
 
 Candidate files:
 
@@ -383,21 +387,32 @@ Implementation notes:
 
 Status:
 
-- conditional score-moving revisit
+- implemented
+
+Owner:
+
+- `assets/studio/js/catalogue-work-action-records.js`
 
 Scope:
 
-- revisit `assets/studio/js/catalogue-work-actions.js` only after B4-B7 reduce route-shell noise enough to expose repeated action orchestration that remains in the action modules
-- likely target is service request/activity context construction or record mutation/reload follow-through, not more presentation shaping
+- revisited `assets/studio/js/catalogue-work-actions.js` after B4-B7 reduced route-shell noise
+- moved Work action record projection and state-store synchronization for single save, bulk save, create, and publication responses into a focused owner
+- left service request construction, action sequencing, confirmation flow, route refresh, delete navigation, and media refresh in the action coordinator
+- did not reopen Task A presentation projections
 
 Expected score movement:
 
-- `assets/studio/js/catalogue-work-actions.js`: target 7 -> 6 only if a complete action responsibility moves to a focused owner with direct checks
-- do not reopen Task A presentation projections unless a regression or duplicated contract appears
+- `assets/studio/js/catalogue-work-actions.js`: 7 -> 6
+
+Acceptance checks:
+
+- `tests/smoke/catalogue_editor_action_workflow_modules.py` covers Work action record projection, single mutation, and bulk mutation with stubbed state maps
+- `node --check` passes for `catalogue-work-actions.js` and `catalogue-work-action-records.js`
+- focused Catalogue action workflow module smoke imports the action modules without page errors
 
 ### Task C: Tag Route Save And Modal Coordination
 
-**Status:** Defined for score-moving implementation.
+**Status:** C1-C3 implemented on 2026-05-21; C4 is the next closeout decision slice.
 
 Candidate files and current scores:
 
@@ -414,67 +429,80 @@ The score-moving target is route-shell responsibility reduction where save/offli
 
 #### C1: Shared Tag Save Session Contract
 
+Status:
+
+- implemented
+
 Owner:
 
-- new or extended save/session owner near `assets/studio/js/tag-studio-save-controller.js`
+- `assets/studio/js/tag-route-save-session.js`
 
 Scope:
 
-- centralize tag save-mode probing, unavailable-server fallback state, patch/manual fallback result shaping, and restored-focus re-probing across Tag Studio, Registry, and Aliases
-- route shells provide route-specific labels and callbacks; the save session owner returns explicit view models and route-busy flags
+- centralize tag save-mode probing, unavailable-server fallback state, patch/manual fallback result projection, restored-focus re-probing, and route-busy wrapping across Tag Studio, Registry, and Aliases
+- route shells provide route-specific render/status callbacks; the save session owner returns explicit service, save-mode, import-availability, and patch-result view models
+- keep Tag Studio offline-session staging in `tag-studio-save-controller.js`, because staged-series notification and baseline mutation remain route-specific
 
 Expected score movement:
 
-- `assets/studio/js/tag-studio.js`: target 7 -> 6
-- `assets/studio/js/tag-registry.js`: target 7 -> 6 if Registry adopts the same save-session contract
-- `assets/studio/js/tag-aliases.js`: target 6 -> 5 if Aliases adopts the same contract
+- `assets/studio/js/tag-studio.js`: 7 -> 6
+- `assets/studio/js/tag-registry.js`: 7 -> 6
+- `assets/studio/js/tag-aliases.js`: 6 -> 5
 
 Acceptance checks:
 
-- add or extend `tests/smoke/tag_route_shell_modules.py`
-- cover unavailable-server fallback, patch/manual result shaping, focus/pageshow re-probe callbacks, and route-busy projection without full route boot
+- `tests/smoke/tag_route_shell_modules.py` covers unavailable-server fallback state, patch/manual result projection, focus/pageshow/visibility re-probe callbacks, route-busy projection, and route-shell importability without full route boot
+- `node --check` passes for the shared save-session helper and adopting Tag route modules
 
 #### C2: Tag Registry Modal Workflow Owner
 
+Status:
+
+- implemented
+
 Owner:
 
-- focused Registry workflow owner, separate from `tag-registry-modals.js` rendering and `tag-modal-shell.js` lifecycle
+- `assets/studio/js/tag-registry-modal-workflow.js`, separate from `tag-registry-modals.js` rendering/lifecycle and `tag-modal-shell.js` shared modal primitives
 
 Scope:
 
-- move Registry create/edit/delete/demote modal state transitions, validation status projection, and apply-result handoff out of `tag-registry.js`
+- moved Registry create/edit/delete/demote modal state transitions, validation status projection, and apply-result handoff out of `tag-registry.js`
 - keep modal HTML rendering in `tag-registry-modals.js`
 - keep source mutation/service calls in existing mutation/service owners
 
 Expected score movement:
 
-- `assets/studio/js/tag-registry.js`: target 6 -> 5
-- `assets/studio/js/tag-registry-modals.js`: target 6 -> 5 only if rendering becomes pure view projection with no workflow state ownership
+- `assets/studio/js/tag-registry.js`: 6 -> 5
+- `assets/studio/js/tag-registry-modals.js`: unchanged at 6 because it still owns modal lifecycle and event callback wiring, even though route workflow state moved out
 
 Acceptance checks:
 
-- focused smoke covers create/edit/delete/demote modal open/close/status transitions with stubbed save callbacks
-- route smoke verifies Registry loads and projects ready/busy state
+- `tests/smoke/tag_route_shell_modules.py` covers Registry modal workflow validation, demote selection state, edit apply-result handoff, and route-shell importability with stubbed state/callbacks
+- `node --check` passes for `tag-registry.js` and `tag-registry-modal-workflow.js`
 
 #### C3: Tag Studio Interaction State Owner
 
+Status:
+
+- implemented
+
 Owner:
 
-- new route-local owner for selected-work/tag-entry interaction state
+- `assets/studio/js/tag-studio-interactions.js`
 
 Scope:
 
-- move selected work activation, tag entry add/remove/restore, metrics, and dirty-save enablement out of `tag-studio.js`
-- keep rendering in `tag-studio-render.js`, save orchestration in save-session owner, and route boot in route shell
+- moved selected work activation, tag entry add/remove/restore, weight cycling, metrics, and dirty-save enablement out of `tag-studio.js`
+- kept rendering in `tag-studio-render.js`, save orchestration in `tag-studio-save-controller.js` plus the shared save-session owner, and route boot/event wiring in the route shell
 
 Expected score movement:
 
-- `assets/studio/js/tag-studio.js`: target 6 -> 5
+- `assets/studio/js/tag-studio.js`: 6 -> 5
 
 Acceptance checks:
 
-- focused smoke covers selected-work changes, tag entry mutation, metrics, and dirty-save enablement from explicit state inputs
-- route smoke verifies Tag Studio still loads for a representative series
+- `tests/smoke/tag_route_shell_modules.py` covers selected-work changes, tag entry mutation, weight cycling, restore, metrics, and dirty-save enablement from explicit state inputs
+- `tests/smoke/series_tag_editor_ready_state.py` verifies Tag Studio still loads and reaches the Studio ready state for a representative series
 
 #### C4: Tag Alias Route Closeout
 

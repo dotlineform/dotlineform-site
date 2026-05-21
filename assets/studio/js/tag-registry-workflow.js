@@ -13,10 +13,12 @@ import {
   submitTagDemote,
   submitTagEdit
 } from "./tag-registry-service.js";
+import {
+  applyTagRoutePatchFallback
+} from "./tag-route-save-session.js";
 
 export function applyTagRegistryPatchFallback(state) {
-  state.saveMode = "patch";
-  state.importAvailable = false;
+  applyTagRoutePatchFallback(state, { syncImportAvailable: true });
 }
 
 export async function previewTagRegistryDeleteImpact(options) {

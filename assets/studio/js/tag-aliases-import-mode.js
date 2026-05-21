@@ -1,12 +1,12 @@
 import {
-  probeStudioHealth
-} from "./studio-transport.js";
-import {
   normalize
 } from "./tag-aliases-domain.js";
 import {
   hideTagAliasesImportModal
 } from "./tag-aliases-modals.js";
+import {
+  probeTagRouteSaveMode
+} from "./tag-route-save-session.js";
 
 export function syncTagAliasesImportModeFromControl(state) {
   const mode = normalize(state.refs.importMode.value);
@@ -27,15 +27,11 @@ export function closeTagAliasesImportModal(state, options = {}) {
 }
 
 export async function probeTagAliasesImportMode(state, options = {}) {
-  const ok = await probeStudioHealth(500);
-  state.saveMode = ok ? "post" : "patch";
-  state.importAvailable = ok;
-  if (typeof options.onImportAvailabilityChange === "function") {
-    options.onImportAvailabilityChange();
-  }
-  if (typeof options.onRouteStateChange === "function") {
-    options.onRouteStateChange();
-  }
+  await probeTagRouteSaveMode(state, {
+    syncImportAvailable: true,
+    onSaveModeChange: options.onImportAvailabilityChange,
+    onRouteStateChange: options.onRouteStateChange
+  });
 }
 
 export function renderTagAliasesImportAvailability(state, options = {}) {

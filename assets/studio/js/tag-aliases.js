@@ -81,6 +81,11 @@ import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 import {
+  bindTagSaveModeReprobe,
+  tagRouteServiceState,
+  withTagRouteBusy
+} from "./tag-route-save-session.js";
+import {
   tagAliasesUi
 } from "./studio-ui.js";
 
@@ -102,7 +107,7 @@ function routeStateDetail(state) {
   return {
     route: "tag-aliases",
     mode: state.importModalOpen ? "import" : state.editState || state.promotionState || state.demoteState ? "edit" : "list",
-    service: state.saveMode === "post" ? "available" : "unavailable",
+    service: tagRouteServiceState(state),
     recordLoaded: Boolean(state.aliases && state.aliases.length)
   };
 }
@@ -116,14 +121,7 @@ function markRouteReady(state, ready) {
 }
 
 async function withRouteBusy(state, task) {
-  state.isBusy = true;
-  syncRouteBusyState(state);
-  try {
-    return await task();
-  } finally {
-    state.isBusy = false;
-    syncRouteBusyState(state);
-  }
+  return withTagRouteBusy(state, task, { syncRouteBusyState });
 }
 
 async function initTagAliasesPage() {
@@ -196,6 +194,9 @@ async function initTagAliasesPage() {
     return;
   }
 
+  bindTagSaveModeReprobe(() => {
+    void probeImportMode(state);
+  });
   void probeImportMode(state);
 }
 

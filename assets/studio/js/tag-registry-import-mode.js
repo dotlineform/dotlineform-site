@@ -1,12 +1,12 @@
 import {
-  probeStudioHealth
-} from "./studio-transport.js";
-import {
   normalize
 } from "./tag-registry-domain.js";
 import {
   hideTagRegistryImportModal
 } from "./tag-registry-modals.js";
+import {
+  probeTagRouteSaveMode
+} from "./tag-route-save-session.js";
 
 export function syncTagRegistryImportModeFromControl(state) {
   const mode = normalize(state.refs.importMode.value);
@@ -27,15 +27,11 @@ export function closeTagRegistryImportModal(state, options = {}) {
 }
 
 export async function probeTagRegistryImportMode(state, options = {}) {
-  const ok = await probeStudioHealth(500);
-  state.saveMode = ok ? "post" : "patch";
-  state.importAvailable = ok;
-  if (typeof options.onImportAvailabilityChange === "function") {
-    options.onImportAvailabilityChange();
-  }
-  if (typeof options.onRouteStateChange === "function") {
-    options.onRouteStateChange();
-  }
+  await probeTagRouteSaveMode(state, {
+    syncImportAvailable: true,
+    onSaveModeChange: options.onImportAvailabilityChange,
+    onRouteStateChange: options.onRouteStateChange
+  });
 }
 
 export function renderTagRegistryImportAvailability(state, options = {}) {

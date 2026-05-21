@@ -16,10 +16,12 @@ import {
   submitAliasesImport,
   submitTagDemoteFromAliases
 } from "./tag-aliases-service.js";
+import {
+  applyTagRoutePatchFallback
+} from "./tag-route-save-session.js";
 
 export function applyTagAliasesPatchFallback(state) {
-  state.saveMode = "patch";
-  state.importAvailable = false;
+  applyTagRoutePatchFallback(state, { syncImportAvailable: true });
 }
 
 export async function importTagAliases(options) {

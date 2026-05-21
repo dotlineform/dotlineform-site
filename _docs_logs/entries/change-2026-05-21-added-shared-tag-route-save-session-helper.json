@@ -1,0 +1,34 @@
+{
+  "id": "change-2026-05-21-added-shared-tag-route-save-session-helper",
+  "date": "2026-05-21",
+  "title": "Added Shared Tag Route Save Session Helper",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "catalogue",
+    "workflow"
+  ],
+  "summary": "Centralized Tag route save-mode probing, patch fallback state, focus/pageshow re-probing, route-busy wrapping, and patch-result projection in a shared helper adopted by Tag Studio, Registry, and Aliases.",
+  "source": {
+    "file": "_docs/javascript-maintenance-risk-mitigation.md"
+  },
+  "subjects": [
+    "javascript-maintenance",
+    "tag-routes"
+  ],
+  "related_docs": [
+    "javascript-maintenance-risk-mitigation",
+    "javascript-inventory"
+  ],
+  "related_files": [
+    "assets/studio/js/tag-route-save-session.js",
+    "assets/studio/js/tag-studio.js",
+    "assets/studio/js/tag-registry.js",
+    "assets/studio/js/tag-aliases.js",
+    "assets/studio/js/tag-registry-import-mode.js",
+    "assets/studio/js/tag-aliases-import-mode.js",
+    "assets/studio/js/tag-registry-workflow.js",
+    "assets/studio/js/tag-aliases-workflow.js",
+    "tests/smoke/tag_route_shell_modules.py"
+  ]
+}

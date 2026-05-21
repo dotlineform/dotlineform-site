@@ -1,0 +1,28 @@
+{
+  "id": "change-2026-05-21-extracted-work-action-record-synchronization",
+  "date": "2026-05-21",
+  "title": "Extracted Work Action Record Synchronization",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "catalogue",
+    "workflow"
+  ],
+  "summary": "Moved Catalogue Work action response record projection and state-store synchronization into a focused helper used by single save, bulk save, create, and publication flows, leaving service sequencing and route refresh behavior in the Work action coordinator.",
+  "source": {
+    "file": "_docs/javascript-maintenance-risk-mitigation.md"
+  },
+  "subjects": [
+    "javascript-maintenance",
+    "catalogue-actions"
+  ],
+  "related_docs": [
+    "javascript-maintenance-risk-mitigation",
+    "javascript-inventory"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-work-actions.js",
+    "assets/studio/js/catalogue-work-action-records.js",
+    "tests/smoke/catalogue_editor_action_workflow_modules.py"
+  ]
+}

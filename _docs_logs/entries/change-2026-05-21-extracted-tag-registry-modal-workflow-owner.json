@@ -1,0 +1,29 @@
+{
+  "id": "change-2026-05-21-extracted-tag-registry-modal-workflow-owner",
+  "date": "2026-05-21",
+  "title": "Extracted Tag Registry Modal Workflow Owner",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "catalogue",
+    "workflow"
+  ],
+  "summary": "Moved Tag Registry create, edit, delete, and demote modal workflow state, validation projection, and apply-result handoff into a focused modal workflow module while leaving modal rendering and service mutation calls in their existing owners.",
+  "source": {
+    "file": "_docs/javascript-maintenance-risk-mitigation.md"
+  },
+  "subjects": [
+    "javascript-maintenance",
+    "tag-routes"
+  ],
+  "related_docs": [
+    "javascript-maintenance-risk-mitigation",
+    "javascript-inventory"
+  ],
+  "related_files": [
+    "assets/studio/js/tag-registry.js",
+    "assets/studio/js/tag-registry-modal-workflow.js",
+    "assets/studio/js/tag-registry-modals.js",
+    "tests/smoke/tag_route_shell_modules.py"
+  ]
+}

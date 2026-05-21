@@ -51,6 +51,10 @@ import {
   normalizeWorkId,
   parseSeriesIds
 } from "./catalogue-work-fields.js";
+import {
+  applyBulkWorkRecordMutations,
+  applyWorkRecordMutation
+} from "./catalogue-work-action-records.js";
 
 function t(state, context, key, fallback, tokens = null) {
   return context.text(key, fallback, tokens);
@@ -442,22 +446,7 @@ export async function saveCurrentWork(state, context) {
     if (state.mode === "bulk") {
       const response = await saveCatalogueBulkRecords(buildPayload(state));
       const changedRecords = Array.isArray(response && response.records) ? response.records : [];
-      changedRecords.forEach((item) => {
-        const workId = normalizeWorkId(item && item.work_id);
-        const record = item && item.record && typeof item.record === "object" ? item.record : null;
-        if (!workId || !record) return;
-        state.sourceWorkRecordsById.set(workId, record);
-        state.bulkRecords.set(workId, record);
-        state.bulkRecordHashes.set(workId, normalizeText(item.record_hash) || "");
-        state.workSearchById.set(workId, {
-          work_id: workId,
-          title: normalizeText(record.title),
-          year_display: normalizeText(record.year_display),
-          status: normalizeText(record.status),
-          series_ids: Array.isArray(record.series_ids) ? record.series_ids.slice() : [],
-          record_hash: normalizeText(item.record_hash)
-        });
-      });
+      applyBulkWorkRecordMutations(state, changedRecords);
       const fallbackBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : [];
       const outcome = applyBulkSaveBuildOutcome(state, response, fallbackBuildTargets);
       setLoadedBulkWorks(state, state.bulkWorkIds, state.bulkRecords, state.bulkRecordHashes, context.workRouteStateOptions({
@@ -476,14 +465,10 @@ export async function saveCurrentWork(state, context) {
     if (!record) {
       throw new Error("save response missing record");
     }
-    state.sourceWorkRecordsById.set(state.currentWorkId, record);
-    state.workSearchById.set(state.currentWorkId, {
-      work_id: state.currentWorkId,
-      title: normalizeText(record.title),
-      year_display: normalizeText(record.year_display),
-      status: normalizeText(record.status),
-      series_ids: Array.isArray(record.series_ids) ? record.series_ids.slice() : [],
-      record_hash: normalizeText(response.record_hash)
+    applyWorkRecordMutation(state, {
+      workId: state.currentWorkId,
+      record,
+      recordHash: response.record_hash
     });
     const outcome = applySingleSaveBuildOutcome(state, response);
     if (response.changed && outcome.kind !== "saved_and_updated" && outcome.kind !== "saved_unpublished") {
@@ -546,14 +531,10 @@ export async function createCurrentWork(state, context) {
       throw new Error("create response missing work id");
     }
     if (record) {
-      state.sourceWorkRecordsById.set(workId, record);
-      state.workSearchById.set(workId, {
-        work_id: workId,
-        title: normalizeText(record.title),
-        year_display: normalizeText(record.year_display),
-        status: normalizeText(record.status),
-        series_ids: Array.isArray(record.series_ids) ? record.series_ids.slice() : [],
-        record_hash: normalizeText(response.record_hash)
+      applyWorkRecordMutation(state, {
+        workId,
+        record,
+        recordHash: response.record_hash
       });
     }
     await context.openWorkById(workId);
@@ -890,15 +871,7 @@ export async function applyPublicationChange(state, context) {
 
     const workId = state.currentWorkId;
     const recordHash = normalizeText(response.record_hash) || await computeRecordHash(record);
-    state.sourceWorkRecordsById.set(workId, record);
-    state.workSearchById.set(workId, {
-      work_id: workId,
-      title: normalizeText(record.title),
-      year_display: normalizeText(record.year_display),
-      status: normalizeText(record.status),
-      series_ids: Array.isArray(record.series_ids) ? record.series_ids.slice() : [],
-      record_hash: recordHash
-    });
+    applyWorkRecordMutation(state, { workId, record, recordHash });
     state.rebuildPending = response.status === "public_update_failed";
     state.pendingBuildExtraSeriesIds = [];
     const lookup = await context.loadWorkLookupRecord(workId).catch(() => null);
