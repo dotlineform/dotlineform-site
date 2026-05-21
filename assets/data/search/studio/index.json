@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-eeb0169d17a06fed19b4b71367a43512",
-    "generated_at_utc": "2026-05-20T20:43:34Z",
+    "version": "blake2b-3a2ba2f125ea4b849b5dc9448ef73c1b",
+    "generated_at_utc": "2026-05-21T09:12:55Z",
     "count": 286
   },
   "entries": [
@@ -2504,24 +2504,22 @@
       "kind": "doc",
       "title": "Tag Registry",
       "href": "/docs/?scope=studio&doc=tag-registry",
-      "last_updated": "2026-05-09 16:00",
+      "last_updated": "2026-05-21",
       "parent_id": "analytics",
       "parent_title": "Analytics",
-      "display_meta": "2026-05-09 16:00 • Analytics",
+      "display_meta": "2026-05-21 • Analytics",
       "search_terms": [
         "tag-registry",
         "tag",
         "registry",
         "tag registry",
         "analytics",
-        "2026-05-09 16:00",
+        "2026-05-21",
         "2026",
         "05",
-        "09",
-        "16",
-        "00"
+        "21"
       ],
-      "search_text": "tag-registry tag registry tag registry analytics 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "tag-registry tag registry tag registry analytics 2026-05-21 2026 05 21"
     },
     {
       "id": "studio-ui-conformance",
@@ -3443,10 +3441,10 @@
       "kind": "doc",
       "title": "JavaScript Inventory Priorities",
       "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-21",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-20 • Studio",
+      "display_meta": "2026-05-21 • Studio",
       "search_terms": [
         "studio-javascript-payload-inventory",
         "studio",
@@ -3455,12 +3453,12 @@
         "inventory",
         "javascript inventory priorities",
         "priorities",
-        "2026-05-20",
+        "2026-05-21",
         "2026",
         "05",
-        "20"
+        "21"
       ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory priorities priorities 2026-05-20 2026 05 20"
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory priorities priorities 2026-05-21 2026 05 21"
     },
     {
       "id": "site-request-js-payload-runtime-cleanup-inventory",

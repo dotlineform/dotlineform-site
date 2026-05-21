@@ -9,6 +9,17 @@ viewable: false
 ---
 # tmp
 
+we are working on the tasks in _docs/studio-javascript-payload-inventory.md
+please start implementing tasks for tag-registry.js
+
+---
+
+<https://developers.openai.com/codex/migrate?utm_campaign=ML_MIX_GWT_AW_codexnewsletter_OF_EX_MAY_18&utm_content=utm_content&utm_medium=email&utm_source=sendgrid&utm_term=utm_term>
+
+<https://developers.openai.com/codex/skills>
+
+---
+
 here is a potential upcoming requirement for docs viewer. it is still rough. what is the blast radius for this request as it stands, and does it have any relationship with any of the risk mitigation work identified?
 
 request:

@@ -2,7 +2,7 @@
 doc_id: tag-registry
 title: Tag Registry
 added_date: 2026-03-31
-last_updated: "2026-05-09 16:00"
+last_updated: "2026-05-21"
 parent_id: analytics
 sort_order: 4000
 ---
@@ -43,6 +43,7 @@ Supporting modules:
 
 - `assets/studio/js/studio-ui.js`
 - `assets/studio/js/tag-registry-domain.js`
+- `assets/studio/js/tag-registry-render.js`
 - `assets/studio/js/tag-registry-save.js`
 - `assets/studio/js/tag-registry-service.js`
 
@@ -129,7 +130,7 @@ DOM / CSS:
 
 JS owner:
 
-- `renderControls(state)`
+- `renderTagRegistryControls(state)` in `assets/studio/js/tag-registry-render.js`
 - search/filter handlers in `wireEvents(state)`
 
 Meaning:
@@ -151,7 +152,7 @@ DOM / CSS:
 
 JS owner:
 
-- `renderList(state)`
+- `renderTagRegistryList(state)` in `assets/studio/js/tag-registry-render.js`
 
 Meaning:
 
@@ -296,8 +297,8 @@ Page boot:
 Main render functions:
 
 - `renderShell(state)`
-- `renderControls(state)`
-- `renderList(state)`
+- `renderTagRegistryControls(state)` in `assets/studio/js/tag-registry-render.js`
+- `renderTagRegistryList(state)` in `assets/studio/js/tag-registry-render.js`
 
 Main event wiring:
 
@@ -305,10 +306,12 @@ Main event wiring:
 
 The page controller owns:
 
-- dynamic inner rendering
+- shell rendering
 - modal visibility
 - search/filter/sort wiring
 - delegating mutations to service helpers
+
+`assets/studio/js/tag-registry-render.js` owns the search/filter controls, group info control, list header, empty state, and registry row markup.
 
 ## UI Contract
 
@@ -318,7 +321,7 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 - `data-role` defines JS selectors
 - `data-state` and ARIA define runtime state
 
-`assets/studio/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-registry.js`.
+`assets/studio/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-registry.js`, `tag-registry-render.js`, and the route-local modal module.
 
 ## State Handling
 
@@ -389,13 +392,13 @@ If a request refers to:
 - “toolbar”
   - start with `.tagStudioToolbar` in `tag-registry.js`
 - “search”
-  - start with `.tagStudioFilters`
+  - start with `.tagStudioFilters` in `assets/studio/js/tag-registry-render.js`
 - “list header”
-  - start with `.tagStudioList__head.tagRegistry__head`
+  - start with `.tagStudioList__head.tagRegistry__head` in `assets/studio/js/tag-registry-render.js`
 - “tag row”
-  - start with `.tagStudioList__row.tagRegistry__row`
+  - start with `.tagStudioList__row.tagRegistry__row` in `assets/studio/js/tag-registry-render.js`
 - “description column”
-  - start with `.tagRegistry__descCol`
+  - start with `.tagRegistry__descCol` in `assets/studio/js/tag-registry-render.js`
 - “new tag modal”
   - start with `[data-role="new-modal"]`
 
