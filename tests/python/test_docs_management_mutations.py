@@ -231,10 +231,9 @@ def test_move_plan_writes_only_moved_doc_for_sparse_same_parent_reorder() -> Non
                 "target_doc_id": "parent",
                 "position": "after",
             },
-        )
+    )
 
     assert plan.response["record"] == {"doc_id": "sibling", "parent_id": "", "sort_order": 15}
-    assert [record["doc_id"] for record in plan.response["undo_records"]] == ["sibling"]
     assert [write.path.name for write in plan.source_writes] == ["sibling.md"]
     assert plan.backup_operation is None
     assert plan.backup_metadata is None
@@ -252,10 +251,9 @@ def test_move_plan_keeps_search_target_for_reparent() -> None:
                 "target_doc_id": "parent",
                 "position": "inside",
             },
-        )
+    )
 
     assert plan.response["record"] == {"doc_id": "sibling", "parent_id": "parent", "sort_order": 1010}
-    assert [record["doc_id"] for record in plan.response["undo_records"]] == ["sibling"]
     assert [write.path.name for write in plan.source_writes] == ["sibling.md"]
     assert plan.backup_operation is None
     assert plan.search_doc_ids == ["sibling"]
@@ -277,28 +275,6 @@ def test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_sea
     assert [write.path.name for write in plan.source_writes] == ["parent.md", "target.md", "sibling.md", "archive.md"]
     assert plan.backup_operation is None
     assert plan.search_doc_ids == []
-
-
-def test_restore_move_plan_deduplicates_records_and_searches_changed_docs() -> None:
-    with make_repo() as temp_path:
-        repo_root = Path(temp_path)
-        plan = mutations.plan_restore_move(
-            repo_root,
-            {
-                "scope": "studio",
-                "focus_doc_id": "sibling",
-                "records": [
-                    {"doc_id": "sibling", "parent_id": "parent", "sort_order": 40},
-                    {"doc_id": "sibling", "parent_id": "", "sort_order": 30},
-                ],
-            },
-        )
-
-    assert plan.response["doc_id"] == "sibling"
-    assert plan.response["records"] == [{"doc_id": "sibling", "parent_id": "parent", "sort_order": 40}]
-    assert plan.response["changed_doc_ids"] == ["sibling"]
-    assert plan.backup_operation is None
-    assert plan.search_doc_ids == ["sibling"]
 
 
 def test_archive_plan_preserves_already_archived_noop() -> None:
@@ -371,12 +347,11 @@ def main() -> None:
         test_create_plan_selects_unique_source_path_backup_metadata_and_search_target,
         test_metadata_plan_keeps_child_search_target_for_title_changes,
         test_metadata_status_only_plan_suppresses_search_target,
-        test_metadata_hidden_plan_writes_hidden_and_removes_legacy_viewable,
+        test_metadata_hidden_plan_writes_viewable_and_removes_legacy_hidden,
         test_viewability_bulk_plan_expands_descendants_and_skips_unchanged_docs,
         test_move_plan_writes_only_moved_doc_for_sparse_same_parent_reorder,
         test_move_plan_keeps_search_target_for_reparent,
         test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_search,
-        test_restore_move_plan_deduplicates_records_and_searches_changed_docs,
         test_archive_plan_preserves_already_archived_noop,
         test_archive_plan_preserves_last_updated_for_tree_metadata_change,
         test_delete_preview_preserves_child_blocker_and_inbound_warning,

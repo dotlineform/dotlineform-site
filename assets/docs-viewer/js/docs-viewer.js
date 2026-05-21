@@ -40,6 +40,7 @@ import {
 import {
   buildIndexPanelStorageKey,
   buildLegacySidebarStorageKey,
+  expandedIndexPanelState,
   nextIndexPanelState,
   persistIndexPanelState,
   projectIndexPanelState,
@@ -62,6 +63,7 @@ import {
 
   var nav = document.getElementById("docsViewerNav");
   var sidebarToggle = document.getElementById("docsViewerSidebarToggle");
+  var sidebarExpand = document.getElementById("docsViewerSidebarExpand");
   var status = document.getElementById("docsViewerStatus");
   var meta = document.getElementById("docsViewerMeta");
   var pathEl = document.getElementById("docsViewerPath");
@@ -166,8 +168,6 @@ import {
       archiveUnavailableNote: "Archive is unavailable for this scope until `archive` exists.",
       checkingNote: "Checking manage mode...",
       clearSearchNote: "Clear search to manage the current doc.",
-      undoMoveLabel: "Undo move",
-      undoMoveStatus: "Undoing move...",
       serverNotConfiguredError: "Local docs-management server is not configured.",
       unavailableNote: "Manage mode unavailable: local docs server unavailable for this scope.",
       cancelButton: "Cancel",
@@ -273,7 +273,6 @@ import {
     reloadNonce: "",
     reloadExpectedDocId: "",
     pendingBusyCount: 0,
-    moveUndo: null,
     metadataEditingDocId: "",
     metadataRestoreFocusId: "",
     nonLoadableDocIds: new Set(),
@@ -620,21 +619,39 @@ import {
     });
     root.dataset.indexPanelState = projection.activeState;
     root.dataset.sidebarState = projection.legacySidebarState;
-    if (!sidebarToggle) return;
-
-    sidebarToggle.hidden = projection.toggleHidden;
-    sidebarToggle.setAttribute("aria-expanded", projection.toggleAriaExpanded);
-    sidebarToggle.setAttribute("aria-label", projection.toggleLabel);
-    sidebarToggle.title = projection.toggleLabel;
-    var icon = sidebarToggle.querySelector(".docsViewer__sidebarToggleIcon");
-    if (icon) {
-      icon.textContent = projection.toggleIcon;
+    if (sidebarExpand) {
+      sidebarExpand.hidden = projection.expandHidden;
+      sidebarExpand.setAttribute("aria-expanded", projection.expandAriaExpanded);
+      sidebarExpand.setAttribute("aria-label", projection.expandLabel);
+      sidebarExpand.title = projection.expandLabel;
+      var expandIcon = sidebarExpand.querySelector(".docsViewer__sidebarToggleIcon");
+      if (expandIcon) {
+        expandIcon.textContent = projection.expandIcon;
+      }
+    }
+    if (sidebarToggle) {
+      sidebarToggle.hidden = projection.stepHidden;
+      sidebarToggle.setAttribute("aria-expanded", projection.stepAriaExpanded);
+      sidebarToggle.setAttribute("aria-label", projection.stepLabel);
+      sidebarToggle.title = projection.stepLabel;
+      var icon = sidebarToggle.querySelector(".docsViewer__sidebarToggleIcon");
+      if (icon) {
+        icon.textContent = projection.stepIcon;
+      }
     }
   }
 
   function toggleIndexPanelState() {
     if (!sidebarCollapseAvailable()) return;
     state.indexPanelState = nextIndexPanelState(state.indexPanelState);
+    persistCurrentIndexPanelState();
+    hideContextMenu();
+    renderIndexPanelState();
+  }
+
+  function expandIndexPanelState() {
+    if (!sidebarCollapseAvailable()) return;
+    state.indexPanelState = expandedIndexPanelState(state.indexPanelState);
     persistCurrentIndexPanelState();
     hideContextMenu();
     renderIndexPanelState();
@@ -1053,6 +1070,12 @@ import {
     if (sidebarToggle) {
       sidebarToggle.addEventListener("click", function () {
         toggleIndexPanelState();
+      });
+    }
+
+    if (sidebarExpand) {
+      sidebarExpand.addEventListener("click", function () {
+        expandIndexPanelState();
       });
     }
 

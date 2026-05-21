@@ -1181,7 +1181,6 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                     <button id="docsViewerManageViewableButton" type="button">Show</button>
                   </div>
                 </div>
-                <button id="docsViewerIndexUndoButton" type="button">Undo</button>
                 <label class="docsViewer__draftLabel"><input id="docsViewerDraftToggle" type="checkbox"> show hidden</label>
                 <nav id="docsViewerNav"></nav>
                 <p id="docsViewerStatus"></p>
@@ -1225,13 +1224,11 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                     deleteConfirmButton: 'Delete',
                     deleteConfirmTitle: 'Confirm delete',
                     serverNotConfiguredError: 'Server unavailable.',
-                    unavailableNote: 'Manage mode unavailable.',
-                    undoMoveLabel: 'Undo move'
+                    unavailableNote: 'Manage mode unavailable.'
                 },
                 searchRouteActive: false,
                 showHidden: true,
                 uiStatuses: [],
-                moveUndo: null,
                 managementMessage: '',
                 managementMessageIsError: false,
                 managementStatusOwnsViewerStatus: false,

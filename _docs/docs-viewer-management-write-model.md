@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management-write-model
 title: Docs Viewer Management Write Model
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-22
 parent_id: docs-viewer-management
 sort_order: 54300
 ---
@@ -28,7 +28,7 @@ Required write-model properties:
 ## Command Semantics
 
 Initial command semantics were defined for `new`, `archive`, and `delete`.
-The implemented management surface now also includes metadata edit, leaf-doc drag/drop move, draft viewability, and one-step move Undo.
+The implemented management surface now also includes metadata edit, leaf-doc drag/drop move, and draft viewability.
 
 ### `new`
 
@@ -63,7 +63,6 @@ The implemented management surface now also includes metadata edit, leaf-doc dra
 - any node can become a parent through drag/drop; there is no `folder` source field
 - when there is room between neighboring `sort_order` values, only the moved doc is rewritten
 - the destination sibling set is normalized to sparse unique orders, currently `1000`, `2000`, `3000`, and so on, only when the numeric gap is exhausted or target ordering is ambiguous
-- one successful move is stored client-side for Undo in the current viewer session, including all docs whose placement changed
 
 ## Data And Builder Implications
 
@@ -140,8 +139,6 @@ Status:
 ### Phase 7
 
 - let any node receive children through drag/drop without adding a source schema field
-- add a one-step client-side Undo action for the most recent successful move
-- keep Undo in the index toolbar because it reverses tree state, not document content
 
 Status:
 
@@ -168,7 +165,7 @@ If a doc is reparented in the viewer, does only parent_id change, or should the 
 A: file doesn't move on disk (flat structure).
 
 If sort_order changes by drag/drop, should the system renumber sibling items automatically or preserve sparse numbering?  
-A: drag/drop preserves sparse numbering when possible by assigning only the moved doc a value between neighboring siblings. If the numeric gap is exhausted or the target order is ambiguous, the destination sibling set is normalized to `1000`, `2000`, `3000`, and so on. Undo restores every touched doc's prior placement in one client-side history step.
+A: drag/drop preserves sparse numbering when possible by assigning only the moved doc a value between neighboring siblings. If the numeric gap is exhausted or the target order is ambiguous, the destination sibling set is normalized to `1000`, `2000`, `3000`, and so on.
 
 What does archive mean?  
 A: parent_id becomes doc_id: archive. so it moves to the Archive folder in Doc Viewer, as the last sibling. file remains unmoved in _docs. published remains true, so that it is still visible unless `hidden: true` is set.

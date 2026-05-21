@@ -87,8 +87,6 @@
   "manage_archive_unavailable_note": "Archive is unavailable for this scope until `archive` exists.",
   "manage_checking_note": "Checking manage mode...",
   "manage_clear_search_note": "Clear search to manage the current doc.",
-  "undo_move_label": "Undo move",
-  "undo_move_status": "Undoing move...",
   "manage_server_not_configured_error": "Local docs-management server is not configured.",
   "manage_unavailable_note": "Manage mode unavailable: local docs server unavailable for this scope.",
   "modal_cancel_button": "Cancel",

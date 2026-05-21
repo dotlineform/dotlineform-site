@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management-current
 title: Docs Viewer Management Current State
 added_date: 2026-05-19
-last_updated: 2026-05-20
+last_updated: 2026-05-22
 parent_id: docs-viewer-management
 sort_order: 54100
 ---
@@ -16,7 +16,7 @@ Status:
 - Phase 4 implemented: current-doc metadata edit modal for `title`, `summary`, `ui_status`, `parent_id`, and `sort_order`
 - Phase 5 implemented: right-click contextual creation for `New Sibling` and `New Child`
 - Phase 6 implemented: hidden-doc review and bulk-backed `Show`
-- Phase 7 implemented: drag/drop into any node plus one-step client-side move Undo
+- Phase 7 implemented: drag/drop into any node
 - Phase 8 implemented: management mode is scoped to `/docs/`, and `/docs/` can manage `studio`, `library`, or `analysis` by changing the active docs scope
 - Phase 9 implemented: Docs Import runs inside the Docs Viewer management modal from the shared importer module
 - Phase 10 implemented: management UI orchestration lives in `assets/docs-viewer/js/docs-viewer-management.js`, loaded only for management-enabled viewer shells
@@ -40,7 +40,6 @@ Implemented now:
 - dropping on the upper half of any doc row moves the dragged doc inside that doc as its last child
 - dropping on the lower half of a doc row moves the dragged doc after that doc and shows a visible insert line
 - all nodes can gain children through drag/drop; there is no source or generated `folder` schema field
-- the index toolbar exposes a one-step Undo action for the most recent successful move in the current viewer session
 - source writes remain front-matter-only; files do not move on disk
 - drag/drop moves assign a sparse `sort_order` to the moved doc only when there is room between neighboring siblings, and normalize the destination sibling set only when the numeric gap is exhausted or the target order is ambiguous
 - sparse order spacing uses `1000` between normalized siblings
@@ -97,7 +96,7 @@ Implemented now:
 - Docs Import reads its scope list, target source roots, and media token path prefixes from the Docs Viewer scope config
 - `assets/docs-viewer/js/docs-viewer-management.js` owns manage-mode toolbar rendering, status-pill events, metadata/import modal coordination, metadata payload collection, settings reads, busy/message/reload callbacks, and navigation
 - `assets/docs-viewer/js/docs-viewer-management-interactions.js` owns manage-mode nav drag/drop event handling, transient drag/drop visual state, context-menu active-doc state, context-menu positioning, and context-menu action dispatch
-- `assets/docs-viewer/js/docs-viewer-management-actions.js` owns create, metadata/status save, settings save, rebuild, archive/delete, viewability, move/undo, source-open, and copy-link write/action orchestration
+- `assets/docs-viewer/js/docs-viewer-management-actions.js` owns create, metadata/status save, settings save, rebuild, archive/delete, viewability, move, source-open, and copy-link write/action orchestration
 - `assets/docs-viewer/js/docs-viewer-management-capabilities.js` owns management capability helpers and the capability probe/retry state machine
 - `assets/docs-viewer/js/docs-viewer-management-config.js` owns management UI-text/config application
 - `assets/docs-viewer/js/docs-viewer-management-render.js` owns management-only markup helpers for status pills, metadata parent/status controls, and settings warnings
@@ -123,13 +122,11 @@ Current state:
   - hidden-doc review
   - `Show` with required-ancestor and optional-descendant handling
   - drag/drop move for leaf docs
-  - one-step move Undo
   - archive and delete
 
 Potential later areas, if promoted:
 
 - dragging docs with child docs
-- deeper undo/history beyond the most recent move
 - true incremental docs-search updates for visibility-only changes
 - a stronger modal/shareable shell for docs-viewer management actions if the surface grows
 - more explicit structured impact previews for archive/delete if native confirm flows become a limiting factor

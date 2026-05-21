@@ -558,7 +558,6 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
         for doc, parent_id, sort_order in planned_placements
         if doc.parent_id != parent_id or doc.sort_order != sort_order
     ]
-    undo_records = [source_model.placement_record(doc) for doc, _parent_id, _sort_order in changed_placements]
     touched_docs = [doc for doc, _parent_id, _sort_order in changed_placements]
     moved_parent_id = next(parent_id for doc, parent_id, _sort_order in planned_placements if doc.doc_id == moving_doc.doc_id)
     moved_sort_order = next(sort_order for doc, _parent_id, sort_order in planned_placements if doc.doc_id == moving_doc.doc_id)
@@ -574,7 +573,6 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
                 "parent_id": moved_parent_id,
                 "sort_order": moved_sort_order,
             },
-            "undo_records": undo_records,
             "changed_doc_ids": [doc.doc_id for doc in touched_docs],
             "summary_text": f"Moved {moving_doc.doc_id}.",
         },
@@ -595,96 +593,6 @@ def plan_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
             "parent_id": moved_parent_id,
             "sort_order": moved_sort_order,
             "changed_count": len(touched_docs),
-        },
-        include_write_result_keys=True,
-    )
-
-
-def parse_restore_sort_order(raw_sort_order: Any) -> Optional[int]:
-    if raw_sort_order is None or raw_sort_order == "":
-        return None
-    try:
-        sort_order = int(str(raw_sort_order).strip())
-    except (TypeError, ValueError) as exc:
-        raise ValueError("restore sort_order must be an integer or blank") from exc
-    if sort_order < 0:
-        raise ValueError("restore sort_order must be zero or greater")
-    return sort_order
-
-
-def plan_restore_move(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
-    scope = source_model.normalize_scope(body.get("scope"))
-    raw_records = body.get("records")
-    if not isinstance(raw_records, list) or not raw_records:
-        raise ValueError("records must be a non-empty list")
-
-    docs = source_model.load_scope_docs(repo_root, scope)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    restore_records: list[tuple[source_model.ScopeDoc, str, Optional[int]]] = []
-    seen_doc_ids: set[str] = set()
-    for raw_record in raw_records:
-        if not isinstance(raw_record, dict):
-            raise ValueError("each restore record must be an object")
-        doc_id = str(raw_record.get("doc_id") or "").strip()
-        if not doc_id:
-            raise ValueError("restore record doc_id is required")
-        if doc_id in seen_doc_ids:
-            continue
-        seen_doc_ids.add(doc_id)
-        doc = docs_by_id.get(doc_id)
-        if doc is None:
-            raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-
-        parent_id = str(raw_record.get("parent_id") or "").strip()
-        if parent_id == doc.doc_id:
-            raise ValueError("restore parent_id cannot be the current doc")
-        if parent_id and parent_id not in docs_by_id:
-            raise ValueError(f"Unknown restore parent_id {parent_id!r} for scope {scope}")
-        if parent_id and parent_id in source_model.descendant_doc_ids(docs, doc.doc_id):
-            raise ValueError("restore parent_id cannot be a child or descendant of the current doc")
-        sort_order = parse_restore_sort_order(raw_record.get("sort_order"))
-        restore_records.append((doc, parent_id, sort_order))
-
-    changed_records = [
-        (doc, parent_id, sort_order)
-        for doc, parent_id, sort_order in restore_records
-        if doc.parent_id != parent_id or doc.sort_order != sort_order
-    ]
-    touched_docs = [doc for doc, _parent_id, _sort_order in changed_records]
-    focus_doc_id = str(body.get("focus_doc_id") or "").strip()
-    if focus_doc_id and focus_doc_id not in docs_by_id:
-        focus_doc_id = ""
-
-    return ManagementMutationPlan(
-        scope=scope,
-        response={
-            "ok": True,
-            "scope": scope,
-            "doc_id": focus_doc_id or (restore_records[0][0].doc_id if restore_records else ""),
-            "changed_doc_ids": [doc.doc_id for doc in touched_docs],
-            "records": [
-                {"doc_id": doc.doc_id, "parent_id": parent_id, "sort_order": sort_order}
-                for doc, parent_id, sort_order in restore_records
-            ],
-            "summary_text": (
-                f"Restored move for {len(touched_docs)} doc{'s' if len(touched_docs) != 1 else ''}."
-                if touched_docs
-                else "Move already restored."
-            ),
-        },
-        backup_operation=None,
-        source_writes=tuple(
-            SourceWrite(doc.path, source_model.rewrite_doc_placement_source(doc, parent_id, sort_order))
-            for doc, parent_id, sort_order in changed_records
-        ),
-        suppression_reason="docs-restore-move",
-        build_doc_ids=[doc.doc_id for doc in touched_docs],
-        search_doc_ids=[doc.doc_id for doc, parent_id, _sort_order in changed_records if doc.parent_id != parent_id],
-        log_event_name="docs-restore-move" if touched_docs else None,
-        log_details={
-            "scope": scope,
-            "changed_count": len(touched_docs),
-            "changed_doc_ids": [doc.doc_id for doc in touched_docs],
         },
         include_write_result_keys=True,
     )

@@ -286,59 +286,6 @@
   }
 }
 
-.docsViewer__indexUndoButton{
-  box-sizing: border-box;
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.8rem;
-  min-width: 1.8rem;
-  height: 1.8rem;
-  border: 1px solid var(--docs-viewer-border, var(--border, #d8d8d8));
-  border-radius: 999px;
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-  color: var(--docs-viewer-text, var(--text, #111));
-  font: inherit;
-  font-size: var(--docs-viewer-font-small, var(--font-small, 0.875rem));
-  line-height: 1;
-  cursor: pointer;
-}
-
-.docsViewer__indexUndoIcon{
-  width: 1.05rem;
-  height: 1.05rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.docsViewer__indexUndoButton:hover{
-  background: var(--docs-viewer-panel-2, var(--panel-2, #f6f6f6));
-}
-
-.docsViewer__indexUndoButton:focus-visible{
-  outline: 2px solid var(--docs-viewer-border-strong, var(--border-strong, #aaa));
-  outline-offset: 2px;
-}
-
-.docsViewer__indexUndoButton[disabled]{
-  opacity: 0.42;
-  cursor: default;
-}
-
-.docsViewer__indexUndoButton[disabled]:hover{
-  background: var(--docs-viewer-panel, var(--panel, #fff));
-}
-
-@media (min-width: 821px){
-  .docsViewer[data-sidebar-state="collapsed"] .docsViewer__indexUndoButton{
-    display: none;
-  }
-}
-
 .docsViewer__draftPrefix{
   display: inline-block;
   margin-right: 0.35rem;

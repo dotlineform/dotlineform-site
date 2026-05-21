@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T21:35:08Z",
+  "generated_at": "2026-05-21T23:08:10Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -352,7 +352,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 9137
+      "content_text_length": 9372
     },
     {
       "scope": "studio",
@@ -596,6 +596,22 @@
       "viewer_url": "/docs/?scope=studio&doc=css-primitives",
       "content_url": "/assets/data/docs/scopes/studio/by-id/css-primitives.json",
       "content_text_length": 5206
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-javascript-payload-inventory",
+      "title": "JavaScript Inventory Policy",
+      "added_date": "2026-05-14",
+      "last_updated": "2026-05-21",
+      "parent_id": "site-docs",
+      "sort_order": 1700,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-javascript-payload-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
+      "content_text_length": 9822
     },
     {
       "scope": "studio",
@@ -1060,7 +1076,7 @@
       "doc_id": "ui-framework",
       "title": "UI Framework",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-22",
       "parent_id": "ui",
       "sort_order": 2500,
       "published": true,
@@ -1069,7 +1085,7 @@
       "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-framework.json",
-      "content_text_length": 11820
+      "content_text_length": 11771
     },
     {
       "scope": "studio",
@@ -2252,23 +2268,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-javascript-payload-inventory",
-      "title": "JavaScript Inventory Policy",
-      "added_date": "2026-05-14",
-      "last_updated": "2026-05-21",
-      "parent_id": "studio",
-      "sort_order": 7000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-javascript-payload-inventory.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 10015,
-      "ui_status": "urgent"
-    },
-    {
-      "scope": "studio",
       "doc_id": "site-request-js-payload-runtime-cleanup-inventory",
       "title": "JavaScript Payload And Runtime Cleanup Inventory",
       "added_date": "2026-05-10",
@@ -2385,40 +2384,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "javascript-maintenance-risk-mitigation",
-      "title": "JavaScript Maintenance Risk Mitigation",
-      "added_date": "2026-05-21",
-      "last_updated": "2026-05-21",
-      "parent_id": "studio-javascript-payload-inventory",
-      "sort_order": 7012,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "javascript-maintenance-risk-mitigation.md",
-      "viewer_url": "/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-maintenance-risk-mitigation.json",
-      "content_text_length": 35582,
-      "ui_status": "done"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "javascript-inventory-implementation-plan",
-      "title": "JavaScript Inventory Implementation Plan",
-      "added_date": "2026-05-21",
-      "last_updated": "2026-05-21",
-      "parent_id": "studio-javascript-payload-inventory",
-      "sort_order": 7015,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "javascript-inventory-implementation-plan.md",
-      "viewer_url": "/docs/?scope=studio&doc=javascript-inventory-implementation-plan",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-inventory-implementation-plan.json",
-      "content_text_length": 16916,
-      "ui_status": "done"
-    },
-    {
-      "scope": "studio",
       "doc_id": "docs-viewer-javascript-inventory",
       "title": "Docs Viewer JavaScript Inventory",
       "added_date": "2026-05-20",
@@ -2431,7 +2396,7 @@
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 7681,
+      "content_text_length": 6690,
       "ui_status": "review"
     },
     {
@@ -3284,7 +3249,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "docs-viewer",
       "sort_order": 15000,
       "published": true,
@@ -3293,7 +3258,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 2265
+      "content_text_length": 2260
     },
     {
       "scope": "studio",
@@ -3348,7 +3313,7 @@
       "doc_id": "scripts-docs-management-server-generated-reads",
       "title": "Docs Management Server Generated Reads",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "scripts-docs-management-server",
       "sort_order": 15100,
       "published": true,
@@ -3357,7 +3322,7 @@
       "source_path": "scripts-docs-management-server-generated-reads.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server-generated-reads.json",
-      "content_text_length": 9849
+      "content_text_length": 9802
     },
     {
       "scope": "studio",
@@ -3396,7 +3361,7 @@
       "doc_id": "scripts-docs-management-server-write-actions",
       "title": "Docs Management Server Write Actions",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "scripts-docs-management-server",
       "sort_order": 15400,
       "published": true,
@@ -3405,7 +3370,7 @@
       "source_path": "scripts-docs-management-server-write-actions.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-write-actions",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server-write-actions.json",
-      "content_text_length": 9279
+      "content_text_length": 8326
     },
     {
       "scope": "studio",
@@ -4257,7 +4222,7 @@
       "doc_id": "docs-viewer-management",
       "title": "Docs Viewer Management",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "archive",
       "sort_order": 54000,
       "published": true,
@@ -4266,7 +4231,7 @@
       "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json",
-      "content_text_length": 1086,
+      "content_text_length": 1080,
       "ui_status": "done"
     },
     {
@@ -4274,7 +4239,7 @@
       "doc_id": "docs-viewer-management-current",
       "title": "Docs Viewer Management Current State",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-22",
       "parent_id": "docs-viewer-management",
       "sort_order": 54100,
       "published": true,
@@ -4283,7 +4248,7 @@
       "source_path": "docs-viewer-management-current.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management-current",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management-current.json",
-      "content_text_length": 10682
+      "content_text_length": 10459
     },
     {
       "scope": "studio",
@@ -4306,7 +4271,7 @@
       "doc_id": "docs-viewer-management-write-model",
       "title": "Docs Viewer Management Write Model",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "docs-viewer-management",
       "sort_order": 54300,
       "published": true,
@@ -4315,7 +4280,7 @@
       "source_path": "docs-viewer-management-write-model.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management-write-model",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management-write-model.json",
-      "content_text_length": 10100
+      "content_text_length": 9713
     },
     {
       "scope": "studio",
@@ -4831,6 +4796,40 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-start",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-start.json",
       "content_text_length": 4377
+    },
+    {
+      "scope": "studio",
+      "doc_id": "javascript-maintenance-risk-mitigation",
+      "title": "JavaScript Maintenance Risk Mitigation",
+      "added_date": "2026-05-21",
+      "last_updated": "2026-05-21",
+      "parent_id": "archive",
+      "sort_order": 87000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "javascript-maintenance-risk-mitigation.md",
+      "viewer_url": "/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-maintenance-risk-mitigation.json",
+      "content_text_length": 35582,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "javascript-inventory-implementation-plan",
+      "title": "JavaScript Inventory Implementation Plan",
+      "added_date": "2026-05-21",
+      "last_updated": "2026-05-21",
+      "parent_id": "archive",
+      "sort_order": 88000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "javascript-inventory-implementation-plan.md",
+      "viewer_url": "/docs/?scope=studio&doc=javascript-inventory-implementation-plan",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-inventory-implementation-plan.json",
+      "content_text_length": 16916,
+      "ui_status": "done"
     }
   ]
 }

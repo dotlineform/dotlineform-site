@@ -347,15 +347,6 @@ def rewrite_doc_placement_source(doc: ScopeDoc, parent_id: str, sort_order: Opti
     return format_source(updated_front_matter, doc.body)
 
 
-def placement_record(doc: ScopeDoc) -> Dict[str, Any]:
-    return {
-        "doc_id": doc.doc_id,
-        "title": doc.title,
-        "parent_id": doc.parent_id,
-        "sort_order": doc.sort_order,
-    }
-
-
 def normalized_move_placements(
     docs: list[ScopeDoc],
     moving_doc: ScopeDoc,

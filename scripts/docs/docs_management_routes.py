@@ -30,7 +30,6 @@ UPDATE_VIEWABILITY_BULK_PATH = "/docs/update-viewability-bulk"
 CREATE_PATH = "/docs/create"
 REBUILD_PATH = "/docs/rebuild"
 MOVE_PATH = "/docs/move"
-RESTORE_MOVE_PATH = "/docs/restore-move"
 NORMALIZE_ORDER_PATH = "/docs/normalize-order"
 ARCHIVE_PATH = "/docs/archive"
 DELETE_PREVIEW_PATH = "/docs/delete-preview"
@@ -72,7 +71,6 @@ POST_PATHS = (
     CREATE_PATH,
     REBUILD_PATH,
     MOVE_PATH,
-    RESTORE_MOVE_PATH,
     NORMALIZE_ORDER_PATH,
     ARCHIVE_PATH,
     DELETE_PREVIEW_PATH,

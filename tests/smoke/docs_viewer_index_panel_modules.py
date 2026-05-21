@@ -50,7 +50,13 @@ def assert_index_panel_helpers(page: Page) -> None:
                 module.nextIndexPanelState('normal'),
                 module.nextIndexPanelState('expanded')
             ];
+            const directExpanded = [
+                module.expandedIndexPanelState('collapsed'),
+                module.expandedIndexPanelState('normal'),
+                module.expandedIndexPanelState('expanded')
+            ];
             const collapsedProjection = module.projectIndexPanelState('collapsed', { available: true });
+            const normalProjection = module.projectIndexPanelState('normal', { available: true });
             const expandedProjection = module.projectIndexPanelState('expanded', { available: true });
             const unavailableProjection = module.projectIndexPanelState('expanded', { available: false });
             return {
@@ -60,7 +66,9 @@ def assert_index_panel_helpers(page: Page) -> None:
                 migratedCollapsed,
                 storedExpanded,
                 sequence,
+                directExpanded,
                 collapsedProjection,
+                normalProjection,
                 expandedProjection,
                 unavailableProjection
             };
@@ -76,12 +84,18 @@ def assert_index_panel_helpers(page: Page) -> None:
         raise AssertionError(f"legacy collapsed did not migrate: {result!r}")
     if result["storedExpanded"] != "expanded":
         raise AssertionError(f"stored expanded was not preserved: {result!r}")
-    if result["sequence"] != ["normal", "expanded", "collapsed"]:
+    if result["sequence"] != ["normal", "collapsed", "normal"]:
         raise AssertionError(f"unexpected state sequence: {result!r}")
-    if result["collapsedProjection"]["toggleLabel"] != "Restore index panel":
+    if result["directExpanded"] != ["expanded", "expanded", "expanded"]:
+        raise AssertionError(f"unexpected direct expanded sequence: {result!r}")
+    if result["collapsedProjection"]["stepLabel"] != "Restore index panel" or result["collapsedProjection"]["expandHidden"] is not True:
         raise AssertionError(f"collapsed projection mismatch: {result!r}")
+    if result["normalProjection"]["stepLabel"] != "Collapse index panel" or result["normalProjection"]["stepIcon"] != "‹" or result["normalProjection"]["expandHidden"] is not False:
+        raise AssertionError(f"normal projection mismatch: {result!r}")
     if result["expandedProjection"]["documentPaneVisible"] is not False:
         raise AssertionError(f"expanded mode should hide document pane: {result!r}")
+    if result["expandedProjection"]["expandHidden"] is not True or result["expandedProjection"]["stepIcon"] != "‹" or result["expandedProjection"]["stepLabel"] != "Restore index panel":
+        raise AssertionError(f"expanded controls mismatch: {result!r}")
     if result["expandedProjection"]["legacySidebarState"] != "expanded":
         raise AssertionError(f"expanded mode should remain sidebar-expanded for compatibility: {result!r}")
     if result["unavailableProjection"]["activeState"] != "normal" or result["unavailableProjection"]["toggleHidden"] is not True:

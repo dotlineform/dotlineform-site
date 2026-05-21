@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server-generated-reads
 title: Docs Management Server Generated Reads
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-22
 parent_id: scripts-docs-management-server
 sort_order: 15100
 ---
@@ -43,7 +43,6 @@ Exposed endpoints:
 - `POST /docs/update-viewability-bulk`
 - `POST /docs/create`
 - `POST /docs/move`
-- `POST /docs/restore-move`
 - `POST /docs/archive`
 - `POST /docs/delete-preview`
 - `POST /docs/delete-apply`
@@ -63,7 +62,7 @@ Current behavior:
 - docs-specific Studio Activity row construction is owned by `scripts/docs/docs_activity.py`
 - docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `scripts/docs/docs_write_rebuild.py`
 - staged source import orchestration for the Docs Viewer import modal is owned by `scripts/docs/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
-- management mutation planners for create, metadata, viewability, move, restore, normalize-order, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups where configured, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
+- management mutation planners for create, metadata, viewability, move, normalize-order, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups where configured, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
 - Data Sharing HTTP endpoints are hosted here for now, with neutral route constants and shared dispatch owned by `scripts/studio/` and Library document behavior owned by `scripts/docs/documents_data_sharing_adapter.py`
 - used by `/docs/?scope=<scope>&mode=manage` for configured docs scopes
 - also used by `/studio/docs-broken-links/` for a read-only docs link audit
@@ -101,7 +100,7 @@ Search update behavior:
 
 Docs payload rebuild behavior:
 
-- create, source import create/overwrite, metadata, viewability, move, restore move, normalize order, archive, delete, and Library returned-package apply writes pass explicit docs payload ids into `./scripts/build_docs.rb --scope <scope> --write --only-doc-ids <ids>`
+- create, source import create/overwrite, metadata, viewability, move, normalize order, archive, delete, and Library returned-package apply writes pass explicit docs payload ids into `./scripts/build_docs.rb --scope <scope> --write --only-doc-ids <ids>`
 - source-config settings writes and explicit `POST /docs/rebuild` remain full same-scope docs payload rebuilds
 - rebuild responses include `rebuild.docs.mode`, `rebuild.docs.doc_ids`, and `rebuild.docs.reason` alongside the existing `rebuild.search` object so callers can tell whether docs payloads used targeted mode or a full fallback
 

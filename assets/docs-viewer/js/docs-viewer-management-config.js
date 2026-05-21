@@ -2,8 +2,6 @@ var MANAGEMENT_TEXT_KEYS = [
   ["archiveUnavailableNote", "docs_viewer.manage_archive_unavailable_note"],
   ["checkingNote", "docs_viewer.manage_checking_note"],
   ["clearSearchNote", "docs_viewer.manage_clear_search_note"],
-  ["undoMoveLabel", "docs_viewer.undo_move_label"],
-  ["undoMoveStatus", "docs_viewer.undo_move_status"],
   ["serverNotConfiguredError", "docs_viewer.manage_server_not_configured_error"],
   ["unavailableNote", "docs_viewer.manage_unavailable_note"],
   ["cancelButton", "docs_viewer.modal_cancel_button"],

@@ -142,13 +142,6 @@ export function moveManagedDoc(docId, targetDocId, position, options) {
   }, options), options);
 }
 
-export function restoreManagedDocMove(focusDocId, records, options) {
-  return fetchManagementJson("/docs/restore-move", "POST", scopedPayload({
-    focus_doc_id: focusDocId,
-    records: records
-  }, options), options);
-}
-
 export function normalizeManagedDocOrder(payload, options) {
   return fetchManagementJson("/docs/normalize-order", "POST", scopedPayload(payload || {}, options), options);
 }

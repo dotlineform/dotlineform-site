@@ -4,8 +4,8 @@ title: JavaScript Inventory Implementation Plan
 added_date: 2026-05-21
 last_updated: 2026-05-21
 ui_status: done
-parent_id: studio-javascript-payload-inventory
-sort_order: 7015
+parent_id: archive
+sort_order: 88000
 viewable: true
 ---
 # JavaScript Inventory Implementation Plan

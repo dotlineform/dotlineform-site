@@ -2,42 +2,6 @@ export function normalizeSortOrderValue(value) {
   return value == null ? "" : String(value);
 }
 
-export function moveUndoRecordChanged(record, nextRecord) {
-  if (!record || !nextRecord) return false;
-  return (
-    String(record.parent_id || "") !== String(nextRecord.parent_id || "") ||
-    normalizeSortOrderValue(record.sort_order) !== normalizeSortOrderValue(nextRecord.sort_order)
-  );
-}
-
-export function normalizeMoveUndoRecords(records) {
-  if (!Array.isArray(records)) return [];
-  var seen = new Set();
-  return records.reduce(function (acc, record) {
-    if (!record || !record.doc_id) return acc;
-    var docId = String(record.doc_id || "").trim();
-    if (!docId || seen.has(docId)) return acc;
-    seen.add(docId);
-    acc.push({
-      doc_id: docId,
-      title: String(record.title || docId),
-      parent_id: String(record.parent_id || ""),
-      sort_order: normalizeSortOrderValue(record.sort_order)
-    });
-    return acc;
-  }, []);
-}
-
-export function moveUndoPayloadRecords(undoRecords) {
-  return undoRecords.map(function (record) {
-    return {
-      doc_id: record.doc_id,
-      parent_id: record.parent_id || "",
-      sort_order: normalizeSortOrderValue(record.sort_order)
-    };
-  });
-}
-
 export function canDragDoc(doc, options) {
   var settings = options || {};
   if (settings.dragEnabled === false || !doc) return false;

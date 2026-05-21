@@ -30,7 +30,6 @@ Endpoints:
   POST /docs/update-viewability-bulk
   POST /docs/create
   POST /docs/move
-  POST /docs/restore-move
   POST /docs/archive
   POST /docs/delete-preview
   POST /docs/delete-apply
@@ -522,10 +521,6 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
     return execute_management_mutation_plan(repo_root, mutations.plan_move(repo_root, body), dry_run)
 
 
-def handle_restore_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
-    return execute_management_mutation_plan(repo_root, mutations.plan_restore_move(repo_root, body), dry_run)
-
-
 def handle_normalize_order(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
     return execute_management_mutation_plan(repo_root, mutations.plan_normalize_order(repo_root, body), dry_run)
 
@@ -631,7 +626,6 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         routes.CREATE_PATH: "_handle_create_post",
         routes.REBUILD_PATH: "_handle_rebuild_post",
         routes.MOVE_PATH: "_handle_move_post",
-        routes.RESTORE_MOVE_PATH: "_handle_restore_move_post",
         routes.NORMALIZE_ORDER_PATH: "_handle_normalize_order_post",
         routes.ARCHIVE_PATH: "_handle_archive_post",
         routes.DELETE_PREVIEW_PATH: "_handle_delete_preview_post",
@@ -830,9 +824,6 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
 
     def _handle_move_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         return HTTPStatus.OK, handle_move(repo_root, body, dry_run)
-
-    def _handle_restore_move_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
-        return HTTPStatus.OK, handle_restore_move(repo_root, body, dry_run)
 
     def _handle_normalize_order_post(self, repo_root: Path, body: Dict[str, Any], dry_run: bool) -> tuple[HTTPStatus, Dict[str, Any]]:
         return HTTPStatus.OK, handle_normalize_order(repo_root, body, dry_run)

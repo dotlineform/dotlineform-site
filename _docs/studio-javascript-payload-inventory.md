@@ -3,15 +3,18 @@ doc_id: studio-javascript-payload-inventory
 title: JavaScript Inventory Policy
 added_date: 2026-05-14
 last_updated: 2026-05-21
-ui_status: urgent
-parent_id: studio
-sort_order: 7000
-hidden: false
+parent_id: site-docs
+sort_order: 1700
+viewable: true
 ---
 # JavaScript Inventory Policy
 
 This document defines the scoring policy and maintenance method for browser JavaScript inventory work.
-It is intentionally policy-only: current scores live in [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory), Docs Viewer-specific follow-up lives in [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory), and implementation sequencing lives in [JavaScript Inventory Implementation Plan](/docs/?scope=studio&doc=javascript-inventory-implementation-plan).
+
+Current risk scores live in:
+
+- [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
+- Docs Viewer-specific follow-up lives in [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
 
 ## Purpose
 
@@ -19,12 +22,13 @@ Use the JavaScript inventory to decide where refactoring will reduce real future
 The inventory is not a payload-size leaderboard and it is not a mandate to split every large file.
 A high score means the current file shape exposes meaningful risk; a low score means the file's current role, ownership boundary, and route exposure are acceptable.
 
-This repo's code is Codex-authored and Codex-maintained.
-The inventory is therefore operational guidance for future Codex sessions as much as it is project documentation: it records where fast iterative development has left fragile ownership boundaries, and where future Codex work should slow down and create clearer helpers before adding behavior.
+This repo's code is Codex-authored and Codex-maintained. The inventory is therefore operational guidance for future Codex sessions as much as it is project documentation: it records where fast iterative development has left fragile ownership boundaries, and where future Codex work should slow down and create clearer helpers before adding behavior.
 
 The project target is a risk score of 4 or lower for normal browser JavaScript files.
-A score of 4 remains the normal acceptable target: maintenance, structural, performance, and architectural risk are each present but low.
-A category score of 0 is allowed only when that risk dimension is materially absent or inapplicable for a physically achievable reason.
+
+- A score of 4 remains the normal acceptable target: maintenance, structural, performance, and architectural risk are each present but low.
+- A category score of 0 is allowed only when that risk dimension is materially absent or inapplicable for a physically achievable reason.
+
 `assets/docs-viewer/js/docs-viewer.js` is tracked separately because it is the shared Docs Viewer entry runtime and needs its own feature-driven mitigation path.
 
 ## Risk Categories
@@ -78,8 +82,7 @@ Useful indicators:
 Each file receives a score from 0 to 3 for each risk category.
 The total risk score is the sum of the four category scores.
 
-Use 0 carefully.
-It means "this category does not materially apply to this file in its current role," not "this seems easy."
+Use 0 carefully. It means "this category does not materially apply to this file in its current role," not "this seems easy."
 For example, an isolated Studio operational helper may have no meaningful performance requirement as long as it remains route-local, rare, and free of heavy boot or input-time work.
 
 | Risk | Score 0: absent or inapplicable | Score 1: low risk | Score 2: medium risk | Score 3: high risk |
@@ -103,11 +106,13 @@ Priority should be based on current risk, not ease or theoretical leverage:
 
 ## Application Rules
 
-Prefer extraction slices that remove a complete responsibility from a mixed controller and leave a clearer ownership boundary behind.
-Do not prioritise a slice because it is narrow, mechanical, or easy.
-Prioritise slices that reduce future change risk, clarify state ownership, improve route-load behavior, or establish a repeatable pattern for sibling routes.
+The target is not a thin pass-through layer; the target is a file whose remaining responsibilities are coherent and low risk.
 
-A file should not be rescored down just because code moved elsewhere.
+- Prefer extraction slices that remove a complete responsibility from a mixed controller and leave a clearer ownership boundary behind.
+- Do not prioritise a slice because it is narrow, mechanical, or easy. Avoid cosmetic splits that only move tiny helpers.
+- Prioritise slices that reduce future change risk, clarify state ownership, improve route-load behavior, or establish a repeatable pattern for sibling routes.
+- A file should not be rescored down just because code moved elsewhere.
+
 Rescore downward only when at least one of these is true:
 
 - a category is now materially absent or inapplicable, justifying a score of 0
@@ -117,23 +122,16 @@ Rescore downward only when at least one of these is true:
 - focused module checks cover behavior that previously required full route boot
 - sibling routes now share a stable boundary pattern
 
-Avoid cosmetic splits that only move tiny helpers.
 A route entry module may remain above 4 if it legitimately coordinates multiple async sources, event wiring, route ready/busy state, and dynamic module activation.
-The target is not a thin pass-through layer; the target is a file whose remaining responsibilities are coherent and low risk.
 
 Maintenance mitigation slices must be classified before implementation:
 
-- **Score-moving slice:** expected to lower at least one target file's risk score because a complete responsibility moves to a focused owner with explicit inputs and focused checks.
-- **Guardrail slice:** pins a contract, smoke, or policy that prevents regression but is not expected to lower a score by itself.
-
-For score-6 and score-7 files, a mitigation batch should not close on guardrail slices alone.
-If a guardrail slice is needed first, the same task definition must name the follow-on score-moving slice, target score movement, and evidence required before rescoring.
-If the expected score movement does not happen, record that as a failed or partial mitigation decision rather than treating the batch as complete.
+- **Score-moving slice:** expected to lower at least one target file's risk score because a complete responsibility moves to a focused owner with explicit inputs and focused checks. If the expected score movement does not happen, record that as a failed or partial mitigation decision rather than treating the batch as complete.
+- **Guardrail slice:** pins a contract, smoke, or policy that prevents regression but is not expected to lower a score by itself. For score-6 and score-7 files, a mitigation batch should not close on guardrail slices alone. If a guardrail slice is needed first, the same task definition must name the follow-on score-moving slice, target score movement, and evidence required before rescoring.
 
 ## Inventory Refresh Method
 
-Refresh the inventory from the current filesystem before starting a new batch.
-Do not rely on stale row counts or previous ranks.
+Refresh the inventory from the current filesystem before starting a new batch. Do not rely on stale row counts or previous ranks.
 
 1. List all browser JavaScript under `assets/`.
 2. Collect raw size, gzip size, line count, imports, route exposure, and recent edit history.
@@ -167,8 +165,6 @@ When checking route exposure, search checked-in route shells and includes while 
 ## Related References
 
 - [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory)
-- [JavaScript Maintenance Risk Mitigation](/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation)
-- [JavaScript Inventory Implementation Plan](/docs/?scope=studio&doc=javascript-inventory-implementation-plan)
 - [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory)
 - [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)

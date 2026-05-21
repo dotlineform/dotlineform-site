@@ -56,7 +56,6 @@ export function initDocsViewerManagement(context) {
   var statusPills = document.getElementById("docsViewerStatusPills");
   var draftToggle = document.getElementById("docsViewerDraftToggle");
   var draftLabel = document.querySelector(".docsViewer__draftLabel");
-  var indexUndoButton = document.getElementById("docsViewerIndexUndoButton");
   var metadataModal = document.getElementById("docsViewerMetadataModal");
   var metadataForm = document.getElementById("docsViewerMetadataForm");
   var metadataDocId = document.getElementById("docsViewerMetadataDocId");
@@ -340,9 +339,6 @@ export function initDocsViewerManagement(context) {
       syncManagementStatus("", false);
       manageRow.hidden = true;
       hideManageActionsMenu();
-      if (indexUndoButton) {
-        indexUndoButton.hidden = true;
-      }
       return;
     }
 
@@ -366,18 +362,6 @@ export function initDocsViewerManagement(context) {
       noteIsError = state.managementMessageIsError;
     }
     syncManagementStatus(noteText, noteIsError);
-
-    if (indexUndoButton) {
-      indexUndoButton.hidden = !state.managementMode;
-      indexUndoButton.disabled = (
-        state.managementBusy ||
-        !state.managementChecked ||
-        !state.managementAvailable ||
-        !state.moveUndo
-      );
-      indexUndoButton.setAttribute("aria-label", state.managementText.undoMoveLabel);
-      indexUndoButton.title = state.managementText.undoMoveLabel;
-    }
 
     if (!manageRebuildButton || !manageNewButton || !manageEditButton || !manageArchiveButton || !manageDeleteButton || !manageViewableButton) return;
 
@@ -723,9 +707,6 @@ export function initDocsViewerManagement(context) {
       manageActionsButton.addEventListener("click", function () {
         toggleManageActionsMenu();
       });
-    }
-    if (indexUndoButton) {
-      indexUndoButton.addEventListener("click", actionController.handleUndoMove);
     }
     if (manageNewButton) {
       manageNewButton.addEventListener("click", function () {

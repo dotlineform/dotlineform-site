@@ -52,8 +52,14 @@ export function persistIndexPanelState(options = {}) {
 
 export function nextIndexPanelState(state) {
   const normalized = normalizeIndexPanelState(state);
-  const index = INDEX_PANEL_STATES.indexOf(normalized);
-  return INDEX_PANEL_STATES[(index + 1) % INDEX_PANEL_STATES.length];
+  if (normalized === INDEX_PANEL_STATE_COLLAPSED) return INDEX_PANEL_STATE_NORMAL;
+  if (normalized === INDEX_PANEL_STATE_EXPANDED) return INDEX_PANEL_STATE_NORMAL;
+  return INDEX_PANEL_STATE_COLLAPSED;
+}
+
+export function expandedIndexPanelState(state) {
+  const normalized = normalizeIndexPanelState(state);
+  return normalized === INDEX_PANEL_STATE_EXPANDED ? normalized : INDEX_PANEL_STATE_EXPANDED;
 }
 
 export function projectIndexPanelState(state, options = {}) {
@@ -61,30 +67,30 @@ export function projectIndexPanelState(state, options = {}) {
   const activeState = available ? normalizeIndexPanelState(state) : INDEX_PANEL_STATE_NORMAL;
   const nextState = available ? nextIndexPanelState(activeState) : INDEX_PANEL_STATE_NORMAL;
   const expanded = activeState !== INDEX_PANEL_STATE_COLLAPSED;
+  const expandHidden = !available || activeState !== INDEX_PANEL_STATE_NORMAL;
+  const stepIcon = activeState === INDEX_PANEL_STATE_COLLAPSED ? "›" : "‹";
+  const stepLabel = activeState === INDEX_PANEL_STATE_NORMAL ? "Collapse index panel" : "Restore index panel";
   return {
     activeState,
     nextState,
+    expandedState: expandedIndexPanelState(activeState),
     documentPaneVisible: activeState !== INDEX_PANEL_STATE_EXPANDED,
     legacySidebarState: activeState === INDEX_PANEL_STATE_COLLAPSED ? INDEX_PANEL_STATE_COLLAPSED : INDEX_PANEL_STATE_EXPANDED,
     toggleHidden: !available,
     toggleAriaExpanded: expanded ? "true" : "false",
-    toggleIcon: iconForNextState(nextState),
-    toggleLabel: labelForNextState(nextState)
+    toggleIcon: stepIcon,
+    toggleLabel: stepLabel,
+    stepHidden: !available,
+    stepAriaExpanded: expanded ? "true" : "false",
+    stepIcon,
+    stepLabel,
+    expandHidden,
+    expandAriaExpanded: "true",
+    expandIcon: "⤢",
+    expandLabel: "Expand index panel"
   };
 }
 
 function normalizeStorageScope(scope) {
   return String(scope || "").trim() || "docs";
-}
-
-function labelForNextState(state) {
-  if (state === INDEX_PANEL_STATE_COLLAPSED) return "Collapse index panel";
-  if (state === INDEX_PANEL_STATE_EXPANDED) return "Expand index panel";
-  return "Restore index panel";
-}
-
-function iconForNextState(state) {
-  if (state === INDEX_PANEL_STATE_COLLAPSED) return "‹";
-  if (state === INDEX_PANEL_STATE_EXPANDED) return "⤢";
-  return "›";
 }

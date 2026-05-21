@@ -7,15 +7,11 @@ import {
   openManagedDocSource,
   previewManagedDocDelete,
   rebuildManagedDocs,
-  restoreManagedDocMove,
   updateSourceConfigSettings,
   updateManagedDocMetadata,
   updateManagedDocsViewability
 } from "./docs-viewer-management-client.js";
 import {
-  moveUndoPayloadRecords,
-  moveUndoRecordChanged,
-  normalizeMoveUndoRecords,
   normalizeSortOrderValue
 } from "./docs-viewer-drag-drop.js";
 import {
@@ -515,66 +511,12 @@ export function createDocsViewerManagementActionController(options) {
     setManagementMessage("Moving " + movingDoc.title + "...", false);
 
     moveManagedDoc(movingDoc.doc_id, targetDoc.doc_id, position, managementClientOptions())
-      .then(function (payload) {
-        var undoRecords = normalizeMoveUndoRecords(payload.undo_records);
-        if (undoRecords.length) {
-          state.moveUndo = {
-            doc_id: movingDoc.doc_id,
-            title: movingDoc.title || movingDoc.doc_id,
-            records: undoRecords
-          };
-        } else if (moveUndoRecordChanged({
-          parent_id: movingDoc.parent_id || "",
-          sort_order: normalizeSortOrderValue(movingDoc.sort_order)
-        }, payload.record)) {
-          state.moveUndo = {
-            doc_id: movingDoc.doc_id,
-            title: movingDoc.title || movingDoc.doc_id,
-            records: [{
-              doc_id: movingDoc.doc_id,
-              title: movingDoc.title || movingDoc.doc_id,
-              parent_id: movingDoc.parent_id || "",
-              sort_order: normalizeSortOrderValue(movingDoc.sort_order)
-            }]
-          };
-        }
+      .then(function () {
         setManagementMessage("", false);
         return reloadDocsIndex(movingDoc.doc_id, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Move failed.", true);
-      })
-      .finally(function () {
-        setManagementBusy(false);
-        renderManagementUi();
-      });
-  }
-
-  function handleUndoMove() {
-    var undoRecord = state.moveUndo;
-    if (!undoRecord || state.managementBusy) return;
-
-    var undoRecords = normalizeMoveUndoRecords(undoRecord.records || [undoRecord]);
-    var focusDocId = String(undoRecord.doc_id || (undoRecords[0] && undoRecords[0].doc_id) || "").trim();
-    if (!focusDocId || !context.findAllDocById(focusDocId) || !undoRecords.length) {
-      state.moveUndo = null;
-      setManagementMessage("Undo unavailable: moved doc is no longer in the current index.", true);
-      renderManagementUi();
-      return;
-    }
-
-    setManagementBusy(true);
-    hideContextMenu();
-    setManagementMessage(state.managementText.undoMoveStatus, false);
-
-    restoreManagedDocMove(focusDocId, moveUndoPayloadRecords(undoRecords), managementClientOptions())
-      .then(function (response) {
-        state.moveUndo = null;
-        setManagementMessage("", false);
-        return reloadDocsIndex(response.doc_id || focusDocId, "");
-      })
-      .catch(function (error) {
-        setManagementMessage(error.message || "Undo failed.", true);
       })
       .finally(function () {
         setManagementBusy(false);
@@ -636,7 +578,6 @@ export function createDocsViewerManagementActionController(options) {
     handleOpenSource: handleOpenSource,
     handleRebuildDocs: handleRebuildDocs,
     handleSettingsSubmit: handleSettingsSubmit,
-    handleStatusPillClick: handleStatusPillClick,
-    handleUndoMove: handleUndoMove
+    handleStatusPillClick: handleStatusPillClick
   };
 }

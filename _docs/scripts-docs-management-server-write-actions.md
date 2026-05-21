@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server-write-actions
 title: Docs Management Server Write Actions
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-22
 parent_id: scripts-docs-management-server
 sort_order: 15400
 ---
@@ -120,35 +120,8 @@ Move behavior:
 - moves preserve `added_date`
 - moves refresh `last_updated` on each source doc whose placement front matter is rewritten
 - moves usually rewrite only the moved doc; they may rewrite multiple sibling docs when fallback normalization changes order values
-- successful move responses include `undo_records` for every doc whose placement changed
 - same-parent reorder rebuilds targeted current-scope docs payloads without a docs-search update
 - reparenting rebuilds targeted current-scope docs payloads and runs a targeted docs-search update for the moved doc
-- successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
-
-`POST /docs/restore-move` expects:
-
-```json
-{
-  "scope": "studio",
-  "focus_doc_id": "docs-viewer-management",
-  "records": [
-    {
-      "doc_id": "docs-viewer-management",
-      "parent_id": "ui-requests",
-      "sort_order": 21
-    }
-  ]
-}
-```
-
-Restore-move behavior:
-
-- restores one client-side move history step by rewriting all supplied placement records
-- validates each restored `parent_id` against the current scope and rejects self-parent or descendant-parent cycles
-- accepts integer or blank `sort_order`
-- writes only records whose current placement differs from the supplied restore record
-- refreshes `last_updated` on each restored source doc whose placement front matter is rewritten
-- rebuilds targeted current-scope docs payloads and runs targeted docs-search updates only for changed docs whose parent changed
 - successful write responses include the same `rebuild.diagnostics` shape used by `POST /docs/rebuild`
 
 `POST /docs/normalize-order` expects either a single sibling group:

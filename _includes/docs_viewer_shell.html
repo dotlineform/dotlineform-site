@@ -125,22 +125,6 @@
   <aside class="docsViewer__sidebar" aria-label="Docs index">
     <div class="docsViewer__sidebarInner">
       <div class="docsViewer__sidebarHeader">
-        {%- if include.allow_management -%}
-        <button
-          class="docsViewer__indexUndoButton"
-          type="button"
-          id="docsViewerIndexUndoButton"
-          aria-label="Undo move"
-          title="Undo move"
-          disabled
-          hidden
-        >
-          <svg class="docsViewer__indexUndoIcon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-            <path d="M9 7H5v4"></path>
-            <path d="M5 7c2.8-2.7 7.2-2.8 10.1-0.2 2.9 2.6 3.1 7.1 0.5 10"></path>
-          </svg>
-        </button>
-        {%- endif -%}
         <button
           class="docsViewer__sidebarToggle"
           type="button"
@@ -151,6 +135,17 @@
           title="Collapse docs index"
         >
           <span class="docsViewer__sidebarToggleIcon" aria-hidden="true">‹</span>
+        </button>
+        <button
+          class="docsViewer__sidebarToggle"
+          type="button"
+          id="docsViewerSidebarExpand"
+          aria-controls="docsViewerNav"
+          aria-expanded="true"
+          aria-label="Expand docs index"
+          title="Expand docs index"
+        >
+          <span class="docsViewer__sidebarToggleIcon" aria-hidden="true">⤢</span>
         </button>
       </div>
       <nav class="docsViewer__nav" id="docsViewerNav" aria-label="Docs tree"></nav>

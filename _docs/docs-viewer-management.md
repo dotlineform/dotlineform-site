@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management
 title: Docs Viewer Management
 added_date: 2026-04-22
-last_updated: 2026-05-19
+last_updated: 2026-05-22
 parent_id: archive
 sort_order: 54000
 ui_status: done
@@ -18,7 +18,7 @@ Implemented management mode covers:
 
 - local-only `/docs/?mode=manage` availability behind the dev Studio Jekyll config
 - active-scope management for Studio, Library, and Analysis from `/docs/`
-- create, import, metadata edit, status edit, viewability, move, undo, normalize order, archive, delete, settings, source-open, copy-link, and rebuild actions
+- create, import, metadata edit, status edit, viewability, move, normalize order, archive, delete, settings, source-open, copy-link, and rebuild actions
 - dedicated client-side management modules under `assets/docs-viewer/js/`
 - local write service backing through [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
 

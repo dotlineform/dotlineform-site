@@ -13,25 +13,13 @@ viewable: true
 This document is the Docs Viewer-specific review slice of [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory).
 It uses the same four-risk scoring model as the parent inventory, but limits the table and follow-up notes to browser JavaScript under `assets/docs-viewer/js/`.
 
-The shared entry runtime `assets/docs-viewer/js/docs-viewer.js` remains listed for completeness, but implementation work for that file is handled separately from the all-script risk-reduction plan.
-
-## Upcoming Index Panel Work
-
-A forthcoming change request is expected to introduce a generic Docs Viewer index panel with `collapsed`, `normal`, and `expanded` states.
-The initial panel content will remain the existing tree index, but the expanded state is intended to create a reusable workspace for later semantic or graph-based index surfaces.
-The graph index itself should be a separate project.
-
-Treat that change request as distinct from this inventory, but use this inventory to identify prerequisite risk work before implementation.
-The likely prerequisite is to establish a focused index panel/layout owner so `assets/docs-viewer/js/docs-viewer.js` does not absorb another broad interactive-surface responsibility.
-Related follow-up should preserve `assets/docs-viewer/js/docs-viewer-sidebar.js` as the tree renderer inside the panel rather than making the tree index own panel state.
-
 ## Current Summary
 
 Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
 - Docs Viewer browser JavaScript files in the full inventory: 34
-- Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 12
-- Main remaining risk themes: shared runtime composition, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and lazy management loading.
+- Files above target score 4: 13
+- General risk themes: shared runtime composition, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and lazy management loading.
 
 | Score | Files |
 | ---: | ---: |
@@ -89,6 +77,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Track separately from the all-script target-score plan because it is the shared Docs Viewer entry runtime.
 - Useful future slices should reduce shared-runtime coupling or route-load cost, such as generated-payload loading, loadable-doc visibility state, index panel surface activation, or management lazy-boundary hardening.
 - Do not turn the entry file into a thin pass-through layer if that makes the viewer boot sequence harder to inspect.
+- Preserve `assets/docs-viewer/js/docs-viewer-sidebar.js` as the tree renderer inside the panel rather than making the tree index own panel state.
 
 ### Docs Import And Management
 

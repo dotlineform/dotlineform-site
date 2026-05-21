@@ -131,8 +131,10 @@ Current document metadata behavior:
 
 Current sidebar behavior:
 
-- larger screens show a small control in the index panel header that collapses the docs tree to a narrow rail
-- the collapsed rail keeps the control visible so the index can always be restored
+- larger screens show index panel controls in the header for direct expanded mode and one-step restore/collapse
+- the direct expand control is visible only in normal state and moves the index panel straight to expanded mode
+- the one-step control restores collapsed to normal, collapses normal to collapsed, and restores expanded to normal
+- the collapsed rail keeps the one-step control visible so the index can always be restored
 - the collapsed desktop layout widens the Docs Viewer reading measure without making prose fully fluid
 - the collapsed state is stored per viewer scope in browser storage
 - smaller screens keep the existing stacked layout and do not show the collapse control, because the document pane already has the full viewport width

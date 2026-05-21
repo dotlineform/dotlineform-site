@@ -114,37 +114,72 @@ def assert_index_panel_toggle(page: Page, timeout_ms: int) -> None:
         arg=ROOT_SELECTOR,
         timeout=timeout_ms,
     )
-    toggle = page.locator("#docsViewerSidebarToggle")
-    toggle.click()
+    step_toggle = page.locator("#docsViewerSidebarToggle")
+    expand_toggle = page.locator("#docsViewerSidebarExpand")
+    page.wait_for_function(
+        """() => {
+            const step = document.querySelector('#docsViewerSidebarToggle');
+            const expand = document.querySelector('#docsViewerSidebarExpand');
+            return step &&
+                expand &&
+                !step.hidden &&
+                !expand.hidden &&
+                step.textContent.trim() === '‹' &&
+                expand.textContent.trim() === '⤢' &&
+                (step.compareDocumentPosition(expand) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+        }""",
+        timeout=timeout_ms,
+    )
+    expand_toggle.click()
     page.wait_for_function(
         """selector => {
             const root = document.querySelector(selector);
             const content = document.querySelector('#docsViewerContent');
+            const step = document.querySelector('#docsViewerSidebarToggle');
+            const expand = document.querySelector('#docsViewerSidebarExpand');
             return root?.dataset.indexPanelState === 'expanded' &&
                 root?.dataset.sidebarState === 'expanded' &&
                 content &&
-                getComputedStyle(content.closest('.docsViewer__main')).display === 'none';
+                getComputedStyle(content.closest('.docsViewer__main')).display === 'none' &&
+                step &&
+                !step.hidden &&
+                step.textContent.trim() === '‹' &&
+                expand &&
+                expand.hidden;
         }""",
         arg=ROOT_SELECTOR,
         timeout=timeout_ms,
     )
-    toggle.click()
+    step_toggle.click()
+    page.wait_for_function(
+        """selector => document.querySelector(selector)?.dataset.indexPanelState === 'normal'""",
+        arg=ROOT_SELECTOR,
+        timeout=timeout_ms,
+    )
+    step_toggle.click()
     page.wait_for_function(
         """selector => {
             const root = document.querySelector(selector);
             const nav = document.querySelector('#docsViewerNav');
             const main = document.querySelector('.docsViewer__main');
+            const step = document.querySelector('#docsViewerSidebarToggle');
+            const expand = document.querySelector('#docsViewerSidebarExpand');
             return root?.dataset.indexPanelState === 'collapsed' &&
                 root?.dataset.sidebarState === 'collapsed' &&
                 nav &&
                 getComputedStyle(nav).display === 'none' &&
                 main &&
-                getComputedStyle(main).display !== 'none';
+                getComputedStyle(main).display !== 'none' &&
+                step &&
+                !step.hidden &&
+                step.textContent.trim() === '›' &&
+                expand &&
+                expand.hidden;
         }""",
         arg=ROOT_SELECTOR,
         timeout=timeout_ms,
     )
-    toggle.click()
+    step_toggle.click()
     page.wait_for_function(
         """selector => {
             const root = document.querySelector(selector);
@@ -168,7 +203,7 @@ def assert_index_panel_expanded_tree_click(page: Page, timeout_ms: int) -> None:
         arg=ROOT_SELECTOR,
         timeout=timeout_ms,
     )
-    page.locator("#docsViewerSidebarToggle").click()
+    page.locator("#docsViewerSidebarExpand").click()
     page.wait_for_function(
         """selector => {
             const root = document.querySelector(selector);

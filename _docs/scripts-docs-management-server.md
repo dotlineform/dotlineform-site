@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Server
 added_date: 2026-04-24
-last_updated: 2026-05-19
+last_updated: 2026-05-22
 parent_id: docs-viewer
 sort_order: 15000
 ---
@@ -51,5 +51,5 @@ Endpoint constants live in `scripts/docs/docs_management_routes.py`; the server 
 - [Generated Reads And Config](/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads) lists generated-data, source-config, capability, and source-config settings endpoints.
 - [Import And Rebuild](/docs/?scope=studio&doc=scripts-docs-management-server-import-rebuild) covers create/import, explicit rebuild, and broken-link audit endpoints.
 - [Data Sharing](/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing) covers Library package preparation, returned package review, and apply endpoints.
-- [Write Actions](/docs/?scope=studio&doc=scripts-docs-management-server-write-actions) covers source-open, metadata, viewability, move/undo, normalize, archive, delete, and scope lifecycle endpoints.
+- [Write Actions](/docs/?scope=studio&doc=scripts-docs-management-server-write-actions) covers source-open, metadata, viewability, move, normalize, archive, delete, and scope lifecycle endpoints.
 - [Operations](/docs/?scope=studio&doc=scripts-docs-management-server-operations) covers security constraints, operational notes, verification, and related references.

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-89d0dfe79d3da1263549ecb2e635b7e8",
-    "generated_at_utc": "2026-05-21T16:40:01Z",
+    "version": "blake2b-a4139a10b5d9e32f550c3bc83c62dfa8",
+    "generated_at_utc": "2026-05-21T23:08:10Z",
     "count": 288
   },
   "entries": [
@@ -855,6 +855,33 @@
       "search_text": "css-primitives css primitives css primitives ui catalogue ui catalogue 2026-05-06 20:00 2026 05 06 20 00"
     },
     {
+      "id": "studio-javascript-payload-inventory",
+      "kind": "doc",
+      "title": "JavaScript Inventory Policy",
+      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
+      "last_updated": "2026-05-21",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-05-21 • Site Docs",
+      "search_terms": [
+        "studio-javascript-payload-inventory",
+        "studio",
+        "javascript",
+        "payload",
+        "inventory",
+        "javascript inventory policy",
+        "policy",
+        "site docs",
+        "site",
+        "docs",
+        "2026-05-21",
+        "2026",
+        "05",
+        "21"
+      ],
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory policy policy site docs site docs 2026-05-21 2026 05 21"
+    },
+    {
       "id": "ui-primitive-button",
       "kind": "doc",
       "title": "Button Primitive",
@@ -1573,23 +1600,21 @@
       "kind": "doc",
       "title": "UI Framework",
       "href": "/docs/?scope=studio&doc=ui-framework",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-22",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-11 14:10 • UI",
+      "display_meta": "2026-05-22 • UI",
       "search_terms": [
         "ui-framework",
         "ui",
         "framework",
         "ui framework",
-        "2026-05-11 14:10",
+        "2026-05-22",
         "2026",
         "05",
-        "11",
-        "14",
-        "10"
+        "22"
       ],
-      "search_text": "ui-framework ui framework ui framework 2026-05-11 14:10 2026 05 11 14 10"
+      "search_text": "ui-framework ui framework ui framework 2026-05-22 2026 05 22"
     },
     {
       "id": "site-request-js-config-structural-review-catalogue-editor-boundary",
@@ -3437,30 +3462,6 @@
       "search_text": "data-flow data flow data flow catalogue 2026-05-11 14:10 2026 05 11 14 10"
     },
     {
-      "id": "studio-javascript-payload-inventory",
-      "kind": "doc",
-      "title": "JavaScript Inventory Policy",
-      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "last_updated": "2026-05-21",
-      "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-21 • Studio",
-      "search_terms": [
-        "studio-javascript-payload-inventory",
-        "studio",
-        "javascript",
-        "payload",
-        "inventory",
-        "javascript inventory policy",
-        "policy",
-        "2026-05-21",
-        "2026",
-        "05",
-        "21"
-      ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory policy policy 2026-05-21 2026 05 21"
-    },
-    {
       "id": "site-request-js-payload-runtime-cleanup-inventory",
       "kind": "doc",
       "title": "JavaScript Payload And Runtime Cleanup Inventory",
@@ -3643,57 +3644,6 @@
         "19"
       ],
       "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and 2026-05-19 2026 05 19"
-    },
-    {
-      "id": "javascript-maintenance-risk-mitigation",
-      "kind": "doc",
-      "title": "JavaScript Maintenance Risk Mitigation",
-      "href": "/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation",
-      "last_updated": "2026-05-21",
-      "parent_id": "studio-javascript-payload-inventory",
-      "parent_title": "JavaScript Inventory Policy",
-      "display_meta": "2026-05-21 • JavaScript Inventory Policy",
-      "search_terms": [
-        "javascript-maintenance-risk-mitigation",
-        "javascript",
-        "maintenance",
-        "risk",
-        "mitigation",
-        "javascript maintenance risk mitigation",
-        "javascript inventory policy",
-        "inventory",
-        "policy",
-        "2026-05-21",
-        "2026",
-        "05",
-        "21"
-      ],
-      "search_text": "javascript-maintenance-risk-mitigation javascript maintenance risk mitigation javascript maintenance risk mitigation javascript inventory policy inventory policy 2026-05-21 2026 05 21"
-    },
-    {
-      "id": "javascript-inventory-implementation-plan",
-      "kind": "doc",
-      "title": "JavaScript Inventory Implementation Plan",
-      "href": "/docs/?scope=studio&doc=javascript-inventory-implementation-plan",
-      "last_updated": "2026-05-21",
-      "parent_id": "studio-javascript-payload-inventory",
-      "parent_title": "JavaScript Inventory Policy",
-      "display_meta": "2026-05-21 • JavaScript Inventory Policy",
-      "search_terms": [
-        "javascript-inventory-implementation-plan",
-        "javascript",
-        "inventory",
-        "implementation",
-        "plan",
-        "javascript inventory implementation plan",
-        "javascript inventory policy",
-        "policy",
-        "2026-05-21",
-        "2026",
-        "05",
-        "21"
-      ],
-      "search_text": "javascript-inventory-implementation-plan javascript inventory implementation plan javascript inventory implementation plan javascript inventory policy policy 2026-05-21 2026 05 21"
     },
     {
       "id": "docs-viewer-javascript-inventory",
@@ -4998,10 +4948,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-19 • Docs Viewer",
+      "display_meta": "2026-05-22 • Docs Viewer",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -5011,12 +4961,12 @@
         "docs management server",
         "docs viewer",
         "viewer",
-        "2026-05-19",
+        "2026-05-22",
         "2026",
         "05",
-        "19"
+        "22"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-19 2026 05 19"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-publish-media-to-r2",
@@ -5098,10 +5048,10 @@
       "kind": "doc",
       "title": "Docs Management Server Generated Reads",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Docs Management Server",
-      "display_meta": "2026-05-19 • Docs Management Server",
+      "display_meta": "2026-05-22 • Docs Management Server",
       "search_terms": [
         "scripts-docs-management-server-generated-reads",
         "scripts",
@@ -5112,12 +5062,12 @@
         "reads",
         "docs management server generated reads",
         "docs management server",
-        "2026-05-19",
+        "2026-05-22",
         "2026",
         "05",
-        "19"
+        "22"
       ],
-      "search_text": "scripts-docs-management-server-generated-reads scripts docs management server generated reads docs management server generated reads docs management server 2026-05-19 2026 05 19"
+      "search_text": "scripts-docs-management-server-generated-reads scripts docs management server generated reads docs management server generated reads docs management server 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-docs-management-server-import-rebuild",
@@ -5177,10 +5127,10 @@
       "kind": "doc",
       "title": "Docs Management Server Write Actions",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-write-actions",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Docs Management Server",
-      "display_meta": "2026-05-19 • Docs Management Server",
+      "display_meta": "2026-05-22 • Docs Management Server",
       "search_terms": [
         "scripts-docs-management-server-write-actions",
         "scripts",
@@ -5191,12 +5141,12 @@
         "actions",
         "docs management server write actions",
         "docs management server",
-        "2026-05-19",
+        "2026-05-22",
         "2026",
         "05",
-        "19"
+        "22"
       ],
-      "search_text": "scripts-docs-management-server-write-actions scripts docs management server write actions docs management server write actions docs management server 2026-05-19 2026 05 19"
+      "search_text": "scripts-docs-management-server-write-actions scripts docs management server write actions docs management server write actions docs management server 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-docs-management-server-operations",
@@ -6373,31 +6323,31 @@
       "kind": "doc",
       "title": "Docs Viewer Management",
       "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "archive",
-      "display_meta": "2026-05-19",
+      "display_meta": "2026-05-22",
       "search_terms": [
         "docs-viewer-management",
         "docs",
         "viewer",
         "management",
         "docs viewer management",
-        "2026-05-19",
+        "2026-05-22",
         "2026",
         "05",
-        "19"
+        "22"
       ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management 2026-05-19 2026 05 19"
+      "search_text": "docs-viewer-management docs viewer management docs viewer management 2026-05-22 2026 05 22"
     },
     {
       "id": "docs-viewer-management-current",
       "kind": "doc",
       "title": "Docs Viewer Management Current State",
       "href": "/docs/?scope=studio&doc=docs-viewer-management-current",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-22",
       "parent_id": "docs-viewer-management",
       "parent_title": "Docs Viewer Management",
-      "display_meta": "2026-05-20 • Docs Viewer Management",
+      "display_meta": "2026-05-22 • Docs Viewer Management",
       "search_terms": [
         "docs-viewer-management-current",
         "docs",
@@ -6407,12 +6357,12 @@
         "docs viewer management current state",
         "state",
         "docs viewer management",
-        "2026-05-20",
+        "2026-05-22",
         "2026",
         "05",
-        "20"
+        "22"
       ],
-      "search_text": "docs-viewer-management-current docs viewer management current docs viewer management current state state docs viewer management 2026-05-20 2026 05 20"
+      "search_text": "docs-viewer-management-current docs viewer management current docs viewer management current state state docs viewer management 2026-05-22 2026 05 22"
     },
     {
       "id": "docs-viewer-management-contract",
@@ -6443,10 +6393,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management Write Model",
       "href": "/docs/?scope=studio&doc=docs-viewer-management-write-model",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "docs-viewer-management",
       "parent_title": "Docs Viewer Management",
-      "display_meta": "2026-05-19 • Docs Viewer Management",
+      "display_meta": "2026-05-22 • Docs Viewer Management",
       "search_terms": [
         "docs-viewer-management-write-model",
         "docs",
@@ -6456,12 +6406,12 @@
         "model",
         "docs viewer management write model",
         "docs viewer management",
-        "2026-05-19",
+        "2026-05-22",
         "2026",
         "05",
-        "19"
+        "22"
       ],
-      "search_text": "docs-viewer-management-write-model docs viewer management write model docs viewer management write model docs viewer management 2026-05-19 2026 05 19"
+      "search_text": "docs-viewer-management-write-model docs viewer management write model docs viewer management write model docs viewer management 2026-05-22 2026 05 22"
     },
     {
       "id": "site-request-catalogue-series-unified-editor",
@@ -7200,6 +7150,50 @@
         "15"
       ],
       "search_text": "studio-ui-start studio ui start ui start 2026-05-15 2026 05 15"
+    },
+    {
+      "id": "javascript-maintenance-risk-mitigation",
+      "kind": "doc",
+      "title": "JavaScript Maintenance Risk Mitigation",
+      "href": "/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation",
+      "last_updated": "2026-05-21",
+      "parent_id": "archive",
+      "display_meta": "2026-05-21",
+      "search_terms": [
+        "javascript-maintenance-risk-mitigation",
+        "javascript",
+        "maintenance",
+        "risk",
+        "mitigation",
+        "javascript maintenance risk mitigation",
+        "2026-05-21",
+        "2026",
+        "05",
+        "21"
+      ],
+      "search_text": "javascript-maintenance-risk-mitigation javascript maintenance risk mitigation javascript maintenance risk mitigation 2026-05-21 2026 05 21"
+    },
+    {
+      "id": "javascript-inventory-implementation-plan",
+      "kind": "doc",
+      "title": "JavaScript Inventory Implementation Plan",
+      "href": "/docs/?scope=studio&doc=javascript-inventory-implementation-plan",
+      "last_updated": "2026-05-21",
+      "parent_id": "archive",
+      "display_meta": "2026-05-21",
+      "search_terms": [
+        "javascript-inventory-implementation-plan",
+        "javascript",
+        "inventory",
+        "implementation",
+        "plan",
+        "javascript inventory implementation plan",
+        "2026-05-21",
+        "2026",
+        "05",
+        "21"
+      ],
+      "search_text": "javascript-inventory-implementation-plan javascript inventory implementation plan javascript inventory implementation plan 2026-05-21 2026 05 21"
     }
   ]
 }

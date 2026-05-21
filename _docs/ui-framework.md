@@ -2,7 +2,7 @@
 doc_id: ui-framework
 title: UI Framework
 added_date: 2026-04-24
-last_updated: "2026-05-11 14:10"
+last_updated: 2026-05-22
 parent_id: ui
 sort_order: 2500
 ---
@@ -196,7 +196,7 @@ The current shared viewer uses:
 - a left index rail for the docs tree
 - a right main pane for search, metadata, and content
 - a sticky sidebar on larger screens
-- a desktop sidebar collapse control for widening the document pane
+- desktop index-panel controls for direct expanded mode and one-step restore/collapse
 - a stacked single-column layout on smaller screens
 
 The docs tree remains visible while the right pane switches between:
@@ -206,7 +206,7 @@ The docs tree remains visible while the right pane switches between:
 
 This should stay a quiet document-reader layout rather than becoming an app-style workspace shell.
 
-On larger screens, the index rail may collapse to a narrow visible strip. The collapse control must remain visible in both states, and the collapsed document pane may use a wider capped reading measure. It should not become fully fluid prose. The mobile stacked layout should remain unchanged because the document pane is already full width there.
+On larger screens, the index panel may collapse to a narrow visible strip or expand to occupy the viewer content area. A direct expand control should be visible only in normal state. A separate one-step control restores collapsed to normal, collapses normal to collapsed, and restores expanded to normal. The mobile stacked layout should remain unchanged because the document pane is already full width there.
 
 ### Search placement
 
@@ -266,5 +266,3 @@ The current shared treatment is:
 - in manage mode, drag/drop tree moves should treat every doc node as a potential parent; the upper half of a row means "move inside", and the lower half means "move after"
 - the "move after" state should render a visible insert line after the target row rather than relying only on a subtle row shadow
 - drag/drop tree moves should normalize the destination sibling set to sparse unique sort orders so the requested placement is visible even when earlier metadata contains duplicate order values
-- the one-step move Undo control belongs to the index toolbar/header area because it reverses a tree operation, not a content edit
-

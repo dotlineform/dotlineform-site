@@ -20,6 +20,7 @@
   --docs-viewer-space-3: var(--space-3, 0.875rem);
   --docs-viewer-space-4: var(--space-4, 1.125rem);
   --docs-viewer-space-5: var(--space-5, 1.375rem);
+  --docs-viewer-sidebar-control-inset: 0.45rem;
   display: grid;
   grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
   column-gap: var(--docs-viewer-space-5);
@@ -62,10 +63,12 @@
 .docsViewer__sidebarHeader{
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 0.4rem;
   min-height: 1.8rem;
-  margin-bottom: 0.45rem;
+  margin: calc(var(--docs-viewer-sidebar-control-inset) - var(--docs-viewer-space-3))
+    calc(var(--docs-viewer-sidebar-control-inset) - var(--docs-viewer-space-3))
+    0.45rem 0;
 }
 
 .docsViewer__sidebarToggle{
@@ -105,13 +108,13 @@
 @media (min-width: 821px){
   .docsViewer[data-index-panel-state="collapsed"] .docsViewer__sidebarInner,
   .docsViewer[data-sidebar-state="collapsed"] .docsViewer__sidebarInner{
-    padding: 0.45rem;
+    padding: var(--docs-viewer-sidebar-control-inset);
   }
 
   .docsViewer[data-index-panel-state="collapsed"] .docsViewer__sidebarHeader,
   .docsViewer[data-sidebar-state="collapsed"] .docsViewer__sidebarHeader{
     justify-content: center;
-    margin-bottom: 0;
+    margin: 0;
   }
 
   .docsViewer[data-index-panel-state="collapsed"] .docsViewer__nav,
