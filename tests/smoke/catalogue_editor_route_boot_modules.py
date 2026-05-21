@@ -66,6 +66,41 @@ def assert_route_boot_helpers(page: Page) -> None:
                 route: 'catalogue-test',
                 bulkIdsKey: 'bulkIds'
             });
+            const bulkOptions = module.createCatalogueEditorRouteStateOptions({
+                route: 'catalogue-test',
+                bulkIdsKey: 'bulkIds'
+            });
+            const singleOptions = module.createCatalogueEditorRouteStateOptions({
+                route: 'catalogue-test'
+            });
+            const importOptions = module.createCatalogueEditorRouteStateOptions({
+                route: 'catalogue-test',
+                importModeKey: 'isImportMode'
+            });
+            const busyOptions = module.createCatalogueEditorRouteStateOptions({
+                route: 'catalogue-test',
+                busyKeys: ['isSaving', 'importIsBusy']
+            });
+            const bulkDetail = module.catalogueEditorRouteStateDetail(state, bulkOptions);
+            const singleDetail = module.catalogueEditorRouteStateDetail({
+                root,
+                currentRecord: { id: '003' },
+                serverAvailable: true
+            }, singleOptions);
+            const importDetail = module.catalogueEditorRouteStateDetail({
+                root,
+                isImportMode: true,
+                currentRecord: { id: '004' },
+                serverAvailable: true
+            }, importOptions);
+            const busyState = {
+                root,
+                currentRecord: { id: '005' },
+                serverAvailable: true,
+                isSaving: false,
+                importIsBusy: true
+            };
+            module.syncCatalogueEditorRouteBusyState(busyState, busyOptions);
             const available = await module.configureCatalogueEditorRouteRuntime(state, {
                 namespace: 'catalogue_test',
                 saveModeNode: statusNode,
@@ -115,10 +150,14 @@ def assert_route_boot_helpers(page: Page) -> None:
                 statusText: statusNode.textContent,
                 statusState: statusNode.dataset.state || '',
                 busy: root.dataset.studioBusy,
+                customBusy: root.dataset.studioBusy,
                 ready: root.dataset.studioReady,
                 mode: root.dataset.studioMode,
                 service: root.dataset.studioService,
                 recordLoaded: root.dataset.studioRecordLoaded,
+                bulkDetail,
+                singleDetail,
+                importDetail,
                 hidden: root.hidden,
                 loadingHidden: loadingNode.hidden,
                 available,
@@ -135,10 +174,29 @@ def assert_route_boot_helpers(page: Page) -> None:
     assert result["statusText"] == "mode:offline"
     assert result["statusState"] == "success"
     assert result["busy"] == "true"
+    assert result["customBusy"] == "true"
     assert result["ready"] == "true"
     assert result["mode"] == "bulk"
     assert result["service"] == "unavailable"
     assert result["recordLoaded"] == "true"
+    assert result["bulkDetail"] == {
+        "route": "catalogue-test",
+        "mode": "bulk",
+        "service": "available",
+        "recordLoaded": True,
+    }
+    assert result["singleDetail"] == {
+        "route": "catalogue-test",
+        "mode": "single",
+        "service": "available",
+        "recordLoaded": True,
+    }
+    assert result["importDetail"] == {
+        "route": "catalogue-test",
+        "mode": "import",
+        "service": "available",
+        "recordLoaded": False,
+    }
     assert result["hidden"] is False
     assert result["loadingHidden"] is True
     assert result["available"] is False

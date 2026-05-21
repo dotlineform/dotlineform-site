@@ -45,6 +45,7 @@ Completed implementation history is recorded in `_docs_logs/`:
 - `change-2026-05-21-added-javascript-maintenance-guardrails-and-docs-viewer-index-panel-boundary`
 - `change-2026-05-21-added-javascript-maintenance-gate-workflow-guidance`
 - `change-2026-05-21-shared-catalogue-save-outcome-presentation-projection`
+- `change-2026-05-21-pinned-catalogue-editor-route-state-projection`
 
 Current stable follow-through:
 
@@ -137,7 +138,7 @@ They should be revisited only when Task B defines the route-shell boundary or wh
 
 ### Task B: Catalogue Editor Route Shell Boundaries
 
-**Status:** Pending definition after Task A completed the shared action workflow presentation contracts.
+**Status:** B1-B3 implemented on 2026-05-21.
 
 Candidate files:
 
@@ -148,16 +149,99 @@ Candidate files:
 - `assets/studio/js/catalogue-editor-route-boot.js`
 - `assets/studio/js/catalogue-work-route-state.js`
 
-Define this task only after the action workflow contracts are clear.
-The editor route shells should keep boot/config, required-element checks, event wiring, and handoff to focused owners.
+Current inventory scores:
 
-The task definition should specify:
+- `assets/studio/js/catalogue-work-editor.js`: 7
+- `assets/studio/js/catalogue-moment-editor.js`: 6
+- `assets/studio/js/catalogue-series-editor.js`: 6
+- `assets/studio/js/catalogue-work-detail-editor.js`: 6
+- `assets/studio/js/catalogue-work-route-state.js`: 5
+- `assets/studio/js/catalogue-editor-route-boot.js`: 4
 
-- which route-state projection or readiness transition is being extracted or pinned
-- whether the shared owner is route-boot, route-state, readiness, selection, or action workflow
-- which editor route is the representative first adopter
-- which smoke or module test proves the route still loads and projects ready/busy state correctly
-- what should not be reintroduced into the editor shell
+The editor route shells should keep boot/config, required-element checks, event wiring, route-ready/busy handoff, and calls into focused owners.
+They should not regain action result shaping, service endpoint naming, readiness item normalization, field normalization, dirty-state comparison, modal formatting, or embedded-item formatting now owned by focused modules.
+
+#### B1: Route-State Projection Contract
+
+Status:
+
+- implemented
+
+Owner:
+
+- `assets/studio/js/catalogue-editor-route-boot.js`
+
+Representative first adopter:
+
+- `assets/studio/js/catalogue-work-editor.js`, because it is the remaining score-7 Catalogue editor route shell.
+
+Scope:
+
+- pin the shared mode, record-loaded, service, ready, and busy projection contract in the route-boot owner
+- route-specific inputs should be explicit route-state options such as route id, bulk-id field, import-mode field, and busy-state fields
+- keep record mutation, selection, URL updates, preview refresh, validation, and event wiring in the existing route-local owners
+- leave `assets/studio/js/catalogue-work-route-state.js` as the Work-specific loaded/new/bulk state transition owner, but route-ready/busy detail should flow through the shared route-boot projection
+
+Acceptance checks:
+
+- `tests/smoke/catalogue_editor_route_boot_modules.py` covers shared route mode and record-loaded projections for single, bulk, import, and busy states
+- `node --check` passes for `catalogue-editor-route-boot.js`, `catalogue-work-route-state.js`, and the four editor route shells
+- focused route-boot smoke imports the four editor route shells without page errors
+- inventory rows are revisited without lowering scores unless the route-shell ownership or focused checks materially improve
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-editor-route-boot.js` now owns shared route-mode, record-loaded, service, ready, and busy detail projection helpers.
+- `assets/studio/js/catalogue-work-detail-editor.js`, `assets/studio/js/catalogue-series-editor.js`, and `assets/studio/js/catalogue-moment-editor.js` now pass explicit route-state options instead of local mode/loaded projection helpers.
+- `assets/studio/js/catalogue-work-route-state.js` still owns Work-specific loaded/new/bulk state transitions, but its ready/busy detail helpers delegate to the shared route-boot projection.
+
+#### B2: Required-Element Boot Consistency
+
+Status:
+
+- implemented
+
+Owner:
+
+- `assets/studio/js/catalogue-editor-route-boot.js`
+
+Representative first adopter:
+
+- `assets/studio/js/catalogue-work-editor.js`
+
+Scope:
+
+- make the Work editor use the shared required-element collection helper instead of a route-local truthiness scan
+- keep each route's element map in the route shell because DOM ownership and route-specific controls remain local
+- avoid moving event wiring, state construction, or render-node ownership into route boot
+
+Acceptance checks:
+
+- `tests/smoke/catalogue_editor_route_boot_modules.py` continues to cover missing-required-element fallback and route-shell importability
+- route files still fail closed when required DOM nodes are absent
+
+Implementation notes:
+
+- `assets/studio/js/catalogue-work-editor.js` now uses `collectRequiredElements` for its required DOM node map, aligning the score-7 Work route shell with the sibling editor shells.
+
+#### B3: Stop And Rescore Decision
+
+Status:
+
+- implemented; no numeric score changes.
+
+Scope:
+
+- inspect the four editor route shells after B1-B2
+- update `assets/studio/js` inventory notes for the route-state owner and any route shell touched by the slice
+- lower scores only if future changes now have a clearer destination outside the editor shell and the focused smoke covers behavior that previously required route boot
+- stop before extracting route-specific state transitions, selection/opening, or validation unless a repeated cross-route contract is visible
+
+Decision:
+
+- Inventory notes were updated for the four Catalogue editor route shells, `catalogue-work-route-state.js`, and `catalogue-editor-route-boot.js`.
+- Scores were not lowered because the route shells still own broad route orchestration, event wiring, state construction, selection/opening handoff, and route-specific validation/update sequencing.
+- The next Catalogue editor route-shell slice should start only when a repeated route-state transition, selection/opening, validation, or boot lifecycle contract appears across at least two routes.
 
 ### Task C: Tag Route Save And Modal Coordination
 

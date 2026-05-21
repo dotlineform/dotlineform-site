@@ -5,6 +5,7 @@ import { loadStudioLookupRecordJson } from "./studio-data.js";
 import {
   collectRequiredElements,
   configureCatalogueEditorRouteRuntime,
+  createCatalogueEditorRouteStateOptions,
   initializeCatalogueEditorRoute,
   loadCatalogueEditorLookupMaps,
   revealCatalogueEditorRoute,
@@ -70,18 +71,12 @@ import {
   updateSeriesSummary
 } from "./catalogue-series-sections.js";
 
-function routeModeForState(state) {
-  if (state.mode === "new") return "new";
-  if (state.currentRecord) return "single";
-  return "empty";
-}
+const SERIES_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
+  route: "catalogue-series"
+});
 
 function syncRouteBusyState(state) {
-  syncCatalogueEditorRouteBusyState(state, {
-    route: "catalogue-series",
-    mode: routeModeForState,
-    recordLoaded: (currentState) => Boolean(currentState.currentRecord)
-  });
+  syncCatalogueEditorRouteBusyState(state, SERIES_ROUTE_STATE);
 }
 
 function setOpenInputMode(state) {
@@ -541,11 +536,7 @@ async function init() {
       updateEditorState(state);
       revealCatalogueEditorRoute(state, {
         loadingNode,
-        routeState: {
-          route: "catalogue-series",
-          mode: routeModeForState,
-          recordLoaded: (currentState) => Boolean(currentState.currentRecord)
-        }
+        routeState: SERIES_ROUTE_STATE
       });
       return;
     }
@@ -600,11 +591,7 @@ async function init() {
 
     revealCatalogueEditorRoute(state, {
       loadingNode,
-      routeState: {
-        route: "catalogue-series",
-        mode: routeModeForState,
-        recordLoaded: (currentState) => Boolean(currentState.currentRecord)
-      }
+      routeState: SERIES_ROUTE_STATE
     });
   } catch (error) {
     console.warn("catalogue_series_editor: init failed", error);

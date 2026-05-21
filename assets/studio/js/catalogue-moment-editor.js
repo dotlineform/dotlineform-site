@@ -4,6 +4,7 @@ import {
 import {
   collectRequiredElements,
   configureCatalogueEditorRouteRuntime,
+  createCatalogueEditorRouteStateOptions,
   initializeCatalogueEditorRoute,
   loadCatalogueEditorLookupMaps,
   markCatalogueEditorRouteReady,
@@ -75,27 +76,18 @@ function getFieldNodeValue(node) {
   return getMomentFieldNodeValue(node);
 }
 
-function routeModeForState(state) {
-  if (state.isImportMode) return "import";
-  if (state.currentRecord) return "single";
-  return "empty";
-}
+const MOMENT_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
+  route: "catalogue-moment",
+  importModeKey: "isImportMode",
+  busyKeys: ["isSaving", "isBuilding", "isDeleting", "importIsBusy"]
+});
 
 function syncRouteBusyState(state) {
-  syncCatalogueEditorRouteBusyState(state, {
-    route: "catalogue-moment",
-    mode: routeModeForState,
-    recordLoaded: (currentState) => Boolean(currentState.currentRecord),
-    busyKeys: ["isSaving", "isBuilding", "isDeleting", "importIsBusy"]
-  });
+  syncCatalogueEditorRouteBusyState(state, MOMENT_ROUTE_STATE);
 }
 
 function markRouteReady(state, ready) {
-  markCatalogueEditorRouteReady(state, ready, {
-    route: "catalogue-moment",
-    mode: routeModeForState,
-    recordLoaded: (currentState) => Boolean(currentState.currentRecord)
-  });
+  markCatalogueEditorRouteReady(state, ready, MOMENT_ROUTE_STATE);
 }
 
 function t(state, key, fallback, tokens = null) {
@@ -580,11 +572,7 @@ async function init() {
       updateImportState(state, buildImportContext(state));
       revealCatalogueEditorRoute(state, {
         loadingNode,
-        routeState: {
-          route: "catalogue-moment",
-          mode: routeModeForState,
-          recordLoaded: (currentState) => Boolean(currentState.currentRecord)
-        }
+        routeState: MOMENT_ROUTE_STATE
       });
       return;
     }

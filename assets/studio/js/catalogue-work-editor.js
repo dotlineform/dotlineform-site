@@ -5,7 +5,9 @@ import {
   loadStudioLookupRecordJson
 } from "./studio-data.js";
 import {
+  collectRequiredElements,
   configureCatalogueEditorRouteRuntime,
+  createCatalogueEditorRouteStateOptions,
   loadCatalogueEditorLookupMaps,
   revealCatalogueEditorRoute,
   setCatalogueEditorTextWithState as setTextWithState,
@@ -95,6 +97,11 @@ import {
 } from "./catalogue-work-fields.js";
 
 const REQUIRED_WORK_FIELDS = ["title", "year", "year_display", "series_ids"];
+const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
+  route: "catalogue-work",
+  bulkIdsKey: "bulkWorkIds",
+  busyKeys: ["isSaving", "isBuilding", "isPreviewingBuild", "isDeleting"]
+});
 
 function changedWorkFieldNames(state) {
   if (state.mode !== "single" || !state.baselineDraft) return [];
@@ -527,47 +534,46 @@ function updateSummary(state) {
 }
 
 function collectWorkEditorElements() {
-  const elements = {
-    root: document.getElementById("catalogueWorkRoot"),
-    loadingNode: document.getElementById("catalogueWorkLoading"),
-    emptyNode: document.getElementById("catalogueWorkEmpty"),
-    fieldsNode: document.getElementById("catalogueWorkFields"),
-    readonlyNode: document.getElementById("catalogueWorkReadonly"),
-    previewNode: document.getElementById("catalogueWorkPreview"),
-    summaryNode: document.getElementById("catalogueWorkSummary"),
-    readinessNode: document.getElementById("catalogueWorkReadiness"),
-    runtimeStateNode: document.getElementById("catalogueWorkRuntimeState"),
-    buildImpactNode: document.getElementById("catalogueWorkBuildImpact"),
-    detailsHeadingNode: document.getElementById("catalogueWorkDetailsHeading"),
-    newDetailLinkNode: document.getElementById("catalogueWorkNewDetailLink"),
-    detailSearchRowNode: document.getElementById("catalogueWorkDetailsSearchRow"),
-    detailSearchNode: document.getElementById("catalogueWorkDetailSearch"),
-    detailsMetaNode: document.getElementById("catalogueWorkDetailsMeta"),
-    detailsResultsNode: document.getElementById("catalogueWorkDetailsResults"),
-    filesHeadingNode: document.getElementById("catalogueWorkFilesHeading"),
-    newFileLinkNode: document.getElementById("catalogueWorkNewFileLink"),
-    filesMetaNode: document.getElementById("catalogueWorkFilesMeta"),
-    filesResultsNode: document.getElementById("catalogueWorkFilesResults"),
-    linksHeadingNode: document.getElementById("catalogueWorkLinksHeading"),
-    newLinkLinkNode: document.getElementById("catalogueWorkNewLinkLink"),
-    linksMetaNode: document.getElementById("catalogueWorkLinksMeta"),
-    linksResultsNode: document.getElementById("catalogueWorkLinksResults"),
-    searchNode: document.getElementById("catalogueWorkSearch"),
-    popupNode: document.getElementById("catalogueWorkPopup"),
-    popupListNode: document.getElementById("catalogueWorkPopupList"),
-    openButton: document.getElementById("catalogueWorkOpen"),
-    newButton: document.getElementById("catalogueWorkNew"),
-    saveButton: document.getElementById("catalogueWorkSave"),
-    publicationButton: document.getElementById("catalogueWorkPublication"),
-    deleteButton: document.getElementById("catalogueWorkDelete"),
-    saveModeNode: document.getElementById("catalogueWorkSaveMode"),
-    contextNode: document.getElementById("catalogueWorkContext"),
-    statusNode: document.getElementById("catalogueWorkStatus"),
-    warningNode: document.getElementById("catalogueWorkWarning"),
-    resultNode: document.getElementById("catalogueWorkResult"),
-    metaNode: document.getElementById("catalogueWorkMeta")
-  };
-  return Object.values(elements).every(Boolean) ? elements : null;
+  return collectRequiredElements({
+    root: "catalogueWorkRoot",
+    loadingNode: "catalogueWorkLoading",
+    emptyNode: "catalogueWorkEmpty",
+    fieldsNode: "catalogueWorkFields",
+    readonlyNode: "catalogueWorkReadonly",
+    previewNode: "catalogueWorkPreview",
+    summaryNode: "catalogueWorkSummary",
+    readinessNode: "catalogueWorkReadiness",
+    runtimeStateNode: "catalogueWorkRuntimeState",
+    buildImpactNode: "catalogueWorkBuildImpact",
+    detailsHeadingNode: "catalogueWorkDetailsHeading",
+    newDetailLinkNode: "catalogueWorkNewDetailLink",
+    detailSearchRowNode: "catalogueWorkDetailsSearchRow",
+    detailSearchNode: "catalogueWorkDetailSearch",
+    detailsMetaNode: "catalogueWorkDetailsMeta",
+    detailsResultsNode: "catalogueWorkDetailsResults",
+    filesHeadingNode: "catalogueWorkFilesHeading",
+    newFileLinkNode: "catalogueWorkNewFileLink",
+    filesMetaNode: "catalogueWorkFilesMeta",
+    filesResultsNode: "catalogueWorkFilesResults",
+    linksHeadingNode: "catalogueWorkLinksHeading",
+    newLinkLinkNode: "catalogueWorkNewLinkLink",
+    linksMetaNode: "catalogueWorkLinksMeta",
+    linksResultsNode: "catalogueWorkLinksResults",
+    searchNode: "catalogueWorkSearch",
+    popupNode: "catalogueWorkPopup",
+    popupListNode: "catalogueWorkPopupList",
+    openButton: "catalogueWorkOpen",
+    newButton: "catalogueWorkNew",
+    saveButton: "catalogueWorkSave",
+    publicationButton: "catalogueWorkPublication",
+    deleteButton: "catalogueWorkDelete",
+    saveModeNode: "catalogueWorkSaveMode",
+    contextNode: "catalogueWorkContext",
+    statusNode: "catalogueWorkStatus",
+    warningNode: "catalogueWorkWarning",
+    resultNode: "catalogueWorkResult",
+    metaNode: "catalogueWorkMeta"
+  });
 }
 
 function createWorkEditorState(elements) {
@@ -801,11 +807,7 @@ function bindWorkEditorEvents(state) {
 function markWorkEditorLoaded(state, elements) {
   revealCatalogueEditorRoute(state, {
     loadingNode: elements.loadingNode,
-    routeState: {
-      route: "catalogue-work",
-      mode: () => state.mode === "new" ? "new" : state.mode === "bulk" ? "bulk" : state.currentRecord ? "single" : "empty",
-      recordLoaded: () => state.mode === "bulk" ? state.bulkWorkIds.length > 0 : state.mode === "single" ? Boolean(state.currentRecord) : false
-    }
+    routeState: WORK_ROUTE_STATE
   });
 }
 

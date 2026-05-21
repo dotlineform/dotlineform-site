@@ -40,7 +40,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 1 | `assets/docs-viewer/js/docs-viewer.js` | Docs Viewer separate track | 2 | 2 | 3 | 1 | 8 | Shared Docs Viewer runtime after index-panel state owner extraction; route loading and payload composition remain. |
 | 2 | `assets/studio/js/tag-studio.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Series tag editor route shell after route-state projection extraction; editor interaction orchestration remains route-local. |
 | 3 | `assets/studio/js/catalogue-work-actions.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Work action coordinator after shared save/build/action presentation projection and bulk build-target projection; service sequencing, record mutation, route refresh, delete navigation, and media refresh remain route-local. |
-| 4 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue editor route shell after shared boot/readiness helper extraction; action workflows remain separate. |
+| 4 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 2 | 2 | 2 | 1 | 7 | Catalogue editor route shell after shared boot/readiness and route-state projection helpers; action workflows remain separate. |
 | 5 | `assets/studio/js/bulk-add-work.js` | Studio routes and shared runtime | 2 | 2 | 2 | 1 | 7 | Bulk import/add route workflow. |
 | 6 | `assets/studio/js/tag-registry.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Tag registry route shell after render, import-mode, and workflow extraction. |
 | 7 | `assets/js/catalogue-search.js` | Public runtime | 2 | 2 | 1 | 1 | 6 | Public catalogue/search route runtime after lazy performance instrumentation loading, query-token reuse, and cached list expansion. |
@@ -49,9 +49,9 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 10 | `assets/studio/js/tag-aliases-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag modal rendering after shared shell/focus lifecycle extraction. |
 | 11 | `assets/studio/js/tag-registry-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag registry modal rendering after shared shell/focus lifecycle extraction. |
 | 12 | `assets/studio/js/tag-aliases.js` | Tag routes | 2 | 1 | 2 | 1 | 6 | Tag aliases route shell after mutation-state and workflow extraction. |
-| 13 | `assets/studio/js/catalogue-moment-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness helper extraction; import/action workflows remain separate. |
-| 14 | `assets/studio/js/catalogue-series-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness helper extraction; membership/action workflows remain separate. |
-| 15 | `assets/studio/js/catalogue-work-detail-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness helper extraction; action workflows remain separate. |
+| 13 | `assets/studio/js/catalogue-moment-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness and route-state projection helpers; import/action workflows remain separate. |
+| 14 | `assets/studio/js/catalogue-series-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness and route-state projection helpers; membership/action workflows remain separate. |
+| 15 | `assets/studio/js/catalogue-work-detail-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness and route-state projection helpers; action workflows remain separate. |
 | 16 | `assets/docs-viewer/js/docs-viewer-bookmarks.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer bookmark/favourite support. |
 | 17 | `assets/docs-viewer/js/docs-viewer-management-actions.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management support module. |
 | 18 | `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer runtime support module. |
@@ -92,7 +92,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 53 | `assets/docs-viewer/js/docs-viewer-document-controller.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer document rendering/controller support. |
 | 54 | `assets/docs-viewer/js/docs-viewer-reports.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer runtime support module. |
 | 55 | `assets/docs-viewer/js/docs-viewer-router.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer routing and history helper. |
-| 56 | `assets/studio/js/catalogue-work-route-state.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue route support module. |
+| 56 | `assets/studio/js/catalogue-work-route-state.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Work loaded/new/bulk state transition helper; ready/busy detail projection now delegates to shared route boot. |
 | 57 | `assets/studio/js/series-tags-modals.js` | Tag routes | 1 | 2 | 1 | 1 | 5 | Tag modal rendering and lifecycle helper. |
 | 58 | `assets/docs-viewer/js/docs-html-import-modals.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
 | 59 | `assets/docs-viewer/js/docs-html-import-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs import result rendering helper. |
@@ -180,7 +180,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 141 | `assets/studio/js/tag-studio-state.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag editor state helper. |
 | 142 | `assets/studio/js/tag-studio-suggestions.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag suggestion helper. |
 | 143 | `assets/ui-catalogue/js/ui-catalogue-demo.js` | UI catalogue | 1 | 1 | 1 | 1 | 4 | Catalogue route support module. |
-| 144 | `assets/studio/js/catalogue-editor-route-boot.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Shared Catalogue editor boot, readiness, required-element, and lookup-loading helper. |
+| 144 | `assets/studio/js/catalogue-editor-route-boot.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Shared Catalogue editor boot, route-state projection, required-element, and lookup-loading helper. |
 | 145 | `assets/studio/js/catalogue-editor-action-workflow.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Shared Catalogue save/build normalization, action presentation projection, pending build target projection, and action preview result contract helper. |
 | 146 | `assets/studio/js/tag-aliases-state.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag aliases mutation-state projection helper. |
 | 147 | `assets/studio/js/tag-aliases-workflow.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag aliases save/import workflow fallback helper. |

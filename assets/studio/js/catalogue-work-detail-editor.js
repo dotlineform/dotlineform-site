@@ -5,6 +5,7 @@ import { loadStudioLookupRecordJson } from "./studio-data.js";
 import {
   collectRequiredElements,
   configureCatalogueEditorRouteRuntime,
+  createCatalogueEditorRouteStateOptions,
   initializeCatalogueEditorRoute,
   loadCatalogueEditorLookupMaps,
   revealCatalogueEditorRoute,
@@ -83,25 +84,13 @@ function buildBulkDraftFromRecords(records) {
   return { draft, mixedFields };
 }
 
-function routeModeForState(state) {
-  if (state.mode === "new") return "new";
-  if (state.mode === "bulk") return "bulk";
-  if (state.currentRecord) return "single";
-  return "empty";
-}
-
-function routeRecordLoadedForState(state) {
-  if (state.mode === "bulk") return state.bulkDetailUids.length > 0;
-  if (state.mode === "single") return Boolean(state.currentRecord);
-  return false;
-}
+const WORK_DETAIL_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
+  route: "catalogue-work-detail",
+  bulkIdsKey: "bulkDetailUids"
+});
 
 function syncRouteBusyState(state) {
-  syncCatalogueEditorRouteBusyState(state, {
-    route: "catalogue-work-detail",
-    mode: routeModeForState,
-    recordLoaded: routeRecordLoadedForState
-  });
+  syncCatalogueEditorRouteBusyState(state, WORK_DETAIL_ROUTE_STATE);
 }
 
 function buildDetailSearchRecord(detailUid, record) {
@@ -581,11 +570,7 @@ async function init() {
       updateEditorState(state);
       revealCatalogueEditorRoute(state, {
         loadingNode,
-        routeState: {
-          route: "catalogue-work-detail",
-          mode: routeModeForState,
-          recordLoaded: routeRecordLoadedForState
-        }
+        routeState: WORK_DETAIL_ROUTE_STATE
       });
       return;
     }
@@ -626,11 +611,7 @@ async function init() {
 
     revealCatalogueEditorRoute(state, {
       loadingNode,
-      routeState: {
-        route: "catalogue-work-detail",
-        mode: routeModeForState,
-        recordLoaded: routeRecordLoadedForState
-      }
+      routeState: WORK_DETAIL_ROUTE_STATE
     });
   } catch (error) {
     console.warn("catalogue_work_detail_editor: init failed", error);

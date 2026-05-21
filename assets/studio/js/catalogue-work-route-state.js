@@ -1,9 +1,13 @@
 import { formatWorkSelectionList as formatSelectionList } from "./catalogue-work-sections.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
-} from "./studio-route-state.js";
+  catalogueEditorRecordLoaded,
+  catalogueEditorRouteMode,
+  catalogueEditorRouteStateDetail,
+  createCatalogueEditorRouteStateOptions,
+  initializeCatalogueEditorRoute,
+  markCatalogueEditorRouteReady,
+  syncCatalogueEditorRouteBusyState
+} from "./catalogue-editor-route-boot.js";
 import {
   WORK_DOWNLOAD_FIELDS as DOWNLOAD_FIELDS,
   WORK_LINK_FIELDS as LINK_FIELDS
@@ -90,42 +94,34 @@ function clearBuildState(state) {
   state.buildPreview = null;
 }
 
+const WORK_ROUTE_STATE = createCatalogueEditorRouteStateOptions({
+  route: "catalogue-work",
+  bulkIdsKey: "bulkWorkIds",
+  busyKeys: ["isSaving", "isBuilding", "isPreviewingBuild", "isDeleting"]
+});
+
 export function initializeWorkRouteState(root) {
-  initializeStudioRouteState(root, { route: "catalogue-work" });
+  initializeCatalogueEditorRoute(root, "catalogue-work");
 }
 
 export function routeModeForWorkState(state) {
-  if (state.mode === "new") return "new";
-  if (state.mode === "bulk") return "bulk";
-  if (state.currentRecord) return "single";
-  return "empty";
+  return catalogueEditorRouteMode(state, WORK_ROUTE_STATE);
 }
 
 export function routeRecordLoadedForWorkState(state) {
-  if (state.mode === "bulk") return state.bulkWorkIds.length > 0;
-  if (state.mode === "single") return Boolean(state.currentRecord);
-  return false;
+  return catalogueEditorRecordLoaded(state, WORK_ROUTE_STATE);
 }
 
 export function workRouteStateDetail(state) {
-  return {
-    route: "catalogue-work",
-    mode: routeModeForWorkState(state),
-    service: state.serverAvailable ? "available" : "unavailable",
-    recordLoaded: routeRecordLoadedForWorkState(state)
-  };
+  return catalogueEditorRouteStateDetail(state, WORK_ROUTE_STATE);
 }
 
 export function syncWorkRouteBusyState(state) {
-  setStudioRouteBusy(
-    state.root,
-    Boolean(state.isSaving || state.isBuilding || state.isPreviewingBuild || state.isDeleting),
-    workRouteStateDetail(state)
-  );
+  syncCatalogueEditorRouteBusyState(state, WORK_ROUTE_STATE);
 }
 
 export function markWorkRouteReady(state, ready) {
-  setStudioRouteReady(state.root, ready, workRouteStateDetail(state));
+  markCatalogueEditorRouteReady(state, ready, WORK_ROUTE_STATE);
 }
 
 export function setLoadedWorkRecord(state, workId, record, options = {}) {

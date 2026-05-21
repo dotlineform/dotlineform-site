@@ -23,7 +23,7 @@ function assignLookupRecord(target, record, normalizeKey) {
   target.set(key, record);
 }
 
-function defaultRouteMode(state, options = {}) {
+export function catalogueEditorRouteMode(state, options = {}) {
   const importModeKey = options.importModeKey || "";
   if (importModeKey && state[importModeKey]) return "import";
   if (state.mode === "new") return "new";
@@ -32,13 +32,25 @@ function defaultRouteMode(state, options = {}) {
   return "empty";
 }
 
-function defaultRecordLoaded(state, options = {}) {
-  if (state.mode === "bulk") {
+export function catalogueEditorRecordLoaded(state, options = {}, projectedMode = "") {
+  const mode = projectedMode || catalogueEditorRouteMode(state, options);
+  if (mode === "bulk") {
     const bulkIdsKey = options.bulkIdsKey || "";
     return bulkIdsKey && Array.isArray(state[bulkIdsKey]) ? state[bulkIdsKey].length > 0 : false;
   }
-  if (state.mode === "single") return Boolean(state.currentRecord);
+  if (mode === "single") return Boolean(state.currentRecord);
   return false;
+}
+
+export function createCatalogueEditorRouteStateOptions(options = {}) {
+  return {
+    route: options.route || "",
+    mode: options.mode,
+    recordLoaded: options.recordLoaded,
+    bulkIdsKey: options.bulkIdsKey || "",
+    importModeKey: options.importModeKey || "",
+    busyKeys: Array.isArray(options.busyKeys) ? options.busyKeys.slice() : undefined
+  };
 }
 
 export function setCatalogueEditorTextWithState(node, text, state = "") {
@@ -61,10 +73,10 @@ export function initializeCatalogueEditorRoute(root, route) {
 }
 
 export function catalogueEditorRouteStateDetail(state, options) {
-  const mode = typeof options.mode === "function" ? options.mode(state) : defaultRouteMode(state, options);
+  const mode = typeof options.mode === "function" ? options.mode(state) : catalogueEditorRouteMode(state, options);
   const recordLoaded = typeof options.recordLoaded === "function"
     ? options.recordLoaded(state)
-    : defaultRecordLoaded(state, options);
+    : catalogueEditorRecordLoaded(state, options, mode);
   return {
     route: options.route,
     mode,
