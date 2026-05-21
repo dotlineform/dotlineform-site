@@ -5,9 +5,7 @@ import {
   loadStudioConfigWithText
 } from "./studio-config.js";
 import {
-  buildStudioRagTooltip,
-  computeStudioRag,
-  computeStudioTagMetrics
+  buildStudioTagScore
 } from "./analysis-tag-scoring.js";
 import {
   buildStudioGroupDescriptionMap,
@@ -52,11 +50,6 @@ import {
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 let GROUP_INFO_PAGE_PATH = "/studio/analytics/tag-groups/";
 const SORTABLE_KEYS = new Set(["series", "status", "tags"]);
-const RAG_ORDER = {
-  red: 0,
-  amber: 1,
-  green: 2
-};
 const UI = seriesTagsUi;
 const { className: UI_CLASS, selector: UI_SELECTOR, state: UI_STATE } = UI;
 
@@ -436,10 +429,7 @@ function buildSeriesRows(state) {
         : null;
       const effectiveRow = offlineEntry ? normalizeOfflineSeriesRow(offlineEntry.staged_row) : repoRow;
       const assigned = effectiveRow.tags.map((row) => row.tag_id);
-      const metrics = computeStudioTagMetrics(assigned, state.registry, state.config);
-      const rag = computeStudioRag(metrics, state.config);
-      const tooltip = buildStudioRagTooltip(metrics);
-      const ragLabel = `status ${rag.toUpperCase()}: ${tooltip}`;
+      const score = buildStudioTagScore(assigned, state.registry, state.config);
       const tags = buildSeriesDisplayTags(state, repoRow, effectiveRow)
         .sort((a, b) => compareText(a.sortLabel, b.sortLabel));
       const visibleTags = state.filterGroup === "all"
@@ -447,10 +437,10 @@ function buildSeriesRows(state) {
         : tags.filter((tag) => tag.group === state.filterGroup);
       return {
         ...series,
-        rag,
-        ragRank: Number.isInteger(RAG_ORDER[rag]) ? RAG_ORDER[rag] : Number.MAX_SAFE_INTEGER,
-        tooltip,
-        ragLabel,
+        rag: score.rag,
+        ragRank: score.ragRank,
+        tooltip: score.tooltip,
+        ragLabel: score.ragLabel,
         visibleTags,
         tagsSortKey: visibleTags.map((tag) => `${tag.sortLabel}:${tag.marker || ""}`).join(" | ")
       };

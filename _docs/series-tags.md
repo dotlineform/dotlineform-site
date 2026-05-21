@@ -320,7 +320,7 @@ Loaded through:
 Primary business logic:
 
 - derive assigned tag ids for each series
-- compute tag metrics and RAG status
+- compute tag metrics and RAG status through `assets/studio/js/analysis-tag-scoring.js`
 - overlay staged offline rows over repo rows for display
 - export/copy/clear the offline session
 - preview and apply assignment imports through the local server
@@ -330,7 +330,8 @@ Primary business logic:
 These responsibilities live mainly in:
 
 - `assets/studio/js/series-tags.js`
-- shared scoring/config helpers in `assets/studio/js/studio-config.js`
+- shared scoring helpers in `assets/studio/js/analysis-tag-scoring.js`
+- shared config helpers in `assets/studio/js/studio-config.js`
 
 ## Change Guidance
 

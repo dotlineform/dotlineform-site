@@ -4,6 +4,25 @@ import {
   getStudioGroups
 } from "./studio-config.js";
 
+const STUDIO_RAG_ORDER = Object.freeze({
+  red: 0,
+  amber: 1,
+  green: 2
+});
+
+export function buildStudioTagScore(assignedTags, registry, config) {
+  const metrics = computeStudioTagMetrics(assignedTags, registry, config);
+  const rag = computeStudioRag(metrics, config);
+  const tooltip = buildStudioRagTooltip(metrics);
+  return {
+    metrics,
+    rag,
+    ragRank: rankStudioRag(rag),
+    tooltip,
+    ragLabel: `status ${rag.toUpperCase()}: ${tooltip}`
+  };
+}
+
 export function computeStudioTagMetrics(assignedTags, registry, config) {
   const groups = getStudioGroups(config);
   const coverageGroups = getStudioCoverageGroups(config);
@@ -103,6 +122,11 @@ export function buildStudioRagTooltip(metrics) {
     `unknown: ${metrics.nUnknown}; deprecated: ${metrics.nDeprecated}; ` +
     `completeness: ${metrics.completeness.toFixed(2)}`
   );
+}
+
+export function rankStudioRag(rag) {
+  const key = normalize(rag);
+  return Number.isInteger(STUDIO_RAG_ORDER[key]) ? STUDIO_RAG_ORDER[key] : Number.MAX_SAFE_INTEGER;
 }
 
 function pathValue(obj, keys) {

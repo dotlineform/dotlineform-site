@@ -191,7 +191,7 @@ Each section should summarise:
 
 | # | Status | Task |
 | ---: | --- | --- |
-| 1 | proposed | Extract scoring calculation and interpretation into a focused analytics module if scoring behavior changes. Anticipated improvement: -1 to -2 from maintenance and architectural risk. |
+| 1 | done | Extracted scoring calculation and interpretation into `assets/studio/js/analysis-tag-scoring.js`, including RAG label and sort-rank interpretation for the Series Tags route. |
 | 2 | proposed | Move RAG/report rendering into a focused render module if display behavior grows. Anticipated improvement: -1 from maintenance or structural risk. |
 | 3 | proposed | Pass explicit scoring/report inputs from the route shell rather than broad route state. Anticipated improvement: -1 from maintenance risk. |
 | 4 | proposed | Add focused checks for score interpretation and RAG display output when those modules are extracted. Anticipated improvement: -1 from maintenance risk. |
