@@ -46,6 +46,7 @@ Completed implementation history is recorded in `_docs_logs/`:
 - `change-2026-05-21-added-javascript-maintenance-gate-workflow-guidance`
 - `change-2026-05-21-shared-catalogue-save-outcome-presentation-projection`
 - `change-2026-05-21-pinned-catalogue-editor-route-state-projection`
+- `change-2026-05-21-defined-score-moving-javascript-maintenance-slices`
 
 Current stable follow-through:
 
@@ -56,8 +57,8 @@ Current stable follow-through:
 
 ## Next Action
 
-Task A is implemented through the save, build, publication/prose-import, and bulk action presentation contract slices.
-The next implementation step is to define Task B against the remaining Catalogue editor route shell responsibilities.
+Task A is implemented through the save, build, publication/prose-import, and bulk action presentation contract slices, but the route/action family still needs score-moving follow-through.
+Task B now continues with the Catalogue editor route shells, starting with Work editor state construction and event-binding ownership because `assets/studio/js/catalogue-work-editor.js` remains score 7.
 
 ## Next Priorities After Docs Viewer
 
@@ -68,10 +69,11 @@ After the Docs Viewer index-panel boundary is in place, revisit the remaining sc
 3. Studio shared route helpers where high churn suggests an API contract needs direct checks before further extraction.
 4. Public runtime only when a route-load or input-time cost is being changed, not for cosmetic splitting.
 
-Each slice should have a focused owner, a small smoke check, and an inventory rescore.
+Each score-moving slice must have a focused owner, a small smoke check, and a rescore target before implementation starts.
+Guardrail slices are allowed only when the same task defines the follow-on score-moving slice.
 
-Concrete task definitions are needed before starting those families.
-Define them against the stable maintenance gate in [Development Workflow](/docs/?scope=studio&doc=development-workflow), so the task definitions stay aligned with the durable workflow guidance rather than this implementation note.
+Concrete task definitions below are aligned with the stable maintenance gate in [Development Workflow](/docs/?scope=studio&doc=development-workflow).
+The goal is measurable maintenance improvement, not waiting for future feature pressure.
 
 ### Task A: Catalogue Action Workflow Contracts
 
@@ -138,7 +140,7 @@ They should be revisited only when Task B defines the route-shell boundary or wh
 
 ### Task B: Catalogue Editor Route Shell Boundaries
 
-**Status:** B1-B3 implemented on 2026-05-21.
+**Status:** B1-B3 guardrails implemented on 2026-05-21; B4 is the next score-moving slice.
 
 Candidate files:
 
@@ -241,81 +243,400 @@ Decision:
 
 - Inventory notes were updated for the four Catalogue editor route shells, `catalogue-work-route-state.js`, and `catalogue-editor-route-boot.js`.
 - Scores were not lowered because the route shells still own broad route orchestration, event wiring, state construction, selection/opening handoff, and route-specific validation/update sequencing.
-- The next Catalogue editor route-shell slice should start only when a repeated route-state transition, selection/opening, validation, or boot lifecycle contract appears across at least two routes.
+- This is a guardrail outcome, not a completed mitigation batch. Continue with B4 and B5 to move Work editor state construction and event binding out of the score-7 route shell.
+
+#### B4: Work Editor State Factory
+
+Status:
+
+- next score-moving slice
+
+Owner:
+
+- new route-local owner `assets/studio/js/catalogue-work-editor-state.js`
+
+Scope:
+
+- move Work editor state construction, initial defaults, derived DOM section references, and route-state option construction out of `catalogue-work-editor.js`
+- keep `catalogue-work-route-state.js` as the owner for loaded/new/bulk transitions
+- keep field rendering, action calls, selection calls, and event wiring out of the new state factory
+
+Expected score movement:
+
+- `assets/studio/js/catalogue-work-editor.js`: target 7 -> 6 if the route shell no longer owns broad state construction and the new state factory has direct module smoke coverage
+- no score reduction if the extracted module still reads global DOM directly or starts owning event/action behavior
+
+Acceptance checks:
+
+- add `tests/smoke/catalogue_work_editor_state_modules.py`
+- prove the state factory returns required defaults, derived panel nodes, route-state options, and modal host wiring from explicit inputs
+- `node --check` for Work editor and the new state module
+- Work ready-state smoke with catalogue service blocked still reaches `data-studio-ready="true"`
+
+#### B5: Work Editor Event Binder
+
+Status:
+
+- planned score-moving slice after B4
+
+Owner:
+
+- new route-local owner `assets/studio/js/catalogue-work-editor-events.js`
+
+Scope:
+
+- move Work editor DOM event binding and async error wrappers out of the route shell
+- keep handler implementations in existing owners: selection, action workflow, embedded-item modal owner, and section render/update helpers
+- route shell should pass explicit context callbacks; the event binder should not mutate route state except through those callbacks
+
+Expected score movement:
+
+- `assets/studio/js/catalogue-work-editor.js`: target 6 -> 5 if event wiring leaves the shell and the remaining file is boot/config/handoff plus update-state coordination
+- no score reduction if the binder becomes a second route controller with broad state logic
+
+Acceptance checks:
+
+- extend or add a focused module smoke to prove the binder attaches expected listeners with stubbed nodes and invokes injected callbacks
+- Work ready-state smoke still passes with unavailable catalogue service
+- one representative DOM-trigger smoke should activate a bound callback without using direct DOM activation for the behavior under test
+
+#### B6: Catalogue Sibling Route State Factories
+
+Status:
+
+- planned score-moving slice after B4 proves the pattern
+
+Owner:
+
+- route-local state factory modules for Work Detail, Series, and Moment editors
+
+Scope:
+
+- apply the B4 state-factory pattern to the three remaining score-6 editor shells
+- keep Moment import state in the Moment owner; do not force it into a generic Catalogue state model
+- keep Series membership state in the Series membership owner
+
+Expected score movement:
+
+- `assets/studio/js/catalogue-work-detail-editor.js`: target 6 -> 5
+- `assets/studio/js/catalogue-series-editor.js`: target 6 -> 5
+- `assets/studio/js/catalogue-moment-editor.js`: target 6 -> 5
+- no score reduction for any route that still owns both state construction and event/action orchestration after the slice
+
+Acceptance checks:
+
+- focused module smoke covers all three state factories
+- route-boot smoke still imports all four editor shells
+- representative route-ready smoke covers Work plus one sibling route
+
+#### B7: Catalogue Sibling Event Binders
+
+Status:
+
+- planned score-moving slice after B5 proves the pattern
+
+Owner:
+
+- route-local event binder modules for Work Detail, Series, and Moment editors
+
+Scope:
+
+- extract DOM event binding for Work Detail, Series, and Moment without moving domain behavior, validation, import, membership, or action orchestration into the binder
+- each binder should accept explicit callback groups for selection, actions, membership/import, and render/update behavior
+
+Expected score movement:
+
+- `assets/studio/js/catalogue-work-detail-editor.js`, `assets/studio/js/catalogue-series-editor.js`, and `assets/studio/js/catalogue-moment-editor.js`: target 5 -> 4 only if the route shells become boot/config/handoff/update coordinators with focused binder tests
+- if only one or two routes reach that shape, rescore only those routes
+
+Acceptance checks:
+
+- binder module smoke verifies attached listeners and callback invocation for each route
+- route-ready smoke covers Work plus one sibling route
+- inventory notes explain what remains in each route shell
+
+#### B8: Catalogue Action Workflow Revisit
+
+Status:
+
+- conditional score-moving revisit
+
+Scope:
+
+- revisit `assets/studio/js/catalogue-work-actions.js` only after B4-B7 reduce route-shell noise enough to expose repeated action orchestration that remains in the action modules
+- likely target is service request/activity context construction or record mutation/reload follow-through, not more presentation shaping
+
+Expected score movement:
+
+- `assets/studio/js/catalogue-work-actions.js`: target 7 -> 6 only if a complete action responsibility moves to a focused owner with direct checks
+- do not reopen Task A presentation projections unless a regression or duplicated contract appears
 
 ### Task C: Tag Route Save And Modal Coordination
 
-**Status:** Pending definition after Task A.
+**Status:** Defined for score-moving implementation.
 
-Candidate files:
+Candidate files and current scores:
 
-- `assets/studio/js/tag-studio.js`
-- `assets/studio/js/tag-registry.js`
-- `assets/studio/js/tag-aliases.js`
-- `assets/studio/js/tag-aliases-modals.js`
-- `assets/studio/js/tag-registry-modals.js`
-- `assets/studio/js/tag-modal-shell.js`
-- `assets/studio/js/tag-studio-save-controller.js`
+- `assets/studio/js/tag-studio.js`: 7
+- `assets/studio/js/tag-registry.js`: 7
+- `assets/studio/js/tag-aliases.js`: 6
+- `assets/studio/js/tag-aliases-modals.js`: 6
+- `assets/studio/js/tag-registry-modals.js`: 6
+- `assets/studio/js/tag-modal-shell.js`: 4
+- `assets/studio/js/tag-studio-save-controller.js`: 5
 
-Define this task around the remaining coordination points where route state, save/offline probing, modal lifecycle, and user-facing fallback still meet.
-Do not reopen already completed modal-shell, render, import-mode, or route-state extractions unless the new slice depends on them.
+Do not treat previous modal-shell, render, import-mode, or route-state extractions as enough.
+The score-moving target is route-shell responsibility reduction where save/offline probing, modal lifecycle, and user-facing fallback still meet.
 
-The task definition should specify:
+#### C1: Shared Tag Save Session Contract
 
-- whether the owner is a save workflow, modal workflow, offline/session workflow, or route-state projection
-- which route shell should become thinner first
-- which modal controller behavior is shared and which remains route-specific
-- what focused smoke covers unavailable-server fallback, patch rendering, and restored focus/status behavior
-- whether `tag-studio.js`, `tag-registry.js`, or `tag-aliases.js` can be rescored after the slice
+Owner:
+
+- new or extended save/session owner near `assets/studio/js/tag-studio-save-controller.js`
+
+Scope:
+
+- centralize tag save-mode probing, unavailable-server fallback state, patch/manual fallback result shaping, and restored-focus re-probing across Tag Studio, Registry, and Aliases
+- route shells provide route-specific labels and callbacks; the save session owner returns explicit view models and route-busy flags
+
+Expected score movement:
+
+- `assets/studio/js/tag-studio.js`: target 7 -> 6
+- `assets/studio/js/tag-registry.js`: target 7 -> 6 if Registry adopts the same save-session contract
+- `assets/studio/js/tag-aliases.js`: target 6 -> 5 if Aliases adopts the same contract
+
+Acceptance checks:
+
+- add or extend `tests/smoke/tag_route_shell_modules.py`
+- cover unavailable-server fallback, patch/manual result shaping, focus/pageshow re-probe callbacks, and route-busy projection without full route boot
+
+#### C2: Tag Registry Modal Workflow Owner
+
+Owner:
+
+- focused Registry workflow owner, separate from `tag-registry-modals.js` rendering and `tag-modal-shell.js` lifecycle
+
+Scope:
+
+- move Registry create/edit/delete/demote modal state transitions, validation status projection, and apply-result handoff out of `tag-registry.js`
+- keep modal HTML rendering in `tag-registry-modals.js`
+- keep source mutation/service calls in existing mutation/service owners
+
+Expected score movement:
+
+- `assets/studio/js/tag-registry.js`: target 6 -> 5
+- `assets/studio/js/tag-registry-modals.js`: target 6 -> 5 only if rendering becomes pure view projection with no workflow state ownership
+
+Acceptance checks:
+
+- focused smoke covers create/edit/delete/demote modal open/close/status transitions with stubbed save callbacks
+- route smoke verifies Registry loads and projects ready/busy state
+
+#### C3: Tag Studio Interaction State Owner
+
+Owner:
+
+- new route-local owner for selected-work/tag-entry interaction state
+
+Scope:
+
+- move selected work activation, tag entry add/remove/restore, metrics, and dirty-save enablement out of `tag-studio.js`
+- keep rendering in `tag-studio-render.js`, save orchestration in save-session owner, and route boot in route shell
+
+Expected score movement:
+
+- `assets/studio/js/tag-studio.js`: target 6 -> 5
+
+Acceptance checks:
+
+- focused smoke covers selected-work changes, tag entry mutation, metrics, and dirty-save enablement from explicit state inputs
+- route smoke verifies Tag Studio still loads for a representative series
+
+#### C4: Tag Alias Route Closeout
+
+Owner:
+
+- existing alias mutation/workflow owners unless review identifies a missing complete responsibility
+
+Scope:
+
+- inspect `tag-aliases.js` after C1 to decide whether remaining risk is route orchestration or a missing owner
+- if a missing owner exists, extract one complete responsibility; otherwise record a no-extraction decision and rescore only if justified
+
+Expected score movement:
+
+- `assets/studio/js/tag-aliases.js`: target 5 -> 4 only if remaining save/offline/modal coordination has moved out and route-shell responsibilities are coherent
 
 ### Task D: Studio Shared Route Helper Contracts
 
-**Status:** Pending definition after the route-specific catalogue and tag slices reveal repeated patterns.
+**Status:** Defined for score-moving implementation.
 
-Candidate files:
+Candidate files and current scores:
+
+- `assets/studio/js/bulk-add-work.js`: 7
+- `assets/studio/js/data-sharing-review.js`: 6
+- `assets/studio/js/docs-broken-links.js`: 6
+- `assets/studio/js/project-state.js`: 6
+- `assets/studio/js/studio-audits.js`: 6
+- `assets/studio/js/thumbnail-quality.js`: 6
+- `assets/studio/js/studio-route-state.js`: shared helper
+- `assets/studio/js/studio-transport.js`: shared helper
+
+This task should not wait for new features.
+The repeated pattern already exists: operational Studio routes duplicate route-state projection, required element collection, local-service transport status, result rendering, and run/apply button state.
+
+#### D1: Operational Route Shell Helper
+
+Owner:
+
+- new shared owner near `assets/studio/js/studio-route-state.js`
+
+First adopters:
 
 - `assets/studio/js/bulk-add-work.js`
-- `assets/studio/js/data-sharing-review.js`
 - `assets/studio/js/docs-broken-links.js`
-- `assets/studio/js/project-state.js`
-- `assets/studio/js/studio-audits.js`
-- `assets/studio/js/thumbnail-quality.js`
-- `assets/studio/js/studio-route-state.js`
-- `assets/studio/js/studio-transport.js`
 
-This task should not start as a broad shared-runtime refactor.
-Define it around one repeated route-helper contract that is already used or clearly needed by at least two route families.
+Scope:
 
-The task definition should specify:
+- provide explicit helper contracts for required element collection, ready/busy projection, service availability display, and run-button disabled state
+- keep route-specific validation, endpoint names, result rendering, and payload shaping in route-local modules
 
-- the repeated contract being pinned, such as ready/busy projection, local-service transport results, list rendering state, or route error display
-- the first two routes that prove the shared helper is real
-- the smallest module smoke that can pin the helper without full route boot
-- whether any route-level browser smoke is needed
-- which high-churn shared helper or route rows can be rescored
+Expected score movement:
 
-### Task E: Public Runtime Performance-Only Follow-Up
+- `assets/studio/js/bulk-add-work.js`: target 7 -> 6
+- `assets/studio/js/docs-broken-links.js`: target 6 -> 5
 
-**Status:** Watch item; define only when public route-load or input-time behavior is being changed.
+Acceptance checks:
 
-Candidate files:
+- add focused smoke for the shared operational route shell helper
+- route smoke verifies both first adopters reach ready state with unavailable local service where applicable
 
-- `assets/js/catalogue-search.js`
-- `assets/js/work.js`
-- `assets/js/moment.js`
-- `assets/js/public-catalogue-runtime.js`
-- `assets/js/search/search-performance.js`
+#### D2: Bulk Add Work Workflow Split
 
-Do not start this task for cosmetic module splitting.
-Public runtime work should be tied to a measurable page-load, search-input, list-expansion, or media-route cost.
+Owner:
 
-The task definition should specify:
+- new route-local workflow/render owner for Bulk Add Work preview/apply state
 
-- the measured runtime cost or user-visible behavior being changed
-- the performance or route smoke baseline before the change
-- the focused owner for the changed behavior
-- the public routes affected by the slice
-- whether the inventory score changes because load/input work was reduced, not merely because code moved
+Scope:
+
+- move preview summary formatting, blocked-row rendering, result shaping, and apply/preview run-state projection out of `bulk-add-work.js`
+- keep endpoint wrappers in transport/client owner and keep route shell as boot plus event handoff
+
+Expected score movement:
+
+- `assets/studio/js/bulk-add-work.js`: target 6 -> 5, or 7 -> 5 if combined after D1 in one implementation batch
+
+Acceptance checks:
+
+- module smoke covers preview summary, blocked rows, run-state view model, and apply result projection
+- route smoke verifies preview/apply controls remain disabled when local service is unavailable
+
+#### D3: Data Sharing Review Apply Workflow Owner
+
+Owner:
+
+- route-local Data Sharing review workflow owner
+
+Scope:
+
+- move scope/action normalization, apply-action menu state, selected-file/preview selection state, and result-button projection out of `data-sharing-review.js`
+- keep rendering in `data-sharing-review-render.js` and modal confirmation in `data-sharing-review-modals.js`
+
+Expected score movement:
+
+- `assets/studio/js/data-sharing-review.js`: target 6 -> 5
+
+Acceptance checks:
+
+- existing Data Sharing smoke or a new module smoke covers action normalization, selected preview rows, result-button projection, and menu open/close state
+
+#### D4: Operational Audit Routes Closeout
+
+Owner:
+
+- shared operational route helper from D1 plus route-local result projection modules where needed
+
+Scope:
+
+- apply the D1 helper to `project-state.js`, `studio-audits.js`, and `thumbnail-quality.js`
+- extract result projection only when repeated list/table/result shaping remains mixed with route boot
+
+Expected score movement:
+
+- `assets/studio/js/project-state.js`: target 6 -> 5
+- `assets/studio/js/studio-audits.js`: target 6 -> 5
+- `assets/studio/js/thumbnail-quality.js`: target 6 -> 5
+- route can move to 4 only if route boot, transport, and result projection are all separated and covered by focused checks
+
+### Task E: Public Runtime Measurable Maintenance And Performance Follow-Up
+
+**Status:** Defined for score-moving implementation; no longer a passive watch item.
+
+Candidate files and current scores:
+
+- `assets/js/catalogue-search.js`: 6
+- `assets/js/work.js`: 5
+- `assets/js/moment.js`: 4
+- `assets/js/public-catalogue-runtime.js`: 4
+- `assets/js/search/search-performance.js`: 4
+
+Public runtime work must improve a measured route-load/input-time behavior or reduce maintenance risk in a user-visible runtime path.
+Cosmetic file splitting is still out of scope.
+
+#### E1: Catalogue Search Runtime Baseline And Hot-Path Split
+
+Owner:
+
+- new focused owner for catalogue-search query evaluation/list rendering, or extension of an existing search runtime owner if one is already present
+
+Scope:
+
+- capture baseline metrics for initial load, first query, repeated query, result render count, and list expansion
+- move query normalization/evaluation and result rendering hot-path decisions out of `catalogue-search.js` behind explicit inputs
+- keep route DOM wiring and config/data loading in the route shell
+
+Expected score movement:
+
+- `assets/js/catalogue-search.js`: target 6 -> 5 if input-time work has a focused owner and smoke/performance checks cover it
+- target 6 -> 4 only if route shell becomes data-load/event-handoff plus explicit render owner, and measured input-time behavior is preserved or improved
+
+Acceptance checks:
+
+- public catalogue search smoke records baseline and after metrics with `search-performance` instrumentation enabled
+- module smoke covers query evaluation and render view model without full route boot
+
+#### E2: Public Work Runtime Projection Owner
+
+Owner:
+
+- existing `assets/js/public-catalogue-runtime.js` or a new work-specific projection module
+
+Scope:
+
+- move `assets/js/work.js` metadata/detail/download projection decisions into a focused owner with explicit work payload inputs
+- keep DOM insertion and route loading in `work.js`
+
+Expected score movement:
+
+- `assets/js/work.js`: target 5 -> 4
+
+Acceptance checks:
+
+- module smoke covers work payload projection for metadata, details, downloads/links, and missing media fallbacks
+- public work route smoke verifies a representative work page still renders equivalent primary content
+
+#### E3: Public Runtime Closeout
+
+Scope:
+
+- compare `work.js`, `moment.js`, and `public-catalogue-runtime.js` after E1-E2
+- if `moment.js` already remains at score 4 with coherent ownership, leave it alone
+- update inventory only for files with measured runtime or focused-owner improvements
+
+Expected score movement:
+
+- at minimum, `catalogue-search.js` target 6 -> 5 and `work.js` target 5 -> 4 across Task E
+- no score change for `moment.js`, `public-catalogue-runtime.js`, or `search-performance.js` unless their contracts materially change
 
 ### Task Definition Exit Criteria
 

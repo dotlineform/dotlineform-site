@@ -41,9 +41,10 @@ Each completed batch should update:
 
 ### Batch 1: Catalogue Editor Route Shells
 
-**Status:** Completed on 2026-05-21.
+**Status:** Guardrail phase completed on 2026-05-21; score-moving follow-through remains.
 The shared route boot/readiness helper now owns required-element collection, config loading, save-mode projection, catalogue server probing, lookup-map loading, route busy/ready projection, and init-error copy fallback for the catalogue editor family.
 The route shells still own entity-specific field rendering, selection contexts, validation, import, membership, and action handoff.
+This batch should not be treated as closed for maintenance-score purposes until the score-moving slices in [JavaScript Maintenance Risk Mitigation](/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation) move state construction and event binding out of the remaining score-6 and score-7 route shells.
 
 **Primary files**
 
@@ -64,10 +65,12 @@ They share similar boot, lookup, route-state, dirty-state, form, and action hand
 2. Keep entity-specific fields and section rendering in existing entity modules; do not flatten work/detail/series/moment differences into one abstract editor.
 3. Add focused checks for the extracted boot/state helper using stubbed config, lookup, and server-availability inputs.
 4. Rescore the four route shells and any affected route-state helpers.
+5. Continue with route-local state factories and event binders where scores remain 6 or 7 after the shared guardrail extraction.
 
 **Expected score movement**
 
-The work/detail/series/moment route shells should each drop by 1 to 2 points if the extracted owner leaves them as orchestration shells with explicit inputs.
+The route shells should drop only after state construction, event binding, or another complete route-shell responsibility moves to a focused owner with direct checks.
+The 2026-05-21 guardrail slice did not justify lowering scores by itself.
 Most existing field, form, and section modules should stay at 4 or 5 unless their contracts change.
 
 **Verification**
@@ -77,10 +80,11 @@ The smoke imports the helper and the four refactored route shells, checks route 
 
 ### Batch 2: Catalogue Action Workflows
 
-**Status:** Completed on 2026-05-21.
+**Status:** Presentation-contract phase completed on 2026-05-21; action orchestration follow-through remains conditional.
 The shared catalogue action workflow helper now owns save/build outcome normalization and preview blocker extraction for publication and delete flows.
 The work, detail, series, and moment action modules still own entity-specific payload construction, local record updates, modal labels, and route handoff.
 Focused module smoke coverage checks the shared save result contract, delete/publication preview blocker shaping, and imports of the four action modules.
+This batch should be revisited only when a complete action responsibility such as service request/activity context construction or record mutation/reload follow-through can move to a focused owner with direct checks.
 
 **Primary files**
 

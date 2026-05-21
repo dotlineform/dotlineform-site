@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T19:01:27Z",
+  "generated_at": "2026-05-21T19:15:21Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2264,7 +2264,7 @@
       "source_path": "studio-javascript-payload-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-javascript-payload-inventory.json",
-      "content_text_length": 9232,
+      "content_text_length": 10015,
       "ui_status": "urgent"
     },
     {
@@ -2397,7 +2397,7 @@
       "source_path": "javascript-maintenance-risk-mitigation.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-maintenance-risk-mitigation.json",
-      "content_text_length": 17047,
+      "content_text_length": 29121,
       "ui_status": "in-progress"
     },
     {
@@ -2414,7 +2414,7 @@
       "source_path": "javascript-inventory-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-inventory-implementation-plan.json",
-      "content_text_length": 16109,
+      "content_text_length": 16916,
       "ui_status": "in-progress"
     },
     {

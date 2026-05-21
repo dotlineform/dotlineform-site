@@ -121,6 +121,15 @@ Avoid cosmetic splits that only move tiny helpers.
 A route entry module may remain above 4 if it legitimately coordinates multiple async sources, event wiring, route ready/busy state, and dynamic module activation.
 The target is not a thin pass-through layer; the target is a file whose remaining responsibilities are coherent and low risk.
 
+Maintenance mitigation slices must be classified before implementation:
+
+- **Score-moving slice:** expected to lower at least one target file's risk score because a complete responsibility moves to a focused owner with explicit inputs and focused checks.
+- **Guardrail slice:** pins a contract, smoke, or policy that prevents regression but is not expected to lower a score by itself.
+
+For score-6 and score-7 files, a mitigation batch should not close on guardrail slices alone.
+If a guardrail slice is needed first, the same task definition must name the follow-on score-moving slice, target score movement, and evidence required before rescoring.
+If the expected score movement does not happen, record that as a failed or partial mitigation decision rather than treating the batch as complete.
+
 ## Inventory Refresh Method
 
 Refresh the inventory from the current filesystem before starting a new batch.
