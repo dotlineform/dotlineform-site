@@ -1,0 +1,30 @@
+{
+  "id": "change-2026-05-21-extracted-shared-tag-modal-shell",
+  "date": "2026-05-21",
+  "title": "Extracted Shared Tag Modal Shell",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio-ui",
+    "workflow"
+  ],
+  "summary": "Extracted shared Tag Aliases and Tag Registry modal shell behavior into a focused helper while leaving family-specific modal rendering and validation in the route modal modules.",
+  "source": {
+    "file": "_docs/javascript-inventory-implementation-plan.md"
+  },
+  "subjects": [
+    "tag-modals",
+    "javascript-inventory"
+  ],
+  "related_docs": [
+    "javascript-inventory",
+    "javascript-inventory-implementation-plan"
+  ],
+  "related_files": [
+    "assets/studio/js/tag-modal-shell.js",
+    "assets/studio/js/tag-aliases-modals.js",
+    "assets/studio/js/tag-registry-modals.js",
+    "_docs/javascript-inventory.md",
+    "_docs/javascript-inventory-implementation-plan.md"
+  ]
+}

@@ -155,10 +155,16 @@ Use broader browser smoke only for future slices that materially change modal be
 
 ### Batch 4: Large Modal Modules
 
+**Status:** First tag-modal shell slice completed on 2026-05-21.
+Tag Aliases and Tag Registry now share a focused tag modal shell helper for open-modal detection, Escape/Tab focus lifecycle support, restore-focus handling, status projection, class composition, group-chip class projection, state attributes, and HTML escaping.
+Family-specific rendering, modal state, validation, and route callbacks remain in the aliases and registry modal modules.
+The Docs Viewer management modal remains a later Batch 4/5 boundary because its management-specific controller responsibilities differ from the Studio tag modal shell conventions.
+
 **Primary files**
 
 - `assets/studio/js/tag-aliases-modals.js`
 - `assets/studio/js/tag-registry-modals.js`
+- `assets/studio/js/tag-modal-shell.js`
 - `assets/docs-viewer/js/docs-viewer-management-modals.js`
 - related small modal helpers where they share the same shell conventions
 

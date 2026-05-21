@@ -17,8 +17,8 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 
 ## Summary
 
-- Browser JavaScript files under `assets/`: 148
-- Total browser JavaScript lines under `assets/`: 42,564
+- Browser JavaScript files under `assets/`: 149
+- Total browser JavaScript lines under `assets/`: 42,473
 - Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 57
 - Target score: 4, meaning every risk category is at the low-risk floor.
 
@@ -26,10 +26,10 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | ---: | ---: |
 | 9 | 1 |
 | 8 | 1 |
-| 7 | 9 |
-| 6 | 21 |
+| 7 | 7 |
+| 6 | 23 |
 | 5 | 26 |
-| 4 | 90 |
+| 4 | 91 |
 
 ## Current Inventory
 
@@ -44,8 +44,8 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | 7 | `assets/studio/js/tag-registry.js` | Tag routes | 2 | 2 | 2 | 1 | 7 | Tag registry route shell after render, import-mode, and workflow extraction. |
 | 8 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | Docs Viewer non-entry | 2 | 2 | 1 | 2 | 7 | Docs Viewer management support module. |
 | 9 | `assets/docs-viewer/js/docs-viewer-management.js` | Docs Viewer non-entry | 2 | 2 | 1 | 2 | 7 | Docs Viewer management coordinator. |
-| 10 | `assets/studio/js/tag-aliases-modals.js` | Tag routes | 2 | 2 | 1 | 2 | 7 | Tag modal rendering and lifecycle helper. |
-| 11 | `assets/studio/js/tag-registry-modals.js` | Tag routes | 2 | 2 | 1 | 2 | 7 | Tag registry modal lifecycle and modal rendering. |
+| 10 | `assets/studio/js/tag-aliases-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag modal rendering after shared shell/focus lifecycle extraction. |
+| 11 | `assets/studio/js/tag-registry-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag registry modal rendering after shared shell/focus lifecycle extraction. |
 | 12 | `assets/studio/js/tag-aliases.js` | Tag routes | 2 | 1 | 2 | 1 | 6 | Tag aliases route shell after mutation-state and workflow extraction. |
 | 13 | `assets/studio/js/catalogue-moment-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness helper extraction; import/action workflows remain separate. |
 | 14 | `assets/studio/js/catalogue-series-editor.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue editor route shell after shared boot/readiness helper extraction; membership/action workflows remain separate. |
@@ -183,6 +183,7 @@ The minimum possible score is 4 because each file receives a score of 1 to 3 for
 | 146 | `assets/studio/js/tag-aliases-state.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag aliases mutation-state projection helper. |
 | 147 | `assets/studio/js/tag-aliases-workflow.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag aliases save/import workflow fallback helper. |
 | 148 | `assets/studio/js/tag-studio-route-state.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Series tag editor route ready/busy projection helper. |
+| 149 | `assets/studio/js/tag-modal-shell.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Shared tag modal shell, focus lifecycle, status, and escaping helper. |
 
 ## Rerun Notes
 

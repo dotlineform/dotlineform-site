@@ -3,6 +3,20 @@ import {
   renderStudioModalActions,
   renderStudioModalFrame
 } from "./studio-modal.js";
+import {
+  captureTagModalRestoreFocus,
+  chipGroupClass as tagChipGroupClass,
+  classNames,
+  closeTagModalByKind,
+  escapeHtml,
+  getOpenTagModalKind,
+  getTagModalElement,
+  restoreTagModalFocus,
+  setStatusText as setTagModalStatusText,
+  stateAttr,
+  syncTagModalFocusAfterOpen,
+  trapTagModalFocus
+} from "./tag-modal-shell.js";
 import { tagRegistryUi } from "./studio-ui.js";
 
 const UI = tagRegistryUi;
@@ -199,27 +213,27 @@ export function wireTagRegistryModalEvents(state, callbacks = {}) {
   });
 
   document.addEventListener("keydown", (event) => {
-    const modalKind = getOpenTagRegistryModalKind(state);
+    const modalKind = getOpenTagModalKind(state, modalConfigs());
     if (!modalKind) return;
 
     if (event.key === "Escape") {
       event.preventDefault();
-      closeTagRegistryModalByKind(state, modalKind);
+      closeTagModalByKind(state, modalKind, tagRegistryModalCloseHandlers);
       callbacks.onModalStateChange?.();
       return;
     }
 
     if (event.key !== "Tab") return;
-    trapModalFocus(event, getTagRegistryModalElement(state, modalKind));
+    trapTagModalFocus(event, getTagModalElement(state, modalKind, modalConfigs()));
   });
 }
 
 export function showTagRegistryImportModal(state) {
-  captureModalRestoreFocus(state, "import");
+  captureTagModalRestoreFocus(state, "import", modalConfigs());
   state.importModalOpen = true;
   state.importModalFocusReady = false;
   state.refs.importModal.hidden = false;
-  syncModalFocusAfterOpen(state, "import");
+  syncTagModalFocusAfterOpen(state, "import", modalConfigs());
 }
 
 export function hideTagRegistryImportModal(state) {
@@ -228,7 +242,7 @@ export function hideTagRegistryImportModal(state) {
   state.importModalFocusReady = false;
   state.importModalRestoreFocus = null;
   state.refs.importModal.hidden = true;
-  restoreModalFocus(restoreTarget);
+  restoreTagModalFocus(restoreTarget);
 }
 
 export function setTagRegistrySelectedImportFile(state, file) {
@@ -255,12 +269,12 @@ export function clearTagRegistryImportResult(state) {
 }
 
 export function showTagRegistryPatchModal(state, snippet) {
-  captureModalRestoreFocus(state, "patch");
+  captureTagModalRestoreFocus(state, "patch", modalConfigs());
   state.patchSnippet = snippet;
   state.refs.patchSnippet.textContent = snippet;
   state.refs.patchModal.hidden = false;
   state.patchModalFocusReady = false;
-  syncModalFocusAfterOpen(state, "patch");
+  syncTagModalFocusAfterOpen(state, "patch", modalConfigs());
 }
 
 export function hideTagRegistryPatchModal(state) {
@@ -268,11 +282,11 @@ export function hideTagRegistryPatchModal(state) {
   state.refs.patchModal.hidden = true;
   state.patchModalFocusReady = false;
   state.patchModalRestoreFocus = null;
-  restoreModalFocus(restoreTarget);
+  restoreTagModalFocus(restoreTarget);
 }
 
 export function openTagRegistryEditModal(state, tag) {
-  captureModalRestoreFocus(state, "edit");
+  captureTagModalRestoreFocus(state, "edit", modalConfigs());
   const [, slug = ""] = String(tag.tagId || "").split(":", 2);
   state.editTagId = tag.tagId;
   state.refs.editTagId.innerHTML = `
@@ -291,7 +305,7 @@ export function openTagRegistryEditModal(state, tag) {
   );
   state.refs.editModal.hidden = false;
   state.editModalFocusReady = false;
-  syncModalFocusAfterOpen(state, "edit");
+  syncTagModalFocusAfterOpen(state, "edit", modalConfigs());
 }
 
 export function closeTagRegistryEditModal(state) {
@@ -302,11 +316,11 @@ export function closeTagRegistryEditModal(state) {
   state.editTagId = "";
   state.refs.editTagName.value = "";
   state.refs.editDescription.value = "";
-  restoreModalFocus(restoreTarget);
+  restoreTagModalFocus(restoreTarget);
 }
 
 export function openTagRegistryNewModal(state) {
-  captureModalRestoreFocus(state, "new");
+  captureTagModalRestoreFocus(state, "new", modalConfigs());
   state.newTagState = {
     group: "",
     slug: "",
@@ -320,7 +334,7 @@ export function openTagRegistryNewModal(state) {
   state.refs.createTag.disabled = true;
   state.refs.newModal.hidden = false;
   state.newModalFocusReady = false;
-  syncModalFocusAfterOpen(state, "new");
+  syncTagModalFocusAfterOpen(state, "new", modalConfigs());
 }
 
 export function closeTagRegistryNewModal(state) {
@@ -335,7 +349,7 @@ export function closeTagRegistryNewModal(state) {
   setStatusText(state.refs.newTagStatus, "", "");
   state.refs.newGroupKey.innerHTML = "";
   state.refs.createTag.disabled = true;
-  restoreModalFocus(restoreTarget);
+  restoreTagModalFocus(restoreTarget);
 }
 
 export function renderTagRegistryNewTagModalState(state, validation) {
@@ -348,7 +362,7 @@ export function renderTagRegistryNewTagModalState(state, validation) {
 }
 
 export function openTagRegistryDemoteModal(state, options) {
-  captureModalRestoreFocus(state, "demote");
+  captureTagModalRestoreFocus(state, "demote", modalConfigs());
   const tag = options && options.tag;
   const aliasKey = options && options.aliasKey ? options.aliasKey : tag.tagId;
   state.demoteState = {
@@ -366,7 +380,7 @@ export function openTagRegistryDemoteModal(state, options) {
   });
   state.refs.demoteModal.hidden = false;
   state.demoteModalFocusReady = false;
-  syncModalFocusAfterOpen(state, "demote");
+  syncTagModalFocusAfterOpen(state, "demote", modalConfigs());
 }
 
 export function closeTagRegistryDemoteModal(state) {
@@ -382,7 +396,7 @@ export function closeTagRegistryDemoteModal(state) {
   state.refs.confirmDemote.disabled = true;
   setStatusText(state.refs.demoteStatus, "", "");
   hideTagRegistryDemoteTagPopup(state);
-  restoreModalFocus(restoreTarget);
+  restoreTagModalFocus(restoreTarget);
 }
 
 export function renderTagRegistryDemoteSelectionState(state, options = {}) {
@@ -419,7 +433,7 @@ export function hideTagRegistryDemoteTagPopup(state) {
 }
 
 export function openTagRegistryDeleteModal(state, tag) {
-  captureModalRestoreFocus(state, "delete");
+  captureTagModalRestoreFocus(state, "delete", modalConfigs());
   state.deleteTagId = tag.tagId;
   state.deletePreview = "";
   state.deletePreviewSeq += 1;
@@ -429,7 +443,7 @@ export function openTagRegistryDeleteModal(state, tag) {
   state.refs.confirmDeleteTag.disabled = state.saveMode !== "post";
   state.refs.deleteModal.hidden = false;
   state.deleteModalFocusReady = false;
-  syncModalFocusAfterOpen(state, "delete");
+  syncTagModalFocusAfterOpen(state, "delete", modalConfigs());
 }
 
 export function closeTagRegistryDeleteModal(state) {
@@ -444,7 +458,7 @@ export function closeTagRegistryDeleteModal(state) {
   setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
   setStatusText(state.refs.deleteStatus, "", "");
   state.refs.confirmDeleteTag.disabled = false;
-  restoreModalFocus(restoreTarget);
+  restoreTagModalFocus(restoreTarget);
 }
 
 export function setTagRegistryDeleteImpactStatus(state, kind, message) {
@@ -634,103 +648,14 @@ function renderDeleteModal(state) {
   });
 }
 
-function closeTagRegistryModalByKind(state, modalKind) {
-  if (modalKind === "import") {
-    hideTagRegistryImportModal(state);
-    return;
-  }
-  if (modalKind === "patch") {
-    hideTagRegistryPatchModal(state);
-    return;
-  }
-  if (modalKind === "edit") {
-    closeTagRegistryEditModal(state);
-    return;
-  }
-  if (modalKind === "new") {
-    closeTagRegistryNewModal(state);
-    return;
-  }
-  if (modalKind === "demote") {
-    closeTagRegistryDemoteModal(state);
-    return;
-  }
-  if (modalKind === "delete") {
-    closeTagRegistryDeleteModal(state);
-  }
-}
-
-function getOpenTagRegistryModalKind(state) {
-  return modalConfigs().find((config) => {
-    const modal = state.refs[config.modalRef];
-    return Boolean(modal && !modal.hidden);
-  })?.kind || "";
-}
-
-function getTagRegistryModalElement(state, modalKind) {
-  const config = modalConfig(modalKind);
-  return config && state.refs[config.modalRef] ? state.refs[config.modalRef] : null;
-}
-
-function captureModalRestoreFocus(state, modalKind) {
-  const config = modalConfig(modalKind);
-  if (!config) return;
-  state[config.restoreProp] = document.activeElement;
-}
-
-function syncModalFocusAfterOpen(state, modalKind) {
-  const config = modalConfig(modalKind);
-  const modal = getTagRegistryModalElement(state, modalKind);
-  if (!config || !modal || modal.hidden) return;
-  if (state[config.focusProp] && modal.contains(document.activeElement)) return;
-  const target = modal.querySelector(config.focusSelector)
-    || modal.querySelector(`[data-role="${config.closeRole}"]`)
-    || modal.querySelector("[role='dialog']");
-  if (target && typeof target.focus === "function") target.focus();
-  state[config.focusProp] = true;
-}
-
-function trapModalFocus(event, modal) {
-  if (!modal) return;
-  const nodes = focusableNodes(modal);
-  if (!nodes.length) return;
-  const first = nodes[0];
-  const last = nodes[nodes.length - 1];
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault();
-    last.focus();
-    return;
-  }
-  if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
-  }
-}
-
-function focusableNodes(root) {
-  return Array.from(root.querySelectorAll([
-    "a[href]",
-    "button:not([disabled])",
-    "input:not([disabled])",
-    "select:not([disabled])",
-    "textarea:not([disabled])",
-    "[tabindex]:not([tabindex='-1'])"
-  ].join(","))).filter((node) => node.getClientRects().length);
-}
-
-function restoreModalFocus(target) {
-  try {
-    if (target && typeof target.focus === "function" && target.getClientRects().length) {
-      target.focus({ preventScroll: true });
-    }
-  } catch (_error) {
-    // Focus return is best effort when a route re-render removes the opener.
-  }
-}
-
-function modalConfig(modalKind) {
-  return modalConfigs().find((config) => config.kind === modalKind) || null;
-}
+const tagRegistryModalCloseHandlers = {
+  import: hideTagRegistryImportModal,
+  patch: hideTagRegistryPatchModal,
+  edit: closeTagRegistryEditModal,
+  new: closeTagRegistryNewModal,
+  demote: closeTagRegistryDemoteModal,
+  delete: closeTagRegistryDeleteModal
+};
 
 function modalConfigs() {
   return [
@@ -931,33 +856,9 @@ function registryText(config, key, fallback, tokens) {
 }
 
 function setStatusText(target, kind, message, baseClass = UI_CLASS.formStatus) {
-  if (!target) return;
-  target.textContent = message || "";
-  target.className = baseClass;
-  if (kind) {
-    target.dataset.state = kind;
-    return;
-  }
-  delete target.dataset.state;
-}
-
-function classNames(...tokens) {
-  return tokens.filter(Boolean).join(" ");
+  setTagModalStatusText(target, kind, message, baseClass);
 }
 
 function chipGroupClass(group) {
-  return `${UI_CLASS.chipGroupPrefix}${group}`;
-}
-
-function stateAttr(stateValue) {
-  return stateValue ? ` data-state="${escapeHtml(stateValue)}"` : "";
-}
-
-function escapeHtml(value) {
-  return String(value == null ? "" : value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+  return tagChipGroupClass(UI_CLASS, group);
 }

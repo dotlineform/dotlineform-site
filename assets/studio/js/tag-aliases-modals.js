@@ -3,6 +3,20 @@ import {
   renderStudioModalActions,
   renderStudioModalFrame
 } from "./studio-modal.js";
+import {
+  captureTagModalRestoreFocus,
+  chipGroupClass as tagChipGroupClass,
+  classNames,
+  closeTagModalByKind,
+  escapeHtml,
+  getOpenTagModalKind,
+  getTagModalElement,
+  restoreTagModalFocus,
+  setStatusText as setTagModalStatusText,
+  stateAttr,
+  syncTagModalFocusAfterOpen,
+  trapTagModalFocus
+} from "./tag-modal-shell.js";
 import { tagAliasesUi } from "./studio-ui.js";
 
 const UI = tagAliasesUi;
@@ -218,27 +232,27 @@ export function wireTagAliasesModalEvents(state, callbacks = {}) {
   });
 
   document.addEventListener("keydown", (event) => {
-    const modalKind = getOpenTagAliasesModalKind(state);
+    const modalKind = getOpenTagModalKind(state, modalConfigs());
     if (!modalKind) return;
 
     if (event.key === "Escape") {
       event.preventDefault();
-      closeTagAliasesModalByKind(state, modalKind);
+      closeTagModalByKind(state, modalKind, tagAliasesModalCloseHandlers);
       callbacks.onModalStateChange?.();
       return;
     }
 
     if (event.key !== "Tab") return;
-    trapModalFocus(event, getTagAliasesModalElement(state, modalKind));
+    trapTagModalFocus(event, getTagModalElement(state, modalKind, modalConfigs()));
   });
 }
 
 export function showTagAliasesImportModal(state) {
-  captureModalRestoreFocus(state, "import");
+  captureTagModalRestoreFocus(state, "import", modalConfigs());
   state.importModalOpen = true;
   state.importModalFocusReady = false;
   state.refs.importModal.hidden = false;
-  syncModalFocusAfterOpen(state, "import");
+  syncTagModalFocusAfterOpen(state, "import", modalConfigs());
 }
 
 export function hideTagAliasesImportModal(state) {
@@ -247,7 +261,7 @@ export function hideTagAliasesImportModal(state) {
   state.importModalFocusReady = false;
   state.importModalRestoreFocus = null;
   state.refs.importModal.hidden = true;
-  restoreModalFocus(restoreTarget);
+  restoreTagModalFocus(restoreTarget);
 }
 
 export function setTagAliasesSelectedImportFile(state, file) {
@@ -274,12 +288,12 @@ export function clearTagAliasesImportResult(state) {
 }
 
 export function showTagAliasesPatchModal(state, snippet) {
-  captureModalRestoreFocus(state, "patch");
+  captureTagModalRestoreFocus(state, "patch", modalConfigs());
   state.patchSnippet = snippet;
   state.refs.patchSnippet.textContent = snippet;
   state.refs.patchModal.hidden = false;
   state.patchModalFocusReady = false;
-  syncModalFocusAfterOpen(state, "patch");
+  syncTagModalFocusAfterOpen(state, "patch", modalConfigs());
 }
 
 export function hideTagAliasesPatchModal(state) {
@@ -287,11 +301,11 @@ export function hideTagAliasesPatchModal(state) {
   state.refs.patchModal.hidden = true;
   state.patchModalFocusReady = false;
   state.patchModalRestoreFocus = null;
-  restoreModalFocus(restoreTarget);
+  restoreTagModalFocus(restoreTarget);
 }
 
 export function openTagAliasesPromotionModal(state, aliasKey, suggestedGroup) {
-  captureModalRestoreFocus(state, "promotion");
+  captureTagModalRestoreFocus(state, "promotion", modalConfigs());
   state.promotionState = {
     aliasKey,
     group: getStudioGroups(state).includes(suggestedGroup) ? suggestedGroup : ""
@@ -299,7 +313,7 @@ export function openTagAliasesPromotionModal(state, aliasKey, suggestedGroup) {
   updateTagAliasesPromotionUi(state);
   state.refs.promotionModal.hidden = false;
   state.promotionModalFocusReady = false;
-  syncModalFocusAfterOpen(state, "promotion");
+  syncTagModalFocusAfterOpen(state, "promotion", modalConfigs());
 }
 
 export function closeTagAliasesPromotionModal(state) {
@@ -312,7 +326,7 @@ export function closeTagAliasesPromotionModal(state) {
   state.refs.promotionGroupKey.innerHTML = "";
   setTagAliasesPromotionStatus(state, "", "");
   state.refs.confirmPromotion.disabled = true;
-  restoreModalFocus(restoreTarget);
+  restoreTagModalFocus(restoreTarget);
 }
 
 export function updateTagAliasesPromotionUi(state) {
@@ -343,7 +357,7 @@ export function setTagAliasesDemoteStatus(state, kind, message) {
 }
 
 export function openTagAliasesDemoteModal(state, options) {
-  captureModalRestoreFocus(state, "demote");
+  captureTagModalRestoreFocus(state, "demote", modalConfigs());
   const canonicalTagId = options && options.canonicalTagId ? options.canonicalTagId : "";
   const aliasKey = options && options.aliasKey ? options.aliasKey : canonicalTagId;
   state.demoteState = {
@@ -368,7 +382,7 @@ export function openTagAliasesDemoteModal(state, options) {
   });
   state.refs.demoteModal.hidden = false;
   state.demoteModalFocusReady = false;
-  syncModalFocusAfterOpen(state, "demote");
+  syncTagModalFocusAfterOpen(state, "demote", modalConfigs());
 }
 
 export function closeTagAliasesDemoteModal(state) {
@@ -384,7 +398,7 @@ export function closeTagAliasesDemoteModal(state) {
   state.refs.confirmDemote.disabled = true;
   setTagAliasesDemoteStatus(state, "", "");
   hideTagAliasesDemoteTagPopup(state);
-  restoreModalFocus(restoreTarget);
+  restoreTagModalFocus(restoreTarget);
 }
 
 export function renderTagAliasesDemoteSelectionState(state, options = {}) {
@@ -424,7 +438,7 @@ export function setTagAliasesEditStatus(state, kind, message) {
 }
 
 export function openTagAliasesEditModal(state, entry) {
-  captureModalRestoreFocus(state, "edit");
+  captureTagModalRestoreFocus(state, "edit", modalConfigs());
   state.editState = {
     originalAlias: entry.alias,
     originalDescription: String(entry.description || "").trim(),
@@ -440,11 +454,11 @@ export function openTagAliasesEditModal(state, entry) {
   renderTagAliasesEditModalState(state);
   state.refs.editModal.hidden = false;
   state.editModalFocusReady = false;
-  syncModalFocusAfterOpen(state, "edit");
+  syncTagModalFocusAfterOpen(state, "edit", modalConfigs());
 }
 
 export function openTagAliasesCreateModal(state) {
-  captureModalRestoreFocus(state, "edit");
+  captureTagModalRestoreFocus(state, "edit", modalConfigs());
   state.editState = {
     originalAlias: "",
     originalDescription: "",
@@ -459,7 +473,7 @@ export function openTagAliasesCreateModal(state) {
   renderTagAliasesEditModalState(state);
   state.refs.editModal.hidden = false;
   state.editModalFocusReady = false;
-  syncModalFocusAfterOpen(state, "edit");
+  syncTagModalFocusAfterOpen(state, "edit", modalConfigs());
 }
 
 export function closeTagAliasesEditModal(state) {
@@ -477,7 +491,7 @@ export function closeTagAliasesEditModal(state) {
   state.refs.saveEditAlias.disabled = true;
   state.refs.editTagList.innerHTML = "";
   hideTagAliasesEditTagPopup(state);
-  restoreModalFocus(restoreTarget);
+  restoreTagModalFocus(restoreTarget);
 }
 
 export function renderTagAliasesEditModalState(state, options = {}) {
@@ -644,99 +658,13 @@ function renderEditModal(state) {
   });
 }
 
-function closeTagAliasesModalByKind(state, modalKind) {
-  if (modalKind === "import") {
-    hideTagAliasesImportModal(state);
-    return;
-  }
-  if (modalKind === "patch") {
-    hideTagAliasesPatchModal(state);
-    return;
-  }
-  if (modalKind === "promotion") {
-    closeTagAliasesPromotionModal(state);
-    return;
-  }
-  if (modalKind === "demote") {
-    closeTagAliasesDemoteModal(state);
-    return;
-  }
-  if (modalKind === "edit") {
-    closeTagAliasesEditModal(state);
-  }
-}
-
-function getOpenTagAliasesModalKind(state) {
-  return modalConfigs().find((config) => {
-    const modal = state.refs[config.modalRef];
-    return Boolean(modal && !modal.hidden);
-  })?.kind || "";
-}
-
-function getTagAliasesModalElement(state, modalKind) {
-  const config = modalConfig(modalKind);
-  return config && state.refs[config.modalRef] ? state.refs[config.modalRef] : null;
-}
-
-function captureModalRestoreFocus(state, modalKind) {
-  const config = modalConfig(modalKind);
-  if (!config) return;
-  state[config.restoreProp] = document.activeElement;
-}
-
-function syncModalFocusAfterOpen(state, modalKind) {
-  const config = modalConfig(modalKind);
-  const modal = getTagAliasesModalElement(state, modalKind);
-  if (!config || !modal || modal.hidden) return;
-  if (state[config.focusProp] && modal.contains(document.activeElement)) return;
-  const target = modal.querySelector(config.focusSelector)
-    || modal.querySelector(`[data-role="${config.closeRole}"]`)
-    || modal.querySelector("[role='dialog']");
-  if (target && typeof target.focus === "function") target.focus();
-  state[config.focusProp] = true;
-}
-
-function trapModalFocus(event, modal) {
-  if (!modal) return;
-  const nodes = focusableNodes(modal);
-  if (!nodes.length) return;
-  const first = nodes[0];
-  const last = nodes[nodes.length - 1];
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault();
-    last.focus();
-    return;
-  }
-  if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
-  }
-}
-
-function focusableNodes(root) {
-  return Array.from(root.querySelectorAll([
-    "a[href]",
-    "button:not([disabled])",
-    "input:not([disabled])",
-    "select:not([disabled])",
-    "textarea:not([disabled])",
-    "[tabindex]:not([tabindex='-1'])"
-  ].join(","))).filter((node) => node.getClientRects().length);
-}
-
-function restoreModalFocus(target) {
-  try {
-    if (target && typeof target.focus === "function" && target.getClientRects().length) {
-      target.focus({ preventScroll: true });
-    }
-  } catch (_error) {
-    // Focus return is best effort when a route re-render removes the opener.
-  }
-}
-
-function modalConfig(modalKind) {
-  return modalConfigs().find((config) => config.kind === modalKind) || null;
-}
+const tagAliasesModalCloseHandlers = {
+  import: hideTagAliasesImportModal,
+  patch: hideTagAliasesPatchModal,
+  promotion: closeTagAliasesPromotionModal,
+  demote: closeTagAliasesDemoteModal,
+  edit: closeTagAliasesEditModal
+};
 
 function modalConfigs() {
   return [
@@ -932,33 +860,9 @@ function aliasesText(config, key, fallback, tokens) {
 }
 
 function setStatusText(target, kind, message, baseClass = UI_CLASS.formStatus) {
-  if (!target) return;
-  target.textContent = message || "";
-  target.className = baseClass;
-  if (kind) {
-    target.dataset.state = kind;
-    return;
-  }
-  delete target.dataset.state;
-}
-
-function classNames(...tokens) {
-  return tokens.filter(Boolean).join(" ");
+  setTagModalStatusText(target, kind, message, baseClass);
 }
 
 function chipGroupClass(group) {
-  return `${UI_CLASS.chipGroupPrefix}${group}`;
-}
-
-function stateAttr(stateValue) {
-  return stateValue ? ` data-state="${escapeHtml(stateValue)}"` : "";
-}
-
-function escapeHtml(value) {
-  return String(value == null ? "" : value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+  return tagChipGroupClass(UI_CLASS, group);
 }
