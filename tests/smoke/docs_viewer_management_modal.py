@@ -770,6 +770,159 @@ def run_import_render_module_check(page: Page) -> None:
         raise AssertionError(f"source link data attributes changed: {state!r}")
 
 
+def run_import_workflow_module_check(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <main id="docsHtmlImportRoot">
+                <button id="docsHtmlImportRun" type="button"></button>
+                <button id="docsHtmlImportConfirm" type="button" hidden></button>
+                <button id="docsHtmlImportCancel" type="button" hidden></button>
+                <p id="docsHtmlImportStatus"></p>
+                <div id="docsHtmlImportWarning" hidden>
+                  <h3 id="docsHtmlImportCollisionHeading"></h3>
+                  <p id="docsHtmlImportCollisionBody"></p>
+                  <p id="docsHtmlImportCollisionMeta"></p>
+                </div>
+                <div id="docsHtmlImportResult" hidden>
+                  <h3 id="docsHtmlImportResultTitle"></h3>
+                  <dl id="docsHtmlImportResultGrid" class="docsViewerImport__resultGrid"></dl>
+                  <div id="docsHtmlImportWarnings" hidden>
+                    <h4 id="docsHtmlImportWarningsHeading"></h4>
+                    <ul id="docsHtmlImportWarningsList"></ul>
+                  </div>
+                </div>
+              </main>
+            `;
+            const workflow = await import('/assets/docs-viewer/js/docs-html-import-workflow.js');
+            const state = {
+                root: document.getElementById('docsHtmlImportRoot'),
+                config: {
+                    docs_html_import: {
+                        running_status: 'Running import.',
+                        overwrite_required: 'Overwrite required: {doc_id} ({title}).',
+                        collision_heading: 'Overwrite warning',
+                        collision_body: 'Collision body.',
+                        result_title: 'Imported',
+                        result_summary_counts: '{links} links, {images} images, {svg} SVG, {details} details blocks',
+                        warnings_heading: 'Warnings'
+                    }
+                },
+                managementBaseUrl: 'http://docs-management.test',
+                routePath: '/docs/?mode=manage&import=1',
+                runButton: document.getElementById('docsHtmlImportRun'),
+                confirmButton: document.getElementById('docsHtmlImportConfirm'),
+                cancelButton: document.getElementById('docsHtmlImportCancel'),
+                statusNode: document.getElementById('docsHtmlImportStatus'),
+                warningNode: document.getElementById('docsHtmlImportWarning'),
+                collisionHeadingNode: document.getElementById('docsHtmlImportCollisionHeading'),
+                collisionBodyNode: document.getElementById('docsHtmlImportCollisionBody'),
+                collisionMetaNode: document.getElementById('docsHtmlImportCollisionMeta'),
+                resultNode: document.getElementById('docsHtmlImportResult'),
+                resultTitleNode: document.getElementById('docsHtmlImportResultTitle'),
+                resultGridNode: document.getElementById('docsHtmlImportResultGrid'),
+                warningsWrap: document.getElementById('docsHtmlImportWarnings'),
+                warningsHeading: document.getElementById('docsHtmlImportWarningsHeading'),
+                warningsList: document.getElementById('docsHtmlImportWarningsList'),
+                pendingOverwriteDocId: '',
+                pendingOverwriteResolver: null,
+                replaceAllOverwrites: false
+            };
+            const requests = [];
+            const busyStates = [];
+            window.fetch = async (url, options = {}) => {
+                const body = options.body ? JSON.parse(options.body) : {};
+                requests.push({ url: String(url), body });
+                if (requests.length === 1) {
+                    return {
+                        ok: true,
+                        status: 200,
+                        json: async () => ({
+                            ok: true,
+                            preview_only: true,
+                            requires_overwrite_confirmation: true,
+                            collision: { doc_id: 'alpha', title: 'Alpha Doc' },
+                            import_preview: {
+                                source_format: 'html',
+                                source_stats: { links: 1, images: 0, svg: 0, details: 0 },
+                                warnings: ['Existing doc will be replaced.']
+                            },
+                            summary_text: 'Overwrite required.'
+                        })
+                    };
+                }
+                return {
+                    ok: true,
+                    status: 200,
+                    json: async () => ({
+                        ok: true,
+                        scope: 'library',
+                        doc_id: 'alpha',
+                        staged_filename: 'alpha.html',
+                        import_preview: {
+                            source_format: 'html',
+                            source_stats: { links: 1, images: 0, svg: 0, details: 0 },
+                            warnings: []
+                        },
+                        summary_text: 'Imported alpha.'
+                    })
+                };
+            };
+            const runPromise = workflow.runDocsHtmlImportWorkflow(state, {
+                files: [{ filename: 'alpha.html', source_format: 'html' }],
+                scope: 'library',
+                includePromptMeta: true,
+                onRunningChange: busy => busyStates.push({ busy, runDisabled: state.runButton.disabled })
+            });
+            for (let tries = 0; tries < 25 && !state.pendingOverwriteResolver; tries += 1) {
+                await new Promise(resolve => window.setTimeout(resolve, 0));
+            }
+            const confirmVisible = !state.warningNode.hidden && !state.confirmButton.hidden && state.statusNode.dataset.state === 'warn';
+            if (!state.pendingOverwriteResolver) {
+                throw new Error('overwrite resolver was not installed');
+            }
+            state.pendingOverwriteResolver('confirm');
+            await runPromise;
+            window.__docsHtmlImportWorkflowSmoke = {
+                requests,
+                busyStates,
+                confirmVisible,
+                status: state.statusNode.textContent.trim(),
+                statusState: state.statusNode.dataset.state || '',
+                resultHidden: state.resultNode.hidden,
+                warningHidden: state.warningNode.hidden,
+                runDisabled: state.runButton.disabled,
+                confirmDisabled: state.confirmButton.disabled,
+                pendingResolver: Boolean(state.pendingOverwriteResolver),
+                rows: Array.from(state.resultGridNode.querySelectorAll('dd')).map(node => node.textContent.trim())
+            };
+        }"""
+    )
+    state = page.evaluate("window.__docsHtmlImportWorkflowSmoke")
+    if len(state["requests"]) != 2:
+        raise AssertionError(f"workflow did not issue preview/write requests: {state!r}")
+    first_body = state["requests"][0]["body"]
+    second_body = state["requests"][1]["body"]
+    if first_body["scope"] != "library" or first_body["staged_filename"] != "alpha.html":
+        raise AssertionError(f"workflow initial request changed: {state!r}")
+    if first_body["include_prompt_meta"] is not True or first_body["confirm_overwrite"] is not False:
+        raise AssertionError(f"workflow initial request flags changed: {state!r}")
+    if second_body["overwrite_doc_id"] != "alpha" or second_body["confirm_overwrite"] is not True:
+        raise AssertionError(f"workflow overwrite request changed: {state!r}")
+    if second_body["activity_context"]["route"] != "/docs/?mode=manage&import=1":
+        raise AssertionError(f"workflow activity context route changed: {state!r}")
+    if not state["confirmVisible"]:
+        raise AssertionError(f"workflow did not expose overwrite confirmation: {state!r}")
+    if state["busyStates"] != [{"busy": True, "runDisabled": True}, {"busy": False, "runDisabled": False}]:
+        raise AssertionError(f"workflow busy transitions changed: {state!r}")
+    if state["status"] != "Imported alpha." or state["statusState"] != "success":
+        raise AssertionError(f"workflow success status changed: {state!r}")
+    if state["resultHidden"] or not state["warningHidden"] or state["runDisabled"] or state["confirmDisabled"] or state["pendingResolver"]:
+        raise AssertionError(f"workflow final UI state changed: {state!r}")
+    if state["rows"] != ["alpha", "1 links, 0 images, 0 SVG, 0 details blocks"]:
+        raise AssertionError(f"workflow result rows changed: {state!r}")
+
+
 def run_import_result_rows_check(page: Page) -> None:
     page.evaluate(
         """async () => {
@@ -1164,6 +1317,7 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
     run_transient_choice_check(page)
     run_filename_conflict_check(page)
     run_import_render_module_check(page)
+    run_import_workflow_module_check(page)
     run_import_result_rows_check(page)
     run_scope_lifecycle_create_payload_check(page)
     run_delete_confirm_idle_check(page)
@@ -1179,6 +1333,7 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
             "transient-choice",
             "filename-conflict",
             "import-render-module",
+            "import-workflow-module",
             "import-result-rows",
             "scope-lifecycle-create-payload",
             "delete-confirm-idle",
