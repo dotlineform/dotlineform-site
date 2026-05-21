@@ -180,15 +180,19 @@ Each section should summarise:
 - The route no longer owns analytics scoring interpretation, RAG/report markup, filter rendering, chip display, visible-row projection, or report sorting.
 - Scoring now lives in `assets/studio/js/analysis-tag-scoring.js`, and report/table rendering now lives in `assets/studio/js/series-tags-render.js` behind an explicit report input.
 - Focused smoke checks now cover score interpretation and Series Tags report/RAG display output without requiring full route boot.
-- Remaining risk comes from legitimate route orchestration plus still-inline offline session actions and import preview/apply service workflow.
-- The route is still eager and route-local, with several async data and service states, so future import/session changes should avoid rebuilding analytics or render behavior in the route shell.
+- Remaining risk comes from legitimate route orchestration plus still-inline rare/off-path offline session handling and import preview/apply service workflow.
+- Offline session support is retained as a useful fallback and implementation model, but it is not part of the current central workflow.
+- Because offline sessions are rare, they should be the next extraction priority across Series Tags and Series Tag Editor: normal route paths should not load, initialise, read, write, render, or overlay offline-session data unless the user explicitly opens or chooses the offline/session flow.
+- The route is still eager and route-local, with several async data and service states, so future import changes should avoid rebuilding analytics or render behavior in the route shell.
 
 **Direction**
 
 - Keep scoring calculation and RAG interpretation in `assets/studio/js/analysis-tag-scoring.js`.
 - Keep report/table rendering, row projection, tag chip display, and sort comparison in `assets/studio/js/series-tags-render.js`.
-- Keep route-shell work limited to boot, config/data loading, event wiring, route ready/busy state, modal coordination, and applying successful import/session changes back to local state.
-- If import preview/apply behavior or offline session actions grow materially, extract a focused workflow/service owner with explicit inputs for import payload, resolutions, activity context, and assignment reloads.
+- Keep route-shell work limited to boot, config/data loading, event wiring, route ready/busy state, modal coordination, and applying successful import changes back to local state.
+- Extract offline-session handling into an explicitly activated module shared by Series Tags and Series Tag Editor. It should not read local storage, prepare export payloads, render session modals, overlay staged offline rows, or stage failed saves on the default route/save path.
+- In Series Tag Editor, the current automatic save-failure fallback to offline session should become an explicit user action or confirmation as part of this extraction.
+- If import preview/apply behavior grows materially, extract a focused workflow/service owner with explicit inputs for import payload, resolutions, activity context, and assignment reloads.
 
 **Score Reduction Tasks**
 
@@ -198,7 +202,8 @@ Each section should summarise:
 | 2 | done | Moved Series Tags report/table rendering into `assets/studio/js/series-tags-render.js`, including RAG indicator markup, filters, chip display, visible-row projection, and sort comparison. |
 | 3 | done | Passed an explicit Series Tags report input from the route shell into `assets/studio/js/series-tags-render.js` instead of handing over broad route state. |
 | 4 | done | Added focused smoke checks for score interpretation and Series Tags report rendering/RAG display output. |
-| 5 | proposed | If import/session workflow changes materially, extract import preview/apply and offline-session action handling into a focused workflow/service module. Anticipated improvement: -1 from maintenance or structural risk. |
+| 5 | proposed | Next priority: extract offline-session handling for Series Tags and Series Tag Editor into a shared explicitly activated module that is not loaded or initialised until the user opens or chooses the offline/session flow. This should cover local-storage reads/writes, export payload preparation, session modal rendering/actions, staged offline-row overlay, and the Series Tag Editor save-failure fallback, which should become an explicit user action or confirmation. Tag Registry and Tag Aliases are out of scope because they do not currently use offline sessions. Anticipated improvement: -1 from maintenance and performance risk. |
+| 6 | proposed | If import preview/apply workflow changes materially, extract it into a focused workflow/service module. Anticipated improvement: -1 from maintenance or structural risk. |
 
 ### `assets/studio/js/data-sharing-prepare.js`
 
@@ -268,7 +273,7 @@ Each section should summarise:
 These files are the next five priorities after the top five detail set for the current pass.
 
 - `assets/studio/js/tag-aliases.js`: now a medium-risk reference state with useful render, modal, and import-mode owners. Revisit only when alias import parsing/submission changes materially.
-- `assets/studio/js/tag-studio.js`: medium risk because several good owners already exist. Keep new save, probe, offline, suggestion, and render behavior in those modules.
+- `assets/studio/js/tag-studio.js`: medium risk because several good owners already exist. It still uses offline-session fallback behavior through the Series Tag Editor save/state path; apply the same explicitly activated extraction policy there if that route is revisited. Tag Registry and Tag Aliases do not currently use offline sessions.
 - `assets/studio/js/data-sharing-review.js`: medium risk after apply-orchestration extraction. Keep returned-package loading, route readiness, and workflow-domain adapter policy small.
 - `assets/studio/js/tag-registry-modals.js`: large route-local modal module. Keep it modal-focused; split if modal workflows themselves gain separate complete responsibilities.
 - `assets/docs-viewer/js/docs-viewer-management.js`: Visit if management workflow growth reintroduces mixed ownership.
