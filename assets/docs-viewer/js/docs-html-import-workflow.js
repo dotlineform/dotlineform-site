@@ -77,11 +77,14 @@ function collisionDocId(payload) {
   return normalizeText(collision.doc_id);
 }
 
-export function docsHtmlImportManagementOptions(state) {
+export function docsHtmlImportManagementOptions({
+  managementBaseUrl = "",
+  config = {}
+} = {}) {
   return {
-    baseUrl: state.managementBaseUrl,
+    baseUrl: managementBaseUrl,
     serverNotConfiguredError: configText(
-      state.config || {},
+      config || {},
       "docs_html_import.server_not_configured",
       "Local docs-management server is not configured."
     ),
@@ -149,11 +152,9 @@ function awaitOverwriteConfirmation(state, payload) {
 }
 
 async function requestImport(
-  state,
   file,
+  context,
   {
-    scope,
-    includePromptMeta,
     overwriteDocId = "",
     confirmOverwrite = false,
     replacementDocId = ""
@@ -162,9 +163,9 @@ async function requestImport(
   const stagedFilename = normalizeText(file && file.filename);
   const normalizedReplacementDocId = normalizeText(replacementDocId);
   return fetchManagementJson("/docs/import-source", "POST", {
-    scope,
+    scope: context.scope,
     staged_filename: stagedFilename,
-    include_prompt_meta: docsHtmlImportSourceFormatForRecord(file) === "html" ? Boolean(includePromptMeta) : false,
+    include_prompt_meta: docsHtmlImportSourceFormatForRecord(file) === "html" ? Boolean(context.includePromptMeta) : false,
     overwrite_doc_id: overwriteDocId,
     confirm_overwrite: confirmOverwrite,
     replacement_doc_id: normalizedReplacementDocId,
@@ -172,13 +173,13 @@ async function requestImport(
     activity_context: buildActivityContext({
       pageId: "docs-import",
       actionId: "import-docs-source",
-      route: state.routePath || "/docs/",
+      route: context.routePath || "/docs/",
       controlId: "docsHtmlImportRun",
       controlSelector: "#docsHtmlImportRun",
       recordIdField: "staged_filename",
       recordId: stagedFilename
     })
-  }, docsHtmlImportManagementOptions(state));
+  }, docsHtmlImportManagementOptions(context));
 }
 
 async function importFileWithPrompts(state, file, context = {}) {
@@ -202,11 +203,13 @@ async function importFileWithPrompts(state, file, context = {}) {
         )
       );
     }
-    const payload = await requestImport(state, file, {
+    const payload = await requestImport(file, {
       scope: context.scope,
       includePromptMeta: context.includePromptMeta,
-      ...nextOptions
-    });
+      routePath: context.routePath,
+      managementBaseUrl: context.managementBaseUrl,
+      config: context.config
+    }, nextOptions);
 
     if (payload.preview_only && (payload.replacement_doc_id_required || payload.replacement_title_required)) {
       renderDocsHtmlImportWarnings(state, payload.import_preview && payload.import_preview.warnings);
@@ -265,9 +268,19 @@ export async function runDocsHtmlImportWorkflow(
     files = [],
     scope = "",
     includePromptMeta = false,
+    routePath = "/docs/",
+    managementBaseUrl = "",
+    config = {},
     onRunningChange = () => {}
   } = {}
 ) {
+  const workflowContext = {
+    scope: normalizeText(scope),
+    includePromptMeta: Boolean(includePromptMeta),
+    routePath: normalizeText(routePath) || "/docs/",
+    managementBaseUrl: normalizeText(managementBaseUrl),
+    config: config && typeof config === "object" ? config : {}
+  };
   state.replaceAllOverwrites = false;
   state.runButton.disabled = true;
   state.confirmButton.disabled = true;
@@ -285,8 +298,7 @@ export async function runDocsHtmlImportWorkflow(
       const result = await importFileWithPrompts(state, files[index], {
         index,
         total: files.length,
-        scope,
-        includePromptMeta
+        ...workflowContext
       });
       if (result.cancelled) {
         if (results.length) renderDocsHtmlImportResult(state, results);

@@ -35,16 +35,16 @@ Related follow-up should preserve `assets/docs-viewer/js/docs-viewer-sidebar.js`
 Measured on 2026-05-20 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
 - Docs Viewer browser JavaScript files in the full inventory: 30
-- Highest current Docs Viewer risk score: 10
+- Highest current Docs Viewer risk score: 9
 - High-priority Docs Viewer threshold: 9 or higher
-- Main remaining risk themes: Docs Import workflow ownership, shared runtime composition, management coordinator growth, and report/module review boundaries
+- Main remaining risk themes: Docs Import focused-check coverage, shared runtime composition, management coordinator growth, and report/module review boundaries
 
 ## Current Priorities
 
 | Docs rank | Full rank | File | Risk score | Focus |
 | ---: | ---: | --- | ---: | --- |
-| 1 | 3 | `assets/docs-viewer/js/docs-html-import.js` | 10 | Docs import preview/write workflow and result rendering. |
-| 2 | 4 | `assets/docs-viewer/js/docs-viewer.js` | 9 | Shared Docs Viewer runtime composition and route loading. |
+| 1 | 1 | `assets/docs-viewer/js/docs-html-import.js` | 9 | Docs import controller with explicit workflow handoff and remaining focused-check gap. |
+| 2 | 2 | `assets/docs-viewer/js/docs-viewer.js` | 9 | Shared Docs Viewer runtime composition and route loading. |
 | 3 | 8 | `assets/docs-viewer/js/docs-viewer-management.js` | 8 | Docs Viewer management coordinator. |
 | 4 | 19 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | 7 | Docs Viewer management support module. |
 | 5 | 25 | `assets/docs-viewer/js/reports/change-history-report.js` | 6 | Docs Viewer report module. |
@@ -78,13 +78,13 @@ Measured on 2026-05-20 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 
 ### `assets/docs-viewer/js/docs-html-import.js`
 
-- Risk score: 10
+- Risk score: 9
 - Classification: mixed management workflow controller
-- Current role: lazy Docs Import controller for staged source selection, preview, write, result rendering, activity context, and local management-service interaction
+- Current role: lazy Docs Import controller for staged source selection, scope selection, route readiness, and explicit preview/write workflow handoff
 
 **Why This Is Priority Work**
 
-- The file combines UI text loading, scope selection, file selection, import preview, confirmation, write calls, replacement decisions, result rendering, and management-service fallback handling.
+- The file still owns UI text loading, scope selection, staged file selection, management-service availability, and workflow handoff.
 - It is lazy and management-only, so transfer-size risk is secondary.
 - Maintenance risk remains high because Docs Import crosses HTML and Markdown conversion, media handling, create/overwrite semantics, and local write-service contracts.
 
@@ -101,7 +101,7 @@ Measured on 2026-05-20 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | ---: | --- | --- |
 | 1 | done | Moved import result rendering into `assets/docs-viewer/js/docs-html-import-render.js` for media plans, warnings, replacement docs, and final status markup. |
 | 2 | done | Extracted preview/write orchestration into `assets/docs-viewer/js/docs-html-import-workflow.js`, which owns service calls, replacement decisions, and write-mode transitions. |
-| 3 | proposed | Keep scope selection and route readiness in the controller with explicit inputs to conversion and workflow modules. Anticipated improvement: -1 from architectural risk. |
+| 3 | done | Kept scope selection and route readiness in the controller with explicit workflow inputs for scope, route path, management base URL, UI text config, and prompt-meta selection. |
 | 4 | proposed | Add focused checks for preview, replacement, write-mode fallback, and result rendering. Anticipated improvement: -1 from maintenance risk. |
 
 ### `assets/docs-viewer/js/docs-viewer.js`

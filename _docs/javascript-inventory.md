@@ -15,7 +15,7 @@ Measured on 2026-05-21 and rescored against the four-risk model.
 
 | Rank | File | Risk score | Focus |
 | ---: | --- | ---: | --- |
-| 1 | `assets/docs-viewer/js/docs-html-import.js` | 10 | Docs import preview/write workflow and result rendering. |
+| 1 | `assets/docs-viewer/js/docs-html-import.js` | 9 | Docs import controller with explicit workflow handoff and remaining focused-check gap. |
 | 2 | `assets/docs-viewer/js/docs-viewer.js` | 9 | Shared Docs Viewer runtime composition and route loading. |
 | 3 | `assets/studio/js/series-tags.js` | 9 | Series tag analytics route and RAG display. |
 | 4 | `assets/studio/js/data-sharing-prepare.js` | 8 | Data sharing package preparation route shell after workflow, render, service, and module-smoke coverage. |

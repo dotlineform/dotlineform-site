@@ -116,13 +116,13 @@ Each section should summarise:
 
 ### `assets/docs-viewer/js/docs-html-import.js`
 
-- Risk score: 10
+- Risk score: 9
 - Classification: mixed management workflow controller
 - Raw: 35.0 KiB
 
 **Why This Is Priority Work**
 
-- The file combines route-state emulation, UI text loading, scope selection, file selection, import preview, confirmation, write calls, result rendering, activity context, and management-service fallback handling.
+- The file still owns route-state emulation, UI text loading, scope selection, staged file selection, management-service availability, and workflow handoff.
 - It is lazy and management-only, so transfer-size risk is not the main reason to work on it.
 - The maintenance risk is high because Docs Import behavior spans HTML/Markdown conversion, media handling, create/overwrite semantics, and local write-service contracts.
 
@@ -138,7 +138,7 @@ Each section should summarise:
 | ---: | --- | --- |
 | 1 | done | Moved import result rendering into `assets/docs-viewer/js/docs-html-import-render.js` for media plans, warnings, replacement docs, and final status markup. |
 | 2 | done | Extracted preview/write orchestration into `assets/docs-viewer/js/docs-html-import-workflow.js`, which owns service calls, replacement decisions, and write-mode transitions. |
-| 3 | proposed | Keep scope selection and route readiness in the controller while passing explicit inputs to conversion and workflow modules. Anticipated improvement: -1 from architectural risk. |
+| 3 | done | Kept scope selection and route readiness in the controller while passing explicit workflow inputs for scope, route path, management base URL, UI text config, and prompt-meta selection. |
 | 4 | proposed | Add focused checks for preview, replacement, write-mode fallback, and result rendering. Anticipated improvement: -1 from maintenance risk. |
 
 ### `assets/docs-viewer/js/docs-viewer.js`

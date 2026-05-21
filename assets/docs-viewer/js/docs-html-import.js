@@ -186,8 +186,15 @@ function persistSelectedScope(state, scope) {
 
 const ALL_STAGED_FILES_VALUE = "__all_staged_import_files__";
 
+function managementOptionsForState(state) {
+  return docsHtmlImportManagementOptions({
+    managementBaseUrl: state.managementBaseUrl,
+    config: state.config
+  });
+}
+
 async function fetchImportFiles(state) {
-  const payload = await fetchManagementJson("/docs/import-source-files", "GET", undefined, docsHtmlImportManagementOptions(state));
+  const payload = await fetchManagementJson("/docs/import-source-files", "GET", undefined, managementOptionsForState(state));
   return Array.isArray(payload.files) ? payload.files : [];
 }
 
@@ -230,7 +237,7 @@ async function openResultSource(state, link) {
       scope,
       doc_id: docId,
       editor: "vscode"
-    }, docsHtmlImportManagementOptions(state));
+    }, managementOptionsForState(state));
   } catch (error) {
     console.warn("docs_html_import: open source failed", error);
     setStatus(
@@ -268,6 +275,9 @@ async function runImport(state) {
     files,
     scope,
     includePromptMeta: Boolean(state.includePromptMeta.checked),
+    routePath: state.routePath,
+    managementBaseUrl: state.managementBaseUrl,
+    config: state.config,
     onRunningChange: () => syncRouteBusyState(state)
   });
 }
@@ -354,7 +364,7 @@ export async function initDocsHtmlImport(options = {}) {
     state.config = await loadDocsViewerText(options.uiTextUrl || root.dataset.uiTextUrl || "/assets/docs-viewer/data/ui-text.json");
     state.docsScopeIds = await loadDocsViewerScopeOptions(options.docsViewerConfigUrl);
     state.managementBaseUrl = normalizeText(options.managementBaseUrl) || "http://127.0.0.1:8789";
-    const serviceAvailable = await fetchManagementJson("/health", "GET", undefined, docsHtmlImportManagementOptions(state))
+    const serviceAvailable = await fetchManagementJson("/health", "GET", undefined, managementOptionsForState(state))
       .then(() => true)
       .catch(() => false);
     state.serviceAvailable = Boolean(serviceAvailable);
