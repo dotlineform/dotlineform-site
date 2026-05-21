@@ -363,6 +363,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             ),
             "Smoke-check the Catalogue Series confirmation modal shell behavior.",
         ),
+        CheckCommand(
+            "tag-registry-module-smoke",
+            (
+                sys.executable,
+                "tests/smoke/tag_registry_modules.py",
+                "--site-root",
+                str(JEKYLL_DESTINATION),
+            ),
+            "Smoke-check Tag Registry render output, import-mode availability, and patch fallback behavior.",
+        ),
     ),
 }
 

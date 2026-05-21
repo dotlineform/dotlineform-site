@@ -141,7 +141,7 @@ Each section should summarise:
 | 1 | done | Moved list and control rendering into `assets/studio/js/tag-registry-render.js`, matching the Tag Aliases render boundary. |
 | 2 | done | Extracted import-mode probing into `assets/studio/js/tag-registry-import-mode.js`, mirroring the Tag Aliases import-mode boundary. |
 | 3 | done | Defined `assets/studio/js/tag-registry-workflow.js` as the service-orchestration boundary for save/import fallback decisions. |
-| 4 | proposed | Add focused verification for render output, import-mode availability, and fallback save behavior as each slice lands. Anticipated improvement: -1 from maintenance risk where logic no longer requires full route boot. |
+| 4 | done | Added focused verification for render output, import-mode availability, and fallback save behavior, without requiring full route boot. Anticipated improvement: -1 from maintenance risk where logic no longer requires full route boot. |
 
 ### `assets/studio/js/data-sharing-prepare.js`
 
