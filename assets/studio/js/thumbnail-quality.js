@@ -9,10 +9,14 @@ import {
   probeCatalogueHealth
 } from "./studio-transport.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
+  initializeStudioRouteState
 } from "./studio-route-state.js";
+import {
+  applyOperationalRunButtonState,
+  collectOperationalRouteElements,
+  markOperationalRouteReady,
+  syncOperationalRouteBusyState
+} from "./studio-operational-route.js";
 
 const UI_TEXT_GROUP = "thumbnail_quality";
 
@@ -51,18 +55,27 @@ function pageText(config, key, fallback, tokens = null) {
 function routeDetail(state, mode = "preview") {
   return {
     route: "thumbnail-quality",
-    mode,
-    service: state.catalogueServerAvailable ? "available" : "unavailable",
-    recordLoaded: Boolean(state.payload && Array.isArray(state.payload.rows) && state.payload.rows.length)
+    mode: () => mode,
+    serviceAvailable: (state) => state.catalogueServerAvailable,
+    isBusy: (state) => state.isBusy,
+    recordLoaded: (state) => Boolean(state.payload && Array.isArray(state.payload.rows) && state.payload.rows.length)
   };
 }
 
 function markBusy(state, busy, mode) {
-  setStudioRouteBusy(state.root, busy, routeDetail(state, mode));
+  state.isBusy = Boolean(busy);
+  syncOperationalRouteBusyState(state, routeDetail(state, mode));
 }
 
 function markReady(state, ready, mode) {
-  setStudioRouteReady(state.root, ready, routeDetail(state, mode));
+  markOperationalRouteReady(state, ready, routeDetail(state, mode));
+}
+
+function syncRefreshButtonState(state) {
+  applyOperationalRunButtonState(state.refreshButton, state, {
+    serviceAvailable: (routeState) => routeState.catalogueServerAvailable,
+    isBusy: (routeState) => routeState.isBusy
+  });
 }
 
 async function fetchJson(url) {
@@ -199,9 +212,9 @@ async function refreshPreview(state) {
     setStatus(state.resultNode, "error", pageText(state.config, "server_unavailable", "Start the catalogue service to refresh."));
     return;
   }
-  state.refreshButton.disabled = true;
-  setStatus(state.resultNode, "", pageText(state.config, "refreshing", "Refreshing thumbnail previews..."));
   markBusy(state, true, "refreshing");
+  syncRefreshButtonState(state);
+  setStatus(state.resultNode, "", pageText(state.config, "refreshing", "Refreshing thumbnail previews..."));
   try {
     state.payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.thumbnailQualityPreview, {});
     renderPayload(state);
@@ -212,8 +225,8 @@ async function refreshPreview(state) {
       error: normalizeText(error && error.message) || "unknown error"
     }));
   } finally {
-    state.refreshButton.disabled = false;
     markBusy(state, false, "preview");
+    syncRefreshButtonState(state);
   }
 }
 
@@ -227,7 +240,18 @@ async function initThumbnailQualityPage() {
   const settingsList = document.getElementById("thumbnailQualitySettingsList");
   const statusNode = document.getElementById("thumbnailQualityStatus");
   const resultNode = document.getElementById("thumbnailQualityResult");
-  if (!root || !loadingNode || !emptyNode || !refreshButton || !rowsNode || !seriesGrid || !settingsList || !statusNode || !resultNode) return;
+  const required = collectOperationalRouteElements({
+    root,
+    loadingNode,
+    emptyNode,
+    refreshButton,
+    rowsNode,
+    seriesGrid,
+    settingsList,
+    statusNode,
+    resultNode
+  });
+  if (!required.ok) return;
 
   const state = {
     root,
@@ -241,11 +265,12 @@ async function initThumbnailQualityPage() {
     resultNode,
     config: null,
     payload: null,
-    catalogueServerAvailable: false
+    catalogueServerAvailable: false,
+    isBusy: false
   };
 
   initializeStudioRouteState(root, { route: "thumbnail-quality", mode: "loading" });
-  setStudioRouteBusy(root, true, { route: "thumbnail-quality", mode: "loading" });
+  markBusy(state, true, "loading");
 
   try {
     const [config, catalogueServerAvailable] = await Promise.all([
@@ -254,6 +279,7 @@ async function initThumbnailQualityPage() {
     ]);
     state.config = config;
     state.catalogueServerAvailable = catalogueServerAvailable;
+    syncRefreshButtonState(state);
 
     setText(document.getElementById("thumbnailQualityPageHeading"), pageText(config, "heading", "thumbnail quality"));
     setText(document.getElementById("thumbnailQualitySettingsHeading"), pageText(config, "settings_heading", "settings"));
@@ -271,6 +297,7 @@ async function initThumbnailQualityPage() {
     loadingNode.hidden = true;
     root.hidden = false;
     markBusy(state, false, "preview");
+    syncRefreshButtonState(state);
     markReady(state, true, "preview");
   } catch (error) {
     console.warn("thumbnail_quality: init failed", error);

@@ -19,8 +19,8 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 
 ## Summary
 
-- Browser JavaScript files under `assets/`: 167
-- Total browser JavaScript lines under `assets/`: 44,019
+- Browser JavaScript files under `assets/`: 170
+- Total browser JavaScript lines under `assets/`: 44,367
 - Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 55
 - Target score: 4 or lower, with 4 meaning every risk category is present but low.
 
@@ -29,9 +29,9 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 9 | 0 |
 | 8 | 1 |
 | 7 | 0 |
-| 6 | 23 |
-| 5 | 32 |
-| 4 | 111 |
+| 6 | 17 |
+| 5 | 37 |
+| 4 | 115 |
 
 ## Current Inventory
 
@@ -41,9 +41,9 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 2 | `assets/studio/js/tag-studio.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Series tag editor route shell after shared route-state projection, shared save-mode re-probe lifecycle extraction, and selected-work/tag-entry interaction state extraction; route boot, shell rendering, event wiring, save handoff, and status/result rendering remain route-local. |
 | 3 | `assets/studio/js/catalogue-work-actions.js` | Catalogue editors | 2 | 1 | 2 | 1 | 6 | Work action coordinator after shared save/build/action presentation projection, bulk build-target projection, and Work action record/store sync extraction; service request construction, action sequencing, route refresh, delete navigation, and media refresh remain route-local. |
 | 4 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue work route shell after state construction moved to `catalogue-work-editor-state.js` and DOM event binding moved to `catalogue-work-editor-events.js`; validation, update coordination, selection/action context handoff, and Work-specific route-state transitions remain route-local. |
-| 5 | `assets/studio/js/bulk-add-work.js` | Studio routes and shared runtime | 2 | 1 | 2 | 1 | 6 | Bulk import/add route shell after shared operational route-state, required-element, service-status, and run-button projection helper adoption; preview/apply result rendering and workbook workflow remain route-local. |
+| 5 | `assets/studio/js/bulk-add-work.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Bulk import/add route shell after shared operational route helper adoption and preview/apply workflow extraction; endpoint calls, activity context, service probing, and event handoff remain route-local. |
 | 6 | `assets/studio/js/tag-registry.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag registry route shell after render, modal lifecycle, import-mode, service workflow, shared save-session, and modal workflow extraction; list/filter route handoff and import orchestration remain route-local. |
-| 7 | `assets/js/catalogue-search.js` | Public runtime | 2 | 2 | 1 | 1 | 6 | Public catalogue/search route runtime after lazy performance instrumentation loading, query-token reuse, and cached list expansion. |
+| 7 | `assets/js/catalogue-search.js` | Public runtime | 2 | 1 | 1 | 1 | 5 | Public catalogue/search route shell after query normalization/evaluation, result ordering, result HTML projection, and metric view-model construction moved to `search/catalogue-search-runtime.js`; route loading, policy/config handoff, DOM event wiring, and instrumentation recording remain local. |
 | 8 | `assets/docs-viewer/js/docs-viewer-management.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management coordinator after shared action workflow helper extraction. |
 | 9 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management modal controller after transient modal shell and metadata parent-picker extraction. |
 | 10 | `assets/studio/js/tag-aliases-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag modal rendering after shared shell/focus lifecycle extraction. |
@@ -60,20 +60,20 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 21 | `assets/studio/js/catalogue-moment-import.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue route support module. |
 | 22 | `assets/studio/js/catalogue-work-sections.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue section rendering/helper. |
 | 23 | `assets/studio/js/data-sharing-prepare.js` | Data sharing | 2 | 2 | 1 | 1 | 6 | Data sharing package preparation route shell after workflow, render, service, and module-smoke coverage. |
-| 24 | `assets/studio/js/data-sharing-review.js` | Data sharing | 2 | 2 | 1 | 1 | 6 | Returned-package review route shell and file/state coordination. |
+| 24 | `assets/studio/js/data-sharing-review.js` | Data sharing | 2 | 1 | 1 | 1 | 5 | Returned-package review route shell after scope/action normalization, apply-action menu state, preview selection state, and result-button projection moved to `data-sharing-review-workflow.js`; service requests, result modal handoff, and route boot remain local. |
 | 25 | `assets/studio/js/docs-broken-links.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Docs broken-links audit route after shared operational route-state, required-element, service-status, and run-button projection helper adoption; scope selection, audit request payloads, sorting, and result rendering remain route-local. |
-| 26 | `assets/studio/js/project-state.js` | Studio routes and shared runtime | 2 | 2 | 1 | 1 | 6 | Project state route workflow. |
+| 26 | `assets/studio/js/project-state.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Project state route after shared operational required-element, route-state, service-status, and run/open button projection helper adoption; report rendering, service calls, and activity context remain route-local. |
 | 27 | `assets/studio/js/catalogue-status.js` | Studio routes and shared runtime | 2 | 1 | 2 | 1 | 6 | Catalogue status route/helper. |
 | 28 | `assets/studio/js/series-tags.js` | Tag routes | 2 | 1 | 2 | 1 | 6 | Series Tags route shell after scoring, report rendering, and offline-session activation extraction. |
-| 29 | `assets/studio/js/studio-audits.js` | Studio routes and shared runtime | 2 | 1 | 2 | 1 | 6 | Studio audit route workflow. |
+| 29 | `assets/studio/js/studio-audits.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Studio audit route after shared operational required-element, ready/busy projection, and audit run-button state adoption; audit normalization, result rendering, and service sequencing remain route-local. |
 | 30 | `assets/studio/js/studio-works.js` | Studio routes and shared runtime | 2 | 1 | 2 | 1 | 6 | Browser runtime support module. |
-| 31 | `assets/studio/js/thumbnail-quality.js` | Studio routes and shared runtime | 2 | 1 | 2 | 1 | 6 | Thumbnail quality route workflow. |
+| 31 | `assets/studio/js/thumbnail-quality.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Thumbnail quality route after shared operational required-element, ready/busy projection, and refresh-button service gating adoption; payload rendering and preview refresh sequencing remain route-local. |
 | 32 | `assets/docs-viewer/js/docs-html-import.js` | Docs Viewer non-entry | 2 | 1 | 1 | 2 | 6 | Docs import controller after explicit workflow handoff and focused module-smoke coverage. |
 | 33 | `assets/studio/js/catalogue-moment-actions.js` | Catalogue editors | 2 | 1 | 1 | 1 | 5 | Moment action coordinator after shared preview blocker extraction, save/build normalization, and shared action presentation projection. |
 | 34 | `assets/docs-viewer/js/docs-html-import-workflow.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs import preview/write workflow helper. |
 | 35 | `assets/docs-viewer/js/docs-viewer-config-controller.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs Viewer config/scope setup. |
 | 36 | `assets/docs-viewer/js/docs-viewer-search-controller.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs Viewer search helper or controller. |
-| 37 | `assets/js/work.js` | Public runtime | 2 | 1 | 1 | 1 | 5 | Public site runtime module. |
+| 37 | `assets/js/work.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public work route shell after series link, back-link, and prev/next navigation projection moved to `public-catalogue-runtime.js`; DOM insertion, series-index loading, refresh handoff, and keyboard navigation remain local. |
 | 38 | `assets/studio/js/activity-log.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Activity log or activity context support. |
 | 39 | `assets/studio/js/catalogue-field-registry-review.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Catalogue route support module. |
 | 40 | `assets/studio/js/catalogue-series-selection.js` | Catalogue editors | 2 | 1 | 1 | 1 | 5 | Catalogue selection UI helper. |
@@ -113,7 +113,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 74 | `assets/docs-viewer/js/reports/reports-list-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 75 | `assets/docs-viewer/js/reports/semantic-references-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 76 | `assets/docs-viewer/js/reports/source-config-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 77 | `assets/js/public-catalogue-runtime.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public site runtime module. |
+| 77 | `assets/js/public-catalogue-runtime.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public catalogue URL, payload, thumbnail, and work navigation projection helper. |
 | 78 | `assets/js/moment.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public moment route runtime after shared public catalogue runtime helper adoption. |
 | 79 | `assets/js/search/search-performance.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public catalogue/search route runtime. |
 | 80 | `assets/js/search/search-policy.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public catalogue/search route runtime. |
@@ -204,6 +204,9 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 165 | `assets/studio/js/tag-route-save-session.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Shared Tag route save-session helper for service probing, patch fallback state, busy wrapping, focus/pageshow re-probing, and patch-result view projection. |
 | 166 | `assets/studio/js/tag-registry-modal-workflow.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag Registry modal workflow owner for create/edit/delete/demote state transitions, validation projection, and apply-result handoff. |
 | 167 | `assets/studio/js/studio-operational-route.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Shared operational Studio route helper for required elements, ready/busy projection, service availability display, and run-button disabled state. |
+| 168 | `assets/studio/js/bulk-add-work-workflow.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Bulk Add Work preview/apply workflow owner for summary rendering, blocked-row details, run-state projection, and status/result shaping. |
+| 169 | `assets/studio/js/data-sharing-review-workflow.js` | Data sharing | 1 | 1 | 1 | 1 | 4 | Data Sharing review workflow owner for scope/action normalization, apply-action menu state, selected preview state, control disabled projection, and result-button visibility. |
+| 170 | `assets/js/search/catalogue-search-runtime.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public catalogue search runtime owner for entry normalization, query matching, result ordering, result HTML projection, cache reuse, and query metric projection. |
 
 ## Rerun Notes
 

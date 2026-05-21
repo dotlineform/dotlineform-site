@@ -19,6 +19,21 @@ ROUTES = [
         "root": "#docsBrokenLinksRoot",
         "button": "#docsBrokenLinksRun",
     },
+    {
+        "path": "/studio/project-state/",
+        "root": "#projectStateRoot",
+        "button": "#projectStateRunButton",
+    },
+    {
+        "path": "/studio/audits/",
+        "root": "#studioAuditsRoot",
+        "button": "[data-run-audit]",
+    },
+    {
+        "path": "/studio/thumbnail-quality/",
+        "root": "#thumbnailQualityRoot",
+        "button": "#thumbnailQualityRefreshButton",
+    },
 ]
 
 
@@ -30,6 +45,7 @@ def run(base_url: str) -> None:
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.route("http://127.0.0.1:8788/**", lambda route: route.abort())
         page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
+        page.route("http://127.0.0.1:8790/**", lambda route: route.abort())
         for route in ROUTES:
             page.goto(f"{base_url.rstrip('/')}{route['path']}", wait_until="domcontentloaded")
             root = page.locator(route["root"])

@@ -16,39 +16,45 @@ import {
 import { runDataSharingReviewApplyAction } from "./data-sharing-review-apply.js";
 import {
   buildDataSharingReviewPreviewRows,
-  renderDataSharingReviewPreviewList,
-  selectableDataSharingReviewPreviewIds,
-  selectedDataSharingReviewRecordIndices,
-  syncDataSharingReviewPreviewCheckboxes,
-  updateDataSharingReviewSelectionFromChange,
-  updateDataSharingReviewSelectionSummary
+  renderDataSharingReviewPreviewList
 } from "./data-sharing-review-render.js";
 import {
   workflowCapabilityForOperation,
-  workflowDomainForKey,
-  workflowDomainFromUrl,
   workflowDomainIsActive,
-  workflowScopeParamForKey,
   workflowDomainsForOperation
 } from "./data-sharing-adapters.js";
-
-const DEFAULT_SCOPE = "library";
-const WORKFLOW_SCOPES = [
-  { key: "library", labelKey: "scope_library", fallback: "library" },
-  { key: "tags", labelKey: "scope_tags", fallback: "tags" }
-];
+import {
+  DATA_SHARING_REVIEW_SCOPES,
+  clearDataSharingReviewPreviewSelection,
+  dataSharingReviewApplyActionsForCapability,
+  dataSharingReviewScopeLabel,
+  dataSharingReviewScopeSupportsApply,
+  dataSharingReviewScopeTitle,
+  dataSharingReviewScopeUnavailableMessage,
+  escapeDataSharingReviewHtml,
+  handleDataSharingReviewPreviewListChange,
+  hideDataSharingReviewApplyActionsMenu,
+  hideDataSharingReviewResultButton,
+  maybeShowDataSharingReviewResultButton,
+  normalizeDataSharingReviewText,
+  renderDataSharingReviewApplyActions,
+  renderDataSharingReviewScopeSelect,
+  resetDataSharingReviewResult,
+  selectAllDataSharingReviewPreviewRows,
+  selectedDataSharingReviewFile,
+  setDataSharingReviewControlsDisabled,
+  toggleDataSharingReviewApplyActionsMenu,
+  updateDataSharingReviewScopeUrl,
+  updateDataSharingReviewSelectionState,
+  workflowScopeFromDataSharingReviewUrl
+} from "./data-sharing-review-workflow.js";
 
 function normalizeText(value) {
-  return String(value == null ? "" : value).trim();
+  return normalizeDataSharingReviewText(value);
 }
 
 function escapeHtml(value) {
-  return normalizeText(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+  return escapeDataSharingReviewHtml(value);
 }
 
 function setText(node, value) {
@@ -66,154 +72,6 @@ function setStatus(node, state, message) {
   }
 }
 
-function workflowScopeFromUrl(domains = WORKFLOW_SCOPES) {
-  return workflowDomainFromUrl(domains, DEFAULT_SCOPE);
-}
-
-function scopeSupportsSourceApply(state) {
-  return state.applyActions.some((action) => action.status === "active");
-}
-
-function scopeLabel(state, scope = state.scope) {
-  const item = workflowDomainForKey(state.workflowScopes, scope) || WORKFLOW_SCOPES[0];
-  if (item.labelKey) return getStudioText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback);
-  return normalizeText(item.label) || item.fallback || scope;
-}
-
-function scopeTitle(state, scope = state.scope) {
-  const label = scopeLabel(state, scope);
-  return label ? label.charAt(0).toUpperCase() + label.slice(1) : scope;
-}
-
-function normalizeId(value) {
-  return normalizeText(value).toLowerCase();
-}
-
-function actionUi(action) {
-  return action && action.ui && typeof action.ui === "object" ? action.ui : {};
-}
-
-function actionResult(action) {
-  return action && action.result && typeof action.result === "object" ? action.result : {};
-}
-
-function normalizeApplyAction(action, index) {
-  if (!action || typeof action !== "object") return null;
-  const id = normalizeText(action.id);
-  if (!id) return null;
-  const ui = actionUi(action);
-  return {
-    ...action,
-    id,
-    status: normalizeId(action.status) || "active",
-    label: normalizeText(action.label) || id,
-    controlId: normalizeText(ui.control_id) || `dataSharingReviewApplyAction${index + 1}`,
-    controlSelector: normalizeText(ui.control_selector) || "",
-    activityActionId: normalizeText(ui.activity_action_id) || `apply-returned-${id.replace(/_/g, "-")}`,
-    selectionRequiredMessage: normalizeText(ui.selection_required_message),
-    preflightStatus: normalizeText(ui.preflight_status),
-    runningStatus: normalizeText(ui.running_status),
-    cancelledStatus: normalizeText(ui.cancelled_status),
-    successStatus: normalizeText(ui.success_status),
-    failedStatus: normalizeText(ui.failed_status),
-    unavailableTitle: normalizeText(ui.unavailable_title),
-    noChangeCountKey: normalizeText(ui.no_change_count_key),
-    resultTitle: normalizeText(actionResult(action).title),
-    countText: normalizeText(actionResult(action).count_text),
-    countRows: Array.isArray(actionResult(action).count_rows) ? actionResult(action).count_rows : []
-  };
-}
-
-function applyActionsForCapability(capability) {
-  const rawActions = Array.isArray(capability && capability.apply_actions) ? capability.apply_actions : [];
-  return rawActions.map(normalizeApplyAction).filter(Boolean);
-}
-
-function renderScopeSelect(state) {
-  state.scopeSelect.innerHTML = state.workflowScopes.map((item) => {
-    const label = item.labelKey
-      ? getStudioText(state.config, `data_sharing_review.${item.labelKey}`, item.fallback)
-      : (normalizeText(item.label) || item.fallback);
-    const selected = item.key === state.scope ? " selected" : "";
-    return `<option value="${escapeHtml(item.key)}"${selected}>${escapeHtml(label)}</option>`;
-  }).join("");
-}
-
-function hideApplyActionsMenu(state) {
-  if (!state || !state.applyActionMenu || !state.actionMenuButton) return;
-  state.applyActionMenu.hidden = true;
-  state.applyActionMenu.style.left = "";
-  state.applyActionMenu.style.top = "";
-  state.applyActionMenu.style.minWidth = "";
-  state.actionMenuButton.setAttribute("aria-expanded", "false");
-}
-
-function positionApplyActionsMenu(state) {
-  if (!state || !state.applyActionMenu || !state.actionMenuButton) return;
-  const triggerRect = state.actionMenuButton.getBoundingClientRect();
-  state.applyActionMenu.style.left = "0px";
-  state.applyActionMenu.style.top = "0px";
-  state.applyActionMenu.style.minWidth = `${Math.max(triggerRect.width, 176)}px`;
-  const menuRect = state.applyActionMenu.getBoundingClientRect();
-  const maxLeft = Math.max(8, window.innerWidth - menuRect.width - 8);
-  const maxTop = Math.max(8, window.innerHeight - menuRect.height - 8);
-  state.applyActionMenu.style.left = `${Math.min(triggerRect.left, maxLeft)}px`;
-  state.applyActionMenu.style.top = `${Math.min(triggerRect.bottom + 6, maxTop)}px`;
-}
-
-function showApplyActionsMenu(state) {
-  if (!state || !state.applyActionMenu || !state.actionMenuButton || state.actionMenuButton.disabled) return;
-  if (!state.applyButtons.size) return;
-  state.applyActionMenu.hidden = false;
-  state.actionMenuButton.setAttribute("aria-expanded", "true");
-  positionApplyActionsMenu(state);
-}
-
-function toggleApplyActionsMenu(state) {
-  if (!state || !state.applyActionMenu || state.applyActionMenu.hidden) {
-    showApplyActionsMenu(state);
-    return;
-  }
-  hideApplyActionsMenu(state);
-}
-
-function renderApplyActions(state) {
-  state.applyButtons.clear();
-  state.applyActionMenu.innerHTML = "";
-  const actions = state.applyActions.length
-    ? state.applyActions
-    : [];
-  actions.forEach((action) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "dataSharingReviewPage__actionMenuItem";
-    button.id = action.controlId;
-    button.setAttribute("role", "menuitem");
-    button.dataset.dataSharingApplyAction = action.id;
-    button.textContent = action.label;
-    button.disabled = true;
-    button.title = action.status === "active"
-      ? normalizeText(action.title)
-      : (action.unavailableTitle || scopeUnavailableMessage(state));
-    state.applyActionMenu.appendChild(button);
-    state.applyButtons.set(action.id, button);
-  });
-  hideApplyActionsMenu(state);
-}
-
-function updateScopeUrl(scope, domains = WORKFLOW_SCOPES) {
-  const nextScope = normalizeText(scope).toLowerCase();
-  if (!domains.some((item) => item.key === nextScope)) return;
-  const scopeParam = workflowScopeParamForKey(domains, nextScope);
-  const url = new URL(window.location.href);
-  if (nextScope === DEFAULT_SCOPE) {
-    url.searchParams.delete("scope");
-  } else {
-    url.searchParams.set("scope", scopeParam);
-  }
-  window.location.href = url.toString();
-}
-
 async function loadJson(path) {
   const response = await fetch(path, { cache: "no-store" });
   if (!response.ok) {
@@ -226,17 +84,6 @@ async function loadAdapterRegistry(config) {
   const registryPath = getStudioDataPath(config, "data_sharing_adapters")
     || "/assets/studio/data/data_sharing_adapters.json";
   return loadJson(registryPath);
-}
-
-function scopeUnavailableMessage(state) {
-  const domain = workflowDomainForKey(state.workflowScopes, state.scope);
-  return normalizeText(domain && domain.message)
-    || getStudioText(
-      state.config,
-      "data_sharing_review.scope_unsupported",
-      "{scope_label} returned-package review is not implemented yet.",
-      { scope_label: scopeTitle(state) }
-    );
 }
 
 function routeModeForState(state) {
@@ -262,40 +109,6 @@ function syncRouteBusyState(state) {
 
 function markRouteReady(state, ready) {
   setStudioRouteReady(state.root, ready, routeStateDetail(state));
-}
-
-function selectedFile(state) {
-  const filename = normalizeText(state.fileSelect.value);
-  return state.files.find((file) => normalizeText(file.filename) === filename) || null;
-}
-
-function resetResult(state) {
-  state.selectedPreviewIds.clear();
-  state.previewRows = [];
-  renderDataSharingReviewPreviewList(state);
-  updateSelectionSummary(state);
-}
-
-function hideResultButton(state) {
-  if (!state || !state.resultButton) return;
-  state.resultButton.hidden = true;
-}
-
-function maybeShowResultButton(state, summary) {
-  if (!state || !state.resultButton || !state.lastImportResult) return;
-  const currentSummary = normalizeText(summary);
-  state.resultButton.hidden = !currentSummary || currentSummary !== state.lastImportResult.summary;
-}
-
-
-function updateSelectionSummary(state) {
-  updateDataSharingReviewSelectionSummary(state);
-  syncApplyActionState(state);
-}
-
-function handlePreviewListChange(state, event) {
-  if (!updateDataSharingReviewSelectionFromChange(state, event)) return;
-  updateSelectionSummary(state);
 }
 
 function previewCountRows(state, counts) {
@@ -338,46 +151,9 @@ function renderResult(state, payload, failed = false) {
   state.previewRows = failed ? [] : buildDataSharingReviewPreviewRows(state, payload);
   state.selectedPreviewIds.clear();
   renderDataSharingReviewPreviewList(state);
-  updateSelectionSummary(state);
+  updateDataSharingReviewSelectionState(state);
   state.lastImportResult = failed ? null : result;
   showDataSharingReviewResultModal(state, result, { restoreFocus: state.previewButton });
-}
-
-function setControlsDisabled(state, disabled) {
-  const supportsApply = scopeSupportsSourceApply(state);
-  const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
-  const disableApplyMenu = disabled || !supportsApply || !state.serviceAvailable || !state.applyButtons.size;
-  state.fileSelect.disabled = disabled || !state.files.length;
-  state.previewButton.disabled = disabled || !state.serviceAvailable || !state.files.length;
-  state.selectAllButton.disabled = disabled || !state.previewRows.length;
-  state.clearButton.disabled = disabled || !state.previewRows.length;
-  state.actionMenuButton.disabled = disableApplyMenu;
-  if (disableApplyMenu) hideApplyActionsMenu(state);
-  state.applyButtons.forEach((button, actionId) => {
-    const action = state.applyActions.find((item) => item.id === actionId);
-    const disabledForSelection = !selectedRecordCount;
-    button.disabled = disabled || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || disabledForSelection;
-    button.title = disabledForSelection
-      ? (action && action.selectionRequiredMessage) || getStudioText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
-      : normalizeText(action && action.title);
-  });
-}
-
-function syncApplyActionState(state) {
-  const supportsApply = scopeSupportsSourceApply(state);
-  const selectedRecordCount = selectedDataSharingReviewRecordIndices(state).length;
-  const disableApplyMenu = state.isRunning || !supportsApply || !state.serviceAvailable || !state.applyButtons.size;
-  state.actionMenuButton.disabled = disableApplyMenu;
-  if (disableApplyMenu) hideApplyActionsMenu(state);
-  state.applyButtons.forEach((button, actionId) => {
-    const action = state.applyActions.find((item) => item.id === actionId);
-    const disabledForSelection = !selectedRecordCount;
-    button.disabled = state.isRunning || !supportsApply || !action || action.status !== "active" || !state.serviceAvailable || disabledForSelection;
-    button.title = disabledForSelection
-      ? (action && action.selectionRequiredMessage) || getStudioText(state.config, "data_sharing_review.apply_selection_required", "Select at least one review row.")
-      : normalizeText(action && action.title);
-  });
-  if (state.applyActionMenu && !state.applyActionMenu.hidden) positionApplyActionsMenu(state);
 }
 
 async function loadImportFiles(scope) {
@@ -388,9 +164,9 @@ async function loadImportFiles(scope) {
 
 async function runPreview(state) {
   if (!state.serviceAvailable || state.isRunning) return;
-  const file = selectedFile(state);
+  const file = selectedDataSharingReviewFile(state);
   if (!file) {
-    hideResultButton(state);
+    hideDataSharingReviewResultButton(state);
     setStatus(
       state.statusNode,
       "error",
@@ -399,10 +175,10 @@ async function runPreview(state) {
     return;
   }
 
-  resetResult(state);
-  hideResultButton(state);
+  resetDataSharingReviewResult(state);
+  hideDataSharingReviewResultButton(state);
   state.isRunning = true;
-  setControlsDisabled(state, true);
+  setDataSharingReviewControlsDisabled(state, true);
   syncRouteBusyState(state);
   setStatus(
     state.statusNode,
@@ -423,11 +199,11 @@ async function runPreview(state) {
       "success",
       successMessage
     );
-    maybeShowResultButton(state, successMessage);
+    maybeShowDataSharingReviewResultButton(state, successMessage);
   } catch (error) {
     const payload = error && error.payload ? error.payload : {};
     renderResult(state, payload, true);
-    hideResultButton(state);
+    hideDataSharingReviewResultButton(state);
     setStatus(
       state.statusNode,
       "error",
@@ -435,7 +211,7 @@ async function runPreview(state) {
     );
   } finally {
     state.isRunning = false;
-    setControlsDisabled(state, false);
+    setDataSharingReviewControlsDisabled(state, false);
     syncRouteBusyState(state);
   }
 }
@@ -449,8 +225,8 @@ async function init() {
   const state = {
     bootStatus,
     root,
-    scope: workflowScopeFromUrl(),
-    workflowScopes: WORKFLOW_SCOPES,
+    scope: workflowScopeFromDataSharingReviewUrl(),
+    workflowScopes: DATA_SHARING_REVIEW_SCOPES,
     adapterRegistry: null,
     applyCapability: null,
     applyActions: [],
@@ -500,13 +276,13 @@ async function init() {
     state.config = await loadStudioConfigWithText("data_sharing_review");
     const adapterRegistry = await loadAdapterRegistry(state.config);
     state.adapterRegistry = adapterRegistry;
-    state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "list_returned", WORKFLOW_SCOPES);
-    state.scope = workflowScopeFromUrl(state.workflowScopes);
+    state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "list_returned", DATA_SHARING_REVIEW_SCOPES);
+    state.scope = workflowScopeFromDataSharingReviewUrl(state.workflowScopes);
     state.applyCapability = workflowCapabilityForOperation(adapterRegistry, "apply", state.scope);
-    state.applyActions = applyActionsForCapability(state.applyCapability && state.applyCapability.capability)
+    state.applyActions = dataSharingReviewApplyActionsForCapability(state.applyCapability && state.applyCapability.capability)
       .filter((action) => action.status === "active");
-    renderScopeSelect(state);
-    renderApplyActions(state);
+    renderDataSharingReviewScopeSelect(state);
+    renderDataSharingReviewApplyActions(state);
     state.serviceAvailable = Boolean(await probeDataSharingHealth());
 
     setText(state.scopeLabelNode, getStudioText(state.config, "data_sharing_review.scope_label", "scope"));
@@ -516,35 +292,35 @@ async function init() {
     setText(state.resultButton, getStudioText(state.config, "data_sharing_review.result_button", "results"));
     setText(state.selectAllButton, getStudioText(state.config, "data_sharing_review.select_all", "select all"));
     setText(state.clearButton, getStudioText(state.config, "data_sharing_review.clear", "clear"));
-    if (!scopeSupportsSourceApply(state)) {
+    if (!dataSharingReviewScopeSupportsApply(state)) {
       const unsupportedApplyTitle = getStudioText(
         state.config,
         "data_sharing_review.apply_unsupported_title",
         "{scope_label} source apply actions are not implemented yet.",
-        { scope_label: scopeTitle(state) }
+        { scope_label: dataSharingReviewScopeTitle(state) }
       );
       state.applyButtons.forEach((button) => {
         button.title = unsupportedApplyTitle;
       });
     }
     renderDataSharingReviewPreviewList(state);
-    updateSelectionSummary(state);
-    setControlsDisabled(state, true);
+    updateDataSharingReviewSelectionState(state);
+    setDataSharingReviewControlsDisabled(state, true);
 
     root.hidden = false;
     bootStatus.hidden = true;
 
-    state.scopeSelect.addEventListener("change", () => updateScopeUrl(state.scopeSelect.value, state.workflowScopes));
+    state.scopeSelect.addEventListener("change", () => updateDataSharingReviewScopeUrl(state.scopeSelect.value, state.workflowScopes));
 
     if (!workflowDomainIsActive(state.workflowScopes, state.scope)) {
-      setControlsDisabled(state, true);
-      setStatus(state.statusNode, "warn", scopeUnavailableMessage(state));
+      setDataSharingReviewControlsDisabled(state, true);
+      setStatus(state.statusNode, "warn", dataSharingReviewScopeUnavailableMessage(state));
       markRouteReady(state, true);
       return;
     }
 
     if (!state.serviceAvailable) {
-      setControlsDisabled(state, true);
+      setDataSharingReviewControlsDisabled(state, true);
       setStatus(
         state.statusNode,
         "error",
@@ -552,7 +328,7 @@ async function init() {
           state.config,
           "data_sharing_review.service_unavailable",
           "Docs management service unavailable. Start bin/dev-studio to review {scope_label} returned packages.",
-          { scope_label: scopeLabel(state) }
+          { scope_label: dataSharingReviewScopeLabel(state) }
         )
       );
       markRouteReady(state, true);
@@ -561,7 +337,7 @@ async function init() {
 
     state.files = await loadImportFiles(state.scope);
     if (!state.files.length) {
-      setControlsDisabled(state, true);
+      setDataSharingReviewControlsDisabled(state, true);
       setStatus(
         state.statusNode,
         "warn",
@@ -569,7 +345,7 @@ async function init() {
           state.config,
           "data_sharing_review.no_files",
           "No staged {scope_label} data files found under var/studio/data-sharing/{scope}/import-staging/.",
-          { scope_label: scopeLabel(state), scope: state.scope }
+          { scope_label: dataSharingReviewScopeLabel(state), scope: state.scope }
         )
       );
       markRouteReady(state, true);
@@ -580,7 +356,7 @@ async function init() {
       const filename = normalizeText(file.filename);
       return `<option value="${escapeHtml(filename)}">${escapeHtml(filename)}</option>`;
     }).join("");
-    setControlsDisabled(state, false);
+    setDataSharingReviewControlsDisabled(state, false);
     setStatus(
       state.statusNode,
       "",
@@ -588,16 +364,16 @@ async function init() {
         state.config,
         "data_sharing_review.idle_status",
         "Select a staged {scope_label} data file and generate previews.",
-        { scope_label: scopeLabel(state) }
+        { scope_label: dataSharingReviewScopeLabel(state) }
       )
     );
     markRouteReady(state, true);
 
     state.fileSelect.addEventListener("change", () => {
-      resetResult(state);
+      resetDataSharingReviewResult(state);
       state.lastImportResult = null;
-      hideResultButton(state);
-      setControlsDisabled(state, false);
+      hideDataSharingReviewResultButton(state);
+      setDataSharingReviewControlsDisabled(state, false);
       setStatus(
         state.statusNode,
         "",
@@ -605,7 +381,7 @@ async function init() {
           state.config,
           "data_sharing_review.idle_status",
           "Select a staged {scope_label} data file and generate previews.",
-          { scope_label: scopeLabel(state) }
+          { scope_label: dataSharingReviewScopeLabel(state) }
         )
       );
       syncRouteBusyState(state);
@@ -614,39 +390,35 @@ async function init() {
       runPreview(state).catch((error) => console.warn("data_sharing_review: unexpected preview failure", error));
     });
     state.actionMenuButton.addEventListener("click", () => {
-      toggleApplyActionsMenu(state);
+      toggleDataSharingReviewApplyActionsMenu(state);
     });
     document.addEventListener("click", (event) => {
       const target = event.target instanceof Node ? event.target : null;
       if (!target || state.applyActionContainer.contains(target)) return;
-      hideApplyActionsMenu(state);
+      hideDataSharingReviewApplyActionsMenu(state);
     });
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") hideApplyActionsMenu(state);
+      if (event.key === "Escape") hideDataSharingReviewApplyActionsMenu(state);
     });
-    window.addEventListener("scroll", () => hideApplyActionsMenu(state), { passive: true });
-    window.addEventListener("resize", () => hideApplyActionsMenu(state));
+    window.addEventListener("scroll", () => hideDataSharingReviewApplyActionsMenu(state), { passive: true });
+    window.addEventListener("resize", () => hideDataSharingReviewApplyActionsMenu(state));
     state.resultButton.addEventListener("click", () => {
       if (state.lastImportResult) showDataSharingReviewResultModal(state, state.lastImportResult, { restoreFocus: state.resultButton });
     });
     state.selectAllButton.addEventListener("click", () => {
-      selectableDataSharingReviewPreviewIds(state).forEach((rowId) => state.selectedPreviewIds.add(rowId));
-      syncDataSharingReviewPreviewCheckboxes(state);
-      updateSelectionSummary(state);
+      selectAllDataSharingReviewPreviewRows(state);
     });
     state.clearButton.addEventListener("click", () => {
-      state.selectedPreviewIds.clear();
-      syncDataSharingReviewPreviewCheckboxes(state);
-      updateSelectionSummary(state);
+      clearDataSharingReviewPreviewSelection(state);
     });
-    state.listNode.addEventListener("change", (event) => handlePreviewListChange(state, event));
+    state.listNode.addEventListener("change", (event) => handleDataSharingReviewPreviewListChange(state, event));
     state.applyActionContainer.addEventListener("click", (event) => {
       const target = event.target instanceof Element ? event.target.closest("[data-data-sharing-apply-action]") : null;
       if (!(target instanceof HTMLButtonElement)) return;
       const actionId = normalizeText(target.dataset.dataSharingApplyAction);
-      hideApplyActionsMenu(state);
+      hideDataSharingReviewApplyActionsMenu(state);
       runDataSharingReviewApplyAction(state, actionId, {
-        setControlsDisabled,
+        setControlsDisabled: setDataSharingReviewControlsDisabled,
         syncRouteBusyState
       }).catch((error) => console.warn("data_sharing_review: unexpected apply failure", error));
     });
@@ -662,7 +434,7 @@ async function init() {
         state.config || {},
         "data_sharing_review.load_failed",
         "Failed to load {scope_label} returned package data.",
-        { scope_label: state.config ? scopeTitle(state) : "Library" }
+        { scope_label: state.config ? dataSharingReviewScopeTitle(state) : "Library" }
       )
     );
     markRouteReady(state, true);

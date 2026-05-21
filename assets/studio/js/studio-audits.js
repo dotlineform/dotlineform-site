@@ -6,10 +6,14 @@ import {
   probeAuditServiceHealth
 } from "./studio-transport.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
+  initializeStudioRouteState
 } from "./studio-route-state.js";
+import {
+  collectOperationalRouteElements,
+  markOperationalRouteReady,
+  projectOperationalRunButtonState,
+  syncOperationalRouteBusyState
+} from "./studio-operational-route.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 
 const FALLBACK_AUDITS = Object.freeze([
@@ -48,29 +52,29 @@ function setStatus(node, state, message) {
   }
 }
 
-function routeStateDetail(state) {
-  let mode = "summary";
-  if (!state.serviceAvailable) {
-    mode = "unavailable";
-  } else if (state.isRunning) {
-    mode = "running";
-  } else if (state.lastResults.size) {
-    mode = "result";
-  }
+function studioAuditsMode(state) {
+  if (!state.serviceAvailable) return "unavailable";
+  if (state.isRunning) return "running";
+  if (state.lastResults.size) return "result";
+  return "summary";
+}
+
+function studioAuditsRouteOptions() {
   return {
     route: "studio-audits",
-    mode,
-    service: state.serviceAvailable ? "available" : "unavailable",
-    recordLoaded: state.lastResults.size > 0
+    mode: studioAuditsMode,
+    serviceAvailable: (state) => state.serviceAvailable,
+    isBusy: (state) => state.isRunning,
+    recordLoaded: (state) => state.lastResults.size > 0
   };
 }
 
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(state.root, Boolean(state.isRunning), routeStateDetail(state));
+  syncOperationalRouteBusyState(state, studioAuditsRouteOptions());
 }
 
 function markRouteReady(state, ready) {
-  setStudioRouteReady(state.root, ready, routeStateDetail(state));
+  markOperationalRouteReady(state, ready, studioAuditsRouteOptions());
 }
 
 function normalizeAudits(rawAudits) {
@@ -152,7 +156,10 @@ function renderAudits(state) {
   state.listNode.innerHTML = state.audits.map((audit) => {
     const result = state.lastResults.get(audit.audit_id);
     const runningThis = state.isRunning && state.runningAuditId === audit.audit_id;
-    const disabled = state.isRunning || !state.serviceAvailable;
+    const disabled = projectOperationalRunButtonState(state, {
+      serviceAvailable: (routeState) => routeState.serviceAvailable,
+      isBusy: (routeState) => routeState.isRunning
+    }).disabled;
     return `
       <article class="tagStudio__panel tagStudio__panel--compact studioAuditsItem" data-audit-id="${escapeHtml(audit.audit_id)}">
         <div class="studioAuditsItem__body">
@@ -234,7 +241,14 @@ async function init() {
   const introNode = document.getElementById("studioAuditsIntro");
   const statusNode = document.getElementById("studioAuditsStatus");
   const listNode = document.getElementById("studioAuditsList");
-  if (!bootStatus || !root || !introNode || !statusNode || !listNode) return;
+  const required = collectOperationalRouteElements({
+    bootStatus,
+    root,
+    introNode,
+    statusNode,
+    listNode
+  });
+  if (!required.ok) return;
 
   initializeStudioRouteState(root, { route: "studio-audits", mode: "summary" });
 

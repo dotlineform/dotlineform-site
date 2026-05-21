@@ -1,0 +1,30 @@
+{
+  "id": "change-2026-05-21-extracted-catalogue-search-runtime-owner",
+  "date": "2026-05-21",
+  "title": "Extracted Catalogue Search Runtime Owner",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "public-runtime",
+    "search"
+  ],
+  "summary": "Moved public catalogue search entry normalization, query matching and ordering, result HTML projection, cache reuse, and query metric projection into a focused runtime owner while keeping route loading, DOM events, and instrumentation recording in the route shell.",
+  "source": {
+    "file": "_docs/javascript-maintenance-risk-mitigation.md"
+  },
+  "subjects": [
+    "javascript-maintenance",
+    "catalogue-search"
+  ],
+  "related_docs": [
+    "javascript-maintenance-risk-mitigation",
+    "javascript-inventory"
+  ],
+  "related_files": [
+    "assets/js/catalogue-search.js",
+    "assets/js/search/catalogue-search-runtime.js",
+    "assets/js/search/search-performance.js",
+    "tests/smoke/catalogue_search_runtime_modules.py",
+    "tests/smoke/catalogue_search_performance.py"
+  ]
+}

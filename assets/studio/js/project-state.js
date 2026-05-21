@@ -10,10 +10,15 @@ import {
   probeDocsManagementHealth
 } from "./studio-transport.js";
 import {
-  initializeStudioRouteState,
-  setStudioRouteBusy,
-  setStudioRouteReady
+  initializeStudioRouteState
 } from "./studio-route-state.js";
+import {
+  applyOperationalRunButtonState,
+  collectOperationalRouteElements,
+  markOperationalRouteReady,
+  renderOperationalServiceStatus,
+  syncOperationalRouteBusyState
+} from "./studio-operational-route.js";
 import { buildSaveModeText } from "./tag-studio-save.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 
@@ -41,21 +46,22 @@ function setTextWithState(node, text, state = "") {
   else delete node.dataset.state;
 }
 
-function routeStateDetail(state) {
+function projectStateRouteOptions() {
   return {
     route: "project-state",
-    mode: state.summary ? "summary" : "idle",
-    service: state.catalogueServerAvailable || state.docsServerAvailable ? "available" : "unavailable",
-    recordLoaded: Boolean(state.summary)
+    mode: (state) => state.summary ? "summary" : "idle",
+    serviceAvailable: (state) => state.catalogueServerAvailable || state.docsServerAvailable,
+    isBusy: (state) => state.isBusy,
+    recordLoaded: (state) => Boolean(state.summary)
   };
 }
 
 function syncRouteBusyState(state) {
-  setStudioRouteBusy(state.root, Boolean(state.isBusy), routeStateDetail(state));
+  syncOperationalRouteBusyState(state, projectStateRouteOptions());
 }
 
 function markRouteReady(state, ready) {
-  setStudioRouteReady(state.root, ready, routeStateDetail(state));
+  markOperationalRouteReady(state, ready, projectStateRouteOptions());
 }
 
 function summaryValue(summary, key) {
@@ -82,9 +88,15 @@ function renderSummary(state) {
 }
 
 function updateState(state) {
-  state.runButton.disabled = state.isBusy || !state.catalogueServerAvailable;
+  applyOperationalRunButtonState(state.runButton, state, {
+    serviceAvailable: (routeState) => routeState.catalogueServerAvailable,
+    isBusy: (routeState) => routeState.isBusy
+  });
   state.includeSubfoldersNode.disabled = state.isBusy;
-  state.openButton.disabled = state.isBusy || !state.docsServerAvailable;
+  applyOperationalRunButtonState(state.openButton, state, {
+    serviceAvailable: (routeState) => routeState.docsServerAvailable,
+    isBusy: (routeState) => routeState.isBusy
+  });
   renderSummary(state);
   syncRouteBusyState(state);
 }
@@ -173,7 +185,29 @@ async function init() {
   const summaryNode = document.getElementById("projectStateSummary");
   const runButton = document.getElementById("projectStateRunButton");
   const openButton = document.getElementById("projectStateOpenButton");
-  if (!root || !loadingNode || !emptyNode || !pageHeadingNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !runHeadingNode || !outputLabelNode || !sourceLabelNode || !outputPathNode || !sourceRootNode || !includeSubfoldersNode || !includeSubfoldersLabelNode || !summaryHeadingNode || !summaryNode || !runButton || !openButton) {
+  const required = collectOperationalRouteElements({
+    root,
+    loadingNode,
+    emptyNode,
+    pageHeadingNode,
+    saveModeNode,
+    contextNode,
+    statusNode,
+    warningNode,
+    resultNode,
+    runHeadingNode,
+    outputLabelNode,
+    sourceLabelNode,
+    outputPathNode,
+    sourceRootNode,
+    includeSubfoldersNode,
+    includeSubfoldersLabelNode,
+    summaryHeadingNode,
+    summaryNode,
+    runButton,
+    openButton
+  });
+  if (!required.ok) {
     return;
   }
   initializeStudioRouteState(root, { route: "project-state" });
@@ -215,10 +249,18 @@ async function init() {
     saveModeNode.textContent = buildSaveModeText(config, catalogueServerAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `project_state.${key}`, fallback, tokens));
     setTextWithState(contextNode, t(state, "context_hint", "Scan source project folders and primary images against works.json, then write the Markdown report. Include sub-folders only when you want nested project folders in the review."));
     if (!catalogueServerAvailable) {
-      setTextWithState(statusNode, t(state, "server_unavailable_hint", "Local catalogue server unavailable. Report generation is disabled."), "warn");
+      renderOperationalServiceStatus(statusNode, state, {
+        serviceAvailable: (routeState) => routeState.catalogueServerAvailable,
+        unavailableText: () => t(state, "server_unavailable_hint", "Local catalogue server unavailable. Report generation is disabled."),
+        unavailableState: "warn"
+      });
     }
     if (!docsServerAvailable) {
-      setTextWithState(warningNode, t(state, "docs_server_unavailable_hint", "Local docs-management server unavailable. Opening the Markdown file is disabled."), "warn");
+      renderOperationalServiceStatus(warningNode, state, {
+        serviceAvailable: (routeState) => routeState.docsServerAvailable,
+        unavailableText: () => t(state, "docs_server_unavailable_hint", "Local docs-management server unavailable. Opening the Markdown file is disabled."),
+        unavailableState: "warn"
+      });
     }
 
     runButton.addEventListener("click", () => {

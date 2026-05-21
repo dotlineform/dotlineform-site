@@ -1,3 +1,9 @@
+import {
+  createCatalogueSearchResultCollator,
+  createCatalogueSearchResultsProjection,
+  normalizeCatalogueSearchEntries
+} from "./search/catalogue-search-runtime.js";
+
 let loadSearchPolicyFn = null;
 let getSearchRuntimePolicyFn = null;
 let getSearchScopePolicyFn = null;
@@ -86,8 +92,8 @@ async function initSearchPage() {
       debounceId: null,
       visibleCount: runtimePolicy.initialBatchSize,
       matchCache: null,
-      resultCollator: createResultCollator(),
-      instrumentation
+        resultCollator: createCatalogueSearchResultCollator(),
+        instrumentation
     };
     wireEvents(state);
     renderResults(state);
@@ -107,7 +113,7 @@ async function loadScopedSearchEntries(scopePolicy, instrumentation) {
     const payload = payloadResult.payload;
     const rawEntries = payload && Array.isArray(payload.entries) ? payload.entries : [];
     const normalizeTimer = instrumentation.timer();
-    const entries = normalizeEntries(rawEntries, scopePolicy);
+    const entries = normalizeCatalogueSearchEntries(rawEntries, scopePolicy);
     const normalizeMs = normalizeTimer.end();
     instrumentation.recordScope({
       scope,
@@ -294,252 +300,33 @@ function wireEvents(state) {
   });
 }
 
-function normalizeEntries(entries, scopePolicy) {
-  const scope = scopePolicy ? scopePolicy.scope : "";
-  const scopeLabel = scopePolicy ? scopePolicy.scopeLabel : "";
-  return entries
-    .filter((entry) => entry && typeof entry === "object")
-    .map((entry) => {
-      const kind = normalize(String(entry.kind || ""));
-      const id = String(entry.id || "").trim();
-      const title = String(entry.title || "").trim();
-      const href = String(entry.href || "").trim();
-      const displayMeta = String(entry.display_meta || "").trim();
-      const parentTitle = String(entry.parent_title || "").trim();
-      const seriesIds = Array.isArray(entry.series_ids) ? entry.series_ids.map((item) => String(item || "").trim()).filter(Boolean) : [];
-      const seriesTitles = Array.isArray(entry.series_titles) ? entry.series_titles.map((item) => String(item || "").trim()).filter(Boolean) : [];
-      const searchTerms = Array.isArray(entry.search_terms) ? entry.search_terms.map((item) => normalize(String(item || ""))).filter(Boolean) : [];
-      return {
-        kind,
-        id,
-        title,
-        href,
-        displayMeta,
-        parentTitle,
-        year: Number.isFinite(Number(entry.year)) ? Number(entry.year) : null,
-        date: String(entry.date || "").trim(),
-        seriesIds,
-        seriesTitles,
-        mediumType: String(entry.medium_type || "").trim(),
-        seriesType: String(entry.series_type || "").trim(),
-        tagLabels: Array.isArray(entry.tag_labels) ? entry.tag_labels.map((item) => String(item || "").trim()).filter(Boolean) : [],
-        scope,
-        scopeLabel,
-        searchTerms,
-        searchText: normalize(String(entry.search_text || "")),
-        titleNorm: normalize(title),
-        idNorm: normalize(id),
-        titleTokens: normalize(title).split(" ").filter(Boolean),
-        parentTitleNorm: normalize(parentTitle),
-        seriesTitleNorms: seriesTitles.map(normalize).filter(Boolean),
-        mediumTypeNorm: normalize(String(entry.medium_type || "")),
-        seriesTypeNorm: normalize(String(entry.series_type || ""))
-      };
-    })
-    .filter((entry) => entry.kind && entry.id && entry.title && entry.href);
-}
-
 function renderResults(state) {
-  const totalTimer = state.instrumentation.timer();
-  const query = normalize(String(state.queryText || state.input.value || ""));
-  state.queryText = query;
-  const queryTokens = query.split(" ").filter(Boolean);
-
-  if (!query || query.length < state.runtimePolicy.minQueryLength || !queryTokens.length) {
-    state.status.dataset.state = "";
-    state.status.textContent = searchText(state.policy, "prompt", "Enter a search query.");
-    state.results.innerHTML = "";
-    state.more.innerHTML = "";
-    return;
-  }
-
-  const matchResult = getSortedMatches(state, query, queryTokens);
-  const matches = matchResult.matches;
-  const evaluateMs = matchResult.evaluateMs;
-  const sortMs = matchResult.sortMs;
-
-  const visible = matches.slice(0, state.visibleCount);
-  const renderTimer = state.instrumentation.timer();
-  if (!visible.length) {
-    state.status.dataset.state = "";
-    state.status.textContent = searchText(state.policy, "no_results", "No results.");
-    state.results.innerHTML = "";
-    state.more.innerHTML = "";
-    state.instrumentation.recordQuery({
-      queryLength: query.length,
-      entryCount: state.entries.length,
-      matchCount: matches.length,
-      visibleCount: 0,
-      evaluateMs,
-      sortMs,
-      renderMs: renderTimer.end(),
-      totalMs: totalTimer.end()
-    });
-    return;
-  }
-
-  state.status.dataset.state = "";
-  state.status.textContent = matches.length === 1
-    ? searchText(state.policy, "results_count_one", "1 result")
-    : matches.length > visible.length
-      ? searchText(state.policy, "results_count_visible", "Showing {visible} of {count} results", {
-        visible: String(visible.length),
-        count: String(matches.length)
-      })
-      : searchText(state.policy, "results_count", "{count} results", { count: String(matches.length) });
-  state.results.innerHTML = visible.map(({ entry }) => renderEntry(state, entry)).join("");
-  state.more.innerHTML = matches.length > visible.length
-    ? `<button type="button" class="studioSearch__moreBtn" data-role="more">${escapeHtml(searchText(state.policy, "load_more", "more"))}</button>`
-    : "";
-  state.instrumentation.recordQuery({
-    queryLength: query.length,
-    entryCount: state.entries.length,
-    matchCount: matches.length,
-    visibleCount: visible.length,
-    evaluateMs,
-    sortMs,
-    renderMs: renderTimer.end(),
-    totalMs: totalTimer.end()
-  });
-}
-
-function getSortedMatches(state, query, queryTokens) {
-  const cache = state.matchCache;
-  if (cache && cache.query === query && cache.filterKind === state.filterKind) {
-    return {
-      matches: cache.matches,
-      evaluateMs: 0,
-      sortMs: 0
-    };
-  }
-
-  const matches = [];
-  const evaluateTimer = state.instrumentation.timer();
-  for (const entry of state.entries) {
-    if (state.filterKind !== "all" && entry.kind !== state.filterKind) continue;
-    const score = scoreEntry(entry, query, queryTokens);
-    if (score == null) continue;
-    matches.push({ entry, score });
-  }
-  const evaluateMs = evaluateTimer.end();
-
-  const sortTimer = state.instrumentation.timer();
-  matches.sort((a, b) => compareSearchMatches(a, b, state.resultCollator));
-  const sortMs = sortTimer.end();
-
-  state.matchCache = {
-    query,
+  const projection = createCatalogueSearchResultsProjection({
+    policy: state.policy,
+    entries: state.entries,
+    queryText: state.queryText || state.input.value,
     filterKind: state.filterKind,
-    matches
-  };
-  return { matches, evaluateMs, sortMs };
-}
-
-function scoreEntry(entry, query, queryTokens) {
-  if (!matchesAllTokens(entry, queryTokens)) return null;
-
-  if (entry.idNorm === query) return 900;
-  if (entry.titleNorm === query) return 860;
-  if (entry.searchTerms.includes(query)) return 780;
-  if (entry.titleNorm.startsWith(query)) return 720;
-  if (entry.idNorm.startsWith(query)) return 690;
-  if (queryTokens.every((token) => entry.titleTokens.some((candidate) => candidate === token || candidate.startsWith(token)))) return 620;
-  if (entry.seriesTitleNorms.some((value) => value.includes(query))) return 480;
-  if (entry.mediumTypeNorm && entry.mediumTypeNorm.includes(query)) return 460;
-  if (entry.seriesTypeNorm && entry.seriesTypeNorm.includes(query)) return 420;
-  if (entry.searchText.includes(query)) return 320;
-  return null;
-}
-
-function compareSearchMatches(a, b, collator) {
-  if (a.score !== b.score) return b.score - a.score;
-  const titleCmp = compareSearchText(a.entry.title, b.entry.title, collator);
-  if (titleCmp !== 0) return titleCmp;
-  return compareSearchText(a.entry.id, b.entry.id, collator);
-}
-
-function compareSearchText(a, b, collator) {
-  if (collator && typeof collator.compare === "function") {
-    return collator.compare(String(a || ""), String(b || ""));
-  }
-  return String(a || "").localeCompare(String(b || ""));
-}
-
-function createResultCollator() {
-  try {
-    if (typeof Intl !== "undefined" && typeof Intl.Collator === "function") {
-      return new Intl.Collator(undefined, { sensitivity: "base", numeric: true });
-    }
-  } catch (_error) {
-    // Fall back to localeCompare if Intl.Collator is unavailable.
-  }
-  return null;
-}
-
-function matchesAllTokens(entry, queryTokens) {
-  return queryTokens.every((token) => {
-    if (entry.searchTerms.some((candidate) => candidate === token || candidate.startsWith(token))) {
-      return true;
-    }
-    return entry.searchText.includes(token);
+    visibleCount: state.visibleCount,
+    runtimePolicy: state.runtimePolicy,
+    baseurl: state.baseurl,
+    matchCache: state.matchCache,
+    resultCollator: state.resultCollator,
+    timer: () => state.instrumentation.timer(),
+    text: (key, fallback, tokens) => searchText(state.policy, key, fallback, tokens)
   });
-}
-
-function renderEntry(state, entry) {
-  const metaParts = [];
-  const separator = searchText(state.policy, "result_meta_separator", " • ");
-  if (entry.displayMeta) metaParts.push(escapeHtml(entry.displayMeta));
-  if (entry.kind === "work" && entry.mediumType) metaParts.push(escapeHtml(entry.mediumType));
-  if (entry.kind === "work" && entry.seriesTitles.length) {
-    metaParts.push(renderSeriesLinks(state, entry).join(escapeHtml(separator)));
+  state.queryText = projection.query;
+  state.matchCache = projection.matchCache;
+  state.status.dataset.state = projection.status.state || "";
+  state.status.textContent = projection.status.text;
+  state.results.innerHTML = projection.resultsHtml;
+  state.more.innerHTML = projection.moreHtml;
+  if (projection.metrics) {
+    state.instrumentation.recordQuery(projection.metrics);
   }
-  if (entry.kind === "series" && entry.seriesType) metaParts.push(escapeHtml(entry.seriesType));
-  const metaHtml = metaParts.join(escapeHtml(separator));
-  const linkAttrs = catalogueEntryTargetAttrs(entry);
-  return `
-    <li class="studioSearch__item">
-      <div class="studioSearch__itemHead">
-        <span class="studioSearch__kind">${escapeHtml(kindLabel(state.policy, entry.kind))}</span>
-        <a class="studioSearch__title" href="${escapeHtml(withBaseUrl(state.baseurl, entry.href))}"${linkAttrs}>${escapeHtml(entry.title)}</a>
-      </div>
-      <p class="studioSearch__id">${escapeHtml(entry.id)}</p>
-      ${metaHtml ? `<p class="studioSearch__meta">${metaHtml}</p>` : ""}
-    </li>
-  `;
-}
-
-function renderSeriesLinks(state, entry) {
-  return entry.seriesTitles.map((title, index) => {
-    const seriesId = String(entry.seriesIds[index] || "").trim();
-    if (!seriesId) return escapeHtml(title);
-    const href = withBaseUrl(state.baseurl, `/series/${encodeURIComponent(seriesId)}/`);
-    return `<a class="studioSearch__metaLink" href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(title)}</a>`;
-  });
-}
-
-function catalogueEntryTargetAttrs(entry) {
-  return entry.kind === "work" || entry.kind === "series" || entry.kind === "moment"
-    ? ' target="_blank" rel="noopener"'
-    : "";
 }
 
 function resetVisibleCount(state) {
   state.visibleCount = state.runtimePolicy.initialBatchSize;
-}
-
-function withBaseUrl(baseurl, href) {
-  const cleanBase = String(baseurl || "").replace(/\/+$/, "");
-  const cleanHref = String(href || "");
-  if (!cleanBase || /^https?:\/\//.test(cleanHref)) return cleanHref;
-  if (!cleanHref.startsWith("/")) return cleanHref;
-  return `${cleanBase}${cleanHref}`;
-}
-
-function kindLabel(policy, kind) {
-  if (kind === "work") return searchText(policy, "result_kind_work", "work");
-  if (kind === "series") return searchText(policy, "result_kind_series", "series");
-  if (kind === "moment") return searchText(policy, "result_kind_moment", "moment");
-  return kind;
 }
 
 function resolveQuery() {
@@ -711,21 +498,4 @@ function readAssetVersion(importUrl = "") {
   }
 
   return "";
-}
-
-function normalize(value) {
-  return String(value || "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function escapeHtml(value) {
-  return String(value || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }

@@ -1,0 +1,29 @@
+{
+  "id": "change-2026-05-21-extracted-public-work-navigation-projection",
+  "date": "2026-05-21",
+  "title": "Extracted Public Work Navigation Projection",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "public-runtime",
+    "catalogue"
+  ],
+  "summary": "Moved public work series id/title lookup, series-link projection, back-link projection, and prev/next navigation URL/counter projection into the shared public catalogue runtime while keeping DOM insertion, series-index loading, refresh events, and keyboard navigation in work.js.",
+  "source": {
+    "file": "_docs/javascript-maintenance-risk-mitigation.md"
+  },
+  "subjects": [
+    "javascript-maintenance",
+    "public-work-runtime"
+  ],
+  "related_docs": [
+    "javascript-maintenance-risk-mitigation",
+    "javascript-inventory"
+  ],
+  "related_files": [
+    "assets/js/work.js",
+    "assets/js/public-catalogue-runtime.js",
+    "tests/smoke/public_work_runtime_modules.py",
+    "tests/smoke/public_work_route.py"
+  ]
+}

@@ -535,16 +535,16 @@ Acceptance checks:
 
 ### Task D: Studio Shared Route Helper Contracts
 
-**Status:** D1 implemented on 2026-05-21; D2 is the next score-moving slice.
+**Status:** D1-D4 implemented on 2026-05-21; Task E is the next score-moving slice.
 
 Candidate files and current scores:
 
-- `assets/studio/js/bulk-add-work.js`: 7
-- `assets/studio/js/data-sharing-review.js`: 6
-- `assets/studio/js/docs-broken-links.js`: 6
-- `assets/studio/js/project-state.js`: 6
-- `assets/studio/js/studio-audits.js`: 6
-- `assets/studio/js/thumbnail-quality.js`: 6
+- `assets/studio/js/bulk-add-work.js`: 5
+- `assets/studio/js/data-sharing-review.js`: 5
+- `assets/studio/js/docs-broken-links.js`: 5
+- `assets/studio/js/project-state.js`: 5
+- `assets/studio/js/studio-audits.js`: 5
+- `assets/studio/js/thumbnail-quality.js`: 5
 - `assets/studio/js/studio-route-state.js`: shared helper
 - `assets/studio/js/studio-transport.js`: shared helper
 
@@ -583,44 +583,60 @@ Acceptance checks:
 
 #### D2: Bulk Add Work Workflow Split
 
+Status:
+
+- implemented
+
 Owner:
 
-- new route-local workflow/render owner for Bulk Add Work preview/apply state
+- `assets/studio/js/bulk-add-work-workflow.js`
 
 Scope:
 
 - move preview summary formatting, blocked-row rendering, result shaping, and apply/preview run-state projection out of `bulk-add-work.js`
 - keep endpoint wrappers in transport/client owner and keep route shell as boot plus event handoff
+- keep import endpoint calls, activity context construction, service probing, and DOM event wiring in `bulk-add-work.js`
 
 Expected score movement:
 
-- `assets/studio/js/bulk-add-work.js`: target 6 -> 5, or 7 -> 5 if combined after D1 in one implementation batch
+- `assets/studio/js/bulk-add-work.js`: 6 -> 5
 
 Acceptance checks:
 
-- module smoke covers preview summary, blocked rows, run-state view model, and apply result projection
-- route smoke verifies preview/apply controls remain disabled when local service is unavailable
+- `tests/smoke/bulk_add_work_workflow_modules.py` covers preview summary rendering, blocked-row details, run-state view model, apply-blocked projection, and apply result/warning projection
+- `tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work and Docs Broken Links reach the Studio ready state with local service probes blocked
+- `node --check` passes for `bulk-add-work.js`, `bulk-add-work-workflow.js`, and `studio-operational-route.js`
 
 #### D3: Data Sharing Review Apply Workflow Owner
 
+Status:
+
+- implemented
+
 Owner:
 
-- route-local Data Sharing review workflow owner
+- `assets/studio/js/data-sharing-review-workflow.js`
 
 Scope:
 
 - move scope/action normalization, apply-action menu state, selected-file/preview selection state, and result-button projection out of `data-sharing-review.js`
 - keep rendering in `data-sharing-review-render.js` and modal confirmation in `data-sharing-review-modals.js`
+- keep service request sequencing, preview result modal handoff, route-state projection, and route boot in `data-sharing-review.js`
 
 Expected score movement:
 
-- `assets/studio/js/data-sharing-review.js`: target 6 -> 5
+- `assets/studio/js/data-sharing-review.js`: 6 -> 5
 
 Acceptance checks:
 
-- existing Data Sharing smoke or a new module smoke covers action normalization, selected preview rows, result-button projection, and menu open/close state
+- `tests/smoke/data_sharing_review_workflow_modules.py` covers action normalization, scope option projection, selected preview rows, control disabled state, result-button projection, and menu open/close state
+- `node --check` passes for `data-sharing-review.js` and `data-sharing-review-workflow.js`
 
 #### D4: Operational Audit Routes Closeout
+
+Status:
+
+- implemented
 
 Owner:
 
@@ -630,22 +646,29 @@ Scope:
 
 - apply the D1 helper to `project-state.js`, `studio-audits.js`, and `thumbnail-quality.js`
 - extract result projection only when repeated list/table/result shaping remains mixed with route boot
+- kept project-state summary rendering, audit result rendering, thumbnail payload rendering, and service request sequencing route-local because those flows are not repeated enough to justify a new projection owner in this slice
 
 Expected score movement:
 
-- `assets/studio/js/project-state.js`: target 6 -> 5
-- `assets/studio/js/studio-audits.js`: target 6 -> 5
-- `assets/studio/js/thumbnail-quality.js`: target 6 -> 5
+- `assets/studio/js/project-state.js`: 6 -> 5
+- `assets/studio/js/studio-audits.js`: 6 -> 5
+- `assets/studio/js/thumbnail-quality.js`: 6 -> 5
 - route can move to 4 only if route boot, transport, and result projection are all separated and covered by focused checks
+
+Acceptance checks:
+
+- `tests/smoke/studio_operational_route_modules.py` imports all D1/D4 operational helper adopters and covers required-element collection, route-state projection, service-status rendering, and run-button disabled projection
+- `tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work, Docs Broken Links, Project State, Studio Audits, and Thumbnail Quality reach Studio ready state with local service probes blocked and primary action buttons disabled
+- `node --check` passes for `project-state.js`, `studio-audits.js`, and `thumbnail-quality.js`
 
 ### Task E: Public Runtime Measurable Maintenance And Performance Follow-Up
 
-**Status:** Defined for score-moving implementation; no longer a passive watch item.
+**Status:** E1-E3 implemented on 2026-05-21.
 
 Candidate files and current scores:
 
-- `assets/js/catalogue-search.js`: 6
-- `assets/js/work.js`: 5
+- `assets/js/catalogue-search.js`: 5
+- `assets/js/work.js`: 4
 - `assets/js/moment.js`: 4
 - `assets/js/public-catalogue-runtime.js`: 4
 - `assets/js/search/search-performance.js`: 4
@@ -655,58 +678,76 @@ Cosmetic file splitting is still out of scope.
 
 #### E1: Catalogue Search Runtime Baseline And Hot-Path Split
 
+Status:
+
+- implemented
+
 Owner:
 
-- new focused owner for catalogue-search query evaluation/list rendering, or extension of an existing search runtime owner if one is already present
+- `assets/js/search/catalogue-search-runtime.js`
 
 Scope:
 
 - capture baseline metrics for initial load, first query, repeated query, result render count, and list expansion
 - move query normalization/evaluation and result rendering hot-path decisions out of `catalogue-search.js` behind explicit inputs
 - keep route DOM wiring and config/data loading in the route shell
+- keep lazy policy/performance module loading, scoped index fetch, DOM event wiring, URL query resolution, and instrumentation recording in `catalogue-search.js`
 
 Expected score movement:
 
-- `assets/js/catalogue-search.js`: target 6 -> 5 if input-time work has a focused owner and smoke/performance checks cover it
+- `assets/js/catalogue-search.js`: 6 -> 5
 - target 6 -> 4 only if route shell becomes data-load/event-handoff plus explicit render owner, and measured input-time behavior is preserved or improved
 
 Acceptance checks:
 
-- public catalogue search smoke records baseline and after metrics with `search-performance` instrumentation enabled
-- module smoke covers query evaluation and render view model without full route boot
+- `tests/smoke/catalogue_search_runtime_modules.py` covers entry normalization, query matching/order, render projection, cache reuse, no-result state, prompt state, and query metric projection without full route boot
+- `tests/smoke/catalogue_search_performance.py` verifies the public `/catalogue/search/` route records scoped load and query metrics with `search-performance` instrumentation enabled
+- `node --check` passes for `catalogue-search.js` and `search/catalogue-search-runtime.js`
 
 #### E2: Public Work Runtime Projection Owner
 
+Status:
+
+- implemented
+
 Owner:
 
-- existing `assets/js/public-catalogue-runtime.js` or a new work-specific projection module
+- `assets/js/public-catalogue-runtime.js`
 
 Scope:
 
-- move `assets/js/work.js` metadata/detail/download projection decisions into a focused owner with explicit work payload inputs
-- keep DOM insertion and route loading in `work.js`
+- moved the current `work.js` projection surface: series work-id normalization, series title lookup, series-link visibility/target, back-link labeling/target, and prev/next navigation URL/counter projection
+- kept DOM insertion, series-index loading, metadata refresh handoff, and keyboard navigation in `work.js`
+- did not move metadata/detail/download projection because the current `work.js` no longer owns those decisions; the work layout owns that hydration path separately
 
 Expected score movement:
 
-- `assets/js/work.js`: target 5 -> 4
+- `assets/js/work.js`: 5 -> 4
 
 Acceptance checks:
 
-- module smoke covers work payload projection for metadata, details, downloads/links, and missing media fallbacks
-- public work route smoke verifies a representative work page still renders equivalent primary content
+- `tests/smoke/public_work_runtime_modules.py` covers series id/title lookup, series-link projection, back-link projection, hidden/single-series fallbacks, and prev/next/counter projection
+- `tests/smoke/public_work_route.py` verifies a representative public work page still renders primary title, back link, series link, series navigation, and prev/next targets
+- `node --check` passes for `work.js` and `public-catalogue-runtime.js`
 
 #### E3: Public Runtime Closeout
+
+Status:
+
+- implemented
 
 Scope:
 
 - compare `work.js`, `moment.js`, and `public-catalogue-runtime.js` after E1-E2
 - if `moment.js` already remains at score 4 with coherent ownership, leave it alone
 - update inventory only for files with measured runtime or focused-owner improvements
+- comparison result: `work.js` reached score 4 after navigation projection moved to `public-catalogue-runtime.js`; `moment.js`, `public-catalogue-runtime.js`, and `search-performance.js` remain at score 4 without further code movement
 
 Expected score movement:
 
-- at minimum, `catalogue-search.js` target 6 -> 5 and `work.js` target 5 -> 4 across Task E
-- no score change for `moment.js`, `public-catalogue-runtime.js`, or `search-performance.js` unless their contracts materially change
+- `assets/js/catalogue-search.js`: 6 -> 5 across Task E
+- `assets/js/work.js`: 5 -> 4 across Task E
+- no score change for `moment.js`, `public-catalogue-runtime.js`, or `search-performance.js`
 
 ### Task Definition Exit Criteria
 

@@ -84,7 +84,10 @@ def assert_operational_route_helpers(page: Page) -> None:
             });
             await Promise.all([
                 import('/assets/studio/js/bulk-add-work.js'),
-                import('/assets/studio/js/docs-broken-links.js')
+                import('/assets/studio/js/docs-broken-links.js'),
+                import('/assets/studio/js/project-state.js'),
+                import('/assets/studio/js/studio-audits.js'),
+                import('/assets/studio/js/thumbnail-quality.js')
             ]);
             return {
                 required,

@@ -26,85 +26,49 @@
   var backLink = document.getElementById('pageBackLink');
   var seriesIndexData = null;
 
-  function normalizeIds(raw) {
-    if (!Array.isArray(raw)) return [];
-    return raw.map(function (id) { return runtime.text(id); }).filter(Boolean);
-  }
-
   function extractSeriesIndexIds(payload, seriesId) {
-    if (!payload || !payload.series || typeof payload.series !== 'object') return [];
-    var row = payload.series[seriesId];
-    if (!row || !Array.isArray(row.works)) return [];
-    return normalizeIds(row.works);
-  }
-
-  function extractSeriesRow(payload, seriesId) {
-    if (!payload || !payload.series || typeof payload.series !== 'object') return null;
-    var row = payload.series[seriesId];
-    return row && typeof row === 'object' ? row : null;
-  }
-
-  function extractSeriesTitle(payload, seriesId) {
-    var row = extractSeriesRow(payload, seriesId);
-    if (!row) return '';
-    return String(row.title || '').trim();
-  }
-
-  function setSeriesLinkVisibilityFromIds(ids) {
-    if (!seriesLinkWrap) return;
-    seriesLinkWrap.hidden = ids.length <= 1;
+    return runtime.seriesIndexWorkIds(payload, seriesId);
   }
 
   function setSeriesLinkTarget(seriesId) {
+    var projection = runtime.projectWorkSeriesLink(seriesIndexData, seriesId, baseurl);
+    if (seriesLinkWrap) seriesLinkWrap.hidden = projection.hidden;
     if (!seriesLink) return;
-    var sid = String(seriesId || '').trim();
-    if (!sid) {
-      seriesLink.textContent = '';
-      seriesLink.setAttribute('href', baseurl + '/series/');
-      return;
-    }
-    var label = extractSeriesTitle(seriesIndexData, sid) || sid;
-    seriesLink.textContent = label;
-    seriesLink.setAttribute('href', baseurl + '/series/' + encodeURIComponent(sid) + '/');
+    seriesLink.textContent = projection.label;
+    seriesLink.setAttribute('href', projection.href);
   }
 
   function setBackLinkLabel(seriesId) {
     if (!backLink) return;
-    var sid = String(seriesId || '').trim();
-    if (!sid) return;
-    var label = extractSeriesTitle(seriesIndexData, sid);
-    if (!label) return;
-    backLink.setAttribute('data-series-label', label);
-    if (seriesFromQuery && seriesFromQuery === sid) {
-      backLink.textContent = '← ' + label;
-    } else if (!seriesFromQuery && !fromContext) {
-      backLink.textContent = '← ' + label;
-      backLink.setAttribute('href', baseurl + '/series/' + encodeURIComponent(sid) + '/');
+    var projection = runtime.projectWorkBackLink(seriesIndexData, {
+      seriesId: seriesId,
+      seriesFromQuery: seriesFromQuery,
+      fromContext: fromContext,
+      baseurl: baseurl
+    });
+    if (!projection) return;
+    backLink.setAttribute('data-series-label', projection.seriesLabel);
+    if (projection.label) backLink.textContent = projection.label;
+    if (projection.href) {
+      backLink.setAttribute('href', projection.href);
     }
   }
 
   function configureNav(ids, currentId) {
     if (!nav || !prevA || !nextA || !seriesFromQuery || !currentId) return;
-    var i = ids.indexOf(currentId);
-    if (i === -1 || ids.length < 2) {
-      nav.hidden = true;
-      if (counterEl) counterEl.hidden = true;
-      return;
-    }
-
-    var prevId = ids[(i - 1 + ids.length) % ids.length];
-    var nextId = ids[(i + 1) % ids.length];
-
-    var qs = '?series=' + encodeURIComponent(seriesFromQuery);
-    if (seriesPage > 0) qs += '&series_page=' + encodeURIComponent(String(seriesPage));
-    prevA.href = baseurl + '/works/' + prevId + '/' + qs;
-    nextA.href = baseurl + '/works/' + nextId + '/' + qs;
-
+    var projection = runtime.projectWorkSeriesNavigation(ids, currentId, {
+      seriesId: seriesFromQuery,
+      seriesPage: seriesPage,
+      baseurl: baseurl
+    });
+    nav.hidden = projection.hidden;
     if (counterEl) {
-      counterEl.textContent = String(i + 1) + '/' + String(ids.length);
-      counterEl.hidden = false;
+      counterEl.textContent = projection.counterText || '';
+      counterEl.hidden = projection.counterHidden;
     }
-    nav.hidden = false;
+    if (projection.hidden) return;
+    prevA.href = projection.prevHref;
+    nextA.href = projection.nextHref;
   }
 
   function refreshFromCurrentMeta() {
@@ -113,7 +77,6 @@
     var currentId = (nav && nav.dataset) ? String(nav.dataset.workId || '').trim() : '';
     if (pageSeriesId) {
       setSeriesLinkTarget(pageSeriesId);
-      setSeriesLinkVisibilityFromIds(extractSeriesIndexIds(seriesIndexData, pageSeriesId));
       setBackLinkLabel(pageSeriesId);
     } else if (seriesLinkWrap) {
       seriesLinkWrap.hidden = true;
