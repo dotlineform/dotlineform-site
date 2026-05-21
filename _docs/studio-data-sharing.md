@@ -60,6 +60,7 @@ The local service gateway uses neutral Data Sharing endpoints:
 The page shells load:
 
 - `assets/studio/js/data-sharing-prepare.js`
+- `assets/studio/js/data-sharing-prepare-render.js`
 - `assets/studio/js/data-sharing-prepare-workflow.js`
 - `assets/studio/js/data-sharing-review.js`
 - `assets/studio/js/data-sharing-adapters.js`

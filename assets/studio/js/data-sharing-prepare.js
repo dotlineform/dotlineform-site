@@ -32,31 +32,32 @@ import {
 } from "./data-sharing-adapters.js";
 import {
   buildPreparePackageRequest,
-  defaultFormatForPrepareConfig,
   enabledPrepareConfigsForScope,
-  prepareConfigSelection,
   prepareProfilesForCapability,
   prepareSelectionModel,
-  selectedPrepareConfig,
-  supportedFormatsForPrepareConfig,
   usesPrepareDocumentSelection
 } from "./data-sharing-prepare-workflow.js";
+import {
+  applyDataSharingPrepareSelectionFilter,
+  dataSharingPrepareListFilters,
+  renderDataSharingPrepareConfigSelect,
+  renderDataSharingPrepareDocList,
+  renderDataSharingPrepareFormatOptions,
+  renderDataSharingPrepareListFilters,
+  selectableDataSharingPrepareDocIds,
+  selectedDataSharingPrepareConfig,
+  supportedUiFormatsForDataSharingPrepareConfig,
+  syncDataSharingPrepareCheckboxes,
+  syncDataSharingPrepareConfigOptions,
+  updateDataSharingPrepareSelectionFromChange,
+  updateDataSharingPrepareSelectionSummary
+} from "./data-sharing-prepare-render.js";
 
 const DEFAULT_SCOPE = "library";
 const WORKFLOW_SCOPES = [
   { key: "library", labelKey: "scope_library", fallback: "library" },
   { key: "tags", labelKey: "scope_tags", fallback: "tags" }
 ];
-const LIST_FILTERS = [
-  { key: "all", labelKey: "filter_show_all", fallback: "show all [{count}]" },
-  { key: "no_content", labelKey: "filter_no_content", fallback: "no content [{count}]" },
-  { key: "not_viewable", labelKey: "filter_not_viewable", fallback: "not viewable [{count}]" }
-];
-const FORMAT_OPTIONS = [
-  { key: "json", labelKey: "format_json", fallback: "JSON" },
-  { key: "jsonl", labelKey: "format_jsonl", fallback: "JSONL" }
-];
-
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -214,200 +215,13 @@ function buildVisibleDocs(indexPayload) {
   return { docs: orderedDocs, childrenByParent, depthById };
 }
 
-function descendantIds(state, docId) {
-  const ids = [];
-  const collect = (parentId) => {
-    const children = state.childrenByParent.get(parentId) || [];
-    children.forEach((child) => {
-      const childId = normalizeText(child.doc_id);
-      if (!childId) return;
-      ids.push(childId);
-      collect(childId);
-    });
-  };
-  collect(docId);
-  return ids;
-}
-
-function contentTextLength(doc) {
-  const value = Number(doc && doc.content_text_length);
-  return Number.isFinite(value) && value > 0 ? value : 0;
-}
-
-function docHasNoContent(doc) {
-  return contentTextLength(doc) === 0;
-}
-
-function docMatchesListFilter(state, doc) {
-  if (!doc) return false;
-  if (state.listFilter === "no_content") return docHasNoContent(doc);
-  if (state.listFilter === "not_viewable") return doc.published !== false && doc.viewable === false;
-  return true;
-}
-
-function docMatchesConfigFilter(state, docId) {
-  const missingOnly = state.missingSummaryOnly.checked && state.missingSummaryOnlyWrap.hidden === false;
-  const doc = state.docsById.get(docId);
-  if (!doc) return false;
-  return !missingOnly || !normalizeText(doc.summary);
-}
-
-function rowMatchesCurrentFilters(state, docId) {
-  const doc = state.docsById.get(docId);
-  return Boolean(doc && docMatchesConfigFilter(state, docId) && docMatchesListFilter(state, doc));
-}
-
-function selectableDocIds(state, { visibleOnly = false } = {}) {
-  return state.docs
-    .filter((doc) => {
-      const docId = normalizeText(doc.doc_id);
-      if (!docMatchesConfigFilter(state, docId)) return false;
-      return !visibleOnly || docMatchesListFilter(state, doc);
-    })
-    .map((doc) => normalizeText(doc.doc_id))
-    .filter(Boolean);
-}
-
-function syncCheckboxStates(state) {
-  const visibleSelected = new Set(
-    selectableDocIds(state, { visibleOnly: true }).filter((docId) => state.selectedIds.has(docId))
-  );
-  state.listNode.querySelectorAll("[data-data-sharing-prepare-doc]").forEach((row) => {
-    const docId = normalizeText(row.getAttribute("data-data-sharing-prepare-doc"));
-    const checkbox = row.querySelector("input[type='checkbox']");
-    if (!(checkbox instanceof HTMLInputElement)) return;
-    const subtreeIds = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesCurrentFilters(state, id));
-    const selectedCount = subtreeIds.filter((id) => visibleSelected.has(id)).length;
-    checkbox.checked = subtreeIds.length > 0 && selectedCount === subtreeIds.length;
-    checkbox.indeterminate = selectedCount > 0 && selectedCount < subtreeIds.length;
-  });
-}
-
-function applySelectionFilter(state) {
-  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
-    state.selectedIds.clear();
-    return;
-  }
-  const allowedIds = new Set(selectableDocIds(state));
-  state.selectedIds.forEach((docId) => {
-    if (!allowedIds.has(docId)) state.selectedIds.delete(docId);
-  });
-}
-
-function updateSelectionSummary(state) {
-  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
-    setText(
-      state.selectionSummary,
-      getStudioText(
-        state.config,
-        "data_sharing_prepare.selection_not_required",
-        "No record selection required."
-      )
-    );
-    return;
-  }
-  const count = state.selectedIds.size;
-  setText(
-    state.selectionSummary,
-    getStudioText(
-      state.config,
-      count === 1
-        ? "data_sharing_prepare.selection_summary_one"
-        : "data_sharing_prepare.selection_summary",
-      count === 1 ? "1 document selected." : "{count} documents selected.",
-      { count }
-    )
-  );
-}
-
-function listFilterCounts(state) {
-  const docs = state.docs.filter((doc) => docMatchesConfigFilter(state, normalizeText(doc.doc_id)));
-  return {
-    all: docs.length,
-    no_content: docs.filter((doc) => docHasNoContent(doc)).length,
-    not_viewable: docs.filter((doc) => doc.published !== false && doc.viewable === false).length
-  };
-}
-
-function renderListFilters(state) {
-  const actions = state.filterNode.closest(".dataSharingPreparePage__listActions");
-  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
-    if (actions) actions.hidden = true;
-    state.filterNode.innerHTML = "";
-    return;
-  }
-  if (actions) actions.hidden = false;
-  const counts = listFilterCounts(state);
-  state.filterNode.innerHTML = LIST_FILTERS.map((filter) => {
-    const count = Number(counts[filter.key] || 0);
-    const active = state.listFilter === filter.key;
-    const label = getStudioText(state.config, `data_sharing_prepare.${filter.labelKey}`, filter.fallback, { count });
-    return `
-      <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" data-data-sharing-prepare-filter="${escapeHtml(filter.key)}" data-state="${active ? "active" : ""}" aria-pressed="${active ? "true" : "false"}">
-        ${escapeHtml(label)}
-      </button>
-    `;
-  }).join("");
-}
-
-function selectedConfig(state) {
-  return selectedPrepareConfig(state.exportConfigs, state.configSelect.value);
-}
-
-function supportedUiFormatsForConfig(config) {
-  return supportedFormatsForPrepareConfig(config)
-    .filter((format) => FORMAT_OPTIONS.some((item) => item.key === format));
-}
-
-function defaultFormatForConfig(config) {
-  return defaultFormatForPrepareConfig(config, FORMAT_OPTIONS.map((item) => item.key));
-}
-
-function renderFormatOptions(state) {
-  const config = selectedConfig(state);
-  const supportedFormats = supportedUiFormatsForConfig(config);
-  if (!config) {
-    state.formatOptionsNode.innerHTML = "";
-    state.targetFormat = "";
-    return;
-  }
-  if (!supportedFormats.includes(state.targetFormat)) {
-    state.targetFormat = defaultFormatForConfig(config);
-  }
-  state.formatOptionsNode.innerHTML = FORMAT_OPTIONS.map((format) => {
-    const supported = supportedFormats.includes(format.key);
-    const checked = state.targetFormat === format.key;
-    const label = getStudioText(state.config, `data_sharing_prepare.${format.labelKey}`, format.fallback);
-    return `
-      <label class="dataSharingPreparePage__formatOption">
-        <input type="radio" name="dataSharingPrepareFormat" value="${escapeHtml(format.key)}"${checked ? " checked" : ""}${supported ? "" : " disabled"}>
-        <span class="tagStudio__keyPill tagStudioFilters__groupBtn" data-state="${checked ? "active" : ""}" aria-disabled="${supported ? "false" : "true"}">${escapeHtml(label)}</span>
-      </label>
-    `;
-  }).join("");
-}
-
-function syncConfigOptions(state) {
-  const config = selectedConfig(state);
-  const selection = prepareConfigSelection(config);
-  const supportsMissing = Boolean(selection.supports_missing_summary_only);
-  state.missingSummaryOnlyWrap.hidden = !usesPrepareDocumentSelection(state.prepareCapability) || !supportsMissing;
-  state.missingSummaryOnly.checked = supportsMissing && Boolean(selection.default_missing_summary_only);
-  state.targetFormat = defaultFormatForConfig(config);
-  renderFormatOptions(state);
-  applySelectionFilter(state);
-  renderListFilters(state);
-  renderDocList(state);
-  updateStatus(state);
-}
-
 function updateStatus(state) {
   if (!workflowDomainIsActive(state.workflowScopes, state.scope)) {
     setStatus(state.statusNode, "warn", scopeUnavailableMessage(state));
     state.runButton.disabled = true;
     return;
   }
-  const config = selectedConfig(state);
+  const config = selectedDataSharingPrepareConfig(state);
   if (!config) {
     setStatus(
       state.statusNode,
@@ -461,81 +275,8 @@ function updateStatus(state) {
   );
 }
 
-function renderConfigSelect(state) {
-  state.configSelect.innerHTML = state.exportConfigs.map((config) => {
-    const id = normalizeText(config.id);
-    const label = normalizeText(config.label) || id;
-    return `<option value="${escapeHtml(id)}">${escapeHtml(label)}</option>`;
-  }).join("");
-}
-
-function renderDocRow(state, doc) {
-  const docId = normalizeText(doc.doc_id);
-  const title = normalizeText(doc.title) || docId;
-  const depth = Math.max(0, Number(state.depthById.get(docId) || 0));
-  const viewable = doc.viewable === true;
-  const noContent = docHasNoContent(doc);
-  return `
-    <li class="tagStudioList__row tagStudioList__row--center dataSharingPrepareList__row" data-data-sharing-prepare-doc="${escapeHtml(docId)}" data-data-sharing-prepare-viewable="${viewable ? "true" : "false"}" data-data-sharing-prepare-no-content="${noContent ? "true" : "false"}" style="--data-sharing-prepare-depth: ${depth};">
-      <label class="dataSharingPrepareList__label">
-        <input class="dataSharingPrepareList__checkbox" type="checkbox" value="${escapeHtml(docId)}">
-        <span class="dataSharingPrepareList__viewable${viewable ? " is-viewable" : ""}" aria-label="${viewable ? "viewable" : ""}"></span>
-        <span class="dataSharingPrepareList__title">${escapeHtml(title)}</span>
-      </label>
-    </li>
-  `;
-}
-
-function renderDocList(state) {
-  if (!usesPrepareDocumentSelection(state.prepareCapability)) {
-    state.listNode.innerHTML = `<p class="tagStudio__status">${escapeHtml(getStudioText(
-      state.config,
-      "data_sharing_prepare.profile_only_empty_state",
-      "This profile packages the selected data family."
-    ))}</p>`;
-    updateSelectionSummary(state);
-    return;
-  }
-  const visibleDocIds = new Set(selectableDocIds(state, { visibleOnly: true }));
-  const rows = state.docs
-    .filter((doc) => visibleDocIds.has(normalizeText(doc.doc_id)))
-    .map((doc) => renderDocRow(state, doc));
-  state.listNode.innerHTML = rows.length
-    ? `<ul class="tagStudioList__rows dataSharingPrepareList__rows">${rows.join("")}</ul>`
-    : `<p class="tagStudio__status">${escapeHtml(getStudioText(
-      state.config,
-      "data_sharing_prepare.empty_state",
-      "No matching {scope_label} documents.",
-      { scope_label: scopeTitle(state) }
-    ))}</p>`;
-  syncCheckboxStates(state);
-  updateSelectionSummary(state);
-}
-
 function resetResult(state) {
   clearDataSharingPrepareResultModal(state);
-}
-
-function setDocAndDescendantSelection(state, docId, selected) {
-  const ids = [docId, ...descendantIds(state, docId)].filter((id) => rowMatchesCurrentFilters(state, id));
-  ids.forEach((id) => {
-    if (selected) {
-      state.selectedIds.add(id);
-    } else {
-      state.selectedIds.delete(id);
-    }
-  });
-}
-
-function handleListChange(state, event) {
-  const target = event.target;
-  if (!(target instanceof HTMLInputElement)) return;
-  const row = target.closest("[data-data-sharing-prepare-doc]");
-  const docId = normalizeText(row ? row.getAttribute("data-data-sharing-prepare-doc") : "");
-  if (!docId) return;
-  setDocAndDescendantSelection(state, docId, target.checked);
-  syncCheckboxStates(state);
-  updateSelectionSummary(state);
 }
 
 async function runPreparePackage(state) {
@@ -544,14 +285,14 @@ async function runPreparePackage(state) {
     updateStatus(state);
     return;
   }
-  const config = selectedConfig(state);
+  const config = selectedDataSharingPrepareConfig(state);
   if (!config) {
     updateStatus(state);
     return;
   }
   const targetFormat = normalizeText(state.targetFormat);
   const usesDocumentSelection = usesPrepareDocumentSelection(state.prepareCapability);
-  if (!supportedUiFormatsForConfig(config).includes(targetFormat)) {
+  if (!supportedUiFormatsForDataSharingPrepareConfig(config).includes(targetFormat)) {
     setStatus(
       state.statusNode,
       "error",
@@ -734,22 +475,26 @@ async function init() {
       "Requires the local docs-management service."
     );
 
-    renderConfigSelect(state);
-    syncConfigOptions(state);
+    renderDataSharingPrepareConfigSelect(state);
+    syncDataSharingPrepareConfigOptions(state);
+    updateStatus(state);
 
     state.scopeSelect.addEventListener("change", () => updateScopeUrl(state.scopeSelect.value, state.workflowScopes));
-    state.configSelect.addEventListener("change", () => syncConfigOptions(state));
+    state.configSelect.addEventListener("change", () => {
+      syncDataSharingPrepareConfigOptions(state);
+      updateStatus(state);
+    });
     state.formatOptionsNode.addEventListener("change", (event) => {
       const target = event.target;
       if (!(target instanceof HTMLInputElement) || target.name !== "dataSharingPrepareFormat") return;
       state.targetFormat = normalizeText(target.value);
-      renderFormatOptions(state);
+      renderDataSharingPrepareFormatOptions(state);
       updateStatus(state);
     });
     state.missingSummaryOnly.addEventListener("change", () => {
-      applySelectionFilter(state);
-      renderListFilters(state);
-      renderDocList(state);
+      applyDataSharingPrepareSelectionFilter(state);
+      renderDataSharingPrepareListFilters(state);
+      renderDataSharingPrepareDocList(state);
       updateStatus(state);
     });
     state.filterNode.addEventListener("click", (event) => {
@@ -758,23 +503,27 @@ async function init() {
         : null;
       if (!button) return;
       const filter = normalizeText(button.getAttribute("data-data-sharing-prepare-filter"));
-      if (!LIST_FILTERS.some((item) => item.key === filter)) return;
+      if (!dataSharingPrepareListFilters().includes(filter)) return;
       state.listFilter = filter;
-      renderListFilters(state);
-      renderDocList(state);
+      renderDataSharingPrepareListFilters(state);
+      renderDataSharingPrepareDocList(state);
       updateStatus(state);
     });
     state.selectAllButton.addEventListener("click", () => {
-      selectableDocIds(state, { visibleOnly: true }).forEach((docId) => state.selectedIds.add(docId));
-      syncCheckboxStates(state);
-      updateSelectionSummary(state);
+      selectableDataSharingPrepareDocIds(state, { visibleOnly: true }).forEach((docId) => state.selectedIds.add(docId));
+      syncDataSharingPrepareCheckboxes(state);
+      updateDataSharingPrepareSelectionSummary(state);
     });
     state.clearButton.addEventListener("click", () => {
       state.selectedIds.clear();
-      syncCheckboxStates(state);
-      updateSelectionSummary(state);
+      syncDataSharingPrepareCheckboxes(state);
+      updateDataSharingPrepareSelectionSummary(state);
     });
-    state.listNode.addEventListener("change", (event) => handleListChange(state, event));
+    state.listNode.addEventListener("change", (event) => {
+      if (!updateDataSharingPrepareSelectionFromChange(state, event)) return;
+      syncDataSharingPrepareCheckboxes(state);
+      updateDataSharingPrepareSelectionSummary(state);
+    });
     state.runButton.addEventListener("click", () => {
       runPreparePackage(state).catch((error) => console.warn("data_sharing_prepare: unexpected run failure", error));
     });

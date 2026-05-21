@@ -139,7 +139,7 @@ Each section should summarise:
 | # | Status | Task |
 | ---: | --- | --- |
 | 1 | done | Extracted package workflow adapter behavior into `assets/studio/js/data-sharing-prepare-workflow.js`, which owns prepare capability/profile interpretation, config and format projection, selection requirements, and prepare request shaping. |
-| 2 | proposed | Move preview/result rendering into a render module with explicit inputs. Anticipated improvement: -1 from maintenance risk, or -2 if route state reads shrink materially. |
+| 2 | done | Moved prepare list/control rendering, selection checkbox sync, and result modal body rendering into `assets/studio/js/data-sharing-prepare-render.js` with explicit route-state inputs. |
 | 3 | proposed | Define a preparation service/workflow boundary for write calls, fallback states, and package result shaping. Anticipated improvement: -1 to -2 from maintenance and structural risk. |
 | 4 | proposed | Add focused checks for package-state projection, preparation result rendering, and fallback write behavior. Anticipated improvement: -1 from maintenance risk. |
 
