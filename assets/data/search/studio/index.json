@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9f3b1933d51156416e2c2ef7a368b600",
-    "generated_at_utc": "2026-05-22T07:45:02Z",
-    "count": 291
+    "version": "blake2b-d6c64d502dd3e09965e437f04ca7a670",
+    "generated_at_utc": "2026-05-22T14:29:08Z",
+    "count": 292
   },
   "entries": [
     {
@@ -750,6 +750,32 @@
         "19"
       ],
       "search_text": "data-models-catalogue-source data models catalogue source catalogue source model model catalogue scope scope 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "local-studio-app-public-surface",
+      "kind": "doc",
+      "title": "Public Published Surface",
+      "href": "/docs/?scope=studio&doc=local-studio-app-public-surface",
+      "last_updated": "2026-05-22",
+      "parent_id": "local-studio-app",
+      "parent_title": "Local Studio App",
+      "display_meta": "2026-05-22 • Local Studio App",
+      "search_terms": [
+        "local-studio-app-public-surface",
+        "local",
+        "studio",
+        "app",
+        "public",
+        "surface",
+        "public published surface",
+        "published",
+        "local studio app",
+        "2026-05-22",
+        "2026",
+        "05",
+        "22"
+      ],
+      "search_text": "local-studio-app-public-surface local studio app public surface public published surface published local studio app 2026-05-22 2026 05 22"
     },
     {
       "id": "data-models-catalogue-indexes",
