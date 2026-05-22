@@ -73,11 +73,6 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 - `CATALOGUE_WRITE_SERVER_ENABLED`
   default: `0`
   set to `1` only for fallback/debug runs that intentionally need the standalone catalogue write service
-- `DOCS_MANAGEMENT_PORT`
-  default: `8789`
-- `DOCS_MANAGEMENT_SERVER_ENABLED`
-  default: `0`
-  set to `1` only for fallback/debug runs that intentionally need the standalone Docs Management server
 - `AUDIT_SERVICE_PORT`
   default: `8790`
 - `AUDIT_SERVICE_ENABLED`
@@ -110,7 +105,6 @@ export CATALOGUE_STARTUP_LOOKUP_REBUILD=off
 export JEKYLL_PORT=4001
 export STUDIO_APP_PORT=8765
 export CATALOGUE_WRITE_PORT=8798
-export DOCS_MANAGEMENT_PORT=8799
 export AUDIT_SERVICE_PORT=8800
 export AUDIT_SERVICE_ENABLED=0
 export DOCS_WATCH_DEBOUNCE_SECONDS=1.5
@@ -133,8 +127,7 @@ Before it starts any rebuilds or long-running servers, `bin/dev-studio` checks t
 1. Jekyll on `JEKYLL_HOST:JEKYLL_PORT`
 2. Local Studio App on `STUDIO_APP_HOST:STUDIO_APP_PORT` when `STUDIO_APP_ENABLED` is not `0`
 3. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT` only when `CATALOGUE_WRITE_SERVER_ENABLED` is not `0`
-4. Docs Management Server on `127.0.0.1:DOCS_MANAGEMENT_PORT` only when `DOCS_MANAGEMENT_SERVER_ENABLED` is not `0`
-5. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT` only when `AUDIT_SERVICE_ENABLED` is not `0`
+4. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT` only when `AUDIT_SERVICE_ENABLED` is not `0`
 
 If any port is unavailable, the runner exits immediately with a message naming the affected service and environment variable override.
 
@@ -216,21 +209,6 @@ CATALOGUE_WRITE_SERVER_ENABLED=1 bin/dev-studio
 - default URL: `http://127.0.0.1:8788`
 - related doc: [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 
-### Docs Management Server
-
-This server is not part of default startup.
-Docs management is handled by the Local Studio App unless `DOCS_MANAGEMENT_SERVER_ENABLED=1` is set for a fallback/debug run.
-The standalone script is a thin HTTP wrapper over `scripts/docs/docs_management_service.py`; normal Local Studio browser traffic uses `/studio/api/docs/...`.
-
-- command:
-
-```bash
-./scripts/docs/docs_management_server.py --port "$DOCS_MANAGEMENT_PORT"
-```
-
-- default URL: `http://127.0.0.1:8789`
-- related doc: [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
-
 ### Audit Service
 
 - command:
@@ -265,7 +243,6 @@ At startup the runner prints quick links for:
 - Jekyll root
 - Local Studio App
 - Catalogue Write Server
-- Docs Management Server
 - Audit Service status
 - startup docs rebuild scopes
 - startup catalogue lookup rebuild status
@@ -283,7 +260,6 @@ When you press `Ctrl+C`, it:
 - stops Jekyll
 - stops the Local Studio App when enabled
 - stops the Catalogue Write Server
-- stops the Docs Management Server
 - stops the Audit Service when enabled
 - stops the Docs Live Rebuild Watcher when enabled
 - waits for those child processes before exiting

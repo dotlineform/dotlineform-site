@@ -1,39 +1,32 @@
 ---
 doc_id: scripts-docs-management-server
-title: Docs Management Server
+title: Docs Management Service
 added_date: 2026-04-24
 last_updated: 2026-05-22
 parent_id: docs-viewer
 sort_order: 15000
 ---
-# Docs Management Server
+# Docs Management Service
 
-Script:
+Service module:
 
-```bash
-./scripts/docs/docs_management_server.py
+```text
+scripts/docs/docs_management_service.py
 ```
 
-This is the retired default local-only HTTP service for the shared Docs Viewer management route.
-The same management behavior is now hosted by the Local Studio App during normal `bin/dev-studio` runs through `scripts/studio/studio_docs_api.py` and `scripts/docs/docs_management_service.py`.
-Start this standalone server only for fallback/debug work or standalone Docs Viewer management experiments.
+This module owns shared Docs Viewer management behavior for Local Studio.
+It is called by `scripts/studio/studio_docs_api.py`, and browser traffic reaches it through the Local Studio app at `/studio/api/docs/...`.
 
-`scripts/docs/docs_management_server.py` is now a thin HTTP wrapper.
-Shared Docs management behavior, route dispatch payloads, write orchestration, capabilities, imports, Data Sharing, and scope lifecycle helpers live in `scripts/docs/docs_management_service.py`.
+The old standalone `scripts/docs/docs_management_server.py` HTTP entrypoint has been removed.
+There is no supported standalone Docs Management server process and no `127.0.0.1:8789` fallback.
 
-## Quick Start
+## Local Studio Path
 
-```bash
-./scripts/docs/docs_management_server.py --port 8789
+```text
+browser -> /studio/api/docs/... -> studio_app_server.py -> studio_docs_api.py -> docs_management_service.py
 ```
 
-Optional flags:
-
-- `--port 8789`: override port
-- `--repo-root /path/to/dotlineform-site`: override root auto-detection by parent-searching for `_config.yml`
-- `--dry-run`: validate and return responses without writing source docs
-
-The server expects the project to provide:
+The service expects the project to provide:
 
 - a Jekyll `_config.yml` at the repo root
 - `scripts/docs/docs_scopes.json` with at least one configured docs scope
@@ -42,12 +35,14 @@ The server expects the project to provide:
 
 ## Responsibilities
 
-- binds a loopback-only standalone HTTP server for explicit debug or portable management experiments
-- parses request bodies, applies local CORS, and maps service exceptions to HTTP responses
-- delegates generated reads, capabilities, source writes, import, Data Sharing, broken links, rebuild, and scope lifecycle behavior to `scripts/docs/docs_management_service.py`
+- serves generated docs index, per-doc payload, docs-search, semantic-reference, source-config, and capability payloads to the Local Studio Docs API adapter
+- creates, imports, updates, moves, archives, deletes, rebuilds, and opens docs source files for configured writable scopes
+- owns the documents Data Sharing service calls for Library package preparation, returned-package review, and summary or hierarchy apply writes
+- appends unified activity rows for covered docs import, Data Sharing package/apply, and broken-links audit actions when valid activity context is supplied
+- coordinates successful source writes with the docs live watcher through short-lived suppression markers
 
 Endpoint constants live in `scripts/docs/docs_management_routes.py`.
-The server handler keeps GET and POST dispatch tables for the standalone HTTP wrapper, but shared behavior is not owned by this entrypoint.
+HTTP transport lives in the Local Studio app server, not in this Docs module.
 
 ## Child References
 

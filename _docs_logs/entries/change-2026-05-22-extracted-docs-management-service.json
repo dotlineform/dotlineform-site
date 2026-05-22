@@ -9,8 +9,8 @@
     "docs-viewer",
     "scripts"
   ],
-  "summary": "Moved shared Docs management behavior from the standalone HTTP server entrypoint into `scripts/docs/docs_management_service.py` and pointed the Local Studio Docs API adapter at that service module.",
-  "effect": "Local Studio no longer depends on `scripts/docs/docs_management_server.py` for reusable Docs management behavior. The standalone server remains available only as a thin optional HTTP wrapper for debug or portable runs, while `/studio/api/docs/...` is the active Local Studio browser contract.",
+  "summary": "Moved shared Docs management behavior from the standalone HTTP server entrypoint into `scripts/docs/docs_management_service.py`, pointed the Local Studio Docs API adapter at that service module, and removed the old standalone HTTP server entrypoint.",
+  "effect": "Local Studio no longer depends on `scripts/docs/docs_management_server.py` for reusable Docs management behavior, and there is no separate Docs Management server runtime or `127.0.0.1:8789` fallback. `/studio/api/docs/...` is the active Local Studio browser contract.",
   "source": {
     "file": "_docs/local-studio-app-implementation-plan.md",
     "archive": "change-request"
@@ -19,7 +19,7 @@
     "local-studio-app",
     "docs-management",
     "service-consolidation",
-    "server-wrapper"
+    "server-retirement"
   ],
   "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
   "related_docs": [
@@ -31,10 +31,9 @@
   ],
   "related_files": [
     "scripts/docs/docs_management_service.py",
-    "scripts/docs/docs_management_server.py",
     "scripts/studio/studio_docs_api.py",
     "scripts/run_checks.py",
-    "tests/python/test_docs_management_server.py",
+    "tests/python/test_docs_management_service.py",
     "tests/python/test_docs_import_service.py",
     "tests/python/test_docs_management_routes.py",
     "tests/python/test_studio_app_server.py"

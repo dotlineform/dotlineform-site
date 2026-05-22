@@ -45,7 +45,7 @@ Run the broad profile:
 - `catalogue`
   Runs grouped pytest checks for catalogue-profile Python modules and a representative field-aware build preview.
 - `docs`
-  Runs grouped pytest checks for Docs Viewer export, Library import, generated-read helpers, Docs Management Server, Docs routes, and Docs Broken Links behavior, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
+  Runs grouped pytest checks for Docs Viewer export, Library import, generated-read helpers, Docs Management service, Docs routes, and Docs Broken Links behavior, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
 - `docs-viewer-smoke`
   Builds the site to a temporary Jekyll destination and runs retained Docs Viewer smoke checks for direct loads, search route state, link interception, history, hash fragments, Library scope loading, and management modal behavior.
 - `studio-smoke`

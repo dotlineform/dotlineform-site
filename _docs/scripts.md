@@ -125,8 +125,8 @@ Catalogue/runtime maintenance:
   Build scope-owned docs JSON for Studio and Library docs.
 - [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links)
   Audit Studio or Library docs links for missing targets.
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
-  Run the local Docs Viewer create/archive/delete service with explicit write allowlists.
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
+  Maintain the Docs Viewer management service used by the Local Studio `/studio/api/docs/...` API.
 - [Documents Package Preparation Script](/docs/?scope=studio&doc=scripts-docs-export)
   Prepare generated Docs Viewer data through configured documents Data Sharing profiles.
 - [Documents Returned Package Script](/docs/?scope=studio&doc=scripts-docs-import)

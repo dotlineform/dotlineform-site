@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Focused checks for Docs Management Server handling of conventional archive docs."""
+"""Focused checks for Docs Management service behavior."""
 
 from __future__ import annotations
 
 import importlib.util
-import io
 import json
 import sys
 import tempfile
@@ -14,7 +13,6 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DOCS_DIR = REPO_ROOT / "scripts" / "docs"
 DOCS_MANAGEMENT_SERVICE_PATH = DOCS_DIR / "docs_management_service.py"
-DOCS_MANAGEMENT_SERVER_PATH = DOCS_DIR / "docs_management_server.py"
 
 
 def load_docs_management_module(module_name: str, module_path: Path):
@@ -30,7 +28,6 @@ def load_docs_management_module(module_name: str, module_path: Path):
 
 
 docs_management_service = load_docs_management_module("docs_management_service", DOCS_MANAGEMENT_SERVICE_PATH)
-docs_management_server = load_docs_management_module("docs_management_server", DOCS_MANAGEMENT_SERVER_PATH)
 docs_management_mutations = sys.modules["docs_management_mutations"]
 docs_source_model = sys.modules["docs_source_model"]
 
@@ -765,30 +762,6 @@ def test_source_config_settings_warns_when_generated_projection_is_stale() -> No
 
     warnings = result["scopes"][0]["fields"][0]["warnings"]
     assert any("does not match source config" in warning for warning in warnings)
-
-
-class FakeHandler:
-    def __init__(self) -> None:
-        self.headers: dict[str, str] = {}
-        self.response_status: int | None = None
-        self.sent_headers: dict[str, str] = {}
-        self.wfile = io.BytesIO()
-
-    def send_response(self, status: int) -> None:
-        self.response_status = status
-
-    def send_header(self, key: str, value: str) -> None:
-        self.sent_headers[key] = value
-
-    def end_headers(self) -> None:
-        pass
-
-
-def test_json_responses_are_not_cached() -> None:
-    handler = FakeHandler()
-    docs_management_server.write_response(handler, docs_management_server.HTTPStatus.OK, {"ok": True})
-
-    assert handler.sent_headers["Cache-Control"] == "no-store"
 
 
 def test_docs_export_request_passes_target_format() -> None:

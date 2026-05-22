@@ -361,7 +361,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
 
 def log_event(repo_root: Path, event: str, details: Dict[str, Any]) -> None:
     append_script_log(
-        repo_root / "scripts" / "docs" / "docs_management_server.py",
+        repo_root / "scripts" / "docs" / "docs_management_service.py",
         event,
         details=details,
         repo_root=repo_root,

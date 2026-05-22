@@ -19,7 +19,7 @@ for path in (SCRIPTS_DOCS_DIR, SCRIPTS_DIR):
 import docs_management_service as docs_service  # noqa: E402
 
 
-def load_docs_management_server_module(repo_root: Path):
+def load_docs_management_service_module(repo_root: Path):
     """Return the shared Docs management service module for fixture-backed tests."""
     return docs_service
 

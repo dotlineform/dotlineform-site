@@ -17,7 +17,7 @@ from studio_activity import (
 )
 
 
-DOCS_MANAGEMENT_LOG_REL_PATH = Path("var/docs/logs/docs_management_server.log")
+DOCS_MANAGEMENT_LOG_REL_PATH = Path("var/docs/logs/docs_management_service.log")
 DOCS_ACTIVITY_SOURCE_REFS = [{"kind": "log", "path": str(DOCS_MANAGEMENT_LOG_REL_PATH)}]
 
 

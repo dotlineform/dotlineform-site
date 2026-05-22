@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify Docs Management local-service route ownership and handler dispatch."""
+"""Verify Docs Management route constant ownership."""
 
 from __future__ import annotations
 
@@ -13,7 +13,6 @@ if str(SCRIPTS_DOCS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DOCS_DIR))
 
 import docs_management_routes as routes  # noqa: E402
-import docs_management_server  # noqa: E402
 from studio import data_sharing_routes  # noqa: E402
 
 
@@ -37,41 +36,18 @@ def test_post_routes_are_unique() -> None:
 
 
 def test_options_routes_are_get_and_post_routes() -> None:
-    all_get_paths = (*routes.GET_PATHS, *data_sharing_routes.GET_PATHS)
-    all_post_paths = (*routes.POST_PATHS, *data_sharing_routes.POST_PATHS)
-    assert_no_duplicates(docs_management_server.DocsManagementHandler.OPTIONS_PATHS, "OPTIONS_PATHS")
     assert_equal(set(routes.OPTIONS_PATHS), {*routes.GET_PATHS, *routes.POST_PATHS}, "OPTIONS_PATHS")
     assert_equal(
-        set(docs_management_server.DocsManagementHandler.OPTIONS_PATHS),
-        {*all_get_paths, *all_post_paths},
-        "handler OPTIONS_PATHS",
+        set(data_sharing_routes.OPTIONS_PATHS),
+        {*data_sharing_routes.GET_PATHS, *data_sharing_routes.POST_PATHS},
+        "data sharing OPTIONS_PATHS",
     )
-
-
-def test_handler_dispatch_covers_each_get_route() -> None:
-    dispatch = docs_management_server.DocsManagementHandler.GET_HANDLERS
-    assert_equal(set(dispatch), {*routes.GET_PATHS, *data_sharing_routes.GET_PATHS}, "GET_HANDLERS route keys")
-    for route_path, handler_name in dispatch.items():
-        handler = getattr(docs_management_server.DocsManagementHandler, handler_name, None)
-        if handler is None:
-            raise AssertionError(f"{route_path} dispatches to missing handler {handler_name!r}")
-
-
-def test_handler_dispatch_covers_each_post_route() -> None:
-    dispatch = docs_management_server.DocsManagementHandler.POST_HANDLERS
-    assert_equal(set(dispatch), {*routes.POST_PATHS, *data_sharing_routes.POST_PATHS}, "POST_HANDLERS route keys")
-    for route_path, handler_name in dispatch.items():
-        handler = getattr(docs_management_server.DocsManagementHandler, handler_name, None)
-        if handler is None:
-            raise AssertionError(f"{route_path} dispatches to missing handler {handler_name!r}")
 
 
 def main() -> None:
     test_get_routes_are_unique()
     test_post_routes_are_unique()
     test_options_routes_are_get_and_post_routes()
-    test_handler_dispatch_covers_each_get_route()
-    test_handler_dispatch_covers_each_post_route()
     print("Docs Management route tests OK")
 
 

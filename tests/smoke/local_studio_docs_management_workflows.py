@@ -92,7 +92,7 @@ def create_fixture_repo(target_root: Path) -> None:
 
 
 def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
-    module = studio_docs_api.load_docs_management_server_module(repo_root)
+    module = studio_docs_api.load_docs_management_service_module(repo_root)
     source_model = module.source_model
     configs = module.docs_source_config_settings.load_docs_scope_configs(repo_root)
     config = configs[scope]
@@ -166,7 +166,7 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
 
 
 def patch_rebuilds(repo_root: Path) -> None:
-    module = studio_docs_api.load_docs_management_server_module(repo_root)
+    module = studio_docs_api.load_docs_management_service_module(repo_root)
 
     def fake_rebuild_scope_outputs(
         _repo_root: Path,

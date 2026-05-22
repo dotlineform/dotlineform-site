@@ -30,10 +30,9 @@ Phase 1 added the first Python local Studio app server:
 
 `bin/dev-studio` now starts this app server by default during the transition.
 Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
-Docs management is handled by this app server by default; `bin/dev-studio` no longer starts `scripts/docs/docs_management_server.py` unless `DOCS_MANAGEMENT_SERVER_ENABLED=1` is set for a fallback/debug run.
+Docs management is handled by this app server; `bin/dev-studio` does not start a separate Docs management server.
 Active Local Studio browser routes use `/studio/api/docs/...` for Docs management reads/writes; they do not use `127.0.0.1:8789` as a browser fallback.
 The local app adapter imports shared Docs management behavior from `scripts/docs/docs_management_service.py`.
-`scripts/docs/docs_management_server.py` is now only an optional standalone HTTP wrapper over that service module.
 Jekyll still starts through `bin/dev-studio` for public-site preview and unmigrated Studio routes until the route migration is complete.
 `bin/dev-studio` is a bridge launcher, not the long-term product boundary.
 The intended end state is a local Studio app command for Studio workflows and the normal Bundler/Jekyll serve/build commands for public-site preview and publishing.

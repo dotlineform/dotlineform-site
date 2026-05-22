@@ -24,7 +24,7 @@ from studio_activity import append_studio_activity, normalize_activity_context_f
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
 
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
-TAG_WRITE_SOURCE_REFS = [{"kind": "log", "path": "var/docs/logs/docs_management_server.log"}]
+TAG_WRITE_SOURCE_REFS = [{"kind": "log", "path": "var/docs/logs/docs_management_service.log"}]
 SUPPORTED_PREPARE_FORMATS = {"json"}
 TAG_PREPARE_PROFILES: Dict[str, Dict[str, Any]] = {
     "tag-registry": {"family": "registry", "label": "Tag registry"},

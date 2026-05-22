@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b23a2bf555b2fab01bad9b359701ab20",
-    "generated_at_utc": "2026-05-22T20:02:07Z",
+    "version": "blake2b-e9dee10100be8571a935014831fff2cb",
+    "generated_at_utc": "2026-05-22T22:46:01Z",
     "count": 292
   },
   "entries": [
@@ -5041,7 +5041,7 @@
     {
       "id": "scripts-docs-management-server",
       "kind": "doc",
-      "title": "Docs Management Server",
+      "title": "Docs Management Service",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "last_updated": "2026-05-22",
       "parent_id": "docs-viewer",
@@ -5053,7 +5053,8 @@
         "docs",
         "management",
         "server",
-        "docs management server",
+        "docs management service",
+        "service",
         "docs viewer",
         "viewer",
         "2026-05-22",
@@ -5061,7 +5062,7 @@
         "05",
         "22"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server docs viewer viewer 2026-05-22 2026 05 22"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management service service docs viewer viewer 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-publish-media-to-r2",
@@ -5145,8 +5146,8 @@
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
       "last_updated": "2026-05-22",
       "parent_id": "scripts-docs-management-server",
-      "parent_title": "Docs Management Server",
-      "display_meta": "2026-05-22 • Docs Management Server",
+      "parent_title": "Docs Management Service",
+      "display_meta": "2026-05-22 • Docs Management Service",
       "search_terms": [
         "scripts-docs-management-server-generated-reads",
         "scripts",
@@ -5156,13 +5157,14 @@
         "generated",
         "reads",
         "docs management server generated reads",
-        "docs management server",
+        "docs management service",
+        "service",
         "2026-05-22",
         "2026",
         "05",
         "22"
       ],
-      "search_text": "scripts-docs-management-server-generated-reads scripts docs management server generated reads docs management server generated reads docs management server 2026-05-22 2026 05 22"
+      "search_text": "scripts-docs-management-server-generated-reads scripts docs management server generated reads docs management server generated reads docs management service service 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-docs-management-server-import-rebuild",
@@ -5171,8 +5173,8 @@
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-import-rebuild",
       "last_updated": "2026-05-19",
       "parent_id": "scripts-docs-management-server",
-      "parent_title": "Docs Management Server",
-      "display_meta": "2026-05-19 • Docs Management Server",
+      "parent_title": "Docs Management Service",
+      "display_meta": "2026-05-19 • Docs Management Service",
       "search_terms": [
         "scripts-docs-management-server-import-rebuild",
         "scripts",
@@ -5183,13 +5185,14 @@
         "rebuild",
         "docs management server import and rebuild",
         "and",
-        "docs management server",
+        "docs management service",
+        "service",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "scripts-docs-management-server-import-rebuild scripts docs management server import rebuild docs management server import and rebuild and docs management server 2026-05-19 2026 05 19"
+      "search_text": "scripts-docs-management-server-import-rebuild scripts docs management server import rebuild docs management server import and rebuild and docs management service service 2026-05-19 2026 05 19"
     },
     {
       "id": "scripts-docs-management-server-data-sharing",
@@ -5198,8 +5201,8 @@
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing",
       "last_updated": "2026-05-19",
       "parent_id": "scripts-docs-management-server",
-      "parent_title": "Docs Management Server",
-      "display_meta": "2026-05-19 • Docs Management Server",
+      "parent_title": "Docs Management Service",
+      "display_meta": "2026-05-19 • Docs Management Service",
       "search_terms": [
         "scripts-docs-management-server-data-sharing",
         "scripts",
@@ -5209,13 +5212,14 @@
         "data",
         "sharing",
         "docs management server data sharing",
-        "docs management server",
+        "docs management service",
+        "service",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "scripts-docs-management-server-data-sharing scripts docs management server data sharing docs management server data sharing docs management server 2026-05-19 2026 05 19"
+      "search_text": "scripts-docs-management-server-data-sharing scripts docs management server data sharing docs management server data sharing docs management service service 2026-05-19 2026 05 19"
     },
     {
       "id": "scripts-docs-management-server-write-actions",
@@ -5224,8 +5228,8 @@
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-write-actions",
       "last_updated": "2026-05-22",
       "parent_id": "scripts-docs-management-server",
-      "parent_title": "Docs Management Server",
-      "display_meta": "2026-05-22 • Docs Management Server",
+      "parent_title": "Docs Management Service",
+      "display_meta": "2026-05-22 • Docs Management Service",
       "search_terms": [
         "scripts-docs-management-server-write-actions",
         "scripts",
@@ -5235,23 +5239,24 @@
         "write",
         "actions",
         "docs management server write actions",
-        "docs management server",
+        "docs management service",
+        "service",
         "2026-05-22",
         "2026",
         "05",
         "22"
       ],
-      "search_text": "scripts-docs-management-server-write-actions scripts docs management server write actions docs management server write actions docs management server 2026-05-22 2026 05 22"
+      "search_text": "scripts-docs-management-server-write-actions scripts docs management server write actions docs management server write actions docs management service service 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-docs-management-server-operations",
       "kind": "doc",
-      "title": "Docs Management Server Operations",
+      "title": "Docs Management Service Operations",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
       "last_updated": "2026-05-22",
       "parent_id": "scripts-docs-management-server",
-      "parent_title": "Docs Management Server",
-      "display_meta": "2026-05-22 • Docs Management Server",
+      "parent_title": "Docs Management Service",
+      "display_meta": "2026-05-22 • Docs Management Service",
       "search_terms": [
         "scripts-docs-management-server-operations",
         "scripts",
@@ -5259,14 +5264,15 @@
         "management",
         "server",
         "operations",
-        "docs management server operations",
-        "docs management server",
+        "docs management service operations",
+        "service",
+        "docs management service",
         "2026-05-22",
         "2026",
         "05",
         "22"
       ],
-      "search_text": "scripts-docs-management-server-operations scripts docs management server operations docs management server operations docs management server 2026-05-22 2026 05 22"
+      "search_text": "scripts-docs-management-server-operations scripts docs management server operations docs management service operations service docs management service 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-delete-work",

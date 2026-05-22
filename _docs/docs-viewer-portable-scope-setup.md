@@ -180,15 +180,9 @@ After this, the public route should be able to fetch:
 
 ### 8. Start Local Management
 
-Run the local Studio app for normal management.
-Standalone docs-management server usage is only a portable fallback/debug path:
-
-```sh
-./scripts/docs/docs_management_server.py --port 8789
-```
-
-This standalone server start is the portable local-management entrypoint.
-It requires a project root with `_config.yml`, configured docs scopes in `scripts/docs/docs_scopes.json`, the Docs Viewer build/search scripts, and the Python/Ruby dependencies used by those scripts.
+Run the local Studio app for management.
+Docs management is served through `/studio/api/docs/...`; there is no standalone Docs Management server entrypoint.
+The project still needs `_config.yml`, configured docs scopes in `scripts/docs/docs_scopes.json`, the Docs Viewer build/search scripts, and the Python/Ruby dependencies used by those scripts.
 
 Then open:
 
