@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-server-operations
 title: Catalogue Write Server Operations
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-23
 parent_id: scripts-catalogue-write-server
 sort_order: 4300
 ---
@@ -12,7 +12,11 @@ sort_order: 4300
 
 - `scripts/catalogue/catalogue_write_server.py` currently owns HTTP transport, request parsing, endpoint-specific write allowlist checks before writes, source-write/build/refresh orchestration decisions, local service logging, Studio Activity append timing, and final response payload assembly.
 - `scripts/studio/studio_catalogue_api.py` owns the active Local Studio `/studio/api/catalogue/...` HTTP surface. It already handles catalogue reads, workbook import, Project State report, and Thumbnail Quality preview directly, but still reuses the legacy write-server handler in-process for the core catalogue editor mutation routes.
-- `scripts/catalogue/catalogue_write_service.py` owns callable Local Studio service slices for delete preview, scoped build preview/apply, moment preview, prose import preview/apply, moment import preview/apply, work create/save, work-detail create/save, and series create/save.
+- `scripts/catalogue/catalogue_write_service.py` owns callable Local Studio catalogue route dispatch only.
+  It maps `/studio/api/catalogue/...` service paths to focused workflow modules and preserves the shared `handle_catalogue_post(repo_root, api_path, body, dry_run=False)` boundary.
+- `scripts/catalogue/catalogue_service_context.py` owns shared Local Studio catalogue service context: source paths, lookup paths, write allowlists, backup paths, lookup refresh response helpers, compact service logging, and best-effort Studio Activity appends.
+- `scripts/catalogue/catalogue_work_service.py`, `scripts/catalogue/catalogue_work_detail_service.py`, and `scripts/catalogue/catalogue_series_service.py` own the distinct create/save workflows for works, work details, and series.
+- `scripts/catalogue/catalogue_build_service.py`, `scripts/catalogue/catalogue_delete_service.py`, `scripts/catalogue/catalogue_moment_service.py`, and `scripts/catalogue/catalogue_prose_import_service.py` own scoped build, delete preview, moment preview, and prose/moment import route behavior.
 - [Catalogue Write Service Extraction](/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction) maps which remaining handler methods should move into callable service functions and which behavior is already local-app native.
 - `scripts/catalogue/catalogue_source.py` owns canonical source field order, shared catalogue id-list and detail-uid normalization, source record normalization, and source validation.
 - `scripts/catalogue/catalogue_routes.py` owns catalogue local-service endpoint path constants, the POST route inventory, and the CORS preflight route inventory shared by the write server and catalogue activity profiles.

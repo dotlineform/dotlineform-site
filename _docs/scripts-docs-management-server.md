@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server
 title: Docs Management Service
 added_date: 2026-04-24
-last_updated: 2026-05-22
+last_updated: 2026-05-23
 parent_id: docs-viewer
 sort_order: 15000
 ---
@@ -14,7 +14,7 @@ Service module:
 scripts/docs/docs_management_service.py
 ```
 
-This module owns shared Docs Viewer management behavior for Local Studio.
+This module owns the shared Docs Viewer management route dispatcher for Local Studio.
 It is called by `scripts/studio/studio_docs_api.py`, and browser traffic reaches it through the Local Studio app at `/studio/api/docs/...`.
 
 The old standalone `scripts/docs/docs_management_server.py` HTTP entrypoint has been removed.
@@ -35,14 +35,22 @@ The service expects the project to provide:
 
 ## Responsibilities
 
-- serves generated docs index, per-doc payload, docs-search, semantic-reference, source-config, and capability payloads to the Local Studio Docs API adapter
-- creates, imports, updates, moves, archives, deletes, rebuilds, and opens docs source files for configured writable scopes
-- owns the documents Data Sharing service calls for Library package preparation, returned-package review, and summary or hierarchy apply writes
-- appends unified activity rows for covered docs import, Data Sharing package/apply, and broken-links audit actions when valid activity context is supplied
-- coordinates successful source writes with the docs live watcher through short-lived suppression markers
+`scripts/docs/docs_management_service.py` dispatches route paths and keeps compatibility imports for existing tests and adapters.
+Focused modules own the workflow behavior behind it:
+
+- `scripts/docs/docs_management_context.py` owns shared paths, backups, repo/root helpers, CORS origin checks, compact logs, and path formatting.
+- `scripts/docs/docs_management_read_service.py` owns generated docs/search/reference reads and GET dispatch.
+- `scripts/docs/docs_management_capabilities_service.py` owns capability and scope availability payloads.
+- `scripts/docs/docs_management_mutation_service.py` owns docs source create, metadata, viewability, move, order normalization, archive, delete apply, and scope lifecycle apply routes.
+- `scripts/docs/docs_management_import_service.py` owns Docs/HTML import-source dependency wiring.
+- `scripts/docs/docs_management_data_sharing_service.py` owns Data Sharing dependency wiring and handler registry assembly.
+- `scripts/docs/docs_management_source_service.py` owns source-file open behavior.
+- `scripts/docs/docs_management_broken_links_service.py` owns broken-links audit route behavior.
+
+Together these modules serve generated docs index, per-doc payload, docs-search, semantic-reference, source-config, and capability payloads; coordinate source mutations, imports, rebuilds, and Data Sharing; append unified activity rows for covered actions; and coordinate successful source writes with the docs live watcher through short-lived suppression markers.
 
 Endpoint constants live in `scripts/docs/docs_management_routes.py`.
-HTTP transport lives in the Local Studio app server, not in this Docs module.
+HTTP transport lives in the Local Studio app server, not in these Docs modules.
 
 ## Child References
 

@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server-operations
 title: Docs Management Service Operations
 added_date: 2026-05-19
-last_updated: 2026-05-22
+last_updated: 2026-05-23
 parent_id: scripts-docs-management-server
 sort_order: 15500
 ---
@@ -34,7 +34,7 @@ sort_order: 15500
 ## Operational Notes
 
 - normal `bin/dev-studio` runs host Docs Viewer management through the Local Studio App
-- shared Docs management behavior lives in `scripts/docs/docs_management_service.py`
+- shared Docs management dispatch lives in `scripts/docs/docs_management_service.py`; workflow behavior is split into focused `docs_management_*_service.py` modules for context, reads, capabilities, source mutations, imports, Data Sharing, source opening, and broken-links audit
 - the old standalone Docs Management HTTP server and `127.0.0.1:8789` fallback have been removed
 - the shared Docs Viewer probes `GET /capabilities` for generated-data reads on normal local loads and for write capability when `?mode=manage` is present
 - if the local service is unavailable, the viewer falls back to static generated JSON for normal public-style reads; manage mode stays read-only and shows a manage-mode unavailable message
