@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-22-rechecked-studio-css-ownership",
+  "date": "2026-05-22",
+  "title": "Rechecked Studio CSS Ownership",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio-ui",
+    "studio",
+    "workflow"
+  ],
+  "summary": "Removed the retired Docs Broken Links route CSS from the Studio stylesheet and moved the local Studio activity route styles out of the public main stylesheet into the Studio-owned stylesheet.",
+  "effect": "The public stylesheet no longer carries retired Docs Broken Links or local-only activity route CSS, while still-public catalogue search and shared Studio shell styles remain in the stylesheet loaded by their Jekyll pages.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "css-ownership",
+    "local-studio-app",
+    "route-retirement"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app",
+    "ui",
+    "ui-framework"
+  ],
+  "related_files": [
+    "assets/css/main.css",
+    "assets/studio/css/studio.css",
+    "_docs/local-studio-app-implementation-plan.md"
+  ]
+}
