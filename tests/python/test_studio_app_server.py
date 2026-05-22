@@ -323,6 +323,8 @@ def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> No
 def test_catalogue_thin_service_routes_bypass_legacy_handler() -> None:
     service_paths = studio_catalogue_api.catalogue_write_service.SERVICE_POST_PATHS
     assert {
+        "/work/create",
+        "/work-detail/create",
         "/delete-preview",
         "/build-preview",
         "/build-apply",
@@ -367,7 +369,7 @@ def test_catalogue_delete_preview_uses_callable_service_route() -> None:
         assert payload["preview"]["record"]["work_id"] == "00042"
 
 
-def test_catalogue_editor_create_work_dry_run_uses_in_process_write_handler() -> None:
+def test_catalogue_editor_create_work_dry_run_uses_callable_service_route() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
         source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
@@ -413,6 +415,66 @@ def test_catalogue_editor_create_work_dry_run_uses_in_process_write_handler() ->
         assert payload["dry_run"] is True
         assert payload["would_write"] is True
         assert json.loads((source_dir / "works.json").read_text(encoding="utf-8"))["works"] == {}
+
+
+def test_catalogue_editor_create_work_detail_dry_run_uses_callable_service_route() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir) / "repo"
+        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir.mkdir(parents=True)
+        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        (source_dir / "works.json").write_text(
+            json.dumps(
+                {
+                    "catalogue_source_works_version": "catalogue_source_works_v1",
+                    "works": {
+                        "00042": {
+                            "work_id": "00042",
+                            "title": "Published Work",
+                            "status": "published",
+                            "series_ids": [],
+                        }
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        (source_dir / "work_details.json").write_text(
+            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
+            encoding="utf-8",
+        )
+        (source_dir / "series.json").write_text(
+            json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
+            encoding="utf-8",
+        )
+        (source_dir / "moments.json").write_text(
+            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
+            encoding="utf-8",
+        )
+
+        status, payload = catalogue_post_response(
+            repo_root,
+            "/work-detail/create",
+            {
+                "work_id": "42",
+                "detail_id": "1",
+                "record": {
+                    "title": "Detail",
+                    "section_title": "Details",
+                    "status": "draft",
+                },
+            },
+            dry_run=True,
+        )
+
+        assert status == studio_docs_api.HTTPStatus.OK
+        assert payload["ok"] is True
+        assert payload["detail_uid"] == "00042-001"
+        assert payload["work_id"] == "00042"
+        assert payload["created"] is True
+        assert payload["dry_run"] is True
+        assert payload["would_write"] is True
+        assert json.loads((source_dir / "work_details.json").read_text(encoding="utf-8"))["work_details"] == {}
 
 
 def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:

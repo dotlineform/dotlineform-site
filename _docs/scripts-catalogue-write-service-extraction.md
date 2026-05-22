@@ -2,7 +2,7 @@
 doc_id: scripts-catalogue-write-service-extraction
 title: Catalogue Write Service Extraction
 added_date: 2026-05-22
-last_updated: 2026-05-22
+last_updated: 2026-05-23
 parent_id: scripts-catalogue-write-server
 sort_order: 4400
 ---
@@ -60,6 +60,18 @@ If a later service module is introduced, these direct functions can move or dele
 Although the handler method is thin, its `save_published` request extraction depends on the same record-update helpers as publication apply and the save handlers.
 Move it with publication apply instead of duplicating the source-save extraction rules.
 
+## Create Mutation Slice
+
+`scripts/catalogue/catalogue_write_service.py` now also owns:
+
+| Route | Service function path | Notes |
+| --- | --- | --- |
+| `POST /studio/api/catalogue/work/create` | `work_create_payload()` | Calls `catalogue_source_mutation.plan_work_create()`, writes through `catalogue_transactions.execute_source_json_write()`, refreshes lookups after real writes, and writes Studio Activity rows best-effort. |
+| `POST /studio/api/catalogue/work-detail/create` | `work_detail_create_payload()` | Calls `catalogue_source_mutation.plan_work_detail_create()`, preserves parent-work validation and generated `section_id`, writes through the transaction helper, refreshes lookups after real writes, and writes Studio Activity rows best-effort. |
+
+These are the first mutation routes moved out of fake `Handler` reuse.
+The save routes remain separate because they also coordinate field-registry build planning, targeted lookup invalidation, removed-series rebuild scope, and optional public build follow-through.
+
 ## Handler Inventory
 
 | Handler method | Size | Route family | Main dependencies | Extraction assessment |
@@ -71,8 +83,8 @@ Move it with publication apply instead of duplicating the source-save extraction
 | `_handle_publication_apply` | 151 lines | publication | `catalogue_publication`, cleanup transactions, lookup/build/activity helpers | Mixed orchestration. Extract after preview/delete because apply coordinates several existing modules. |
 | `_handle_delete_preview` | 14 lines | delete | `catalogue_delete_plans.build_delete_preview` | Moved for Local Studio to `catalogue_write_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_delete_apply` | 98 lines | delete | `catalogue_delete_plans`, cleanup transactions, activity, search rebuild | Mixed orchestration. Extract as delete-apply service after preview is direct. |
-| `_handle_work_create` | 98 lines | work create | `catalogue_source_mutation`, source write transaction, lookup/activity | Trapped orchestration. Extract with work save or immediately after it. |
-| `_handle_work_detail_create` | 105 lines | detail create | `catalogue_source_mutation`, source write transaction, lookup/activity | Trapped orchestration. Extract with detail save. |
+| `_handle_work_create` | 98 lines | work create | `catalogue_source_mutation`, source write transaction, lookup/activity | Moved for Local Studio to `catalogue_write_service.py`; standalone wrapper still has its old handler method. |
+| `_handle_work_detail_create` | 105 lines | detail create | `catalogue_source_mutation`, source write transaction, lookup/activity | Moved for Local Studio to `catalogue_write_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_work_detail_save` | 183 lines | detail save | `catalogue_source_mutation`, `catalogue_lookup_refresh`, `catalogue_save_build`, activity | Trapped orchestration. Extract as detail-save service. |
 | `_handle_work_file_*` | 2 lines each | retired work file metadata | none | Retired endpoints. Keep excluded from new service unless a current route still needs them. |
 | `_handle_work_link_*` | 2 lines each | retired work link metadata | none | Retired endpoints. Keep excluded from new service unless a current route still needs them. |
@@ -95,7 +107,7 @@ Move it with publication apply instead of duplicating the source-save extraction
 
 1. Keep `scripts/catalogue/catalogue_write_service.py` small: route mapping, status selection, response shaping, and calls into existing domain modules.
 2. Treat the first service slice as complete for delete preview, build preview/apply, moment preview, prose import preview/apply, and moment import preview/apply.
-3. Move work and work-detail create/save as the first high-value mutation group.
+3. Move work and work-detail save as the next high-value mutation group.
    Keep source mutation planning in `catalogue_source_mutation.py`, transaction writes in `catalogue_transactions.py`, lookup refresh in `catalogue_lookup_refresh.py`, and activity row construction in `catalogue_activity.py`.
 4. Move series create/save and moment save after the work/detail pattern is verified.
 5. Move publication preview/apply and delete apply as separate slices because they coordinate source-save extraction, cleanup, build, lookup, and activity behavior.

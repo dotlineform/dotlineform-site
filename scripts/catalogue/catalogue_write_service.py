@@ -9,12 +9,25 @@ from typing import Any, Mapping
 
 from catalogue import catalogue_activity as activity
 from catalogue import catalogue_delete_plans
+from catalogue import catalogue_lookup_refresh as lookup_refresh
 from catalogue import catalogue_prose_import as prose_import
+from catalogue import catalogue_source_mutation as source_mutation
+from catalogue import catalogue_transactions as transactions
 from catalogue.catalogue_build_field_plan import apply_field_build_plan_to_scope, build_field_plan_for_scope
 from catalogue.catalogue_build_media import build_local_media_plan, build_moment_readiness
 from catalogue.catalogue_build_scopes import build_scope_for_moment, build_scope_for_series, build_scope_for_work, preview_moment_source
 from catalogue.catalogue_json_build import run_scoped_build_scope
-from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, load_json_file, normalize_detail_uid_value, normalize_series_ids_value, slug_id
+from catalogue.catalogue_source import (
+    DEFAULT_SOURCE_DIR,
+    DETAIL_FIELDS,
+    SOURCE_FILES,
+    WORK_FIELDS,
+    load_json_file,
+    normalize_detail_uid_value,
+    normalize_series_ids_value,
+    records_from_json_source,
+    slug_id,
+)
 from catalogue.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, MOMENT_METADATA_FILENAME, normalize_moment_filename, normalize_moment_metadata_record
 from catalogue.series_ids import normalize_series_id
 from script_logging import append_script_log
@@ -25,6 +38,8 @@ BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
 
 SERVICE_POST_PATHS = {
+    "/work/create",
+    "/work-detail/create",
     "/delete-preview",
     "/build-preview",
     "/build-apply",
@@ -40,7 +55,11 @@ SERVICE_POST_PATHS = {
 class CatalogueWriteContext:
     repo_root: Path
     source_dir: Path
+    lookup_dir: Path
+    works_path: Path
+    work_details_path: Path
     moments_path: Path
+    allowed_write_paths: set[Path]
     allowed_write_roots: set[Path]
     backups_dir: Path
     dry_run: bool = False
@@ -58,7 +77,15 @@ def build_catalogue_write_context(repo_root: Path, *, dry_run: bool = False) -> 
     return CatalogueWriteContext(
         repo_root=resolved_root,
         source_dir=source_dir,
+        lookup_dir=(resolved_root / "assets" / "studio" / "data" / "catalogue_lookup").resolve(),
+        works_path=(source_dir / SOURCE_FILES["works"]).resolve(),
+        work_details_path=(source_dir / SOURCE_FILES["work_details"]).resolve(),
         moments_path=(source_dir / MOMENT_METADATA_FILENAME).resolve(),
+        allowed_write_paths={
+            (source_dir / filename).resolve()
+            for kind, filename in SOURCE_FILES.items()
+            if kind != "meta"
+        } | {(source_dir / MOMENT_METADATA_FILENAME).resolve()},
         allowed_write_roots={
             (resolved_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "works").resolve(),
             (resolved_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "series").resolve(),
@@ -77,6 +104,10 @@ def handle_catalogue_post(
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, Any]]:
     context = build_catalogue_write_context(repo_root, dry_run=dry_run)
+    if api_path == "/work/create":
+        return HTTPStatus.OK, work_create_payload(context, body)
+    if api_path == "/work-detail/create":
+        return HTTPStatus.OK, work_detail_create_payload(context, body)
     if api_path == "/delete-preview":
         return HTTPStatus.OK, delete_preview_payload(context, body)
     if api_path == "/build-preview":
@@ -95,6 +126,209 @@ def handle_catalogue_post(
     if api_path == "/moment/import-apply":
         return HTTPStatus.OK, moment_import_apply_payload(context, body)
     raise FileNotFoundError(f"Unknown catalogue service route: {api_path}")
+
+
+def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
+    requested_work_id = body.get("work_id")
+    work_update = extract_work_update(body)
+    if requested_work_id is None:
+        requested_work_id = work_update.get("work_id")
+    work_id = slug_id(requested_work_id)
+    activity_context = activity.normalize_activity_context_for_profile(
+        body.get("activity_context"),
+        activity.ACTIVITY_PROFILE_CREATE_WORK,
+        record_id=work_id,
+    )
+
+    works_payload = load_works_payload(context.works_path)
+    works = works_payload["works"]
+    if isinstance(works.get(work_id), dict):
+        raise ValueError(f"work_id already exists: {work_id}")
+
+    mutation_plan = source_mutation.plan_work_create(
+        records_from_json_source(context.source_dir),
+        works,
+        work_id,
+        work_update,
+    )
+    if mutation_plan.validation_errors:
+        raise ValueError("source validation failed: " + "; ".join(mutation_plan.validation_errors[:20]))
+
+    target_path = context.works_path.resolve()
+    if target_path not in context.allowed_write_paths:
+        raise ValueError("write target not allowlisted")
+    write_result = transactions.execute_source_json_write(
+        {target_path: mutation_plan.payload},
+        context.backups_dir,
+        dry_run=context.dry_run,
+        repo_root=context.repo_root,
+    )
+
+    payload: dict[str, Any] = {
+        "ok": True,
+        "work_id": work_id,
+        "created": True,
+        "changed": True,
+        "changed_fields": mutation_plan.changed_fields,
+        "record": mutation_plan.updated_record,
+    }
+    if activity_context:
+        payload["activity_context"] = activity_context
+    if context.dry_run:
+        payload["dry_run"] = True
+        payload["would_write"] = True
+    else:
+        payload["saved_at_utc"] = activity.utc_now()
+        if write_result.backups:
+            payload["backups"] = write_result.backups
+
+    log_event(
+        context.repo_root,
+        "catalogue_work_create",
+        {
+            "work_id": work_id,
+            "changed_fields": payload["changed_fields"],
+            "dry_run": context.dry_run,
+        },
+    )
+    if not context.dry_run:
+        refresh_result = refresh_lookup_payloads(context)
+        payload["lookup_refresh"] = refresh_result
+        if activity_context:
+            now_utc = activity.utc_now()
+            record_groups = activity.activity_record_groups(works=[work_id])
+            append_activity_rows(
+                context.repo_root,
+                payload,
+                [
+                    *activity.catalogue_source_write_activity_rows(
+                        activity.ACTIVITY_PROFILE_CREATE_WORK,
+                        activity_context,
+                        now_utc=now_utc,
+                        script_purpose_id="save-canonical-data",
+                        record_groups=record_groups,
+                        detail_items=[
+                            f"Created canonical draft work record {work_id}",
+                            f"Changed fields: {', '.join(payload['changed_fields'])}",
+                        ],
+                    ),
+                    activity.catalogue_lookup_activity_row(
+                        activity_context,
+                        now_utc=now_utc,
+                        record_groups=record_groups,
+                        detail_items=[
+                            f"Refreshed catalogue lookup data after creating work {work_id}",
+                            f"Wrote {refresh_result['written_count']} lookup file(s)",
+                        ],
+                    ),
+                ],
+            )
+    return payload
+
+
+def work_detail_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
+    requested_detail_uid = body.get("detail_uid")
+    detail_update = extract_work_detail_update(body)
+    requested_work_id = body.get("work_id", detail_update.get("work_id"))
+    requested_detail_id = body.get("detail_id", detail_update.get("detail_id"))
+    work_id = slug_id(requested_work_id)
+    detail_id = slug_id(requested_detail_id, width=3)
+    detail_uid = normalize_detail_uid_value(requested_detail_uid or f"{work_id}-{detail_id}")
+    activity_context = activity.normalize_activity_context_for_profile(
+        body.get("activity_context"),
+        activity.ACTIVITY_PROFILE_CREATE_WORK_DETAIL,
+        record_id=detail_uid,
+    )
+
+    details_payload = load_work_details_payload(context.work_details_path)
+    work_details = details_payload["work_details"]
+    if isinstance(work_details.get(detail_uid), dict):
+        raise ValueError(f"detail_uid already exists: {detail_uid}")
+
+    source_records = records_from_json_source(context.source_dir)
+    mutation_plan = source_mutation.plan_work_detail_create(
+        source_records,
+        work_details,
+        detail_uid,
+        work_id,
+        detail_id,
+        detail_update,
+    )
+    if mutation_plan.validation_errors:
+        raise ValueError("source validation failed: " + "; ".join(mutation_plan.validation_errors[:20]))
+
+    target_path = context.work_details_path.resolve()
+    if target_path not in context.allowed_write_paths:
+        raise ValueError("write target not allowlisted")
+    write_result = transactions.execute_source_json_write(
+        {target_path: mutation_plan.payload},
+        context.backups_dir,
+        dry_run=context.dry_run,
+        repo_root=context.repo_root,
+    )
+
+    payload: dict[str, Any] = {
+        "ok": True,
+        "detail_uid": detail_uid,
+        "work_id": work_id,
+        "created": True,
+        "changed": True,
+        "changed_fields": mutation_plan.changed_fields,
+        "record": mutation_plan.updated_record,
+    }
+    if activity_context:
+        payload["activity_context"] = activity_context
+    if context.dry_run:
+        payload["dry_run"] = True
+        payload["would_write"] = True
+    else:
+        payload["saved_at_utc"] = activity.utc_now()
+        if write_result.backups:
+            payload["backups"] = write_result.backups
+
+    log_event(
+        context.repo_root,
+        "catalogue_work_detail_create",
+        {
+            "detail_uid": detail_uid,
+            "work_id": work_id,
+            "changed_fields": payload["changed_fields"],
+            "dry_run": context.dry_run,
+        },
+    )
+    if not context.dry_run:
+        refresh_result = refresh_lookup_payloads(context)
+        payload["lookup_refresh"] = refresh_result
+        if activity_context:
+            now_utc = activity.utc_now()
+            record_groups = activity.activity_record_groups(works=[work_id], work_details=[detail_uid])
+            append_activity_rows(
+                context.repo_root,
+                payload,
+                [
+                    *activity.catalogue_source_write_activity_rows(
+                        activity.ACTIVITY_PROFILE_CREATE_WORK_DETAIL,
+                        activity_context,
+                        now_utc=now_utc,
+                        script_purpose_id="save-canonical-data",
+                        record_groups=record_groups,
+                        detail_items=[
+                            f"Created canonical draft work detail record {detail_uid}",
+                            f"Changed fields: {', '.join(payload['changed_fields'])}",
+                        ],
+                    ),
+                    activity.catalogue_lookup_activity_row(
+                        activity_context,
+                        now_utc=now_utc,
+                        record_groups=record_groups,
+                        detail_items=[
+                            f"Refreshed catalogue lookup data after creating work detail {detail_uid}",
+                            f"Wrote {refresh_result['written_count']} lookup file(s)",
+                        ],
+                    ),
+                ],
+            )
+    return payload
 
 
 def delete_preview_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
@@ -363,6 +597,37 @@ def load_moments_payload(path: Path) -> dict[str, Any]:
     return payload
 
 
+def load_works_payload(path: Path) -> dict[str, Any]:
+    payload = load_json_file(path)
+    works = payload.get("works")
+    if not isinstance(works, dict):
+        raise ValueError("works source file must include a works object")
+    return payload
+
+
+def load_work_details_payload(path: Path) -> dict[str, Any]:
+    payload = load_json_file(path)
+    work_details = payload.get("work_details")
+    if not isinstance(work_details, dict):
+        raise ValueError("work details source file must include a work_details object")
+    return payload
+
+
+def refresh_lookup_payloads(context: CatalogueWriteContext) -> dict[str, Any]:
+    result = lookup_refresh.full_lookup_refresh(context.source_dir, context.lookup_dir, context.repo_root)
+    log_event(
+        context.repo_root,
+        "catalogue_lookup_refresh",
+        {
+            "lookup_dir": context.rel_path(context.lookup_dir),
+            "mode": result["mode"],
+            "artifacts": result["artifacts"],
+            "written_count": result["written_count"],
+        },
+    )
+    return result
+
+
 def normalize_moment_id_value(value: Any) -> str:
     text = str(value or "").strip()
     if not text:
@@ -419,6 +684,34 @@ def extract_delete_request(body: Mapping[str, Any]) -> dict[str, str]:
         "kind": kind,
         "id": record_id,
     }
+
+
+def extract_work_update(body: Mapping[str, Any]) -> dict[str, Any]:
+    raw_record = body.get("record", body.get("work"))
+    if raw_record is None:
+        raw_record = {field: body[field] for field in WORK_FIELDS if field in body}
+    if not isinstance(raw_record, dict):
+        raise ValueError("record must be an object")
+    unknown = sorted(str(key) for key in raw_record.keys() if str(key) not in WORK_FIELDS)
+    if unknown:
+        raise ValueError(f"record contains unsupported fields: {', '.join(unknown)}")
+    if not raw_record:
+        raise ValueError("record must include at least one work field")
+    return dict(raw_record)
+
+
+def extract_work_detail_update(body: Mapping[str, Any]) -> dict[str, Any]:
+    raw_record = body.get("record", body.get("work_detail"))
+    if raw_record is None:
+        raw_record = {field: body[field] for field in DETAIL_FIELDS if field in body}
+    if not isinstance(raw_record, dict):
+        raise ValueError("record must be an object")
+    unknown = sorted(str(key) for key in raw_record.keys() if str(key) not in DETAIL_FIELDS)
+    if unknown:
+        raise ValueError(f"record contains unsupported fields: {', '.join(unknown)}")
+    if not raw_record:
+        raise ValueError("record must include at least one work detail field")
+    return dict(raw_record)
 
 
 def log_event(repo_root: Path, event: str, details: Mapping[str, Any] | None = None) -> None:

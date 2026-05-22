@@ -1,0 +1,35 @@
+{
+  "id": "change-2026-05-23-extracted-catalogue-create-service-routes",
+  "date": "2026-05-23",
+  "title": "Extracted Catalogue Create Service Routes",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "catalogue",
+    "scripts"
+  ],
+  "summary": "Moved Local Studio work-create and work-detail-create catalogue routes from fake in-process `catalogue_write_server.Handler` reuse to callable service functions in `scripts/catalogue/catalogue_write_service.py`.",
+  "effect": "The first catalogue mutation routes now use a direct service boundary while preserving source mutation planning, transaction writes, lookup refreshes, and Studio Activity behavior. Save routes remain on the legacy handler pending a separate field-registry/build-follow-through extraction.",
+  "source": {
+    "file": "_docs/scripts-catalogue-write-service-extraction.md",
+    "archive": "direct"
+  },
+  "subjects": [
+    "local-studio-app",
+    "catalogue-write-service",
+    "service-consolidation",
+    "server-refactor"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "scripts-catalogue-write-service-extraction",
+    "scripts-catalogue-write-server-operations",
+    "local-studio-app-implementation-plan"
+  ],
+  "related_files": [
+    "scripts/catalogue/catalogue_write_service.py",
+    "scripts/studio/studio_catalogue_api.py",
+    "tests/python/test_studio_app_server.py"
+  ]
+}

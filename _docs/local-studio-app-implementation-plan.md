@@ -309,6 +309,7 @@ The catalogue editor write/build/publication/delete/prose-import/moment-import e
 `bin/dev-studio` no longer starts the standalone catalogue write server by default; `CATALOGUE_WRITE_SERVER_ENABLED=1` remains available for fallback/debug runs.
 The catalogue write service extraction inventory is captured in [Catalogue Write Service Extraction](/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction).
 The first callable catalogue service slice now routes delete preview, build preview/apply, moment preview, prose import preview/apply, and moment import preview/apply through `scripts/catalogue/catalogue_write_service.py`.
+The first mutation extraction slice also routes work create and work-detail create through `scripts/catalogue/catalogue_write_service.py`.
 The next catalogue refactor should remove the fake in-process `Handler` dependency from `scripts/studio/studio_catalogue_api.py` without moving all handler code into one new large service file.
 Active Local Studio Docs browser transport now uses `/studio/api/docs/...`; `127.0.0.1:8789` is no longer a browser fallback for migrated routes.
 The standalone Docs Management server entrypoint has been removed; Local Studio imports `scripts/docs/docs_management_service.py` for shared Docs behavior.
