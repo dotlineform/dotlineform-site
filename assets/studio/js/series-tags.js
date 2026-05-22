@@ -477,7 +477,7 @@ async function handleClearSession(state) {
 }
 
 async function probeImportAvailability(state) {
-  state.importAvailable = await probeStudioHealth(500);
+  state.importAvailable = await probeStudioHealth(500, { config: state.config });
   renderChrome(state);
   syncRouteBusyState(state);
 }

@@ -10,7 +10,7 @@ import sys
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, unquote, urlsplit
+from urllib.parse import parse_qs, unquote, urlparse, urlsplit
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -20,8 +20,8 @@ if str(STUDIO_DIR) not in sys.path:
 
 from studio_app_config import asset_version, runtime_config  # noqa: E402
 from studio_app_views import docs_viewer_manage_view, studio_home_view, tag_groups_view  # noqa: E402
-from studio_analytics_api import analytics_get_payload  # noqa: E402
-from studio_docs_api import docs_allowed_origin, docs_management_get_payload, docs_management_post_response  # noqa: E402
+from studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
+from studio_docs_api import docs_management_get_payload, docs_management_post_response  # noqa: E402
 
 
 STATIC_PREFIXES = ("/assets/",)
@@ -82,8 +82,14 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
+        if path.startswith("/studio/api/analytics/"):
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_analytics_api_post_json(path.removeprefix("/studio/api/analytics"))
+            return
         if path.startswith("/studio/api/docs/"):
-            if not self.origin_allowed_for_docs_api():
+            if not self.origin_allowed_for_local_api():
                 self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
                 return
             self.send_docs_api_post_json(path.removeprefix("/studio/api/docs"))
@@ -94,10 +100,10 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if not path.startswith("/studio/api/docs/"):
+        if not path.startswith(("/studio/api/docs/", "/studio/api/analytics/")):
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
-        if not self.origin_allowed_for_docs_api():
+        if not self.origin_allowed_for_local_api():
             self.send_response(HTTPStatus.FORBIDDEN)
             self.end_headers()
             return
@@ -109,9 +115,26 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         return path in STATIC_FILES or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
 
     def allowed_origin(self) -> str:
-        return docs_allowed_origin(self.repo_root, self.headers.get("Origin", ""))
+        origin = self.headers.get("Origin", "")
+        if not origin:
+            return ""
+        try:
+            parsed = urlparse(origin)
+        except Exception:
+            return ""
+        if parsed.scheme != "http":
+            return ""
+        if parsed.hostname not in {"localhost", "127.0.0.1"}:
+            return ""
+        if parsed.path not in {"", "/"}:
+            return ""
+        if parsed.params or parsed.query or parsed.fragment:
+            return ""
+        if parsed.port is None:
+            return f"{parsed.scheme}://{parsed.hostname}"
+        return f"{parsed.scheme}://{parsed.hostname}:{parsed.port}"
 
-    def origin_allowed_for_docs_api(self) -> bool:
+    def origin_allowed_for_local_api(self) -> bool:
         origin = self.headers.get("Origin", "")
         return not origin or bool(self.allowed_origin())
 
@@ -149,6 +172,18 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             self.send_json(analytics_get_payload(self.repo_root, api_path))
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_analytics_api_post_json(self, api_path: str) -> None:
+        try:
+            body = self.read_json_body()
+            status, payload = analytics_post_response(self.repo_root, api_path, body)
+            self.send_json(payload, status)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 

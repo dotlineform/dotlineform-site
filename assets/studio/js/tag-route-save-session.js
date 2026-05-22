@@ -12,7 +12,7 @@ export async function probeTagRouteSaveMode(state, options = {}) {
   const timeoutMs = Number.isFinite(Number(options.timeoutMs)) ? Number(options.timeoutMs) : 500;
   const availableMode = options.availableMode || "post";
   const fallbackMode = options.fallbackMode || "patch";
-  const ok = await healthProbe(timeoutMs);
+  const ok = await healthProbe(timeoutMs, { config: state.config });
   state.saveMode = ok ? availableMode : fallbackMode;
   if ("importAvailable" in state || options.syncImportAvailable) {
     state.importAvailable = ok;

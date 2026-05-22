@@ -43,10 +43,16 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
     "analytics": {
         "base": "/studio/api/analytics",
         "health": "/studio/api/analytics/health",
+        "import_tag_assignments": "/studio/api/analytics/import-tag-assignments",
+        "import_tag_assignments_preview": "/studio/api/analytics/import-tag-assignments-preview",
+        "import_tag_registry": "/studio/api/analytics/import-tag-registry",
+        "mutate_tag": "/studio/api/analytics/mutate-tag",
+        "mutate_tag_preview": "/studio/api/analytics/mutate-tag-preview",
         "tag_aliases": "/studio/api/analytics/tag-aliases",
         "tag_assignments": "/studio/api/analytics/tag-assignments",
         "tag_groups": "/studio/api/analytics/tag-groups",
         "tag_registry": "/studio/api/analytics/tag-registry",
+        "save_tags": "/studio/api/analytics/save-tags",
     },
     "docs": {
         "base": "/studio/api/docs",

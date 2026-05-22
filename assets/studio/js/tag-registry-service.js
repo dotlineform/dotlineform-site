@@ -2,6 +2,7 @@ import {
   getStudioText
 } from "./studio-config.js";
 import {
+  getStudioWriteEndpoint,
   postJson,
   STUDIO_WRITE_ENDPOINTS
 } from "./studio-transport.js";
@@ -49,7 +50,7 @@ export async function previewDeleteImpact(options) {
   }
 
   try {
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.mutateTagPreview, payload);
+    const response = await postJson(getStudioWriteEndpoint("mutateTagPreview", config), payload);
     const summary = buildMutationSummary(response);
     return {
       ok: true,
@@ -91,7 +92,7 @@ export async function submitTagEdit(options) {
   }
 
   try {
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.mutateTag, {
+    const response = await postJson(getStudioWriteEndpoint("mutateTag", config), {
       action: "edit",
       tag_id: tag.tagId,
       description,
@@ -118,7 +119,7 @@ export async function submitCreateTag(options) {
   const { saveMode, newTagRow, config, importMode = "add", state } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagRegistry, {
+      const response = await postJson(getStudioWriteEndpoint("importTagRegistry", config), {
         mode: importMode,
         import_registry: {
           tags: [newTagRow]
@@ -173,7 +174,7 @@ export async function submitDeleteTag(options) {
   }
 
   try {
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.mutateTag, {
+    const response = await postJson(getStudioWriteEndpoint("mutateTag", config), {
       action: "delete",
       tag_id: tag.tagId,
       client_time_utc: utcTimestamp(),
@@ -249,7 +250,7 @@ export async function submitRegistryImport(options) {
   const { saveMode, importMode, importRegistry, filename, config, state } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagRegistry, {
+      const response = await postJson(getStudioWriteEndpoint("importTagRegistry", config), {
         mode: importMode,
         import_registry: importRegistry,
         import_filename: filename || "",

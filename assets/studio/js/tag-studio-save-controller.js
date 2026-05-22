@@ -35,7 +35,7 @@ export function clearTagStudioOfflineAutosave(state) {
 export async function probeTagStudioSaveMode(state, callbacks = {}) {
   if (state.saveModeProbePending) return;
   state.saveModeProbePending = true;
-  const ok = await probeStudioHealth(500);
+  const ok = await probeStudioHealth(500, { config: state.config });
   state.saveModeProbePending = false;
   state.lastSaveModeHealthOk = ok;
   state.saveMode = ok && !state.hasOfflineStagedSeries ? "post" : "offline";
@@ -148,12 +148,12 @@ async function handleTagStudioSaveInner(state, callbacks) {
         recordId: state.seriesId
       });
       if (diff.seriesChanged) {
-        results.push(await postTags(state.seriesId, null, diff.nextSeriesRows, false, utcTimestamp, undefined, activityContext));
+        results.push(await postTags(state.seriesId, null, diff.nextSeriesRows, false, utcTimestamp, undefined, activityContext, state.config));
       }
       for (const workId of diff.changedWorkIds) {
         const nextTags = diff.nextWorkStateById.get(workId) || [];
         const keepWork = diff.nextWorkStateById.has(workId);
-        results.push(await postTags(state.seriesId, workId, nextTags, keepWork, utcTimestamp, undefined, activityContext));
+        results.push(await postTags(state.seriesId, workId, nextTags, keepWork, utcTimestamp, undefined, activityContext, state.config));
       }
       const lastResult = results[results.length - 1] || {};
       const savedAt = String(lastResult.updated_at_utc || utcTimestamp());

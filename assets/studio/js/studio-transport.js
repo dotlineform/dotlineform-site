@@ -15,6 +15,16 @@ const STUDIO_WRITE_ENDPOINTS = Object.freeze({
   promoteTagAliasPreview: "http://127.0.0.1:8787/promote-tag-alias-preview"
 });
 
+const STUDIO_WRITE_RUNTIME_KEYS = Object.freeze({
+  health: "health",
+  importTagAssignments: "import_tag_assignments",
+  importTagAssignmentsPreview: "import_tag_assignments_preview",
+  importTagRegistry: "import_tag_registry",
+  mutateTag: "mutate_tag",
+  mutateTagPreview: "mutate_tag_preview",
+  saveTags: "save_tags"
+});
+
 const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   bulkSave: "http://127.0.0.1:8788/catalogue/bulk-save",
   deletePreview: "http://127.0.0.1:8788/catalogue/delete-preview",
@@ -77,8 +87,17 @@ export {
   CATALOGUE_WRITE_ENDPOINTS
 };
 
-export async function probeStudioHealth(timeoutMs = 500) {
-  return probeHealth(STUDIO_WRITE_ENDPOINTS.health, timeoutMs);
+export function getStudioWriteEndpoint(key, config = null) {
+  const runtimeKey = STUDIO_WRITE_RUNTIME_KEYS[key] || "";
+  const runtime = config && config.app && config.app.runtime;
+  const analytics = runtime && runtime.services && runtime.services.analytics;
+  const configured = runtimeKey && analytics && analytics[runtimeKey];
+  if (typeof configured === "string" && configured.trim()) return configured;
+  return STUDIO_WRITE_ENDPOINTS[key] || "";
+}
+
+export async function probeStudioHealth(timeoutMs = 500, options = {}) {
+  return probeHealth(getStudioWriteEndpoint("health", options.config), timeoutMs);
 }
 
 export async function probeCatalogueHealth(timeoutMs = 500) {

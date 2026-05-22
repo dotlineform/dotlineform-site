@@ -1,9 +1,9 @@
 import {
-  STUDIO_WRITE_ENDPOINTS,
+  getStudioWriteEndpoint,
   postJson
 } from "./studio-transport.js";
 
-export async function postTags(seriesId, workId, tags, keepWork, utcTimestampFn = utcTimestamp, signal, activityContext = null) {
+export async function postTags(seriesId, workId, tags, keepWork, utcTimestampFn = utcTimestamp, signal, activityContext = null, config = null) {
   const payload = {
     series_id: seriesId,
     tags,
@@ -16,7 +16,7 @@ export async function postTags(seriesId, workId, tags, keepWork, utcTimestampFn 
   if (activityContext) {
     payload.activity_context = activityContext;
   }
-  return postJson(STUDIO_WRITE_ENDPOINTS.saveTags, payload, { signal });
+  return postJson(getStudioWriteEndpoint("saveTags", config), payload, { signal });
 }
 
 export function buildPatchSnippet(seriesId, diff, timestamp) {

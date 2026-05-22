@@ -1,0 +1,51 @@
+{
+  "id": "change-2026-05-22-added-local-analytics-tag-assignment-import-api",
+  "date": "2026-05-22",
+  "title": "Added Local Analytics Tag Assignment Import API",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "studio",
+    "analytics",
+    "testing"
+  ],
+  "summary": "Moved tag assignment import preview and apply routes into the local Studio app server while keeping broader registry, alias, and promotion mutations on the old tag write server.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "analytics",
+    "tag-assignments",
+    "assignment-import",
+    "app-server-api",
+    "service-consolidation"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/studio/studio_analytics_api.py",
+    "scripts/studio/studio_app_config.py",
+    "assets/studio/js/studio-transport.js",
+    "assets/studio/js/series-tags-import-workflow.js",
+    "tests/python/test_studio_app_server.py",
+    "tests/smoke/local_studio_analytics_tag_assignment_apis.py",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/site-request-studio-local-vanilla-web-app.md"
+  ],
+  "effect": "Migrated local app pages can now preview and apply tag assignment imports through /studio/api/analytics/import-tag-assignments-preview and /studio/api/analytics/import-tag-assignments. The routes reuse existing assignment import validation, conflict resolution, atomic write, backup, logging, and activity helpers, while the browser workflow keeps old 127.0.0.1:8787 URLs as compatibility fallback for unmigrated Jekyll-hosted pages.",
+  "verification": [
+    "Python compile checks passed for the touched Studio app server, analytics adapter, config, and smoke files",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/python/test_tag_assignment_service.py passed",
+    "tests/smoke/local_studio_analytics_tag_assignment_apis.py passed with loopback server permissions",
+    "tests/smoke/tag_route_shell_modules.py passed with loopback server permissions"
+  ]
+}

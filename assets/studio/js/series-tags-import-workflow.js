@@ -6,8 +6,8 @@ import {
   loadStudioAssignmentsJson
 } from "./studio-data.js";
 import {
+  getStudioWriteEndpoint,
   postJson,
-  STUDIO_WRITE_ENDPOINTS
 } from "./studio-transport.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 
@@ -33,7 +33,7 @@ export async function previewSeriesTagsImport(options = {}) {
   }
 
   try {
-    const importPreview = await postJson(STUDIO_WRITE_ENDPOINTS.importTagAssignmentsPreview, {
+    const importPreview = await postJson(getStudioWriteEndpoint("importTagAssignmentsPreview", config), {
       import_assignments: importPayload,
       import_filename: file.name || "",
       client_time_utc: new Date().toISOString()
@@ -75,7 +75,7 @@ export async function applySeriesTagsImport(options = {}) {
 
   try {
     const filename = file && file.name ? file.name : "";
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagAssignments, {
+    const response = await postJson(getStudioWriteEndpoint("importTagAssignments", config), {
       import_assignments: importPayload,
       import_filename: filename,
       resolutions: importResolutions || {},
