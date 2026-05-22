@@ -22,6 +22,7 @@ from catalogue.project_state_report import (  # noqa: E402
     resolve_projects_base_dir,
 )
 from local_env import runtime_env  # noqa: E402
+from media.build_thumbnail_quality_preview import build_preview as build_thumbnail_quality_preview  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
 from studio_activity import append_studio_activity  # noqa: E402
 
@@ -32,7 +33,7 @@ PROJECT_STATE_REPORT_API_PATH = "/studio/api/catalogue/project-state-report"
 
 def catalogue_get_payload(repo_root: Path, api_path: str) -> dict[str, Any]:
     if api_path == "/health":
-        return {"ok": True, "service": "studio_catalogue", "routes": ["project-state-report"]}
+        return {"ok": True, "service": "studio_catalogue", "routes": ["project-state-report", "thumbnail-quality-preview"]}
     raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
 
 
@@ -43,9 +44,11 @@ def catalogue_post_response(
     *,
     dry_run: bool = False,
 ) -> tuple[HTTPStatus, dict[str, Any]]:
-    if api_path != "/project-state-report":
-        raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
-    return HTTPStatus.OK, project_state_report_payload(repo_root, body, dry_run=dry_run)
+    if api_path == "/project-state-report":
+        return HTTPStatus.OK, project_state_report_payload(repo_root, body, dry_run=dry_run)
+    if api_path == "/thumbnail-quality-preview":
+        return HTTPStatus.OK, thumbnail_quality_preview_payload(repo_root, dry_run=dry_run)
+    raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
 
 
 def project_state_report_payload(
@@ -130,6 +133,25 @@ def project_state_report_payload(
             ],
         )
         activity.increment_studio_activity_count(payload, 1)
+    return payload
+
+
+def thumbnail_quality_preview_payload(repo_root: Path, *, dry_run: bool = False) -> dict[str, Any]:
+    payload = build_thumbnail_quality_preview(
+        repo_root,
+        env=runtime_env(repo_root=repo_root),
+        write=not dry_run,
+    )
+    payload["dry_run"] = dry_run
+    log_event(
+        repo_root,
+        "thumbnail_quality_preview",
+        {
+            "source_count": payload.get("source_count"),
+            "data_path": payload.get("data_path"),
+            "dry_run": dry_run,
+        },
+    )
     return payload
 
 

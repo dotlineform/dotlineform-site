@@ -276,6 +276,7 @@ Current narrow catalogue-report integration surfaced through this runtime:
 
 - `GET /studio/api/catalogue/health`
 - `POST /studio/api/catalogue/project-state-report`
+- `POST /studio/api/catalogue/thumbnail-quality-preview`
 
 The runner is therefore sufficient for route-shell and write-flow testing, but not a full content-generation pipeline.
 

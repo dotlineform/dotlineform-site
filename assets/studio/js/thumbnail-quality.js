@@ -4,9 +4,9 @@ import {
   loadStudioConfigWithText
 } from "./studio-config.js";
 import {
-  CATALOGUE_WRITE_ENDPOINTS,
+  THUMBNAIL_QUALITY_ENDPOINTS,
   postJson,
-  probeCatalogueHealth
+  probeThumbnailQualityCatalogueHealth
 } from "./studio-transport.js";
 import {
   initializeStudioRouteState
@@ -216,7 +216,7 @@ async function refreshPreview(state) {
   syncRefreshButtonState(state);
   setStatus(state.resultNode, "", pageText(state.config, "refreshing", "Refreshing thumbnail previews..."));
   try {
-    state.payload = await postJson(CATALOGUE_WRITE_ENDPOINTS.thumbnailQualityPreview, {});
+    state.payload = await postJson(THUMBNAIL_QUALITY_ENDPOINTS.refresh, {});
     renderPayload(state);
     setStatus(state.resultNode, "success", pageText(state.config, "refresh_success", "Thumbnail previews refreshed."));
   } catch (error) {
@@ -275,7 +275,7 @@ async function initThumbnailQualityPage() {
   try {
     const [config, catalogueServerAvailable] = await Promise.all([
       loadStudioConfigWithText(UI_TEXT_GROUP),
-      probeCatalogueHealth().catch(() => false)
+      probeThumbnailQualityCatalogueHealth().catch(() => false)
     ]);
     state.config = config;
     state.catalogueServerAvailable = catalogueServerAvailable;

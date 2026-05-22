@@ -26,14 +26,6 @@ def start_server() -> tuple[StudioAppServer, str]:
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def unavailable_json(route) -> None:
-    route.fulfill(
-        status=200,
-        content_type="application/json",
-        body='{"ok": false, "error": "catalogue service unavailable"}',
-    )
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args(argv)
@@ -47,31 +39,34 @@ def main(argv: list[str] | None = None) -> int:
         runtime_view = runtime_by_id.get("thumbnail_quality")
         if not runtime_view or runtime_view.get("path") != "/studio/thumbnail-quality/?mode=manage":
             raise AssertionError(f"runtime config missing thumbnail_quality: {runtime_views!r}")
+        catalogue_service = runtime_config.get("app", {}).get("runtime", {}).get("services", {}).get("catalogue", {})
+        if catalogue_service.get("thumbnail_quality_preview") != "/studio/api/catalogue/thumbnail-quality-preview":
+            raise AssertionError(f"runtime config missing local thumbnail-quality API: {catalogue_service!r}")
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page()
             console_errors: list[str] = []
             page_errors: list[str] = []
-            catalogue_service_requests: list[str] = []
+            legacy_catalogue_service_requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
             page.on(
                 "request",
-                lambda request: catalogue_service_requests.append(request.url)
+                lambda request: legacy_catalogue_service_requests.append(request.url)
                 if "127.0.0.1:8788" in request.url
                 else None,
             )
-            page.route("http://127.0.0.1:8788/**", unavailable_json)
+            page.route("http://127.0.0.1:8788/**", lambda route: route.abort())
 
             page.goto(f"{base_url}/studio/thumbnail-quality/?mode=manage", wait_until="domcontentloaded")
             root = page.locator("#thumbnailQualityRoot")
             expect(root).to_be_visible(timeout=10_000)
             expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
             expect(root).to_have_attribute("data-studio-mode", "preview", timeout=10_000)
-            expect(root).to_have_attribute("data-studio-service", "unavailable", timeout=10_000)
+            expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
             expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
-            expect(page.locator("#thumbnailQualityRefreshButton")).to_be_disabled(timeout=10_000)
+            expect(page.locator("#thumbnailQualityRefreshButton")).to_be_enabled(timeout=10_000)
             expect(page.locator(".thumbnailQualityRow").first).to_be_visible(timeout=10_000)
 
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
@@ -80,8 +75,8 @@ def main(argv: list[str] | None = None) -> int:
             nav_link = page.locator('.site-nav [data-studio-navigate="thumbnail_quality"]').get_attribute("href")
             if nav_link != "/studio/thumbnail-quality/?mode=manage":
                 raise AssertionError(f"thumbnail-quality nav link is not manage-mode: {nav_link!r}")
-            if not catalogue_service_requests:
-                raise AssertionError("thumbnail-quality route did not probe the catalogue service")
+            if legacy_catalogue_service_requests:
+                raise AssertionError(f"thumbnail-quality route should not request legacy 8788 endpoints: {legacy_catalogue_service_requests!r}")
 
             browser.close()
 

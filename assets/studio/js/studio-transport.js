@@ -77,12 +77,18 @@ const PROJECT_STATE_ENDPOINTS = Object.freeze({
   openSource: "/studio/api/docs/docs/open-source"
 });
 
+const THUMBNAIL_QUALITY_ENDPOINTS = Object.freeze({
+  catalogueHealth: "/studio/api/catalogue/health",
+  refresh: "/studio/api/catalogue/thumbnail-quality-preview"
+});
+
 export {
   AUDIT_SERVICE_ENDPOINTS,
   DATA_SHARING_ENDPOINTS,
   DOCS_MANAGEMENT_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS,
-  PROJECT_STATE_ENDPOINTS
+  PROJECT_STATE_ENDPOINTS,
+  THUMBNAIL_QUALITY_ENDPOINTS
 };
 
 export function getStudioWriteEndpoint(key, config = null) {
@@ -120,6 +126,10 @@ export async function probeProjectStateCatalogueHealth(timeoutMs = 500) {
 
 export async function probeProjectStateDocsHealth(timeoutMs = 500) {
   return probeHealth(PROJECT_STATE_ENDPOINTS.docsHealth, timeoutMs);
+}
+
+export async function probeThumbnailQualityCatalogueHealth(timeoutMs = 500) {
+  return probeHealth(THUMBNAIL_QUALITY_ENDPOINTS.catalogueHealth, timeoutMs);
 }
 
 async function probeHealth(url, timeoutMs = 500) {

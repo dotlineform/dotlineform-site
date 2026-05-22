@@ -121,7 +121,8 @@ It reuses `assets/studio/js/project-state.js` and now calls local Studio app end
 `scripts/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` adapter and reuses `scripts/catalogue/project_state_report.py`.
 The old Jekyll `/studio/project-state/` shell has been retired.
 The Thumbnail Quality route shell is hosted by the local app at `/studio/thumbnail-quality/?mode=manage`.
-It reuses `assets/studio/js/thumbnail-quality.js`, checked-in preview JSON/image data, and the existing sibling catalogue refresh endpoint on `127.0.0.1:8788`.
+It reuses `assets/studio/js/thumbnail-quality.js`, checked-in preview JSON/image data, and `POST /studio/api/catalogue/thumbnail-quality-preview` for refresh.
+The refresh adapter reuses `scripts/media/build_thumbnail_quality_preview.py`.
 The old Jekyll `/studio/thumbnail-quality/` shell has been retired.
 The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-work/?mode=manage`.
 The Data Sharing dashboard, package preparation, and returned-package review route shells are hosted by the local app at `/studio/data-sharing/?mode=manage`, `/studio/data-sharing/prepare/?mode=manage`, and `/studio/data-sharing/review/?mode=manage`.

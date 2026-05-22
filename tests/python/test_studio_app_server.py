@@ -86,6 +86,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
     assert runtime["services"]["catalogue"]["base"] == "/studio/api/catalogue"
     assert runtime["services"]["catalogue"]["project_state_report"] == "/studio/api/catalogue/project-state-report"
+    assert runtime["services"]["catalogue"]["thumbnail_quality_preview"] == "/studio/api/catalogue/thumbnail-quality-preview"
     assert "tag_groups" not in runtime["data_paths"]["studio"]
     assert "tag_registry" not in runtime["data_paths"]["studio"]
     assert "tag_aliases" not in runtime["data_paths"]["studio"]
@@ -183,6 +184,33 @@ def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
         assert payload["written"] is False
         assert payload["summary"]["source_folder_count"] == 1
         assert payload["summary"]["unrepresented_image_count"] == 1
+
+
+def test_catalogue_thumbnail_quality_route_uses_fixture_source(monkeypatch) -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir) / "repo"
+        projects_base = Path(tmp_dir) / "source"
+        source_dir = projects_base / "thumbnail-quality-preview"
+        source_dir.mkdir(parents=True)
+        (repo_root / "_config.yml").parent.mkdir(parents=True, exist_ok=True)
+        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        (source_dir / "sample.jpg").write_bytes(b"")
+        monkeypatch.setenv("DOTLINEFORM_PROJECTS_BASE_DIR", str(projects_base))
+
+        status, payload = catalogue_post_response(
+            repo_root,
+            "/thumbnail-quality-preview",
+            {},
+            dry_run=True,
+        )
+
+        assert status == studio_docs_api.HTTPStatus.OK
+        assert payload["ok"] is True
+        assert payload["dry_run"] is True
+        assert payload["source_count"] == 1
+        assert payload["data_path"] == "assets/studio/data/thumbnail_quality_preview.json"
+        assert payload["rows"][0]["source_name"] == "sample.jpg"
+        assert payload["rows"][0]["baseline"]["path"].endswith("-current.webp")
 
 
 def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:

@@ -63,13 +63,13 @@ That row uses the public `.seriesGrid`, `.seriesGrid__item`, and `.seriesGrid__i
 The `Refresh` button calls the local Catalogue Write Server endpoint:
 
 ```text
-POST /catalogue/thumbnail-quality-preview
+POST /studio/api/catalogue/thumbnail-quality-preview
 ```
 
 The endpoint reruns `scripts/media/build_thumbnail_quality_preview.py` and rewrites the preview JSON and referenced preview images.
 
-If the local Catalogue Write Server is unavailable, the page still loads the last generated preview data when present, but the refresh command reports that the service must be started.
-That sibling refresh endpoint remains in place until a later catalogue API consolidation slice.
+If the local Studio app catalogue API is unavailable, the page still loads the last generated preview data when present, but the refresh command reports that the service must be started.
+The old sibling catalogue refresh URL is no longer used by the local app route.
 
 ## Manual Command
 

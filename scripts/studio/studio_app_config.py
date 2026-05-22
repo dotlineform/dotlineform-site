@@ -231,6 +231,7 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "base": "/studio/api/catalogue",
         "health": "/studio/api/catalogue/health",
         "project_state_report": "/studio/api/catalogue/project-state-report",
+        "thumbnail_quality_preview": "/studio/api/catalogue/thumbnail-quality-preview",
     },
 }
 
