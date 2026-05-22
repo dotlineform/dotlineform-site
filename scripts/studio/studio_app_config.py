@@ -10,15 +10,15 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
     "docs": {
         "label": "docs",
         "title": "Docs",
-        "path": "/docs/",
-        "doc_href": "/docs/?scope=studio&doc=docs-viewer",
+        "path": "/docs/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=docs-viewer&mode=manage",
         "script": "/assets/docs-viewer/js/docs-viewer.js",
     },
     "tag_groups": {
         "label": "tag groups",
         "title": "Tag Groups",
         "path": "/studio/analytics/tag-groups/",
-        "doc_href": "/docs/?scope=studio&doc=tag-groups",
+        "doc_href": "/docs/?scope=studio&doc=tag-groups&mode=manage",
         "script": "/assets/studio/js/tag-groups.js",
     },
 }

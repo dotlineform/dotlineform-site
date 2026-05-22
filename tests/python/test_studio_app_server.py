@@ -28,7 +28,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["state"]["return_context_storage_key"] == "dlf.studio.returnContext"
     assert runtime["modals"]["event"] == "studio:open-modal"
-    assert any(view["id"] == "docs" and view["path"] == "/docs/" for view in runtime["views"])
+    assert any(view["id"] == "docs" and view["path"] == "/docs/?mode=manage" for view in runtime["views"])
 
 
 def test_docs_capabilities_report_scopes_and_management_api() -> None:

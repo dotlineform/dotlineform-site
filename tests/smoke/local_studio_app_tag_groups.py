@@ -60,6 +60,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             page.goto(f"{base_url}/studio/", wait_until="domcontentloaded")
             page.wait_for_selector('[data-studio-navigate="tag_groups"]', timeout=10000)
+            docs_home_link = page.locator('[data-studio-navigate="docs"]').get_attribute("href")
             home_link = page.locator('[data-studio-navigate="tag_groups"]').get_attribute("href")
             nav_script_count = page.locator('script[src*="studio-navigation.js"]').count()
             page.locator('[data-studio-navigate="tag_groups"]').click()
@@ -73,6 +74,8 @@ def main(argv: list[str] | None = None) -> int:
             browser.close()
 
         expected_groups = {"subject", "domain", "form", "theme"}
+        if docs_home_link != "/docs/?mode=manage":
+            raise AssertionError(f"unexpected home Docs navigation href: {docs_home_link!r}")
         if home_link != "/studio/analytics/tag-groups/":
             raise AssertionError(f"unexpected home navigation href: {home_link!r}")
         if nav_script_count != 1:
@@ -83,7 +86,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"expected record loaded, got {record_loaded!r}")
         if expected_groups - set(chips):
             raise AssertionError(f"missing expected group chips: {sorted(expected_groups - set(chips))}")
-        if doc_link != "/docs/?scope=studio&doc=tag-groups":
+        if doc_link != "/docs/?scope=studio&doc=tag-groups&mode=manage":
             raise AssertionError(f"unexpected doc link: {doc_link!r}")
         if "No group descriptions available" in content_text:
             raise AssertionError("Tag Groups rendered empty fallback unexpectedly")

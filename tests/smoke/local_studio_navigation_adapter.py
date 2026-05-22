@@ -101,7 +101,7 @@ def main(argv: list[str] | None = None) -> int:
         expected_url = "/studio/analytics/tag-groups/?scope=studio&zero=0"
         if result["serviceBase"] != "/studio/api/docs":
             raise AssertionError(f"unexpected Docs service base: {result['serviceBase']!r}")
-        if result["docsView"] != "/docs/":
+        if result["docsView"] != "/docs/?mode=manage":
             raise AssertionError(f"unexpected Docs view path: {result['docsView']!r}")
         if result["dataPath"] != "/assets/studio/data/ui_text/tag-groups.json":
             raise AssertionError(f"unexpected UI text path: {result['dataPath']!r}")

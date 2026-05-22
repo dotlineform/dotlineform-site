@@ -174,7 +174,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"expected one management stylesheet, got {management_css_count}")
         if docs_script_count != 1:
             raise AssertionError(f"expected one Docs Viewer script, got {docs_script_count}")
-        if nav_link != "/docs/":
+        if nav_link != "/docs/?mode=manage":
             raise AssertionError(f"unexpected docs nav href: {nav_link!r}")
         if query_value(final_url, "mode") != "manage":
             raise AssertionError(f"expected mode=manage in URL, got {final_url}")
