@@ -1,0 +1,53 @@
+{
+  "id": "change-2026-05-22-started-local-studio-app-migration",
+  "date": "2026-05-22",
+  "title": "Started Local Studio App Migration",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "docs-viewer",
+    "build",
+    "workflow"
+  ],
+  "summary": "Started the migration from Jekyll-hosted Studio pages to a local Python-hosted vanilla Studio app by excluding Studio-only public output, adding the local app server, mounting the Studio home, Tag Groups, and Docs Viewer shells, and exposing runtime config plus Docs generated-read API adapters.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "jekyll-decoupling",
+    "commit-point"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "development-workflow",
+    "studio-javascript-payload-inventory",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "_docs/site-request-studio-local-vanilla-web-app.md",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "scripts/studio/studio_app_server.py",
+    "scripts/studio/studio_app_config.py",
+    "scripts/studio/studio_app_views.py",
+    "scripts/studio/studio_docs_api.py",
+    "assets/studio/js/studio-navigation.js",
+    "tests/python/test_studio_app_server.py",
+    "tests/smoke/local_studio_app_docs_viewer.py",
+    "tests/smoke/local_studio_app_tag_groups.py"
+  ],
+  "effect": "This establishes the local app boundary while preserving existing browser modules, records the first behavior-changing commit point, and makes future slices responsible for structured close-out and generated-payload status.",
+  "verification": [
+    "Python compile checks passed for local Studio server modules and focused tests",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_app_docs_viewer.py passed",
+    "tests/smoke/local_studio_app_tag_groups.py passed",
+    "Browser sanity check on port 8765 confirmed Docs Viewer layout and Tag Groups ready state",
+    "Generated docs/search payloads were not rebuilt; source docs and docs-log indexes changed only"
+  ]
+}

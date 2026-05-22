@@ -19,6 +19,68 @@ Status:
 
 - in progress
 - Phase 0, Phase 1, and Phase 1A are implemented
+- Phase 2 and Phase 3 have started
+
+## Lifecycle Rules
+
+This migration follows [Development Workflow](/docs/?scope=studio&doc=development-workflow).
+It should be handled as a behavior-changing migration even when a slice is intended to preserve existing features.
+
+Before editing a slice:
+
+- classify the slice by owning surface: local runtime, Docs Viewer, Studio route behavior, public build surface, generated data, UI/CSS, or workflow documentation
+- read the owning docs for that surface
+- identify whether the change touches high-risk JavaScript, Python service boundaries, local write paths, generated payloads, public output, or CSS ownership
+- keep the task small enough to verify and summarize in one close-out
+
+While implementing:
+
+- do not add complete responsibilities to large route controllers by default
+- keep `studio_app_server.py` as dispatch/startup, with config, views, and route-family APIs in focused modules
+- reuse extracted Python and JavaScript domain owners where they exist
+- avoid default proxy compatibility layers to old sibling services
+- preserve local write-service guardrails: loopback binding, CORS limits, write allowlists, backups, preview/apply boundaries, and compact logs
+- keep public Jekyll output and local Studio behavior as separate verification surfaces
+
+At close-out:
+
+- update this plan and the change request when task status, behavior, risks, or next steps changed
+- record generated docs/search payload status
+- write or explicitly defer the structured `_docs_logs/` entry for the commit point
+- include checks run, results, and the next suggested slice
+
+## Commit Points And Change Log
+
+Future sessions should assume the user may commit whenever Codex stops.
+Do not leave a migration slice half-described if the code is otherwise ready.
+
+Each meaningful commit point needs a structured docs-log entry under `_docs_logs/entries/`.
+Use `_docs_logs/README.md` and set `change_request_doc_id` to `site-request-studio-local-vanilla-web-app`.
+
+Commit points should be small and coherent:
+
+- one phase completion
+- one migrated route or route-family milestone
+- one local API/workflow milestone
+- one public build-surface or projection-contract milestone
+- one service-consolidation milestone
+- one behavior-changing documentation milestone
+
+Each commit-point entry should capture:
+
+- what behavior changed
+- why it matters for the Jekyll-to-local-app migration
+- related docs and files
+- verification run
+- generated docs/search payload status
+- any remaining risks or next slice
+
+Current commit point:
+
+- Phase 0, Phase 1, and Phase 1A are complete
+- Phase 2 has started with runtime config and navigation helpers
+- Phase 3 has started with the Docs Viewer shell and generated-read API adapter hosted by the local app server
+- write/manage APIs are intentionally still disabled or partial where not yet migrated
 
 ## Phase 0: Published Surface Cleanup
 
@@ -56,6 +118,7 @@ Outcomes:
 | Task | Status |
 | --- | --- |
 | Add a small Python Studio app server entrypoint. | done |
+| Split app-server config, view rendering, and Docs API adapters out of the server entrypoint before broad route migration. | done |
 | Serve a local Studio app shell. | done |
 | Serve existing Studio CSS and JavaScript assets. | done |
 | Expose browser-safe runtime config JSON for migrated views. | done |
@@ -66,6 +129,8 @@ Next steps:
 
 Phase 1 foundation is implemented.
 The server now exposes `/studio/runtime-config.json`, and migrated views can opt into it with `meta[name="dlf-studio-config-url"]` while unmigrated Jekyll-hosted pages continue to use the static Studio config fallback.
+`studio_app_server.py` should stay a thin dispatcher and process entrypoint.
+Local app growth should happen in focused modules such as config, view shells, route-family APIs, and reusable domain services.
 The next slice should start Phase 2 by defining the stable runtime config shape and introducing narrow navigation helpers only where migrated views need them.
 
 ## Phase 1A: Tag Groups View Spike
@@ -126,11 +191,11 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Mount the Docs Viewer management shell in the local Studio app. | pending |
-| Provide Docs Viewer management runtime config through the Python app server. | pending |
+| Mount the Docs Viewer management shell in the local Studio app. | partial |
+| Provide Docs Viewer management runtime config through the Python app server. | partial |
 | Define Docs Viewer route/API modules inside the Python Studio app server rather than creating a separate default Docs server. | pending |
-| Move or adapt docs-management API routes into the Python Studio app server without default proxying. | pending |
-| Reuse existing docs-management domain modules and response contracts. | pending |
+| Move or adapt docs-management API routes into the Python Studio app server without default proxying. | partial |
+| Reuse existing docs-management domain modules and response contracts. | partial |
 | Keep Docs Viewer JS, CSS, UI text, scope config, payload contract, write policies, and import/rebuild/search behavior Docs-owned. | pending |
 | Preserve create, metadata edit, move, archive/delete, show hidden, rebuild, settings, and import workflows. | pending |
 | Verify generated docs payload rebuilds and docs search rebuilds still run through the expected paths. | pending |
@@ -138,7 +203,11 @@ Outcomes:
 
 Next steps:
 
-Start by hosting the shell and config, then migrate API ownership workflow by workflow.
+Phase 3 has started by hosting the Docs Viewer management shell at `/docs/` through the Python Studio app server.
+The first app-server Docs API routes are `/studio/api/docs/capabilities` plus generated-read endpoints under `/studio/api/docs/docs/generated/...`.
+Those endpoints now live behind a dedicated `studio_docs_api.py` adapter instead of being embedded in the app-server dispatcher.
+Capabilities now report real scope and generated-read availability while keeping write capabilities disabled so manage mode fails closed instead of probing an absent sibling process.
+Continue by replacing the temporary shell adapter with a cleaner Docs-owned route module, then migrate API ownership workflow by workflow.
 Temporary sibling services are acceptable only as narrow scaffolding and should be retired as each management route moves into the app server.
 Do not add a separate always-running Docs Viewer server for normal Studio; keep a possible standalone Docs Viewer launcher as a later portability option over the same modules.
 
@@ -259,6 +328,9 @@ For projection-contract slices:
 
 - [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
 - [Studio Local Vanilla Web App Request](/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app)
+- [Development Workflow](/docs/?scope=studio&doc=development-workflow)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory)
+- `_docs_logs/README.md`
 - [Docs Viewer Management Current State](/docs/?scope=studio&doc=docs-viewer-management-current)
 - [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)

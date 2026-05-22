@@ -12,9 +12,10 @@ viewable: true
 
 Status:
 
-- proposed
+- in progress
 - target direction agreed
-- implementation not started
+- Phase 0, Phase 1, and Phase 1A implemented
+- Phase 2 and Phase 3 started
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -313,6 +314,79 @@ Continue only when needed:
 
 The migration should use the existing JavaScript maintenance gate when it changes high-risk files, but it should not keep reducing scores as a standalone goal.
 
+## Migration Workflow Guardrails
+
+Treat this request as a major behavior-changing migration even when individual slices try to preserve features.
+
+Use [Development Workflow](/docs/?scope=studio&doc=development-workflow) as the lifecycle guide for every non-trivial slice.
+In particular:
+
+- classify each slice before editing: local runtime, Docs Viewer, Studio route behavior, public build surface, generated data, UI/CSS, or workflow documentation
+- read the owning docs before changing that surface
+- keep implementation scoped to the owning runtime, script, route module, data contract, or UI primitive
+- run the smallest verification that proves the changed behavior
+- update owning docs and generated artifacts when their source contracts changed
+- close each slice with changed files, checks run, generated payload status, risks, and next task
+
+Carry forward the recent JavaScript risk-review rules:
+
+- do not add new responsibilities to large Studio or Docs Viewer route controllers by default
+- use the JavaScript maintenance gate before touching files with maintenance score 2, total risk score 6 or higher, or recent churn
+- prefer focused owners for rendering, modal lifecycle, service orchestration, validation, result shaping, import/export flow, route-state projection, and domain logic
+- run focused browser-module or route smoke checks when behavior moved out of a controller
+- update the relevant JavaScript inventory docs only when scores, owners, or follow-up tasks materially changed
+
+Carry forward the recent Python service-refactoring rules:
+
+- keep `studio_app_server.py` as request dispatch and process startup, not a domain module
+- add route-family API modules before adding broad behavior to the server entrypoint
+- reuse extracted domain modules from catalogue, docs, analytics, audit, and Studio services rather than adding proxy compatibility layers by default
+- preserve loopback binding, CORS limits, write allowlists, backups, preview/apply boundaries, and compact activity/log records
+- keep focused tests against the owning domain module where practical, with server tests covering HTTP routing and status mapping
+
+Docs and generated-payload follow-through remains explicit:
+
+- source docs under `_docs/` are not the runtime payload
+- Studio docs payloads under `assets/data/docs/scopes/studio/...` must be updated before docs output is treated as final
+- do not manually rebuild docs payloads when `bin/dev-studio` or the docs watcher is expected to do it
+- if generated docs/search payloads are not rebuilt in a slice, state that in close-out
+
+Security and publication checks remain part of the migration:
+
+- do not widen local write paths, CORS origins, or localhost service scope implicitly
+- do not add local services that bind beyond loopback
+- do not publish Studio routes, Studio app assets, local write surfaces, source-only fields, or local operational docs to dotlineform.com
+- use sanitization scans when a slice touches credential handling, logging, local-service writes, generated docs payloads, or docs/examples with system paths
+
+## Commit Points And Change History
+
+Use explicit commit points for this migration.
+A commit point is appropriate when a slice has a coherent behavior boundary, targeted verification has passed, docs are updated, and the next slice can start without needing uncommitted context from the previous one.
+
+Good commit points include:
+
+- public published-surface cleanup
+- first local app server shell
+- first migrated Studio view
+- navigation/runtime-config adapter changes
+- Docs Viewer management shell or API milestone
+- each migrated Docs management workflow
+- each route-family migration
+- each local-service consolidation milestone
+- projection/build contract changes
+
+At every phase end or meaningful commit point:
+
+- update this change request and the implementation plan status
+- add a structured `_docs_logs/entries/*.json` entry using `_docs_logs/README.md` and include `change_request_doc_id: site-request-studio-local-vanilla-web-app`
+- include related docs and related files that help future Codex sessions trace the decision
+- record behavior changes even when features were intended to remain equivalent
+- record verification commands or smoke-test results
+- state whether generated docs/search payloads were rebuilt or intentionally left to the watcher/manual workflow
+
+Do not combine unrelated route-family migrations into one commit just because they share the same local app server.
+Prefer small green commits that leave a clear next slice.
+
 ## Implementation Plan
 
 The phased task plan lives in [Local Studio App Implementation Plan](/docs/?scope=studio&doc=local-studio-app-implementation-plan).
@@ -355,13 +429,19 @@ For projection-contract slices:
 
 ## Related Docs
 
+- [Development Workflow](/docs/?scope=studio&doc=development-workflow)
 - [Studio](/docs/?scope=studio&doc=studio)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
 - [Studio Ready State](/docs/?scope=studio&doc=studio-ready-state)
 - [Studio JavaScript Payload Inventory](/docs/?scope=studio&doc=studio-javascript-payload-inventory)
 - [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory)
+- `_docs_logs/README.md`
 - [Catalogue Source Model](/docs/?scope=studio&doc=data-models-catalogue-source)
 - [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
 - [Docs Viewer Management Current State](/docs/?scope=studio&doc=docs-viewer-management-current)
 - [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review)
+
+## Change Log Entries
+
+- `change-2026-05-22-started-local-studio-app-migration`

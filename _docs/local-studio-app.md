@@ -31,6 +31,7 @@ Phase 1 added the first Python local Studio app server:
 Current mounted views:
 
 - `/studio/`
+- `/docs/`
 - `/studio/analytics/tag-groups/`
 
 Current app endpoints:
@@ -42,4 +43,8 @@ The Tag Groups view reuses the existing Studio CSS, `assets/studio/js/tag-groups
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
 The endpoint currently also exposes the local app view registry that powers the shell navigation.
 `assets/studio/js/studio-navigation.js` provides the first helper over that registry: migrated links can declare `data-studio-navigate="<view-id>"` while retaining a real `href` fallback.
+The local `/docs/` route hosts the Docs Viewer management shell through the Python app server while still using the existing Docs Viewer JavaScript, CSS, config, and generated docs payloads.
+Its management API base is `/studio/api/docs`; this currently exposes real scope availability through `/studio/api/docs/capabilities` and serves generated docs read endpoints while keeping write capabilities disabled until those routes migrate into the app server.
 This first server is intentionally narrow and does not yet own write-service APIs or app-wide navigation.
+The app server is split before broader route migration: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns HTML shells, and `studio_docs_api.py` owns the Docs Viewer API adapter.
+New route families should follow that module-boundary pattern rather than expanding the server entrypoint.

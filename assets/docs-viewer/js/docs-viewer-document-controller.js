@@ -218,6 +218,7 @@ export function initDocsViewerDocumentController(context) {
     maybeMountDocsViewerReport(doc, payload);
     document.title = doc.title + " | dotlineform";
     context.setStatus("", false);
+    context.renderManagementUi();
 
     window.requestAnimationFrame(function () {
       scrollToHash(hash);

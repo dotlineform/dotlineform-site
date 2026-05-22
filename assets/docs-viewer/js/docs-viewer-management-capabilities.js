@@ -86,7 +86,7 @@ export function createDocsViewerManagementCapabilityController(options) {
     state.generatedDataReadAvailable = scopeSupportsGeneratedDataReads(capabilities, viewerScope());
     state.generatedDataReadChecked = true;
     state.managementChecked = true;
-    state.managementAvailable = Boolean(scopeCaps && scopeCaps.available);
+    state.managementAvailable = Boolean(capabilities && capabilities.docs_management && scopeCaps && scopeCaps.available);
     renderManagementUi();
     renderSidebar();
   }
