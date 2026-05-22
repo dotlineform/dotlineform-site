@@ -21,6 +21,35 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "doc_href": "/docs/?scope=studio&doc=tag-groups&mode=manage",
         "script": "/assets/studio/js/tag-groups.js",
     },
+    "tag_registry": {
+        "label": "registry",
+        "title": "Tag Registry",
+        "path": "/studio/analytics/tag-registry/",
+        "doc_href": "/docs/?scope=studio&doc=tag-registry&mode=manage",
+        "script": "/assets/studio/js/tag-registry.js",
+    },
+    "tag_aliases": {
+        "label": "aliases",
+        "title": "Tag Aliases",
+        "path": "/studio/analytics/tag-aliases/",
+        "doc_href": "/docs/?scope=studio&doc=tag-aliases&mode=manage",
+        "script": "/assets/studio/js/tag-aliases.js",
+    },
+    "series_tags": {
+        "label": "series tags",
+        "title": "Series Tags",
+        "path": "/studio/analytics/series-tags/",
+        "doc_href": "/docs/?scope=studio&doc=series-tags&mode=manage",
+        "script": "/assets/studio/js/series-tags.js",
+    },
+    "series_tag_editor": {
+        "label": "tag editor",
+        "title": "Series Tag Editor",
+        "path": "/studio/analytics/series-tag-editor/",
+        "doc_href": "/docs/?scope=studio&doc=tag-editor&mode=manage",
+        "script": "/assets/studio/js/series-tag-editor-page.js",
+        "nav": "false",
+    },
 }
 
 STUDIO_MEDIA: dict[str, object] = {
@@ -44,6 +73,8 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "base": "/studio/api/analytics",
         "health": "/studio/api/analytics/health",
         "delete_tag_alias": "/studio/api/analytics/delete-tag-alias",
+        "demote_tag": "/studio/api/analytics/demote-tag",
+        "demote_tag_preview": "/studio/api/analytics/demote-tag-preview",
         "import_tag_assignments": "/studio/api/analytics/import-tag-assignments",
         "import_tag_assignments_preview": "/studio/api/analytics/import-tag-assignments-preview",
         "import_tag_aliases": "/studio/api/analytics/import-tag-aliases",
@@ -52,6 +83,8 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "mutate_tag_alias_preview": "/studio/api/analytics/mutate-tag-alias-preview",
         "mutate_tag": "/studio/api/analytics/mutate-tag",
         "mutate_tag_preview": "/studio/api/analytics/mutate-tag-preview",
+        "promote_tag_alias": "/studio/api/analytics/promote-tag-alias",
+        "promote_tag_alias_preview": "/studio/api/analytics/promote-tag-alias-preview",
         "tag_aliases": "/studio/api/analytics/tag-aliases",
         "tag_assignments": "/studio/api/analytics/tag-assignments",
         "tag_groups": "/studio/api/analytics/tag-groups",
@@ -80,6 +113,11 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "assets" / "docs-viewer" / "data" / "docs-viewer-config.json",
         repo_root / "assets" / "studio" / "js" / "studio-navigation.js",
         repo_root / "assets" / "studio" / "js" / "tag-groups.js",
+        repo_root / "assets" / "studio" / "js" / "tag-registry.js",
+        repo_root / "assets" / "studio" / "js" / "tag-aliases.js",
+        repo_root / "assets" / "studio" / "js" / "series-tags.js",
+        repo_root / "assets" / "studio" / "js" / "series-tag-editor-page.js",
+        repo_root / "assets" / "studio" / "js" / "tag-studio.js",
         repo_root / "assets" / "studio" / "css" / "studio.css",
         repo_root / "assets" / "studio" / "data" / "studio_config.json",
     ]
@@ -130,7 +168,11 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             for view_id, view in STUDIO_VIEWS.items()
         ],
         "navigation": {
-            "primary": list(STUDIO_VIEWS.keys()),
+            "primary": [
+                view_id
+                for view_id, view in STUDIO_VIEWS.items()
+                if view.get("nav", "true") != "false"
+            ],
         },
         "modals": {
             "event": STUDIO_STATE_CONFIG["modal_event"],

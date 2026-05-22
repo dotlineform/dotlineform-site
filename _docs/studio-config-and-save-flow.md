@@ -101,7 +101,7 @@ Current write endpoints include:
 Current non-catalogue local action behavior also includes:
 
 - the docs viewer manage-mode rebuild action uses the separate docs-management service and rebuilds the current docs scope plus that scope's docs search
-- the legacy `POST /build-docs` path on the tag write service is deprecated and no longer part of the live docs workflow
+- the legacy tag write-service `POST /build-docs` path is retired and was not migrated into the local Studio app
 
 ## Save Modes
 
@@ -125,10 +125,10 @@ Current local save behavior:
 
 Current write-service implementation notes:
 
-- the local service is `scripts/analytics/tag_write_server.py`
+- the local tag API owner is `scripts/studio/studio_analytics_api.py`
 - writes are constrained to Studio-owned JSON files
 - server writes create timestamped backups in `var/studio/backups/`
-- write activity is logged to `var/studio/logs/tag_write_server.log`
+- write activity is logged to `var/studio/logs/studio_analytics_api.log`
 - covered local-server writes also append unified Studio activity rows when the browser supplies valid activity context
 - backup retention is applied at `bin/dev-studio` startup; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
 

@@ -24,14 +24,14 @@ The page root `#series-tags` exposes the shared Studio route-ready contract:
 - `data-studio-ready` is `false` while config, series, assignment, registry, and group data load, then `true` after the table or empty/error state is rendered
 - `data-studio-busy` is `true` while assignment import preview or apply is running
 - `data-studio-mode` is `list`, `session`, or `import` depending on the active modal state
-- `data-studio-service` reports whether the local tag write server is available for assignment import
+- `data-studio-service` reports whether the local Studio analytics API is available for assignment import
 - `data-studio-record-loaded` is `true` when series rows are loaded
 
 ## Page / Template Structure
 
-Primary template:
+Primary shell:
 
-- `studio/analytics/series-tags/index.md`
+- `scripts/studio/studio_app_views.py`
 
 Page controller:
 

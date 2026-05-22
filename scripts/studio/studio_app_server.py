@@ -19,7 +19,15 @@ if str(STUDIO_DIR) not in sys.path:
     sys.path.insert(0, str(STUDIO_DIR))
 
 from studio_app_config import asset_version, runtime_config  # noqa: E402
-from studio_app_views import docs_viewer_manage_view, studio_home_view, tag_groups_view  # noqa: E402
+from studio_app_views import (  # noqa: E402
+    docs_viewer_manage_view,
+    series_tags_view,
+    series_tag_editor_view,
+    studio_home_view,
+    tag_aliases_view,
+    tag_groups_view,
+    tag_registry_view,
+)
 from studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
 from studio_docs_api import docs_management_get_payload, docs_management_post_response  # noqa: E402
 
@@ -72,6 +80,18 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path in {"/studio/analytics/tag-groups", "/studio/analytics/tag-groups/"}:
             self.send_html(tag_groups_view(self.version))
+            return
+        if path in {"/studio/analytics/tag-registry", "/studio/analytics/tag-registry/"}:
+            self.send_html(tag_registry_view(self.version))
+            return
+        if path in {"/studio/analytics/tag-aliases", "/studio/analytics/tag-aliases/"}:
+            self.send_html(tag_aliases_view(self.version))
+            return
+        if path in {"/studio/analytics/series-tags", "/studio/analytics/series-tags/"}:
+            self.send_html(series_tags_view(self.version))
+            return
+        if path in {"/studio/analytics/series-tag-editor", "/studio/analytics/series-tag-editor/"}:
+            self.send_html(series_tag_editor_view(self.version, self.repo_root))
             return
         if self.is_allowed_static_path(path):
             self.send_static(path)

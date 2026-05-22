@@ -3,8 +3,7 @@ import {
 } from "./studio-config.js";
 import {
   getStudioWriteEndpoint,
-  postJson,
-  STUDIO_WRITE_ENDPOINTS
+  postJson
 } from "./studio-transport.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
@@ -232,7 +231,7 @@ export async function submitAliasEdit(options) {
 export async function previewAliasPromote(options) {
   const { aliasKey, group, config } = options || {};
   try {
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.promoteTagAliasPreview, {
+    const response = await postJson(getStudioWriteEndpoint("promoteTagAliasPreview", config), {
       alias: aliasKey,
       group,
       client_time_utc: utcTimestamp()
@@ -254,7 +253,7 @@ export async function submitAliasPromote(options) {
   const { saveMode, state, aliasKey, group } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.promoteTagAlias, {
+      const response = await postJson(getStudioWriteEndpoint("promoteTagAlias", state.config), {
         alias: aliasKey,
         group,
         client_time_utc: utcTimestamp(),
@@ -285,7 +284,7 @@ export async function submitAliasPromote(options) {
 export async function previewTagDemoteFromAliases(options) {
   const { canonicalTagId, aliasTargets, config } = options || {};
   try {
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTagPreview, {
+    const response = await postJson(getStudioWriteEndpoint("demoteTagPreview", config), {
       tag_id: canonicalTagId,
       alias_targets: aliasTargets,
       client_time_utc: utcTimestamp()
@@ -304,10 +303,10 @@ export async function previewTagDemoteFromAliases(options) {
 }
 
 export async function submitTagDemoteFromAliases(options) {
-  const { saveMode, canonicalTagId, aliasTargets } = options || {};
+  const { saveMode, canonicalTagId, aliasTargets, config } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTag, {
+      const response = await postJson(getStudioWriteEndpoint("demoteTag", config), {
         tag_id: canonicalTagId,
         alias_targets: aliasTargets,
         client_time_utc: utcTimestamp(),

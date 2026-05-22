@@ -29,7 +29,7 @@ The useful sequence is visibility first, then targeted reductions in generated a
 
 - New catalogue generated payload behavior belongs in `scripts/catalogue/catalogue_generation_*`, `catalogue_lookup*`, or source-model modules, not directly in write-server handlers.
 - New docs source mutation behavior belongs in `docs_management_mutations.py`, source config/settings modules, or import-source services, not directly in the HTTP server.
-- New tag assignment, registry, alias, promotion, or Data Sharing behavior belongs in the analytics domain modules, not in `tag_write_server.py` handler bodies.
+- New tag assignment, registry, alias, promotion, or Data Sharing behavior belongs in the analytics domain modules and local Studio analytics API adapter, not in standalone service scripts.
 - New local-service behavior should preserve explicit write allowlists, dry-run semantics, backup paths, and compact logging.
 - New rebuild performance work should first expose counts and fallback reasons, then optimize the path with the highest measured cost.
 - New command examples in docs should use project-local script paths from `dotlineform-site/`.
@@ -195,7 +195,6 @@ Immediate work signal: medium for maintainability, high for performance when med
 Relevant files:
 
 - `scripts/catalogue/catalogue_write_server.py`
-- `scripts/analytics/tag_write_server.py`
 - `scripts/docs/docs_management_server.py`
 - `scripts/studio/audit_service.py`
 - `scripts/script_logging.py`
@@ -254,7 +253,6 @@ Immediate work signal: medium.
 | `scripts/analytics/tags_data_sharing_adapter.py` | 1,249 | medium | medium | low | Data Sharing apply paths should remain adapter-owned and directly tested. |
 | `scripts/catalogue/catalogue_build_media.py` | 1,184 | medium | medium | high | Local media planning/execution is a concrete performance improvement candidate. |
 | `scripts/docs/docs_import.py` | 1,182 | medium | medium | medium | Returned-package parsing and preview writing should stay separated from source-apply services. |
-| `scripts/analytics/tag_write_server.py` | 1,067 | medium | medium | low | Still large but much clearer after tag mutation/service extractions. Avoid broad shared-service rewrites. |
 
 ## How To Rerun
 

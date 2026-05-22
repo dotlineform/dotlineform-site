@@ -119,7 +119,7 @@ Current consumers:
 
 - Tag Editor input resolution
 - Tag Aliases page
-- local mutation flows in the tag write server
+- local mutation flows in the Studio analytics API
 
 ### `tag_assignments.json`
 
@@ -198,7 +198,7 @@ Current enforcement:
 - the scoped JSON build flow refreshes generated catalogue payloads that tag assignments align against
 - Studio delete and save flows update canonical source JSON without relying on workbook-led cleanup
 - [Audit Site Consistency](/docs/?scope=studio&doc=scripts-audit-site-consistency) checks cross-references between assignments, series membership, and works
-- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) constrains writes to the Studio-owned JSON files and creates backups/logs
+- [Retired Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) records the migration of tag writes into the local Studio analytics API, which constrains writes to Studio-owned JSON files and creates backups/logs
 
 ## Studio Docs Data
 

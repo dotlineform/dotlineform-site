@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d6c64d502dd3e09965e437f04ca7a670",
-    "generated_at_utc": "2026-05-22T14:29:08Z",
+    "version": "blake2b-d6f3a01660dd03281162fed4ea56254a",
+    "generated_at_utc": "2026-05-22T17:55:03Z",
     "count": 292
   },
   "entries": [
@@ -1960,6 +1960,31 @@
       "search_text": "llm-semantic-enrichment-spec llm semantic enrichment spec llm semantic enrichment spec 2026-05-03 17:08 2026 05 03 17 08"
     },
     {
+      "id": "scripts-tag-write-server",
+      "kind": "doc",
+      "title": "Retired Tag Write Server",
+      "href": "/docs/?scope=studio&doc=scripts-tag-write-server",
+      "last_updated": "2026-05-22",
+      "parent_id": "servers",
+      "parent_title": "Servers",
+      "display_meta": "2026-05-22 • Servers",
+      "search_terms": [
+        "scripts-tag-write-server",
+        "scripts",
+        "tag",
+        "write",
+        "server",
+        "retired tag write server",
+        "retired",
+        "servers",
+        "2026-05-22",
+        "2026",
+        "05",
+        "22"
+      ],
+      "search_text": "scripts-tag-write-server scripts tag write server retired tag write server retired servers 2026-05-22 2026 05 22"
+    },
+    {
       "id": "search-index-schema",
       "kind": "doc",
       "title": "Search Index Schema",
@@ -2069,32 +2094,6 @@
         "00"
       ],
       "search_text": "tag-editor tag editor tag editor analytics 2026-05-09 16:00 2026 05 09 16 00"
-    },
-    {
-      "id": "scripts-tag-write-server",
-      "kind": "doc",
-      "title": "Tag Write Server",
-      "href": "/docs/?scope=studio&doc=scripts-tag-write-server",
-      "last_updated": "2026-05-09 21:45",
-      "parent_id": "servers",
-      "parent_title": "Servers",
-      "display_meta": "2026-05-09 21:45 • Servers",
-      "search_terms": [
-        "scripts-tag-write-server",
-        "scripts",
-        "tag",
-        "write",
-        "server",
-        "tag write server",
-        "servers",
-        "2026-05-09 21:45",
-        "2026",
-        "05",
-        "09",
-        "21",
-        "45"
-      ],
-      "search_text": "scripts-tag-write-server scripts tag write server tag write server servers 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "site-request-script-structural-review-tag-write-server",

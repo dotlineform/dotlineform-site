@@ -11,12 +11,15 @@ sort_order: 1000
 ## Current Position
 
 Studio currently uses `bin/dev-studio` as the integrated local runner for everyday Studio development.
-That runner starts Jekyll plus several separate localhost services:
+That runner starts Jekyll, the local Studio app server, and the remaining separate localhost services:
 
-- `scripts/analytics/tag_write_server.py`
+- `scripts/studio/studio_app_server.py`
 - `scripts/catalogue/catalogue_write_server.py`
-- `scripts/docs/docs_management_server.py`
 - `scripts/studio/audit_service.py`
+
+Docs management and Analytics tag APIs are now owned by the local Studio app server.
+The old standalone tag write server has been retired.
+The old standalone Docs management server remains available only when explicitly enabled for fallback/debug use.
 
 When docs live watching is enabled, the same runner also starts:
 
@@ -25,22 +28,21 @@ When docs live watching is enabled, the same runner also starts:
 This means the current implementation is already an integrated local workflow, but not a combined server process.
 Each local service still owns its own port, health surface, CORS handling, route set, logging, and write boundary.
 
-That separation remains intentional for the current implementation phase.
-The tag server is broad and stable.
+That remaining separation is intentional for the current implementation phase.
 The catalogue write service has grown into the active JSON-led catalogue source writer, but it still benefits from a narrow domain boundary.
-The docs management server and audit service also have distinct safety profiles: docs management owns source-doc writes and generated docs reads, while the audit service runs only allowlisted local checks.
+The audit service has a distinct safety profile because it runs only allowlisted local checks.
 
 Keeping these services separate for now reduces regression risk:
 
-- tag write behavior can remain unchanged
+- migrated tag write behavior stays inside the local Studio app server and its analytics module
 - catalogue source writes get their own explicit allowlist
-- docs source writes and generated-data reads stay isolated from catalogue writes
+- docs source writes and generated-data reads stay isolated from catalogue writes through the local Studio app's Docs module
 - audit commands stay isolated from write endpoints
 - backup, validation, and rebuild behavior can be tested within each domain before shared server infrastructure is introduced
 
 The architecture described below is still the preferred development option for a future consolidation pass.
 It should be treated as a deliberate refactor, not as a requirement for ordinary feature work.
-Use the existing owning service for narrow tag, catalogue, docs, or audit changes.
+Use the existing owning module/service for narrow tag, catalogue, docs, or audit changes.
 Start the combined-server work when a new local capability would otherwise add another long-running server or duplicate loopback, CORS, health, logging, capability, backup, or write-allowlist logic.
 
 ## Target Direction
@@ -85,7 +87,7 @@ Tag routes should only write:
 - `assets/studio/data/tag_assignments.json`
 - `assets/studio/data/tag_registry.json`
 - `assets/studio/data/tag_aliases.json`
-- tag-server backup and log paths
+- Studio analytics backup and log paths
 
 Catalogue routes should only write:
 
@@ -116,12 +118,11 @@ Shared helpers should not erase domain boundaries. Each route module should stil
 
 Recommended path:
 
-1. Keep the Tag Write Server and Catalogue Write Server separate while the first catalogue editor work is implemented.
-2. Extract shared localhost server helpers after both services have stable behavior.
-3. Add `scripts/studio/studio_local_server.py` as the combined process.
-4. Keep the existing tag and catalogue server scripts as compatibility launchers for a transition period.
-5. Move `bin/dev-studio` to start the combined server.
-6. Add future local-server requirements as route modules under the combined server rather than as new standalone processes.
+1. Keep migrating route families into the local Studio app server by domain module.
+2. Retain separate catalogue and audit services until those workflows have local-app replacements.
+3. Extract shared localhost server helpers only where contracts are identical.
+4. Move `bin/dev-studio` to start only the local Studio app plus genuinely required background processes.
+5. Add future local-server requirements as route modules under the local Studio app rather than as new standalone processes.
 
 This lets future local features reuse the same server surface while preserving explicit write boundaries.
 
@@ -145,4 +146,4 @@ Mitigation:
 - keep route modules domain-specific
 - keep write allowlists local to each domain
 - keep preview/apply split for destructive or multi-record operations
-- preserve compatibility launchers during migration
+- preserve compatibility launchers only where an unmigrated workflow still requires them

@@ -1,0 +1,57 @@
+{
+  "id": "change-2026-05-22-removed-standalone-tag-write-server",
+  "date": "2026-05-22",
+  "title": "Removed Standalone Tag Write Server",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "studio",
+    "analytics",
+    "scripts"
+  ],
+  "summary": "Deleted the retired standalone tag write HTTP server after moving active tag write routes into the local Studio app analytics adapter.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "analytics",
+    "tag-write-server",
+    "studio-analytics-api",
+    "service-consolidation"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "scripts-tag-write-server",
+    "scripts-dev-studio",
+    "local-studio-server-architecture",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/analytics/tag_write_server.py",
+    "scripts/analytics/tag_routes.py",
+    "scripts/analytics/tag_activity.py",
+    "scripts/studio/studio_analytics_api.py",
+    "tests/python/test_tag_routes.py",
+    "tests/python/test_tag_activity.py",
+    "_docs/scripts-tag-write-server.md",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/local-studio-server-architecture.md",
+    "_docs/studio-config-and-save-flow.md"
+  ],
+  "effect": "The old standalone tag write HTTP entrypoint is gone. Active tag write endpoints are exposed only by the local Studio app under /studio/api/analytics, activity source refs now point at var/studio/logs/studio_analytics_api.log, and the deprecated /build-docs tag route is absent from the active tag route inventory.",
+  "verification": [
+    "Python compile checks passed for scripts/analytics/tag_routes.py, scripts/analytics/tag_activity.py, scripts/studio/studio_analytics_api.py, tests/python/test_tag_routes.py, tests/python/test_tag_activity.py, and tests/python/test_studio_app_server.py",
+    "tests/python/test_tag_routes.py passed",
+    "tests/python/test_tag_activity.py passed",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_app_tag_routes.py passed with loopback server permissions",
+    "tests/smoke/local_studio_analytics_promotion_apis.py passed with loopback server permissions",
+    "tests/smoke/local_studio_navigation_adapter.py passed with loopback server permissions"
+  ]
+}

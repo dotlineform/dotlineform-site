@@ -626,7 +626,8 @@ async function handleTagDemoteFromAliases(state) {
   const result = await demoteTagAliasFromAliases({
     saveMode: state.saveMode,
     canonicalTagId,
-    aliasTargets
+    aliasTargets,
+    config: state.config
   });
   if (!result.ok) {
     const message = result.message || aliasesText(state.config, "demotion_failed", "Demotion failed.");

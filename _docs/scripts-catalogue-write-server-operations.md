@@ -43,7 +43,7 @@ The server validates the proposed update through the shared catalogue source loa
 
 ## Dev Studio
 
-`bin/dev-studio` starts this service alongside Jekyll and the Tag Write Server.
+`bin/dev-studio` starts this service alongside Jekyll and the local Studio app server.
 
 Default local endpoint:
 

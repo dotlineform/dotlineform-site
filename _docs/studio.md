@@ -117,7 +117,7 @@ Current runner behavior:
 
 - rebuilds Docs Viewer data from `_docs/`
 - starts Jekyll on `127.0.0.1:4000`
-- starts `scripts/analytics/tag_write_server.py`
+- starts the local Studio app server for Studio shell, Docs management, and Analytics tag APIs
 - starts `scripts/studio/catalogue_write_server.py`
 - starts `scripts/docs/docs_management_server.py`
 - starts `scripts/studio/audit_service.py`

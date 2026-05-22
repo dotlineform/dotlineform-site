@@ -4,12 +4,12 @@
     "scope": "analysis",
     "count": 1
   },
-  "target_key": "work:00638",
+  "target_key": "work:00638002",
   "target_kind": "work",
-  "target_id": "00638",
-  "target_href": "/works/00638/",
-  "target_title": "3 symbols",
-  "target_status": "published",
+  "target_id": "00638002",
+  "target_href": "",
+  "target_title": "",
+  "target_status": "missing",
   "count": 1,
   "references": [
     {
@@ -18,9 +18,9 @@
       "source_title": "3 symbols",
       "source_path": "3-symbols.md",
       "source_viewer_url": "/analysis/?doc=3-symbols",
-      "label": "3 symbols",
+      "label": "3 symbols (untreated)",
       "action": "link",
-      "ordinal": 1
+      "ordinal": 2
     }
   ]
 }

@@ -251,16 +251,16 @@ What it runs before starting long-lived services:
 What it starts:
 
 - `bundle exec jekyll serve --host 127.0.0.1 --port 4000`
-- `scripts/analytics/tag_write_server.py`
+- `scripts/studio/studio_app_server.py`
 - `scripts/catalogue/catalogue_write_server.py`
-- `scripts/docs/docs_management_server.py`
 - `scripts/studio/audit_service.py`
 - `scripts/docs/docs_live_rebuild_watcher.py`
 
 What it does not start:
 
 - catalogue/search regeneration scripts
-- any separate Studio-only frontend server
+- the retired standalone tag write server
+- the standalone Docs management server unless explicitly enabled for fallback/debug use
 
 Current local generated Studio feeds surfaced through this runtime:
 

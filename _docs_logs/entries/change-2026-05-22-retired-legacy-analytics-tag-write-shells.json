@@ -1,0 +1,62 @@
+{
+  "id": "change-2026-05-22-retired-legacy-analytics-tag-write-shells",
+  "date": "2026-05-22",
+  "title": "Retired Legacy Analytics Tag Write Shells",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "studio",
+    "analytics",
+    "workflow"
+  ],
+  "summary": "Removed the old analytics tag Jekyll route shells and the browser fallback to the standalone 8787 tag write server.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "analytics",
+    "tag-write-server",
+    "tag-registry",
+    "tag-aliases",
+    "series-tags",
+    "series-tag-editor",
+    "service-consolidation"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app",
+    "scripts-dev-studio"
+  ],
+  "related_files": [
+    "assets/studio/js/studio-transport.js",
+    "assets/studio/js/studio-navigation.js",
+    "bin/dev-studio",
+    "tests/smoke/tag_registry_modules.py",
+    "studio/analytics/index.md",
+    "studio/analytics/tag-groups/index.md",
+    "studio/analytics/tag-registry/index.md",
+    "studio/analytics/tag-aliases/index.md",
+    "studio/analytics/series-tags/index.md",
+    "studio/analytics/series-tag-editor/index.md",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/site-request-studio-local-vanilla-web-app.md",
+    "_docs/scripts-dev-studio.md"
+  ],
+  "effect": "Tag writes now resolve through local Studio runtime config and /studio/api/analytics endpoints only; the browser no longer has hardcoded 127.0.0.1:8787 tag write fallback URLs. bin/dev-studio no longer starts scripts/analytics/tag_write_server.py by default, and the migrated analytics tag pages are no longer Jekyll route shells. The deprecated tag-server /build-docs route remains intentionally unmigrated.",
+  "verification": [
+    "bash -n bin/dev-studio passed",
+    "node --check passed for assets/studio/js/studio-transport.js, assets/studio/js/studio-navigation.js, assets/studio/js/tag-registry-service.js, assets/studio/js/tag-aliases-service.js, and assets/studio/js/tag-aliases.js",
+    "Python compile checks passed for the touched Studio app server, route smoke, promotion smoke, and tag registry module smoke files",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_app_tag_routes.py passed with loopback server permissions",
+    "tests/smoke/local_studio_analytics_promotion_apis.py passed with loopback server permissions",
+    "tests/smoke/tag_registry_modules.py passed with loopback server permissions",
+    "tests/smoke/local_studio_navigation_adapter.py passed with loopback server permissions"
+  ]
+}

@@ -38,6 +38,10 @@ Current mounted views:
 - `/studio/`
 - `/docs/`
 - `/studio/analytics/tag-groups/`
+- `/studio/analytics/tag-registry/`
+- `/studio/analytics/tag-aliases/`
+- `/studio/analytics/series-tags/`
+- `/studio/analytics/series-tag-editor/?series=<series_id>`
 
 Current app endpoints:
 
@@ -53,6 +57,10 @@ Current app endpoints:
 - `POST /studio/api/analytics/delete-tag-alias`
 - `POST /studio/api/analytics/mutate-tag-alias-preview`
 - `POST /studio/api/analytics/mutate-tag-alias`
+- `POST /studio/api/analytics/promote-tag-alias-preview`
+- `POST /studio/api/analytics/promote-tag-alias`
+- `POST /studio/api/analytics/demote-tag-preview`
+- `POST /studio/api/analytics/demote-tag`
 - `POST /studio/api/analytics/import-tag-registry`
 - `POST /studio/api/analytics/mutate-tag-preview`
 - `POST /studio/api/analytics/mutate-tag`
@@ -64,9 +72,15 @@ Current app endpoints:
 The Tag Groups view reuses the existing Studio CSS, `assets/studio/js/tag-groups.js`, and the route-ready data attributes.
 In the local app it reads group-description data through `/studio/api/analytics/tag-groups`; unmigrated/Jekyll contexts still fall back to the static `assets/studio/data/tag_groups.json` path.
 The shared Studio data loader also uses local analytics read endpoints for tag registry, aliases, and assignments when the local runtime config advertises them.
-The first analytics write routes are `POST /studio/api/analytics/save-tags`, tag assignment import preview/apply, tag alias import/delete/edit preview/apply, and tag registry import/edit/delete preview/apply.
-They reuse the existing tag assignment, alias mutation, registry mutation, alias rewrite, atomic JSON write, backups, compact script logging, and Studio activity helpers from the tag write-service domain modules.
-The browser transport now prefers these local runtime endpoints for `saveTags`, assignment import, alias import/delete/edit, registry import/edit/delete, and analytics health when a migrated local app page has runtime config; old `127.0.0.1:8787` endpoints remain fallbacks for unmigrated Jekyll-hosted pages.
+The analytics write routes now include `POST /studio/api/analytics/save-tags`, tag assignment import preview/apply, tag alias import/delete/edit preview/apply, tag registry import/edit/delete preview/apply, and cross-artifact promote/demote preview/apply.
+They reuse the existing tag assignment, alias mutation, registry mutation, promotion/demotion, alias rewrite, assignment rewrite, atomic JSON write, backups, compact script logging, and Studio activity helpers from the analytics tag domain modules.
+The legacy tag-server `POST /build-docs` route is deprecated and intentionally not migrated; Docs rebuilds belong to the Docs management API.
+The browser transport now requires these local runtime endpoints for `saveTags`, assignment import, alias import/delete/edit/promote/demote, registry import/edit/delete, demote, and analytics health.
+The old `127.0.0.1:8787` tag write-server fallback endpoints have been removed from the browser runtime.
+Tag registry, tag aliases, series-tags, and the per-series tag editor route shells are now also hosted by the local app with their existing browser modules and DOM contracts.
+They use local runtime config and local analytics API reads/writes when served from the local app.
+The old Jekyll analytics tag route files have been retired, and `bin/dev-studio` no longer starts `scripts/analytics/tag_write_server.py` by default.
+The standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint has been removed; `scripts/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes.
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
 The endpoint exposes the local app runtime contract for migrated views:
 
@@ -88,7 +102,7 @@ Browser-level fixture smokes cover local `/docs/` manage-mode workflows through 
 Data-sharing UI behavior is intentionally deferred to a later cross-Studio adapter consolidation slice.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
-The server is still intentionally narrow and does not yet own catalogue, the broader analytics promote/demote mutation set, audit, or app-wide navigation APIs.
+The server is still intentionally narrow and does not yet own catalogue, audit, or app-wide navigation APIs.
 The app server is split before broader route migration: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns HTML shells, `studio_docs_api.py` owns the Docs Viewer API adapter, and `studio_analytics_api.py` owns the first analytics API adapter.
 New route families should follow that module-boundary pattern rather than expanding the server entrypoint.
 
@@ -97,6 +111,7 @@ Current focused checks:
 - `tests/python/test_studio_app_server.py`
 - `tests/smoke/local_studio_navigation_adapter.py`
 - `tests/smoke/local_studio_app_tag_groups.py`
+- `tests/smoke/local_studio_app_tag_routes.py`
 - `tests/smoke/local_studio_app_docs_viewer.py`
 - `tests/smoke/local_studio_docs_management_workflows.py`
 - `tests/smoke/local_studio_docs_management_ui.py`

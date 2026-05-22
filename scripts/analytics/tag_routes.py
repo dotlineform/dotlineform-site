@@ -3,7 +3,6 @@
 
 HEALTH_PATH = "/health"
 SAVE_TAGS_PATH = "/save-tags"
-BUILD_DOCS_PATH = "/build-docs"
 IMPORT_ASSIGNMENTS_PREVIEW_PATH = "/import-tag-assignments-preview"
 IMPORT_ASSIGNMENTS_APPLY_PATH = "/import-tag-assignments"
 IMPORT_REGISTRY_PATH = "/import-tag-registry"
@@ -20,7 +19,6 @@ MUTATE_TAG_APPLY_PATH = "/mutate-tag"
 
 POST_PATHS = (
     SAVE_TAGS_PATH,
-    BUILD_DOCS_PATH,
     IMPORT_ASSIGNMENTS_PREVIEW_PATH,
     IMPORT_ASSIGNMENTS_APPLY_PATH,
     IMPORT_REGISTRY_PATH,

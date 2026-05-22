@@ -29,14 +29,16 @@ Status:
 - timestamped backup names, single-file JSON writes with backup, and multi-file JSON writes with backup and rollback are now owned by `scripts/analytics/tag_write_transactions.py`
 - Slice 8 implemented
 - final handler body cleanup is complete: tag activity, script logging, Studio Activity, and extracted helper call sites now use explicit module namespaces; canonical tag assignment rewrites are owned by `scripts/analytics/tag_registry_mutations.py`; `tag_write_server.py` remains the service name until a broader Analytics write-service contract exists
+- Follow-up local Studio app migration retired the standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint; `scripts/studio/studio_analytics_api.py` now owns the local Analytics HTTP surface while the extracted domain modules remain in use.
 
 ## Purpose
 
-This child doc tracks the detailed review and implementation slices for restructuring `scripts/analytics/tag_write_server.py`.
+This child doc tracks the completed review and implementation slices that extracted domain behavior from the former `scripts/analytics/tag_write_server.py`.
 The parent [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review) stays focused on the broader review goals, candidate scripts, completed priority summaries, and acceptance criteria.
 
 The intended end state is not a small file for its own sake.
-The tag write server should remain the Tag Studio local-service HTTP and endpoint orchestration layer, while cohesive route inventory, tag assignment model helpers, registry and alias mutation planning, promotion/demotion flows, activity contracts, and backup/write mechanics get explicit owners only when the boundary is useful.
+The follow-up local Studio app migration moved HTTP ownership to `scripts/studio/studio_analytics_api.py`.
+Cohesive route inventory, tag assignment model helpers, registry and alias mutation planning, promotion/demotion flows, activity contracts, and backup/write mechanics remain explicit domain owners.
 
 ## Analytics Context
 
@@ -449,9 +451,8 @@ The final closeout kept endpoint behavior stable while removing the remaining ca
 Those helpers now live with canonical tag mutation behavior in `scripts/analytics/tag_registry_mutations.py`, with focused coverage for rename and delete assignment rewrites.
 The server now calls extracted owners through explicit module namespaces for script logging, Studio Activity append, tag activity rows, registry mutation helpers, route constants, source loading/validation, assignment planning, alias mutation planning, promotion/demotion planning, and write transactions.
 
-Decision: keep the executable name as `scripts/analytics/tag_write_server.py` for this completed review.
-The current service writes only tag assignments, tag registry rows, tag aliases, promotion, and demotion, so renaming it to `analytics_server.py` now would imply a broader Analytics write surface that does not exist yet.
-If future Analytics metadata or scoring registries share the same local service, that rename should be handled as a separate request because it affects command paths, docs, `bin/dev-studio`, route constants, and folder organization.
+Later decision: retire the standalone executable during the local Studio app migration.
+Do not reintroduce a separate Analytics HTTP server unless a future request justifies another process boundary.
 
 The remaining candidate scripts stay in the parent review queue rather than being folded into this closeout.
 The follow-up folder move into `scripts/analytics/` is now complete in [Scripts Directory Organization Request](/docs/?scope=studio&doc=site-request-scripts-directory-organization).
@@ -460,8 +461,8 @@ Target ownership:
 
 - remove stale imports and dead helpers
 - verify server call sites use explicit module namespaces
-- refresh [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) and this slice plan with the final boundary
-- decide whether `tag_write_server.py` should remain tag-specific or become `analytics_server.py`: leave as `tag_write_server.py` until broader Analytics writes exist
+- refresh [Retired Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) and this slice plan with the final boundary
+- keep `scripts/studio/studio_analytics_api.py` as the active local HTTP owner for tag writes
 - decide whether remaining candidates should be marked `leave` or linked to a separate request: keep lower-priority candidates in the parent queue; folder organization is handled by the directory request
 
 Acceptance checks:
@@ -474,7 +475,7 @@ Acceptance checks:
 
 Benefits:
 
-- leaves `scripts/analytics/tag_write_server.py` as HTTP orchestration rather than a mixed domain module
+- left the former HTTP orchestration thin enough to move into the local Studio app cleanly
 - creates a stable handoff point before reviewing generator or catalogue build scripts
 
 Risks:

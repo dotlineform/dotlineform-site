@@ -210,6 +210,10 @@ function inferViewIdFromPath(pathname) {
   const path = String(pathname || "");
   if (path === "/docs" || path === "/docs/") return "docs";
   if (path === "/studio/analytics/tag-groups" || path === "/studio/analytics/tag-groups/") return "tag_groups";
+  if (path === "/studio/analytics/tag-registry" || path === "/studio/analytics/tag-registry/") return "tag_registry";
+  if (path === "/studio/analytics/tag-aliases" || path === "/studio/analytics/tag-aliases/") return "tag_aliases";
+  if (path === "/studio/analytics/series-tags" || path === "/studio/analytics/series-tags/") return "series_tags";
+  if (path === "/studio/analytics/series-tag-editor" || path === "/studio/analytics/series-tag-editor/") return "series_tag_editor";
   if (path === "/studio" || path === "/studio/") return "home";
   return "";
 }

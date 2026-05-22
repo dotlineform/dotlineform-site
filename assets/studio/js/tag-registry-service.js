@@ -3,8 +3,7 @@ import {
 } from "./studio-config.js";
 import {
   getStudioWriteEndpoint,
-  postJson,
-  STUDIO_WRITE_ENDPOINTS
+  postJson
 } from "./studio-transport.js";
 import { buildStudioActivityContext } from "./studio-activity-context.js";
 import {
@@ -197,7 +196,7 @@ export async function submitDeleteTag(options) {
 export async function previewTagDemote(options) {
   const { tagId, aliasTargets, config } = options || {};
   try {
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTagPreview, {
+    const response = await postJson(getStudioWriteEndpoint("demoteTagPreview", config), {
       tag_id: tagId,
       alias_targets: aliasTargets,
       client_time_utc: utcTimestamp()
@@ -219,7 +218,7 @@ export async function submitTagDemote(options) {
   const { saveMode, tagId, aliasTargets, config } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTag, {
+      const response = await postJson(getStudioWriteEndpoint("demoteTag", config), {
         tag_id: tagId,
         alias_targets: aliasTargets,
         client_time_utc: utcTimestamp(),

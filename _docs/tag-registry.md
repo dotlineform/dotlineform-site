@@ -23,7 +23,7 @@ The page root `#tag-registry` exposes the shared Studio route-ready contract:
 - `data-studio-ready` is `false` while config, registry, aliases, assignment, series, and group data load, then `true` after the list or error state is rendered
 - `data-studio-busy` is `true` while import, edit, create, delete, demote, or delete-impact preview work is running
 - `data-studio-mode` is `list`, `import`, or `edit` depending on active modal state
-- `data-studio-service` reports whether the local tag write server is available for direct writes
+- `data-studio-service` reports whether the local Studio analytics API is available for direct writes
 - `data-studio-record-loaded` is `true` when registry tags are loaded
 
 Successful local-server registry writes send Studio activity context and append unified activity rows with script purpose `save tag data`.
@@ -31,9 +31,9 @@ Covered write actions include registry import, create tag, edit tag, delete tag,
 
 ## Page / Template Structure
 
-Primary template:
+Primary shell:
 
-- `studio/analytics/tag-registry/index.md`
+- `scripts/studio/studio_app_views.py`
 
 Page controller:
 

@@ -16,7 +16,7 @@ for path in (SCRIPTS_DIR, ANALYTICS_SCRIPTS_DIR, STUDIO_SCRIPTS_DIR):
         sys.path.insert(0, str(path))
 
 from analytics import tag_routes as routes  # noqa: E402
-from analytics import tag_write_server  # noqa: E402
+import studio_analytics_api  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -41,19 +41,16 @@ def test_options_routes_cover_each_post_route() -> None:
         raise AssertionError("health route should not gain CORS preflight handling implicitly")
 
 
-def test_handler_dispatch_covers_each_post_route() -> None:
-    dispatch = tag_write_server.Handler.POST_HANDLERS
-    assert_equal(set(dispatch), set(routes.POST_PATHS), "POST_HANDLERS route keys")
-    for route_path, handler_name in dispatch.items():
-        handler = getattr(tag_write_server.Handler, handler_name, None)
-        if handler is None:
-            raise AssertionError(f"{route_path} dispatches to missing handler {handler_name!r}")
+def test_local_analytics_adapter_covers_each_post_route() -> None:
+    assert_equal(set(studio_analytics_api.ANALYTICS_POST_PATHS), set(routes.POST_PATHS), "local analytics route keys")
+    if "/build-docs" in studio_analytics_api.ANALYTICS_POST_PATHS:
+        raise AssertionError("deprecated /build-docs route should not be exposed by local analytics API")
 
 
 def main() -> None:
     test_post_routes_are_unique()
     test_options_routes_cover_each_post_route()
-    test_handler_dispatch_covers_each_post_route()
+    test_local_analytics_adapter_covers_each_post_route()
     print("Tag route tests OK")
 
 

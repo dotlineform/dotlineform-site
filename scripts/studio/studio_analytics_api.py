@@ -19,6 +19,7 @@ import studio_activity  # noqa: E402
 from analytics import tag_activity  # noqa: E402
 from analytics import tag_alias_mutations as tag_aliases  # noqa: E402
 from analytics import tag_assignment_service as tag_assignments  # noqa: E402
+from analytics import tag_promotion_mutations as tag_promotions  # noqa: E402
 from analytics import tag_registry_mutations as tag_registry  # noqa: E402
 from analytics import tag_routes  # noqa: E402
 from analytics import tag_source_model as tag_source  # noqa: E402
@@ -54,6 +55,7 @@ READ_ENDPOINTS = {
         "required_type": list,
     },
 }
+ANALYTICS_POST_PATHS = tag_routes.POST_PATHS
 
 
 def utc_now() -> str:
@@ -74,6 +76,10 @@ def analytics_health_payload() -> dict[str, object]:
             "mutate_tag_alias_preview": True,
             "mutate_tag": True,
             "mutate_tag_preview": True,
+            "promote_tag_alias": True,
+            "promote_tag_alias_preview": True,
+            "demote_tag": True,
+            "demote_tag_preview": True,
             "save_tags": True,
         },
     }
@@ -131,6 +137,14 @@ def analytics_post_response(
         return HTTPStatus.OK, mutate_tag_alias_response(repo_root, body, preview=True, dry_run=dry_run)
     if path == tag_routes.MUTATE_ALIAS_APPLY_PATH:
         return HTTPStatus.OK, mutate_tag_alias_response(repo_root, body, preview=False, dry_run=dry_run)
+    if path == tag_routes.PROMOTE_ALIAS_PREVIEW_PATH:
+        return HTTPStatus.OK, promote_tag_alias_response(repo_root, body, preview=True, dry_run=dry_run)
+    if path == tag_routes.PROMOTE_ALIAS_APPLY_PATH:
+        return HTTPStatus.OK, promote_tag_alias_response(repo_root, body, preview=False, dry_run=dry_run)
+    if path == tag_routes.DEMOTE_TAG_PREVIEW_PATH:
+        return HTTPStatus.OK, demote_tag_response(repo_root, body, preview=True, dry_run=dry_run)
+    if path == tag_routes.DEMOTE_TAG_APPLY_PATH:
+        return HTTPStatus.OK, demote_tag_response(repo_root, body, preview=False, dry_run=dry_run)
     if path == tag_routes.MUTATE_TAG_PREVIEW_PATH:
         return HTTPStatus.OK, mutate_tag_response(repo_root, body, preview=True, dry_run=dry_run)
     if path == tag_routes.MUTATE_TAG_APPLY_PATH:
@@ -555,6 +569,187 @@ def mutate_tag_alias_response(
     return response_payload
 
 
+def promote_tag_alias_response(
+    repo_root: Path,
+    body: dict[str, Any],
+    *,
+    preview: bool,
+    dry_run: bool = False,
+) -> dict[str, object]:
+    registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
+    aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
+    backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
+    allowed_write_paths = {registry_path, aliases_path}
+
+    alias_key = tag_source.sanitize_alias_key(body.get("alias"), 0)
+
+    now_utc = utc_now()
+    registry_payload = tag_source.load_registry(registry_path)
+    aliases_payload = tag_source.load_aliases(aliases_path)
+    allowed_groups = tag_source.extract_allowed_groups(registry_payload)
+    group = tag_source.sanitize_group(body.get("group"), allowed_groups, "group")
+
+    registry_updated, aliases_updated, stats, registry_changed, aliases_changed = tag_promotions.promote_alias_to_canonical_tag(
+        registry_payload=registry_payload,
+        aliases_payload=aliases_payload,
+        alias_key=alias_key,
+        group=group,
+        now_utc=now_utc,
+    )
+    summary_text = tag_promotions.build_promote_summary_text(stats)
+
+    response_payload: dict[str, object] = {
+        "ok": True,
+        "updated_at_utc": now_utc,
+        "summary_text": summary_text,
+        "preview": preview,
+        **stats,
+    }
+
+    payloads_to_write: dict[Path, dict[str, Any]] = {}
+    if registry_changed:
+        payloads_to_write[registry_path] = registry_updated
+    if aliases_changed:
+        payloads_to_write[aliases_path] = aliases_updated
+
+    if preview:
+        response_payload["dry_run"] = True
+        response_payload["would_write"] = {
+            "updated_at_utc": now_utc,
+            **stats,
+        }
+    elif dry_run:
+        response_payload["dry_run"] = True
+        response_payload["would_write"] = {
+            "updated_at_utc": now_utc,
+            **stats,
+        }
+    else:
+        for target in payloads_to_write:
+            if target not in allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+        if payloads_to_write:
+            tag_transactions.atomic_write_many(payloads_to_write, backups_dir)
+
+    if not preview:
+        log_event(
+            repo_root,
+            "promote_tag_alias",
+            {
+                "summary_text": summary_text,
+                "dry_run": dry_run,
+                **stats,
+            },
+        )
+        if tag_activity.tag_activity_changed(stats):
+            tag_activity.attach_tag_activity(
+                repo_root=repo_root,
+                endpoint=tag_routes.PROMOTE_ALIAS_APPLY_PATH,
+                dry_run=dry_run,
+                append_activity=lambda entry: studio_activity.append_studio_activity(repo_root, entry),
+                body=body,
+                response_payload=response_payload,
+                detail_items=[
+                    summary_text,
+                    f"Promoted alias {stats.get('alias')} to {stats.get('new_tag_id')}.",
+                ],
+                status=tag_activity.tag_activity_status(stats),
+            )
+    return response_payload
+
+
+def demote_tag_response(
+    repo_root: Path,
+    body: dict[str, Any],
+    *,
+    preview: bool,
+    dry_run: bool = False,
+) -> dict[str, object]:
+    registry_path = (repo_root / tag_source.REGISTRY_REL_PATH).resolve()
+    aliases_path = (repo_root / tag_source.ALIASES_REL_PATH).resolve()
+    assignments_path = (repo_root / tag_source.ASSIGNMENTS_REL_PATH).resolve()
+    backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
+    allowed_write_paths = {registry_path, aliases_path, assignments_path}
+
+    old_tag_id = tag_source.sanitize_tag_id(body.get("tag_id"), "tag_id")
+    alias_targets = tag_source.sanitize_tag_id_list(body.get("alias_targets"), "alias_targets")
+    tag_source.enforce_alias_group_constraints(alias_targets, "alias_targets")
+
+    now_utc = utc_now()
+    registry_payload = tag_source.load_registry(registry_path)
+    aliases_payload = tag_source.load_aliases(aliases_path)
+    assignments_payload = tag_source.load_assignments(assignments_path)
+
+    registry_updated, aliases_updated, assignments_updated, stats, assignments_changed = tag_promotions.demote_tag_to_alias(
+        registry_payload=registry_payload,
+        aliases_payload=aliases_payload,
+        assignments_payload=assignments_payload,
+        old_tag_id=old_tag_id,
+        alias_targets=alias_targets,
+        now_utc=now_utc,
+    )
+    summary_text = tag_promotions.build_demote_summary_text(stats)
+
+    response_payload: dict[str, object] = {
+        "ok": True,
+        "updated_at_utc": now_utc,
+        "summary_text": summary_text,
+        "preview": preview,
+        **stats,
+    }
+
+    payloads_to_write: dict[Path, dict[str, Any]] = {
+        registry_path: registry_updated,
+        aliases_path: aliases_updated,
+    }
+    if assignments_changed:
+        payloads_to_write[assignments_path] = assignments_updated
+
+    if preview:
+        response_payload["dry_run"] = True
+        response_payload["would_write"] = {
+            "updated_at_utc": now_utc,
+            **stats,
+        }
+    elif dry_run:
+        response_payload["dry_run"] = True
+        response_payload["would_write"] = {
+            "updated_at_utc": now_utc,
+            **stats,
+        }
+    else:
+        for target in payloads_to_write:
+            if target not in allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+        tag_transactions.atomic_write_many(payloads_to_write, backups_dir)
+
+    if not preview:
+        log_event(
+            repo_root,
+            "demote_tag",
+            {
+                "summary_text": summary_text,
+                "dry_run": dry_run,
+                **stats,
+            },
+        )
+        if tag_activity.tag_activity_changed(stats):
+            tag_activity.attach_tag_activity(
+                repo_root=repo_root,
+                endpoint=tag_routes.DEMOTE_TAG_APPLY_PATH,
+                dry_run=dry_run,
+                append_activity=lambda entry: studio_activity.append_studio_activity(repo_root, entry),
+                body=body,
+                response_payload=response_payload,
+                detail_items=[
+                    summary_text,
+                    f"Demoted {stats.get('old_tag_id')} to alias {stats.get('alias_key')}.",
+                ],
+                status=tag_activity.tag_activity_status(stats),
+            )
+    return response_payload
+
+
 def mutate_tag_response(
     repo_root: Path,
     body: dict[str, Any],
@@ -724,7 +919,7 @@ def sanitize_import_resolutions(raw_resolutions: object) -> dict[str, str]:
 def log_event(repo_root: Path, event: str, details: dict[str, Any]) -> None:
     try:
         script_logging.append_script_log(
-            SCRIPTS_DIR / "analytics" / "tag_write_server.py",
+            Path(__file__).resolve(),
             event=event,
             details=details,
             repo_root=repo_root,

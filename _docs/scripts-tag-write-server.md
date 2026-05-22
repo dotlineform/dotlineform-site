@@ -1,43 +1,41 @@
 ---
 doc_id: scripts-tag-write-server
-title: Tag Write Server
+title: Retired Tag Write Server
 added_date: 2026-03-31
-last_updated: "2026-05-09 21:45"
+last_updated: "2026-05-22"
 parent_id: servers
 sort_order: 3000
 ---
-# Tag Write Server
+# Retired Tag Write Server
 
-Script:
+`scripts/analytics/tag_write_server.py` has been retired.
 
-```bash
-./scripts/analytics/tag_write_server.py
-```
+Tag write routes now run through the local Studio app server:
 
-Endpoint paths are owned by `scripts/analytics/tag_routes.py`.
-The server keeps HTTP orchestration and maps `routes.POST_PATHS` to handler methods through `Handler.POST_HANDLERS`.
-Tag-specific Studio Activity status, changed-state, write-endpoint, record-group, and row-construction helpers are owned by `scripts/analytics/tag_activity.py`.
-Tag source artifact paths, JSON loading defaults, tag/alias/group/weight validation, assignment normalization, import filename sanitization, and import assignment row validation are owned by `scripts/analytics/tag_source_model.py`.
-Tag assignment save planning, work override planning, assignment import preview/apply decisions, and assignment import response summary text are owned by `scripts/analytics/tag_assignment_service.py`.
-Tag registry import, canonical tag mutation planners, canonical rename/delete assignment rewrites, and registry mutation summary text are owned by `scripts/analytics/tag_registry_mutations.py`.
-Tag alias import, edit/delete, target rewrite, and redundant alias cleanup planners are owned by `scripts/analytics/tag_alias_mutations.py`.
-Alias promotion and tag demotion planners are owned by `scripts/analytics/tag_promotion_mutations.py`.
-Timestamped backups and atomic JSON write transactions are owned by `scripts/analytics/tag_write_transactions.py`.
-The service remains `tag_write_server.py` for this completed structural pass because the write surface is still limited to tag assignments, registry rows, aliases, promotion, and demotion. A broader `analytics_server.py` rename should wait until a separate Analytics metadata or scoring workflow shares the same local-service contract.
+- API module: `scripts/studio/studio_analytics_api.py`
+- route constants: `scripts/analytics/tag_routes.py`
+- local API base: `/studio/api/analytics`
+- operational log: `var/studio/logs/studio_analytics_api.log`
 
-## Optional Flags
+The old standalone `127.0.0.1:8787` process is no longer started by `bin/dev-studio`, and browser modules no longer include hardcoded fallback URLs for it.
+The deprecated tag-server `/build-docs` route was not migrated.
+Docs rebuilds belong to the Docs management API.
 
-- `--port 8787`: override port
-- `--repo-root /path/to/dotlineform-site`: override root auto-detection by parent-searching for `_config.yml`
-- `--dry-run`: validate and return a response without writing files
+Reusable analytics owners remain active:
 
-## Endpoints And Behavior
+- `scripts/analytics/tag_activity.py`
+- `scripts/analytics/tag_source_model.py`
+- `scripts/analytics/tag_assignment_service.py`
+- `scripts/analytics/tag_registry_mutations.py`
+- `scripts/analytics/tag_alias_mutations.py`
+- `scripts/analytics/tag_promotion_mutations.py`
+- `scripts/analytics/tag_write_transactions.py`
 
-Exposed endpoints are defined in `scripts/analytics/tag_routes.py`:
+## Active Endpoints
 
-- `GET /health`
+The local Studio app exposes these tag write endpoints under `/studio/api/analytics`:
+
 - `POST /save-tags`
-- `POST /build-docs` (deprecated; returns `410 Gone`)
 - `POST /import-tag-registry`
 - `POST /import-tag-aliases`
 - `POST /delete-tag-alias`
@@ -52,131 +50,20 @@ Exposed endpoints are defined in `scripts/analytics/tag_routes.py`:
 - `POST /mutate-tag-preview`
 - `POST /mutate-tag`
 
-Tag Studio save behavior:
+## Write Policy
 
-- the Tag Studio page probes `/health`
-- shows `Save mode: Local server` when available
-- shows `Save mode: Offline session` when unavailable or when a staged local row already exists for the current series
-- `POST /save-tags` expects assignment objects in `tags`
-  - series save payload: `{ "series_id": "<series>", "tags": [...] }`
-  - work override save payload: `{ "series_id": "<series>", "work_id": "<work_id>", "keep_work": true|false, "tags": [...] }`
-  - tag rows use `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9, "alias"?: "<alias>" }`
-  - `alias` is optional historical data only and is not treated as canonical
-- saves write `assets/studio/data/tag_assignments.json` with object-only tag rows
-- saves are diff-based in the Series Tag Editor
-- when multiple work pills are selected, the active work's current override set is used as the persisted state for all selected work pills
-- work override saves strip tags already inherited from `series[*].tags`
-- `keep_work: false` plus empty tags deletes `series[*].works[work_id]`
-- `keep_work: true` allows an explicit work row with `tags: []`
-- offline-session staging stores full normalized series rows in browser `localStorage`, including optional historical `alias`
-- the Series Tags page can export that session as JSON or preview and apply it through the local server
-- assignment import preview and apply compares full normalized rows, including `alias`, and resolves conflicts per series via `overwrite` or `skip`
-- covered local-server save and import-apply requests append unified Studio activity rows when valid activity context is supplied
-
-Tag Registry behavior:
-
-- probes `/health`
-- shows `Import mode: Local server` when available
-- shows `Import mode: Patch` when unavailable
-- tag edit and delete require local server mode
-- `New tag` opens a create modal with group pills, slug entry, optional description, and duplicate checks
-- local mode uses `POST /import-tag-registry` with `mode: add`
-- patch mode emits an add-tag row snippet
-
-Registry import and mutation behavior:
-
-- supported import modes:
-  - `add`
-  - `merge`
-  - `replace`
-- successful imports include `summary_text`
-- import requests may include `import_filename`; server logs basename only
-- covered import, create, edit, delete, and demote writes append unified Studio activity rows when valid activity context is supplied
-- `POST /mutate-tag`
-  - `action: edit` updates canonical tag description
-  - `action: delete` removes the tag
-- delete cascades into `tag_assignments.json` and `tag_aliases.json`
-- aliases that become 1:1 self-maps are removed automatically
-- `POST /mutate-tag-preview` returns the same impact stats without writing files
-- tag demotion:
-  - triggered from the registry list
-  - preview via `POST /demote-tag-preview`
-  - apply via `POST /demote-tag`
-  - demotion removes the canonical tag, creates alias mappings, and rewrites assignments and alias target refs
-  - patch fallback emits ordered manual steps only
-
-Tag Aliases behavior:
-
-- probes `/health`
-- shows `Import mode: Local server` when available
-- shows `Import mode: Patch` when unavailable
-- alias delete uses `POST /delete-tag-alias` in local mode
-- patch mode generates manual snippets with `aliases_to_remove`
-- alias edit modal supports description and selected canonical tags, with max 4 tags and max 1 per group
-- local mode uses `POST /mutate-tag-alias`
-- patch mode emits ordered `set_alias` and `remove_alias_key` steps
-- `New alias` uses `POST /import-tag-aliases` with `mode: add` in local mode
-- patch mode emits an add-alias fragment snippet
-- alias promote:
-  - choose target group at action time
-  - preview via `POST /promote-tag-alias-preview`
-  - apply via `POST /promote-tag-alias`
-  - canonical tag id becomes `<group>:<alias-slug>`
-  - if canonical already exists, the alias key is removed only
-- alias import modes:
-  - `add`
-  - `merge`
-  - `replace`
-- successful alias imports include `summary_text` and `import_filename` basename only
-- covered import, create, edit, delete, promote, and demote writes append unified Studio activity rows when valid activity context is supplied
-
-## Security Constraints
-
-- binds to loopback only
-- CORS allows loopback origins only
-- write target is allowlisted to:
-  - `assets/studio/data/tag_assignments.json`
-  - `assets/studio/data/tag_registry.json`
-  - `assets/studio/data/tag_aliases.json`
-- unified activity rows are written only through fixed local feed paths owned by `scripts/studio_activity.py`
-- tag activity row construction is centralized in `scripts/analytics/tag_activity.py`
-- tag source artifact paths and validation defaults are centralized in `scripts/analytics/tag_source_model.py`
-- tag assignment save and import planners are centralized in `scripts/analytics/tag_assignment_service.py`
-- tag registry mutation planners and canonical tag assignment rewrites are centralized in `scripts/analytics/tag_registry_mutations.py`
-- tag alias mutation and rewrite planners are centralized in `scripts/analytics/tag_alias_mutations.py`
-- tag promotion and demotion planners are centralized in `scripts/analytics/tag_promotion_mutations.py`
-- tag write transaction helpers are centralized in `scripts/analytics/tag_write_transactions.py`
-- timestamped backups are created in `var/studio/backups/`
-  - `tag_assignments.json.bak-YYYYMMDD-HHMMSS`
-  - `tag_registry.json.bak-YYYYMMDD-HHMMSS`
-  - `tag_aliases.json.bak-YYYYMMDD-HHMMSS`
-
-## Source And Target Artifacts
-
-Source and target JSON artifacts:
+Tag writes remain allowlisted to:
 
 - `assets/studio/data/tag_assignments.json`
 - `assets/studio/data/tag_registry.json`
 - `assets/studio/data/tag_aliases.json`
 
-Backup target:
-
-- `var/studio/backups/`
-
-Operational log target:
-
-- `var/studio/logs/tag_write_server.log`
-
-Unified activity targets:
-
-- `var/studio/activity/activity_log.jsonl`
-- `var/studio/activity/activity_log.json`
+Backups remain under `var/studio/backups/`.
+Unified activity rows are written through `scripts/studio_activity.py`.
 
 ## Related References
 
-- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
+- [Local Studio App Implementation Plan](/docs/?scope=studio&doc=local-studio-app-implementation-plan)
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
 - [Servers](/docs/?scope=studio&doc=servers)
-- [Local Studio Server Architecture](/docs/?scope=studio&doc=local-studio-server-architecture)
-- [Studio](/docs/?scope=studio&doc=studio)
-- [Series Tags](/docs/?scope=studio&doc=series-tags)
-- [Tag Editor](/docs/?scope=studio&doc=tag-editor)

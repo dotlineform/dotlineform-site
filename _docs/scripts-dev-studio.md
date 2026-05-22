@@ -65,8 +65,6 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   default: `127.0.0.1`
 - `STUDIO_APP_PORT`
   default: `8765`
-- `TAG_WRITE_PORT`
-  default: `8787`
 - `CATALOGUE_WRITE_PORT`
   default: `8788`
 - `DOCS_MANAGEMENT_PORT`
@@ -99,7 +97,6 @@ export DOCS_STARTUP_REBUILD_SCOPES=""
 export CATALOGUE_STARTUP_LOOKUP_REBUILD=off
 export JEKYLL_PORT=4001
 export STUDIO_APP_PORT=8765
-export TAG_WRITE_PORT=8797
 export CATALOGUE_WRITE_PORT=8798
 export DOCS_MANAGEMENT_PORT=8799
 export AUDIT_SERVICE_PORT=8800
@@ -122,10 +119,9 @@ Before it starts any rebuilds or long-running servers, `bin/dev-studio` checks t
 
 1. Jekyll on `JEKYLL_HOST:JEKYLL_PORT`
 2. Local Studio App on `STUDIO_APP_HOST:STUDIO_APP_PORT` when `STUDIO_APP_ENABLED` is not `0`
-3. Tag Write Server on `127.0.0.1:TAG_WRITE_PORT`
-4. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT`
-5. Docs Management Server on `127.0.0.1:DOCS_MANAGEMENT_PORT`
-6. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT`
+3. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT`
+4. Docs Management Server on `127.0.0.1:DOCS_MANAGEMENT_PORT`
+5. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT`
 
 If any port is unavailable, the runner exits immediately with a message naming the affected service and environment variable override.
 
@@ -189,17 +185,6 @@ bundle exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port 
 - that filter suppresses only WEBrick `Errno::ECONNRESET` server-log entries, which are expected when the browser closes a local connection during refreshes, rebuilds, or cancelled asset loads
 - other WEBrick errors, Jekyll build warnings, and docs watcher messages remain visible
 
-### Tag Write Server
-
-- command:
-
-```bash
-./scripts/analytics/tag_write_server.py --port "$TAG_WRITE_PORT"
-```
-
-- default URL: `http://127.0.0.1:8787`
-- related doc: [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
-
 ### Catalogue Write Server
 
 - command:
@@ -254,7 +239,6 @@ At startup the runner prints quick links for:
 
 - Jekyll root
 - Local Studio App
-- Tag Write Server
 - Catalogue Write Server
 - Docs Management Server
 - Audit Service
@@ -263,7 +247,7 @@ At startup the runner prints quick links for:
 - Docs Live Watcher status
 - Backup retention status
 - Series Tag Editor:
-  - `http://127.0.0.1:4000/studio/analytics/series-tag-editor/?series=<series_id>`
+  - `http://127.0.0.1:8765/studio/analytics/series-tag-editor/?series=<series_id>`
 
 ## Shutdown Behavior
 
@@ -273,7 +257,6 @@ When you press `Ctrl+C`, it:
 
 - stops Jekyll
 - stops the Local Studio App when enabled
-- stops the Tag Write Server
 - stops the Catalogue Write Server
 - stops the Docs Management Server
 - stops the Audit Service

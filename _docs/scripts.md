@@ -145,8 +145,8 @@ Catalogue/runtime maintenance:
   Report source project folders and primary images that are not represented by `works.json`.
 - [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
   Export derived Studio lookup payloads for focused editor reads.
-- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
-  Run the local Studio tag-save/import service with explicit write allowlists.
+- [Retired Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
+  Records the retired standalone tag write service and the active local Studio analytics API replacement.
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
   Run the local Studio catalogue source save service with explicit write allowlists.
 - [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)

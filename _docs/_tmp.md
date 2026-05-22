@@ -67,3 +67,91 @@ The current local views in studio_app_views.py build their own minimal HTML shel
 My recommendation: keep the local Studio app footerless unless it has a real Studio job. Public-site footer content probably should not come over. A small local footer/status strip could be useful later for things like server mode, active repo, health, docs watcher status, or version, but that should be designed as Studio app chrome, not inherited Jekyll chrome.
 
 ---
+
+Implemented the bridge step: bin/dev-studio now starts the local Python Studio app server by default.
+
+bin/dev-studio now has:
+STUDIO_APP_ENABLED, default 1
+STUDIO_APP_HOST, default 127.0.0.1
+STUDIO_APP_PORT, default 8765
+
+---
+
+I’m about to add POST handling to the local app server and a Docs API adapter that calls the existing docs-management domain functions directly. The browser-facing base stays /studio/api/docs, so this is endpoint migration, not a second server or proxy.
+
+It calls the existing Python docs-management functions directly.
+
+Flow now:
+
+Browser Docs Viewer JS
+  -> fetch("/studio/api/docs/docs/update-metadata")
+  -> scripts/studio/studio_app_server.py
+  -> scripts/studio/studio_docs_api.py
+  -> existing Python docs-management domain functions
+So the browser still uses the existing JavaScript modules, especially assets/docs-viewer/js/docs-viewer-management-client.js, but the server-side call is Python-to-Python, not JavaScript-to-JavaScript.
+
+The important distinction:
+
+Before: Docs Viewer JS could call a separate docs-management HTTP server.
+Now: Docs Viewer JS calls the Studio app server at /studio/api/docs.
+The Studio app server imports/reuses the existing Python docs-management implementation instead of proxying to another localhost port.
+This is the “one app server” direction we discussed.
+
+---
+
+Not quite.
+
+The **page URL** is still the same:
+
+`/studio/analytics/tag-groups/`
+
+That page is now served by the **local Python Studio app server**, not by a Jekyll-rendered route, when you are using the local app on port `8765`.
+
+Inside that page, the **data request changed**:
+
+Before:
+`GET /assets/studio/data/tag_groups.json`
+
+Now, in local Studio:
+`GET /studio/api/analytics/tag-groups`
+
+So the route split is:
+
+- `/studio/analytics/tag-groups/` = local app page shell
+- `/studio/api/analytics/tag-groups` = local app API returning the tag-groups JSON data
+- Jekyll/static fallback still exists for contexts that do not have the local runtime config/API.
+
+Yes.
+
+Before, the browser fetched the JSON file directly:
+
+`/assets/studio/data/tag_groups.json`
+
+Now, in the local Studio app, the browser calls:
+
+`/studio/api/analytics/tag-groups`
+
+and the Python app server reads:
+
+`assets/studio/data/tag_groups.json`
+
+then returns that JSON as an API response with `ok: true` added.
+
+So the source data file has not moved. Only the access path changed: browser direct file read -> local app API read.
+
+> so whats the benefit of doing it the api way?
+
+For this specific Tag Groups read, the immediate benefit is small. It is mostly an architecture slice, not a feature improvement.
+
+The useful benefits are:
+
+- It proves the Phase 4 pattern for non-Docs route families: `studio_app_server.py` dispatches, `studio_analytics_api.py` owns analytics endpoints.
+- It lets local Studio views stop depending on public/static asset paths as their data interface.
+- It gives us one place to add validation, shaping, caching, diagnostics, or future source changes without changing the browser module again.
+- It prepares for write/read workflows where the API boundary matters more, such as tag registry, aliases, assignments, and eventually retiring `tag_write_server.py`.
+- It keeps the page URL stable while moving implementation behind it away from Jekyll/static-file assumptions.
+
+But yes: for Tag Groups alone, this is deliberately low-value/low-risk. Its main value is establishing the route-module pattern before moving higher-risk analytics write services.
+
+---
+

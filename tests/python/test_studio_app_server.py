@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import sys
 import tempfile
@@ -24,11 +25,18 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["host"] == "local-studio-app"
     assert runtime["asset_version"] == "test-version"
     assert runtime["routes"]["runtime_config"] == "/studio/runtime-config.json"
+    assert any(view["id"] == "tag_registry" and view["path"] == "/studio/analytics/tag-registry/" for view in runtime["views"])
+    assert any(view["id"] == "tag_aliases" and view["path"] == "/studio/analytics/tag-aliases/" for view in runtime["views"])
+    assert any(view["id"] == "series_tags" and view["path"] == "/studio/analytics/series-tags/" for view in runtime["views"])
+    assert any(view["id"] == "series_tag_editor" and view["path"] == "/studio/analytics/series-tag-editor/" for view in runtime["views"])
+    assert "series_tag_editor" not in runtime["navigation"]["primary"]
     assert runtime["services"]["analytics"]["tag_groups"] == "/studio/api/analytics/tag-groups"
     assert runtime["services"]["analytics"]["tag_registry"] == "/studio/api/analytics/tag-registry"
     assert runtime["services"]["analytics"]["tag_aliases"] == "/studio/api/analytics/tag-aliases"
     assert runtime["services"]["analytics"]["tag_assignments"] == "/studio/api/analytics/tag-assignments"
     assert runtime["services"]["analytics"]["delete_tag_alias"] == "/studio/api/analytics/delete-tag-alias"
+    assert runtime["services"]["analytics"]["demote_tag_preview"] == "/studio/api/analytics/demote-tag-preview"
+    assert runtime["services"]["analytics"]["demote_tag"] == "/studio/api/analytics/demote-tag"
     assert runtime["services"]["analytics"]["save_tags"] == "/studio/api/analytics/save-tags"
     assert runtime["services"]["analytics"]["import_tag_assignments_preview"] == "/studio/api/analytics/import-tag-assignments-preview"
     assert runtime["services"]["analytics"]["import_tag_assignments"] == "/studio/api/analytics/import-tag-assignments"
@@ -38,6 +46,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["analytics"]["mutate_tag_alias"] == "/studio/api/analytics/mutate-tag-alias"
     assert runtime["services"]["analytics"]["mutate_tag_preview"] == "/studio/api/analytics/mutate-tag-preview"
     assert runtime["services"]["analytics"]["mutate_tag"] == "/studio/api/analytics/mutate-tag"
+    assert runtime["services"]["analytics"]["promote_tag_alias_preview"] == "/studio/api/analytics/promote-tag-alias-preview"
+    assert runtime["services"]["analytics"]["promote_tag_alias"] == "/studio/api/analytics/promote-tag-alias"
     assert runtime["services"]["docs"]["base"] == "/studio/api/docs"
     assert runtime["data_paths"]["ui_text"]["tag_groups"] == "/assets/studio/data/ui_text/tag-groups.json"
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
@@ -382,6 +392,104 @@ def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
         assert "canopy" not in persisted
 
 
+def test_analytics_promotion_demotion_dry_run_routes_use_promotion_contract() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir)
+        registry_path = repo_root / "assets" / "studio" / "data" / "tag_registry.json"
+        aliases_path = repo_root / "assets" / "studio" / "data" / "tag_aliases.json"
+        assignments_path = repo_root / "assets" / "studio" / "data" / "tag_assignments.json"
+        registry_path.parent.mkdir(parents=True)
+        registry_path.write_text(
+            """{
+  "tag_registry_version": "tag_registry_v1",
+  "updated_at_utc": "2026-05-01T00:00:00Z",
+  "policy": {
+    "allowed_groups": ["subject", "theme"]
+  },
+  "tags": [
+    {
+      "tag_id": "subject:trees",
+      "group": "subject",
+      "label": "trees",
+      "status": "active",
+      "description": "Trees"
+    },
+    {
+      "tag_id": "theme:growth",
+      "group": "theme",
+      "label": "growth",
+      "status": "active",
+      "description": "Growth"
+    }
+  ]
+}
+""",
+            encoding="utf-8",
+        )
+        aliases_path.write_text(
+            """{
+  "tag_aliases_version": "tag_aliases_v1",
+  "updated_at_utc": "2026-05-01T00:00:00Z",
+  "aliases": {
+    "foliage": {
+      "description": "Foliage",
+      "tags": ["subject:trees"]
+    }
+  }
+}
+""",
+            encoding="utf-8",
+        )
+        assignments_path.write_text(
+            """{
+  "tag_assignments_version": "tag_assignments_v1",
+  "updated_at_utc": "2026-05-01T00:00:00Z",
+  "series": {
+    "series-a": {
+      "tags": [{"tag_id": "subject:trees", "w_manual": 0.6}]
+    }
+  }
+}
+""",
+            encoding="utf-8",
+        )
+
+        promote_status, promote_payload = analytics_post_response(
+            repo_root,
+            "/promote-tag-alias-preview",
+            {
+                "alias": "foliage",
+                "group": "theme",
+                "client_time_utc": "2026-05-22T00:00:00Z",
+            },
+            dry_run=True,
+        )
+        demote_status, demote_payload = analytics_post_response(
+            repo_root,
+            "/demote-tag-preview",
+            {
+                "tag_id": "subject:trees",
+                "alias_targets": ["theme:growth"],
+                "client_time_utc": "2026-05-22T00:00:00Z",
+            },
+            dry_run=True,
+        )
+
+        registry_persisted = registry_path.read_text(encoding="utf-8")
+        aliases_persisted = json.loads(aliases_path.read_text(encoding="utf-8"))
+        assert promote_status == studio_docs_api.HTTPStatus.OK
+        assert promote_payload["ok"] is True
+        assert promote_payload["preview"] is True
+        assert promote_payload["new_tag_id"] == "theme:foliage"
+        assert demote_status == studio_docs_api.HTTPStatus.OK
+        assert demote_payload["ok"] is True
+        assert demote_payload["preview"] is True
+        assert demote_payload["alias_key"] == "trees"
+        assert demote_payload["series_tag_refs_rewritten"] == 1
+        assert "theme:foliage" not in registry_persisted
+        assert "trees" not in aliases_persisted["aliases"]
+
+
 def test_docs_capabilities_report_scopes_and_management_api() -> None:
     payload = studio_docs_api.docs_capabilities_payload(REPO_ROOT)
     capabilities = payload["capabilities"]
@@ -455,6 +563,7 @@ if __name__ == "__main__":
     test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract()
     test_analytics_tag_registry_dry_run_routes_use_registry_contract()
     test_analytics_tag_alias_dry_run_routes_use_alias_contract()
+    test_analytics_promotion_demotion_dry_run_routes_use_promotion_contract()
     test_docs_capabilities_report_scopes_and_management_api()
     test_docs_generated_read_routes_return_existing_payloads()
     test_docs_management_settings_and_dry_run_mutation_routes()

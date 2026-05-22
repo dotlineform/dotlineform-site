@@ -51,6 +51,16 @@ def install_fixture(page: Page) -> None:
             const workflow = await import('/assets/studio/js/tag-registry-workflow.js');
             const host = document.querySelector('[data-role="modal-host"]');
             const config = {
+                app: {
+                    runtime: {
+                        services: {
+                            analytics: {
+                                health: '/studio/api/analytics/health',
+                                import_tag_registry: '/studio/api/analytics/import-tag-registry'
+                            }
+                        }
+                    }
+                },
                 ui_text: {
                     tag_registry: {
                         all_tags_filter: 'All tags [{count}]',
@@ -202,7 +212,7 @@ def assert_render_output(page: Page) -> None:
 
 def assert_import_mode_availability(page: Page) -> None:
     page.route(
-        "http://127.0.0.1:8787/health",
+        "**/studio/api/analytics/health",
         lambda route: route.fulfill(
             status=503,
             headers={
@@ -291,9 +301,9 @@ def assert_import_mode_availability(page: Page) -> None:
         raise AssertionError(f"health probe fallback mismatch: {result!r}")
 
 
-def assert_fallback_save_behavior(page: Page) -> None:
+def assert_patch_save_behavior(page: Page) -> None:
     page.route(
-        "http://127.0.0.1:8787/import-tag-registry",
+        "**/studio/api/analytics/import-tag-registry",
         lambda route: route.fulfill(
             status=503,
             headers={
@@ -409,7 +419,7 @@ def main() -> int:
             install_fixture(page)
             assert_render_output(page)
             assert_import_mode_availability(page)
-            assert_fallback_save_behavior(page)
+            assert_patch_save_behavior(page)
         finally:
             browser.close()
             if server:

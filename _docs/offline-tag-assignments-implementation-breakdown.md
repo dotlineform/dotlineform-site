@@ -140,7 +140,7 @@ This page is the session hub.
 
 Primary file:
 
-- `scripts/analytics/tag_write_server.py`
+- `scripts/studio/studio_analytics_api.py`
 
 Responsibilities:
 
@@ -190,7 +190,7 @@ Docs to update:
 - [Series Tags](/docs/?scope=studio&doc=series-tags)
 - [Studio](/docs/?scope=studio&doc=studio)
 - [UI Framework](/docs/?scope=studio&doc=ui-framework)
-- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
+- [Retired Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
 
 Verification focus:
 

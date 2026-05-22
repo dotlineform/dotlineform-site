@@ -74,7 +74,7 @@ That is workable for the Library document workflow, but it is the wrong place to
 Tags are Analytics-owned data that relate to Catalogue series and works through `assets/studio/data/tag_assignments.json`, `assets/studio/data/tag_registry.json`, and `assets/studio/data/tag_aliases.json`.
 They need registry, alias, assignment, validation, review, apply, backup, and activity behavior that is not document-shaped.
 
-The tag write service already has extracted domain owners for those behaviors.
+The local Studio analytics API already has extracted domain owners for those behaviors.
 The missing layer is a shared Data Sharing contract that can call those owners without making the docs-management server or the document package adapter responsible for Analytics data.
 
 ## Portability Direction

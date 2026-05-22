@@ -50,7 +50,7 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 |---|---|---|---|
 | 1 | `scripts/catalogue/catalogue_write_server.py` | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | complete; final boundary recorded in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server) |
 | 2 | `scripts/docs/docs_management_server.py` | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | complete; final boundary recorded in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server) |
-| 3 | `scripts/analytics/tag_write_server.py` | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing share one service file | complete; final boundary recorded in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server) |
+| 3 | retired tag write server | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing originally shared one service file | complete; domain owners retained and HTTP ownership moved to the local Studio analytics API |
 | 4 | `scripts/catalogue/generate_work_pages.py` | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | complete; final boundary recorded in [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages) |
 | 5 | `scripts/catalogue/catalogue_json_build.py` | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | complete; final boundary recorded in [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build) |
 | 6 | `scripts/audit_site_consistency.py` | audit checks can grow into a dense list of unrelated validators | deferred; low priority until audit checks become harder to maintain |
@@ -88,7 +88,7 @@ End result:
 Review questions used for the completed catalogue write-server sequence:
 
 - Which functions are pure domain logic and can be tested without an HTTP server?
-- Which helpers are local-service infrastructure that should be shared with docs or tag write services?
+- Which helpers are local-service infrastructure that should be shared with docs or Analytics services?
 - Which response payload keys are public contracts for Studio pages and should be pinned by tests before extraction?
 - Which transaction paths create backups, restore on failure, or update multiple generated artifacts?
 - Which activity-row helpers are catalogue-specific, and which are shared Studio activity infrastructure?
@@ -117,7 +117,7 @@ Slice discipline:
 
 ## Shared-Service Review
 
-The catalogue, docs, and tag write servers share several local-service concerns:
+The catalogue, docs, and Analytics local APIs share several local-service concerns:
 
 - loopback-only CORS handling
 - JSON body limits and parse errors
@@ -157,8 +157,8 @@ Priority 3 was `scripts/analytics/tag_write_server.py`.
 The detailed implementation tracker lives in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server).
 Tags are conceptually part of Analytics: they are a metadata layer over catalogue works and series, currently surfaced through Studio admin pages because they are not public catalogue UI.
 Slices 1-8 moved route inventory, POST dispatch, tag-specific activity helpers, source-model validation/loading helpers, assignment save/import planners, registry/alias mutation planners, promotion/demotion planners, canonical assignment rewrites, and backup/write transaction helpers into focused module owners.
-`scripts/analytics/tag_write_server.py` remains the loopback HTTP orchestration layer for tag writes, including request parsing, route dispatch, response status mapping, endpoint-specific write allowlists, dry-run suppression, local logging timing, and Studio Activity append timing.
-The service name remains tag-specific until a separate Analytics metadata or scoring workflow needs the same local-service contract.
+That standalone HTTP entrypoint was later retired by the local Studio app migration.
+`scripts/studio/studio_analytics_api.py` is now the active local HTTP owner for tag writes, and the extracted Analytics modules remain the domain owners.
 
 ## Remaining Review Queue
 

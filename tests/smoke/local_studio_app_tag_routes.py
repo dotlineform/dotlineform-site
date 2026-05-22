@@ -1,0 +1,150 @@
+#!/usr/bin/env python3
+"""Smoke-check local Studio tag route shells."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+import urllib.request
+from pathlib import Path
+from threading import Thread
+
+from playwright.sync_api import sync_playwright
+
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.studio.studio_app_server import StudioAppServer  # noqa: E402
+
+
+ROUTES = [
+    {
+        "view_id": "tag_registry",
+        "runtime_path": "/studio/analytics/tag-registry/",
+        "path": "/studio/analytics/tag-registry/",
+        "root": "#tag-registry",
+        "mode": "list",
+        "expected_requests": [
+            "/studio/api/analytics/tag-registry",
+            "/studio/api/analytics/tag-aliases",
+            "/studio/api/analytics/tag-assignments",
+        ],
+    },
+    {
+        "view_id": "tag_aliases",
+        "runtime_path": "/studio/analytics/tag-aliases/",
+        "path": "/studio/analytics/tag-aliases/",
+        "root": "#tag-aliases",
+        "mode": "list",
+        "expected_requests": [
+            "/studio/api/analytics/tag-aliases",
+            "/studio/api/analytics/tag-registry",
+        ],
+    },
+    {
+        "view_id": "series_tags",
+        "runtime_path": "/studio/analytics/series-tags/",
+        "path": "/studio/analytics/series-tags/",
+        "root": "#series-tags",
+        "mode": "list",
+        "expected_requests": [
+            "/studio/api/analytics/tag-assignments",
+            "/studio/api/analytics/tag-registry",
+            "/studio/api/analytics/health",
+        ],
+    },
+    {
+        "view_id": "series_tag_editor",
+        "runtime_path": "/studio/analytics/series-tag-editor/",
+        "path": "/studio/analytics/series-tag-editor/?series=036",
+        "root": "#seriesTagEditorRoot",
+        "mode": "edit",
+        "expected_requests": [
+            "/studio/api/analytics/tag-registry",
+            "/studio/api/analytics/tag-aliases",
+            "/studio/api/analytics/tag-assignments",
+            "/studio/api/analytics/health",
+        ],
+    },
+]
+
+
+def start_server() -> tuple[StudioAppServer, str]:
+    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    return server, f"http://127.0.0.1:{server.server_address[1]}"
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.parse_args(argv)
+
+    server, base_url = start_server()
+    try:
+        with urllib.request.urlopen(f"{base_url}/studio/runtime-config.json", timeout=10) as response:
+            runtime_config = json.loads(response.read().decode("utf-8"))
+        runtime_views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
+        runtime_by_id = {view.get("id"): view for view in runtime_views if isinstance(view, dict)}
+        for route in ROUTES:
+            runtime_view = runtime_by_id.get(route["view_id"])
+            if not runtime_view or runtime_view.get("path") != route["runtime_path"]:
+                raise AssertionError(f"runtime config missing {route['view_id']}: {runtime_views!r}")
+
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page()
+            console_errors: list[str] = []
+            page_errors: list[str] = []
+            requests: list[str] = []
+            legacy_requests: list[str] = []
+            page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
+            page.on("pageerror", lambda error: page_errors.append(str(error)))
+            page.on("request", lambda request: requests.append(request.url))
+            page.on("request", lambda request: legacy_requests.append(request.url) if "127.0.0.1:8787" in request.url else None)
+
+            for route in ROUTES:
+                page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
+                page.wait_for_selector(f'{route["root"]}[data-studio-ready="true"]', timeout=10_000)
+                root = page.locator(route["root"])
+                mode = root.get_attribute("data-studio-mode")
+                record_loaded = root.get_attribute("data-studio-record-loaded")
+                doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
+                if mode != route["mode"]:
+                    raise AssertionError(f"{route['path']} expected {route['mode']} mode, got {mode!r}")
+                if record_loaded != "true":
+                    raise AssertionError(f"{route['path']} did not report loaded data")
+                if "mode=manage" not in str(doc_link or ""):
+                    raise AssertionError(f"{route['path']} doc link is not manage-mode: {doc_link!r}")
+                if route["view_id"] == "series_tag_editor":
+                    series_id = page.locator("#tag-studio").get_attribute("data-series-id")
+                    if series_id != "036":
+                        raise AssertionError(f"series tag editor did not load series 036: {series_id!r}")
+
+            browser.close()
+
+        for route in ROUTES:
+            missing = [
+                expected
+                for expected in route["expected_requests"]
+                if not any(expected in request for request in requests)
+            ]
+            if missing:
+                raise AssertionError(f"{route['path']} did not request expected local APIs: {missing!r}")
+        if legacy_requests:
+            raise AssertionError(f"local tag routes should not request legacy 8787 endpoints: {legacy_requests!r}")
+        if console_errors:
+            raise AssertionError(f"console errors: {console_errors}")
+        if page_errors:
+            raise AssertionError(f"page errors: {page_errors}")
+        print(f"local Studio tag routes OK: {base_url}/studio/analytics/tag-registry/")
+        return 0
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

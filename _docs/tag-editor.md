@@ -26,7 +26,7 @@ The page root `#seriesTagEditorRoot` exposes the shared Studio route-ready contr
 - `data-studio-ready` is `false` while the series header and editor data load, then `true` after the tag editor has rendered or a stable error state is shown
 - `data-studio-busy` is `true` while the editor save command is running
 - `data-studio-mode` is `single` when a work is selected, `edit` for the series-level editor state, and `empty` for missing or failed series loads
-- `data-studio-service` reports whether the local tag write server is available for direct saves
+- `data-studio-service` reports whether the local Studio analytics API is available for direct saves
 - `data-studio-record-loaded` is `true` after a valid series id is loaded
 
 Successful local-server saves send Studio activity context and append unified activity rows with script purpose `save tag data`.
@@ -34,9 +34,9 @@ Multiple row writes from one Save click share the same initiating action context
 
 ## Page / Template Structure
 
-Primary template:
+Primary shell:
 
-- `studio/analytics/series-tag-editor/index.md`
+- `scripts/studio/studio_app_views.py`
 
 Page boot module:
 

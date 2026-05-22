@@ -1,22 +1,7 @@
-const STUDIO_WRITE_ENDPOINTS = Object.freeze({
-  saveTags: "http://127.0.0.1:8787/save-tags",
-  health: "http://127.0.0.1:8787/health",
-  importTagAssignmentsPreview: "http://127.0.0.1:8787/import-tag-assignments-preview",
-  importTagAssignments: "http://127.0.0.1:8787/import-tag-assignments",
-  importTagRegistry: "http://127.0.0.1:8787/import-tag-registry",
-  mutateTag: "http://127.0.0.1:8787/mutate-tag",
-  mutateTagPreview: "http://127.0.0.1:8787/mutate-tag-preview",
-  demoteTag: "http://127.0.0.1:8787/demote-tag",
-  demoteTagPreview: "http://127.0.0.1:8787/demote-tag-preview",
-  importTagAliases: "http://127.0.0.1:8787/import-tag-aliases",
-  deleteTagAlias: "http://127.0.0.1:8787/delete-tag-alias",
-  mutateTagAlias: "http://127.0.0.1:8787/mutate-tag-alias",
-  promoteTagAlias: "http://127.0.0.1:8787/promote-tag-alias",
-  promoteTagAliasPreview: "http://127.0.0.1:8787/promote-tag-alias-preview"
-});
-
 const STUDIO_WRITE_RUNTIME_KEYS = Object.freeze({
   deleteTagAlias: "delete_tag_alias",
+  demoteTag: "demote_tag",
+  demoteTagPreview: "demote_tag_preview",
   health: "health",
   importTagAssignments: "import_tag_assignments",
   importTagAssignmentsPreview: "import_tag_assignments_preview",
@@ -26,6 +11,8 @@ const STUDIO_WRITE_RUNTIME_KEYS = Object.freeze({
   mutateTagAliasPreview: "mutate_tag_alias_preview",
   mutateTag: "mutate_tag",
   mutateTagPreview: "mutate_tag_preview",
+  promoteTagAlias: "promote_tag_alias",
+  promoteTagAliasPreview: "promote_tag_alias_preview",
   saveTags: "save_tags"
 });
 
@@ -87,7 +74,6 @@ export {
   AUDIT_SERVICE_ENDPOINTS,
   DATA_SHARING_ENDPOINTS,
   DOCS_MANAGEMENT_ENDPOINTS,
-  STUDIO_WRITE_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS
 };
 
@@ -97,7 +83,7 @@ export function getStudioWriteEndpoint(key, config = null) {
   const analytics = runtime && runtime.services && runtime.services.analytics;
   const configured = runtimeKey && analytics && analytics[runtimeKey];
   if (typeof configured === "string" && configured.trim()) return configured;
-  return STUDIO_WRITE_ENDPOINTS[key] || "";
+  return "";
 }
 
 export async function probeStudioHealth(timeoutMs = 500, options = {}) {
@@ -121,6 +107,7 @@ export async function probeAuditServiceHealth(timeoutMs = 500) {
 }
 
 async function probeHealth(url, timeoutMs = 500) {
+  if (!url) return false;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -139,6 +126,10 @@ async function probeHealth(url, timeoutMs = 500) {
 }
 
 export async function postJson(url, payload, options = {}) {
+  if (!url) {
+    throw new Error("Missing service endpoint");
+  }
+
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -165,6 +156,10 @@ export async function postJson(url, payload, options = {}) {
 }
 
 export async function getJson(url, options = {}) {
+  if (!url) {
+    throw new Error("Missing service endpoint");
+  }
+
   const response = await fetch(url, {
     cache: "no-store",
     signal: options.signal

@@ -120,7 +120,7 @@ def test_tag_record_group_is_resolved_from_context() -> None:
     )
     assert_equal(len(calls), 1, "tag append calls")
     assert_equal(calls[0]["record_groups"]["tags"], ["subject:trees"], "tag record group")
-    assert_equal(calls[0]["source_refs"], [{"kind": "log", "path": "var/studio/logs/tag_write_server.log"}], "source refs")
+    assert_equal(calls[0]["source_refs"], [{"kind": "log", "path": "var/studio/logs/studio_analytics_api.log"}], "source refs")
     assert_equal(response["activity_log"], {"written_count": 1}, "activity log")
 
 

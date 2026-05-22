@@ -3,17 +3,20 @@
 from __future__ import annotations
 
 import html
+import json
 from pathlib import Path
 
 try:
-    from studio_app_config import STUDIO_VIEWS
+    from studio_app_config import STUDIO_MEDIA, STUDIO_VIEWS
 except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
-    from .studio_app_config import STUDIO_VIEWS
+    from .studio_app_config import STUDIO_MEDIA, STUDIO_VIEWS
 
 
 def studio_nav(active_view_id: str = "") -> str:
     items = []
     for view_id, view in STUDIO_VIEWS.items():
+        if view.get("nav", "true") == "false":
+            continue
         label = html.escape(view["label"])
         href = html.escape(view["path"], quote=True)
         escaped_view_id = html.escape(view_id, quote=True)
@@ -22,8 +25,8 @@ def studio_nav(active_view_id: str = "") -> str:
     return "\n        ".join(items)
 
 
-def tag_groups_view(version: str) -> str:
-    view = STUDIO_VIEWS["tag_groups"]
+def studio_route_view(version: str, view_id: str, body_html: str) -> str:
+    view = STUDIO_VIEWS[view_id]
     escaped_version = html.escape(version, quote=True)
     title = html.escape(view["title"])
     doc_href = html.escape(view["doc_href"], quote=True)
@@ -44,7 +47,7 @@ def tag_groups_view(version: str) -> str:
     <div class="container">
       <div class="site-title"><a href="/studio/">dotlineform Studio</a></div>
       <nav class="site-nav" aria-label="Studio">
-        {studio_nav("tag_groups")}
+        {studio_nav(view_id)}
       </nav>
     </div>
   </header>
@@ -64,13 +67,7 @@ def tag_groups_view(version: str) -> str:
         </a>
       </div>
       <div class="studio__content">
-        <div class="tagStudioPage tagGroupsPage">
-          <div id="tag-groups" data-role="tag-groups" data-studio-ready="false" data-studio-busy="false">
-            <div class="tagStudio__panel">
-              <div data-role="content"></div>
-            </div>
-          </div>
-        </div>
+        {body_html}
       </div>
     </div>
   </main>
@@ -79,6 +76,222 @@ def tag_groups_view(version: str) -> str:
 </body>
 </html>
 """
+
+
+def tag_groups_view(version: str) -> str:
+    body = """<div class="tagStudioPage tagGroupsPage">
+          <div id="tag-groups" data-role="tag-groups" data-studio-ready="false" data-studio-busy="false">
+            <div class="tagStudio__panel">
+              <div data-role="content"></div>
+            </div>
+          </div>
+        </div>"""
+    return studio_route_view(version, "tag_groups", body)
+
+
+def tag_registry_view(version: str) -> str:
+    body = """<div class="tagRegistryPage">
+          <div id="tag-registry" data-role="tag-registry" data-studio-ready="false" data-studio-busy="false">
+            <div class="seriesTagsActions">
+              <button type="button" class="tagStudio__button" data-role="open-import-modal">Import</button>
+              <button type="button" class="tagStudio__button" data-role="open-new-tag">New tag</button>
+            </div>
+            <section class="tagStudio__panel">
+              <div class="tagStudioFilters" data-role="filters">
+                <div class="tagStudio__key tagStudioFilters__key" data-role="key"></div>
+                <label class="tagStudioFilters__searchWrap">
+                  <span class="visually-hidden" data-role="search-label">Search tags</span>
+                  <input
+                    type="text"
+                    class="tagStudio__input tagStudioFilters__searchInput"
+                    data-role="search"
+                    placeholder="search"
+                    autocomplete="off"
+                  >
+                </label>
+              </div>
+              <div data-role="list"></div>
+            </section>
+            <div data-role="modal-host"></div>
+          </div>
+        </div>"""
+    return studio_route_view(version, "tag_registry", body)
+
+
+def tag_aliases_view(version: str) -> str:
+    body = """<div class="tagAliasesPage">
+          <div id="tag-aliases" data-role="tag-aliases" data-studio-ready="false" data-studio-busy="false">
+            <div class="seriesTagsActions">
+              <button type="button" class="tagStudio__button" data-role="open-import-modal">Import</button>
+              <button type="button" class="tagStudio__button" data-role="open-new-alias">New alias</button>
+            </div>
+            <section class="tagStudio__panel">
+              <div class="tagStudioFilters" data-role="filters">
+                <div class="tagStudio__key tagStudioFilters__key" data-role="key"></div>
+                <label class="tagStudioFilters__searchWrap">
+                  <span class="visually-hidden" data-role="search-label">Search aliases</span>
+                  <input
+                    type="text"
+                    class="tagStudio__input tagStudioFilters__searchInput"
+                    data-role="search"
+                    placeholder="search"
+                    autocomplete="off"
+                  >
+                </label>
+              </div>
+              <div data-role="list"></div>
+            </section>
+            <div data-role="modal-host"></div>
+          </div>
+        </div>"""
+    return studio_route_view(version, "tag_aliases", body)
+
+
+def series_tags_view(version: str) -> str:
+    body = """<div class="seriesTagsPage">
+          <div class="seriesTagsActions" data-role="series-tags-actions">
+            <button type="button" class="tagStudio__button" data-role="open-session-modal"></button>
+            <button type="button" class="tagStudio__button" data-role="open-import-modal"></button>
+          </div>
+          <div data-role="series-tags-session-modal-host"></div>
+          <div data-role="series-tags-import-modal-host"></div>
+          <div class="tagStudio__panel">
+            <div id="series-tags" data-role="series-tags" data-studio-ready="false" data-studio-busy="false"></div>
+          </div>
+        </div>"""
+    return studio_route_view(version, "series_tags", body)
+
+
+def series_tag_editor_view(version: str, repo_root: Path) -> str:
+    view = STUDIO_VIEWS["series_tag_editor"]
+    escaped_version = html.escape(version, quote=True)
+    title = html.escape(view["title"])
+    doc_href = html.escape(view["doc_href"], quote=True)
+    script = html.escape(view["script"], quote=True)
+    pipeline = load_pipeline(repo_root)
+    variants = pipeline.get("variants") if isinstance(pipeline.get("variants"), dict) else {}
+    primary_variants = variants.get("primary") if isinstance(variants.get("primary"), dict) else {}
+    compatibility_variants = variants.get("compatibility") if isinstance(variants.get("compatibility"), dict) else {}
+    encoding = pipeline.get("encoding") if isinstance(pipeline.get("encoding"), dict) else {}
+    render_widths = compatibility_variants.get("render_widths") or primary_variants.get("widths") or [800, 1200, 1600]
+    if not isinstance(render_widths, list):
+        render_widths = [800, 1200, 1600]
+    display_width = render_widths[-1] if render_widths else 1600
+    full_width = primary_variants.get("preferred_width") or display_width
+    media_config = STUDIO_MEDIA.get("media") if isinstance(STUDIO_MEDIA.get("media"), dict) else {}
+    media_base = str(media_config.get("base") or "")
+    media_works = str(media_config.get("works_images") or "/works/img")
+    media_image_works_base = f"{media_base}{media_works}/"
+    body = f"""<article
+          class="page tagStudioPage"
+          id="seriesTagEditorRoot"
+          data-baseurl=""
+          data-media-image-works-base="{html.escape(media_image_works_base, quote=True)}"
+          data-primary-render-widths="{html.escape(json.dumps(render_widths), quote=True)}"
+          data-primary-display-width="{html.escape(str(display_width), quote=True)}"
+          data-primary-full-width="{html.escape(str(full_width), quote=True)}"
+          data-primary-suffix="{html.escape(str(primary_variants.get("suffix") or "primary"), quote=True)}"
+          data-asset-format="{html.escape(str(encoding.get("format") or "webp"), quote=True)}"
+          data-series-index-url="/assets/data/series_index.json"
+          data-tag-studio-module-url="/assets/studio/js/tag-studio.js?v={escaped_version}"
+          hidden
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <header class="tagStudioPage__header">
+            <figure class="tagStudioPage__media" id="seriesTagEditorMedia" hidden>
+              <a
+                class="page__mediaLink"
+                id="seriesTagEditorMediaLink"
+                href="#"
+                target="_blank"
+                rel="noopener"
+                style="--work-ar: 4 / 3;"
+              >
+                <img
+                  class="tagStudioPage__mediaImg"
+                  id="seriesTagEditorMediaImg"
+                  src=""
+                  srcset=""
+                  sizes="(max-width: 900px) 100vw, 40vw"
+                  alt=""
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
+                >
+              </a>
+              <figcaption class="tagStudioPage__mediaCaption" id="seriesTagEditorMediaCaption"></figcaption>
+            </figure>
+
+            <section class="tagStudioPage__context tagStudioPage__context--meta">
+              <h1 class="tagStudioPage__title" id="seriesTagEditorTitle">Series Tag Editor</h1>
+              <div class="page__caption page__metaList">
+                <div class="page__row"><span id="seriesTagEditorYearDisplay">-</span></div>
+                <div class="page__row">
+                  <span id="seriesTagEditorCat">-</span>
+                </div>
+                <div class="page__row" style="display:none;"><span id="seriesTagEditorYear">-</span></div>
+                <div class="page__row" style="display:none;"><span id="seriesTagEditorSortFields">-</span></div>
+                <div class="page__row" style="display:none;"><span id="seriesTagEditorPrimaryWork">-</span></div>
+                <div class="page__row">/<span id="seriesTagEditorFolders">-</span></div>
+                <div class="page__row"><span id="seriesTagEditorNotes">-</span></div>
+              </div>
+            </section>
+          </header>
+
+          <section class="tagStudioPage__editor">
+            <div id="tag-studio" class="tagStudio" data-role="series-tag-editor">
+              <section class="tagStudio__panel tagStudio__panel--editor" data-role="editor-shell">
+                <section class="tagStudioEditorSection tagStudioEditorSection--work" data-role="work-section">
+                  <div class="tagStudio__inputRow tagStudio__inputRow--work">
+                    <input class="tagStudio__input" data-role="work-input" type="text" autocomplete="off" placeholder="work_id(s) in this series">
+                    <div class="tagStudio__workSelection" data-role="selected-work"></div>
+                  </div>
+                  <div class="tagStudio__popup tagStudio__popup--work" data-role="work-popup" hidden>
+                    <div class="tagStudio__popupInner tagStudio__popupInner--series" data-role="work-popup-list"></div>
+                  </div>
+                </section>
+
+                <section class="tagStudioEditorSection tagStudioEditorSection--messages" data-role="message-section">
+                  <p class="tagStudio__contextHint" data-role="context-hint"></p>
+                </section>
+
+                <section class="tagStudioEditorSection tagStudioEditorSection--groups" data-role="groups-section">
+                  <div data-role="groups"></div>
+                </section>
+
+                <section class="tagStudioEditorSection tagStudioEditorSection--search" data-role="search-section">
+                  <div class="tagStudio__inputRow tagStudio__editorActionGrid">
+                    <input class="tagStudio__input" data-role="tag-input" type="text" autocomplete="off" placeholder="tag slug or alias">
+                    <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-role="add-tag">Add</button>
+                    <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-role="save">Save</button>
+                    <span class="tagStudio__saveMode" data-role="save-mode"></span>
+                    <div class="tagStudio__buttonFeedback tagStudio__buttonFeedback--editor">
+                      <p class="tagStudio__status" data-role="status"></p>
+                      <p class="tagStudio__saveWarning" data-role="save-warning"></p>
+                      <p class="tagStudio__saveResult" data-role="save-result"></p>
+                    </div>
+                  </div>
+                  <div class="tagStudio__popup tagStudio__popup--series" data-role="popup" hidden>
+                    <div class="tagStudio__popupInner tagStudio__popupInner--series" data-role="popup-list"></div>
+                  </div>
+                </section>
+              </section>
+              <div data-role="modal-host"></div>
+            </div>
+          </section>
+        </article>
+        <p id="seriesTagEditorEmpty" hidden></p>"""
+    return studio_route_view(version, "series_tag_editor", body)
+
+
+def load_pipeline(repo_root: Path) -> dict[str, object]:
+    path = repo_root / "_data" / "pipeline.json"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
 
 
 def docs_viewer_shell(version: str, repo_root: Path) -> str:

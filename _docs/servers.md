@@ -25,5 +25,5 @@ Read this section in this order:
 
 Current local server scripts:
 
-- **[Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)**
+- **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for Studio shell, Docs management, and Analytics tag APIs
 - **[Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)**

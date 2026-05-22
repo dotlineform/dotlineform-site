@@ -17,7 +17,7 @@ Status:
 - Phase 0, Phase 1, and Phase 1A implemented
 - Phase 2 implemented
 - Phase 3 implemented for Docs Viewer manage mode
-- Phase 4 in progress with Docs management, analytics tag reads, tag assignment writes, tag alias writes, and tag registry writes routed through the local app server
+- Phase 4 in progress with Docs management, analytics tag reads, active analytics tag writes, and analytics tag route shells routed through the local app server; the old analytics tag Jekyll shells and 8787 browser fallback are retired
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -447,6 +447,14 @@ For projection-contract slices:
 
 ## Change Log Entries
 
+- `change-2026-05-22-added-local-analytics-tag-promotion-api`
+- `change-2026-05-22-mounted-local-analytics-tag-route-shells`
+- `change-2026-05-22-added-local-analytics-tag-alias-mutation-api`
+- `change-2026-05-22-added-local-analytics-tag-registry-mutation-api`
+- `change-2026-05-22-added-local-analytics-tag-assignment-import-api`
+- `change-2026-05-22-added-local-analytics-save-tags-api`
+- `change-2026-05-22-added-local-analytics-tag-read-apis`
+- `change-2026-05-22-added-local-analytics-tag-groups-api`
 - `change-2026-05-22-added-local-docs-management-ui-smoke`
 - `change-2026-05-22-added-public-docs-readonly-smoke`
 - `change-2026-05-22-added-local-docs-management-workflow-smoke`
