@@ -8,11 +8,17 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
+import sys
 from threading import Thread
 from urllib.parse import urlparse
 
 from playwright.sync_api import sync_playwright
 
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.studio.studio_app_server import StudioAppServer  # noqa: E402
 
 ROOT_SELECTOR = "#dataSharingReviewRoot"
 
@@ -28,6 +34,13 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
         raise FileNotFoundError(f"site root does not exist: {resolved_root}")
     handler = partial(QuietStaticHandler, directory=str(resolved_root))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    return server, f"http://127.0.0.1:{server.server_address[1]}"
+
+
+def start_local_app_server() -> tuple[StudioAppServer, str]:
+    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
@@ -125,9 +138,9 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
 
     def handle(route):
         parsed = urlparse(route.request.url)
-        if parsed.path == "/health":
+        if parsed.path in {"/health", "/studio/api/docs/health"}:
             payload = {"ok": True}
-        elif parsed.path == "/data-sharing/returned-packages":
+        elif parsed.path in {"/data-sharing/returned-packages", "/studio/api/docs/data-sharing/returned-packages"}:
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -142,7 +155,7 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
                     }
                 ],
             }
-        elif parsed.path == "/data-sharing/review":
+        elif parsed.path in {"/data-sharing/review", "/studio/api/docs/data-sharing/review"}:
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -259,7 +272,7 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
                     },
                 ],
             }
-        elif parsed.path == "/data-sharing/apply":
+        elif parsed.path in {"/data-sharing/apply", "/studio/api/docs/data-sharing/apply"}:
             request_body = {}
             try:
                 post_data_json = route.request.post_data_json
@@ -340,6 +353,7 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
             payload = {"ok": False, "error": f"Unhandled mock route: {parsed.path}"}
         route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
 
+    page.route("**/studio/api/docs/**", handle)
     page.route("http://127.0.0.1:8789/**", handle)
     return apply_requests
 
@@ -605,16 +619,20 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", default="http://127.0.0.1:4000")
     parser.add_argument("--site-root", help="Serve a built site root on a temporary local HTTP server.")
+    parser.add_argument("--local-app", action="store_true", help="Serve the local Studio app on a temporary local HTTP server.")
     parser.add_argument("--block-docs-service", action="store_true")
     parser.add_argument("--mock-docs-service", action="store_true")
-    parser.add_argument("--route-path", default="/studio/data-sharing/review/")
+    parser.add_argument("--route-path", default="/studio/data-sharing/review/?mode=manage")
     parser.add_argument("--expect-unsupported", default="")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()
 
     static_server = None
+    local_app_server = None
     base_url = args.base_url
-    if args.site_root:
+    if args.local_app:
+        local_app_server, base_url = start_local_app_server()
+    elif args.site_root:
         static_server, base_url = start_static_server(Path(args.site_root))
 
     try:
@@ -624,6 +642,7 @@ def main() -> int:
                 page = browser.new_page()
                 apply_requests: list[dict[str, object]] = []
                 if args.block_docs_service:
+                    page.route("**/studio/api/docs/**", lambda route: route.abort())
                     page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
                 elif args.mock_docs_service:
                     apply_requests = install_mock_docs_service(page)
@@ -644,6 +663,9 @@ def main() -> int:
         if static_server is not None:
             static_server.shutdown()
             static_server.server_close()
+        if local_app_server is not None:
+            local_app_server.shutdown()
+            local_app_server.server_close()
     return 0
 
 

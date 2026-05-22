@@ -14,7 +14,7 @@ Status:
 - implemented
 
 These archived UI refinements applied to the historical `/studio/export/` page.
-The current package-preparation route is `/studio/data-sharing/prepare/`.
+The current package-preparation route is `/studio/data-sharing/prepare/?mode=manage`.
 
 ## Text and messages
 

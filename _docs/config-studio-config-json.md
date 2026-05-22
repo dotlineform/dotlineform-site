@@ -125,7 +125,7 @@ The package preparation page reads:
 
 The Library sharing profile config file owns document package pattern definitions.
 `studio_config.json` only owns browser-facing route, payload, and scoped UI-copy lookup for the Studio page.
-The page runs package preparation through the fixed Data Sharing transport endpoint `POST /data-sharing/prepare`, which is configured in `assets/studio/js/studio-transport.js` rather than in `studio_config.json`.
+The page runs package preparation through the fixed local Studio app Data Sharing transport endpoint `POST /studio/api/docs/data-sharing/prepare`, which is configured in `assets/studio/js/studio-transport.js` rather than in `studio_config.json`.
 Adapter dispatch belongs in `assets/studio/data/data_sharing_adapters.json`.
 Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.
 The scoped data-sharing-prepare payload keys `format_label`, `format_json`, `format_jsonl`, `format_required`, and `result_format_label` control output-format selector and result-modal copy.
@@ -144,7 +144,7 @@ The returned package review page reads:
 - `paths.data.ui_text.data_sharing_review`
 
 The scoped data-sharing-review payload owns browser-facing labels, status messages, selection copy, preview/apply result modal titles and count labels, the preview `results` reopen button, summary-apply confirmation modal copy, and hierarchy-apply confirmation modal copy.
-The fixed docs-management transport endpoints for returned-package listing, review generation, and apply live in `assets/studio/js/studio-transport.js`.
+The fixed local Studio app transport endpoints for returned-package listing, review generation, and apply live in `assets/studio/js/studio-transport.js`.
 Adapter dispatch belongs in `assets/studio/data/data_sharing_adapters.json`.
 Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.
 Returned-package parsing rules, sharing-profile matching, output formats, and source-write validation do not belong in `studio_config.json`; they belong in the Data Sharing adapters and local service.

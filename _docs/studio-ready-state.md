@@ -151,8 +151,8 @@ Route-specific Studio roots:
 - `/studio/catalogue-status/?mode=manage` with `#catalogueStatusRoot`
 - `/studio/catalogue-work/` with `#catalogueWorkRoot`
 - `/studio/catalogue-work-detail/` with `#catalogueWorkDetailRoot`
-- `/studio/data-sharing/prepare/` with `#dataSharingPrepareRoot`
-- `/studio/data-sharing/review/` with `#dataSharingReviewRoot`
+- `/studio/data-sharing/prepare/?mode=manage` with `#dataSharingPrepareRoot`
+- `/studio/data-sharing/review/?mode=manage` with `#dataSharingReviewRoot`
 - `/studio/project-state/` with `#projectStateRoot`
 - `/studio/thumbnail-quality/` with `#thumbnailQualityRoot`
 - `/studio/studio-works/` with `#worksStudioRoot`
@@ -165,7 +165,7 @@ Route-specific Studio roots:
 Static Studio roots:
 
 - `/studio/` with `#studioHomeRoot`
-- `/studio/data-sharing/` with `#studioDataSharingDashboardRoot`
+- `/studio/data-sharing/?mode=manage` with `#studioDataSharingDashboardRoot`
 The legacy UI catalogue reference routes have been retired. Isolated UI Catalogue demo routes now use `data-ui-catalogue-demo-ready` instead of the production `data-studio-ready` contract.
 
 Dashboard Studio roots:

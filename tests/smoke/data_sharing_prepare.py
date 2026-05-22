@@ -9,6 +9,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 from threading import Thread
+from urllib.parse import urlparse
 
 from playwright.sync_api import sync_playwright
 
@@ -99,22 +100,22 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
 
     def handle(route):
         request = route.request
-        url = request.url
-        if url.startswith("http://127.0.0.1:8789/health"):
+        parsed = urlparse(request.url)
+        if parsed.path == "/studio/api/docs/health" or request.url.startswith("http://127.0.0.1:8789/health"):
             route.fulfill(
                 status=200,
                 content_type="application/json",
                 body=json.dumps({"ok": True, "service": "docs_management", "dry_run": True}),
             )
             return
-        if url.startswith("http://127.0.0.1:8789/docs/generated/index"):
+        if parsed.path == "/studio/api/docs/docs/generated/index" or request.url.startswith("http://127.0.0.1:8789/docs/generated/index"):
             route.fulfill(
                 status=200,
                 content_type="application/json",
                 body=json.dumps(generated_docs_index()),
             )
             return
-        if url.startswith("http://127.0.0.1:8789/data-sharing/prepare"):
+        if parsed.path == "/studio/api/docs/data-sharing/prepare" or request.url.startswith("http://127.0.0.1:8789/data-sharing/prepare"):
             post_data_json = request.post_data_json
             prepare_requests.append(post_data_json() if callable(post_data_json) else post_data_json)
             route.fulfill(
@@ -129,6 +130,7 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
             body=json.dumps({"ok": False, "error": "Unexpected mock docs-management route"}),
         )
 
+    page.route("**/studio/api/docs/**", handle)
     page.route("http://127.0.0.1:8789/**", handle)
     return prepare_requests
 
@@ -407,8 +409,9 @@ def main() -> int:
             if args.mock_docs_service:
                 prepare_requests = install_mock_docs_service(page)
             elif args.block_docs_service:
+                page.route("**/studio/api/docs/**", lambda route: route.abort())
                 page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
-            page.goto(route_url(base_url, "/studio/data-sharing/prepare/"), wait_until="domcontentloaded")
+            page.goto(route_url(base_url, "/studio/data-sharing/prepare/?mode=manage"), wait_until="domcontentloaded")
             attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
             assert_ready_contract(attrs)
             if args.block_docs_service and attrs["service"] != "unavailable":

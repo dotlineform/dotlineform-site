@@ -327,7 +327,7 @@ def assert_fallback_write_behavior(page: Page) -> None:
             ),
         )
 
-    page.route("http://127.0.0.1:8789/data-sharing/prepare", handle)
+    page.route("**/studio/api/docs/data-sharing/prepare", handle)
     result = page.evaluate(
         """async () => {
             const smoke = window.__dataSharingPrepareModuleSmoke;

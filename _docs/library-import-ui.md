@@ -14,7 +14,7 @@ Status:
 - Implemented
 
 These archived UI refinements applied to the historical `/studio/import/` page.
-The current returned-package review route is `/studio/data-sharing/review/`.
+The current returned-package review route is `/studio/data-sharing/review/?mode=manage`.
 
 ## Text and messages
 

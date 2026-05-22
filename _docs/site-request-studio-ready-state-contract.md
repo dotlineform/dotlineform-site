@@ -69,8 +69,8 @@ Adopted routes:
 - `/studio/catalogue-status/`
 - `/studio/catalogue-field-registry/`
 - `/docs/?mode=manage&import=1`
-- `/studio/data-sharing/prepare/`
-- `/studio/data-sharing/review/`
+- `/studio/data-sharing/prepare/?mode=manage`
+- `/studio/data-sharing/review/?mode=manage`
 - `/studio/audits/`
 - `/studio/project-state/`
 - `/studio/analytics/series-tag-editor/`
@@ -117,8 +117,8 @@ Primary async or service-backed Studio routes:
 - [x] `/studio/catalogue-work-detail/` root `#catalogueWorkDetailRoot`
 - [x] `/studio/catalogue-work/` root `#catalogueWorkRoot`
 - [x] `/docs/?mode=manage&import=1` import modal root `#docsHtmlImportRoot`
-- [x] `/studio/data-sharing/prepare/` root `#dataSharingPrepareRoot`
-- [x] `/studio/data-sharing/review/` root `#dataSharingReviewRoot`
+- [x] `/studio/data-sharing/prepare/?mode=manage` root `#dataSharingPrepareRoot`
+- [x] `/studio/data-sharing/review/?mode=manage` root `#dataSharingReviewRoot`
 - [x] `/studio/audits/` root `#studioAuditsRoot`
 - [x] `/studio/project-state/` root `#projectStateRoot`
 - [x] `/studio/analytics/series-tag-editor/` root `#seriesTagEditorRoot`

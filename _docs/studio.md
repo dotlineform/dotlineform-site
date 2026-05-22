@@ -80,7 +80,7 @@ Current Studio landing routes:
 - `/studio/`
 - `/studio/catalogue/?mode=manage`
 - `/studio/analytics/?mode=manage`
-- `/studio/data-sharing/`
+- `/studio/data-sharing/?mode=manage`
 - `/docs/`
 
 Current workflow/detail routes:
@@ -88,8 +88,8 @@ Current workflow/detail routes:
 - `/studio/activity/`
 - `/studio/audits/`
 - `/studio/catalogue-field-registry/`
-- `/studio/data-sharing/prepare/`
-- `/studio/data-sharing/review/`
+- `/studio/data-sharing/prepare/?mode=manage`
+- `/studio/data-sharing/review/?mode=manage`
 - `/studio/catalogue-status/?mode=manage`
 - `/studio/project-state/`
 - `/studio/bulk-add-work/`

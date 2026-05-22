@@ -31,10 +31,10 @@ Exposed endpoints:
 - `GET /docs/import-html-files`
 - `POST /docs/import-source`
 - `POST /docs/import-html`
-- `GET /data-sharing/returned-packages`
-- `POST /data-sharing/prepare`
-- `POST /data-sharing/review`
-- `POST /data-sharing/apply`
+- `GET /studio/api/docs/data-sharing/returned-packages` through the local Studio app
+- `POST /studio/api/docs/data-sharing/prepare` through the local Studio app
+- `POST /studio/api/docs/data-sharing/review` through the local Studio app
+- `POST /studio/api/docs/data-sharing/apply` through the local Studio app
 - `POST /docs/broken-links`
 - `POST /docs/rebuild`
 - `POST /docs/open-source`
@@ -63,12 +63,12 @@ Current behavior:
 - docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `scripts/docs/docs_write_rebuild.py`
 - staged source import orchestration for the Docs Viewer import modal is owned by `scripts/docs/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
 - management mutation planners for create, metadata, viewability, move, normalize-order, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups where configured, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
-- Data Sharing HTTP endpoints are hosted here for now, with neutral route constants and shared dispatch owned by `scripts/studio/` and Library document behavior owned by `scripts/docs/documents_data_sharing_adapter.py`
+- Data Sharing HTTP endpoints are exposed through the local Studio app Docs API adapter, with neutral route constants and shared dispatch owned by `scripts/studio/` and Library document behavior owned by `scripts/docs/documents_data_sharing_adapter.py`
 - used by `/docs/?scope=<scope>&mode=manage` for configured docs scopes
 - also used by the `docs_broken_links` Docs Viewer report for a read-only docs link audit
 - also used by the `/docs/` management import modal for staged-file listing and source import writes
-- also used by `/studio/data-sharing/prepare/` to dispatch Library package preparation to the documents Data Sharing adapter
-- also used by `/studio/data-sharing/review/` to dispatch staged-file listing, Markdown review generation, summary apply, and hierarchy apply to the documents Data Sharing adapter
+- also used by `/studio/data-sharing/prepare/?mode=manage` to dispatch Library package preparation to the documents Data Sharing adapter
+- also used by `/studio/data-sharing/review/?mode=manage` to dispatch staged-file listing, Markdown review generation, summary apply, and hierarchy apply to the documents Data Sharing adapter
 - appends unified activity rows for covered docs import, Data Sharing package/apply, and broken-links audit actions when valid activity context is supplied
 - serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
 - serves a read-only Docs Viewer source-config report payload to manage-mode report surfaces
@@ -85,8 +85,8 @@ Current behavior:
 Unified activity coverage:
 
 - `POST /docs/import-source` writes `import source data` rows after a source doc is created or overwritten; preview, replacement-required, and confirmation-only responses are excluded
-- `POST /data-sharing/prepare` writes package-preparation rows only when an outbound package artifact is written
-- `POST /data-sharing/apply` writes update rows only for confirmed summary or hierarchy apply writes
+- `POST /studio/api/docs/data-sharing/prepare` writes package-preparation rows only when an outbound package artifact is written
+- `POST /studio/api/docs/data-sharing/apply` writes update rows only for confirmed summary or hierarchy apply writes
 - `POST /docs/broken-links` writes `run audit` rows with checked and broken-link counts
 
 Search update behavior:

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T20:50:41Z",
+  "generated_at": "2026-05-22T21:07:01Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -287,7 +287,7 @@
       "source_path": "data-models-library.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-library.json",
-      "content_text_length": 9406
+      "content_text_length": 9459
     },
     {
       "scope": "studio",
@@ -319,7 +319,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 31032
+      "content_text_length": 32032
     },
     {
       "scope": "studio",
@@ -498,7 +498,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 4422
+      "content_text_length": 4792
     },
     {
       "scope": "studio",
@@ -790,7 +790,7 @@
       "source_path": "scripts-docs-export.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-export.json",
-      "content_text_length": 7643
+      "content_text_length": 7676
     },
     {
       "scope": "studio",
@@ -875,7 +875,7 @@
       "source_path": "modal-composition-migration-tracker.md",
       "viewer_url": "/docs/?scope=studio&doc=modal-composition-migration-tracker",
       "content_url": "/assets/data/docs/scopes/studio/by-id/modal-composition-migration-tracker.json",
-      "content_text_length": 10170,
+      "content_text_length": 10194,
       "ui_status": "done"
     },
     {
@@ -941,7 +941,7 @@
       "source_path": "studio-data-sharing-technical-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 7072
+      "content_text_length": 7172
     },
     {
       "scope": "studio",
@@ -973,7 +973,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 14363
+      "content_text_length": 14282
     },
     {
       "scope": "studio",
@@ -1375,7 +1375,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 5634
+      "content_text_length": 5670
     },
     {
       "scope": "studio",
@@ -1715,7 +1715,7 @@
       "source_path": "studio-ready-state.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ready-state",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ready-state.json",
-      "content_text_length": 8046
+      "content_text_length": 8082
     },
     {
       "scope": "studio",
@@ -1892,7 +1892,7 @@
       "source_path": "library.md",
       "viewer_url": "/docs/?scope=studio&doc=library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library.json",
-      "content_text_length": 574
+      "content_text_length": 598
     },
     {
       "scope": "studio",
@@ -2167,7 +2167,7 @@
       "source_path": "ui-pattern-reopenable-command-result.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-reopenable-command-result.json",
-      "content_text_length": 3238
+      "content_text_length": 3250
     },
     {
       "scope": "studio",
@@ -2923,7 +2923,7 @@
       "source_path": "scripts-docs-import.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-import.json",
-      "content_text_length": 7372
+      "content_text_length": 7428
     },
     {
       "scope": "studio",
@@ -3164,7 +3164,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 9260
+      "content_text_length": 9294
     },
     {
       "scope": "studio",
@@ -3260,7 +3260,7 @@
       "source_path": "import-export.md",
       "viewer_url": "/docs/?scope=studio&doc=import-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/import-export.json",
-      "content_text_length": 510
+      "content_text_length": 534
     },
     {
       "scope": "studio",
@@ -3404,7 +3404,7 @@
       "source_path": "scripts-docs-management-server-generated-reads.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server-generated-reads.json",
-      "content_text_length": 9816
+      "content_text_length": 10086
     },
     {
       "scope": "studio",
@@ -3436,7 +3436,7 @@
       "source_path": "scripts-docs-management-server-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server-data-sharing.json",
-      "content_text_length": 8471
+      "content_text_length": 8551
     },
     {
       "scope": "studio",
@@ -3727,7 +3727,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 15441
+      "content_text_length": 16131
     },
     {
       "scope": "studio",
@@ -3791,7 +3791,7 @@
       "source_path": "library-export.md",
       "viewer_url": "/docs/?scope=studio&doc=library-export",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-export.json",
-      "content_text_length": 22321,
+      "content_text_length": 22345,
       "ui_status": "done"
     },
     {
@@ -3824,7 +3824,7 @@
       "source_path": "library-import.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import.json",
-      "content_text_length": 23831,
+      "content_text_length": 23903,
       "ui_status": "done"
     },
     {
@@ -3841,7 +3841,7 @@
       "source_path": "library-export-ui.md",
       "viewer_url": "/docs/?scope=studio&doc=library-export-ui",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-export-ui.json",
-      "content_text_length": 1644,
+      "content_text_length": 1656,
       "ui_status": "done"
     },
     {
@@ -3892,7 +3892,7 @@
       "source_path": "library-import-ui.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import-ui",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import-ui.json",
-      "content_text_length": 1465,
+      "content_text_length": 1477,
       "ui_status": "done"
     },
     {
@@ -4111,7 +4111,7 @@
       "source_path": "site-request-studio-ready-state-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-ready-state-contract.json",
-      "content_text_length": 9648,
+      "content_text_length": 9696,
       "ui_status": "done"
     },
     {

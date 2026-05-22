@@ -72,7 +72,7 @@ export function buildPrepareActivityContext({ scope, configId } = {}) {
   return buildStudioActivityContext({
     pageId: "data-sharing-prepare",
     actionId: "prepare-share-package",
-    route: "/studio/data-sharing/prepare/",
+    route: "/studio/data-sharing/prepare/?mode=manage",
     controlId: "dataSharingPrepareRun",
     controlSelector: "#dataSharingPrepareRun",
     recordIdField: "export_id",

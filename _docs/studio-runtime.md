@@ -62,14 +62,11 @@ Route pages own which entry module they load; route controllers do not own cache
 ## Studio Pages
 
 Current Jekyll route inventory is shrinking as local app views replace route shells.
-Active migrated shells include `/studio/`, `/docs/`, `/studio/catalogue/`, `/studio/analytics/`, analytics tag routes, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, and the four catalogue editor routes.
+Active migrated shells include `/studio/`, `/docs/`, `/studio/catalogue/`, `/studio/analytics/`, analytics tag routes, Data Sharing routes, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, and the four catalogue editor routes.
 
 Remaining Jekyll route inventory:
 
 - `studio/analytics/index.md`
-- `studio/data-sharing/index.md`
-- `studio/data-sharing/prepare/index.md`
-- `studio/data-sharing/review/index.md`
 - `studio/ui-catalogue/demos/index.md`
 
 Current page-level doc links:

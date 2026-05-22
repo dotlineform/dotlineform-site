@@ -1,0 +1,40 @@
+{
+  "id": "change-2026-05-22-mounted-local-data-sharing-routes",
+  "date": "2026-05-22",
+  "title": "Mounted Local Data Sharing Routes",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "docs-viewer",
+    "workflow"
+  ],
+  "summary": "Mounted the Data Sharing dashboard, package-preparation, and returned-package review route shells in the local Studio app and retired the old Jekyll route files.",
+  "effect": "Data Sharing now runs through the local Studio app shell and local Docs API Data Sharing endpoints, reducing Jekyll route ownership while preserving the existing browser modules and adapter-backed prepare/review/apply contracts.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "data-sharing",
+    "local-studio-app",
+    "route-migration"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app-implementation-plan",
+    "local-studio-app",
+    "studio-data-sharing",
+    "studio-data-sharing-technical-spec",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/studio/studio_app_config.py",
+    "scripts/studio/studio_app_views.py",
+    "scripts/studio/studio_app_server.py",
+    "assets/studio/js/studio-transport.js",
+    "assets/studio/js/data-sharing-prepare-docs.js",
+    "tests/smoke/local_studio_app_data_sharing_routes.py",
+    "_docs/local-studio-app-implementation-plan.md"
+  ]
+}

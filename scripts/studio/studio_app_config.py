@@ -100,6 +100,27 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "doc_href": "/docs/?scope=studio&doc=studio-activity&mode=manage",
         "script": "/assets/studio/js/activity-log.js",
     },
+    "data_sharing": {
+        "label": "data sharing",
+        "title": "Data Sharing",
+        "path": "/studio/data-sharing/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=studio-data-sharing&mode=manage",
+        "script": "/assets/studio/js/studio-static-route.js",
+    },
+    "data_sharing_prepare": {
+        "label": "prepare share",
+        "title": "Prepare Share Package",
+        "path": "/studio/data-sharing/prepare/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=studio-data-sharing&mode=manage",
+        "script": "/assets/studio/js/data-sharing-prepare.js",
+    },
+    "data_sharing_review": {
+        "label": "review share",
+        "title": "Review Returned Package",
+        "path": "/studio/data-sharing/review/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=studio-data-sharing&mode=manage",
+        "script": "/assets/studio/js/data-sharing-review.js",
+    },
     "catalogue_field_registry": {
         "label": "field registry",
         "title": "Catalogue Field Registry",
@@ -192,7 +213,13 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
     },
     "docs": {
         "base": "/studio/api/docs",
+        "health": "/studio/api/docs/health",
         "capabilities": "/studio/api/docs/capabilities",
+        "generated_index": "/studio/api/docs/docs/generated/index",
+        "data_sharing_prepare": "/studio/api/docs/data-sharing/prepare",
+        "data_sharing_returned_packages": "/studio/api/docs/data-sharing/returned-packages",
+        "data_sharing_review": "/studio/api/docs/data-sharing/review",
+        "data_sharing_apply": "/studio/api/docs/data-sharing/apply",
     },
 }
 
@@ -224,6 +251,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "assets" / "studio" / "js" / "bulk-add-work.js",
         repo_root / "assets" / "studio" / "js" / "activity-log.js",
         repo_root / "assets" / "studio" / "js" / "activity-log-modals.js",
+        repo_root / "assets" / "studio" / "js" / "data-sharing-prepare.js",
+        repo_root / "assets" / "studio" / "js" / "data-sharing-review.js",
         repo_root / "assets" / "studio" / "js" / "catalogue-field-registry-review.js",
         repo_root / "assets" / "studio" / "js" / "studio-works.js",
         repo_root / "assets" / "studio" / "js" / "catalogue-series-editor.js",

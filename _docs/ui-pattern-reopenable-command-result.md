@@ -12,7 +12,7 @@ This composition pattern covers command results that open in a modal and can be 
 
 Current live examples:
 
-- `/studio/data-sharing/review/`
+- `/studio/data-sharing/review/?mode=manage`
 
 Demo reference:
 

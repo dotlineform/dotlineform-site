@@ -751,7 +751,7 @@
     },
     "data-sharing-prepare": {
       "label": "data sharing prepare",
-      "route": "/studio/data-sharing/prepare/",
+      "route": "/studio/data-sharing/prepare/?mode=manage",
       "actions": {
         "prepare-share-package": {
           "label": "prepare share package",
@@ -777,7 +777,7 @@
     },
     "data-sharing-review": {
       "label": "data sharing review",
-      "route": "/studio/data-sharing/review/",
+      "route": "/studio/data-sharing/review/?mode=manage",
       "actions": {
         "apply-returned-summaries": {
           "label": "apply returned summaries",

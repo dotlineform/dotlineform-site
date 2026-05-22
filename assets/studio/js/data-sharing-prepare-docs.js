@@ -2,7 +2,7 @@ import {
   getDocsScopeDataPath
 } from "./studio-config.js";
 import {
-  DOCS_MANAGEMENT_ENDPOINTS
+  DATA_SHARING_ENDPOINTS
 } from "./studio-transport.js";
 import {
   usesPrepareDocumentSelection
@@ -88,7 +88,7 @@ export function buildVisibleDocs(indexPayload) {
 }
 
 function docsGeneratedIndexUrl(scope) {
-  const url = new URL(DOCS_MANAGEMENT_ENDPOINTS.generatedIndex);
+  const url = new URL(DATA_SHARING_ENDPOINTS.generatedIndex, window.location.origin);
   url.searchParams.set("scope", scope);
   return url.href;
 }

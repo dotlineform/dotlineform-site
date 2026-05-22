@@ -538,6 +538,142 @@ def activity_view(version: str) -> str:
     return studio_route_view(version, "activity", body)
 
 
+def data_sharing_dashboard_view(version: str) -> str:
+    body = """<div
+          class="studioDashboard"
+          id="studioDataSharingDashboardRoot"
+          data-studio-static-route="studio-data-sharing"
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <section class="catalogueDashboardRoutes" aria-label="Data Sharing links">
+            <section class="catalogueDashboardColumn">
+              <h3>Share</h3>
+              <ul class="catalogueDashboardPills">
+                <li><a href="/studio/data-sharing/prepare/?mode=manage&scope=library">prepare package</a></li>
+                <li><a href="/studio/data-sharing/review/?mode=manage&scope=library">review returned package</a></li>
+              </ul>
+            </section>
+          </section>
+        </div>"""
+    return studio_route_view(version, "data_sharing", body)
+
+
+def data_sharing_prepare_view(version: str) -> str:
+    body = """<div
+          class="tagStudioPage dataSharingPreparePage"
+          id="dataSharingPrepareRoot"
+          hidden
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <div class="tagStudio__panel dataSharingPreparePage__panel">
+            <div class="dataSharingPreparePage__controls">
+              <label class="tagStudioField dataSharingPreparePage__scopeField" for="dataSharingPrepareScopeSelect">
+                <span class="tagStudioField__label" id="dataSharingPrepareScopeLabel"></span>
+                <span class="tagStudioField__control">
+                  <select class="tagStudio__input" id="dataSharingPrepareScopeSelect"></select>
+                </span>
+              </label>
+              <label class="tagStudioField dataSharingPreparePage__field" for="dataSharingPrepareConfigSelect">
+                <span class="tagStudioField__label" id="dataSharingPrepareConfigLabel"></span>
+                <span class="tagStudioField__control">
+                  <select class="tagStudio__input" id="dataSharingPrepareConfigSelect"></select>
+                </span>
+              </label>
+              <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="dataSharingPrepareRun"></button>
+              <fieldset class="dataSharingPreparePage__format" id="dataSharingPrepareFormatWrap">
+                <legend id="dataSharingPrepareFormatLabel"></legend>
+                <span class="dataSharingPreparePage__formatOptions" id="dataSharingPrepareFormatOptions"></span>
+              </fieldset>
+              <label class="dataSharingPreparePage__toggle" id="dataSharingPrepareMissingSummaryWrap" hidden>
+                <input type="checkbox" id="dataSharingPrepareMissingSummaryOnly">
+                <span id="dataSharingPrepareMissingSummaryLabel"></span>
+              </label>
+            </div>
+
+            <p class="tagStudio__status" id="dataSharingPrepareStatus"></p>
+            <p class="tagStudioForm__meta dataSharingPreparePage__selectionSummary" id="dataSharingPrepareSelectionSummary"></p>
+
+            <div class="dataSharingPreparePage__listActions" aria-label="Share package document selection actions">
+              <span class="dataSharingPreparePage__filterPills" id="dataSharingPrepareListFilters" aria-label="Data Sharing list filters"></span>
+              <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="dataSharingPrepareSelectAll"></button>
+              <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="dataSharingPrepareClear"></button>
+            </div>
+
+            <div class="tagStudioList dataSharingPrepareList" id="dataSharingPrepareList"></div>
+            <div data-studio-modal-host="true"></div>
+          </div>
+        </div>
+
+        <p class="tagStudio__status" id="dataSharingPrepareBootStatus">loading Data Sharing...</p>"""
+    return studio_route_view(version, "data_sharing_prepare", body)
+
+
+def data_sharing_review_view(version: str) -> str:
+    body = """<div
+          class="tagStudioPage dataSharingReviewPage"
+          id="dataSharingReviewRoot"
+          hidden
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <div class="tagStudio__panel dataSharingReviewPage__panel">
+            <div class="dataSharingReviewPage__controls">
+              <label class="tagStudioField dataSharingReviewPage__scopeField" for="dataSharingReviewScopeSelect">
+                <span class="tagStudioField__label" id="dataSharingReviewScopeLabel"></span>
+                <span class="tagStudioField__control">
+                  <select class="tagStudio__input" id="dataSharingReviewScopeSelect"></select>
+                </span>
+              </label>
+              <label class="tagStudioField dataSharingReviewPage__field" for="dataSharingReviewFileSelect">
+                <span class="tagStudioField__label" id="dataSharingReviewFileLabel"></span>
+                <span class="tagStudioField__control">
+                  <select class="tagStudio__input" id="dataSharingReviewFileSelect"></select>
+                </span>
+              </label>
+              <div class="dataSharingReviewPage__commandButtons" id="dataSharingReviewApplyActions" aria-label="Returned package apply actions">
+                <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="dataSharingReviewRun"></button>
+                <div class="dataSharingReviewPage__actionsMenuHost">
+                  <button
+                    type="button"
+                    class="tagStudio__button tagStudio__button--defaultWidth"
+                    id="dataSharingReviewActionsButton"
+                    aria-haspopup="menu"
+                    aria-expanded="false"
+                    aria-controls="dataSharingReviewActionsMenu"
+                  ></button>
+                  <div
+                    class="dataSharingReviewPage__actionsMenu"
+                    id="dataSharingReviewActionsMenu"
+                    role="menu"
+                    hidden
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dataSharingReviewPage__statusRow">
+              <p class="tagStudio__status" id="dataSharingReviewStatus"></p>
+              <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn dataSharingReviewPage__resultButton" id="dataSharingReviewResults" hidden></button>
+            </div>
+            <p class="tagStudioForm__meta dataSharingReviewPage__selectionSummary" id="dataSharingReviewSelectionSummary"></p>
+
+            <div class="dataSharingReviewPage__listActions" aria-label="Returned package review selection actions">
+              <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="dataSharingReviewSelectAll"></button>
+              <button type="button" class="tagStudio__keyPill tagStudioFilters__groupBtn" id="dataSharingReviewClear"></button>
+            </div>
+
+            <div class="tagStudioList dataSharingReviewList" id="dataSharingReviewList"></div>
+
+            <div data-studio-modal-host="true"></div>
+          </div>
+        </div>
+
+        <p class="tagStudio__status" id="dataSharingReviewBootStatus">loading Data Sharing...</p>"""
+    return studio_route_view(version, "data_sharing_review", body)
+
+
 def load_pipeline(repo_root: Path) -> dict[str, object]:
     path = repo_root / "_data" / "pipeline.json"
     try:

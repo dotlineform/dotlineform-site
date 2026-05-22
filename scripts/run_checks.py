@@ -362,15 +362,12 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check the UI Catalogue modal shell demo semantics, focus behavior, validation, and mobile sizing.",
         ),
         CheckCommand(
-            "data-sharing-prepare-smoke",
+            "local-studio-data-sharing-routes-smoke",
             (
                 sys.executable,
-                "tests/smoke/data_sharing_prepare.py",
-                "--site-root",
-                str(JEKYLL_DESTINATION),
-                "--block-docs-service",
+                "tests/smoke/local_studio_app_data_sharing_routes.py",
             ),
-            "Smoke-check the Studio data sharing prepare route ready state with docs-management unavailable.",
+            "Smoke-check the local Studio Data Sharing dashboard, prepare, and review route shells.",
         ),
         CheckCommand(
             "data-sharing-prepare-module-smoke",
@@ -383,6 +380,16 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Smoke-check Data Sharing prepare state projection, result rendering, and write failure shaping.",
         ),
         CheckCommand(
+            "data-sharing-review-preview-smoke",
+            (
+                sys.executable,
+                "tests/smoke/data_sharing_review.py",
+                "--local-app",
+                "--mock-docs-service",
+            ),
+            "Smoke-check the local Studio returned package review list and apply flow with a mocked Docs API.",
+        ),
+        CheckCommand(
             "activity-log-modal-smoke",
             (
                 sys.executable,
@@ -391,41 +398,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 str(JEKYLL_DESTINATION),
             ),
             "Smoke-check the Studio activity detail notice modal shell behavior.",
-        ),
-        CheckCommand(
-            "data-sharing-review-smoke",
-            (
-                sys.executable,
-                "tests/smoke/data_sharing_review.py",
-                "--site-root",
-                str(JEKYLL_DESTINATION),
-                "--block-docs-service",
-            ),
-            "Smoke-check the Studio data sharing review route ready state with docs-management unavailable.",
-        ),
-        CheckCommand(
-            "data-sharing-review-tags-unavailable-smoke",
-            (
-                sys.executable,
-                "tests/smoke/data_sharing_review.py",
-                "--site-root",
-                str(JEKYLL_DESTINATION),
-                "--block-docs-service",
-                "--route-path",
-                "/studio/data-sharing/review/?scope=tags",
-            ),
-            "Smoke-check the Tags returned package review route with docs-management unavailable.",
-        ),
-        CheckCommand(
-            "data-sharing-review-preview-smoke",
-            (
-                sys.executable,
-                "tests/smoke/data_sharing_review.py",
-                "--site-root",
-                str(JEKYLL_DESTINATION),
-                "--mock-docs-service",
-            ),
-            "Smoke-check the Studio returned package review list flow with a mocked docs-management service.",
         ),
         CheckCommand(
             "catalogue-series-modal-smoke",

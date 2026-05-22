@@ -16,9 +16,9 @@ Older import/export names remain only in archived request docs, historical chang
 
 ## Routes
 
-- `/studio/data-sharing/`
-- `/studio/data-sharing/prepare/`
-- `/studio/data-sharing/review/`
+- `/studio/data-sharing/?mode=manage`
+- `/studio/data-sharing/prepare/?mode=manage`
+- `/studio/data-sharing/review/?mode=manage`
 
 The page shells are Studio-owned.
 They call a loopback local service, render shared lifecycle states, and use adapter metadata to decide which domains, sharing profiles, review rows, and apply actions are available.
@@ -30,10 +30,10 @@ Neutral route constants and shared dispatch live under `scripts/studio/`.
 
 Endpoints:
 
-- `GET /data-sharing/returned-packages`
-- `POST /data-sharing/prepare`
-- `POST /data-sharing/review`
-- `POST /data-sharing/apply`
+- `GET /studio/api/docs/data-sharing/returned-packages`
+- `POST /studio/api/docs/data-sharing/prepare`
+- `POST /studio/api/docs/data-sharing/review`
+- `POST /studio/api/docs/data-sharing/apply`
 
 The shared service layer owns:
 

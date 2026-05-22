@@ -56,11 +56,12 @@ const DOCS_MANAGEMENT_ENDPOINTS = Object.freeze({
 });
 
 const DATA_SHARING_ENDPOINTS = Object.freeze({
-  health: "http://127.0.0.1:8789/health",
-  prepare: "http://127.0.0.1:8789/data-sharing/prepare",
-  returnedPackages: "http://127.0.0.1:8789/data-sharing/returned-packages",
-  review: "http://127.0.0.1:8789/data-sharing/review",
-  apply: "http://127.0.0.1:8789/data-sharing/apply"
+  health: "/studio/api/docs/health",
+  generatedIndex: "/studio/api/docs/docs/generated/index",
+  prepare: "/studio/api/docs/data-sharing/prepare",
+  returnedPackages: "/studio/api/docs/data-sharing/returned-packages",
+  review: "/studio/api/docs/data-sharing/review",
+  apply: "/studio/api/docs/data-sharing/apply"
 });
 
 const AUDIT_SERVICE_ENDPOINTS = Object.freeze({

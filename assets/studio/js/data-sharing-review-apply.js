@@ -116,7 +116,7 @@ function actionActivityContext(state, action, stagedFilename) {
   return buildStudioActivityContext({
     pageId: "data-sharing-review",
     actionId: action.activityActionId,
-    route: "/studio/data-sharing/review/",
+    route: "/studio/data-sharing/review/?mode=manage",
     controlId: action.controlId,
     controlSelector,
     recordIdField: "staged_filename",

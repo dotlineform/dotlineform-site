@@ -8,7 +8,7 @@ sort_order: 15300
 ---
 # Docs Management Server Data Sharing
 
-`POST /data-sharing/prepare` expects:
+`POST /studio/api/docs/data-sharing/prepare` expects:
 
 ```json
 {
@@ -45,7 +45,7 @@ Runtime role:
 - config-defined paths are resolved and allowlisted by the shared export engine
 - generated package files are local working artifacts for Studio reporting or manual external use
 
-`GET /data-sharing/returned-packages` accepts:
+`GET /studio/api/docs/data-sharing/returned-packages` accepts:
 
 ```text
 ?data_domain=library
@@ -60,7 +60,7 @@ Import file listing behavior:
 - returns filename, repo-relative path, format, size, and modified time
 - does not parse or log file content
 
-`POST /data-sharing/review` expects:
+`POST /studio/api/docs/data-sharing/review` expects:
 
 ```json
 {
@@ -89,7 +89,7 @@ Runtime role:
 - generated preview files are local working artifacts for Studio review
 - unconfigured data domains fail closed instead of falling back to document parsing
 
-`POST /data-sharing/apply` expects for summary updates:
+`POST /studio/api/docs/data-sharing/apply` expects for summary updates:
 
 ```json
 {
@@ -125,7 +125,7 @@ Runtime role:
 - it does not apply full content, `parent_id`, `sort_order`, or other relationship changes
 - backups use the existing docs-management backup root so Studio backup retention can manage them with the other docs source-write backups
 
-`POST /data-sharing/apply` expects for hierarchy updates:
+`POST /studio/api/docs/data-sharing/apply` expects for hierarchy updates:
 
 ```json
 {

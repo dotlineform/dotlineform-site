@@ -218,7 +218,7 @@ Diagnostics should stay in the Studio report; v1 should not write a separate mac
 The intended v1 Studio page is likely:
 
 ```text
-/studio/data-sharing/review/
+/studio/data-sharing/review/?mode=manage
 ```
 
 The page should:
@@ -277,13 +277,13 @@ Potential later apply flows:
 - full content semantics: readable inspection preview only, not a source-content replacement
 - relationship semantics: candidate tree preview only
 - source freshness comparison against `source_last_updated`: deferred
-- entry link: expose Library Import as `/studio/data-sharing/review/?scope=library`
+- entry link: expose Library Import as `/studio/data-sharing/review/?mode=manage&scope=library`
 
 ## Remaining Open Questions
 
 - What exact preview filename should be used for duplicate or missing `doc_id` records?
 - Should unknown metadata be rendered in a small human-readable metadata section in each preview, or only in the Studio report?
-- How much UI should the early `/studio/data-sharing/review/` page expose before preview generation exists?
+- How much UI should the early `/studio/data-sharing/review/?mode=manage` page expose before preview generation exists?
 
 ## Initial Likely Tasks
 
@@ -375,8 +375,8 @@ The page can ship first as a staged-file listing and then grow preview generatio
 
 Status note:
 
-- implemented at `/studio/data-sharing/review/`
-- reachable at `/studio/data-sharing/review/?scope=library`
+- implemented at `/studio/data-sharing/review/?mode=manage`
+- reachable at `/studio/data-sharing/review/?mode=manage&scope=library`
 - defaults to `scope=library`, with a scope selector for `library`, `catalogue`, and `analytics`
 - reads selectable data domains and unavailable-state messages from `assets/studio/data/data_sharing_adapters.json`
 - loads staged `.json` and `.jsonl` files through `GET /docs/import/files?data_domain=library`
@@ -401,7 +401,7 @@ Status note:
 
 Add links to the Library Import route from active Library entry points once the page route exists.
 
-Status: implemented, then superseded by direct `/studio/data-sharing/review/?scope=library` access after the `/studio/library/` dashboard was retired.
+Status: implemented, then superseded by direct `/studio/data-sharing/review/?mode=manage&scope=library` access after the `/studio/library/` dashboard was retired.
 
 ### Task 8. Add Verification
 

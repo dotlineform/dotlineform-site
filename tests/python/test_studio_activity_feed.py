@@ -53,7 +53,7 @@ def write_context_contract(repo_root: Path) -> None:
                 "pages": {
                     "data-sharing-prepare": {
                         "label": "data sharing prepare",
-                        "route": "/studio/data-sharing/prepare/",
+                        "route": "/studio/data-sharing/prepare/?mode=manage",
                         "actions": {
                             "prepare-share-package": {
                                 "label": "prepare share package",
@@ -145,7 +145,7 @@ def test_context_normalizer_validates_contract_action() -> None:
             {
                 "page_id": "data-sharing-prepare",
                 "action_id": "prepare-share-package",
-                "route": "/studio/data-sharing/prepare/",
+                "route": "/studio/data-sharing/prepare/?mode=manage",
                 "control_id": "dataSharingPrepareRun",
                 "control_selector": "#dataSharingPrepareRun",
                 "correlation_id": "export:test",
@@ -165,7 +165,7 @@ def test_context_normalizer_validates_contract_action() -> None:
                 {
                     "page_id": "data-sharing-prepare",
                     "action_id": "prepare-share-package",
-                    "route": "/studio/data-sharing/prepare/",
+                    "route": "/studio/data-sharing/prepare/?mode=manage",
                     "control_id": "dataSharingPrepareRun",
                     "control_selector": "#dataSharingPrepareRun",
                     "correlation_id": "export:test",

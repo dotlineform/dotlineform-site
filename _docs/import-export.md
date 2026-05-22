@@ -16,8 +16,8 @@ The current shared workflow is [Studio Data Sharing](/docs/?scope=studio&doc=stu
 Current Studio routes are:
 
 - `/studio/data-sharing/`
-- `/studio/data-sharing/prepare/`
-- `/studio/data-sharing/review/`
+- `/studio/data-sharing/prepare/?mode=manage`
+- `/studio/data-sharing/review/?mode=manage`
 
 Older import/export terminology in this repo described generated JSON files copied out for external editing and staged JSON/JSONL files returned for review.
 Those decisions have been carried forward into the Data Sharing docs and adapter registry.

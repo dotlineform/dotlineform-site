@@ -11,9 +11,9 @@ hidden: false
 
 Routes:
 
-- `/studio/data-sharing/`
-- `/studio/data-sharing/prepare/`
-- `/studio/data-sharing/review/`
+- `/studio/data-sharing/?mode=manage`
+- `/studio/data-sharing/prepare/?mode=manage`
+- `/studio/data-sharing/review/?mode=manage`
 
 Studio Data Sharing is the shared shell for preparing outbound share packages and reviewing returned packages from supported Studio data domains.
 It defaults to the Library data domain and exposes Tags as a named workflow scope for package preparation, returned-package listing, review, and confirmed apply.
@@ -50,10 +50,10 @@ The review page:
 
 The local service gateway uses neutral Data Sharing endpoints:
 
-- `GET /data-sharing/returned-packages`
-- `POST /data-sharing/prepare`
-- `POST /data-sharing/review`
-- `POST /data-sharing/apply`
+- `GET /studio/api/docs/data-sharing/returned-packages`
+- `POST /studio/api/docs/data-sharing/prepare`
+- `POST /studio/api/docs/data-sharing/review`
+- `POST /studio/api/docs/data-sharing/apply`
 
 ## Runtime
 
@@ -72,6 +72,8 @@ The page shells load:
 - `scripts/docs/documents_data_sharing_adapter.py`
 - `scripts/analytics/tags_data_sharing_adapter.py`
 
+The dashboard, prepare, and review shells are hosted by the local Studio app server.
+The old Jekyll route files under `studio/data-sharing/` are retired; the browser modules and CSS contracts remain Studio-owned assets.
 The documents adapter wrapper owns the implemented Library config set, source index, document tree selection, field mapping, returned-package review, summary apply, and hierarchy apply behavior.
 The Analytics tags adapter owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior, using existing Analytics tag planners and backup/write helpers.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
@@ -94,6 +96,7 @@ Selection changes, filter changes, review-only previews, and unavailable-service
 
 The retained smoke entry points are:
 
+- `tests/smoke/local_studio_app_data_sharing_routes.py`
 - `tests/smoke/data_sharing_prepare.py`
 - `tests/smoke/data_sharing_review.py`
 - `tests/python/test_data_sharing_service.py`

@@ -51,6 +51,9 @@ Current mounted views:
 - `/studio/thumbnail-quality/?mode=manage`
 - `/studio/bulk-add-work/?mode=manage`
 - `/studio/activity/?mode=manage`
+- `/studio/data-sharing/?mode=manage`
+- `/studio/data-sharing/prepare/?mode=manage`
+- `/studio/data-sharing/review/?mode=manage`
 - `/studio/catalogue-field-registry/?mode=manage`
 - `/studio/catalogue-status/?mode=manage`
 - `/studio/studio-works/?mode=manage`
@@ -94,6 +97,7 @@ Current app endpoints:
 - `/studio/api/docs/capabilities`
 - `/studio/api/docs/docs/generated/...`
 - `/studio/api/docs/docs/...` management GET/POST routes migrated from the Docs management server
+- `/studio/api/docs/data-sharing/...` package preparation, returned-package listing, review, and apply routes
 
 The Tag Groups view reuses the existing Studio CSS, `assets/studio/js/tag-groups.js`, and the route-ready data attributes.
 In the local app it reads group-description data through `/studio/api/analytics/tag-groups`.
@@ -118,6 +122,9 @@ The Thumbnail Quality route shell is hosted by the local app at `/studio/thumbna
 It reuses `assets/studio/js/thumbnail-quality.js`, checked-in preview JSON/image data, and the existing sibling catalogue refresh endpoint on `127.0.0.1:8788`.
 The old Jekyll `/studio/thumbnail-quality/` shell has been retired.
 The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-work/?mode=manage`.
+The Data Sharing dashboard, package preparation, and returned-package review route shells are hosted by the local app at `/studio/data-sharing/?mode=manage`, `/studio/data-sharing/prepare/?mode=manage`, and `/studio/data-sharing/review/?mode=manage`.
+They reuse the existing Data Sharing browser modules and now call Data Sharing through `/studio/api/docs/data-sharing/...` on the local app server.
+The old Jekyll route files under `studio/data-sharing/` have been retired.
 It reuses `assets/studio/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and the existing sibling catalogue import preview/apply endpoints on `127.0.0.1:8788`.
 The old Jekyll `/studio/bulk-add-work/` shell has been retired.
 The Studio Activity route shell is hosted by the local app at `/studio/activity/?mode=manage`.

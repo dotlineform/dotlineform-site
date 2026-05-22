@@ -32,6 +32,9 @@ from studio_catalogue_views import (  # noqa: E402
 from studio_app_views import (  # noqa: E402
     activity_view,
     bulk_add_work_view,
+    data_sharing_dashboard_view,
+    data_sharing_prepare_view,
+    data_sharing_review_view,
     docs_viewer_manage_view,
     project_state_view,
     series_tags_view,
@@ -129,6 +132,15 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path in {"/studio/activity", "/studio/activity/"}:
             self.send_html(activity_view(self.version))
+            return
+        if path in {"/studio/data-sharing", "/studio/data-sharing/"}:
+            self.send_html(data_sharing_dashboard_view(self.version))
+            return
+        if path in {"/studio/data-sharing/prepare", "/studio/data-sharing/prepare/"}:
+            self.send_html(data_sharing_prepare_view(self.version))
+            return
+        if path in {"/studio/data-sharing/review", "/studio/data-sharing/review/"}:
+            self.send_html(data_sharing_review_view(self.version))
             return
         if path in {"/studio/catalogue-field-registry", "/studio/catalogue-field-registry/"}:
             self.send_html(catalogue_field_registry_view(self.version))
