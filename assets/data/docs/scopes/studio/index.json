@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T06:54:36Z",
+  "generated_at": "2026-05-22T06:59:35Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2610,7 +2610,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 15456,
+      "content_text_length": 16511,
       "ui_status": "proposed"
     },
     {

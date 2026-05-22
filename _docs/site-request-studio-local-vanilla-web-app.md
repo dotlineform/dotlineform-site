@@ -143,6 +143,21 @@ Recommended prework:
 This prework should be behavior-preserving for public users.
 It should not move canonical data yet.
 
+## CSS Boundary Benefit
+
+Moving Studio out of the public Jekyll section should also simplify CSS ownership.
+
+Today, public `assets/css/main.css` and related site styles have to coexist with Studio-admin surfaces because Studio is rendered as part of the same Jekyll site.
+After the public/local boundary is cleaned up, CSS can be organized by runtime responsibility:
+
+- public site CSS for public catalogue pages, work/series/moment pages, public navigation, and public read-only routes
+- Docs Viewer CSS for the portable viewer shell, read-only document UI, and local management UI where management mode is enabled
+- Studio CSS for the local app shell, editors, modals, dense admin lists, status panels, import/export flows, and audit tooling
+
+This should make later CSS refactoring safer.
+Rules can be judged by which runtime owns them rather than by whether they happen to be loaded through the current Jekyll layout.
+It also reduces the long-term responsibility of public `main.css`, because Studio-only primitives do not need to remain available to dotlineform.com.
+
 ## Refactoring Pause Decision
 
 Broad script and JavaScript risk-reduction work can pause.
