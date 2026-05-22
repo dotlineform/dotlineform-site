@@ -17,6 +17,7 @@ for path in (SCRIPTS_DIR, STUDIO_SCRIPTS_DIR):
 from catalogue import catalogue_activity as activity  # noqa: E402
 from catalogue import catalogue_routes as routes  # noqa: E402
 from catalogue import catalogue_write_server  # noqa: E402
+from scripts.studio import studio_catalogue_api  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -51,11 +52,23 @@ def test_handler_dispatch_covers_each_post_route() -> None:
 
 
 def test_activity_profile_endpoints_are_known_post_routes() -> None:
+    local_app_post_routes = {
+        f"/studio/api/catalogue{api_path}"
+        for api_path in {
+            "/import-preview",
+            "/import-apply",
+            "/project-state-report",
+            "/thumbnail-quality-preview",
+            *studio_catalogue_api.catalogue_write_service.SERVICE_POST_PATHS,
+            *studio_catalogue_api.LEGACY_WRITE_ROUTE_BY_API_PATH.keys(),
+        }
+    }
+    known_endpoints = {*routes.POST_PATHS, *local_app_post_routes}
     unknown_endpoints = sorted(
         {
             profile.endpoint
             for profile in activity.ACTIVITY_ACTION_PROFILES
-            if profile.endpoint not in routes.POST_PATHS
+            if profile.endpoint not in known_endpoints
         }
     )
     assert_equal(unknown_endpoints, [], "activity profile endpoints")

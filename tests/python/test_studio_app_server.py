@@ -19,6 +19,7 @@ from scripts.studio import studio_docs_api  # noqa: E402
 from scripts.studio.studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
 from scripts.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from scripts.studio.studio_app_config import runtime_config  # noqa: E402
+from scripts.studio import studio_catalogue_api  # noqa: E402
 from scripts.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
 
 
@@ -317,6 +318,53 @@ def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> No
         assert apply_payload["dry_run"] is True
         assert apply_payload["would_write"] is True
         assert json.loads((source_dir / "works.json").read_text(encoding="utf-8"))["works"] == {}
+
+
+def test_catalogue_thin_service_routes_bypass_legacy_handler() -> None:
+    service_paths = studio_catalogue_api.catalogue_write_service.SERVICE_POST_PATHS
+    assert {
+        "/delete-preview",
+        "/build-preview",
+        "/build-apply",
+        "/moment/preview",
+        "/prose/import-preview",
+        "/prose/import-apply",
+        "/moment/import-preview",
+        "/moment/import-apply",
+    } <= service_paths
+    assert not service_paths.intersection(studio_catalogue_api.LEGACY_WRITE_ROUTE_BY_API_PATH)
+
+
+def test_catalogue_delete_preview_uses_callable_service_route() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir) / "repo"
+        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir.mkdir(parents=True)
+        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        (source_dir / "works.json").write_text(
+            json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {"00042": {"work_id": "00042", "title": "Draft", "status": "draft", "series_ids": []}}}),
+            encoding="utf-8",
+        )
+        (source_dir / "work_details.json").write_text(
+            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
+            encoding="utf-8",
+        )
+        (source_dir / "series.json").write_text(
+            json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
+            encoding="utf-8",
+        )
+        (source_dir / "moments.json").write_text(
+            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
+            encoding="utf-8",
+        )
+
+        status, payload = catalogue_post_response(repo_root, "/delete-preview", {"kind": "work", "id": "42"})
+
+        assert status == studio_docs_api.HTTPStatus.OK
+        assert payload["ok"] is True
+        assert payload["kind"] == "work"
+        assert payload["id"] == "00042"
+        assert payload["preview"]["record"]["work_id"] == "00042"
 
 
 def test_catalogue_editor_create_work_dry_run_uses_in_process_write_handler() -> None:

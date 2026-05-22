@@ -1,0 +1,37 @@
+{
+  "id": "change-2026-05-22-started-catalogue-write-service-extraction",
+  "date": "2026-05-22",
+  "title": "Started Catalogue Write Service Extraction",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "catalogue",
+    "scripts"
+  ],
+  "summary": "Added `scripts/catalogue/catalogue_write_service.py` and routed the first low-risk Local Studio catalogue endpoints through callable service functions instead of the legacy in-process HTTP handler.",
+  "effect": "Local Studio no longer constructs a fake `catalogue_write_server.Handler` for delete preview, scoped build preview/apply, moment preview, prose import preview/apply, or moment import preview/apply. Core catalogue mutations remain on the legacy handler pending smaller extraction slices.",
+  "source": {
+    "file": "_docs/scripts-catalogue-write-service-extraction.md",
+    "archive": "direct"
+  },
+  "subjects": [
+    "local-studio-app",
+    "catalogue-write-service",
+    "service-consolidation",
+    "server-refactor"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "scripts-catalogue-write-service-extraction",
+    "scripts-catalogue-write-server-operations",
+    "local-studio-app-implementation-plan"
+  ],
+  "related_files": [
+    "scripts/catalogue/catalogue_write_service.py",
+    "scripts/studio/studio_catalogue_api.py",
+    "scripts/run_checks.py",
+    "tests/python/test_studio_app_server.py",
+    "tests/python/test_catalogue_routes.py"
+  ]
+}

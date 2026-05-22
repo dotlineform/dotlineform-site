@@ -16,6 +16,7 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
 
 from catalogue import catalogue_activity as activity  # noqa: E402
 from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
+from catalogue import catalogue_write_service  # noqa: E402
 from catalogue import catalogue_write_server as legacy_write_server  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
     DEFAULT_LOOKUP_DIR,
@@ -77,7 +78,6 @@ CATALOGUE_READ_KEYS = {
 }
 LEGACY_WRITE_ROUTE_BY_API_PATH = {
     "/bulk-save": legacy_write_server.routes.BULK_SAVE_PATH,
-    "/delete-preview": legacy_write_server.routes.DELETE_PREVIEW_PATH,
     "/delete-apply": legacy_write_server.routes.DELETE_APPLY_PATH,
     "/publication-preview": legacy_write_server.routes.PUBLICATION_PREVIEW_PATH,
     "/publication-apply": legacy_write_server.routes.PUBLICATION_APPLY_PATH,
@@ -87,13 +87,6 @@ LEGACY_WRITE_ROUTE_BY_API_PATH = {
     "/work-detail/save": legacy_write_server.routes.DETAIL_SAVE_PATH,
     "/series/create": legacy_write_server.routes.SERIES_CREATE_PATH,
     "/series/save": legacy_write_server.routes.SERIES_SAVE_PATH,
-    "/build-preview": legacy_write_server.routes.BUILD_PREVIEW_PATH,
-    "/build-apply": legacy_write_server.routes.BUILD_APPLY_PATH,
-    "/prose/import-preview": legacy_write_server.routes.PROSE_IMPORT_PREVIEW_PATH,
-    "/prose/import-apply": legacy_write_server.routes.PROSE_IMPORT_APPLY_PATH,
-    "/moment/import-preview": legacy_write_server.routes.MOMENT_IMPORT_PREVIEW_PATH,
-    "/moment/import-apply": legacy_write_server.routes.MOMENT_IMPORT_APPLY_PATH,
-    "/moment/preview": legacy_write_server.routes.MOMENT_PREVIEW_PATH,
     "/moment/save": legacy_write_server.routes.MOMENT_SAVE_PATH,
 }
 
@@ -150,6 +143,8 @@ def catalogue_post_response(
         return HTTPStatus.OK, import_preview_payload(repo_root, body)
     if api_path == "/import-apply":
         return import_apply_response(repo_root, body, dry_run=dry_run)
+    if api_path in catalogue_write_service.SERVICE_POST_PATHS:
+        return catalogue_write_service.handle_catalogue_post(repo_root, api_path, body, dry_run=dry_run)
     if api_path in LEGACY_WRITE_ROUTE_BY_API_PATH:
         return in_process_catalogue_write_response(repo_root, api_path, body, dry_run=dry_run)
     raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
