@@ -102,7 +102,7 @@ Outcomes:
 | Task | Status |
 | --- | --- |
 | Define the Studio runtime config shape for media bases, thumb bases, pipeline variants, UI text paths, docs links, and service endpoints. | partial |
-| Add `navigateTo(view, params)` and related navigation helpers. | pending |
+| Add `navigateTo(view, params)` and related navigation helpers. | partial |
 | Add `openModal(name, params)` and modal/context helpers where needed. | pending |
 | Add return-context helpers that replace route-query return state over time. | pending |
 | Add an initial-state adapter that can read current URL state during transition. | pending |
@@ -110,8 +110,8 @@ Outcomes:
 
 Next steps:
 
-Phase 2 has started with an app-server view registry exposed through `/studio/runtime-config.json`.
-Continue by expanding the runtime config shape only as migrated views need it, then add a small navigation helper over the view registry.
+Phase 2 has started with an app-server view registry exposed through `/studio/runtime-config.json` and a small `studio-navigation.js` helper over that registry.
+Continue by expanding the runtime config shape only as migrated views need it.
 The adapter should support current route-like views first and can later support panels or modals where that improves workflow.
 
 ## Phase 3: Docs Viewer Manage Mode Migration

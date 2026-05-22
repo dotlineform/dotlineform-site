@@ -41,4 +41,5 @@ Current app endpoints:
 The Tag Groups view reuses the existing Studio CSS, `assets/studio/js/tag-groups.js`, and the route-ready data attributes.
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
 The endpoint currently also exposes the local app view registry that powers the shell navigation.
+`assets/studio/js/studio-navigation.js` provides the first helper over that registry: migrated links can declare `data-studio-navigate="<view-id>"` while retaining a real `href` fallback.
 This first server is intentionally narrow and does not yet own write-service APIs or app-wide navigation.

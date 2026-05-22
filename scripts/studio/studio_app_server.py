@@ -36,6 +36,7 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
 
 def asset_version(repo_root: Path) -> str:
     candidates = [
+        repo_root / "assets" / "studio" / "js" / "studio-navigation.js",
         repo_root / "assets" / "studio" / "js" / "tag-groups.js",
         repo_root / "assets" / "studio" / "css" / "studio.css",
         repo_root / "assets" / "studio" / "data" / "studio_config.json",
@@ -81,8 +82,9 @@ def studio_nav(active_view_id: str = "") -> str:
     for view_id, view in STUDIO_VIEWS.items():
         label = html.escape(view["label"])
         href = html.escape(view["path"], quote=True)
+        escaped_view_id = html.escape(view_id, quote=True)
         active_class = " is-active" if view_id == active_view_id else ""
-        items.append(f'<a class="nav-item{active_class}" href="{href}">{label}</a>')
+        items.append(f'<a class="nav-item{active_class}" href="{href}" data-studio-navigate="{escaped_view_id}">{label}</a>')
     return "\n        ".join(items)
 
 
@@ -138,6 +140,7 @@ def tag_groups_view(version: str) -> str:
       </div>
     </div>
   </main>
+  <script type="module" src="/assets/studio/js/studio-navigation.js?v={escaped_version}"></script>
   <script type="module" src="{script}?v={escaped_version}"></script>
 </body>
 </html>
@@ -147,11 +150,12 @@ def tag_groups_view(version: str) -> str:
 def studio_home_view(version: str) -> str:
     escaped_version = html.escape(version, quote=True)
     links = "\n          ".join(
-        '<li><a class="studioLinkList__item" href="{href}">{label}</a></li>'.format(
+        '<li><a class="studioLinkList__item" href="{href}" data-studio-navigate="{view_id}">{label}</a></li>'.format(
             href=html.escape(view["path"], quote=True),
+            view_id=html.escape(view_id, quote=True),
             label=html.escape(view["title"]),
         )
-        for view in STUDIO_VIEWS.values()
+        for view_id, view in STUDIO_VIEWS.items()
     )
     return f"""<!doctype html>
 <html lang="en">
@@ -175,6 +179,7 @@ def studio_home_view(version: str) -> str:
       </div>
     </div>
   </main>
+  <script type="module" src="/assets/studio/js/studio-navigation.js?v={escaped_version}"></script>
 </body>
 </html>
 """
