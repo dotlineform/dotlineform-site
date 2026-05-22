@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T22:45:55Z",
+  "generated_at": "2026-05-22T23:44:49Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -319,7 +319,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 35580
+      "content_text_length": 37517
     },
     {
       "scope": "studio",
@@ -335,7 +335,7 @@
       "source_path": "local-studio-server-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-server-architecture.json",
-      "content_text_length": 6413
+      "content_text_length": 6766
     },
     {
       "scope": "studio",
@@ -1569,7 +1569,7 @@
       "source_path": "scripts-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server.json",
-      "content_text_length": 1595
+      "content_text_length": 1712
     },
     {
       "scope": "studio",
@@ -1786,7 +1786,7 @@
       "doc_id": "scripts-catalogue-write-server-operations",
       "title": "Catalogue Write Server Operations",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-23",
       "parent_id": "scripts-catalogue-write-server",
       "sort_order": 4300,
       "published": true,
@@ -1795,7 +1795,23 @@
       "source_path": "scripts-catalogue-write-server-operations.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server-operations",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server-operations.json",
-      "content_text_length": 5608
+      "content_text_length": 7372
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-catalogue-write-service-extraction",
+      "title": "Catalogue Write Service Extraction",
+      "added_date": "2026-05-22",
+      "last_updated": "2026-05-23",
+      "parent_id": "scripts-catalogue-write-server",
+      "sort_order": 4400,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "scripts-catalogue-write-service-extraction.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-service-extraction.json",
+      "content_text_length": 14824
     },
     {
       "scope": "studio",
@@ -3331,7 +3347,7 @@
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Service",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-23",
       "parent_id": "docs-viewer",
       "sort_order": 15000,
       "published": true,
@@ -3340,7 +3356,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 2288
+      "content_text_length": 3089
     },
     {
       "scope": "studio",
@@ -3459,7 +3475,7 @@
       "doc_id": "scripts-docs-management-server-operations",
       "title": "Docs Management Service Operations",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-23",
       "parent_id": "scripts-docs-management-server",
       "sort_order": 15500,
       "published": true,
@@ -3468,7 +3484,7 @@
       "source_path": "scripts-docs-management-server-operations.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server-operations.json",
-      "content_text_length": 3589
+      "content_text_length": 3782
     },
     {
       "scope": "studio",

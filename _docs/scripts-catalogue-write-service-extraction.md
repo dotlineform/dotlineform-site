@@ -152,8 +152,9 @@ Series create/save behavior now runs through `scripts/catalogue/catalogue_series
    Keep source mutation planning in `catalogue_source_mutation.py`, transaction writes in `catalogue_transactions.py`, lookup refresh in `catalogue_lookup_refresh.py`, and activity row construction in `catalogue_activity.py`.
 4. Move moment save next into a moment-owned service module, following the established mutation extraction pattern.
 5. Move publication preview/apply and delete apply as separate workflow slices because they coordinate source-save extraction, cleanup, build, lookup, and activity behavior.
-6. Remove the fake handler path from `studio_catalogue_api.py`.
-7. Decide whether the standalone `catalogue_write_server.py` wrapper still has an audience.
+6. Move bulk save into its own bulk-save service slice rather than folding it into a generic write module.
+7. Remove the fake handler path from `studio_catalogue_api.py`.
+8. Decide whether the standalone `catalogue_write_server.py` wrapper still has an audience.
    If it does not, remove the `8788` wrapper rather than keeping a compatibility server around as a second exercise path.
 
 ## Non-Goals
