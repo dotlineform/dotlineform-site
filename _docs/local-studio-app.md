@@ -63,6 +63,9 @@ The same module exposes `navigateTo(view, params)`, `readStudioInitialState()`, 
 This adapter is deliberately small and does not introduce a route framework.
 The local `/docs/` route hosts the Docs Viewer management shell through the Python app server while still using the existing Docs Viewer JavaScript, CSS, config, and generated docs payloads.
 Its management API base is `/studio/api/docs`; this now exposes real scope availability and Docs management capabilities, serves generated docs read endpoints, and calls the existing Docs management domain functions directly for migrated management routes.
+The main management API workflow routes are covered through a temporary fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, and rebuild paths through the local app server without touching real docs.
+Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
+That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
 The server is still intentionally narrow and does not yet own catalogue, analytics, audit, or app-wide navigation APIs.
 The app server is split before broader route migration: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns HTML shells, and `studio_docs_api.py` owns the Docs Viewer API adapter.
 New route families should follow that module-boundary pattern rather than expanding the server entrypoint.
@@ -73,3 +76,5 @@ Current focused checks:
 - `tests/smoke/local_studio_navigation_adapter.py`
 - `tests/smoke/local_studio_app_tag_groups.py`
 - `tests/smoke/local_studio_app_docs_viewer.py`
+- `tests/smoke/local_studio_docs_management_workflows.py`
+- `tests/smoke/public_docs_viewer_readonly.py`

@@ -1,0 +1,39 @@
+{
+  "id": "change-2026-05-22-added-local-docs-management-workflow-smoke",
+  "date": "2026-05-22",
+  "title": "Added Local Docs Management Workflow Smoke",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "docs-viewer",
+    "testing"
+  ],
+  "summary": "Added a fixture-backed smoke test that runs the local Studio app server against a temporary repo and exercises the main Docs management API workflow routes through /studio/api/docs.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "docs-management",
+    "workflow-smoke"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "tests/smoke/local_studio_docs_management_workflows.py",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/site-request-studio-local-vanilla-web-app.md"
+  ],
+  "effect": "Phase 3 now has direct evidence that the local app server can call Docs management domain functions for create, metadata update, move, archive, delete preview/apply, source-config settings, import listing, and rebuild route families without proxying to the old docs-management HTTP service.",
+  "verification": [
+    "Python compile check passed for tests/smoke/local_studio_docs_management_workflows.py",
+    "tests/smoke/local_studio_docs_management_workflows.py passed against a temporary fixture repo"
+  ]
+}

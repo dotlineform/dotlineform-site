@@ -445,6 +445,8 @@ For projection-contract slices:
 
 ## Change Log Entries
 
+- `change-2026-05-22-added-public-docs-readonly-smoke`
+- `change-2026-05-22-added-local-docs-management-workflow-smoke`
 - `change-2026-05-22-completed-local-studio-config-navigation-adapter`
 - `change-2026-05-22-migrated-docs-management-api-to-local-studio-app`
 - `change-2026-05-22-added-local-studio-app-to-dev-runner`
