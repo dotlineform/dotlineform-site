@@ -81,6 +81,15 @@ These are the first mutation routes moved out of fake `Handler` reuse.
 
 These routes moved after create because they coordinate more post-save behavior than source writes alone.
 
+## Series Mutation Slice
+
+`scripts/catalogue/catalogue_write_service.py` now also owns:
+
+| Route | Service function path | Notes |
+| --- | --- | --- |
+| `POST /studio/api/catalogue/series/create` | `series_create_payload()` | Calls `catalogue_source_mutation.plan_series_create()`, preserves optional member-work updates, writes through the transaction helper, refreshes lookups after real writes, and writes Studio Activity rows best-effort. |
+| `POST /studio/api/catalogue/series/save` | `series_save_payload()` | Calls `catalogue_source_mutation.plan_series_save()`, preserves member-work updates, conservative fallback build planning when member works change, targeted lookup refresh, optional public build follow-through, and Studio Activity rows. |
+
 ## Handler Inventory
 
 | Handler method | Size | Route family | Main dependencies | Extraction assessment |
@@ -97,8 +106,8 @@ These routes moved after create because they coordinate more post-save behavior 
 | `_handle_work_detail_save` | 183 lines | detail save | `catalogue_source_mutation`, `catalogue_lookup_refresh`, `catalogue_save_build`, activity | Moved for Local Studio to `catalogue_write_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_work_file_*` | 2 lines each | retired work file metadata | none | Retired endpoints. Keep excluded from new service unless a current route still needs them. |
 | `_handle_work_link_*` | 2 lines each | retired work link metadata | none | Retired endpoints. Keep excluded from new service unless a current route still needs them. |
-| `_handle_series_save` | 213 lines | series save | series/work mutation planning, lookup/build/activity helpers | Trapped orchestration. Extract after work/detail save patterns are established. |
-| `_handle_series_create` | 116 lines | series create | `catalogue_source_mutation`, source write transaction, lookup/activity | Trapped orchestration. Extract with series save. |
+| `_handle_series_save` | 213 lines | series save | series/work mutation planning, lookup/build/activity helpers | Moved for Local Studio to `catalogue_write_service.py`; standalone wrapper still has its old handler method. |
+| `_handle_series_create` | 116 lines | series create | `catalogue_source_mutation`, source write transaction, lookup/activity | Moved for Local Studio to `catalogue_write_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_import_preview` | 11 lines | workbook import | `catalogue_workbook_import` | Already replaced for Local Studio by `import_preview_payload()`. |
 | `_handle_import_apply` | 115 lines | workbook import | `catalogue_workbook_import`, source write transaction, lookup/activity | Already replaced for Local Studio by `import_apply_response()`. Avoid copying the old handler version. |
 | `_handle_build_preview` | 47 lines | scoped build | field registry, build scopes, media plan | Moved for Local Studio to `catalogue_write_service.py`; standalone wrapper still has its old handler method. |
@@ -118,7 +127,7 @@ These routes moved after create because they coordinate more post-save behavior 
 2. Treat the first service slice as complete for delete preview, build preview/apply, moment preview, prose import preview/apply, and moment import preview/apply.
 3. Treat work and work-detail create/save as the established mutation extraction pattern.
    Keep source mutation planning in `catalogue_source_mutation.py`, transaction writes in `catalogue_transactions.py`, lookup refresh in `catalogue_lookup_refresh.py`, and activity row construction in `catalogue_activity.py`.
-4. Move series create/save and moment save after the work/detail pattern is verified.
+4. Move moment save next, following the established mutation extraction pattern.
 5. Move publication preview/apply and delete apply as separate slices because they coordinate source-save extraction, cleanup, build, lookup, and activity behavior.
 6. Remove the fake handler path from `studio_catalogue_api.py`.
 7. Decide whether the standalone `catalogue_write_server.py` wrapper still has an audience.
