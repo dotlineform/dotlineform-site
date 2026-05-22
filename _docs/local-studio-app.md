@@ -117,7 +117,8 @@ It reuses `assets/studio/js/studio-audits.js` and now calls `/studio/api/audits/
 `scripts/studio/studio_audit_api.py` adapts the existing allowlisted audit functions from `scripts/studio/audit_service.py`, so normal Studio sessions no longer need the separate `127.0.0.1:8790` sibling service.
 The old Jekyll `/studio/audits/` shell has been retired.
 The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
-It reuses `assets/studio/js/project-state.js` and the existing sibling catalogue/docs service probes on `127.0.0.1:8788` and `127.0.0.1:8789`; those API calls remain unchanged until a later route-family API consolidation slice.
+It reuses `assets/studio/js/project-state.js` and now calls local Studio app endpoints for catalogue report generation and source-file opening.
+`scripts/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` adapter and reuses `scripts/catalogue/project_state_report.py`.
 The old Jekyll `/studio/project-state/` shell has been retired.
 The Thumbnail Quality route shell is hosted by the local app at `/studio/thumbnail-quality/?mode=manage`.
 It reuses `assets/studio/js/thumbnail-quality.js`, checked-in preview JSON/image data, and the existing sibling catalogue refresh endpoint on `127.0.0.1:8788`.
@@ -183,8 +184,8 @@ Browser-level fixture smokes cover local `/docs/` manage-mode workflows through 
 Data-sharing UI behavior is intentionally deferred to a later cross-Studio adapter consolidation slice.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
-The server is still intentionally narrow and does not yet own catalogue APIs or app-wide navigation APIs.
-The app server is split before broader route migration: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns shared HTML shells, `studio_catalogue_views.py` owns catalogue route shells, `studio_docs_api.py` owns the Docs Viewer API adapter, `studio_analytics_api.py` owns Analytics tag APIs, and `studio_audit_api.py` owns the Studio audit API adapter.
+The server is still intentionally narrow and does not yet own the broad catalogue editor/read API family or app-wide navigation APIs.
+The app server is split before broader route migration: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns shared HTML shells, `studio_catalogue_views.py` owns catalogue route shells, `studio_docs_api.py` owns the Docs Viewer API adapter, `studio_analytics_api.py` owns Analytics tag APIs, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the first narrow Catalogue API adapter.
 New route families should follow that module-boundary pattern rather than expanding the server entrypoint.
 
 Current focused checks:

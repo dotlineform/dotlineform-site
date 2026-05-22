@@ -309,10 +309,10 @@ ACTIVITY_PROFILE_IMPORT_MOMENT = ActivityActionProfile(
 ACTIVITY_PROFILE_RUN_PROJECT_STATE_REPORT = ActivityActionProfile(
     page_id="project-state",
     action_id="run-project-state-report",
-    route="/studio/project-state/",
+    route="/studio/project-state/?mode=manage",
     control_id="projectStateRunButton",
     control_selector="#projectStateRunButton",
-    endpoint=routes.PROJECT_STATE_REPORT_PATH,
+    endpoint="/studio/api/catalogue/project-state-report",
     record_family="report",
     record_id_field="activity_target",
     script_purpose_ids=("generate-report",),

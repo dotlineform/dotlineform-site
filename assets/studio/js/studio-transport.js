@@ -70,11 +70,19 @@ const AUDIT_SERVICE_ENDPOINTS = Object.freeze({
   run: "/studio/api/audits/audits/run"
 });
 
+const PROJECT_STATE_ENDPOINTS = Object.freeze({
+  catalogueHealth: "/studio/api/catalogue/health",
+  docsHealth: "/studio/api/docs/health",
+  report: "/studio/api/catalogue/project-state-report",
+  openSource: "/studio/api/docs/docs/open-source"
+});
+
 export {
   AUDIT_SERVICE_ENDPOINTS,
   DATA_SHARING_ENDPOINTS,
   DOCS_MANAGEMENT_ENDPOINTS,
-  CATALOGUE_WRITE_ENDPOINTS
+  CATALOGUE_WRITE_ENDPOINTS,
+  PROJECT_STATE_ENDPOINTS
 };
 
 export function getStudioWriteEndpoint(key, config = null) {
@@ -104,6 +112,14 @@ export async function probeDataSharingHealth(timeoutMs = 500) {
 
 export async function probeAuditServiceHealth(timeoutMs = 500) {
   return probeHealth(AUDIT_SERVICE_ENDPOINTS.health, timeoutMs);
+}
+
+export async function probeProjectStateCatalogueHealth(timeoutMs = 500) {
+  return probeHealth(PROJECT_STATE_ENDPOINTS.catalogueHealth, timeoutMs);
+}
+
+export async function probeProjectStateDocsHealth(timeoutMs = 500) {
+  return probeHealth(PROJECT_STATE_ENDPOINTS.docsHealth, timeoutMs);
 }
 
 async function probeHealth(url, timeoutMs = 500) {

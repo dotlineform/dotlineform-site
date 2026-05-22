@@ -272,6 +272,11 @@ Current localhost audit integration surfaced through this runtime:
 - `POST /studio/api/audits/audits/run`
 - `POST /docs/rebuild`
 
+Current narrow catalogue-report integration surfaced through this runtime:
+
+- `GET /studio/api/catalogue/health`
+- `POST /studio/api/catalogue/project-state-report`
+
 The runner is therefore sufficient for route-shell and write-flow testing, but not a full content-generation pipeline.
 
 ## Current Catalogue UI Baseline

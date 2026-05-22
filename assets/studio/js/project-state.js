@@ -3,11 +3,10 @@ import {
   loadStudioConfigWithText
 } from "./studio-config.js";
 import {
-  CATALOGUE_WRITE_ENDPOINTS,
-  DOCS_MANAGEMENT_ENDPOINTS,
+  PROJECT_STATE_ENDPOINTS,
   postJson,
-  probeCatalogueHealth,
-  probeDocsManagementHealth
+  probeProjectStateCatalogueHealth,
+  probeProjectStateDocsHealth
 } from "./studio-transport.js";
 import {
   initializeStudioRouteState
@@ -108,12 +107,12 @@ async function runReport(state) {
   setTextWithState(state.warningNode, "");
   setTextWithState(state.resultNode, "");
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.projectStateReport, {
+    const response = await postJson(PROJECT_STATE_ENDPOINTS.report, {
       include_subfolders: Boolean(state.includeSubfoldersNode.checked),
       activity_context: buildStudioActivityContext({
         pageId: "project-state",
         actionId: "run-project-state-report",
-        route: "/studio/project-state/",
+        route: "/studio/project-state/?mode=manage",
         controlId: "projectStateRunButton",
         controlSelector: "#projectStateRunButton",
         recordIdField: "activity_target",
@@ -150,7 +149,7 @@ async function runReport(state) {
 async function openReportSource(state) {
   setTextWithState(state.warningNode, "");
   try {
-    await postJson(DOCS_MANAGEMENT_ENDPOINTS.openSource, {
+    await postJson(PROJECT_STATE_ENDPOINTS.openSource, {
       scope: "studio",
       doc_id: "project-state",
       editor: "vscode"
@@ -214,8 +213,8 @@ async function init() {
 
   try {
     const config = await loadStudioConfigWithText("project_state");
-    const catalogueServerAvailable = Boolean(await probeCatalogueHealth());
-    const docsServerAvailable = Boolean(await probeDocsManagementHealth());
+    const catalogueServerAvailable = Boolean(await probeProjectStateCatalogueHealth());
+    const docsServerAvailable = Boolean(await probeProjectStateDocsHealth());
     const state = {
       config,
       root,

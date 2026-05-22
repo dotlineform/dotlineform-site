@@ -14,7 +14,12 @@ Route:
 
 This page runs the project-state report and writes `_docs/project-state.md`.
 The route shell is served by the local Studio app, not by a Jekyll Studio page.
-The browser module still uses the existing sibling catalogue and docs service endpoints for report generation and source-file opening until those APIs are consolidated into the local app server.
+The browser module uses local Studio app endpoints for report generation and source-file opening:
+
+- `GET /studio/api/catalogue/health`
+- `POST /studio/api/catalogue/project-state-report`
+- `GET /studio/api/docs/health`
+- `POST /studio/api/docs/docs/open-source`
 
 ## Current Scope
 
@@ -44,7 +49,7 @@ The page root `#projectStateRoot` exposes the shared Studio route-ready contract
 - `data-studio-ready` is `false` during initial config and local service checks, then `true` after the initial disabled or interactive state is rendered
 - `data-studio-busy` is `true` while the report is running
 - `data-studio-mode` is `idle` before a report and `summary` after summary counts are loaded
-- `data-studio-service` is `available` when either the Catalogue Write Server or Docs Management Server is available, and `unavailable` when both are unavailable
+- `data-studio-service` is `available` when either the local catalogue report API or local Docs API is available, and `unavailable` when both are unavailable
 - `data-studio-record-loaded` is `true` when report summary data is loaded
 
 ## Related References

@@ -1,0 +1,40 @@
+{
+  "id": "change-2026-05-22-mounted-local-project-state-api",
+  "date": "2026-05-22",
+  "title": "Mounted Local Project State API",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "catalogue",
+    "workflow"
+  ],
+  "summary": "Moved Project State report generation to a narrow local Studio app catalogue API while keeping the existing report builder and activity contract.",
+  "effect": "The Project State page now uses `/studio/api/catalogue/project-state-report` and the local Docs API instead of the old catalogue and docs sibling service URLs, reducing remaining service dependencies without migrating the broad catalogue editor write surface.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "project-state",
+    "service-consolidation"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app-implementation-plan",
+    "local-studio-app",
+    "project-state-page",
+    "scripts-project-state-report",
+    "studio-runtime"
+  ],
+  "related_files": [
+    "scripts/studio/studio_catalogue_api.py",
+    "scripts/studio/studio_app_server.py",
+    "scripts/studio/studio_app_config.py",
+    "assets/studio/js/project-state.js",
+    "assets/studio/js/studio-transport.js",
+    "assets/studio/data/activity_contract.json",
+    "tests/smoke/local_studio_app_project_state_route.py"
+  ]
+}

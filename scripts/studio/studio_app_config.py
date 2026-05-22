@@ -227,6 +227,11 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "audits": "/studio/api/audits/audits",
         "run": "/studio/api/audits/audits/run",
     },
+    "catalogue": {
+        "base": "/studio/api/catalogue",
+        "health": "/studio/api/catalogue/health",
+        "project_state_report": "/studio/api/catalogue/project-state-report",
+    },
 }
 
 STUDIO_STATE_CONFIG: dict[str, object] = {

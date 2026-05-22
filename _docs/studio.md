@@ -91,7 +91,7 @@ Current workflow/detail routes:
 - `/studio/data-sharing/prepare/?mode=manage`
 - `/studio/data-sharing/review/?mode=manage`
 - `/studio/catalogue-status/?mode=manage`
-- `/studio/project-state/`
+- `/studio/project-state/?mode=manage`
 - `/studio/bulk-add-work/`
 - `/studio/catalogue-moment/`
 - `/studio/catalogue-moment/?moment=<moment_id>`

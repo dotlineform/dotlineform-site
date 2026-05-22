@@ -698,7 +698,7 @@
     },
     "project-state": {
       "label": "project state",
-      "route": "/studio/project-state/",
+      "route": "/studio/project-state/?mode=manage",
       "actions": {
         "run-project-state-report": {
           "label": "run project-state report",
@@ -706,7 +706,7 @@
           "control_id": "projectStateRunButton",
           "control_selector": "#projectStateRunButton",
           "control_label": "Run",
-          "endpoint": "/catalogue/project-state-report",
+          "endpoint": "/studio/api/catalogue/project-state-report",
           "record_family": "report",
           "record_id_field": "activity_target",
           "no_change_activity": "report",

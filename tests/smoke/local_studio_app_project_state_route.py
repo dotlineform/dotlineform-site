@@ -26,14 +26,6 @@ def start_server() -> tuple[StudioAppServer, str]:
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def unavailable_json(route) -> None:
-    route.fulfill(
-        status=200,
-        content_type="application/json",
-        body='{"ok": false, "error": "service unavailable"}',
-    )
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args(argv)
@@ -47,40 +39,43 @@ def main(argv: list[str] | None = None) -> int:
         runtime_view = runtime_by_id.get("project_state")
         if not runtime_view or runtime_view.get("path") != "/studio/project-state/?mode=manage":
             raise AssertionError(f"runtime config missing project_state: {runtime_views!r}")
+        catalogue_service = runtime_config.get("app", {}).get("runtime", {}).get("services", {}).get("catalogue", {})
+        if catalogue_service.get("project_state_report") != "/studio/api/catalogue/project-state-report":
+            raise AssertionError(f"runtime config missing local project-state API: {catalogue_service!r}")
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page()
             console_errors: list[str] = []
             page_errors: list[str] = []
-            catalogue_service_requests: list[str] = []
-            docs_service_requests: list[str] = []
+            legacy_catalogue_service_requests: list[str] = []
+            legacy_docs_service_requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
             page.on(
                 "request",
-                lambda request: catalogue_service_requests.append(request.url)
+                lambda request: legacy_catalogue_service_requests.append(request.url)
                 if "127.0.0.1:8788" in request.url
                 else None,
             )
             page.on(
                 "request",
-                lambda request: docs_service_requests.append(request.url)
+                lambda request: legacy_docs_service_requests.append(request.url)
                 if "127.0.0.1:8789" in request.url
                 else None,
             )
-            page.route("http://127.0.0.1:8788/**", unavailable_json)
-            page.route("http://127.0.0.1:8789/**", unavailable_json)
+            page.route("http://127.0.0.1:8788/**", lambda route: route.abort())
+            page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
 
             page.goto(f"{base_url}/studio/project-state/?mode=manage", wait_until="domcontentloaded")
             root = page.locator("#projectStateRoot")
             expect(root).to_be_visible(timeout=10_000)
             expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
             expect(root).to_have_attribute("data-studio-mode", "idle", timeout=10_000)
-            expect(root).to_have_attribute("data-studio-service", "unavailable", timeout=10_000)
+            expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
             expect(root).to_have_attribute("data-studio-record-loaded", "false", timeout=10_000)
-            expect(page.locator("#projectStateRunButton")).to_be_disabled(timeout=10_000)
-            expect(page.locator("#projectStateOpenButton")).to_be_disabled(timeout=10_000)
+            expect(page.locator("#projectStateRunButton")).to_be_enabled(timeout=10_000)
+            expect(page.locator("#projectStateOpenButton")).to_be_enabled(timeout=10_000)
 
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
             if doc_link != "/docs/?scope=studio&doc=project-state-page&mode=manage":
@@ -88,10 +83,10 @@ def main(argv: list[str] | None = None) -> int:
             nav_link = page.locator('.site-nav [data-studio-navigate="project_state"]').get_attribute("href")
             if nav_link != "/studio/project-state/?mode=manage":
                 raise AssertionError(f"project-state nav link is not manage-mode: {nav_link!r}")
-            if not catalogue_service_requests:
-                raise AssertionError("project-state route did not probe the catalogue service")
-            if not docs_service_requests:
-                raise AssertionError("project-state route did not probe the docs service")
+            if legacy_catalogue_service_requests:
+                raise AssertionError(f"project-state route should not request legacy 8788 endpoints: {legacy_catalogue_service_requests!r}")
+            if legacy_docs_service_requests:
+                raise AssertionError(f"project-state route should not request legacy 8789 endpoints: {legacy_docs_service_requests!r}")
 
             browser.close()
 
