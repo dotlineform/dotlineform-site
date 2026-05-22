@@ -116,6 +116,8 @@ The Studio Audits route shell is also hosted by the local app at `/studio/audits
 It reuses `assets/studio/js/studio-audits.js` and now calls `/studio/api/audits/...` on the local app server.
 `scripts/studio/studio_audit_api.py` adapts the existing allowlisted audit functions from `scripts/studio/audit_service.py`, so normal Studio sessions no longer need the separate `127.0.0.1:8790` sibling service.
 The old Jekyll `/studio/audits/` shell has been retired.
+The Catalogue dashboard is hosted by the local app at `/studio/catalogue/?mode=manage`.
+It reuses `assets/studio/js/studio-dashboard.js`, local index data, and local-app catalogue read keys for source-backed dashboard counts.
 The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
 It reuses `assets/studio/js/project-state.js` and now calls local Studio app endpoints for catalogue report generation and source-file opening.
 `scripts/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` adapter and reuses `scripts/catalogue/project_state_report.py`.
@@ -144,9 +146,10 @@ It reuses `assets/studio/js/studio-works.js`, checked-in works/series indexes, a
 The old Jekyll `/studio/studio-works/` shell has been retired.
 Its work and series links now resolve through the configured public-site preview base rather than staying on the Studio app host.
 The Catalogue Series, Work, Work Detail, and Moment editor route shells are hosted by the local app at their `?mode=manage` routes.
-They reuse the existing vanilla editor modules and existing sibling catalogue service endpoints on `127.0.0.1:8788`.
+They reuse the existing vanilla editor modules and call local-app catalogue API endpoints under `/studio/api/catalogue/...`.
 The old Jekyll shells for `/studio/catalogue-series/`, `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, and `/studio/catalogue-moment/` have been retired.
-This slice changes route hosting only; catalogue write/API ownership remains a later route-family API consolidation task.
+The local app adapter reuses the existing catalogue write handler in-process for editor save, build, publication, delete, prose import, and moment import flows.
+`bin/dev-studio` skips the standalone catalogue write server by default; set `CATALOGUE_WRITE_SERVER_ENABLED=1` only for fallback/debug runs.
 The old Jekyll `/studio/` landing shell has also been retired.
 This removes another public-site Studio page and keeps the local app as the only active Studio home surface during migration.
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.

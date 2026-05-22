@@ -111,7 +111,7 @@ In new mode:
 - the suggested next id is prefilled when available
 - `status` is visible but fixed to `draft`
 - `published_date` is unavailable until the record exists
-- `Create` writes source JSON only through `POST /catalogue/work/create`
+- `Create` writes source JSON only through `POST /studio/api/catalogue/work/create`
 - no public site update runs during create
 - after create, the page opens the new work in normal edit mode
 
@@ -135,8 +135,8 @@ Bulk mode keeps the existing raw `series_ids` input for now because bulk add/rem
 ## Local App Migration
 
 The page shell now lives in `scripts/studio/studio_app_views.py` and is mounted at `/studio/catalogue-work/?mode=manage` by `scripts/studio/studio_app_server.py`.
-It reuses the existing browser module and the existing catalogue sibling service endpoints on `127.0.0.1:8788`.
-The route migration changed the host shell, not the save/build/publication behavior.
+It reuses the existing browser module and calls local-app catalogue endpoints under `/studio/api/catalogue/...`.
+The local app adapter reuses the existing catalogue write handler in-process, so save/build/publication behavior stays aligned with the retired sibling service.
 
 Focused smoke coverage:
 
@@ -197,19 +197,19 @@ Current action labels:
 
 Current save/publication flow:
 
-1. page loads work search and series search lookup payloads through `GET /catalogue/read`
-2. opening a work fetches one focused work lookup record through `GET /catalogue/read?key=catalogue_lookup_work_base&record_id=<work_id>`; that focused payload carries the editable record plus generated runtime context
+1. page loads work search and series search lookup payloads through `GET /studio/api/catalogue/read`
+2. opening a work fetches one focused work lookup record through `GET /studio/api/catalogue/read?key=catalogue_lookup_work_base&record_id=<work_id>`; that focused payload carries the editable record plus generated runtime context
 3. browser computes stale-write protection against the full canonical source record rather than relying on the lookup payload alone
 4. user edits form fields
-5. `POST /catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and internal `apply_build: true` when the current work is already `published`
-6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested public-update status for published saves
+5. `POST /studio/api/catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and internal `apply_build: true` when the current work is already `published`
+6. the local app adapter validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested public-update status for published saves
 7. the page reloads its focused work lookup payload for preview/detail/download/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `notes` and `provenance` do not disappear after save
-8. `POST /catalogue/build-preview` reports the scoped public-update impact for the saved work record
-9. the current-record rail `Preview update` button is available for unsaved single-work edits on published works; it sends the changed source field names to `POST /catalogue/build-preview` and shows the field-aware result in a modal without saving
+8. `POST /studio/api/catalogue/build-preview` reports the scoped public-update impact for the saved work record
+9. the current-record rail `Preview update` button is available for unsaved single-work edits on published works; it sends the changed source field names to `POST /studio/api/catalogue/build-preview` and shows the field-aware result in a modal without saving
 10. the same preview now also carries work media readiness and staged work prose readiness
 11. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
 12. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `_docs_catalogue/works/<work_id>.md` after overwrite confirmation when needed
-13. `Publish` and `Unpublish` use `POST /catalogue/publication-preview` followed by `POST /catalogue/publication-apply`
+13. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`
 14. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/works/img/`, and leaves primary derivatives staged for remote publishing
 15. generator lookup now reads `_docs_catalogue/works/<work_id>.md` for public work prose
 
@@ -238,16 +238,16 @@ Bulk save flow:
 1. page expands the requested work selection in the browser
 2. page uses canonical source records for the bulk-edit baseline and only uses focused lookup records for generated runtime context
 3. user edits only the fields that should apply across the selection
-4. `POST /catalogue/bulk-save` sends selected `work_id` values, expected hashes, scalar field updates, optional series membership operations, and internal `apply_build: true` when the selection includes published records
-5. the local write server validates the combined source write, writes `works.json` once, refreshes lookup payloads, and returns changed counts plus published-record public-update targets
+4. `POST /studio/api/catalogue/bulk-save` sends selected `work_id` values, expected hashes, scalar field updates, optional series membership operations, and internal `apply_build: true` when the selection includes published records
+5. the local app adapter validates the combined source write, writes `works.json` once, refreshes lookup payloads, and returns changed counts plus published-record public-update targets
 6. changed draft records remain source-only; changed published records update public catalogue output in the same save response
 
 Delete flow:
 
-1. single-record mode requests `POST /catalogue/delete-preview`
+1. single-record mode requests `POST /studio/api/catalogue/delete-preview`
 2. the server returns blockers, validation errors, and dependent source-record impact
 3. blockers and validation errors remain visible in the page status area
-4. if preview is clean, the page confirms and sends `POST /catalogue/delete-apply`
+4. if preview is clean, the page confirms and sends `POST /studio/api/catalogue/delete-apply`
 5. the server deletes the work plus dependent detail records and work-owned file/link metadata in one atomic write bundle
 6. if a draft series uses the deleted work as `primary_work_id`, the server clears that draft-only pointer; published series still block deletion until reassigned or unpublished
 7. the server removes generated work/detail artifacts, published thumbnails, repo-local staged media, stale public index/search records, per-work tag overrides, and work-storage index entries

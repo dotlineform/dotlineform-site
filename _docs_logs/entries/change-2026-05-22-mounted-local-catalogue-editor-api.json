@@ -1,0 +1,47 @@
+{
+  "id": "change-2026-05-22-mounted-local-catalogue-editor-api",
+  "date": "2026-05-22",
+  "title": "Mounted Local Catalogue Editor API",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "catalogue",
+    "workflow"
+  ],
+  "summary": "Moved catalogue editor save, bulk-save, build, publication, delete, prose import, and moment import browser calls onto `/studio/api/catalogue/...` in the local Studio app and stopped default startup of the standalone catalogue write server.",
+  "effect": "Catalogue editor routes no longer need the standalone `127.0.0.1:8788` service from the browser or default `bin/dev-studio` startup. The local app adapter invokes the existing catalogue write handler in-process, preserving current validation, backups, lookup refresh, build follow-through, and Studio Activity behavior while consolidating endpoint ownership.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "catalogue-editors",
+    "catalogue-write-api",
+    "service-consolidation"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app-implementation-plan",
+    "local-studio-app",
+    "studio-config-and-save-flow",
+    "scripts-dev-studio",
+    "catalogue-work-editor",
+    "catalogue-work-detail-editor",
+    "catalogue-series-editor",
+    "catalogue-moment-editor"
+  ],
+  "related_files": [
+    "scripts/studio/studio_catalogue_api.py",
+    "scripts/studio/studio_app_server.py",
+    "scripts/studio/studio_app_config.py",
+    "bin/dev-studio",
+    "assets/studio/js/studio-transport.js",
+    "assets/studio/js/studio-dashboard.js",
+    "tests/smoke/local_studio_app_catalogue_editor_routes.py",
+    "tests/smoke/local_studio_app_catalogue_dashboard_route.py",
+    "tests/smoke/local_studio_app_analytics_dashboard_route.py",
+    "tests/python/test_studio_app_server.py"
+  ]
+}

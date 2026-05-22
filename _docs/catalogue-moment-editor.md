@@ -59,14 +59,14 @@ The page root `#catalogueMomentRoot` implements the shared Studio ready-state co
 
 ## Save And Publication
 
-`Save` calls `POST /catalogue/moment/save` with the current record hash for stale-write protection.
+`Save` calls `POST /studio/api/catalogue/moment/save` with the current record hash for stale-write protection.
 
 `Save` does not change publication status. Draft moment saves remain source-only. Published moment saves request the internal public update path so saved changes appear in generated public moment artifacts without exposing a separate update command.
 
 `Publish` and `Unpublish` call the shared publication preview/apply endpoints:
 
-- `POST /catalogue/publication-preview`
-- `POST /catalogue/publication-apply`
+- `POST /studio/api/catalogue/publication-preview`
+- `POST /studio/api/catalogue/publication-apply`
 
 `Publish` requires valid moment metadata and readiness for the public moment surface, then changes source status to `published` and runs the scoped public update. `Unpublish` changes source status back to `draft`, ignores unsaved form edits after confirmation, removes generated moment page/json/search output, and updates `assets/data/moments_index.json`.
 
@@ -89,8 +89,8 @@ The import flow:
 1. click `New`, or open the page with `?file=<filename>`
 2. enter a filename-only staged moment file, such as `keys.md`
 3. enter initial metadata in the same fields used by existing moments
-4. preview the staged prose and resolved metadata with `POST /catalogue/moment/import-preview`
-5. apply the import with `POST /catalogue/moment/import-apply`
+4. preview the staged prose and resolved metadata with `POST /studio/api/catalogue/moment/import-preview`
+5. apply the import with `POST /studio/api/catalogue/moment/import-apply`
 6. open the imported draft in the editor immediately after a successful apply
 
 Runtime ownership:
@@ -121,12 +121,12 @@ The old standalone `/studio/catalogue-moment-import/` route is retired. Open `/s
 
 ## Delete
 
-`Delete` calls `POST /catalogue/delete-preview` with `kind: "moment"` and the current record hash.
-If the preview has no blockers or validation errors, the page asks for confirmation and then calls `POST /catalogue/delete-apply`.
+`Delete` calls `POST /studio/api/catalogue/delete-preview` with `kind: "moment"` and the current record hash.
+If the preview has no blockers or validation errors, the page asks for confirmation and then calls `POST /studio/api/catalogue/delete-apply`.
 
 The Studio delete removes:
 
-- the canonical moment metadata record through `GET /catalogue/read?key=catalogue_moments`
+- the canonical moment metadata record through `GET /studio/api/catalogue/read?key=catalogue_moments`
 - `_moments/<moment_id>.md`
 - `assets/moments/index/<moment_id>.json`
 - matching published moment thumbnails under `assets/moments/img/`

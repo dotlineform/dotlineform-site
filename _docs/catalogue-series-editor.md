@@ -103,7 +103,7 @@ In new mode:
 - `title`, `series_type`, `year`, and `year_display` are required
 - `status` is visible and fixed to `draft`
 - `published_date`, `primary_work_id`, member editing, staged prose import, publication, and delete actions remain disabled until the source record exists
-- `Create` writes through `POST /catalogue/series/create`
+- `Create` writes through `POST /studio/api/catalogue/series/create`
 - successful create opens `/studio/catalogue-series/?series=<series_id>` in normal edit mode
 
 Create mode does not update the public site. Add member works, set a valid `primary_work_id`, save the draft, and then use `Publish` when ready.
@@ -136,22 +136,22 @@ Current action labels:
 
 Current save/publication flow:
 
-1. page loads derived series-search and work-search lookup payloads through `GET /catalogue/read`, not full canonical source maps
-2. opening a series fetches one focused lookup record through `GET /catalogue/read?key=catalogue_lookup_series_base&record_id=<series_id>`
+1. page loads derived series-search and work-search lookup payloads through `GET /studio/api/catalogue/read`, not full canonical source maps
+2. opening a series fetches one focused lookup record through `GET /studio/api/catalogue/read?key=catalogue_lookup_series_base&record_id=<series_id>`
 3. membership edits operate on affected work `series_ids` arrays in the browser, using lookup-provided work hashes for stale-write checks
-4. `POST /catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, and only the changed work membership rows; the editor and write server reject saves where `year` or `year_display` is blank
+4. `POST /studio/api/catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, and only the changed work membership rows; the editor and local app adapter reject saves where `year` or `year_display` is blank
 5. draft saves are source-only; published saves send `apply_build: true` internally so saved metadata appears on the public site without a separate visible command
-6. the local write server validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records plus nested public-update status for published saves
+6. the local app adapter validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records plus nested public-update status for published saves
 7. the page reloads its focused series lookup payload
-8. `POST /catalogue/build-preview` reports scoped public-update impact for published series plus affected published works and carries staged series prose readiness
-9. `Publish` and `Unpublish` use `POST /catalogue/publication-preview` followed by `POST /catalogue/publication-apply`; series publish writes `series.json` and any attached draft-work status changes in one atomic transaction
+8. `POST /studio/api/catalogue/build-preview` reports scoped public-update impact for published series plus affected published works and carries staged series prose readiness
+9. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`; series publish writes `series.json` and any attached draft-work status changes in one atomic transaction
 10. `Import staged prose` previews `var/docs/catalogue/import-staging/series/<series_id>.md` and writes `_docs_catalogue/series/<series_id>.md` after overwrite confirmation when needed
 
 Delete flow:
 
-1. page requests `POST /catalogue/delete-preview`
+1. page requests `POST /studio/api/catalogue/delete-preview`
 2. preview reports affected member works and any validation blockers
-3. if preview is clean, the page confirms and sends `POST /catalogue/delete-apply`
+3. if preview is clean, the page confirms and sends `POST /studio/api/catalogue/delete-apply`
 4. the server deletes the series source record and removes that `series_id` from affected work records in one atomic write bundle
 5. the server removes generated series artifacts, updates affected work runtime/index records, removes the series tag-assignment row, updates public indexes, and rebuilds catalogue search
 

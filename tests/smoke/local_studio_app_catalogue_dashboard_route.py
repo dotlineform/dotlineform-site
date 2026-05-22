@@ -42,14 +42,6 @@ def start_server() -> tuple[StudioAppServer, str]:
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def unavailable_json(route) -> None:
-    route.fulfill(
-        status=200,
-        content_type="application/json",
-        body='{"ok": false, "error": "catalogue service unavailable"}',
-    )
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args(argv)
@@ -70,6 +62,8 @@ def main(argv: list[str] | None = None) -> int:
             console_errors: list[str] = []
             page_errors: list[str] = []
             data_requests: list[str] = []
+            local_catalogue_requests: list[str] = []
+            legacy_catalogue_service_requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
             page.on(
@@ -80,7 +74,18 @@ def main(argv: list[str] | None = None) -> int:
                 or "/assets/studio/data/tag_registry.json" in request.url
                 else None,
             )
-            page.route("http://127.0.0.1:8788/**", unavailable_json)
+            page.on(
+                "request",
+                lambda request: local_catalogue_requests.append(request.url)
+                if "/studio/api/catalogue/" in request.url
+                else None,
+            )
+            page.on(
+                "request",
+                lambda request: legacy_catalogue_service_requests.append(request.url)
+                if "127.0.0.1:8788" in request.url
+                else None,
+            )
 
             page.goto(f"{base_url}{ROUTE_PATH}", wait_until="domcontentloaded")
             root = page.locator(ROOT_SELECTOR)
@@ -106,6 +111,10 @@ def main(argv: list[str] | None = None) -> int:
 
         if len(data_requests) < 3:
             raise AssertionError(f"Catalogue dashboard did not request expected data sources: {data_requests!r}")
+        if not local_catalogue_requests:
+            raise AssertionError("Catalogue dashboard did not request the local catalogue API")
+        if legacy_catalogue_service_requests:
+            raise AssertionError(f"Catalogue dashboard still called legacy catalogue service: {legacy_catalogue_service_requests}")
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:

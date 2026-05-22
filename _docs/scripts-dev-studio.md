@@ -70,6 +70,9 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   default: `8765`
 - `CATALOGUE_WRITE_PORT`
   default: `8788`
+- `CATALOGUE_WRITE_SERVER_ENABLED`
+  default: `0`
+  set to `1` only for fallback/debug runs that intentionally need the standalone catalogue write service
 - `DOCS_MANAGEMENT_PORT`
   default: `8789`
 - `AUDIT_SERVICE_PORT`
@@ -126,7 +129,7 @@ Before it starts any rebuilds or long-running servers, `bin/dev-studio` checks t
 
 1. Jekyll on `JEKYLL_HOST:JEKYLL_PORT`
 2. Local Studio App on `STUDIO_APP_HOST:STUDIO_APP_PORT` when `STUDIO_APP_ENABLED` is not `0`
-3. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT`
+3. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT` only when `CATALOGUE_WRITE_SERVER_ENABLED` is not `0`
 4. Docs Management Server on `127.0.0.1:DOCS_MANAGEMENT_PORT` only when `DOCS_MANAGEMENT_SERVER_ENABLED` is not `0`
 5. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT` only when `AUDIT_SERVICE_ENABLED` is not `0`
 
@@ -144,7 +147,7 @@ After that preflight, `bin/dev-studio` runs the startup write steps below:
    - `./scripts/catalogue/export_catalogue_lookup.py --write`
 
 That means a default `bin/dev-studio` run skips startup docs/docs-search rebuilds and startup catalogue lookup export.
-The catalogue write server still refreshes derived lookup payloads after catalogue writes.
+The local Studio app catalogue API refreshes derived lookup payloads after catalogue writes.
 
 If `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled, startup also updates:
 
@@ -193,6 +196,13 @@ bundle exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port 
 - other WEBrick errors, Jekyll build warnings, and docs watcher messages remain visible
 
 ### Catalogue Write Server
+
+The standalone catalogue write server is disabled by default because the local Studio app owns the active browser-facing catalogue APIs under `/studio/api/catalogue/...`.
+Enable it only for fallback/debug runs:
+
+```bash
+CATALOGUE_WRITE_SERVER_ENABLED=1 bin/dev-studio
+```
 
 - command:
 
@@ -285,7 +295,7 @@ If any one of the child processes exits unexpectedly, the runner stops monitorin
 - rebuild catalogue lookup artifacts on startup unless `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled
 - rebuild public search artifacts on startup
 - start a separate frontend asset server
-- replace Jekyll as the host for all Studio routes; unmigrated routes still use the Jekyll process during transition
+- replace Jekyll as the public preview host
 - provide the final long-term launcher split; `bin/dev-studio` is still a bridge command
 
 If you disable the watcher or want an explicit manual rebuild, use:

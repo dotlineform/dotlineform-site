@@ -6,7 +6,7 @@ import {
   setStudioRouteReady
 } from "./studio-route-state.js";
 import {
-  probeCatalogueHealth
+  probeCatalogueReadHealth
 } from "./studio-transport.js";
 
 function dashboardRouteDetail(root) {
@@ -52,7 +52,7 @@ async function initStudioDashboard() {
   }
   const [config, catalogueServerAvailable] = await Promise.all([
     loadStudioConfig().catch(() => null),
-    probeCatalogueHealth().catch(() => false)
+    probeCatalogueReadHealth().catch(() => false)
   ]);
   const catalogueReadOptions = { cache: "no-store", catalogueServerAvailable };
 

@@ -110,7 +110,7 @@ Current commit point:
 - Phase 4 now mounts the tag registry, tag aliases, series-tags, and per-series tag editor route shells in the local app so those pages use local runtime config and local analytics endpoints
 - Phase 4 has retired the Jekyll analytics tag route shells, removed the old `127.0.0.1:8787` browser fallbacks, and stopped launching the standalone tag write server from `bin/dev-studio`
 - Phase 4 has removed the standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint; `scripts/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes
-- Phase 5 has started by mounting `/studio/catalogue/?mode=manage`, `/studio/analytics/?mode=manage`, `/studio/audits/?mode=manage`, `/studio/project-state/?mode=manage`, `/studio/thumbnail-quality/?mode=manage`, `/studio/bulk-add-work/?mode=manage`, `/studio/activity/?mode=manage`, `/studio/catalogue-field-registry/?mode=manage`, `/studio/catalogue-status/?mode=manage`, `/studio/studio-works/?mode=manage`, `/studio/catalogue-series/?mode=manage`, `/studio/catalogue-work/?mode=manage`, `/studio/catalogue-work-detail/?mode=manage`, and `/studio/catalogue-moment/?mode=manage` in the local app and retiring the old Jekyll shells while leaving their sibling service APIs in place for now
+- Phase 5 has mounted `/studio/catalogue/?mode=manage`, `/studio/analytics/?mode=manage`, `/studio/audits/?mode=manage`, `/studio/project-state/?mode=manage`, `/studio/thumbnail-quality/?mode=manage`, `/studio/bulk-add-work/?mode=manage`, `/studio/activity/?mode=manage`, `/studio/catalogue-field-registry/?mode=manage`, `/studio/catalogue-status/?mode=manage`, `/studio/studio-works/?mode=manage`, `/studio/catalogue-series/?mode=manage`, `/studio/catalogue-work/?mode=manage`, `/studio/catalogue-work-detail/?mode=manage`, and `/studio/catalogue-moment/?mode=manage` in the local app, retired the old Jekyll shells, and moved their browser-facing catalogue APIs under `/studio/api/catalogue/...`
 - the old Jekyll `/studio/` landing shell is retired; `/studio/` is now the local app home during Studio sessions
 - Studio route URL building now preserves configured route query state such as `?mode=manage` while appending record parameters for migrated catalogue editor links
 - Docs Broken Links moved into Docs Viewer reports rather than becoming another migrated Studio route shell
@@ -306,6 +306,8 @@ Thumbnail Quality now uses the same narrow catalogue adapter for `POST /studio/a
 The adapter reuses `scripts/media/build_thumbnail_quality_preview.py`, keeps initial page loads on the checked-in preview JSON, and removes the browser dependency on `127.0.0.1:8788` for refresh availability.
 Catalogue Drafts and Studio Activity now read through local-app `GET /studio/api/catalogue/read`.
 Bulk Add Work now uses local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply`; the adapter reuses the existing workbook import planner/apply helpers and preserves Studio Activity logging.
+The catalogue editor write/build/publication/delete/prose-import/moment-import endpoints now run through `/studio/api/catalogue/...` on the local app server, reusing the existing catalogue write handler in-process.
+`bin/dev-studio` no longer starts the standalone catalogue write server by default; `CATALOGUE_WRITE_SERVER_ENABLED=1` remains available for fallback/debug runs.
 
 Transition cleanup backlog:
 
@@ -352,15 +354,13 @@ Do not let relative public-content links stay on the Studio app host, and do not
 The first helper is in place; adopt it as each migrated route's public-content links are touched rather than doing a broad blind rewrite.
 Catalogue dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, and the Catalogue Series/Work/Work Detail/Moment editor shells are the first operational route shells moved in Phase 5.
 They keep the existing vanilla browser modules and unavailable-service behavior, and only change the host shell from Jekyll to the local app.
-The catalogue API calls behind Catalogue Drafts, Bulk Add Work, and Studio Activity are now consolidated into the local app server.
-The catalogue editor write/build/publication/delete/import API calls are not yet consolidated; migrate those only when the editor route-family API boundary is ready.
+The catalogue API calls behind Catalogue dashboard counts, Catalogue Drafts, Bulk Add Work, Studio Activity, and the catalogue editors are now consolidated into the local app server.
 The Catalogue dashboard keeps the existing `studio-dashboard.js` metric hydration and now links to manage-mode local Catalogue routes.
 The Analytics dashboard also uses `studio-dashboard.js` and links to the local Analytics tag routes.
 Catalogue Field Registry is read-only and uses checked-in Studio data, so it does not add a new write/API consolidation dependency.
 Catalogue Drafts reads draft record data through the local app catalogue read API.
 Studio Works is read-only and uses checked-in index data, but it also adopts the public-site link resolver so work and series links open against the configured public Jekyll preview host.
-The catalogue editor shell migration keeps the existing `127.0.0.1:8788` catalogue sibling service dependency for create/save/build/publication/delete/import flows.
-Endpoint ownership should move into the local app server as a separate API consolidation slice rather than being proxied.
+The catalogue editor API consolidation keeps behavior aligned with the existing catalogue write handler by invoking it in-process from `scripts/studio/studio_catalogue_api.py`.
 Catalogue route shells are split into `scripts/studio/studio_catalogue_views.py` so `studio_app_views.py` remains a shared shell module rather than absorbing every route family.
 The Jekyll `/studio/` landing shell is now retired because the local app owns `/studio/` and public builds should not expose Studio.
 The local app home is intentionally a simple runtime navigation list rather than a preserved Jekyll dashboard design; it filters out non-nav internal views such as the per-series tag editor and marks the home root ready for smoke checks.

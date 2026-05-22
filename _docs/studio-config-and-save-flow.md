@@ -81,22 +81,29 @@ Current write endpoints include:
 - `/mutate-tag-alias`
 - `/promote-tag-alias`
 - `/promote-tag-alias-preview`
-- `http://127.0.0.1:8788/health`
-- `http://127.0.0.1:8788/catalogue/bulk-save`
-- `http://127.0.0.1:8788/catalogue/delete-preview`
-- `http://127.0.0.1:8788/catalogue/delete-apply`
-- `http://127.0.0.1:8788/catalogue/work/create`
-- `http://127.0.0.1:8788/catalogue/work/save`
-- `http://127.0.0.1:8788/catalogue/work-detail/create`
-- `http://127.0.0.1:8788/catalogue/work-detail/save`
-- `http://127.0.0.1:8788/catalogue/import-preview`
-- `http://127.0.0.1:8788/catalogue/import-apply`
-- `http://127.0.0.1:8788/catalogue/moment/import-preview`
-- `http://127.0.0.1:8788/catalogue/moment/import-apply`
-- `http://127.0.0.1:8788/catalogue/series/create`
-- `http://127.0.0.1:8788/catalogue/series/save`
-- `http://127.0.0.1:8788/catalogue/build-preview`
-- `http://127.0.0.1:8788/catalogue/build-apply`
+- `/studio/api/catalogue/health`
+- `/studio/api/catalogue/read`
+- `/studio/api/catalogue/bulk-save`
+- `/studio/api/catalogue/delete-preview`
+- `/studio/api/catalogue/delete-apply`
+- `/studio/api/catalogue/publication-preview`
+- `/studio/api/catalogue/publication-apply`
+- `/studio/api/catalogue/work/create`
+- `/studio/api/catalogue/work/save`
+- `/studio/api/catalogue/work-detail/create`
+- `/studio/api/catalogue/work-detail/save`
+- `/studio/api/catalogue/import-preview`
+- `/studio/api/catalogue/import-apply`
+- `/studio/api/catalogue/moment/import-preview`
+- `/studio/api/catalogue/moment/import-apply`
+- `/studio/api/catalogue/moment/preview`
+- `/studio/api/catalogue/moment/save`
+- `/studio/api/catalogue/series/create`
+- `/studio/api/catalogue/series/save`
+- `/studio/api/catalogue/build-preview`
+- `/studio/api/catalogue/build-apply`
+- `/studio/api/catalogue/prose/import-preview`
+- `/studio/api/catalogue/prose/import-apply`
 
 Current non-catalogue local action behavior also includes:
 
@@ -109,14 +116,14 @@ The Tag Editor probes local write availability at page load.
 
 Current mode selection:
 
-- if the local write service responds successfully, Studio uses `Local server`
+- if the local app catalogue API responds successfully, Studio uses `Local server`
 - otherwise Studio falls back to `Offline session`
 
 ### Local Server Mode
 
 Current local save behavior:
 
-- the editor sends `POST /save-tags` to the local write service
+- the editor sends `POST /save-tags` to the local app catalogue API
 - only the current diff is persisted, not a full materialized export
 - work rows are normalized before save
 - inherited series tags are not persisted into work rows
@@ -134,8 +141,8 @@ Current write-service implementation notes:
 
 Catalogue editor local save behavior:
 
-- catalogue editor source and lookup reads go through `GET /catalogue/read` when the local catalogue server is available
-- the work editor sends `POST /catalogue/work/save` to the catalogue local write service
+- catalogue editor source and lookup reads go through `GET /studio/api/catalogue/read` when the local app catalogue API is available
+- the work editor sends `POST /studio/api/catalogue/work/save` to the local app catalogue API
 - the request includes `work_id`, a browser-computed record hash, a normalized work record patch, and optional `apply_build: true`
 - the server validates the full catalogue source set before writing
 - writes are constrained to allowlisted canonical catalogue source JSON
@@ -143,26 +150,26 @@ Catalogue editor local save behavior:
 - backup bundles are written under `var/studio/catalogue/backups/`
 - activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `var/studio/activity/activity_log.json`
 - backup retention is applied at `bin/dev-studio` startup; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
-- bulk mode on the same page sends `POST /catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, optional series membership operations, and optional `apply_build: true`
+- bulk mode on the same page sends `POST /studio/api/catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, optional series membership operations, and optional `apply_build: true`
 - bulk work update still runs as a sequence of scoped work rebuilds, but that sequence can now be requested directly from the save endpoint
-- single-record mode on the same page can also request `POST /catalogue/delete-preview` and `POST /catalogue/delete-apply`
+- single-record mode on the same page can also request `POST /studio/api/catalogue/delete-preview` and `POST /studio/api/catalogue/delete-apply`
 - work delete removes the selected work plus dependent detail records and work-owned file/link metadata on that work record
 - work delete is disabled while the work editor is in bulk mode
 
 Catalogue work detail local save behavior:
 
-- the detail editor sends `POST /catalogue/work-detail/save` to the same local catalogue write service
+- the detail editor sends `POST /studio/api/catalogue/work-detail/save` to the same local app catalogue API
 - the request includes `detail_uid`, a browser-computed record hash, a normalized detail patch, and optional `apply_build: true`
 - the server validates the parent work reference before writing
 - the server writes `work_details.json` only after full-source validation succeeds
-- bulk mode on the same page sends `POST /catalogue/bulk-save` with selected detail ids, one expected hash per selected detail, the touched field updates, and optional `apply_build: true`
+- bulk mode on the same page sends `POST /studio/api/catalogue/bulk-save` with selected detail ids, one expected hash per selected detail, the touched field updates, and optional `apply_build: true`
 - bulk detail update still runs as a sequence of scoped parent-work rebuilds, but that sequence can now be requested directly from the save endpoint
-- single-record mode on the same page can also request `POST /catalogue/delete-preview` and `POST /catalogue/delete-apply`
+- single-record mode on the same page can also request `POST /studio/api/catalogue/delete-preview` and `POST /studio/api/catalogue/delete-apply`
 - work-detail delete is disabled while the detail editor is in bulk mode
 
 Catalogue workbook import behavior:
 
-- the bulk-add page sends `POST /catalogue/import-preview` and `POST /catalogue/import-apply`
+- the bulk-add page sends `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply`
 - both endpoints read the configured bulk-import workbook path from `_data/pipeline.json`, currently `data/works_bulk_import.xlsx`
 - preview/apply support two modes: `works` and `work_details`
 - works import adds new work records only
@@ -174,7 +181,7 @@ Catalogue workbook import behavior:
 
 Catalogue moment import behavior:
 
-- the moments page sends `POST /catalogue/moment/import-preview` and `POST /catalogue/moment/import-apply`
+- the moments page sends `POST /studio/api/catalogue/moment/import-preview` and `POST /studio/api/catalogue/moment/import-apply`
 - both endpoints resolve one explicit staged Markdown filename from `var/docs/catalogue/import-staging/moments/`
 - the page collects moment metadata and sends it with the filename
 - preview validates body-only staged prose, validates the required metadata, and reports current runtime/generated status
@@ -186,13 +193,13 @@ Catalogue moment import behavior:
 
 Catalogue work-owned files and links behavior:
 
-- the work editor saves `downloads` and `links` as arrays on the work record through `POST /catalogue/work/save`
+- the work editor saves `downloads` and `links` as arrays on the work record through `POST /studio/api/catalogue/work/save`
 - standalone work-file and work-link routes and source JSON files are retired
-- the local write service validates the complete work source payload before writing `works.json`
+- the local app catalogue API validates the complete work source payload before writing `works.json`
 
 Catalogue series local save behavior:
 
-- the series editor sends `POST /catalogue/series/save` to the same local catalogue write service
+- the series editor sends `POST /studio/api/catalogue/series/save` to the same local app catalogue API
 - the request includes the current `series_id`, a browser-computed series record hash, the normalized series patch, only the changed work membership rows, and optional `apply_build: true`
 - work membership writes preserve the edited `series_ids` order for each changed work
 - the server validates `primary_work_id` membership and then writes `series.json` plus affected `works.json` atomically
@@ -200,10 +207,10 @@ Catalogue series local save behavior:
 
 Catalogue scoped rebuild behavior:
 
-- the work editor requests a scoped preview from `POST /catalogue/build-preview`
+- the work editor requests a scoped preview from `POST /studio/api/catalogue/build-preview`
 - the detail editor requests the same scoped preview for the parent work
 - the series editor requests a series-scoped preview from the same endpoint, including any removed member works that still need rebuild
-- `POST /catalogue/build-apply` runs JSON-source generation for one work or one series scope plus the affected work/series ids
+- `POST /studio/api/catalogue/build-apply` runs JSON-source generation for one work or one series scope plus the affected work/series ids
 - the apply step then rebuilds `assets/data/search/catalogue/index.json`
 - unified Studio Activity records these JSON-source scoped rebuilds
 

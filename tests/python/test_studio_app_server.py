@@ -86,8 +86,27 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
     assert runtime["services"]["catalogue"]["base"] == "/studio/api/catalogue"
     assert runtime["services"]["catalogue"]["read"] == "/studio/api/catalogue/read"
+    assert runtime["services"]["catalogue"]["bulk_save"] == "/studio/api/catalogue/bulk-save"
+    assert runtime["services"]["catalogue"]["delete_preview"] == "/studio/api/catalogue/delete-preview"
+    assert runtime["services"]["catalogue"]["delete_apply"] == "/studio/api/catalogue/delete-apply"
+    assert runtime["services"]["catalogue"]["publication_preview"] == "/studio/api/catalogue/publication-preview"
+    assert runtime["services"]["catalogue"]["publication_apply"] == "/studio/api/catalogue/publication-apply"
+    assert runtime["services"]["catalogue"]["create_work"] == "/studio/api/catalogue/work/create"
+    assert runtime["services"]["catalogue"]["save_work"] == "/studio/api/catalogue/work/save"
+    assert runtime["services"]["catalogue"]["create_work_detail"] == "/studio/api/catalogue/work-detail/create"
+    assert runtime["services"]["catalogue"]["save_work_detail"] == "/studio/api/catalogue/work-detail/save"
     assert runtime["services"]["catalogue"]["import_preview"] == "/studio/api/catalogue/import-preview"
     assert runtime["services"]["catalogue"]["import_apply"] == "/studio/api/catalogue/import-apply"
+    assert runtime["services"]["catalogue"]["create_series"] == "/studio/api/catalogue/series/create"
+    assert runtime["services"]["catalogue"]["save_series"] == "/studio/api/catalogue/series/save"
+    assert runtime["services"]["catalogue"]["build_preview"] == "/studio/api/catalogue/build-preview"
+    assert runtime["services"]["catalogue"]["build_apply"] == "/studio/api/catalogue/build-apply"
+    assert runtime["services"]["catalogue"]["prose_import_preview"] == "/studio/api/catalogue/prose/import-preview"
+    assert runtime["services"]["catalogue"]["prose_import_apply"] == "/studio/api/catalogue/prose/import-apply"
+    assert runtime["services"]["catalogue"]["moment_import_preview"] == "/studio/api/catalogue/moment/import-preview"
+    assert runtime["services"]["catalogue"]["moment_import_apply"] == "/studio/api/catalogue/moment/import-apply"
+    assert runtime["services"]["catalogue"]["moment_preview"] == "/studio/api/catalogue/moment/preview"
+    assert runtime["services"]["catalogue"]["save_moment"] == "/studio/api/catalogue/moment/save"
     assert runtime["services"]["catalogue"]["project_state_report"] == "/studio/api/catalogue/project-state-report"
     assert runtime["services"]["catalogue"]["thumbnail_quality_preview"] == "/studio/api/catalogue/thumbnail-quality-preview"
     assert "tag_groups" not in runtime["data_paths"]["studio"]
@@ -284,6 +303,54 @@ def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> No
         assert apply_status == studio_docs_api.HTTPStatus.OK
         assert apply_payload["dry_run"] is True
         assert apply_payload["would_write"] is True
+        assert json.loads((source_dir / "works.json").read_text(encoding="utf-8"))["works"] == {}
+
+
+def test_catalogue_editor_create_work_dry_run_uses_in_process_write_handler() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir) / "repo"
+        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir.mkdir(parents=True)
+        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        (source_dir / "works.json").write_text(
+            json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {}}),
+            encoding="utf-8",
+        )
+        (source_dir / "work_details.json").write_text(
+            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
+            encoding="utf-8",
+        )
+        (source_dir / "series.json").write_text(
+            json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {}}),
+            encoding="utf-8",
+        )
+        (source_dir / "moments.json").write_text(
+            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
+            encoding="utf-8",
+        )
+        registry_target = repo_root / "assets" / "studio" / "data" / "catalogue_field_registry.json"
+        registry_target.write_text((REPO_ROOT / "assets" / "studio" / "data" / "catalogue_field_registry.json").read_text(encoding="utf-8"), encoding="utf-8")
+
+        status, payload = catalogue_post_response(
+            repo_root,
+            "/work/create",
+            {
+                "work_id": "42",
+                "record": {
+                    "title": "Draft Work",
+                    "status": "draft",
+                    "series_ids": [],
+                },
+            },
+            dry_run=True,
+        )
+
+        assert status == studio_docs_api.HTTPStatus.OK
+        assert payload["ok"] is True
+        assert payload["work_id"] == "00042"
+        assert payload["created"] is True
+        assert payload["dry_run"] is True
+        assert payload["would_write"] is True
         assert json.loads((source_dir / "works.json").read_text(encoding="utf-8"))["works"] == {}
 
 
