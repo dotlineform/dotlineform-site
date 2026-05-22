@@ -2,9 +2,9 @@
   "header": {
     "schema": "docs_semantic_references_index_v1",
     "scope": "analysis",
-    "count": 1,
+    "count": 2,
     "target_count": 1,
-    "generated_at": "2026-05-18T21:10:30Z"
+    "generated_at": "2026-05-22T17:04:51Z"
   },
   "targets": [
     {
@@ -14,7 +14,7 @@
       "target_href": "/works/00638/",
       "target_title": "3 symbols",
       "target_status": "published",
-      "count": 1,
+      "count": 2,
       "bucket_url": "/assets/data/docs/scopes/analysis/references/by-target/work/00638.json"
     }
   ]

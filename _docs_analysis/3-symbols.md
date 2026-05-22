@@ -25,18 +25,15 @@ hidden: true
 **life** healing joining<br>
 **death** decaying fragmenting<br>
  
-there are 3 core symbols, everything else is derived from these 3. new symbols are created in powers of 3. when a new concept is added to the group, it would apply to all existing symbols. a new concept may not just add a graphical element to a symbol, it may completely transform the symbol.
- 
-meta-symbols can be created by grouping combinations of symbols. in a composite symbol, the individual symbols are stacked up in layers. therefore the separate symbols might not be completely identifiable in the final composite.
+there are 3 core symbols, everything else is derived from these 3. new symbols are created in powers of 3. when a new concept is added to the group, it would apply to all existing symbols. a new concept may not just add a graphical element to a symbol, it may completely transform the symbol. meta-symbols can be created by grouping combinations of symbols. in a composite symbol, the individual symbols are stacked up in layers. therefore the separate symbols might not be completely identifiable in the final composite.
  
 the form symbols, when layered into an image, describe the hidden meaning of the image
-
-
  
 *3 symbols* is an experiment in how to reconcile in a single image the idea of photographic realism with the symbolism of forms, lines and dots, which represent the ‘unreal’ and hidden, the fundamental forces that lie within/behind what we see and experience as ‘real life’. Together these 2 layers, one of formless colour and the other of colourless form, represent the intangible and shifting boundaries between our perception of the world and the world itself; the point at which our symbols for the world merge with our perception of it.
  
 **composite**
 
+[[ref:work:00638|3 symbols]]<br>
 ![3 symbols image 02]([[media:docs/analysis/img/3-symbols-image-02.webp]] "3 symbols image 02")
 **composite for 3 symbols**
 2007

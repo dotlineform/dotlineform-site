@@ -90,6 +90,7 @@ Current commit point:
 - Phase 4 now has the first analytics write route, `POST /studio/api/analytics/save-tags`, through the local app server
 - Phase 4 now routes tag assignment import preview/apply through the local app server
 - Phase 4 now routes tag registry import and mutate-tag preview/apply through the local app server
+- Phase 4 now routes tag alias import, delete, and mutate-alias preview/apply through the local app server
 - non-Docs write/manage APIs are intentionally still disabled or partial where not yet migrated
 
 ## Phase 0: Published Surface Cleanup
@@ -243,9 +244,9 @@ Outcomes:
 | Task | Status |
 | --- | --- |
 | Define route modules for catalogue, docs, analytics, audit, and shared Studio app routes. | partial; docs and analytics modules started |
-| Move endpoint ownership into the Python app server slice by slice. | partial; Docs management, analytics tag read routes, tag assignment write routes, and tag registry write routes moved |
-| Reuse extracted Python domain modules instead of proxying to old services by default. | partial; Docs management, analytics tag assignment routes, and analytics registry routes use existing domain functions directly |
-| Preserve loopback binding, CORS limits, write allowlists, backups, compact logs, and preview/apply boundaries. | partial; tag assignment and registry writes preserve write allowlists, backups, compact logs, activity attachment, and preview/apply split where applicable |
+| Move endpoint ownership into the Python app server slice by slice. | partial; Docs management, analytics tag read routes, tag assignment writes, tag alias writes, and tag registry writes moved |
+| Reuse extracted Python domain modules instead of proxying to old services by default. | partial; Docs management, analytics tag assignment, alias, and registry routes use existing domain functions directly |
+| Preserve loopback binding, CORS limits, write allowlists, backups, compact logs, and preview/apply boundaries. | partial; tag assignment, alias, and registry writes preserve write allowlists, backups, compact logs, activity attachment, and preview/apply split where applicable |
 | Update `bin/dev-studio` to start the app server and only necessary background tasks. | partial; Docs management sibling retired from default startup |
 | Keep public Jekyll preview/build as an explicit separate action. | pending |
 
@@ -254,10 +255,10 @@ Next steps:
 Use the docs-management migration to establish the endpoint ownership pattern.
 `bin/dev-studio` now starts the local app server as a bridge step, but it still starts Jekyll and existing sibling services for unmigrated workflows.
 Avoid a broad service merge until one migrated workflow has proven the app-server route-module shape.
-The first analytics-owned slices established read and write ownership separately: `studio_analytics_api.py` serves tag registry, aliases, assignments, and groups through `/studio/api/analytics/...`, and it now handles `POST /studio/api/analytics/save-tags`, `POST /studio/api/analytics/import-tag-assignments-preview`, `POST /studio/api/analytics/import-tag-assignments`, `POST /studio/api/analytics/import-tag-registry`, `POST /studio/api/analytics/mutate-tag-preview`, and `POST /studio/api/analytics/mutate-tag` by calling the existing tag assignment, registry mutation, alias rewrite, atomic-write, logging, and Studio activity helpers directly.
+The first analytics-owned slices established read and write ownership separately: `studio_analytics_api.py` serves tag registry, aliases, assignments, and groups through `/studio/api/analytics/...`, and it now handles save-tags, tag assignment import preview/apply, tag alias import/delete/mutate preview/apply, and tag registry import/mutate preview/apply by calling the existing tag assignment, alias mutation, registry mutation, alias rewrite, atomic-write, logging, and Studio activity helpers directly.
 Static JSON fallbacks remain for unmigrated/Jekyll contexts.
-The browser transport prefers the local runtime `save_tags`, assignment import, registry import, registry mutation, and analytics `health` endpoints when a migrated local app page has runtime config; old tag write-server URLs remain fallbacks for unmigrated Jekyll-hosted pages.
-Next Phase 4 slices should migrate one endpoint family at a time, with tag alias mutations, promote/demote workflows, and route-page migration still treated as separate higher-risk steps.
+The browser transport prefers the local runtime `save_tags`, assignment import, alias import/delete/edit, registry import/mutation, and analytics `health` endpoints when a migrated local app page has runtime config; old tag write-server URLs remain fallbacks for unmigrated Jekyll-hosted pages.
+Next Phase 4 slices should migrate one endpoint family at a time, with promote/demote workflows and route-page migration still treated as separate higher-risk steps.
 
 Transition cleanup backlog:
 

@@ -16,10 +16,14 @@ const STUDIO_WRITE_ENDPOINTS = Object.freeze({
 });
 
 const STUDIO_WRITE_RUNTIME_KEYS = Object.freeze({
+  deleteTagAlias: "delete_tag_alias",
   health: "health",
   importTagAssignments: "import_tag_assignments",
   importTagAssignmentsPreview: "import_tag_assignments_preview",
+  importTagAliases: "import_tag_aliases",
   importTagRegistry: "import_tag_registry",
+  mutateTagAlias: "mutate_tag_alias",
+  mutateTagAliasPreview: "mutate_tag_alias_preview",
   mutateTag: "mutate_tag",
   mutateTagPreview: "mutate_tag_preview",
   saveTags: "save_tags"

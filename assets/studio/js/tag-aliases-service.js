@@ -2,6 +2,7 @@ import {
   getStudioText
 } from "./studio-config.js";
 import {
+  getStudioWriteEndpoint,
   postJson,
   STUDIO_WRITE_ENDPOINTS
 } from "./studio-transport.js";
@@ -37,7 +38,7 @@ export async function submitAliasesImport(options) {
   const { saveMode, importMode, importAliases, filename, config, state } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagAliases, {
+      const response = await postJson(getStudioWriteEndpoint("importTagAliases", config), {
         mode: importMode,
         import_aliases: importAliases,
         import_filename: filename || "",
@@ -77,7 +78,7 @@ export async function submitAliasDelete(options) {
   const { saveMode, aliasKey, config } = options || {};
   if (saveMode === "post") {
     try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.deleteTagAlias, {
+      const response = await postJson(getStudioWriteEndpoint("deleteTagAlias", config), {
         alias: aliasKey,
         client_time_utc: utcTimestamp(),
         activity_context: aliasesActivityContext("delete-tag-alias", "delete-alias", "[data-delete-alias]", "alias", aliasKey)
@@ -129,7 +130,7 @@ export async function submitAliasEdit(options) {
   if (isCreate) {
     if (saveMode === "post") {
       try {
-        const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagAliases, {
+        const response = await postJson(getStudioWriteEndpoint("importTagAliases", config), {
           mode: "add",
           import_aliases: {
             aliases: {
@@ -182,7 +183,7 @@ export async function submitAliasEdit(options) {
 
   if (saveMode === "post") {
     try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.mutateTagAlias, {
+      const response = await postJson(getStudioWriteEndpoint("mutateTagAlias", config), {
         alias: originalAlias,
         new_alias: validation.alias,
         description: validation.description,

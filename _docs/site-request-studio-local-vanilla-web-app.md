@@ -17,7 +17,7 @@ Status:
 - Phase 0, Phase 1, and Phase 1A implemented
 - Phase 2 implemented
 - Phase 3 implemented for Docs Viewer manage mode
-- Phase 4 in progress with Docs management, analytics tag reads, tag assignment writes, and tag registry writes routed through the local app server
+- Phase 4 in progress with Docs management, analytics tag reads, tag assignment writes, tag alias writes, and tag registry writes routed through the local app server
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
