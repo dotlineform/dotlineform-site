@@ -198,7 +198,7 @@ async function runAudit(state, auditId) {
       activity_context: buildStudioActivityContext({
         pageId: "studio-audits",
         actionId: "run-studio-audit",
-        route: "/studio/audits/",
+        route: "/studio/audits/?mode=manage",
         controlId: "runAudit",
         controlSelector: "[data-run-audit]",
         recordIdField: "audit_id",

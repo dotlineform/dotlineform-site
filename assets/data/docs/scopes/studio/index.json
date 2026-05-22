@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T21:07:01Z",
+  "generated_at": "2026-05-22T21:22:47Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -319,7 +319,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 32032
+      "content_text_length": 32854
     },
     {
       "scope": "studio",
@@ -335,7 +335,7 @@
       "source_path": "local-studio-server-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-server-architecture.json",
-      "content_text_length": 5486
+      "content_text_length": 5701
     },
     {
       "scope": "studio",
@@ -707,7 +707,7 @@
       "source_path": "scripts-dev-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json",
-      "content_text_length": 10163
+      "content_text_length": 10493
     },
     {
       "scope": "studio",
@@ -973,7 +973,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 14282
+      "content_text_length": 14364
     },
     {
       "scope": "studio",
@@ -1375,7 +1375,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 5670
+      "content_text_length": 5775
     },
     {
       "scope": "studio",
@@ -1974,7 +1974,7 @@
       "source_path": "studio-audits.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-audits",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-audits.json",
-      "content_text_length": 1651
+      "content_text_length": 1813
     },
     {
       "scope": "studio",
@@ -2361,7 +2361,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 8004
+      "content_text_length": 8072
     },
     {
       "scope": "studio",
@@ -2427,7 +2427,7 @@
       "source_path": "studio-python-ruby-script-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-python-ruby-script-inventory.json",
-      "content_text_length": 17110,
+      "content_text_length": 17145,
       "ui_status": "urgent"
     },
     {
@@ -2626,7 +2626,7 @@
       "source_path": "scripts-studio-audit-service.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-studio-audit-service",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-studio-audit-service.json",
-      "content_text_length": 1570
+      "content_text_length": 2299
     },
     {
       "scope": "studio",
@@ -3727,7 +3727,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 16131
+      "content_text_length": 16300
     },
     {
       "scope": "studio",

@@ -243,7 +243,6 @@ What it starts:
 - `bundle exec jekyll serve --host 127.0.0.1 --port 4000`
 - `scripts/studio/studio_app_server.py`
 - `scripts/catalogue/catalogue_write_server.py`
-- `scripts/studio/audit_service.py`
 - `scripts/docs/docs_live_rebuild_watcher.py`
 
 What it does not start:
@@ -251,6 +250,7 @@ What it does not start:
 - catalogue/search regeneration scripts
 - the retired standalone tag write server
 - the standalone Docs management server unless explicitly enabled for fallback/debug use
+- the standalone Audit Service unless explicitly enabled for fallback/debug use
 
 Current local generated Studio feeds surfaced through this runtime:
 
@@ -268,8 +268,8 @@ Current localhost docs-maintenance integration surfaced through this runtime:
 
 Current localhost audit integration surfaced through this runtime:
 
-- `GET /audits`
-- `POST /audits/run`
+- `GET /studio/api/audits/audits`
+- `POST /studio/api/audits/audits/run`
 - `POST /docs/rebuild`
 
 The runner is therefore sufficient for route-shell and write-flow testing, but not a full content-generation pipeline.

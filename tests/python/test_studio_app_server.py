@@ -9,6 +9,7 @@ from pathlib import Path
 import sys
 import tempfile
 
+import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
@@ -16,6 +17,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.studio import studio_docs_api  # noqa: E402
 from scripts.studio.studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
+from scripts.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from scripts.studio.studio_app_config import runtime_config  # noqa: E402
 
 
@@ -78,6 +80,9 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["analytics"]["promote_tag_alias_preview"] == "/studio/api/analytics/promote-tag-alias-preview"
     assert runtime["services"]["analytics"]["promote_tag_alias"] == "/studio/api/analytics/promote-tag-alias"
     assert runtime["services"]["docs"]["base"] == "/studio/api/docs"
+    assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
+    assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
+    assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
     assert "tag_groups" not in runtime["data_paths"]["studio"]
     assert "tag_registry" not in runtime["data_paths"]["studio"]
     assert "tag_aliases" not in runtime["data_paths"]["studio"]
@@ -108,6 +113,19 @@ def test_analytics_tag_groups_route_returns_existing_payload() -> None:
     assert assignments_payload["ok"] is True
     assert assignments_payload["tag_assignments_version"] == "tag_assignments_v1"
     assert "001" in assignments_payload["series"]
+
+
+def test_audit_api_routes_return_registry_and_validate_runs() -> None:
+    health_payload = audit_get_payload(REPO_ROOT, "/health")
+    audits_payload = audit_get_payload(REPO_ROOT, "/audits")
+
+    assert health_payload["ok"] is True
+    assert "studio-ready-state" in health_payload["audits"]
+    assert audits_payload["ok"] is True
+    assert any(audit["audit_id"] == "studio-ready-state" for audit in audits_payload["audits"])
+
+    with pytest.raises(ValueError, match="allowlisted"):
+        audit_post_response(REPO_ROOT, "/audits/run", {"audit_id": "not-allowlisted"})
 
 
 def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:

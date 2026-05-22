@@ -48,6 +48,7 @@ from studio_app_views import (  # noqa: E402
     thumbnail_quality_view,
 )
 from studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
+from studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio_docs_api import docs_management_get_payload, docs_management_post_response  # noqa: E402
 
 
@@ -90,6 +91,9 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path.startswith("/studio/api/docs/"):
             self.send_docs_api_json(path.removeprefix("/studio/api/docs"), query)
+            return
+        if path.startswith("/studio/api/audits/"):
+            self.send_audit_api_json(path.removeprefix("/studio/api/audits"))
             return
         if path in {"/studio", "/studio/"}:
             self.send_html(studio_home_view(self.version))
@@ -184,13 +188,19 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
                 return
             self.send_docs_api_post_json(path.removeprefix("/studio/api/docs"))
             return
+        if path.startswith("/studio/api/audits/"):
+            if not self.origin_allowed_for_local_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_audit_api_post_json(path.removeprefix("/studio/api/audits"))
+            return
 
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
     def do_OPTIONS(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if not path.startswith(("/studio/api/docs/", "/studio/api/analytics/")):
+        if not path.startswith(("/studio/api/docs/", "/studio/api/analytics/", "/studio/api/audits/")):
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
         if not self.origin_allowed_for_local_api():
@@ -265,6 +275,14 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
+    def send_audit_api_json(self, api_path: str) -> None:
+        try:
+            self.send_json(audit_get_payload(self.repo_root, api_path))
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
     def send_analytics_api_post_json(self, api_path: str) -> None:
         try:
             body = self.read_json_body()
@@ -281,6 +299,18 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         try:
             body = self.read_json_body()
             status, payload = docs_management_post_response(self.repo_root, api_path, body)
+            self.send_json(payload, status)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_audit_api_post_json(self, api_path: str) -> None:
+        try:
+            body = self.read_json_body()
+            status, payload = audit_post_response(self.repo_root, api_path, body)
             self.send_json(payload, status)
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)

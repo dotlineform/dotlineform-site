@@ -11,33 +11,33 @@ sort_order: 1000
 ## Current Position
 
 Studio currently uses `bin/dev-studio` as the integrated local runner for everyday Studio development.
-That runner starts Jekyll, the local Studio app server, and the remaining separate localhost services:
+That runner starts Jekyll, the local Studio app server, and the remaining separate catalogue localhost service:
 
 - `scripts/studio/studio_app_server.py`
 - `scripts/catalogue/catalogue_write_server.py`
-- `scripts/studio/audit_service.py`
 
-Docs management and Analytics tag APIs are now owned by the local Studio app server.
+Docs management, Analytics tag APIs, and Studio audit APIs are now owned by the local Studio app server.
 The old standalone tag write server has been retired.
 The old standalone Docs management server remains available only when explicitly enabled for fallback/debug use.
+The standalone Audit Service remains available only when explicitly enabled for fallback/debug use.
 
 When docs live watching is enabled, the same runner also starts:
 
 - `scripts/docs/docs_live_rebuild_watcher.py`
 
 This means the current implementation is already an integrated local workflow, but not a combined server process.
-Each local service still owns its own port, health surface, CORS handling, route set, logging, and write boundary.
+The remaining separate catalogue service still owns its own port, health surface, CORS handling, route set, logging, and write boundary.
 
 That remaining separation is intentional for the current implementation phase.
 The catalogue write service has grown into the active JSON-led catalogue source writer, but it still benefits from a narrow domain boundary.
-The audit service has a distinct safety profile because it runs only allowlisted local checks.
+The audit runner still has a distinct safety profile because it runs only allowlisted local checks, but its active HTTP ownership now sits inside the local Studio app.
 
 Keeping these services separate for now reduces regression risk:
 
 - migrated tag write behavior stays inside the local Studio app server and its analytics module
 - catalogue source writes get their own explicit allowlist
 - docs source writes and generated-data reads stay isolated from catalogue writes through the local Studio app's Docs module
-- audit commands stay isolated from write endpoints
+- audit commands stay allowlisted inside a dedicated local app API adapter
 - backup, validation, and rebuild behavior can be tested within each domain before shared server infrastructure is introduced
 
 The architecture described below is still the preferred development option for a future consolidation pass.

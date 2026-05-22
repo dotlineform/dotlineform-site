@@ -221,6 +221,12 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "data_sharing_review": "/studio/api/docs/data-sharing/review",
         "data_sharing_apply": "/studio/api/docs/data-sharing/apply",
     },
+    "audits": {
+        "base": "/studio/api/audits",
+        "health": "/studio/api/audits/health",
+        "audits": "/studio/api/audits/audits",
+        "run": "/studio/api/audits/audits/run",
+    },
 }
 
 STUDIO_STATE_CONFIG: dict[str, object] = {

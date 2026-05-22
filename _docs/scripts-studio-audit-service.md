@@ -14,11 +14,13 @@ Script:
 ./scripts/studio/audit_service.py --port 8790
 ```
 
-`bin/dev-studio` starts this service automatically.
+Normal `bin/dev-studio` sessions do not start this standalone service by default because the local Studio app server owns the active audit HTTP surface through `scripts/studio/studio_audit_api.py`.
+Set `AUDIT_SERVICE_ENABLED=1` only for fallback/debug runs that intentionally need the old standalone process.
 
 ## Purpose
 
-The audit service is a localhost-only read service for allowlisted Studio maintenance audits.
+The audit service module owns the allowlisted Studio maintenance audit registry and reusable run logic.
+The active local Studio endpoints are served by `scripts/studio/studio_audit_api.py`; the standalone script remains available as a localhost-only fallback/debug service.
 
 The first allowlisted audit is:
 
@@ -28,9 +30,12 @@ The first allowlisted audit is:
 
 | Method | Path | Purpose |
 |---|---|---|
-| `GET` | `/health` | service availability check |
-| `GET` | `/audits` | list allowlisted audit IDs and labels |
-| `POST` | `/audits/run` | run one allowlisted audit by ID |
+| `GET` | `/studio/api/audits/health` | service availability check in the local Studio app |
+| `GET` | `/studio/api/audits/audits` | list allowlisted audit IDs and labels in the local Studio app |
+| `POST` | `/studio/api/audits/audits/run` | run one allowlisted audit by ID in the local Studio app |
+| `GET` | `/health` | standalone fallback service availability check |
+| `GET` | `/audits` | standalone fallback registry read |
+| `POST` | `/audits/run` | standalone fallback audit run |
 
 Run request:
 
@@ -44,7 +49,7 @@ The response includes `status`, `exit_code`, `summary`, `totals`, `findings`, ti
 
 Audit failures are returned as successful service responses with `status: "failed"` and a non-zero `exit_code`. Invalid audit IDs return a request error.
 
-When the request includes valid Studio activity context from `/studio/audits/`, the service appends one unified Studio activity row with script purpose `run audit`. The detail items include the audit label, pass/warn/fail status, error and warning counts, and duration.
+When the request includes valid Studio activity context from `/studio/audits/?mode=manage`, the local app API appends one unified Studio activity row with script purpose `run audit`. The detail items include the audit label, pass/warn/fail status, error and warning counts, and duration.
 
 ## Security Boundary
 

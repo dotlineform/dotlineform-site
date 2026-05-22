@@ -196,6 +196,7 @@ Relevant files:
 
 - `scripts/catalogue/catalogue_write_server.py`
 - `scripts/docs/docs_management_server.py`
+- `scripts/studio/studio_audit_api.py`
 - `scripts/studio/audit_service.py`
 - `scripts/script_logging.py`
 - `scripts/studio_activity.py`

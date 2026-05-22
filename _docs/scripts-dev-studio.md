@@ -74,6 +74,9 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   default: `8789`
 - `AUDIT_SERVICE_PORT`
   default: `8790`
+- `AUDIT_SERVICE_ENABLED`
+  default: `0`
+  set to `1` only for fallback/debug runs that intentionally need the standalone audit service
 - `DOCS_STARTUP_REBUILD_SCOPES`
   default: blank
   accepted values: configured docs scope ids from `scripts/docs/docs_scopes.json`, or comma-separated combinations
@@ -103,6 +106,7 @@ export STUDIO_APP_PORT=8765
 export CATALOGUE_WRITE_PORT=8798
 export DOCS_MANAGEMENT_PORT=8799
 export AUDIT_SERVICE_PORT=8800
+export AUDIT_SERVICE_ENABLED=0
 export DOCS_WATCH_DEBOUNCE_SECONDS=1.5
 export DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8
 ```
@@ -124,7 +128,7 @@ Before it starts any rebuilds or long-running servers, `bin/dev-studio` checks t
 2. Local Studio App on `STUDIO_APP_HOST:STUDIO_APP_PORT` when `STUDIO_APP_ENABLED` is not `0`
 3. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT`
 4. Docs Management Server on `127.0.0.1:DOCS_MANAGEMENT_PORT` only when `DOCS_MANAGEMENT_SERVER_ENABLED` is not `0`
-5. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT`
+5. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT` only when `AUDIT_SERVICE_ENABLED` is not `0`
 
 If any port is unavailable, the runner exits immediately with a message naming the affected service and environment variable override.
 
@@ -222,6 +226,7 @@ Docs management is handled by the Local Studio App unless `DOCS_MANAGEMENT_SERVE
 ```
 
 - default URL: `http://127.0.0.1:8790`
+- disabled by default; active Studio audit endpoints are served by the local Studio app at `/studio/api/audits/...`
 - related doc: [Studio Audit Service](/docs/?scope=studio&doc=scripts-studio-audit-service)
 
 ### Docs Live Rebuild Watcher
@@ -247,7 +252,7 @@ At startup the runner prints quick links for:
 - Local Studio App
 - Catalogue Write Server
 - Docs Management Server
-- Audit Service
+- Audit Service status
 - startup docs rebuild scopes
 - startup catalogue lookup rebuild status
 - Docs Live Watcher status
@@ -265,7 +270,7 @@ When you press `Ctrl+C`, it:
 - stops the Local Studio App when enabled
 - stops the Catalogue Write Server
 - stops the Docs Management Server
-- stops the Audit Service
+- stops the Audit Service when enabled
 - stops the Docs Live Rebuild Watcher when enabled
 - waits for those child processes before exiting
 

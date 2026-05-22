@@ -10,7 +10,7 @@ sort_order: 5000
 
 Route:
 
-- `/studio/audits/`
+- `/studio/audits/?mode=manage`
 
 The Studio Audits page surfaces local maintenance audits inside Studio.
 
@@ -20,15 +20,16 @@ The first version lists the Studio ready-state audit and provides a Run command.
 
 The page uses:
 
-- `studio/audits/index.md`
 - `assets/studio/js/studio-audits.js`
 - `assets/studio/js/studio-transport.js`
+- `scripts/studio/studio_audit_api.py`
 - `scripts/studio/audit_service.py`
 - `scripts/checks/audit_studio_ready_state.py`
 
 Visible runtime copy lives under `ui_text.studio_audits` in `assets/studio/data/studio_config.json`.
 
 The local service endpoint definitions live in `assets/studio/js/studio-transport.js`, matching the existing Studio transport pattern.
+The active browser endpoints are hosted by the local Studio app server under `/studio/api/audits/...`.
 
 ## Ready State
 
@@ -48,11 +49,11 @@ The page marks busy while an audit run is in progress and returns to ready after
 
 When the audit service is unavailable, the page stays readable, disables the Run command, and exposes `data-studio-service="unavailable"`.
 
-When the service is available, the page fetches `/audits` to list allowlisted audits. It currently expects:
+When the service is available, the page fetches `/studio/api/audits/audits` to list allowlisted audits. It currently expects:
 
 - `studio-ready-state`
 
-Running the audit posts only the audit ID to `/audits/run`. The browser never sends command text, paths, shell flags, environment variables, or working directories.
+Running the audit posts only the audit ID to `/studio/api/audits/audits/run`. The browser never sends command text, paths, shell flags, environment variables, or working directories.
 
 ## Related References
 

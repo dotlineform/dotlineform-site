@@ -65,9 +65,9 @@ const DATA_SHARING_ENDPOINTS = Object.freeze({
 });
 
 const AUDIT_SERVICE_ENDPOINTS = Object.freeze({
-  health: "http://127.0.0.1:8790/health",
-  audits: "http://127.0.0.1:8790/audits",
-  run: "http://127.0.0.1:8790/audits/run"
+  health: "/studio/api/audits/health",
+  audits: "/studio/api/audits/audits",
+  run: "/studio/api/audits/audits/run"
 });
 
 export {

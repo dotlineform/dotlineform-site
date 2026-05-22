@@ -116,10 +116,10 @@ Current runner behavior:
 
 - optionally rebuilds Docs Viewer data when `DOCS_STARTUP_REBUILD_SCOPES` is set
 - starts Jekyll on `127.0.0.1:4000`
-- starts the local Studio app server for Studio shell, Docs management, and Analytics tag APIs
+- starts the local Studio app server for Studio shell, Docs management, Analytics tag APIs, and Studio audit APIs
 - starts `scripts/catalogue/catalogue_write_server.py`
 - skips the standalone `scripts/docs/docs_management_server.py` by default because Docs management is hosted by the local Studio app
-- starts `scripts/studio/audit_service.py`
+- skips the standalone `scripts/studio/audit_service.py` by default because Studio audit APIs are hosted by the local Studio app
 - starts the docs live rebuild watcher by default
 - keeps all long-running processes attached to the current terminal
 - stops all long-running processes on `Ctrl+C`

@@ -909,7 +909,7 @@
     },
     "studio-audits": {
       "label": "studio audits",
-      "route": "/studio/audits/",
+      "route": "/studio/audits/?mode=manage",
       "actions": {
         "run-studio-audit": {
           "label": "run studio audit",
@@ -917,7 +917,7 @@
           "control_id": "runAudit",
           "control_selector": "[data-run-audit]",
           "control_label": "Run",
-          "endpoint": "/audits/run",
+          "endpoint": "/studio/api/audits/audits/run",
           "record_family": "audit",
           "record_id_field": "audit_id",
           "no_change_activity": "report",

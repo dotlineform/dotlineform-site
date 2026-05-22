@@ -21,14 +21,14 @@ Status:
 - Phase 0, Phase 1, and Phase 1A are implemented
 - Phase 2 is implemented
 - Phase 3 is implemented for Docs Viewer manage mode and the Docs Broken Links report replacement
-- Phase 4 is in progress with Docs management and analytics tag routes consolidated into the local app server
+- Phase 4 is in progress with Docs management, Data Sharing, analytics tag routes, and Studio audit routes consolidated into the local app server
 - Phase 5 has started with the local Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Data Sharing, Catalogue Field Registry, Studio Works, and catalogue editor route shells
 
 ## Remaining Work Snapshot
 
 Next suitable slices, in dependency order:
 
-1. Consolidate the remaining catalogue, audit, and project-state sibling APIs into the local app server one route family at a time.
+1. Consolidate the remaining catalogue and project-state sibling APIs into the local app server one route family at a time.
 2. Finish retiring or redirecting old Jekyll Studio route shells after each local replacement is verified.
 3. Define the final launcher split so local Studio and public Jekyll preview/build are explicit commands instead of one bridge command.
 4. Start the projection contract work once route and service ownership is less fluid.
@@ -115,6 +115,7 @@ Current commit point:
 - Studio route URL building now preserves configured route query state such as `?mode=manage` while appending record parameters for migrated catalogue editor links
 - Docs Broken Links moved into Docs Viewer reports rather than becoming another migrated Studio route shell
 - Data Sharing dashboard, prepare, and review route shells are now local-app hosted and call Data Sharing through the local Docs API adapter instead of the old standalone docs-management service URL
+- Studio Audits now calls `/studio/api/audits/...` through the local app server instead of requiring the old standalone audit service URL
 - non-Docs write/manage APIs are intentionally still disabled or partial where not yet migrated
 
 ## Phase 0: Published Surface Cleanup
@@ -272,11 +273,11 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Define route modules for catalogue, docs, analytics, audit, and shared Studio app routes. | partial; docs and analytics modules started |
-| Move endpoint ownership into the Python app server slice by slice. | partial; Docs management, Data Sharing, analytics tag read routes, active tag write routes, and first analytics route shells moved |
-| Reuse extracted Python domain modules instead of proxying to old services by default. | partial; Docs management, Data Sharing, and analytics tag routes use existing domain functions directly |
-| Preserve loopback binding, CORS limits, write allowlists, backups, compact logs, and preview/apply boundaries. | partial; Docs/Data Sharing writes and analytics tag writes preserve write allowlists, backups, compact logs, activity attachment, and preview/apply split where applicable |
-| Update `bin/dev-studio` to start the app server and only necessary background tasks. | partial; Docs management sibling and tag write sibling retired from default startup |
+| Define route modules for catalogue, docs, analytics, audit, and shared Studio app routes. | partial; docs, analytics, and audit modules started |
+| Move endpoint ownership into the Python app server slice by slice. | partial; Docs management, Data Sharing, analytics tag read routes, active tag write routes, Studio audit routes, and first analytics route shells moved |
+| Reuse extracted Python domain modules instead of proxying to old services by default. | partial; Docs management, Data Sharing, analytics tag routes, and Studio audit routes use existing domain functions directly |
+| Preserve loopback binding, CORS limits, write allowlists, backups, compact logs, and preview/apply boundaries. | partial; Docs/Data Sharing writes, analytics tag writes, and Studio audit runs preserve existing guardrails, compact logs, and activity attachment where applicable |
+| Update `bin/dev-studio` to start the app server and only necessary background tasks. | partial; Docs management sibling, tag write sibling, and audit sibling retired from default startup |
 | Keep public Jekyll preview/build as an explicit separate action. | pending |
 | Define the final launcher split while keeping `bin/dev-studio` as a bridge command during migration. | pending |
 
@@ -295,6 +296,8 @@ The deprecated tag-server `POST /build-docs` path is intentionally not migrated 
 The tag registry, tag aliases, series-tags, and per-series tag editor shells now run in the local app and are covered by `tests/smoke/local_studio_app_tag_routes.py`, which verifies local analytics API reads and no `8787` fallback requests.
 The old Jekyll analytics tag route files have been removed, so `bin/dev-studio` no longer starts the standalone tag write server by default.
 The standalone tag write server HTTP entrypoint has been removed; reusable tag domain modules remain under `scripts/analytics/`.
+Studio Audits now uses `scripts/studio/studio_audit_api.py` for local app `GET /studio/api/audits/audits` and `POST /studio/api/audits/audits/run`.
+The adapter reuses the allowlisted registry and run logic from `scripts/studio/audit_service.py`, and `bin/dev-studio` skips the standalone audit process unless `AUDIT_SERVICE_ENABLED=1`.
 
 Transition cleanup backlog:
 
@@ -303,6 +306,7 @@ Transition cleanup backlog:
 | Remove old `127.0.0.1:8787` tag write-server fallbacks from `assets/studio/js/studio-transport.js`. | All tag editor/import routes are hosted by the local app shell and use local runtime config. | done |
 | Stop `bin/dev-studio` from starting `scripts/analytics/tag_write_server.py` by default. | The local app server owns save-tags, assignment import, registry import/mutation, alias import/mutation, and promote/demote; the deprecated `/build-docs` path is excluded rather than migrated; all active tag editor pages are local-app hosted. | done |
 | Retire or archive `scripts/analytics/tag_write_server.py` as an HTTP entrypoint while keeping reusable analytics domain modules. | No migrated UI or fallback/debug workflow needs the standalone tag write HTTP process. | done |
+| Stop `bin/dev-studio` from starting `scripts/studio/audit_service.py` by default. | The local app server owns the active Studio audit HTTP endpoints. | done |
 | Remove hardcoded old tag write URLs from tests and browser module fixtures. | Runtime-config endpoints cover the migrated routes and fallback compatibility is no longer required. | done; remaining 8787 references are negative assertions only |
 | Remove static JSON fallbacks for analytics tag data from migrated local-only views where the fallback no longer serves a Jekyll-hosted page. | The corresponding view no longer runs in Jekyll and public output has no Studio shell for it. | done |
 | Retire migrated Jekyll Studio route files or replace them with local-only transition redirects. | Each route family has a verified local app view and no public build dependency. | partial; analytics tag route files plus audits, project-state, thumbnail-quality, bulk-add-work, activity, and data-sharing route files retired |
@@ -323,7 +327,7 @@ Outcomes:
 | Migrate catalogue editors and dashboards. | partial; Catalogue dashboard, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, and the catalogue editor shells are local-app hosted |
 | Migrate analytics/tag routes. | partial; analytics dashboard, tag groups, registry, aliases, series-tags, and per-series tag editor are local-app hosted |
 | Migrate data-sharing routes. | done; dashboard, prepare, and review shells are local-app hosted and use local Docs API Data Sharing endpoints |
-| Migrate audit and project-state routes. | partial; Studio Audits, Project State, and Thumbnail Quality shells are local-app hosted while their sibling service APIs remain in place |
+| Migrate audit and project-state routes. | partial; Studio Audits shell and API are local-app hosted; Project State and Thumbnail Quality shells are local-app hosted while catalogue/docs sibling APIs remain in place |
 | Add an explicit public-site link resolver for Studio links to works, series, moments, `/library/`, and `/analysis/`. | partial; runtime config now exposes public-preview and production bases, `studio-navigation.js` has `buildPublicSiteUrl(...)`, and the migrated per-series tag editor uses it for series/work header links; broader route adoption remains pending |
 | Replace ad hoc Studio route query concatenation with the shared route URL builder as routes are migrated. | partial; catalogue editor and series-tag editor links now preserve configured route query state while appending record ids |
 | Retire Jekyll Studio route files after each replacement is verified. | partial; analytics dashboard/tag route files plus catalogue dashboard, data-sharing, audits, project-state, thumbnail-quality, bulk-add-work, activity, catalogue-field-registry, catalogue-status, studio-works, and catalogue editor route files retired |
@@ -340,7 +344,7 @@ Do not let relative public-content links stay on the Studio app host, and do not
 The first helper is in place; adopt it as each migrated route's public-content links are touched rather than doing a broad blind rewrite.
 Catalogue dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, and the Catalogue Series/Work/Work Detail/Moment editor shells are the first operational route shells moved in Phase 5.
 They keep the existing vanilla browser modules and unavailable-service behavior, and only change the host shell from Jekyll to the local app.
-The audit, catalogue, and docs-service API calls behind those pages are not yet consolidated; migrate those only when the route-family API boundary is ready.
+The catalogue and docs-service API calls behind Project State, Thumbnail Quality, Catalogue Drafts, Bulk Add Work, Studio Activity, and the catalogue editors are not yet consolidated; migrate those only when the route-family API boundary is ready.
 The Catalogue dashboard keeps the existing `studio-dashboard.js` metric hydration and now links to manage-mode local Catalogue routes.
 The Analytics dashboard also uses `studio-dashboard.js` and links to the local Analytics tag routes.
 Catalogue Field Registry is read-only and uses checked-in Studio data, so it does not add a new write/API consolidation dependency.

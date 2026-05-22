@@ -34,6 +34,7 @@ CATALOGUE_WRITE_PORT="${CATALOGUE_WRITE_PORT:-8788}"
 DOCS_MANAGEMENT_PORT="${DOCS_MANAGEMENT_PORT:-8789}"
 DOCS_MANAGEMENT_SERVER_ENABLED="${DOCS_MANAGEMENT_SERVER_ENABLED:-0}"
 AUDIT_SERVICE_PORT="${AUDIT_SERVICE_PORT:-8790}"
+AUDIT_SERVICE_ENABLED="${AUDIT_SERVICE_ENABLED:-0}"
 DOCS_STARTUP_REBUILD_SCOPES="${DOCS_STARTUP_REBUILD_SCOPES:-}"
 CATALOGUE_STARTUP_LOOKUP_REBUILD="${CATALOGUE_STARTUP_LOOKUP_REBUILD:-off}"
 DOCS_WATCH_ENABLED="${DOCS_WATCH_ENABLED:-1}"
@@ -228,7 +229,11 @@ if [ "$DOCS_MANAGEMENT_SERVER_ENABLED" != "0" ]; then
 else
   echo "Docs Management Server: disabled (handled by Local Studio App)"
 fi
-echo "Audit Service: http://127.0.0.1:$AUDIT_SERVICE_PORT"
+if [ "$AUDIT_SERVICE_ENABLED" != "0" ]; then
+  echo "Audit Service: http://127.0.0.1:$AUDIT_SERVICE_PORT"
+else
+  echo "Audit Service: disabled (handled by Local Studio App)"
+fi
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   echo "Series Tag Editor: http://$STUDIO_APP_HOST:$STUDIO_APP_PORT/studio/analytics/series-tag-editor/?series=<series_id>"
 fi
@@ -265,7 +270,9 @@ require_open_port "Catalogue Write Server" "127.0.0.1" "$CATALOGUE_WRITE_PORT" "
 if [ "$DOCS_MANAGEMENT_SERVER_ENABLED" != "0" ]; then
   require_open_port "Docs Management Server" "127.0.0.1" "$DOCS_MANAGEMENT_PORT" "DOCS_MANAGEMENT_PORT"
 fi
-require_open_port "Audit Service" "127.0.0.1" "$AUDIT_SERVICE_PORT" "AUDIT_SERVICE_PORT"
+if [ "$AUDIT_SERVICE_ENABLED" != "0" ]; then
+  require_open_port "Audit Service" "127.0.0.1" "$AUDIT_SERVICE_PORT" "AUDIT_SERVICE_PORT"
+fi
 
 if [ "$DOTLINEFORM_BACKUP_RETENTION" = "off" ] || [ "$DOTLINEFORM_BACKUP_RETENTION" = "0" ]; then
   echo "Skipping Studio backup retention cleanup"
@@ -314,8 +321,10 @@ if [ "$DOCS_MANAGEMENT_SERVER_ENABLED" != "0" ]; then
   DOCS_MANAGEMENT_PID=$!
 fi
 
-"$PYTHON_BIN" scripts/studio/audit_service.py --port "$AUDIT_SERVICE_PORT" &
-AUDIT_SERVICE_PID=$!
+if [ "$AUDIT_SERVICE_ENABLED" != "0" ]; then
+  "$PYTHON_BIN" scripts/studio/audit_service.py --port "$AUDIT_SERVICE_PORT" &
+  AUDIT_SERVICE_PID=$!
+fi
 
 if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
   "$PYTHON_BIN" scripts/docs/docs_live_rebuild_watcher.py \
@@ -341,7 +350,7 @@ while true; do
     wait "$DOCS_MANAGEMENT_PID"
     break
   fi
-  if ! kill -0 "$AUDIT_SERVICE_PID" 2>/dev/null; then
+  if [ -n "$AUDIT_SERVICE_PID" ] && ! kill -0 "$AUDIT_SERVICE_PID" 2>/dev/null; then
     wait "$AUDIT_SERVICE_PID"
     break
   fi

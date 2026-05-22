@@ -1,0 +1,42 @@
+{
+  "id": "change-2026-05-22-mounted-local-studio-audit-api",
+  "date": "2026-05-22",
+  "title": "Mounted Local Studio Audit API",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "scripts",
+    "workflow"
+  ],
+  "summary": "Moved the active Studio audit health, registry, and run endpoints into the local Studio app server while preserving the existing allowlisted audit runner.",
+  "effect": "Studio Audits no longer requires the standalone audit service during normal local Studio sessions. The local app owns `/studio/api/audits/...`, `bin/dev-studio` skips the old sibling process by default, and the standalone script remains available for fallback/debug runs.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "studio-audits",
+    "service-consolidation"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app-implementation-plan",
+    "local-studio-app",
+    "studio-audits",
+    "scripts-studio-audit-service",
+    "scripts-dev-studio",
+    "studio-runtime"
+  ],
+  "related_files": [
+    "scripts/studio/audit_service.py",
+    "scripts/studio/studio_audit_api.py",
+    "scripts/studio/studio_app_server.py",
+    "scripts/studio/studio_app_config.py",
+    "assets/studio/js/studio-audits.js",
+    "assets/studio/js/studio-transport.js",
+    "bin/dev-studio",
+    "tests/smoke/local_studio_app_audits_route.py"
+  ]
+}

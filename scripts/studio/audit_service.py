@@ -132,6 +132,128 @@ def build_audit_registry(repo_root: Path) -> Dict[str, AuditDefinition]:
     }
 
 
+def health_payload(repo_root: Path, audits: Optional[Dict[str, AuditDefinition]] = None) -> Dict[str, Any]:
+    audit_registry = audits or build_audit_registry(repo_root)
+    return {
+        "ok": True,
+        "service": "audit_service",
+        "audits": sorted(audit_registry.keys()),
+        "time_utc": utc_now(),
+    }
+
+
+def audits_payload(repo_root: Path, audits: Optional[Dict[str, AuditDefinition]] = None) -> Dict[str, Any]:
+    audit_registry = audits or build_audit_registry(repo_root)
+    return {
+        "ok": True,
+        "audits": [audit.public_payload() for audit in audit_registry.values()],
+        "time_utc": utc_now(),
+    }
+
+
+def run_audit_payload(
+    repo_root: Path,
+    body: Dict[str, Any],
+    audits: Optional[Dict[str, AuditDefinition]] = None,
+    *,
+    activity_endpoint: str = RUN_AUDIT_PATH,
+    log_event=None,
+    append_activity=None,
+) -> Dict[str, Any]:
+    audit_registry = audits or build_audit_registry(repo_root)
+    audit_id = str(body.get("audit_id") or "").strip()
+    if not audit_id:
+        raise ValueError("audit_id is required")
+    audit = audit_registry.get(audit_id)
+    if audit is None:
+        raise ValueError("audit_id is not allowlisted")
+
+    started_at = utc_now()
+    started = time.monotonic()
+    result = subprocess.run(
+        audit.argv,
+        cwd=repo_root,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    finished_at = utc_now()
+    duration = time.monotonic() - started
+
+    try:
+        parsed = json.loads(result.stdout or "{}")
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"audit returned invalid JSON: {exc}") from exc
+    if not isinstance(parsed, dict):
+        raise RuntimeError("audit returned invalid JSON payload")
+
+    summary = parsed.get("summary") if isinstance(parsed.get("summary"), dict) else {}
+    response_payload: Dict[str, Any] = {
+        "ok": True,
+        "audit_id": audit.audit_id,
+        "label": audit.label,
+        "status": str(parsed.get("status") or ("passed" if result.returncode == 0 else "failed")),
+        "exit_code": result.returncode,
+        "started_at": started_at,
+        "finished_at": finished_at,
+        "duration_seconds": round(duration, 3),
+        "summary": {
+            "errors": int(summary.get("errors") or 0),
+            "warnings": int(summary.get("warnings") or 0),
+        },
+        "totals": parsed.get("totals") if isinstance(parsed.get("totals"), dict) else {},
+        "findings": parsed.get("findings") if isinstance(parsed.get("findings"), list) else [],
+        "stdout": result.stdout,
+        "stderr": result.stderr,
+    }
+
+    try:
+        activity_context = normalize_activity_context_from_contract(
+            repo_root,
+            body.get("activity_context"),
+            endpoint=activity_endpoint,
+            record_id=audit.audit_id,
+        )
+        if activity_context and append_activity:
+            errors = response_payload["summary"]["errors"]
+            warnings = response_payload["summary"]["warnings"]
+            status = "failed" if response_payload["status"] == "failed" or errors else ("warning" if warnings else "completed")
+            response_payload["activity_context"] = activity_context
+            append_activity(
+                studio_activity_entry(
+                    activity_context,
+                    script_purpose_id="run-audit",
+                    now_utc=finished_at,
+                    status=status,
+                    record_groups={"docs": [audit.audit_id]},
+                    detail_items=[
+                        f"Ran Studio audit: {audit.label}.",
+                        f"Status: {response_payload['status']}; errors: {errors}; warnings: {warnings}.",
+                        f"Duration: {response_payload['duration_seconds']} seconds.",
+                    ],
+                    source_refs=[{"kind": "log", "path": str(LOGS_REL_DIR / "audit_service.log")}],
+                )
+            )
+            response_payload["activity_log"] = {"written_count": 1}
+    except Exception as exc:  # noqa: BLE001
+        response_payload["activity_log"] = {"written_count": 0, "error": str(exc)}
+
+    if log_event:
+        log_event(
+            "audit_run",
+            {
+                "audit_id": audit.audit_id,
+                "status": response_payload["status"],
+                "exit_code": result.returncode,
+                "errors": response_payload["summary"]["errors"],
+                "warnings": response_payload["summary"]["warnings"],
+                "duration_seconds": response_payload["duration_seconds"],
+            },
+        )
+    return response_payload
+
+
 class AuditServiceServer(ThreadingHTTPServer):
     def __init__(
         self,
@@ -193,28 +315,11 @@ class Handler(BaseHTTPRequestHandler):
 
         request_path = self._request_path()
         if request_path == "/health":
-            self._send_json(
-                HTTPStatus.OK,
-                {
-                    "ok": True,
-                    "service": "audit_service",
-                    "audits": sorted(self.server.audits.keys()),
-                    "time_utc": utc_now(),
-                },
-                allowed,
-            )
+            self._send_json(HTTPStatus.OK, health_payload(self.server.repo_root, self.server.audits), allowed)
             return
 
         if request_path == "/audits":
-            self._send_json(
-                HTTPStatus.OK,
-                {
-                    "ok": True,
-                    "audits": [audit.public_payload() for audit in self.server.audits.values()],
-                    "time_utc": utc_now(),
-                },
-                allowed,
-            )
+            self._send_json(HTTPStatus.OK, audits_payload(self.server.repo_root, self.server.audits), allowed)
             return
 
         self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
@@ -241,94 +346,12 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_run_audit(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        audit_id = str(body.get("audit_id") or "").strip()
-        if not audit_id:
-            raise ValueError("audit_id is required")
-        audit = self.server.audits.get(audit_id)
-        if audit is None:
-            raise ValueError("audit_id is not allowlisted")
-
-        started_at = utc_now()
-        started = time.monotonic()
-        result = subprocess.run(
-            audit.argv,
-            cwd=self.server.repo_root,
-            text=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=False,
-        )
-        finished_at = utc_now()
-        duration = time.monotonic() - started
-
-        audit_payload: Dict[str, Any]
-        try:
-            parsed = json.loads(result.stdout or "{}")
-        except json.JSONDecodeError as exc:
-            raise RuntimeError(f"audit returned invalid JSON: {exc}") from exc
-        if not isinstance(parsed, dict):
-            raise RuntimeError("audit returned invalid JSON payload")
-        audit_payload = parsed
-
-        summary = audit_payload.get("summary") if isinstance(audit_payload.get("summary"), dict) else {}
-        response_payload = {
-            "ok": True,
-            "audit_id": audit.audit_id,
-            "label": audit.label,
-            "status": str(audit_payload.get("status") or ("passed" if result.returncode == 0 else "failed")),
-            "exit_code": result.returncode,
-            "started_at": started_at,
-            "finished_at": finished_at,
-            "duration_seconds": round(duration, 3),
-            "summary": {
-                "errors": int(summary.get("errors") or 0),
-                "warnings": int(summary.get("warnings") or 0),
-            },
-            "totals": audit_payload.get("totals") if isinstance(audit_payload.get("totals"), dict) else {},
-            "findings": audit_payload.get("findings") if isinstance(audit_payload.get("findings"), list) else [],
-            "stdout": result.stdout,
-            "stderr": result.stderr,
-        }
-        try:
-            activity_context = normalize_activity_context_from_contract(
-                self.server.repo_root,
-                body.get("activity_context"),
-                endpoint=RUN_AUDIT_PATH,
-                record_id=audit.audit_id,
-            )
-            if activity_context:
-                errors = response_payload["summary"]["errors"]
-                warnings = response_payload["summary"]["warnings"]
-                status = "failed" if response_payload["status"] == "failed" or errors else ("warning" if warnings else "completed")
-                response_payload["activity_context"] = activity_context
-                self.server.append_activity(
-                    studio_activity_entry(
-                        activity_context,
-                        script_purpose_id="run-audit",
-                        now_utc=finished_at,
-                        status=status,
-                        record_groups={"docs": [audit.audit_id]},
-                        detail_items=[
-                            f"Ran Studio audit: {audit.label}.",
-                            f"Status: {response_payload['status']}; errors: {errors}; warnings: {warnings}.",
-                            f"Duration: {response_payload['duration_seconds']} seconds.",
-                        ],
-                        source_refs=[{"kind": "log", "path": str(LOGS_REL_DIR / "audit_service.log")}],
-                    )
-                )
-                response_payload["activity_log"] = {"written_count": 1}
-        except Exception as exc:  # noqa: BLE001
-            response_payload["activity_log"] = {"written_count": 0, "error": str(exc)}
-        self.server.log_event(
-            "audit_run",
-            {
-                "audit_id": audit.audit_id,
-                "status": response_payload["status"],
-                "exit_code": result.returncode,
-                "errors": response_payload["summary"]["errors"],
-                "warnings": response_payload["summary"]["warnings"],
-                "duration_seconds": response_payload["duration_seconds"],
-            },
+        response_payload = run_audit_payload(
+            self.server.repo_root,
+            body,
+            self.server.audits,
+            log_event=self.server.log_event,
+            append_activity=self.server.append_activity,
         )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
