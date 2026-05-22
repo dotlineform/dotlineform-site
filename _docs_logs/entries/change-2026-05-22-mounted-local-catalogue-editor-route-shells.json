@@ -1,56 +1,63 @@
 {
-    "id": "change-2026-05-22-added-studio-route-url-builder",
-    "date": "2026-05-22",
-    "title": "Added Studio Route URL Builder",
-    "status": "implemented",
-    "type": "migration",
-    "domains": [
-        "runtime",
-        "studio",
-        "catalogue",
-        "testing"
-    ],
-    "summary": "Added a shared Studio route URL builder and switched catalogue editor links that append record parameters away from ad hoc query-string concatenation.",
-    "source": {
-        "file": "_docs/local-studio-app-implementation-plan.md",
-        "archive": "change-request"
-    },
-    "subjects": [
-        "local-studio-app",
-        "runtime-config",
-        "navigation",
-        "catalogue-editors",
-        "route-urls"
-    ],
-    "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
-    "related_docs": [
-        "local-studio-app",
-        "local-studio-app-implementation-plan",
-        "site-request-studio-local-vanilla-web-app",
-        "studio-runtime"
-    ],
-    "related_files": [
-        "assets/studio/js/studio-config.js",
-        "assets/studio/data/studio_config.json",
-        "assets/studio/js/catalogue-status.js",
-        "assets/studio/js/catalogue-work-sections.js",
-        "assets/studio/js/catalogue-work-detail-actions.js",
-        "assets/studio/js/catalogue-work-detail-sections.js",
-        "assets/studio/js/catalogue-series-actions.js",
-        "assets/studio/js/catalogue-series-membership.js",
-        "assets/studio/js/catalogue-moment-actions.js",
-        "assets/studio/js/tag-registry-state.js",
-        "assets/studio/js/series-tags.js",
-        "tests/smoke/local_studio_navigation_adapter.py",
-        "_docs/local-studio-app.md",
-        "_docs/local-studio-app-implementation-plan.md",
-        "_docs/site-request-studio-local-vanilla-web-app.md",
-        "_docs/studio-runtime.md"
-    ],
-    "effect": "Configured Studio routes can now keep transition query state such as `?mode=manage` while browser modules add record parameters such as `work`, `detail`, `series`, or `moment`. This removes a local-app migration risk where callers that used string concatenation could accidentally produce invalid URLs or drop manage mode after route config moved away from Jekyll shells.",
-    "verification": [
-        "Added route URL builder assertions to tests/smoke/local_studio_navigation_adapter.py",
-        "JavaScript syntax checks covered the touched Studio config and route modules",
-        "Focused local Studio navigation and catalogue editor route smokes covered the changed URL behavior"
-    ]
+  "id": "change-2026-05-22-mounted-local-catalogue-editor-route-shells",
+  "date": "2026-05-22",
+  "title": "Mounted Local Catalogue Editor Route Shells",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "studio",
+    "catalogue",
+    "testing"
+  ],
+  "summary": "Mounted the Catalogue Series, Work, Work Detail, and Moment editor route shells in the local Studio app server and retired their old Jekyll route shells.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "catalogue-editors",
+    "route-shells",
+    "jekyll-retirement"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app",
+    "catalogue-series-editor",
+    "catalogue-work-editor",
+    "catalogue-work-detail-editor",
+    "catalogue-moment-editor",
+    "studio-runtime"
+  ],
+  "related_files": [
+    "scripts/studio/studio_app_config.py",
+    "scripts/studio/studio_catalogue_views.py",
+    "scripts/studio/studio_app_views.py",
+    "scripts/studio/studio_app_server.py",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js",
+    "tests/python/test_studio_app_server.py",
+    "tests/smoke/local_studio_app_catalogue_editor_routes.py",
+    "studio/catalogue-series/index.md",
+    "studio/catalogue-work/index.md",
+    "studio/catalogue-work-detail/index.md",
+    "studio/catalogue-moment/index.md",
+    "_docs/catalogue-series-editor.md",
+    "_docs/catalogue-work-editor.md",
+    "_docs/catalogue-work-detail-editor.md",
+    "_docs/catalogue-moment-editor.md",
+    "_docs/studio-runtime.md",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/site-request-studio-local-vanilla-web-app.md"
+  ],
+  "effect": "The local Studio app now serves `/studio/catalogue-series/?mode=manage`, `/studio/catalogue-work/?mode=manage`, `/studio/catalogue-work-detail/?mode=manage`, and `/studio/catalogue-moment/?mode=manage` with the existing vanilla catalogue editor browser modules. The old Jekyll shells have been removed. Catalogue route shells live in `scripts/studio/studio_catalogue_views.py` so the shared view module does not absorb the full route family. Catalogue create/save/build/publication/delete/import APIs still use the existing `127.0.0.1:8788` sibling catalogue service until a later route-family API consolidation slice.",
+  "verification": [
+    "Python and JavaScript syntax checks passed for the touched Studio app, config, and catalogue editor files",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_app_catalogue_editor_routes.py passed with loopback server permissions"
+  ]
 }

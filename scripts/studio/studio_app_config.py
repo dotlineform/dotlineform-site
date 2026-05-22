@@ -15,6 +15,13 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "doc_href": "/docs/?scope=studio&doc=docs-viewer&mode=manage",
         "script": "/assets/docs-viewer/js/docs-viewer.js",
     },
+    "studio_catalogue": {
+        "label": "catalogue",
+        "title": "Catalogue Dashboard",
+        "path": "/studio/catalogue/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan&mode=manage",
+        "script": "/assets/studio/js/studio-dashboard.js",
+    },
     "tag_groups": {
         "label": "tag groups",
         "title": "Tag Groups",
@@ -92,6 +99,13 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "path": "/studio/catalogue-field-registry/?mode=manage",
         "doc_href": "/docs/?scope=studio&doc=catalogue-field-registry-review&mode=manage",
         "script": "/assets/studio/js/catalogue-field-registry-review.js",
+    },
+    "catalogue_status": {
+        "label": "drafts",
+        "title": "Catalogue Drafts",
+        "path": "/studio/catalogue-status/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=catalogue-status&mode=manage",
+        "script": "/assets/studio/js/catalogue-status.js",
     },
     "studio_works": {
         "label": "works",

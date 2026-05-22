@@ -4,6 +4,7 @@
   "paths": {
     "routes": {
       "studio_home": "/studio/",
+      "studio_catalogue": "/studio/catalogue/?mode=manage",
       "studio_works": "/studio/studio-works/?mode=manage",
       "studio_audits": "/studio/audits/",
       "search": "/catalogue/search/",
@@ -16,7 +17,7 @@
       "docs_html_import": "/docs/?mode=manage&import=1",
       "data_sharing_prepare": "/studio/data-sharing/prepare/",
       "data_sharing_review": "/studio/data-sharing/review/",
-      "catalogue_status": "/studio/catalogue-status/",
+      "catalogue_status": "/studio/catalogue-status/?mode=manage",
       "activity": "/studio/activity/",
       "bulk_add_work": "/studio/bulk-add-work/",
       "catalogue_moment_editor": "/studio/catalogue-moment/?mode=manage",

@@ -39,6 +39,7 @@ Current mounted views:
 
 - `/studio/`
 - `/docs/`
+- `/studio/catalogue/?mode=manage`
 - `/studio/analytics/tag-groups/`
 - `/studio/analytics/tag-registry/`
 - `/studio/analytics/tag-aliases/`
@@ -50,6 +51,7 @@ Current mounted views:
 - `/studio/bulk-add-work/?mode=manage`
 - `/studio/activity/?mode=manage`
 - `/studio/catalogue-field-registry/?mode=manage`
+- `/studio/catalogue-status/?mode=manage`
 - `/studio/studio-works/?mode=manage`
 - `/studio/catalogue-series/?mode=manage`
 - `/studio/catalogue-work/?mode=manage`
@@ -59,6 +61,9 @@ Current mounted views:
 The local app owns `/studio/`.
 The old Jekyll `/studio/` landing shell has been retired, so Studio home navigation now comes from the local runtime view registry rather than Jekyll/Liquid page data.
 The local home intentionally exposes a plain navigation list for active local views and filters out internal non-nav views such as the per-series tag editor.
+The Catalogue dashboard route shell is hosted by the local app at `/studio/catalogue/?mode=manage`.
+It reuses the existing dashboard metric module and grouped Catalogue link layout with manage-mode links to the migrated local Catalogue routes.
+The old Jekyll `/studio/catalogue/` shell has been retired.
 
 Current app endpoints:
 
@@ -117,6 +122,9 @@ The old Jekyll `/studio/activity/` shell has been retired.
 The Catalogue Field Registry route shell is hosted by the local app at `/studio/catalogue-field-registry/?mode=manage`.
 It reuses `assets/studio/js/catalogue-field-registry-review.js` and the checked-in `assets/studio/data/catalogue_field_registry.json` read-only data source.
 The old Jekyll `/studio/catalogue-field-registry/` shell has been retired.
+The Catalogue Drafts route shell is hosted by the local app at `/studio/catalogue-status/?mode=manage`.
+It reuses `assets/studio/js/catalogue-status.js` and the existing sibling catalogue read service on `127.0.0.1:8788`.
+The old Jekyll `/studio/catalogue-status/` shell has been retired.
 The Studio Works route shell is hosted by the local app at `/studio/studio-works/?mode=manage`.
 It reuses `assets/studio/js/studio-works.js`, checked-in works/series indexes, and the Studio-only work storage index.
 The old Jekyll `/studio/studio-works/` shell has been retired.
@@ -171,6 +179,7 @@ Current focused checks:
 
 - `tests/python/test_studio_app_server.py`
 - `tests/smoke/local_studio_navigation_adapter.py`
+- `tests/smoke/local_studio_app_catalogue_dashboard_route.py`
 - `tests/smoke/local_studio_app_tag_groups.py`
 - `tests/smoke/local_studio_app_tag_routes.py`
 - `tests/smoke/local_studio_app_audits_route.py`
@@ -179,6 +188,7 @@ Current focused checks:
 - `tests/smoke/local_studio_app_bulk_add_work_route.py`
 - `tests/smoke/local_studio_app_activity_route.py`
 - `tests/smoke/local_studio_app_catalogue_field_registry_route.py`
+- `tests/smoke/local_studio_app_catalogue_status_route.py`
 - `tests/smoke/local_studio_app_studio_works_route.py`
 - `tests/smoke/local_studio_app_catalogue_editor_routes.py`
 - `tests/smoke/local_studio_app_docs_viewer.py`

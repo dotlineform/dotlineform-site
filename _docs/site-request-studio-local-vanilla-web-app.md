@@ -18,7 +18,7 @@ Status:
 - Phase 2 implemented
 - Phase 3 implemented for Docs Viewer manage mode
 - Phase 4 in progress with Docs management, analytics tag reads, active analytics tag writes, and analytics tag route shells routed through the local app server; the old analytics tag Jekyll shells and 8787 browser fallback are retired
-- Phase 5 started with the Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Studio Works, catalogue editor, and Studio home shells hosted by the local app and their old Jekyll shells retired
+- Phase 5 started with the Catalogue dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, catalogue editor, and Studio home shells hosted by the local app and their old Jekyll shells retired
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -487,6 +487,8 @@ For projection-contract slices:
 ## Change Log Entries
 
 - `change-2026-05-22-added-local-analytics-tag-promotion-api`
+- `change-2026-05-22-mounted-local-catalogue-dashboard-route`
+- `change-2026-05-22-mounted-local-catalogue-status-route`
 - `change-2026-05-22-added-studio-route-url-builder`
 - `change-2026-05-22-mounted-local-catalogue-editor-route-shells`
 - `change-2026-05-22-mounted-local-studio-works-route`

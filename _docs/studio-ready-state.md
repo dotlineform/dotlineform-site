@@ -133,6 +133,10 @@ Their route roots declare:
 
 `studio-dashboard.js` initializes the root, sets busy while lightweight metric hydration runs, waits for metric reads with `Promise.allSettled`, then marks the route ready. Dashboard readiness means the dashboard shell and metric hydration have settled; it is not a broader route-specific QA guarantee.
 
+Current dashboard routes:
+
+- `/studio/catalogue/?mode=manage` with `#studioCatalogueDashboardRoot`
+
 ## Current Route Inventory
 
 Route-specific Studio roots:
@@ -143,7 +147,7 @@ Route-specific Studio roots:
 - `/studio/catalogue-field-registry/` with `#fieldRegistryReviewRoot`
 - `/studio/catalogue-moment/` with `#catalogueMomentRoot`
 - `/studio/catalogue-series/` with `#catalogueSeriesRoot`
-- `/studio/catalogue-status/` with `#catalogueStatusRoot`
+- `/studio/catalogue-status/?mode=manage` with `#catalogueStatusRoot`
 - `/studio/catalogue-work/` with `#catalogueWorkRoot`
 - `/studio/catalogue-work-detail/` with `#catalogueWorkDetailRoot`
 - `/studio/data-sharing/prepare/` with `#dataSharingPrepareRoot`
@@ -166,7 +170,6 @@ The legacy UI catalogue reference routes have been retired. Isolated UI Catalogu
 
 Dashboard Studio roots:
 
-- `/studio/catalogue/` with `#studioCatalogueDashboardRoot`
 - `/studio/analytics/` with `#studioAnalyticsDashboardRoot`
 
 Docs Viewer ready root:

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T19:20:49Z",
+  "generated_at": "2026-05-22T20:09:37Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -319,7 +319,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 27567
+      "content_text_length": 30458
     },
     {
       "scope": "studio",
@@ -682,7 +682,7 @@
       "doc_id": "catalogue-status",
       "title": "Catalogue Drafts",
       "added_date": "2026-04-18",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-22 20:55",
       "parent_id": "catalogue",
       "sort_order": 2000,
       "published": true,
@@ -691,7 +691,7 @@
       "source_path": "catalogue-status.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-status",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-status.json",
-      "content_text_length": 2960
+      "content_text_length": 3119
     },
     {
       "scope": "studio",
@@ -964,7 +964,7 @@
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-13",
+      "last_updated": "2026-05-22",
       "parent_id": "studio",
       "sort_order": 2000,
       "published": true,
@@ -973,7 +973,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 14004
+      "content_text_length": 14477
     },
     {
       "scope": "studio",
@@ -1157,7 +1157,7 @@
       "doc_id": "catalogue-work-editor",
       "title": "Catalogue Work Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-10 21:10",
+      "last_updated": "2026-05-22",
       "parent_id": "user-guide",
       "sort_order": 3000,
       "published": true,
@@ -1166,14 +1166,14 @@
       "source_path": "catalogue-work-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-work-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-editor.json",
-      "content_text_length": 15388
+      "content_text_length": 15945
     },
     {
       "scope": "studio",
       "doc_id": "studio-works",
       "title": "Catalogue Works",
       "added_date": "2026-04-01",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-22",
       "parent_id": "catalogue",
       "sort_order": 3000,
       "published": true,
@@ -1182,7 +1182,7 @@
       "source_path": "studio-works.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-works",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-works.json",
-      "content_text_length": 3836
+      "content_text_length": 4438
     },
     {
       "scope": "studio",
@@ -1375,7 +1375,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 5601
+      "content_text_length": 5637
     },
     {
       "scope": "studio",
@@ -1511,7 +1511,7 @@
       "doc_id": "catalogue-field-registry-review",
       "title": "Catalogue Field Registry",
       "added_date": "2026-05-01",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-22",
       "parent_id": "catalogue",
       "sort_order": 4000,
       "published": true,
@@ -1520,14 +1520,14 @@
       "source_path": "catalogue-field-registry-review.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-field-registry-review",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-field-registry-review.json",
-      "content_text_length": 2087
+      "content_text_length": 2474
     },
     {
       "scope": "studio",
       "doc_id": "catalogue-work-detail-editor",
       "title": "Catalogue Work Detail Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-10 21:38",
+      "last_updated": "2026-05-22",
       "parent_id": "user-guide",
       "sort_order": 4000,
       "published": true,
@@ -1536,7 +1536,7 @@
       "source_path": "catalogue-work-detail-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-detail-editor.json",
-      "content_text_length": 8139
+      "content_text_length": 8511
     },
     {
       "scope": "studio",
@@ -1715,7 +1715,7 @@
       "source_path": "studio-ready-state.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ready-state",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ready-state.json",
-      "content_text_length": 8037
+      "content_text_length": 8087
     },
     {
       "scope": "studio",
@@ -1835,7 +1835,7 @@
       "doc_id": "catalogue-series-editor",
       "title": "Catalogue Series Editor",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-10",
+      "last_updated": "2026-05-22",
       "parent_id": "user-guide",
       "sort_order": 5000,
       "published": true,
@@ -1844,7 +1844,7 @@
       "source_path": "catalogue-series-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-series-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-series-editor.json",
-      "content_text_length": 9207
+      "content_text_length": 9574
     },
     {
       "scope": "studio",
@@ -2093,7 +2093,7 @@
       "doc_id": "catalogue-moment-editor",
       "title": "Catalogue Moment Editor",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-11 00:25",
+      "last_updated": "2026-05-22",
       "parent_id": "user-guide",
       "sort_order": 6000,
       "published": true,
@@ -2102,7 +2102,7 @@
       "source_path": "catalogue-moment-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-moment-editor.json",
-      "content_text_length": 7648
+      "content_text_length": 8015
     },
     {
       "scope": "studio",
@@ -2971,7 +2971,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 24334,
+      "content_text_length": 25051,
       "ui_status": "in-progress"
     },
     {
@@ -3724,7 +3724,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 12258
+      "content_text_length": 15045
     },
     {
       "scope": "studio",

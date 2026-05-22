@@ -376,7 +376,7 @@ def main() -> int:
             page.locator(delete_button).click()
             assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms)
             page.locator('[data-role="modal-primary"]').click()
-            page.wait_for_url("**/studio/catalogue-status/", timeout=args.timeout_ms)
+            page.wait_for_url("**/studio/catalogue-status/?mode=manage", timeout=args.timeout_ms)
             if len(delete_apply_requests) != 1:
                 raise AssertionError(f"delete apply should be route-owned and confirmed once: {delete_apply_requests!r}")
             delete_request = delete_apply_requests[0]

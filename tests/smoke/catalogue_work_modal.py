@@ -457,7 +457,7 @@ def main() -> int:
             if f"Delete source record {WORK_ID}" not in delete_modal["bodyText"]:
                 raise AssertionError(f"delete preview text missing from modal: {delete_modal!r}")
             page.locator('[data-role="modal-primary"]').click()
-            page.wait_for_url("**/studio/catalogue-status/", timeout=args.timeout_ms)
+            page.wait_for_url("**/studio/catalogue-status/?mode=manage", timeout=args.timeout_ms)
             if len(delete_apply_requests) != 1 or delete_apply_requests[0].get("kind") != "work":
                 raise AssertionError(f"delete apply should be route-owned and confirmed once: {delete_apply_requests!r}")
 

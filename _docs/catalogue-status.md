@@ -2,20 +2,21 @@
 doc_id: catalogue-status
 title: Catalogue Drafts
 added_date: 2026-04-18
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-22 20:55"
 parent_id: catalogue
 sort_order: 2000
 ---
 # Catalogue Drafts
 
-This document describes the Studio drafts page at `/studio/catalogue-status/`.
+This document describes the Studio drafts page at `/studio/catalogue-status/?mode=manage`.
+The route shell is now hosted by the local Studio app server rather than Jekyll.
 
 Family views:
 
-- `/studio/catalogue-status/`
-- `/studio/catalogue-status/?family=works`
-- `/studio/catalogue-status/?family=work_details`
-- `/studio/catalogue-status/?family=moments`
+- `/studio/catalogue-status/?mode=manage`
+- `/studio/catalogue-status/?mode=manage&family=works`
+- `/studio/catalogue-status/?mode=manage&family=work_details`
+- `/studio/catalogue-status/?mode=manage&family=moments`
 
 ## Purpose
 
@@ -43,7 +44,8 @@ The page reads canonical source JSON through the local Catalogue Write Server:
 - `GET /catalogue/read?key=catalogue_series`
 - `GET /catalogue/read?key=catalogue_moments`
 
-The logical keys are configured through `assets/studio/data/studio_config.json`. The canonical source files still live under `assets/studio/data/catalogue/`, but Jekyll excludes that directory from the served site so local source writes do not trigger an extra regeneration pass.
+The logical keys are configured through `assets/studio/data/studio_config.json`.
+The canonical source files still live under `assets/studio/data/catalogue/`, but public Jekyll output excludes Studio-only catalogue source data.
 
 ## Current Behavior
 
@@ -74,6 +76,7 @@ Supported family keys:
 - `moments`
 
 Legacy `?view=draft-works` and `?view=draft-series` URLs still map to the matching family filters.
+The local route preserves `mode=manage` when family filters are changed.
 
 ## Boundaries
 

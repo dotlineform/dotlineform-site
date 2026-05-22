@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-be3012090830ebccf62316ed8a6198a1",
-    "generated_at_utc": "2026-05-22T19:13:31Z",
+    "version": "blake2b-b23a2bf555b2fab01bad9b359701ab20",
+    "generated_at_utc": "2026-05-22T20:02:07Z",
     "count": 292
   },
   "entries": [
@@ -961,24 +961,24 @@
       "kind": "doc",
       "title": "Catalogue Drafts",
       "href": "/docs/?scope=studio&doc=catalogue-status",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-22 20:55",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:49 • Catalogue",
+      "display_meta": "2026-05-22 20:55 • Catalogue",
       "search_terms": [
         "catalogue-status",
         "catalogue",
         "status",
         "catalogue drafts",
         "drafts",
-        "2026-05-06 20:49",
+        "2026-05-22 20:55",
         "2026",
         "05",
-        "06",
+        "22",
         "20",
-        "49"
+        "55"
       ],
-      "search_text": "catalogue-status catalogue status catalogue drafts drafts 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "catalogue-status catalogue status catalogue drafts drafts 2026-05-22 20:55 2026 05 22 20 55"
     },
     {
       "id": "scripts-dev-studio",
@@ -1418,21 +1418,21 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-05-13",
+      "last_updated": "2026-05-22",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-13 • Studio",
+      "display_meta": "2026-05-22 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-05-13",
+        "2026-05-22",
         "2026",
         "05",
-        "13"
+        "22"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-13 2026 05 13"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-22 2026 05 22"
     },
     {
       "id": "tag-groups",
@@ -1708,10 +1708,10 @@
       "kind": "doc",
       "title": "Catalogue Work Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-editor",
-      "last_updated": "2026-05-10 21:10",
+      "last_updated": "2026-05-22",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-10 21:10 • User Guide",
+      "display_meta": "2026-05-22 • User Guide",
       "search_terms": [
         "catalogue-work-editor",
         "catalogue",
@@ -1721,35 +1721,34 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-10 21:10",
+        "2026-05-22",
         "2026",
         "05",
-        "10",
-        "21"
+        "22"
       ],
-      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor user guide user guide 2026-05-10 21:10 2026 05 10 21"
+      "search_text": "catalogue-work-editor catalogue work editor catalogue work editor user guide user guide 2026-05-22 2026 05 22"
     },
     {
       "id": "studio-works",
       "kind": "doc",
       "title": "Catalogue Works",
       "href": "/docs/?scope=studio&doc=studio-works",
-      "last_updated": "2026-05-07",
+      "last_updated": "2026-05-22",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-07 • Catalogue",
+      "display_meta": "2026-05-22 • Catalogue",
       "search_terms": [
         "studio-works",
         "studio",
         "works",
         "catalogue works",
         "catalogue",
-        "2026-05-07",
+        "2026-05-22",
         "2026",
         "05",
-        "07"
+        "22"
       ],
-      "search_text": "studio-works studio works catalogue works catalogue 2026-05-07 2026 05 07"
+      "search_text": "studio-works studio works catalogue works catalogue 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-cloud-environments",
@@ -2248,10 +2247,10 @@
       "kind": "doc",
       "title": "Catalogue Field Registry",
       "href": "/docs/?scope=studio&doc=catalogue-field-registry-review",
-      "last_updated": "2026-05-06 20:49",
+      "last_updated": "2026-05-22",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-06 20:49 • Catalogue",
+      "display_meta": "2026-05-22 • Catalogue",
       "search_terms": [
         "catalogue-field-registry-review",
         "catalogue",
@@ -2259,24 +2258,22 @@
         "registry",
         "review",
         "catalogue field registry",
-        "2026-05-06 20:49",
+        "2026-05-22",
         "2026",
         "05",
-        "06",
-        "20",
-        "49"
+        "22"
       ],
-      "search_text": "catalogue-field-registry-review catalogue field registry review catalogue field registry 2026-05-06 20:49 2026 05 06 20 49"
+      "search_text": "catalogue-field-registry-review catalogue field registry review catalogue field registry 2026-05-22 2026 05 22"
     },
     {
       "id": "catalogue-work-detail-editor",
       "kind": "doc",
       "title": "Catalogue Work Detail Editor",
       "href": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
-      "last_updated": "2026-05-10 21:38",
+      "last_updated": "2026-05-22",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-10 21:38 • User Guide",
+      "display_meta": "2026-05-22 • User Guide",
       "search_terms": [
         "catalogue-work-detail-editor",
         "catalogue",
@@ -2287,14 +2284,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-10 21:38",
+        "2026-05-22",
         "2026",
         "05",
-        "10",
-        "21",
-        "38"
+        "22"
       ],
-      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor user guide user guide 2026-05-10 21:38 2026 05 10 21 38"
+      "search_text": "catalogue-work-detail-editor catalogue work detail editor catalogue work detail editor user guide user guide 2026-05-22 2026 05 22"
     },
     {
       "id": "site-request-catalogue-work-unified-editor",
@@ -2759,10 +2754,10 @@
       "kind": "doc",
       "title": "Catalogue Series Editor",
       "href": "/docs/?scope=studio&doc=catalogue-series-editor",
-      "last_updated": "2026-05-10",
+      "last_updated": "2026-05-22",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-10 • User Guide",
+      "display_meta": "2026-05-22 • User Guide",
       "search_terms": [
         "catalogue-series-editor",
         "catalogue",
@@ -2772,12 +2767,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-10",
+        "2026-05-22",
         "2026",
         "05",
-        "10"
+        "22"
       ],
-      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor user guide user guide 2026-05-10 2026 05 10"
+      "search_text": "catalogue-series-editor catalogue series editor catalogue series editor user guide user guide 2026-05-22 2026 05 22"
     },
     {
       "id": "config",
@@ -3150,10 +3145,10 @@
       "kind": "doc",
       "title": "Catalogue Moment Editor",
       "href": "/docs/?scope=studio&doc=catalogue-moment-editor",
-      "last_updated": "2026-05-11 00:25",
+      "last_updated": "2026-05-22",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-11 00:25 • User Guide",
+      "display_meta": "2026-05-22 • User Guide",
       "search_terms": [
         "catalogue-moment-editor",
         "catalogue",
@@ -3163,14 +3158,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-11 00:25",
+        "2026-05-22",
         "2026",
         "05",
-        "11",
-        "00",
-        "25"
+        "22"
       ],
-      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-05-11 00:25 2026 05 11 00 25"
+      "search_text": "catalogue-moment-editor catalogue moment editor catalogue moment editor user guide user guide 2026-05-22 2026 05 22"
     },
     {
       "id": "doc-ui-status",

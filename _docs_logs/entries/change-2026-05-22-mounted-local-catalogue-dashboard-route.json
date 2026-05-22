@@ -1,0 +1,55 @@
+{
+  "id": "change-2026-05-22-mounted-local-catalogue-dashboard-route",
+  "date": "2026-05-22",
+  "title": "Mounted Local Catalogue Dashboard Route",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "studio",
+    "catalogue",
+    "testing"
+  ],
+  "summary": "Mounted the Catalogue dashboard route shell in the local Studio app server and retired its old Jekyll route shell.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "catalogue-dashboard",
+    "route-shells",
+    "jekyll-retirement"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app",
+    "studio-runtime",
+    "studio-ready-state",
+    "studio"
+  ],
+  "related_files": [
+    "scripts/studio/studio_app_config.py",
+    "scripts/studio/studio_catalogue_views.py",
+    "scripts/studio/studio_app_server.py",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js",
+    "tests/python/test_studio_app_server.py",
+    "tests/smoke/local_studio_app_catalogue_dashboard_route.py",
+    "studio/catalogue/index.md",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/site-request-studio-local-vanilla-web-app.md",
+    "_docs/studio-runtime.md",
+    "_docs/studio-ready-state.md",
+    "_docs/studio.md"
+  ],
+  "effect": "The local Studio app now serves `/studio/catalogue/?mode=manage` with the existing dashboard metric module and grouped Catalogue link layout. Dashboard links now point to manage-mode local Catalogue routes. The old Jekyll shell has been removed, leaving the remaining catalogue-facing shells outside Jekyll except for future API consolidation and non-catalogue route families.",
+  "verification": [
+    "Python and JavaScript syntax checks passed for the touched Studio app, config, and smoke files",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_app_catalogue_dashboard_route.py passed with loopback server permissions"
+  ]
+}

@@ -40,6 +40,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["routes"]["runtime_config"] == "/studio/runtime-config.json"
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
+    assert any(view["id"] == "studio_catalogue" and view["path"] == "/studio/catalogue/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "tag_registry" and view["path"] == "/studio/analytics/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/studio/analytics/tag-aliases/" for view in runtime["views"])
     assert any(view["id"] == "series_tags" and view["path"] == "/studio/analytics/series-tags/" for view in runtime["views"])
@@ -50,6 +51,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "bulk_add_work" and view["path"] == "/studio/bulk-add-work/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "activity" and view["path"] == "/studio/activity/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/?mode=manage" for view in runtime["views"])
+    assert any(view["id"] == "catalogue_status" and view["path"] == "/studio/catalogue-status/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "studio_works" and view["path"] == "/studio/studio-works/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_series_editor" and view["path"] == "/studio/catalogue-series/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/?mode=manage" for view in runtime["views"])

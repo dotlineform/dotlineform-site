@@ -54,6 +54,90 @@ def catalogue_field_registry_view(version: str) -> str:
     return studio_route_view(version, "catalogue_field_registry", body)
 
 
+def catalogue_dashboard_view(version: str) -> str:
+    body = """<div
+          class="studioDashboard"
+          id="studioCatalogueDashboardRoot"
+          data-studio-dashboard-route="studio-catalogue"
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <section class="studioDashboard__metrics" aria-label="Catalogue metrics">
+            <article class="studioMetricCard">
+              <p class="studioMetricCard__value" data-studio-metric="series-count">--</p>
+              <p class="studioMetricCard__label">series</p>
+            </article>
+            <article class="studioMetricCard">
+              <p class="studioMetricCard__value" data-studio-metric="works-count">--</p>
+              <p class="studioMetricCard__label">works</p>
+            </article>
+            <article class="studioMetricCard">
+              <p class="studioMetricCard__value" data-studio-metric="work-details-count">--</p>
+              <p class="studioMetricCard__label">work details</p>
+            </article>
+            <article class="studioMetricCard">
+              <p class="studioMetricCard__value" data-studio-metric="moments-count">--</p>
+              <p class="studioMetricCard__label">moments</p>
+            </article>
+          </section>
+
+          <section class="catalogueDashboardRoutes" aria-label="Catalogue links">
+            <section class="catalogueDashboardColumn">
+              <h3>Edit</h3>
+              <ul class="catalogueDashboardPills">
+                <li><a href="/studio/catalogue-series/?mode=manage">series</a></li>
+                <li><a href="/studio/catalogue-work/?mode=manage">works</a></li>
+                <li><a href="/studio/catalogue-work-detail/?mode=manage">work details</a></li>
+                <li><a href="/studio/bulk-add-work/?mode=manage">bulk add</a></li>
+                <li><a href="/studio/catalogue-moment/?mode=manage">moments</a></li>
+              </ul>
+            </section>
+            <section class="catalogueDashboardColumn">
+              <h3>Review</h3>
+              <ul class="catalogueDashboardPills">
+                <li><a href="/studio/catalogue-status/?mode=manage">drafts</a></li>
+                <li><a href="/studio/studio-works/?mode=manage">works</a></li>
+                <li><a href="/studio/project-state/?mode=manage">projects</a></li>
+              </ul>
+            </section>
+          </section>
+        </div>"""
+    return studio_route_view(version, "studio_catalogue", body)
+
+
+def catalogue_status_view(version: str) -> str:
+    body = """<div
+          class="tagStudioPage catalogueStatusPage"
+          id="catalogueStatusRoot"
+          hidden
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <section class="tagStudio__panel">
+            <div class="tagStudioFilters catalogueStatusPage__filters">
+              <div class="tagStudio__key tagStudioFilters__key" id="catalogueStatusKey"></div>
+              <label class="tagStudioFilters__searchWrap catalogueStatusPage__searchWrap">
+                <span class="visually-hidden">Search catalogue draft rows</span>
+                <input
+                  type="text"
+                  class="tagStudio__input tagStudioFilters__searchInput"
+                  id="catalogueStatusSearch"
+                  placeholder="search"
+                  autocomplete="off"
+                >
+              </label>
+            </div>
+
+            <p class="tagStudio__status catalogueStatusPage__meta" id="catalogueStatusMeta"></p>
+            <div id="catalogueStatusList"></div>
+          </section>
+        </div>
+
+        <p class="tagStudio__status" id="catalogueStatusLoading">loading catalogue drafts...</p>
+        <p class="tagStudio__empty" id="catalogueStatusEmpty" hidden>No draft catalogue source records.</p>"""
+    return studio_route_view(version, "catalogue_status", body)
+
+
 def studio_works_view(version: str) -> str:
     body = """<div
           class="index worksList worksList--studio tagStudioList tagStudioList--dense"
@@ -439,5 +523,3 @@ def catalogue_moment_view(version: str) -> str:
         <p class="tagStudio__status" id="catalogueMomentLoading">loading catalogue moment editor...</p>
         <p class="tagStudio__empty" id="catalogueMomentEmpty" hidden></p>"""
     return studio_route_view(version, "catalogue_moment_editor", body)
-
-
