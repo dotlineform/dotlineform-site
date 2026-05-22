@@ -2,7 +2,7 @@
 doc_id: studio-works
 title: Catalogue Works
 added_date: 2026-04-01
-last_updated: 2026-05-07
+last_updated: 2026-05-22
 parent_id: catalogue
 sort_order: 3000
 ---
@@ -10,7 +10,7 @@ sort_order: 3000
 
 Route:
 
-- `/studio/studio-works/`
+- `/studio/studio-works/?mode=manage`
 
 Purpose:
 
@@ -29,7 +29,7 @@ The page root `#worksStudioRoot` exposes the shared Studio route-ready contract:
 
 Primary template:
 
-- `studio/studio-works/index.md`
+- `scripts/studio/studio_app_views.py`
 
 Page controller:
 
@@ -122,6 +122,7 @@ Meaning:
 - the existing Studio works rows and links
 - curator-only storage values are merged in from the Studio-only work storage index rather than the public works index
 - work links carry Studio sort/filter return state so the work-page back link returns to `/studio/studio-works/`
+- work and series links resolve through the configured public-site preview base in local Studio sessions rather than remaining on the Studio app host
 
 ## UI Layout and Styling
 
@@ -164,6 +165,16 @@ Meaning:
 
 - the page renders rows with the shared dense list primitive while keeping works-specific sort/filter state in the controller
 - the page now also loads Studio config for the copy-button label
+
+## Local App Migration
+
+The page shell is mounted in the local Studio app server and reuses the existing `assets/studio/js/studio-works.js` browser module.
+The old Jekyll route shell has been retired.
+Because Studio and the public Jekyll preview now have separate local hosts, the controller uses the local Studio public-site link resolver for work and series links.
+
+Focused smoke coverage:
+
+- `tests/smoke/local_studio_app_studio_works_route.py`
 
 ## UI Contract
 

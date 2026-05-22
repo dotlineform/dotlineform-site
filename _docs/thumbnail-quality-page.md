@@ -2,13 +2,14 @@
 doc_id: thumbnail-quality-page
 title: Thumbnail Quality Page
 added_date: 2026-05-12
-last_updated: 2026-05-12
+last_updated: 2026-05-22
 parent_id: catalogue
 sort_order: 9000
 ---
 # Thumbnail Quality Page
 
-This document describes the Studio page at `/studio/thumbnail-quality/`.
+This document describes the Studio page at `/studio/thumbnail-quality/?mode=manage`.
+The route shell is served by the local Studio app, not by a Jekyll Studio page.
 
 ## Purpose
 
@@ -68,6 +69,7 @@ POST /catalogue/thumbnail-quality-preview
 The endpoint reruns `scripts/media/build_thumbnail_quality_preview.py` and rewrites the preview JSON and referenced preview images.
 
 If the local Catalogue Write Server is unavailable, the page still loads the last generated preview data when present, but the refresh command reports that the service must be started.
+That sibling refresh endpoint remains in place until a later catalogue API consolidation slice.
 
 ## Manual Command
 

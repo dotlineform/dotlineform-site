@@ -2,7 +2,7 @@
 doc_id: bulk-add-work
 title: Bulk Add Work
 added_date: 2026-04-19
-last_updated: "2026-05-08 18:20"
+last_updated: "2026-05-22"
 parent_id: user-guide
 sort_order: 7000
 ---
@@ -10,9 +10,11 @@ sort_order: 7000
 
 Route:
 
-- `/studio/bulk-add-work/`
+- `/studio/bulk-add-work/?mode=manage`
 
 This page runs the configured bulk-import workbook flow from `data/works_bulk_import.xlsx` into canonical catalogue source JSON.
+The route shell is served by the local Studio app, not by a Jekyll Studio page.
+The browser module still uses the existing sibling catalogue import preview/apply endpoints until those APIs are consolidated into the local app server.
 
 ## Current Scope
 

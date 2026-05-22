@@ -4,11 +4,12 @@ const DEFAULT_STUDIO_CONFIG = {
   "paths": {
     "routes": {
       "studio_home": "/studio/",
+      "studio_works": "/studio/studio-works/?mode=manage",
       "studio_audits": "/studio/audits/",
       "search": "/catalogue/search/",
       "series_tags": "/studio/analytics/series-tags/",
       "series_tag_editor": "/studio/analytics/series-tag-editor/",
-      "catalogue_field_registry_review": "/studio/catalogue-field-registry/",
+      "catalogue_field_registry_review": "/studio/catalogue-field-registry/?mode=manage",
       "docs_broken_links": "/studio/docs-broken-links/",
       "project_state": "/studio/project-state/",
       "thumbnail_quality": "/studio/thumbnail-quality/",

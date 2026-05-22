@@ -2,7 +2,7 @@
 doc_id: catalogue-field-registry-review
 title: Catalogue Field Registry
 added_date: 2026-05-01
-last_updated: "2026-05-06 20:49"
+last_updated: "2026-05-22"
 parent_id: catalogue
 sort_order: 4000
 ---
@@ -10,9 +10,10 @@ sort_order: 4000
 
 Route:
 
-- `/studio/catalogue-field-registry/`
+- `/studio/catalogue-field-registry/?mode=manage`
 
 This Studio page is a read-only review surface for `assets/studio/data/catalogue_field_registry.json`.
+It is hosted by the local Studio app server, not by a Jekyll route shell.
 
 ## Route Ready State
 
@@ -47,6 +48,15 @@ The page:
 - when search has an exact field-name match, shows the complete rule object that contains the field
 - when no exact match exists, shows any complete rules whose field names contain the search text
 - leaves the source registry unchanged
+
+## Local App Migration
+
+The page shell is mounted in the local Studio app server and reuses the existing `assets/studio/js/catalogue-field-registry-review.js` browser module.
+The old Jekyll route shell has been retired.
+
+Focused smoke coverage:
+
+- `tests/smoke/local_studio_app_catalogue_field_registry_route.py`
 
 ## Current Scope
 

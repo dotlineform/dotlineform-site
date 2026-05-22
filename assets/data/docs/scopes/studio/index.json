@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T18:51:06Z",
+  "generated_at": "2026-05-22T19:20:49Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -319,7 +319,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 25763
+      "content_text_length": 27567
     },
     {
       "scope": "studio",
@@ -2239,7 +2239,7 @@
       "doc_id": "studio-activity",
       "title": "Studio Activity",
       "added_date": "2026-05-08",
-      "last_updated": "2026-05-13",
+      "last_updated": "2026-05-22",
       "parent_id": "studio",
       "sort_order": 6000,
       "published": true,
@@ -2248,14 +2248,14 @@
       "source_path": "studio-activity.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-activity",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-activity.json",
-      "content_text_length": 2575
+      "content_text_length": 2760
     },
     {
       "scope": "studio",
       "doc_id": "bulk-add-work",
       "title": "Bulk Add Work",
       "added_date": "2026-04-19",
-      "last_updated": "2026-05-08 18:20",
+      "last_updated": "2026-05-22",
       "parent_id": "user-guide",
       "sort_order": 7000,
       "published": true,
@@ -2264,7 +2264,7 @@
       "source_path": "bulk-add-work.md",
       "viewer_url": "/docs/?scope=studio&doc=bulk-add-work",
       "content_url": "/assets/data/docs/scopes/studio/by-id/bulk-add-work.json",
-      "content_text_length": 2596
+      "content_text_length": 2841
     },
     {
       "scope": "studio",
@@ -2866,7 +2866,7 @@
       "doc_id": "thumbnail-quality-page",
       "title": "Thumbnail Quality Page",
       "added_date": "2026-05-12",
-      "last_updated": "2026-05-12",
+      "last_updated": "2026-05-22",
       "parent_id": "catalogue",
       "sort_order": 9000,
       "published": true,
@@ -2875,7 +2875,7 @@
       "source_path": "thumbnail-quality-page.md",
       "viewer_url": "/docs/?scope=studio&doc=thumbnail-quality-page",
       "content_url": "/assets/data/docs/scopes/studio/by-id/thumbnail-quality-page.json",
-      "content_text_length": 2293
+      "content_text_length": 2481
     },
     {
       "scope": "studio",
@@ -2971,7 +2971,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 23734,
+      "content_text_length": 24334,
       "ui_status": "in-progress"
     },
     {
@@ -3587,7 +3587,7 @@
       "doc_id": "docs-broken-links",
       "title": "Docs Broken Links",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-22",
       "parent_id": "docs-viewer",
       "sort_order": 18000,
       "published": true,
@@ -3596,7 +3596,7 @@
       "source_path": "docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-broken-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-broken-links.json",
-      "content_text_length": 2246
+      "content_text_length": 2537
     },
     {
       "scope": "studio",
@@ -3724,7 +3724,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 10424
+      "content_text_length": 12258
     },
     {
       "scope": "studio",

@@ -22,7 +22,7 @@ Status:
 - Phase 2 is implemented
 - Phase 3 is implemented for Docs Viewer manage mode
 - Phase 4 is in progress with Docs management and analytics tag routes consolidated into the local app server
-- Phase 5 has started with the local Studio Audits and Project State route shells
+- Phase 5 has started with the local Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, and Studio Works route shells
 
 ## Lifecycle Rules
 
@@ -98,7 +98,9 @@ Current commit point:
 - Phase 4 now mounts the tag registry, tag aliases, series-tags, and per-series tag editor route shells in the local app so those pages use local runtime config and local analytics endpoints
 - Phase 4 has retired the Jekyll analytics tag route shells, removed the old `127.0.0.1:8787` browser fallbacks, and stopped launching the standalone tag write server from `bin/dev-studio`
 - Phase 4 has removed the standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint; `scripts/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes
-- Phase 5 has started by mounting `/studio/audits/?mode=manage` and `/studio/project-state/?mode=manage` in the local app and retiring the old Jekyll shells while leaving their sibling service APIs in place for now
+- Phase 5 has started by mounting `/studio/audits/?mode=manage`, `/studio/project-state/?mode=manage`, `/studio/thumbnail-quality/?mode=manage`, `/studio/bulk-add-work/?mode=manage`, `/studio/activity/?mode=manage`, `/studio/catalogue-field-registry/?mode=manage`, and `/studio/studio-works/?mode=manage` in the local app and retiring the old Jekyll shells while leaving their sibling service APIs in place for now
+- the old Jekyll `/studio/` landing shell is retired; `/studio/` is now the local app home during Studio sessions
+- Docs Broken Links should move into Docs Viewer reports rather than becoming another migrated Studio route shell
 - non-Docs write/manage APIs are intentionally still disabled or partial where not yet migrated
 
 ## Phase 0: Published Surface Cleanup
@@ -221,6 +223,7 @@ Outcomes:
 | Preserve create, metadata edit, move, archive/delete, show hidden, rebuild, settings, import, and scope lifecycle workflows. | done |
 | Verify generated docs payload rebuilds and docs search rebuilds still run through the expected paths. | done |
 | Smoke `/docs/` manage mode on the local app host and public `/library/` plus `/analysis/` read-only behavior separately. | done |
+| Move Docs Broken Links into Docs Viewer reports instead of migrating `/studio/docs-broken-links/` as a standalone Studio route. | pending |
 
 Next steps:
 
@@ -237,6 +240,8 @@ It covers create, metadata edit, settings save, archive, delete preview/apply, a
 `bin/dev-studio` now treats Docs management as owned by the local Studio app server and does not start `scripts/docs/docs_management_server.py` by default.
 Set `DOCS_MANAGEMENT_SERVER_ENABLED=1` only for fallback/debug runs that intentionally need the old standalone process.
 Data-sharing-specific UI behavior remains a later adapter-consolidation slice; the Phase 3 claim is Docs Viewer manage-mode parity for the ordinary source/edit/import/scope workflows.
+Docs Broken Links is also a Docs Viewer concern because it is a scope-based report over generated docs links.
+Do not migrate `/studio/docs-broken-links/` as a permanent Studio route shell; add it as a Docs Viewer report, then retire the old Studio shell after the report entry point exists.
 Do not add a separate always-running Docs Viewer server for normal Studio; keep a possible standalone Docs Viewer launcher as a later portability option over the same modules.
 
 ## Phase 4: Local Service Consolidation
@@ -284,7 +289,8 @@ Transition cleanup backlog:
 | Retire or archive `scripts/analytics/tag_write_server.py` as an HTTP entrypoint while keeping reusable analytics domain modules. | No migrated UI or fallback/debug workflow needs the standalone tag write HTTP process. | done |
 | Remove hardcoded old tag write URLs from tests and browser module fixtures. | Runtime-config endpoints cover the migrated routes and fallback compatibility is no longer required. | done; remaining 8787 references are negative assertions only |
 | Remove static JSON fallbacks for analytics tag data from migrated local-only views where the fallback no longer serves a Jekyll-hosted page. | The corresponding view no longer runs in Jekyll and public output has no Studio shell for it. | done |
-| Retire migrated Jekyll Studio route files or replace them with local-only transition redirects. | Each route family has a verified local app view and no public build dependency. | partial; analytics tag route files plus audits and project-state route files retired |
+| Retire migrated Jekyll Studio route files or replace them with local-only transition redirects. | Each route family has a verified local app view and no public build dependency. | partial; analytics tag route files plus audits, project-state, thumbnail-quality, bulk-add-work, and activity route files retired |
+| Retire the Jekyll `/studio/` landing shell once the local app owns `/studio/`. | The public site no longer publishes Studio, and the local app home exposes the runtime navigation list. | done |
 | Recheck `main.css` and Studio CSS ownership after route retirements. | Migrated Studio surfaces no longer rely on public-site route CSS. | pending |
 | Remove compatibility docs that describe old sibling-service startup as the normal path. | `bin/dev-studio` starts only the local app server plus genuinely required background tasks. | partial; `scripts-dev-studio` now documents the bridge-runner status and default Docs management ownership |
 
@@ -298,12 +304,14 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Migrate catalogue editors and dashboards. | pending |
+| Migrate catalogue editors and dashboards. | partial; Bulk Add Work, Studio Activity, Catalogue Field Registry, and Studio Works are local-app hosted while catalogue editor/dashboards remain pending |
 | Migrate analytics/tag routes. | partial; tag groups, registry, aliases, series-tags, and per-series tag editor are local-app hosted |
 | Migrate data-sharing routes. | pending |
-| Migrate audit and project-state routes. | partial; Studio Audits and Project State shells are local-app hosted while their sibling service APIs remain in place |
+| Migrate audit and project-state routes. | partial; Studio Audits, Project State, and Thumbnail Quality shells are local-app hosted while their sibling service APIs remain in place |
 | Add an explicit public-site link resolver for Studio links to works, series, moments, `/library/`, and `/analysis/`. | partial; runtime config now exposes public-preview and production bases, `studio-navigation.js` has `buildPublicSiteUrl(...)`, and the migrated per-series tag editor uses it for series/work header links; broader route adoption remains pending |
-| Retire Jekyll Studio route files after each replacement is verified. | partial; analytics tag route files plus audits and project-state route files retired |
+| Retire Jekyll Studio route files after each replacement is verified. | partial; analytics tag route files plus audits, project-state, thumbnail-quality, bulk-add-work, activity, catalogue-field-registry, and studio-works route files retired |
+| Retire the Jekyll `/studio/` landing shell after the local app owns `/studio/`. | done |
+| Retire `/studio/docs-broken-links/` only after the Docs Viewer report replacement exists. | pending |
 | Keep temporary redirects only where useful for local transition ergonomics. | pending |
 
 Next steps:
@@ -313,9 +321,13 @@ Do not migrate routes only for tidiness; each slice should end with a verified l
 When route families include links to public content, resolve those links through a configured local Jekyll preview base.
 Do not let relative public-content links stay on the Studio app host, and do not default them to dotlineform.com except for explicit live-site actions.
 The first helper is in place; adopt it as each migrated route's public-content links are touched rather than doing a broad blind rewrite.
-Studio Audits and Project State are the first operational route shells moved in Phase 5.
+Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, and Studio Works are the first operational route shells moved in Phase 5.
 They keep the existing vanilla browser modules and unavailable-service behavior, and only change the host shell from Jekyll to the local app.
 The audit, catalogue, and docs-service API calls behind those pages are not yet consolidated; migrate those only when the route-family API boundary is ready.
+Catalogue Field Registry is read-only and uses checked-in Studio data, so it does not add a new write/API consolidation dependency.
+Studio Works is read-only and uses checked-in index data, but it also adopts the public-site link resolver so work and series links open against the configured public Jekyll preview host.
+The Jekyll `/studio/` landing shell is now retired because the local app owns `/studio/` and public builds should not expose Studio.
+The local app home is intentionally a simple runtime navigation list rather than a preserved Jekyll dashboard design; it filters out non-nav internal views such as the per-series tag editor and marks the home root ready for smoke checks.
 
 ## Phase 6: Projection And Build Contract
 

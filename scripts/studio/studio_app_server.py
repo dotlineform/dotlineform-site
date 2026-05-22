@@ -20,15 +20,20 @@ if str(STUDIO_DIR) not in sys.path:
 
 from studio_app_config import asset_version, runtime_config  # noqa: E402
 from studio_app_views import (  # noqa: E402
+    activity_view,
+    bulk_add_work_view,
+    catalogue_field_registry_view,
     docs_viewer_manage_view,
     project_state_view,
     series_tags_view,
     series_tag_editor_view,
     studio_audits_view,
     studio_home_view,
+    studio_works_view,
     tag_aliases_view,
     tag_groups_view,
     tag_registry_view,
+    thumbnail_quality_view,
 )
 from studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
 from studio_docs_api import docs_management_get_payload, docs_management_post_response  # noqa: E402
@@ -100,6 +105,21 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path in {"/studio/project-state", "/studio/project-state/"}:
             self.send_html(project_state_view(self.version))
+            return
+        if path in {"/studio/thumbnail-quality", "/studio/thumbnail-quality/"}:
+            self.send_html(thumbnail_quality_view(self.version))
+            return
+        if path in {"/studio/bulk-add-work", "/studio/bulk-add-work/"}:
+            self.send_html(bulk_add_work_view(self.version, self.repo_root))
+            return
+        if path in {"/studio/activity", "/studio/activity/"}:
+            self.send_html(activity_view(self.version))
+            return
+        if path in {"/studio/catalogue-field-registry", "/studio/catalogue-field-registry/"}:
+            self.send_html(catalogue_field_registry_view(self.version))
+            return
+        if path in {"/studio/studio-works", "/studio/studio-works/"}:
+            self.send_html(studio_works_view(self.version))
             return
         if self.is_allowed_static_path(path):
             self.send_static(path)

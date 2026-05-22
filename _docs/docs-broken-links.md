@@ -2,7 +2,7 @@
 doc_id: docs-broken-links
 title: Docs Broken Links
 added_date: 2026-04-23
-last_updated: "2026-05-13 20:20"
+last_updated: "2026-05-22"
 parent_id: docs-viewer
 sort_order: 18000
 ---
@@ -65,6 +65,12 @@ Current flow:
 4. page renders the returned issue list
 
 The page is therefore a Studio maintenance surface for a read-only docs audit, not a public hosted feature.
+
+Target migration:
+
+- move this workflow into Docs Viewer reports because the audit is scope-based Docs Viewer reporting
+- keep the current `/studio/docs-broken-links/` shell only until the Docs Viewer report entry point exists
+- retire the Studio route shell after the report replacement is verified
 
 ## Route Ready State
 

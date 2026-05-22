@@ -363,6 +363,223 @@ def project_state_view(version: str) -> str:
     return studio_route_view(version, "project_state", body)
 
 
+def thumbnail_quality_view(version: str) -> str:
+    body = """<div
+          class="tagStudioPage thumbnailQualityPage"
+          id="thumbnailQualityRoot"
+          hidden
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <section class="tagStudio__panel tagStudio__panel--editor">
+            <div class="tagStudio__headingRow">
+              <h2 class="tagStudio__heading" id="thumbnailQualityPageHeading">thumbnail quality</h2>
+              <div class="catalogueWorkPage__actions">
+                <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="thumbnailQualityRefreshButton">Refresh</button>
+              </div>
+            </div>
+            <p class="tagStudio__contextHint" id="thumbnailQualityContext"></p>
+            <p class="tagStudio__status" id="thumbnailQualityStatus"></p>
+            <p class="tagStudio__saveResult" id="thumbnailQualityResult"></p>
+          </section>
+
+          <section class="tagStudio__panel thumbnailQualitySettings" aria-labelledby="thumbnailQualitySettingsHeading">
+            <h2 class="tagStudio__heading" id="thumbnailQualitySettingsHeading">settings</h2>
+            <div class="thumbnailQualitySettings__grid" id="thumbnailQualitySettingsList"></div>
+          </section>
+
+          <section class="tagStudio__panel thumbnailQualitySeriesPreview" aria-labelledby="thumbnailQualitySeriesHeading">
+            <h2 class="tagStudio__heading" id="thumbnailQualitySeriesHeading">series gallery comparison</h2>
+            <p class="tagStudio__contextHint" id="thumbnailQualitySeriesContext"></p>
+            <div class="seriesGrid thumbnailQualitySeriesPreview__grid" id="thumbnailQualitySeriesGrid"></div>
+          </section>
+
+          <section class="thumbnailQualityRows" id="thumbnailQualityRows" aria-label="Thumbnail quality comparison rows"></section>
+        </div>
+
+        <p class="tagStudio__status" id="thumbnailQualityLoading">loading thumbnail quality preview...</p>
+        <p class="tagStudio__empty" id="thumbnailQualityEmpty" hidden></p>"""
+    return studio_route_view(version, "thumbnail_quality", body)
+
+
+def bulk_add_work_view(version: str, repo_root: Path) -> str:
+    pipeline = load_pipeline(repo_root)
+    paths = pipeline.get("paths") if isinstance(pipeline.get("paths"), dict) else {}
+    workbooks = paths.get("workbooks") if isinstance(paths.get("workbooks"), dict) else {}
+    workbook_path = str(workbooks.get("bulk_import") or "data/works_bulk_import.xlsx")
+    escaped_workbook_path = html.escape(workbook_path, quote=True)
+    body = f"""<div
+          class="tagStudioPage catalogueWorkPage"
+          id="bulkAddWorkRoot"
+          data-workbook-path="{escaped_workbook_path}"
+          hidden
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <section class="tagStudio__panel tagStudio__panel--editor">
+            <div class="tagStudio__headingRow">
+              <h2 class="tagStudio__heading" id="bulkAddWorkPageHeading">bulk add work</h2>
+              <span class="tagStudio__saveMode" id="bulkAddWorkSaveMode"></span>
+            </div>
+
+            <p class="tagStudio__contextHint" id="bulkAddWorkContext"></p>
+            <p class="tagStudio__status" id="bulkAddWorkStatus"></p>
+            <p class="tagStudio__saveWarning" id="bulkAddWorkWarning"></p>
+            <p class="tagStudio__saveResult" id="bulkAddWorkResult"></p>
+          </section>
+
+          <div class="tagStudio__grid catalogueWorkPage__grid">
+            <section class="tagStudio__panel tagStudio__panel--editor">
+              <div class="tagStudio__headingRow">
+                <h2 class="tagStudio__heading" id="bulkAddWorkImportHeading">import</h2>
+                <div class="catalogueWorkPage__actions">
+                  <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="bulkAddWorkPreview">Preview</button>
+                  <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="bulkAddWorkApply">Import</button>
+                </div>
+              </div>
+              <div class="tagStudioForm__fields catalogueWorkForm__fields" id="bulkAddWorkFields">
+                <label class="tagStudioForm__field catalogueWorkForm__field" for="bulkAddWorkMode">
+                  <span class="tagStudioForm__label" id="bulkAddWorkModeLabel">mode</span>
+                  <select class="tagStudio__input" id="bulkAddWorkMode">
+                    <option value="works" id="bulkAddWorkModeWorks">works</option>
+                    <option value="work_details" id="bulkAddWorkModeWorkDetails">work details</option>
+                  </select>
+                </label>
+                <div class="tagStudioForm__field">
+                  <span class="tagStudioForm__label" id="bulkAddWorkWorkbookLabel">workbook</span>
+                  <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="bulkAddWorkWorkbook">{html.escape(workbook_path)}</span>
+                </div>
+              </div>
+            </section>
+
+            <aside class="tagStudio__panel catalogueWorkSummary">
+              <h2 class="tagStudio__heading" id="bulkAddWorkSummaryHeading">preview summary</h2>
+              <div class="tagStudioForm__fields" id="bulkAddWorkSummary"></div>
+            </aside>
+          </div>
+
+          <section class="tagStudio__panel catalogueWorkDetails">
+            <div class="tagStudio__headingRow">
+              <h2 class="tagStudio__heading" id="bulkAddWorkDetailsHeading">preview details</h2>
+            </div>
+            <div class="catalogueWorkDetails__results" id="bulkAddWorkPreviewDetails"></div>
+          </section>
+        </div>
+
+        <p class="tagStudio__status" id="bulkAddWorkLoading">loading bulk add work...</p>
+        <p class="tagStudio__empty" id="bulkAddWorkEmpty" hidden></p>"""
+    return studio_route_view(version, "bulk_add_work", body)
+
+
+def activity_view(version: str) -> str:
+    body = """<div
+          class="tagStudioPage buildActivityPage studioActivityPage"
+          id="studioActivityRoot"
+          hidden
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <div class="tagStudio__panel buildActivityPage__panel">
+            <p class="buildActivityPage__meta" id="studioActivityMeta"></p>
+            <div id="studioActivityList"></div>
+          </div>
+        </div>
+
+        <p class="buildActivityPage__status" id="studioActivityStatus">loading Studio activity...</p>
+        <p class="buildActivityPage__empty" id="studioActivityEmpty" hidden>No Studio activity yet.</p>"""
+    return studio_route_view(version, "activity", body)
+
+
+def catalogue_field_registry_view(version: str) -> str:
+    body = """<div
+          class="tagStudioPage fieldRegistryReviewPage"
+          id="fieldRegistryReviewRoot"
+          hidden
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <section class="tagStudio__panel tagStudio__panel--editor">
+            <div class="tagStudio__headingRow">
+              <h2 class="tagStudio__heading" id="fieldRegistryReviewHeading">catalogue field registry</h2>
+            </div>
+            <p class="tagStudio__contextHint" id="fieldRegistryReviewContext"></p>
+            <p class="tagStudio__status" id="fieldRegistryReviewStatus"></p>
+          </section>
+
+          <section class="tagStudio__panel tagStudio__panel--editor">
+            <div class="tagStudio__inputRow tagStudio__inputRow--editor">
+              <label class="visually-hidden" for="fieldRegistryReviewSearch">Search by field name</label>
+              <input
+                type="search"
+                class="tagStudio__input"
+                id="fieldRegistryReviewSearch"
+                placeholder="field name"
+                autocomplete="off"
+              >
+            </div>
+            <p class="tagStudioForm__meta" id="fieldRegistryReviewMeta"></p>
+            <label class="tagStudioForm__field tagStudioForm__field--topAligned fieldRegistryReviewPage__outputField" for="fieldRegistryReviewOutput">
+              <span class="tagStudioForm__label" id="fieldRegistryReviewOutputLabel">registry extract</span>
+              <textarea class="tagStudio__input fieldRegistryReviewPage__output" id="fieldRegistryReviewOutput" readonly spellcheck="false"></textarea>
+            </label>
+          </section>
+        </div>
+
+        <p class="tagStudio__status" id="fieldRegistryReviewLoading">loading catalogue field registry...</p>
+        <p class="tagStudio__empty" id="fieldRegistryReviewEmpty" hidden></p>"""
+    return studio_route_view(version, "catalogue_field_registry", body)
+
+
+def studio_works_view(version: str) -> str:
+    body = """<div
+          class="index worksList worksList--studio tagStudioList tagStudioList--dense"
+          id="worksStudioRoot"
+          data-role="studio-works"
+          data-baseurl=""
+          data-works-index-url="/assets/data/works_index.json"
+          data-work-storage-index-url="/assets/studio/data/work_storage_index.json"
+          data-series-index-url="/assets/data/series_index.json"
+          data-series-base-href="/series/"
+          hidden
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <h1 class="index__heading visually-hidden">studio works</h1>
+          <div class="worksList__metaRow">
+            <p class="worksList__count" id="worksListCount"></p>
+            <div class="worksList__metaActions">
+              <button class="tagStudio__button worksList__metaButton" type="button" id="worksListCopySeriesButton">copy series</button>
+            </div>
+          </div>
+
+          <div class="tagStudioList__head worksList__head" role="group" aria-label="Sort studio works">
+            <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="cat">
+              cat <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
+            </button>
+            <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="year">
+              year <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
+            </button>
+            <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="title">
+              title <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
+            </button>
+            <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="series">
+              series <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
+            </button>
+            <button class="tagStudioList__sortBtn" type="button" data-role="sort-button" data-sort-key="storage">
+              storage <span class="tagStudioList__sortIndicator" aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <ul class="tagStudioList__rows" id="worksList"></ul>
+
+          <nav class="page__nav" id="worksIndexBackNav" hidden>
+            <a class="page__back" id="worksIndexBackLink" href="/series/">series</a>
+          </nav>
+        </div>
+        <p id="worksStudioEmpty" hidden>no studio works yet</p>"""
+    return studio_route_view(version, "studio_works", body)
+
+
 def load_pipeline(repo_root: Path) -> dict[str, object]:
     path = repo_root / "_data" / "pipeline.json"
     try:
@@ -467,6 +684,7 @@ def studio_home_view(version: str) -> str:
             label=html.escape(view["title"]),
         )
         for view_id, view in STUDIO_VIEWS.items()
+        if view.get("nav", "true") != "false"
     )
     return f"""<!doctype html>
 <html lang="en">
@@ -481,7 +699,7 @@ def studio_home_view(version: str) -> str:
 </head>
 <body class="studio-local-app">
   <main class="container">
-    <div class="studio">
+    <div class="studio" id="studioHomeRoot" data-studio-ready="true" data-studio-busy="false">
       <div class="studio__headerRow"><h2>Studio</h2></div>
       <div class="studio__content">
         <ul class="studioLinkList">

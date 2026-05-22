@@ -18,7 +18,7 @@ Status:
 - Phase 2 implemented
 - Phase 3 implemented for Docs Viewer manage mode
 - Phase 4 in progress with Docs management, analytics tag reads, active analytics tag writes, and analytics tag route shells routed through the local app server; the old analytics tag Jekyll shells and 8787 browser fallback are retired
-- Phase 5 started with the Studio Audits and Project State route shells hosted by the local app and their old Jekyll shells retired
+- Phase 5 started with the Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Studio Works, and Studio home shells hosted by the local app and their old Jekyll shells retired
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -266,6 +266,9 @@ Reuse existing Studio JavaScript and CSS wherever practical.
 Current route controllers are browser ES modules that generally bind to stable DOM ids, classes, and `data-role` contracts.
 The migration should preserve those contracts first and replace only the Jekyll/Liquid route shell around them.
 
+Docs Broken Links is not a good long-term standalone Studio route.
+It is a scope-based Docs Viewer report over generated docs links, so the target migration should move it into the Docs Viewer reports surface and retire `/studio/docs-broken-links/` only after that report exists.
+
 Reusable as-is or with small adapters:
 
 - shared Studio data loaders and shapers
@@ -408,6 +411,7 @@ Good commit points include:
 - Docs Viewer management shell or API milestone
 - each migrated Docs management workflow
 - each route-family migration
+- moving Docs Broken Links into Docs Viewer reports
 - each local-service consolidation milestone
 - projection/build contract changes
 
@@ -481,6 +485,12 @@ For projection-contract slices:
 ## Change Log Entries
 
 - `change-2026-05-22-added-local-analytics-tag-promotion-api`
+- `change-2026-05-22-mounted-local-studio-works-route`
+- `change-2026-05-22-mounted-local-catalogue-field-registry-route`
+- `change-2026-05-22-retired-jekyll-studio-home-shell`
+- `change-2026-05-22-mounted-local-studio-activity-route`
+- `change-2026-05-22-mounted-local-bulk-add-work-route`
+- `change-2026-05-22-mounted-local-thumbnail-quality-route`
 - `change-2026-05-22-mounted-local-project-state-route`
 - `change-2026-05-22-mounted-local-studio-audits-route`
 - `change-2026-05-22-mounted-local-analytics-tag-route-shells`

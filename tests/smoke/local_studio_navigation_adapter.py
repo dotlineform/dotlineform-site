@@ -71,6 +71,11 @@ def main(argv: list[str] | None = None) -> int:
                         openModalDetail = event.detail;
                     }, { once: true });
                     const modalEvent = mod.openModal("Confirm Delete", { doc_id: "docs-viewer" });
+                    const homeLinks = [...document.querySelectorAll(".studioLinkList__item")].map((link) => ({
+                        viewId: link.getAttribute("data-studio-navigate"),
+                        href: link.getAttribute("href")
+                    }));
+                    const homeReady = document.querySelector("#studioHomeRoot")?.getAttribute("data-studio-ready");
 
                     let delegatedModalDetail = null;
                     document.addEventListener(mod.STUDIO_MODAL_EVENT, (event) => {
@@ -102,6 +107,8 @@ def main(argv: list[str] | None = None) -> int:
                         consumedAgain,
                         openModalDetail,
                         modalDefaultPrevented: modalEvent.defaultPrevented,
+                        homeLinks,
+                        homeReady,
                         delegatedModalDetail
                     };
                 }"""
@@ -147,6 +154,13 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected openModal detail: {result['openModalDetail']!r}")
         if result["modalDefaultPrevented"]:
             raise AssertionError("openModal event was unexpectedly prevented")
+        home_link_ids = {link["viewId"] for link in result["homeLinks"]}
+        if "series_tag_editor" in home_link_ids:
+            raise AssertionError(f"Studio home exposed hidden editor link: {result['homeLinks']!r}")
+        if {"docs", "tag_groups", "activity"} - home_link_ids:
+            raise AssertionError(f"Studio home missing expected links: {result['homeLinks']!r}")
+        if result["homeReady"] != "true":
+            raise AssertionError(f"Studio home did not expose ready state: {result['homeReady']!r}")
         if result["delegatedModalDetail"]["name"] != "rename":
             raise AssertionError(f"unexpected delegated modal detail: {result['delegatedModalDetail']!r}")
         if result["delegatedModalDetail"]["params"]["doc_id"] != "docs-viewer":

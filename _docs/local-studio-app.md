@@ -46,6 +46,15 @@ Current mounted views:
 - `/studio/analytics/series-tag-editor/?series=<series_id>`
 - `/studio/audits/?mode=manage`
 - `/studio/project-state/?mode=manage`
+- `/studio/thumbnail-quality/?mode=manage`
+- `/studio/bulk-add-work/?mode=manage`
+- `/studio/activity/?mode=manage`
+- `/studio/catalogue-field-registry/?mode=manage`
+- `/studio/studio-works/?mode=manage`
+
+The local app owns `/studio/`.
+The old Jekyll `/studio/` landing shell has been retired, so Studio home navigation now comes from the local runtime view registry rather than Jekyll/Liquid page data.
+The local home intentionally exposes a plain navigation list for active local views and filters out internal non-nav views such as the per-series tag editor.
 
 Current app endpoints:
 
@@ -92,6 +101,24 @@ The old Jekyll `/studio/audits/` shell has been retired.
 The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
 It reuses `assets/studio/js/project-state.js` and the existing sibling catalogue/docs service probes on `127.0.0.1:8788` and `127.0.0.1:8789`; those API calls remain unchanged until a later route-family API consolidation slice.
 The old Jekyll `/studio/project-state/` shell has been retired.
+The Thumbnail Quality route shell is hosted by the local app at `/studio/thumbnail-quality/?mode=manage`.
+It reuses `assets/studio/js/thumbnail-quality.js`, checked-in preview JSON/image data, and the existing sibling catalogue refresh endpoint on `127.0.0.1:8788`.
+The old Jekyll `/studio/thumbnail-quality/` shell has been retired.
+The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-work/?mode=manage`.
+It reuses `assets/studio/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and the existing sibling catalogue import preview/apply endpoints on `127.0.0.1:8788`.
+The old Jekyll `/studio/bulk-add-work/` shell has been retired.
+The Studio Activity route shell is hosted by the local app at `/studio/activity/?mode=manage`.
+It reuses `assets/studio/js/activity-log.js`, `assets/studio/js/activity-log-modals.js`, and the existing sibling catalogue activity-feed read endpoint on `127.0.0.1:8788`.
+The old Jekyll `/studio/activity/` shell has been retired.
+The Catalogue Field Registry route shell is hosted by the local app at `/studio/catalogue-field-registry/?mode=manage`.
+It reuses `assets/studio/js/catalogue-field-registry-review.js` and the checked-in `assets/studio/data/catalogue_field_registry.json` read-only data source.
+The old Jekyll `/studio/catalogue-field-registry/` shell has been retired.
+The Studio Works route shell is hosted by the local app at `/studio/studio-works/?mode=manage`.
+It reuses `assets/studio/js/studio-works.js`, checked-in works/series indexes, and the Studio-only work storage index.
+The old Jekyll `/studio/studio-works/` shell has been retired.
+Its work and series links now resolve through the configured public-site preview base rather than staying on the Studio app host.
+The old Jekyll `/studio/` landing shell has also been retired.
+This removes another public-site Studio page and keeps the local app as the only active Studio home surface during migration.
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
 The endpoint exposes the local app runtime contract for migrated views:
 
@@ -138,6 +165,11 @@ Current focused checks:
 - `tests/smoke/local_studio_app_tag_routes.py`
 - `tests/smoke/local_studio_app_audits_route.py`
 - `tests/smoke/local_studio_app_project_state_route.py`
+- `tests/smoke/local_studio_app_thumbnail_quality_route.py`
+- `tests/smoke/local_studio_app_bulk_add_work_route.py`
+- `tests/smoke/local_studio_app_activity_route.py`
+- `tests/smoke/local_studio_app_catalogue_field_registry_route.py`
+- `tests/smoke/local_studio_app_studio_works_route.py`
 - `tests/smoke/local_studio_app_docs_viewer.py`
 - `tests/smoke/local_studio_docs_management_workflows.py`
 - `tests/smoke/local_studio_docs_management_ui.py`

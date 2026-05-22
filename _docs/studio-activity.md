@@ -2,13 +2,14 @@
 doc_id: studio-activity
 title: Studio Activity
 added_date: 2026-05-08
-last_updated: 2026-05-13
+last_updated: 2026-05-22
 parent_id: studio
 sort_order: 6000
 ---
 # Studio Activity
 
-This document describes the Studio page at `/studio/activity/`.
+This document describes the Studio page at `/studio/activity/?mode=manage`.
+The route shell is served by the local Studio app, not by a Jekyll Studio page.
 
 ## Purpose
 
@@ -39,6 +40,8 @@ The page reads the unified feed through the local Catalogue Write Server:
 That service-backed read returns:
 
 - `var/studio/activity/activity_log.json`
+
+That sibling read endpoint remains in place until a later catalogue API consolidation slice.
 
 The fuller local journal lives beside the capped feed outside published route data:
 

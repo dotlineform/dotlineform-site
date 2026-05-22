@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-086dad89ccc3cb684fb1a71ed273e0de",
-    "generated_at_utc": "2026-05-22T18:51:07Z",
+    "version": "blake2b-be3012090830ebccf62316ed8a6198a1",
+    "generated_at_utc": "2026-05-22T19:13:31Z",
     "count": 292
   },
   "entries": [
@@ -3391,31 +3391,31 @@
       "kind": "doc",
       "title": "Studio Activity",
       "href": "/docs/?scope=studio&doc=studio-activity",
-      "last_updated": "2026-05-13",
+      "last_updated": "2026-05-22",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-13 • Studio",
+      "display_meta": "2026-05-22 • Studio",
       "search_terms": [
         "studio-activity",
         "studio",
         "activity",
         "studio activity",
-        "2026-05-13",
+        "2026-05-22",
         "2026",
         "05",
-        "13"
+        "22"
       ],
-      "search_text": "studio-activity studio activity studio activity 2026-05-13 2026 05 13"
+      "search_text": "studio-activity studio activity studio activity 2026-05-22 2026 05 22"
     },
     {
       "id": "bulk-add-work",
       "kind": "doc",
       "title": "Bulk Add Work",
       "href": "/docs/?scope=studio&doc=bulk-add-work",
-      "last_updated": "2026-05-08 18:20",
+      "last_updated": "2026-05-22",
       "parent_id": "user-guide",
       "parent_title": "User Guide",
-      "display_meta": "2026-05-08 18:20 • User Guide",
+      "display_meta": "2026-05-22 • User Guide",
       "search_terms": [
         "bulk-add-work",
         "bulk",
@@ -3425,14 +3425,12 @@
         "user guide",
         "user",
         "guide",
-        "2026-05-08 18:20",
+        "2026-05-22",
         "2026",
         "05",
-        "08",
-        "18",
-        "20"
+        "22"
       ],
-      "search_text": "bulk-add-work bulk add work bulk add work user guide user guide 2026-05-08 18:20 2026 05 08 18 20"
+      "search_text": "bulk-add-work bulk add work bulk add work user guide user guide 2026-05-22 2026 05 22"
     },
     {
       "id": "ui-pattern-column-links",
@@ -4352,10 +4350,10 @@
       "kind": "doc",
       "title": "Thumbnail Quality Page",
       "href": "/docs/?scope=studio&doc=thumbnail-quality-page",
-      "last_updated": "2026-05-12",
+      "last_updated": "2026-05-22",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-12 • Catalogue",
+      "display_meta": "2026-05-22 • Catalogue",
       "search_terms": [
         "thumbnail-quality-page",
         "thumbnail",
@@ -4363,12 +4361,12 @@
         "page",
         "thumbnail quality page",
         "catalogue",
-        "2026-05-12",
+        "2026-05-22",
         "2026",
         "05",
-        "12"
+        "22"
       ],
-      "search_text": "thumbnail-quality-page thumbnail quality page thumbnail quality page catalogue 2026-05-12 2026 05 12"
+      "search_text": "thumbnail-quality-page thumbnail quality page thumbnail quality page catalogue 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-catalogue-source",
@@ -5454,10 +5452,10 @@
       "kind": "doc",
       "title": "Docs Broken Links",
       "href": "/docs/?scope=studio&doc=docs-broken-links",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-22",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 20:20 • Docs Viewer",
+      "display_meta": "2026-05-22 • Docs Viewer",
       "search_terms": [
         "docs-broken-links",
         "docs",
@@ -5466,13 +5464,12 @@
         "docs broken links",
         "docs viewer",
         "viewer",
-        "2026-05-13 20:20",
+        "2026-05-22",
         "2026",
         "05",
-        "13",
-        "20"
+        "22"
       ],
-      "search_text": "docs-broken-links docs broken links docs broken links docs viewer viewer 2026-05-13 20:20 2026 05 13 20"
+      "search_text": "docs-broken-links docs broken links docs broken links docs viewer viewer 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-docs-broken-links",

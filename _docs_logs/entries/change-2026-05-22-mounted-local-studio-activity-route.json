@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-05-22-mounted-local-studio-activity-route",
+  "date": "2026-05-22",
+  "title": "Mounted Local Studio Activity Route",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "studio",
+    "catalogue",
+    "testing"
+  ],
+  "summary": "Mounted the Studio Activity route shell in the local Studio app server and retired the old Jekyll route shell.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "studio-activity",
+    "route-shells",
+    "jekyll-retirement"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app",
+    "studio-activity"
+  ],
+  "related_files": [
+    "scripts/studio/studio_app_config.py",
+    "scripts/studio/studio_app_views.py",
+    "scripts/studio/studio_app_server.py",
+    "tests/python/test_studio_app_server.py",
+    "tests/smoke/local_studio_app_activity_route.py",
+    "studio/activity/index.md",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/site-request-studio-local-vanilla-web-app.md",
+    "_docs/studio-activity.md"
+  ],
+  "effect": "The local Studio app now serves /studio/activity/?mode=manage with the existing vanilla Studio Activity browser module, modal module, and route-ready contract. The route keeps the existing catalogue sibling read endpoint for activity feed data, and the old Jekyll /studio/activity/ shell has been removed. The catalogue activity-feed read remains a sibling call for a later route-family API consolidation slice.",
+  "verification": [
+    "Python compile checks passed for the touched Studio app server, view, config, and smoke files",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_app_activity_route.py passed with loopback server permissions"
+  ]
+}

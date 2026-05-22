@@ -6,6 +6,9 @@ import {
   loadStudioConfigWithText
 } from "./studio-config.js";
 import {
+  buildPublicSiteUrl
+} from "./studio-navigation.js";
+import {
   initializeStudioRouteState,
   setStudioRouteBusy,
   setStudioRouteReady
@@ -198,13 +201,13 @@ function initStudioWorksPage() {
         countEl.appendChild(document.createTextNode(" in "));
         const seriesLink = document.createElement("a");
         seriesLink.className = "worksList__countSeriesLink";
-        seriesLink.href = `${seriesBaseHref}${encodeURIComponent(seriesFilter)}/`;
+        seriesLink.href = seriesHref(seriesFilter);
         seriesLink.textContent = seriesLabel;
         countEl.appendChild(seriesLink);
       }
       if (backNav && backLink) {
         backNav.hidden = false;
-        backLink.setAttribute("href", `${seriesBaseHref}${encodeURIComponent(seriesFilter)}/`);
+        backLink.setAttribute("href", seriesHref(seriesFilter));
         backLink.textContent = seriesLabel ? `← ${seriesLabel}` : "← series";
       }
       return;
@@ -325,6 +328,28 @@ function initStudioWorksPage() {
     window.history.replaceState({}, "", nextUrl);
   }
 
+  function publicContentUrl(path, params = {}) {
+    try {
+      return buildPublicSiteUrl(config, path, params);
+    } catch (_error) {
+      const url = new URL(`${baseurl}${path}`, window.location.origin);
+      Object.keys(params || {}).forEach((key) => {
+        const value = params[key];
+        if (!key || value == null || value === "") return;
+        url.searchParams.set(key, String(value));
+      });
+      return url.origin === window.location.origin ? `${url.pathname}${url.search}${url.hash}` : url.href;
+    }
+  }
+
+  function seriesHref(seriesId) {
+    const normalizedSeriesId = normalizeText(seriesId);
+    const basePath = normalizedSeriesId
+      ? `/series/${encodeURIComponent(normalizedSeriesId)}/`
+      : seriesBaseHref;
+    return publicContentUrl(basePath);
+  }
+
   function makeWorkRow(work, seriesMetaById, workStorage) {
     const wid = normalizeText(work && work.work_id);
     if (!wid) return null;
@@ -359,7 +384,9 @@ function initStudioWorksPage() {
     li.setAttribute("data-series-id", sid);
     li.setAttribute("data-series-label", seriesLabel);
 
-    const workHref = `${baseurl}/works/${encodeURIComponent(wid)}/?from=studio_works_index`;
+    const workHref = publicContentUrl(`/works/${encodeURIComponent(wid)}/`, {
+      from: "studio_works_index"
+    });
 
     const catA = document.createElement("a");
     catA.className = "tagStudioList__cellLink worksList__cat";
@@ -380,7 +407,7 @@ function initStudioWorksPage() {
 
     const seriesA = document.createElement("a");
     seriesA.className = "tagStudioList__cellLink worksList__series";
-    seriesA.href = sid ? `${seriesBaseHref}${encodeURIComponent(sid)}/` : seriesBaseHref;
+    seriesA.href = seriesHref(sid);
     seriesA.textContent = seriesLabel;
     li.appendChild(seriesA);
 
