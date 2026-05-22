@@ -19,3 +19,26 @@ Change request: [Studio Local Vanilla Web App Request](/docs/?scope=studio&mode=
 Implementation plan: [Local Studio App Implementation Plan](/docs/?scope=studio&mode=manage&doc=local-studio-app-implementation-plan)
 
 Public surface: [Public Published Surface](/docs/?scope=studio&mode=manage&doc=local-studio-app-public-surface)
+
+## Current App Server
+
+Phase 1 added the first Python local Studio app server:
+
+```bash
+./scripts/studio/studio_app_server.py --port 8765
+```
+
+Current mounted views:
+
+- `/studio/`
+- `/studio/analytics/tag-groups/`
+
+Current app endpoints:
+
+- `/health`
+- `/studio/runtime-config.json`
+
+The Tag Groups view reuses the existing Studio CSS, `assets/studio/js/tag-groups.js`, and the route-ready data attributes.
+Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
+The endpoint currently also exposes the local app view registry that powers the shell navigation.
+This first server is intentionally narrow and does not yet own write-service APIs or app-wide navigation.

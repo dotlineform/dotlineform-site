@@ -220,7 +220,7 @@ export {
 
 export async function loadStudioConfig() {
   if (!studioConfigPromise) {
-    studioConfigPromise = fetch(buildAssetUrl(new URL("../data/studio_config.json", import.meta.url).href), { cache: "default" })
+    studioConfigPromise = fetch(resolveStudioConfigUrl(), { cache: "default" })
       .then((response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
@@ -232,6 +232,20 @@ export async function loadStudioConfig() {
       });
   }
   return studioConfigPromise;
+}
+
+function resolveStudioConfigUrl() {
+  const configuredUrl = readConfiguredStudioConfigUrl();
+  if (configuredUrl) {
+    return buildAssetUrl(resolveSitePath(configuredUrl));
+  }
+  return buildAssetUrl(new URL("../data/studio_config.json", import.meta.url).href);
+}
+
+function readConfiguredStudioConfigUrl() {
+  if (typeof document === "undefined") return "";
+  const meta = document.querySelector('meta[name="dlf-studio-config-url"]');
+  return meta ? String(meta.getAttribute("content") || "").trim() : "";
 }
 
 export async function loadStudioConfigWithText(group) {

@@ -17,8 +17,8 @@ The public Jekyll site remains responsible for dotlineform.com publishing.
 
 Status:
 
-- proposed
-- no implementation slices started
+- in progress
+- Phase 0, Phase 1, and Phase 1A are implemented
 
 ## Phase 0: Published Surface Cleanup
 
@@ -55,17 +55,18 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Add a small Python Studio app server entrypoint. | pending |
-| Serve a local Studio app shell. | pending |
-| Serve existing Studio CSS and JavaScript assets. | pending |
-| Expose browser-safe runtime config JSON for migrated views. | pending |
-| Add a minimal health or readiness endpoint for the app server. | pending |
-| Add a focused smoke-test harness that can target the local app host. | pending |
+| Add a small Python Studio app server entrypoint. | done |
+| Serve a local Studio app shell. | done |
+| Serve existing Studio CSS and JavaScript assets. | done |
+| Expose browser-safe runtime config JSON for migrated views. | done |
+| Add a minimal health or readiness endpoint for the app server. | done |
+| Add a focused smoke-test harness that can target the local app host. | done |
 
 Next steps:
 
-Keep this slice intentionally small.
-The server should prove shell/static/config mechanics only; it should not yet absorb all local write services or redesign Studio navigation.
+Phase 1 foundation is implemented.
+The server now exposes `/studio/runtime-config.json`, and migrated views can opt into it with `meta[name="dlf-studio-config-url"]` while unmigrated Jekyll-hosted pages continue to use the static Studio config fallback.
+The next slice should start Phase 2 by defining the stable runtime config shape and introducing narrow navigation helpers only where migrated views need them.
 
 ## Phase 1A: Tag Groups View Spike
 
@@ -78,17 +79,17 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Convert the current Tag Groups Jekyll shell into a local app view/template. | pending |
-| Preserve the existing Tag Groups root ids, classes, and `data-role` hooks. | pending |
-| Load the existing Tag Groups browser module from the local app shell. | pending |
-| Provide any Tag Groups config/UI text through existing static config or the new runtime config JSON. | pending |
-| Verify the view loads Studio data and renders the current review list. | pending |
-| Add or update a smoke check for Tag Groups route-ready/rendered state on the local app host. | pending |
+| Convert the current Tag Groups Jekyll shell into a local app view/template. | done |
+| Preserve the existing Tag Groups root ids, classes, and `data-role` hooks. | done |
+| Load the existing Tag Groups browser module from the local app shell. | done |
+| Provide any Tag Groups config/UI text through existing static config or the new runtime config JSON. | done |
+| Verify the view loads Studio data and renders the current review list. | done |
+| Add or update a smoke check for Tag Groups route-ready/rendered state on the local app host. | done |
 
 Next steps:
 
-Use this as the first practical measure of how much Jekyll/Liquid glue must be replaced.
-Do not introduce write-service proxying, route-family migration, or app-wide navigation redesign in this slice.
+Phase 1A is implemented.
+Use the Tag Groups spike findings to shape the dedicated runtime config and navigation adapter work in Phase 2.
 
 ## Phase 2: Config And Navigation Adapter
 
@@ -100,16 +101,17 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Define the Studio runtime config shape for media bases, thumb bases, pipeline variants, UI text paths, docs links, and service endpoints. | pending |
+| Define the Studio runtime config shape for media bases, thumb bases, pipeline variants, UI text paths, docs links, and service endpoints. | partial |
 | Add `navigateTo(view, params)` and related navigation helpers. | pending |
 | Add `openModal(name, params)` and modal/context helpers where needed. | pending |
 | Add return-context helpers that replace route-query return state over time. | pending |
 | Add an initial-state adapter that can read current URL state during transition. | pending |
-| Centralize app-shell nav labels and view ids outside Jekyll front matter. | pending |
+| Centralize app-shell nav labels and view ids outside Jekyll front matter. | partial |
 
 Next steps:
 
-Introduce adapters only where a migrated view needs them.
+Phase 2 has started with an app-server view registry exposed through `/studio/runtime-config.json`.
+Continue by expanding the runtime config shape only as migrated views need it, then add a small navigation helper over the view registry.
 The adapter should support current route-like views first and can later support panels or modals where that improves workflow.
 
 ## Phase 3: Docs Viewer Manage Mode Migration

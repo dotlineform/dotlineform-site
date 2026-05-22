@@ -73,6 +73,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/catalogue/project_state_report.py",
                 "scripts/catalogue/catalogue_write_server.py",
                 "scripts/studio/studio_backup_retention.py",
+                "scripts/studio/studio_app_server.py",
                 "scripts/checks/audit_studio_ready_state.py",
                 "scripts/checks/verify_activity_contract.py",
                 "scripts/studio_activity.py",
