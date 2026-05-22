@@ -76,22 +76,29 @@ def main(argv: list[str] | None = None) -> int:
             page = browser.new_page()
             console_errors: list[str] = []
             page_errors: list[str] = []
-            catalogue_service_requests: list[str] = []
+            legacy_catalogue_service_requests: list[str] = []
+            local_catalogue_requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
             page.on(
                 "request",
-                lambda request: catalogue_service_requests.append(request.url)
+                lambda request: legacy_catalogue_service_requests.append(request.url)
                 if "127.0.0.1:8788" in request.url
                 else None,
             )
             page.route(
-                "http://127.0.0.1:8788/catalogue/read**",
+                "**/studio/api/catalogue/read**",
                 lambda route: route.fulfill(
                     status=200,
                     content_type="application/json",
                     body=json.dumps(activity_feed()),
                 ),
+            )
+            page.on(
+                "request",
+                lambda request: local_catalogue_requests.append(request.url)
+                if "/studio/api/catalogue/read" in request.url
+                else None,
             )
 
             page.goto(f"{base_url}/studio/activity/?mode=manage", wait_until="domcontentloaded")
@@ -116,8 +123,10 @@ def main(argv: list[str] | None = None) -> int:
             nav_link = page.locator('.site-nav [data-studio-navigate="activity"]').get_attribute("href")
             if nav_link != "/studio/activity/?mode=manage":
                 raise AssertionError(f"activity nav link is not manage-mode: {nav_link!r}")
-            if not catalogue_service_requests:
-                raise AssertionError("activity route did not request the catalogue read service")
+            if not local_catalogue_requests:
+                raise AssertionError("activity route did not request the local catalogue read API")
+            if legacy_catalogue_service_requests:
+                raise AssertionError(f"activity route still called legacy catalogue service: {legacy_catalogue_service_requests}")
 
             browser.close()
 

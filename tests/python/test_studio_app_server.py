@@ -85,6 +85,9 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
     assert runtime["services"]["catalogue"]["base"] == "/studio/api/catalogue"
+    assert runtime["services"]["catalogue"]["read"] == "/studio/api/catalogue/read"
+    assert runtime["services"]["catalogue"]["import_preview"] == "/studio/api/catalogue/import-preview"
+    assert runtime["services"]["catalogue"]["import_apply"] == "/studio/api/catalogue/import-apply"
     assert runtime["services"]["catalogue"]["project_state_report"] == "/studio/api/catalogue/project-state-report"
     assert runtime["services"]["catalogue"]["thumbnail_quality_preview"] == "/studio/api/catalogue/thumbnail-quality-preview"
     assert "tag_groups" not in runtime["data_paths"]["studio"]
@@ -211,6 +214,77 @@ def test_catalogue_thumbnail_quality_route_uses_fixture_source(monkeypatch) -> N
         assert payload["data_path"] == "assets/studio/data/thumbnail_quality_preview.json"
         assert payload["rows"][0]["source_name"] == "sample.jpg"
         assert payload["rows"][0]["baseline"]["path"].endswith("-current.webp")
+
+
+def test_catalogue_read_route_returns_source_and_activity_payloads() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir) / "repo"
+        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir.mkdir(parents=True)
+        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        (source_dir / "works.json").write_text(
+            json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {"00001": {"work_id": "00001", "title": "One", "status": "draft"}}}),
+            encoding="utf-8",
+        )
+        (source_dir / "work_details.json").write_text(
+            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
+            encoding="utf-8",
+        )
+        (source_dir / "series.json").write_text(
+            json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {"001": {"series_id": "001", "title": "Series", "status": "draft"}}}),
+            encoding="utf-8",
+        )
+        (source_dir / "moments.json").write_text(
+            json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
+            encoding="utf-8",
+        )
+
+        works_payload = catalogue_get_payload(repo_root, "/read", {"key": ["catalogue_works"]})
+        activity_payload = catalogue_get_payload(repo_root, "/read", {"key": ["activity_log"]})
+
+        assert works_payload["works"]["00001"]["title"] == "One"
+        assert activity_payload["header"]["schema"] == "studio_activity_log_v1"
+        assert activity_payload["entries"] == []
+
+
+def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> None:
+    openpyxl = pytest.importorskip("openpyxl")
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir) / "repo"
+        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir.mkdir(parents=True)
+        (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
+        (source_dir / "works.json").write_text(
+            json.dumps({"catalogue_source_works_version": "catalogue_source_works_v1", "works": {}}),
+            encoding="utf-8",
+        )
+        (source_dir / "work_details.json").write_text(
+            json.dumps({"catalogue_source_work_details_version": "catalogue_source_work_details_v1", "work_details": {}}),
+            encoding="utf-8",
+        )
+        (source_dir / "series.json").write_text(
+            json.dumps({"catalogue_source_series_version": "catalogue_source_series_v1", "series": {"001": {"series_id": "001", "title": "Series", "status": "published", "primary_work_id": "00042"}}}),
+            encoding="utf-8",
+        )
+        workbook_path = repo_root / "data" / "works_bulk_import.xlsx"
+        workbook_path.parent.mkdir(parents=True)
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+        sheet.title = "Works"
+        sheet.append(["work_id", "series_ids", "title"])
+        sheet.append(["42", "001", "Imported Work"])
+        workbook.save(workbook_path)
+
+        status, preview_payload = catalogue_post_response(repo_root, "/import-preview", {"mode": "works"}, dry_run=True)
+        apply_status, apply_payload = catalogue_post_response(repo_root, "/import-apply", {"mode": "works"}, dry_run=True)
+
+        assert status == studio_docs_api.HTTPStatus.OK
+        assert preview_payload["preview"]["summary"]["importable_count"] == 1
+        assert preview_payload["preview"]["importable_ids"] == ["00042"]
+        assert apply_status == studio_docs_api.HTTPStatus.OK
+        assert apply_payload["dry_run"] is True
+        assert apply_payload["would_write"] is True
+        assert json.loads((source_dir / "works.json").read_text(encoding="utf-8"))["works"] == {}
 
 
 def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:

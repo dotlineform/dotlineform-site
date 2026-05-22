@@ -1,4 +1,4 @@
-import { CATALOGUE_WRITE_ENDPOINTS } from "./studio-transport.js";
+import { CATALOGUE_READ_ENDPOINTS } from "./studio-transport.js";
 
 let studioConfigModulePromise = null;
 
@@ -88,7 +88,7 @@ function shouldUseCatalogueServerRead(key, options = {}) {
 }
 
 function buildCatalogueReadUrl(key, recordId = "") {
-  const url = new URL(CATALOGUE_WRITE_ENDPOINTS.read);
+  const url = new URL(CATALOGUE_READ_ENDPOINTS.read, window.location.origin);
   url.searchParams.set("key", key);
   if (recordId) {
     url.searchParams.set("record_id", String(recordId));

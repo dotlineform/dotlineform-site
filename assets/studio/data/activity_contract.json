@@ -667,7 +667,7 @@
     },
     "bulk-add-work": {
       "label": "bulk add work",
-      "route": "/studio/bulk-add-work/",
+      "route": "/studio/bulk-add-work/?mode=manage",
       "actions": {
         "import-workbook-records": {
           "label": "import workbook records",
@@ -675,7 +675,7 @@
           "control_id": "bulkAddWorkApply",
           "control_selector": "#bulkAddWorkApply",
           "control_label": "Import",
-          "endpoint": "/catalogue/import-apply",
+          "endpoint": "/studio/api/catalogue/import-apply",
           "record_family": "workbook_import",
           "record_id_field": "import_mode",
           "no_change_activity": "skip",

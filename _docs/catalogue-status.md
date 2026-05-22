@@ -37,12 +37,12 @@ The page root `#catalogueStatusRoot` implements the shared Studio ready-state co
 
 ## Current Inputs
 
-The page reads canonical source JSON through the local Catalogue Write Server:
+The page reads canonical source JSON through the local Studio app catalogue API:
 
-- `GET /catalogue/read?key=catalogue_works`
-- `GET /catalogue/read?key=catalogue_work_details`
-- `GET /catalogue/read?key=catalogue_series`
-- `GET /catalogue/read?key=catalogue_moments`
+- `GET /studio/api/catalogue/read?key=catalogue_works`
+- `GET /studio/api/catalogue/read?key=catalogue_work_details`
+- `GET /studio/api/catalogue/read?key=catalogue_series`
+- `GET /studio/api/catalogue/read?key=catalogue_moments`
 
 The logical keys are configured through `assets/studio/data/studio_config.json`.
 The canonical source files still live under `assets/studio/data/catalogue/`, but public Jekyll output excludes Studio-only catalogue source data.

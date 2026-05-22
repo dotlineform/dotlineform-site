@@ -128,16 +128,16 @@ The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-wo
 The Data Sharing dashboard, package preparation, and returned-package review route shells are hosted by the local app at `/studio/data-sharing/?mode=manage`, `/studio/data-sharing/prepare/?mode=manage`, and `/studio/data-sharing/review/?mode=manage`.
 They reuse the existing Data Sharing browser modules and now call Data Sharing through `/studio/api/docs/data-sharing/...` on the local app server.
 The old Jekyll route files under `studio/data-sharing/` have been retired.
-It reuses `assets/studio/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and the existing sibling catalogue import preview/apply endpoints on `127.0.0.1:8788`.
+It reuses `assets/studio/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply` endpoints.
 The old Jekyll `/studio/bulk-add-work/` shell has been retired.
 The Studio Activity route shell is hosted by the local app at `/studio/activity/?mode=manage`.
-It reuses `assets/studio/js/activity-log.js`, `assets/studio/js/activity-log-modals.js`, and the existing sibling catalogue activity-feed read endpoint on `127.0.0.1:8788`.
+It reuses `assets/studio/js/activity-log.js`, `assets/studio/js/activity-log-modals.js`, and `GET /studio/api/catalogue/read?key=activity_log` on the local app server.
 The old Jekyll `/studio/activity/` shell has been retired.
 The Catalogue Field Registry route shell is hosted by the local app at `/studio/catalogue-field-registry/?mode=manage`.
 It reuses `assets/studio/js/catalogue-field-registry-review.js` and the checked-in `assets/studio/data/catalogue_field_registry.json` read-only data source.
 The old Jekyll `/studio/catalogue-field-registry/` shell has been retired.
 The Catalogue Drafts route shell is hosted by the local app at `/studio/catalogue-status/?mode=manage`.
-It reuses `assets/studio/js/catalogue-status.js` and the existing sibling catalogue read service on `127.0.0.1:8788`.
+It reuses `assets/studio/js/catalogue-status.js` and local-app catalogue read keys under `GET /studio/api/catalogue/read`.
 The old Jekyll `/studio/catalogue-status/` shell has been retired.
 The Studio Works route shell is hosted by the local app at `/studio/studio-works/?mode=manage`.
 It reuses `assets/studio/js/studio-works.js`, checked-in works/series indexes, and the Studio-only work storage index.

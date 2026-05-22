@@ -304,6 +304,8 @@ Project State now uses `scripts/studio/studio_catalogue_api.py` for local app `P
 The adapter reuses `scripts/catalogue/project_state_report.py`, reads the served repo's local environment for `DOTLINEFORM_PROJECTS_BASE_DIR`, preserves Studio activity logging, and lets the browser use local Docs API source opening instead of the old standalone docs-management URL.
 Thumbnail Quality now uses the same narrow catalogue adapter for `POST /studio/api/catalogue/thumbnail-quality-preview`.
 The adapter reuses `scripts/media/build_thumbnail_quality_preview.py`, keeps initial page loads on the checked-in preview JSON, and removes the browser dependency on `127.0.0.1:8788` for refresh availability.
+Catalogue Drafts and Studio Activity now read through local-app `GET /studio/api/catalogue/read`.
+Bulk Add Work now uses local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply`; the adapter reuses the existing workbook import planner/apply helpers and preserves Studio Activity logging.
 
 Transition cleanup backlog:
 
@@ -350,11 +352,12 @@ Do not let relative public-content links stay on the Studio app host, and do not
 The first helper is in place; adopt it as each migrated route's public-content links are touched rather than doing a broad blind rewrite.
 Catalogue dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, and the Catalogue Series/Work/Work Detail/Moment editor shells are the first operational route shells moved in Phase 5.
 They keep the existing vanilla browser modules and unavailable-service behavior, and only change the host shell from Jekyll to the local app.
-The catalogue API calls behind Catalogue Drafts, Bulk Add Work, Studio Activity, and the catalogue editors are not yet consolidated; migrate those only when the route-family API boundary is ready.
+The catalogue API calls behind Catalogue Drafts, Bulk Add Work, and Studio Activity are now consolidated into the local app server.
+The catalogue editor write/build/publication/delete/import API calls are not yet consolidated; migrate those only when the editor route-family API boundary is ready.
 The Catalogue dashboard keeps the existing `studio-dashboard.js` metric hydration and now links to manage-mode local Catalogue routes.
 The Analytics dashboard also uses `studio-dashboard.js` and links to the local Analytics tag routes.
 Catalogue Field Registry is read-only and uses checked-in Studio data, so it does not add a new write/API consolidation dependency.
-Catalogue Drafts still reads draft record data through the sibling catalogue service until the catalogue read/write API family moves into the local app server.
+Catalogue Drafts reads draft record data through the local app catalogue read API.
 Studio Works is read-only and uses checked-in index data, but it also adopts the public-site link resolver so work and series links open against the configured public Jekyll preview host.
 The catalogue editor shell migration keeps the existing `127.0.0.1:8788` catalogue sibling service dependency for create/save/build/publication/delete/import flows.
 Endpoint ownership should move into the local app server as a separate API consolidation slice rather than being proxied.

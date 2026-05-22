@@ -287,10 +287,10 @@ ACTIVITY_DELETE_PROFILES: dict[str, ActivityActionProfile] = {
 ACTIVITY_PROFILE_IMPORT_WORKBOOK_RECORDS = ActivityActionProfile(
     page_id="bulk-add-work",
     action_id="import-workbook-records",
-    route="/studio/bulk-add-work/",
+    route="/studio/bulk-add-work/?mode=manage",
     control_id="bulkAddWorkApply",
     control_selector="#bulkAddWorkApply",
-    endpoint=routes.IMPORT_APPLY_PATH,
+    endpoint="/studio/api/catalogue/import-apply",
     record_family="workbook_import",
     record_id_field="import_mode",
     script_purpose_ids=("import-source-data", "rebuild-lookups"),

@@ -26,14 +26,6 @@ def start_server() -> tuple[StudioAppServer, str]:
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def unavailable_json(route) -> None:
-    route.fulfill(
-        status=200,
-        content_type="application/json",
-        body='{"ok": false, "error": "catalogue service unavailable"}',
-    )
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.parse_args(argv)
@@ -53,25 +45,31 @@ def main(argv: list[str] | None = None) -> int:
             page = browser.new_page()
             console_errors: list[str] = []
             page_errors: list[str] = []
-            catalogue_service_requests: list[str] = []
+            legacy_catalogue_service_requests: list[str] = []
+            local_catalogue_requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
             page.on(
                 "request",
-                lambda request: catalogue_service_requests.append(request.url)
+                lambda request: legacy_catalogue_service_requests.append(request.url)
                 if "127.0.0.1:8788" in request.url
                 else None,
             )
-            page.route("http://127.0.0.1:8788/**", unavailable_json)
+            page.on(
+                "request",
+                lambda request: local_catalogue_requests.append(request.url)
+                if "/studio/api/catalogue/" in request.url
+                else None,
+            )
 
             page.goto(f"{base_url}/studio/bulk-add-work/?mode=manage", wait_until="domcontentloaded")
             root = page.locator("#bulkAddWorkRoot")
             expect(root).to_be_visible(timeout=10_000)
             expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
             expect(root).to_have_attribute("data-studio-mode", "idle", timeout=10_000)
-            expect(root).to_have_attribute("data-studio-service", "unavailable", timeout=10_000)
+            expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
             expect(root).to_have_attribute("data-studio-record-loaded", "false", timeout=10_000)
-            expect(page.locator("#bulkAddWorkPreview")).to_be_disabled(timeout=10_000)
+            expect(page.locator("#bulkAddWorkPreview")).to_be_enabled(timeout=10_000)
             expect(page.locator("#bulkAddWorkApply")).to_be_disabled(timeout=10_000)
 
             workbook_path = page.locator("#bulkAddWorkWorkbook").inner_text(timeout=10_000).strip()
@@ -84,8 +82,10 @@ def main(argv: list[str] | None = None) -> int:
             nav_link = page.locator('.site-nav [data-studio-navigate="bulk_add_work"]').get_attribute("href")
             if nav_link != "/studio/bulk-add-work/?mode=manage":
                 raise AssertionError(f"bulk-add-work nav link is not manage-mode: {nav_link!r}")
-            if not catalogue_service_requests:
-                raise AssertionError("bulk-add-work route did not probe the catalogue service")
+            if not local_catalogue_requests:
+                raise AssertionError("bulk-add-work route did not call the local catalogue API")
+            if legacy_catalogue_service_requests:
+                raise AssertionError(f"bulk-add-work still called legacy catalogue service: {legacy_catalogue_service_requests}")
 
             browser.close()
 

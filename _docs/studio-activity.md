@@ -33,15 +33,13 @@ The page root `#studioActivityRoot` implements the shared Studio ready-state con
 
 ## Inputs
 
-The page reads the unified feed through the local Catalogue Write Server:
+The page reads the unified feed through the local Studio app catalogue API:
 
-- `GET /catalogue/read?key=activity_log`
+- `GET /studio/api/catalogue/read?key=activity_log`
 
 That service-backed read returns:
 
 - `var/studio/activity/activity_log.json`
-
-That sibling read endpoint remains in place until a later catalogue API consolidation slice.
 
 The fuller local journal lives beside the capped feed outside published route data:
 

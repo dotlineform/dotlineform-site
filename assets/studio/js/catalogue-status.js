@@ -6,7 +6,7 @@ import {
 import {
   loadStudioLookupJson
 } from "./studio-data.js";
-import { probeCatalogueHealth } from "./studio-transport.js";
+import { probeCatalogueReadHealth } from "./studio-transport.js";
 import {
   initializeStudioRouteState,
   setStudioRouteReady
@@ -225,7 +225,7 @@ async function init() {
 
   try {
     const config = await loadStudioConfigWithText("catalogue_status");
-    const serverAvailable = await probeCatalogueHealth();
+    const serverAvailable = await probeCatalogueReadHealth();
     if (!serverAvailable) {
       loadingNode.textContent = getStudioText(config, "catalogue_status.server_unavailable_hint", "Local catalogue server unavailable. Catalogue drafts are disabled.");
       root.hidden = false;

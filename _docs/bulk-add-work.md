@@ -49,14 +49,14 @@ Current workbook check:
 Current flow:
 
 1. choose import mode
-2. `POST /catalogue/import-preview` reads the configured workbook path and reports:
+2. `POST /studio/api/catalogue/import-preview` reads the configured workbook path and reports:
    - candidate row count
    - importable row count
    - duplicate row count
    - blocked row count
    - blocked reasons and sample rows
 3. if the preview has blocked rows, apply is disabled
-4. `POST /catalogue/import-apply` re-runs the same plan and writes only new records into canonical source JSON
+4. `POST /studio/api/catalogue/import-apply` re-runs the same plan and writes only new records into canonical source JSON
 5. successful apply refreshes derived lookup payloads, writes an aggregated Studio Activity entry, and appends unified Studio activity rows for import and lookup refresh
 
 This page does not upload workbook files, edit workbook rows, or write anything back into Excel.

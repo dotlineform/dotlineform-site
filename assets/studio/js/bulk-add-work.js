@@ -3,9 +3,9 @@ import {
   loadStudioConfigWithText
 } from "./studio-config.js";
 import {
-  CATALOGUE_WRITE_ENDPOINTS,
+  BULK_ADD_WORK_ENDPOINTS,
   postJson,
-  probeCatalogueHealth
+  probeBulkAddWorkCatalogueHealth
 } from "./studio-transport.js";
 import {
   initializeStudioRouteState
@@ -87,7 +87,7 @@ async function runPreview(state) {
   updateState(state);
   applyBulkAddWorkStatusProjection(state, projectBulkAddWorkPreviewStart(workflowTextOptions(state)));
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.importPreview, { mode: state.mode });
+    const response = await postJson(BULK_ADD_WORK_ENDPOINTS.importPreview, { mode: state.mode });
     state.preview = response && response.preview ? response.preview : null;
     applyBulkAddWorkStatusProjection(state, projectBulkAddWorkPreviewSuccess(state, state.preview, workflowTextOptions(state)));
   } catch (error) {
@@ -109,12 +109,12 @@ async function applyImport(state) {
   updateState(state);
   applyBulkAddWorkStatusProjection(state, projectBulkAddWorkApplyStart(workflowTextOptions(state)));
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.importApply, {
+    const response = await postJson(BULK_ADD_WORK_ENDPOINTS.importApply, {
       mode: state.mode,
       activity_context: buildStudioActivityContext({
         pageId: "bulk-add-work",
         actionId: "import-workbook-records",
-        route: "/studio/bulk-add-work/",
+        route: "/studio/bulk-add-work/?mode=manage",
         controlId: "bulkAddWorkApply",
         controlSelector: "#bulkAddWorkApply",
         recordIdField: "import_mode",
@@ -208,7 +208,7 @@ async function init() {
   try {
     const config = await loadStudioConfigWithText("bulk_add_work");
     state.config = config;
-    state.serverAvailable = Boolean(await probeCatalogueHealth());
+    state.serverAvailable = Boolean(await probeBulkAddWorkCatalogueHealth());
     pageHeadingNode.textContent = t(state, "page_heading", "bulk add work");
     importHeadingNode.textContent = t(state, "import_heading", "import");
     modeLabelNode.textContent = t(state, "mode_label", "mode");

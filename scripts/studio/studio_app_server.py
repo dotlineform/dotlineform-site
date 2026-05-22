@@ -97,7 +97,7 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             self.send_audit_api_json(path.removeprefix("/studio/api/audits"))
             return
         if path.startswith("/studio/api/catalogue/"):
-            self.send_catalogue_api_json(path.removeprefix("/studio/api/catalogue"))
+            self.send_catalogue_api_json(path.removeprefix("/studio/api/catalogue"), query)
             return
         if path in {"/studio", "/studio/"}:
             self.send_html(studio_home_view(self.version))
@@ -293,11 +293,13 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
-    def send_catalogue_api_json(self, api_path: str) -> None:
+    def send_catalogue_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
         try:
-            self.send_json(catalogue_get_payload(self.repo_root, api_path))
+            self.send_json(catalogue_get_payload(self.repo_root, api_path, query))
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
