@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0035088c9cd5442fae8b6525eb6a90a1",
-    "generated_at_utc": "2026-05-22T06:54:32Z",
-    "count": 289
+    "version": "blake2b-e0ad93dadcdf54e8e3e447633099159c",
+    "generated_at_utc": "2026-05-22T07:21:18Z",
+    "count": 290
   },
   "entries": [
     {
@@ -3941,35 +3941,6 @@
       "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
-      "id": "site-request-studio-local-vanilla-web-app",
-      "kind": "doc",
-      "title": "Studio Local Vanilla Web App Request",
-      "href": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
-      "last_updated": "2026-05-22",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-22 • Change Requests",
-      "search_terms": [
-        "site-request-studio-local-vanilla-web-app",
-        "site",
-        "request",
-        "studio",
-        "local",
-        "vanilla",
-        "web",
-        "app",
-        "studio local vanilla web app request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-22",
-        "2026",
-        "05",
-        "22"
-      ],
-      "search_text": "site-request-studio-local-vanilla-web-app site request studio local vanilla web app studio local vanilla web app request change requests change requests 2026-05-22 2026 05 22"
-    },
-    {
       "id": "search-build-pipeline-architecture",
       "kind": "doc",
       "title": "Search Build Pipeline Architecture",
@@ -4144,6 +4115,33 @@
         "10"
       ],
       "search_text": "search-studio-v1-index-shape search studio v1 index shape docs scope index shape docs scope 2026-05-11 14:10 2026 05 11 14 10"
+    },
+    {
+      "id": "site-request-docs-semantic-references",
+      "kind": "doc",
+      "title": "Docs Semantic References Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
+      "last_updated": "2026-05-19",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-19 • Change Requests",
+      "search_terms": [
+        "site-request-docs-semantic-references",
+        "site",
+        "request",
+        "docs",
+        "semantic",
+        "references",
+        "docs semantic references request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "site-request-docs-semantic-references site request docs semantic references docs semantic references request change requests change requests 2026-05-19 2026 05 19"
     },
     {
       "id": "docs-viewer",
@@ -4449,6 +4447,35 @@
         "35"
       ],
       "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-09 22:35 2026 05 09 22 35"
+    },
+    {
+      "id": "site-request-studio-local-vanilla-web-app",
+      "kind": "doc",
+      "title": "Studio Local Vanilla Web App Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
+      "last_updated": "2026-05-22",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-22 • Change Requests",
+      "search_terms": [
+        "site-request-studio-local-vanilla-web-app",
+        "site",
+        "request",
+        "studio",
+        "local",
+        "vanilla",
+        "web",
+        "app",
+        "studio local vanilla web app request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-22",
+        "2026",
+        "05",
+        "22"
+      ],
+      "search_text": "site-request-studio-local-vanilla-web-app site request studio local vanilla web app studio local vanilla web app request change requests change requests 2026-05-22 2026 05 22"
     },
     {
       "id": "tiered-dimension-policy",
@@ -5555,6 +5582,28 @@
         "45"
       ],
       "search_text": "config-docs-viewer config docs viewer docs viewer config docs viewer 2026-05-14 14:45 2026 05 14 45"
+    },
+    {
+      "id": "local-studio-app",
+      "kind": "doc",
+      "title": "Local Studio App",
+      "href": "/docs/?scope=studio&doc=local-studio-app",
+      "last_updated": "2026-05-22 08:06",
+      "display_meta": "2026-05-22 08:06",
+      "search_terms": [
+        "local-studio-app",
+        "local",
+        "studio",
+        "app",
+        "local studio app",
+        "2026-05-22 08:06",
+        "2026",
+        "05",
+        "22",
+        "08",
+        "06"
+      ],
+      "search_text": "local-studio-app local studio app local studio app 2026-05-22 08:06 2026 05 22 08 06"
     },
     {
       "id": "change-requests",
@@ -6836,33 +6885,6 @@
         "15"
       ],
       "search_text": "site-request-docs-viewer-new-scope-button site request docs viewer new scope button docs viewer new scope button request 2026-05-15 2026 05 15"
-    },
-    {
-      "id": "site-request-docs-semantic-references",
-      "kind": "doc",
-      "title": "Docs Semantic References Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
-      "last_updated": "2026-05-19",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-19 • Change Requests",
-      "search_terms": [
-        "site-request-docs-semantic-references",
-        "site",
-        "request",
-        "docs",
-        "semantic",
-        "references",
-        "docs semantic references request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "site-request-docs-semantic-references site request docs semantic references docs semantic references request change requests change requests 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-docs-markdown-package-import",

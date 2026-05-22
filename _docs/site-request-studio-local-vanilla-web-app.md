@@ -3,10 +3,10 @@ doc_id: site-request-studio-local-vanilla-web-app
 title: Studio Local Vanilla Web App Request
 added_date: 2026-05-22
 last_updated: 2026-05-22
-ui_status: proposed
+ui_status: in-progress
 parent_id: change-requests
-sort_order: 8000
-hidden: false
+sort_order: 10000
+viewable: true
 ---
 # Studio Local Vanilla Web App Request
 
@@ -15,6 +15,8 @@ Status:
 - proposed
 - target direction agreed
 - implementation not started
+
+Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
 ## Summary
 
@@ -190,16 +192,16 @@ The migration should use the existing JavaScript maintenance gate when it change
 Goal:
 
 - make the current public build reflect what dotlineform.com should actually expose
+- keep `/library/` and `/analysis/` public read-only
 
 Tasks:
 
 - document the public published-surface manifest
-- keep `/library/` and `/analysis/` public read-only
 - remove or exclude public `/studio/` output
 - remove or exclude public `/docs/` output unless a curated read-only docs install is intentionally defined
 - exclude Studio-only assets and generated Studio docs/search payloads from public output
 - add or update checks so accidental public Studio output is visible
-- keep `bin/dev-studio` unchanged unless a small config split is needed
+- decide if `bin/dev-studio` remains unchanged or if a small config split is needed
 
 Acceptance:
 

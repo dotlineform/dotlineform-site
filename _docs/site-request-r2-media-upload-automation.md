@@ -3,9 +3,10 @@ doc_id: site-request-r2-media-upload-automation
 title: R2 Media Upload Automation Request
 added_date: 2026-05-07
 last_updated: "2026-05-08 00:00"
-ui_status: urgent
+ui_status: paused
 parent_id: change-requests
 sort_order: 6000
+viewable: true
 ---
 # R2 Media Upload Automation Request
 

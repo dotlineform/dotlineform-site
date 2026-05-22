@@ -3,9 +3,10 @@ doc_id: site-request-json-schema-adoption
 title: JSON Schema Adoption Request
 added_date: "2026-05-03 14:35"
 last_updated: "2026-05-03 14:35"
-ui_status: in-progress
+ui_status: deferred
 parent_id: change-requests
 sort_order: 3000
+viewable: true
 ---
 # JSON Schema Adoption Request
 
