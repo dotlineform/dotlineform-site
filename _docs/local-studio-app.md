@@ -28,6 +28,10 @@ Phase 1 added the first Python local Studio app server:
 ./scripts/studio/studio_app_server.py --port 8765
 ```
 
+`bin/dev-studio` now starts this app server by default during the transition.
+Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
+Jekyll still starts through `bin/dev-studio` for public-site preview and unmigrated Studio routes until the route migration is complete.
+
 Current mounted views:
 
 - `/studio/`

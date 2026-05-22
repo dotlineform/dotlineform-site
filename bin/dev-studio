@@ -27,6 +27,9 @@ fi
 
 JEKYLL_HOST="${JEKYLL_HOST:-127.0.0.1}"
 JEKYLL_PORT="${JEKYLL_PORT:-4000}"
+STUDIO_APP_ENABLED="${STUDIO_APP_ENABLED:-1}"
+STUDIO_APP_HOST="${STUDIO_APP_HOST:-127.0.0.1}"
+STUDIO_APP_PORT="${STUDIO_APP_PORT:-8765}"
 TAG_WRITE_PORT="${TAG_WRITE_PORT:-8787}"
 CATALOGUE_WRITE_PORT="${CATALOGUE_WRITE_PORT:-8788}"
 DOCS_MANAGEMENT_PORT="${DOCS_MANAGEMENT_PORT:-8789}"
@@ -45,6 +48,7 @@ if [ -n "${RUBYOPT:-}" ]; then
 fi
 
 JEKYLL_PID=""
+STUDIO_APP_PID=""
 TAG_WRITE_PID=""
 CATALOGUE_WRITE_PID=""
 DOCS_MANAGEMENT_PID=""
@@ -188,6 +192,9 @@ cleanup() {
   if [ -n "$JEKYLL_PID" ] && kill -0 "$JEKYLL_PID" 2>/dev/null; then
     kill "$JEKYLL_PID" 2>/dev/null || true
   fi
+  if [ -n "$STUDIO_APP_PID" ] && kill -0 "$STUDIO_APP_PID" 2>/dev/null; then
+    kill "$STUDIO_APP_PID" 2>/dev/null || true
+  fi
   if [ -n "$TAG_WRITE_PID" ] && kill -0 "$TAG_WRITE_PID" 2>/dev/null; then
     kill "$TAG_WRITE_PID" 2>/dev/null || true
   fi
@@ -203,7 +210,7 @@ cleanup() {
   if [ -n "$DOCS_WATCHER_PID" ] && kill -0 "$DOCS_WATCHER_PID" 2>/dev/null; then
     kill "$DOCS_WATCHER_PID" 2>/dev/null || true
   fi
-  wait "$JEKYLL_PID" "$TAG_WRITE_PID" "$CATALOGUE_WRITE_PID" "$DOCS_MANAGEMENT_PID" "$AUDIT_SERVICE_PID" "$DOCS_WATCHER_PID" 2>/dev/null || true
+  wait "$JEKYLL_PID" "$STUDIO_APP_PID" "$TAG_WRITE_PID" "$CATALOGUE_WRITE_PID" "$DOCS_MANAGEMENT_PID" "$AUDIT_SERVICE_PID" "$DOCS_WATCHER_PID" 2>/dev/null || true
 }
 
 trap cleanup EXIT INT TERM
@@ -214,6 +221,11 @@ parse_startup_doc_scopes "$DOCS_STARTUP_REBUILD_SCOPES"
 echo "Starting Studio development services from $ROOT_DIR"
 echo "Jekyll: http://$JEKYLL_HOST:$JEKYLL_PORT"
 echo "Jekyll config: $JEKYLL_CONFIG"
+if [ "$STUDIO_APP_ENABLED" != "0" ]; then
+  echo "Local Studio App: http://$STUDIO_APP_HOST:$STUDIO_APP_PORT"
+else
+  echo "Local Studio App: disabled"
+fi
 echo "Tag Write Server: http://127.0.0.1:$TAG_WRITE_PORT"
 echo "Catalogue Write Server: http://127.0.0.1:$CATALOGUE_WRITE_PORT"
 echo "Docs Management Server: http://127.0.0.1:$DOCS_MANAGEMENT_PORT"
@@ -245,6 +257,9 @@ fi
 echo
 
 require_open_port "Jekyll" "$JEKYLL_HOST" "$JEKYLL_PORT" "JEKYLL_PORT"
+if [ "$STUDIO_APP_ENABLED" != "0" ]; then
+  require_open_port "Local Studio App" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT" "STUDIO_APP_PORT"
+fi
 require_open_port "Tag Write Server" "127.0.0.1" "$TAG_WRITE_PORT" "TAG_WRITE_PORT"
 require_open_port "Catalogue Write Server" "127.0.0.1" "$CATALOGUE_WRITE_PORT" "CATALOGUE_WRITE_PORT"
 require_open_port "Docs Management Server" "127.0.0.1" "$DOCS_MANAGEMENT_PORT" "DOCS_MANAGEMENT_PORT"
@@ -284,6 +299,11 @@ echo
 RUBYOPT="$JEKYLL_RUBYOPT" "$BUNDLE_BIN" exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port "$JEKYLL_PORT" &
 JEKYLL_PID=$!
 
+if [ "$STUDIO_APP_ENABLED" != "0" ]; then
+  "$PYTHON_BIN" scripts/studio/studio_app_server.py --host "$STUDIO_APP_HOST" --port "$STUDIO_APP_PORT" &
+  STUDIO_APP_PID=$!
+fi
+
 "$PYTHON_BIN" scripts/analytics/tag_write_server.py --port "$TAG_WRITE_PORT" &
 TAG_WRITE_PID=$!
 
@@ -306,6 +326,10 @@ fi
 while true; do
   if ! kill -0 "$JEKYLL_PID" 2>/dev/null; then
     wait "$JEKYLL_PID"
+    break
+  fi
+  if [ -n "$STUDIO_APP_PID" ] && ! kill -0 "$STUDIO_APP_PID" 2>/dev/null; then
+    wait "$STUDIO_APP_PID"
     break
   fi
   if ! kill -0 "$TAG_WRITE_PID" 2>/dev/null; then

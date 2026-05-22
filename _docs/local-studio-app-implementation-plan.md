@@ -80,6 +80,7 @@ Current commit point:
 - Phase 0, Phase 1, and Phase 1A are complete
 - Phase 2 has started with runtime config and navigation helpers
 - Phase 3 has started with the Docs Viewer shell and generated-read API adapter hosted by the local app server
+- Phase 4 has started by adding the local app server to `bin/dev-studio` while keeping Jekyll and existing sibling services available for unmigrated workflows
 - write/manage APIs are intentionally still disabled or partial where not yet migrated
 
 ## Phase 0: Published Surface Cleanup
@@ -227,12 +228,13 @@ Outcomes:
 | Move endpoint ownership into the Python app server slice by slice. | pending |
 | Reuse extracted Python domain modules instead of proxying to old services by default. | pending |
 | Preserve loopback binding, CORS limits, write allowlists, backups, compact logs, and preview/apply boundaries. | pending |
-| Update `bin/dev-studio` to start the app server and only necessary background tasks. | pending |
+| Update `bin/dev-studio` to start the app server and only necessary background tasks. | partial |
 | Keep public Jekyll preview/build as an explicit separate action. | pending |
 
 Next steps:
 
-Use the docs-management migration to establish the pattern.
+Use the docs-management migration to establish the endpoint ownership pattern.
+`bin/dev-studio` now starts the local app server as a bridge step, but it still starts Jekyll and existing sibling services for unmigrated workflows.
 Avoid a broad service merge until one migrated workflow has proven the app-server route-module shape.
 
 ## Phase 5: Route Family Migration

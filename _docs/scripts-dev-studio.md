@@ -22,6 +22,7 @@ For a new local session, it is the simplest way to:
 
 - optionally refresh one or both docs/docs-search scopes before startup
 - optionally refresh the derived catalogue lookup payloads used by the catalogue editors
+- start the local Python Studio app server for migrated Studio views
 - start the Jekyll site
 - start the local Studio write services used by the current admin UI
 - keep docs source edits synced into same-scope docs payloads and docs search while the runner is active
@@ -57,6 +58,13 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   default: `4000`
 - `JEKYLL_CONFIG`
   default: `_config.yml,_config.dev-studio.yml`
+- `STUDIO_APP_ENABLED`
+  default: `1`
+  set to `0` to skip the local Python Studio app server during transition
+- `STUDIO_APP_HOST`
+  default: `127.0.0.1`
+- `STUDIO_APP_PORT`
+  default: `8765`
 - `TAG_WRITE_PORT`
   default: `8787`
 - `CATALOGUE_WRITE_PORT`
@@ -90,6 +98,7 @@ Example:
 export DOCS_STARTUP_REBUILD_SCOPES=""
 export CATALOGUE_STARTUP_LOOKUP_REBUILD=off
 export JEKYLL_PORT=4001
+export STUDIO_APP_PORT=8765
 export TAG_WRITE_PORT=8797
 export CATALOGUE_WRITE_PORT=8798
 export DOCS_MANAGEMENT_PORT=8799
@@ -112,10 +121,11 @@ Adding a new docs scope there makes it eligible for startup docs/docs-search reb
 Before it starts any rebuilds or long-running servers, `bin/dev-studio` checks that the required ports are available:
 
 1. Jekyll on `JEKYLL_HOST:JEKYLL_PORT`
-2. Tag Write Server on `127.0.0.1:TAG_WRITE_PORT`
-3. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT`
-4. Docs Management Server on `127.0.0.1:DOCS_MANAGEMENT_PORT`
-5. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT`
+2. Local Studio App on `STUDIO_APP_HOST:STUDIO_APP_PORT` when `STUDIO_APP_ENABLED` is not `0`
+3. Tag Write Server on `127.0.0.1:TAG_WRITE_PORT`
+4. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT`
+5. Docs Management Server on `127.0.0.1:DOCS_MANAGEMENT_PORT`
+6. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT`
 
 If any port is unavailable, the runner exits immediately with a message naming the affected service and environment variable override.
 
@@ -149,6 +159,20 @@ After those startup writes succeed, it starts the long-running local processes b
 
 ## Running Services
 
+### Local Studio App
+
+- command:
+
+```bash
+./scripts/studio/studio_app_server.py --host "$STUDIO_APP_HOST" --port "$STUDIO_APP_PORT"
+```
+
+- default URL: `http://127.0.0.1:8765/studio/`
+- serves migrated local Studio views outside Jekyll
+- currently mounts `/studio/`, `/studio/analytics/tag-groups/`, `/docs/`, `/health`, `/studio/runtime-config.json`, and the first Docs generated-read API routes
+- can be disabled during transition with `STUDIO_APP_ENABLED=0`
+- related doc: [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
+
 ### Jekyll
 
 - command:
@@ -158,7 +182,7 @@ bundle exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port 
 ```
 
 - default URL: `http://127.0.0.1:4000`
-- serves the local site and Studio routes
+- serves the local site and unmigrated Studio routes during the transition
 - uses `_config.dev-studio.yml` by default as a local-only overlay to exclude generated docs/search JSON from Jekyll's watch surface
 - normal public builds that use `_config.yml` alone still include generated docs/search JSON
 - when launched through `bin/dev-studio`, the Jekyll process loads `scripts/jekyll_webrick_client_reset_filter.rb` through `RUBYOPT`
@@ -229,6 +253,7 @@ bundle exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port 
 At startup the runner prints quick links for:
 
 - Jekyll root
+- Local Studio App
 - Tag Write Server
 - Catalogue Write Server
 - Docs Management Server
@@ -247,6 +272,7 @@ The runner traps `EXIT`, `INT`, and `TERM`.
 When you press `Ctrl+C`, it:
 
 - stops Jekyll
+- stops the Local Studio App when enabled
 - stops the Tag Write Server
 - stops the Catalogue Write Server
 - stops the Docs Management Server
@@ -265,6 +291,7 @@ If any one of the child processes exits unexpectedly, the runner stops monitorin
 - rebuild catalogue lookup artifacts on startup unless `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled
 - rebuild public search artifacts on startup
 - start a separate frontend asset server
+- replace Jekyll as the host for all Studio routes; unmigrated routes still use the Jekyll process during transition
 
 If you disable the watcher or want an explicit manual rebuild, use:
 
