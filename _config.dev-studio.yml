@@ -2,6 +2,7 @@
 # Keep public builds on _config.yml so generated docs/search JSON is still published.
 docs_viewer_generated_base_url: "http://127.0.0.1:8789"
 docs_viewer_management_enabled: true
+docs_viewer_config_url: "/assets/docs-viewer/data/docs-viewer-config.json"
 
 exclude:
   - scripts

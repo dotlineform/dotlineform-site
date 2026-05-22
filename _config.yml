@@ -4,6 +4,7 @@ url: "https://www.dotlineform.com"
 baseurl: ""  # custom domain: leave empty
 live_url: "https://www.dotlineform.com"
 docs_viewer_management_enabled: false
+docs_viewer_config_url: "/assets/docs-viewer/data/docs-viewer-public-config.json"
 
 # Thumbnails (local repo
 # (thumb_base is to let thumbnail URLs come from a different origin than the site itself. Set to "" to serve from repo, or a full URL to serve from a different origin.)
@@ -96,5 +97,10 @@ exclude:
   - tests
   - var
   - logs
+  - docs/
+  - studio/
+  - assets/studio/
   - assets/studio/data/catalogue/
   - assets/studio/data/catalogue_lookup/
+  - assets/data/docs/scopes/studio/
+  - assets/data/search/studio/

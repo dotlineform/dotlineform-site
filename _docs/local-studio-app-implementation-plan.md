@@ -31,18 +31,18 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Document the public published-surface manifest. | pending |
-| Keep `/library/` and `/analysis/` public read-only. | pending |
-| Remove or exclude public `/studio/` output. | pending |
-| Remove or exclude public `/docs/` output unless a curated read-only docs install is intentionally defined. | pending |
-| Exclude Studio-only assets and generated Studio docs/search payloads from public output. | pending |
-| Add or update checks so accidental public Studio output is visible. | pending |
-| Decide whether `bin/dev-studio` can remain unchanged for this phase or needs a small config split. | pending |
+| Document the public published-surface manifest. | done |
+| Keep `/library/` and `/analysis/` public read-only. | done |
+| Remove or exclude public `/studio/` output. | done |
+| Remove or exclude public `/docs/` output unless a curated read-only docs install is intentionally defined. | done |
+| Exclude Studio-only assets and generated Studio docs/search payloads from public output. | done |
+| Add or update checks so accidental public Studio output is visible. | done |
+| Decide whether `bin/dev-studio` can remain unchanged for this phase or needs a small config split. | done |
 
 Next steps:
 
-Start with the published-surface manifest and build-output audit.
-This phase should be behavior-preserving for public users and should not move canonical data.
+Phase 0 is implemented.
+Next work should begin Phase 1 with the Python local app shell foundation, then Phase 1A with the Tag Groups view spike.
 
 ## Phase 1: Local App Shell Foundation
 
@@ -120,13 +120,16 @@ Outcomes:
 - public `/library/` and `/analysis/` stay read-only Docs Viewer installs
 - local Docs management no longer requires Jekyll to serve the management shell
 - Docs Viewer portability remains intact
+- Docs Viewer route/API code is kept as a distinct module boundary inside the Studio app server
 
 | Task | Status |
 | --- | --- |
 | Mount the Docs Viewer management shell in the local Studio app. | pending |
 | Provide Docs Viewer management runtime config through the Python app server. | pending |
+| Define Docs Viewer route/API modules inside the Python Studio app server rather than creating a separate default Docs server. | pending |
 | Move or adapt docs-management API routes into the Python Studio app server without default proxying. | pending |
 | Reuse existing docs-management domain modules and response contracts. | pending |
+| Keep Docs Viewer JS, CSS, UI text, scope config, payload contract, write policies, and import/rebuild/search behavior Docs-owned. | pending |
 | Preserve create, metadata edit, move, archive/delete, show hidden, rebuild, settings, and import workflows. | pending |
 | Verify generated docs payload rebuilds and docs search rebuilds still run through the expected paths. | pending |
 | Smoke `/docs/` manage mode on the local app host and public `/library/` plus `/analysis/` read-only behavior separately. | pending |
@@ -135,6 +138,7 @@ Next steps:
 
 Start by hosting the shell and config, then migrate API ownership workflow by workflow.
 Temporary sibling services are acceptable only as narrow scaffolding and should be retired as each management route moves into the app server.
+Do not add a separate always-running Docs Viewer server for normal Studio; keep a possible standalone Docs Viewer launcher as a later portability option over the same modules.
 
 ## Phase 4: Local Service Consolidation
 
@@ -144,6 +148,7 @@ Outcomes:
 - old sibling HTTP services are retired as their workflows migrate
 - domain modules preserve explicit write policies and response contracts
 - `bin/dev-studio` becomes a launcher for the local app server and any remaining required background processes
+- Docs Viewer remains a module boundary within the app server rather than becoming a separate default process
 
 | Task | Status |
 | --- | --- |

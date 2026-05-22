@@ -1,0 +1,67 @@
+{
+  "schema_version": "docs_viewer_config_v1",
+  "default_scope_id": "library",
+  "scopes": [
+    {
+      "scope_id": "library",
+      "viewer_base_url": "/library/",
+      "include_scope_param": false,
+      "default_doc_id": "library",
+      "media_path_prefix": "docs/library",
+      "index_url": "/assets/data/docs/scopes/library/index.json",
+      "search_index_url": "/assets/data/search/library/index.json",
+      "search": {
+        "domain": "docs_viewer",
+        "schema": "search_index_library_v1",
+        "index_url": "/assets/data/search/library/index.json",
+        "targeted_policy": "record_update",
+        "targeted_operations": [
+          "create",
+          "update",
+          "delete"
+        ]
+      }
+    },
+    {
+      "scope_id": "analysis",
+      "viewer_base_url": "/analysis/",
+      "include_scope_param": false,
+      "default_doc_id": "analysis",
+      "media_path_prefix": "docs/analysis",
+      "index_url": "/assets/data/docs/scopes/analysis/index.json",
+      "search_index_url": "/assets/data/search/analysis/index.json",
+      "search": {
+        "domain": "docs_viewer",
+        "schema": "search_index_analysis_v1",
+        "index_url": "/assets/data/search/analysis/index.json",
+        "targeted_policy": "record_update",
+        "targeted_operations": [
+          "create",
+          "update",
+          "delete"
+        ]
+      }
+    }
+  ],
+  "docs_viewer": {
+    "recently_added_limit": 10,
+    "hidden_nav_color": "var(--muted)",
+    "doc_hidden_emoji": "🚫",
+    "ui_statuses_by_scope": {
+      "library": [
+        {
+          "ui_status": "draft",
+          "label": "Draft",
+          "emoji": "📝"
+        }
+      ],
+      "analysis": [
+        {
+          "ui_status": "draft",
+          "label": "Draft",
+          "emoji": "📝"
+        }
+      ]
+    }
+  }
+}

@@ -88,6 +88,44 @@ Preferred migration rule:
 This is one reason the recent script structural work is useful to pause rather than continue broadly.
 The extracted helpers can become app-server modules directly instead of remaining hidden behind old per-service HTTP wrappers.
 
+## Docs Viewer Server Boundary Decision
+
+Keep Docs Viewer as a distinct module and package boundary, but host local Docs Viewer management through the one Python Studio app server by default.
+
+Do not introduce a separate always-running Docs Viewer server for normal Studio use.
+That would reintroduce several problems this migration is meant to reduce:
+
+- another local port
+- another health and capability surface
+- another CORS and loopback policy
+- another startup and shutdown path
+- another proxy or compatibility layer
+- more process decisions in `bin/dev-studio`
+
+The target shape is one local app server with Docs-owned route modules:
+
+```text
+Python Studio app server
+  /studio/...       Studio shell and views
+  /docs/...         Docs Viewer management shell
+  /api/docs/...     Docs management APIs
+  /api/catalogue/... etc.
+```
+
+Docs Viewer should still own its domain boundary:
+
+- browser JavaScript, CSS, and UI text
+- source/docs scope config
+- generated docs payload contract
+- management route module
+- write policies and allowlists
+- import, rebuild, and search behavior
+- public read-only install behavior
+
+For portability, a standalone Docs Viewer server launcher can be considered later for non-Studio installs.
+That should be an alternate entrypoint over the same Docs Viewer modules, not the default architecture inside this repo.
+The normal Studio path should feel like one local app.
+
 ## Product Boundary
 
 Public site:
