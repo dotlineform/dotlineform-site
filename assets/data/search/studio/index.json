@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e0ad93dadcdf54e8e3e447633099159c",
-    "generated_at_utc": "2026-05-22T07:21:18Z",
-    "count": 290
+    "version": "blake2b-9f3b1933d51156416e2c2ef7a368b600",
+    "generated_at_utc": "2026-05-22T07:45:02Z",
+    "count": 291
   },
   "entries": [
     {
@@ -390,6 +390,31 @@
         "16"
       ],
       "search_text": "llm-dimension llm dimension llm-assisted dimension recommendation assisted recommendation 2026-04-16 2026 04 16"
+    },
+    {
+      "id": "local-studio-app-implementation-plan",
+      "kind": "doc",
+      "title": "Local Studio App Implementation Plan",
+      "href": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
+      "last_updated": "2026-05-22",
+      "parent_id": "local-studio-app",
+      "parent_title": "Local Studio App",
+      "display_meta": "2026-05-22 • Local Studio App",
+      "search_terms": [
+        "local-studio-app-implementation-plan",
+        "local",
+        "studio",
+        "app",
+        "implementation",
+        "plan",
+        "local studio app implementation plan",
+        "local studio app",
+        "2026-05-22",
+        "2026",
+        "05",
+        "22"
+      ],
+      "search_text": "local-studio-app-implementation-plan local studio app implementation plan local studio app implementation plan local studio app 2026-05-22 2026 05 22"
     },
     {
       "id": "local-studio-server-architecture",

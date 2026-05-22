@@ -37,6 +37,57 @@ Do not use this migration to rewrite Studio in React, Vue, Svelte, Swift, or ano
 Those options might have had tradeoffs earlier, but they now carry too much migration and revalidation cost for the current developer constraints.
 The current maintenance problem is Jekyll coupling, not the absence of a UI framework.
 
+## Local App Server Decision
+
+Use Python for the local Studio app server.
+
+The decision drivers are operational:
+
+- existing Studio write/read services and many generators are already Python
+- the first app server mostly needs to serve HTML, JavaScript, CSS, static assets, and runtime config JSON
+- Python can proxy or coordinate existing loopback services without introducing a new frontend toolchain
+- using Ruby risks preserving the wrong coupling because the goal is to remove Jekyll as the Studio host
+- using Node is not justified while the frontend remains vanilla browser modules without bundling or a framework
+
+Ruby should remain available for the public Jekyll build, current docs rendering, and existing Ruby-owned builders until those are intentionally replaced or wrapped.
+Node can be reconsidered later only if there is a concrete need for bundling, TypeScript, hot reload, module graph tooling, or desktop-shell packaging.
+
+The Python app server should stay deliberately small:
+
+- serve the local Studio app shell
+- serve existing Studio static assets
+- expose browser-safe runtime config JSON
+- proxy or coordinate existing local services where needed
+- avoid becoming a new application framework
+
+## Local Service Architecture Decision
+
+Use one Python Studio app server as the preferred end state.
+
+The app server should own the local Studio HTTP surface:
+
+- serve the Studio app shell
+- serve Studio static assets
+- expose runtime config JSON
+- expose local API routes
+- call existing domain modules directly where practical
+- start or delegate long-running/background tasks only where needed
+
+Do not make proxying to old sibling HTTP services the default architecture.
+A permanent proxy layer would keep two routing models alive and preserve avoidable compatibility work.
+During migration, temporary sibling services may remain for routes that have not moved yet, but each migrated workflow should retire the corresponding proxy/sibling dependency where practical.
+
+Preferred migration rule:
+
+- do not proxy by default
+- move endpoint ownership into the Python Studio app server as each workflow migrates
+- reuse extracted Python domain modules from the current catalogue, docs, analytics, audit, and Studio services
+- preserve response contracts where existing frontend code depends on them
+- keep temporary proxying narrow, explicit, and retired slice by slice
+
+This is one reason the recent script structural work is useful to pause rather than continue broadly.
+The extracted helpers can become app-server modules directly instead of remaining hidden behind old per-service HTTP wrappers.
+
 ## Product Boundary
 
 Public site:
@@ -93,6 +144,45 @@ For Studio users, navigation means:
 The current URL/query model is an implementation detail of the Jekyll route host.
 A local app may use internal app state, browser history, hash state, session storage, or a small router abstraction.
 Stable `/studio/...` URLs are useful for debugging and migration, but they are not the product contract.
+
+## State And Restore Decision
+
+Keep Studio state primarily in app and session state.
+
+Do not make hash/history debug restore a first-order migration requirement.
+Current Studio uses URL query state heavily because Jekyll routes made the browser URL the easiest route-state carrier, not because every workflow needs a shareable or restorable URL.
+
+Preferred state model:
+
+- use in-memory app state for active view, modal, selected record, filters, and return context
+- use `sessionStorage` only where restoring the last local workspace after refresh is useful
+- use explicit navigation APIs such as `navigateTo(view, params)` and `openModal(name, params)`
+- treat URL, hash, and history state as optional diagnostic or restore metadata
+- add URL/hash restore only for specific high-value cases after the local app shell is proven
+
+The migration should preserve workflow continuity, not every current query parameter.
+
+## First Complex Migration Decision
+
+Use Docs Viewer `/docs/` manage mode as the first complex workflow migration after a small local app shell spike.
+
+The app shell spike should still come first, using a simple read/review surface to prove static asset serving, runtime config JSON, route-ready smoke testing, and basic view mounting outside Jekyll.
+After that, `/docs/` manage mode is the right first serious workflow because it is frequently used, fundamental to site maintenance, and directly exercises the architecture this request is trying to prove.
+
+Reasons:
+
+- it targets a current source of Jekyll-regeneration friction
+- it exercises local management UI, runtime config, source writes, generated docs payload rebuilds, docs search rebuilds, and service/API ownership
+- it clarifies that public `/library/` and `/analysis/` remain read-only Docs Viewer installs
+- it moves local Docs management into the Python Studio app server while preserving Docs Viewer portability
+- it avoids starting with a catalogue editor whose migration would also carry public catalogue projection risk
+
+Target direction:
+
+- local `/docs/` management is hosted by the Python Studio app server
+- public `/library/` and `/analysis/` continue to use read-only Docs Viewer installs
+- Docs Viewer remains portable, with management enabled only in local app/server contexts
+- Jekyll should not be required to serve the local Docs management shell once this migration lands
 
 ## Reuse Strategy
 
@@ -185,177 +275,10 @@ Continue only when needed:
 
 The migration should use the existing JavaScript maintenance gate when it changes high-risk files, but it should not keep reducing scores as a standalone goal.
 
-## Implementation Phases
+## Implementation Plan
 
-### Phase 0: Published Surface Cleanup
-
-Goal:
-
-- make the current public build reflect what dotlineform.com should actually expose
-- keep `/library/` and `/analysis/` public read-only
-
-Tasks:
-
-- document the public published-surface manifest
-- remove or exclude public `/studio/` output
-- remove or exclude public `/docs/` output unless a curated read-only docs install is intentionally defined
-- exclude Studio-only assets and generated Studio docs/search payloads from public output
-- add or update checks so accidental public Studio output is visible
-- decide if `bin/dev-studio` remains unchanged or if a small config split is needed
-
-Acceptance:
-
-- public users can still access intended public catalogue pages, `/library/`, and `/analysis/`
-- public builds no longer produce non-functional Studio shells
-- public builds no longer expose local-management docs route output
-- local dev Studio still runs through the current path until replacement slices land
-
-### Phase 1: Local App Shell Spike
-
-Goal:
-
-- prove a non-Jekyll Studio host can serve one existing Studio view without changing its workflow
-
-Tasks:
-
-- add a small local Studio app server or extend an existing local server in a scoped way
-- serve a single app shell at a local Studio URL
-- serve existing Studio CSS and JS assets directly
-- provide a browser-safe runtime config JSON that replaces the Liquid values needed by the chosen route
-- mount one simple route/view, preferably a low-write review surface such as Studio Works, Activity, or a dashboard
-- preserve current ids, classes, and `data-role` hooks for that view
-
-Acceptance:
-
-- the chosen view loads without Jekyll
-- existing browser module behavior is reused rather than rewritten
-- route-ready state still becomes inspectable for smoke tests
-- the spike identifies which Jekyll assumptions must become app-server config or navigation adapters
-
-### Phase 2: Config And Navigation Adapter
-
-Goal:
-
-- replace Jekyll route/query assumptions with explicit Studio app services
-
-Tasks:
-
-- define a Studio runtime config shape for media bases, thumb bases, pipeline variants, UI text paths, docs links, and service endpoints
-- add a navigation adapter with methods such as `navigateTo(view, params)`, `openModal(name, params)`, and return-context helpers
-- add an initial-state adapter that can read URL state during transition but does not require it as the long-term owner
-- centralize app-shell nav labels and view ids outside Jekyll front matter
-- keep compatibility with existing route controllers until each route is migrated
-
-Acceptance:
-
-- migrated views do not need Liquid to receive runtime config
-- migrated views can navigate by app state rather than hardcoded `window.location` URLs
-- current URL query behavior can remain as a transitional input, not the product contract
-
-### Phase 3: Representative Route Migration
-
-Goal:
-
-- prove both simple and complex Studio workflows can run in the local app shell
-
-Tasks:
-
-- migrate one simple/review route
-- migrate one complex editor route, likely Catalogue Work Editor or Catalogue Series Editor
-- preserve current user-facing workflow behavior
-- keep existing write endpoints stable or proxy them without changing response contracts
-- update focused smoke tests to run against the local app host
-- record any controllers that need small ownership extractions before further migration
-
-Acceptance:
-
-- one complex editor can create/open/save through the local app shell
-- route-local behavior is preserved without Jekyll page generation
-- test coverage proves the migrated view can boot, load data, and reach route-ready state
-- no frontend-framework rewrite has been introduced
-
-### Phase 4: Local Service Integration
-
-Goal:
-
-- make Studio startup and service access coherent without tying app serving to Jekyll
-
-Tasks:
-
-- decide whether the local app server proxies existing write services or starts them as sibling processes
-- keep loopback binding, CORS limits, write allowlists, and compact logs
-- preserve existing service endpoint contracts during the first migration
-- split `bin/dev-studio` into separate responsibilities if needed:
-  - start Studio local app
-  - start local write/read services
-  - optionally preview/build the public Jekyll site
-- keep public-site preview explicit rather than required for using Studio
-
-Acceptance:
-
-- Studio can run locally without Jekyll serve
-- Jekyll public preview/build remains available as a separate action
-- local write services retain existing safety constraints
-
-### Phase 5: Route Family Migration
-
-Goal:
-
-- move remaining Studio surfaces from Jekyll route pages into the local app shell
-
-Tasks:
-
-- migrate catalogue editors and dashboards
-- migrate analytics/tag routes
-- migrate data-sharing routes
-- migrate audit and project-state routes
-- migrate Docs management entry points while keeping Docs Viewer portable
-- remove or retire Jekyll Studio route files after their local app replacements are verified
-- keep old route redirects only if useful for local transitional ergonomics
-
-Acceptance:
-
-- all active Studio workflows run through the local app shell
-- Jekyll no longer owns Studio page rendering
-- existing workflows, labels, service effects, and generated outputs remain stable unless explicitly changed
-
-### Phase 6: Projection And Build Contract
-
-Goal:
-
-- make the canonical-source to public-projection boundary explicit enough for a future repo split
-
-Tasks:
-
-- document canonical source families and their public projections
-- distinguish public projections, Studio projections, and Docs Viewer payloads
-- add checks for source-only fields leaking into public projections
-- ensure Jekyll consumes public projections rather than Studio-only data
-- keep generated output paths boring and explicit
-
-Acceptance:
-
-- public Jekyll builds depend only on intended public source/projection files
-- source-only fields are allowed in canonical data but excluded from public runtime artifacts unless a runtime contract includes them
-- the future site/studio repo boundary is visible even while both remain in one repo
-
-### Phase 7: Optional Repo Split Decision
-
-Goal:
-
-- decide whether a separate Studio repo is worth the operational cost after the local app boundary is stable
-
-Tasks:
-
-- review what files now belong to public site, Studio app, canonical data, Docs Viewer, and generated outputs
-- decide whether to keep one repo, split into public-site and Studio repos, or extract Docs Viewer first
-- avoid splitting only for tidiness
-- require a concrete benefit such as simpler deployment, clearer publish artifacts, or easier local app maintenance
-
-Acceptance:
-
-- repo split is a separate decision, not a prerequisite for local app migration
-- if split, the publish/export contract is already proven
+The phased task plan lives in [Local Studio App Implementation Plan](/docs/?scope=studio&doc=local-studio-app-implementation-plan).
+Keep this request focused on direction, boundaries, and design decisions.
 
 ## Non-Goals
 
@@ -391,14 +314,6 @@ For projection-contract slices:
 - add focused leak checks for source-only fields
 - verify generated public JSON/search payloads
 - verify representative public pages consume public projections only
-
-## Open Questions
-
-- Should the local app server be Python, Ruby, or Node?
-- Should existing write services stay as sibling processes or be proxied through one app server?
-- Should the local app use hash/history state for debug restore, or keep state mostly in memory/session storage?
-- Which route should be the first complex editor migration?
-- Should `/docs/` management remain a Docs Viewer route hosted by the local app, or continue as a separate local viewer shell during transition?
 
 ## Related Docs
 
