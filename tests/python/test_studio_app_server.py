@@ -12,6 +12,23 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.studio import studio_docs_api  # noqa: E402
+from scripts.studio.studio_app_config import runtime_config  # noqa: E402
+
+
+def test_runtime_config_exposes_adapter_contract() -> None:
+    payload = runtime_config(REPO_ROOT, "test-version")
+    runtime = payload["app"]["runtime"]
+
+    assert runtime["host"] == "local-studio-app"
+    assert runtime["asset_version"] == "test-version"
+    assert runtime["routes"]["runtime_config"] == "/studio/runtime-config.json"
+    assert runtime["services"]["docs"]["base"] == "/studio/api/docs"
+    assert runtime["data_paths"]["ui_text"]["tag_groups"] == "/assets/studio/data/ui_text/tag-groups.json"
+    assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
+    assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
+    assert runtime["state"]["return_context_storage_key"] == "dlf.studio.returnContext"
+    assert runtime["modals"]["event"] == "studio:open-modal"
+    assert any(view["id"] == "docs" and view["path"] == "/docs/" for view in runtime["views"])
 
 
 def test_docs_capabilities_report_scopes_and_management_api() -> None:
@@ -81,6 +98,7 @@ def test_docs_api_post_rejects_disallowed_origin() -> None:
 
 
 if __name__ == "__main__":
+    test_runtime_config_exposes_adapter_contract()
     test_docs_capabilities_report_scopes_and_management_api()
     test_docs_generated_read_routes_return_existing_payloads()
     test_docs_management_settings_and_dry_run_mutation_routes()

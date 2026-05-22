@@ -15,7 +15,8 @@ Status:
 - in progress
 - target direction agreed
 - Phase 0, Phase 1, and Phase 1A implemented
-- Phase 2 and Phase 3 started
+- Phase 2 implemented
+- Phase 3 started
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -368,7 +369,7 @@ Good commit points include:
 - public published-surface cleanup
 - first local app server shell
 - first migrated Studio view
-- navigation/runtime-config adapter changes
+- navigation/runtime-config adapter completion
 - Docs Viewer management shell or API milestone
 - each migrated Docs management workflow
 - each route-family migration
@@ -444,6 +445,7 @@ For projection-contract slices:
 
 ## Change Log Entries
 
+- `change-2026-05-22-completed-local-studio-config-navigation-adapter`
 - `change-2026-05-22-migrated-docs-management-api-to-local-studio-app`
 - `change-2026-05-22-added-local-studio-app-to-dev-runner`
 - `change-2026-05-22-started-local-studio-app-migration`

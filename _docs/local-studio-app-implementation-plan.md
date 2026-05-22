@@ -19,7 +19,8 @@ Status:
 
 - in progress
 - Phase 0, Phase 1, and Phase 1A are implemented
-- Phase 2 and Phase 3 have started
+- Phase 2 is implemented
+- Phase 3 has started
 
 ## Lifecycle Rules
 
@@ -78,7 +79,7 @@ Each commit-point entry should capture:
 Current commit point:
 
 - Phase 0, Phase 1, and Phase 1A are complete
-- Phase 2 has started with runtime config and navigation helpers
+- Phase 2 is complete with runtime config, navigation, initial-state, return-context, and modal-dispatch helpers
 - Phase 3 has started with the Docs Viewer shell and generated-read API adapter hosted by the local app server
 - Phase 3 now routes Docs management GET/POST APIs through the local app server adapter
 - Phase 4 has started by adding the local app server to `bin/dev-studio` while keeping Jekyll and existing sibling services available for unmigrated workflows
@@ -168,18 +169,20 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Define the Studio runtime config shape for media bases, thumb bases, pipeline variants, UI text paths, docs links, and service endpoints. | partial |
-| Add `navigateTo(view, params)` and related navigation helpers. | partial |
-| Add `openModal(name, params)` and modal/context helpers where needed. | pending |
-| Add return-context helpers that replace route-query return state over time. | pending |
-| Add an initial-state adapter that can read current URL state during transition. | pending |
-| Centralize app-shell nav labels and view ids outside Jekyll front matter. | partial |
+| Define the Studio runtime config shape for media bases, thumb bases, pipeline variants, UI text paths, docs links, and service endpoints. | done |
+| Add `navigateTo(view, params)` and related navigation helpers. | done |
+| Add `openModal(name, params)` and modal/context helpers where needed. | done |
+| Add return-context helpers that replace route-query return state over time. | done |
+| Add an initial-state adapter that can read current URL state during transition. | done |
+| Centralize app-shell nav labels and view ids outside Jekyll front matter. | done |
 
 Next steps:
 
-Phase 2 has started with an app-server view registry exposed through `/studio/runtime-config.json` and a small `studio-navigation.js` helper over that registry.
-Continue by expanding the runtime config shape only as migrated views need it.
-The adapter should support current route-like views first and can later support panels or modals where that improves workflow.
+Phase 2 is implemented.
+`/studio/runtime-config.json` now exposes the local app runtime contract for views, navigation, service endpoints, data/UI-text paths, media/thumb bases, pipeline variants, modal dispatch, and transitional state.
+`assets/studio/js/studio-navigation.js` now owns the first local app adapter layer: view lookup, URL building, `navigateTo(view, params)`, URL initial-state parsing, `sessionStorage` return-context helpers, and `openModal(name, params)` dispatch through the `studio:open-modal` event.
+This is intentionally not a route framework; it is a small compatibility surface for migrated vanilla modules.
+Future route migrations should add only the adapter helpers they actually need, backed by focused smoke tests.
 
 ## Phase 3: Docs Viewer Manage Mode Migration
 

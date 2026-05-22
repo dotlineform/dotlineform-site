@@ -1,0 +1,46 @@
+{
+  "id": "change-2026-05-22-completed-local-studio-config-navigation-adapter",
+  "date": "2026-05-22",
+  "title": "Completed Local Studio Config Navigation Adapter",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "studio-ui",
+    "workflow"
+  ],
+  "summary": "Completed Phase 2 of the local Studio app migration by expanding the runtime config contract and adding a small vanilla JavaScript adapter for view navigation, transitional URL state, return context, and modal dispatch.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "runtime-config",
+    "navigation-adapter"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/studio/studio_app_config.py",
+    "assets/studio/js/studio-navigation.js",
+    "tests/python/test_studio_app_server.py",
+    "tests/smoke/local_studio_navigation_adapter.py",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/site-request-studio-local-vanilla-web-app.md"
+  ],
+  "effect": "Migrated Studio views now have a Jekyll-free runtime contract for view metadata, service endpoints, data paths, media/thumb bases, pipeline variants, modal dispatch, and transitional state. The adapter preserves vanilla module reuse without introducing a route framework or frontend rewrite.",
+  "verification": [
+    "Python compile checks passed for the touched local Studio app modules and smoke tests",
+    "node --check passed for assets/studio/js/studio-navigation.js",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_navigation_adapter.py passed",
+    "tests/smoke/local_studio_app_tag_groups.py passed",
+    "tests/smoke/local_studio_app_docs_viewer.py passed"
+  ]
+}

@@ -1,8 +1,21 @@
 import { loadStudioConfig } from "./studio-config.js";
 
+export const STUDIO_MODAL_EVENT = "studio:open-modal";
+export const STUDIO_RETURN_CONTEXT_STORAGE_KEY = "dlf.studio.returnContext";
+
 export function getStudioRuntime(config) {
   const runtime = config && config.app && config.app.runtime;
   return runtime && typeof runtime === "object" && !Array.isArray(runtime) ? runtime : {};
+}
+
+export function getStudioServices(config) {
+  const services = getStudioRuntime(config).services;
+  return services && typeof services === "object" && !Array.isArray(services) ? services : {};
+}
+
+export function getStudioStateConfig(config) {
+  const state = getStudioRuntime(config).state;
+  return state && typeof state === "object" && !Array.isArray(state) ? state : {};
 }
 
 export function getStudioViews(config) {
@@ -23,12 +36,12 @@ export function buildStudioViewUrl(config, viewId, params = {}) {
     throw new Error(`Unknown Studio view: ${viewId}`);
   }
 
-  const url = new URL(view.path, window.location.origin);
+  const url = new URL(view.path, currentOrigin());
   for (const [key, value] of Object.entries(params || {})) {
     if (!key || value == null || value === "") continue;
     url.searchParams.set(key, String(value));
   }
-  return url.origin === window.location.origin
+  return url.origin === currentOrigin()
     ? `${url.pathname}${url.search}${url.hash}`
     : url.href;
 }
@@ -40,20 +53,128 @@ export async function navigateTo(viewId, params = {}) {
   return url;
 }
 
+export function readStudioInitialState(locationLike = currentLocation()) {
+  const url = toUrl(locationLike);
+  const params = Object.fromEntries(url.searchParams.entries());
+  const viewId = normalizeViewId(params.view || params.route || inferViewIdFromPath(url.pathname));
+  const modalName = normalizeModalName(params.modal || "");
+
+  return {
+    path: url.pathname,
+    hash: url.hash,
+    viewId,
+    params,
+    modal: modalName
+      ? {
+          name: modalName,
+          params: readNamespacedParams(url.searchParams, "modal."),
+        }
+      : null,
+    returnContext: readReturnContextParam(url.searchParams),
+  };
+}
+
+export function createReturnContext(viewId, params = {}, options = {}) {
+  const targetViewId = normalizeViewId(viewId);
+  const targetParams = isPlainObject(params) ? { ...params } : {};
+  const context = {
+    viewId: targetViewId,
+    params: targetParams,
+    label: typeof options.label === "string" ? options.label : "",
+    createdAt: new Date().toISOString(),
+  };
+  if (typeof options.path === "string" && options.path) {
+    context.path = options.path;
+  }
+  return context;
+}
+
+export function storeReturnContext(context, options = {}) {
+  const storage = options.storage || currentSessionStorage();
+  const key = options.key || STUDIO_RETURN_CONTEXT_STORAGE_KEY;
+  if (!storage || typeof storage.setItem !== "function") {
+    return context;
+  }
+  storage.setItem(key, JSON.stringify(context || null));
+  return context;
+}
+
+export function readReturnContext(options = {}) {
+  const storage = options.storage || currentSessionStorage();
+  const key = options.key || STUDIO_RETURN_CONTEXT_STORAGE_KEY;
+  if (!storage || typeof storage.getItem !== "function") {
+    return null;
+  }
+  const raw = storage.getItem(key);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null;
+  } catch (_error) {
+    return null;
+  }
+}
+
+export function consumeReturnContext(options = {}) {
+  const storage = options.storage || currentSessionStorage();
+  const key = options.key || STUDIO_RETURN_CONTEXT_STORAGE_KEY;
+  const context = readReturnContext({ ...options, storage, key });
+  if (storage && typeof storage.removeItem === "function") {
+    storage.removeItem(key);
+  }
+  return context;
+}
+
+export function openModal(name, params = {}, options = {}) {
+  const modalName = normalizeModalName(name);
+  if (!modalName) {
+    throw new Error("Studio modal name is required");
+  }
+  const detail = {
+    name: modalName,
+    params: isPlainObject(params) ? { ...params } : {},
+    returnContext: options.returnContext || null,
+  };
+  const target = options.target || currentDocument();
+  if (!target || typeof target.dispatchEvent !== "function") {
+    return { detail, defaultPrevented: false };
+  }
+  const EventConstructor = currentCustomEvent();
+  const event = new EventConstructor(STUDIO_MODAL_EVENT, {
+    bubbles: true,
+    cancelable: true,
+    detail,
+  });
+  target.dispatchEvent(event);
+  return event;
+}
+
 export async function attachStudioNavigation(root = document) {
   const config = await loadStudioConfig();
   const targetRoot = root && typeof root.addEventListener === "function" ? root : document;
   targetRoot.addEventListener("click", (event) => {
-    const trigger = event.target && event.target.closest
+    const navigateTrigger = event.target && event.target.closest
       ? event.target.closest("[data-studio-navigate]")
       : null;
-    if (!trigger || !targetRoot.contains(trigger) || shouldUseNativeNavigation(event, trigger)) return;
+    if (navigateTrigger && targetRoot.contains(navigateTrigger) && !shouldUseNativeNavigation(event, navigateTrigger)) {
+      const viewId = navigateTrigger.getAttribute("data-studio-navigate");
+      if (!viewId) return;
 
-    const viewId = trigger.getAttribute("data-studio-navigate");
-    if (!viewId) return;
+      event.preventDefault();
+      window.location.assign(buildStudioViewUrl(config, viewId, readNavigationParams(navigateTrigger)));
+      return;
+    }
+
+    const modalTrigger = event.target && event.target.closest
+      ? event.target.closest("[data-studio-modal]")
+      : null;
+    if (!modalTrigger || !targetRoot.contains(modalTrigger) || shouldUseNativeNavigation(event, modalTrigger)) return;
+
+    const modalName = modalTrigger.getAttribute("data-studio-modal");
+    if (!modalName) return;
 
     event.preventDefault();
-    window.location.assign(buildStudioViewUrl(config, viewId, readNavigationParams(trigger)));
+    openModal(modalName, readNavigationParams(modalTrigger), { target: targetRoot });
   });
   return config;
 }
@@ -79,6 +200,79 @@ function shouldUseNativeNavigation(event, trigger) {
 
 function normalizeViewId(value) {
   return String(value || "").trim().replace(/-/g, "_").toLowerCase();
+}
+
+function normalizeModalName(value) {
+  return String(value || "").trim().replace(/\s+/g, "-").toLowerCase();
+}
+
+function inferViewIdFromPath(pathname) {
+  const path = String(pathname || "");
+  if (path === "/docs" || path === "/docs/") return "docs";
+  if (path === "/studio/analytics/tag-groups" || path === "/studio/analytics/tag-groups/") return "tag_groups";
+  if (path === "/studio" || path === "/studio/") return "home";
+  return "";
+}
+
+function readNamespacedParams(searchParams, prefix) {
+  const params = {};
+  for (const [key, value] of searchParams.entries()) {
+    if (key.startsWith(prefix)) {
+      params[key.slice(prefix.length)] = value;
+    }
+  }
+  return params;
+}
+
+function readReturnContextParam(searchParams) {
+  const viewId = normalizeViewId(searchParams.get("return_view") || searchParams.get("return"));
+  if (!viewId) return null;
+  return createReturnContext(viewId, readNamespacedParams(searchParams, "return."));
+}
+
+function toUrl(locationLike) {
+  if (locationLike instanceof URL) return locationLike;
+  if (typeof locationLike === "string") return new URL(locationLike, currentOrigin());
+  const href = locationLike && typeof locationLike.href === "string" ? locationLike.href : "/";
+  return new URL(href, currentOrigin());
+}
+
+function isPlainObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value);
+}
+
+function currentOrigin() {
+  return typeof window !== "undefined" && window.location && window.location.origin
+    ? window.location.origin
+    : "http://127.0.0.1";
+}
+
+function currentLocation() {
+  return typeof window !== "undefined" && window.location ? window.location : "/";
+}
+
+function currentDocument() {
+  return typeof document !== "undefined" ? document : null;
+}
+
+function currentSessionStorage() {
+  try {
+    return typeof window !== "undefined" && window.sessionStorage ? window.sessionStorage : null;
+  } catch (_error) {
+    return null;
+  }
+}
+
+function currentCustomEvent() {
+  if (typeof CustomEvent !== "undefined") {
+    return CustomEvent;
+  }
+  return class StudioCustomEvent extends Event {
+    constructor(type, options = {}) {
+      super(type, options);
+      this.detail = options.detail;
+    }
+  };
 }
 
 if (typeof document !== "undefined") {
