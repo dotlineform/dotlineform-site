@@ -31,6 +31,9 @@ Phase 1 added the first Python local Studio app server:
 `bin/dev-studio` now starts this app server by default during the transition.
 Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
 Docs management is handled by this app server by default; `bin/dev-studio` no longer starts `scripts/docs/docs_management_server.py` unless `DOCS_MANAGEMENT_SERVER_ENABLED=1` is set for a fallback/debug run.
+Active Local Studio browser routes use `/studio/api/docs/...` for Docs management reads/writes; they do not use `127.0.0.1:8789` as a browser fallback.
+The local app adapter imports shared Docs management behavior from `scripts/docs/docs_management_service.py`.
+`scripts/docs/docs_management_server.py` is now only an optional standalone HTTP wrapper over that service module.
 Jekyll still starts through `bin/dev-studio` for public-site preview and unmigrated Studio routes until the route migration is complete.
 `bin/dev-studio` is a bridge launcher, not the long-term product boundary.
 The intended end state is a local Studio app command for Studio workflows and the normal Bundler/Jekyll serve/build commands for public-site preview and publishing.
@@ -182,7 +185,7 @@ The runtime config now exposes `app.runtime.sites.public_preview.base` and `app.
 Route migrations should use that helper when they touch public-content links; existing links are not rewritten automatically.
 The migrated per-series tag editor now uses this resolver for its header links to the public series page and primary work page, so those links open on the configured public preview host during local Studio sessions.
 The local `/docs/` route hosts the Docs Viewer management shell through the Python app server while still using the existing Docs Viewer JavaScript, CSS, config, and generated docs payloads.
-Its management API base is `/studio/api/docs`; this now exposes live configured-scope availability and Docs management capabilities, serves generated docs read endpoints, and calls the existing Docs management domain functions directly for migrated management routes.
+Its management API base is `/studio/api/docs`; this now exposes live configured-scope availability and Docs management capabilities, serves generated docs read endpoints, and calls shared Docs management service functions directly for migrated management routes.
 The main management API workflow routes are covered through a temporary fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the local app server without touching real docs.
 Browser-level fixture smokes cover local `/docs/` manage-mode workflows through the actual UI: create, metadata edit, settings save, archive, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.
 Data-sharing UI behavior is intentionally deferred to a later cross-Studio adapter consolidation slice.

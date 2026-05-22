@@ -12,23 +12,25 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DOCS_MANAGEMENT_SERVER_PATH = REPO_ROOT / "scripts" / "docs" / "docs_management_server.py"
+DOCS_DIR = REPO_ROOT / "scripts" / "docs"
+DOCS_MANAGEMENT_SERVICE_PATH = DOCS_DIR / "docs_management_service.py"
+DOCS_MANAGEMENT_SERVER_PATH = DOCS_DIR / "docs_management_server.py"
 
 
-def load_docs_management_server_module():
-    scripts_docs_dir = DOCS_MANAGEMENT_SERVER_PATH.parent
-    if str(scripts_docs_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_docs_dir))
-    spec = importlib.util.spec_from_file_location("docs_management_server", DOCS_MANAGEMENT_SERVER_PATH)
+def load_docs_management_module(module_name: str, module_path: Path):
+    if str(DOCS_DIR) not in sys.path:
+        sys.path.insert(0, str(DOCS_DIR))
+    spec = importlib.util.spec_from_file_location(module_name, module_path)
     if spec is None or spec.loader is None:
-        raise RuntimeError("Could not load docs_management_server.py")
+        raise RuntimeError(f"Could not load {module_path.name}")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 
 
-docs_management_server = load_docs_management_server_module()
+docs_management_service = load_docs_management_module("docs_management_service", DOCS_MANAGEMENT_SERVICE_PATH)
+docs_management_server = load_docs_management_module("docs_management_server", DOCS_MANAGEMENT_SERVER_PATH)
 docs_management_mutations = sys.modules["docs_management_mutations"]
 docs_source_model = sys.modules["docs_source_model"]
 
@@ -236,7 +238,7 @@ def write_docs_viewer_browser_config(root: Path) -> None:
 def test_archive_doc_is_editable_in_dry_run() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        result = docs_management_server.handle_update_metadata(
+        result = docs_management_service.handle_update_metadata(
             repo_root,
             {
                 "scope": "studio",
@@ -256,7 +258,7 @@ def test_archive_doc_is_editable_in_dry_run() -> None:
 def test_update_metadata_can_change_viewability_in_dry_run() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        result = docs_management_server.handle_update_metadata(
+        result = docs_management_service.handle_update_metadata(
             repo_root,
             {
                 "scope": "studio",
@@ -279,7 +281,7 @@ def test_update_metadata_can_change_viewability_in_dry_run() -> None:
 def test_archive_doc_viewability_can_be_changed_in_dry_run() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        result = docs_management_server.handle_update_viewability(
+        result = docs_management_service.handle_update_viewability(
             repo_root,
             {
                 "scope": "studio",
@@ -306,7 +308,7 @@ def test_archive_parent_delete_is_blocked_only_by_children() -> None:
 def test_archive_command_noops_on_archive_parent() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        result = docs_management_server.handle_archive(
+        result = docs_management_service.handle_archive(
             repo_root,
             {
                 "scope": "studio",
@@ -324,7 +326,7 @@ def test_capabilities_advertise_generated_data_reads() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
-        payload = docs_management_server.capabilities_payload(repo_root)
+        payload = docs_management_service.capabilities_payload(repo_root)
 
     assert payload["capabilities"]["generated_data_reads"] is True
     assert payload["capabilities"]["scopes"]["studio"]["generated_data_reads"] is True
@@ -334,7 +336,7 @@ def test_capabilities_advertise_generated_data_reads() -> None:
 def test_capabilities_advertise_source_config_reads() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
-        payload = docs_management_server.capabilities_payload(repo_root)
+        payload = docs_management_service.capabilities_payload(repo_root)
 
     assert payload["capabilities"]["source_config_reads"] is True
     assert payload["capabilities"]["source_config_settings_reads"] is True
@@ -351,7 +353,7 @@ def test_scope_manifest_backfills_existing_scopes_as_system_owned() -> None:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         write_generated_docs(repo_root)
-        payload = docs_management_server.docs_scope_manifest.build_backfilled_manifest(repo_root)
+        payload = docs_management_service.docs_scope_manifest.build_backfilled_manifest(repo_root)
 
     assert payload["schema_version"] == "docs_scope_manifest_v1"
     records = {record["scope_id"]: record for record in payload["scopes"]}
@@ -365,7 +367,7 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
-        payload = docs_management_server.docs_scope_manifest.plan_create_scope_preview(
+        payload = docs_management_service.docs_scope_manifest.plan_create_scope_preview(
             repo_root,
             {
                 "scope_id": "research",
@@ -393,7 +395,7 @@ def test_scope_create_apply_requires_confirmation() -> None:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         try:
-            docs_management_server.handle_scope_create_apply(
+            docs_management_service.handle_scope_create_apply(
                 repo_root,
                 {
                     "scope_id": "research",
@@ -413,7 +415,7 @@ def test_scope_create_apply_requires_confirmation() -> None:
 
 def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     calls: list[tuple[Path, str, dict[str, object]]] = []
-    original_rebuild = docs_management_server.write_rebuild.rebuild_scope_outputs
+    original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
 
     def fake_rebuild(repo_root: Path, scope: str, **kwargs):
         calls.append((repo_root, scope, kwargs))
@@ -423,12 +425,12 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             "search": {"mode": "full", "doc_ids": []},
         }
 
-    docs_management_server.write_rebuild.rebuild_scope_outputs = fake_rebuild
+    docs_management_service.write_rebuild.rebuild_scope_outputs = fake_rebuild
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
             write_docs_scope_config(repo_root)
-            payload = docs_management_server.handle_scope_create_apply(
+            payload = docs_management_service.handle_scope_create_apply(
                 repo_root,
                 {
                     "scope_id": "research",
@@ -448,7 +450,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             default_doc_exists = (repo_root / "_docs_research/research.md").exists()
             route_exists = (repo_root / "research/index.md").exists()
     finally:
-        docs_management_server.write_rebuild.rebuild_scope_outputs = original_rebuild
+        docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_scope_lifecycle_apply_v1"
@@ -469,7 +471,7 @@ def test_scope_delete_preview_blocks_system_scopes() -> None:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         write_generated_docs(repo_root)
-        payload = docs_management_server.docs_scope_manifest.plan_delete_scope_preview(
+        payload = docs_management_service.docs_scope_manifest.plan_delete_scope_preview(
             repo_root,
             {
                 "scope_id": "studio",
@@ -482,13 +484,13 @@ def test_scope_delete_preview_blocks_system_scopes() -> None:
 
 
 def test_scope_delete_preview_keeps_config_as_changed_file() -> None:
-    original_rebuild = docs_management_server.write_rebuild.rebuild_scope_outputs
-    docs_management_server.write_rebuild.rebuild_scope_outputs = lambda *_args, **_kwargs: {"ok": True}
+    original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
+    docs_management_service.write_rebuild.rebuild_scope_outputs = lambda *_args, **_kwargs: {"ok": True}
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
             write_docs_scope_config(repo_root)
-            docs_management_server.handle_scope_create_apply(
+            docs_management_service.handle_scope_create_apply(
                 repo_root,
                 {
                     "scope_id": "research",
@@ -501,14 +503,14 @@ def test_scope_delete_preview_keeps_config_as_changed_file() -> None:
                 },
                 dry_run=False,
             )
-            payload = docs_management_server.docs_scope_manifest.plan_delete_scope_preview(
+            payload = docs_management_service.docs_scope_manifest.plan_delete_scope_preview(
                 repo_root,
                 {
                     "scope_id": "research",
                 },
             )
     finally:
-        docs_management_server.write_rebuild.rebuild_scope_outputs = original_rebuild
+        docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
 
     assert payload["ok"] is True
     assert payload["allowed"] is True
@@ -522,7 +524,7 @@ def test_scope_delete_apply_requires_confirmation() -> None:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         try:
-            docs_management_server.handle_scope_delete_apply(
+            docs_management_service.handle_scope_delete_apply(
                 repo_root,
                 {
                     "scope_id": "studio",
@@ -538,8 +540,8 @@ def test_scope_delete_apply_requires_confirmation() -> None:
 def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
     create_calls: list[tuple[Path, str, dict[str, object]]] = []
     delete_calls: list[Path] = []
-    original_create_rebuild = docs_management_server.write_rebuild.rebuild_scope_outputs
-    original_delete_rebuild = docs_management_server.write_rebuild.rebuild_all_docs_outputs
+    original_create_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
+    original_delete_rebuild = docs_management_service.write_rebuild.rebuild_all_docs_outputs
 
     def fake_create_rebuild(repo_root: Path, scope: str, **kwargs):
         create_calls.append((repo_root, scope, kwargs))
@@ -556,13 +558,13 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
         delete_calls.append(repo_root)
         return {"ok": True, "steps": [], "search": {"mode": "full", "doc_ids": []}}
 
-    docs_management_server.write_rebuild.rebuild_scope_outputs = fake_create_rebuild
-    docs_management_server.write_rebuild.rebuild_all_docs_outputs = fake_delete_rebuild
+    docs_management_service.write_rebuild.rebuild_scope_outputs = fake_create_rebuild
+    docs_management_service.write_rebuild.rebuild_all_docs_outputs = fake_delete_rebuild
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
             write_docs_scope_config(repo_root)
-            docs_management_server.handle_scope_create_apply(
+            docs_management_service.handle_scope_create_apply(
                 repo_root,
                 {
                     "scope_id": "research",
@@ -575,7 +577,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
                 },
                 dry_run=False,
             )
-            payload = docs_management_server.handle_scope_delete_apply(
+            payload = docs_management_service.handle_scope_delete_apply(
                 repo_root,
                 {
                     "scope_id": "research",
@@ -590,8 +592,8 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
             generated_docs_exists = (repo_root / "assets/data/docs/scopes/research").exists()
             generated_search_exists = (repo_root / "assets/data/search/research/index.json").exists()
     finally:
-        docs_management_server.write_rebuild.rebuild_scope_outputs = original_create_rebuild
-        docs_management_server.write_rebuild.rebuild_all_docs_outputs = original_delete_rebuild
+        docs_management_service.write_rebuild.rebuild_scope_outputs = original_create_rebuild
+        docs_management_service.write_rebuild.rebuild_all_docs_outputs = original_delete_rebuild
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_scope_lifecycle_apply_v1"
@@ -613,7 +615,7 @@ def test_source_config_report_reads_known_config_files() -> None:
         write_docs_scope_config(repo_root)
         write_docs_viewer_browser_config(repo_root)
         write_generated_docs(repo_root)
-        payload = docs_management_server.docs_source_config_report.build_source_config_report(repo_root)
+        payload = docs_management_service.docs_source_config_report.build_source_config_report(repo_root)
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_source_config_report_v1"
@@ -630,7 +632,7 @@ def test_source_config_settings_contract_allows_updated_date_only() -> None:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         write_generated_docs(repo_root)
-        payload = docs_management_server.docs_source_config_settings.build_settings_contract(repo_root, "studio")
+        payload = docs_management_service.docs_source_config_settings.build_settings_contract(repo_root, "studio")
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_source_config_settings_v1"
@@ -650,7 +652,7 @@ def test_source_config_settings_validation_reports_rebuild_artifact() -> None:
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         write_generated_docs(repo_root)
-        payload = docs_management_server.docs_source_config_settings.validate_scope_settings_change(
+        payload = docs_management_service.docs_source_config_settings.validate_scope_settings_change(
             repo_root,
             "studio",
             {"show_updated_date": False},
@@ -671,7 +673,7 @@ def test_source_config_settings_rejects_blocked_and_deferred_fields() -> None:
         write_generated_docs(repo_root)
 
         try:
-            docs_management_server.docs_source_config_settings.validate_scope_settings_change(
+            docs_management_service.docs_source_config_settings.validate_scope_settings_change(
                 repo_root,
                 "studio",
                 {"source": "_docs2"},
@@ -682,7 +684,7 @@ def test_source_config_settings_rejects_blocked_and_deferred_fields() -> None:
             raise AssertionError("blocked source field should be rejected")
 
         try:
-            docs_management_server.docs_source_config_settings.validate_scope_settings_change(
+            docs_management_service.docs_source_config_settings.validate_scope_settings_change(
                 repo_root,
                 "studio",
                 {"recently_added_limit": 12},
@@ -700,7 +702,7 @@ def test_source_config_settings_rejects_invalid_updated_date_value() -> None:
         write_generated_docs(repo_root)
 
         try:
-            docs_management_server.docs_source_config_settings.validate_scope_settings_change(
+            docs_management_service.docs_source_config_settings.validate_scope_settings_change(
                 repo_root,
                 "studio",
                 {"show_updated_date": "false"},
@@ -717,7 +719,7 @@ def test_source_config_settings_apply_writes_allowed_field() -> None:
         write_docs_scope_config(repo_root)
         write_generated_docs(repo_root)
 
-        result = docs_management_server.docs_source_config_settings.apply_scope_settings_change(
+        result = docs_management_service.docs_source_config_settings.apply_scope_settings_change(
             repo_root,
             "studio",
             {"show_updated_date": False},
@@ -736,7 +738,7 @@ def test_source_config_settings_apply_dry_run_does_not_write() -> None:
         write_docs_scope_config(repo_root)
         write_generated_docs(repo_root)
 
-        result = docs_management_server.docs_source_config_settings.apply_scope_settings_change(
+        result = docs_management_service.docs_source_config_settings.apply_scope_settings_change(
             repo_root,
             "studio",
             {"show_updated_date": False},
@@ -759,7 +761,7 @@ def test_source_config_settings_warns_when_generated_projection_is_stale() -> No
         payload["viewer_options"]["show_updated_date"] = False
         write_json(index_path, payload)
 
-        result = docs_management_server.docs_source_config_settings.build_settings_contract(repo_root, "studio")
+        result = docs_management_service.docs_source_config_settings.build_settings_contract(repo_root, "studio")
 
     warnings = result["scopes"][0]["fields"][0]["warnings"]
     assert any("does not match source config" in warning for warning in warnings)
@@ -791,7 +793,7 @@ def test_json_responses_are_not_cached() -> None:
 
 def test_docs_export_request_passes_target_format() -> None:
     calls: list[dict[str, object]] = []
-    original_build_export = docs_management_server.documents_data_sharing_adapter.build_export
+    original_build_export = docs_management_service.documents_data_sharing_adapter.build_export
 
     def fake_build_export(**kwargs):
         calls.append(kwargs)
@@ -804,11 +806,11 @@ def test_docs_export_request_passes_target_format() -> None:
             "issue_counts": {"errors": 0, "warnings": 0},
         }
 
-    docs_management_server.documents_data_sharing_adapter.build_export = fake_build_export
+    docs_management_service.documents_data_sharing_adapter.build_export = fake_build_export
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
-            result = docs_management_server.documents_data_sharing_adapter.prepare_package(
+            result = docs_management_service.documents_data_sharing_adapter.prepare_package(
                 repo_root,
                 {
                     "data_domain": "library",
@@ -819,10 +821,10 @@ def test_docs_export_request_passes_target_format() -> None:
                     "target_format": "json",
                 },
                 dry_run=True,
-                dependencies=docs_management_server.documents_data_sharing_dependencies(),
+                dependencies=docs_management_service.documents_data_sharing_dependencies(),
             )
     finally:
-        docs_management_server.documents_data_sharing_adapter.build_export = original_build_export
+        docs_management_service.documents_data_sharing_adapter.build_export = original_build_export
 
     assert result["ok"] is True
     assert result["target_format"] == "json"

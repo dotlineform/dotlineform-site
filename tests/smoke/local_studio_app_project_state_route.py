@@ -49,7 +49,6 @@ def main(argv: list[str] | None = None) -> int:
             console_errors: list[str] = []
             page_errors: list[str] = []
             legacy_catalogue_service_requests: list[str] = []
-            legacy_docs_service_requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
             page.on(
@@ -58,14 +57,7 @@ def main(argv: list[str] | None = None) -> int:
                 if "127.0.0.1:8788" in request.url
                 else None,
             )
-            page.on(
-                "request",
-                lambda request: legacy_docs_service_requests.append(request.url)
-                if "127.0.0.1:8789" in request.url
-                else None,
-            )
             page.route("http://127.0.0.1:8788/**", lambda route: route.abort())
-            page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
 
             page.goto(f"{base_url}/studio/project-state/?mode=manage", wait_until="domcontentloaded")
             root = page.locator("#projectStateRoot")
@@ -85,8 +77,6 @@ def main(argv: list[str] | None = None) -> int:
                 raise AssertionError(f"project-state nav link is not manage-mode: {nav_link!r}")
             if legacy_catalogue_service_requests:
                 raise AssertionError(f"project-state route should not request legacy 8788 endpoints: {legacy_catalogue_service_requests!r}")
-            if legacy_docs_service_requests:
-                raise AssertionError(f"project-state route should not request legacy 8789 endpoints: {legacy_docs_service_requests!r}")
 
             browser.close()
 

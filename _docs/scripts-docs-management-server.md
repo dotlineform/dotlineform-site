@@ -15,8 +15,11 @@ Script:
 ```
 
 This is the retired default local-only HTTP service for the shared Docs Viewer management route.
-The same management behavior is now hosted by the Local Studio App during normal `bin/dev-studio` runs.
+The same management behavior is now hosted by the Local Studio App during normal `bin/dev-studio` runs through `scripts/studio/studio_docs_api.py` and `scripts/docs/docs_management_service.py`.
 Start this standalone server only for fallback/debug work or standalone Docs Viewer management experiments.
+
+`scripts/docs/docs_management_server.py` is now a thin HTTP wrapper.
+Shared Docs management behavior, route dispatch payloads, write orchestration, capabilities, imports, Data Sharing, and scope lifecycle helpers live in `scripts/docs/docs_management_service.py`.
 
 ## Quick Start
 
@@ -39,13 +42,12 @@ The server expects the project to provide:
 
 ## Responsibilities
 
-- serves generated docs index, per-doc payload, docs-search, semantic-reference, source-config, and capability JSON to local Docs Viewer clients
-- creates, imports, updates, moves, archives, deletes, rebuilds, and opens docs source files for configured writable scopes
-- hosts the documents Data Sharing adapter endpoints for Library package preparation, returned-package review, and summary or hierarchy apply writes
-- appends unified activity rows for covered docs import, Data Sharing package/apply, and broken-links audit actions when valid activity context is supplied
-- coordinates successful source writes with the docs live watcher through short-lived suppression markers
+- binds a loopback-only standalone HTTP server for explicit debug or portable management experiments
+- parses request bodies, applies local CORS, and maps service exceptions to HTTP responses
+- delegates generated reads, capabilities, source writes, import, Data Sharing, broken links, rebuild, and scope lifecycle behavior to `scripts/docs/docs_management_service.py`
 
-Endpoint constants live in `scripts/docs/docs_management_routes.py`; the server handler uses explicit GET and POST dispatch tables.
+Endpoint constants live in `scripts/docs/docs_management_routes.py`.
+The server handler keeps GET and POST dispatch tables for the standalone HTTP wrapper, but shared behavior is not owned by this entrypoint.
 
 ## Child References
 

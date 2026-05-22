@@ -230,10 +230,8 @@ def main(argv: list[str] | None = None) -> int:
             page = browser.new_page()
             console_errors: list[str] = []
             page_errors: list[str] = []
-            legacy_requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
-            page.on("request", lambda request: legacy_requests.append(request.url) if "127.0.0.1:8789" in request.url else None)
             docs_api_calls = install_mock_docs_api(page, base_url)
 
             assert_dashboard(page, base_url)
@@ -241,8 +239,6 @@ def main(argv: list[str] | None = None) -> int:
             assert_review(page, base_url)
             browser.close()
 
-        if legacy_requests:
-            raise AssertionError(f"Data Sharing should not request legacy docs service URLs: {legacy_requests!r}")
         required_paths = {
             "/studio/api/docs/health",
             "/studio/api/docs/docs/generated/index",

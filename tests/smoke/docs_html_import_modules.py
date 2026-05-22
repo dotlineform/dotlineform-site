@@ -96,7 +96,7 @@ def install_fixture(page: Page) -> None:
                 root,
                 config,
                 routePath: '/docs/',
-                managementBaseUrl: 'http://127.0.0.1:8789',
+                managementBaseUrl: 'http://docs-management.test',
                 runButton: document.getElementById('docsHtmlImportRun'),
                 confirmButton: document.getElementById('docsHtmlImportConfirm'),
                 cancelButton: document.getElementById('docsHtmlImportCancel'),
@@ -268,7 +268,7 @@ def assert_overwrite_preview_flow(page: Page) -> None:
         requests.append(route.request.post_data_json)
         fulfill_json(route, responses.pop(0))
 
-    page.route("http://127.0.0.1:8789/docs/import-source", handle)
+    page.route("http://docs-management.test/docs/import-source", handle)
     result = page.evaluate(
         """async () => {
             const smoke = window.__docsHtmlImportModuleSmoke;
@@ -297,7 +297,7 @@ def assert_overwrite_preview_flow(page: Page) -> None:
             };
         }"""
     )
-    page.unroute("http://127.0.0.1:8789/docs/import-source", handle)
+    page.unroute("http://docs-management.test/docs/import-source", handle)
 
     if len(requests) != 2:
         raise AssertionError(f"expected preview and confirmed write requests: {requests!r}")
@@ -362,7 +362,7 @@ def assert_replacement_doc_id_flow(page: Page) -> None:
         requests.append(route.request.post_data_json)
         fulfill_json(route, responses.pop(0))
 
-    page.route("http://127.0.0.1:8789/docs/import-source", handle)
+    page.route("http://docs-management.test/docs/import-source", handle)
     result = page.evaluate(
         """async () => {
             const smoke = window.__docsHtmlImportModuleSmoke;
@@ -401,7 +401,7 @@ def assert_replacement_doc_id_flow(page: Page) -> None:
             };
         }"""
     )
-    page.unroute("http://127.0.0.1:8789/docs/import-source", handle)
+    page.unroute("http://docs-management.test/docs/import-source", handle)
 
     if len(requests) != 2:
         raise AssertionError(f"expected replacement preview and write requests: {requests!r}")
@@ -445,7 +445,7 @@ def assert_write_failure_partial_result_fallback(page: Page) -> None:
         status = 500 if len(requests) == 2 else 200
         fulfill_json(route, responses.pop(0), status=status)
 
-    page.route("http://127.0.0.1:8789/docs/import-source", handle)
+    page.route("http://docs-management.test/docs/import-source", handle)
     result = page.evaluate(
         """async () => {
             const smoke = window.__docsHtmlImportModuleSmoke;
@@ -477,7 +477,7 @@ def assert_write_failure_partial_result_fallback(page: Page) -> None:
             };
         }"""
     )
-    page.unroute("http://127.0.0.1:8789/docs/import-source", handle)
+    page.unroute("http://docs-management.test/docs/import-source", handle)
 
     if len(requests) != 2 or requests[1].get("staged_filename") != "beta.md":
         raise AssertionError(f"write failure request sequence changed: {requests!r}")

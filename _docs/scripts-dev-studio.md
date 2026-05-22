@@ -26,7 +26,7 @@ For a new local session, it is the simplest way to:
 - optionally refresh the derived catalogue lookup payloads used by the catalogue editors
 - start the local Python Studio app server for migrated Studio views
 - start the Jekyll site for public-site preview and unmigrated routes during transition
-- start the remaining local Studio write services used by unmigrated admin UI
+- optionally start retired standalone write services for fallback/debug runs
 - keep docs source edits synced into same-scope docs payloads and docs search while the runner is active
 
 It is intended for route-shell, UI, and localhost write-flow testing. It is not the full content-generation pipeline.
@@ -75,6 +75,9 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   set to `1` only for fallback/debug runs that intentionally need the standalone catalogue write service
 - `DOCS_MANAGEMENT_PORT`
   default: `8789`
+- `DOCS_MANAGEMENT_SERVER_ENABLED`
+  default: `0`
+  set to `1` only for fallback/debug runs that intentionally need the standalone Docs Management server
 - `AUDIT_SERVICE_PORT`
   default: `8790`
 - `AUDIT_SERVICE_ENABLED`
@@ -217,6 +220,7 @@ CATALOGUE_WRITE_SERVER_ENABLED=1 bin/dev-studio
 
 This server is not part of default startup.
 Docs management is handled by the Local Studio App unless `DOCS_MANAGEMENT_SERVER_ENABLED=1` is set for a fallback/debug run.
+The standalone script is a thin HTTP wrapper over `scripts/docs/docs_management_service.py`; normal Local Studio browser traffic uses `/studio/api/docs/...`.
 
 - command:
 

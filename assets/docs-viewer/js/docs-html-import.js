@@ -323,7 +323,7 @@ export async function initDocsHtmlImport(options = {}) {
     replaceAllOverwrites: false,
     persistScope: options.persistScope !== false,
     routePath: normalizeText(options.routePath) || "/docs/",
-    managementBaseUrl: normalizeText(options.managementBaseUrl) || "http://127.0.0.1:8789",
+    managementBaseUrl: normalizeText(options.managementBaseUrl),
     serviceAvailable: false,
     isRunning: false,
     files: [],
@@ -363,7 +363,7 @@ export async function initDocsHtmlImport(options = {}) {
   try {
     state.config = await loadDocsViewerText(options.uiTextUrl || root.dataset.uiTextUrl || "/assets/docs-viewer/data/ui-text.json");
     state.docsScopeIds = await loadDocsViewerScopeOptions(options.docsViewerConfigUrl);
-    state.managementBaseUrl = normalizeText(options.managementBaseUrl) || "http://127.0.0.1:8789";
+    state.managementBaseUrl = normalizeText(options.managementBaseUrl);
     const serviceAvailable = await fetchManagementJson("/health", "GET", undefined, managementOptionsForState(state))
       .then(() => true)
       .catch(() => false);

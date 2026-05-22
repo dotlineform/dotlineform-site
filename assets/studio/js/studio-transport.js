@@ -45,14 +45,14 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
 });
 
 const DOCS_MANAGEMENT_ENDPOINTS = Object.freeze({
-  health: "http://127.0.0.1:8789/health",
-  generatedIndex: "http://127.0.0.1:8789/docs/generated/index",
-  generatedSearch: "http://127.0.0.1:8789/docs/generated/search",
-  importSource: "http://127.0.0.1:8789/docs/import-source",
-  importSourceFiles: "http://127.0.0.1:8789/docs/import-source-files",
-  importHtml: "http://127.0.0.1:8789/docs/import-html",
-  importHtmlFiles: "http://127.0.0.1:8789/docs/import-html-files",
-  openSource: "http://127.0.0.1:8789/docs/open-source"
+  health: "/studio/api/docs/health",
+  generatedIndex: "/studio/api/docs/docs/generated/index",
+  generatedSearch: "/studio/api/docs/docs/generated/search",
+  importSource: "/studio/api/docs/docs/import-source",
+  importSourceFiles: "/studio/api/docs/docs/import-source-files",
+  importHtml: "/studio/api/docs/docs/import-html",
+  importHtmlFiles: "/studio/api/docs/docs/import-html-files",
+  openSource: "/studio/api/docs/docs/open-source"
 });
 
 const DATA_SHARING_ENDPOINTS = Object.freeze({

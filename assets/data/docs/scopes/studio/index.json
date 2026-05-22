@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T22:06:45Z",
+  "generated_at": "2026-05-22T22:34:34Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -319,7 +319,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 34581
+      "content_text_length": 35899
     },
     {
       "scope": "studio",
@@ -707,7 +707,7 @@
       "source_path": "scripts-dev-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json",
-      "content_text_length": 10875
+      "content_text_length": 11172
     },
     {
       "scope": "studio",
@@ -1488,7 +1488,7 @@
       "source_path": "docs-viewer-portable-scope-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-scope-setup.json",
-      "content_text_length": 7256
+      "content_text_length": 7527
     },
     {
       "scope": "studio",
@@ -3340,7 +3340,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 2323
+      "content_text_length": 2439
     },
     {
       "scope": "studio",
@@ -3468,7 +3468,7 @@
       "source_path": "scripts-docs-management-server-operations.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server-operations.json",
-      "content_text_length": 3568
+      "content_text_length": 3729
     },
     {
       "scope": "studio",
@@ -3727,7 +3727,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 16991
+      "content_text_length": 17356
     },
     {
       "scope": "studio",

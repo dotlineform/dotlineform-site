@@ -101,21 +101,21 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
     def handle(route):
         request = route.request
         parsed = urlparse(request.url)
-        if parsed.path == "/studio/api/docs/health" or request.url.startswith("http://127.0.0.1:8789/health"):
+        if parsed.path == "/studio/api/docs/health":
             route.fulfill(
                 status=200,
                 content_type="application/json",
                 body=json.dumps({"ok": True, "service": "docs_management", "dry_run": True}),
             )
             return
-        if parsed.path == "/studio/api/docs/docs/generated/index" or request.url.startswith("http://127.0.0.1:8789/docs/generated/index"):
+        if parsed.path == "/studio/api/docs/docs/generated/index":
             route.fulfill(
                 status=200,
                 content_type="application/json",
                 body=json.dumps(generated_docs_index()),
             )
             return
-        if parsed.path == "/studio/api/docs/data-sharing/prepare" or request.url.startswith("http://127.0.0.1:8789/data-sharing/prepare"):
+        if parsed.path == "/studio/api/docs/data-sharing/prepare":
             post_data_json = request.post_data_json
             prepare_requests.append(post_data_json() if callable(post_data_json) else post_data_json)
             route.fulfill(
@@ -131,7 +131,6 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
         )
 
     page.route("**/studio/api/docs/**", handle)
-    page.route("http://127.0.0.1:8789/**", handle)
     return prepare_requests
 
 
@@ -410,7 +409,6 @@ def main() -> int:
                 prepare_requests = install_mock_docs_service(page)
             elif args.block_docs_service:
                 page.route("**/studio/api/docs/**", lambda route: route.abort())
-                page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
             page.goto(route_url(base_url, "/studio/data-sharing/prepare/?mode=manage"), wait_until="domcontentloaded")
             attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
             assert_ready_contract(attrs)

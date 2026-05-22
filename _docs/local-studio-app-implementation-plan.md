@@ -21,16 +21,16 @@ Status:
 - Phase 0, Phase 1, and Phase 1A are implemented
 - Phase 2 is implemented
 - Phase 3 is implemented for Docs Viewer manage mode and the Docs Broken Links report replacement
-- Phase 4 is in progress with Docs management, Data Sharing, analytics tag routes, Studio audit routes, Project State report, and Thumbnail Quality preview routes consolidated into the local app server
+- Phase 4 is in progress with Docs management, Data Sharing, analytics tag routes, Studio audit routes, Project State report, Thumbnail Quality preview, and active catalogue editor APIs consolidated into the local app server
 - Phase 5 has started with the local Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Data Sharing, Catalogue Field Registry, Studio Works, and catalogue editor route shells
 
 ## Remaining Work Snapshot
 
 Next suitable slices, in dependency order:
 
-1. Consolidate the remaining catalogue sibling APIs into the local app server one route family at a time.
-2. Finish retiring or redirecting old Jekyll Studio route shells after each local replacement is verified.
-3. Define the final launcher split so local Studio and public Jekyll preview/build are explicit commands instead of one bridge command.
+1. Define the final launcher split so local Studio and public Jekyll preview/build are explicit commands instead of one bridge command.
+2. Decide whether the now-thin standalone Docs Management HTTP wrapper should remain as an explicit debug/portable server or be removed entirely.
+3. Broaden public-site link resolver adoption across migrated Studio routes when those routes are touched.
 4. Start the projection contract work once route and service ownership is less fluid.
 5. Defer the optional repo split decision until the publish/export contract is stable.
 
@@ -99,6 +99,7 @@ Current commit point:
 - Phase 3 now has fixture-backed UI workflow smoke coverage for Docs create, metadata edit, settings save, archive, delete preview/apply, import, drag/drop move, scope create/delete, and generated reload behavior in the local `/docs/` shell
 - Phase 3 now has public read-only smoke coverage for `/library/` and `/analysis/`
 - Phase 3 now hosts Docs Broken Links as a Docs Viewer report and has retired the old `/studio/docs-broken-links/` route shell
+- Phase 3 Docs management shared behavior now lives in `scripts/docs/docs_management_service.py`; the local Studio app imports that module through `scripts/studio/studio_docs_api.py` instead of loading the standalone HTTP server entrypoint
 - Phase 4 has started by adding the local app server to `bin/dev-studio` and retiring the separate Docs management HTTP process from default startup
 - Phase 4 now has the first analytics API route module, serving tag read data through the local app server
 - Phase 4 now has the first analytics write route, `POST /studio/api/analytics/save-tags`, through the local app server
@@ -276,8 +277,8 @@ Outcomes:
 | Task | Status |
 | --- | --- |
 | Define route modules for catalogue, docs, analytics, audit, and shared Studio app routes. | partial; docs, analytics, audit, and first narrow catalogue modules started |
-| Move endpoint ownership into the Python app server slice by slice. | partial; Docs management, Data Sharing, analytics tag read routes, active tag write routes, Studio audit routes, Project State report, Thumbnail Quality preview, and first analytics route shells moved |
-| Reuse extracted Python domain modules instead of proxying to old services by default. | partial; Docs management, Data Sharing, analytics tag routes, Studio audit routes, Project State report, and Thumbnail Quality preview use existing domain functions directly |
+| Move endpoint ownership into the Python app server slice by slice. | partial; Docs management, Data Sharing, analytics tag read routes, active tag write routes, Studio audit routes, Project State report, Thumbnail Quality preview, active catalogue editor APIs, and first analytics route shells moved |
+| Reuse extracted Python domain modules instead of proxying to old services by default. | partial; Docs management, Data Sharing, analytics tag routes, Studio audit routes, Project State report, Thumbnail Quality preview, and catalogue editor APIs use existing domain functions directly or in-process adapters |
 | Preserve loopback binding, CORS limits, write allowlists, backups, compact logs, and preview/apply boundaries. | partial; Docs/Data Sharing writes, analytics tag writes, Studio audit runs, Project State report runs, and Thumbnail Quality preview refreshes preserve existing guardrails, compact logs, and activity attachment where applicable |
 | Update `bin/dev-studio` to start the app server and only necessary background tasks. | partial; Docs management sibling, tag write sibling, and audit sibling retired from default startup |
 | Keep public Jekyll preview/build as an explicit separate action. | pending |
@@ -308,6 +309,8 @@ Catalogue Drafts and Studio Activity now read through local-app `GET /studio/api
 Bulk Add Work now uses local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply`; the adapter reuses the existing workbook import planner/apply helpers and preserves Studio Activity logging.
 The catalogue editor write/build/publication/delete/prose-import/moment-import endpoints now run through `/studio/api/catalogue/...` on the local app server, reusing the existing catalogue write handler in-process.
 `bin/dev-studio` no longer starts the standalone catalogue write server by default; `CATALOGUE_WRITE_SERVER_ENABLED=1` remains available for fallback/debug runs.
+Active Local Studio Docs browser transport now uses `/studio/api/docs/...`; `127.0.0.1:8789` is no longer a browser fallback for migrated routes.
+The standalone Docs Management server is now a thin optional HTTP wrapper over `scripts/docs/docs_management_service.py`; Local Studio no longer imports the server entrypoint for shared Docs behavior.
 
 Transition cleanup backlog:
 
@@ -317,6 +320,8 @@ Transition cleanup backlog:
 | Stop `bin/dev-studio` from starting `scripts/analytics/tag_write_server.py` by default. | The local app server owns save-tags, assignment import, registry import/mutation, alias import/mutation, and promote/demote; the deprecated `/build-docs` path is excluded rather than migrated; all active tag editor pages are local-app hosted. | done |
 | Retire or archive `scripts/analytics/tag_write_server.py` as an HTTP entrypoint while keeping reusable analytics domain modules. | No migrated UI or fallback/debug workflow needs the standalone tag write HTTP process. | done |
 | Stop `bin/dev-studio` from starting `scripts/studio/audit_service.py` by default. | The local app server owns the active Studio audit HTTP endpoints. | done |
+| Remove old `127.0.0.1:8789` Docs Management fallbacks from active Studio browser transport and route smokes. | Local Studio Docs management and Data Sharing routes are served through `/studio/api/docs/...`; the standalone Docs Management server is debug/portable only. | done |
+| Extract Docs Management reusable behavior out of the standalone HTTP server entrypoint. | The local Studio app needs Docs management behavior without depending on an old sibling server module. | done; `scripts/docs/docs_management_service.py` owns shared behavior, while `scripts/docs/docs_management_server.py` is an optional HTTP wrapper |
 | Remove hardcoded old tag write URLs from tests and browser module fixtures. | Runtime-config endpoints cover the migrated routes and fallback compatibility is no longer required. | done; remaining 8787 references are negative assertions only |
 | Remove static JSON fallbacks for analytics tag data from migrated local-only views where the fallback no longer serves a Jekyll-hosted page. | The corresponding view no longer runs in Jekyll and public output has no Studio shell for it. | done |
 | Retire migrated Jekyll Studio route files or replace them with local-only transition redirects. | Each route family has a verified local app view and no public build dependency. | partial; analytics tag route files plus audits, project-state, thumbnail-quality, bulk-add-work, activity, and data-sharing route files retired |

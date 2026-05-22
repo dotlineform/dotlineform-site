@@ -34,11 +34,12 @@ sort_order: 15500
 ## Operational Notes
 
 - normal `bin/dev-studio` runs host Docs Viewer management through the Local Studio App, not this standalone server
+- shared Docs management behavior lives in `scripts/docs/docs_management_service.py`; the standalone server is only an HTTP wrapper around that module
 - set `DOCS_MANAGEMENT_SERVER_ENABLED=1` only for fallback/debug runs that intentionally need the standalone `http://127.0.0.1:8789` process
 - standalone local management experiments can start with `./scripts/docs/docs_management_server.py --port 8789`
 - the shared Docs Viewer probes `GET /capabilities` for generated-data reads on normal local loads and for write capability when `?mode=manage` is present
 - if the local service is unavailable, the viewer falls back to static generated JSON for normal public-style reads; manage mode stays read-only and shows a manage-mode unavailable message
-- successful source writes now leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the server
+- successful source writes leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the Docs management service
 - `var/` is excluded from Jekyll because docs-management backups, logs, staged imports, and watcher-suppression markers are local operational files rather than publishable site input
 - `bin/dev-studio` also uses a local-only Jekyll overlay so generated docs/search JSON can be read from this server without making Jekyll watch those generated files
 

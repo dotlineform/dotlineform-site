@@ -12,15 +12,15 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DOCS_DIR = REPO_ROOT / "scripts" / "docs"
-DOCS_MANAGEMENT_PATH = DOCS_DIR / "docs_management_server.py"
+DOCS_MANAGEMENT_PATH = DOCS_DIR / "docs_management_service.py"
 
 
 def load_docs_management_module():
     if str(DOCS_DIR) not in sys.path:
         sys.path.insert(0, str(DOCS_DIR))
-    spec = importlib.util.spec_from_file_location("docs_management_server", DOCS_MANAGEMENT_PATH)
+    spec = importlib.util.spec_from_file_location("docs_management_service", DOCS_MANAGEMENT_PATH)
     if spec is None or spec.loader is None:
-        raise RuntimeError("Could not load docs_management_server.py")
+        raise RuntimeError("Could not load docs_management_service.py")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)

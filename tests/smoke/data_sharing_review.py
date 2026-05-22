@@ -354,7 +354,6 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
         route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
 
     page.route("**/studio/api/docs/**", handle)
-    page.route("http://127.0.0.1:8789/**", handle)
     return apply_requests
 
 
@@ -643,7 +642,6 @@ def main() -> int:
                 apply_requests: list[dict[str, object]] = []
                 if args.block_docs_service:
                     page.route("**/studio/api/docs/**", lambda route: route.abort())
-                    page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
                 elif args.mock_docs_service:
                     apply_requests = install_mock_docs_service(page)
                 page.goto(route_url(base_url, args.route_path), wait_until="domcontentloaded")

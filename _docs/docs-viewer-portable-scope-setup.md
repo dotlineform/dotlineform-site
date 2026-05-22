@@ -116,9 +116,10 @@ In local Studio runs, it renders `/docs/` through `docs_viewer_management_route.
 
 - `allow_management=true`
 - `allow_scope_query=true`
-- `management_base_url='http://127.0.0.1:8789'`
+- `management_base_url='/studio/api/docs'` in the local Studio app shell
 
 Public builds keep `docs_viewer_management_enabled: false`, so the same route adapter emits the read-only shell and ignores `mode=manage` without loading management CSS or localhost server configuration.
+The dev Studio Jekyll overlay points generated reads and management actions at the local Studio app default, `http://127.0.0.1:8765/studio/api/docs`, rather than the standalone Docs management process.
 
 The management scope selector and browser route map come from `assets/docs-viewer/data/docs-viewer-config.json`.
 Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `assets/docs-viewer/js/docs-viewer.js`.
@@ -129,7 +130,7 @@ Management route adapter inputs:
 - `viewer_base_url`: optional override; defaults to the page permalink or URL
 - `viewer_scope`: optional fixed initial scope hint
 - `default_doc_id`: optional route-local fallback
-- `management_base_url`: optional localhost server base URL; defaults to `http://127.0.0.1:8789`
+- `management_base_url`: optional local management API base URL; defaults to the site `docs_viewer_management_base_url` setting when configured, otherwise blank
 - `enable_search`: optional `false` to hide search controls
 - `search_placeholder`: optional search input placeholder
 - `search_aria_label`: optional search input label
@@ -179,8 +180,8 @@ After this, the public route should be able to fetch:
 
 ### 8. Start Local Management
 
-Run the docs-management server locally.
-In this repo the normal path is through the Studio dev runner; standalone usage is the same server script:
+Run the local Studio app for normal management.
+Standalone docs-management server usage is only a portable fallback/debug path:
 
 ```sh
 ./scripts/docs/docs_management_server.py --port 8789

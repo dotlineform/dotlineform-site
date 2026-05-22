@@ -39,7 +39,6 @@ def run(base_url: str) -> None:
         errors: list[str] = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.route("http://127.0.0.1:8788/**", lambda route: route.abort())
-        page.route("http://127.0.0.1:8789/**", lambda route: route.abort())
         page.route("http://127.0.0.1:8790/**", lambda route: route.abort())
         for route in ROUTES:
             page.goto(f"{base_url.rstrip('/')}{route['path']}", wait_until="domcontentloaded")
