@@ -1,4 +1,4 @@
-import { getStudioRoute } from "./studio-config.js";
+import { buildStudioRouteUrl } from "./studio-config.js";
 import {
   computeRecordHash,
   displayValue,
@@ -138,12 +138,11 @@ export async function buildChangedSeriesWorkUpdates(state) {
 }
 
 export function renderSeriesMemberRows(state, entries, options = {}) {
-  const workEditorBase = getStudioRoute(state.config, "catalogue_work_editor");
   return entries.map((entry) => {
     const workId = entry.workId;
     const title = displayValue(entry.record && entry.record.title);
     const isPrimary = entry.position === 0;
-    const workHref = `${workEditorBase}?work=${encodeURIComponent(workId)}`;
+    const workHref = buildStudioRouteUrl(state.config, "catalogue_work_editor", { work: workId });
     const positionText = text(options, "members_position", "position {position}", { position: String(entry.position + 1) });
     return `
       <div class="catalogueSeriesMembers__row">

@@ -1,4 +1,4 @@
-import { getStudioRoute } from "./studio-config.js";
+import { buildStudioRouteUrl } from "./studio-config.js";
 import {
   applyCatalogueBuild,
   applyCatalogueDelete,
@@ -771,8 +771,9 @@ export async function deleteCurrentDetail(state, context) {
     context.updateEditorState();
     setTextWithState(context, state.statusNode, t(state, context, "delete_status_running", "Deleting source record…"));
     await applyCatalogueDelete(request);
-    const route = getStudioRoute(state.config, "catalogue_work_editor");
-    window.location.assign(`${route}?work=${encodeURIComponent(state.currentWorkId)}`);
+    window.location.assign(buildStudioRouteUrl(state.config, "catalogue_work_editor", {
+      work: state.currentWorkId
+    }));
   } catch (error) {
     const message = Number(error && error.status) === 409
       ? t(state, context, "delete_status_conflict", "Source record changed since this page loaded. Reload before deleting again.")

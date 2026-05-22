@@ -19,10 +19,10 @@ const DEFAULT_STUDIO_CONFIG = {
       "catalogue_status": "/studio/catalogue-status/",
       "activity": "/studio/activity/",
       "bulk_add_work": "/studio/bulk-add-work/",
-      "catalogue_moment_editor": "/studio/catalogue-moment/",
-      "catalogue_work_editor": "/studio/catalogue-work/",
-      "catalogue_work_detail_editor": "/studio/catalogue-work-detail/",
-      "catalogue_series_editor": "/studio/catalogue-series/",
+      "catalogue_moment_editor": "/studio/catalogue-moment/?mode=manage",
+      "catalogue_work_editor": "/studio/catalogue-work/?mode=manage",
+      "catalogue_work_detail_editor": "/studio/catalogue-work-detail/?mode=manage",
+      "catalogue_series_editor": "/studio/catalogue-series/?mode=manage",
       "tag_registry": "/studio/analytics/tag-registry/",
       "tag_aliases": "/studio/analytics/tag-aliases/",
       "tag_groups": "/studio/analytics/tag-groups/",
@@ -350,6 +350,12 @@ export function getStudioRoute(config, key) {
   return resolveSitePath(typeof path === "string" ? path : "");
 }
 
+export function buildStudioRouteUrl(config, key, params = {}) {
+  const route = getStudioRoute(config, key);
+  if (!route) return "";
+  return appendRouteParams(route, params);
+}
+
 export function getStudioText(config, key, fallback = "", tokens = null) {
   const pathKeys = ["ui_text", ...String(key || "").split(".").filter(Boolean)];
   const value = pathValue(config, pathKeys);
@@ -398,6 +404,23 @@ function buildAssetUrl(path) {
   const [base, hash = ""] = resolvedPath.split("#", 2);
   const separator = base.includes("?") ? "&" : "?";
   return `${base}${separator}v=${encodeURIComponent(assetVersion)}${hash ? `#${hash}` : ""}`;
+}
+
+function appendRouteParams(route, params = {}) {
+  const origin = currentOrigin();
+  const url = new URL(String(route || "/"), origin);
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (!key || value == null || value === "") return;
+    url.searchParams.set(key, String(value));
+  });
+  return url.origin === origin ? `${url.pathname}${url.search}${url.hash}` : url.href;
+}
+
+function currentOrigin() {
+  if (typeof window !== "undefined" && window.location && window.location.origin) {
+    return window.location.origin;
+  }
+  return "http://127.0.0.1";
 }
 
 function readAssetVersion(importUrl = "") {

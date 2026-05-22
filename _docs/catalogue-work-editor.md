@@ -2,7 +2,7 @@
 doc_id: catalogue-work-editor
 title: Catalogue Work Editor
 added_date: 2026-04-22
-last_updated: "2026-05-10 21:10"
+last_updated: "2026-05-22"
 parent_id: user-guide
 sort_order: 3000
 ---
@@ -13,6 +13,9 @@ Route:
 - `/studio/catalogue-work/`
 - focused record selection uses `?work=<work_id>`
 - new draft mode uses `?mode=new`
+
+The route shell is hosted by the local Studio app server.
+The old Jekyll route shell has been retired.
 
 This page edits canonical work source records from `assets/studio/data/catalogue/works.json` through the local catalogue service. It now supports focused single-record edit, bulk edit, and draft create mode on the same route.
 
@@ -128,6 +131,16 @@ The picker:
 - blocks create/save when no series is selected
 
 Bulk mode keeps the existing raw `series_ids` input for now because bulk add/remove semantics still use the `+id` / `-id` diff form.
+
+## Local App Migration
+
+The page shell now lives in `scripts/studio/studio_app_views.py` and is mounted at `/studio/catalogue-work/?mode=manage` by `scripts/studio/studio_app_server.py`.
+It reuses the existing browser module and the existing catalogue sibling service endpoints on `127.0.0.1:8788`.
+The route migration changed the host shell, not the save/build/publication behavior.
+
+Focused smoke coverage:
+
+- `tests/smoke/local_studio_app_catalogue_editor_routes.py`
 
 Required create fields:
 

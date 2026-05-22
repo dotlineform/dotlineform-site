@@ -22,7 +22,7 @@ Status:
 - Phase 2 is implemented
 - Phase 3 is implemented for Docs Viewer manage mode
 - Phase 4 is in progress with Docs management and analytics tag routes consolidated into the local app server
-- Phase 5 has started with the local Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, and Studio Works route shells
+- Phase 5 has started with the local Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Studio Works, and catalogue editor route shells
 
 ## Lifecycle Rules
 
@@ -40,6 +40,7 @@ While implementing:
 
 - do not add complete responsibilities to large route controllers by default
 - keep `studio_app_server.py` as dispatch/startup, with config, views, and route-family APIs in focused modules
+- keep route shell modules split by ownership when the shared view module starts collecting a whole route family
 - reuse extracted Python and JavaScript domain owners where they exist
 - avoid default proxy compatibility layers to old sibling services
 - preserve local write-service guardrails: loopback binding, CORS limits, write allowlists, backups, preview/apply boundaries, and compact logs
@@ -98,8 +99,9 @@ Current commit point:
 - Phase 4 now mounts the tag registry, tag aliases, series-tags, and per-series tag editor route shells in the local app so those pages use local runtime config and local analytics endpoints
 - Phase 4 has retired the Jekyll analytics tag route shells, removed the old `127.0.0.1:8787` browser fallbacks, and stopped launching the standalone tag write server from `bin/dev-studio`
 - Phase 4 has removed the standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint; `scripts/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes
-- Phase 5 has started by mounting `/studio/audits/?mode=manage`, `/studio/project-state/?mode=manage`, `/studio/thumbnail-quality/?mode=manage`, `/studio/bulk-add-work/?mode=manage`, `/studio/activity/?mode=manage`, `/studio/catalogue-field-registry/?mode=manage`, and `/studio/studio-works/?mode=manage` in the local app and retiring the old Jekyll shells while leaving their sibling service APIs in place for now
+- Phase 5 has started by mounting `/studio/audits/?mode=manage`, `/studio/project-state/?mode=manage`, `/studio/thumbnail-quality/?mode=manage`, `/studio/bulk-add-work/?mode=manage`, `/studio/activity/?mode=manage`, `/studio/catalogue-field-registry/?mode=manage`, `/studio/studio-works/?mode=manage`, `/studio/catalogue-series/?mode=manage`, `/studio/catalogue-work/?mode=manage`, `/studio/catalogue-work-detail/?mode=manage`, and `/studio/catalogue-moment/?mode=manage` in the local app and retiring the old Jekyll shells while leaving their sibling service APIs in place for now
 - the old Jekyll `/studio/` landing shell is retired; `/studio/` is now the local app home during Studio sessions
+- Studio route URL building now preserves configured route query state such as `?mode=manage` while appending record parameters for migrated catalogue editor links
 - Docs Broken Links should move into Docs Viewer reports rather than becoming another migrated Studio route shell
 - non-Docs write/manage APIs are intentionally still disabled or partial where not yet migrated
 
@@ -189,6 +191,7 @@ Outcomes:
 | --- | --- |
 | Define the Studio runtime config shape for media bases, thumb bases, pipeline variants, UI text paths, docs links, and service endpoints. | done |
 | Add `navigateTo(view, params)` and related navigation helpers. | done |
+| Add a shared Studio route URL builder that safely appends params to configured route paths with existing query state. | done |
 | Add `openModal(name, params)` and modal/context helpers where needed. | done |
 | Add return-context helpers that replace route-query return state over time. | done |
 | Add an initial-state adapter that can read current URL state during transition. | done |
@@ -199,6 +202,7 @@ Next steps:
 Phase 2 is implemented.
 `/studio/runtime-config.json` now exposes the local app runtime contract for views, navigation, service endpoints, data/UI-text paths, media/thumb bases, pipeline variants, modal dispatch, and transitional state.
 `assets/studio/js/studio-navigation.js` now owns the first local app adapter layer: view lookup, URL building, `navigateTo(view, params)`, URL initial-state parsing, `sessionStorage` return-context helpers, and `openModal(name, params)` dispatch through the `studio:open-modal` event.
+`assets/studio/js/studio-config.js` now owns `buildStudioRouteUrl(config, key, params)` for callers that need to append route-specific params to configured Studio routes that may already include `?mode=manage`.
 This is intentionally not a route framework; it is a small compatibility surface for migrated vanilla modules.
 Future route migrations should add only the adapter helpers they actually need, backed by focused smoke tests.
 
@@ -304,12 +308,13 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Migrate catalogue editors and dashboards. | partial; Bulk Add Work, Studio Activity, Catalogue Field Registry, and Studio Works are local-app hosted while catalogue editor/dashboards remain pending |
+| Migrate catalogue editors and dashboards. | partial; Bulk Add Work, Studio Activity, Catalogue Field Registry, Studio Works, and the catalogue editor shells are local-app hosted while catalogue dashboard/status remain pending |
 | Migrate analytics/tag routes. | partial; tag groups, registry, aliases, series-tags, and per-series tag editor are local-app hosted |
 | Migrate data-sharing routes. | pending |
 | Migrate audit and project-state routes. | partial; Studio Audits, Project State, and Thumbnail Quality shells are local-app hosted while their sibling service APIs remain in place |
 | Add an explicit public-site link resolver for Studio links to works, series, moments, `/library/`, and `/analysis/`. | partial; runtime config now exposes public-preview and production bases, `studio-navigation.js` has `buildPublicSiteUrl(...)`, and the migrated per-series tag editor uses it for series/work header links; broader route adoption remains pending |
-| Retire Jekyll Studio route files after each replacement is verified. | partial; analytics tag route files plus audits, project-state, thumbnail-quality, bulk-add-work, activity, catalogue-field-registry, and studio-works route files retired |
+| Replace ad hoc Studio route query concatenation with the shared route URL builder as routes are migrated. | partial; catalogue editor and series-tag editor links now preserve configured route query state while appending record ids |
+| Retire Jekyll Studio route files after each replacement is verified. | partial; analytics tag route files plus audits, project-state, thumbnail-quality, bulk-add-work, activity, catalogue-field-registry, studio-works, and catalogue editor route files retired |
 | Retire the Jekyll `/studio/` landing shell after the local app owns `/studio/`. | done |
 | Retire `/studio/docs-broken-links/` only after the Docs Viewer report replacement exists. | pending |
 | Keep temporary redirects only where useful for local transition ergonomics. | pending |
@@ -321,13 +326,18 @@ Do not migrate routes only for tidiness; each slice should end with a verified l
 When route families include links to public content, resolve those links through a configured local Jekyll preview base.
 Do not let relative public-content links stay on the Studio app host, and do not default them to dotlineform.com except for explicit live-site actions.
 The first helper is in place; adopt it as each migrated route's public-content links are touched rather than doing a broad blind rewrite.
-Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, and Studio Works are the first operational route shells moved in Phase 5.
+Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Studio Works, and the Catalogue Series/Work/Work Detail/Moment editor shells are the first operational route shells moved in Phase 5.
 They keep the existing vanilla browser modules and unavailable-service behavior, and only change the host shell from Jekyll to the local app.
 The audit, catalogue, and docs-service API calls behind those pages are not yet consolidated; migrate those only when the route-family API boundary is ready.
 Catalogue Field Registry is read-only and uses checked-in Studio data, so it does not add a new write/API consolidation dependency.
 Studio Works is read-only and uses checked-in index data, but it also adopts the public-site link resolver so work and series links open against the configured public Jekyll preview host.
+The catalogue editor shell migration keeps the existing `127.0.0.1:8788` catalogue sibling service dependency for create/save/build/publication/delete/import flows.
+Endpoint ownership should move into the local app server as a separate API consolidation slice rather than being proxied.
+Catalogue route shells are split into `scripts/studio/studio_catalogue_views.py` so `studio_app_views.py` remains a shared shell module rather than absorbing every route family.
 The Jekyll `/studio/` landing shell is now retired because the local app owns `/studio/` and public builds should not expose Studio.
 The local app home is intentionally a simple runtime navigation list rather than a preserved Jekyll dashboard design; it filters out non-nav internal views such as the per-series tag editor and marks the home root ready for smoke checks.
+Configured catalogue editor routes now keep `?mode=manage` in runtime/static config.
+Browser callers that add `work=`, `detail=`, `series=`, or `moment=` parameters use the shared route URL builder instead of string concatenation, so the migration can preserve manage mode without depending on Jekyll-style query assembly.
 
 ## Phase 6: Projection And Build Contract
 

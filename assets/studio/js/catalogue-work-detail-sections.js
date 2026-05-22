@@ -1,4 +1,5 @@
 import {
+  buildStudioRouteUrl,
   getStudioRoute,
   getStudioText
 } from "./studio-config.js";
@@ -149,8 +150,7 @@ export function updateWorkDetailSummary(state, options = {}) {
   if (state.mode === "new") {
     const workId = normalizeWorkId(state.draft.work_id);
     const parentRecord = state.workSearchById.get(workId);
-    const workEditorBase = getStudioRoute(state.config, "catalogue_work_editor");
-    const parentHref = workId ? `${workEditorBase}?work=${encodeURIComponent(workId)}` : workEditorBase;
+    const parentHref = buildStudioRouteUrl(state.config, "catalogue_work_editor", { work: workId });
     state.summaryNode.innerHTML = `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(text(state, options, "new_summary_parent_label", "parent work"))}</span>
@@ -208,9 +208,8 @@ export function updateWorkDetailSummary(state, options = {}) {
 
   const record = state.currentRecord;
   const publicBase = getStudioRoute(state.config, "work_details_page_base");
-  const workEditorBase = getStudioRoute(state.config, "catalogue_work_editor");
   const publicHref = record ? `${publicBase}${encodeURIComponent(record.detail_uid)}/` : "";
-  const workEditorHref = record ? `${workEditorBase}?work=${encodeURIComponent(record.work_id)}` : "";
+  const workEditorHref = record ? buildStudioRouteUrl(state.config, "catalogue_work_editor", { work: record.work_id }) : "";
   state.summaryNode.innerHTML = `
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_public_link", "Open public detail page"))}</span>

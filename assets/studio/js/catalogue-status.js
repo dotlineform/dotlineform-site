@@ -1,5 +1,5 @@
 import {
-  getStudioRoute,
+  buildStudioRouteUrl,
   getStudioText,
   loadStudioConfigWithText
 } from "./studio-config.js";
@@ -240,9 +240,9 @@ async function init() {
     entries.forEach((entry) => {
       const family = FAMILIES.find((item) => item.key === entry.family);
       if (!family) return;
-      const route = getStudioRoute(config, family.routeKey);
-      if (!route) return;
-      entry.editorHref = `${route}?${family.paramKey}=${encodeURIComponent(entry.id)}`;
+      entry.editorHref = buildStudioRouteUrl(config, family.routeKey, {
+        [family.paramKey]: entry.id
+      });
     });
     const state = {
       config,

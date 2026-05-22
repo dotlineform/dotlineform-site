@@ -1,4 +1,5 @@
 import {
+  buildStudioRouteUrl,
   getStudioRoute,
   getStudioText
 } from "./studio-config.js";
@@ -197,8 +198,9 @@ function getCurrentWorkDetailMatches(state, rawQuery) {
 }
 
 function buildDetailEditorHref(state, detailUid) {
-  const route = getStudioRoute(state.config, "catalogue_work_detail_editor");
-  return `${route}?detail=${encodeURIComponent(detailUid)}`;
+  return buildStudioRouteUrl(state.config, "catalogue_work_detail_editor", {
+    detail: detailUid
+  });
 }
 
 function renderDetailRows(state, options, details) {
@@ -513,7 +515,7 @@ export function updateWorkSummary(state, options = {}) {
       : text(state, options, "summary_rebuild_current", "source and public catalogue are aligned in this session");
     if (state.newDetailLinkNode) {
       state.newDetailLinkNode.removeAttribute("aria-disabled");
-      state.newDetailLinkNode.href = getStudioRoute(state.config, "catalogue_work_detail_editor");
+      state.newDetailLinkNode.href = buildStudioRouteUrl(state.config, "catalogue_work_detail_editor");
     }
     if (state.newFileLinkNode) {
       state.newFileLinkNode.disabled = true;
@@ -554,11 +556,13 @@ export function updateWorkSummary(state, options = {}) {
     ? text(state, options, "summary_rebuild_needed", "public update failed in this session")
     : text(state, options, "summary_rebuild_current", "source and public catalogue are aligned in this session");
   if (state.newDetailLinkNode) {
-    const base = getStudioRoute(state.config, "catalogue_work_detail_editor");
     if (record && isCurrentWorkPublished(state, options)) {
       state.newDetailLinkNode.removeAttribute("aria-disabled");
       state.newDetailLinkNode.removeAttribute("title");
-      state.newDetailLinkNode.href = `${base}?work=${encodeURIComponent(record.work_id)}&mode=new`;
+      state.newDetailLinkNode.href = buildStudioRouteUrl(state.config, "catalogue_work_detail_editor", {
+        work: record.work_id,
+        mode: "new"
+      });
     } else {
       state.newDetailLinkNode.setAttribute("aria-disabled", "true");
       state.newDetailLinkNode.title = text(state, options, "details_new_unavailable_draft", "Publish this work before adding work details.");

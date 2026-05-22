@@ -2,7 +2,7 @@
 doc_id: catalogue-moment-editor
 title: Catalogue Moment Editor
 added_date: 2026-04-27
-last_updated: "2026-05-11 00:25"
+last_updated: "2026-05-22"
 parent_id: user-guide
 sort_order: 6000
 ---
@@ -13,6 +13,9 @@ Route:
 - `/studio/catalogue-moment/`
 - focused record selection uses `?moment=<moment_id>`
 - staged import mode uses `?file=<moment_id>.md`
+
+The route shell is hosted by the local Studio app server.
+The old Jekyll route shell has been retired.
 
 This page edits one existing canonical moment metadata record from `assets/studio/data/catalogue/moments.json` through the local catalogue service.
 It also imports new draft moments from staged body-only Markdown, so moment creation, review, save, publish, and unpublish now live on one Studio page.
@@ -99,6 +102,12 @@ Runtime ownership:
 - `assets/studio/js/catalogue-moment-sections.js` owns normal edit summary rendering, readiness rendering, and build-impact text rendering.
 - `assets/studio/js/catalogue-moment-import.js` owns staged-file query state, import metadata reads, preview metadata seeding, import preview/apply transport sequencing, import summary/detail rendering, stale preview clearing, import control availability, and import activity context.
 - `assets/studio/js/catalogue-moment-fields.js` owns field definitions, id/filename normalization, draft reads, source-record shaping, and validation.
+
+Local app migration:
+
+- the page shell now lives in `scripts/studio/studio_app_views.py`
+- the local app mounts it at `/studio/catalogue-moment/?mode=manage`
+- `tests/smoke/local_studio_app_catalogue_editor_routes.py` covers the local route shell and unavailable-service state
 
 Apply writes:
 

@@ -2,7 +2,7 @@
 doc_id: catalogue-series-editor
 title: Catalogue Series Editor
 added_date: 2026-04-22
-last_updated: 2026-05-10
+last_updated: 2026-05-22
 parent_id: user-guide
 sort_order: 5000
 ---
@@ -13,6 +13,9 @@ Route:
 - `/studio/catalogue-series/`
 - focused record selection uses `?series=<series_id>`
 - new draft mode uses `?mode=new`
+
+The route shell is hosted by the local Studio app server.
+The old Jekyll route shell has been retired.
 
 This page edits one canonical series source record from `assets/studio/data/catalogue/series.json` through the local catalogue service and can also write affected work membership records in `assets/studio/data/catalogue/works.json`.
 
@@ -57,6 +60,12 @@ The Series Editor route is split into route orchestration, action workflows, fie
 
 Membership remains route-local to the Series Editor because it edits affected work `series_ids` arrays as part of the series workflow.
 It is not a generic Catalogue membership controller.
+
+Local app migration:
+
+- the page shell now lives in `scripts/studio/studio_app_views.py`
+- the local app mounts it at `/studio/catalogue-series/?mode=manage`
+- `tests/smoke/local_studio_app_catalogue_editor_routes.py` covers the local route shell and unavailable-service state
 
 ## Route Ready State
 

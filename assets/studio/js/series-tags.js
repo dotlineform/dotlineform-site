@@ -1,4 +1,5 @@
 import {
+  buildStudioRouteUrl,
   getStudioGroups,
   getStudioRoute,
   getStudioText,
@@ -253,9 +254,7 @@ function isPrimarySeriesEntry(entry) {
 
 function buildSeriesEditorUrl(config, seriesId) {
   const sid = normalize(seriesId);
-  const base = getStudioRoute(config, "series_tag_editor");
-  if (!base) return "";
-  return `${base}?series=${encodeURIComponent(sid)}`;
+  return sid ? buildStudioRouteUrl(config, "series_tag_editor", { series: sid }) : "";
 }
 
 function wireEvents(state) {

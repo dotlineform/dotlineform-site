@@ -2,22 +2,26 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: 2026-05-13
+last_updated: 2026-05-22
 parent_id: studio
 sort_order: 2000
 ---
 # Studio Runtime
 
 This document describes the current Studio route shell, shared runtime modules, and the way Studio pages connect into the scoped Docs Viewer.
+Studio route hosting is migrating from Jekyll shells to the local Python Studio app server.
 
 ## Route Shell
 
-All Studio pages use:
+Legacy Jekyll-hosted Studio pages use:
 
 - `layout: studio`
 - `_layouts/studio.html`
 
-The Studio route shell now provides the shared admin-facing navigation model. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
+The local Studio app server now owns many active Studio route shells directly.
+For migrated routes, `scripts/studio/studio_app_views.py` renders the shell, `scripts/studio/studio_app_config.py` advertises the runtime view registry, and `scripts/studio/studio_app_server.py` dispatches the route.
+
+The legacy Studio route shell provides the shared admin-facing navigation model for any pages not yet migrated. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
 
 - `Catalogue`
 - `Analytics`
@@ -46,7 +50,7 @@ The `i` link is the page-to-doc bridge for Studio. Each page now points to a sco
 
 This keeps Studio implementation notes in the shared `/docs/` module rather than on page-local routes.
 
-Studio route entry modules are loaded through `_includes/studio_module_script.html`, for example:
+Legacy Jekyll route entry modules are loaded through `_includes/studio_module_script.html`, for example:
 
 ```liquid
 {% include studio_module_script.html src='/assets/studio/js/catalogue-work-editor.js' %}
@@ -57,25 +61,19 @@ Route pages own which entry module they load; route controllers do not own cache
 
 ## Studio Pages
 
-Current route inventory:
+Current Jekyll route inventory is shrinking as local app views replace route shells.
+Active migrated shells include `/studio/`, `/docs/`, analytics tag routes, operational Studio routes, Studio Works, Catalogue Field Registry, and the four catalogue editor routes.
 
-- `studio/index.md`
+Remaining Jekyll route inventory:
+
 - `studio/catalogue/index.md`
 - `studio/analytics/index.md`
 - `studio/catalogue-status/index.md`
-- `studio/activity/index.md`
 - `studio/docs-broken-links/index.md`
-- `studio/bulk-add-work/index.md`
-- `studio/catalogue-moment/index.md`
-- `studio/catalogue-work/index.md`
-- `studio/catalogue-work-detail/index.md`
-- `studio/catalogue-series/index.md`
-- `studio/analytics/tag-groups/index.md`
-- `studio/analytics/tag-registry/index.md`
-- `studio/analytics/tag-aliases/index.md`
-- `studio/analytics/series-tags/index.md`
-- `studio/analytics/series-tag-editor/index.md`
-- `studio/studio-works/index.md`
+- `studio/data-sharing/index.md`
+- `studio/data-sharing/prepare/index.md`
+- `studio/data-sharing/review/index.md`
+- `studio/ui-catalogue/demos/index.md`
 
 Current page-level doc links:
 
@@ -101,7 +99,7 @@ Current page-level doc links:
 Shared Studio runtime and wiring currently live in:
 
 - `assets/studio/js/studio-config.js`
-  loads `assets/studio/data/studio_config.json`, merges defaults, and resolves root-relative paths against the current site base path
+  loads `assets/studio/data/studio_config.json`, merges defaults, resolves root-relative paths against the current site base path, and builds configured Studio route URLs while preserving existing query state
 - `assets/studio/js/studio-data.js`
   provides shared JSON loading and common shaping helpers for Studio pages
 - `assets/studio/js/studio-transport.js`

@@ -100,6 +100,34 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "doc_href": "/docs/?scope=studio&doc=studio-works&mode=manage",
         "script": "/assets/studio/js/studio-works.js",
     },
+    "catalogue_series_editor": {
+        "label": "series editor",
+        "title": "Catalogue Series Editor",
+        "path": "/studio/catalogue-series/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=catalogue-series-editor&mode=manage",
+        "script": "/assets/studio/js/catalogue-series-editor.js",
+    },
+    "catalogue_work_editor": {
+        "label": "work editor",
+        "title": "Catalogue Work Editor",
+        "path": "/studio/catalogue-work/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=catalogue-work-editor&mode=manage",
+        "script": "/assets/studio/js/catalogue-work-editor.js",
+    },
+    "catalogue_work_detail_editor": {
+        "label": "detail editor",
+        "title": "Catalogue Work Detail Editor",
+        "path": "/studio/catalogue-work-detail/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=catalogue-work-detail-editor&mode=manage",
+        "script": "/assets/studio/js/catalogue-work-detail-editor.js",
+    },
+    "catalogue_moment_editor": {
+        "label": "moment editor",
+        "title": "Catalogue Moment Editor",
+        "path": "/studio/catalogue-moment/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=catalogue-moment-editor&mode=manage",
+        "script": "/assets/studio/js/catalogue-moment-editor.js",
+    },
 }
 
 STUDIO_MEDIA: dict[str, object] = {
@@ -177,6 +205,10 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "assets" / "studio" / "js" / "activity-log-modals.js",
         repo_root / "assets" / "studio" / "js" / "catalogue-field-registry-review.js",
         repo_root / "assets" / "studio" / "js" / "studio-works.js",
+        repo_root / "assets" / "studio" / "js" / "catalogue-series-editor.js",
+        repo_root / "assets" / "studio" / "js" / "catalogue-work-editor.js",
+        repo_root / "assets" / "studio" / "js" / "catalogue-work-detail-editor.js",
+        repo_root / "assets" / "studio" / "js" / "catalogue-moment-editor.js",
         repo_root / "assets" / "studio" / "js" / "tag-studio.js",
         repo_root / "assets" / "studio" / "css" / "studio.css",
         repo_root / "assets" / "studio" / "data" / "studio_config.json",

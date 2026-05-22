@@ -51,6 +51,10 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "activity" and view["path"] == "/studio/activity/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_field_registry" and view["path"] == "/studio/catalogue-field-registry/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "studio_works" and view["path"] == "/studio/studio-works/?mode=manage" for view in runtime["views"])
+    assert any(view["id"] == "catalogue_series_editor" and view["path"] == "/studio/catalogue-series/?mode=manage" for view in runtime["views"])
+    assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/?mode=manage" for view in runtime["views"])
+    assert any(view["id"] == "catalogue_work_detail_editor" and view["path"] == "/studio/catalogue-work-detail/?mode=manage" for view in runtime["views"])
+    assert any(view["id"] == "catalogue_moment_editor" and view["path"] == "/studio/catalogue-moment/?mode=manage" for view in runtime["views"])
     assert "series_tag_editor" not in runtime["navigation"]["primary"]
     assert runtime["services"]["analytics"]["tag_groups"] == "/studio/api/analytics/tag-groups"
     assert runtime["services"]["analytics"]["tag_registry"] == "/studio/api/analytics/tag-registry"

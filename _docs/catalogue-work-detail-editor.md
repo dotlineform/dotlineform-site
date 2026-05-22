@@ -2,7 +2,7 @@
 doc_id: catalogue-work-detail-editor
 title: Catalogue Work Detail Editor
 added_date: 2026-04-22
-last_updated: "2026-05-10 21:38"
+last_updated: "2026-05-22"
 parent_id: user-guide
 sort_order: 4000
 ---
@@ -13,6 +13,9 @@ Route:
 - `/studio/catalogue-work-detail/`
 - focused record selection uses `?detail=<detail_uid>`
 - parent-scoped draft create mode uses `?work=<work_id>&mode=new`
+
+The route shell is hosted by the local Studio app server.
+The old Jekyll route shell has been retired.
 
 This page edits canonical work detail source records from `assets/studio/data/catalogue/work_details.json` through the local catalogue service. It now supports focused single-record edit, bulk edit, and parent-scoped draft create mode on the same route.
 
@@ -50,6 +53,12 @@ Implementation notes:
 - `assets/studio/js/catalogue-work-detail-form.js` owns form field rendering, readonly field rendering, label refresh, field value synchronization, enabled/disabled state, and field validation message rendering.
 - `assets/studio/js/catalogue-work-detail-selection.js` owns detail query parsing, search suggestions, single/bulk open flows, and initial `?detail=` / `?mode=new` route selection.
 - the edit controller shares work-detail field definitions, id normalization, draft shaping, and save payload construction with the new-detail controller through `assets/studio/js/catalogue-work-detail-fields.js`.
+
+Local app migration:
+
+- the page shell now lives in `scripts/studio/studio_app_views.py`
+- the local app mounts it at `/studio/catalogue-work-detail/?mode=manage`
+- `tests/smoke/local_studio_app_catalogue_editor_routes.py` covers the local route shell and unavailable-service state
 
 ## Route Ready State
 

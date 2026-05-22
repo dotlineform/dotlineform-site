@@ -1,0 +1,56 @@
+{
+    "id": "change-2026-05-22-added-studio-route-url-builder",
+    "date": "2026-05-22",
+    "title": "Added Studio Route URL Builder",
+    "status": "implemented",
+    "type": "migration",
+    "domains": [
+        "runtime",
+        "studio",
+        "catalogue",
+        "testing"
+    ],
+    "summary": "Added a shared Studio route URL builder and switched catalogue editor links that append record parameters away from ad hoc query-string concatenation.",
+    "source": {
+        "file": "_docs/local-studio-app-implementation-plan.md",
+        "archive": "change-request"
+    },
+    "subjects": [
+        "local-studio-app",
+        "runtime-config",
+        "navigation",
+        "catalogue-editors",
+        "route-urls"
+    ],
+    "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+    "related_docs": [
+        "local-studio-app",
+        "local-studio-app-implementation-plan",
+        "site-request-studio-local-vanilla-web-app",
+        "studio-runtime"
+    ],
+    "related_files": [
+        "assets/studio/js/studio-config.js",
+        "assets/studio/data/studio_config.json",
+        "assets/studio/js/catalogue-status.js",
+        "assets/studio/js/catalogue-work-sections.js",
+        "assets/studio/js/catalogue-work-detail-actions.js",
+        "assets/studio/js/catalogue-work-detail-sections.js",
+        "assets/studio/js/catalogue-series-actions.js",
+        "assets/studio/js/catalogue-series-membership.js",
+        "assets/studio/js/catalogue-moment-actions.js",
+        "assets/studio/js/tag-registry-state.js",
+        "assets/studio/js/series-tags.js",
+        "tests/smoke/local_studio_navigation_adapter.py",
+        "_docs/local-studio-app.md",
+        "_docs/local-studio-app-implementation-plan.md",
+        "_docs/site-request-studio-local-vanilla-web-app.md",
+        "_docs/studio-runtime.md"
+    ],
+    "effect": "Configured Studio routes can now keep transition query state such as `?mode=manage` while browser modules add record parameters such as `work`, `detail`, `series`, or `moment`. This removes a local-app migration risk where callers that used string concatenation could accidentally produce invalid URLs or drop manage mode after route config moved away from Jekyll shells.",
+    "verification": [
+        "Added route URL builder assertions to tests/smoke/local_studio_navigation_adapter.py",
+        "JavaScript syntax checks covered the touched Studio config and route modules",
+        "Focused local Studio navigation and catalogue editor route smokes covered the changed URL behavior"
+    ]
+}

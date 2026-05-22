@@ -51,6 +51,10 @@ Current mounted views:
 - `/studio/activity/?mode=manage`
 - `/studio/catalogue-field-registry/?mode=manage`
 - `/studio/studio-works/?mode=manage`
+- `/studio/catalogue-series/?mode=manage`
+- `/studio/catalogue-work/?mode=manage`
+- `/studio/catalogue-work-detail/?mode=manage`
+- `/studio/catalogue-moment/?mode=manage`
 
 The local app owns `/studio/`.
 The old Jekyll `/studio/` landing shell has been retired, so Studio home navigation now comes from the local runtime view registry rather than Jekyll/Liquid page data.
@@ -117,6 +121,10 @@ The Studio Works route shell is hosted by the local app at `/studio/studio-works
 It reuses `assets/studio/js/studio-works.js`, checked-in works/series indexes, and the Studio-only work storage index.
 The old Jekyll `/studio/studio-works/` shell has been retired.
 Its work and series links now resolve through the configured public-site preview base rather than staying on the Studio app host.
+The Catalogue Series, Work, Work Detail, and Moment editor route shells are hosted by the local app at their `?mode=manage` routes.
+They reuse the existing vanilla editor modules and existing sibling catalogue service endpoints on `127.0.0.1:8788`.
+The old Jekyll shells for `/studio/catalogue-series/`, `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, and `/studio/catalogue-moment/` have been retired.
+This slice changes route hosting only; catalogue write/API ownership remains a later route-family API consolidation task.
 The old Jekyll `/studio/` landing shell has also been retired.
 This removes another public-site Studio page and keeps the local app as the only active Studio home surface during migration.
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
@@ -133,6 +141,8 @@ The endpoint exposes the local app runtime contract for migrated views:
 Migrated links can declare `data-studio-navigate="<view-id>"` while retaining a real `href` fallback.
 The same module exposes `navigateTo(view, params)`, `readStudioInitialState()`, return-context helpers backed by `sessionStorage`, and `openModal(name, params)` dispatch through the `studio:open-modal` event.
 This adapter is deliberately small and does not introduce a route framework.
+`assets/studio/js/studio-config.js` also exposes `buildStudioRouteUrl(config, key, params)`.
+Use it when a browser module needs to append record parameters to a configured Studio route, because configured local routes may already contain transition state such as `?mode=manage`.
 Studio-to-public-content links need an explicit second boundary once Studio and the public Jekyll preview are separate local servers.
 The target contract is:
 
@@ -154,7 +164,7 @@ Data-sharing UI behavior is intentionally deferred to a later cross-Studio adapt
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
 The server is still intentionally narrow and does not yet own catalogue, audit API, or app-wide navigation APIs.
-The app server is split before broader route migration: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns HTML shells, `studio_docs_api.py` owns the Docs Viewer API adapter, and `studio_analytics_api.py` owns the first analytics API adapter.
+The app server is split before broader route migration: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns shared HTML shells, `studio_catalogue_views.py` owns catalogue route shells, `studio_docs_api.py` owns the Docs Viewer API adapter, and `studio_analytics_api.py` owns the first analytics API adapter.
 New route families should follow that module-boundary pattern rather than expanding the server entrypoint.
 
 Current focused checks:
@@ -170,6 +180,7 @@ Current focused checks:
 - `tests/smoke/local_studio_app_activity_route.py`
 - `tests/smoke/local_studio_app_catalogue_field_registry_route.py`
 - `tests/smoke/local_studio_app_studio_works_route.py`
+- `tests/smoke/local_studio_app_catalogue_editor_routes.py`
 - `tests/smoke/local_studio_app_docs_viewer.py`
 - `tests/smoke/local_studio_docs_management_workflows.py`
 - `tests/smoke/local_studio_docs_management_ui.py`

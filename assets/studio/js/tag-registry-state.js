@@ -7,7 +7,7 @@ import {
   getSeriesAssignmentTagIds
 } from "./studio-data.js";
 import {
-  getStudioRoute
+  buildStudioRouteUrl
 } from "./studio-config.js";
 
 export function applyTagRegistryEditProjection(state, options = {}) {
@@ -114,8 +114,6 @@ function timestampMs(value) {
 }
 
 function buildSeriesEditorUrl(config, seriesId) {
-  const base = getStudioRoute(config, "series_tag_editor");
   const normalizedSeriesId = normalize(seriesId);
-  if (!base || !normalizedSeriesId) return "";
-  return `${base}?series=${encodeURIComponent(normalizedSeriesId)}`;
+  return normalizedSeriesId ? buildStudioRouteUrl(config, "series_tag_editor", { series: normalizedSeriesId }) : "";
 }

@@ -39,11 +39,21 @@ def main(argv: list[str] | None = None) -> int:
             result = page.evaluate(
                 """async () => {
                     const mod = await import("/assets/studio/js/studio-navigation.js");
+                    const configMod = await import("/assets/studio/js/studio-config.js");
                     const config = await (await fetch("/studio/runtime-config.json")).json();
                     const url = mod.buildStudioViewUrl(config, "tag-groups", {
                         scope: "studio",
                         empty: "",
                         zero: 0
+                    });
+                    const workEditorUrl = configMod.buildStudioRouteUrl(config, "catalogue_work_editor", {
+                        work: "00001",
+                        empty: "",
+                        zero: 0
+                    });
+                    const newDetailUrl = configMod.buildStudioRouteUrl(config, "catalogue_work_detail_editor", {
+                        work: "00001",
+                        mode: "new"
                     });
                     const publicWorkUrl = mod.buildPublicSiteUrl(config, "/works/00123/", {
                         from: "studio",
@@ -99,6 +109,8 @@ def main(argv: list[str] | None = None) -> int:
                         stateStorageKey: config.app.runtime.state.return_context_storage_key,
                         modalEventName: config.app.runtime.modals.event,
                         url,
+                        workEditorUrl,
+                        newDetailUrl,
                         publicWorkUrl,
                         liveWorkUrl,
                         initial,
@@ -136,6 +148,10 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected modal event name: {result['modalEventName']!r}")
         if result["url"] != expected_url:
             raise AssertionError(f"unexpected view URL: {result['url']!r}")
+        if result["workEditorUrl"] != "/studio/catalogue-work/?mode=manage&work=00001&zero=0":
+            raise AssertionError(f"unexpected work editor URL: {result['workEditorUrl']!r}")
+        if result["newDetailUrl"] != "/studio/catalogue-work-detail/?mode=new&work=00001":
+            raise AssertionError(f"unexpected new detail URL: {result['newDetailUrl']!r}")
         if result["publicWorkUrl"] != "http://127.0.0.1:4000/works/00123/?from=studio&zero=0":
             raise AssertionError(f"unexpected public work URL: {result['publicWorkUrl']!r}")
         if result["liveWorkUrl"] != "https://dotlineform.com/works/00123/":

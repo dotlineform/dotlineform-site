@@ -18,7 +18,7 @@ Status:
 - Phase 2 implemented
 - Phase 3 implemented for Docs Viewer manage mode
 - Phase 4 in progress with Docs management, analytics tag reads, active analytics tag writes, and analytics tag route shells routed through the local app server; the old analytics tag Jekyll shells and 8787 browser fallback are retired
-- Phase 5 started with the Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Studio Works, and Studio home shells hosted by the local app and their old Jekyll shells retired
+- Phase 5 started with the Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Studio Works, catalogue editor, and Studio home shells hosted by the local app and their old Jekyll shells retired
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -199,6 +199,8 @@ That means runtime config should distinguish:
 Studio navigation helpers should resolve public-content links through the configured public preview base rather than relying on relative URLs that would stay on the Studio app host.
 The initial helper exists in the local Studio runtime: runtime config exposes public-preview and production site bases, and `studio-navigation.js` can build public-site URLs from those bases.
 Route migrations still need to adopt the helper where they own public-content links.
+Configured Studio-route links should use the shared route URL builder when adding record parameters.
+That keeps transition state such as `?mode=manage` in config, rather than forcing every caller to know whether it should append `?` or `&`.
 
 ## Launcher Transition Decision
 
@@ -284,7 +286,7 @@ Needs adaptation:
 - `relative_url` and `site.*` config injection
 - `data-*` attributes generated from `_config.yml` and `_data`
 - query-string based initial state
-- `window.location` navigation between Studio pages
+- `window.location` navigation between Studio pages, especially ad hoc query-string concatenation
 - tests that assume Jekyll-served `/studio/...` routes
 
 Avoid:
@@ -485,6 +487,8 @@ For projection-contract slices:
 ## Change Log Entries
 
 - `change-2026-05-22-added-local-analytics-tag-promotion-api`
+- `change-2026-05-22-added-studio-route-url-builder`
+- `change-2026-05-22-mounted-local-catalogue-editor-route-shells`
 - `change-2026-05-22-mounted-local-studio-works-route`
 - `change-2026-05-22-mounted-local-catalogue-field-registry-route`
 - `change-2026-05-22-retired-jekyll-studio-home-shell`
