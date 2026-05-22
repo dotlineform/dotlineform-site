@@ -36,6 +36,7 @@ from studio_app_views import (  # noqa: E402
     project_state_view,
     series_tags_view,
     series_tag_editor_view,
+    studio_analytics_view,
     studio_audits_view,
     studio_home_view,
     tag_aliases_view,
@@ -110,6 +111,9 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path in {"/studio/catalogue", "/studio/catalogue/"}:
             self.send_html(catalogue_dashboard_view(self.version))
+            return
+        if path in {"/studio/analytics", "/studio/analytics/"}:
+            self.send_html(studio_analytics_view(self.version))
             return
         if path in {"/studio/audits", "/studio/audits/"}:
             self.send_html(studio_audits_view(self.version))

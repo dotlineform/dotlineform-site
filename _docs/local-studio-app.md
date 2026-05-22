@@ -40,6 +40,7 @@ Current mounted views:
 - `/studio/`
 - `/docs/`
 - `/studio/catalogue/?mode=manage`
+- `/studio/analytics/?mode=manage`
 - `/studio/analytics/tag-groups/`
 - `/studio/analytics/tag-registry/`
 - `/studio/analytics/tag-aliases/`
@@ -64,6 +65,9 @@ The local home intentionally exposes a plain navigation list for active local vi
 The Catalogue dashboard route shell is hosted by the local app at `/studio/catalogue/?mode=manage`.
 It reuses the existing dashboard metric module and grouped Catalogue link layout with manage-mode links to the migrated local Catalogue routes.
 The old Jekyll `/studio/catalogue/` shell has been retired.
+The Analytics dashboard route shell is hosted by the local app at `/studio/analytics/?mode=manage`.
+It reuses the existing dashboard metric module and links to the local Analytics tag routes.
+The old Jekyll `/studio/analytics/` shell was already retired; the local app now owns the root Analytics entry point.
 
 Current app endpoints:
 
@@ -179,6 +183,7 @@ Current focused checks:
 
 - `tests/python/test_studio_app_server.py`
 - `tests/smoke/local_studio_navigation_adapter.py`
+- `tests/smoke/local_studio_app_analytics_dashboard_route.py`
 - `tests/smoke/local_studio_app_catalogue_dashboard_route.py`
 - `tests/smoke/local_studio_app_tag_groups.py`
 - `tests/smoke/local_studio_app_tag_routes.py`

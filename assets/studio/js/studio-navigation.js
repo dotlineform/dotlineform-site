@@ -235,6 +235,8 @@ function normalizeModalName(value) {
 function inferViewIdFromPath(pathname) {
   const path = String(pathname || "");
   if (path === "/docs" || path === "/docs/") return "docs";
+  if (path === "/studio/catalogue" || path === "/studio/catalogue/") return "studio_catalogue";
+  if (path === "/studio/analytics" || path === "/studio/analytics/") return "studio_analytics";
   if (path === "/studio/analytics/tag-groups" || path === "/studio/analytics/tag-groups/") return "tag_groups";
   if (path === "/studio/analytics/tag-registry" || path === "/studio/analytics/tag-registry/") return "tag_registry";
   if (path === "/studio/analytics/tag-aliases" || path === "/studio/analytics/tag-aliases/") return "tag_aliases";

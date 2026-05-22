@@ -99,7 +99,7 @@ Current commit point:
 - Phase 4 now mounts the tag registry, tag aliases, series-tags, and per-series tag editor route shells in the local app so those pages use local runtime config and local analytics endpoints
 - Phase 4 has retired the Jekyll analytics tag route shells, removed the old `127.0.0.1:8787` browser fallbacks, and stopped launching the standalone tag write server from `bin/dev-studio`
 - Phase 4 has removed the standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint; `scripts/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes
-- Phase 5 has started by mounting `/studio/catalogue/?mode=manage`, `/studio/audits/?mode=manage`, `/studio/project-state/?mode=manage`, `/studio/thumbnail-quality/?mode=manage`, `/studio/bulk-add-work/?mode=manage`, `/studio/activity/?mode=manage`, `/studio/catalogue-field-registry/?mode=manage`, `/studio/catalogue-status/?mode=manage`, `/studio/studio-works/?mode=manage`, `/studio/catalogue-series/?mode=manage`, `/studio/catalogue-work/?mode=manage`, `/studio/catalogue-work-detail/?mode=manage`, and `/studio/catalogue-moment/?mode=manage` in the local app and retiring the old Jekyll shells while leaving their sibling service APIs in place for now
+- Phase 5 has started by mounting `/studio/catalogue/?mode=manage`, `/studio/analytics/?mode=manage`, `/studio/audits/?mode=manage`, `/studio/project-state/?mode=manage`, `/studio/thumbnail-quality/?mode=manage`, `/studio/bulk-add-work/?mode=manage`, `/studio/activity/?mode=manage`, `/studio/catalogue-field-registry/?mode=manage`, `/studio/catalogue-status/?mode=manage`, `/studio/studio-works/?mode=manage`, `/studio/catalogue-series/?mode=manage`, `/studio/catalogue-work/?mode=manage`, `/studio/catalogue-work-detail/?mode=manage`, and `/studio/catalogue-moment/?mode=manage` in the local app and retiring the old Jekyll shells while leaving their sibling service APIs in place for now
 - the old Jekyll `/studio/` landing shell is retired; `/studio/` is now the local app home during Studio sessions
 - Studio route URL building now preserves configured route query state such as `?mode=manage` while appending record parameters for migrated catalogue editor links
 - Docs Broken Links should move into Docs Viewer reports rather than becoming another migrated Studio route shell
@@ -309,12 +309,12 @@ Outcomes:
 | Task | Status |
 | --- | --- |
 | Migrate catalogue editors and dashboards. | partial; Catalogue dashboard, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, and the catalogue editor shells are local-app hosted |
-| Migrate analytics/tag routes. | partial; tag groups, registry, aliases, series-tags, and per-series tag editor are local-app hosted |
+| Migrate analytics/tag routes. | partial; analytics dashboard, tag groups, registry, aliases, series-tags, and per-series tag editor are local-app hosted |
 | Migrate data-sharing routes. | pending |
 | Migrate audit and project-state routes. | partial; Studio Audits, Project State, and Thumbnail Quality shells are local-app hosted while their sibling service APIs remain in place |
 | Add an explicit public-site link resolver for Studio links to works, series, moments, `/library/`, and `/analysis/`. | partial; runtime config now exposes public-preview and production bases, `studio-navigation.js` has `buildPublicSiteUrl(...)`, and the migrated per-series tag editor uses it for series/work header links; broader route adoption remains pending |
 | Replace ad hoc Studio route query concatenation with the shared route URL builder as routes are migrated. | partial; catalogue editor and series-tag editor links now preserve configured route query state while appending record ids |
-| Retire Jekyll Studio route files after each replacement is verified. | partial; analytics tag route files plus catalogue dashboard, audits, project-state, thumbnail-quality, bulk-add-work, activity, catalogue-field-registry, catalogue-status, studio-works, and catalogue editor route files retired |
+| Retire Jekyll Studio route files after each replacement is verified. | partial; analytics dashboard/tag route files plus catalogue dashboard, audits, project-state, thumbnail-quality, bulk-add-work, activity, catalogue-field-registry, catalogue-status, studio-works, and catalogue editor route files retired |
 | Retire the Jekyll `/studio/` landing shell after the local app owns `/studio/`. | done |
 | Retire `/studio/docs-broken-links/` only after the Docs Viewer report replacement exists. | pending |
 | Keep temporary redirects only where useful for local transition ergonomics. | pending |
@@ -330,6 +330,7 @@ Catalogue dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add W
 They keep the existing vanilla browser modules and unavailable-service behavior, and only change the host shell from Jekyll to the local app.
 The audit, catalogue, and docs-service API calls behind those pages are not yet consolidated; migrate those only when the route-family API boundary is ready.
 The Catalogue dashboard keeps the existing `studio-dashboard.js` metric hydration and now links to manage-mode local Catalogue routes.
+The Analytics dashboard also uses `studio-dashboard.js` and links to the local Analytics tag routes.
 Catalogue Field Registry is read-only and uses checked-in Studio data, so it does not add a new write/API consolidation dependency.
 Catalogue Drafts still reads draft record data through the sibling catalogue service until the catalogue read/write API family moves into the local app server.
 Studio Works is read-only and uses checked-in index data, but it also adopts the public-site link resolver so work and series links open against the configured public Jekyll preview host.

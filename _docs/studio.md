@@ -33,7 +33,7 @@ Sharing profile definitions live in `assets/studio/data/library_export_configs.j
 Studio landing and dashboard routes expose the shared route-ready contract:
 
 - `/studio/` uses `#studioHomeRoot` with `data-studio-mode="landing"` and static ready state
-- `/studio/catalogue/?mode=manage` and `/studio/analytics/` use dashboard roots with `data-studio-mode="dashboard"`
+- `/studio/catalogue/?mode=manage` and `/studio/analytics/?mode=manage` use dashboard roots with `data-studio-mode="dashboard"`
 - dashboard routes set `data-studio-busy="true"` while lightweight metric hydration runs, then mark ready after metric reads settle
 - these routes are framework markers for future dashboard behavior; they do not imply a formal dashboard test suite
 
@@ -79,7 +79,7 @@ Current Studio landing routes:
 
 - `/studio/`
 - `/studio/catalogue/?mode=manage`
-- `/studio/analytics/`
+- `/studio/analytics/?mode=manage`
 - `/studio/data-sharing/`
 - `/docs/`
 

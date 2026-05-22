@@ -5,6 +5,7 @@
     "routes": {
       "studio_home": "/studio/",
       "studio_catalogue": "/studio/catalogue/?mode=manage",
+      "studio_analytics": "/studio/analytics/?mode=manage",
       "studio_works": "/studio/studio-works/?mode=manage",
       "studio_audits": "/studio/audits/",
       "search": "/catalogue/search/",

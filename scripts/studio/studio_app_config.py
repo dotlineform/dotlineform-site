@@ -22,6 +22,13 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "doc_href": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan&mode=manage",
         "script": "/assets/studio/js/studio-dashboard.js",
     },
+    "studio_analytics": {
+        "label": "analytics",
+        "title": "Analytics Dashboard",
+        "path": "/studio/analytics/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=tag-groups&mode=manage",
+        "script": "/assets/studio/js/studio-dashboard.js",
+    },
     "tag_groups": {
         "label": "tag groups",
         "title": "Tag Groups",

@@ -136,6 +136,7 @@ Their route roots declare:
 Current dashboard routes:
 
 - `/studio/catalogue/?mode=manage` with `#studioCatalogueDashboardRoot`
+- `/studio/analytics/?mode=manage` with `#studioAnalyticsDashboardRoot`
 
 ## Current Route Inventory
 
@@ -170,7 +171,6 @@ The legacy UI catalogue reference routes have been retired. Isolated UI Catalogu
 
 Dashboard Studio roots:
 
-- `/studio/analytics/` with `#studioAnalyticsDashboardRoot`
 
 Docs Viewer ready root:
 

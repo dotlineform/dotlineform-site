@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T20:09:37Z",
+  "generated_at": "2026-05-22T20:17:28Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -319,7 +319,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 30458
+      "content_text_length": 30621
     },
     {
       "scope": "studio",
@@ -973,7 +973,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 14477
+      "content_text_length": 14498
     },
     {
       "scope": "studio",
@@ -1375,7 +1375,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 5637
+      "content_text_length": 5661
     },
     {
       "scope": "studio",
@@ -1715,7 +1715,7 @@
       "source_path": "studio-ready-state.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ready-state",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ready-state.json",
-      "content_text_length": 8087
+      "content_text_length": 8099
     },
     {
       "scope": "studio",
@@ -2971,7 +2971,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 25051,
+      "content_text_length": 25130,
       "ui_status": "in-progress"
     },
     {
@@ -3724,7 +3724,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 15045
+      "content_text_length": 15441
     },
     {
       "scope": "studio",

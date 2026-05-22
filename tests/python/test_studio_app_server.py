@@ -41,6 +41,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
     assert any(view["id"] == "studio_catalogue" and view["path"] == "/studio/catalogue/?mode=manage" for view in runtime["views"])
+    assert any(view["id"] == "studio_analytics" and view["path"] == "/studio/analytics/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "tag_registry" and view["path"] == "/studio/analytics/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/studio/analytics/tag-aliases/" for view in runtime["views"])
     assert any(view["id"] == "series_tags" and view["path"] == "/studio/analytics/series-tags/" for view in runtime["views"])

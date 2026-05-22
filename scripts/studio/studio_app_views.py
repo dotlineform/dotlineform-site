@@ -78,6 +78,54 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
 """
 
 
+def studio_analytics_view(version: str) -> str:
+    body = """<div
+          class="studioDashboard"
+          id="studioAnalyticsDashboardRoot"
+          data-studio-dashboard-route="studio-analytics"
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <section class="studioDashboard__metrics" aria-label="Analytics metrics">
+            <article class="studioMetricCard">
+              <p class="studioMetricCard__value" data-studio-metric="tag-count">--</p>
+              <p class="studioMetricCard__label">tags</p>
+            </article>
+            <article class="studioMetricCard">
+              <p class="studioMetricCard__value" data-studio-metric="tag-group-count">--</p>
+              <p class="studioMetricCard__label">groups</p>
+            </article>
+            <article class="studioMetricCard">
+              <p class="studioMetricCard__value" data-studio-metric="series-count">--</p>
+              <p class="studioMetricCard__label">series</p>
+            </article>
+            <article class="studioMetricCard">
+              <p class="studioMetricCard__value" data-studio-metric="works-count">--</p>
+              <p class="studioMetricCard__label">works</p>
+            </article>
+          </section>
+
+          <section class="catalogueDashboardRoutes" aria-label="Analytics links">
+            <section class="catalogueDashboardColumn">
+              <h3>Tags</h3>
+              <ul class="catalogueDashboardPills">
+                <li><a href="/studio/analytics/tag-groups/">tag groups</a></li>
+                <li><a href="/studio/analytics/tag-registry/">registry</a></li>
+                <li><a href="/studio/analytics/tag-aliases/">aliases</a></li>
+              </ul>
+            </section>
+            <section class="catalogueDashboardColumn">
+              <h3>Assignments</h3>
+              <ul class="catalogueDashboardPills">
+                <li><a href="/studio/analytics/series-tags/">series tags</a></li>
+                <li><a href="/studio/analytics/series-tag-editor/">tag editor</a></li>
+              </ul>
+            </section>
+          </section>
+        </div>"""
+    return studio_route_view(version, "studio_analytics", body)
+
+
 def tag_groups_view(version: str) -> str:
     body = """<div class="tagStudioPage tagGroupsPage">
           <div id="tag-groups" data-role="tag-groups" data-studio-ready="false" data-studio-busy="false">

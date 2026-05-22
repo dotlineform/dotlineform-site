@@ -1,0 +1,54 @@
+{
+  "id": "change-2026-05-22-mounted-local-analytics-dashboard-route",
+  "date": "2026-05-22",
+  "title": "Mounted Local Analytics Dashboard Route",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "studio",
+    "analytics",
+    "testing"
+  ],
+  "summary": "Mounted the Analytics dashboard route shell in the local Studio app server.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "analytics-dashboard",
+    "route-shells"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app",
+    "studio-runtime",
+    "studio-ready-state",
+    "studio"
+  ],
+  "related_files": [
+    "scripts/studio/studio_app_config.py",
+    "scripts/studio/studio_app_views.py",
+    "scripts/studio/studio_app_server.py",
+    "assets/studio/data/studio_config.json",
+    "assets/studio/js/studio-config.js",
+    "assets/studio/js/studio-navigation.js",
+    "tests/python/test_studio_app_server.py",
+    "tests/smoke/local_studio_app_analytics_dashboard_route.py",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/site-request-studio-local-vanilla-web-app.md",
+    "_docs/studio-runtime.md",
+    "_docs/studio-ready-state.md",
+    "_docs/studio.md"
+  ],
+  "effect": "The local Studio app now serves `/studio/analytics/?mode=manage` with the existing dashboard metric module and links to the local Analytics tag routes. This restores the Analytics root entry point outside Jekyll after the tag route shells had already moved to the local app.",
+  "verification": [
+    "Python and JavaScript syntax checks passed for the touched Studio app, config, navigation, and smoke files",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_app_analytics_dashboard_route.py passed with loopback server permissions"
+  ]
+}
