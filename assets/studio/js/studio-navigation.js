@@ -13,6 +13,11 @@ export function getStudioServices(config) {
   return services && typeof services === "object" && !Array.isArray(services) ? services : {};
 }
 
+export function getStudioSites(config) {
+  const sites = getStudioRuntime(config).sites;
+  return sites && typeof sites === "object" && !Array.isArray(sites) ? sites : {};
+}
+
 export function getStudioStateConfig(config) {
   const state = getStudioRuntime(config).state;
   return state && typeof state === "object" && !Array.isArray(state) ? state : {};
@@ -44,6 +49,27 @@ export function buildStudioViewUrl(config, viewId, params = {}) {
   return url.origin === currentOrigin()
     ? `${url.pathname}${url.search}${url.hash}`
     : url.href;
+}
+
+export function buildPublicSiteUrl(config, path = "/", params = {}, options = {}) {
+  const siteKey = options && options.site === "production" ? "production" : "public_preview";
+  const base = getStudioSiteBase(config, siteKey);
+  if (!base) {
+    throw new Error(`Missing Studio site base: ${siteKey}`);
+  }
+  const url = new URL(String(path || "/"), ensureTrailingSlash(base));
+  for (const [key, value] of Object.entries(params || {})) {
+    if (!key || value == null || value === "") continue;
+    url.searchParams.set(key, String(value));
+  }
+  return url.href;
+}
+
+export function getStudioSiteBase(config, siteKey) {
+  const sites = getStudioSites(config);
+  const site = sites && sites[siteKey];
+  const value = site && site.base;
+  return typeof value === "string" && value.trim() ? value.trim().replace(/\/+$/, "") : "";
 }
 
 export async function navigateTo(viewId, params = {}) {
@@ -277,6 +303,11 @@ function currentCustomEvent() {
       this.detail = options.detail;
     }
   };
+}
+
+function ensureTrailingSlash(value) {
+  const text = String(value || "");
+  return text.endsWith("/") ? text : `${text}/`;
 }
 
 if (typeof document !== "undefined") {

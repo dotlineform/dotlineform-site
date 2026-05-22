@@ -32,6 +32,8 @@ Phase 1 added the first Python local Studio app server:
 Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
 Docs management is handled by this app server by default; `bin/dev-studio` no longer starts `scripts/docs/docs_management_server.py` unless `DOCS_MANAGEMENT_SERVER_ENABLED=1` is set for a fallback/debug run.
 Jekyll still starts through `bin/dev-studio` for public-site preview and unmigrated Studio routes until the route migration is complete.
+`bin/dev-studio` is a bridge launcher, not the long-term product boundary.
+The intended end state is a local Studio app command for Studio workflows and the normal Bundler/Jekyll serve/build commands for public-site preview and publishing.
 
 Current mounted views:
 
@@ -42,6 +44,8 @@ Current mounted views:
 - `/studio/analytics/tag-aliases/`
 - `/studio/analytics/series-tags/`
 - `/studio/analytics/series-tag-editor/?series=<series_id>`
+- `/studio/audits/?mode=manage`
+- `/studio/project-state/?mode=manage`
 
 Current app endpoints:
 
@@ -82,6 +86,12 @@ Tag registry, tag aliases, series-tags, and the per-series tag editor route shel
 They use local runtime config and local analytics API reads/writes when served from the local app.
 The old Jekyll analytics tag route files have been retired, and `bin/dev-studio` no longer starts `scripts/analytics/tag_write_server.py` by default.
 The standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint has been removed; `scripts/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes.
+The Studio Audits route shell is also hosted by the local app at `/studio/audits/?mode=manage`.
+It reuses `assets/studio/js/studio-audits.js` and the existing audit service on `127.0.0.1:8790`; that audit service remains a sibling process until the audit API itself is migrated.
+The old Jekyll `/studio/audits/` shell has been retired.
+The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
+It reuses `assets/studio/js/project-state.js` and the existing sibling catalogue/docs service probes on `127.0.0.1:8788` and `127.0.0.1:8789`; those API calls remain unchanged until a later route-family API consolidation slice.
+The old Jekyll `/studio/project-state/` shell has been retired.
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
 The endpoint exposes the local app runtime contract for migrated views:
 
@@ -96,6 +106,19 @@ The endpoint exposes the local app runtime contract for migrated views:
 Migrated links can declare `data-studio-navigate="<view-id>"` while retaining a real `href` fallback.
 The same module exposes `navigateTo(view, params)`, `readStudioInitialState()`, return-context helpers backed by `sessionStorage`, and `openModal(name, params)` dispatch through the `studio:open-modal` event.
 This adapter is deliberately small and does not introduce a route framework.
+Studio-to-public-content links need an explicit second boundary once Studio and the public Jekyll preview are separate local servers.
+The target contract is:
+
+- Studio app routes open on the local Studio app server
+- Docs management routes open on the local Studio app server
+- public content routes such as `/works/...`, `/series/...`, `/library/`, and `/analysis/` open against the local Jekyll preview when it is running
+- production `https://dotlineform.com` links are used only for explicit live-site actions
+
+The runtime config should eventually expose a public-site preview base URL and, separately, the production site base URL.
+Studio navigation helpers should resolve public-content links through that configured public preview base rather than relying on relative URLs that stay on the Studio app host or silently default to dotlineform.com.
+The runtime config now exposes `app.runtime.sites.public_preview.base` and `app.runtime.sites.production.base`, and `assets/studio/js/studio-navigation.js` exposes `buildPublicSiteUrl(config, path, params, options)`.
+Route migrations should use that helper when they touch public-content links; existing links are not rewritten automatically.
+The migrated per-series tag editor now uses this resolver for its header links to the public series page and primary work page, so those links open on the configured public preview host during local Studio sessions.
 The local `/docs/` route hosts the Docs Viewer management shell through the Python app server while still using the existing Docs Viewer JavaScript, CSS, config, and generated docs payloads.
 Its management API base is `/studio/api/docs`; this now exposes live configured-scope availability and Docs management capabilities, serves generated docs read endpoints, and calls the existing Docs management domain functions directly for migrated management routes.
 The main management API workflow routes are covered through a temporary fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the local app server without touching real docs.
@@ -103,7 +126,7 @@ Browser-level fixture smokes cover local `/docs/` manage-mode workflows through 
 Data-sharing UI behavior is intentionally deferred to a later cross-Studio adapter consolidation slice.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
-The server is still intentionally narrow and does not yet own catalogue, audit, or app-wide navigation APIs.
+The server is still intentionally narrow and does not yet own catalogue, audit API, or app-wide navigation APIs.
 The app server is split before broader route migration: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns HTML shells, `studio_docs_api.py` owns the Docs Viewer API adapter, and `studio_analytics_api.py` owns the first analytics API adapter.
 New route families should follow that module-boundary pattern rather than expanding the server entrypoint.
 
@@ -113,6 +136,8 @@ Current focused checks:
 - `tests/smoke/local_studio_navigation_adapter.py`
 - `tests/smoke/local_studio_app_tag_groups.py`
 - `tests/smoke/local_studio_app_tag_routes.py`
+- `tests/smoke/local_studio_app_audits_route.py`
+- `tests/smoke/local_studio_app_project_state_route.py`
 - `tests/smoke/local_studio_app_docs_viewer.py`
 - `tests/smoke/local_studio_docs_management_workflows.py`
 - `tests/smoke/local_studio_docs_management_ui.py`

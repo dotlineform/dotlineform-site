@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 
@@ -49,6 +50,20 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "doc_href": "/docs/?scope=studio&doc=tag-editor&mode=manage",
         "script": "/assets/studio/js/series-tag-editor-page.js",
         "nav": "false",
+    },
+    "studio_audits": {
+        "label": "audits",
+        "title": "Studio Audits",
+        "path": "/studio/audits/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=studio-audits&mode=manage",
+        "script": "/assets/studio/js/studio-audits.js",
+    },
+    "project_state": {
+        "label": "project state",
+        "title": "Project State",
+        "path": "/studio/project-state/?mode=manage",
+        "doc_href": "/docs/?scope=studio&doc=project-state-page&mode=manage",
+        "script": "/assets/studio/js/project-state.js",
     },
 }
 
@@ -103,6 +118,8 @@ STUDIO_STATE_CONFIG: dict[str, object] = {
     "modal_event": "studio:open-modal",
 }
 
+PRODUCTION_SITE_BASE = "https://dotlineform.com"
+
 
 def asset_version(repo_root: Path) -> str:
     candidates = [
@@ -117,6 +134,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "assets" / "studio" / "js" / "tag-aliases.js",
         repo_root / "assets" / "studio" / "js" / "series-tags.js",
         repo_root / "assets" / "studio" / "js" / "series-tag-editor-page.js",
+        repo_root / "assets" / "studio" / "js" / "studio-audits.js",
+        repo_root / "assets" / "studio" / "js" / "project-state.js",
         repo_root / "assets" / "studio" / "js" / "tag-studio.js",
         repo_root / "assets" / "studio" / "css" / "studio.css",
         repo_root / "assets" / "studio" / "data" / "studio_config.json",
@@ -157,6 +176,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             "runtime_config": "/studio/runtime-config.json",
         },
         "services": STUDIO_SERVICE_ENDPOINTS,
+        "sites": runtime_site_bases(),
         "data_paths": data_paths,
         "media": STUDIO_MEDIA,
         "pipeline": {
@@ -180,3 +200,26 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         },
     }
     return payload
+
+
+def runtime_site_bases() -> dict[str, object]:
+    jekyll_host = os.environ.get("JEKYLL_HOST", "127.0.0.1").strip() or "127.0.0.1"
+    jekyll_port = os.environ.get("JEKYLL_PORT", "4000").strip() or "4000"
+    public_preview_base = os.environ.get("PUBLIC_SITE_PREVIEW_BASE", "").strip()
+    if not public_preview_base:
+        public_preview_base = f"http://{jekyll_host}:{jekyll_port}"
+    production_base = os.environ.get("PRODUCTION_SITE_BASE", PRODUCTION_SITE_BASE).strip() or PRODUCTION_SITE_BASE
+
+    return {
+        "public_preview": {
+            "base": normalize_base_url(public_preview_base),
+        },
+        "production": {
+            "base": normalize_base_url(production_base),
+        },
+    }
+
+
+def normalize_base_url(value: str) -> str:
+    normalized = value.strip().rstrip("/")
+    return normalized or "/"

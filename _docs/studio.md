@@ -115,12 +115,13 @@ bin/dev-studio
 
 Current runner behavior:
 
-- rebuilds Docs Viewer data from `_docs/`
+- optionally rebuilds Docs Viewer data when `DOCS_STARTUP_REBUILD_SCOPES` is set
 - starts Jekyll on `127.0.0.1:4000`
 - starts the local Studio app server for Studio shell, Docs management, and Analytics tag APIs
-- starts `scripts/studio/catalogue_write_server.py`
-- starts `scripts/docs/docs_management_server.py`
+- starts `scripts/catalogue/catalogue_write_server.py`
+- skips the standalone `scripts/docs/docs_management_server.py` by default because Docs management is hosted by the local Studio app
 - starts `scripts/studio/audit_service.py`
+- starts the docs live rebuild watcher by default
 - keeps all long-running processes attached to the current terminal
 - stops all long-running processes on `Ctrl+C`
 - serves mutable catalogue source and lookup reads through the local catalogue server rather than through Jekyll-served static JSON
@@ -128,11 +129,11 @@ Current runner behavior:
 Current limits:
 
 - it does not enable `--livereload`
-- it does not rebuild docs-search artifacts
+- it does not rebuild docs or docs-search artifacts on startup unless `DOCS_STARTUP_REBUILD_SCOPES` is set
 - it does not replace the standalone scripts documented in **[Scripts](/docs/?scope=studio&doc=scripts)**
 - local server architecture and future consolidation strategy are documented in **[Servers](/docs/?scope=studio&doc=servers)**
 
-If you edit docs after the runner has started, rebuild the docs payloads manually:
+If you disable the watcher or need an explicit rebuild, rebuild docs payloads manually:
 
 ```bash
 ./scripts/build_docs.rb --write

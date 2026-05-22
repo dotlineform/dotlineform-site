@@ -2,7 +2,7 @@
 doc_id: project-state-page
 title: Project State Page
 added_date: 2026-04-27
-last_updated: "2026-05-08 18:20"
+last_updated: "2026-05-22"
 parent_id: catalogue
 sort_order: 6000
 ---
@@ -10,9 +10,11 @@ sort_order: 6000
 
 Route:
 
-- `/studio/project-state/`
+- `/studio/project-state/?mode=manage`
 
 This page runs the project-state report and writes `_docs/project-state.md`.
+The route shell is served by the local Studio app, not by a Jekyll Studio page.
+The browser module still uses the existing sibling catalogue and docs service endpoints for report generation and source-file opening until those APIs are consolidated into the local app server.
 
 ## Current Scope
 

@@ -1,0 +1,46 @@
+{
+  "id": "change-2026-05-22-mounted-local-studio-audits-route",
+  "date": "2026-05-22",
+  "title": "Mounted Local Studio Audits Route",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "studio",
+    "testing"
+  ],
+  "summary": "Mounted the Studio Audits route shell in the local Studio app server and retired the old Jekyll route shell.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "studio-audits",
+    "route-shells",
+    "jekyll-retirement"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/studio/studio_app_config.py",
+    "scripts/studio/studio_app_views.py",
+    "scripts/studio/studio_app_server.py",
+    "tests/python/test_studio_app_server.py",
+    "tests/smoke/local_studio_app_audits_route.py",
+    "studio/audits/index.md",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/site-request-studio-local-vanilla-web-app.md"
+  ],
+  "effect": "The local Studio app now serves /studio/audits/?mode=manage with the existing vanilla Studio Audits browser module and route-ready contract. The route keeps the existing unavailable-service behavior when the audit service on 127.0.0.1:8790 is not running, and the old Jekyll /studio/audits/ shell has been removed. The audit API remains a sibling service for a later route-family API consolidation slice.",
+  "verification": [
+    "Python compile checks passed for the touched Studio app server, view, config, and smoke files",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_app_audits_route.py passed with loopback server permissions"
+  ]
+}

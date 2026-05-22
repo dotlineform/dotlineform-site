@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T18:11:56Z",
+  "generated_at": "2026-05-22T18:51:06Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -319,7 +319,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 23339
+      "content_text_length": 25763
     },
     {
       "scope": "studio",
@@ -698,7 +698,7 @@
       "doc_id": "scripts-dev-studio",
       "title": "Dev Studio Runner",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-12 10:50",
+      "last_updated": "2026-05-22 19:20",
       "parent_id": "servers",
       "sort_order": 2000,
       "published": true,
@@ -707,7 +707,7 @@
       "source_path": "scripts-dev-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json",
-      "content_text_length": 9413
+      "content_text_length": 10163
     },
     {
       "scope": "studio",
@@ -1375,7 +1375,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 5362
+      "content_text_length": 5601
     },
     {
       "scope": "studio",
@@ -2125,7 +2125,7 @@
       "doc_id": "project-state-page",
       "title": "Project State Page",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-08 18:20",
+      "last_updated": "2026-05-22",
       "parent_id": "catalogue",
       "sort_order": 6000,
       "published": true,
@@ -2134,7 +2134,7 @@
       "source_path": "project-state-page.md",
       "viewer_url": "/docs/?scope=studio&doc=project-state-page",
       "content_url": "/assets/data/docs/scopes/studio/by-id/project-state-page.json",
-      "content_text_length": 2234
+      "content_text_length": 2521
     },
     {
       "scope": "studio",
@@ -2971,7 +2971,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 21766,
+      "content_text_length": 23734,
       "ui_status": "in-progress"
     },
     {
@@ -3340,7 +3340,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 2260
+      "content_text_length": 2323
     },
     {
       "scope": "studio",
@@ -3459,7 +3459,7 @@
       "doc_id": "scripts-docs-management-server-operations",
       "title": "Docs Management Server Operations",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "scripts-docs-management-server",
       "sort_order": 15500,
       "published": true,
@@ -3468,7 +3468,7 @@
       "source_path": "scripts-docs-management-server-operations.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server-operations.json",
-      "content_text_length": 3366
+      "content_text_length": 3568
     },
     {
       "scope": "studio",
@@ -3724,7 +3724,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 7921
+      "content_text_length": 10424
     },
     {
       "scope": "studio",

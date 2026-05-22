@@ -45,6 +45,12 @@ def main(argv: list[str] | None = None) -> int:
                         empty: "",
                         zero: 0
                     });
+                    const publicWorkUrl = mod.buildPublicSiteUrl(config, "/works/00123/", {
+                        from: "studio",
+                        empty: "",
+                        zero: 0
+                    });
+                    const liveWorkUrl = mod.buildPublicSiteUrl(config, "/works/00123/", {}, { site: "production" });
                     const initial = mod.readStudioInitialState(
                         "/docs/?scope=studio&doc=docs-viewer&modal=delete&modal.doc_id=docs-viewer&return_view=docs&return.scope=studio"
                     );
@@ -79,6 +85,8 @@ def main(argv: list[str] | None = None) -> int:
 
                     return {
                         serviceBase: mod.getStudioServices(config).docs.base,
+                        publicPreviewBase: mod.getStudioSiteBase(config, "public_preview"),
+                        productionBase: mod.getStudioSiteBase(config, "production"),
                         docsView: mod.getStudioView(config, "docs").path,
                         dataPath: config.app.runtime.data_paths.ui_text.tag_groups,
                         mediaThumbWorks: config.app.runtime.media.thumbs.works,
@@ -86,6 +94,8 @@ def main(argv: list[str] | None = None) -> int:
                         stateStorageKey: config.app.runtime.state.return_context_storage_key,
                         modalEventName: config.app.runtime.modals.event,
                         url,
+                        publicWorkUrl,
+                        liveWorkUrl,
                         initial,
                         storedContext,
                         consumedContext,
@@ -101,6 +111,10 @@ def main(argv: list[str] | None = None) -> int:
         expected_url = "/studio/analytics/tag-groups/?scope=studio&zero=0"
         if result["serviceBase"] != "/studio/api/docs":
             raise AssertionError(f"unexpected Docs service base: {result['serviceBase']!r}")
+        if result["publicPreviewBase"] != "http://127.0.0.1:4000":
+            raise AssertionError(f"unexpected public preview base: {result['publicPreviewBase']!r}")
+        if result["productionBase"] != "https://dotlineform.com":
+            raise AssertionError(f"unexpected production base: {result['productionBase']!r}")
         if result["docsView"] != "/docs/?mode=manage":
             raise AssertionError(f"unexpected Docs view path: {result['docsView']!r}")
         if result["dataPath"] != "/assets/studio/data/ui_text/tag-groups.json":
@@ -115,6 +129,10 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected modal event name: {result['modalEventName']!r}")
         if result["url"] != expected_url:
             raise AssertionError(f"unexpected view URL: {result['url']!r}")
+        if result["publicWorkUrl"] != "http://127.0.0.1:4000/works/00123/?from=studio&zero=0":
+            raise AssertionError(f"unexpected public work URL: {result['publicWorkUrl']!r}")
+        if result["liveWorkUrl"] != "https://dotlineform.com/works/00123/":
+            raise AssertionError(f"unexpected live work URL: {result['liveWorkUrl']!r}")
         if result["initial"]["viewId"] != "docs":
             raise AssertionError(f"unexpected initial view: {result['initial']!r}")
         if result["initial"]["modal"]["params"]["doc_id"] != "docs-viewer":

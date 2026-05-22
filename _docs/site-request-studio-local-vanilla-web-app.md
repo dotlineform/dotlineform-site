@@ -18,6 +18,7 @@ Status:
 - Phase 2 implemented
 - Phase 3 implemented for Docs Viewer manage mode
 - Phase 4 in progress with Docs management, analytics tag reads, active analytics tag writes, and analytics tag route shells routed through the local app server; the old analytics tag Jekyll shells and 8787 browser fallback are retired
+- Phase 5 started with the Studio Audits and Project State route shells hosted by the local app and their old Jekyll shells retired
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -185,6 +186,38 @@ For Studio users, navigation means:
 The current URL/query model is an implementation detail of the Jekyll route host.
 A local app may use internal app state, browser history, hash state, session storage, or a small router abstraction.
 Stable `/studio/...` URLs are useful for debugging and migration, but they are not the product contract.
+
+Studio links to public content need an explicit host boundary after Studio leaves Jekyll.
+Links to works, series, moments, `/library/`, `/analysis/`, and similar public routes should open against the local public Jekyll preview when it is running.
+They should use `https://dotlineform.com` only for an explicit live-site action.
+That means runtime config should distinguish:
+
+- the local Studio app base
+- the local public-site preview base
+- the production site base
+
+Studio navigation helpers should resolve public-content links through the configured public preview base rather than relying on relative URLs that would stay on the Studio app host.
+The initial helper exists in the local Studio runtime: runtime config exposes public-preview and production site bases, and `studio-navigation.js` can build public-site URLs from those bases.
+Route migrations still need to adopt the helper where they own public-content links.
+
+## Launcher Transition Decision
+
+`bin/dev-studio` should remain available during migration as a bridge launcher, not become the permanent product boundary.
+
+During migration it can start:
+
+- the local Studio app server
+- the public Jekyll preview needed for public routes and unmigrated Studio routes
+- the remaining local write/watch services that have not moved into the app server
+
+The end state should be clearer:
+
+- local Studio workflows start through a Studio app launcher
+- public-site preview and publishing use the normal Bundler/Jekyll commands
+- `bin/dev-studio` is retired or reduced to a compatibility wrapper once the route migration, public-link resolver, and service consolidation are stable
+
+Retiring the bridge runner does not mean retiring Jekyll.
+Jekyll remains the public-site publisher and local public-site preview host.
 
 ## State And Restore Decision
 
@@ -448,6 +481,8 @@ For projection-contract slices:
 ## Change Log Entries
 
 - `change-2026-05-22-added-local-analytics-tag-promotion-api`
+- `change-2026-05-22-mounted-local-project-state-route`
+- `change-2026-05-22-mounted-local-studio-audits-route`
 - `change-2026-05-22-mounted-local-analytics-tag-route-shells`
 - `change-2026-05-22-added-local-analytics-tag-alias-mutation-api`
 - `change-2026-05-22-added-local-analytics-tag-registry-mutation-api`

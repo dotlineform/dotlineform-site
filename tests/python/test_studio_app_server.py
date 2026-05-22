@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -19,16 +20,32 @@ from scripts.studio.studio_app_config import runtime_config  # noqa: E402
 
 
 def test_runtime_config_exposes_adapter_contract() -> None:
-    payload = runtime_config(REPO_ROOT, "test-version")
+    original_env = {key: os.environ.get(key) for key in ("JEKYLL_HOST", "JEKYLL_PORT", "PUBLIC_SITE_PREVIEW_BASE", "PRODUCTION_SITE_BASE")}
+    os.environ["JEKYLL_HOST"] = "127.0.0.1"
+    os.environ["JEKYLL_PORT"] = "4000"
+    os.environ.pop("PUBLIC_SITE_PREVIEW_BASE", None)
+    os.environ.pop("PRODUCTION_SITE_BASE", None)
+    try:
+        payload = runtime_config(REPO_ROOT, "test-version")
+    finally:
+        for key, value in original_env.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
     runtime = payload["app"]["runtime"]
 
     assert runtime["host"] == "local-studio-app"
     assert runtime["asset_version"] == "test-version"
     assert runtime["routes"]["runtime_config"] == "/studio/runtime-config.json"
+    assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
+    assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
     assert any(view["id"] == "tag_registry" and view["path"] == "/studio/analytics/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/studio/analytics/tag-aliases/" for view in runtime["views"])
     assert any(view["id"] == "series_tags" and view["path"] == "/studio/analytics/series-tags/" for view in runtime["views"])
     assert any(view["id"] == "series_tag_editor" and view["path"] == "/studio/analytics/series-tag-editor/" for view in runtime["views"])
+    assert any(view["id"] == "studio_audits" and view["path"] == "/studio/audits/?mode=manage" for view in runtime["views"])
+    assert any(view["id"] == "project_state" and view["path"] == "/studio/project-state/?mode=manage" for view in runtime["views"])
     assert "series_tag_editor" not in runtime["navigation"]["primary"]
     assert runtime["services"]["analytics"]["tag_groups"] == "/studio/api/analytics/tag-groups"
     assert runtime["services"]["analytics"]["tag_registry"] == "/studio/api/analytics/tag-registry"

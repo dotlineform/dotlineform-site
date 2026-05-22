@@ -285,6 +285,84 @@ def series_tag_editor_view(version: str, repo_root: Path) -> str:
     return studio_route_view(version, "series_tag_editor", body)
 
 
+def studio_audits_view(version: str) -> str:
+    body = """<div
+          class="tagStudioPage studioAuditsPage"
+          id="studioAuditsRoot"
+          hidden
+          data-studio-route="studio-audits"
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <div class="tagStudio__panel studioAuditsPage__panel">
+            <p class="studioAuditsPage__intro" id="studioAuditsIntro"></p>
+            <p class="tagStudio__status" id="studioAuditsStatus"></p>
+            <div class="studioAuditsPage__list" id="studioAuditsList"></div>
+          </div>
+        </div>
+
+        <p class="tagStudio__status" id="studioAuditsBootStatus">loading Studio audits...</p>"""
+    return studio_route_view(version, "studio_audits", body)
+
+
+def project_state_view(version: str) -> str:
+    body = """<div
+          class="tagStudioPage catalogueWorkPage"
+          id="projectStateRoot"
+          hidden
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <section class="tagStudio__panel tagStudio__panel--editor">
+            <div class="tagStudio__headingRow">
+              <h2 class="tagStudio__heading" id="projectStatePageHeading">project state</h2>
+              <span class="tagStudio__saveMode" id="projectStateSaveMode"></span>
+            </div>
+            <p class="tagStudio__contextHint" id="projectStateContext"></p>
+            <p class="tagStudio__status" id="projectStateStatus"></p>
+            <p class="tagStudio__saveWarning" id="projectStateWarning"></p>
+            <p class="tagStudio__saveResult" id="projectStateResult"></p>
+          </section>
+
+          <div class="tagStudio__grid catalogueWorkPage__grid">
+            <section class="tagStudio__panel tagStudio__panel--editor">
+              <div class="tagStudio__headingRow">
+                <h2 class="tagStudio__heading" id="projectStateRunHeading">report</h2>
+                <div class="catalogueWorkPage__actions">
+                  <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="projectStateRunButton">Run</button>
+                </div>
+              </div>
+              <div class="tagStudioForm__fields catalogueWorkForm__fields">
+                <div class="tagStudioForm__field">
+                  <span class="tagStudioForm__label" id="projectStateOutputLabel">output</span>
+                  <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="projectStateOutputPath">_docs/project-state.md</span>
+                </div>
+                <div class="tagStudioForm__field">
+                  <span class="tagStudioForm__label" id="projectStateSourceLabel">source</span>
+                  <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="projectStateSourceRoot">$DOTLINEFORM_PROJECTS_BASE_DIR/projects</span>
+                </div>
+                <label class="catalogueWorkPage__updateToggle" for="projectStateIncludeSubfolders">
+                  <input type="checkbox" id="projectStateIncludeSubfolders">
+                  <span id="projectStateIncludeSubfoldersLabel">include sub-folders</span>
+                </label>
+              </div>
+            </section>
+
+            <aside class="tagStudio__panel catalogueWorkSummary">
+              <h2 class="tagStudio__heading" id="projectStateSummaryHeading">summary</h2>
+              <div class="tagStudioForm__fields" id="projectStateSummary"></div>
+              <div class="catalogueWorkPage__actions">
+                <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="projectStateOpenButton">Open file</button>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <p class="tagStudio__status" id="projectStateLoading">loading project state...</p>
+        <p class="tagStudio__empty" id="projectStateEmpty" hidden></p>"""
+    return studio_route_view(version, "project_state", body)
+
+
 def load_pipeline(repo_root: Path) -> dict[str, object]:
     path = repo_root / "_data" / "pipeline.json"
     try:

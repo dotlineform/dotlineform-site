@@ -2,7 +2,7 @@
 doc_id: scripts-dev-studio
 title: Dev Studio Runner
 added_date: 2026-04-22
-last_updated: "2026-05-12 10:50"
+last_updated: "2026-05-22 19:20"
 parent_id: servers
 sort_order: 2000
 ---
@@ -16,18 +16,21 @@ bin/dev-studio
 
 ## Purpose
 
-`bin/dev-studio` is the integrated local Studio runner for everyday development.
+`bin/dev-studio` is the integrated transition runner for local Studio development.
+It remains the easiest command while Studio is still being moved out of Jekyll, but it is not the intended long-term command boundary.
+The target split is a local Studio app launcher plus the normal Bundler/Jekyll public-site preview command.
 
 For a new local session, it is the simplest way to:
 
 - optionally refresh one or both docs/docs-search scopes before startup
 - optionally refresh the derived catalogue lookup payloads used by the catalogue editors
 - start the local Python Studio app server for migrated Studio views
-- start the Jekyll site
-- start the local Studio write services used by the current admin UI
+- start the Jekyll site for public-site preview and unmigrated routes during transition
+- start the remaining local Studio write services used by unmigrated admin UI
 - keep docs source edits synced into same-scope docs payloads and docs search while the runner is active
 
 It is intended for route-shell, UI, and localhost write-flow testing. It is not the full content-generation pipeline.
+As migration proceeds, this runner should shrink rather than gain new compatibility layers.
 
 ## Default Command
 
@@ -120,7 +123,7 @@ Before it starts any rebuilds or long-running servers, `bin/dev-studio` checks t
 1. Jekyll on `JEKYLL_HOST:JEKYLL_PORT`
 2. Local Studio App on `STUDIO_APP_HOST:STUDIO_APP_PORT` when `STUDIO_APP_ENABLED` is not `0`
 3. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT`
-4. Docs Management Server on `127.0.0.1:DOCS_MANAGEMENT_PORT`
+4. Docs Management Server on `127.0.0.1:DOCS_MANAGEMENT_PORT` only when `DOCS_MANAGEMENT_SERVER_ENABLED` is not `0`
 5. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT`
 
 If any port is unavailable, the runner exits immediately with a message naming the affected service and environment variable override.
@@ -165,7 +168,7 @@ After those startup writes succeed, it starts the long-running local processes b
 
 - default URL: `http://127.0.0.1:8765/studio/`
 - serves migrated local Studio views outside Jekyll
-- currently mounts `/studio/`, `/studio/analytics/tag-groups/`, `/docs/`, `/health`, `/studio/runtime-config.json`, and the first Docs generated-read API routes
+- currently mounts `/studio/`, `/docs/`, migrated analytics tag views, `/health`, `/studio/runtime-config.json`, local Docs management API routes, and local analytics tag API routes
 - can be disabled during transition with `STUDIO_APP_ENABLED=0`
 - related doc: [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
 
@@ -178,7 +181,7 @@ bundle exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port 
 ```
 
 - default URL: `http://127.0.0.1:4000`
-- serves the local site and unmigrated Studio routes during the transition
+- serves the local public-site preview and unmigrated Studio routes during the transition
 - uses `_config.dev-studio.yml` by default as a local-only overlay to exclude generated docs/search JSON from Jekyll's watch surface
 - normal public builds that use `_config.yml` alone still include generated docs/search JSON
 - when launched through `bin/dev-studio`, the Jekyll process loads `scripts/jekyll_webrick_client_reset_filter.rb` through `RUBYOPT`
@@ -197,6 +200,9 @@ bundle exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port 
 - related doc: [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 
 ### Docs Management Server
+
+This server is not part of default startup.
+Docs management is handled by the Local Studio App unless `DOCS_MANAGEMENT_SERVER_ENABLED=1` is set for a fallback/debug run.
 
 - command:
 
@@ -275,6 +281,7 @@ If any one of the child processes exits unexpectedly, the runner stops monitorin
 - rebuild public search artifacts on startup
 - start a separate frontend asset server
 - replace Jekyll as the host for all Studio routes; unmigrated routes still use the Jekyll process during transition
+- provide the final long-term launcher split; `bin/dev-studio` is still a bridge command
 
 If you disable the watcher or want an explicit manual rebuild, use:
 

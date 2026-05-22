@@ -2,6 +2,12 @@ import {
   fetchJson
 } from "./studio-data.js";
 import {
+  loadStudioConfig
+} from "./studio-config.js";
+import {
+  buildPublicSiteUrl
+} from "./studio-navigation.js";
+import {
   initializeStudioRouteState,
   setStudioRouteReady
 } from "./studio-route-state.js";
@@ -12,12 +18,13 @@ if (document.readyState === "loading") {
   initSeriesTagEditorPage();
 }
 
-function initSeriesTagEditorPage() {
+async function initSeriesTagEditorPage() {
   const root = document.getElementById("seriesTagEditorRoot");
   const emptyEl = document.getElementById("seriesTagEditorEmpty");
   const mount = document.getElementById("tag-studio");
   if (!root || !emptyEl || !mount) return;
   initializeStudioRouteState(root, { route: "series-tag-editor", mode: "single" });
+  const config = await loadStudioConfig();
 
   const titleEl = document.getElementById("seriesTagEditorTitle");
   const catEl = document.getElementById("seriesTagEditorCat");
@@ -86,6 +93,14 @@ function initSeriesTagEditorPage() {
     link.rel = "noopener noreferrer";
     link.textContent = text;
     el.appendChild(link);
+  }
+
+  function publicSiteUrl(path) {
+    try {
+      return buildPublicSiteUrl(config, path);
+    } catch (_error) {
+      return `${baseurl}${path}`;
+    }
   }
 
   function normalizeSeriesMap(seriesMap) {
@@ -184,14 +199,14 @@ function initSeriesTagEditorPage() {
 
       const seriesTitle = textOrDash(row.title);
       titleEl.textContent = seriesTitle;
-      setLinkOrDash(catEl, `${baseurl}/series/${encodeURIComponent(seriesIdQuery)}/`, seriesIdQuery);
+      setLinkOrDash(catEl, publicSiteUrl(`/series/${encodeURIComponent(seriesIdQuery)}/`), seriesIdQuery);
       yearEl.textContent = textOrDash(row.year);
       yearDisplayEl.textContent = textOrDash(row.year_display);
       sortFieldsEl.textContent = textOrDash(row.sort_fields);
 
       const primaryWorkId = String(row.primary_work_id || "").trim();
       if (primaryWorkId) {
-        setLinkOrDash(primaryWorkEl, `${baseurl}/works/${encodeURIComponent(primaryWorkId)}/`, primaryWorkId);
+        setLinkOrDash(primaryWorkEl, publicSiteUrl(`/works/${encodeURIComponent(primaryWorkId)}/`), primaryWorkId);
       } else {
         primaryWorkEl.textContent = "—";
       }

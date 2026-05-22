@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d6f3a01660dd03281162fed4ea56254a",
-    "generated_at_utc": "2026-05-22T17:55:03Z",
+    "version": "blake2b-086dad89ccc3cb684fb1a71ed273e0de",
+    "generated_at_utc": "2026-05-22T18:51:07Z",
     "count": 292
   },
   "entries": [
@@ -985,10 +985,10 @@
       "kind": "doc",
       "title": "Dev Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-05-12 10:50",
+      "last_updated": "2026-05-22 19:20",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-12 10:50 • Servers",
+      "display_meta": "2026-05-22 19:20 • Servers",
       "search_terms": [
         "scripts-dev-studio",
         "scripts",
@@ -997,14 +997,14 @@
         "dev studio runner",
         "runner",
         "servers",
-        "2026-05-12 10:50",
+        "2026-05-22 19:20",
         "2026",
         "05",
-        "12",
-        "10",
-        "50"
+        "22",
+        "19",
+        "20"
       ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-12 10:50 2026 05 12 10 50"
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-22 19:20 2026 05 22 19 20"
     },
     {
       "id": "user-guide-docs-html-import",
@@ -3204,10 +3204,10 @@
       "kind": "doc",
       "title": "Project State Page",
       "href": "/docs/?scope=studio&doc=project-state-page",
-      "last_updated": "2026-05-08 18:20",
+      "last_updated": "2026-05-22",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-08 18:20 • Catalogue",
+      "display_meta": "2026-05-22 • Catalogue",
       "search_terms": [
         "project-state-page",
         "project",
@@ -3215,14 +3215,12 @@
         "page",
         "project state page",
         "catalogue",
-        "2026-05-08 18:20",
+        "2026-05-22",
         "2026",
         "05",
-        "08",
-        "18",
-        "20"
+        "22"
       ],
-      "search_text": "project-state-page project state page project state page catalogue 2026-05-08 18:20 2026 05 08 18 20"
+      "search_text": "project-state-page project state page project state page catalogue 2026-05-22 2026 05 22"
     },
     {
       "id": "site-request-r2-media-upload-automation",
@@ -5259,10 +5257,10 @@
       "kind": "doc",
       "title": "Docs Management Server Operations",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-22",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Docs Management Server",
-      "display_meta": "2026-05-19 • Docs Management Server",
+      "display_meta": "2026-05-22 • Docs Management Server",
       "search_terms": [
         "scripts-docs-management-server-operations",
         "scripts",
@@ -5272,12 +5270,12 @@
         "operations",
         "docs management server operations",
         "docs management server",
-        "2026-05-19",
+        "2026-05-22",
         "2026",
         "05",
-        "19"
+        "22"
       ],
-      "search_text": "scripts-docs-management-server-operations scripts docs management server operations docs management server operations docs management server 2026-05-19 2026 05 19"
+      "search_text": "scripts-docs-management-server-operations scripts docs management server operations docs management server operations docs management server 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-delete-work",

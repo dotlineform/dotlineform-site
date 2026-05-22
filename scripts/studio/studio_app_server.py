@@ -21,8 +21,10 @@ if str(STUDIO_DIR) not in sys.path:
 from studio_app_config import asset_version, runtime_config  # noqa: E402
 from studio_app_views import (  # noqa: E402
     docs_viewer_manage_view,
+    project_state_view,
     series_tags_view,
     series_tag_editor_view,
+    studio_audits_view,
     studio_home_view,
     tag_aliases_view,
     tag_groups_view,
@@ -92,6 +94,12 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path in {"/studio/analytics/series-tag-editor", "/studio/analytics/series-tag-editor/"}:
             self.send_html(series_tag_editor_view(self.version, self.repo_root))
+            return
+        if path in {"/studio/audits", "/studio/audits/"}:
+            self.send_html(studio_audits_view(self.version))
+            return
+        if path in {"/studio/project-state", "/studio/project-state/"}:
+            self.send_html(project_state_view(self.version))
             return
         if self.is_allowed_static_path(path):
             self.send_static(path)

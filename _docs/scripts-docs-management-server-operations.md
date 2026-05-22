@@ -2,7 +2,7 @@
 doc_id: scripts-docs-management-server-operations
 title: Docs Management Server Operations
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-22
 parent_id: scripts-docs-management-server
 sort_order: 15500
 ---
@@ -33,8 +33,9 @@ sort_order: 15500
 
 ## Operational Notes
 
-- `bin/dev-studio` starts this service on `http://127.0.0.1:8789`
-- standalone local management starts with `./scripts/docs/docs_management_server.py --port 8789`
+- normal `bin/dev-studio` runs host Docs Viewer management through the Local Studio App, not this standalone server
+- set `DOCS_MANAGEMENT_SERVER_ENABLED=1` only for fallback/debug runs that intentionally need the standalone `http://127.0.0.1:8789` process
+- standalone local management experiments can start with `./scripts/docs/docs_management_server.py --port 8789`
 - the shared Docs Viewer probes `GET /capabilities` for generated-data reads on normal local loads and for write capability when `?mode=manage` is present
 - if the local service is unavailable, the viewer falls back to static generated JSON for normal public-style reads; manage mode stays read-only and shows a manage-mode unavailable message
 - successful source writes now leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the server

@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-05-22-added-local-studio-public-link-helper",
+  "date": "2026-05-22",
+  "title": "Added Local Studio Public Link Helper",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "runtime",
+    "navigation"
+  ],
+  "summary": "Added runtime-config site bases and a Studio navigation helper for resolving public-content links through the local public Jekyll preview or production base.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "public-site-preview",
+    "navigation",
+    "link-resolution"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/studio/studio_app_config.py",
+    "assets/studio/js/studio-navigation.js",
+    "assets/studio/js/series-tag-editor-page.js",
+    "tests/python/test_studio_app_server.py",
+    "tests/smoke/local_studio_app_tag_routes.py",
+    "tests/smoke/local_studio_navigation_adapter.py",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/site-request-studio-local-vanilla-web-app.md"
+  ],
+  "effect": "The local Studio runtime now advertises public_preview and production site bases. Migrated routes can call buildPublicSiteUrl(...) to send public-content links to the local Jekyll preview by default or to dotlineform.com for explicit live-site actions. The migrated per-series tag editor uses the helper for public series and work header links.",
+  "verification": [
+    "node --check passed for assets/studio/js/studio-navigation.js",
+    "Python compile checks passed for scripts/studio/studio_app_config.py, tests/python/test_studio_app_server.py, and tests/smoke/local_studio_navigation_adapter.py",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_navigation_adapter.py passed with loopback server permissions",
+    "tests/smoke/local_studio_app_tag_routes.py passed with loopback server permissions and checks that per-series editor public links use the public-preview base"
+  ]
+}

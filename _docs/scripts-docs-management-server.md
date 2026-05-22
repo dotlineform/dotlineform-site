@@ -14,8 +14,9 @@ Script:
 ./scripts/docs/docs_management_server.py
 ```
 
-This is the local-only write and generated-data read service for the shared Docs Viewer management route.
-`bin/dev-studio` starts it on `http://127.0.0.1:8789`; standalone installs can start it directly when they only need Docs Viewer management.
+This is the retired default local-only HTTP service for the shared Docs Viewer management route.
+The same management behavior is now hosted by the Local Studio App during normal `bin/dev-studio` runs.
+Start this standalone server only for fallback/debug work or standalone Docs Viewer management experiments.
 
 ## Quick Start
 

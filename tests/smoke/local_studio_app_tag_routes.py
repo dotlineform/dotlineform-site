@@ -90,7 +90,10 @@ def main(argv: list[str] | None = None) -> int:
         with urllib.request.urlopen(f"{base_url}/studio/runtime-config.json", timeout=10) as response:
             runtime_config = json.loads(response.read().decode("utf-8"))
         runtime_views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
+        public_preview_base = runtime_config.get("app", {}).get("runtime", {}).get("sites", {}).get("public_preview", {}).get("base", "")
         runtime_by_id = {view.get("id"): view for view in runtime_views if isinstance(view, dict)}
+        if not public_preview_base:
+            raise AssertionError(f"runtime config missing public preview base: {runtime_config!r}")
         for route in ROUTES:
             runtime_view = runtime_by_id.get(route["view_id"])
             if not runtime_view or runtime_view.get("path") != route["runtime_path"]:
@@ -132,6 +135,12 @@ def main(argv: list[str] | None = None) -> int:
                     series_id = page.locator("#tag-studio").get_attribute("data-series-id")
                     if series_id != "036":
                         raise AssertionError(f"series tag editor did not load series 036: {series_id!r}")
+                    series_href = page.locator("#seriesTagEditorCat a").get_attribute("href")
+                    primary_work_href = page.locator("#seriesTagEditorPrimaryWork a").get_attribute("href")
+                    if series_href != f"{public_preview_base}/series/036/":
+                        raise AssertionError(f"series link did not use public preview base: {series_href!r}")
+                    if primary_work_href and not primary_work_href.startswith(f"{public_preview_base}/works/"):
+                        raise AssertionError(f"primary work link did not use public preview base: {primary_work_href!r}")
 
             browser.close()
 
