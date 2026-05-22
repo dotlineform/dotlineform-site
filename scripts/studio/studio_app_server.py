@@ -20,6 +20,7 @@ if str(STUDIO_DIR) not in sys.path:
 
 from studio_app_config import asset_version, runtime_config  # noqa: E402
 from studio_app_views import docs_viewer_manage_view, studio_home_view, tag_groups_view  # noqa: E402
+from studio_analytics_api import analytics_get_payload  # noqa: E402
 from studio_docs_api import docs_allowed_origin, docs_management_get_payload, docs_management_post_response  # noqa: E402
 
 
@@ -56,6 +57,9 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path == "/studio/runtime-config.json":
             self.send_json(runtime_config(self.repo_root, self.version))
+            return
+        if path.startswith("/studio/api/analytics/"):
+            self.send_analytics_api_json(path.removeprefix("/studio/api/analytics"))
             return
         if path.startswith("/studio/api/docs/"):
             self.send_docs_api_json(path.removeprefix("/studio/api/docs"), query)
@@ -137,6 +141,14 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
         except ValueError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_analytics_api_json(self, api_path: str) -> None:
+        try:
+            self.send_json(analytics_get_payload(self.repo_root, api_path))
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
 

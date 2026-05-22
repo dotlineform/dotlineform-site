@@ -1,0 +1,46 @@
+{
+  "id": "change-2026-05-22-added-local-analytics-tag-read-apis",
+  "date": "2026-05-22",
+  "title": "Added Local Analytics Tag Read APIs",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "studio",
+    "analytics",
+    "testing"
+  ],
+  "summary": "Extended the local Studio analytics API adapter to serve tag registry, aliases, assignments, and groups read payloads through the app server.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "analytics",
+    "tag-registry",
+    "tag-aliases",
+    "tag-assignments",
+    "tag-groups",
+    "app-server-api"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/studio/studio_analytics_api.py",
+    "scripts/studio/studio_app_config.py",
+    "assets/studio/js/studio-data.js",
+    "tests/python/test_studio_app_server.py",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md"
+  ],
+  "effect": "Local Studio views that use the shared Studio data loader can now read tag registry, aliases, assignments, and groups through /studio/api/analytics/... when the local runtime config is present. Static JSON paths remain the fallback for unmigrated Jekyll contexts, and analytics write mutations are not moved in this slice.",
+  "verification": [
+    "Python compile checks passed for scripts/studio/studio_analytics_api.py, scripts/studio/studio_app_config.py, and tests/python/test_studio_app_server.py",
+    "tests/python/test_studio_app_server.py passed"
+  ]
+}

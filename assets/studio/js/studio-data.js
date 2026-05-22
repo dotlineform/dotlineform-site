@@ -27,22 +27,25 @@ export async function fetchJson(url, options = {}) {
 
 export async function loadStudioRegistryJson(config, options) {
   const { getStudioDataPath } = await loadStudioConfigModule();
-  return fetchJson(getStudioDataPath(config, "tag_registry"), options);
+  return fetchJson(studioServicePath(config, "analytics", "tag_registry") || getStudioDataPath(config, "tag_registry"), options);
 }
 
 export async function loadStudioAliasesJson(config, options) {
   const { getStudioDataPath } = await loadStudioConfigModule();
-  return fetchJson(getStudioDataPath(config, "tag_aliases"), options);
+  return fetchJson(studioServicePath(config, "analytics", "tag_aliases") || getStudioDataPath(config, "tag_aliases"), options);
 }
 
 export async function loadStudioAssignmentsJson(config, options) {
   const { getStudioDataPath } = await loadStudioConfigModule();
-  return fetchJson(getStudioDataPath(config, "tag_assignments"), { cache: "no-store", ...(options || {}) });
+  return fetchJson(
+    studioServicePath(config, "analytics", "tag_assignments") || getStudioDataPath(config, "tag_assignments"),
+    { cache: "no-store", ...(options || {}) }
+  );
 }
 
 export async function loadStudioGroupsJson(config, options) {
   const { getStudioDataPath } = await loadStudioConfigModule();
-  return fetchJson(getStudioDataPath(config, "tag_groups"), options);
+  return fetchJson(studioServicePath(config, "analytics", "tag_groups") || getStudioDataPath(config, "tag_groups"), options);
 }
 
 export async function loadSiteSeriesIndexJson(config, options) {
@@ -95,6 +98,14 @@ function buildCatalogueReadUrl(key, recordId = "") {
     url.searchParams.set("record_id", String(recordId));
   }
   return url.toString();
+}
+
+function studioServicePath(config, serviceName, key) {
+  const runtime = config && config.app && config.app.runtime;
+  const services = runtime && runtime.services;
+  const service = services && services[serviceName];
+  const value = service && service[key];
+  return typeof value === "string" && value.trim() ? value : "";
 }
 
 export function buildStudioRegistryLookup(registryJson, studioGroups = [], options = {}) {

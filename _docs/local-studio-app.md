@@ -43,16 +43,22 @@ Current app endpoints:
 
 - `/health`
 - `/studio/runtime-config.json`
+- `/studio/api/analytics/tag-registry`
+- `/studio/api/analytics/tag-aliases`
+- `/studio/api/analytics/tag-assignments`
+- `/studio/api/analytics/tag-groups`
 - `/studio/api/docs/capabilities`
 - `/studio/api/docs/docs/generated/...`
 - `/studio/api/docs/docs/...` management GET/POST routes migrated from the Docs management server
 
 The Tag Groups view reuses the existing Studio CSS, `assets/studio/js/tag-groups.js`, and the route-ready data attributes.
+In the local app it reads group-description data through `/studio/api/analytics/tag-groups`; unmigrated/Jekyll contexts still fall back to the static `assets/studio/data/tag_groups.json` path.
+The shared Studio data loader also uses local analytics read endpoints for tag registry, aliases, and assignments when the local runtime config advertises them.
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
 The endpoint exposes the local app runtime contract for migrated views:
 
 - view ids, labels, paths, docs links, and shell navigation groups
-- local service endpoints such as `/studio/api/docs`
+- local service endpoints such as `/studio/api/docs` and `/studio/api/analytics`
 - generated data, search, and UI-text paths from the checked-in Studio config
 - media and thumbnail bases used by Studio previews
 - pipeline variant metadata from `_data/pipeline.json`
@@ -69,8 +75,8 @@ Browser-level fixture smokes cover local `/docs/` manage-mode workflows through 
 Data-sharing UI behavior is intentionally deferred to a later cross-Studio adapter consolidation slice.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
-The server is still intentionally narrow and does not yet own catalogue, analytics, audit, or app-wide navigation APIs.
-The app server is split before broader route migration: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns HTML shells, and `studio_docs_api.py` owns the Docs Viewer API adapter.
+The server is still intentionally narrow and does not yet own catalogue, analytics write mutations, audit, or app-wide navigation APIs.
+The app server is split before broader route migration: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns HTML shells, `studio_docs_api.py` owns the Docs Viewer API adapter, and `studio_analytics_api.py` owns the first analytics API adapter.
 New route families should follow that module-boundary pattern rather than expanding the server entrypoint.
 
 Current focused checks:

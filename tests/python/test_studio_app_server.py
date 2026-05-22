@@ -12,6 +12,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.studio import studio_docs_api  # noqa: E402
+from scripts.studio.studio_analytics_api import analytics_get_payload  # noqa: E402
 from scripts.studio.studio_app_config import runtime_config  # noqa: E402
 
 
@@ -22,6 +23,10 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["host"] == "local-studio-app"
     assert runtime["asset_version"] == "test-version"
     assert runtime["routes"]["runtime_config"] == "/studio/runtime-config.json"
+    assert runtime["services"]["analytics"]["tag_groups"] == "/studio/api/analytics/tag-groups"
+    assert runtime["services"]["analytics"]["tag_registry"] == "/studio/api/analytics/tag-registry"
+    assert runtime["services"]["analytics"]["tag_aliases"] == "/studio/api/analytics/tag-aliases"
+    assert runtime["services"]["analytics"]["tag_assignments"] == "/studio/api/analytics/tag-assignments"
     assert runtime["services"]["docs"]["base"] == "/studio/api/docs"
     assert runtime["data_paths"]["ui_text"]["tag_groups"] == "/assets/studio/data/ui_text/tag-groups.json"
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
@@ -29,6 +34,26 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["state"]["return_context_storage_key"] == "dlf.studio.returnContext"
     assert runtime["modals"]["event"] == "studio:open-modal"
     assert any(view["id"] == "docs" and view["path"] == "/docs/?mode=manage" for view in runtime["views"])
+
+
+def test_analytics_tag_groups_route_returns_existing_payload() -> None:
+    groups_payload = analytics_get_payload(REPO_ROOT, "/tag-groups")
+    registry_payload = analytics_get_payload(REPO_ROOT, "/tag-registry")
+    aliases_payload = analytics_get_payload(REPO_ROOT, "/tag-aliases")
+    assignments_payload = analytics_get_payload(REPO_ROOT, "/tag-assignments")
+
+    assert groups_payload["ok"] is True
+    assert groups_payload["tag_groups_version"] == "tag_groups_v1"
+    assert {group["group_id"] for group in groups_payload["groups"]} >= {"subject", "domain", "form", "theme"}
+    assert registry_payload["ok"] is True
+    assert registry_payload["tag_registry_version"] == "tag_registry_v1"
+    assert any(tag["tag_id"] == "subject:flower" for tag in registry_payload["tags"])
+    assert aliases_payload["ok"] is True
+    assert aliases_payload["tag_aliases_version"] == "tag_aliases_v1"
+    assert "floral" in aliases_payload["aliases"]
+    assert assignments_payload["ok"] is True
+    assert assignments_payload["tag_assignments_version"] == "tag_assignments_v1"
+    assert "001" in assignments_payload["series"]
 
 
 def test_docs_capabilities_report_scopes_and_management_api() -> None:
@@ -99,6 +124,7 @@ def test_docs_api_post_rejects_disallowed_origin() -> None:
 
 if __name__ == "__main__":
     test_runtime_config_exposes_adapter_contract()
+    test_analytics_tag_groups_route_returns_existing_payload()
     test_docs_capabilities_report_scopes_and_management_api()
     test_docs_generated_read_routes_return_existing_payloads()
     test_docs_management_settings_and_dry_run_mutation_routes()

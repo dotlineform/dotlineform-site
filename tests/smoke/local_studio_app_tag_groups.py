@@ -51,11 +51,25 @@ def main(argv: list[str] | None = None) -> int:
             page = browser.new_page()
             console_errors: list[str] = []
             config_requests: list[str] = []
+            analytics_requests: list[str] = []
+            static_group_requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on(
                 "request",
                 lambda request: config_requests.append(request.url)
                 if "/studio/runtime-config.json" in request.url
+                else None,
+            )
+            page.on(
+                "request",
+                lambda request: analytics_requests.append(request.url)
+                if "/studio/api/analytics/tag-groups" in request.url
+                else None,
+            )
+            page.on(
+                "request",
+                lambda request: static_group_requests.append(request.url)
+                if "/assets/studio/data/tag_groups.json" in request.url
                 else None,
             )
             page.goto(f"{base_url}/studio/", wait_until="domcontentloaded")
@@ -92,6 +106,10 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError("Tag Groups rendered empty fallback unexpectedly")
         if not config_requests:
             raise AssertionError("Tag Groups did not request the local runtime config endpoint")
+        if not analytics_requests:
+            raise AssertionError("Tag Groups did not request the local analytics API")
+        if static_group_requests:
+            raise AssertionError(f"Tag Groups should use the local analytics API instead of static data: {static_group_requests!r}")
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")
         print(f"local Studio Tag Groups OK: {base_url}/studio/analytics/tag-groups/")

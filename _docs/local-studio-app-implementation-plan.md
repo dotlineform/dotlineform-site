@@ -86,6 +86,7 @@ Current commit point:
 - Phase 3 now has fixture-backed UI workflow smoke coverage for Docs create, metadata edit, settings save, archive, delete preview/apply, import, drag/drop move, scope create/delete, and generated reload behavior in the local `/docs/` shell
 - Phase 3 now has public read-only smoke coverage for `/library/` and `/analysis/`
 - Phase 4 has started by adding the local app server to `bin/dev-studio` and retiring the separate Docs management HTTP process from default startup
+- Phase 4 now has the first analytics API route module, serving tag read data through the local app server
 - non-Docs write/manage APIs are intentionally still disabled or partial where not yet migrated
 
 ## Phase 0: Published Surface Cleanup
@@ -238,8 +239,8 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Define route modules for catalogue, docs, analytics, audit, and shared Studio app routes. | pending |
-| Move endpoint ownership into the Python app server slice by slice. | pending |
+| Define route modules for catalogue, docs, analytics, audit, and shared Studio app routes. | partial; docs and analytics modules started |
+| Move endpoint ownership into the Python app server slice by slice. | partial; Docs management and analytics tag read routes moved |
 | Reuse extracted Python domain modules instead of proxying to old services by default. | pending |
 | Preserve loopback binding, CORS limits, write allowlists, backups, compact logs, and preview/apply boundaries. | pending |
 | Update `bin/dev-studio` to start the app server and only necessary background tasks. | partial; Docs management sibling retired from default startup |
@@ -250,6 +251,9 @@ Next steps:
 Use the docs-management migration to establish the endpoint ownership pattern.
 `bin/dev-studio` now starts the local app server as a bridge step, but it still starts Jekyll and existing sibling services for unmigrated workflows.
 Avoid a broad service merge until one migrated workflow has proven the app-server route-module shape.
+The first analytics-owned slices are intentionally read-only: `studio_analytics_api.py` serves tag registry, aliases, assignments, and groups through `/studio/api/analytics/...`, and the shared Studio data loader uses those endpoints when the local runtime config advertises them.
+Static JSON fallbacks remain for unmigrated/Jekyll contexts.
+Next Phase 4 slices should migrate one endpoint family at a time, with analytics write mutations still treated as a separate higher-risk step.
 
 ## Phase 5: Route Family Migration
 

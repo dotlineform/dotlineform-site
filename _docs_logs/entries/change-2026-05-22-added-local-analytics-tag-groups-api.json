@@ -1,0 +1,46 @@
+{
+  "id": "change-2026-05-22-added-local-analytics-tag-groups-api",
+  "date": "2026-05-22",
+  "title": "Added Local Analytics Tag Groups API",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "studio",
+    "analytics",
+    "testing"
+  ],
+  "summary": "Started Phase 4 analytics service consolidation by adding a dedicated local Studio analytics API adapter and serving Tag Groups data through the app server.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "analytics",
+    "tag-groups",
+    "app-server-api"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/studio/studio_analytics_api.py",
+    "scripts/studio/studio_app_server.py",
+    "scripts/studio/studio_app_config.py",
+    "assets/studio/js/studio-data.js",
+    "tests/python/test_studio_app_server.py",
+    "tests/smoke/local_studio_app_tag_groups.py",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md"
+  ],
+  "effect": "The local Tag Groups view now reads group-description data from /studio/api/analytics/tag-groups when running under the local Studio app, while preserving the static JSON fallback for unmigrated Jekyll contexts. This establishes the analytics route-module pattern without moving analytics write mutations yet.",
+  "verification": [
+    "Python compile checks passed for the local app server, analytics API adapter, and focused tests",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_app_tag_groups.py passed and confirmed the view requested /studio/api/analytics/tag-groups instead of assets/studio/data/tag_groups.json"
+  ]
+}

@@ -40,6 +40,14 @@ STUDIO_MEDIA: dict[str, object] = {
 }
 
 STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
+    "analytics": {
+        "base": "/studio/api/analytics",
+        "health": "/studio/api/analytics/health",
+        "tag_aliases": "/studio/api/analytics/tag-aliases",
+        "tag_assignments": "/studio/api/analytics/tag-assignments",
+        "tag_groups": "/studio/api/analytics/tag-groups",
+        "tag_registry": "/studio/api/analytics/tag-registry",
+    },
     "docs": {
         "base": "/studio/api/docs",
         "capabilities": "/studio/api/docs/capabilities",
