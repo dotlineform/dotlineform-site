@@ -42,13 +42,16 @@ Current app endpoints:
 
 - `/health`
 - `/studio/runtime-config.json`
+- `/studio/api/docs/capabilities`
+- `/studio/api/docs/docs/generated/...`
+- `/studio/api/docs/docs/...` management GET/POST routes migrated from the Docs management server
 
 The Tag Groups view reuses the existing Studio CSS, `assets/studio/js/tag-groups.js`, and the route-ready data attributes.
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
 The endpoint currently also exposes the local app view registry that powers the shell navigation.
 `assets/studio/js/studio-navigation.js` provides the first helper over that registry: migrated links can declare `data-studio-navigate="<view-id>"` while retaining a real `href` fallback.
 The local `/docs/` route hosts the Docs Viewer management shell through the Python app server while still using the existing Docs Viewer JavaScript, CSS, config, and generated docs payloads.
-Its management API base is `/studio/api/docs`; this currently exposes real scope availability through `/studio/api/docs/capabilities` and serves generated docs read endpoints while keeping write capabilities disabled until those routes migrate into the app server.
-This first server is intentionally narrow and does not yet own write-service APIs or app-wide navigation.
+Its management API base is `/studio/api/docs`; this now exposes real scope availability and Docs management capabilities, serves generated docs read endpoints, and calls the existing Docs management domain functions directly for migrated management routes.
+The server is still intentionally narrow and does not yet own catalogue, analytics, audit, or app-wide navigation APIs.
 The app server is split before broader route migration: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns HTML shells, and `studio_docs_api.py` owns the Docs Viewer API adapter.
 New route families should follow that module-boundary pattern rather than expanding the server entrypoint.

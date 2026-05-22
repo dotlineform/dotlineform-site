@@ -14,7 +14,7 @@ if str(REPO_ROOT) not in sys.path:
 from scripts.studio import studio_docs_api  # noqa: E402
 
 
-def test_docs_capabilities_report_scopes_but_disable_unmigrated_writes() -> None:
+def test_docs_capabilities_report_scopes_and_management_api() -> None:
     payload = studio_docs_api.docs_capabilities_payload(REPO_ROOT)
     capabilities = payload["capabilities"]
     studio = capabilities["scopes"]["studio"]
@@ -22,10 +22,11 @@ def test_docs_capabilities_report_scopes_but_disable_unmigrated_writes() -> None
     assert payload["ok"] is True
     assert studio["available"] is True
     assert studio["root"] == "_docs"
-    assert capabilities["docs_management"] is False
+    assert capabilities["docs_management"] is True
     assert capabilities["generated_data_reads"] is True
-    assert capabilities["html_import"] is False
-    assert capabilities["scope_lifecycle"]["create_apply"] is False
+    assert capabilities["html_import"] is True
+    assert capabilities["source_config_settings_reads"] is True
+    assert capabilities["scope_lifecycle"]["create_apply"] is True
     assert studio["generated_data_reads"] is True
     assert studio["generated_search_reads"] is True
 
@@ -53,7 +54,35 @@ def test_docs_generated_read_routes_return_existing_payloads() -> None:
     assert doc_payload["doc_id"] == "docs-viewer"
 
 
+def test_docs_management_settings_and_dry_run_mutation_routes() -> None:
+    settings_payload = studio_docs_api.docs_management_get_payload(
+        REPO_ROOT,
+        "/docs/source-config-settings",
+        {"scope": ["studio"]},
+    )
+    preview_status, preview_payload = studio_docs_api.docs_management_post_response(
+        REPO_ROOT,
+        "/docs/delete-preview",
+        {"scope": "studio", "doc_id": "docs-viewer"},
+        dry_run=True,
+    )
+
+    assert settings_payload["ok"] is True
+    assert any(scope["scope_id"] == "studio" for scope in settings_payload["scopes"])
+    assert preview_status == studio_docs_api.HTTPStatus.OK
+    assert preview_payload["ok"] is True
+    assert preview_payload["doc_id"] == "docs-viewer"
+    assert "blockers" in preview_payload
+
+
+def test_docs_api_post_rejects_disallowed_origin() -> None:
+    assert studio_docs_api.docs_allowed_origin(REPO_ROOT, "http://127.0.0.1:8765") == "http://127.0.0.1:8765"
+    assert studio_docs_api.docs_allowed_origin(REPO_ROOT, "https://example.com") == ""
+
+
 if __name__ == "__main__":
-    test_docs_capabilities_report_scopes_but_disable_unmigrated_writes()
+    test_docs_capabilities_report_scopes_and_management_api()
     test_docs_generated_read_routes_return_existing_payloads()
+    test_docs_management_settings_and_dry_run_mutation_routes()
+    test_docs_api_post_rejects_disallowed_origin()
     print("studio app server tests OK")

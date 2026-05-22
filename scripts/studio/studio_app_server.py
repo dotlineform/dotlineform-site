@@ -20,7 +20,7 @@ if str(STUDIO_DIR) not in sys.path:
 
 from studio_app_config import asset_version, runtime_config  # noqa: E402
 from studio_app_views import docs_viewer_manage_view, studio_home_view, tag_groups_view  # noqa: E402
-from studio_docs_api import docs_capabilities_payload, docs_generated_read_payload  # noqa: E402
+from studio_docs_api import docs_allowed_origin, docs_management_get_payload, docs_management_post_response  # noqa: E402
 
 
 STATIC_PREFIXES = ("/assets/",)
@@ -32,6 +32,7 @@ STATIC_FILES = {
     "/safari-pinned-tab.svg",
     "/site.webmanifest",
 }
+MAX_BODY_BYTES = 64 * 1024
 
 
 class StudioAppRequestHandler(BaseHTTPRequestHandler):
@@ -56,9 +57,6 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         if path == "/studio/runtime-config.json":
             self.send_json(runtime_config(self.repo_root, self.version))
             return
-        if path == "/studio/api/docs/capabilities":
-            self.send_json(docs_capabilities_payload(self.repo_root))
-            return
         if path.startswith("/studio/api/docs/"):
             self.send_docs_api_json(path.removeprefix("/studio/api/docs"), query)
             return
@@ -77,12 +75,55 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
 
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
+    def do_POST(self) -> None:
+        request = urlsplit(self.path)
+        path = unquote(request.path)
+        if path.startswith("/studio/api/docs/"):
+            if not self.origin_allowed_for_docs_api():
+                self.send_json({"ok": False, "error": "Origin not allowed"}, HTTPStatus.FORBIDDEN)
+                return
+            self.send_docs_api_post_json(path.removeprefix("/studio/api/docs"))
+            return
+
+        self.send_error(HTTPStatus.NOT_FOUND, "Not found")
+
+    def do_OPTIONS(self) -> None:
+        request = urlsplit(self.path)
+        path = unquote(request.path)
+        if not path.startswith("/studio/api/docs/"):
+            self.send_error(HTTPStatus.NOT_FOUND, "Not found")
+            return
+        if not self.origin_allowed_for_docs_api():
+            self.send_response(HTTPStatus.FORBIDDEN)
+            self.end_headers()
+            return
+        self.send_response(HTTPStatus.NO_CONTENT)
+        self.send_cors_headers()
+        self.end_headers()
+
     def is_allowed_static_path(self, path: str) -> bool:
         return path in STATIC_FILES or any(path.startswith(prefix) for prefix in STATIC_PREFIXES)
+
+    def allowed_origin(self) -> str:
+        return docs_allowed_origin(self.repo_root, self.headers.get("Origin", ""))
+
+    def origin_allowed_for_docs_api(self) -> bool:
+        origin = self.headers.get("Origin", "")
+        return not origin or bool(self.allowed_origin())
+
+    def send_cors_headers(self) -> None:
+        origin = self.allowed_origin()
+        if not origin:
+            return
+        self.send_header("Access-Control-Allow-Origin", origin)
+        self.send_header("Vary", "Origin")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
 
     def send_json(self, payload: object, status: HTTPStatus = HTTPStatus.OK) -> None:
         body = (json.dumps(payload, sort_keys=True) + "\n").encode("utf-8")
         self.send_response(status)
+        self.send_cors_headers()
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Cache-Control", "no-store")
         self.send_header("Content-Length", str(len(body)))
@@ -91,13 +132,42 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
 
     def send_docs_api_json(self, api_path: str, query: dict[str, list[str]]) -> None:
         try:
-            self.send_json(docs_generated_read_payload(self.repo_root, api_path, query))
+            self.send_json(docs_management_get_payload(self.repo_root, api_path, query))
         except FileNotFoundError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
         except ValueError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
         except RuntimeError as error:
             self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def send_docs_api_post_json(self, api_path: str) -> None:
+        try:
+            body = self.read_json_body()
+            status, payload = docs_management_post_response(self.repo_root, api_path, body)
+            self.send_json(payload, status)
+        except FileNotFoundError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.NOT_FOUND)
+        except ValueError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.BAD_REQUEST)
+        except RuntimeError as error:
+            self.send_json({"ok": False, "error": str(error)}, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+    def read_json_body(self) -> dict[str, object]:
+        content_length = self.headers.get("Content-Length", "").strip()
+        try:
+            length = int(content_length)
+        except ValueError as error:
+            raise ValueError("Invalid Content-Length") from error
+        if length < 0 or length > MAX_BODY_BYTES:
+            raise ValueError("Request body too large")
+        raw = self.rfile.read(length)
+        try:
+            payload = json.loads(raw.decode("utf-8"))
+        except json.JSONDecodeError as error:
+            raise ValueError("Request body must be valid JSON") from error
+        if not isinstance(payload, dict):
+            raise ValueError("Request body must be a JSON object")
+        return payload
 
     def send_html(self, html_text: str, status: HTTPStatus = HTTPStatus.OK) -> None:
         body = html_text.encode("utf-8")

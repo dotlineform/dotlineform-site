@@ -80,8 +80,9 @@ Current commit point:
 - Phase 0, Phase 1, and Phase 1A are complete
 - Phase 2 has started with runtime config and navigation helpers
 - Phase 3 has started with the Docs Viewer shell and generated-read API adapter hosted by the local app server
+- Phase 3 now routes Docs management GET/POST APIs through the local app server adapter
 - Phase 4 has started by adding the local app server to `bin/dev-studio` while keeping Jekyll and existing sibling services available for unmigrated workflows
-- write/manage APIs are intentionally still disabled or partial where not yet migrated
+- non-Docs write/manage APIs are intentionally still disabled or partial where not yet migrated
 
 ## Phase 0: Published Surface Cleanup
 
@@ -194,22 +195,22 @@ Outcomes:
 | --- | --- |
 | Mount the Docs Viewer management shell in the local Studio app. | partial |
 | Provide Docs Viewer management runtime config through the Python app server. | partial |
-| Define Docs Viewer route/API modules inside the Python Studio app server rather than creating a separate default Docs server. | pending |
+| Define Docs Viewer route/API modules inside the Python Studio app server rather than creating a separate default Docs server. | done |
 | Move or adapt docs-management API routes into the Python Studio app server without default proxying. | partial |
 | Reuse existing docs-management domain modules and response contracts. | partial |
-| Keep Docs Viewer JS, CSS, UI text, scope config, payload contract, write policies, and import/rebuild/search behavior Docs-owned. | pending |
-| Preserve create, metadata edit, move, archive/delete, show hidden, rebuild, settings, and import workflows. | pending |
+| Keep Docs Viewer JS, CSS, UI text, scope config, payload contract, write policies, and import/rebuild/search behavior Docs-owned. | partial |
+| Preserve create, metadata edit, move, archive/delete, show hidden, rebuild, settings, and import workflows. | partial |
 | Verify generated docs payload rebuilds and docs search rebuilds still run through the expected paths. | pending |
-| Smoke `/docs/` manage mode on the local app host and public `/library/` plus `/analysis/` read-only behavior separately. | pending |
+| Smoke `/docs/` manage mode on the local app host and public `/library/` plus `/analysis/` read-only behavior separately. | partial |
 
 Next steps:
 
 Phase 3 has started by hosting the Docs Viewer management shell at `/docs/` through the Python Studio app server.
-The first app-server Docs API routes are `/studio/api/docs/capabilities` plus generated-read endpoints under `/studio/api/docs/docs/generated/...`.
-Those endpoints now live behind a dedicated `studio_docs_api.py` adapter instead of being embedded in the app-server dispatcher.
-Capabilities now report real scope and generated-read availability while keeping write capabilities disabled so manage mode fails closed instead of probing an absent sibling process.
-Continue by replacing the temporary shell adapter with a cleaner Docs-owned route module, then migrate API ownership workflow by workflow.
-Temporary sibling services are acceptable only as narrow scaffolding and should be retired as each management route moves into the app server.
+The app-server Docs API routes live behind the dedicated `studio_docs_api.py` adapter instead of being embedded in the app-server dispatcher.
+Capabilities now report real scope, generated-read, and Docs management availability.
+The adapter calls existing docs-management domain functions directly for generated reads, source-config/settings reads, import listings, data-sharing package reads, and management POST routes such as settings, create, metadata update, move, archive/delete, rebuild, scope lifecycle, import, and data sharing.
+Continue by proving individual workflows through UI-level smokes and then retiring the separate docs-management sibling process from normal `bin/dev-studio` once equivalent coverage exists.
+Temporary sibling services are acceptable only as narrow scaffolding and should be retired as each management route family moves into the app server.
 Do not add a separate always-running Docs Viewer server for normal Studio; keep a possible standalone Docs Viewer launcher as a later portability option over the same modules.
 
 ## Phase 4: Local Service Consolidation

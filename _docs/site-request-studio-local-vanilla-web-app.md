@@ -444,6 +444,6 @@ For projection-contract slices:
 
 ## Change Log Entries
 
+- `change-2026-05-22-migrated-docs-management-api-to-local-studio-app`
 - `change-2026-05-22-added-local-studio-app-to-dev-runner`
-
 - `change-2026-05-22-started-local-studio-app-migration`
