@@ -14,6 +14,10 @@ exclude:
   - tests
   - var
   - logs
+  - assets/studio/data/tag_aliases.json
+  - assets/studio/data/tag_assignments.json
+  - assets/studio/data/tag_groups.json
+  - assets/studio/data/tag_registry.json
   - assets/studio/data/catalogue/
   - assets/studio/data/catalogue_lookup/
   - assets/data/docs/scopes/

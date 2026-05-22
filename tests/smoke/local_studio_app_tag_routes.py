@@ -30,6 +30,7 @@ ROUTES = [
             "/studio/api/analytics/tag-registry",
             "/studio/api/analytics/tag-aliases",
             "/studio/api/analytics/tag-assignments",
+            "/studio/api/analytics/tag-groups",
         ],
     },
     {
@@ -41,6 +42,7 @@ ROUTES = [
         "expected_requests": [
             "/studio/api/analytics/tag-aliases",
             "/studio/api/analytics/tag-registry",
+            "/studio/api/analytics/tag-groups",
         ],
     },
     {
@@ -52,6 +54,7 @@ ROUTES = [
         "expected_requests": [
             "/studio/api/analytics/tag-assignments",
             "/studio/api/analytics/tag-registry",
+            "/studio/api/analytics/tag-groups",
             "/studio/api/analytics/health",
         ],
     },
@@ -100,10 +103,17 @@ def main(argv: list[str] | None = None) -> int:
             page_errors: list[str] = []
             requests: list[str] = []
             legacy_requests: list[str] = []
+            static_tag_requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
             page.on("request", lambda request: requests.append(request.url))
             page.on("request", lambda request: legacy_requests.append(request.url) if "127.0.0.1:8787" in request.url else None)
+            page.on(
+                "request",
+                lambda request: static_tag_requests.append(request.url)
+                if "/assets/studio/data/tag_" in request.url
+                else None,
+            )
 
             for route in ROUTES:
                 page.goto(f"{base_url}{route['path']}", wait_until="domcontentloaded")
@@ -135,6 +145,8 @@ def main(argv: list[str] | None = None) -> int:
                 raise AssertionError(f"{route['path']} did not request expected local APIs: {missing!r}")
         if legacy_requests:
             raise AssertionError(f"local tag routes should not request legacy 8787 endpoints: {legacy_requests!r}")
+        if static_tag_requests:
+            raise AssertionError(f"local tag routes should not request static analytics tag data: {static_tag_requests!r}")
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:

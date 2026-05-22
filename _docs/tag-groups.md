@@ -134,7 +134,7 @@ This page follows the Studio-specific shared UI boundary documented in [Studio U
 
 Primary data access:
 
-- group descriptions from `tag_groups.json`
+- group descriptions from `/studio/api/analytics/tag-groups` in the local Studio app
 - group ordering from `studio_config.json`
 
 Loaded through:

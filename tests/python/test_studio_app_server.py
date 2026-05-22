@@ -49,6 +49,10 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["analytics"]["promote_tag_alias_preview"] == "/studio/api/analytics/promote-tag-alias-preview"
     assert runtime["services"]["analytics"]["promote_tag_alias"] == "/studio/api/analytics/promote-tag-alias"
     assert runtime["services"]["docs"]["base"] == "/studio/api/docs"
+    assert "tag_groups" not in runtime["data_paths"]["studio"]
+    assert "tag_registry" not in runtime["data_paths"]["studio"]
+    assert "tag_aliases" not in runtime["data_paths"]["studio"]
+    assert "tag_assignments" not in runtime["data_paths"]["studio"]
     assert runtime["data_paths"]["ui_text"]["tag_groups"] == "/assets/studio/data/ui_text/tag-groups.json"
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"

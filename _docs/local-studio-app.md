@@ -70,8 +70,9 @@ Current app endpoints:
 - `/studio/api/docs/docs/...` management GET/POST routes migrated from the Docs management server
 
 The Tag Groups view reuses the existing Studio CSS, `assets/studio/js/tag-groups.js`, and the route-ready data attributes.
-In the local app it reads group-description data through `/studio/api/analytics/tag-groups`; unmigrated/Jekyll contexts still fall back to the static `assets/studio/data/tag_groups.json` path.
-The shared Studio data loader also uses local analytics read endpoints for tag registry, aliases, and assignments when the local runtime config advertises them.
+In the local app it reads group-description data through `/studio/api/analytics/tag-groups`.
+The shared Studio data loader now requires local analytics read endpoints for tag groups, registry, aliases, and assignments on migrated local-only tag views; it no longer falls back to static `assets/studio/data/tag_*.json` paths for those views, and `studio_config.json` no longer advertises those static tag-data paths as browser data sources.
+The public Jekyll config already excludes `assets/studio/`; the dev Studio Jekyll overlay also excludes the four tag source JSON files so legacy Jekyll-side static reads fail during local development.
 The analytics write routes now include `POST /studio/api/analytics/save-tags`, tag assignment import preview/apply, tag alias import/delete/edit preview/apply, tag registry import/edit/delete preview/apply, and cross-artifact promote/demote preview/apply.
 They reuse the existing tag assignment, alias mutation, registry mutation, promotion/demotion, alias rewrite, assignment rewrite, atomic JSON write, backups, compact script logging, and Studio activity helpers from the analytics tag domain modules.
 The legacy tag-server `POST /build-docs` route is deprecated and intentionally not migrated; Docs rebuilds belong to the Docs management API.

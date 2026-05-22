@@ -44,7 +44,7 @@ async function initTagGroupsPage() {
       recordLoaded: groups.length > 0
     });
   } catch (error) {
-    content.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(tagGroupsText(null, "load_failed_error", "Failed to load group descriptions from /assets/studio/data/tag_groups.json."))}</div>`;
+    content.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(tagGroupsText(null, "load_failed_error", "Failed to load group descriptions from the local analytics API."))}</div>`;
     setStudioRouteReady(root, true, {
       route: "tag-groups",
       mode: "empty",
