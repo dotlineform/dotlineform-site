@@ -9,13 +9,6 @@ viewable: false
 ---
 # tmp
 
-## javascript risk mitigation
-
-we are workinh on _docs/javascript-maintenance-risk-mitigation.md
-please continue with the next pending implementation
-
----
-
 <https://developers.openai.com/codex/migrate?utm_campaign=ML_MIX_GWT_AW_codexnewsletter_OF_EX_MAY_18&utm_content=utm_content&utm_medium=email&utm_source=sendgrid&utm_term=utm_term>
 
 <https://developers.openai.com/codex/skills>

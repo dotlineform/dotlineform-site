@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a4139a10b5d9e32f550c3bc83c62dfa8",
-    "generated_at_utc": "2026-05-21T23:08:10Z",
-    "count": 288
+    "version": "blake2b-0035088c9cd5442fae8b6525eb6a90a1",
+    "generated_at_utc": "2026-05-22T06:54:32Z",
+    "count": 289
   },
   "entries": [
     {
@@ -3939,6 +3939,35 @@
         "25"
       ],
       "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-08 19:25 2026 05 08 19 25"
+    },
+    {
+      "id": "site-request-studio-local-vanilla-web-app",
+      "kind": "doc",
+      "title": "Studio Local Vanilla Web App Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
+      "last_updated": "2026-05-22",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-22 • Change Requests",
+      "search_terms": [
+        "site-request-studio-local-vanilla-web-app",
+        "site",
+        "request",
+        "studio",
+        "local",
+        "vanilla",
+        "web",
+        "app",
+        "studio local vanilla web app request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-22",
+        "2026",
+        "05",
+        "22"
+      ],
+      "search_text": "site-request-studio-local-vanilla-web-app site request studio local vanilla web app studio local vanilla web app request change requests change requests 2026-05-22 2026 05 22"
     },
     {
       "id": "search-build-pipeline-architecture",

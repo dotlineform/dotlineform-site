@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T23:08:10Z",
+  "generated_at": "2026-05-22T06:54:36Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -451,6 +451,22 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-docs.json",
       "content_text_length": 1375,
       "summary": "This section contains technical reference documents that apply to the site as a whole."
+    },
+    {
+      "scope": "studio",
+      "doc_id": "_tmp-spa",
+      "title": "SPA",
+      "added_date": "2026-05-22",
+      "last_updated": "2026-05-22",
+      "parent_id": "_tmp",
+      "sort_order": 1000,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "_tmp_spa.md",
+      "viewer_url": "/docs/?scope=studio&doc=_tmp-spa",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp-spa.json",
+      "content_text_length": 19497
     },
     {
       "scope": "studio",
@@ -2582,6 +2598,23 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-request-studio-local-vanilla-web-app",
+      "title": "Studio Local Vanilla Web App Request",
+      "added_date": "2026-05-22",
+      "last_updated": "2026-05-22",
+      "parent_id": "change-requests",
+      "sort_order": 8000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-studio-local-vanilla-web-app.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
+      "content_text_length": 15456,
+      "ui_status": "proposed"
+    },
+    {
+      "scope": "studio",
       "doc_id": "search-build-pipeline-architecture",
       "title": "Search Build Pipeline Architecture",
       "added_date": "2026-05-19",
@@ -3977,7 +4010,7 @@
       "source_path": "_tmp.md",
       "viewer_url": "/docs/?scope=studio&doc=_tmp",
       "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp.json",
-      "content_text_length": 367
+      "content_text_length": 221
     },
     {
       "scope": "studio",
