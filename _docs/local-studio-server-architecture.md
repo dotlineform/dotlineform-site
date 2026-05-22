@@ -11,14 +11,17 @@ sort_order: 1000
 ## Current Position
 
 Studio currently uses `bin/dev-studio` as the integrated local runner for everyday Studio development.
-That runner starts Jekyll, the local Studio app server, and the remaining separate catalogue localhost service:
+That runner starts Jekyll and the local Studio app server by default:
 
 - `scripts/studio/studio_app_server.py`
+
+It can still start the remaining separate catalogue localhost service when `CATALOGUE_WRITE_SERVER_ENABLED=1`:
+
 - `scripts/catalogue/catalogue_write_server.py`
 
-Docs management, Analytics tag APIs, Studio audit APIs, Project State report API, and Thumbnail Quality preview API are now owned by the local Studio app server.
+Docs management, Analytics tag APIs, Studio audit APIs, Project State report API, Thumbnail Quality preview API, catalogue reads, workbook import, and migrated catalogue editor mutations are now owned by the local Studio app server.
 The old standalone tag write server has been retired.
-The old standalone Docs management server remains available only when explicitly enabled for fallback/debug use.
+The old standalone Docs management server has been retired.
 The standalone Audit Service remains available only when explicitly enabled for fallback/debug use.
 
 When docs live watching is enabled, the same runner also starts:
@@ -26,7 +29,8 @@ When docs live watching is enabled, the same runner also starts:
 - `scripts/docs/docs_live_rebuild_watcher.py`
 
 This means the current implementation is already an integrated local workflow, but not a combined server process.
-The remaining separate catalogue service still owns its own port, health surface, CORS handling, route set, logging, and write boundary for the broad catalogue editor/read API family.
+The remaining separate catalogue service still owns its own port, health surface, CORS handling, route set, logging, and write boundary for compatibility/debug use.
+The active local app still imports the old catalogue handler in-process for core editor mutations, so the next refactor is to extract those handler-owned behaviors into callable catalogue service functions.
 
 That remaining separation is intentional for the current implementation phase.
 The catalogue write service has grown into the active JSON-led catalogue source writer, but it still benefits from a narrow domain boundary.
@@ -123,7 +127,7 @@ Shared helpers should not erase domain boundaries. Each route module should stil
 Recommended path:
 
 1. Keep migrating route families into the local Studio app server by domain module.
-2. Retain separate catalogue and audit services until those workflows have local-app replacements.
+2. Extract callable service functions for remaining catalogue handler-owned behavior, then decide whether the standalone catalogue and audit wrappers still have a real audience.
 3. Extract shared localhost server helpers only where contracts are identical.
 4. Move `bin/dev-studio` to start only the local Studio app plus genuinely required background processes.
 5. Add future local-server requirements as route modules under the local Studio app rather than as new standalone processes.

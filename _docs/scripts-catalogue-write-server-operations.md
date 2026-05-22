@@ -10,7 +10,9 @@ sort_order: 4300
 
 ## Module Ownership
 
-- `scripts/catalogue/catalogue_write_server.py` owns HTTP transport, request parsing, endpoint-specific write allowlist checks before writes, source-write/build/refresh orchestration decisions, local service logging, Studio Activity append timing, and final response payload assembly.
+- `scripts/catalogue/catalogue_write_server.py` currently owns HTTP transport, request parsing, endpoint-specific write allowlist checks before writes, source-write/build/refresh orchestration decisions, local service logging, Studio Activity append timing, and final response payload assembly.
+- `scripts/studio/studio_catalogue_api.py` owns the active Local Studio `/studio/api/catalogue/...` HTTP surface. It already handles catalogue reads, workbook import, Project State report, and Thumbnail Quality preview directly, but still reuses the legacy write-server handler in-process for the core catalogue editor mutation routes.
+- [Catalogue Write Service Extraction](/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction) maps which remaining handler methods should move into callable service functions and which behavior is already local-app native.
 - `scripts/catalogue/catalogue_source.py` owns canonical source field order, shared catalogue id-list and detail-uid normalization, source record normalization, and source validation.
 - `scripts/catalogue/catalogue_routes.py` owns catalogue local-service endpoint path constants, the POST route inventory, and the CORS preflight route inventory shared by the write server and catalogue activity profiles.
 - `scripts/catalogue/catalogue_activity.py` owns catalogue-specific Studio Activity profiles, activity context normalization, activity row construction, and activity response-count bookkeeping.
@@ -43,7 +45,9 @@ The server validates the proposed update through the shared catalogue source loa
 
 ## Dev Studio
 
-`bin/dev-studio` starts this service alongside Jekyll and the local Studio app server.
+`bin/dev-studio` does not start this service by default.
+The active Local Studio catalogue HTTP surface is served by the local Studio app at `/studio/api/catalogue/...`.
+The standalone write server remains a compatibility/debug path only when explicitly enabled.
 
 Default local endpoint:
 
@@ -54,7 +58,7 @@ http://127.0.0.1:8788
 The port can be overridden for the dev launcher:
 
 ```bash
-CATALOGUE_WRITE_PORT=8798 bin/dev-studio
+CATALOGUE_WRITE_SERVER_ENABLED=1 CATALOGUE_WRITE_PORT=8798 bin/dev-studio
 ```
 
 ## Source And Target Artifacts
