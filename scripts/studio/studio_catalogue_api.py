@@ -81,8 +81,6 @@ LEGACY_WRITE_ROUTE_BY_API_PATH = {
     "/delete-apply": legacy_write_server.routes.DELETE_APPLY_PATH,
     "/publication-preview": legacy_write_server.routes.PUBLICATION_PREVIEW_PATH,
     "/publication-apply": legacy_write_server.routes.PUBLICATION_APPLY_PATH,
-    "/work/save": legacy_write_server.routes.WORK_SAVE_PATH,
-    "/work-detail/save": legacy_write_server.routes.DETAIL_SAVE_PATH,
     "/series/create": legacy_write_server.routes.SERIES_CREATE_PATH,
     "/series/save": legacy_write_server.routes.SERIES_SAVE_PATH,
     "/moment/save": legacy_write_server.routes.MOMENT_SAVE_PATH,
