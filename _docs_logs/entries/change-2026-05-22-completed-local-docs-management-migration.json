@@ -1,0 +1,52 @@
+{
+  "id": "change-2026-05-22-completed-local-docs-management-migration",
+  "date": "2026-05-22",
+  "title": "Completed Local Docs Management Migration",
+  "status": "implemented",
+  "type": "migration",
+  "domains": [
+    "runtime",
+    "docs-viewer",
+    "workflow",
+    "testing"
+  ],
+  "summary": "Completed the Docs Viewer manage-mode migration to the local Studio app server for ordinary source/edit/import/scope workflows and retired the standalone Docs management HTTP process from default dev startup.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "docs-management",
+    "docs-viewer-manage-mode",
+    "dev-studio"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "bin/dev-studio",
+    "scripts/docs/docs_management_server.py",
+    "tests/smoke/local_studio_docs_management_workflows.py",
+    "tests/smoke/local_studio_docs_management_import_ui.py",
+    "tests/smoke/local_studio_docs_management_move_ui.py",
+    "tests/smoke/local_studio_docs_management_scope_ui.py",
+    "_docs/local-studio-app.md",
+    "_docs/local-studio-app-implementation-plan.md",
+    "_docs/site-request-studio-local-vanilla-web-app.md"
+  ],
+  "effect": "Local /docs/ manage mode now uses the Python Studio app server for staged import, drag/drop move, scope create/delete, and the previously migrated create/edit/settings/archive/delete workflows. Docs capabilities now enumerate live configured scopes so user-created scopes can be deleted without restarting into the old static scope map. bin/dev-studio leaves the old docs-management server disabled unless DOCS_MANAGEMENT_SERVER_ENABLED=1 is explicitly set.",
+  "verification": [
+    "Python compile checks passed for scripts/docs/docs_management_server.py and local Docs management smoke tests",
+    "tests/python/test_studio_app_server.py passed",
+    "tests/smoke/local_studio_docs_management_workflows.py passed against a temporary fixture repo",
+    "tests/smoke/local_studio_docs_management_ui.py passed against a temporary fixture repo",
+    "tests/smoke/local_studio_docs_management_import_ui.py passed against a temporary fixture repo",
+    "tests/smoke/local_studio_docs_management_move_ui.py passed against a temporary fixture repo",
+    "tests/smoke/local_studio_docs_management_scope_ui.py passed against a temporary fixture repo",
+    "tests/smoke/local_studio_app_docs_viewer.py passed"
+  ]
+}

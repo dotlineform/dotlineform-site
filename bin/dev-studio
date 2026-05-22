@@ -33,6 +33,7 @@ STUDIO_APP_PORT="${STUDIO_APP_PORT:-8765}"
 TAG_WRITE_PORT="${TAG_WRITE_PORT:-8787}"
 CATALOGUE_WRITE_PORT="${CATALOGUE_WRITE_PORT:-8788}"
 DOCS_MANAGEMENT_PORT="${DOCS_MANAGEMENT_PORT:-8789}"
+DOCS_MANAGEMENT_SERVER_ENABLED="${DOCS_MANAGEMENT_SERVER_ENABLED:-0}"
 AUDIT_SERVICE_PORT="${AUDIT_SERVICE_PORT:-8790}"
 DOCS_STARTUP_REBUILD_SCOPES="${DOCS_STARTUP_REBUILD_SCOPES:-}"
 CATALOGUE_STARTUP_LOOKUP_REBUILD="${CATALOGUE_STARTUP_LOOKUP_REBUILD:-off}"
@@ -228,7 +229,11 @@ else
 fi
 echo "Tag Write Server: http://127.0.0.1:$TAG_WRITE_PORT"
 echo "Catalogue Write Server: http://127.0.0.1:$CATALOGUE_WRITE_PORT"
-echo "Docs Management Server: http://127.0.0.1:$DOCS_MANAGEMENT_PORT"
+if [ "$DOCS_MANAGEMENT_SERVER_ENABLED" != "0" ]; then
+  echo "Docs Management Server: http://127.0.0.1:$DOCS_MANAGEMENT_PORT"
+else
+  echo "Docs Management Server: disabled (handled by Local Studio App)"
+fi
 echo "Audit Service: http://127.0.0.1:$AUDIT_SERVICE_PORT"
 echo "Series Tag Editor: http://$JEKYLL_HOST:$JEKYLL_PORT/studio/analytics/series-tag-editor/?series=<series_id>"
 if [ "${#STARTUP_DOC_SCOPES[@]}" -gt 0 ]; then
@@ -262,7 +267,9 @@ if [ "$STUDIO_APP_ENABLED" != "0" ]; then
 fi
 require_open_port "Tag Write Server" "127.0.0.1" "$TAG_WRITE_PORT" "TAG_WRITE_PORT"
 require_open_port "Catalogue Write Server" "127.0.0.1" "$CATALOGUE_WRITE_PORT" "CATALOGUE_WRITE_PORT"
-require_open_port "Docs Management Server" "127.0.0.1" "$DOCS_MANAGEMENT_PORT" "DOCS_MANAGEMENT_PORT"
+if [ "$DOCS_MANAGEMENT_SERVER_ENABLED" != "0" ]; then
+  require_open_port "Docs Management Server" "127.0.0.1" "$DOCS_MANAGEMENT_PORT" "DOCS_MANAGEMENT_PORT"
+fi
 require_open_port "Audit Service" "127.0.0.1" "$AUDIT_SERVICE_PORT" "AUDIT_SERVICE_PORT"
 
 if [ "$DOTLINEFORM_BACKUP_RETENTION" = "off" ] || [ "$DOTLINEFORM_BACKUP_RETENTION" = "0" ]; then
@@ -310,8 +317,10 @@ TAG_WRITE_PID=$!
 "$PYTHON_BIN" scripts/catalogue/catalogue_write_server.py --port "$CATALOGUE_WRITE_PORT" &
 CATALOGUE_WRITE_PID=$!
 
-"$PYTHON_BIN" scripts/docs/docs_management_server.py --port "$DOCS_MANAGEMENT_PORT" &
-DOCS_MANAGEMENT_PID=$!
+if [ "$DOCS_MANAGEMENT_SERVER_ENABLED" != "0" ]; then
+  "$PYTHON_BIN" scripts/docs/docs_management_server.py --port "$DOCS_MANAGEMENT_PORT" &
+  DOCS_MANAGEMENT_PID=$!
+fi
 
 "$PYTHON_BIN" scripts/studio/audit_service.py --port "$AUDIT_SERVICE_PORT" &
 AUDIT_SERVICE_PID=$!
@@ -340,7 +349,7 @@ while true; do
     wait "$CATALOGUE_WRITE_PID"
     break
   fi
-  if ! kill -0 "$DOCS_MANAGEMENT_PID" 2>/dev/null; then
+  if [ -n "$DOCS_MANAGEMENT_PID" ] && ! kill -0 "$DOCS_MANAGEMENT_PID" 2>/dev/null; then
     wait "$DOCS_MANAGEMENT_PID"
     break
   fi

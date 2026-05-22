@@ -30,6 +30,7 @@ Phase 1 added the first Python local Studio app server:
 
 `bin/dev-studio` now starts this app server by default during the transition.
 Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
+Docs management is handled by this app server by default; `bin/dev-studio` no longer starts `scripts/docs/docs_management_server.py` unless `DOCS_MANAGEMENT_SERVER_ENABLED=1` is set for a fallback/debug run.
 Jekyll still starts through `bin/dev-studio` for public-site preview and unmigrated Studio routes until the route migration is complete.
 
 Current mounted views:
@@ -62,8 +63,10 @@ Migrated links can declare `data-studio-navigate="<view-id>"` while retaining a 
 The same module exposes `navigateTo(view, params)`, `readStudioInitialState()`, return-context helpers backed by `sessionStorage`, and `openModal(name, params)` dispatch through the `studio:open-modal` event.
 This adapter is deliberately small and does not introduce a route framework.
 The local `/docs/` route hosts the Docs Viewer management shell through the Python app server while still using the existing Docs Viewer JavaScript, CSS, config, and generated docs payloads.
-Its management API base is `/studio/api/docs`; this now exposes real scope availability and Docs management capabilities, serves generated docs read endpoints, and calls the existing Docs management domain functions directly for migrated management routes.
-The main management API workflow routes are covered through a temporary fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, and rebuild paths through the local app server without touching real docs.
+Its management API base is `/studio/api/docs`; this now exposes live configured-scope availability and Docs management capabilities, serves generated docs read endpoints, and calls the existing Docs management domain functions directly for migrated management routes.
+The main management API workflow routes are covered through a temporary fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the local app server without touching real docs.
+Browser-level fixture smokes cover local `/docs/` manage-mode workflows through the actual UI: create, metadata edit, settings save, archive, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.
+Data-sharing UI behavior is intentionally deferred to a later cross-Studio adapter consolidation slice.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
 The server is still intentionally narrow and does not yet own catalogue, analytics, audit, or app-wide navigation APIs.
@@ -77,4 +80,8 @@ Current focused checks:
 - `tests/smoke/local_studio_app_tag_groups.py`
 - `tests/smoke/local_studio_app_docs_viewer.py`
 - `tests/smoke/local_studio_docs_management_workflows.py`
+- `tests/smoke/local_studio_docs_management_ui.py`
+- `tests/smoke/local_studio_docs_management_import_ui.py`
+- `tests/smoke/local_studio_docs_management_move_ui.py`
+- `tests/smoke/local_studio_docs_management_scope_ui.py`
 - `tests/smoke/public_docs_viewer_readonly.py`

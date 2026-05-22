@@ -20,7 +20,7 @@ Status:
 - in progress
 - Phase 0, Phase 1, and Phase 1A are implemented
 - Phase 2 is implemented
-- Phase 3 has started
+- Phase 3 is implemented for Docs Viewer manage mode
 
 ## Lifecycle Rules
 
@@ -82,9 +82,10 @@ Current commit point:
 - Phase 2 is complete with runtime config, navigation, initial-state, return-context, and modal-dispatch helpers
 - Phase 3 has started with the Docs Viewer shell and generated-read API adapter hosted by the local app server
 - Phase 3 now routes Docs management GET/POST APIs through the local app server adapter
-- Phase 3 now has fixture-backed API workflow smoke coverage for Docs create, metadata edit, move, archive, delete, source-config settings, import listing, and rebuild routes
+- Phase 3 now has fixture-backed API workflow smoke coverage for Docs create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle routes
+- Phase 3 now has fixture-backed UI workflow smoke coverage for Docs create, metadata edit, settings save, archive, delete preview/apply, import, drag/drop move, scope create/delete, and generated reload behavior in the local `/docs/` shell
 - Phase 3 now has public read-only smoke coverage for `/library/` and `/analysis/`
-- Phase 4 has started by adding the local app server to `bin/dev-studio` while keeping Jekyll and existing sibling services available for unmigrated workflows
+- Phase 4 has started by adding the local app server to `bin/dev-studio` and retiring the separate Docs management HTTP process from default startup
 - non-Docs write/manage APIs are intentionally still disabled or partial where not yet migrated
 
 ## Phase 0: Published Surface Cleanup
@@ -198,27 +199,31 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Mount the Docs Viewer management shell in the local Studio app. | partial |
-| Provide Docs Viewer management runtime config through the Python app server. | partial |
+| Mount the Docs Viewer management shell in the local Studio app. | done |
+| Provide Docs Viewer management runtime config through the Python app server. | done |
 | Define Docs Viewer route/API modules inside the Python Studio app server rather than creating a separate default Docs server. | done |
 | Move or adapt docs-management API routes into the Python Studio app server without default proxying. | done |
 | Reuse existing docs-management domain modules and response contracts. | done |
-| Keep Docs Viewer JS, CSS, UI text, scope config, payload contract, write policies, and import/rebuild/search behavior Docs-owned. | partial |
-| Preserve create, metadata edit, move, archive/delete, show hidden, rebuild, settings, and import workflows. | partial |
-| Verify generated docs payload rebuilds and docs search rebuilds still run through the expected paths. | partial |
+| Keep Docs Viewer JS, CSS, UI text, scope config, payload contract, write policies, and import/rebuild/search behavior Docs-owned. | done |
+| Preserve create, metadata edit, move, archive/delete, show hidden, rebuild, settings, import, and scope lifecycle workflows. | done |
+| Verify generated docs payload rebuilds and docs search rebuilds still run through the expected paths. | done |
 | Smoke `/docs/` manage mode on the local app host and public `/library/` plus `/analysis/` read-only behavior separately. | done |
 
 Next steps:
 
-Phase 3 has started by hosting the Docs Viewer management shell at `/docs/` through the Python Studio app server.
+Phase 3 is implemented for Docs Viewer manage mode by hosting the management shell at `/docs/` through the Python Studio app server.
 The app-server Docs API routes live behind the dedicated `studio_docs_api.py` adapter instead of being embedded in the app-server dispatcher.
-Capabilities now report real scope, generated-read, and Docs management availability.
+Capabilities now report configured scopes from the live docs scope config file, including user-created scopes that are eligible for scope lifecycle deletion.
 The adapter calls existing docs-management domain functions directly for generated reads, source-config/settings reads, import listings, data-sharing package reads, and management POST routes such as settings, create, metadata update, move, archive/delete, rebuild, scope lifecycle, import, and data sharing.
 `tests/smoke/local_studio_docs_management_workflows.py` now proves the main Docs management API workflow paths against a temporary fixture repo through the local app server.
-It patches rebuild execution inside the fixture so source writes are exercised without rebuilding real docs payloads or touching real `_docs/` files.
+It patches rebuild execution and Markdown validation inside the fixture so source writes are exercised without rebuilding real docs payloads, invoking Bundler/Jekyll validation, or touching real `_docs/` files.
+`tests/smoke/local_studio_docs_management_ui.py` proves representative UI-level management workflows through the local `/docs/` shell against the same fixture pattern.
+It covers create, metadata edit, settings save, archive, delete preview/apply, and browser reloads of generated docs index/payload data after each source mutation.
+`tests/smoke/local_studio_docs_management_import_ui.py`, `tests/smoke/local_studio_docs_management_move_ui.py`, and `tests/smoke/local_studio_docs_management_scope_ui.py` cover the remaining managed UI workflows: staged import, drag/drop move, and scope create/delete.
 `tests/smoke/public_docs_viewer_readonly.py` verifies that public `/library/` and `/analysis/` builds stay read-only, do not load management CSS, do not render management controls, and do not load Studio-only assets.
-Continue by proving individual Docs management workflows through UI-level smokes and then retiring the separate docs-management sibling process from normal `bin/dev-studio` once equivalent coverage exists.
-Temporary sibling services are acceptable only as narrow scaffolding and should be retired as each management route family moves into the app server.
+`bin/dev-studio` now treats Docs management as owned by the local Studio app server and does not start `scripts/docs/docs_management_server.py` by default.
+Set `DOCS_MANAGEMENT_SERVER_ENABLED=1` only for fallback/debug runs that intentionally need the old standalone process.
+Data-sharing-specific UI behavior remains a later adapter-consolidation slice; the Phase 3 claim is Docs Viewer manage-mode parity for the ordinary source/edit/import/scope workflows.
 Do not add a separate always-running Docs Viewer server for normal Studio; keep a possible standalone Docs Viewer launcher as a later portability option over the same modules.
 
 ## Phase 4: Local Service Consolidation
@@ -237,7 +242,7 @@ Outcomes:
 | Move endpoint ownership into the Python app server slice by slice. | pending |
 | Reuse extracted Python domain modules instead of proxying to old services by default. | pending |
 | Preserve loopback binding, CORS limits, write allowlists, backups, compact logs, and preview/apply boundaries. | pending |
-| Update `bin/dev-studio` to start the app server and only necessary background tasks. | partial |
+| Update `bin/dev-studio` to start the app server and only necessary background tasks. | partial; Docs management sibling retired from default startup |
 | Keep public Jekyll preview/build as an explicit separate action. | pending |
 
 Next steps:

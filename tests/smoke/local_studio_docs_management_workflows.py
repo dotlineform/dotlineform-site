@@ -11,6 +11,7 @@ import tempfile
 import urllib.request
 from pathlib import Path
 from threading import Thread
+from types import SimpleNamespace
 from typing import Any
 
 
@@ -55,6 +56,16 @@ def copy_scripts_fixture(target_root: Path) -> None:
         target_root / "scripts",
         ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
     )
+    (target_root / "_includes").mkdir(parents=True, exist_ok=True)
+    shutil.copy2(REPO_ROOT / "_includes" / "docs_viewer_shell.html", target_root / "_includes" / "docs_viewer_shell.html")
+    shutil.copytree(REPO_ROOT / "assets" / "docs-viewer", target_root / "assets" / "docs-viewer")
+    shutil.copytree(REPO_ROOT / "assets" / "studio", target_root / "assets" / "studio")
+    (target_root / "assets" / "css").mkdir(parents=True, exist_ok=True)
+    shutil.copy2(REPO_ROOT / "assets" / "css" / "main.css", target_root / "assets" / "css" / "main.css")
+    reports_path = REPO_ROOT / "assets" / "data" / "docs" / "reports.json"
+    if reports_path.exists():
+        (target_root / "assets" / "data" / "docs").mkdir(parents=True, exist_ok=True)
+        shutil.copy2(reports_path, target_root / "assets" / "data" / "docs" / "reports.json")
 
 
 def create_fixture_repo(target_root: Path) -> None:
@@ -77,29 +88,81 @@ def create_fixture_repo(target_root: Path) -> None:
     (target_root / "var" / "docs" / "import-staging").mkdir(parents=True)
     (target_root / "var" / "docs" / "import-staging" / "staged-doc.md").write_text("# Staged Doc\n", encoding="utf-8")
 
+    materialize_fixture_generated_docs(target_root, "studio")
+
+
+def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
+    module = studio_docs_api.load_docs_management_server_module(repo_root)
+    source_model = module.source_model
+    configs = module.docs_source_config_settings.load_docs_scope_configs(repo_root)
+    config = configs[scope]
+    try:
+        docs = source_model.load_scope_docs(repo_root, scope)
+    except (KeyError, ValueError):
+        docs = []
+        source_root = repo_root / config.source
+        for path in sorted(source_root.glob("*.md")):
+            front_matter, body = source_model.parse_source(path)
+            doc_id = str(front_matter.get("doc_id") or path.stem).strip()
+            title = str(front_matter.get("title") or source_model.humanize(doc_id or path.stem)).strip() or doc_id
+            sort_order = front_matter.get("sort_order")
+            if sort_order is not None:
+                sort_order = int(sort_order)
+            hidden = source_model.doc_is_hidden(front_matter)
+            docs.append(
+                SimpleNamespace(
+                    doc_id=doc_id,
+                    title=title,
+                    front_matter=dict(front_matter),
+                    ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
+                    parent_id=str(front_matter.get("parent_id") or "").strip(),
+                    sort_order=sort_order,
+                    published=source_model.doc_is_published(front_matter),
+                    hidden=hidden,
+                    viewable=not hidden,
+                    body=body,
+                )
+            )
+    output_root = repo_root / config.output
+    docs_payload = []
+    for doc in docs:
+        content_url = f"/{(config.output / 'by-id' / f'{doc.doc_id}.json').as_posix()}"
+        docs_payload.append(
+            {
+                "doc_id": doc.doc_id,
+                "title": doc.title,
+                "summary": str(doc.front_matter.get("summary") or ""),
+                "ui_status": doc.ui_status,
+                "parent_id": doc.parent_id,
+                "sort_order": doc.sort_order,
+                "published": doc.published,
+                "hidden": doc.hidden,
+                "viewable": doc.viewable,
+                "content_url": content_url,
+            }
+        )
+        write_json(
+            output_root / "by-id" / f"{doc.doc_id}.json",
+            {
+                "doc_id": doc.doc_id,
+                "title": doc.title,
+                "parent_id": doc.parent_id,
+                "sort_order": doc.sort_order,
+                "content_html": f"<h1 id=\"{doc.doc_id}\">{doc.title}</h1>",
+            },
+        )
     write_json(
-        target_root / "assets" / "data" / "docs" / "scopes" / "studio" / "index.json",
+        output_root / "index.json",
         {
-            "viewer_options": {"show_updated_date": True},
-            "docs": [
-                {
-                    "doc_id": "root-doc",
-                    "title": "Root Doc",
-                    "content_url": "/assets/data/docs/scopes/studio/by-id/root-doc.json",
-                }
-            ],
+            "viewer_options": {
+                "show_updated_date": config.show_updated_date,
+                "default_doc_id": config.default_doc_id,
+            },
+            "docs": docs_payload,
         },
     )
-    write_json(
-        target_root / "assets" / "data" / "docs" / "scopes" / "studio" / "by-id" / "root-doc.json",
-        {
-            "doc_id": "root-doc",
-            "title": "Root Doc",
-            "content_html": "<h1 id=\"root-doc\">Root Doc</h1>",
-        },
-    )
-    write_json(target_root / "assets" / "data" / "docs" / "scopes" / "studio" / "references" / "index.json", {"targets": []})
-    write_json(target_root / "assets" / "data" / "search" / "studio" / "index.json", {"entries": []})
+    write_json(output_root / "references" / "index.json", {"targets": []})
+    write_json(repo_root / "assets" / "data" / "search" / scope / "index.json", {"entries": []})
 
 
 def patch_rebuilds(repo_root: Path) -> None:
@@ -112,6 +175,7 @@ def patch_rebuilds(repo_root: Path) -> None:
         search_doc_ids: list[str] | None = None,
         docs_doc_ids: list[str] | None = None,
     ) -> dict[str, Any]:
+        materialize_fixture_generated_docs(_repo_root, scope)
         return {
             "ok": True,
             "fixture_rebuild": True,
@@ -119,6 +183,20 @@ def patch_rebuilds(repo_root: Path) -> None:
             "include_search": include_search,
             "search": {"mode": "targeted" if search_doc_ids else "none", "doc_ids": search_doc_ids or []},
             "docs": {"mode": "targeted" if docs_doc_ids else "full", "doc_ids": docs_doc_ids or []},
+            "steps": [],
+        }
+
+    def fake_rebuild_all_docs_outputs(_repo_root: Path) -> dict[str, Any]:
+        configs = module.docs_source_config_settings.load_docs_scope_configs(_repo_root)
+        for scope in sorted(configs):
+            materialize_fixture_generated_docs(_repo_root, scope)
+        return {
+            "ok": True,
+            "fixture_rebuild": True,
+            "scope": "",
+            "include_search": True,
+            "search": {"mode": "full", "doc_ids": []},
+            "docs": {"mode": "full", "doc_ids": []},
             "steps": [],
         }
 
@@ -142,8 +220,17 @@ def patch_rebuilds(repo_root: Path) -> None:
             docs_doc_ids=docs_doc_ids,
         )
 
+    def fake_validate_markdown_with_jekyll(_repo_root: Path, markdown: str) -> dict[str, Any]:
+        return {
+            "ok": True,
+            "html_chars": len(markdown),
+            "renderer": "fixture-markdown-validator",
+        }
+
     module.write_rebuild.rebuild_scope_outputs = fake_rebuild_scope_outputs
+    module.write_rebuild.rebuild_all_docs_outputs = fake_rebuild_all_docs_outputs
     module.write_rebuild.perform_source_write_and_rebuild = fake_perform_source_write_and_rebuild
+    sys.modules["docs_html_import"].validate_markdown_with_jekyll = fake_validate_markdown_with_jekyll
 
 
 def start_server(repo_root: Path) -> tuple[StudioAppServer, str]:
@@ -281,9 +368,68 @@ def main(argv: list[str] | None = None) -> int:
             if rebuild.get("fixture_rebuild") is not True:
                 raise AssertionError(f"rebuild route did not use fixture rebuild: {rebuild!r}")
 
+            scope_create_preview = request_json(
+                base_url,
+                "POST",
+                "/studio/api/docs/docs/scopes/create-preview",
+                {
+                    "scope_id": "apismoke",
+                    "title": "API Smoke Scope",
+                    "source_root": "_docs_apismoke",
+                    "default_doc_id": "apismoke",
+                    "publishing_mode": "local_uncommitted",
+                    "write_generated_outputs": True,
+                    "build_inline_search": True,
+                },
+            )
+            assert_ok(scope_create_preview, "scope create preview")
+            if scope_create_preview.get("scope_id") != "apismoke":
+                raise AssertionError(f"scope create preview returned unexpected payload: {scope_create_preview!r}")
+
+            scope_created = request_json(
+                base_url,
+                "POST",
+                "/studio/api/docs/docs/scopes/create-apply",
+                {
+                    "scope_id": "apismoke",
+                    "title": "API Smoke Scope",
+                    "source_root": "_docs_apismoke",
+                    "default_doc_id": "apismoke",
+                    "publishing_mode": "local_uncommitted",
+                    "write_generated_outputs": True,
+                    "build_inline_search": True,
+                    "confirm": True,
+                },
+            )
+            assert_ok(scope_created, "scope create apply")
+            if not (fixture_root / "_docs_apismoke" / "apismoke.md").exists():
+                raise AssertionError(f"scope create did not write fixture source: {scope_created!r}")
+
+            scope_delete_preview = request_json(
+                base_url,
+                "POST",
+                "/studio/api/docs/docs/scopes/delete-preview",
+                {"scope_id": "apismoke"},
+            )
+            assert_ok(scope_delete_preview, "scope delete preview")
+            if scope_delete_preview.get("allowed") is not True:
+                raise AssertionError(f"scope delete preview should be allowed: {scope_delete_preview!r}")
+
+            scope_deleted = request_json(
+                base_url,
+                "POST",
+                "/studio/api/docs/docs/scopes/delete-apply",
+                {"scope_id": "apismoke", "confirm": True},
+            )
+            assert_ok(scope_deleted, "scope delete apply")
+            if (fixture_root / "_docs_apismoke").exists():
+                raise AssertionError(f"scope delete did not remove fixture source root: {scope_deleted!r}")
+
             docs_config = (fixture_root / "scripts" / "docs" / "docs_scopes.json").read_text(encoding="utf-8")
             if '"show_updated_date": false' not in docs_config:
                 raise AssertionError("settings apply did not update fixture docs_scopes.json")
+            if "apismoke" in docs_config:
+                raise AssertionError("scope delete did not remove fixture scope config")
             print(f"local Studio Docs management workflows OK: {base_url}/studio/api/docs")
             return 0
         finally:

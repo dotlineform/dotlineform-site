@@ -16,7 +16,7 @@ Status:
 - target direction agreed
 - Phase 0, Phase 1, and Phase 1A implemented
 - Phase 2 implemented
-- Phase 3 started
+- Phase 3 implemented for Docs Viewer manage mode
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -223,6 +223,7 @@ Target direction:
 - public `/library/` and `/analysis/` continue to use read-only Docs Viewer installs
 - Docs Viewer remains portable, with management enabled only in local app/server contexts
 - Jekyll should not be required to serve the local Docs management shell once this migration lands
+- the separate Docs management HTTP server is no longer part of normal `bin/dev-studio` startup, but remains available as an explicit fallback/debug entrypoint
 
 ## Reuse Strategy
 
@@ -445,6 +446,7 @@ For projection-contract slices:
 
 ## Change Log Entries
 
+- `change-2026-05-22-added-local-docs-management-ui-smoke`
 - `change-2026-05-22-added-public-docs-readonly-smoke`
 - `change-2026-05-22-added-local-docs-management-workflow-smoke`
 - `change-2026-05-22-completed-local-studio-config-navigation-adapter`

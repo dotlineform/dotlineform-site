@@ -320,6 +320,44 @@ def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dic
     }
 
 
+def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
+    if scope in SCOPE_ROOTS:
+        return source_model.load_scope_docs(repo_root, scope)
+
+    if not root.exists():
+        return []
+    docs = []
+    for path in source_model.scope_markdown_paths(root, scope):
+        front_matter, body = source_model.parse_source(path)
+        doc_id = str(front_matter.get("doc_id") or path.stem).strip()
+        title = str(front_matter.get("title") or source_model.humanize(doc_id or path.stem)).strip() or doc_id
+        sort_order = front_matter.get("sort_order")
+        if sort_order is not None:
+            try:
+                sort_order = int(sort_order)
+            except (TypeError, ValueError):
+                sort_order = None
+        hidden = source_model.doc_is_hidden(front_matter)
+        docs.append(
+            source_model.ScopeDoc(
+                scope=scope,
+                path=path,
+                source_text=path.read_text(encoding="utf-8"),
+                front_matter=dict(front_matter),
+                body=body,
+                doc_id=doc_id,
+                title=title,
+                ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
+                parent_id=str(front_matter.get("parent_id") or "").strip(),
+                sort_order=sort_order,
+                published=source_model.doc_is_published(front_matter),
+                hidden=hidden,
+                viewable=not hidden,
+            )
+        )
+    return docs
+
+
 def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     scopes: Dict[str, Any] = {}
     try:
@@ -327,16 +365,18 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
     except (FileNotFoundError, ValueError):
         manifest = {"scopes": []}
     manifest_scopes = docs_scope_manifest.manifest_scopes_by_id(manifest)
-    for scope in sorted(SCOPE_ROOTS.keys()):
-        root = source_model.scope_root(repo_root, scope)
-        scope_docs = source_model.load_scope_docs(repo_root, scope) if root.exists() else []
+    scope_configs = docs_source_config_settings.load_docs_scope_configs(repo_root)
+    for scope in sorted(scope_configs):
+        config = scope_configs[scope]
+        root = repo_root / config.source
+        scope_docs = capability_scope_docs(repo_root, scope, root)
         manifest_record = manifest_scopes.get(scope)
         scopes[scope] = {
             "available": root.exists(),
             "root": relative_path(repo_root, root),
             "archive_available": any(doc.doc_id == "archive" for doc in scope_docs),
-            "generated_data_reads": docs_generated_reads.generated_scope_data_available(repo_root, scope),
-            "generated_search_reads": docs_generated_reads.generated_search_data_available(repo_root, scope),
+            "generated_data_reads": (repo_root / config.output / "index.json").exists(),
+            "generated_search_reads": (repo_root / "assets" / "data" / "search" / scope / "index.json").exists(),
             "count": len(scope_docs),
             "scope_lifecycle": {
                 "manifest_recorded": manifest_record is not None,
