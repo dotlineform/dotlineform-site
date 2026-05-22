@@ -50,6 +50,7 @@
 
 .docsViewerReport__filter:focus-visible,
 .docsViewerReport__select:focus-visible,
+.docsViewerReport__button:focus-visible,
 .docsViewerReport__searchInput:focus-visible,
 .docsViewerReport__searchClear:focus-visible,
 .docsViewerReport__sortButton:focus-visible,
@@ -80,6 +81,30 @@
   font: inherit;
   line-height: var(--docs-viewer-line-snug);
   padding: 0.36rem 0.52rem;
+}
+
+.docsViewerReport__button{
+  display: inline-grid;
+  place-items: center;
+  min-width: 6.5rem;
+  height: var(--docs-viewer-report-control-height);
+  border: 1px solid var(--docs-viewer-border);
+  border-radius: 6px;
+  color: var(--docs-viewer-text);
+  background: var(--docs-viewer-panel);
+  cursor: pointer;
+  font: inherit;
+  line-height: var(--docs-viewer-line-snug);
+  padding: 0 0.7rem;
+}
+
+.docsViewerReport__button:hover:not(:disabled){
+  background: var(--docs-viewer-panel-2);
+}
+
+.docsViewerReport__button:disabled{
+  cursor: default;
+  opacity: 0.55;
 }
 
 .docsViewerReport__search{
@@ -159,6 +184,11 @@
 .docsViewerReport[data-report-id="semantic_references"] .docsViewerReport__head,
 .docsViewerReport[data-report-id="semantic_references"] .docsViewerReport__row{
   grid-template-columns: minmax(12rem, 1fr) 5rem minmax(14rem, 1.4fr);
+}
+
+.docsViewerReport[data-report-id="docs_broken_links"] .docsViewerReport__head,
+.docsViewerReport[data-report-id="docs_broken_links"] .docsViewerReport__row{
+  grid-template-columns: minmax(7rem, 0.6fr) minmax(12rem, 1fr) minmax(12rem, 1fr) minmax(12rem, 1fr);
 }
 
 .docsViewerReport__head{

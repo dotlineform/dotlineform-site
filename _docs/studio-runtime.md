@@ -67,7 +67,6 @@ Active migrated shells include `/studio/`, `/docs/`, `/studio/catalogue/`, `/stu
 Remaining Jekyll route inventory:
 
 - `studio/analytics/index.md`
-- `studio/docs-broken-links/index.md`
 - `studio/data-sharing/index.md`
 - `studio/data-sharing/prepare/index.md`
 - `studio/data-sharing/review/index.md`
@@ -77,7 +76,6 @@ Current page-level doc links:
 
 - Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
 - Studio Activity -> `/docs/?scope=studio&doc=studio-activity`
-- Docs Broken Links -> `/docs/?scope=studio&doc=docs-broken-links`
 - Studio Audits -> `/docs/?scope=studio&doc=studio-audits`
 - Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
 - Catalogue Moment Editor -> `/docs/?scope=studio&doc=catalogue-moment-editor`
@@ -140,7 +138,6 @@ Shared Studio runtime and wiring currently live in:
 Current page controllers:
 
 - `assets/studio/js/activity-log.js`
-- `assets/studio/js/docs-broken-links.js`
 - `assets/studio/js/studio-audits.js`
 - `assets/docs-viewer/js/docs-html-import.js`
 - `assets/studio/js/bulk-add-work.js`

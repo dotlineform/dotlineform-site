@@ -39,6 +39,13 @@ const REPORT_LOADERS = {
         return module.mountSemanticReferencesReport;
       });
     }
+  },
+  docs_broken_links: {
+    load: function () {
+      return import("./reports/docs-broken-links-report.js").then(function (module) {
+        return module.mountDocsBrokenLinksReport;
+      });
+    }
   }
 };
 
@@ -83,6 +90,14 @@ const FALLBACK_REPORT_REGISTRY = {
       description: "Displays generated semantic-reference targets and source docs.",
       defaultAccess: "manage",
       loaderId: "semantic_references",
+      presets: []
+    },
+    {
+      reportId: "docs_broken_links",
+      title: "Docs Broken Links",
+      description: "Runs the Docs Viewer broken-links audit for a selected scope.",
+      defaultAccess: "manage",
+      loaderId: "docs_broken_links",
       presets: []
     }
   ],

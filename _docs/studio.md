@@ -88,7 +88,6 @@ Current workflow/detail routes:
 - `/studio/activity/`
 - `/studio/audits/`
 - `/studio/catalogue-field-registry/`
-- `/studio/docs-broken-links/`
 - `/studio/data-sharing/prepare/`
 - `/studio/data-sharing/review/`
 - `/studio/catalogue-status/?mode=manage`

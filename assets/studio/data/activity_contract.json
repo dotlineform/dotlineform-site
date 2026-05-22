@@ -883,13 +883,13 @@
     },
     "docs-broken-links": {
       "label": "docs broken links",
-      "route": "/studio/docs-broken-links/",
+      "route": "/docs/?scope=studio&doc=docs-broken-links&mode=manage",
       "actions": {
         "run-broken-links-audit": {
           "label": "run broken-links audit",
           "status": "v1-target",
-          "control_id": "docsBrokenLinksRun",
-          "control_selector": "#docsBrokenLinksRun",
+          "control_id": "docsBrokenLinksReportRun",
+          "control_selector": "#docsBrokenLinksReportRun",
           "control_label": "Run",
           "endpoint": "/docs/broken-links",
           "record_family": "audit",

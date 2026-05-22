@@ -20,7 +20,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 ## Summary
 
 - Browser JavaScript files under `assets/`: 170
-- Total browser JavaScript lines under `assets/`: 44,367
+- Total browser JavaScript lines under `assets/`: 44,549
 - Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 55
 - Target score: 4 or lower, with 4 meaning every risk category is present but low.
 
@@ -61,7 +61,7 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 22 | `assets/studio/js/catalogue-work-sections.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue section rendering/helper. |
 | 23 | `assets/studio/js/data-sharing-prepare.js` | Data sharing | 2 | 2 | 1 | 1 | 6 | Data sharing package preparation route shell after workflow, render, service, and module-smoke coverage. |
 | 24 | `assets/studio/js/data-sharing-review.js` | Data sharing | 2 | 1 | 1 | 1 | 5 | Returned-package review route shell after scope/action normalization, apply-action menu state, preview selection state, and result-button projection moved to `data-sharing-review-workflow.js`; service requests, result modal handoff, and route boot remain local. |
-| 25 | `assets/studio/js/docs-broken-links.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Docs broken-links audit route after shared operational route-state, required-element, service-status, and run-button projection helper adoption; scope selection, audit request payloads, sorting, and result rendering remain route-local. |
+| 25 | `assets/docs-viewer/js/reports/docs-broken-links-report.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs Broken Links report module after the old Studio route controller was retired; scope selection, local Docs API request payloads, sorting, and result rendering are report-local. |
 | 26 | `assets/studio/js/project-state.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Project state route after shared operational required-element, route-state, service-status, and run/open button projection helper adoption; report rendering, service calls, and activity context remain route-local. |
 | 27 | `assets/studio/js/catalogue-status.js` | Studio routes and shared runtime | 2 | 1 | 2 | 1 | 6 | Catalogue status route/helper. |
 | 28 | `assets/studio/js/series-tags.js` | Tag routes | 2 | 1 | 2 | 1 | 6 | Series Tags route shell after scoring, report rendering, and offline-session activation extraction. |
@@ -151,7 +151,6 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 112 | `assets/studio/js/data-sharing-prepare-workflow.js` | Data sharing | 1 | 1 | 1 | 1 | 4 | Data sharing prepare workflow projection helper. |
 | 113 | `assets/studio/js/data-sharing-review-modals.js` | Data sharing | 1 | 1 | 1 | 1 | 4 | Data sharing modal/result helper. |
 | 114 | `assets/studio/js/data-sharing-review-render.js` | Data sharing | 1 | 1 | 1 | 1 | 4 | Data sharing review preview rendering helper. |
-| 115 | `assets/studio/js/docs-viewer-scope-options.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Studio Docs Viewer scope option helper. |
 | 116 | `assets/studio/js/series-tags-import-workflow.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Series Tags import preview/apply workflow helper. |
 | 117 | `assets/studio/js/series-tags-render.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Series Tags report and table rendering helper. |
 | 118 | `assets/studio/js/studio-activity-context.js` | Studio routes and shared runtime | 1 | 1 | 1 | 1 | 4 | Activity log or activity context support. |

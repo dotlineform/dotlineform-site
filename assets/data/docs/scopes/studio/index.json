@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T20:17:28Z",
+  "generated_at": "2026-05-22T20:43:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -70,7 +70,7 @@
       "source_path": "site-request-studio-unified-activity-log-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-unified-activity-log-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-unified-activity-log-inventory.json",
-      "content_text_length": 21604,
+      "content_text_length": 21674,
       "ui_status": "done"
     },
     {
@@ -319,7 +319,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 30621
+      "content_text_length": 30815
     },
     {
       "scope": "studio",
@@ -973,7 +973,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 14498
+      "content_text_length": 14363
     },
     {
       "scope": "studio",
@@ -1375,7 +1375,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 5661
+      "content_text_length": 5634
     },
     {
       "scope": "studio",
@@ -1715,7 +1715,7 @@
       "source_path": "studio-ready-state.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ready-state",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ready-state.json",
-      "content_text_length": 8099
+      "content_text_length": 8046
     },
     {
       "scope": "studio",
@@ -2410,7 +2410,7 @@
       "source_path": "javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-inventory.json",
-      "content_text_length": 26670,
+      "content_text_length": 26491,
       "ui_status": "review"
     },
     {
@@ -2444,7 +2444,7 @@
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 6690,
+      "content_text_length": 6847,
       "ui_status": "review"
     },
     {
@@ -2544,7 +2544,7 @@
       "source_path": "docs-viewer-reports.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-reports",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-reports.json",
-      "content_text_length": 5482,
+      "content_text_length": 5709,
       "viewer_report": "reports_list",
       "viewer_report_access": "public"
     },
@@ -2971,7 +2971,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 25130,
+      "content_text_length": 25114,
       "ui_status": "in-progress"
     },
     {
@@ -3164,7 +3164,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 9283
+      "content_text_length": 9260
     },
     {
       "scope": "studio",
@@ -3404,7 +3404,7 @@
       "source_path": "scripts-docs-management-server-generated-reads.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server-generated-reads.json",
-      "content_text_length": 9802
+      "content_text_length": 9816
     },
     {
       "scope": "studio",
@@ -3596,7 +3596,10 @@
       "source_path": "docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-broken-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-broken-links.json",
-      "content_text_length": 2537
+      "content_text_length": 2069,
+      "ui_status": "report",
+      "viewer_report": "docs_broken_links",
+      "viewer_report_access": "manage"
     },
     {
       "scope": "studio",
@@ -3612,7 +3615,7 @@
       "source_path": "scripts-docs-broken-links.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-broken-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-broken-links.json",
-      "content_text_length": 1943
+      "content_text_length": 1947
     },
     {
       "scope": "studio",
@@ -4108,7 +4111,7 @@
       "source_path": "site-request-studio-ready-state-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-ready-state-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-ready-state-contract.json",
-      "content_text_length": 9746,
+      "content_text_length": 9648,
       "ui_status": "done"
     },
     {
@@ -4892,7 +4895,7 @@
       "source_path": "javascript-maintenance-risk-mitigation.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-maintenance-risk-mitigation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-maintenance-risk-mitigation.json",
-      "content_text_length": 35582,
+      "content_text_length": 35658,
       "ui_status": "done"
     },
     {

@@ -135,7 +135,7 @@ The script-purpose label describes each downstream operation recorded as its own
 | Studio data import | `/studio/import/` | `#dataImportPreview` | none | none | `excluded` | Preview-only commands should not be reported unless implementation finds they persist data. |
 | Studio data import | `/studio/import/` | `#dataImportUpdateSummary` | `update import summaries` | import apply preflight; source doc backups; summary field writes; result counts | `done` | Batch C coverage for confirmed apply writes; preflight remains excluded. |
 | Studio data import | `/studio/import/` | `#dataImportApplyHierarchy` | `update import hierarchy` | import apply preflight; source doc backups; parent-id writes; result counts | `done` | Batch C coverage for confirmed apply writes; preflight remains excluded. |
-| Docs broken links | `/studio/docs-broken-links/` | `#docsBrokenLinksRun` | `run broken-links audit` | broken-link scan; generated result list | `done` | Batch C report coverage. |
+| Docs broken links | `/docs/?scope=studio&doc=docs-broken-links&mode=manage` | `#docsBrokenLinksReportRun` | `run broken-links audit` | broken-link scan; generated result list | `done` | Batch C report coverage now runs from the Docs Viewer report. |
 | Library documents | `/studio/library-documents/` | sort/filter/open controls | none | none | `excluded` | Review surface only. |
 
 ## Tag Pages

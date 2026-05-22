@@ -541,7 +541,6 @@ Candidate files and current scores:
 
 - `assets/studio/js/bulk-add-work.js`: 5
 - `assets/studio/js/data-sharing-review.js`: 5
-- `assets/studio/js/docs-broken-links.js`: 5
 - `assets/studio/js/project-state.js`: 5
 - `assets/studio/js/studio-audits.js`: 5
 - `assets/studio/js/thumbnail-quality.js`: 5
@@ -564,7 +563,7 @@ Owner:
 First adopters:
 
 - `assets/studio/js/bulk-add-work.js`
-- `assets/studio/js/docs-broken-links.js`
+- `assets/studio/js/docs-broken-links.js` (later retired when Docs Broken Links moved into Docs Viewer reports)
 
 Scope:
 
@@ -574,12 +573,12 @@ Scope:
 Expected score movement:
 
 - `assets/studio/js/bulk-add-work.js`: 7 -> 6
-- `assets/studio/js/docs-broken-links.js`: 6 -> 5
+- `assets/studio/js/docs-broken-links.js`: 6 -> 5 before the route was retired
 
 Acceptance checks:
 
 - `tests/smoke/studio_operational_route_modules.py` covers required-element collection, ready/busy projection, service availability display, run-button disabled projection, and first-adopter route imports
-- `tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work and Docs Broken Links reach the Studio ready state with local service probes blocked
+- `tests/smoke/operational_routes_ready_state.py` verified Bulk Add Work and Docs Broken Links reached the Studio ready state with local service probes blocked before Docs Broken Links moved into Docs Viewer reports
 
 #### D2: Bulk Add Work Workflow Split
 
@@ -604,7 +603,7 @@ Expected score movement:
 Acceptance checks:
 
 - `tests/smoke/bulk_add_work_workflow_modules.py` covers preview summary rendering, blocked-row details, run-state view model, apply-blocked projection, and apply result/warning projection
-- `tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work and Docs Broken Links reach the Studio ready state with local service probes blocked
+- `tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work reaches the Studio ready state with local service probes blocked
 - `node --check` passes for `bulk-add-work.js`, `bulk-add-work-workflow.js`, and `studio-operational-route.js`
 
 #### D3: Data Sharing Review Apply Workflow Owner
@@ -658,7 +657,7 @@ Expected score movement:
 Acceptance checks:
 
 - `tests/smoke/studio_operational_route_modules.py` imports all D1/D4 operational helper adopters and covers required-element collection, route-state projection, service-status rendering, and run-button disabled projection
-- `tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work, Docs Broken Links, Project State, Studio Audits, and Thumbnail Quality reach Studio ready state with local service probes blocked and primary action buttons disabled
+- `tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work, Project State, Studio Audits, and Thumbnail Quality reach Studio ready state with local service probes blocked and primary action buttons disabled
 - `node --check` passes for `project-state.js`, `studio-audits.js`, and `thumbnail-quality.js`
 
 ### Task E: Public Runtime Measurable Maintenance And Performance Follow-Up

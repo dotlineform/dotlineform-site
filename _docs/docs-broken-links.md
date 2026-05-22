@@ -2,17 +2,21 @@
 doc_id: docs-broken-links
 title: Docs Broken Links
 added_date: 2026-04-23
-last_updated: "2026-05-22"
+last_updated: 2026-05-22
+ui_status: report
 parent_id: docs-viewer
 sort_order: 18000
+viewable: true
+viewer_report: docs_broken_links
+viewer_report_access: manage
 ---
 # Docs Broken Links
 
-This page provides a Studio-facing audit for Docs Viewer links that no longer resolve.
+This report audits Docs Viewer links that no longer resolve.
 
 Route:
 
-- `/studio/docs-broken-links/`
+- `/docs/?scope=studio&doc=docs-broken-links&mode=manage`
 
 Use it to run a broken-links check for one configured docs scope at a time.
 The scope menu is rendered from the shared Docs Viewer config:
@@ -23,7 +27,7 @@ The scope menu is rendered from the shared Docs Viewer config:
 
 ## What It Checks
 
-The page reports one problem type:
+The report shows one problem type:
 
 - `not found`
   the link points at a docs page that does not exist
@@ -38,7 +42,7 @@ Current rule:
 
 ## Result Columns
 
-The page shows:
+The report table shows:
 
 - `problem`
 - `from page`
@@ -55,37 +59,25 @@ Current behavior:
 
 ## Runtime Boundary
 
-The page depends on the local Docs Management Server.
+The report depends on the local Docs management API through the local Studio app server.
 
 Current flow:
 
-1. user selects a docs scope
-2. page sends `POST /docs/broken-links` to the localhost docs-management service
-3. service runs the shared docs broken-links audit logic for that scope
-4. page renders the returned issue list
+1. Docs Viewer loads this report-backed document in manage mode
+2. the report module selects the current or requested docs scope
+3. the report sends `POST /docs/broken-links` through `/studio/api/docs`
+4. the API adapter runs the shared docs broken-links audit logic for that scope
+5. the report renders the returned issue list
 
-The page is therefore a Studio maintenance surface for a read-only docs audit, not a public hosted feature.
+This is a Docs Viewer management report for a read-only docs audit, not a public hosted feature.
 
-Target migration:
-
-- move this workflow into Docs Viewer reports because the audit is scope-based Docs Viewer reporting
-- keep the current `/studio/docs-broken-links/` shell only until the Docs Viewer report entry point exists
-- retire the Studio route shell after the report replacement is verified
-
-## Route Ready State
-
-The page root `#docsBrokenLinksRoot` exposes the shared Studio route-ready contract:
-
-- `data-studio-ready` is `false` during initial config and Docs Management Server checks, then `true` after the initial disabled or interactive state is rendered
-- `data-studio-busy` is `true` while an audit request is running
-- `data-studio-mode` is `idle` before results and `results` after issues are loaded
-- `data-studio-service` reports whether the Docs Management Server is available
-- `data-studio-record-loaded` is `true` when audit entries are loaded
+The old `/studio/docs-broken-links/` route shell and Studio page controller have been retired.
+The reusable Python audit remains under `scripts/docs/docs_broken_links.py`, and the local Docs API endpoint remains `POST /docs/broken-links`.
 
 ## Related References
 
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
+- [Docs Viewer Reports](/docs/?scope=studio&doc=docs-viewer-reports)
 - [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links)
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
-- [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)

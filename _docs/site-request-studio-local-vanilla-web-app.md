@@ -269,7 +269,7 @@ Current route controllers are browser ES modules that generally bind to stable D
 The migration should preserve those contracts first and replace only the Jekyll/Liquid route shell around them.
 
 Docs Broken Links is not a good long-term standalone Studio route.
-It is a scope-based Docs Viewer report over generated docs links, so the target migration should move it into the Docs Viewer reports surface and retire `/studio/docs-broken-links/` only after that report exists.
+It is a scope-based Docs Viewer report over generated docs links, so the migration moved it into the Docs Viewer reports surface and retired `/studio/docs-broken-links/` after that report existed.
 
 Reusable as-is or with small adapters:
 

@@ -15,11 +15,6 @@ ROUTES = [
         "button": "#bulkAddWorkPreview",
     },
     {
-        "path": "/studio/docs-broken-links/",
-        "root": "#docsBrokenLinksRoot",
-        "button": "#docsBrokenLinksRun",
-    },
-    {
         "path": "/studio/project-state/",
         "root": "#projectStateRoot",
         "button": "#projectStateRunButton",

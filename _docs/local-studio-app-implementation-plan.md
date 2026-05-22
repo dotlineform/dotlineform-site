@@ -20,7 +20,7 @@ Status:
 - in progress
 - Phase 0, Phase 1, and Phase 1A are implemented
 - Phase 2 is implemented
-- Phase 3 is implemented for Docs Viewer manage mode
+- Phase 3 is implemented for Docs Viewer manage mode and the Docs Broken Links report replacement
 - Phase 4 is in progress with Docs management and analytics tag routes consolidated into the local app server
 - Phase 5 has started with the local Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Studio Works, and catalogue editor route shells
 
@@ -88,6 +88,7 @@ Current commit point:
 - Phase 3 now has fixture-backed API workflow smoke coverage for Docs create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle routes
 - Phase 3 now has fixture-backed UI workflow smoke coverage for Docs create, metadata edit, settings save, archive, delete preview/apply, import, drag/drop move, scope create/delete, and generated reload behavior in the local `/docs/` shell
 - Phase 3 now has public read-only smoke coverage for `/library/` and `/analysis/`
+- Phase 3 now hosts Docs Broken Links as a Docs Viewer report and has retired the old `/studio/docs-broken-links/` route shell
 - Phase 4 has started by adding the local app server to `bin/dev-studio` and retiring the separate Docs management HTTP process from default startup
 - Phase 4 now has the first analytics API route module, serving tag read data through the local app server
 - Phase 4 now has the first analytics write route, `POST /studio/api/analytics/save-tags`, through the local app server
@@ -102,7 +103,7 @@ Current commit point:
 - Phase 5 has started by mounting `/studio/catalogue/?mode=manage`, `/studio/analytics/?mode=manage`, `/studio/audits/?mode=manage`, `/studio/project-state/?mode=manage`, `/studio/thumbnail-quality/?mode=manage`, `/studio/bulk-add-work/?mode=manage`, `/studio/activity/?mode=manage`, `/studio/catalogue-field-registry/?mode=manage`, `/studio/catalogue-status/?mode=manage`, `/studio/studio-works/?mode=manage`, `/studio/catalogue-series/?mode=manage`, `/studio/catalogue-work/?mode=manage`, `/studio/catalogue-work-detail/?mode=manage`, and `/studio/catalogue-moment/?mode=manage` in the local app and retiring the old Jekyll shells while leaving their sibling service APIs in place for now
 - the old Jekyll `/studio/` landing shell is retired; `/studio/` is now the local app home during Studio sessions
 - Studio route URL building now preserves configured route query state such as `?mode=manage` while appending record parameters for migrated catalogue editor links
-- Docs Broken Links should move into Docs Viewer reports rather than becoming another migrated Studio route shell
+- Docs Broken Links moved into Docs Viewer reports rather than becoming another migrated Studio route shell
 - non-Docs write/manage APIs are intentionally still disabled or partial where not yet migrated
 
 ## Phase 0: Published Surface Cleanup
@@ -227,7 +228,7 @@ Outcomes:
 | Preserve create, metadata edit, move, archive/delete, show hidden, rebuild, settings, import, and scope lifecycle workflows. | done |
 | Verify generated docs payload rebuilds and docs search rebuilds still run through the expected paths. | done |
 | Smoke `/docs/` manage mode on the local app host and public `/library/` plus `/analysis/` read-only behavior separately. | done |
-| Move Docs Broken Links into Docs Viewer reports instead of migrating `/studio/docs-broken-links/` as a standalone Studio route. | pending |
+| Move Docs Broken Links into Docs Viewer reports instead of migrating `/studio/docs-broken-links/` as a standalone Studio route. | done |
 
 Next steps:
 
@@ -245,7 +246,7 @@ It covers create, metadata edit, settings save, archive, delete preview/apply, a
 Set `DOCS_MANAGEMENT_SERVER_ENABLED=1` only for fallback/debug runs that intentionally need the old standalone process.
 Data-sharing-specific UI behavior remains a later adapter-consolidation slice; the Phase 3 claim is Docs Viewer manage-mode parity for the ordinary source/edit/import/scope workflows.
 Docs Broken Links is also a Docs Viewer concern because it is a scope-based report over generated docs links.
-Do not migrate `/studio/docs-broken-links/` as a permanent Studio route shell; add it as a Docs Viewer report, then retire the old Studio shell after the report entry point exists.
+It now lives on the `docs-broken-links` Studio docs page through `viewer_report: docs_broken_links`, calls the local Docs API endpoint `POST /docs/broken-links`, and replaces the retired `/studio/docs-broken-links/` shell.
 Do not add a separate always-running Docs Viewer server for normal Studio; keep a possible standalone Docs Viewer launcher as a later portability option over the same modules.
 
 ## Phase 4: Local Service Consolidation
@@ -316,7 +317,7 @@ Outcomes:
 | Replace ad hoc Studio route query concatenation with the shared route URL builder as routes are migrated. | partial; catalogue editor and series-tag editor links now preserve configured route query state while appending record ids |
 | Retire Jekyll Studio route files after each replacement is verified. | partial; analytics dashboard/tag route files plus catalogue dashboard, audits, project-state, thumbnail-quality, bulk-add-work, activity, catalogue-field-registry, catalogue-status, studio-works, and catalogue editor route files retired |
 | Retire the Jekyll `/studio/` landing shell after the local app owns `/studio/`. | done |
-| Retire `/studio/docs-broken-links/` only after the Docs Viewer report replacement exists. | pending |
+| Retire `/studio/docs-broken-links/` only after the Docs Viewer report replacement exists. | done |
 | Keep temporary redirects only where useful for local transition ergonomics. | pending |
 
 Next steps:

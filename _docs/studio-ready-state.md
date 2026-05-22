@@ -153,7 +153,6 @@ Route-specific Studio roots:
 - `/studio/catalogue-work-detail/` with `#catalogueWorkDetailRoot`
 - `/studio/data-sharing/prepare/` with `#dataSharingPrepareRoot`
 - `/studio/data-sharing/review/` with `#dataSharingReviewRoot`
-- `/studio/docs-broken-links/` with `#docsBrokenLinksRoot`
 - `/studio/project-state/` with `#projectStateRoot`
 - `/studio/thumbnail-quality/` with `#thumbnailQualityRoot`
 - `/studio/studio-works/` with `#worksStudioRoot`

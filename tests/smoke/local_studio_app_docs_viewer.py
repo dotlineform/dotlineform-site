@@ -86,6 +86,7 @@ def main(argv: list[str] | None = None) -> int:
             errors: list[str] = []
             generated_requests: list[str] = []
             management_posts: list[str] = []
+            broken_link_requests: list[str] = []
             page.on("pageerror", lambda exc: errors.append(str(exc)))
             page.on(
                 "request",
@@ -97,6 +98,12 @@ def main(argv: list[str] | None = None) -> int:
                 "request",
                 lambda request: management_posts.append(request.url)
                 if request.method == "POST" and "/studio/api/docs/docs/" in request.url
+                else None,
+            )
+            page.on(
+                "request",
+                lambda request: broken_link_requests.append(request.url)
+                if request.method == "POST" and "/studio/api/docs/docs/broken-links" in request.url
                 else None,
             )
             page.goto(f"{base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage", wait_until="domcontentloaded")
@@ -145,6 +152,19 @@ def main(argv: list[str] | None = None) -> int:
             docs_box = page.locator("#docsViewerRoot").bounding_box()
             title = page.locator("#docsViewerContent h1").inner_text()
             final_url = page.url
+            page.goto(f"{base_url}/docs/?scope=studio&doc=docs-broken-links&mode=manage", wait_until="domcontentloaded")
+            page.wait_for_selector('#docsViewerContent .docsViewerReport[data-report-id="docs_broken_links"]', timeout=args.timeout_ms)
+            page.wait_for_function(
+                """() => {
+                    const report = document.querySelector('.docsViewerReport[data-report-id="docs_broken_links"]');
+                    const button = document.querySelector('#docsBrokenLinksReportRun');
+                    const status = report && report.querySelector('.docsViewerReport__status');
+                    return report && button && !button.disabled && status && !/Running/.test(status.textContent);
+                }""",
+                timeout=args.timeout_ms,
+            )
+            report_status = page.locator('.docsViewerReport[data-report-id="docs_broken_links"] .docsViewerReport__status').inner_text()
+            report_scope = page.locator('.docsViewerReport[data-report-id="docs_broken_links"] select').input_value()
             browser.close()
 
         if root_attrs != {
@@ -180,6 +200,12 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"expected mode=manage in URL, got {final_url}")
         if title != "Docs Viewer":
             raise AssertionError(f"unexpected docs title: {title!r}")
+        if not any("/docs/broken-links" in url for url in broken_link_requests):
+            raise AssertionError(f"expected broken-links report request through local Docs API: {broken_link_requests!r}")
+        if report_scope != "studio":
+            raise AssertionError(f"expected broken-links report to default to Studio scope, got {report_scope!r}")
+        if "studio" not in report_status:
+            raise AssertionError(f"expected broken-links report status to include selected scope, got {report_status!r}")
         if errors:
             raise AssertionError(f"page errors during local Docs Viewer smoke: {errors!r}")
         print(f"local Studio Docs Viewer OK: {base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage")

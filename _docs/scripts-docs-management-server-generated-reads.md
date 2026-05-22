@@ -65,7 +65,7 @@ Current behavior:
 - management mutation planners for create, metadata, viewability, move, normalize-order, archive, and delete flows are owned by `scripts/docs/docs_management_mutations.py`; the server still parses requests, performs backups where configured, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
 - Data Sharing HTTP endpoints are hosted here for now, with neutral route constants and shared dispatch owned by `scripts/studio/` and Library document behavior owned by `scripts/docs/documents_data_sharing_adapter.py`
 - used by `/docs/?scope=<scope>&mode=manage` for configured docs scopes
-- also used by `/studio/docs-broken-links/` for a read-only docs link audit
+- also used by the `docs_broken_links` Docs Viewer report for a read-only docs link audit
 - also used by the `/docs/` management import modal for staged-file listing and source import writes
 - also used by `/studio/data-sharing/prepare/` to dispatch Library package preparation to the documents Data Sharing adapter
 - also used by `/studio/data-sharing/review/` to dispatch staged-file listing, Markdown review generation, summary apply, and hierarchy apply to the documents Data Sharing adapter

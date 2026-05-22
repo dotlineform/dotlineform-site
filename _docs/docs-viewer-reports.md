@@ -114,6 +114,9 @@ It reads ignored local projections under `_docs_logs/generated/` through the doc
 It reads the current scope's `references/index.json` plus per-target buckets from `references/by-target/`.
 The report defaults to all configured docs scopes and provides a `report_scope` selector for focusing on one scope.
 
+`docs_broken_links` runs the Docs Viewer broken-links audit for a selected scope in manage mode.
+It uses the local Docs API endpoint `POST /docs/broken-links` and replaces the retired `/studio/docs-broken-links/` Studio route shell.
+
 ## Good Candidates
 
 Good report candidates are compact, read-oriented views over generated docs data:

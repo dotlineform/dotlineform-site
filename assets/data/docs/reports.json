@@ -58,6 +58,14 @@
       "default_access": "manage",
       "loader_id": "semantic_references",
       "presets": []
+    },
+    {
+      "report_id": "docs_broken_links",
+      "title": "Docs Broken Links",
+      "description": "Runs the Docs Viewer broken-links audit for a selected scope.",
+      "default_access": "manage",
+      "loader_id": "docs_broken_links",
+      "presets": []
     }
   ]
 }

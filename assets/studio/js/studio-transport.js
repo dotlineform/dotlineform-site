@@ -46,7 +46,6 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
 
 const DOCS_MANAGEMENT_ENDPOINTS = Object.freeze({
   health: "http://127.0.0.1:8789/health",
-  brokenLinks: "http://127.0.0.1:8789/docs/broken-links",
   generatedIndex: "http://127.0.0.1:8789/docs/generated/index",
   generatedSearch: "http://127.0.0.1:8789/docs/generated/search",
   importSource: "http://127.0.0.1:8789/docs/import-source",

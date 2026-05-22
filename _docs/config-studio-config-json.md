@@ -98,7 +98,6 @@ Current bundles:
 - `catalogue-status.json`
 - `data-sharing-review.json`
 - `data-sharing-prepare.json`
-- `docs-broken-links.json`
 - `docs-viewer.json`
 - `library-documents.json`
 - `project-state.json`

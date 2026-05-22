@@ -75,15 +75,15 @@ Flags:
 - `--repo-root PATH`
   override repo-root auto-detection
 - `--json`
-  print the structured payload used by the Studio page and docs-management endpoint
+  print the structured payload used by the Docs Viewer report and docs-management endpoint
 
-## Studio Integration
+## Docs Viewer Integration
 
-The Studio route `/studio/docs-broken-links/` uses this same audit logic through the Docs Management Server endpoint:
+The Docs Viewer report [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links) uses this same audit logic through the Docs management endpoint:
 
 - `POST /docs/broken-links`
 
-That keeps the browser page thin while leaving the audit reusable from the terminal.
+That keeps the browser report thin while leaving the audit reusable from the terminal.
 
 ## Related References
 

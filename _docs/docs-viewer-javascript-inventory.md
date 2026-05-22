@@ -17,8 +17,8 @@ It uses the same four-risk scoring model as the parent inventory, but limits the
 
 Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).
 
-- Docs Viewer browser JavaScript files in the full inventory: 34
-- Files above target score 4: 13
+- Docs Viewer browser JavaScript files in the full inventory: 35
+- Files above target score 4: 14
 - General risk themes: shared runtime composition, management coordinator growth, import workflow ownership, scope lifecycle, search/bookmark controller boundaries, and lazy management loading.
 
 | Score | Files |
@@ -27,7 +27,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 8 | 1 |
 | 7 | 0 |
 | 6 | 6 |
-| 5 | 6 |
+| 5 | 7 |
 | 4 | 21 |
 
 ## Current Priorities
@@ -46,28 +46,29 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 | 10 | 36 | `assets/docs-viewer/js/docs-viewer-search-controller.js` | 2 | 1 | 1 | 1 | 5 | Docs Viewer search helper or controller. |
 | 11 | 54 | `assets/docs-viewer/js/docs-viewer-document-controller.js` | 1 | 2 | 1 | 1 | 5 | Docs Viewer document rendering/controller support. |
 | 12 | 55 | `assets/docs-viewer/js/docs-viewer-reports.js` | 1 | 2 | 1 | 1 | 5 | Docs Viewer runtime support module. |
-| 13 | 56 | `assets/docs-viewer/js/docs-viewer-router.js` | 1 | 2 | 1 | 1 | 5 | Docs Viewer routing and history helper. |
-| 14 | 59 | `assets/docs-viewer/js/docs-html-import-modals.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 15 | 60 | `assets/docs-viewer/js/docs-html-import-render.js` | 1 | 1 | 1 | 1 | 4 | Docs import result rendering helper. |
-| 16 | 61 | `assets/docs-viewer/js/docs-viewer-data.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 17 | 62 | `assets/docs-viewer/js/docs-viewer-drag-drop.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 18 | 63 | `assets/docs-viewer/js/docs-viewer-favourites.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer bookmark/favourite support. |
-| 19 | 64 | `assets/docs-viewer/js/docs-viewer-management-capabilities.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 20 | 65 | `assets/docs-viewer/js/docs-viewer-management-client.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 21 | 66 | `assets/docs-viewer/js/docs-viewer-management-config.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 22 | 67 | `assets/docs-viewer/js/docs-viewer-management-interactions.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 23 | 68 | `assets/docs-viewer/js/docs-viewer-management-render.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 24 | 69 | `assets/docs-viewer/js/docs-viewer-render.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer rendering helper. |
-| 25 | 70 | `assets/docs-viewer/js/docs-viewer-search.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer search helper or controller. |
-| 26 | 71 | `assets/docs-viewer/js/docs-viewer-sidebar.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 27 | 72 | `assets/docs-viewer/js/docs-viewer-tree.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 28 | 73 | `assets/docs-viewer/js/reports/change-history-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 29 | 74 | `assets/docs-viewer/js/reports/docs-index-table-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 30 | 75 | `assets/docs-viewer/js/reports/reports-list-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 31 | 76 | `assets/docs-viewer/js/reports/semantic-references-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 32 | 77 | `assets/docs-viewer/js/reports/source-config-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 33 | 152 | `assets/docs-viewer/js/docs-viewer-management-action-workflow.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
-| 34 | 153 | `assets/docs-viewer/js/docs-viewer-index-panel.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, persistence migration, toggle projection, and document-pane visibility helper. |
+| 13 | 25 | `assets/docs-viewer/js/reports/docs-broken-links-report.js` | 2 | 1 | 1 | 1 | 5 | Docs Broken Links report module after the old Studio route controller was retired. |
+| 14 | 56 | `assets/docs-viewer/js/docs-viewer-router.js` | 1 | 2 | 1 | 1 | 5 | Docs Viewer routing and history helper. |
+| 15 | 59 | `assets/docs-viewer/js/docs-html-import-modals.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 16 | 60 | `assets/docs-viewer/js/docs-html-import-render.js` | 1 | 1 | 1 | 1 | 4 | Docs import result rendering helper. |
+| 17 | 61 | `assets/docs-viewer/js/docs-viewer-data.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 18 | 62 | `assets/docs-viewer/js/docs-viewer-drag-drop.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 19 | 63 | `assets/docs-viewer/js/docs-viewer-favourites.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer bookmark/favourite support. |
+| 20 | 64 | `assets/docs-viewer/js/docs-viewer-management-capabilities.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 21 | 65 | `assets/docs-viewer/js/docs-viewer-management-client.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 22 | 66 | `assets/docs-viewer/js/docs-viewer-management-config.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 23 | 67 | `assets/docs-viewer/js/docs-viewer-management-interactions.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 24 | 68 | `assets/docs-viewer/js/docs-viewer-management-render.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 25 | 69 | `assets/docs-viewer/js/docs-viewer-render.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer rendering helper. |
+| 26 | 70 | `assets/docs-viewer/js/docs-viewer-search.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer search helper or controller. |
+| 27 | 71 | `assets/docs-viewer/js/docs-viewer-sidebar.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 28 | 72 | `assets/docs-viewer/js/docs-viewer-tree.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 29 | 73 | `assets/docs-viewer/js/reports/change-history-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 30 | 74 | `assets/docs-viewer/js/reports/docs-index-table-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 31 | 75 | `assets/docs-viewer/js/reports/reports-list-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 32 | 76 | `assets/docs-viewer/js/reports/semantic-references-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 33 | 77 | `assets/docs-viewer/js/reports/source-config-report.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 34 | 152 | `assets/docs-viewer/js/docs-viewer-management-action-workflow.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
+| 35 | 153 | `assets/docs-viewer/js/docs-viewer-index-panel.js` | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, persistence migration, toggle projection, and document-pane visibility helper. |
 
 ## Follow-Up Notes
 
