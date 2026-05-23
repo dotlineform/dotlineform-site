@@ -184,6 +184,8 @@ Studio navigation helpers should resolve public-content links through that confi
 The runtime config now exposes `app.runtime.sites.public_preview.base` and `app.runtime.sites.production.base`, and `assets/studio/js/studio-navigation.js` exposes `buildPublicSiteUrl(config, path, params, options)`.
 Route migrations should use that helper when they touch public-content links; existing links are not rewritten automatically.
 The migrated per-series tag editor now uses this resolver for its header links to the public series page and primary work page, so those links open on the configured public preview host during local Studio sessions.
+The migrated Catalogue editor summaries also use this resolver through `assets/studio/js/catalogue-public-links.js` for public work, series, work detail, and moment links.
+Editor-to-editor links remain local Studio routes.
 The local `/docs/` route hosts the Docs Viewer management shell through the Python app server while still using the existing Docs Viewer JavaScript, CSS, config, and generated docs payloads.
 Its management API base is `/studio/api/docs`; this now exposes live configured-scope availability and Docs management capabilities, serves generated docs read endpoints, and calls shared Docs management service functions directly for migrated management routes.
 The main management API workflow routes are covered through a temporary fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the local app server without touching real docs.

@@ -1,7 +1,9 @@
 import {
-  getStudioRoute,
   getStudioText
 } from "./studio-config.js";
+import {
+  buildPublicSeriesUrl
+} from "./catalogue-public-links.js";
 import {
   catalogueReadinessItems,
   catalogueReadinessItemSummary,
@@ -113,7 +115,7 @@ export function updateSeriesSummary(state, options = {}) {
 
   const record = state.currentRecord;
   state.metaNode.textContent = record ? `${record.series_id} · ${buildSeriesRecordSummary(record)}` : "";
-  const publicHref = record ? `${getStudioRoute(state.config, "series_page_base")}${encodeURIComponent(record.series_id)}/` : "";
+  const publicHref = record ? buildPublicSeriesUrl(state.config, record.series_id) : "";
   const memberCount = getCurrentSeriesMemberEntries(state).length;
   state.summaryNode.innerHTML = `
     <div class="tagStudioForm__field">

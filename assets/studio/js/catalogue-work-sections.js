@@ -1,8 +1,11 @@
 import {
   buildStudioRouteUrl,
-  getStudioRoute,
   getStudioText
 } from "./studio-config.js";
+import {
+  buildPublicSeriesUrl,
+  buildPublicWorkUrl
+} from "./catalogue-public-links.js";
 import {
   cataloguePreviewFallback,
   catalogueReadinessItem,
@@ -127,11 +130,10 @@ function buildSeriesSummaryHtml(state, options, seriesIds) {
     return escapeHtml(text(state, options, "context_series_empty", "No series assigned."));
   }
 
-  const seriesBase = getStudioRoute(state.config, "series_page_base");
   return seriesIds.map((seriesId) => {
     const seriesRecord = state.seriesById.get(seriesId);
     const label = seriesRecord && seriesRecord.title ? `${seriesId} · ${seriesRecord.title}` : seriesId;
-    const href = `${seriesBase}${encodeURIComponent(seriesId)}/`;
+    const href = buildPublicSeriesUrl(state.config, seriesId);
     return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
   }).join("<br>");
 }
@@ -240,7 +242,7 @@ export function renderWorkCurrentPreview(state, options = {}) {
   const caption = buildWorkRecordSummary(record);
   const canShowGenerated = !mediaItem || normalizeText(mediaItem.status) === "ready";
   const previewState = preview.src && canShowGenerated ? "loading" : fallback.fallbackState;
-  const publicHref = `${getStudioRoute(state.config, "works_page_base")}${encodeURIComponent(record.work_id)}/`;
+  const publicHref = buildPublicWorkUrl(state.config, record.work_id);
   const isPublished = normalizeText(record && record.status).toLowerCase() === "published";
   const previewHref = isPublished ? publicHref : normalizeText(preview.fullSrc);
   const previewTarget = isPublished ? "" : "_blank";
@@ -537,8 +539,7 @@ export function updateWorkSummary(state, options = {}) {
     : "";
 
   const seriesIds = parseSeriesIds(state.draft.series_ids);
-  const workBase = getStudioRoute(state.config, "works_page_base");
-  const publicHref = record ? `${workBase}${encodeURIComponent(record.work_id)}/` : "";
+  const publicHref = record ? buildPublicWorkUrl(state.config, record.work_id) : "";
   state.summaryNode.innerHTML = `
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(text(state, options, "summary_public_link", "Open public work page"))}</span>

@@ -68,6 +68,9 @@ def main(argv: list[str] | None = None) -> int:
             runtime_config = json.loads(response.read().decode("utf-8"))
         runtime_views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
         runtime_by_id = {view.get("id"): view for view in runtime_views if isinstance(view, dict)}
+        public_preview_base = runtime_config.get("app", {}).get("runtime", {}).get("sites", {}).get("public_preview", {}).get("base", "")
+        if not public_preview_base:
+            raise AssertionError(f"runtime config missing public preview base: {runtime_config!r}")
         for route in ROUTES:
             runtime_view = runtime_by_id.get(route["id"])
             if not runtime_view or runtime_view.get("path") != route["path"]:
@@ -110,6 +113,41 @@ def main(argv: list[str] | None = None) -> int:
                 nav_link = page.locator(f'.site-nav [data-studio-navigate="{route["id"]}"]').get_attribute("href")
                 if nav_link != route["path"]:
                     raise AssertionError(f"{route['id']} nav link is not manage-mode: {nav_link!r}")
+
+            public_link_checks = [
+                {
+                    "url": "/studio/catalogue-series/?mode=manage&series=001",
+                    "root": "#catalogueSeriesRoot",
+                    "selector": "#catalogueSeriesSummary a[href*='/series/']",
+                    "prefix": f"{public_preview_base}/series/001/",
+                },
+                {
+                    "url": "/studio/catalogue-work/?mode=manage&work=00001",
+                    "root": "#catalogueWorkRoot",
+                    "selector": "#catalogueWorkSummary a[href*='/works/']",
+                    "prefix": f"{public_preview_base}/works/00001/",
+                },
+                {
+                    "url": "/studio/catalogue-work-detail/?mode=manage&detail=00001-001",
+                    "root": "#catalogueWorkDetailRoot",
+                    "selector": "#catalogueWorkDetailSummary a[href*='/work_details/']",
+                    "prefix": f"{public_preview_base}/work_details/00001-001/",
+                },
+                {
+                    "url": "/studio/catalogue-moment/?mode=manage&moment=13-moments-in-october",
+                    "root": "#catalogueMomentRoot",
+                    "selector": "#catalogueMomentSummary a[href*='/moments/']",
+                    "prefix": f"{public_preview_base}/moments/13-moments-in-october/",
+                },
+            ]
+            for check in public_link_checks:
+                page.goto(f"{base_url}{check['url']}", wait_until="domcontentloaded")
+                root = page.locator(check["root"])
+                expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
+                expect(root).to_have_attribute("data-studio-record-loaded", "true", timeout=10_000)
+                public_href = page.locator(check["selector"]).first.get_attribute("href")
+                if not public_href or not public_href.startswith(check["prefix"]):
+                    raise AssertionError(f"catalogue editor public link did not use public preview base: {public_href!r}")
 
             browser.close()
 

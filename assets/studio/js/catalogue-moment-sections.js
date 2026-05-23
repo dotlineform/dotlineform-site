@@ -1,4 +1,7 @@
-import { getStudioRoute } from "./studio-config.js";
+import {
+  buildPublicCatalogueUrl,
+  buildPublicMomentUrl
+} from "./catalogue-public-links.js";
 import {
   catalogueGeneratedStatusText,
   catalogueReadinessItems,
@@ -76,7 +79,10 @@ export function renderMomentReadiness(state, options = {}) {
 
 export function renderMomentSummary(state, options = {}) {
   const preview = state.preview || {};
-  const publicUrl = normalizeText(preview.public_url) || `${getStudioRoute(state.config, "moments_page_base")}${state.currentMomentId}/`;
+  const previewPublicUrl = normalizeText(preview.public_url);
+  const publicUrl = previewPublicUrl
+    ? buildPublicCatalogueUrl(state.config, previewPublicUrl)
+    : buildPublicMomentUrl(state.config, state.currentMomentId);
   const fields = [
     { label: "public URL", value: publicUrl },
     { label: "generated", value: catalogueGeneratedStatusText(preview) },

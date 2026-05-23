@@ -1,8 +1,10 @@
 import {
   buildStudioRouteUrl,
-  getStudioRoute,
   getStudioText
 } from "./studio-config.js";
+import {
+  buildPublicWorkDetailUrl
+} from "./catalogue-public-links.js";
 import {
   cataloguePreviewFallback,
   catalogueReadinessItem,
@@ -207,8 +209,7 @@ export function updateWorkDetailSummary(state, options = {}) {
   }
 
   const record = state.currentRecord;
-  const publicBase = getStudioRoute(state.config, "work_details_page_base");
-  const publicHref = record ? `${publicBase}${encodeURIComponent(record.detail_uid)}/` : "";
+  const publicHref = record ? buildPublicWorkDetailUrl(state.config, record.detail_uid) : "";
   const workEditorHref = record ? buildStudioRouteUrl(state.config, "catalogue_work_editor", { work: record.work_id }) : "";
   state.summaryNode.innerHTML = `
     <div class="tagStudioForm__field">
