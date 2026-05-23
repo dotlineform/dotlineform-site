@@ -3,7 +3,7 @@ doc_id: runtime-dependencies
 title: Runtime Dependencies
 added_date: 2026-04-23
 last_updated: 2026-04-23
-parent_id: site-docs
+parent_id: dev-home
 sort_order: 1000
 ---
 # Runtime Dependencies
@@ -196,7 +196,7 @@ For external command-line tools:
 
 ## Related References
 
-- [Site Docs](/docs/?scope=studio&doc=site-docs)
+- [Site Docs](/docs/?scope=studio&doc=dev-home)
 - [Local Setup](/docs/?scope=studio&doc=local-setup)
 - [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)

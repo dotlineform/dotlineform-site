@@ -3,7 +3,7 @@ doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
 last_updated: "2026-05-13 18:15"
-parent_id: site-docs
+parent_id: dev-home
 sort_order: 7000
 ---
 # Scripts

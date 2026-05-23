@@ -6,7 +6,7 @@
       "scope_id": "studio",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
-      "default_doc_id": "site-docs",
+      "default_doc_id": "dev-home",
       "media_path_prefix": "docs/studio",
       "index_url": "/assets/data/docs/scopes/studio/index.json",
       "search_index_url": "/assets/data/search/studio/index.json",

@@ -77,7 +77,7 @@ Do not add an entry for:
 
 Use the site change log alongside:
 
-- [Site Docs](/docs/?scope=studio&doc=site-docs)
+- [Site Docs](/docs/?scope=studio&doc=dev-home)
 - [Data Flow](/docs/?scope=studio&doc=data-flow)
 - [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)
 - [Scripts](/docs/?scope=studio&doc=scripts)

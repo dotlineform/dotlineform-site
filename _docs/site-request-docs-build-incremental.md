@@ -283,7 +283,7 @@ Likely docs:
 
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
-- [Site Docs](/docs/?scope=studio&doc=site-docs) if a broader site-docs note becomes useful
+- [Site Docs](/docs/?scope=studio&doc=dev-home) if a broader dev-home note becomes useful
 - `AGENTS.md` only if the repo workflow contract materially changes
 
 Reason:
@@ -407,7 +407,7 @@ This request is complete when:
 
 ## Related References
 
-- [Site Docs](/docs/?scope=studio&doc=site-docs)
+- [Site Docs](/docs/?scope=studio&doc=dev-home)
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)

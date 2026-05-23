@@ -3,7 +3,7 @@ doc_id: local-setup
 title: Local Setup
 added_date: 2026-04-13
 last_updated: 2026-05-19
-parent_id: site-docs
+parent_id: dev-home
 sort_order: 2000
 ---
 # Local Setup

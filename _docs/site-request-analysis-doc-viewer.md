@@ -272,7 +272,7 @@ Manual checks should include:
 
 ## Related References
 
-- [Site Docs](/docs/?scope=studio&doc=site-docs)
+- [Site Docs](/docs/?scope=studio&doc=dev-home)
 - [Docs Viewer Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Library Scope](/docs/?scope=studio&doc=data-models-library)

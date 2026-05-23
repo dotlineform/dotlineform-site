@@ -3,7 +3,7 @@ doc_id: scripts-audit-site-consistency
 title: Site Consistency Audit
 added_date: 2026-03-31
 last_updated: "2026-05-09 22:35"
-parent_id: site-docs
+parent_id: dev-home
 sort_order: 6000
 ---
 # Site Consistency Audit

@@ -160,7 +160,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "_docs/site-docs.md",
+          "path": "_docs/dev-home.md",
           "action": "track",
           "exists": true
         },
@@ -198,7 +198,7 @@
       "metadata": {
         "backfilled": true,
         "viewer_base_url": "/docs/",
-        "default_doc_id": "site-docs"
+        "default_doc_id": "dev-home"
       }
     }
   ]

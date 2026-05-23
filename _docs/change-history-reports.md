@@ -3,7 +3,7 @@ doc_id: change-history-reports
 title: Change History Reports
 added_date: 2026-05-19
 last_updated: 2026-05-19
-parent_id: site-docs
+parent_id: dev-home
 sort_order: 26000
 hidden: false
 ---

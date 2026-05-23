@@ -245,7 +245,7 @@ Expected outputs:
 - required and optional record fields
 - generated year, month, domain, related-doc, related-file, and change-request index strategy
 - automatic generated-output rebuild behavior after log entries change
-- report-driven human-readable view under [Site Docs](/docs/?scope=studio&doc=site-docs), with iterative filters starting by scope/domain
+- report-driven human-readable view under [Site Docs](/docs/?scope=studio&doc=dev-home), with iterative filters starting by scope/domain
 - search weighting rules for change-history records
 
 ### Step 2. Document The Development Workflow
@@ -254,7 +254,7 @@ Status:
 
 - completed
 
-Create `_docs/development-workflow.md` under [Site Docs](/docs/?scope=studio&doc=site-docs) so AGENTS.md can reference it before and during implementation work.
+Create `_docs/development-workflow.md` under [Site Docs](/docs/?scope=studio&doc=dev-home) so AGENTS.md can reference it before and during implementation work.
 Part of this work should review the current AGENTS.md content and move detailed procedural guidance into the workflow document where that guidance does not need to be read for every task.
 AGENTS.md should become more directional: it should tell Codex which workflow sections to consult for the current class of work rather than carrying every detailed rule inline.
 
@@ -386,7 +386,7 @@ The current [Site Change Log](/docs/?scope=studio&doc=site-change-log) should be
 - domain indexes
 - migration notes
 
-The human-facing change-history report should live under [Site Docs](/docs/?scope=studio&doc=site-docs).
+The human-facing change-history report should live under [Site Docs](/docs/?scope=studio&doc=dev-home).
 Its v1 display should provide:
 
 - scope/domain filter
@@ -489,7 +489,7 @@ The scripts should not delete or rewrite the original log files until the genera
 - staging and commits remain manual during development
 - Search change-log entries are included in the same implementation with `domain: search`
 - individual rendered entry detail views are not needed for v1
-- search result snippets, generated indexes, and a Docs Viewer report under [Site Docs](/docs/?scope=studio&doc=site-docs) are enough for v1
+- search result snippets, generated indexes, and a Docs Viewer report under [Site Docs](/docs/?scope=studio&doc=dev-home) are enough for v1
 - the v1 report should start with scope/domain filtering plus title, date, and summary for each entry
 - additional report filters should be designed iteratively
 - no substantial manual metadata curation is expected after the first scripted migration
@@ -497,7 +497,7 @@ The scripts should not delete or rewrite the original log files until the genera
 - seeding and populating entries is expected to be Codex-driven from current context or a change request doc
 - helper scripts are useful only insofar as they support Codex-driven workflow, validation, and generated-output refresh
 - completed request docs should be updated with log-entry references when a defined closure/cleanup task calls for it
-- AGENTS.md should point to `_docs/development-workflow.md`, a [Site Docs](/docs/?scope=studio&doc=site-docs) child doc that includes this close-out behavior
+- AGENTS.md should point to `_docs/development-workflow.md`, a [Site Docs](/docs/?scope=studio&doc=dev-home) child doc that includes this close-out behavior
 - detailed procedural guidance that does not need to be loaded for every task should move from AGENTS.md into the development workflow doc, leaving AGENTS.md as a concise directional entrypoint
 
 ## Benefits And Risks

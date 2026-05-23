@@ -391,7 +391,7 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
       "output": "assets/data/docs/scopes/studio",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
-      "default_doc_id": "site-docs"
+      "default_doc_id": "dev-home"
     }
   ]
 }

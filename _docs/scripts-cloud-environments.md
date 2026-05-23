@@ -3,7 +3,7 @@ doc_id: scripts-cloud-environments
 title: Cloud Environments
 added_date: 2026-04-14
 last_updated: "2026-05-09 21:28"
-parent_id: site-docs
+parent_id: dev-home
 sort_order: 3000
 ---
 # Cloud Environments (Codex + Codespaces + R2)

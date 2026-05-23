@@ -3,7 +3,7 @@ doc_id: studio-javascript-payload-inventory
 title: JavaScript Inventory Policy
 added_date: 2026-05-14
 last_updated: 2026-05-21
-parent_id: site-docs
+parent_id: dev-home
 sort_order: 1700
 viewable: true
 ---

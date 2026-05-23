@@ -580,7 +580,7 @@
       "title": "Runtime Dependencies",
       "href": "/docs/?scope=studio&doc=runtime-dependencies",
       "last_updated": "2026-04-23",
-      "parent_id": "site-docs",
+      "parent_id": "dev-home",
       "parent_title": "Site Docs",
       "display_meta": "2026-04-23 • Site Docs",
       "search_terms": [
@@ -622,14 +622,14 @@
       "search_text": "search-overview search overview search overview 2026-05-11 21:30 2026 05 11 21 30"
     },
     {
-      "id": "site-docs",
+      "id": "dev-home",
       "kind": "doc",
       "title": "Site Docs",
-      "href": "/docs/?scope=studio&doc=site-docs",
+      "href": "/docs/?scope=studio&doc=dev-home",
       "last_updated": "2026-05-19",
       "display_meta": "2026-05-19",
       "search_terms": [
-        "site-docs",
+        "dev-home",
         "site",
         "docs",
         "site docs",
@@ -638,7 +638,7 @@
         "05",
         "19"
       ],
-      "search_text": "site-docs site docs site docs 2026-05-19 2026 05 19"
+      "search_text": "dev-home site docs site docs 2026-05-19 2026 05 19"
     },
     {
       "id": "studio-data-sharing",
@@ -836,7 +836,7 @@
       "title": "Development Workflow",
       "href": "/docs/?scope=studio&doc=development-workflow",
       "last_updated": "2026-05-19",
-      "parent_id": "site-docs",
+      "parent_id": "dev-home",
       "parent_title": "Site Docs",
       "display_meta": "2026-05-19 • Site Docs",
       "search_terms": [
@@ -911,7 +911,7 @@
       "title": "JavaScript Inventory Policy",
       "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "last_updated": "2026-05-21",
-      "parent_id": "site-docs",
+      "parent_id": "dev-home",
       "parent_title": "Site Docs",
       "display_meta": "2026-05-21 • Site Docs",
       "search_terms": [
@@ -1236,7 +1236,7 @@
       "title": "Local Setup",
       "href": "/docs/?scope=studio&doc=local-setup",
       "last_updated": "2026-05-19",
-      "parent_id": "site-docs",
+      "parent_id": "dev-home",
       "parent_title": "Site Docs",
       "display_meta": "2026-05-19 • Site Docs",
       "search_terms": [
@@ -1756,7 +1756,7 @@
       "title": "Cloud Environments",
       "href": "/docs/?scope=studio&doc=scripts-cloud-environments",
       "last_updated": "2026-05-09 21:28",
-      "parent_id": "site-docs",
+      "parent_id": "dev-home",
       "parent_title": "Site Docs",
       "display_meta": "2026-05-09 21:28 • Site Docs",
       "search_terms": [
@@ -2437,7 +2437,7 @@
       "title": "Jekyll Site Config",
       "href": "/docs/?scope=studio&doc=config-jekyll-site-config",
       "last_updated": "2026-05-11 14:10",
-      "parent_id": "site-docs",
+      "parent_id": "dev-home",
       "parent_title": "Site Docs",
       "display_meta": "2026-05-11 14:10 • Site Docs",
       "search_terms": [
@@ -2933,7 +2933,7 @@
       "title": "Run Checks",
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
       "last_updated": "2026-05-15",
-      "parent_id": "site-docs",
+      "parent_id": "dev-home",
       "parent_title": "Site Docs",
       "display_meta": "2026-05-15 • Site Docs",
       "search_terms": [
@@ -3384,7 +3384,7 @@
       "title": "Site Consistency Audit",
       "href": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
       "last_updated": "2026-05-09 22:35",
-      "parent_id": "site-docs",
+      "parent_id": "dev-home",
       "parent_title": "Site Docs",
       "display_meta": "2026-05-09 22:35 • Site Docs",
       "search_terms": [
@@ -3593,7 +3593,7 @@
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
       "last_updated": "2026-05-13 18:15",
-      "parent_id": "site-docs",
+      "parent_id": "dev-home",
       "parent_title": "Site Docs",
       "display_meta": "2026-05-13 18:15 • Site Docs",
       "search_terms": [

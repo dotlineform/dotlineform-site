@@ -3,7 +3,7 @@ doc_id: development-workflow
 title: Development Workflow
 added_date: 2026-05-19
 last_updated: 2026-05-19
-parent_id: site-docs
+parent_id: dev-home
 sort_order: 1500
 viewable: true
 ---
@@ -42,7 +42,7 @@ Use the smallest owning area that explains the change:
 - Local setup, dependency, or environment behavior: [Local Setup](/docs/?scope=studio&doc=local-setup) and [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)
 - Test strategy and check profiles: [Testing](/docs/?scope=studio&doc=testing), [Run Checks](/docs/?scope=studio&doc=scripts-run-checks), and [Pytest](/docs/?scope=studio&doc=testing-pytest)
 
-If the owning area is unclear, start with [Site Docs](/docs/?scope=studio&doc=site-docs), then narrow from there.
+If the owning area is unclear, start with [Site Docs](/docs/?scope=studio&doc=dev-home), then narrow from there.
 
 ## 2. Decide Whether A Change Request Is Needed
 

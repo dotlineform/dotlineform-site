@@ -389,7 +389,7 @@ Manual checks should include:
 
 ## Related References
 
-- [Site Docs](/docs/?scope=studio&doc=site-docs)
+- [Site Docs](/docs/?scope=studio&doc=dev-home)
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
 - [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
 - [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
