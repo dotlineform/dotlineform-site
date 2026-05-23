@@ -417,20 +417,26 @@ Outcomes:
 - canonical source, public projections, Studio projections, and Docs Viewer payloads are clearly separated
 - Jekyll public builds consume only intended public source/projection files
 - source-only fields can remain in canonical data without leaking into public runtime artifacts
+- the source/projection boundary is backed by a manifest and checks rather than duplicated prose
 
 | Task | Status |
 | --- | --- |
+| Create projection-contract manifest infrastructure and a validation check entrypoint. | planned |
 | Document canonical source families and their public projections. | done; see [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) |
-| Distinguish public projections, Studio projections, and Docs Viewer payloads in docs and checks. | planned |
-| Add checks for source-only fields leaking into public projections. | planned |
-| Verify Jekyll consumes public projections rather than Studio-only data. | planned |
-| Keep generated output paths explicit and boring. | planned |
+| Populate the manifest with all Phase 6 artifact families: canonical source, public projections, Studio projections, Docs Viewer payloads, local working output, public media, Studio app assets, and UI Catalogue demo assets where relevant. | planned |
+| Distinguish public projections, Studio projections, and Docs Viewer payloads through manifest-backed docs and checks. | planned |
+| Add manifest-backed checks for source-only fields leaking into public projections. | planned |
+| Verify Jekyll consumes public projections rather than Studio-only data, and that `_config.yml` exclusion/allowance policy matches the manifest. | planned |
+| Keep generated output paths explicit, boring, and classified in the manifest. | planned |
 
 Next steps:
 
 Use this phase to prepare for a future repo split without requiring one.
 The first documentation slice is complete: [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) defines the current canonical source, public projection, Studio projection, and Docs Viewer payload families.
-The next slice should make the boundary more mechanical by extending checks for projection-family classification and source-only field leakage.
+The implementation direction is to introduce a machine-readable `projection_contract.json` as the Phase 6 source of truth.
+Existing domain configs should keep their current domain responsibilities: Docs Viewer scope build details stay in `scripts/docs/docs_scopes.json`, search source-family behavior stays in `scripts/search/build_config.json`, catalogue build scoping stays in the catalogue field registry, and `_config.yml` stays the public Jekyll build config.
+The projection contract manifest should own cross-domain classification, public-build policy, source-only leak rules, owner docs, and check coverage.
+The next slice should create the manifest schema plus validation/check entrypoint first, then populate it across the remaining Phase 6 tasks so the Markdown contract becomes an explanation of the executable manifest rather than a parallel source of truth.
 The projection contract matters more than physical repo layout.
 
 ## Phase 7: Optional Repo Split Decision
