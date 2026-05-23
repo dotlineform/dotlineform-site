@@ -10,4 +10,6 @@ viewable: false
 ---
 # Archive
 
-This section keeps deprecated or superseded docs that may remain useful as historical reference. For current guidance, start at [Site Docs](/docs/?scope=studio&doc=site-docs).
+This section keeps deprecated or superseded docs that may remain useful as historical reference. Do not use for live guidance.
+
+For current guidance, start at [Dev](/docs/?scope=studio&doc=dev).
