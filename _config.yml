@@ -97,6 +97,8 @@ exclude:
   - tests
   - var
   - logs
+  - _docs/
+  - _docs_logs/
   - docs/
   - studio/
   - assets/studio/

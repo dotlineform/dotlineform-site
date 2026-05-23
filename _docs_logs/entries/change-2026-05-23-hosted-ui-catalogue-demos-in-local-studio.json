@@ -1,0 +1,41 @@
+{
+  "id": "change-2026-05-23-hosted-ui-catalogue-demos-in-local-studio",
+  "date": "2026-05-23",
+  "title": "Hosted UI Catalogue Demos In Local Studio",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "runtime",
+    "studio-ui",
+    "workflow"
+  ],
+  "summary": "Served the UI Catalogue demo index, primitive demos, and pattern demos through the Local Studio app as non-mutating reference surfaces while preserving their isolated demo namespace and ready-state contract.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "ui-catalogue",
+    "route-migration"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app-implementation-plan",
+    "ui-catalogue",
+    "development-checklist",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/studio/studio_ui_catalogue_views.py",
+    "scripts/studio/studio_app_server.py",
+    "scripts/studio/studio_app_config.py",
+    "tests/smoke/local_studio_app_ui_catalogue_routes.py",
+    "studio/ui-catalogue/demos/primitives/panel/index.md"
+  ],
+  "verification": [
+    "py_compile local Studio UI Catalogue modules",
+    "tests/smoke/local_studio_app_ui_catalogue_routes.py",
+    "in-app browser modal-shell route check"
+  ]
+}

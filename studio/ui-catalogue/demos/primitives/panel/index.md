@@ -29,7 +29,7 @@ ui_catalogue_demo_primitive: panel
 {% capture image_markup %}<a
   class="uiCatalogueDemoPanel uiCatalogueDemoPanel--image uiCatalogueDemoPanel--imageContrast"
   href="#"
-  style="--ui-demo-panel-image: url('/assets/moments/img/blue-sky-thumb-192.webp');"
+  style="--ui-demo-panel-image: url('/assets/moments/img/blue-sky-thumb-96.webp');"
 >
   <h4 class="uiCatalogueDemoPanel__heading">Image Panel Link</h4>
   <p class="uiCatalogueDemoText">Use the contrast modifier when the image needs white text.</p>
@@ -138,7 +138,7 @@ ui_catalogue_demo_primitive: panel
     <a
       class="uiCatalogueDemoPanel uiCatalogueDemoPanel--image"
       href="#"
-      style="--ui-demo-panel-image: url('{{ '/assets/moments/img/blue-sky-thumb-192.webp' | relative_url }}');"
+      style="--ui-demo-panel-image: url('{{ '/assets/moments/img/blue-sky-thumb-96.webp' | relative_url }}');"
     >
       <h4 class="uiCatalogueDemoPanel__heading">Image Panel Link</h4>
       <p class="uiCatalogueDemoText">Choose image and overlay together at design time.</p>
@@ -153,7 +153,7 @@ ui_catalogue_demo_primitive: panel
     <a
       class="uiCatalogueDemoPanel uiCatalogueDemoPanel--image uiCatalogueDemoPanel--imageContrast"
       href="#"
-      style="--ui-demo-panel-image: url('{{ '/assets/moments/img/blue-sky-thumb-192.webp' | relative_url }}');"
+      style="--ui-demo-panel-image: url('{{ '/assets/moments/img/blue-sky-thumb-96.webp' | relative_url }}');"
     >
       <h4 class="uiCatalogueDemoPanel__heading">Image Panel Link: Contrast Override</h4>
       <p class="uiCatalogueDemoText">Use the contrast modifier when the chosen image needs white text.</p>

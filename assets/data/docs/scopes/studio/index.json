@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T19:25:26Z",
+  "generated_at": "2026-05-23T20:03:38Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -321,7 +321,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 41051
+      "content_text_length": 41265
     },
     {
       "scope": "studio",
@@ -1087,7 +1087,7 @@
       "source_path": "local-setup-public-site-preview.md",
       "viewer_url": "/docs/?scope=studio&doc=local-setup-public-site-preview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-setup-public-site-preview.json",
-      "content_text_length": 3602
+      "content_text_length": 3810
     },
     {
       "scope": "studio",
@@ -3057,7 +3057,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 26080,
+      "content_text_length": 26299,
       "ui_status": "in-progress"
     },
     {
@@ -3799,7 +3799,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 14318
+      "content_text_length": 14359
     },
     {
       "scope": "studio",

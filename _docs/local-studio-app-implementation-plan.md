@@ -22,15 +22,14 @@ Status:
 - Phase 2 is implemented
 - Phase 3 is implemented for Docs Viewer manage mode and the Docs Broken Links report replacement
 - Phase 4 active service consolidation and launcher cleanup are done for the current Local Studio route scope
-- Phase 5 operational route migration is implemented for the current route scope; UI Catalogue demo visibility remains a planned first-class local Studio follow-up
+- Phase 5 operational route migration and UI Catalogue demo visibility are implemented for the current route scope
 
 ## Remaining Work Snapshot
 
 Next suitable slices, in dependency order:
 
-1. Make UI Catalogue demos visible from Local Studio as first-class non-mutating Studio surfaces.
-2. Start the projection contract work now that route and service ownership is less fluid.
-3. Defer the optional repo split decision until the publish/export contract is stable.
+1. Start the projection contract work now that route and service ownership is less fluid.
+2. Defer the optional repo split decision until the publish/export contract is stable.
 
 ## Lifecycle Rules
 
@@ -124,6 +123,7 @@ Current commit point:
 - Project State now calls `/studio/api/catalogue/project-state-report` and the local Docs API through the local app server instead of requiring the old catalogue/docs sibling service URLs
 - Thumbnail Quality now calls `/studio/api/catalogue/thumbnail-quality-preview` through the local app server instead of requiring the old catalogue sibling service URL
 - Local Studio and public-site launchers are now split into explicit commands: `bin/local-studio`, `bin/public-site-preview`, and `bin/public-site-build`; `bin/local-studio` has been retired
+- UI Catalogue demo index, primitive, and pattern routes are now local-app hosted as first-class non-mutating Studio reference surfaces while preserving the isolated demo namespace and demo-ready contract
 - future non-Docs write/manage APIs should be added through the same local app route-module and domain-service pattern; detailed future-proofing rules live in [Development Checklist](/docs/?scope=studio&doc=development-checklist)
 
 ## Phase 0: Published Surface Cleanup
@@ -337,7 +337,7 @@ Transition cleanup backlog:
 | Remove the standalone Docs Management HTTP entrypoint. | No active workflow needs to exercise Docs management outside Local Studio. | done |
 | Remove hardcoded old tag write URLs from tests and browser module fixtures. | Runtime-config endpoints cover the migrated routes and fallback compatibility is no longer required. | done; remaining 8787 references are negative assertions only |
 | Remove static JSON fallbacks for analytics tag data from migrated local-only views where the fallback no longer serves a Jekyll-hosted page. | The corresponding view no longer runs in Jekyll and public output has no Studio shell for it. | done |
-| Retire migrated Jekyll Studio route files or replace them with local-only transition redirects. | Each route family has a verified local app view and no public build dependency. | done for operational Studio routes in current scope; remaining UI Catalogue demo pages are intentionally retained until their Local Studio visibility path exists |
+| Retire migrated Jekyll Studio route files or replace them with local-only transition redirects. | Each route family has a verified local app view and no public build dependency. | done for operational Studio routes in current scope; UI Catalogue demo source pages are intentionally retained as local renderer input rather than retired workflow shells |
 | Retire the Jekyll `/studio/` landing shell once the local app owns `/studio/`. | The public site no longer publishes Studio, and the local app home exposes the runtime navigation list. | done |
 | Recheck `main.css` and Studio CSS ownership after route retirements. | Migrated Studio surfaces no longer rely on public-site route CSS. | done; retired Docs Broken Links route CSS removed, local activity styles moved to `assets/studio/css/studio.css`, and still-public catalogue search/shared Studio shell styles left in `main.css` where their pages still load them |
 | Remove compatibility docs that describe old sibling-service startup as the normal path. | `bin/local-studio` starts only the local app server plus genuinely required background tasks. | done |
@@ -361,11 +361,11 @@ Outcomes:
 | Migrate audit and project-state routes. | done for current scope; Studio Audits shell/API, Project State shell/report API, and Thumbnail Quality shell/refresh API are local-app hosted |
 | Add an explicit public-site link resolver for Studio links to works, series, moments, `/library/`, and `/analysis/`. | done for currently migrated local Studio routes; runtime config exposes public-preview and production bases, `studio-navigation.js` has `buildPublicSiteUrl(...)`, per-series tag editor, catalogue editor summaries, and Studio Works share `catalogue-public-links.js` for public catalogue links, and the audited migrated surfaces do not expose `/library/` or `/analysis/` public-content links |
 | Replace ad hoc Studio route query concatenation with the shared route URL builder as routes are migrated. | done for current migrated record-param links; fixed dashboard/nav links may remain static when they do not append dynamic params |
-| Retire Jekyll Studio route files after each replacement is verified. | done for operational Studio routes in current scope; remaining `studio/ui-catalogue/demos/` pages are isolated UI reference surfaces rather than retired workflow shells |
+| Retire Jekyll Studio route files after each replacement is verified. | done for operational Studio routes in current scope; `studio/ui-catalogue/demos/` source pages are retained as isolated UI reference markup for the local renderer rather than retired workflow shells |
 | Retire the Jekyll `/studio/` landing shell after the local app owns `/studio/`. | done |
 | Retire `/studio/docs-broken-links/` only after the Docs Viewer report replacement exists. | done |
 | Keep temporary redirects only where useful for local transition ergonomics. | done; no transition redirects were needed for current route retirement |
-| Make UI Catalogue demos visible in Local Studio. | planned; demos should be treated as first-class non-mutating Studio reference surfaces and exposed from local Studio because they are not public-site pages |
+| Make UI Catalogue demos visible in Local Studio. | done; the demo index is discoverable from Local Studio and the current primitive/pattern demo route hierarchy is served by the local app as non-mutating reference surfaces |
 
 Next steps:
 
@@ -393,9 +393,9 @@ The Jekyll `/studio/` landing shell is now retired because the local app owns `/
 The local app home is intentionally a simple runtime navigation list rather than a preserved Jekyll dashboard design; it filters out non-nav internal views such as the per-series tag editor and marks the home root ready for smoke checks.
 Configured catalogue editor routes now keep `?mode=manage` in runtime/static config.
 Browser callers that add `work=`, `detail=`, `series=`, or `moment=` parameters use the shared route URL builder instead of string concatenation, so the migration can preserve manage mode without depending on Jekyll-style query assembly.
-The UI Catalogue demo routes remain visible only through the Jekyll route source today.
-They should be exposed as first-class local Studio reference surfaces even though they do not mutate catalogue data.
-They should keep their isolated demo namespace and ready-state contract rather than being treated as production Studio workflow routes.
+The UI Catalogue demo routes are now exposed through Local Studio under `/studio/ui-catalogue/demos/`, including the current primitive and pattern demo pages.
+They keep the isolated `assets/ui-catalogue/` CSS/JS namespace and `data-ui-catalogue-demo-*` ready-state contract rather than being treated as production Studio workflow routes.
+The source Markdown pages remain in `studio/ui-catalogue/demos/` as demo markup input for the local renderer.
 
 ## Phase 6: Projection And Build Contract
 

@@ -170,6 +170,69 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "doc_href": "/docs/?scope=studio&doc=catalogue-moment-editor&mode=manage",
         "script": "/assets/studio/js/catalogue-moment-editor.js",
     },
+    "ui_catalogue_demos": {
+        "label": "ui catalogue",
+        "title": "UI Catalogue Demos",
+        "path": "/studio/ui-catalogue/demos/",
+        "doc_href": "/docs/?scope=studio&doc=ui-catalogue&mode=manage",
+        "script": "/assets/ui-catalogue/js/ui-catalogue-demo.js",
+    },
+    "ui_catalogue_demo_button": {
+        "label": "button",
+        "title": "UI Demo Primitive: Button",
+        "path": "/studio/ui-catalogue/demos/primitives/button/",
+        "doc_href": "/docs/?scope=studio&doc=ui-primitive-button&mode=manage",
+        "script": "/assets/ui-catalogue/js/ui-catalogue-demo.js",
+        "nav": "false",
+    },
+    "ui_catalogue_demo_input": {
+        "label": "input",
+        "title": "UI Demo Primitive: Input",
+        "path": "/studio/ui-catalogue/demos/primitives/input/",
+        "doc_href": "/docs/?scope=studio&doc=ui-primitive-input&mode=manage",
+        "script": "/assets/ui-catalogue/js/ui-catalogue-demo.js",
+        "nav": "false",
+    },
+    "ui_catalogue_demo_list": {
+        "label": "list",
+        "title": "UI Demo Primitive: List",
+        "path": "/studio/ui-catalogue/demos/primitives/list/",
+        "doc_href": "/docs/?scope=studio&doc=ui-primitive-list&mode=manage",
+        "script": "/assets/ui-catalogue/js/ui-catalogue-demo.js",
+        "nav": "false",
+    },
+    "ui_catalogue_demo_modal_shell": {
+        "label": "modal shell",
+        "title": "UI Demo Primitive: Modal Shell",
+        "path": "/studio/ui-catalogue/demos/primitives/modal-shell/",
+        "doc_href": "/docs/?scope=studio&doc=ui-primitive-modal-shell&mode=manage",
+        "script": "/assets/ui-catalogue/js/ui-catalogue-demo.js",
+        "nav": "false",
+    },
+    "ui_catalogue_demo_panel": {
+        "label": "panel",
+        "title": "UI Demo Primitive: Panel",
+        "path": "/studio/ui-catalogue/demos/primitives/panel/",
+        "doc_href": "/docs/?scope=studio&doc=ui-primitive-panel&mode=manage",
+        "script": "/assets/ui-catalogue/js/ui-catalogue-demo.js",
+        "nav": "false",
+    },
+    "ui_catalogue_demo_reopenable_command_result": {
+        "label": "reopenable result",
+        "title": "UI Demo Pattern: Reopenable Command Result",
+        "path": "/studio/ui-catalogue/demos/patterns/reopenable-command-result/",
+        "doc_href": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result&mode=manage",
+        "script": "/assets/ui-catalogue/js/ui-catalogue-demo.js",
+        "nav": "false",
+    },
+    "ui_catalogue_demo_column_links": {
+        "label": "column links",
+        "title": "UI Demo Pattern: Column Links",
+        "path": "/studio/ui-catalogue/demos/patterns/column-links/",
+        "doc_href": "/docs/?scope=studio&doc=ui-pattern-column-links&mode=manage",
+        "script": "/assets/ui-catalogue/js/ui-catalogue-demo.js",
+        "nav": "false",
+    },
 }
 
 STUDIO_MEDIA: dict[str, object] = {
@@ -302,6 +365,8 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "assets" / "studio" / "js" / "tag-studio.js",
         repo_root / "assets" / "studio" / "css" / "studio.css",
         repo_root / "assets" / "studio" / "data" / "studio_config.json",
+        repo_root / "assets" / "ui-catalogue" / "js" / "ui-catalogue-demo.js",
+        repo_root / "assets" / "ui-catalogue" / "css" / "ui-catalogue-demo.css",
     ]
     mtimes = [path.stat().st_mtime for path in candidates if path.exists()]
     return str(int(max(mtimes))) if mtimes else "1"

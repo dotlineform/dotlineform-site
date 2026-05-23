@@ -65,7 +65,7 @@ This config is the shared source of truth for docs scope ids, Markdown source ro
 - writes one index payload plus one per-doc payload for each configured scope
 - writes incremental semantic-reference relationship artifacts under `references/`
 - writes `assets/docs-viewer/data/docs-viewer-config.json` from `scripts/docs/docs_scopes.json`, including route/scope data and the `docs_viewer` browser settings used by public and management routes
-- writes incrementally: unchanged payloads are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
+- writes incrementally: unchanged payloads and unchanged Docs Viewer browser config are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
 - supports targeted same-scope payload rebuilds through `--only-doc-ids` when an orchestration layer has already proven the affected ids are safe
 
 ## Publishing Rules

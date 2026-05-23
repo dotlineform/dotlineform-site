@@ -18,8 +18,8 @@ Status:
 - Phase 2 implemented
 - Phase 3 implemented for Docs Viewer manage mode
 - Phase 4 in progress with Docs management, analytics tag reads, active analytics tag writes, analytics tag route shells, and explicit local Studio/public-site launchers routed through the local app migration; the old analytics tag Jekyll shells and 8787 browser fallback are retired
-- Phase 5 operational route migration is implemented for the current route scope: Catalogue dashboard, Analytics dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, catalogue editor, and Studio home shells are hosted by the local app and their old Jekyll shells are retired
-- UI Catalogue demos remain a first-class local Studio visibility task because they are Studio reference surfaces, not public-site pages
+- Phase 5 route migration is implemented for the current route scope: Catalogue dashboard, Analytics dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, catalogue editor, Studio home, and UI Catalogue demo shells are hosted by the local app
+- UI Catalogue demos are first-class local Studio reference surfaces because they are Studio-owned, non-mutating pages rather than public-site pages
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -223,6 +223,7 @@ Launcher split implemented on 2026-05-23:
 - `bin/public-site-preview` runs public-site Jekyll preview with `_config.yml` by default
 - `bin/public-site-build` runs public-site Jekyll build with `_config.yml` by default and passes through extra Jekyll arguments
 - `bin/local-studio` has been retired
+- `/studio/ui-catalogue/demos/` and its current primitive/pattern demo routes are hosted by Local Studio while preserving their isolated demo CSS, JavaScript, and ready-state contract
 
 Retiring the bridge runner does not mean retiring Jekyll.
 Jekyll remains the public-site publisher and local public-site preview host.
@@ -493,6 +494,7 @@ For projection-contract slices:
 ## Change Log Entries
 
 - `change-2026-05-22-added-local-analytics-tag-promotion-api`
+- `change-2026-05-23-hosted-ui-catalogue-demos-in-local-studio`
 - `change-2026-05-22-mounted-local-analytics-dashboard-route`
 - `change-2026-05-22-mounted-local-catalogue-dashboard-route`
 - `change-2026-05-22-mounted-local-catalogue-status-route`

@@ -50,6 +50,7 @@ bin/public-site-build --destination /tmp/dlf-jekyll-build
 ## CSS changes
 
 `bin/public-site-preview` uses Jekyll serve, so Jekyll watches public-site source files and rebuilds changed pages and assets.
+The public Jekyll config excludes local Studio docs source and docs-log source paths such as `_docs/` and `_docs_logs/`, so ordinary Local Studio documentation edits do not trigger public-site preview rebuilds.
 For CSS changes, save the file and refresh the browser page.
 
 This is watch-and-rebuild behavior, not hot module replacement.

@@ -1413,8 +1413,13 @@ end
 
 def write_docs_viewer_browser_config(scope_configs)
   payload = browser_scope_config_payload(scope_configs)
+  text = JSON.pretty_generate(payload) + "\n"
   FileUtils.mkdir_p(File.dirname(DOCS_VIEWER_BROWSER_CONFIG_PATH))
-  File.write(DOCS_VIEWER_BROWSER_CONFIG_PATH, JSON.pretty_generate(payload) + "\n")
+  if File.exist?(DOCS_VIEWER_BROWSER_CONFIG_PATH) && File.read(DOCS_VIEWER_BROWSER_CONFIG_PATH) == text
+    puts "Docs Viewer browser config unchanged: #{DOCS_VIEWER_BROWSER_CONFIG_PATH}"
+    return
+  end
+  File.write(DOCS_VIEWER_BROWSER_CONFIG_PATH, text)
   puts "Docs Viewer browser config wrote: #{DOCS_VIEWER_BROWSER_CONFIG_PATH}"
 end
 

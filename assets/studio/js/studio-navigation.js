@@ -242,6 +242,7 @@ function inferViewIdFromPath(pathname) {
   if (path === "/studio/analytics/tag-aliases" || path === "/studio/analytics/tag-aliases/") return "tag_aliases";
   if (path === "/studio/analytics/series-tags" || path === "/studio/analytics/series-tags/") return "series_tags";
   if (path === "/studio/analytics/series-tag-editor" || path === "/studio/analytics/series-tag-editor/") return "series_tag_editor";
+  if (path === "/studio/ui-catalogue/demos" || path === "/studio/ui-catalogue/demos/") return "ui_catalogue_demos";
   if (path === "/studio" || path === "/studio/") return "home";
   return "";
 }
