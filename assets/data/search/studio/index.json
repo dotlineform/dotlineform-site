@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b90a25ae278b3e91130f5f6d9091900d",
-    "generated_at_utc": "2026-05-23T23:45:37Z",
+    "version": "blake2b-680bfe837d134c323240d1d9aceaad8a",
+    "generated_at_utc": "2026-05-23T23:53:06Z",
     "count": 300
   },
   "entries": [
@@ -384,31 +384,6 @@
       "search_text": "llm-dimension llm dimension llm-assisted dimension recommendation assisted recommendation 2026-04-16 2026 04 16"
     },
     {
-      "id": "local-studio-app-implementation-plan",
-      "kind": "doc",
-      "title": "Local Studio App Implementation Plan",
-      "href": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
-      "last_updated": "2026-05-24",
-      "parent_id": "local-studio-app",
-      "parent_title": "Local Studio App",
-      "display_meta": "2026-05-24 • Local Studio App",
-      "search_terms": [
-        "local-studio-app-implementation-plan",
-        "local",
-        "studio",
-        "app",
-        "implementation",
-        "plan",
-        "local studio app implementation plan",
-        "local studio app",
-        "2026-05-24",
-        "2026",
-        "05",
-        "24"
-      ],
-      "search_text": "local-studio-app-implementation-plan local studio app implementation plan local studio app implementation plan local studio app 2026-05-24 2026 05 24"
-    },
-    {
       "id": "local-studio-server-architecture",
       "kind": "doc",
       "title": "Local Studio Server Architecture",
@@ -723,32 +698,6 @@
       "search_text": "data-models-studio data models studio studio scope scope 2026-05-06 20:51 2026 05 06 20 51"
     },
     {
-      "id": "local-studio-app-public-surface",
-      "kind": "doc",
-      "title": "Public Published Surface",
-      "href": "/docs/?scope=studio&doc=local-studio-app-public-surface",
-      "last_updated": "2026-05-23",
-      "parent_id": "local-studio-app",
-      "parent_title": "Local Studio App",
-      "display_meta": "2026-05-23 • Local Studio App",
-      "search_terms": [
-        "local-studio-app-public-surface",
-        "local",
-        "studio",
-        "app",
-        "public",
-        "surface",
-        "public published surface",
-        "published",
-        "local studio app",
-        "2026-05-23",
-        "2026",
-        "05",
-        "23"
-      ],
-      "search_text": "local-studio-app-public-surface local studio app public surface public published surface published local studio app 2026-05-23 2026 05 23"
-    },
-    {
       "id": "development-workflow",
       "kind": "doc",
       "title": "Development Workflow",
@@ -872,10 +821,10 @@
       "kind": "doc",
       "title": "CSS Primitives",
       "href": "/docs/?scope=studio&doc=css-primitives",
-      "last_updated": "2026-05-06 20:00",
+      "last_updated": "2026-05-24",
       "parent_id": "ui-catalogue",
       "parent_title": "UI Catalogue",
-      "display_meta": "2026-05-06 20:00 • UI Catalogue",
+      "display_meta": "2026-05-24 • UI Catalogue",
       "search_terms": [
         "css-primitives",
         "css",
@@ -884,14 +833,12 @@
         "ui catalogue",
         "ui",
         "catalogue",
-        "2026-05-06 20:00",
+        "2026-05-24",
         "2026",
         "05",
-        "06",
-        "20",
-        "00"
+        "24"
       ],
-      "search_text": "css-primitives css primitives css primitives ui catalogue ui catalogue 2026-05-06 20:00 2026 05 06 20 00"
+      "search_text": "css-primitives css primitives css primitives ui catalogue ui catalogue 2026-05-24 2026 05 24"
     },
     {
       "id": "ui-primitive-button",
@@ -4637,35 +4584,6 @@
       "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
-      "id": "site-request-studio-local-vanilla-web-app",
-      "kind": "doc",
-      "title": "Studio Local Vanilla Web App Request",
-      "href": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
-      "last_updated": "2026-05-23",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-23 • Change Requests",
-      "search_terms": [
-        "site-request-studio-local-vanilla-web-app",
-        "site",
-        "request",
-        "studio",
-        "local",
-        "vanilla",
-        "web",
-        "app",
-        "studio local vanilla web app request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-23",
-        "2026",
-        "05",
-        "23"
-      ],
-      "search_text": "site-request-studio-local-vanilla-web-app site request studio local vanilla web app studio local vanilla web app request change requests change requests 2026-05-23 2026 05 23"
-    },
-    {
       "id": "tiered-dimension-policy",
       "kind": "doc",
       "title": "Tiered Dimension Policy",
@@ -4695,10 +4613,10 @@
       "kind": "doc",
       "title": "Studio Source Tree Reorganization Request",
       "href": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-24",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-23 • Change Requests",
+      "display_meta": "2026-05-24 • Change Requests",
       "search_terms": [
         "site-request-studio-source-tree-reorganization",
         "site",
@@ -4711,12 +4629,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-23",
+        "2026-05-24",
         "2026",
         "05",
-        "23"
+        "24"
       ],
-      "search_text": "site-request-studio-source-tree-reorganization site request studio source tree reorganization studio source tree reorganization request change requests change requests 2026-05-23 2026 05 23"
+      "search_text": "site-request-studio-source-tree-reorganization site request studio source tree reorganization studio source tree reorganization request change requests change requests 2026-05-24 2026 05 24"
     },
     {
       "id": "site-request-docs-viewer-shell-extraction",
@@ -7476,6 +7394,78 @@
         "21"
       ],
       "search_text": "javascript-inventory-implementation-plan javascript inventory implementation plan javascript inventory implementation plan 2026-05-21 2026 05 21"
+    },
+    {
+      "id": "local-studio-app-implementation-plan",
+      "kind": "doc",
+      "title": "Local Studio App Implementation Plan",
+      "href": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
+      "last_updated": "2026-05-24",
+      "parent_id": "archive",
+      "display_meta": "2026-05-24",
+      "search_terms": [
+        "local-studio-app-implementation-plan",
+        "local",
+        "studio",
+        "app",
+        "implementation",
+        "plan",
+        "local studio app implementation plan",
+        "2026-05-24",
+        "2026",
+        "05",
+        "24"
+      ],
+      "search_text": "local-studio-app-implementation-plan local studio app implementation plan local studio app implementation plan 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "local-studio-app-public-surface",
+      "kind": "doc",
+      "title": "Public Published Surface",
+      "href": "/docs/?scope=studio&doc=local-studio-app-public-surface",
+      "last_updated": "2026-05-23",
+      "parent_id": "archive",
+      "display_meta": "2026-05-23",
+      "search_terms": [
+        "local-studio-app-public-surface",
+        "local",
+        "studio",
+        "app",
+        "public",
+        "surface",
+        "public published surface",
+        "published",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "local-studio-app-public-surface local studio app public surface public published surface published 2026-05-23 2026 05 23"
+    },
+    {
+      "id": "site-request-studio-local-vanilla-web-app",
+      "kind": "doc",
+      "title": "Studio Local Vanilla Web App Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
+      "last_updated": "2026-05-23",
+      "parent_id": "archive",
+      "display_meta": "2026-05-23",
+      "search_terms": [
+        "site-request-studio-local-vanilla-web-app",
+        "site",
+        "request",
+        "studio",
+        "local",
+        "vanilla",
+        "web",
+        "app",
+        "studio local vanilla web app request",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "site-request-studio-local-vanilla-web-app site request studio local vanilla web app studio local vanilla web app request 2026-05-23 2026 05 23"
     }
   ]
 }

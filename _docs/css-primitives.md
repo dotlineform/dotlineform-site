@@ -2,22 +2,24 @@
 doc_id: css-primitives
 title: CSS Primitives
 added_date: 2026-03-31
-last_updated: "2026-05-06 20:00"
+last_updated: "2026-05-24"
 parent_id: ui-catalogue
 sort_order: 1625
 ---
 # CSS Primitives
 
-This document defines the current shared CSS contract for the site and Studio.
+This document defines the current shared CSS contract for the public site and Studio.
 
 The goal is not to freeze all visual design. The goal is to make repeated patterns explicit so future CSS work extends the existing system instead of adding new one-off selectors, sizes, or colors.
 
 ## Rules
 
-- Fit UI to the shared token set in `assets/css/main.css`.
-- Do not add raw `font-size` or color literals to `assets/css/main.css` or `assets/studio/css/studio.css`.
+- Fit UI to the relevant token set before adding route-local values.
+- Keep `assets/css/main.css` focused on public-site CSS and genuinely shared primitives.
+- Keep Studio route, editor, and shell classes out of `assets/css/main.css` unless the same selector is intentionally used by public pages too.
+- Do not add raw `font-size` or color literals to `assets/css/main.css` or Studio-owned CSS.
 - Prefer extending an existing primitive before creating a new page-specific pattern.
-- If a new token is required, add it in the shared token layer, not inside a page block.
+- If a new token is required, add it in the relevant public or Studio token layer, not inside a page block.
 - If two pages need the same visual shell, promote it to a shared primitive.
 
 ## Shared Token Sources
@@ -56,6 +58,10 @@ Defined in `assets/css/main.css`:
   - `--radius`
   - `--container`
   - `--content-measure`
+
+Local Studio currently depends on these public-site tokens because Local Studio shells still load `assets/css/main.css` before `assets/studio/css/studio.css`.
+The source-tree reorganization should replace that dependency with a Studio-owned base stylesheet that contains the font, size, spacing, layout, and truly shared primitive tokens Studio needs.
+After that split, `assets/css/main.css` should not retain Studio-only classes or tokens.
 
 ### Shared list tokens
 

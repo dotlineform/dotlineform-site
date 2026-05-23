@@ -3,17 +3,16 @@ doc_id: site-request-studio-local-vanilla-web-app
 title: Studio Local Vanilla Web App Request
 added_date: 2026-05-22
 last_updated: 2026-05-23
-ui_status: in-progress
-parent_id: change-requests
-sort_order: 10000
+ui_status: done
+parent_id: archive
+sort_order: 91000
 viewable: true
 ---
 # Studio Local Vanilla Web App Request
 
 Status:
 
-- in progress
-- target direction agreed
+- completed
 - Phase 0, Phase 1, and Phase 1A implemented
 - Phase 2 implemented
 - Phase 3 implemented for Docs Viewer manage mode

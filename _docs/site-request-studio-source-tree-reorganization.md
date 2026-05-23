@@ -2,7 +2,7 @@
 doc_id: site-request-studio-source-tree-reorganization
 title: Studio Source Tree Reorganization Request
 added_date: 2026-05-23
-last_updated: 2026-05-23
+last_updated: 2026-05-24
 ui_status: planned
 parent_id: change-requests
 sort_order: 10010
@@ -34,6 +34,7 @@ In scope:
 
 - Local Studio Python app server modules and route-family modules
 - Studio-owned browser JavaScript and CSS
+- a Studio-owned base stylesheet that replaces Local Studio's dependency on public `assets/css/main.css`
 - Studio-owned static data and local runtime config
 - UI Catalogue demos and notes that are Studio reference surfaces
 - local-only source or support files that should no longer sit in public Jekyll paths
@@ -97,6 +98,19 @@ This is not a requirement to adopt a frontend framework or rewrite Studio as a f
 A vanilla JavaScript shell is enough as the next architectural step.
 The practical goal is to move shell composition and navigation rendering out of Python while keeping Python authoritative for local filesystem writes and service guardrails.
 
+## CSS Ownership Direction
+
+Local Studio currently loads public `assets/css/main.css` for base font, size, spacing, layout, and primitive tokens, then layers `assets/studio/css/studio.css` on top.
+That is a concrete public-site dependency and should be removed during the source-tree reorganization.
+
+The target is:
+
+- public `assets/css/main.css` owns public-site styles and genuinely shared primitives only
+- Studio has its own base or main stylesheet for font, size, spacing, layout, shell, and primitive tokens needed by Local Studio
+- Studio route, editor, modal, dashboard, and operational classes live in Studio-owned CSS
+- any selector left in public `main.css` must be used by public routes too, not retained only because Studio needs it
+- Local Studio shell rendering should load the Studio base stylesheet directly, then Studio route CSS, without depending on public `main.css`
+
 ## Implementation Tasks
 
 - Inventory current Studio-owned source, static, UI Catalogue, and generated-output-adjacent paths.
@@ -105,6 +119,7 @@ The practical goal is to move shell composition and navigation rendering out of 
 - Identify which current Python-rendered shell concerns should become browser-shell concerns before moving files.
 - Move Python app-server modules in a small first slice, with import compatibility kept narrow and temporary.
 - Move Studio static assets in a second slice, with local app static serving preserving existing URLs where practical.
+- Split Studio's CSS base from public `assets/css/main.css`, moving Studio-only tokens/classes into Studio-owned CSS and leaving only public or genuinely shared selectors in public `main.css`.
 - Move top navigation, active-section mapping, and home-list rendering toward a focused JavaScript shell module when doing so reduces path churn and verification scope.
 - Move UI Catalogue notes and demo source under the Studio boundary, preserving local demo routes.
 - Update smoke tests, docs, Jekyll excludes, and local runner docs in the same slices as the moves.
@@ -114,6 +129,8 @@ The practical goal is to move shell composition and navigation rendering out of 
 
 - Studio-owned source files are discoverable under a coherent `studio/` source boundary.
 - Public Jekyll preview does not watch Studio-only source or demo assets.
+- Local Studio no longer depends on public `assets/css/main.css` for base typography, size, spacing, shell, or Studio-only primitive classes.
+- Public `assets/css/main.css` contains no Studio-only route, editor, modal, dashboard, or operational selectors after the split.
 - Local Studio routes, UI Catalogue demos, and migrated app workflows still pass their focused smoke checks.
 - Existing public-site builds continue to exclude Studio-only surfaces.
 - Docs Viewer portable/shared files are not buried under Studio unless they are explicitly Studio shell integration files.

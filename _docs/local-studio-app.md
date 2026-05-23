@@ -31,6 +31,8 @@ Active Local Studio browser routes use `/studio/api/docs/...` for Docs managemen
 The local app adapter imports shared Docs management behavior from `scripts/docs/docs_management_service.py`.
 Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
 `bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
+Local Studio route shells currently load `/assets/css/main.css` before `/assets/studio/css/studio.css`.
+That is a remaining public-site CSS dependency: Studio needs its own base stylesheet for font, size, spacing, layout, and shared primitive tokens, and public `main.css` should not keep Studio-only classes unless a selector is genuinely shared with public routes.
 
 Current mounted views:
 

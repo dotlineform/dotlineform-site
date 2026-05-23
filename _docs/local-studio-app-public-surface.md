@@ -3,8 +3,8 @@ doc_id: local-studio-app-public-surface
 title: Public Published Surface
 added_date: 2026-05-22
 last_updated: 2026-05-23
-parent_id: local-studio-app
-sort_order: 1100
+parent_id: archive
+sort_order: 90000
 published: true
 viewable: true
 ---

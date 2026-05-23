@@ -3,8 +3,9 @@ doc_id: local-studio-app-implementation-plan
 title: Local Studio App Implementation Plan
 added_date: 2026-05-22
 last_updated: 2026-05-24
-parent_id: local-studio-app
-sort_order: 1000
+ui_status: done
+parent_id: archive
+sort_order: 89000
 published: true
 viewable: true
 ---
