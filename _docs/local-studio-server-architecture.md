@@ -22,7 +22,7 @@ Docs management, Data Sharing, Analytics tag APIs, Studio audit APIs, Project St
 The old standalone tag write server has been retired.
 The old standalone Docs management server has been retired.
 The old standalone catalogue write server has been retired.
-The standalone Audit Service remains available only when explicitly enabled for fallback/debug use.
+The old standalone Audit Service HTTP wrapper has been retired; direct automation uses `scripts/studio/audit_runner.py`.
 
 When docs live watching is enabled, the same runner also starts:
 
@@ -45,7 +45,7 @@ Current boundaries:
 - `scripts/studio/studio_audit_api.py` owns `/studio/api/audits/...` and keeps audit execution allowlisted.
 
 Some migration work remains, but it is no longer about moving endpoint ownership off sibling localhost services.
-Remaining work is mostly route-family cleanup, projection contracts, public/local boundary hardening, and deciding whether the optional standalone Audit Service still has a real fallback/debug audience.
+Remaining work is mostly route-family cleanup, projection contracts, public/local boundary hardening, and direct launcher cleanup.
 
 ## Current Direction
 
@@ -149,14 +149,13 @@ Implemented:
 - catalogue reads, workbook import, editor writes, build, publication, delete, prose import, moment import, Project State, and Thumbnail Quality workflows use local Studio catalogue APIs
 - catalogue handler-owned behavior has been extracted into callable service functions
 - the standalone tag write, Docs management, and catalogue write servers have been retired
-- `bin/dev-studio` starts only the local Studio app, optional Jekyll, optional Docs watcher, optional startup rebuilds, and explicitly enabled fallback/debug services that still exist
+- `bin/dev-studio` starts only the local Studio app, optional Jekyll, optional Docs watcher, and optional startup rebuilds
 
 Still in progress:
 
 - finish retiring or replacing remaining Jekyll Studio route files as local route families are verified
 - continue moving route state and cross-route data sharing from query-string compatibility toward explicit projection contracts
 - keep separating public-site preview/build commands from Local Studio workflows
-- decide whether the optional standalone Audit Service should remain as a fallback/debug wrapper
 - extract shared localhost helpers only where contracts are identical across domains
 
 Future local features should be added as route modules or focused service modules under the local Studio app, not as new standalone localhost processes.

@@ -356,7 +356,7 @@ Status:
 
 Implemented decision:
 
-- `bin/dev-studio` now checks the Jekyll, local Studio app, Catalogue Write Server, and Audit Service ports before any rebuild work runs
+- `bin/dev-studio` now checks required long-running service ports before any rebuild work runs; after later service consolidation this is Jekyll and the local Studio app
 - the runner exits early if any required port is unavailable
 - the failure message names the affected service and the matching port override environment variable
 

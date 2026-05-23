@@ -9,7 +9,83 @@ viewable: false
 ---
 # tmp
 
+we are working on _docs/local-studio-app-implementation-plan.md
+please continue with the next suitable slice.
 
+---
+
+normal development should use:
+
+- `bin/local-studio` for Studio
+- `bin/public-site-preview` for public Jekyll preview
+- `bin/public-site-build` for public Jekyll build
+
+
+---
+
+Reviewed `_docs/local-studio-app-implementation-plan.md`. Remaining work is:
+
+**Next Slices**
+1. Finish any remaining public-site link resolver adoption when migrated routes are touched.
+2. Continue service consolidation, especially remaining catalogue write-handler extraction.
+3. Start Phase 6 projection/build contract work.
+4. Defer repo split decision until the publish/export contract is stable.
+
+**Phase 4: Local Service Consolidation**
+- Continue moving endpoint ownership into the Python app server.
+- Keep expanding focused route/API modules for catalogue and shared Studio routes.
+- Finish replacing in-process `catalogue_write_server.Handler` bridge in `studio_catalogue_api.py`.
+- Current catalogue extraction order in the plan:
+  - moment save
+  - publication preview/apply
+  - delete apply
+  - bulk save
+  - remove fake handler bridge
+- Keep reducing `bin/dev-studio` to only genuinely required background tasks.
+- Finish compatibility docs cleanup around old sibling-service startup.
+
+**Transition Cleanup Backlog**
+- Retire remaining migrated Jekyll Studio route files or add intentional transition redirects.
+- Finish compatibility docs that still imply old sibling services are normal.
+- Finish extracting remaining catalogue write behavior out of the standalone HTTP handler.
+
+---
+
+**Phase 5: Route Family Migration**
+- Catalogue editors/dashboards remain partial, though many shells are already local-hosted.
+- Analytics/tag routes remain partial, though dashboard/tag groups/registry/aliases/series-tags/per-series editor are local-hosted.
+- Broader public-link resolver adoption remains partial, mainly “adopt when touched.”
+- Shared route URL builder adoption remains partial.
+- Jekyll route retirement remains partial.
+- Decide whether temporary redirects are useful for local transition ergonomics.
+
+Bullet check:
+Catalogue editors/dashboards: done for the current Phase 5 scope. Local app config includes catalogue dashboard, Bulk Add, Activity, Field Registry, Drafts, Studio Works, and all four catalogue editors in studio_app_config.py (line 13).
+Analytics/tag routes: done for the current Phase 5 scope. Analytics dashboard plus tag groups, registry, aliases, series-tags, and per-series editor are all in local app config.
+Public-link resolver: done for currently migrated route surfaces after the slice we just landed. Future route families still need to use the helper if they add public links.
+Shared route URL builder: done for the important migrated record-param links (work=, detail=, series=, moment=). There are still static route strings for fixed dashboard/nav links and route-context labels, which is fine. If the plan meant “all Studio links must use a builder,” then it is still partial, but that would be broader than the original risk.
+Jekyll route retirement: done for operational Studio routes. studio/ now only has UI Catalogue demo material left, which docs describe as isolated demo/reference pages, not migrated Studio workflow routes.
+Temporary redirects: no evidence that redirects are needed or implemented. This should be closed as “not useful for now” rather than left pending.
+So I’d mark Phase 5 as complete for current operational route-family migration, with a caveat that future route families must follow the same resolver/builder conventions. The next cleanup would be a docs-only/status update: change the stale Phase 5 table entries and explicitly record “no temporary redirects for now.”
+
+---
+
+**Phase 6: Projection And Build Contract**
+All still pending:
+- Document canonical source families and public projections.
+- Distinguish public projections, Studio projections, and Docs Viewer payloads.
+- Add checks for source-only fields leaking into public projections.
+- Verify Jekyll consumes public projections rather than Studio-only data.
+- Keep generated output paths explicit.
+
+**Phase 7: Optional Repo Split Decision**
+All still pending:
+- Review ownership of public site, Studio app, canonical data, Docs Viewer, and generated outputs.
+- Decide one repo vs split public-site/Studio repos vs Docs Viewer extraction.
+- Identify concrete operational benefits required to justify a split.
+- Define publish/export contract before moving files.
+
+Phases 0, 1, 1A, 2, and 3 are complete. Phase 4 and 5 are the active implementation areas; Phase 6 is the next strategic boundary work.
 
 ---
 

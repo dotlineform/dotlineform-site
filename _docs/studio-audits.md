@@ -2,7 +2,7 @@
 doc_id: studio-audits
 title: Studio Audits
 added_date: 2026-05-03
-last_updated: "2026-05-06 20:51"
+last_updated: "2026-05-23"
 parent_id: audit
 sort_order: 5000
 viewable: true
@@ -24,7 +24,7 @@ The page uses:
 - `assets/studio/js/studio-audits.js`
 - `assets/studio/js/studio-transport.js`
 - `scripts/studio/studio_audit_api.py`
-- `scripts/studio/audit_service.py`
+- `scripts/studio/audit_runner.py`
 - `scripts/checks/audit_studio_ready_state.py`
 
 Visible runtime copy lives under `ui_text.studio_audits` in `assets/studio/data/studio_config.json`.
@@ -48,7 +48,7 @@ The page marks busy while an audit run is in progress and returns to ready after
 
 ## Service Behavior
 
-When the audit service is unavailable, the page stays readable, disables the Run command, and exposes `data-studio-service="unavailable"`.
+When the local app audit API is unavailable, the page stays readable, disables the Run command, and exposes `data-studio-service="unavailable"`.
 
 When the service is available, the page fetches `/studio/api/audits/audits` to list allowlisted audits. It currently expects:
 
@@ -58,6 +58,6 @@ Running the audit posts only the audit ID to `/studio/api/audits/audits/run`. Th
 
 ## Related References
 
-- [Studio Audit Service](/docs/?scope=studio&doc=scripts-studio-audit-service)
+- [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service)
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
 - [Studio Audits Page Request](/docs/?scope=studio&doc=site-request-studio-audits-page)

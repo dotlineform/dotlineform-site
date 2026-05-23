@@ -159,7 +159,7 @@ The script-purpose label describes each downstream operation recorded as its own
 
 | Page | Route | Button/control | User action label | Expected script coverage | Status | Notes |
 |---|---|---|---|---|---|---|
-| Studio audits | `/studio/audits/` | `data-run-audit="<audit_id>"` | `run studio audit` | audit service run; pass/warn/fail result; report path or summary | `done` | Batch C coverage; details include audit label, status, error/warning counts, and duration. |
+| Studio audits | `/studio/audits/` | `data-run-audit="<audit_id>"` | `run studio audit` | local app audit API run; pass/warn/fail result; report path or summary | `done` | Batch C coverage; details include audit label, status, error/warning counts, and duration. |
 | Catalogue field registry | `/studio/catalogue-field-registry/` | review controls | none | none | `excluded` | Review/config surface; future writable behavior belongs in [Studio Activity Follow-Ups](/docs/?scope=studio&doc=site-request-studio-activity-follow-ups). |
 | Studio dashboards | `/studio/`, `/studio/catalogue/`, `/studio/analytics/` | dashboard links and hydration | none | none | `excluded` | Navigation and read-only metric hydration should not appear in the activity log. |
 | Docs Viewer | `/docs/` | view/search/navigation controls | none | none | `excluded` | Not a Studio write/build action. |

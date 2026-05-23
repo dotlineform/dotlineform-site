@@ -117,7 +117,7 @@ The old Jekyll analytics tag route files have been retired, and `bin/dev-studio`
 The standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint has been removed; `scripts/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes.
 The Studio Audits route shell is also hosted by the local app at `/studio/audits/?mode=manage`.
 It reuses `assets/studio/js/studio-audits.js` and now calls `/studio/api/audits/...` on the local app server.
-`scripts/studio/studio_audit_api.py` adapts the existing allowlisted audit functions from `scripts/studio/audit_service.py`, so normal Studio sessions no longer need the separate `127.0.0.1:8790` sibling service.
+`scripts/studio/studio_audit_api.py` adapts the allowlisted audit functions from `scripts/studio/audit_runner.py`, so normal Studio sessions no longer need a separate audit sibling service.
 The old Jekyll `/studio/audits/` shell has been retired.
 The Catalogue dashboard is hosted by the local app at `/studio/catalogue/?mode=manage`.
 It reuses `assets/studio/js/studio-dashboard.js`, local index data, and local-app catalogue read keys for source-backed dashboard counts.

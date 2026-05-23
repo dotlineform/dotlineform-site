@@ -64,7 +64,7 @@ const DATA_SHARING_ENDPOINTS = Object.freeze({
   apply: "/studio/api/docs/data-sharing/apply"
 });
 
-const AUDIT_SERVICE_ENDPOINTS = Object.freeze({
+const AUDIT_API_ENDPOINTS = Object.freeze({
   health: "/studio/api/audits/health",
   audits: "/studio/api/audits/audits",
   run: "/studio/api/audits/audits/run"
@@ -94,7 +94,7 @@ const BULK_ADD_WORK_ENDPOINTS = Object.freeze({
 });
 
 export {
-  AUDIT_SERVICE_ENDPOINTS,
+  AUDIT_API_ENDPOINTS,
   BULK_ADD_WORK_ENDPOINTS,
   CATALOGUE_READ_ENDPOINTS,
   DATA_SHARING_ENDPOINTS,
@@ -129,8 +129,8 @@ export async function probeDataSharingHealth(timeoutMs = 500) {
   return probeHealth(DATA_SHARING_ENDPOINTS.health, timeoutMs);
 }
 
-export async function probeAuditServiceHealth(timeoutMs = 500) {
-  return probeHealth(AUDIT_SERVICE_ENDPOINTS.health, timeoutMs);
+export async function probeAuditApiHealth(timeoutMs = 500) {
+  return probeHealth(AUDIT_API_ENDPOINTS.health, timeoutMs);
 }
 
 export async function probeProjectStateCatalogueHealth(timeoutMs = 500) {

@@ -39,9 +39,9 @@ def main(argv: list[str] | None = None) -> int:
         runtime_view = runtime_by_id.get("studio_audits")
         if not runtime_view or runtime_view.get("path") != "/studio/audits/?mode=manage":
             raise AssertionError(f"runtime config missing studio_audits: {runtime_views!r}")
-        audit_service = runtime_config.get("app", {}).get("runtime", {}).get("services", {}).get("audits", {})
-        if audit_service.get("audits") != "/studio/api/audits/audits":
-            raise AssertionError(f"runtime config missing local audits API: {audit_service!r}")
+        audit_api = runtime_config.get("app", {}).get("runtime", {}).get("services", {}).get("audits", {})
+        if audit_api.get("audits") != "/studio/api/audits/audits":
+            raise AssertionError(f"runtime config missing local audits API: {audit_api!r}")
 
         with urllib.request.urlopen(f"{base_url}/studio/api/audits/audits", timeout=10) as response:
             audits_payload = json.loads(response.read().decode("utf-8"))
@@ -57,12 +57,12 @@ def main(argv: list[str] | None = None) -> int:
             page = browser.new_page()
             console_errors: list[str] = []
             page_errors: list[str] = []
-            legacy_audit_service_requests: list[str] = []
+            legacy_audit_wrapper_requests: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
             page.on(
                 "request",
-                lambda request: legacy_audit_service_requests.append(request.url)
+                lambda request: legacy_audit_wrapper_requests.append(request.url)
                 if "127.0.0.1:8790" in request.url
                 else None,
             )
@@ -89,8 +89,8 @@ def main(argv: list[str] | None = None) -> int:
             home_href = page.locator(".site-title a").get_attribute("href")
             if home_href != "/studio/":
                 raise AssertionError(f"unexpected Studio home link: {home_href!r}")
-            if legacy_audit_service_requests:
-                raise AssertionError(f"audits route should not request legacy 8790 endpoints: {legacy_audit_service_requests!r}")
+            if legacy_audit_wrapper_requests:
+                raise AssertionError(f"audits route should not request legacy 8790 endpoints: {legacy_audit_wrapper_requests!r}")
 
             browser.close()
 

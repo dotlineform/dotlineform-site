@@ -14,14 +14,18 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
     if str(candidate) not in sys.path:
         sys.path.insert(0, str(candidate))
 
-from audit_service import (
+from audit_runner import (
     audits_payload,
     build_audit_registry,
     health_payload,
     run_audit_payload,
 )
 from script_logging import append_script_log
-from studio_activity import append_studio_activity
+from studio_activity import (
+    append_studio_activity,
+    normalize_activity_context_from_contract,
+    studio_activity_entry,
+)
 
 
 LOGS_REL_DIR = Path("var/studio/audits/logs")
@@ -65,4 +69,6 @@ def audit_post_response(
         activity_endpoint=RUN_AUDIT_API_PATH,
         log_event=log_event,
         append_activity=append_activity,
+        normalize_activity_context=normalize_activity_context_from_contract,
+        build_activity_entry=studio_activity_entry,
     )

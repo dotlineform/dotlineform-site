@@ -23,8 +23,9 @@ Local Studio and public Jekyll preview now have explicit launcher commands.
 `bin/local-studio` is the local Studio app launcher.
 `bin/public-site-preview` and `bin/public-site-build` are public-site Jekyll commands that use `_config.yml` by default.
 
-`bin/dev-studio` remains the integrated transition runner while Studio is still being moved out of Jekyll.
-It starts both the local Studio app and the Jekyll dev preview unless Jekyll is disabled, so it should be treated as a bridge command rather than the long-term product boundary.
+`bin/dev-studio` remains an integrated bridge runner, not the normal product boundary.
+It starts both the local Studio app and the Jekyll dev preview unless Jekyll is disabled.
+The current plan is to reduce or retire this bridge after `bin/local-studio` no longer depends on it for shared startup behavior.
 
 For a new Studio session, `bin/local-studio` is the clearest command.
 It can:
@@ -32,7 +33,6 @@ It can:
 - optionally refresh one or both docs/docs-search scopes before startup
 - optionally refresh the derived catalogue lookup payloads used by the catalogue editors
 - start the local Python Studio app server for migrated Studio views
-- optionally start retired standalone write services for fallback/debug runs
 - keep docs source edits synced into same-scope docs payloads and docs search while the runner is active
 
 Use `bin/public-site-preview` alongside it when local Studio links need a running public-site preview.
@@ -40,6 +40,7 @@ Use `bin/public-site-preview` alongside it when local Studio links need a runnin
 `bin/dev-studio` adds Jekyll to the same process group for transition sessions that still need public preview and Studio services under one terminal.
 It is intended for route-shell, UI, and localhost write-flow testing. It is not the full content-generation pipeline.
 As migration proceeds, this runner should shrink rather than gain new compatibility layers.
+Normal local work should use `bin/local-studio` for Studio and `bin/public-site-preview` or `bin/public-site-build` for public Jekyll.
 
 ## Explicit Commands
 
@@ -74,6 +75,9 @@ The bridge command remains available:
 ```bash
 bin/dev-studio
 ```
+
+It is still present because `bin/local-studio` currently delegates to the same runner implementation with Jekyll disabled.
+Before removing `bin/dev-studio`, move the shared local-Studio startup pieces into `bin/local-studio` or a neutral helper so Studio startup, docs watching, backup retention, and optional startup rebuilds keep their existing behavior.
 
 Each script:
 
@@ -111,11 +115,6 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   default: `127.0.0.1`
 - `STUDIO_APP_PORT`
   default: `8765`
-- `AUDIT_SERVICE_PORT`
-  default: `8790`
-- `AUDIT_SERVICE_ENABLED`
-  default: `0`
-  set to `1` only for fallback/debug runs that intentionally need the standalone audit service
 - `DOCS_STARTUP_REBUILD_SCOPES`
   default: blank
   accepted values: configured docs scope ids from `scripts/docs/docs_scopes.json`, or comma-separated combinations
@@ -151,8 +150,6 @@ export DOCS_STARTUP_REBUILD_SCOPES=""
 export CATALOGUE_STARTUP_LOOKUP_REBUILD=off
 export JEKYLL_PORT=4001
 export STUDIO_APP_PORT=8765
-export AUDIT_SERVICE_PORT=8800
-export AUDIT_SERVICE_ENABLED=0
 export DOCS_WATCH_DEBOUNCE_SECONDS=1.5
 export DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8
 ```
@@ -172,7 +169,6 @@ Before it starts any rebuilds or long-running servers, `bin/dev-studio` checks t
 
 1. Jekyll on `JEKYLL_HOST:JEKYLL_PORT` when `JEKYLL_ENABLED` is not `0`
 2. Local Studio App on `STUDIO_APP_HOST:STUDIO_APP_PORT` when `STUDIO_APP_ENABLED` is not `0`
-3. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT` only when `AUDIT_SERVICE_ENABLED` is not `0`
 
 If any port is unavailable, the runner exits immediately with a message naming the affected service and environment variable override.
 
@@ -268,17 +264,17 @@ Both public-site commands use `_config.yml` by default and do not start local St
 The local Studio app owns the active browser-facing catalogue APIs under `/studio/api/catalogue/...`.
 There is no standalone catalogue write-server fallback in `bin/dev-studio`.
 
-### Audit Service
+### Audit API
 
-- command:
+The local Studio app owns the active browser-facing audit APIs under `/studio/api/audits/...`.
+There is no standalone audit HTTP service fallback in `bin/dev-studio`.
+For direct automation, call:
 
 ```bash
-./scripts/studio/audit_service.py --port "$AUDIT_SERVICE_PORT"
+./scripts/studio/audit_runner.py --audit-id studio-ready-state
 ```
 
-- default URL: `http://127.0.0.1:8790`
-- disabled by default; active Studio audit endpoints are served by the local Studio app at `/studio/api/audits/...`
-- related doc: [Studio Audit Service](/docs/?scope=studio&doc=scripts-studio-audit-service)
+Related doc: [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service).
 
 ### Docs Live Rebuild Watcher
 
@@ -301,7 +297,7 @@ At startup the runner prints quick links for:
 
 - Jekyll root when enabled
 - Local Studio App
-- Audit Service status
+- Audit API ownership
 - startup docs rebuild scopes
 - startup catalogue lookup rebuild status
 - Docs Live Watcher status
@@ -317,7 +313,6 @@ When you press `Ctrl+C`, it:
 
 - stops Jekyll when enabled
 - stops the Local Studio App when enabled
-- stops the Audit Service when enabled
 - stops the Docs Live Rebuild Watcher when enabled
 - waits for those child processes before exiting
 

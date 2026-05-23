@@ -27,7 +27,7 @@ The current layout has useful subfolders, but their rule is inconsistent:
 
 - `scripts/docs/` is a coherent Docs domain package containing the docs builder implementation, docs-management server, docs source-model helpers, import/export helpers, generated-read helpers, rebuild helpers, and docs route constants.
 - `scripts/search/` contains search configuration and the search builder implementation, while `scripts/build_search.rb` remains the stable top-level command wrapper.
-- `scripts/studio/` contains local Studio services such as `studio_app_server.py` and `audit_service.py`; catalogue and Analytics tag domain helpers live with their owning domains.
+- `scripts/studio/` contains local Studio runtime modules such as `studio_app_server.py`, `studio_audit_api.py`, and `audit_runner.py`; catalogue and Analytics tag domain helpers live with their owning domains.
 - Catalogue has many top-level modules: `catalogue_source.py`, `catalogue_json_build.py`, `catalogue_lookup.py`, `catalogue_transactions.py`, `catalogue_routes.py`, `catalogue_publication.py`, and related helpers.
 - Shared helpers such as `script_logging.py`, `studio_activity.py`, `pipeline_config.py`, and `display_paths.py` also live at top level, which is reasonable only if top level is explicitly treated as shared infrastructure plus stable entrypoints.
 
@@ -201,7 +201,7 @@ Proposed folder ownership rules:
 | `scripts/script_logging.py` | helper | Shared infrastructure | `scripts/script_logging.py` | - | - | low |
 | `scripts/search/build_config.json` | config | Search | `scripts/search/build_config.json` | config read | docs: `_docs/search-validation-checklist.md`, `_docs/search-overview.md` +7 | medium |
 | `scripts/series_ids.py` | helper | Catalogue | `scripts/catalogue/series_ids.py` | - | tests: `tests/python/test_catalogue_build_commands.py`, `tests/python/test_catalogue_build_field_plan.py` +11; docs: `_docs/site-change-log-2026-04.md` | medium |
-| `scripts/studio/audit_service.py` | entrypoint | Studio runtime | `scripts/studio/audit_service.py` | `bin/dev-studio`, `./scripts/studio/audit_service.py` | docs: `_docs/site-change-log-2026-05.md`, `_docs/studio-runtime.md` +8 | high |
+| retired audit HTTP wrapper | entrypoint | Studio runtime | local Studio app API: `scripts/studio/studio_audit_api.py`; direct runner: `scripts/studio/audit_runner.py` | no standalone HTTP command | docs: `_docs/studio-runtime.md`, `_docs/scripts-studio-audit-service.md` | done |
 | `scripts/studio/catalogue_write_server.py` | entrypoint | Catalogue | `scripts/catalogue/catalogue_write_server.py` | `bin/dev-studio`, `./scripts/studio/catalogue_write_server.py` | tests: `tests/python/test_catalogue_routes.py`, `tests/python/test_studio_activity_feed.py`; docs: `_docs/site-change-log-2026-05.md`, `_docs/site-request-catalogue-delete-cleanup.md` +24 | high |
 | retired tag write server | entrypoint | Analytics | local Studio app API: `scripts/studio/studio_analytics_api.py` | no standalone command | tests: `tests/python/test_tag_activity.py`, `tests/python/test_tag_routes.py`; docs: `_docs/site-request-script-structural-review-tag-write-server.md`, `_docs/offline-tag-assignments-implementation-breakdown.md` +12 | done |
 | `scripts/studio_activity.py` | helper | Shared infrastructure | `scripts/studio_activity.py` | - | tests: `tests/python/test_docs_activity.py`, `tests/python/test_studio_activity_feed.py`; docs: `_docs/scripts-tag-write-server.md`, `_docs/site-change-log.md` +1 | medium |
@@ -272,7 +272,7 @@ Historical change-log and already-closed request docs may still mention the old 
 
 Run this slice after [Analytics Tag Route Cleanup Request](/docs/?scope=studio&doc=site-request-analytics-tag-route-cleanup) and the tag write-server structural review are complete.
 At that point the Analytics tag service boundary, extracted helper modules, and server name should be stable enough to move without mixing package churn into behavior extraction.
-Review the retired tag write service history, extracted Analytics tag modules, and `scripts/studio/audit_service.py`.
+Review the retired tag write service history, extracted Analytics tag modules, and `scripts/studio/audit_runner.py`.
 
 Expected decision:
 
@@ -304,7 +304,7 @@ Slice 3 moved Analytics tag code into a concrete `analytics` Python package:
 The later local Studio app migration retired the standalone tag write service; `scripts/studio/studio_analytics_api.py` now owns the local Analytics HTTP surface.
 The moved modules import each other through the `analytics.*` package boundary, and tag tests import package modules rather than loose top-level `tag_*` modules.
 
-`scripts/studio/audit_service.py` remains under `scripts/studio/` because it is Studio runtime infrastructure: it exposes allowlisted local audit checks for Studio tooling rather than owning Catalogue, Analytics, Docs, or Search data-domain behavior.
+`scripts/studio/audit_runner.py` remains under `scripts/studio/` because it is Studio runtime infrastructure: it exposes allowlisted local audit checks for Studio tooling rather than owning Catalogue, Analytics, Docs, or Search data-domain behavior.
 
 ### Slice 4: docs and search entrypoint consistency
 
@@ -368,7 +368,7 @@ Final owner folders are now concrete:
   - `make_srcset_images.py`
   - `publish_media_to_r2.py`
 - `scripts/studio/` owns non-domain-specific Studio runtime services:
-  - `audit_service.py`
+  - `audit_runner.py`
   - `studio_backup_retention.py`
 
 Top-level `scripts/` is now reserved for:

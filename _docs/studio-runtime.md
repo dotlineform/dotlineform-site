@@ -104,7 +104,7 @@ Shared Studio runtime and wiring currently live in:
 - `assets/studio/js/studio-dashboard.js`
   hydrates lightweight dashboard metrics for the new domain landing pages
 - `assets/studio/js/studio-audits.js`
-  powers `/studio/audits/` by probing the local audit service, listing allowlisted audits, running selected audits, and rendering structured findings
+  powers `/studio/audits/` by probing the local app audit API, listing allowlisted audits, running selected audits, and rendering structured findings
 - `assets/studio/js/docs-rebuild-button.js`
   wires the docs rebuild action beside the Studio docs search input
 - `assets/studio/js/catalogue-work-fields.js`
@@ -253,7 +253,7 @@ What it does not start:
 - catalogue/search regeneration scripts
 - the retired standalone tag write server
 - the standalone Docs management server unless explicitly enabled for fallback/debug use
-- the standalone Audit Service unless explicitly enabled for fallback/debug use
+- the retired standalone Audit Service HTTP wrapper
 
 Current local generated Studio feeds surfaced through this runtime:
 

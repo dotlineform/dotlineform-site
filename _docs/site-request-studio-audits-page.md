@@ -22,10 +22,11 @@ The first slice is implemented.
 
 - `/studio/audits/` renders a compact Studio audit page.
 - `/studio/` links to Audits from Resources.
-- `assets/studio/js/studio-audits.js` loads the audit registry, probes service availability, runs an allowlisted audit, renders results, and maintains route-ready attributes.
-- `scripts/studio/audit_service.py` exposes the local read-only audit service.
-- `scripts/checks/audit_studio_ready_state.py --strict --json` provides structured output for the service.
-- `bin/dev-studio` starts the audit service on `AUDIT_SERVICE_PORT`, default `8790`.
+- `assets/studio/js/studio-audits.js` loads the audit registry through the local app audit API, probes API availability, runs an allowlisted audit, renders results, and maintains route-ready attributes.
+- `scripts/studio/studio_audit_api.py` exposes the active local app audit API.
+- `scripts/studio/audit_runner.py` owns the direct allowlisted runner used by the API and by Codex automation.
+- `scripts/checks/audit_studio_ready_state.py --strict --json` provides structured output for the runner.
+- the original standalone `scripts/studio/audit_service.py` HTTP wrapper has been retired.
 
 Only `studio-ready-state` is wired in this slice.
 
@@ -128,13 +129,13 @@ Requirements:
 - return structured JSON
 - keep logs limited to audit ID, status, counts, and exit code
 
-Suggested endpoints:
+Current endpoints:
 
 | Method | Path | Purpose |
 |---|---|---|
-| `GET` | `/health` | service availability check |
-| `GET` | `/audits` | list available audit IDs and labels |
-| `POST` | `/audits/run` | run one allowlisted audit by ID |
+| `GET` | `/studio/api/audits/health` | local app API availability check |
+| `GET` | `/studio/api/audits/audits` | list available audit IDs and labels |
+| `POST` | `/studio/api/audits/audits/run` | run one allowlisted audit by ID |
 
 Suggested request:
 
@@ -216,13 +217,13 @@ Finding shape:
 ## Implementation Tasks
 
 1. Add JSON output to `scripts/checks/audit_studio_ready_state.py`.
-2. Add a loopback-only audit service under `scripts/studio/` with `health`, `audits`, and `audits/run` endpoints.
+2. Add a loopback-only audit API under the local Studio app with health, registry, and run endpoints.
 3. Add `studio_config.json` entries for the Audits route, labels, and status text. Endpoint URLs remain in `assets/studio/js/studio-transport.js`, matching the existing local-service boundary.
 4. Add `/studio/audits/index.md` with the Studio route root and Resources navigation target.
 5. Add `assets/studio/js/studio-audits.js` for service health, audit registry rendering, run command state, result rendering, and route-ready attributes.
 6. Add the `/studio/audits/` link to the `/studio/` Resources section.
 7. Document the new service and route in Studio/runtime/script docs.
-8. Add the audit service to the local Studio runner.
+8. Host audit endpoints through the local Studio app runner.
 9. Add targeted smoke coverage for service unavailable, passing audit, and failing audit states.
 10. Update the site change log when the feature is implemented.
 
@@ -231,7 +232,7 @@ Finding shape:
 | Slice | Codex-run checks | Manual checks |
 |---|---|---|
 | JSON audit output | Python syntax check; `./scripts/checks/audit_studio_ready_state.py --strict`; JSON output parse check | Compare human and JSON summaries for the same run |
-| Audit service | service health check; allowed audit run; invalid audit ID rejection | Confirm service binds only to loopback and logs only minimal run metadata |
+| Audit API | local app API health check; allowed audit run; invalid audit ID rejection | Confirm audit runs accept only allowlisted IDs and logs only minimal run metadata |
 | Studio page | Jekyll build; Playwright smoke for unavailable and passing states | Open `/studio/audits/`, run the audit, inspect findings display and button/busy behavior on desktop and mobile |
 | Home link | Jekyll build; link presence check | Open `/studio/` and follow the Audits link from Resources |
 

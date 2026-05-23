@@ -1,31 +1,44 @@
 ---
 doc_id: scripts-studio-audit-service
-title: Studio Audit Service
+title: Studio Audit Runner
 added_date: 2026-05-03
-last_updated: "2026-05-08 19:25"
+last_updated: "2026-05-23"
 parent_id: audit
 sort_order: 1000
 viewable: true
 ---
-# Studio Audit Service
+# Studio Audit Runner
 
 Script:
 
 ```bash
-./scripts/studio/audit_service.py --port 8790
+./scripts/studio/audit_runner.py --audit-id studio-ready-state
 ```
 
-Normal `bin/dev-studio` sessions do not start this standalone service by default because the local Studio app server owns the active audit HTTP surface through `scripts/studio/studio_audit_api.py`.
-Set `AUDIT_SERVICE_ENABLED=1` only for fallback/debug runs that intentionally need the old standalone process.
+Normal Studio sessions do not start a standalone audit service because the local Studio app server owns the active audit HTTP surface through `scripts/studio/studio_audit_api.py`.
+For Codex automation, call `scripts/studio/audit_runner.py` directly instead of starting a sibling localhost service.
 
 ## Purpose
 
-The audit service module owns the allowlisted Studio maintenance audit registry and reusable run logic.
-The active local Studio endpoints are served by `scripts/studio/studio_audit_api.py`; the standalone script remains available as a localhost-only fallback/debug service.
+The audit runner owns the allowlisted Studio maintenance audit registry and direct audit execution behavior.
+The active local Studio browser endpoints are served by `scripts/studio/studio_audit_api.py`, which imports the runner module.
+The retired `scripts/studio/audit_service.py` HTTP wrapper is no longer part of the local development stack.
 
 The first allowlisted audit is:
 
 - `studio-ready-state`
+
+List allowlisted audits:
+
+```bash
+./scripts/studio/audit_runner.py --list
+```
+
+Run the default ready-state audit:
+
+```bash
+./scripts/studio/audit_runner.py --audit-id studio-ready-state
+```
 
 ## Endpoints
 
@@ -34,9 +47,6 @@ The first allowlisted audit is:
 | `GET` | `/studio/api/audits/health` | service availability check in the local Studio app |
 | `GET` | `/studio/api/audits/audits` | list allowlisted audit IDs and labels in the local Studio app |
 | `POST` | `/studio/api/audits/audits/run` | run one allowlisted audit by ID in the local Studio app |
-| `GET` | `/health` | standalone fallback service availability check |
-| `GET` | `/audits` | standalone fallback registry read |
-| `POST` | `/audits/run` | standalone fallback audit run |
 
 Run request:
 
@@ -54,8 +64,6 @@ When the request includes valid Studio activity context from `/studio/audits/?mo
 
 ## Security Boundary
 
-- binds only to `127.0.0.1`
-- allows CORS only from `http://localhost:*` and `http://127.0.0.1:*`
 - accepts audit IDs only, not command text
 - runs command arguments from a server-side allowlist
 - does not accept browser-controlled paths, flags, environment, or working directories

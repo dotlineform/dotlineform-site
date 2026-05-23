@@ -123,7 +123,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/catalogue/catalogue_save_build.py",
                 "scripts/catalogue/catalogue_source_mutation.py",
                 "scripts/catalogue/catalogue_transactions.py",
-                "scripts/studio/audit_service.py",
+                "scripts/studio/audit_runner.py",
                 "tests/smoke/docs_viewer_routes.py",
                 "tests/smoke/local_studio_app_docs_viewer.py",
                 "tests/smoke/docs_viewer_management_modal.py",

@@ -34,8 +34,6 @@ fi
 STUDIO_APP_ENABLED="${STUDIO_APP_ENABLED:-1}"
 STUDIO_APP_HOST="${STUDIO_APP_HOST:-127.0.0.1}"
 STUDIO_APP_PORT="${STUDIO_APP_PORT:-8765}"
-AUDIT_SERVICE_PORT="${AUDIT_SERVICE_PORT:-8790}"
-AUDIT_SERVICE_ENABLED="${AUDIT_SERVICE_ENABLED:-0}"
 DOCS_STARTUP_REBUILD_SCOPES="${DOCS_STARTUP_REBUILD_SCOPES:-}"
 CATALOGUE_STARTUP_LOOKUP_REBUILD="${CATALOGUE_STARTUP_LOOKUP_REBUILD:-off}"
 DOCS_WATCH_ENABLED="${DOCS_WATCH_ENABLED:-1}"
@@ -52,7 +50,6 @@ RUNNER_NAME="${RUNNER_NAME:-bin/dev-studio}"
 
 JEKYLL_PID=""
 STUDIO_APP_PID=""
-AUDIT_SERVICE_PID=""
 DOCS_WATCHER_PID=""
 STARTUP_DOC_SCOPES=()
 DOCS_SCOPE_IDS=()
@@ -195,13 +192,10 @@ cleanup() {
   if [ -n "$STUDIO_APP_PID" ] && kill -0 "$STUDIO_APP_PID" 2>/dev/null; then
     kill "$STUDIO_APP_PID" 2>/dev/null || true
   fi
-  if [ -n "$AUDIT_SERVICE_PID" ] && kill -0 "$AUDIT_SERVICE_PID" 2>/dev/null; then
-    kill "$AUDIT_SERVICE_PID" 2>/dev/null || true
-  fi
   if [ -n "$DOCS_WATCHER_PID" ] && kill -0 "$DOCS_WATCHER_PID" 2>/dev/null; then
     kill "$DOCS_WATCHER_PID" 2>/dev/null || true
   fi
-  wait "$JEKYLL_PID" "$STUDIO_APP_PID" "$AUDIT_SERVICE_PID" "$DOCS_WATCHER_PID" 2>/dev/null || true
+  wait "$JEKYLL_PID" "$STUDIO_APP_PID" "$DOCS_WATCHER_PID" 2>/dev/null || true
 }
 
 trap cleanup EXIT INT TERM
@@ -223,11 +217,7 @@ else
 fi
 echo "Catalogue APIs: handled by Local Studio App"
 echo "Docs management API: handled by Local Studio App"
-if [ "$AUDIT_SERVICE_ENABLED" != "0" ]; then
-  echo "Audit Service: http://127.0.0.1:$AUDIT_SERVICE_PORT"
-else
-  echo "Audit Service: disabled (handled by Local Studio App)"
-fi
+echo "Audit API: handled by Local Studio App"
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   echo "Series Tag Editor: http://$STUDIO_APP_HOST:$STUDIO_APP_PORT/studio/analytics/series-tag-editor/?series=<series_id>"
 fi
@@ -261,9 +251,6 @@ if [ "$JEKYLL_ENABLED" != "0" ]; then
 fi
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   require_open_port "Local Studio App" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT" "STUDIO_APP_PORT"
-fi
-if [ "$AUDIT_SERVICE_ENABLED" != "0" ]; then
-  require_open_port "Audit Service" "127.0.0.1" "$AUDIT_SERVICE_PORT" "AUDIT_SERVICE_PORT"
 fi
 
 if [ "$DOTLINEFORM_BACKUP_RETENTION" = "off" ] || [ "$DOTLINEFORM_BACKUP_RETENTION" = "0" ]; then
@@ -307,11 +294,6 @@ if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   STUDIO_APP_PID=$!
 fi
 
-if [ "$AUDIT_SERVICE_ENABLED" != "0" ]; then
-  "$PYTHON_BIN" scripts/studio/audit_service.py --port "$AUDIT_SERVICE_PORT" &
-  AUDIT_SERVICE_PID=$!
-fi
-
 if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
   "$PYTHON_BIN" scripts/docs/docs_live_rebuild_watcher.py \
     --poll-seconds "$DOCS_WATCH_POLL_SECONDS" \
@@ -326,10 +308,6 @@ while true; do
   fi
   if [ -n "$STUDIO_APP_PID" ] && ! kill -0 "$STUDIO_APP_PID" 2>/dev/null; then
     wait "$STUDIO_APP_PID"
-    break
-  fi
-  if [ -n "$AUDIT_SERVICE_PID" ] && ! kill -0 "$AUDIT_SERVICE_PID" 2>/dev/null; then
-    wait "$AUDIT_SERVICE_PID"
     break
   fi
   if [ -n "$DOCS_WATCHER_PID" ] && ! kill -0 "$DOCS_WATCHER_PID" 2>/dev/null; then

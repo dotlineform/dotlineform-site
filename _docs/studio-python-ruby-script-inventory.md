@@ -197,11 +197,12 @@ Relevant files:
 - `scripts/catalogue/catalogue_write_server.py`
 - `scripts/docs/docs_management_server.py`
 - `scripts/studio/studio_audit_api.py`
-- `scripts/studio/audit_service.py`
+- `scripts/studio/audit_runner.py`
 - `scripts/script_logging.py`
 - `scripts/studio_activity.py`
 
 The local services share a pattern: loopback-only HTTP, CORS checks, JSON request parsing, write allowlists, backups, local logs, dry-run responses, and Studio Activity rows.
+Studio audit execution is now a direct runner plus local app API adapter rather than a sibling HTTP service.
 The services are currently domain-specific enough that a broad shared framework would be premature, but repeated mechanics can drift.
 
 Recommended improvements:

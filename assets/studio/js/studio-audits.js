@@ -1,9 +1,9 @@
 import { getStudioText, loadStudioConfigWithText } from "./studio-config.js";
 import {
-  AUDIT_SERVICE_ENDPOINTS,
+  AUDIT_API_ENDPOINTS,
   getJson,
   postJson,
-  probeAuditServiceHealth
+  probeAuditApiHealth
 } from "./studio-transport.js";
 import {
   initializeStudioRouteState
@@ -193,7 +193,7 @@ async function runAudit(state, auditId) {
   );
 
   try {
-    const result = await postJson(AUDIT_SERVICE_ENDPOINTS.run, {
+    const result = await postJson(AUDIT_API_ENDPOINTS.run, {
       audit_id: auditId,
       activity_context: buildStudioActivityContext({
         pageId: "studio-audits",
@@ -231,7 +231,7 @@ async function runAudit(state, auditId) {
 
 async function loadAudits(serviceAvailable) {
   if (!serviceAvailable) return FALLBACK_AUDITS.slice();
-  const payload = await getJson(AUDIT_SERVICE_ENDPOINTS.audits);
+  const payload = await getJson(AUDIT_API_ENDPOINTS.audits);
   return normalizeAudits(payload && payload.audits);
 }
 
@@ -254,7 +254,7 @@ async function init() {
 
   try {
     const config = await loadStudioConfigWithText("studio_audits");
-    const serviceAvailable = await probeAuditServiceHealth();
+    const serviceAvailable = await probeAuditApiHealth();
     const audits = await loadAudits(serviceAvailable);
     const state = {
       config,
