@@ -198,8 +198,9 @@ That means runtime config should distinguish:
 
 Studio navigation helpers should resolve public-content links through the configured public preview base rather than relying on relative URLs that would stay on the Studio app host.
 The initial helper exists in the local Studio runtime: runtime config exposes public-preview and production site bases, and `studio-navigation.js` can build public-site URLs from those bases.
-Route migrations still need to adopt the helper where they own public-content links.
-Migrated Catalogue editor summaries now resolve public work, series, work detail, and moment links through the configured public preview base, while local editor links keep using Studio routes.
+Route migrations should keep adopting the helper where future routes introduce public-content links.
+Migrated Catalogue editor summaries, the per-series tag editor, and Studio Works now resolve public catalogue links through the configured public preview base, while local editor links keep using Studio routes.
+The shared catalogue public-link helper fails closed if the public-site base is missing rather than falling back to Studio-host-relative public links.
 Configured Studio-route links should use the shared route URL builder when adding record parameters.
 That keeps transition state such as `?mode=manage` in config, rather than forcing every caller to know whether it should append `?` or `&`.
 

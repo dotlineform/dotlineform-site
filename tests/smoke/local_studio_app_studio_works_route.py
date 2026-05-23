@@ -66,6 +66,13 @@ def main(argv: list[str] | None = None) -> int:
             expect(page.locator(".worksList__item").first).to_be_visible(timeout=10_000)
             expect(page.locator("#worksListCount")).to_contain_text("works", timeout=10_000)
 
+            static_series_base = root.get_attribute("data-series-base-href")
+            back_href = page.locator("#worksIndexBackLink").get_attribute("href")
+            if static_series_base is not None:
+                raise AssertionError(f"studio-works kept static public series fallback: {static_series_base!r}")
+            if back_href == "/series/":
+                raise AssertionError("studio-works kept a relative public series back link")
+
             title_href = page.locator(".worksList__title").first.get_attribute("href")
             series_href = page.locator(".worksList__series").first.get_attribute("href")
             if not title_href or not title_href.startswith("http://127.0.0.1:4000/works/"):

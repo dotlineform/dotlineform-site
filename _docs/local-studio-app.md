@@ -182,9 +182,10 @@ The target contract is:
 The runtime config should eventually expose a public-site preview base URL and, separately, the production site base URL.
 Studio navigation helpers should resolve public-content links through that configured public preview base rather than relying on relative URLs that stay on the Studio app host or silently default to dotlineform.com.
 The runtime config now exposes `app.runtime.sites.public_preview.base` and `app.runtime.sites.production.base`, and `assets/studio/js/studio-navigation.js` exposes `buildPublicSiteUrl(config, path, params, options)`.
-Route migrations should use that helper when they touch public-content links; existing links are not rewritten automatically.
-The migrated per-series tag editor and Catalogue editor summaries now use this resolver through `assets/studio/js/catalogue-public-links.js` for public catalogue links.
+Route migrations should use that helper when they touch public-content links.
+The migrated per-series tag editor, Catalogue editor summaries, and Studio Works now use this resolver through `assets/studio/js/catalogue-public-links.js` for public catalogue links.
 Those links open on the configured public preview host during local Studio sessions.
+The catalogue helper does not fall back to Studio-host-relative public links when the public-site base is missing.
 Editor-to-editor links remain local Studio routes.
 The local `/docs/` route hosts the Docs Viewer management shell through the Python app server while still using the existing Docs Viewer JavaScript, CSS, config, and generated docs payloads.
 Its management API base is `/studio/api/docs`; this now exposes live configured-scope availability and Docs management capabilities, serves generated docs read endpoints, and calls shared Docs management service functions directly for migrated management routes.

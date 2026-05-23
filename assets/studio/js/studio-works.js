@@ -6,8 +6,9 @@ import {
   loadStudioConfigWithText
 } from "./studio-config.js";
 import {
-  buildPublicSiteUrl
-} from "./studio-navigation.js";
+  buildPublicSeriesUrl,
+  buildPublicWorkUrl
+} from "./catalogue-public-links.js";
 import {
   initializeStudioRouteState,
   setStudioRouteBusy,
@@ -47,11 +48,9 @@ function initStudioWorksPage() {
   initializeStudioRouteState(worksListRoot, { route: "studio-works", mode: "list" });
   setStudioRouteBusy(worksListRoot, true, { route: "studio-works", mode: "list" });
 
-  const baseurl = String(worksListRoot.dataset.baseurl || "");
   const worksIndexUrl = String(worksListRoot.dataset.worksIndexUrl || "");
   const workStorageIndexUrl = String(worksListRoot.dataset.workStorageIndexUrl || "");
   const seriesIndexUrl = String(worksListRoot.dataset.seriesIndexUrl || "");
-  const seriesBaseHref = String(worksListRoot.dataset.seriesBaseHref || `${baseurl}/series/`);
   const validKeys = { cat: true, year: true, title: true, series: true, storage: true, seriessort: true };
   const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
   const params = new URLSearchParams(window.location.search);
@@ -328,26 +327,9 @@ function initStudioWorksPage() {
     window.history.replaceState({}, "", nextUrl);
   }
 
-  function publicContentUrl(path, params = {}) {
-    try {
-      return buildPublicSiteUrl(config, path, params);
-    } catch (_error) {
-      const url = new URL(`${baseurl}${path}`, window.location.origin);
-      Object.keys(params || {}).forEach((key) => {
-        const value = params[key];
-        if (!key || value == null || value === "") return;
-        url.searchParams.set(key, String(value));
-      });
-      return url.origin === window.location.origin ? `${url.pathname}${url.search}${url.hash}` : url.href;
-    }
-  }
-
   function seriesHref(seriesId) {
     const normalizedSeriesId = normalizeText(seriesId);
-    const basePath = normalizedSeriesId
-      ? `/series/${encodeURIComponent(normalizedSeriesId)}/`
-      : seriesBaseHref;
-    return publicContentUrl(basePath);
+    return buildPublicSeriesUrl(config, normalizedSeriesId);
   }
 
   function makeWorkRow(work, seriesMetaById, workStorage) {
@@ -384,7 +366,7 @@ function initStudioWorksPage() {
     li.setAttribute("data-series-id", sid);
     li.setAttribute("data-series-label", seriesLabel);
 
-    const workHref = publicContentUrl(`/works/${encodeURIComponent(wid)}/`, {
+    const workHref = buildPublicWorkUrl(config, wid, {
       from: "studio_works_index"
     });
 

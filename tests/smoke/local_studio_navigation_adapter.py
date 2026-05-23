@@ -39,6 +39,7 @@ def main(argv: list[str] | None = None) -> int:
             result = page.evaluate(
                 """async () => {
                     const mod = await import("/assets/studio/js/studio-navigation.js");
+                    const publicLinks = await import("/assets/studio/js/catalogue-public-links.js");
                     const configMod = await import("/assets/studio/js/studio-config.js");
                     const config = await (await fetch("/studio/runtime-config.json")).json();
                     const url = mod.buildStudioViewUrl(config, "tag-groups", {
@@ -60,6 +61,15 @@ def main(argv: list[str] | None = None) -> int:
                         empty: "",
                         zero: 0
                     });
+                    const cataloguePublicWorkUrl = publicLinks.buildPublicWorkUrl(config, "00123", {
+                        from: "studio"
+                    });
+                    let cataloguePublicMissingBaseError = "";
+                    try {
+                        publicLinks.buildPublicSeriesUrl({}, "009");
+                    } catch (error) {
+                        cataloguePublicMissingBaseError = String(error && error.message || error);
+                    }
                     const liveWorkUrl = mod.buildPublicSiteUrl(config, "/works/00123/", {}, { site: "production" });
                     const initial = mod.readStudioInitialState(
                         "/docs/?scope=studio&doc=docs-viewer&modal=delete&modal.doc_id=docs-viewer&return_view=docs&return.scope=studio"
@@ -112,6 +122,8 @@ def main(argv: list[str] | None = None) -> int:
                         workEditorUrl,
                         newDetailUrl,
                         publicWorkUrl,
+                        cataloguePublicWorkUrl,
+                        cataloguePublicMissingBaseError,
                         liveWorkUrl,
                         initial,
                         storedContext,
@@ -154,6 +166,10 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected new detail URL: {result['newDetailUrl']!r}")
         if result["publicWorkUrl"] != "http://127.0.0.1:4000/works/00123/?from=studio&zero=0":
             raise AssertionError(f"unexpected public work URL: {result['publicWorkUrl']!r}")
+        if result["cataloguePublicWorkUrl"] != "http://127.0.0.1:4000/works/00123/?from=studio":
+            raise AssertionError(f"unexpected catalogue public work URL: {result['cataloguePublicWorkUrl']!r}")
+        if "Missing Studio site base" not in result["cataloguePublicMissingBaseError"]:
+            raise AssertionError(f"catalogue public links did not fail closed without a public base: {result['cataloguePublicMissingBaseError']!r}")
         if result["liveWorkUrl"] != "https://dotlineform.com/works/00123/":
             raise AssertionError(f"unexpected live work URL: {result['liveWorkUrl']!r}")
         if result["initial"]["viewId"] != "docs":

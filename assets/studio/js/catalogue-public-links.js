@@ -7,11 +7,7 @@ import {
 
 export function buildPublicCatalogueUrl(config, path = "/", params = {}) {
   const normalizedPath = normalizePublicPath(path);
-  try {
-    return buildPublicSiteUrl(config, normalizedPath, params);
-  } catch (_error) {
-    return buildFallbackUrl(normalizedPath, params);
-  }
+  return buildPublicSiteUrl(config, normalizedPath, params);
 }
 
 export function buildPublicWorkUrl(config, workId, params = {}) {
@@ -49,24 +45,6 @@ function normalizePublicPath(value) {
   } catch (_error) {
     return text.startsWith("/") ? text : `/${text}`;
   }
-}
-
-function buildFallbackUrl(path, params = {}) {
-  const origin = currentOrigin();
-  const url = new URL(path || "/", origin);
-  Object.keys(params || {}).forEach((key) => {
-    const value = params[key];
-    if (!key || value == null || value === "") return;
-    url.searchParams.set(key, String(value));
-  });
-  return url.origin === origin ? `${url.pathname}${url.search}${url.hash}` : url.href;
-}
-
-function currentOrigin() {
-  if (typeof window !== "undefined" && window.location && window.location.origin) {
-    return window.location.origin;
-  }
-  return "http://127.0.0.1";
 }
 
 function normalizeText(value) {

@@ -147,7 +147,6 @@ def studio_works_view(version: str) -> str:
           data-works-index-url="/assets/data/works_index.json"
           data-work-storage-index-url="/assets/studio/data/work_storage_index.json"
           data-series-index-url="/assets/data/series_index.json"
-          data-series-base-href="/series/"
           hidden
           data-studio-ready="false"
           data-studio-busy="false"
@@ -181,7 +180,7 @@ def studio_works_view(version: str) -> str:
           <ul class="tagStudioList__rows" id="worksList"></ul>
 
           <nav class="page__nav" id="worksIndexBackNav" hidden>
-            <a class="page__back" id="worksIndexBackLink" href="/series/">series</a>
+            <a class="page__back" id="worksIndexBackLink" href="#">series</a>
           </nav>
         </div>
         <p id="worksStudioEmpty" hidden>no studio works yet</p>"""
