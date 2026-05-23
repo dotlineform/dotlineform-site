@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-shell-extraction
 title: Docs Viewer Shell Extraction Request
 added_date: 2026-05-23
-last_updated: 2026-05-23
+last_updated: 2026-05-24
 ui_status: planned
 parent_id: change-requests
 sort_order: 10020
@@ -64,6 +64,7 @@ The first implementation should avoid changing generated payload locations unles
 - Define the shell contract: required DOM roots, config attributes, route parameters, events, management capability flags, and write API endpoints.
 - Move or wrap Studio-specific shell code so it is clearly separate from reusable Docs Viewer runtime code.
 - Add a minimal portable shell that can load relative Docs Viewer config and generated docs/search payloads without the Studio app server.
+- If a standalone Docs Viewer launcher is still useful, define it here as part of the portable shell contract rather than as a Local Studio migration fallback.
 - Verify Studio-hosted Docs Viewer management mode still works after the shell split.
 - Verify a portable read-only fixture can load a docs corpus without Studio navigation or Studio runtime config.
 - Update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) with the resulting copy/install contract.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T23:09:29Z",
+  "generated_at": "2026-05-23T23:22:33Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -321,7 +321,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 48271
+      "content_text_length": 49151
     },
     {
       "scope": "studio",
@@ -3089,7 +3089,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 27105,
+      "content_text_length": 27154,
       "ui_status": "in-progress"
     },
     {
@@ -3131,7 +3131,7 @@
       "doc_id": "site-request-docs-viewer-shell-extraction",
       "title": "Docs Viewer Shell Extraction Request",
       "added_date": "2026-05-23",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-24",
       "parent_id": "change-requests",
       "sort_order": 10020,
       "published": true,
@@ -3140,7 +3140,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction.json",
-      "content_text_length": 3325,
+      "content_text_length": 3483,
       "ui_status": "planned"
     },
     {
@@ -3173,7 +3173,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 17390
+      "content_text_length": 17321
     },
     {
       "scope": "studio",

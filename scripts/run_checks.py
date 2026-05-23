@@ -418,8 +418,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             (
                 sys.executable,
                 "tests/smoke/catalogue_series_modal.py",
-                "--site-root",
-                str(JEKYLL_DESTINATION),
             ),
             "Smoke-check the Catalogue Series confirmation modal shell behavior.",
         ),

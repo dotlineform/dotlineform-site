@@ -333,11 +333,7 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
     },
 }
 
-STUDIO_STATE_CONFIG: dict[str, object] = {
-    "initial_state_source": "url-query",
-    "return_context_storage_key": "dlf.studio.returnContext",
-    "modal_event": "studio:open-modal",
-}
+STUDIO_MODAL_EVENT = "studio:open-modal"
 
 PRODUCTION_SITE_BASE = "https://dotlineform.com"
 
@@ -418,7 +414,6 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         "pipeline": {
             "variants": pipeline_variants,
         },
-        "state": STUDIO_STATE_CONFIG,
         "views": [
             {"id": view_id, **view}
             for view_id, view in STUDIO_VIEWS.items()
@@ -427,7 +422,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             "primary": list(STUDIO_TOP_NAV_VIEW_IDS),
         },
         "modals": {
-            "event": STUDIO_STATE_CONFIG["modal_event"],
+            "event": STUDIO_MODAL_EVENT,
             "registered": [],
         },
     }

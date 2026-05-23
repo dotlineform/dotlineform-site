@@ -270,7 +270,7 @@ Target direction:
 - public `/library/` and `/analysis/` continue to use read-only Docs Viewer installs
 - Docs Viewer remains portable, with management enabled only in local app/server contexts
 - Jekyll should not be required to serve the local Docs management shell once this migration lands
-- the separate Docs management HTTP server is no longer part of normal `bin/local-studio` startup, but remains available as an explicit fallback/debug entrypoint
+- the separate Docs management HTTP server is no longer part of normal `bin/local-studio` startup, and Local Studio should call Docs management through the app-server adapter rather than a fallback/debug server
 
 ## Reuse Strategy
 

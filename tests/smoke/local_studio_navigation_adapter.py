@@ -71,20 +71,6 @@ def main(argv: list[str] | None = None) -> int:
                         cataloguePublicMissingBaseError = String(error && error.message || error);
                     }
                     const liveWorkUrl = mod.buildPublicSiteUrl(config, "/works/00123/", {}, { site: "production" });
-                    const initial = mod.readStudioInitialState(
-                        "/docs/?scope=studio&doc=docs-viewer&modal=delete&modal.doc_id=docs-viewer&return_view=docs&return.scope=studio"
-                    );
-                    const store = new Map();
-                    const storage = {
-                        getItem: (key) => store.has(key) ? store.get(key) : null,
-                        setItem: (key, value) => store.set(key, value),
-                        removeItem: (key) => store.delete(key)
-                    };
-                    const returnContext = mod.createReturnContext("docs", { scope: "studio" }, { label: "Docs" });
-                    mod.storeReturnContext(returnContext, { storage });
-                    const storedContext = mod.readReturnContext({ storage });
-                    const consumedContext = mod.consumeReturnContext({ storage });
-                    const consumedAgain = mod.readReturnContext({ storage });
 
                     let openModalDetail = null;
                     document.addEventListener(mod.STUDIO_MODAL_EVENT, (event) => {
@@ -124,7 +110,6 @@ def main(argv: list[str] | None = None) -> int:
                         dataPath: config.app.runtime.data_paths.ui_text.tag_groups,
                         mediaThumbWorks: config.app.runtime.media.thumbs.works,
                         pipelineThumbSuffix: config.app.runtime.pipeline.variants.thumb.suffix,
-                        stateStorageKey: config.app.runtime.state.return_context_storage_key,
                         modalEventName: config.app.runtime.modals.event,
                         url,
                         workEditorUrl,
@@ -133,11 +118,7 @@ def main(argv: list[str] | None = None) -> int:
                         cataloguePublicWorkUrl,
                         cataloguePublicMissingBaseError,
                         liveWorkUrl,
-                        initial,
                         runtimePrimaryNav: config.app.runtime.navigation.primary,
-                        storedContext,
-                        consumedContext,
-                        consumedAgain,
                         openModalDetail,
                         modalDefaultPrevented: modalEvent.defaultPrevented,
                         homeLinks,
@@ -177,8 +158,6 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected thumb works path: {result['mediaThumbWorks']!r}")
         if result["pipelineThumbSuffix"] != "thumb":
             raise AssertionError(f"unexpected pipeline thumb suffix: {result['pipelineThumbSuffix']!r}")
-        if result["stateStorageKey"] != "dlf.studio.returnContext":
-            raise AssertionError(f"unexpected return context key: {result['stateStorageKey']!r}")
         if result["modalEventName"] != "studio:open-modal":
             raise AssertionError(f"unexpected modal event name: {result['modalEventName']!r}")
         if result["url"] != expected_url:
@@ -195,16 +174,6 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"catalogue public links did not fail closed without a public base: {result['cataloguePublicMissingBaseError']!r}")
         if result["liveWorkUrl"] != "https://dotlineform.com/works/00123/":
             raise AssertionError(f"unexpected live work URL: {result['liveWorkUrl']!r}")
-        if result["initial"]["viewId"] != "docs":
-            raise AssertionError(f"unexpected initial view: {result['initial']!r}")
-        if result["initial"]["modal"]["params"]["doc_id"] != "docs-viewer":
-            raise AssertionError(f"unexpected modal params: {result['initial']!r}")
-        if result["initial"]["returnContext"]["params"]["scope"] != "studio":
-            raise AssertionError(f"unexpected return context params: {result['initial']!r}")
-        if result["storedContext"]["viewId"] != "docs" or result["storedContext"]["params"]["scope"] != "studio":
-            raise AssertionError(f"unexpected stored return context: {result['storedContext']!r}")
-        if result["consumedContext"]["viewId"] != "docs" or result["consumedAgain"] is not None:
-            raise AssertionError("return context was not consumed correctly")
         if result["openModalDetail"]["name"] != "confirm-delete":
             raise AssertionError(f"unexpected openModal detail: {result['openModalDetail']!r}")
         if result["modalDefaultPrevented"]:

@@ -248,7 +248,7 @@ function initStudioWorksPage() {
       const qIndex = href.indexOf("?");
       const base = qIndex >= 0 ? href.slice(0, qIndex) : href;
       const query = new URLSearchParams(qIndex >= 0 ? href.slice(qIndex + 1) : "");
-      query.set("from", "studio_works_index");
+      query.set("from", "works_index");
       query.set("return_sort", key);
       query.set("return_dir", dir);
       if (hasSeriesFilter) {
@@ -367,7 +367,7 @@ function initStudioWorksPage() {
     li.setAttribute("data-series-label", seriesLabel);
 
     const workHref = buildPublicWorkUrl(config, wid, {
-      from: "studio_works_index"
+      from: "works_index"
     });
 
     const catA = document.createElement("a");

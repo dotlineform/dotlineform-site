@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-0c49e258b24e5f25e9913794d857a98e",
-    "generated_at_utc": "2026-05-23T23:01:29Z",
+    "version": "blake2b-7fbe77deae9340814236923e9e440dc7",
+    "generated_at_utc": "2026-05-23T23:18:58Z",
     "count": 300
   },
   "entries": [
@@ -4723,10 +4723,10 @@
       "kind": "doc",
       "title": "Docs Viewer Shell Extraction Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-24",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-23 • Change Requests",
+      "display_meta": "2026-05-24 • Change Requests",
       "search_terms": [
         "site-request-docs-viewer-shell-extraction",
         "site",
@@ -4739,12 +4739,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-23",
+        "2026-05-24",
         "2026",
         "05",
-        "23"
+        "24"
       ],
-      "search_text": "site-request-docs-viewer-shell-extraction site request docs viewer shell extraction docs viewer shell extraction request change requests change requests 2026-05-23 2026 05 23"
+      "search_text": "site-request-docs-viewer-shell-extraction site request docs viewer shell extraction docs viewer shell extraction request change requests change requests 2026-05-24 2026 05 24"
     },
     {
       "id": "search-incremental-orchestration-plan",

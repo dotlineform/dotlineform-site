@@ -4,31 +4,26 @@
 from __future__ import annotations
 
 import argparse
-from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
+import sys
 from threading import Thread
 from urllib.parse import parse_qs, urlparse
 
 from playwright.sync_api import Route, sync_playwright
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.studio.studio_app_server import StudioAppServer  # noqa: E402
 
 
 ROOT_SELECTOR = "#catalogueMomentRoot"
 MOMENT_ID = "smoke-moment"
 
 
-class QuietStaticHandler(SimpleHTTPRequestHandler):
-    def log_message(self, format, *args):  # noqa: A003
-        return
-
-
-def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
-    resolved_root = site_root.expanduser().resolve()
-    if not resolved_root.exists():
-        raise FileNotFoundError(f"site root does not exist: {resolved_root}")
-    handler = partial(QuietStaticHandler, directory=str(resolved_root))
-    server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+def start_local_studio_server() -> tuple[StudioAppServer, str]:
+    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
@@ -193,15 +188,14 @@ def build_preview_payload() -> dict[str, object]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--base-url", default="http://127.0.0.1:4000")
-    parser.add_argument("--site-root", help="Serve a built site root on a temporary local HTTP server.")
+    parser.add_argument("--base-url", default="")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()
 
     server = None
     base_url = args.base_url
-    if args.site_root:
-        server, base_url = start_static_server(Path(args.site_root))
+    if not base_url:
+        server, base_url = start_local_studio_server()
 
     moment_record = {
         "moment_id": MOMENT_ID,
@@ -225,8 +219,8 @@ def main() -> int:
         request = route.request
         parsed = urlparse(request.url)
         query = parse_qs(parsed.query)
-        path = parsed.path
-        if request.method == "GET" and path == "/health":
+        path = parsed.path.removeprefix("/studio/api")
+        if request.method == "GET" and path in {"/health", "/catalogue/health"}:
             fulfil_json(route, {"ok": True})
             return
         if request.method == "GET" and path == "/catalogue/read":
@@ -316,7 +310,7 @@ def main() -> int:
         browser = playwright.chromium.launch(headless=True)
         try:
             page = browser.new_page()
-            page.route("http://127.0.0.1:8788/**", handle_catalogue)
+            page.route(f"{base_url}/studio/api/catalogue/**", handle_catalogue)
             page.goto(route_url(base_url, f"/studio/catalogue-moment/?moment={MOMENT_ID}"), wait_until="domcontentloaded")
             attrs = wait_for_studio_route_ready(page, args.timeout_ms)
             assert_ready_contract(attrs)

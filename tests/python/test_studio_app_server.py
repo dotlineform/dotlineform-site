@@ -130,7 +130,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["data_paths"]["ui_text"]["tag_groups"] == "/assets/studio/data/ui_text/tag-groups.json"
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
-    assert runtime["state"]["return_context_storage_key"] == "dlf.studio.returnContext"
     assert runtime["modals"]["event"] == "studio:open-modal"
     assert any(view["id"] == "docs" and view["path"] == "/docs/?mode=manage" for view in runtime["views"])
 

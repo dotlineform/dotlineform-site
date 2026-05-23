@@ -1,7 +1,6 @@
 import { loadStudioConfig } from "./studio-config.js";
 
 export const STUDIO_MODAL_EVENT = "studio:open-modal";
-export const STUDIO_RETURN_CONTEXT_STORAGE_KEY = "dlf.studio.returnContext";
 
 export function getStudioRuntime(config) {
   const runtime = config && config.app && config.app.runtime;
@@ -16,11 +15,6 @@ export function getStudioServices(config) {
 export function getStudioSites(config) {
   const sites = getStudioRuntime(config).sites;
   return sites && typeof sites === "object" && !Array.isArray(sites) ? sites : {};
-}
-
-export function getStudioStateConfig(config) {
-  const state = getStudioRuntime(config).state;
-  return state && typeof state === "object" && !Array.isArray(state) ? state : {};
 }
 
 export function getStudioViews(config) {
@@ -77,78 +71,6 @@ export async function navigateTo(viewId, params = {}) {
   const url = buildStudioViewUrl(config, viewId, params);
   window.location.assign(url);
   return url;
-}
-
-export function readStudioInitialState(locationLike = currentLocation()) {
-  const url = toUrl(locationLike);
-  const params = Object.fromEntries(url.searchParams.entries());
-  const viewId = normalizeViewId(params.view || params.route || inferViewIdFromPath(url.pathname));
-  const modalName = normalizeModalName(params.modal || "");
-
-  return {
-    path: url.pathname,
-    hash: url.hash,
-    viewId,
-    params,
-    modal: modalName
-      ? {
-          name: modalName,
-          params: readNamespacedParams(url.searchParams, "modal."),
-        }
-      : null,
-    returnContext: readReturnContextParam(url.searchParams),
-  };
-}
-
-export function createReturnContext(viewId, params = {}, options = {}) {
-  const targetViewId = normalizeViewId(viewId);
-  const targetParams = isPlainObject(params) ? { ...params } : {};
-  const context = {
-    viewId: targetViewId,
-    params: targetParams,
-    label: typeof options.label === "string" ? options.label : "",
-    createdAt: new Date().toISOString(),
-  };
-  if (typeof options.path === "string" && options.path) {
-    context.path = options.path;
-  }
-  return context;
-}
-
-export function storeReturnContext(context, options = {}) {
-  const storage = options.storage || currentSessionStorage();
-  const key = options.key || STUDIO_RETURN_CONTEXT_STORAGE_KEY;
-  if (!storage || typeof storage.setItem !== "function") {
-    return context;
-  }
-  storage.setItem(key, JSON.stringify(context || null));
-  return context;
-}
-
-export function readReturnContext(options = {}) {
-  const storage = options.storage || currentSessionStorage();
-  const key = options.key || STUDIO_RETURN_CONTEXT_STORAGE_KEY;
-  if (!storage || typeof storage.getItem !== "function") {
-    return null;
-  }
-  const raw = storage.getItem(key);
-  if (!raw) return null;
-  try {
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null;
-  } catch (_error) {
-    return null;
-  }
-}
-
-export function consumeReturnContext(options = {}) {
-  const storage = options.storage || currentSessionStorage();
-  const key = options.key || STUDIO_RETURN_CONTEXT_STORAGE_KEY;
-  const context = readReturnContext({ ...options, storage, key });
-  if (storage && typeof storage.removeItem === "function") {
-    storage.removeItem(key);
-  }
-  return context;
 }
 
 export function openModal(name, params = {}, options = {}) {
@@ -232,44 +154,6 @@ function normalizeModalName(value) {
   return String(value || "").trim().replace(/\s+/g, "-").toLowerCase();
 }
 
-function inferViewIdFromPath(pathname) {
-  const path = String(pathname || "");
-  if (path === "/docs" || path === "/docs/") return "docs";
-  if (path === "/studio/catalogue" || path === "/studio/catalogue/") return "studio_catalogue";
-  if (path === "/studio/analytics" || path === "/studio/analytics/") return "studio_analytics";
-  if (path === "/studio/analytics/tag-groups" || path === "/studio/analytics/tag-groups/") return "tag_groups";
-  if (path === "/studio/analytics/tag-registry" || path === "/studio/analytics/tag-registry/") return "tag_registry";
-  if (path === "/studio/analytics/tag-aliases" || path === "/studio/analytics/tag-aliases/") return "tag_aliases";
-  if (path === "/studio/analytics/series-tags" || path === "/studio/analytics/series-tags/") return "series_tags";
-  if (path === "/studio/analytics/series-tag-editor" || path === "/studio/analytics/series-tag-editor/") return "series_tag_editor";
-  if (path === "/studio/ui-catalogue/demos" || path === "/studio/ui-catalogue/demos/") return "ui_catalogue_demos";
-  if (path === "/studio" || path === "/studio/") return "home";
-  return "";
-}
-
-function readNamespacedParams(searchParams, prefix) {
-  const params = {};
-  for (const [key, value] of searchParams.entries()) {
-    if (key.startsWith(prefix)) {
-      params[key.slice(prefix.length)] = value;
-    }
-  }
-  return params;
-}
-
-function readReturnContextParam(searchParams) {
-  const viewId = normalizeViewId(searchParams.get("return_view") || searchParams.get("return"));
-  if (!viewId) return null;
-  return createReturnContext(viewId, readNamespacedParams(searchParams, "return."));
-}
-
-function toUrl(locationLike) {
-  if (locationLike instanceof URL) return locationLike;
-  if (typeof locationLike === "string") return new URL(locationLike, currentOrigin());
-  const href = locationLike && typeof locationLike.href === "string" ? locationLike.href : "/";
-  return new URL(href, currentOrigin());
-}
-
 function isPlainObject(value) {
   return value && typeof value === "object" && !Array.isArray(value);
 }
@@ -280,20 +164,8 @@ function currentOrigin() {
     : "http://127.0.0.1";
 }
 
-function currentLocation() {
-  return typeof window !== "undefined" && window.location ? window.location : "/";
-}
-
 function currentDocument() {
   return typeof document !== "undefined" ? document : null;
-}
-
-function currentSessionStorage() {
-  try {
-    return typeof window !== "undefined" && window.sessionStorage ? window.sessionStorage : null;
-  } catch (_error) {
-    return null;
-  }
 }
 
 function currentCustomEvent() {

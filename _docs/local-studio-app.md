@@ -163,11 +163,11 @@ The endpoint exposes the local app runtime contract for migrated views:
 - generated data, search, and UI-text paths from the checked-in Studio config
 - media and thumbnail bases used by Studio previews
 - pipeline variant metadata from `_data/pipeline.json`
-- modal and transitional state constants
+- modal event constants
 
 `assets/studio/js/studio-navigation.js` provides the first helper layer over that contract.
 Migrated links can declare `data-studio-navigate="<view-id>"` while retaining a real `href` fallback.
-The same module exposes `navigateTo(view, params)`, `readStudioInitialState()`, return-context helpers backed by `sessionStorage`, and `openModal(name, params)` dispatch through the `studio:open-modal` event.
+The same module exposes `navigateTo(view, params)`, public-site URL helpers, and `openModal(name, params)` dispatch through the `studio:open-modal` event.
 This adapter is deliberately small and does not introduce a route framework.
 `assets/studio/js/studio-config.js` also exposes `buildStudioRouteUrl(config, key, params)`.
 Use it when a browser module needs to append record parameters to a configured Studio route, because configured local routes may already contain transition state such as `?mode=manage`.

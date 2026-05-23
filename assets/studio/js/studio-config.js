@@ -223,11 +223,7 @@ export async function loadStudioConfig() {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
       })
-      .then((data) => mergeConfig(DEFAULT_STUDIO_CONFIG, data))
-      .catch((error) => {
-        console.warn("studio_config: using defaults after config load failure", error);
-        return cloneJson(DEFAULT_STUDIO_CONFIG);
-      });
+      .then((data) => mergeConfig(DEFAULT_STUDIO_CONFIG, data));
   }
   return studioConfigPromise;
 }
@@ -237,7 +233,7 @@ function resolveStudioConfigUrl() {
   if (configuredUrl) {
     return buildAssetUrl(resolveSitePath(configuredUrl));
   }
-  return buildAssetUrl(new URL("../data/studio_config.json", import.meta.url).href);
+  throw new Error('Studio runtime config meta tag is required: meta[name="dlf-studio-config-url"]');
 }
 
 function readConfiguredStudioConfigUrl() {

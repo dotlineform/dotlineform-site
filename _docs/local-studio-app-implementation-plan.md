@@ -100,7 +100,7 @@ Each commit-point entry should capture:
 Current commit point:
 
 - Phase 0, Phase 1, and Phase 1A are complete
-- Phase 2 is complete with runtime config, navigation, initial-state, return-context, and modal-dispatch helpers
+- Phase 2 is complete with runtime config, navigation, route URL building, public-site URL building, and modal-dispatch helpers
 - Phase 3 has started with the Docs Viewer shell and generated-read API adapter hosted by the local app server
 - Phase 3 now routes Docs management GET/POST APIs through the local app server adapter
 - Phase 3 now has fixture-backed API workflow smoke coverage for Docs create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle routes
@@ -227,15 +227,15 @@ Outcomes:
 | Add `navigateTo(view, params)` and related navigation helpers. | done |
 | Add a shared Studio route URL builder that safely appends params to configured route paths with existing query state. | done |
 | Add `openModal(name, params)` and modal/context helpers where needed. | done |
-| Add return-context helpers that replace route-query return state over time. | done |
-| Add an initial-state adapter that can read current URL state during transition. | done |
+| Add return-context helpers that replace route-query return state over time. | removed during cleanup; no active local route used the sessionStorage return-context adapter |
+| Add an initial-state adapter that can read current URL state during transition. | removed during cleanup; no active local route used the transition query-state adapter |
 | Centralize app-shell nav labels and view ids outside Jekyll front matter. | done |
 
 Next steps:
 
 Phase 2 is implemented.
 `/studio/runtime-config.json` now exposes the local app runtime contract for views, navigation, service endpoints, data/UI-text paths, media/thumb bases, pipeline variants, modal dispatch, and active route state.
-`assets/studio/js/studio-navigation.js` now owns the first local app adapter layer: view lookup, URL building, `navigateTo(view, params)`, URL initial-state parsing, `sessionStorage` return-context helpers, and `openModal(name, params)` dispatch through the `studio:open-modal` event.
+`assets/studio/js/studio-navigation.js` now owns the active local app adapter layer: view lookup, URL building, `navigateTo(view, params)`, public-site URL building, delegated navigation, and `openModal(name, params)` dispatch through the `studio:open-modal` event.
 `assets/studio/js/studio-config.js` now owns `buildStudioRouteUrl(config, key, params)` for callers that need to append route-specific params to configured Studio routes that may already include `?mode=manage`.
 This is intentionally not a route framework; it is a narrow adapter layer for active vanilla modules.
 Before source-tree reorganization, re-audit these helpers and remove transition-only query-state or fallback behavior that no active local route still calls.
@@ -441,7 +441,8 @@ The implementation direction is to use machine-readable `scripts/checks/projecti
 Existing domain configs should keep their current domain responsibilities: Docs Viewer scope build details stay in `scripts/docs/docs_scopes.json`, search source-family behavior stays in `scripts/search/build_config.json`, catalogue build scoping stays in the catalogue field registry, and `_config.yml` stays the public Jekyll build config.
 The projection contract manifest should own cross-domain classification, public-build policy, source-only leak rules, owner docs, and check coverage.
 The manifest schema, first full-family population, validation check, public-build audit integration, and public template/script source-reference audit are now in place.
-The source-reference audit also removed the old public work-page JavaScript branch that reconstructed `/studio/studio-works/` on the public-site host for `from=studio_works_index`; that return context now falls back to the public work index because Local Studio has a separate host.
+The source-reference audit also removed the old public work-page JavaScript branch that reconstructed `/studio/studio-works/` on the public-site host.
+Studio Works now links to public work pages with the ordinary `from=works_index` public return context rather than a Studio-specific `from=studio_works_index` marker.
 The public `notes` and `storage` cleanup decision is now implemented: `storage` stays available through the Studio-only work storage index for `/studio/studio-works/` management views, while public catalogue records, indexes, and search omit it; retired series `notes` no longer publishes because catalogue prose Markdown is the public narrative source.
 The projection contract matters more than physical repo layout.
 
@@ -456,12 +457,12 @@ Outcomes:
 
 | Cleanup Item | Trigger | Status |
 | --- | --- | --- |
-| Audit static Studio config fallback paths and remove any that no active route still uses. | Operational Studio routes are local-app hosted and should receive runtime config from `/studio/runtime-config.json`. | planned |
-| Audit runtime config, static config, browser modules, and smoke fixtures for old sibling-service URLs and ports. | Local Studio should not retain `127.0.0.1` service fallbacks for retired tag, docs, audit, or catalogue sibling services. | planned |
-| Audit route code for Jekyll-host-relative public links, `from=studio...` return contexts, and temporary redirects. | Public-content links should resolve through configured public-site bases, and old Studio-host return contexts should not reappear. | planned |
-| Audit `studio-navigation.js` and related adapters for transition-only query-state helpers without active callers. | The source-tree reorganization should carry active route helpers, not migration residue. | planned |
-| Confirm Data Sharing adapter consolidation status against the Phase 5 local-app routes. | The plan should not leave Data Sharing listed as both implemented and a future adapter slice. | planned |
-| Move standalone Docs Viewer launcher discussion to the Docs Viewer shell extraction request if it remains useful. | Local Studio should not carry a future standalone server option as a migration fallback. | planned |
+| Audit static Studio config fallback paths and remove any that no active route still uses. | Operational Studio routes are local-app hosted and should receive runtime config from `/studio/runtime-config.json`. | done; `loadStudioConfig()` now requires the runtime-config meta tag instead of falling back to `assets/studio/data/studio_config.json` or default config after fetch failure |
+| Audit runtime config, static config, browser modules, and smoke fixtures for old sibling-service URLs and ports. | Local Studio should not retain `127.0.0.1` service fallbacks for retired tag, docs, audit, or catalogue sibling services. | done for retired tag/docs/audit/catalogue service ports in active runtime, config, browser modules, and smoke fixtures; remaining old-port references are negative assertions or explicit aborts |
+| Audit route code for Jekyll-host-relative public links, `from=studio...` return contexts, and temporary redirects. | Public-content links should resolve through configured public-site bases, and old Studio-host return contexts should not reappear. | done for current scope; Studio Works now uses `from=works_index`, and no transition redirects are active |
+| Audit `studio-navigation.js` and related adapters for transition-only query-state helpers without active callers. | The source-tree reorganization should carry active route helpers, not migration residue. | done; unused initial-state and sessionStorage return-context helpers were removed |
+| Confirm Data Sharing adapter consolidation status against the Phase 5 local-app routes. | The plan should not leave Data Sharing listed as both implemented and a future adapter slice. | done; Phase 3 wording now points to Phase 5 for Data Sharing adapter consolidation |
+| Move standalone Docs Viewer launcher discussion to the Docs Viewer shell extraction request if it remains useful. | Local Studio should not carry a future standalone server option as a migration fallback. | done; the Docs Viewer shell extraction request now owns any future standalone launcher discussion |
 
 Next steps:
 

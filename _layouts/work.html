@@ -444,7 +444,7 @@ layout: default
     } else if (from === 'recent') {
       link.textContent = '← recently added';
       link.setAttribute('href', baseurl + '/recent/');
-    } else if (from === 'works_index' || from === 'studio_works_index') {
+    } else if (from === 'works_index') {
       var worksUrl = baseurl + '/works/';
       var q = new URLSearchParams();
       if (returnSort === 'cat' || returnSort === 'year' || returnSort === 'title' || returnSort === 'series') {

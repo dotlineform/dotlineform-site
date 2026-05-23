@@ -77,8 +77,8 @@ def main(argv: list[str] | None = None) -> int:
             series_href = page.locator(".worksList__series").first.get_attribute("href")
             if not title_href or not title_href.startswith("http://127.0.0.1:4000/works/"):
                 raise AssertionError(f"work link did not resolve through the public preview base: {title_href!r}")
-            if "from=studio_works_index" not in title_href:
-                raise AssertionError(f"work link lost Studio return marker: {title_href!r}")
+            if "from=works_index" not in title_href:
+                raise AssertionError(f"work link lost public works-index return marker: {title_href!r}")
             if not series_href or not series_href.startswith("http://127.0.0.1:4000/series/"):
                 raise AssertionError(f"series link did not resolve through the public preview base: {series_href!r}")
 

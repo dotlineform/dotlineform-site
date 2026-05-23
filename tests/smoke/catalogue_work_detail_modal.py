@@ -5,9 +5,17 @@ from __future__ import annotations
 
 import argparse
 import json
+from pathlib import Path
+import sys
+from threading import Thread
 from urllib.parse import parse_qs, urlparse
 
 from playwright.sync_api import Route, sync_playwright
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.studio.studio_app_server import StudioAppServer  # noqa: E402
 
 
 ROOT_SELECTOR = "#catalogueWorkDetailRoot"
@@ -17,6 +25,13 @@ WORK_ID = "00001"
 
 def route_url(base_url: str, path: str) -> str:
     return f"{base_url.rstrip('/')}{path}"
+
+
+def start_local_studio_server() -> tuple[StudioAppServer, str]:
+    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
 def wait_for_studio_route_ready(page, timeout_ms: int) -> dict[str, str]:
@@ -136,9 +151,14 @@ def close_with_cancel(page, opener_selector: str, timeout_ms: int) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--base-url", default="http://127.0.0.1:4000")
+    parser.add_argument("--base-url", default="")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()
+
+    server = None
+    base_url = args.base_url
+    if not base_url:
+        server, base_url = start_local_studio_server()
 
     detail_record = {
         "detail_uid": DETAIL_UID,
@@ -176,8 +196,8 @@ def main() -> int:
         request = route.request
         parsed = urlparse(request.url)
         query = parse_qs(parsed.query)
-        path = parsed.path
-        if request.method == "GET" and path == "/health":
+        path = parsed.path.removeprefix("/studio/api")
+        if request.method == "GET" and path in {"/health", "/catalogue/health"}:
             fulfil_json(route, {"ok": True})
             return
         if request.method == "GET" and path == "/catalogue/read":
@@ -244,9 +264,9 @@ def main() -> int:
         browser = playwright.chromium.launch(headless=True)
         try:
             page = browser.new_page()
-            page.route("http://127.0.0.1:8788/**", handle_catalogue)
+            page.route(f"{base_url}/studio/api/catalogue/**", handle_catalogue)
             page.goto(
-                route_url(args.base_url, f"/studio/catalogue-work-detail/?detail={DETAIL_UID}"),
+                route_url(base_url, f"/studio/catalogue-work-detail/?detail={DETAIL_UID}"),
                 wait_until="domcontentloaded",
             )
             attrs = wait_for_studio_route_ready(page, args.timeout_ms)
@@ -293,7 +313,10 @@ def main() -> int:
             page.locator(delete_button).click()
             assert_modal_shell(page, "Confirm delete", ["Cancel", "Delete"], args.timeout_ms)
             page.locator('[data-role="modal-primary"]').click()
-            page.wait_for_url("**/studio/catalogue-work/?work=00001", timeout=args.timeout_ms)
+            page.wait_for_function(
+                "() => window.location.pathname === '/studio/catalogue-work/'",
+                timeout=args.timeout_ms,
+            )
             if len(delete_apply_requests) != 1:
                 raise AssertionError(f"delete apply should be route-owned and confirmed once: {delete_apply_requests!r}")
             delete_request = delete_apply_requests[0]
@@ -309,6 +332,9 @@ def main() -> int:
             }, sort_keys=True))
         finally:
             browser.close()
+            if server:
+                server.shutdown()
+                server.server_close()
     return 0
 
 
