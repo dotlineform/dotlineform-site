@@ -1,0 +1,38 @@
+{
+  "id": "change-2026-05-23-consolidated-series-tag-editor-public-links",
+  "date": "2026-05-23",
+  "title": "Consolidated Series Tag Editor Public Links",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio-ui",
+    "runtime"
+  ],
+  "summary": "Moved the migrated per-series tag editor public series and work header links onto the shared catalogue public-link helper.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio",
+    "public-link-resolver",
+    "analytics-tags"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "assets/studio/js/series-tag-editor-page.js",
+    "assets/studio/js/catalogue-public-links.js",
+    "tests/smoke/local_studio_app_tag_routes.py",
+    "_docs/local-studio-app-implementation-plan.md"
+  ],
+  "effect": "Public catalogue links in migrated Studio routes now have one catalogue helper owner instead of a route-local helper in the series tag editor.",
+  "verification": [
+    "$HOME/miniconda3/bin/python3 -m py_compile tests/smoke/local_studio_app_tag_routes.py",
+    "$HOME/miniconda3/bin/python3 tests/smoke/local_studio_app_tag_routes.py"
+  ]
+}

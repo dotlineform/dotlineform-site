@@ -112,6 +112,7 @@ Current commit point:
 - Phase 5 has mounted `/studio/catalogue/?mode=manage`, `/studio/analytics/?mode=manage`, `/studio/audits/?mode=manage`, `/studio/project-state/?mode=manage`, `/studio/thumbnail-quality/?mode=manage`, `/studio/bulk-add-work/?mode=manage`, `/studio/activity/?mode=manage`, `/studio/catalogue-field-registry/?mode=manage`, `/studio/catalogue-status/?mode=manage`, `/studio/studio-works/?mode=manage`, `/studio/catalogue-series/?mode=manage`, `/studio/catalogue-work/?mode=manage`, `/studio/catalogue-work-detail/?mode=manage`, and `/studio/catalogue-moment/?mode=manage` in the local app, retired the old Jekyll shells, and moved their browser-facing catalogue APIs under `/studio/api/catalogue/...`
 - the old Jekyll `/studio/` landing shell is retired; `/studio/` is now the local app home during Studio sessions
 - Studio route URL building now preserves configured route query state such as `?mode=manage` while appending record parameters for migrated catalogue editor links
+- The per-series tag editor now shares the catalogue public-link helper for its public series/work header links
 - Migrated catalogue editor summary links for public work, series, work detail, and moment pages now resolve through the configured public preview base instead of staying relative to the Studio app host
 - Docs Broken Links moved into Docs Viewer reports rather than becoming another migrated Studio route shell
 - Data Sharing dashboard, prepare, and review route shells are now local-app hosted and call Data Sharing through the local Docs API adapter instead of the old standalone docs-management service URL
@@ -352,7 +353,7 @@ Outcomes:
 | Migrate analytics/tag routes. | partial; analytics dashboard, tag groups, registry, aliases, series-tags, and per-series tag editor are local-app hosted |
 | Migrate data-sharing routes. | done; dashboard, prepare, and review shells are local-app hosted and use local Docs API Data Sharing endpoints |
 | Migrate audit and project-state routes. | done for current scope; Studio Audits shell/API, Project State shell/report API, and Thumbnail Quality shell/refresh API are local-app hosted |
-| Add an explicit public-site link resolver for Studio links to works, series, moments, `/library/`, and `/analysis/`. | partial; runtime config now exposes public-preview and production bases, `studio-navigation.js` has `buildPublicSiteUrl(...)`, the migrated per-series tag editor uses it for series/work header links, Studio Works uses it for work/series links, and migrated catalogue editor summaries use it for public work/series/detail/moment links; broader route adoption remains pending |
+| Add an explicit public-site link resolver for Studio links to works, series, moments, `/library/`, and `/analysis/`. | partial; runtime config now exposes public-preview and production bases, `studio-navigation.js` has `buildPublicSiteUrl(...)`, the migrated per-series tag editor and catalogue editor summaries share `catalogue-public-links.js` for public catalogue links, and Studio Works uses the resolver for work/series links; broader route adoption remains pending |
 | Replace ad hoc Studio route query concatenation with the shared route URL builder as routes are migrated. | partial; catalogue editor and series-tag editor links now preserve configured route query state while appending record ids |
 | Retire Jekyll Studio route files after each replacement is verified. | partial; analytics dashboard/tag route files plus catalogue dashboard, data-sharing, audits, project-state, thumbnail-quality, bulk-add-work, activity, catalogue-field-registry, catalogue-status, studio-works, and catalogue editor route files retired |
 | Retire the Jekyll `/studio/` landing shell after the local app owns `/studio/`. | done |
@@ -374,6 +375,7 @@ The Analytics dashboard also uses `studio-dashboard.js` and links to the local A
 Catalogue Field Registry is read-only and uses checked-in Studio data, so it does not add a new write/API consolidation dependency.
 Catalogue Drafts reads draft record data through the local app catalogue read API.
 Studio Works is read-only and uses checked-in index data, but it also adopts the public-site link resolver so work and series links open against the configured public Jekyll preview host.
+The per-series tag editor now uses the same catalogue public-link helper for public series/work header links instead of maintaining a route-local resolver.
 Catalogue editor summaries now share `assets/studio/js/catalogue-public-links.js` for public work, series, work detail, and moment links.
 Those links resolve through the configured public preview base during local Studio sessions, while editor-to-editor links continue to use local Studio routes.
 The catalogue editor API consolidation keeps behavior aligned with the existing catalogue write handler by invoking it in-process from `scripts/studio/studio_catalogue_api.py`.

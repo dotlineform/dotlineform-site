@@ -5,8 +5,9 @@ import {
   loadStudioConfig
 } from "./studio-config.js";
 import {
-  buildPublicSiteUrl
-} from "./studio-navigation.js";
+  buildPublicSeriesUrl,
+  buildPublicWorkUrl
+} from "./catalogue-public-links.js";
 import {
   initializeStudioRouteState,
   setStudioRouteReady
@@ -93,14 +94,6 @@ async function initSeriesTagEditorPage() {
     link.rel = "noopener noreferrer";
     link.textContent = text;
     el.appendChild(link);
-  }
-
-  function publicSiteUrl(path) {
-    try {
-      return buildPublicSiteUrl(config, path);
-    } catch (_error) {
-      return `${baseurl}${path}`;
-    }
   }
 
   function normalizeSeriesMap(seriesMap) {
@@ -199,14 +192,14 @@ async function initSeriesTagEditorPage() {
 
       const seriesTitle = textOrDash(row.title);
       titleEl.textContent = seriesTitle;
-      setLinkOrDash(catEl, publicSiteUrl(`/series/${encodeURIComponent(seriesIdQuery)}/`), seriesIdQuery);
+      setLinkOrDash(catEl, buildPublicSeriesUrl(config, seriesIdQuery), seriesIdQuery);
       yearEl.textContent = textOrDash(row.year);
       yearDisplayEl.textContent = textOrDash(row.year_display);
       sortFieldsEl.textContent = textOrDash(row.sort_fields);
 
       const primaryWorkId = String(row.primary_work_id || "").trim();
       if (primaryWorkId) {
-        setLinkOrDash(primaryWorkEl, publicSiteUrl(`/works/${encodeURIComponent(primaryWorkId)}/`), primaryWorkId);
+        setLinkOrDash(primaryWorkEl, buildPublicWorkUrl(config, primaryWorkId), primaryWorkId);
       } else {
         primaryWorkEl.textContent = "—";
       }
