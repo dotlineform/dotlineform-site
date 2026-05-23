@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T17:13:09Z",
+  "generated_at": "2026-05-23T17:23:36Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -321,7 +321,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 39198
+      "content_text_length": 39151
     },
     {
       "scope": "studio",
@@ -483,7 +483,7 @@
       "source_path": "studio-config-and-save-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-config-and-save-flow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-config-and-save-flow.json",
-      "content_text_length": 12052
+      "content_text_length": 12055
     },
     {
       "scope": "studio",
@@ -681,7 +681,7 @@
       "source_path": "scripts-dev-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json",
-      "content_text_length": 12403
+      "content_text_length": 11780
     },
     {
       "scope": "studio",
@@ -959,7 +959,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 14573
+      "content_text_length": 14655
     },
     {
       "scope": "studio",
@@ -1546,7 +1546,7 @@
     {
       "scope": "studio",
       "doc_id": "scripts-catalogue-write-server",
-      "title": "Catalogue Write Server",
+      "title": "Catalogue Write Services",
       "added_date": "2026-04-22",
       "last_updated": "2026-05-19",
       "parent_id": "servers",
@@ -1557,7 +1557,7 @@
       "source_path": "scripts-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server.json",
-      "content_text_length": 1712
+      "content_text_length": 2381
     },
     {
       "scope": "studio",
@@ -1821,7 +1821,7 @@
     {
       "scope": "studio",
       "doc_id": "scripts-catalogue-write-server-operations",
-      "title": "Catalogue Write Server Operations",
+      "title": "Catalogue Write Service Operations",
       "added_date": "2026-05-19",
       "last_updated": "2026-05-23",
       "parent_id": "scripts-catalogue-write-server",
@@ -1832,7 +1832,7 @@
       "source_path": "scripts-catalogue-write-server-operations.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server-operations",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server-operations.json",
-      "content_text_length": 7372
+      "content_text_length": 6814
     },
     {
       "scope": "studio",
@@ -1848,7 +1848,7 @@
       "source_path": "scripts-catalogue-write-service-extraction.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-service-extraction.json",
-      "content_text_length": 16175
+      "content_text_length": 16154
     },
     {
       "scope": "studio",
@@ -2631,7 +2631,7 @@
       "source_path": "source-model.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-source-model",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-source-model.json",
-      "content_text_length": 11374
+      "content_text_length": 11377
     },
     {
       "scope": "studio",
@@ -3075,7 +3075,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 17349
+      "content_text_length": 17337
     },
     {
       "scope": "studio",
@@ -3283,7 +3283,7 @@
       "source_path": "servers.md",
       "viewer_url": "/docs/?scope=studio&doc=servers",
       "content_url": "/assets/data/docs/scopes/studio/by-id/servers.json",
-      "content_text_length": 676
+      "content_text_length": 743
     },
     {
       "scope": "studio",

@@ -242,7 +242,8 @@ What it starts:
 
 - `bundle exec jekyll serve --host 127.0.0.1 --port 4000`
 - `scripts/studio/studio_app_server.py`
-- `scripts/catalogue/catalogue_write_server.py`
+- `scripts/studio/studio_catalogue_api.py`
+- `scripts/catalogue/catalogue_write_service.py`
 - `scripts/docs/docs_live_rebuild_watcher.py`
 
 What it does not start:
@@ -258,7 +259,7 @@ Current local generated Studio feeds surfaced through this runtime:
 
 Current mutable catalogue data surfaced through this runtime:
 
-- catalogue source records and catalogue lookup/search records are read from `scripts/catalogue/catalogue_write_server.py`
+- catalogue source records and catalogue lookup/search records are read through Local Studio catalogue API routes backed by `scripts/studio/studio_catalogue_api.py`
 - Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `var/`, and local `logs/` from the served site so local source/lookup/activity writes do not trigger an extra Jekyll regeneration pass
 - catalogue editors, Catalogue Drafts, and Studio Activity show their existing unavailable/load-failed states instead of falling back to stale static source JSON
 

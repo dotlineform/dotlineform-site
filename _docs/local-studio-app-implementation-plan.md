@@ -30,8 +30,7 @@ Next suitable slices, in dependency order:
 
 1. Broaden public-site link resolver adoption across migrated Studio routes when those routes are touched.
 2. Start the projection contract work now that route and service ownership is less fluid.
-3. Decide whether the standalone catalogue write-server wrapper still has a current fallback/debug audience.
-4. Defer the optional repo split decision until the publish/export contract is stable.
+3. Defer the optional repo split decision until the publish/export contract is stable.
 
 ## Lifecycle Rules
 
@@ -117,6 +116,7 @@ Current commit point:
 - Migrated catalogue editor summary links for public work, series, work detail, and moment pages now resolve through the configured public preview base instead of staying relative to the Studio app host
 - Catalogue moment save, publication preview/apply, and delete apply now run through focused catalogue service modules rather than the legacy in-process HTTP handler bridge
 - Catalogue bulk save now runs through a focused catalogue service module, and `studio_catalogue_api.py` no longer constructs fake legacy HTTP handlers for Local Studio catalogue writes
+- The standalone `scripts/catalogue/catalogue_write_server.py` wrapper has been retired; `bin/dev-studio` no longer exposes `CATALOGUE_WRITE_SERVER_ENABLED` or `CATALOGUE_WRITE_PORT`
 - Docs Broken Links moved into Docs Viewer reports rather than becoming another migrated Studio route shell
 - Data Sharing dashboard, prepare, and review route shells are now local-app hosted and call Data Sharing through the local Docs API adapter instead of the old standalone docs-management service URL
 - Studio Audits now calls `/studio/api/audits/...` through the local app server instead of requiring the old standalone audit service URL
@@ -312,11 +312,11 @@ Catalogue Drafts and Studio Activity now read through local-app `GET /studio/api
 Bulk Add Work now uses local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply`; the adapter reuses the existing workbook import planner/apply helpers and preserves Studio Activity logging.
 The catalogue editor write/build/publication/delete/prose-import/moment-import endpoints now run through `/studio/api/catalogue/...` on the local app server.
 Migrated catalogue editor endpoints call focused catalogue service modules directly; no active Local Studio catalogue write endpoint uses the legacy in-process handler bridge.
-`bin/dev-studio` no longer starts the standalone catalogue write server by default; `CATALOGUE_WRITE_SERVER_ENABLED=1` remains available for fallback/debug runs.
+`bin/dev-studio` no longer starts or offers a fallback flag for a standalone catalogue write server.
 The catalogue write service extraction inventory is captured in [Catalogue Write Service Extraction](/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction).
 The callable catalogue service slices now route bulk save, delete preview/apply, publication preview/apply, build preview/apply, moment preview/save, prose import preview/apply, moment import preview/apply, work create/save, work-detail create/save, and series create/save through `scripts/catalogue/catalogue_write_service.py`.
 `catalogue_write_service.py` is only the dispatcher; ownership lives in focused modules such as `catalogue_bulk_service.py`, `catalogue_work_service.py`, `catalogue_work_detail_service.py`, `catalogue_series_service.py`, `catalogue_build_service.py`, `catalogue_delete_service.py`, `catalogue_moment_service.py`, and `catalogue_prose_import_service.py`, with shared plumbing in `catalogue_service_context.py`.
-The next catalogue refactor should decide whether the standalone `scripts/catalogue/catalogue_write_server.py` wrapper still has an audience now that Local Studio no longer depends on its handler methods.
+The standalone `scripts/catalogue/catalogue_write_server.py` wrapper has been removed now that Local Studio no longer depends on its handler methods.
 Active Local Studio Docs browser transport now uses `/studio/api/docs/...`; `127.0.0.1:8789` is no longer a browser fallback for migrated routes.
 The standalone Docs Management server entrypoint has been removed; Local Studio imports `scripts/docs/docs_management_service.py` as the dispatcher for focused Docs management modules covering context, reads, capabilities, source mutations, import, Data Sharing, source opening, and broken-links audit behavior.
 The launcher split is now explicit: `bin/local-studio` starts the local Studio app path with Jekyll disabled, `bin/public-site-preview` runs public Jekyll preview with `_config.yml`, and `bin/public-site-build` runs public Jekyll builds with `_config.yml`.

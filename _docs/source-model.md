@@ -302,7 +302,7 @@ Recommended shape:
         "series": [],
         "work_details": []
       },
-      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
+      "log_ref": "var/studio/catalogue/logs/catalogue_service_context.log"
     }
   ]
 }

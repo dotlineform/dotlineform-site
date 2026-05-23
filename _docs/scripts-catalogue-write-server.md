@@ -1,31 +1,26 @@
 ---
 doc_id: scripts-catalogue-write-server
-title: Catalogue Write Server
+title: Catalogue Write Services
 added_date: 2026-04-22
 last_updated: 2026-05-19
 parent_id: servers
 sort_order: 4000
 ---
-# Catalogue Write Server
+# Catalogue Write Services
 
-Script:
+Status:
 
-```bash
-./scripts/catalogue/catalogue_write_server.py
-```
+- the standalone `scripts/catalogue/catalogue_write_server.py` HTTP wrapper is retired
+- Local Studio serves active catalogue APIs through `scripts/studio/studio_app_server.py`
+- catalogue write behavior lives in focused modules behind `scripts/catalogue/catalogue_write_service.py`
 
-This is the local-only write service for mutable catalogue source JSON, catalogue prose imports, scoped public catalogue rebuilds, derived Studio lookup refreshes, publication actions, and catalogue Studio Activity rows.
-It does not write back into Excel.
-
-## Optional Flags
-
-- `--port 8788`: override port
-- `--repo-root /path/to/dotlineform-site`: override root auto-detection by parent-searching for `_config.yml`
-- `--dry-run`: validate and return a response without writing source JSON
+The retired wrapper used to bind a separate local-only catalogue write process.
+That separate process is no longer a supported fallback/debug path.
+Use Local Studio app routes under `/studio/api/catalogue/...` for browser-facing catalogue writes.
 
 ## Current Behavior
 
-The server can:
+The Local Studio catalogue service can:
 
 - serve allowlisted catalogue source and lookup payloads for Studio
 - create draft work, work-detail, and series records
@@ -37,9 +32,16 @@ The server can:
 - apply shared publication preview/apply actions for works, work details, series, and moments
 - write the local project-state report
 
+## Module Boundary
+
+- `scripts/studio/studio_catalogue_api.py` owns the Local Studio `/studio/api/catalogue/...` adapter.
+- `scripts/catalogue/catalogue_write_service.py` owns service route dispatch.
+- focused modules such as `catalogue_bulk_service.py`, `catalogue_work_service.py`, `catalogue_work_detail_service.py`, `catalogue_series_service.py`, `catalogue_build_service.py`, `catalogue_delete_service.py`, `catalogue_moment_service.py`, `catalogue_publication_service.py`, and `catalogue_prose_import_service.py` own workflow behavior.
+- `scripts/catalogue/catalogue_routes.py` remains the stable catalogue route constant inventory for activity profiles and request-contract documentation.
+
 ## Child References
 
 - [Endpoint Reference](/docs/?scope=studio&doc=scripts-catalogue-write-server-endpoints) lists read, save, create, delete, publication, prose import, workbook import, series, and build endpoint request contracts.
 - [Build And Lookup](/docs/?scope=studio&doc=scripts-catalogue-write-server-build-lookup) covers scoped build media, moment import behavior, derived lookup refresh, and field-aware build planning.
 - [Operations](/docs/?scope=studio&doc=scripts-catalogue-write-server-operations) covers module ownership, validation, security, `bin/dev-studio` integration, artifacts, and related references.
-- [Catalogue Write Service Extraction](/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction) maps the remaining handler-owned behavior before the service extraction refactor.
+- [Catalogue Write Service Extraction](/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction) records the handler-to-service extraction and wrapper retirement.

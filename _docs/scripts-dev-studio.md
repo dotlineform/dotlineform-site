@@ -111,11 +111,6 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   default: `127.0.0.1`
 - `STUDIO_APP_PORT`
   default: `8765`
-- `CATALOGUE_WRITE_PORT`
-  default: `8788`
-- `CATALOGUE_WRITE_SERVER_ENABLED`
-  default: `0`
-  set to `1` only for fallback/debug runs that intentionally need the standalone catalogue write service
 - `AUDIT_SERVICE_PORT`
   default: `8790`
 - `AUDIT_SERVICE_ENABLED`
@@ -156,7 +151,6 @@ export DOCS_STARTUP_REBUILD_SCOPES=""
 export CATALOGUE_STARTUP_LOOKUP_REBUILD=off
 export JEKYLL_PORT=4001
 export STUDIO_APP_PORT=8765
-export CATALOGUE_WRITE_PORT=8798
 export AUDIT_SERVICE_PORT=8800
 export AUDIT_SERVICE_ENABLED=0
 export DOCS_WATCH_DEBOUNCE_SECONDS=1.5
@@ -167,7 +161,7 @@ Keeping `DOCS_STARTUP_REBUILD_SCOPES=""` in `var/local/site.env` is a valid remi
 To run a startup rebuild locally, edit that value to a configured docs scope id such as `studio`, `library`, `analysis`, or a comma-separated combination before starting the runner.
 
 Keeping `CATALOGUE_STARTUP_LOOKUP_REBUILD=off` in `var/local/site.env` skips the full derived catalogue lookup export during normal startup.
-Set it to `1`, `on`, `true`, or `yes` when startup should refresh `assets/studio/data/catalogue_lookup/` before the write server starts.
+Set it to `1`, `on`, `true`, or `yes` when startup should refresh `assets/studio/data/catalogue_lookup/` before the local Studio app starts.
 
 The runner reads valid docs scope ids from `scripts/docs/docs_scopes.json`.
 Adding a new docs scope there makes it eligible for startup docs/docs-search rebuilds without editing `bin/dev-studio`.
@@ -178,8 +172,7 @@ Before it starts any rebuilds or long-running servers, `bin/dev-studio` checks t
 
 1. Jekyll on `JEKYLL_HOST:JEKYLL_PORT` when `JEKYLL_ENABLED` is not `0`
 2. Local Studio App on `STUDIO_APP_HOST:STUDIO_APP_PORT` when `STUDIO_APP_ENABLED` is not `0`
-3. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT` only when `CATALOGUE_WRITE_SERVER_ENABLED` is not `0`
-4. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT` only when `AUDIT_SERVICE_ENABLED` is not `0`
+3. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT` only when `AUDIT_SERVICE_ENABLED` is not `0`
 
 If any port is unavailable, the runner exits immediately with a message naming the affected service and environment variable override.
 
@@ -270,23 +263,10 @@ bundle exec jekyll build --config "$PUBLIC_SITE_CONFIG"
 
 Both public-site commands use `_config.yml` by default and do not start local Studio services.
 
-### Catalogue Write Server
+### Catalogue APIs
 
-The standalone catalogue write server is disabled by default because the local Studio app owns the active browser-facing catalogue APIs under `/studio/api/catalogue/...`.
-Enable it only for fallback/debug runs:
-
-```bash
-CATALOGUE_WRITE_SERVER_ENABLED=1 bin/dev-studio
-```
-
-- command:
-
-```bash
-./scripts/catalogue/catalogue_write_server.py --port "$CATALOGUE_WRITE_PORT"
-```
-
-- default URL: `http://127.0.0.1:8788`
-- related doc: [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+The local Studio app owns the active browser-facing catalogue APIs under `/studio/api/catalogue/...`.
+There is no standalone catalogue write-server fallback in `bin/dev-studio`.
 
 ### Audit Service
 
@@ -321,7 +301,6 @@ At startup the runner prints quick links for:
 
 - Jekyll root when enabled
 - Local Studio App
-- Catalogue Write Server
 - Audit Service status
 - startup docs rebuild scopes
 - startup catalogue lookup rebuild status
@@ -338,7 +317,6 @@ When you press `Ctrl+C`, it:
 
 - stops Jekyll when enabled
 - stops the Local Studio App when enabled
-- stops the Catalogue Write Server
 - stops the Audit Service when enabled
 - stops the Docs Live Rebuild Watcher when enabled
 - waits for those child processes before exiting

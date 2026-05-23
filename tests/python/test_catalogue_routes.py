@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify catalogue local-service route ownership and handler dispatch."""
+"""Verify catalogue local-service route ownership."""
 
 from __future__ import annotations
 
@@ -16,7 +16,6 @@ for path in (SCRIPTS_DIR, STUDIO_SCRIPTS_DIR):
 
 from catalogue import catalogue_activity as activity  # noqa: E402
 from catalogue import catalogue_routes as routes  # noqa: E402
-from catalogue import catalogue_write_server  # noqa: E402
 from scripts.studio import studio_catalogue_api  # noqa: E402
 
 
@@ -40,15 +39,6 @@ def test_options_routes_are_post_routes_plus_catalogue_read() -> None:
     assert_equal(set(routes.OPTIONS_PATHS), {*routes.POST_PATHS, routes.CATALOGUE_READ_PATH}, "OPTIONS_PATHS")
     if routes.HEALTH_PATH in routes.OPTIONS_PATHS:
         raise AssertionError("health route should not gain CORS preflight handling implicitly")
-
-
-def test_handler_dispatch_covers_each_post_route() -> None:
-    dispatch = catalogue_write_server.Handler.POST_HANDLERS
-    assert_equal(set(dispatch), set(routes.POST_PATHS), "POST_HANDLERS route keys")
-    for route_path, handler_name in dispatch.items():
-        handler = getattr(catalogue_write_server.Handler, handler_name, None)
-        if handler is None:
-            raise AssertionError(f"{route_path} dispatches to missing handler {handler_name!r}")
 
 
 def test_activity_profile_endpoints_are_known_post_routes() -> None:
@@ -76,7 +66,6 @@ def test_activity_profile_endpoints_are_known_post_routes() -> None:
 def main() -> None:
     test_post_routes_are_unique()
     test_options_routes_are_post_routes_plus_catalogue_read()
-    test_handler_dispatch_covers_each_post_route()
     test_activity_profile_endpoints_are_known_post_routes()
     print("Catalogue route tests OK")
 

@@ -26,4 +26,4 @@ Read this section in this order:
 Current local server scripts:
 
 - **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for Studio shell, Docs management, and Analytics tag APIs
-- **[Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)**
+- **[Catalogue Write Services](/docs/?scope=studio&doc=scripts-catalogue-write-server)** for catalogue API service modules hosted by the Local Studio app

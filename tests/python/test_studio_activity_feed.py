@@ -93,7 +93,7 @@ def test_append_hydrates_registry_labels_and_writes_feed() -> None:
                 "script_purpose_id": "save-canonical-data",
                 "record_groups": {"works": ["00001"], "series": [], "work_details": [], "moments": []},
                 "detail_items": ["Saved canonical work record 00001"],
-                "source_refs": [{"kind": "log", "path": "var/studio/catalogue/logs/catalogue_write_server.log"}],
+                "source_refs": [{"kind": "log", "path": "var/studio/catalogue/logs/catalogue_service_context.log"}],
             },
         )
         if feed_path != repo_root.resolve() / "var/studio/activity/activity_log.json":

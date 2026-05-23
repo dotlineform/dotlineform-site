@@ -152,7 +152,7 @@ The Catalogue Series, Work, Work Detail, and Moment editor route shells are host
 They reuse the existing vanilla editor modules and call local-app catalogue API endpoints under `/studio/api/catalogue/...`.
 The old Jekyll shells for `/studio/catalogue-series/`, `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, and `/studio/catalogue-moment/` have been retired.
 The local app adapter routes editor save, bulk save, build, publication, delete, prose import, and moment import flows through focused catalogue service modules.
-`bin/dev-studio` skips the standalone catalogue write server by default; set `CATALOGUE_WRITE_SERVER_ENABLED=1` only for fallback/debug runs.
+`bin/dev-studio` no longer starts a standalone catalogue write server; catalogue APIs are owned by the Local Studio app server.
 The old Jekyll `/studio/` landing shell has also been retired.
 This removes another public-site Studio page and keeps the local app as the only active Studio home surface during migration.
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.

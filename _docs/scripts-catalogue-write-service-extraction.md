@@ -8,7 +8,7 @@ sort_order: 4400
 ---
 # Catalogue Write Service Extraction
 
-This is the follow-up map for reducing `scripts/catalogue/catalogue_write_server.py` without replacing one large server file with one large service file.
+This is the follow-up map for the extraction that retired `scripts/catalogue/catalogue_write_server.py` without replacing one large server file with one large service file.
 
 The target is a normal callable catalogue service boundary that Local Studio can use directly:
 
@@ -44,7 +44,7 @@ Small shared plumbing belongs in context/helper modules only when it is genuinel
 
 ## Current Coupling
 
-Local Studio no longer imports `scripts/catalogue/catalogue_write_server.py` or constructs fake `Handler` instances for catalogue writes.
+Local Studio no longer imports the retired `scripts/catalogue/catalogue_write_server.py` wrapper or constructs fake `Handler` instances for catalogue writes.
 `scripts/studio/studio_catalogue_api.py` dispatches active catalogue editor write endpoints through `scripts/catalogue/catalogue_write_service.py`.
 
 The standalone HTTP server entrypoint still exists, but Local Studio no longer depends on the shape of `BaseHTTPRequestHandler` methods.
@@ -165,7 +165,7 @@ Series create/save behavior now runs through `scripts/catalogue/catalogue_series
 | `_handle_project_state_report` | 73 lines | project state | `project_state_report`, activity | Already replaced for Local Studio by `project_state_report_payload()`. |
 | `_handle_thumbnail_quality_preview` | 17 lines | thumbnail quality | `build_thumbnail_quality_preview` | Already replaced for Local Studio by `thumbnail_quality_preview_payload()`. |
 
-## Recommended Extraction Order
+## Extraction Close-Out
 
 1. Keep `scripts/catalogue/catalogue_write_service.py` small: route mapping, status selection, response shaping, and calls into focused workflow modules.
 2. Treat the first service slice as complete for delete preview, build preview/apply, moment preview, prose import preview/apply, and moment import preview/apply.
@@ -173,12 +173,11 @@ Series create/save behavior now runs through `scripts/catalogue/catalogue_series
    Keep source mutation planning in `catalogue_source_mutation.py`, transaction writes in `catalogue_transactions.py`, lookup refresh in `catalogue_lookup_refresh.py`, and activity row construction in `catalogue_activity.py`.
 4. Treat moment save, publication preview/apply, and delete apply as extracted for Local Studio.
 5. Treat bulk save as extracted for Local Studio and the fake handler path as removed from `studio_catalogue_api.py`.
-6. Decide whether the standalone `catalogue_write_server.py` wrapper still has an audience.
-   If it does not, remove the `8788` wrapper rather than keeping a compatibility server around as a second exercise path.
+6. Treat the standalone `catalogue_write_server.py` wrapper as retired; `bin/dev-studio` no longer starts or exposes a fallback flag for the `8788` service.
 
 ## Non-Goals
 
 - Do not move every handler method into one `CatalogueWriteService` class.
 - Do not make the service module own source mutation, transaction, lookup, publication, delete, import, or build domain rules that already have focused modules.
 - Do not restore retired work-file or work-link endpoints unless there is a current route that needs them.
-- Do not keep `127.0.0.1:8788` as a normal Local Studio dependency once the local app can call the service functions directly.
+- Do not reintroduce `127.0.0.1:8788` as a normal Local Studio dependency now that the local app calls service functions directly.

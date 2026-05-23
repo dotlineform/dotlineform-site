@@ -528,7 +528,7 @@ def studio_activity_entry(
 
 
 def catalogue_log_source_ref() -> list[Mapping[str, str]]:
-    return [{"kind": "log", "path": str(LOGS_REL_DIR / "catalogue_write_server.log")}]
+    return [{"kind": "log", "path": str(LOGS_REL_DIR / "catalogue_service_context.log")}]
 
 
 def build_step_status(build_payload: Mapping[str, Any], label: str) -> str:

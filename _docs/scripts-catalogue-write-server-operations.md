@@ -1,23 +1,23 @@
 ---
 doc_id: scripts-catalogue-write-server-operations
-title: Catalogue Write Server Operations
+title: Catalogue Write Service Operations
 added_date: 2026-05-19
 last_updated: 2026-05-23
 parent_id: scripts-catalogue-write-server
 sort_order: 4300
 ---
-# Catalogue Write Server Operations
+# Catalogue Write Service Operations
 
 ## Module Ownership
 
-- `scripts/catalogue/catalogue_write_server.py` currently owns HTTP transport, request parsing, endpoint-specific write allowlist checks before writes, source-write/build/refresh orchestration decisions, local service logging, Studio Activity append timing, and final response payload assembly.
-- `scripts/studio/studio_catalogue_api.py` owns the active Local Studio `/studio/api/catalogue/...` HTTP surface. It already handles catalogue reads, workbook import, Project State report, and Thumbnail Quality preview directly, but still reuses the legacy write-server handler in-process for the core catalogue editor mutation routes.
+- The retired `scripts/catalogue/catalogue_write_server.py` wrapper no longer owns any Local Studio HTTP surface.
+- `scripts/studio/studio_catalogue_api.py` owns the active Local Studio `/studio/api/catalogue/...` HTTP surface and calls catalogue service functions directly.
 - `scripts/catalogue/catalogue_write_service.py` owns callable Local Studio catalogue route dispatch only.
   It maps `/studio/api/catalogue/...` service paths to focused workflow modules and preserves the shared `handle_catalogue_post(repo_root, api_path, body, dry_run=False)` boundary.
 - `scripts/catalogue/catalogue_service_context.py` owns shared Local Studio catalogue service context: source paths, lookup paths, write allowlists, backup paths, lookup refresh response helpers, compact service logging, and best-effort Studio Activity appends.
-- `scripts/catalogue/catalogue_work_service.py`, `scripts/catalogue/catalogue_work_detail_service.py`, and `scripts/catalogue/catalogue_series_service.py` own the distinct create/save workflows for works, work details, and series.
-- `scripts/catalogue/catalogue_build_service.py`, `scripts/catalogue/catalogue_delete_service.py`, `scripts/catalogue/catalogue_moment_service.py`, and `scripts/catalogue/catalogue_prose_import_service.py` own scoped build, delete preview, moment preview, and prose/moment import route behavior.
-- [Catalogue Write Service Extraction](/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction) maps which remaining handler methods should move into callable service functions and which behavior is already local-app native.
+- `scripts/catalogue/catalogue_bulk_service.py`, `scripts/catalogue/catalogue_work_service.py`, `scripts/catalogue/catalogue_work_detail_service.py`, and `scripts/catalogue/catalogue_series_service.py` own the distinct bulk, create, and save workflows for works, work details, and series.
+- `scripts/catalogue/catalogue_build_service.py`, `scripts/catalogue/catalogue_delete_service.py`, `scripts/catalogue/catalogue_moment_service.py`, `scripts/catalogue/catalogue_publication_service.py`, and `scripts/catalogue/catalogue_prose_import_service.py` own scoped build, delete, moment, publication, and prose/moment import route behavior.
+- [Catalogue Write Service Extraction](/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction) records the service extraction and wrapper retirement.
 - `scripts/catalogue/catalogue_source.py` owns canonical source field order, shared catalogue id-list and detail-uid normalization, source record normalization, and source validation.
 - `scripts/catalogue/catalogue_routes.py` owns catalogue local-service endpoint path constants, the POST route inventory, and the CORS preflight route inventory shared by the write server and catalogue activity profiles.
 - `scripts/catalogue/catalogue_activity.py` owns catalogue-specific Studio Activity profiles, activity context normalization, activity row construction, and activity response-count bookkeeping.
@@ -50,21 +50,8 @@ The server validates the proposed update through the shared catalogue source loa
 
 ## Dev Studio
 
-`bin/dev-studio` does not start this service by default.
-The active Local Studio catalogue HTTP surface is served by the local Studio app at `/studio/api/catalogue/...`.
-The standalone write server remains a compatibility/debug path only when explicitly enabled.
-
-Default local endpoint:
-
-```text
-http://127.0.0.1:8788
-```
-
-The port can be overridden for the dev launcher:
-
-```bash
-CATALOGUE_WRITE_SERVER_ENABLED=1 CATALOGUE_WRITE_PORT=8798 bin/dev-studio
-```
+`bin/dev-studio` starts the Local Studio app server, which owns catalogue APIs at `/studio/api/catalogue/...`.
+It no longer starts or offers a fallback flag for a standalone catalogue write server.
 
 ## Source And Target Artifacts
 
@@ -90,7 +77,7 @@ Derived lookup target:
 
 Operational log target:
 
-- `var/studio/catalogue/logs/catalogue_write_server.log`
+- `var/studio/catalogue/logs/catalogue_service_context.log`
 
 ## Related References
 

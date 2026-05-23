@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6fd66c92bc931edeb9c90af105c9b988",
-    "generated_at_utc": "2026-05-23T16:37:58Z",
+    "version": "blake2b-15d0a2efa21dbf9f6ac74ae25e3d524e",
+    "generated_at_utc": "2026-05-23T17:22:09Z",
     "count": 294
   },
   "entries": [
@@ -2293,7 +2293,7 @@
     {
       "id": "scripts-catalogue-write-server",
       "kind": "doc",
-      "title": "Catalogue Write Server",
+      "title": "Catalogue Write Services",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "last_updated": "2026-05-19",
       "parent_id": "servers",
@@ -2305,14 +2305,15 @@
         "catalogue",
         "write",
         "server",
-        "catalogue write server",
+        "catalogue write services",
+        "services",
         "servers",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write server servers 2026-05-19 2026 05 19"
+      "search_text": "scripts-catalogue-write-server scripts catalogue write server catalogue write services services servers 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-js-config-structural-review-config-ownership",
@@ -2663,8 +2664,8 @@
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server-endpoints",
       "last_updated": "2026-05-19",
       "parent_id": "scripts-catalogue-write-server",
-      "parent_title": "Catalogue Write Server",
-      "display_meta": "2026-05-19 • Catalogue Write Server",
+      "parent_title": "Catalogue Write Services",
+      "display_meta": "2026-05-19 • Catalogue Write Services",
       "search_terms": [
         "scripts-catalogue-write-server-endpoints",
         "scripts",
@@ -2673,13 +2674,14 @@
         "server",
         "endpoints",
         "catalogue write server endpoints",
-        "catalogue write server",
+        "catalogue write services",
+        "services",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "scripts-catalogue-write-server-endpoints scripts catalogue write server endpoints catalogue write server endpoints catalogue write server 2026-05-19 2026 05 19"
+      "search_text": "scripts-catalogue-write-server-endpoints scripts catalogue write server endpoints catalogue write server endpoints catalogue write services services 2026-05-19 2026 05 19"
     },
     {
       "id": "scripts-catalogue-write-server-build-lookup",
@@ -2688,8 +2690,8 @@
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server-build-lookup",
       "last_updated": "2026-05-19",
       "parent_id": "scripts-catalogue-write-server",
-      "parent_title": "Catalogue Write Server",
-      "display_meta": "2026-05-19 • Catalogue Write Server",
+      "parent_title": "Catalogue Write Services",
+      "display_meta": "2026-05-19 • Catalogue Write Services",
       "search_terms": [
         "scripts-catalogue-write-server-build-lookup",
         "scripts",
@@ -2700,23 +2702,24 @@
         "lookup",
         "catalogue write server build and lookup",
         "and",
-        "catalogue write server",
+        "catalogue write services",
+        "services",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "scripts-catalogue-write-server-build-lookup scripts catalogue write server build lookup catalogue write server build and lookup and catalogue write server 2026-05-19 2026 05 19"
+      "search_text": "scripts-catalogue-write-server-build-lookup scripts catalogue write server build lookup catalogue write server build and lookup and catalogue write services services 2026-05-19 2026 05 19"
     },
     {
       "id": "scripts-catalogue-write-server-operations",
       "kind": "doc",
-      "title": "Catalogue Write Server Operations",
+      "title": "Catalogue Write Service Operations",
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-server-operations",
       "last_updated": "2026-05-23",
       "parent_id": "scripts-catalogue-write-server",
-      "parent_title": "Catalogue Write Server",
-      "display_meta": "2026-05-23 • Catalogue Write Server",
+      "parent_title": "Catalogue Write Services",
+      "display_meta": "2026-05-23 • Catalogue Write Services",
       "search_terms": [
         "scripts-catalogue-write-server-operations",
         "scripts",
@@ -2724,14 +2727,16 @@
         "write",
         "server",
         "operations",
-        "catalogue write server operations",
-        "catalogue write server",
+        "catalogue write service operations",
+        "service",
+        "catalogue write services",
+        "services",
         "2026-05-23",
         "2026",
         "05",
         "23"
       ],
-      "search_text": "scripts-catalogue-write-server-operations scripts catalogue write server operations catalogue write server operations catalogue write server 2026-05-23 2026 05 23"
+      "search_text": "scripts-catalogue-write-server-operations scripts catalogue write server operations catalogue write service operations service catalogue write services services 2026-05-23 2026 05 23"
     },
     {
       "id": "scripts-catalogue-write-service-extraction",
@@ -2740,8 +2745,8 @@
       "href": "/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction",
       "last_updated": "2026-05-23",
       "parent_id": "scripts-catalogue-write-server",
-      "parent_title": "Catalogue Write Server",
-      "display_meta": "2026-05-23 • Catalogue Write Server",
+      "parent_title": "Catalogue Write Services",
+      "display_meta": "2026-05-23 • Catalogue Write Services",
       "search_terms": [
         "scripts-catalogue-write-service-extraction",
         "scripts",
@@ -2750,14 +2755,14 @@
         "service",
         "extraction",
         "catalogue write service extraction",
-        "catalogue write server",
-        "server",
+        "catalogue write services",
+        "services",
         "2026-05-23",
         "2026",
         "05",
         "23"
       ],
-      "search_text": "scripts-catalogue-write-service-extraction scripts catalogue write service extraction catalogue write service extraction catalogue write server server 2026-05-23 2026 05 23"
+      "search_text": "scripts-catalogue-write-service-extraction scripts catalogue write service extraction catalogue write service extraction catalogue write services services 2026-05-23 2026 05 23"
     },
     {
       "id": "scripts-verify-catalogue-field-registry",
