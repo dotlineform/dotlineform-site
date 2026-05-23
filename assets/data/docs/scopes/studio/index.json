@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T21:34:04Z",
+  "generated_at": "2026-05-23T21:41:31Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -321,7 +321,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 44213
+      "content_text_length": 44891
     },
     {
       "scope": "studio",
@@ -601,7 +601,7 @@
       "source_path": "data-models-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-projection-contract.json",
-      "content_text_length": 7711
+      "content_text_length": 8555
     },
     {
       "scope": "studio",
@@ -2454,7 +2454,7 @@
       "doc_id": "scripts",
       "title": "Scripts",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-13 18:15",
+      "last_updated": "2026-05-23",
       "parent_id": "dev-home",
       "sort_order": 7000,
       "published": true,
@@ -2463,7 +2463,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 8063
+      "content_text_length": 8358
     },
     {
       "scope": "studio",
@@ -2712,6 +2712,22 @@
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline-architecture.json",
       "content_text_length": 4479
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-audit-projection-contract",
+      "title": "Projection Contract Audit",
+      "added_date": "2026-05-23",
+      "last_updated": "2026-05-23",
+      "parent_id": "scripts",
+      "sort_order": 8110,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "scripts-audit-projection-contract.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-audit-projection-contract",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-projection-contract.json",
+      "content_text_length": 2325
     },
     {
       "scope": "studio",
@@ -3073,7 +3089,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 26684,
+      "content_text_length": 26846,
       "ui_status": "in-progress"
     },
     {

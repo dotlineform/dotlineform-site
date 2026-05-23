@@ -14,6 +14,11 @@ This document defines the boundary between canonical source, public projections,
 
 It supports the Local Studio migration by making the build/export contract explicit before any optional repo split or large source-tree move.
 
+The executable source of truth is `scripts/checks/projection_contract.json`.
+This document explains that manifest; it should not become a parallel hand-maintained list.
+Run `./scripts/checks/audit_projection_contract.py` to validate the manifest, checked-in public JSON leak rules, and `_config.yml` exclusion policy.
+When a built public site is available, pass `--site-root <path>` to audit public output from the same manifest.
+
 `public` means intended for dotlineform.com runtime output.
 It does not mean repository privacy.
 Canonical source can remain in a public repo while generated public projections omit source-only fields.
@@ -38,7 +43,8 @@ Canonical source can remain in a public repo while generated public projections 
 | Catalogue search | public catalogue projections plus selected Studio tag data | `assets/data/search/catalogue/index.json` | search preview/build diagnostics | [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) |
 
 Catalogue public builders must treat canonical source JSON as input, not as a browser payload.
-Fields such as `project_folder`, `project_subfolder`, `project_filename`, `details_subfolder`, `notes`, `provenance`, storage metadata, and other editor-only values should stay out of public projections unless a public runtime contract names them.
+The current manifest-backed leak rule covers source media path fields such as `project_folder`, `project_subfolder`, `project_filename`, `details_subfolder`, `source_image_file`, and `provenance`.
+Fields currently present in public projections, such as some series `notes` values and work `storage`, are not treated as source-only by the v1 check until a separate cleanup changes the runtime contract.
 
 Catalogue search is allowed to include selected Studio-derived tag labels or terms when the search builder documents the transform.
 That does not make the tag registry, aliases, assignments, or full Studio lookup payloads public projections.
@@ -94,6 +100,8 @@ Adding a new generated family requires naming:
 
 Existing enforcement is split across several checks and builders:
 
+- `scripts/checks/projection_contract.json` classifies current Phase 6 artifact families and owns cross-domain public-build policy
+- `scripts/checks/audit_projection_contract.py` validates the manifest, `_config.yml` exclusions, checked-in public JSON field-leak rules, and optional built public output
 - public build surface audit checks that public output excludes Studio routes, Studio assets, Studio docs payloads/search, and canonical catalogue source
 - catalogue build planners and validators decide which public catalogue projections are refreshed from source edits
 - docs builder excludes unpublished docs and emits viewable/manage-mode metadata according to each scope contract
@@ -102,8 +110,8 @@ Existing enforcement is split across several checks and builders:
 
 The next Phase 6 slices should make this more mechanical:
 
-1. distinguish public projections, Studio projections, and Docs Viewer payloads in check output
-2. add focused checks for known source-only catalogue fields in public projections
+1. extend manifest-backed checks when new artifact families appear
+2. tighten source-only field rules only when the current public runtime contract changes
 3. verify public Jekyll templates and scripts read generated public projections rather than Studio-only source files
 
 ## Practical Update Rule

@@ -2,7 +2,7 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: "2026-05-13 18:15"
+last_updated: 2026-05-23
 parent_id: dev-home
 sort_order: 7000
 ---
@@ -90,6 +90,8 @@ Catalogue/runtime maintenance:
 
 - `./scripts/run_checks.py`
   - runs optional repo check profiles and writes local logs under `var/test-runs/`
+- `./scripts/checks/audit_projection_contract.py`
+  - validates the Phase 6 projection contract manifest, checked-in public JSON leak rules, `_config.yml` exclusion policy, and optional built public output
 - `./scripts/checks/audit_studio_ready_state.py`
   - audits Studio route-ready template contracts and flags static routes that need a route-specific ready/busy implementation
 - `./scripts/catalogue/catalogue_json_build.py`
@@ -113,6 +115,8 @@ Catalogue/runtime maintenance:
 
 - [Run Checks](/docs/?scope=studio&doc=scripts-run-checks)
   Run optional check profiles and capture local run logs for larger-risk changes.
+- [Projection Contract Audit](/docs/?scope=studio&doc=scripts-audit-projection-contract)
+  Validate the source/projection manifest and public/local build boundary.
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
   Audit Studio route-ready template contracts and static-route drift.
 - [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service)

@@ -1,0 +1,70 @@
+---
+doc_id: scripts-audit-projection-contract
+title: Projection Contract Audit
+added_date: 2026-05-23
+last_updated: 2026-05-23
+parent_id: scripts
+sort_order: 8110
+published: true
+viewable: true
+---
+# Projection Contract Audit
+
+Script:
+
+```bash
+./scripts/checks/audit_projection_contract.py
+```
+
+This check validates the Phase 6 source/projection contract used by the Local Studio migration.
+
+The manifest is `scripts/checks/projection_contract.json`.
+It is the machine-readable source of truth for cross-domain artifact classification, public-build policy, source-only leak rules, owner docs, and public Docs Viewer scope policy.
+
+## Common Runs
+
+Validate the manifest, `_config.yml` exclusion policy, and checked-in public JSON leak rules:
+
+```bash
+./scripts/checks/audit_projection_contract.py
+```
+
+Audit a built public site from the same manifest:
+
+```bash
+./scripts/checks/audit_projection_contract.py --site-root /tmp/dlf-jekyll-build
+```
+
+The legacy public-surface audit wrapper now uses the same manifest-backed public build audit:
+
+```bash
+./scripts/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build
+```
+
+## What It Checks
+
+- manifest schema version, family ids, classifications, owner docs, path lists, public-output policies, and duplicate path declarations
+- `_config.yml` exclusions for families marked `jekyll_exclude_required`
+- checked-in public JSON/search projections for fields listed in manifest `field_leak_rules`
+- built public output for required and forbidden public-output families when `--site-root` is supplied
+- public Docs Viewer config scope ids when `--site-root` is supplied
+- forbidden public HTML links such as `/studio/` and local `/docs/` management links when `--site-root` is supplied
+
+## Boundary
+
+This script owns the cross-domain projection classification check.
+It does not replace domain-specific configs:
+
+- Docs Viewer scope build details stay in `scripts/docs/docs_scopes.json`
+- search source-family behavior stays in `scripts/search/build_config.json`
+- catalogue field-aware build scoping stays in `assets/studio/data/catalogue_field_registry.json`
+- `_config.yml` stays the public Jekyll build config
+
+The projection contract audit checks those systems at the public/local boundary.
+
+## Update Rule
+
+When adding a source family, generated payload, local working output, public runtime asset, or Studio-only artifact, classify it in `scripts/checks/projection_contract.json`.
+
+When a field becomes source-only, add it to a manifest `field_leak_rules` entry with the public paths that must not contain it.
+Do not add fields to leak rules if they are still intentionally present in current public runtime payloads.

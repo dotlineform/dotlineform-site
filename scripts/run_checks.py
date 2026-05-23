@@ -51,6 +51,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "scripts/local_env.py",
                 "scripts/pipeline_config.py",
                 "scripts/checks/audit_site_consistency.py",
+                "scripts/checks/audit_projection_contract.py",
                 "scripts/checks/audit_public_build_surface.py",
                 "scripts/checks/css_token_audit.py",
                 "scripts/checks/javascript_inventory_guardrail.py",
@@ -213,6 +214,11 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "tests/python/test_catalogue_generation_source_updates.py",
             ),
             "Run quick-profile Python tests through pytest collection.",
+        ),
+        CheckCommand(
+            "projection-contract",
+            (sys.executable, "scripts/checks/audit_projection_contract.py"),
+            "Validate the projection contract manifest and checked-in public projections.",
         ),
         CheckCommand(
             "studio-ready-state-audit",

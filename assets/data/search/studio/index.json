@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-1df90ca6828324eab1ba37cd483c12d8",
-    "generated_at_utc": "2026-05-23T21:17:28Z",
-    "count": 299
+    "version": "blake2b-546f689e1784ff71cb63584f4530e58a",
+    "generated_at_utc": "2026-05-23T21:40:11Z",
+    "count": 300
   },
   "entries": [
     {
@@ -3704,23 +3704,21 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-05-13 18:15",
+      "last_updated": "2026-05-23",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-05-13 18:15 • Dev Home",
+      "display_meta": "2026-05-23 • Dev Home",
       "search_terms": [
         "scripts",
         "dev home",
         "dev",
         "home",
-        "2026-05-13 18:15",
+        "2026-05-23",
         "2026",
         "05",
-        "13",
-        "18",
-        "15"
+        "23"
       ],
-      "search_text": "scripts dev home dev home 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "scripts dev home dev home 2026-05-23 2026 05 23"
     },
     {
       "id": "search-ui-behaviour",
@@ -4093,6 +4091,29 @@
         "19"
       ],
       "search_text": "search-build-pipeline-architecture search build pipeline architecture search build pipeline architecture search build pipeline 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "scripts-audit-projection-contract",
+      "kind": "doc",
+      "title": "Projection Contract Audit",
+      "href": "/docs/?scope=studio&doc=scripts-audit-projection-contract",
+      "last_updated": "2026-05-23",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-05-23 • Scripts",
+      "search_terms": [
+        "scripts-audit-projection-contract",
+        "scripts",
+        "audit",
+        "projection",
+        "contract",
+        "projection contract audit",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "scripts-audit-projection-contract scripts audit projection contract projection contract audit 2026-05-23 2026 05 23"
     },
     {
       "id": "search-build-pipeline-catalogue",
