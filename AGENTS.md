@@ -1,15 +1,14 @@
 ## General behaviour
 
-- when prompted to 'read Agents.md', note any actions needed before continuing.
-- for major features, behavior changes, refactors, and meaningful docs changes, use `_docs/development-workflow.md` as the lifecycle guide and follow its links to task-specific docs.
-- consider whether edits are implied by the current request. If the request is analysis-only, exploratory, uses words like 'check' or 'confirm', or includes a '?', do not make edits without asking first.
-- when edits are implied, briefly state the intended change set and ask for confirmation before editing unless the request is trivial.
+- for new features, behavior changes, refactors, and meaningful docs changes, use `_docs/development-workflow.md` as the lifecycle guide and follow its links to task-specific docs.
+- answer questions based on applying best practice in this technical or creative domain, provide suggestions to mitigate maintenance risk and improve site or application performance.
+- summarise the intended change set and ask for confirmation before editing unless the request is trivial.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
 - do not rebuild doc payloads, this is done manually or by `bin/dev-studio`
 
 ## Project Priorities and Tradeoffs
 
-- The user is effectively fulfilling developer, tester, and product roles together. Optimize for decisions that help the user understand:
+- Optimize for decisions that help the user understand:
   - organized, maintainable code
   - best practice and where compromise is justified
   - how Codex should best be used to implement requirements
@@ -17,57 +16,48 @@
 
 ## Context and Batching
 
-- Treat the visible context window as a hard working budget; do not rely on automatic compaction succeeding.
-- Keep broad requests split where possible into finishable slices that can be completed, verified, and summarized in one context window.
+- Treat the visible context window as a working budget; do not rely on automatic compaction succeeding.
 - Prefer targeted file reads, scoped diffs, and concise command output over broad searches or full diffs that flood the transcript.
-- For long-running multi-batch work, leave a compact handoff note before stopping or before context gets high, including:
-  - completed slice and files changed
-  - checks run and results
-  - known risks or blockers
-  - exact next slice to start
-- If a slice is growing beyond the remaining context budget, stop at a clean checkpoint rather than pushing into an interruption-prone state.
-- Before a long thread reaches context limit, produce a handoff note: changed files, decisions made, remaining tasks, commands run, and known risks.
+- For long-running multi-batch work, or before a long thread reaches context limit, produce a handoff note: changed files, decisions made, remaining tasks, commands run, and known risks. If the implementation is documented, add the handoff note to the document at the top of the document for the next Codex session to read.
 
 ## UI Guidance
 
 - `_docs/ui.md` is the section containing UI guidance and maintenance rules.
-- `_docs/ui-framework.md` defines the site-wide UI interaction defaults.
+- `_docs/ui-catalogue.md` defines the site-wide UI interaction default UI components.
 - Keep UI shell concerns separate from application logic, validation, and mutation behavior.
 
 ## Implementation Style
 
-- Preserve existing Jekyll/Liquid conventions in this repo.
 - Prefer shared JS/CSS logic over duplicated inline logic.
 - When modifying CSS, consider whether there is an opportunity to refactor or consolidate shared styles.
-- The primary purpose of refactoring is to improve consistency and reliability of *.css
 - Keep comments concise and implementation-focused.
-- use studio_config.json (ui_text section) to store UI copy such as labels. 
+- use the apppropriate config file to store UI copy such as labels and status message text. 
 - For material new changes, new requirements, or refactors, state the main benefits and risks associated with:
   - new changes
   - new requirements
   - refactors
 - For trivial or mechanical edits, a short summary is enough.
 
-## JavaScript Module Boundaries
+## Script Module Boundaries
 
 - Do not add new responsibilities to large route/controller files by default.
 - Before changing a Studio or Docs Viewer route controller, check whether the behavior belongs in an existing route-local module, shared module, render module, service/write module, domain module, modal module, or workflow module.
 - Prefer creating or extending a focused module when the change adds a complete responsibility such as rendering, modal lifecycle, service orchestration, result shaping, validation, import/export flow, or route-state projection.
-- Keep route entry modules as orchestration shells where practical: boot/config, route readiness, event wiring, and handoff between focused modules.
+- Keep route entry modules as orchestration shells: boot/config, route readiness, event wiring, and handoff between focused modules.
 - Avoid cosmetic splits that only move tiny helpers; extract around stable ownership boundaries.
-- When changing JavaScript inventory priority files, consult `_docs/studio-javascript-payload-inventory.md`.
+- For risk mitigation and scoring, consult as appropriate:
+  - Javascript: `_docs/studio-javascript-payload-inventory.md`
+  - Paython, Ruby: `_docs/studio-python-ruby-script-inventory.md`
 
 ## Studio Documentation and Search
 
 - Docs source is flat under `_docs/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders in _docs/.
 - The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not `_docs/` directly.
-- If `bin/dev-studio` or docs-watch is already running and expected to regenerate the payloads, do not rebuild doc payloads.
-- When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
-- Prefer explicit scope for docs search rebuilds:
+- Do not rebuild doc payloads.
+- When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&mode=manage&doc=<doc_id>`.
+- Use explicit scope for docs search rebuilds:
   - `./scripts/build_search.rb --scope studio --write`
   - `./scripts/build_search.rb --scope library --write`
-- Do not treat all-scope rebuilds as the default path; use them only when the task intentionally spans both corpora.
-- When search behaviour, schema, ranking, normalization, UI, build flow, validation, or architecture changes materially, update the relevant child docs under `_docs/search.md` in the same change.
 
 ## Change Log
 
@@ -81,12 +71,8 @@
 
 - Use `$HOME/miniconda3/bin/python3` for all Python commands.
 - Run project commands from `dotlineform-site/` unless explicitly told otherwise.
-- Media/generator scripts should rely on `DOTLINEFORM_PROJECTS_BASE_DIR` by default for source image lookups.
-- Only pass `--projects-base-dir` when intentionally overriding `DOTLINEFORM_PROJECTS_BASE_DIR`.
-- If work/detail/moment dimension lookups fail unexpectedly, verify `DOTLINEFORM_PROJECTS_BASE_DIR` in the current shell before supplying a manual `--projects-base-dir`.
-- In repo docs and command examples, prefer the shortest project-local script form unless explicitly needed:
-  - use `./scripts/...` rather than `python3 scripts/...`
-  - only mention workbook paths for the configured Studio bulk-import workflow
+- Env vars are saved in `var/local/site.env`
+- In repo docs and command examples, prefer the shortest project-local script form unless explicitly needed.
 
 ## Ruby / Jekyll Toolchain
 
@@ -101,20 +87,10 @@
 - If `jekyll serve` or `bin/dev-studio` is already running, do not verify against the default `_site/` destination concurrently.
 - In that case, use a separate destination for one-off verification builds:
   - `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
-- Before relying on, starting, stopping, or interrupting local `bin/dev-studio` services for verification, tell the user whether they need to start or stop those services. Do not assume running local Studio services are available for tests; they may only be running so the user can read docs.
+- Before relying on, starting, stopping, or interrupting local services for verification, tell the user whether they need to start or stop those services. Do not assume running local Studio services are available for tests; they may only be running so the user can read docs.
 - A failed Codex `curl` to `localhost:4000` or `127.0.0.1:4000` may be a sandbox/network boundary, not proof that `bin/dev-studio` or Jekyll is not running. If the user says the route is running, trust that and avoid contradicting it.
 - When localhost reachability is uncertain, say the sandbox cannot reach the route and use an isolated temporary build/server for automated verification only if needed.
-- Docs Viewer management mode requires the dev Studio Jekyll config:
-  - `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --config _config.yml,_config.dev-studio.yml --destination /tmp/dlf-jekyll-build`
-- A normal `_config.yml` build intentionally renders `/docs/` as read-only, so `?mode=manage` will not include management CSS, controls, modal markup, local server config, or the right-click management menu.
 - `_config.dev-studio.yml` excludes generated docs/search JSON from Jekyll's output. For isolated temporary-build smoke tests, copy the needed generated `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/` payloads into the temporary build destination, or use a running `bin/dev-studio` route when reachable.
-- After changing `_docs/`, ensure Studio docs-viewer JSON payloads under `assets/data/docs/scopes/studio/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
-- After changing `_docs_library/`, ensure library docs-viewer JSON payloads under `assets/data/docs/scopes/library/...` are updated before treating the docs output as final. If `bin/dev-studio` or a docs-watch process is already running locally and is expected to regenerate docs payloads, do not run a manual docs rebuild unless deterministic verification is needed or the watcher appears inactive.
-- When docs search output must be kept live with docs changes, rebuild the matching scope explicitly:
-  - `./scripts/build_search.rb --scope studio --write`
-  - `./scripts/build_search.rb --scope library --write`
-- Do not assume all-scope rebuilds by default; treat `studio` and `library` as separate corpora and pass `--scope` explicitly unless the task intentionally requires both.
-- Do not assume `jekyll build` alone updates docs-viewer content; use it only as a separate site verification step after the docs-data rebuild when needed.
 - If a build fails with “Could not find bundler 2.6.9” or shows `/usr/bin/ruby`, rerun using the shim commands before reporting an issue.
 - Local shell should load rbenv (for interactive use), but Codex checks should still prefer explicit shim paths.
 
@@ -128,16 +104,14 @@
 - For implementation changes, define proportional targeted verification for both:
   - Codex-run checks
   - manual checks
-- For docs-only or analysis-only changes, keep manual verification lightweight and state when no separate manual check is useful. Browser smoke tests are only needed when changes have been to the operational site, not when documents have been edited.
-- Manual testing in this repo is expected to be light-touch and pragmatic. There is no formal QA sign-off process.
+- Browser smoke tests are only needed when changes have been to the operational site or front end, not when documents have been edited.
+- Codex performs most testing where practical. Manual testing in this repo is expected to be light-touch and pragmatic. There is no formal QA sign-off process.
 - Include changed file paths (and line references when useful) in summaries.
+- After changing scripts, run a syntax check with the configured interpreter.
+- After UI changes, verify behavior on both desktop and mobile.
 
-## Validation Checklist
+## Tests
 
-- After changing Python scripts, run a syntax check with the configured interpreter.
-- After generator or pipeline-entrypoint changes, verify `scripts/catalogue_json_build.py` still previews or runs successfully.
-- After generator changes, run a dry-run and summarize what would be written.
-- After layout/template changes, verify behavior on desktop and mobile.
 - For a Codex-run browser smoke test on this machine, prefer local Playwright Chromium via the Miniconda Python environment:
   - Playwright CLI: `$HOME/miniconda3/bin/playwright`
   - Python entrypoint: `$HOME/miniconda3/bin/python -m playwright`
@@ -157,13 +131,14 @@
 - If Chromium launch fails in the Codex app sandbox, retry the same Playwright browser check with escalated permissions before treating it as a product or runtime issue.
 - Avoid the raw Edge headless fallback unless Playwright is unavailable; Edge can trigger crash-report noise on this machine.
 - For Studio Playwright smoke tests, follow `_docs/studio-smoke-testing.md`: wait for the route root to be visible and for route-specific loaded status before interacting; for controls below async-rendered lists, scroll into view and verify `document.elementFromPoint()` resolves to the target or a child before pointer clicking; use DOM activation only for setup-only actions, not for the behavior being tested.
-- Use `_docs/testing.md` and `./scripts/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions. Do not run broad profiles by default for every change; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
+- Use `_docs/testing.md` and `./scripts/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions.
+- Do not run broad profiles by default for every change; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
 - Python tests in `./scripts/run_checks.py` run through pytest using the configured Python interpreter. For focused checks, prefer `$HOME/miniconda3/bin/python3 -m pytest <test-path>` over relying on whichever `python` happens to be active.
 - When `./scripts/run_checks.py` is used, report the profiles, pass/fail result, and `var/test-runs/.../summary.md` path in the final response.
 
 ## Security and Sanitization
 
-- Treat sanitization not as a mechanical step for every change. Only run a sanitization scan when a change touches credential handling, logging, local-service writes, docs/examples with system paths or commands, generated docs payloads that may include local output, or any script/doc change with realistic risk of leaking local paths or sensitive values.
+- Only run a sanitization scan when a change touches credential handling, logging, local-service writes, docs/examples with system paths or commands, generated docs payloads that may include local output, or any script/doc change with realistic risk of leaking local paths or sensitive values.
 - For small low-risk edits, a reasoned no-scan decision is acceptable.
 - When scanning changed files for local path leaks and sensitive terms, use:
   - `rg -n "/Users/|/home/|C:\\\\|miniconda|rbenv|api[_-]?key|token|secret|password|PRIVATE KEY" <changed-files>`
@@ -174,7 +149,7 @@
 - Keep logs for local write services minimal (ids/counts/status), not full payload/file-content dumps.
 - For local write services, keep explicit write allowlists and do not widen write scope implicitly.
 - Keep local write services bound to loopback and limit CORS to localhost origins only.
-- If a runtime smoke test is blocked by sandbox restrictions, state that clearly in the final summary.
+- If a runtime smoke test is blocked by sandbox restrictions, ask for elevated permissions.
 
 ## Codex Cloud / Codespaces Runtime Contract
 
