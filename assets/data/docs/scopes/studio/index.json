@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T17:48:03Z",
+  "generated_at": "2026-05-23T18:04:05Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -188,7 +188,7 @@
       "source_path": "dev-home.md",
       "viewer_url": "/docs/?scope=studio&doc=dev-home",
       "content_url": "/assets/data/docs/scopes/studio/by-id/dev-home.json",
-      "content_text_length": 1490,
+      "content_text_length": 1768,
       "summary": "This section contains technical reference documents that apply to the repo as a whole."
     },
     {
@@ -321,7 +321,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 39638
+      "content_text_length": 40443
     },
     {
       "scope": "studio",
@@ -564,7 +564,7 @@
       "source_path": "development-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/development-workflow.json",
-      "content_text_length": 10878
+      "content_text_length": 11141
     },
     {
       "scope": "studio",
@@ -602,6 +602,22 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework-primitives",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework-primitives.json",
       "content_text_length": 9980
+    },
+    {
+      "scope": "studio",
+      "doc_id": "development-checklist",
+      "title": "Development Checklist",
+      "added_date": "2026-05-23",
+      "last_updated": "2026-05-23",
+      "parent_id": "dev-home",
+      "sort_order": 1510,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "development-checklist.md",
+      "viewer_url": "/docs/?scope=studio&doc=development-checklist",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/development-checklist.json",
+      "content_text_length": 4007
     },
     {
       "scope": "studio",
@@ -959,7 +975,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 14655
+      "content_text_length": 14898
     },
     {
       "scope": "studio",
@@ -2913,7 +2929,7 @@
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json",
-      "content_text_length": 5590
+      "content_text_length": 5999
     },
     {
       "scope": "studio",
@@ -3025,7 +3041,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 25983,
+      "content_text_length": 26362,
       "ui_status": "in-progress"
     },
     {

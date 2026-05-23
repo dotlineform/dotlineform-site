@@ -29,6 +29,10 @@ Note on document structure:
   site-wide UI framework and maintenance
 - **[Change Requests](/docs/?scope=studio&doc=change-requests)**
   proposed and in-progress request docs, including UI request specs and task breakdowns.
+- **[Development Workflow](/docs/?scope=studio&doc=development-workflow)**
+  repo implementation lifecycle guide for scoping, verification, documentation, and closeout.
+- **[Development Checklist](/docs/?scope=studio&doc=development-checklist)**
+  detailed implementation rules for local Studio route migration, public/local URL boundaries, route builders, and UI Catalogue demo visibility.
 - **[Architecture](/docs/?scope=studio&doc=architecture)**
   route/runtime building blocks, shared shell behavior, and generated-artifact flow into the live site.
 - **[Config](/docs/?scope=studio&doc=config)**

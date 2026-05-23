@@ -13,6 +13,7 @@ This document is the repo-specific lifecycle guide for major new features, behav
 
 Use it to decide what to read, what to update, and how to close work out.
 It is intentionally a router to focused docs rather than a replacement for them.
+Detailed implementation rules that are too specific for this lifecycle guide live in [Development Checklist](/docs/?scope=studio&doc=development-checklist).
 
 ## Fast Path
 
@@ -71,6 +72,7 @@ Prefer existing repo boundaries:
 - Keep generated data flowing from source records through scripts; do not edit generated payloads as source.
 - Keep source docs under the owning scope and use Docs Viewer links for published doc references.
 
+For local Studio route migration, public-link resolver adoption, Studio route URL builders, and UI Catalogue demo visibility, use [Development Checklist](/docs/?scope=studio&doc=development-checklist).
 For UI work, start with [UI](/docs/?scope=studio&doc=ui) and child documents.
 For search work, start with [Search](/docs/?scope=studio&doc=search) and update search child docs when schema, ranking, normalization, UI, build flow, or validation changes materially.
 For scripts or local services, use [Scripts](/docs/?scope=studio&doc=scripts) and the script-specific child doc.

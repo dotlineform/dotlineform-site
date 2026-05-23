@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2d7f4c231b0669342e75cb91a85927ed",
-    "generated_at_utc": "2026-05-23T17:32:52Z",
-    "count": 294
+    "version": "blake2b-08814aa83e31fef199ba3145fc26b0f4",
+    "generated_at_utc": "2026-05-23T18:02:25Z",
+    "count": 295
   },
   "entries": [
     {
@@ -821,6 +821,30 @@
         "19"
       ],
       "search_text": "studio-ui-framework-primitives studio ui framework primitives ui framework primitives ui catalogue catalogue 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "development-checklist",
+      "kind": "doc",
+      "title": "Development Checklist",
+      "href": "/docs/?scope=studio&doc=development-checklist",
+      "last_updated": "2026-05-23",
+      "parent_id": "dev-home",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-05-23 • Dev Home",
+      "search_terms": [
+        "development-checklist",
+        "development",
+        "checklist",
+        "development checklist",
+        "dev home",
+        "dev",
+        "home",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "development-checklist development checklist development checklist dev home dev home 2026-05-23 2026 05 23"
     },
     {
       "id": "css-primitives",

@@ -18,7 +18,8 @@ Status:
 - Phase 2 implemented
 - Phase 3 implemented for Docs Viewer manage mode
 - Phase 4 in progress with Docs management, analytics tag reads, active analytics tag writes, analytics tag route shells, and explicit local Studio/public-site launchers routed through the local app migration; the old analytics tag Jekyll shells and 8787 browser fallback are retired
-- Phase 5 started with the Catalogue dashboard, Analytics dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, catalogue editor, and Studio home shells hosted by the local app and their old Jekyll shells retired
+- Phase 5 operational route migration is implemented for the current route scope: Catalogue dashboard, Analytics dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, catalogue editor, and Studio home shells are hosted by the local app and their old Jekyll shells are retired
+- UI Catalogue demos remain a first-class local Studio visibility task because they are Studio reference surfaces, not public-site pages
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -203,6 +204,7 @@ Migrated Catalogue editor summaries, the per-series tag editor, and Studio Works
 The shared catalogue public-link helper fails closed if the public-site base is missing rather than falling back to Studio-host-relative public links.
 Configured Studio-route links should use the shared route URL builder when adding record parameters.
 That keeps transition state such as `?mode=manage` in config, rather than forcing every caller to know whether it should append `?` or `&`.
+Detailed checklist rules for this boundary live in [Development Checklist](/docs/?scope=studio&doc=development-checklist).
 
 ## Launcher Transition Decision
 
@@ -219,6 +221,7 @@ The end state should be clearer:
 - local Studio workflows start through a Studio app launcher
 - public-site preview and publishing use the normal Bundler/Jekyll commands
 - `bin/dev-studio` is retired or reduced to a compatibility wrapper once the route migration, public-link resolver, and service consolidation are stable
+- UI Catalogue demos are reachable from Local Studio as first-class, non-mutating Studio reference surfaces
 
 Initial launcher split implemented on 2026-05-23:
 

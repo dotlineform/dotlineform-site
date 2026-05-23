@@ -12,6 +12,8 @@ viewable: true
 This section is the top-level index for shared UI primitives, composition patterns, and isolated demo pages.
 
 The UI Catalogue is now a demo system, not a live-system CSS check. It exists to make patterns readable, inspectable, and reusable while keeping demo code separate from production Studio and Docs Viewer implementation code.
+The demo pages are still first-class Local Studio reference surfaces.
+They do not mutate catalogue data, but they must remain reachable from Local Studio because they are not public-site pages.
 
 ## Demo Route Structure
 
@@ -32,6 +34,7 @@ Current demo pages:
 - [Column Links Pattern](/docs/?scope=studio&doc=ui-pattern-column-links) / [demo page](/studio/ui-catalogue/demos/patterns/column-links/)
 
 Removed legacy routes such as `/studio/ui-catalogue/button/` and `/studio/ui-catalogue/panel/` should not be recreated. New catalogue pages should use the demo route hierarchy.
+During the Local Studio migration, demo route visibility should move into the local Studio navigation or an equivalent local Studio entry point while preserving the isolated demo namespace and ready-state contract.
 
 ## Demo Namespace
 
