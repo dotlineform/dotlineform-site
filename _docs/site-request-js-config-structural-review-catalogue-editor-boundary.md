@@ -6,7 +6,7 @@ last_updated: "2026-05-10 15:36"
 ui_status: done
 parent_id: site-request-js-config-structural-review
 sort_order: 3000
-hidden: false
+viewable: true
 ---
 # Catalogue Editor Boundary Spec Slice
 

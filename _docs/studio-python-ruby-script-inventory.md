@@ -4,9 +4,9 @@ title: Studio Python And Ruby Script Inventory
 added_date: 2026-05-19
 last_updated: 2026-05-19
 ui_status: urgent
-parent_id: studio
-sort_order: 7010
-hidden: false
+parent_id: audit
+sort_order: 4000
+viewable: true
 ---
 # Studio Python And Ruby Script Inventory
 

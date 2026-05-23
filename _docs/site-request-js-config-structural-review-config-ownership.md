@@ -6,7 +6,7 @@ last_updated: "2026-05-10 17:08"
 ui_status: done
 parent_id: site-request-js-config-structural-review
 sort_order: 4000
-hidden: false
+viewable: true
 ---
 # Config Ownership Cleanup Slice
 

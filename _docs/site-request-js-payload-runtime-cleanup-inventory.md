@@ -6,7 +6,7 @@ last_updated: "2026-05-11 00:35"
 ui_status: done
 parent_id: site-request-js-config-structural-review
 sort_order: 7000
-hidden: false
+viewable: true
 ---
 # JavaScript Payload And Runtime Cleanup Inventory
 

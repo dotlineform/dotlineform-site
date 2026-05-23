@@ -3,8 +3,9 @@ doc_id: scripts-audit-studio-ready-state
 title: Studio Ready-State Audit
 added_date: 2026-05-03
 last_updated: "2026-05-09 22:35"
-parent_id: studio
-sort_order: 9000
+parent_id: audit
+sort_order: 2000
+viewable: true
 ---
 # Studio Ready-State Audit
 

@@ -3,8 +3,9 @@ doc_id: studio-config-and-save-flow
 title: Studio Config and Save Flow
 added_date: 2026-04-22
 last_updated: "2026-05-09 21:45"
-parent_id: studio
-sort_order: 11000
+parent_id: config
+sort_order: 1000
+viewable: true
 ---
 # Studio Config and Save Flow
 

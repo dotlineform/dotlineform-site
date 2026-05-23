@@ -6,7 +6,7 @@ last_updated: 2026-05-19
 ui_status: done
 parent_id: archive
 sort_order: 74000
-hidden: false
+viewable: true
 ---
 # Change Log Entry Model Request
 

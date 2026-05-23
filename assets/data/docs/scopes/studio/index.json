@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T13:29:12Z",
+  "generated_at": "2026-05-23T14:26:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -8,23 +8,6 @@
     "show_updated_date": true
   },
   "docs": [
-    {
-      "scope": "studio",
-      "doc_id": "dev",
-      "title": "Dev",
-      "added_date": "2026-05-23",
-      "last_updated": "2026-05-23",
-      "parent_id": "",
-      "sort_order": 100,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "dev.md",
-      "viewer_url": "/docs/?scope=studio&doc=dev",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/dev.json",
-      "content_text_length": 787,
-      "summary": "This section contains technical reference documents that apply to the site as a whole."
-    },
     {
       "scope": "studio",
       "doc_id": "_tmp-index-space",
@@ -75,22 +58,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "public-site",
-      "title": "Public Site",
-      "added_date": "2026-05-23",
-      "last_updated": "2026-05-23",
-      "parent_id": "",
-      "sort_order": 200,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "public-site.md",
-      "viewer_url": "/docs/?scope=studio&doc=public-site",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/public-site.json",
-      "content_text_length": 105
-    },
-    {
-      "scope": "studio",
       "doc_id": "site-request-studio-unified-activity-log-inventory",
       "title": "Activity Log Coverage Inventory",
       "added_date": "2026-05-08",
@@ -121,6 +88,22 @@
       "viewer_url": "/docs/?scope=studio&doc=data-models-analysis",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-analysis.json",
       "content_text_length": 3017
+    },
+    {
+      "scope": "studio",
+      "doc_id": "audit",
+      "title": "Audit",
+      "added_date": "2026-05-23",
+      "last_updated": "2026-05-23",
+      "parent_id": "",
+      "sort_order": 1000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "audit.md",
+      "viewer_url": "/docs/?scope=studio&doc=audit",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/audit.json",
+      "content_text_length": 105
     },
     {
       "scope": "studio",
@@ -237,7 +220,8 @@
       "source_path": "dev-home.md",
       "viewer_url": "/docs/?scope=studio&doc=dev-home",
       "content_url": "/assets/data/docs/scopes/studio/by-id/dev-home.json",
-      "content_text_length": 60
+      "content_text_length": 896,
+      "summary": "This section contains technical reference documents that apply to the repo as a whole."
     },
     {
       "scope": "studio",
@@ -515,6 +499,38 @@
       "viewer_url": "/docs/?scope=studio&doc=_tmp-spa",
       "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp-spa.json",
       "content_text_length": 19497
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-studio-audit-service",
+      "title": "Studio Audit Service",
+      "added_date": "2026-05-03",
+      "last_updated": "2026-05-08 19:25",
+      "parent_id": "audit",
+      "sort_order": 1000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "scripts-studio-audit-service.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-studio-audit-service",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-studio-audit-service.json",
+      "content_text_length": 2299
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-config-and-save-flow",
+      "title": "Studio Config and Save Flow",
+      "added_date": "2026-04-22",
+      "last_updated": "2026-05-09 21:45",
+      "parent_id": "config",
+      "sort_order": 1000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-config-and-save-flow.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-config-and-save-flow",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-config-and-save-flow.json",
+      "content_text_length": 12052
     },
     {
       "scope": "studio",
@@ -944,6 +960,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "studio",
+      "title": "Studio",
+      "added_date": "2026-04-23",
+      "last_updated": "2026-05-13",
+      "parent_id": "",
+      "sort_order": 2000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
+      "content_text_length": 4096
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-request-studio-audits-page",
       "title": "Studio Audits Page Request",
       "added_date": "2026-05-03",
@@ -961,6 +993,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "config-studio-config-json",
+      "title": "Studio Config JSON",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-05-11 17:50",
+      "parent_id": "config",
+      "sort_order": 2000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-studio-config-json.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
+      "content_text_length": 9294
+    },
+    {
+      "scope": "studio",
       "doc_id": "studio-data-sharing-technical-spec",
       "title": "Studio Data Sharing Technical Spec",
       "added_date": "2026-05-13 18:15",
@@ -974,6 +1022,22 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-data-sharing-technical-spec.json",
       "content_text_length": 7172
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-audit-studio-ready-state",
+      "title": "Studio Ready-State Audit",
+      "added_date": "2026-05-03",
+      "last_updated": "2026-05-09 22:35",
+      "parent_id": "audit",
+      "sort_order": 2000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "scripts-audit-studio-ready-state.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-studio-ready-state.json",
+      "content_text_length": 1742
     },
     {
       "scope": "studio",
@@ -1006,6 +1070,22 @@
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
       "content_text_length": 14573
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-smoke-testing",
+      "title": "Studio Smoke Testing",
+      "added_date": "2026-05-01",
+      "last_updated": "2026-05-13",
+      "parent_id": "testing",
+      "sort_order": 2000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-smoke-testing.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-smoke-testing",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-smoke-testing.json",
+      "content_text_length": 6162
     },
     {
       "scope": "studio",
@@ -1299,22 +1379,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "config-library-export-configs",
-      "title": "Library Export Configs",
-      "added_date": "2026-05-03 14:15",
-      "last_updated": "2026-05-06 21:14",
-      "parent_id": "library",
-      "sort_order": 3000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "config-library-export-configs.md",
-      "viewer_url": "/docs/?scope=studio&doc=config-library-export-configs",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/config-library-export-configs.json",
-      "content_text_length": 9656
-    },
-    {
-      "scope": "studio",
       "doc_id": "ui-primitive-list",
       "title": "List Primitive",
       "added_date": "2026-05-05",
@@ -1347,19 +1411,19 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio",
-      "title": "Local Studio",
-      "added_date": "2026-04-23",
-      "last_updated": "2026-05-13",
+      "doc_id": "public-site",
+      "title": "Public Site",
+      "added_date": "2026-05-23",
+      "last_updated": "2026-05-23",
       "parent_id": "",
       "sort_order": 3000,
       "published": true,
       "hidden": false,
       "viewable": true,
-      "source_path": "studio.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 4096
+      "source_path": "public-site.md",
+      "viewer_url": "/docs/?scope=studio&doc=public-site",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/public-site.json",
+      "content_text_length": 105
     },
     {
       "scope": "studio",
@@ -1411,19 +1475,36 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-smoke-testing",
-      "title": "Studio Smoke Testing",
-      "added_date": "2026-05-01",
-      "last_updated": "2026-05-13",
-      "parent_id": "studio",
+      "doc_id": "config-studio-config-js",
+      "title": "Studio Config Loader JS",
+      "added_date": "2026-04-01",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "config",
       "sort_order": 3000,
       "published": true,
       "hidden": false,
       "viewable": true,
-      "source_path": "studio-smoke-testing.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-smoke-testing",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-smoke-testing.json",
-      "content_text_length": 6162
+      "source_path": "config-studio-config-js.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-studio-config-js",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-js.json",
+      "content_text_length": 2611
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-docs-inventory",
+      "title": "Studio Docs Inventory",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "audit",
+      "sort_order": 3000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-docs-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-docs-inventory",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-docs-inventory.json",
+      "content_text_length": 2703,
+      "ui_status": "urgent"
     },
     {
       "scope": "studio",
@@ -1504,7 +1585,7 @@
       "source_path": "docs-viewer-portable-source-shape.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-source-shape",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-source-shape.json",
-      "content_text_length": 1029
+      "content_text_length": 1030
     },
     {
       "scope": "studio",
@@ -1671,6 +1752,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "config-library-export-configs",
+      "title": "Library Export Configs",
+      "added_date": "2026-05-03 14:15",
+      "last_updated": "2026-05-06 21:14",
+      "parent_id": "data-sharing",
+      "sort_order": 4000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "config-library-export-configs.md",
+      "viewer_url": "/docs/?scope=studio&doc=config-library-export-configs",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/config-library-export-configs.json",
+      "content_text_length": 9656
+    },
+    {
+      "scope": "studio",
       "doc_id": "ui-primitive-panel",
       "title": "Panel Primitive",
       "added_date": "2026-05-05",
@@ -1732,6 +1829,23 @@
       "viewer_url": "/docs/?scope=studio&doc=sorting-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/sorting-architecture.json",
       "content_text_length": 2252
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-python-ruby-script-inventory",
+      "title": "Studio Python And Ruby Script Inventory",
+      "added_date": "2026-05-19",
+      "last_updated": "2026-05-19",
+      "parent_id": "audit",
+      "sort_order": 4000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-python-ruby-script-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-python-ruby-script-inventory.json",
+      "content_text_length": 17145,
+      "ui_status": "urgent"
     },
     {
       "scope": "studio",
@@ -1900,7 +2014,7 @@
       "title": "Config",
       "added_date": "2026-03-31",
       "last_updated": "2026-05-13 18:15",
-      "parent_id": "architecture",
+      "parent_id": "",
       "sort_order": 5000,
       "published": true,
       "hidden": false,
@@ -2014,7 +2128,7 @@
       "title": "Studio Audits",
       "added_date": "2026-05-03",
       "last_updated": "2026-05-06 20:51",
-      "parent_id": "studio",
+      "parent_id": "audit",
       "sort_order": 5000,
       "published": true,
       "hidden": false,
@@ -2463,23 +2577,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-python-ruby-script-inventory",
-      "title": "Studio Python And Ruby Script Inventory",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio",
-      "sort_order": 7010,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-python-ruby-script-inventory.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-python-ruby-script-inventory.json",
-      "content_text_length": 17145,
-      "ui_status": "urgent"
-    },
-    {
-      "scope": "studio",
       "doc_id": "docs-viewer-javascript-inventory",
       "title": "Docs Viewer JavaScript Inventory",
       "added_date": "2026-05-20",
@@ -2494,23 +2591,6 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-javascript-inventory.json",
       "content_text_length": 6847,
       "ui_status": "review"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio-docs-inventory",
-      "title": "Studio Docs Inventory",
-      "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio",
-      "sort_order": 7505,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-docs-inventory.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-docs-inventory",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-docs-inventory.json",
-      "content_text_length": 2703,
-      "ui_status": "urgent"
     },
     {
       "scope": "studio",
@@ -2658,22 +2738,6 @@
       "source_path": "scripts-srcset-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-srcset-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-srcset-builder.json",
-      "content_text_length": 2299
-    },
-    {
-      "scope": "studio",
-      "doc_id": "scripts-studio-audit-service",
-      "title": "Studio Audit Service",
-      "added_date": "2026-05-03",
-      "last_updated": "2026-05-08 19:25",
-      "parent_id": "studio",
-      "sort_order": 8000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "scripts-studio-audit-service.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-studio-audit-service",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-studio-audit-service.json",
       "content_text_length": 2299
     },
     {
@@ -2826,6 +2890,22 @@
     },
     {
       "scope": "studio",
+      "doc_id": "docs-viewer-scopes",
+      "title": "Docs Viewer Scopes",
+      "added_date": "2026-04-24",
+      "last_updated": "2026-05-20",
+      "parent_id": "docs-viewer",
+      "sort_order": 9000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "docs-viewer-scopes.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-scopes",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-scopes.json",
+      "content_text_length": 51
+    },
+    {
+      "scope": "studio",
       "doc_id": "docs-viewer-source-config-report",
       "title": "Docs Viewer Source Config Report",
       "added_date": "2026-05-14",
@@ -2892,22 +2972,6 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-payload-runtime-cleanup.json",
       "content_text_length": 30004,
       "ui_status": "done"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "scripts-audit-studio-ready-state",
-      "title": "Studio Ready-State Audit",
-      "added_date": "2026-05-03",
-      "last_updated": "2026-05-09 22:35",
-      "parent_id": "studio",
-      "sort_order": 9000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "scripts-audit-studio-ready-state.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-studio-ready-state.json",
-      "content_text_length": 1742
     },
     {
       "scope": "studio",
@@ -3088,22 +3152,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "studio-config-and-save-flow",
-      "title": "Studio Config and Save Flow",
-      "added_date": "2026-04-22",
-      "last_updated": "2026-05-09 21:45",
-      "parent_id": "studio",
-      "sort_order": 11000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "studio-config-and-save-flow.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio-config-and-save-flow",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-config-and-save-flow.json",
-      "content_text_length": 12052
-    },
-    {
-      "scope": "studio",
       "doc_id": "ui",
       "title": "UI",
       "added_date": "2026-05-05",
@@ -3200,22 +3248,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "config-studio-config-json",
-      "title": "Studio Config JSON",
-      "added_date": "2026-04-24",
-      "last_updated": "2026-05-11 17:50",
-      "parent_id": "studio",
-      "sort_order": 12000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "config-studio-config-json.md",
-      "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 9294
-    },
-    {
-      "scope": "studio",
       "doc_id": "ui-catalogue",
       "title": "UI Catalogue",
       "added_date": "2026-04-21",
@@ -3277,22 +3309,6 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-generate-work-pages.json",
       "content_text_length": 14742
-    },
-    {
-      "scope": "studio",
-      "doc_id": "config-studio-config-js",
-      "title": "Studio Config Loader JS",
-      "added_date": "2026-04-01",
-      "last_updated": "2026-05-13 18:15",
-      "parent_id": "studio",
-      "sort_order": 13000,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "config-studio-config-js.md",
-      "viewer_url": "/docs/?scope=studio&doc=config-studio-config-js",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-js.json",
-      "content_text_length": 2611
     },
     {
       "scope": "studio",
@@ -4388,7 +4404,7 @@
       "doc_id": "docs-viewer-management-current",
       "title": "Docs Viewer Management Current State",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-23",
       "parent_id": "docs-viewer-management",
       "sort_order": 54100,
       "published": true,
@@ -4397,7 +4413,7 @@
       "source_path": "docs-viewer-management-current.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management-current",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management-current.json",
-      "content_text_length": 10459
+      "content_text_length": 10573
     },
     {
       "scope": "studio",

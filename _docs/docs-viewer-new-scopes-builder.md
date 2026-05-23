@@ -5,7 +5,7 @@ added_date: 2026-05-15
 last_updated: 2026-05-15
 parent_id: docs-viewer
 sort_order: 5500
-hidden: false
+viewable: true
 ---
 # New Scopes Builder
 

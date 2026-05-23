@@ -6,7 +6,7 @@ last_updated: "2026-05-10 14:45"
 ui_status: done
 parent_id: site-request-js-config-structural-review-docs-viewer-boundary
 sort_order: 1000
-hidden: false
+viewable: true
 ---
 # Docs Viewer Function Inventory
 

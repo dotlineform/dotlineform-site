@@ -7,7 +7,7 @@ ui_status: report
 parent_id: docs-viewer
 sort_order: 9000
 published: true
-hidden: false
+viewable: true
 viewer_report: source_config
 viewer_report_access: manage
 ---

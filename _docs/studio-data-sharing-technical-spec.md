@@ -5,7 +5,7 @@ added_date: "2026-05-13 18:15"
 last_updated: "2026-05-13 17:17"
 parent_id: data-sharing
 sort_order: 2000
-hidden: false
+viewable: true
 ---
 # Studio Data Sharing Technical Spec
 

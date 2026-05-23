@@ -5,7 +5,7 @@ added_date: 2026-03-31
 last_updated: "2026-05-09 22:35"
 parent_id: ui
 sort_order: 8000
-hidden: false
+viewable: true
 ---
 # CSS Token Audit
 

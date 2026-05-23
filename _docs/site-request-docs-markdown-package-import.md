@@ -6,7 +6,7 @@ last_updated: 2026-05-18
 ui_status: done
 parent_id: archive
 sort_order: 73000
-hidden: false
+viewable: true
 ---
 # Docs Markdown Package Import Request
 

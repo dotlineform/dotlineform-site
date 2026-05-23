@@ -6,7 +6,7 @@ last_updated: "2026-05-13 11:14"
 ui_status: done
 parent_id: archive
 sort_order: 32000
-hidden: false
+viewable: true
 ---
 # Docs Viewer Report Components Request
 

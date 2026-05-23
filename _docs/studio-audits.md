@@ -3,8 +3,9 @@ doc_id: studio-audits
 title: Studio Audits
 added_date: 2026-05-03
 last_updated: "2026-05-06 20:51"
-parent_id: studio
+parent_id: audit
 sort_order: 5000
+viewable: true
 ---
 # Studio Audits
 

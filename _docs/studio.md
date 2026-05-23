@@ -1,12 +1,12 @@
 ---
 doc_id: studio
-title: Local Studio
+title: Studio
 added_date: 2026-04-23
 last_updated: 2026-05-13
 parent_id: ""
-sort_order: 3000
+sort_order: 2000
 ---
-# Local Studio
+# Studio
 
 This section documents the Local Studio app routes used to review and edit public site data, catalogue records, and related operational workflows.
 

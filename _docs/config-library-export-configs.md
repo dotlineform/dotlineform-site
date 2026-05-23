@@ -3,9 +3,9 @@ doc_id: config-library-export-configs
 title: Library Export Configs
 added_date: "2026-05-03 14:15"
 last_updated: "2026-05-06 21:14"
-parent_id: library
-sort_order: 3000
-hidden: false
+parent_id: data-sharing
+sort_order: 4000
+viewable: true
 ---
 # Library Export Configs
 

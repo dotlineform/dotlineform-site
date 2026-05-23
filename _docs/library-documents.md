@@ -6,7 +6,7 @@ last_updated: 2026-05-13
 ui_status: report
 parent_id: library
 sort_order: 2000
-hidden: false
+viewable: true
 viewer_report: docs_index_table
 viewer_report_access: manage
 viewer_report_preset: library_documents_admin

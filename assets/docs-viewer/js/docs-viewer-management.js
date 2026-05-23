@@ -298,9 +298,16 @@ export function initDocsViewerManagement(context) {
       });
   }
 
-  function openMetadataModal() {
-    var doc = currentSelectedDoc();
+  function openMetadataModalForDoc(doc) {
     return modalController ? modalController.openMetadataModal(doc) : Promise.resolve(null);
+  }
+
+  function openMetadataModal() {
+    return openMetadataModalForDoc(currentSelectedDoc());
+  }
+
+  function openMetadataModalForDocId(docId) {
+    return openMetadataModalForDoc(state.docsById.get(docId) || null);
   }
 
   function updateNavDragState() {
@@ -811,6 +818,11 @@ export function initDocsViewerManagement(context) {
         if (actionName === "open") {
           actionController.handleOpenSource("default");
         }
+      },
+      onEditDoc: function (docId) {
+        if (!actionController) return;
+        hideManageActionsMenu();
+        openMetadataModalForDocId(docId).then(actionController.handleEditMetadataSave);
       },
       onMoveDoc: function (movingDocId, targetDocId, position) {
         if (actionController) actionController.handleMoveDoc(movingDocId, targetDocId, position);

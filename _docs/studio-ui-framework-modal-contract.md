@@ -5,7 +5,7 @@ added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: ui-catalogue
 sort_order: 5500
-hidden: false
+viewable: true
 ---
 # Modal Contract
 

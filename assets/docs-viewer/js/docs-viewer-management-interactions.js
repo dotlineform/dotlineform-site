@@ -16,6 +16,9 @@ export function createDocsViewerManagementInteractionController(options) {
   var dragDocId = "";
   var dropTargetDocId = "";
   var dropPosition = "";
+  var suppressNextClickDocId = "";
+  var lastEditRequestDocId = "";
+  var lastEditRequestTime = 0;
 
   function docChildren(docId) {
     return state.childrenByParent.get(docId) || [];
@@ -30,6 +33,10 @@ export function createDocsViewerManagementInteractionController(options) {
   }
 
   function contextMenuEnabled() {
+    return state.managementMode && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
+  }
+
+  function editFromIndexEnabled() {
     return state.managementMode && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
   }
 
@@ -109,6 +116,18 @@ export function createDocsViewerManagementInteractionController(options) {
     if (callbacks.onContextAction) callbacks.onContextAction(actionName);
   }
 
+  function requestEditDoc(docId) {
+    var normalizedDocId = String(docId || "");
+    if (!normalizedDocId || !state.docsById.has(normalizedDocId)) return;
+    var now = Date.now();
+    if (lastEditRequestDocId === normalizedDocId && now - lastEditRequestTime < 500) return;
+    lastEditRequestDocId = normalizedDocId;
+    lastEditRequestTime = now;
+    clearSelection();
+    hideContextMenu();
+    if (callbacks.onEditDoc) callbacks.onEditDoc(normalizedDocId);
+  }
+
   function handleRootClick(event) {
     if (contextMenu && !event.target.closest("#docsViewerContextMenu")) {
       hideContextMenu();
@@ -128,7 +147,42 @@ export function createDocsViewerManagementInteractionController(options) {
   function wireNavEvents() {
     if (!nav) return;
 
+    nav.addEventListener("click", function (event) {
+      if (event.detail >= 2 && !event.target.closest("[data-toggle-doc-id]")) {
+        var editRow = event.target.closest("[data-doc-row-id]");
+        if (editRow && editFromIndexEnabled()) {
+          var editDocId = editRow.dataset.docRowId || "";
+          if (state.docsById.has(editDocId)) {
+            suppressNextClickDocId = "";
+            event.preventDefault();
+            event.stopPropagation();
+            requestEditDoc(editDocId);
+            return;
+          }
+        }
+      }
+      if (!suppressNextClickDocId) return;
+      var row = event.target.closest("[data-doc-row-id]");
+      if (!row || row.dataset.docRowId !== suppressNextClickDocId) return;
+      suppressNextClickDocId = "";
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+
     nav.addEventListener("mousedown", function (event) {
+      if (event.button === 0 && event.detail >= 2 && !event.target.closest("[data-toggle-doc-id]")) {
+        var editRow = event.target.closest("[data-doc-row-id]");
+        if (editRow && editFromIndexEnabled()) {
+          var editDocId = editRow.dataset.docRowId || "";
+          if (state.docsById.has(editDocId)) {
+            suppressNextClickDocId = editDocId;
+            event.preventDefault();
+            event.stopPropagation();
+            requestEditDoc(editDocId);
+            return;
+          }
+        }
+      }
       var row = event.target.closest("[data-doc-row-id]");
       if (!row || !contextMenuEnabled() || event.button !== 2) return;
       event.preventDefault();
@@ -141,6 +195,16 @@ export function createDocsViewerManagementInteractionController(options) {
       event.preventDefault();
       clearSelection();
       showContextMenu(row.dataset.docRowId || "", event.clientX, event.clientY);
+    });
+
+    nav.addEventListener("dblclick", function (event) {
+      if (event.target.closest("[data-toggle-doc-id]")) return;
+      var row = event.target.closest("[data-doc-row-id]");
+      if (!row || !editFromIndexEnabled()) return;
+      var docId = row.dataset.docRowId || "";
+      if (!state.docsById.has(docId)) return;
+      event.preventDefault();
+      requestEditDoc(docId);
     });
 
     nav.addEventListener("dragstart", function (event) {

@@ -5,7 +5,7 @@ added_date: 2026-04-24
 last_updated: 2026-05-20
 parent_id: ""
 sort_order: 9000
-hidden: false
+viewable: true
 ---
 # Docs Viewer
 

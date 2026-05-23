@@ -6,7 +6,7 @@ last_updated: 2026-05-13
 ui_status: done
 parent_id: archive
 sort_order: 66000
-hidden: false
+viewable: true
 ---
 # Catalogue Lookup Invalidation Request
 

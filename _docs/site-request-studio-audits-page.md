@@ -6,7 +6,7 @@ last_updated: 2026-05-03
 ui_status: deferred
 parent_id: change-requests
 sort_order: 2000
-hidden: false
+viewable: true
 ---
 # Studio Audits Page Request
 

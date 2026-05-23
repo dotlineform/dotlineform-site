@@ -1305,6 +1305,177 @@ def run_delete_confirm_idle_check(page: Page) -> None:
         raise AssertionError(f"delete confirmation should not leave the viewer busy: {state!r}")
 
 
+def run_index_double_click_edit_check(page: Page) -> None:
+    page.evaluate(
+        """async () => {
+            document.body.innerHTML = `
+              <main id="docsViewerRoot" class="docsViewer" data-management-busy="false">
+                <div id="docsViewerManageRow">
+                  <div class="docsViewer__manageActions">
+                    <button id="docsViewerManageActionsButton" type="button">Actions</button>
+                    <div id="docsViewerManageActionsMenu" hidden>
+                      <button id="docsViewerManageRebuildButton" type="button">Rebuild</button>
+                      <button id="docsViewerManageNormalizeOrderButton" type="button">Normalize order</button>
+                      <button id="docsViewerManageSettingsButton" type="button">Settings</button>
+                      <button id="docsViewerManageNewScopeButton" type="button">New scope</button>
+                      <button id="docsViewerManageDeleteScopeButton" type="button">Delete scope</button>
+                      <button id="docsViewerManageImportButton" type="button">Import</button>
+                      <button id="docsViewerManageNewButton" type="button">New</button>
+                      <button id="docsViewerManageEditButton" type="button">Edit</button>
+                      <button id="docsViewerManageArchiveButton" type="button">Archive</button>
+                      <button id="docsViewerManageDeleteButton" type="button">Delete</button>
+                      <button id="docsViewerManageViewableButton" type="button">Show</button>
+                    </div>
+                  </div>
+                </div>
+                <label class="docsViewer__draftLabel"><input id="docsViewerDraftToggle" type="checkbox"> show hidden</label>
+                <nav id="docsViewerNav">
+                  <div class="docsViewer__navRow" data-doc-row-id="current-doc">
+                    <span class="docsViewer__toggleSpacer"></span>
+                    <a href="#current-doc" class="docsViewer__navLink" id="currentDocLink">Current Doc</a>
+                  </div>
+                  <div class="docsViewer__navRow" data-doc-row-id="other-doc">
+                    <span class="docsViewer__toggleSpacer"></span>
+                    <a href="#other-doc" class="docsViewer__navLink" id="otherDocLink">Other Doc</a>
+                  </div>
+                </nav>
+                <div class="docsViewer__contextMenu" id="docsViewerContextMenu" hidden></div>
+                <div id="docsViewerStatusPills" hidden></div>
+                <p id="docsViewerStatus"></p>
+                <div class="docsViewer__modal" id="docsViewerMetadataModal" hidden>
+                  <div class="docsViewer__modalBackdrop" data-metadata-close="true"></div>
+                  <div class="docsViewer__modalCard" role="dialog" aria-modal="true" aria-labelledby="docsViewerMetadataHeading">
+                    <h2 class="docsViewer__modalTitle" id="docsViewerMetadataHeading">Edit metadata</h2>
+                    <p id="docsViewerMetadataDocId"></p>
+                    <form id="docsViewerMetadataForm">
+                      <input id="docsViewerMetadataTitleInput" name="title" required>
+                      <textarea id="docsViewerMetadataSummaryInput" name="summary"></textarea>
+                      <select id="docsViewerMetadataStatusInput" name="ui_status"></select>
+                      <input id="docsViewerMetadataHiddenInput" name="hidden" type="checkbox">
+                      <span id="docsViewerMetadataHiddenLabel">hidden</span>
+                      <input id="docsViewerMetadataParentInput" name="parent_id">
+                      <div id="docsViewerMetadataParentPopup" hidden></div>
+                      <input id="docsViewerMetadataSortOrderInput" name="sort_order" type="number">
+                      <button id="docsViewerMetadataCancelButton" type="button">Cancel</button>
+                      <button id="docsViewerMetadataSaveButton" type="submit">OK</button>
+                    </form>
+                  </div>
+                </div>
+                <div class="docsViewer__modal" id="docsViewerImportModal" hidden>
+                  <div class="docsViewer__modalBackdrop" data-import-close="true"></div>
+                  <div id="docsHtmlImportRoot"></div>
+                  <p id="docsHtmlImportBootStatus"></p>
+                </div>
+                <div class="docsViewer__modal" id="docsViewerSettingsModal" hidden>
+                  <div class="docsViewer__modalBackdrop" data-settings-close="true"></div>
+                  <form id="docsViewerSettingsForm">
+                    <p id="docsViewerSettingsScope"></p>
+                    <input id="docsViewerSettingsUpdatedInput" type="checkbox">
+                    <div id="docsViewerSettingsWarnings"></div>
+                    <p id="docsViewerSettingsStatus"></p>
+                    <button id="docsViewerSettingsCancelButton" type="button">Cancel</button>
+                    <button id="docsViewerSettingsSaveButton" type="submit">OK</button>
+                  </form>
+                </div>
+              </main>
+            `;
+
+            const docs = [
+                { doc_id: 'current-doc', title: 'Current Doc', parent_id: '', sort_order: 1, hidden: false },
+                { doc_id: 'other-doc', title: 'Other Doc', parent_id: '', sort_order: 2, hidden: false }
+            ];
+            const status = document.getElementById('docsViewerStatus');
+            const state = {
+                allDocs: docs,
+                docs,
+                childrenByParent: new Map([['', docs]]),
+                docsById: new Map(docs.map(doc => [doc.doc_id, doc])),
+                expandedDocIds: new Set(),
+                payloadCache: new Map(),
+                searchEntries: [],
+                searchLoaded: false,
+                searchRequestPromise: null,
+                selectedDocId: 'current-doc',
+                managementMode: true,
+                managementChecked: true,
+                managementAvailable: true,
+                managementBusy: false,
+                managementCapabilities: { scopes: { studio: { available: true, archive_available: true } } },
+                managementText: {
+                    archiveUnavailableNote: 'Archive unavailable.',
+                    checkingNote: 'Checking manage mode...',
+                    clearSearchNote: 'Clear search to manage the current doc.',
+                    docHiddenEmoji: 'H',
+                    importCancelButton: 'Cancel',
+                    metadataHiddenLabel: 'hidden',
+                    metadataParentInvalid: 'Invalid parent.',
+                    metadataParentNoMatches: 'No matches.',
+                    metadataParentRootOption: 'Root',
+                    metadataStatusNoneOption: 'None',
+                    metadataStatusSelectedSuffix: 'selected',
+                    serverNotConfiguredError: 'Server unavailable.',
+                    settingsLoading: 'Loading settings...',
+                    settingsLoadFailed: 'Settings failed.',
+                    settingsSaveFailed: 'Save failed.',
+                    settingsSaving: 'Saving settings...',
+                    unavailableNote: 'Manage mode unavailable.'
+                },
+                metadataEditingDocId: '',
+                metadataRestoreFocusId: '',
+                reloadNonce: '',
+                searchRouteActive: false,
+                searchQuery: '',
+                searchVisibleCount: 0,
+                showHidden: true,
+                uiStatuses: [],
+                uiStatusByValue: new Map(),
+                managementMessage: '',
+                managementMessageIsError: false,
+                managementStatusOwnsViewerStatus: false,
+                statusMenuOpen: false
+            };
+            const management = await import('/assets/docs-viewer/js/docs-viewer-management.js');
+            const controller = management.initDocsViewerManagement({
+                root: document.getElementById('docsViewerRoot'),
+                nav: document.getElementById('docsViewerNav'),
+                state,
+                SEARCH_BATCH_SIZE: 20,
+                MANAGEMENT_MODE: 'manage',
+                managementBaseUrl: 'http://docs-management.test',
+                getCurrentMode: () => 'manage',
+                currentViewerConfig: () => ({}),
+                getConfigValue: () => undefined,
+                getConfigText: (_config, _path, fallback) => fallback || '',
+                formatText: (template, tokens = {}) => String(template || '').replace(/\\{(\\w+)\\}/g, (_match, key) => tokens[key] || ''),
+                setStatus: (message, isError) => {
+                    status.textContent = message || '';
+                    status.dataset.state = isError ? 'error' : 'idle';
+                },
+                viewerScope: () => 'studio',
+                cssEscape: value => CSS.escape(value),
+                renderSidebar: () => {},
+                renderBookmarkUi: () => {},
+                cancelSearchDebounce: () => {},
+                loadIndex: () => Promise.resolve(),
+                setHistory: () => {}
+            });
+            controller.render();
+        }"""
+    )
+    page.locator("#otherDocLink").dblclick()
+    page.wait_for_selector("#docsViewerMetadataModal:not([hidden])")
+    state = page.locator("#docsViewerMetadataModal").evaluate(
+        """modal => ({
+            docId: modal.querySelector('#docsViewerMetadataDocId').textContent.trim(),
+            titleValue: modal.querySelector('#docsViewerMetadataTitleInput').value,
+            activeId: document.activeElement ? document.activeElement.id : ''
+        })"""
+    )
+    if state["docId"] != "other-doc" or state["titleValue"] != "Other Doc":
+        raise AssertionError(f"double-click did not open edit modal for clicked index doc: {state!r}")
+    page.locator("#docsViewerMetadataCancelButton").click()
+
+
 def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) -> dict[str, object]:
     page.set_viewport_size(viewport)
     page.goto(route_url(base_url, "/assets/docs-viewer/css/docs-viewer-management.css"), wait_until="domcontentloaded")
@@ -1321,6 +1492,7 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
     run_import_result_rows_check(page)
     run_scope_lifecycle_create_payload_check(page)
     run_delete_confirm_idle_check(page)
+    run_index_double_click_edit_check(page)
     return {
         "width": viewport["width"],
         "height": viewport["height"],
@@ -1337,6 +1509,7 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
             "import-result-rows",
             "scope-lifecycle-create-payload",
             "delete-confirm-idle",
+            "index-double-click-edit",
         ],
     }
 

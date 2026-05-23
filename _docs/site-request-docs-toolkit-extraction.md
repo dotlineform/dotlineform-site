@@ -6,7 +6,7 @@ last_updated: "2026-05-13 21:07"
 ui_status: deferred
 parent_id: change-requests
 sort_order: 8000
-hidden: false
+viewable: true
 ---
 # Docs Toolkit Extraction Request
 

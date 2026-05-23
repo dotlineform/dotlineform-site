@@ -42,7 +42,7 @@ added_date: 2026-05-11
 last_updated: "2026-05-11"
 parent_id: ""
 sort_order: 10
-hidden: false
+viewable: true
 ---
 # Library
 

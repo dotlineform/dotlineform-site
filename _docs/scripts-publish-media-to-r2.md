@@ -5,7 +5,7 @@ added_date: 2026-05-08
 last_updated: "2026-05-13 17:18"
 parent_id: catalogue
 sort_order: 15000
-hidden: false
+viewable: true
 ---
 # Publish Media To R2
 

@@ -6,7 +6,7 @@ last_updated: "2026-05-13 18:15"
 ui_status: done
 parent_id: archive
 sort_order: 28000
-hidden: false
+viewable: true
 ---
 # Studio Data Sharing Module Implementation Request
 

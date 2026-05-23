@@ -6,7 +6,7 @@ last_updated: "2026-05-10 15:18"
 ui_status: done
 parent_id: site-request-js-config-structural-review-docs-viewer-boundary
 sort_order: 2000
-hidden: false
+viewable: true
 ---
 # Docs Viewer Extraction Plan
 

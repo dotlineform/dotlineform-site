@@ -1,0 +1,15 @@
+{
+  "scope": "studio",
+  "doc_id": "audit",
+  "title": "Audit",
+  "added_date": "2026-05-23",
+  "last_updated": "2026-05-23",
+  "parent_id": "",
+  "sort_order": 1000,
+  "published": true,
+  "hidden": false,
+  "viewable": true,
+  "source_path": "audit.md",
+  "viewer_url": "/docs/?scope=studio&doc=audit",
+  "content_html": "<h1 id=\"audit\">Audit</h1>\n\n<p>This section contains policy and guidance about auditing the repo to identify areas which need improving.</p>\n"
+}

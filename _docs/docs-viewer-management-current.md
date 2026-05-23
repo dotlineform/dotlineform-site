@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management-current
 title: Docs Viewer Management Current State
 added_date: 2026-05-19
-last_updated: 2026-05-22
+last_updated: 2026-05-23
 parent_id: docs-viewer-management
 sort_order: 54100
 ---
@@ -47,7 +47,7 @@ Implemented now:
 - create-after-selected uses sparse `sort_order` increments without renumbering siblings
 - create, reparent, archive, delete, and searchable metadata edits rebuild docs payloads plus same-scope docs search; same-parent drag/drop reorder rebuilds docs payloads without a search update
 - docs-management writes `added_date` and `last_updated` values in `YYYY-MM-DD HH:MM` form for new or content-imported docs; metadata-only changes preserve existing `last_updated` values so the field reflects content freshness rather than tree/status/summary churn
-- Library create/import defaults to `published: true`, `hidden: true`; Studio create/import defaults to `published: true`, `hidden: false`
+- Library create/import defaults to `published: true`, `hidden: true`; Studio create/import defaults to `published: true`, `viewable: true`
 - generated docs data keeps a compatibility `viewable` field computed as `!hidden`
 - manage mode uses a checked-by-default `show hidden` checkbox so hidden docs remain visible for review
 - selected hidden docs can be shown through the manage toolbar
@@ -63,7 +63,7 @@ Implemented now:
 - right-click create actions now expose:
   - `New Sibling`
   - `New Child`
-- `Edit` is available for the current doc in the manage toolbar
+- `Edit` is available for the current doc in the manage toolbar, and double-clicking an index row opens the same metadata modal for that clicked doc
 - `Rebuild docs`, `Normalize order`, `Import`, `New`, `Edit`, `Archive`, and `Delete` are grouped under the top-row `Actions` menu
 - `Settings` is grouped under the top-row `Actions` menu and opens the active-scope settings modal
 - the settings modal currently exposes scoped `show_updated_date` only, writes through the local source-config settings endpoint, and rebuilds the affected docs payloads after a changed save
@@ -95,7 +95,7 @@ Implemented now:
 - `assets/docs-viewer/js/docs-html-import.js` exports the importer initializer used by the Docs Viewer modal
 - Docs Import reads its scope list, target source roots, and media token path prefixes from the Docs Viewer scope config
 - `assets/docs-viewer/js/docs-viewer-management.js` owns manage-mode toolbar rendering, status-pill events, metadata/import modal coordination, metadata payload collection, settings reads, busy/message/reload callbacks, and navigation
-- `assets/docs-viewer/js/docs-viewer-management-interactions.js` owns manage-mode nav drag/drop event handling, transient drag/drop visual state, context-menu active-doc state, context-menu positioning, and context-menu action dispatch
+- `assets/docs-viewer/js/docs-viewer-management-interactions.js` owns manage-mode nav drag/drop event handling, double-click edit dispatch, transient drag/drop visual state, context-menu active-doc state, context-menu positioning, and context-menu action dispatch
 - `assets/docs-viewer/js/docs-viewer-management-actions.js` owns create, metadata/status save, settings save, rebuild, archive/delete, viewability, move, source-open, and copy-link write/action orchestration
 - `assets/docs-viewer/js/docs-viewer-management-capabilities.js` owns management capability helpers and the capability probe/retry state machine
 - `assets/docs-viewer/js/docs-viewer-management-config.js` owns management UI-text/config application

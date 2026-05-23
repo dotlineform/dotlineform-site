@@ -2,46 +2,11 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a21aa04b01e4662fec886fcdf6d6c32d",
-    "generated_at_utc": "2026-05-23T13:29:13Z",
-    "count": 295
+    "version": "blake2b-9f89055b16fb74d7c6d0e06af5d044a6",
+    "generated_at_utc": "2026-05-23T14:25:29Z",
+    "count": 296
   },
   "entries": [
-    {
-      "id": "dev",
-      "kind": "doc",
-      "title": "Dev",
-      "href": "/docs/?scope=studio&doc=dev",
-      "last_updated": "2026-05-23",
-      "display_meta": "2026-05-23",
-      "search_terms": [
-        "dev",
-        "2026-05-23",
-        "2026",
-        "05",
-        "23"
-      ],
-      "search_text": "dev 2026-05-23 2026 05 23"
-    },
-    {
-      "id": "public-site",
-      "kind": "doc",
-      "title": "Public Site",
-      "href": "/docs/?scope=studio&doc=public-site",
-      "last_updated": "2026-05-23",
-      "display_meta": "2026-05-23",
-      "search_terms": [
-        "public-site",
-        "public",
-        "site",
-        "public site",
-        "2026-05-23",
-        "2026",
-        "05",
-        "23"
-      ],
-      "search_text": "public-site public site public site 2026-05-23 2026 05 23"
-    },
     {
       "id": "site-request-studio-unified-activity-log-inventory",
       "kind": "doc",
@@ -97,6 +62,22 @@
         "54"
       ],
       "search_text": "data-models-analysis data models analysis analysis scope scope analytics 2026-05-06 20:54 2026 05 06 20 54"
+    },
+    {
+      "id": "audit",
+      "kind": "doc",
+      "title": "Audit",
+      "href": "/docs/?scope=studio&doc=audit",
+      "last_updated": "2026-05-23",
+      "display_meta": "2026-05-23",
+      "search_terms": [
+        "audit",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "audit 2026-05-23 2026 05 23"
     },
     {
       "id": "site-request-js-config-structural-review-catalogue-editor-extraction-plan",
@@ -676,6 +657,57 @@
       "search_text": "search-overview search overview search overview 2026-05-11 21:30 2026 05 11 21 30"
     },
     {
+      "id": "scripts-studio-audit-service",
+      "kind": "doc",
+      "title": "Studio Audit Service",
+      "href": "/docs/?scope=studio&doc=scripts-studio-audit-service",
+      "last_updated": "2026-05-08 19:25",
+      "parent_id": "audit",
+      "parent_title": "Audit",
+      "display_meta": "2026-05-08 19:25 • Audit",
+      "search_terms": [
+        "scripts-studio-audit-service",
+        "scripts",
+        "studio",
+        "audit",
+        "service",
+        "studio audit service",
+        "2026-05-08 19:25",
+        "2026",
+        "05",
+        "08",
+        "19",
+        "25"
+      ],
+      "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-08 19:25 2026 05 08 19 25"
+    },
+    {
+      "id": "studio-config-and-save-flow",
+      "kind": "doc",
+      "title": "Studio Config and Save Flow",
+      "href": "/docs/?scope=studio&doc=studio-config-and-save-flow",
+      "last_updated": "2026-05-09 21:45",
+      "parent_id": "config",
+      "parent_title": "Config",
+      "display_meta": "2026-05-09 21:45 • Config",
+      "search_terms": [
+        "studio-config-and-save-flow",
+        "studio",
+        "config",
+        "and",
+        "save",
+        "flow",
+        "studio config and save flow",
+        "2026-05-09 21:45",
+        "2026",
+        "05",
+        "09",
+        "21",
+        "45"
+      ],
+      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-05-09 21:45 2026 05 09 21 45"
+    },
+    {
       "id": "studio-data-sharing",
       "kind": "doc",
       "title": "Studio Data Sharing",
@@ -742,8 +774,8 @@
       "href": "/docs/?scope=studio&doc=data-models-studio",
       "last_updated": "2026-05-06 20:51",
       "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-06 20:51 • Local Studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-06 20:51 • Studio",
       "search_terms": [
         "data-models-studio",
         "data",
@@ -751,8 +783,6 @@
         "studio",
         "studio scope",
         "scope",
-        "local studio",
-        "local",
         "2026-05-06 20:51",
         "2026",
         "05",
@@ -760,7 +790,7 @@
         "20",
         "51"
       ],
-      "search_text": "data-models-studio data models studio studio scope scope local studio local 2026-05-06 20:51 2026 05 06 20 51"
+      "search_text": "data-models-studio data models studio studio scope scope 2026-05-06 20:51 2026 05 06 20 51"
     },
     {
       "id": "data-models-catalogue-source",
@@ -1366,6 +1396,22 @@
       "search_text": "data-models-shared data models shared shared patterns patterns architecture 2026-05-06 21:10 2026 05 06 21 10"
     },
     {
+      "id": "studio",
+      "kind": "doc",
+      "title": "Studio",
+      "href": "/docs/?scope=studio&doc=studio",
+      "last_updated": "2026-05-13",
+      "display_meta": "2026-05-13",
+      "search_terms": [
+        "studio",
+        "2026-05-13",
+        "2026",
+        "05",
+        "13"
+      ],
+      "search_text": "studio 2026-05-13 2026 05 13"
+    },
+    {
       "id": "site-request-studio-audits-page",
       "kind": "doc",
       "title": "Studio Audits Page Request",
@@ -1393,6 +1439,30 @@
       "search_text": "site-request-studio-audits-page site request studio audits page studio audits page request change requests change requests 2026-05-03 2026 05 03"
     },
     {
+      "id": "config-studio-config-json",
+      "kind": "doc",
+      "title": "Studio Config JSON",
+      "href": "/docs/?scope=studio&doc=config-studio-config-json",
+      "last_updated": "2026-05-11 17:50",
+      "parent_id": "config",
+      "parent_title": "Config",
+      "display_meta": "2026-05-11 17:50 • Config",
+      "search_terms": [
+        "config-studio-config-json",
+        "config",
+        "studio",
+        "json",
+        "studio config json",
+        "2026-05-11 17:50",
+        "2026",
+        "05",
+        "11",
+        "17",
+        "50"
+      ],
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-11 17:50 2026 05 11 17 50"
+    },
+    {
       "id": "studio-data-sharing-technical-spec",
       "kind": "doc",
       "title": "Studio Data Sharing Technical Spec",
@@ -1417,6 +1487,32 @@
         "17"
       ],
       "search_text": "studio-data-sharing-technical-spec studio data sharing technical spec studio data sharing technical spec data sharing 2026-05-13 17:17 2026 05 13 17"
+    },
+    {
+      "id": "scripts-audit-studio-ready-state",
+      "kind": "doc",
+      "title": "Studio Ready-State Audit",
+      "href": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
+      "last_updated": "2026-05-09 22:35",
+      "parent_id": "audit",
+      "parent_title": "Audit",
+      "display_meta": "2026-05-09 22:35 • Audit",
+      "search_terms": [
+        "scripts-audit-studio-ready-state",
+        "scripts",
+        "audit",
+        "studio",
+        "ready",
+        "state",
+        "studio ready-state audit",
+        "2026-05-09 22:35",
+        "2026",
+        "05",
+        "09",
+        "22",
+        "35"
+      ],
+      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "site-request-studio-record-hash-simplification",
@@ -1457,21 +1553,41 @@
       "href": "/docs/?scope=studio&doc=studio-runtime",
       "last_updated": "2026-05-22",
       "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-22 • Local Studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-22 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "local studio",
-        "local",
         "2026-05-22",
         "2026",
         "05",
         "22"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime local studio local 2026-05-22 2026 05 22"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-22 2026 05 22"
+    },
+    {
+      "id": "studio-smoke-testing",
+      "kind": "doc",
+      "title": "Studio Smoke Testing",
+      "href": "/docs/?scope=studio&doc=studio-smoke-testing",
+      "last_updated": "2026-05-13",
+      "parent_id": "testing",
+      "parent_title": "Testing",
+      "display_meta": "2026-05-13 • Testing",
+      "search_terms": [
+        "studio-smoke-testing",
+        "studio",
+        "smoke",
+        "testing",
+        "studio smoke testing",
+        "2026-05-13",
+        "2026",
+        "05",
+        "13"
+      ],
+      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-13 2026 05 13"
     },
     {
       "id": "tag-groups",
@@ -1924,31 +2040,6 @@
       "search_text": "site-request-json-schema-adoption site request json schema adoption json schema adoption request change requests change requests 2026-05-03 14:35 2026 05 03 14 35"
     },
     {
-      "id": "config-library-export-configs",
-      "kind": "doc",
-      "title": "Library Export Configs",
-      "href": "/docs/?scope=studio&doc=config-library-export-configs",
-      "last_updated": "2026-05-06 21:14",
-      "parent_id": "library",
-      "parent_title": "Library",
-      "display_meta": "2026-05-06 21:14 • Library",
-      "search_terms": [
-        "config-library-export-configs",
-        "config",
-        "library",
-        "export",
-        "configs",
-        "library export configs",
-        "2026-05-06 21:14",
-        "2026",
-        "05",
-        "06",
-        "21",
-        "14"
-      ],
-      "search_text": "config-library-export-configs config library export configs library export configs 2026-05-06 21:14 2026 05 06 21 14"
-    },
-    {
       "id": "ui-primitive-list",
       "kind": "doc",
       "title": "List Primitive",
@@ -1998,22 +2089,23 @@
       "search_text": "llm-semantic-enrichment-spec llm semantic enrichment spec llm semantic enrichment spec 2026-05-03 17:08 2026 05 03 17 08"
     },
     {
-      "id": "studio",
+      "id": "public-site",
       "kind": "doc",
-      "title": "Local Studio",
-      "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-13",
-      "display_meta": "2026-05-13",
+      "title": "Public Site",
+      "href": "/docs/?scope=studio&doc=public-site",
+      "last_updated": "2026-05-23",
+      "display_meta": "2026-05-23",
       "search_terms": [
-        "studio",
-        "local studio",
-        "local",
-        "2026-05-13",
+        "public-site",
+        "public",
+        "site",
+        "public site",
+        "2026-05-23",
         "2026",
         "05",
-        "13"
+        "23"
       ],
-      "search_text": "studio local studio local 2026-05-13 2026 05 13"
+      "search_text": "public-site public site public site 2026-05-23 2026 05 23"
     },
     {
       "id": "scripts-tag-write-server",
@@ -2090,28 +2182,52 @@
       "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
-      "id": "studio-smoke-testing",
+      "id": "config-studio-config-js",
       "kind": "doc",
-      "title": "Studio Smoke Testing",
-      "href": "/docs/?scope=studio&doc=studio-smoke-testing",
-      "last_updated": "2026-05-13",
-      "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-13 • Local Studio",
+      "title": "Studio Config Loader JS",
+      "href": "/docs/?scope=studio&doc=config-studio-config-js",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "config",
+      "parent_title": "Config",
+      "display_meta": "2026-05-13 18:15 • Config",
       "search_terms": [
-        "studio-smoke-testing",
+        "config-studio-config-js",
+        "config",
         "studio",
-        "smoke",
-        "testing",
-        "studio smoke testing",
-        "local studio",
-        "local",
-        "2026-05-13",
+        "js",
+        "studio config loader js",
+        "loader",
+        "2026-05-13 18:15",
         "2026",
         "05",
-        "13"
+        "13",
+        "18",
+        "15"
       ],
-      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing local studio local 2026-05-13 2026 05 13"
+      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-13 18:15 2026 05 13 18 15"
+    },
+    {
+      "id": "studio-docs-inventory",
+      "kind": "doc",
+      "title": "Studio Docs Inventory",
+      "href": "/docs/?scope=studio&doc=studio-docs-inventory",
+      "last_updated": "2026-05-19",
+      "parent_id": "audit",
+      "parent_title": "Audit",
+      "display_meta": "2026-05-19 • Audit",
+      "search_terms": [
+        "studio-docs-inventory",
+        "studio",
+        "docs",
+        "inventory",
+        "studio docs inventory",
+        "audit",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-docs-inventory studio docs inventory studio docs inventory audit 2026-05-19 2026 05 19"
     },
     {
       "id": "tag-editor",
@@ -2502,6 +2618,34 @@
       "search_text": "config-jekyll-site-config config jekyll site jekyll site config dev home dev home 2026-05-11 14:10 2026 05 11 14 10"
     },
     {
+      "id": "config-library-export-configs",
+      "kind": "doc",
+      "title": "Library Export Configs",
+      "href": "/docs/?scope=studio&doc=config-library-export-configs",
+      "last_updated": "2026-05-06 21:14",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-06 21:14 • Data Sharing",
+      "search_terms": [
+        "config-library-export-configs",
+        "config",
+        "library",
+        "export",
+        "configs",
+        "library export configs",
+        "data sharing",
+        "data",
+        "sharing",
+        "2026-05-06 21:14",
+        "2026",
+        "05",
+        "06",
+        "21",
+        "14"
+      ],
+      "search_text": "config-library-export-configs config library export configs library export configs data sharing data sharing 2026-05-06 21:14 2026 05 06 21 14"
+    },
+    {
       "id": "ui-primitive-panel",
       "kind": "doc",
       "title": "Panel Primitive",
@@ -2592,28 +2736,52 @@
       "search_text": "sorting-architecture sorting architecture sorting architecture 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
+      "id": "studio-python-ruby-script-inventory",
+      "kind": "doc",
+      "title": "Studio Python And Ruby Script Inventory",
+      "href": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
+      "last_updated": "2026-05-19",
+      "parent_id": "audit",
+      "parent_title": "Audit",
+      "display_meta": "2026-05-19 • Audit",
+      "search_terms": [
+        "studio-python-ruby-script-inventory",
+        "studio",
+        "python",
+        "ruby",
+        "script",
+        "inventory",
+        "studio python and ruby script inventory",
+        "and",
+        "audit",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and audit 2026-05-19 2026 05 19"
+    },
+    {
       "id": "studio-ready-state",
       "kind": "doc",
       "title": "Studio Ready State",
       "href": "/docs/?scope=studio&doc=studio-ready-state",
       "last_updated": "2026-05-15",
       "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-15 • Local Studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-15 • Studio",
       "search_terms": [
         "studio-ready-state",
         "studio",
         "ready",
         "state",
         "studio ready state",
-        "local studio",
-        "local",
         "2026-05-15",
         "2026",
         "05",
         "15"
       ],
-      "search_text": "studio-ready-state studio ready state studio ready state local studio local 2026-05-15 2026 05 15"
+      "search_text": "studio-ready-state studio ready state studio ready state 2026-05-15 2026 05 15"
     },
     {
       "id": "tag-registry",
@@ -2852,12 +3020,9 @@
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config",
       "last_updated": "2026-05-13 18:15",
-      "parent_id": "architecture",
-      "parent_title": "Architecture",
-      "display_meta": "2026-05-13 18:15 • Architecture",
+      "display_meta": "2026-05-13 18:15",
       "search_terms": [
         "config",
-        "architecture",
         "2026-05-13 18:15",
         "2026",
         "05",
@@ -2865,7 +3030,7 @@
         "18",
         "15"
       ],
-      "search_text": "config architecture 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "config 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "docs-viewer-media-handling",
@@ -3026,16 +3191,15 @@
       "title": "Studio Audits",
       "href": "/docs/?scope=studio&doc=studio-audits",
       "last_updated": "2026-05-06 20:51",
-      "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-06 20:51 • Local Studio",
+      "parent_id": "audit",
+      "parent_title": "Audit",
+      "display_meta": "2026-05-06 20:51 • Audit",
       "search_terms": [
         "studio-audits",
         "studio",
         "audits",
         "studio audits",
-        "local studio",
-        "local",
+        "audit",
         "2026-05-06 20:51",
         "2026",
         "05",
@@ -3043,7 +3207,7 @@
         "20",
         "51"
       ],
-      "search_text": "studio-audits studio audits studio audits local studio local 2026-05-06 20:51 2026 05 06 20 51"
+      "search_text": "studio-audits studio audits studio audits audit 2026-05-06 20:51 2026 05 06 20 51"
     },
     {
       "id": "tag-aliases",
@@ -3461,21 +3625,19 @@
       "href": "/docs/?scope=studio&doc=studio-activity",
       "last_updated": "2026-05-22",
       "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-22 • Local Studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-22 • Studio",
       "search_terms": [
         "studio-activity",
         "studio",
         "activity",
         "studio activity",
-        "local studio",
-        "local",
         "2026-05-22",
         "2026",
         "05",
         "22"
       ],
-      "search_text": "studio-activity studio activity studio activity local studio local 2026-05-22 2026 05 22"
+      "search_text": "studio-activity studio activity studio activity 2026-05-22 2026 05 22"
     },
     {
       "id": "bulk-add-work",
@@ -3737,33 +3899,6 @@
       "search_text": "javascript-inventory javascript inventory javascript inventory javascript inventory policy policy 2026-05-21 2026 05 21"
     },
     {
-      "id": "studio-python-ruby-script-inventory",
-      "kind": "doc",
-      "title": "Studio Python And Ruby Script Inventory",
-      "href": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-19 • Local Studio",
-      "search_terms": [
-        "studio-python-ruby-script-inventory",
-        "studio",
-        "python",
-        "ruby",
-        "script",
-        "inventory",
-        "studio python and ruby script inventory",
-        "and",
-        "local studio",
-        "local",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and local studio local 2026-05-19 2026 05 19"
-    },
-    {
       "id": "docs-viewer-javascript-inventory",
       "kind": "doc",
       "title": "Docs Viewer JavaScript Inventory",
@@ -3787,30 +3922,6 @@
         "21"
       ],
       "search_text": "docs-viewer-javascript-inventory docs viewer javascript inventory docs viewer javascript inventory javascript inventory policy policy 2026-05-21 2026 05 21"
-    },
-    {
-      "id": "studio-docs-inventory",
-      "kind": "doc",
-      "title": "Studio Docs Inventory",
-      "href": "/docs/?scope=studio&doc=studio-docs-inventory",
-      "last_updated": "2026-05-19",
-      "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-19 • Local Studio",
-      "search_terms": [
-        "studio-docs-inventory",
-        "studio",
-        "docs",
-        "inventory",
-        "studio docs inventory",
-        "local studio",
-        "local",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "studio-docs-inventory studio docs inventory studio docs inventory local studio local 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-catalogue-js-runtime-consistency",
@@ -4036,33 +4147,6 @@
       "search_text": "scripts-srcset-builder scripts srcset builder srcset builder catalogue 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
-      "id": "scripts-studio-audit-service",
-      "kind": "doc",
-      "title": "Studio Audit Service",
-      "href": "/docs/?scope=studio&doc=scripts-studio-audit-service",
-      "last_updated": "2026-05-08 19:25",
-      "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-08 19:25 • Local Studio",
-      "search_terms": [
-        "scripts-studio-audit-service",
-        "scripts",
-        "studio",
-        "audit",
-        "service",
-        "studio audit service",
-        "local studio",
-        "local",
-        "2026-05-08 19:25",
-        "2026",
-        "05",
-        "08",
-        "19",
-        "25"
-      ],
-      "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service local studio local 2026-05-08 19:25 2026 05 08 19 25"
-    },
-    {
       "id": "search-build-pipeline-architecture",
       "kind": "doc",
       "title": "Search Build Pipeline Architecture",
@@ -4285,6 +4369,29 @@
       "search_text": "docs-viewer docs viewer docs viewer 2026-05-20 2026 05 20"
     },
     {
+      "id": "docs-viewer-scopes",
+      "kind": "doc",
+      "title": "Docs Viewer Scopes",
+      "href": "/docs/?scope=studio&doc=docs-viewer-scopes",
+      "last_updated": "2026-05-20",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-20 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-scopes",
+        "docs",
+        "viewer",
+        "scopes",
+        "docs viewer scopes",
+        "docs viewer",
+        "2026-05-20",
+        "2026",
+        "05",
+        "20"
+      ],
+      "search_text": "docs-viewer-scopes docs viewer scopes docs viewer scopes docs viewer 2026-05-20 2026 05 20"
+    },
+    {
       "id": "docs-viewer-source-config-report",
       "kind": "doc",
       "title": "Docs Viewer Source Config Report",
@@ -4394,34 +4501,6 @@
         "19"
       ],
       "search_text": "site-request-js-payload-runtime-cleanup site request js payload runtime cleanup javascript payload and runtime cleanup request javascript and javascript and browser config structural review request browser config structural review 2026-05-10 21:19 2026 05 10 21 19"
-    },
-    {
-      "id": "scripts-audit-studio-ready-state",
-      "kind": "doc",
-      "title": "Studio Ready-State Audit",
-      "href": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
-      "last_updated": "2026-05-09 22:35",
-      "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-09 22:35 • Local Studio",
-      "search_terms": [
-        "scripts-audit-studio-ready-state",
-        "scripts",
-        "audit",
-        "studio",
-        "ready",
-        "state",
-        "studio ready-state audit",
-        "local studio",
-        "local",
-        "2026-05-09 22:35",
-        "2026",
-        "05",
-        "09",
-        "22",
-        "35"
-      ],
-      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit local studio local 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "thumbnail-quality-page",
@@ -4554,8 +4633,8 @@
       "href": "/docs/?scope=studio&doc=scripts-studio-backup-retention",
       "last_updated": "2026-05-09 22:35",
       "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-09 22:35 • Local Studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-09 22:35 • Studio",
       "search_terms": [
         "scripts-studio-backup-retention",
         "scripts",
@@ -4563,8 +4642,6 @@
         "backup",
         "retention",
         "studio backup retention",
-        "local studio",
-        "local",
         "2026-05-09 22:35",
         "2026",
         "05",
@@ -4572,7 +4649,7 @@
         "22",
         "35"
       ],
-      "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention local studio local 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "site-request-studio-local-vanilla-web-app",
@@ -4703,34 +4780,6 @@
         "20"
       ],
       "search_text": "docs-viewer-source-organisation docs viewer source organisation source organisation docs viewer 2026-05-13 20:20 2026 05 13 20"
-    },
-    {
-      "id": "studio-config-and-save-flow",
-      "kind": "doc",
-      "title": "Studio Config and Save Flow",
-      "href": "/docs/?scope=studio&doc=studio-config-and-save-flow",
-      "last_updated": "2026-05-09 21:45",
-      "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-09 21:45 • Local Studio",
-      "search_terms": [
-        "studio-config-and-save-flow",
-        "studio",
-        "config",
-        "and",
-        "save",
-        "flow",
-        "studio config and save flow",
-        "local studio",
-        "local",
-        "2026-05-09 21:45",
-        "2026",
-        "05",
-        "09",
-        "21",
-        "45"
-      ],
-      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow local studio local 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "ui",
@@ -4874,32 +4923,6 @@
       "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-12 18:45 2026 05 12 18 45"
     },
     {
-      "id": "config-studio-config-json",
-      "kind": "doc",
-      "title": "Studio Config JSON",
-      "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-11 17:50",
-      "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-11 17:50 • Local Studio",
-      "search_terms": [
-        "config-studio-config-json",
-        "config",
-        "studio",
-        "json",
-        "studio config json",
-        "local studio",
-        "local",
-        "2026-05-11 17:50",
-        "2026",
-        "05",
-        "11",
-        "17",
-        "50"
-      ],
-      "search_text": "config-studio-config-json config studio json studio config json local studio local 2026-05-11 17:50 2026 05 11 17 50"
-    },
-    {
       "id": "ui-catalogue",
       "kind": "doc",
       "title": "UI Catalogue",
@@ -4990,33 +5013,6 @@
         "28"
       ],
       "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages 2026-05-09 21:28 2026 05 09 21 28"
-    },
-    {
-      "id": "config-studio-config-js",
-      "kind": "doc",
-      "title": "Studio Config Loader JS",
-      "href": "/docs/?scope=studio&doc=config-studio-config-js",
-      "last_updated": "2026-05-13 18:15",
-      "parent_id": "studio",
-      "parent_title": "Local Studio",
-      "display_meta": "2026-05-13 18:15 • Local Studio",
-      "search_terms": [
-        "config-studio-config-js",
-        "config",
-        "studio",
-        "js",
-        "studio config loader js",
-        "loader",
-        "local studio",
-        "local",
-        "2026-05-13 18:15",
-        "2026",
-        "05",
-        "13",
-        "18",
-        "15"
-      ],
-      "search_text": "config-studio-config-js config studio js studio config loader js loader local studio local 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "import-export",
@@ -6559,10 +6555,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management Current State",
       "href": "/docs/?scope=studio&doc=docs-viewer-management-current",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-23",
       "parent_id": "docs-viewer-management",
       "parent_title": "Docs Viewer Management",
-      "display_meta": "2026-05-22 • Docs Viewer Management",
+      "display_meta": "2026-05-23 • Docs Viewer Management",
       "search_terms": [
         "docs-viewer-management-current",
         "docs",
@@ -6572,12 +6568,12 @@
         "docs viewer management current state",
         "state",
         "docs viewer management",
-        "2026-05-22",
+        "2026-05-23",
         "2026",
         "05",
-        "22"
+        "23"
       ],
-      "search_text": "docs-viewer-management-current docs viewer management current docs viewer management current state state docs viewer management 2026-05-22 2026 05 22"
+      "search_text": "docs-viewer-management-current docs viewer management current docs viewer management current state state docs viewer management 2026-05-23 2026 05 23"
     },
     {
       "id": "docs-viewer-management-contract",

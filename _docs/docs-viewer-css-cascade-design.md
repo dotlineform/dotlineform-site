@@ -5,7 +5,7 @@ added_date: 2026-05-11
 last_updated: "2026-05-13 20:20"
 parent_id: docs-viewer
 sort_order: 12000
-hidden: false
+viewable: true
 ---
 # Docs Viewer CSS Cascade Design
 

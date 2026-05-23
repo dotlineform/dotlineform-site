@@ -6,7 +6,7 @@ last_updated: "2026-05-14 14:45"
 ui_status: done
 parent_id: archive
 sort_order: 37000
-hidden: false
+viewable: true
 ---
 # Docs Viewer Config And Settings Request
 

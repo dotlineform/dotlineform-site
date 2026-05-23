@@ -5,7 +5,7 @@ added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: ui-catalogue
 sort_order: 1500
-hidden: false
+viewable: true
 ---
 # UI Framework Primitives
 

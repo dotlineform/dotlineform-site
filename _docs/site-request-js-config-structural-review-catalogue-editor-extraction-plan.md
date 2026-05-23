@@ -6,7 +6,7 @@ last_updated: "2026-05-10 16:50"
 ui_status: done
 parent_id: site-request-js-config-structural-review-catalogue-editor-boundary
 sort_order: 1000
-hidden: false
+viewable: true
 ---
 # Catalogue Editor Extraction Plan
 

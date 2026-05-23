@@ -5,7 +5,7 @@ added_date: "2026-05-06 11:35"
 last_updated: "2026-05-13 18:15"
 parent_id: data-sharing
 sort_order: 3000
-hidden: false
+viewable: true
 ---
 # Data Sharing Adapters
 

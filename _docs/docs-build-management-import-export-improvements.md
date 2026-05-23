@@ -6,7 +6,7 @@ last_updated: 2026-05-19
 ui_status: done
 parent_id: studio-python-ruby-script-inventory
 sort_order: 1000
-hidden: false
+viewable: true
 ---
 # Docs Build Management Import Export Improvements
 

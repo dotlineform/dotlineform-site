@@ -5,7 +5,7 @@ added_date: 2026-05-12
 last_updated: "2026-05-14 14:45"
 parent_id: docs-viewer
 sort_order: 21000
-hidden: false
+viewable: true
 ---
 # Docs Viewer Config
 

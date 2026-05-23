@@ -4,10 +4,10 @@ title: Studio Docs Inventory
 added_date: 2026-05-19
 last_updated: 2026-05-19
 ui_status: urgent
-parent_id: studio
-sort_order: 7505
+parent_id: audit
+sort_order: 3000
 published: true
-hidden: false
+viewable: true
 ---
 # Studio Document Inventory
 

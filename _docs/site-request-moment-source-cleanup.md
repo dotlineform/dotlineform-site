@@ -6,7 +6,7 @@ last_updated: "2026-05-11 13:03"
 ui_status: done
 parent_id: archive
 sort_order: 51000
-hidden: false
+viewable: true
 ---
 # Moment Source Cleanup
 
