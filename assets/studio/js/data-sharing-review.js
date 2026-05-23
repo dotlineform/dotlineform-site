@@ -327,7 +327,7 @@ async function init() {
         getStudioText(
           state.config,
           "data_sharing_review.service_unavailable",
-          "Docs management service unavailable. Start bin/dev-studio to review {scope_label} returned packages.",
+          "Docs management service unavailable. Start bin/local-studio to review {scope_label} returned packages.",
           { scope_label: dataSharingReviewScopeLabel(state) }
         )
       );

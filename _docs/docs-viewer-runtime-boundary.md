@@ -64,7 +64,7 @@ Current route capability boundary:
 - `/docs/` can switch the loaded docs scope with `?scope=studio`, `?scope=library`, or `?scope=analysis`
 - `/library/` and `/analysis/` are public read-only viewer routes and do not render management controls, configure write-capable management mode, or load management-only CSS
 - public read-only viewer routes also avoid loading the management controller module
-- local `bin/dev-studio` builds may configure `data-generated-base-url` for read-only generated-data reads because the local Jekyll overlay excludes generated docs/search JSON from the watch surface
+- local `bin/local-studio` serves Docs Viewer management and generated-data reads through the local app server rather than through a Jekyll overlay
 - a `mode=manage` query on a public viewer route is normalized away by the shared runtime because those routes cannot perform local writes on the static public site
 - canonical internal docs links stay read-only-safe and omit `mode=manage`; the management-capable `/docs/` shell preserves manage mode at runtime only when the current session is already in manage mode
 

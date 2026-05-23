@@ -17,7 +17,7 @@ Tag write routes now run through the local Studio app server:
 - local API base: `/studio/api/analytics`
 - operational log: `var/studio/logs/studio_analytics_api.log`
 
-The old standalone `127.0.0.1:8787` process is no longer started by `bin/dev-studio`, and browser modules no longer include hardcoded fallback URLs for it.
+The old standalone `127.0.0.1:8787` process is no longer started by `bin/local-studio`, and browser modules no longer include hardcoded fallback URLs for it.
 The deprecated tag-server `/build-docs` route was not migrated.
 Docs rebuilds belong to the Docs management API.
 
@@ -65,5 +65,5 @@ Unified activity rows are written through `scripts/studio_activity.py`.
 
 - [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
 - [Local Studio App Implementation Plan](/docs/?scope=studio&doc=local-studio-app-implementation-plan)
-- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
 - [Servers](/docs/?scope=studio&doc=servers)

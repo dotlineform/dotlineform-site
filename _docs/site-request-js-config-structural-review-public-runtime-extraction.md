@@ -166,7 +166,7 @@ Avoid in the first implementation:
 For an implementation slice, use focused checks:
 
 - `node --check` for changed public JavaScript files
-- Jekyll build to a separate destination if `bin/dev-studio` or `jekyll serve` is running
+- Jekyll build to a separate destination if `jekyll serve` is running
 - Playwright smoke against representative static routes:
   - one work page with details and series navigation
   - one work-detail page reached with parent work context

@@ -22,11 +22,11 @@ Status:
 - Task 4. Review Index-Metadata Churn: implemented
 - Task 5. Align Local Rebuild Entry Points: implemented
 - Task 6. Align Search Follow-Through: implemented
-- Task 7. Define `dev-studio` Live Rebuild Behavior: implemented
+- Task 7. Define Local Studio Live Rebuild Behavior: implemented
 - Task 8. Update Docs And Operating Guidance: implemented
 - Task 9. Verify And Close Out: implemented
-- Task 10. Make `dev-studio` Startup Rebuilds Opt-In: implemented
-- Task 11. Add `dev-studio` Startup Port Preflight: implemented
+- Task 10. Make Local Studio Startup Rebuilds Opt-In: implemented
+- Task 11. Add Local Studio Startup Port Preflight: implemented
 
 ## Summary
 
@@ -69,7 +69,7 @@ Original implementation facts at request start:
 - by default it selects both `studio` and `library` when `--scope` is omitted
 - it deletes and recreates the scope `by-id/` output directory before writing payloads
 - it always writes a fresh `generated_at` timestamp into the docs index
-- `bin/dev-studio` runs the all-scope docs rebuild on startup
+- `bin/local-studio` runs the all-scope docs rebuild on startup
 - the Studio `Rebuild docs` action also uses the all-scope rebuild path
 
 Current effect:
@@ -126,7 +126,7 @@ Minimum explicit command forms:
 Apply that rule to:
 
 - `scripts/build_docs.rb`
-- `bin/dev-studio`
+- `bin/local-studio`
 - Studio docs rebuild endpoints
 - any docs-management rebuild helpers
 
@@ -207,7 +207,7 @@ Bring local tooling into line with the new rebuild contract.
 
 Relevant surfaces:
 
-- `bin/dev-studio`
+- `bin/local-studio`
 - Studio `Rebuild docs`
 - docs-management rebuild helpers
 - any helper path that currently assumes full all-scope docs rewrites
@@ -241,19 +241,19 @@ Reason:
 
 - docs-viewer data and docs-search data are related but not identical outputs
 
-### Task 7. Define `dev-studio` Live Rebuild Behavior
+### Task 7. Define Local Studio Live Rebuild Behavior
 
 Status:
 
 - implemented
 
-Assume `dev-studio` becomes the normal integrated local workflow.
+Assume Local Studio needs live docs rebuild behavior while the runner is active.
 
 This task is about live local runner behavior, not about the principle that search should stay current.
 
 Implemented decisions:
 
-- `bin/dev-studio` starts a local docs watcher while running
+- `bin/local-studio` starts a local docs watcher while running
 - scope detection is source-root based:
   - `_docs/*.md` -> `studio`
   - `_docs_library/*.md` -> `library`
@@ -264,7 +264,7 @@ Implemented decisions:
 Preferred direction:
 
 - source-root watching, not watching generated outputs
-- same-scope docs rebuild plus same-scope docs-search rebuild while `dev-studio` is running
+- same-scope docs rebuild plus same-scope docs-search rebuild while `bin/local-studio` is running
 - manual rebuild commands remain available as fallback tooling
 
 Reason:
@@ -303,7 +303,7 @@ Required verification:
 - deleted or unpublished docs remove the corresponding generated payloads
 - docs viewer still loads correctly for `studio` and `library`
 - any intended docs-search follow-through still works
-- any intended `dev-studio` live rebuild behavior works without redundant rebuild loops
+- any intended Local Studio live rebuild behavior works without redundant rebuild loops
 
 Verification completed:
 
@@ -312,7 +312,7 @@ Verification completed:
 - stale payload cleanup behavior had already been verified earlier in the implementation work
 - docs viewer routing and click behavior were rechecked for both `studio` and `library`
 - same-scope docs-search follow-through was verified for live docs-management actions and watcher-driven rebuilds
-- `dev-studio` live rebuild behavior was verified with source-root watching and no generated-output watch loops
+- Local Studio live rebuild behavior was verified with source-root watching and no generated-output watch loops
 - `archive` handling was verified in both scopes as a conventional archive parent id
 
 Close-out should also record:
@@ -326,12 +326,12 @@ Close-out summary:
 - incremental same-scope docs payload writes are in place
 - stale generated payload cleanup for removed or unpublished docs is in place
 - same-scope docs-search follow-through is in place for live docs-management actions
-- `bin/dev-studio` now supports same-scope live docs/docs-search rebuilds while running
+- `bin/local-studio` now supports same-scope live docs/docs-search rebuilds while running
 - legacy live rebuild ambiguity was reduced by deprecating the older Studio tag-server `POST /build-docs` path
 - `archive` remains the conventional Archive command parent id and is no longer a reserved structural doc id
 - Archive visibility should be controlled with `viewable`, like any other doc
 
-### Task 10. Make `dev-studio` Startup Rebuilds Opt-In
+### Task 10. Make Local Studio Startup Rebuilds Opt-In
 
 Status:
 
@@ -339,7 +339,7 @@ Status:
 
 Implemented decision:
 
-- `bin/dev-studio` no longer performs startup docs/docs-search rebuilds by default
+- `bin/local-studio` no longer performs startup docs/docs-search rebuilds by default
 - startup docs/docs-search rebuilds now run only when `DOCS_STARTUP_REBUILD_SCOPES` is set
 - accepted startup rebuild scopes are `studio`, `library`, or `studio,library`
 - the Docs Live Rebuild Watcher remains the default live-sync path while the runner is active
@@ -348,7 +348,7 @@ Reason:
 
 - neither docs scope should keep an implicit startup rebuild bias as the site matures and direct docs editing becomes the normal live workflow
 
-### Task 11. Add `dev-studio` Startup Port Preflight
+### Task 11. Add Local Studio Startup Port Preflight
 
 Status:
 
@@ -356,7 +356,7 @@ Status:
 
 Implemented decision:
 
-- `bin/dev-studio` now checks required long-running service ports before any rebuild work runs; after later service consolidation this is Jekyll and the local Studio app
+- `bin/local-studio` now checks the local Studio app port before any rebuild work runs
 - the runner exits early if any required port is unavailable
 - the failure message names the affected service and the matching port override environment variable
 

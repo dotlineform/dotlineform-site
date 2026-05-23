@@ -17,7 +17,7 @@
   "run_disabled_title": "Requires the local docs-management service.",
   "loading": "loading Data Sharing...",
   "idle_status": "",
-  "service_unavailable": "Docs management service unavailable. Start bin/dev-studio to prepare packages.",
+  "service_unavailable": "Docs management service unavailable. Start bin/local-studio to prepare packages.",
   "scope_unsupported": "{scope_label} package preparation is not implemented yet.",
   "no_config": "No enabled {scope_label} sharing profiles found.",
   "docs_index_unavailable": "No generated {scope_label} data index is available for this sharing profile.",

@@ -15,7 +15,7 @@ Status:
 
 ## Summary
 
-This change request proposes moving local docs-viewer reads for generated docs and docs-search JSON through the localhost docs-management server while `bin/dev-studio` is running.
+This change request proposes moving local docs-viewer reads for generated docs and docs-search JSON through the localhost docs-management server while `bin/local-studio` is running.
 
 The goal is to preserve automatic local docs refresh behavior without making Jekyll watch every generated docs/search asset rewrite.
 
@@ -103,7 +103,7 @@ The local server-read path should be explicit and capability-driven:
 
 ### Jekyll Watch Exclusion
 
-After server reads are in place, `bin/dev-studio` can use a local Jekyll config overlay that excludes generated docs/search data from the Jekyll watch surface.
+After server reads are in place, Local Studio can serve generated docs/search data through the Python app instead of making Jekyll watch generated JSON.
 
 Candidate exclusions for the local dev overlay:
 
@@ -134,7 +134,7 @@ The server-read path is a local development optimization and local Studio runtim
 - Should the docs viewer enable server reads only when `mode=manage`, or for all localhost docs-viewer reads while the server is available?
 - Should `analysis` use the same generated-data endpoints immediately, or should the first implementation cover only `studio` and `library`?
 - Should the local server read endpoint return raw generated JSON unchanged, or wrap it with metadata such as `ok`, `scope`, and `source`?
-- Should generated docs/search exclusions live in `_config.yml`, or should `bin/dev-studio` pass a separate local-only Jekyll config overlay?
+- Should generated docs/search exclusions live in `_config.yml`, or should Local Studio avoid Jekyll for generated-data reads?
 - Should the docs viewer display a small local-data warning if a server read fails and it falls back to static assets during local development?
 
 Resolved:
@@ -142,8 +142,8 @@ Resolved:
 - Server reads are enabled for all docs-viewer reads when the configured localhost docs-management server advertises generated-data read capability, not only in `mode=manage`.
 - `studio`, `library`, and `analysis` use the same generated-data endpoints.
 - Generated-data endpoints return the raw generated JSON unchanged.
-- `bin/dev-studio` uses `_config.dev-studio.yml` as a local-only Jekyll overlay; normal builds keep `_config.yml`.
-- `_config.dev-studio.yml` sets `docs_viewer_generated_base_url` to the local docs-management server so read-only public viewer shells can use generated-data reads while generated docs/search JSON is excluded from local Jekyll.
+- Local Studio now serves Docs Viewer management and generated-data reads through the Python app server; normal public builds keep `_config.yml`.
+- The old local-only Jekyll overlay has been retired with the `bin/dev-studio` bridge.
 - The viewer falls back to static assets only when the local server capability probe is unavailable. Once generated-data reads are advertised for the scope, failed server reads surface as load errors rather than silently using stale static data.
 
 ## Task List
@@ -239,12 +239,10 @@ Status:
 
 - implemented
 
-Update `bin/dev-studio` to start Jekyll with a local-only config overlay that excludes generated docs/search data once server reads are verified.
+Retired implementation note:
 
-Implementation note:
-
-- `bin/dev-studio` defaults `JEKYLL_CONFIG` to `_config.yml,_config.dev-studio.yml`
-- `_config.dev-studio.yml` carries the base exclusions plus generated docs/search exclusions
+- the old bridge runner used a local-only Jekyll overlay for generated docs/search exclusions
+- `bin/local-studio` no longer starts Jekyll, so the overlay is not part of the active runtime
 - public builds that use `_config.yml` alone still include generated docs/search JSON
 
 Reason:
@@ -287,6 +285,6 @@ Reason:
 
 - [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
-- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
 - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)

@@ -66,18 +66,18 @@ Override retention counts:
 
 ## Dev Studio Startup
 
-`bin/dev-studio` runs backup retention once during startup before the long-running services start:
+`bin/local-studio` runs backup retention once during startup before the long-running services start:
 
 ```bash
 ./scripts/studio/studio_backup_retention.py --write --quiet
 ```
 
-If cleanup fails, `bin/dev-studio` prints a warning and continues startup.
+If cleanup fails, `bin/local-studio` prints a warning and continues startup.
 
 Disable startup retention for one session:
 
 ```bash
-DOTLINEFORM_BACKUP_RETENTION=off bin/dev-studio
+DOTLINEFORM_BACKUP_RETENTION=off bin/local-studio
 ```
 
 `DOTLINEFORM_BACKUP_RETENTION=0` is also accepted.

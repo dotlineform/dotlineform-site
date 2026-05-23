@@ -26,13 +26,13 @@ I agree with your conclusions. The current structure already points that way.
 Current facts in the repo:
 
 - Public `_config.yml` has `docs_viewer_management_enabled: false`, so `/docs/?mode=manage` is intentionally read-only on public builds.
-- `_config.dev-studio.yml` enables management mode only for `bin/dev-studio`.
-- `bin/dev-studio` starts Jekyll plus local loopback write/services, so the functional Studio surface is already local-only in practice.
+- `bin/local-studio` serves management mode through the local Python app.
+- public Jekyll preview/build stays separate.
 - `/studio/` still ships as public static pages, and `assets/studio/` is about 26 MB of local-only UI/data/assets.
 - Generated Studio docs/search payloads are also published today unless excluded.
 
 Relevant files:
-[public config](/Users/dlf/Developer/dotlineform/dotlineform-site/_config.yml), [dev config](/Users/dlf/Developer/dotlineform/dotlineform-site/_config.dev-studio.yml), [dev launcher](/Users/dlf/Developer/dotlineform/dotlineform-site/bin/dev-studio), [docs shell gate](/Users/dlf/Developer/dotlineform/dotlineform-site/_includes/docs_viewer_management_route.html).
+[public config](/Users/dlf/Developer/dotlineform/dotlineform-site/_config.yml), [local launcher](/Users/dlf/Developer/dotlineform/dotlineform-site/bin/local-studio), [docs shell gate](/Users/dlf/Developer/dotlineform/dotlineform-site/_includes/docs_viewer_management_route.html).
 
 **Recommended Direction**
 
@@ -44,7 +44,7 @@ I would do this in stages:
    Exclude `/studio/`, `assets/studio/`, `/docs/`, Studio docs payloads, and Studio docs search from public builds. Keep `/library/` or `/analysis/` public only if they are intentionally curated read-only corpora.
 
 2. **Keep local Studio in-repo for now**
-   Do not jump straight to a new repo until the public/local boundary is clean. A low-risk first move is making `_config.yml` public-only and `_config.dev-studio.yml` local-Studio-inclusive.
+   Do not jump straight to a new repo until the public/local boundary is clean. A low-risk first move is keeping `_config.yml` public-only and serving Local Studio through the Python app.
 
 3. **Then split Studio if it still feels valuable**
    A separate Studio repo makes sense once ownership is clear. The key decision is where canonical source data lives: public-site repo, Studio repo, or a shared/private data repo. That choice matters more than whether the frontend is Jekyll, Vite, Electron/Tauri, or Swift.
@@ -88,7 +88,7 @@ I would not start with a separate repo immediately. First, make the current repo
 
 1. Public build excludes `/studio/`, `assets/studio/`, local Studio data, and the Studio docs route at `/docs/`.
 2. Public build keeps `/library/` and `/analysis/`, plus their generated docs/search payloads.
-3. Local `bin/dev-studio` continues to use the dev config and can still serve `/studio/` and management `/docs/`.
+3. Local `bin/local-studio` continues to use the dev config and can still serve `/studio/` and management `/docs/`.
 4. Define a “published artifact manifest”: what files/directories are intentionally part of dotlineform.com.
 5. Once that manifest is stable, move canonical source data and Studio app code into a Studio repo or sibling workspace.
 

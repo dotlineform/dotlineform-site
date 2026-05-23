@@ -43,5 +43,5 @@ The Local Studio catalogue service can:
 
 - [Endpoint Reference](/docs/?scope=studio&doc=scripts-catalogue-write-server-endpoints) lists read, save, create, delete, publication, prose import, workbook import, series, and build endpoint request contracts.
 - [Build And Lookup](/docs/?scope=studio&doc=scripts-catalogue-write-server-build-lookup) covers scoped build media, moment import behavior, derived lookup refresh, and field-aware build planning.
-- [Operations](/docs/?scope=studio&doc=scripts-catalogue-write-server-operations) covers module ownership, validation, security, `bin/dev-studio` integration, artifacts, and related references.
+- [Operations](/docs/?scope=studio&doc=scripts-catalogue-write-server-operations) covers module ownership, validation, security, `bin/local-studio` integration, artifacts, and related references.
 - [Catalogue Write Service Extraction](/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction) records the handler-to-service extraction and wrapper retirement.

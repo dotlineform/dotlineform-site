@@ -235,8 +235,8 @@ Current fields:
 
 ## Operational Notes
 
-- `bin/dev-studio` currently runs this builder for the `studio` scope once before starting Jekyll
-- `bin/dev-studio` also starts the Docs Live Rebuild Watcher, which watches `_docs/*.md`, `_docs_analysis/**/*.md`, and `_docs_library/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
+- `bin/local-studio` runs this builder only when `DOCS_STARTUP_REBUILD_SCOPES` requests a startup docs/docs-search rebuild
+- `bin/local-studio` also starts the Docs Live Rebuild Watcher, which watches `_docs/*.md`, `_docs_analysis/**/*.md`, and `_docs_library/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
 - if you disable the watcher or want explicit control while the dev runner is already running, re-run `./scripts/build_docs.rb --scope <scope> --write`
 - docs viewer manage mode rebuilds the current docs scope through the localhost docs-management service
 - manual `./scripts/build_docs.rb --scope <scope> --write` remains a low-level docs-payload rebuild only
@@ -255,7 +255,7 @@ Current fields:
 
 Jekyll verification builds:
 
-- if `jekyll serve` or `bin/dev-studio` is already running, avoid building into the default `_site/` destination at the same time
+- if `jekyll serve` is already running, avoid building into the default `_site/` destination at the same time
 - concurrent writes to the same `_site/` tree can produce transient static-file copy failures even when the source asset is valid
 - for a one-off verification build while the dev server is active, use a separate destination:
 
@@ -281,7 +281,7 @@ Pipeline policy config:
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
 - [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)

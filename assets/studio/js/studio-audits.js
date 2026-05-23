@@ -278,7 +278,7 @@ async function init() {
       serviceAvailable ? "" : "error",
       serviceAvailable
         ? getStudioText(config, "studio_audits.idle_status", "Select an audit to run.")
-        : getStudioText(config, "studio_audits.service_unavailable", "Audit service unavailable. Start bin/dev-studio to run audits.")
+        : getStudioText(config, "studio_audits.service_unavailable", "Audit API unavailable. Start bin/local-studio to run audits.")
     );
     renderAudits(state);
     listNode.addEventListener("click", (event) => {

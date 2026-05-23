@@ -71,7 +71,7 @@ Initial retained smoke coverage should verify:
 - hash fragments survive route navigation and target visible document anchors
 - alternate configured public scope routes still load
 
-Management-mode route smoke coverage should be added when the isolated test build can render the dev Studio Docs Viewer management shell or when the test can run against a known local `bin/dev-studio` route.
+Management-mode route smoke coverage should be added when the isolated test build can render the dev Studio Docs Viewer management shell or when the test can run against a known local `bin/local-studio` route.
 
 ## Proposed Runtime Boundary
 

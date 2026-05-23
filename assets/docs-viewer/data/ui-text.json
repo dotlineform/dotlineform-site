@@ -119,7 +119,7 @@
     "confirm_overwrite_button": "Confirm overwrite",
     "cancel_overwrite_button": "Cancel",
     "server_not_configured": "Local docs-management server is not configured.",
-    "service_unavailable": "Docs management service unavailable. Start bin/dev-studio to run imports.",
+    "service_unavailable": "Docs management service unavailable. Start bin/local-studio to run imports.",
     "loading": "loading docs import...",
     "idle_status": "Select a staged source file and import it into a configured docs scope.",
     "running_status": "Converting and validating staged source...",

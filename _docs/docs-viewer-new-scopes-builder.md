@@ -70,7 +70,7 @@ permalink: /research/
 
 Use `docs_viewer_management_route.html` only for the local management shell.
 In this repo, that route is `/docs/`.
-The adapter requires `docs_viewer_management_enabled: true`, which is set by `_config.dev-studio.yml`; public builds leave the flag false and receive the read-only shell instead.
+The adapter requires `docs_viewer_management_enabled: true`; public builds leave the flag false and receive the read-only shell, while Local Studio serves `/docs/` management through the Python app server.
 
 The management shell can switch scopes with the `scope` query parameter.
 Public read-only routes ignore and normalize away `scope` and `mode` so they cannot become management routes by query string.

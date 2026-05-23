@@ -168,7 +168,7 @@ Results:
 - `node --check` passed for `assets/studio/js/analysis-tag-scoring.js`, `assets/studio/js/studio-config.js`, `assets/studio/js/tag-studio-index.js`, and `assets/studio/js/series-tags.js`.
 - Targeted search confirmed `computeStudioTagMetrics`, `computeStudioRag`, and `buildStudioRagTooltip` are defined only in `analysis-tag-scoring.js` and imported by the two scoring consumers.
 - Studio docs payloads and Studio search index were rebuilt.
-- Jekyll build passed to `/tmp/dlf-jekyll-build` because local `bin/dev-studio` was already running.
+- Jekyll build passed to `/tmp/dlf-jekyll-build` because a local Jekyll server was already running.
 - Static Playwright smoke against the temp build passed for the series tags page, catalogue work editor page, and direct `tag-studio-index.js` module import; `analysis-tag-scoring.js` loaded with HTTP 200, the series tags page rendered 138 RAG indicators, and no page errors or failed local requests were reported.
 
 ## Benefits And Risks

@@ -75,4 +75,4 @@ When the request includes valid Studio activity context from `/studio/audits/?mo
 
 - [Studio Audits](/docs/?scope=studio&doc=studio-audits)
 - [Studio Ready-State Audit](/docs/?scope=studio&doc=scripts-audit-studio-ready-state)
-- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)

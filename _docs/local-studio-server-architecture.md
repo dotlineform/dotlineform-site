@@ -11,11 +11,10 @@ sort_order: 1000
 ## Current Position
 
 Studio currently uses the local Studio app server as the normal HTTP owner for Studio routes and local APIs.
-`bin/dev-studio` remains a bridge runner for everyday development and starts Jekyll plus the local Studio app server by default:
+`bin/local-studio` is the normal Studio runner and starts the local Studio app server:
 
 - `scripts/studio/studio_app_server.py`
 
-`bin/local-studio` starts the same local Studio app path with Jekyll disabled.
 Public Jekyll preview/build is explicit through `bin/public-site-preview` and `bin/public-site-build`.
 
 Docs management, Data Sharing, Analytics tag APIs, Studio audit APIs, Project State report API, Thumbnail Quality preview API, catalogue reads, workbook import, catalogue editor mutations, and migrated Studio route shells are now owned by the local Studio app server.
@@ -149,7 +148,7 @@ Implemented:
 - catalogue reads, workbook import, editor writes, build, publication, delete, prose import, moment import, Project State, and Thumbnail Quality workflows use local Studio catalogue APIs
 - catalogue handler-owned behavior has been extracted into callable service functions
 - the standalone tag write, Docs management, and catalogue write servers have been retired
-- `bin/dev-studio` starts only the local Studio app, optional Jekyll, optional Docs watcher, and optional startup rebuilds
+- `bin/local-studio` starts only the local Studio app, optional Docs watcher, and optional startup rebuilds
 
 Still in progress:
 
@@ -166,7 +165,7 @@ Future local features should be added as route modules or focused service module
 - one local app runtime-config endpoint for Studio pages
 - one loopback HTTP process for active Studio APIs
 - one place for route shell and service endpoint discovery
-- simpler `bin/dev-studio` process management
+- simpler `bin/local-studio` process management
 - easier service discovery for future Studio pages
 
 ## Risks

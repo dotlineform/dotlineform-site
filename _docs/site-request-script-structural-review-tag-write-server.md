@@ -68,7 +68,7 @@ The tag routes were moved under `/studio/analytics/` without compatibility redir
 Server naming is also an open architectural question.
 If this local service remains limited to tag assignment, tag registry, and tag alias writes, `tag_write_server.py` remains accurate.
 If the service becomes the write/service layer for broader Analytics registries, scoring dimensions, or future Analytics metadata workflows, the target name should probably become `analytics_server.py` or an equivalent Analytics service name rather than creating a second parallel local server for each new Analytics registry.
-That decision should be made before final closeout, because it affects route constants, docs, `bin/dev-studio`, check profiles, and the future `scripts/analytics/` package layout.
+That decision should be made before final closeout, because it affects route constants, docs, `bin/local-studio`, check profiles, and the future `scripts/analytics/` package layout.
 
 Sequencing decision:
 

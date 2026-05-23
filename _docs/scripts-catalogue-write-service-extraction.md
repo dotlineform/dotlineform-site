@@ -173,7 +173,7 @@ Series create/save behavior now runs through `scripts/catalogue/catalogue_series
    Keep source mutation planning in `catalogue_source_mutation.py`, transaction writes in `catalogue_transactions.py`, lookup refresh in `catalogue_lookup_refresh.py`, and activity row construction in `catalogue_activity.py`.
 4. Treat moment save, publication preview/apply, and delete apply as extracted for Local Studio.
 5. Treat bulk save as extracted for Local Studio and the fake handler path as removed from `studio_catalogue_api.py`.
-6. Treat the standalone `catalogue_write_server.py` wrapper as retired; `bin/dev-studio` no longer starts or exposes a fallback flag for the `8788` service.
+6. Treat the standalone `catalogue_write_server.py` wrapper as retired; `bin/local-studio` no longer starts or exposes a fallback flag for the `8788` service.
 
 ## Non-Goals
 

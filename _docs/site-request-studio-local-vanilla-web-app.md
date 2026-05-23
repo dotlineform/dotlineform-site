@@ -28,7 +28,7 @@ Related migration documentation under: [Local Studio App](/docs/?scope=studio&mo
 Studio should become a local vanilla web app, not a Jekyll section and not a frontend-framework rewrite.
 
 The current Studio implementation is already a local service-backed application in practice.
-It is hosted by Jekyll route pages, Liquid config injection, and public/dev config overlays, but its functional workflows depend on `bin/dev-studio` and localhost services.
+It was hosted by Jekyll route pages, Liquid config injection, and public/dev config overlays, but its functional workflows depended on Local Studio and localhost services.
 That hosting model creates more problems than it solves for Studio: route regeneration, `_site` state, static-page URL constraints, Jekyll/Liquid coupling, and public shells that are not useful on dotlineform.com.
 
 The strategic move is to keep the existing vanilla browser modules, CSS conventions, local services, and workflow behavior, while replacing Jekyll as the Studio application host.
@@ -105,7 +105,7 @@ That would reintroduce several problems this migration is meant to reduce:
 - another CORS and loopback policy
 - another startup and shutdown path
 - another proxy or compatibility layer
-- more process decisions in `bin/dev-studio`
+- more process decisions in `bin/local-studio`
 
 The target shape is one local app server with Docs-owned route modules:
 
@@ -208,27 +208,21 @@ Detailed checklist rules for this boundary live in [Development Checklist](/docs
 
 ## Launcher Transition Decision
 
-`bin/dev-studio` should remain available during migration as a bridge launcher, not become the permanent product boundary.
-
-During migration it can start:
-
-- the local Studio app server
-- the public Jekyll preview needed for public routes and unmigrated Studio routes
-- the remaining local write/watch services that have not moved into the app server
+`bin/local-studio` was available during migration as a bridge launcher, but it is not the permanent product boundary.
 
 The end state should be clearer:
 
-- local Studio workflows start through a Studio app launcher
-- public-site preview and publishing use the normal Bundler/Jekyll commands
-- `bin/dev-studio` is retired or reduced to a compatibility wrapper once the route migration, public-link resolver, and service consolidation are stable
+- local Studio workflows start through `bin/local-studio`
+- public-site preview and publishing use `bin/public-site-preview`, `bin/public-site-build`, or the normal Bundler/Jekyll commands
+- `bin/local-studio` is retired once the route migration, public-link resolver, and service consolidation are stable
 - UI Catalogue demos are reachable from Local Studio as first-class, non-mutating Studio reference surfaces
 
-Initial launcher split implemented on 2026-05-23:
+Launcher split implemented on 2026-05-23:
 
-- `bin/local-studio` starts the local Studio app path with Jekyll disabled by default
+- `bin/local-studio` starts the local Studio app path directly and does not start Jekyll
 - `bin/public-site-preview` runs public-site Jekyll preview with `_config.yml` by default
 - `bin/public-site-build` runs public-site Jekyll build with `_config.yml` by default and passes through extra Jekyll arguments
-- `bin/dev-studio` remains a bridge command and now has a `JEKYLL_ENABLED=0` switch for local-Studio-only runs
+- `bin/local-studio` has been retired
 
 Retiring the bridge runner does not mean retiring Jekyll.
 Jekyll remains the public-site publisher and local public-site preview host.
@@ -271,7 +265,7 @@ Target direction:
 - public `/library/` and `/analysis/` continue to use read-only Docs Viewer installs
 - Docs Viewer remains portable, with management enabled only in local app/server contexts
 - Jekyll should not be required to serve the local Docs management shell once this migration lands
-- the separate Docs management HTTP server is no longer part of normal `bin/dev-studio` startup, but remains available as an explicit fallback/debug entrypoint
+- the separate Docs management HTTP server is no longer part of normal `bin/local-studio` startup, but remains available as an explicit fallback/debug entrypoint
 
 ## Reuse Strategy
 
@@ -401,7 +395,7 @@ Docs and generated-payload follow-through remains explicit:
 
 - source docs under `_docs/` are not the runtime payload
 - Studio docs payloads under `assets/data/docs/scopes/studio/...` must be updated before docs output is treated as final
-- do not manually rebuild docs payloads when `bin/dev-studio` or the docs watcher is expected to do it
+- do not manually rebuild docs payloads when `bin/local-studio` or the docs watcher is expected to do it
 - if generated docs/search payloads are not rebuilt in a slice, state that in close-out
 
 Security and publication checks remain part of the migration:

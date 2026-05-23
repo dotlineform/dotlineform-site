@@ -428,7 +428,7 @@ export async function initDocsHtmlImport(options = {}) {
         configText(
           state.config,
           "docs_html_import.service_unavailable",
-          "Docs management service unavailable. Start bin/dev-studio to run imports."
+          "Docs management service unavailable. Start bin/local-studio to run imports."
         )
       );
       markRouteReady(state, true);

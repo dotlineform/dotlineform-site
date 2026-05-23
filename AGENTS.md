@@ -4,7 +4,7 @@
 - answer questions based on applying best practice in this technical or creative domain, provide suggestions to mitigate maintenance risk and improve site or application performance. ask for confirmation before any edits.
 - summarise the intended change set and ask for confirmation before editing unless the request is trivial.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
-- do not rebuild doc payloads, this is done manually or by `bin/dev-studio`
+- do not rebuild doc payloads, this is done manually or by `bin/local-studio` / the docs watcher
 
 ## Project Priorities and Tradeoffs
 
@@ -84,13 +84,13 @@
   - `$HOME/.rbenv/shims/ruby -v`
   - `$HOME/.rbenv/shims/bundle -v`
   - `$HOME/.rbenv/shims/bundle exec jekyll build --quiet`
-- If `jekyll serve` or `bin/dev-studio` is already running, do not verify against the default `_site/` destination concurrently.
+- If `jekyll serve` is already running, do not verify against the default `_site/` destination concurrently.
 - In that case, use a separate destination for one-off verification builds:
   - `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
 - Before relying on, starting, stopping, or interrupting local services for verification, tell the user whether they need to start or stop those services. Do not assume running local Studio services are available for tests; they may only be running so the user can read docs.
-- A failed Codex `curl` to `localhost:4000` or `127.0.0.1:4000` may be a sandbox/network boundary, not proof that `bin/dev-studio` or Jekyll is not running. If the user says the route is running, trust that and avoid contradicting it.
+- A failed Codex `curl` to `localhost:4000` or `127.0.0.1:4000` may be a sandbox/network boundary, not proof that Jekyll is not running. If the user says the route is running, trust that and avoid contradicting it.
 - When localhost reachability is uncertain, say the sandbox cannot reach the route and use an isolated temporary build/server for automated verification only if needed.
-- `_config.dev-studio.yml` excludes generated docs/search JSON from Jekyll's output. For isolated temporary-build smoke tests, copy the needed generated `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/` payloads into the temporary build destination, or use a running `bin/dev-studio` route when reachable.
+- Local Studio is served by `bin/local-studio`, not by a Jekyll overlay. For isolated public Jekyll smoke tests, copy the needed generated `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/` payloads into the temporary build destination when the build destination excludes or lacks those generated payloads.
 - If a build fails with “Could not find bundler 2.6.9” or shows `/usr/bin/ruby`, rerun using the shim commands before reporting an issue.
 - Local shell should load rbenv (for interactive use), but Codex checks should still prefer explicit shim paths.
 

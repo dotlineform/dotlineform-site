@@ -77,6 +77,6 @@ The catalogue editors use these files as follows:
 
 ## Dev Studio
 
-`bin/dev-studio` now runs this export before starting Jekyll and the local write services.
+`bin/local-studio` can run this export before starting Local Studio when `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled.
 
 The catalogue write server also refreshes these lookup payloads after canonical catalogue source writes.

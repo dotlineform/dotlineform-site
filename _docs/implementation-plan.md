@@ -107,7 +107,7 @@ Work:
 - implement backup bundle writes
 - implement minimal event logging
 - add shared request/response helpers or copy the smallest safe pattern from `tag_write_server.py`
-- update `bin/dev-studio` to start the catalogue write service after the first UI needs it
+- route catalogue write behavior through the Local Studio app after the first UI needs it
 
 Acceptance:
 

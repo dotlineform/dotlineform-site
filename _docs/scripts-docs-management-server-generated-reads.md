@@ -70,7 +70,7 @@ Current behavior:
 - also used by `/studio/data-sharing/prepare/?mode=manage` to dispatch Library package preparation to the documents Data Sharing adapter
 - also used by `/studio/data-sharing/review/?mode=manage` to dispatch staged-file listing, Markdown review generation, summary apply, and hierarchy apply to the documents Data Sharing adapter
 - appends unified activity rows for covered docs import, Data Sharing package/apply, and broken-links audit actions when valid activity context is supplied
-- serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/dev-studio` is running
+- serves generated docs index, per-doc payload, and docs-search JSON to the shared Docs Viewer while `bin/local-studio` is running
 - serves a read-only Docs Viewer source-config report payload to manage-mode report surfaces
 - serves a source-config settings contract and allowlisted settings write endpoint for manage-mode settings controls
 - creates, archives, and deletes source docs under the current scope root
@@ -80,7 +80,7 @@ Current behavior:
 - writes new or changed docs with minute-precision `added_date` and `last_updated` values in `YYYY-MM-DD HH:MM` form while preserving existing date-only values
 - rebuilds scope-owned docs payloads after successful writes, using targeted docs payload ids when the mutation planner can provide an explicit safe set
 - runs targeted docs-search updates after successful writes when affected doc ids are explicit
-- coordinates successful source writes with the docs live watcher so `bin/dev-studio` does not immediately run a redundant second same-scope rebuild for the same changed source file
+- coordinates successful source writes with the docs live watcher so `bin/local-studio` does not immediately run a redundant second same-scope rebuild for the same changed source file
 
 Unified activity coverage:
 

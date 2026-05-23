@@ -31,14 +31,14 @@ export R2_BUCKET="..."
 export R2_ENDPOINT="https://<account_id>.r2.cloudflarestorage.com"
 ```
 
-Local repo scripts and `bin/dev-studio` read this file directly.
+Local repo scripts and `bin/local-studio` read this file directly.
 Do not duplicate these repo-specific values in shell startup files.
 
 What the shared variables mean:
 
 - `DOTLINEFORM_PROJECTS_BASE_DIR`: base directory that contains the source `projects/` and `moments/` trees used for dimension reads and source-media lookup
 - `MAKE_SRCSET_JOBS`: optional default parallel worker count for srcset generation
-- `DOCS_STARTUP_REBUILD_SCOPES`: optional `bin/dev-studio` startup docs/docs-search rebuild scopes; keep it blank as an explicit reminder that startup rebuilds are off
+- `DOCS_STARTUP_REBUILD_SCOPES`: optional `bin/local-studio` startup docs/docs-search rebuild scopes; keep it blank as an explicit reminder that startup rebuilds are off
 
 Media staging, generated srcset output, and staged work downloads are repo-local under `var/catalogue/media/`.
 
@@ -102,5 +102,5 @@ Common commands:
 ./scripts/catalogue/validate_catalogue_source.py
 ./scripts/catalogue/catalogue_json_build.py --work-id 00001
 python3 ./scripts/checks/css_token_audit.py
-bin/dev-studio
+bin/local-studio
 ```

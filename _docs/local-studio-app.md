@@ -29,14 +29,12 @@ Phase 1 added the first Python local Studio app server:
 ```
 
 `bin/local-studio` starts this app server without Jekyll.
-`bin/dev-studio` still starts this app server by default during the transition, but it remains the bridge command for sessions that also want Jekyll in the same terminal.
 Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
-Docs management is handled by this app server; `bin/dev-studio` does not start a separate Docs management server.
+Docs management is handled by this app server; there is no separate Docs management server in normal local Studio startup.
 Active Local Studio browser routes use `/studio/api/docs/...` for Docs management reads/writes; they do not use `127.0.0.1:8789` as a browser fallback.
 The local app adapter imports shared Docs management behavior from `scripts/docs/docs_management_service.py`.
 Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
 `bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
-`bin/dev-studio` can still launch Jekyll with the local dev overlay for transition sessions, or skip it with `JEKYLL_ENABLED=0`.
 
 Current mounted views:
 
@@ -113,7 +111,7 @@ The browser transport now requires these local runtime endpoints for `saveTags`,
 The old `127.0.0.1:8787` tag write-server fallback endpoints have been removed from the browser runtime.
 Tag registry, tag aliases, series-tags, and the per-series tag editor route shells are now also hosted by the local app with their existing browser modules and DOM contracts.
 They use local runtime config and local analytics API reads/writes when served from the local app.
-The old Jekyll analytics tag route files have been retired, and `bin/dev-studio` no longer starts `scripts/analytics/tag_write_server.py` by default.
+The old Jekyll analytics tag route files have been retired, and there is no standalone Analytics tag write service in normal local Studio startup.
 The standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint has been removed; `scripts/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes.
 The Studio Audits route shell is also hosted by the local app at `/studio/audits/?mode=manage`.
 It reuses `assets/studio/js/studio-audits.js` and now calls `/studio/api/audits/...` on the local app server.
@@ -152,7 +150,7 @@ The Catalogue Series, Work, Work Detail, and Moment editor route shells are host
 They reuse the existing vanilla editor modules and call local-app catalogue API endpoints under `/studio/api/catalogue/...`.
 The old Jekyll shells for `/studio/catalogue-series/`, `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, and `/studio/catalogue-moment/` have been retired.
 The local app adapter routes editor save, bulk save, build, publication, delete, prose import, and moment import flows through focused catalogue service modules.
-`bin/dev-studio` no longer starts a standalone catalogue write server; catalogue APIs are owned by the Local Studio app server.
+`bin/local-studio` no longer starts a standalone catalogue write server; catalogue APIs are owned by the Local Studio app server.
 The old Jekyll `/studio/` landing shell has also been retired.
 This removes another public-site Studio page and keeps the local app as the only active Studio home surface during migration.
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.

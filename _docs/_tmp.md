@@ -41,7 +41,7 @@ Reviewed `_docs/local-studio-app-implementation-plan.md`. Remaining work is:
   - delete apply
   - bulk save
   - remove fake handler bridge
-- Keep reducing `bin/dev-studio` to only genuinely required background tasks.
+- Keep reducing `bin/local-studio` to only genuinely required background tasks.
 - Finish compatibility docs cleanup around old sibling-service startup.
 
 **Transition Cleanup Backlog**
@@ -124,19 +124,19 @@ docs viewer needs to use full screen when expanded!
 
 ---
 
-The docs watcher should stay, but it should not be “Jekyll’s watcher.” The useful thing is scripts/docs/docs_live_rebuild_watcher.py: it watches _docs, _docs_library, _docs_analysis, rebuilds the matching generated Docs Viewer payloads/search, and keeps local docs current. That remains useful after Studio moves off Jekyll. The target is probably: bin/dev-studio starts the local Studio app server plus the Docs watcher and only the remaining needed background services.
+The docs watcher should stay, but it should not be “Jekyll’s watcher.” The useful thing is scripts/docs/docs_live_rebuild_watcher.py: it watches _docs, _docs_library, _docs_analysis, rebuilds the matching generated Docs Viewer payloads/search, and keeps local docs current. That remains useful after Studio moves off Jekyll. The target is probably: bin/local-studio starts the local Studio app server plus the Docs watcher and only the remaining needed background services.
 
-You can still use bin/dev-studio now. Current behavior is unchanged: it starts Jekyll on 4000, tag/catalogue/docs/audit services, and the Docs Live Watcher by default via DOCS_WATCH_ENABLED=1. It does not yet start the new scripts/studio/studio_app_server.py on 8765, so for the new local app routes you still use the separate local app server at http://127.0.0.1:8765/studio/.
+Use bin/local-studio for Studio. It starts the local Studio app server and the Docs Live Watcher by default via DOCS_WATCH_ENABLED=1. Use bin/public-site-preview separately for Jekyll.
 
 So current practical setup is:
 
-bin/dev-studio
+bin/local-studio
 for the existing Jekyll Studio stack, old routes, write services, and docs watcher.
 
 ./scripts/studio/studio_app_server.py --port 8765
 for the new local Studio app surface.
 
-Later, Phase 4 should fold that second command into bin/dev-studio, then Jekyll becomes optional/separate for public-site preview rather than the Studio host.
+Phase 4 folded Studio startup into bin/local-studio, and Jekyll is separate for public-site preview rather than the Studio host.
 
 ---
 
@@ -148,9 +148,9 @@ My recommendation: keep the local Studio app footerless unless it has a real Stu
 
 ---
 
-Implemented the bridge step: bin/dev-studio now starts the local Python Studio app server by default.
+Implemented the bridge step: bin/local-studio now starts the local Python Studio app server by default.
 
-bin/dev-studio now has:
+bin/local-studio now has:
 STUDIO_APP_ENABLED, default 1
 STUDIO_APP_HOST, default 127.0.0.1
 STUDIO_APP_PORT, default 8765

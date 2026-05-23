@@ -50,7 +50,7 @@ The server validates the proposed update through the shared catalogue source loa
 
 ## Dev Studio
 
-`bin/dev-studio` starts the Local Studio app server, which owns catalogue APIs at `/studio/api/catalogue/...`.
+`bin/local-studio` starts the Local Studio app server, which owns catalogue APIs at `/studio/api/catalogue/...`.
 It no longer starts or offers a fallback flag for a standalone catalogue write server.
 
 ## Source And Target Artifacts

@@ -243,7 +243,7 @@ Targeted verification:
 - A targeted search found no remaining local `formatBuildPreview`, `fieldPlanList`, or `formatBuildPreviewModalHtml` helper definitions in the migrated route controllers.
 - Formatter extraction stayed pure: the new module does not call catalogue service endpoints, `window.confirm`, or route-state mutation helpers.
 - Studio docs payloads and the Studio search index were rebuilt.
-- Jekyll build passed with `--destination /tmp/dlf-jekyll-build` because local `bin/dev-studio` was already running.
+- Jekyll build passed with `--destination /tmp/dlf-jekyll-build` because a local Jekyll server was already running.
 - Static Playwright smoke passed for work, work-detail, series, and moment editor routes against the built site; all four reached route-ready state with no page errors and no failed Studio JS module requests.
 - The first Playwright launch failed inside the Codex sandbox; the same check passed when rerun with escalated permissions as required by the local validation guidance.
 

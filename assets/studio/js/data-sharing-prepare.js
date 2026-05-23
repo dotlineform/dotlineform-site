@@ -212,7 +212,7 @@ function updateStatus(state) {
       getStudioText(
         state.config,
         "data_sharing_prepare.service_unavailable",
-        "Docs management service unavailable. Start bin/dev-studio to prepare packages."
+        "Docs management service unavailable. Start bin/local-studio to prepare packages."
       )
     );
     state.runButton.disabled = true;

@@ -232,17 +232,16 @@ This means Studio documentation changes must stay aligned with the shared Docs V
 
 ## Local Development Boundary
 
-`bin/dev-studio` is the current Studio route runner.
+`bin/local-studio` is the current Studio route runner.
 
 What it runs before starting long-lived services:
 
-- required port preflight for Jekyll and the local write services
+- required port preflight for the local Studio app
 - optional docs/docs-search rebuilds for scopes listed in `DOCS_STARTUP_REBUILD_SCOPES`
 - `./scripts/catalogue/export_catalogue_lookup.py --write`
 
 What it starts:
 
-- `bundle exec jekyll serve --host 127.0.0.1 --port 4000`
 - `scripts/studio/studio_app_server.py`
 - `scripts/studio/studio_catalogue_api.py`
 - `scripts/catalogue/catalogue_write_service.py`

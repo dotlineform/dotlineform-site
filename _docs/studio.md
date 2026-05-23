@@ -10,7 +10,7 @@ sort_order: 2000
 
 This section documents the Local Studio app routes used to review and edit public site data, catalogue records, and related operational workflows.
 
-Studio is a local service-backed workspace. Editing and mutable review data require `bin/dev-studio` and the localhost services it starts. When a required local service is unavailable, Studio pages should make that state visible and disable affected controls rather than reading stale static editor data.
+Studio is a local service-backed workspace. Editing and mutable review data require `bin/local-studio` and the localhost services it starts. When a required local service is unavailable, Studio pages should make that state visible and disable affected controls rather than reading stale static editor data.
 
 The current Studio shell is organized around active admin entry points:
 
@@ -82,13 +82,12 @@ Technical route and workflow docs:
 Use the repo-local runner from `dotlineform-site/`:
 
 ```bash
-bin/dev-studio
+bin/local-studio
 ```
 
 Current runner behavior:
 
 - optionally rebuilds Docs Viewer data when `DOCS_STARTUP_REBUILD_SCOPES` is set
-- starts Jekyll on `127.0.0.1:4000`
 - starts the local Studio app server for Studio shell, Docs management, Analytics tag APIs, and Studio audit APIs
 - skips the standalone `scripts/docs/docs_management_server.py` by default because Docs management is hosted by the local Studio app
 - has no standalone Studio audit HTTP service; browser audit APIs are hosted by the local Studio app and direct automation uses `scripts/studio/audit_runner.py`
@@ -101,6 +100,7 @@ Current limits:
 
 - it does not enable `--livereload`
 - it does not rebuild docs or docs-search artifacts on startup unless `DOCS_STARTUP_REBUILD_SCOPES` is set
+- it does not start Jekyll; use `bin/public-site-preview` for public-site preview
 - it does not replace the standalone scripts documented in **[Scripts](/docs/?scope=studio&doc=scripts)**
 - local server architecture and future consolidation strategy are documented in **[Servers](/docs/?scope=studio&doc=servers)**
 

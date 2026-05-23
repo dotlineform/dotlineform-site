@@ -27,7 +27,7 @@ The current script surface is organized by owner:
 - All commands assume you are in `dotlineform-site/`.
 - For local environment/bootstrap steps, see [Local Setup](/docs/?scope=studio&doc=local-setup).
 - use project-local script paths
-- if `jekyll serve` or `bin/dev-studio` is already running, verify one-off builds to `/tmp/dlf-jekyll-build` rather than `_site/`
+- if `jekyll serve` is already running, verify one-off builds to `/tmp/dlf-jekyll-build` rather than `_site/`
 - media and generation scripts read `DOTLINEFORM_PROJECTS_BASE_DIR` from `var/local/site.env` for local runs
 - R2 media publishing reads R2 credentials from `var/local/site.env` for local runs
 - in cloud/Codespaces runs, those same keys should be provided through platform environment variables or secrets
@@ -117,7 +117,7 @@ Catalogue/runtime maintenance:
   Audit Studio route-ready template contracts and static-route drift.
 - [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service)
   Maintain the allowlisted audit runner used by `/studio/audits/?mode=manage`; the active HTTP endpoints are served by the local Studio app.
-- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
   Run the integrated local Studio development stack, including Jekyll, localhost write services, optional startup docs refreshes, and live docs watching.
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
   Watch docs source roots and rebuild same-scope docs payloads plus docs search during local development.

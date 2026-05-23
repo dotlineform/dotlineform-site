@@ -26,9 +26,10 @@ Use this checklist to:
 
 Complete these before running the checklist:
 
-- start the local Studio stack with `bin/dev-studio`
-- confirm the site is available at `http://127.0.0.1:4000/`
-- confirm the local catalogue write server is available on `http://127.0.0.1:8788/`
+- start the local Studio stack with `bin/local-studio`
+- confirm Local Studio is available at `http://127.0.0.1:8765/studio/`
+- start `bin/public-site-preview` separately and confirm `http://127.0.0.1:4000/` only when public preview links are in scope
+- confirm catalogue APIs are available through Local Studio under `/studio/api/catalogue/...`
 - confirm `DOTLINEFORM_PROJECTS_BASE_DIR` points to the current source tree used for work media and moment source images
 - confirm `var/catalogue/media/` is writable if media-generation behavior is being checked
 - confirm `assets/studio/data/catalogue/` is present and current

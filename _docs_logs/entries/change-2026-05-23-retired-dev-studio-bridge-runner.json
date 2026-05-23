@@ -1,0 +1,48 @@
+{
+  "id": "change-2026-05-23-retired-dev-studio-bridge-runner",
+  "date": "2026-05-23",
+  "title": "Retired Dev Studio Bridge Runner",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "scripts",
+    "workflow"
+  ],
+  "summary": "Removed the old bin/dev-studio bridge runner and local Jekyll overlay, made bin/local-studio own Local Studio startup directly, and kept public Jekyll preview/build on explicit public-site commands.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-runner",
+    "service-consolidation",
+    "public-preview-boundary"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app-implementation-plan",
+    "scripts-local-studio",
+    "local-studio-server-architecture",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "bin/local-studio",
+    "bin/dev-studio",
+    "_config.dev-studio.yml",
+    "_docs/scripts-local-studio.md",
+    "_docs/local-studio-app-implementation-plan.md"
+  ],
+  "effect": "Local Studio startup no longer depends on a combined Studio/Jekyll bridge. Studio runs through `bin/local-studio`, public preview/build run through `bin/public-site-preview` and `bin/public-site-build`, and stale dev-studio command/config references have been removed from active docs and UI copy.",
+  "verification": [
+    "bash -n bin/local-studio bin/public-site-preview bin/public-site-build",
+    "STUDIO_APP_ENABLED=0 DOCS_WATCH_ENABLED=0 DOTLINEFORM_BACKUP_RETENTION=off bin/local-studio",
+    "node --check assets/studio/js/studio-audits.js",
+    "node --check assets/studio/js/data-sharing-prepare.js",
+    "node --check assets/studio/js/data-sharing-review.js",
+    "node --check assets/docs-viewer/js/docs-html-import.js",
+    "python3 -m py_compile scripts/studio/audit_runner.py scripts/studio/studio_audit_api.py scripts/studio/studio_app_server.py scripts/run_checks.py",
+    "python3 -m pytest tests/python/test_studio_app_server.py",
+    "DOCS_WATCH_ENABLED=0 DOTLINEFORM_BACKUP_RETENTION=off CATALOGUE_STARTUP_LOOKUP_REBUILD=off STUDIO_APP_PORT=8776 bin/local-studio; curl -sS http://127.0.0.1:8776/health"
+  ]
+}

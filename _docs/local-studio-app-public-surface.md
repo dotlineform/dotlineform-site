@@ -56,8 +56,8 @@ Public Jekyll builds use `_config.yml`.
 That config excludes local-only Studio routes, local-management docs routes, Studio app assets, and Studio docs payload/search outputs.
 It also points Docs Viewer routes at the public browser config, which includes only `library` and `analysis` scopes.
 
-Local Studio development uses `_config.yml,_config.dev-studio.yml` through `bin/dev-studio`.
-The dev overlay keeps local Studio routes available, points Docs Viewer back at the full browser config, and enables Docs Viewer management mode for local use.
+Local Studio development uses `bin/local-studio`, which serves Studio routes and Docs Viewer management directly through the local app server.
+Public Jekyll preview/build remains on `_config.yml` and does not expose Studio management surfaces.
 
 The public build surface can be checked after a public build with:
 

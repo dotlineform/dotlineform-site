@@ -18,7 +18,7 @@ Script:
 
 This script watches the docs source roots used by the shared Docs Viewer and rebuilds same-scope docs payloads plus same-scope docs search after source changes.
 
-It is intended as a local development helper for `bin/dev-studio`, not as the primary manual rebuild command.
+It is intended as a local development helper for `bin/local-studio`, not as the primary manual rebuild command.
 
 ## Scope Detection
 
@@ -120,9 +120,9 @@ Watcher diagnostics are intentionally log-only. They report affected doc ids and
 
 ## Operational Notes
 
-- `bin/dev-studio` starts this watcher by default
-- `bin/dev-studio` no longer performs a default startup docs/docs-search rebuild; startup rebuilds are opt-in through `DOCS_STARTUP_REBUILD_SCOPES`
-- `DOCS_WATCH_POLL_SECONDS`, `DOCS_WATCH_DEBOUNCE_SECONDS`, and `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD` default from `var/local/site.env` for local runs, including when the watcher is started through `bin/dev-studio`
+- `bin/local-studio` starts this watcher by default
+- `bin/local-studio` does not perform a default startup docs/docs-search rebuild; startup rebuilds are opt-in through `DOCS_STARTUP_REBUILD_SCOPES`
+- `DOCS_WATCH_POLL_SECONDS`, `DOCS_WATCH_DEBOUNCE_SECONDS`, and `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD` default from `var/local/site.env` for local runs, including when the watcher is started through `bin/local-studio`
 - manual rebuild commands remain available and are still the fallback path when you want explicit control
 - because the watcher rebuilds from source-root changes only, generated output writes do not loop back into new watcher-triggered rebuilds
 - when the localhost docs-management server writes a source doc and rebuilds the same scope itself, it now leaves a short-lived suppression marker under `var/docs/watch-suppressions/`; the watcher uses that marker to avoid a redundant second rebuild for the same source change
@@ -130,7 +130,7 @@ Watcher diagnostics are intentionally log-only. They report affected doc ids and
 
 ## Related References
 
-- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)

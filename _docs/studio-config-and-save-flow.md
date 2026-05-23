@@ -138,7 +138,7 @@ Current write-service implementation notes:
 - server writes create timestamped backups in `var/studio/backups/`
 - write activity is logged to `var/studio/logs/studio_analytics_api.log`
 - covered local-server writes also append unified Studio activity rows when the browser supplies valid activity context
-- backup retention is applied at `bin/dev-studio` startup; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
+- backup retention is applied at `bin/local-studio` startup; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
 
 Catalogue editor local save behavior:
 
@@ -150,7 +150,7 @@ Catalogue editor local save behavior:
 - derived lookup payloads under `assets/studio/data/catalogue_lookup/` are refreshed after canonical writes
 - backup bundles are written under `var/studio/catalogue/backups/`
 - activity is logged to `var/studio/catalogue/logs/catalogue_service_context.log` and summarized into `var/studio/activity/activity_log.json`
-- backup retention is applied at `bin/dev-studio` startup; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
+- backup retention is applied at `bin/local-studio` startup; see [Studio Backup Retention](/docs/?scope=studio&doc=scripts-studio-backup-retention)
 - bulk mode on the same page sends `POST /studio/api/catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, optional series membership operations, and optional `apply_build: true`
 - bulk work update still runs as a sequence of scoped work rebuilds, but that sequence can now be requested directly from the save endpoint
 - single-record mode on the same page can also request `POST /studio/api/catalogue/delete-preview` and `POST /studio/api/catalogue/delete-apply`
@@ -258,8 +258,8 @@ Use these references for the contracts:
 
 Current operational constraints:
 
-- `bin/dev-studio` rebuilds Studio Docs Viewer data and derived catalogue lookup artifacts, but not docs-search artifacts
-- Studio route behavior depends on the current site build being present under Jekyll
+- `bin/local-studio` runs startup docs/docs-search rebuilds only when `DOCS_STARTUP_REBUILD_SCOPES` is set, and derived catalogue lookup export only when `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled
+- Studio route behavior depends on the Local Studio app server; public-link inspection also needs `bin/public-site-preview` when local preview links are being checked
 - `scripts/checks/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
 
 For command-level usage and script flags, keep **[Scripts](/docs/?scope=studio&doc=scripts)** aligned with Studio workflow changes.

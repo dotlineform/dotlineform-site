@@ -35,7 +35,7 @@ Examples in this repo are:
 
 Use `docs_viewer_readonly_route.html` for public corpus routes such as `/library/` and `/analysis/`.
 Use `docs_viewer_management_route.html` for the local `/docs/` management shell.
-That adapter renders management markup only when `docs_viewer_management_enabled: true`; the public config leaves the flag false, while `_config.dev-studio.yml` enables it for `bin/dev-studio`.
+That adapter renders management markup only when `docs_viewer_management_enabled: true`; public Jekyll config leaves the flag false, while Local Studio serves `/docs/` management through the Python app server.
 
 ### Browser Runtime
 
