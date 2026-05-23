@@ -98,9 +98,16 @@ exclude:
   - var
   - logs
   - _docs/
+  - _docs_analysis/
+  - _docs_library/
+  - _docs_catalogue/
   - _docs_logs/
+  - _ui_catalogue_notes/
+  - _includes/ui_catalogue_notes/
   - docs/
   - studio/
+  - assets/ui-catalogue/
+  - assets/docs/ui-catalogue/
   - assets/studio/
   - assets/studio/data/catalogue/
   - assets/studio/data/catalogue_lookup/

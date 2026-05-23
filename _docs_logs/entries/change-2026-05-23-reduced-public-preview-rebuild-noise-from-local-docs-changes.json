@@ -9,7 +9,7 @@
     "docs-viewer",
     "workflow"
   ],
-  "summary": "Excluded local Studio docs source and docs-log source from the public Jekyll config, and made the Docs Viewer browser config writer skip content-identical writes.",
+  "summary": "Excluded local Studio docs source, docs-log source, UI Catalogue source, and Studio-only asset roots from the public Jekyll config, and made the Docs Viewer browser config writer skip content-identical writes.",
   "source": {
     "file": "_docs/local-setup-public-site-preview.md"
   },

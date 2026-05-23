@@ -50,7 +50,7 @@ bin/public-site-build --destination /tmp/dlf-jekyll-build
 ## CSS changes
 
 `bin/public-site-preview` uses Jekyll serve, so Jekyll watches public-site source files and rebuilds changed pages and assets.
-The public Jekyll config excludes local Studio docs source and docs-log source paths such as `_docs/` and `_docs_logs/`, so ordinary Local Studio documentation edits do not trigger public-site preview rebuilds.
+The public Jekyll config excludes local Studio docs source, docs-log source, UI Catalogue source, and Studio-only asset roots, so ordinary Local Studio documentation and UI Catalogue edits do not trigger public-site preview rebuilds.
 For CSS changes, save the file and refresh the browser page.
 
 This is watch-and-rebuild behavior, not hot module replacement.
@@ -61,6 +61,27 @@ Notes:
 - Sass/SCSS files are compiled by Jekyll before the browser sees the change.
 - Browser cache can hide a CSS update; hard refresh if the page still shows the old styles.
 - Jekyll config changes normally require restarting `bin/public-site-preview`.
+
+## Local-only watch excludes
+
+The public Jekyll config excludes these local-only roots from conversion and watch:
+
+- `_docs/`
+- `_docs_analysis/`
+- `_docs_library/`
+- `_docs_catalogue/`
+- `_docs_logs/`
+- `_ui_catalogue_notes/`
+- `_includes/ui_catalogue_notes/`
+- `docs/`
+- `studio/`
+- `assets/ui-catalogue/`
+- `assets/docs/ui-catalogue/`
+- `assets/studio/`
+- `assets/data/docs/scopes/studio/`
+- `assets/data/search/studio/`
+
+Restart `bin/public-site-preview` after changing `_config.yml`; an already-running Jekyll process does not reload updated exclude rules.
 
 ## LiveReload
 
