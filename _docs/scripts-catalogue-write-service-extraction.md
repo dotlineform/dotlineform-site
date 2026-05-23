@@ -32,8 +32,9 @@ The callable catalogue service is split by maintenance ownership:
 | `scripts/catalogue/catalogue_work_detail_service.py` | work-detail create/save routes |
 | `scripts/catalogue/catalogue_series_service.py` | series create/save routes, including explicit member-work update coordination |
 | `scripts/catalogue/catalogue_build_service.py` | scoped public build preview/apply routes |
-| `scripts/catalogue/catalogue_delete_service.py` | delete preview routes |
-| `scripts/catalogue/catalogue_moment_service.py` | moment preview routes |
+| `scripts/catalogue/catalogue_delete_service.py` | delete preview/apply routes |
+| `scripts/catalogue/catalogue_moment_service.py` | moment preview/save routes |
+| `scripts/catalogue/catalogue_publication_service.py` | publication preview/apply routes |
 | `scripts/catalogue/catalogue_prose_import_service.py` | prose import apply and moment import apply routes |
 
 The practical rule for the rest of this migration is ownership by workflow/data item, not ownership by the old standalone server.
@@ -43,10 +44,10 @@ Small shared plumbing belongs in context/helper modules only when it is genuinel
 ## Current Coupling
 
 `scripts/studio/studio_catalogue_api.py` still imports `scripts/catalogue/catalogue_write_server.py` as `legacy_write_server`.
-For the remaining core catalogue editor mutation routes, it creates an in-process fake `Handler` instance, attaches an `InProcessCatalogueServer`, replaces `_read_json_body`, captures `_send_json`, and invokes the legacy handler method.
+For bulk save, it creates an in-process fake `Handler` instance, attaches an `InProcessCatalogueServer`, replaces `_read_json_body`, captures `_send_json`, and invokes the legacy handler method.
 
 That coupling means the HTTP server entrypoint is also the reusable behavior owner.
-It keeps Local Studio dependent on the shape of `BaseHTTPRequestHandler` methods for the routes that have not yet moved behind callable service modules.
+It keeps Local Studio dependent on the shape of `BaseHTTPRequestHandler` methods for the final route that has not yet moved behind callable service modules.
 
 ## Already Local-App Native
 
@@ -78,9 +79,18 @@ The first low-risk service group now runs through `scripts/catalogue/catalogue_w
 | `POST /studio/api/catalogue/moment/import-preview` | `handle_catalogue_post()` | Calls `catalogue_prose_import.build_moment_import_preview()` directly. |
 | `POST /studio/api/catalogue/moment/import-apply` | `handle_catalogue_post()` | Calls `catalogue_prose_import.apply_moment_import()` directly and writes Studio Activity rows without constructing a fake HTTP handler. |
 
-`publication-preview` intentionally stayed with the legacy publication group for now.
-Although the handler method is thin, its `save_published` request extraction depends on the same record-update helpers as publication apply and the save handlers.
-Move it with publication apply instead of duplicating the source-save extraction rules.
+## Publication, Delete Apply, And Moment Save Slice
+
+Moment save, publication preview/apply, and delete apply now run through focused service modules:
+
+| Route | Service function path | Notes |
+| --- | --- | --- |
+| `POST /studio/api/catalogue/moment/save` | `catalogue_moment_service.moment_save_payload()` | Owns moment metadata mutation, field-aware build planning, optional build follow-through, logging, and Studio Activity rows. |
+| `POST /studio/api/catalogue/publication-preview` | `catalogue_publication_service.publication_preview_payload()` | Keeps preview request extraction beside apply so `save_published` uses the same record-update helpers. |
+| `POST /studio/api/catalogue/publication-apply` | `catalogue_publication_service.publication_apply_response()` | Coordinates source writes, publication cleanup/build transactions, lookup refresh, backups, and activity rows through existing domain modules. |
+| `POST /studio/api/catalogue/delete-apply` | `catalogue_delete_service.delete_apply_response()` | Coordinates delete apply plans, cleanup transactions, search rebuild, lookup refresh, backups, and activity rows. |
+
+`scripts/studio/studio_catalogue_api.py` no longer maps these routes through `LEGACY_WRITE_ROUTE_BY_API_PATH`.
 
 ## Create Mutation Slice
 
@@ -119,11 +129,11 @@ Series create/save behavior now runs through `scripts/catalogue/catalogue_series
 | --- | ---: | --- | --- | --- |
 | `_catalogue_read_payload` | 45 lines | read | `catalogue_source`, `catalogue_lookup`, activity feed loader | Already replaced for Local Studio by `catalogue_read_payload()`. Keep any final service version as a simple read function. |
 | `_handle_work_save` | 193 lines | work save | `catalogue_source_mutation`, `catalogue_lookup_refresh`, `catalogue_save_build`, `catalogue_activity`, transactions | Moved for Local Studio to `catalogue_work_service.py`; standalone wrapper still has its old handler method. |
-| `_handle_bulk_save` | 209 lines | bulk save | bulk request parsing, source validation, lookup/build planning, activity | Trapped orchestration. Needs its own bulk-save service function rather than a generic catch-all. |
-| `_handle_publication_preview` | 5 lines | publication | `catalogue_publication.build_publication_preview` | Thin wrapper. Can move early into dispatch/status handling. |
-| `_handle_publication_apply` | 151 lines | publication | `catalogue_publication`, cleanup transactions, lookup/build/activity helpers | Mixed orchestration. Extract after preview/delete because apply coordinates several existing modules. |
+| `_handle_bulk_save` | 209 lines | bulk save | bulk request parsing, source validation, lookup/build planning, activity | Final bridge route. Needs its own bulk-save service function rather than a generic catch-all. |
+| `_handle_publication_preview` | 5 lines | publication | `catalogue_publication.build_publication_preview` | Moved for Local Studio to `catalogue_publication_service.py`; standalone wrapper still has its old handler method. |
+| `_handle_publication_apply` | 151 lines | publication | `catalogue_publication`, cleanup transactions, lookup/build/activity helpers | Moved for Local Studio to `catalogue_publication_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_delete_preview` | 14 lines | delete | `catalogue_delete_plans.build_delete_preview` | Moved for Local Studio to `catalogue_delete_service.py`; standalone wrapper still has its old handler method. |
-| `_handle_delete_apply` | 98 lines | delete | `catalogue_delete_plans`, cleanup transactions, activity, search rebuild | Mixed orchestration. Extract as delete-apply service after preview is direct. |
+| `_handle_delete_apply` | 98 lines | delete | `catalogue_delete_plans`, cleanup transactions, activity, search rebuild | Moved for Local Studio to `catalogue_delete_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_work_create` | 98 lines | work create | `catalogue_source_mutation`, source write transaction, lookup/activity | Moved for Local Studio to `catalogue_work_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_work_detail_create` | 105 lines | detail create | `catalogue_source_mutation`, source write transaction, lookup/activity | Moved for Local Studio to `catalogue_work_detail_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_work_detail_save` | 183 lines | detail save | `catalogue_source_mutation`, `catalogue_lookup_refresh`, `catalogue_save_build`, activity | Moved for Local Studio to `catalogue_work_detail_service.py`; standalone wrapper still has its old handler method. |
@@ -136,7 +146,7 @@ Series create/save behavior now runs through `scripts/catalogue/catalogue_series
 | `_handle_build_preview` | 47 lines | scoped build | field registry, build scopes, media plan | Moved for Local Studio to `catalogue_build_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_build_apply` | 16 lines | scoped build | `run_scoped_build_scope` through helper | Moved for Local Studio to `catalogue_build_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_moment_preview` | 21 lines | moment preview | moment source/metadata helpers, media plan | Moved for Local Studio to `catalogue_moment_service.py`; standalone wrapper still has its old handler method. |
-| `_handle_moment_save` | 149 lines | moment save | moment metadata mutation, invalidation, build/activity helpers | Trapped orchestration. Extract after work/detail/series save patterns. |
+| `_handle_moment_save` | 149 lines | moment save | moment metadata mutation, invalidation, build/activity helpers | Moved for Local Studio to `catalogue_moment_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_prose_import_preview` | 4 lines | prose import | `catalogue_prose_import` | Moved for Local Studio through dispatcher direct call to `catalogue_prose_import`; standalone wrapper still has its old handler method. |
 | `_handle_prose_import_apply` | 50 lines | prose import | `catalogue_prose_import`, activity | Moved for Local Studio to `catalogue_prose_import_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_moment_import_preview` | 3 lines | moment import | `catalogue_prose_import` | Moved for Local Studio through dispatcher direct call to `catalogue_prose_import`; standalone wrapper still has its old handler method. |
@@ -150,11 +160,10 @@ Series create/save behavior now runs through `scripts/catalogue/catalogue_series
 2. Treat the first service slice as complete for delete preview, build preview/apply, moment preview, prose import preview/apply, and moment import preview/apply.
 3. Treat work and work-detail create/save as the established mutation extraction pattern.
    Keep source mutation planning in `catalogue_source_mutation.py`, transaction writes in `catalogue_transactions.py`, lookup refresh in `catalogue_lookup_refresh.py`, and activity row construction in `catalogue_activity.py`.
-4. Move moment save next into a moment-owned service module, following the established mutation extraction pattern.
-5. Move publication preview/apply and delete apply as separate workflow slices because they coordinate source-save extraction, cleanup, build, lookup, and activity behavior.
-6. Move bulk save into its own bulk-save service slice rather than folding it into a generic write module.
-7. Remove the fake handler path from `studio_catalogue_api.py`.
-8. Decide whether the standalone `catalogue_write_server.py` wrapper still has an audience.
+4. Treat moment save, publication preview/apply, and delete apply as extracted for Local Studio.
+5. Move bulk save into its own bulk-save service slice rather than folding it into a generic write module.
+6. Remove the fake handler path from `studio_catalogue_api.py`.
+7. Decide whether the standalone `catalogue_write_server.py` wrapper still has an audience.
    If it does not, remove the `8788` wrapper rather than keeping a compatibility server around as a second exercise path.
 
 ## Non-Goals

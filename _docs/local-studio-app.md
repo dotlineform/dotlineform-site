@@ -151,7 +151,7 @@ Its work and series links now resolve through the configured public-site preview
 The Catalogue Series, Work, Work Detail, and Moment editor route shells are hosted by the local app at their `?mode=manage` routes.
 They reuse the existing vanilla editor modules and call local-app catalogue API endpoints under `/studio/api/catalogue/...`.
 The old Jekyll shells for `/studio/catalogue-series/`, `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, and `/studio/catalogue-moment/` have been retired.
-The local app adapter reuses the existing catalogue write handler in-process for editor save, build, publication, delete, prose import, and moment import flows.
+The local app adapter routes editor save, build, publication, delete, prose import, and moment import flows through focused catalogue service modules; bulk save is the remaining catalogue editor route that still uses the legacy in-process handler bridge.
 `bin/dev-studio` skips the standalone catalogue write server by default; set `CATALOGUE_WRITE_SERVER_ENABLED=1` only for fallback/debug runs.
 The old Jekyll `/studio/` landing shell has also been retired.
 This removes another public-site Studio page and keeps the local app as the only active Studio home surface during migration.

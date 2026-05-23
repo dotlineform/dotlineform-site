@@ -78,10 +78,6 @@ CATALOGUE_READ_KEYS = {
 }
 LEGACY_WRITE_ROUTE_BY_API_PATH = {
     "/bulk-save": legacy_write_server.routes.BULK_SAVE_PATH,
-    "/delete-apply": legacy_write_server.routes.DELETE_APPLY_PATH,
-    "/publication-preview": legacy_write_server.routes.PUBLICATION_PREVIEW_PATH,
-    "/publication-apply": legacy_write_server.routes.PUBLICATION_APPLY_PATH,
-    "/moment/save": legacy_write_server.routes.MOMENT_SAVE_PATH,
 }
 
 

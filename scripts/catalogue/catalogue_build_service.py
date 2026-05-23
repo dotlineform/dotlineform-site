@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 from typing import Any, Mapping
 
 from catalogue import catalogue_activity as activity
+from catalogue.catalogue_build_commands import build_search_command
 from catalogue.catalogue_build_field_plan import apply_field_build_plan_to_scope, build_field_plan_for_scope
 from catalogue.catalogue_build_media import build_local_media_plan
 from catalogue.catalogue_build_scopes import build_scope_for_moment, build_scope_for_series, build_scope_for_work
@@ -13,6 +15,7 @@ from catalogue.catalogue_json_build import run_scoped_build_scope
 from catalogue.catalogue_source import normalize_detail_uid_value, normalize_series_ids_value, slug_id
 from catalogue.catalogue_service_context import CatalogueWriteContext, normalize_moment_id_value
 from catalogue.series_ids import normalize_series_id
+from local_env import runtime_env
 
 
 def build_preview_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
@@ -132,6 +135,26 @@ def run_build_operation(
     if not context.dry_run:
         payload["completed_at_utc"] = activity.utc_now()
     return True, payload
+
+
+def run_catalogue_search_rebuild(repo_root: Path, *, write: bool) -> dict[str, Any]:
+    proc = subprocess.run(
+        build_search_command(repo_root, write=write, force=False, env=runtime_env(repo_root=repo_root)),
+        cwd=repo_root,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    payload = {
+        "ok": proc.returncode == 0,
+        "exit_code": proc.returncode,
+        "stdout_tail": "\n".join(proc.stdout.strip().splitlines()[-8:]) if proc.stdout else "",
+        "stderr_tail": "\n".join(proc.stderr.strip().splitlines()[-8:]) if proc.stderr else "",
+    }
+    if proc.returncode != 0:
+        detail = payload["stderr_tail"] or payload["stdout_tail"] or "catalogue search rebuild failed"
+        raise RuntimeError(str(detail))
+    return payload
 
 
 def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, str, list[str], list[str], bool]:

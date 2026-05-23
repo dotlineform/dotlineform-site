@@ -29,8 +29,9 @@ Status:
 Next suitable slices, in dependency order:
 
 1. Broaden public-site link resolver adoption across migrated Studio routes when those routes are touched.
-2. Start the projection contract work once route and service ownership is less fluid.
-3. Defer the optional repo split decision until the publish/export contract is stable.
+2. Move catalogue bulk save out of the legacy handler bridge, then remove the fake in-process handler path from the local app server.
+3. Start the projection contract work once route and service ownership is less fluid.
+4. Defer the optional repo split decision until the publish/export contract is stable.
 
 ## Lifecycle Rules
 
@@ -114,6 +115,7 @@ Current commit point:
 - Studio route URL building now preserves configured route query state such as `?mode=manage` while appending record parameters for migrated catalogue editor links
 - The per-series tag editor now shares the catalogue public-link helper for its public series/work header links
 - Migrated catalogue editor summary links for public work, series, work detail, and moment pages now resolve through the configured public preview base instead of staying relative to the Studio app host
+- Catalogue moment save, publication preview/apply, and delete apply now run through focused catalogue service modules rather than the legacy in-process HTTP handler bridge
 - Docs Broken Links moved into Docs Viewer reports rather than becoming another migrated Studio route shell
 - Data Sharing dashboard, prepare, and review route shells are now local-app hosted and call Data Sharing through the local Docs API adapter instead of the old standalone docs-management service URL
 - Studio Audits now calls `/studio/api/audits/...` through the local app server instead of requiring the old standalone audit service URL
@@ -308,13 +310,13 @@ The adapter reuses `scripts/media/build_thumbnail_quality_preview.py`, keeps ini
 Catalogue Drafts and Studio Activity now read through local-app `GET /studio/api/catalogue/read`.
 Bulk Add Work now uses local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply`; the adapter reuses the existing workbook import planner/apply helpers and preserves Studio Activity logging.
 The catalogue editor write/build/publication/delete/prose-import/moment-import endpoints now run through `/studio/api/catalogue/...` on the local app server.
-Most migrated endpoints call focused catalogue service modules directly; the remaining publication, delete-apply, bulk-save, and moment-save routes still use the legacy handler bridge until their own slices move.
+Most migrated endpoints call focused catalogue service modules directly; only bulk save still uses the legacy handler bridge until its own slice moves.
 `bin/dev-studio` no longer starts the standalone catalogue write server by default; `CATALOGUE_WRITE_SERVER_ENABLED=1` remains available for fallback/debug runs.
 The catalogue write service extraction inventory is captured in [Catalogue Write Service Extraction](/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction).
-The first callable catalogue service slices now route delete preview, build preview/apply, moment preview, prose import preview/apply, moment import preview/apply, work create/save, work-detail create/save, and series create/save through `scripts/catalogue/catalogue_write_service.py`.
+The callable catalogue service slices now route delete preview/apply, publication preview/apply, build preview/apply, moment preview/save, prose import preview/apply, moment import preview/apply, work create/save, work-detail create/save, and series create/save through `scripts/catalogue/catalogue_write_service.py`.
 `catalogue_write_service.py` is only the dispatcher; ownership lives in focused modules such as `catalogue_work_service.py`, `catalogue_work_detail_service.py`, `catalogue_series_service.py`, `catalogue_build_service.py`, `catalogue_delete_service.py`, `catalogue_moment_service.py`, and `catalogue_prose_import_service.py`, with shared plumbing in `catalogue_service_context.py`.
 The next catalogue refactor should remove the fake in-process `Handler` dependency from `scripts/studio/studio_catalogue_api.py` one workflow at a time, using the same ownership-by-workflow rule.
-Pick-up order: moment save first, then publication preview/apply and delete apply as separate workflow slices, then bulk save as its own slice, then remove the fake handler bridge.
+Pick-up order: bulk save as its own slice, then remove the fake handler bridge.
 Active Local Studio Docs browser transport now uses `/studio/api/docs/...`; `127.0.0.1:8789` is no longer a browser fallback for migrated routes.
 The standalone Docs Management server entrypoint has been removed; Local Studio imports `scripts/docs/docs_management_service.py` as the dispatcher for focused Docs management modules covering context, reads, capabilities, source mutations, import, Data Sharing, source opening, and broken-links audit behavior.
 The launcher split is now explicit: `bin/local-studio` starts the local Studio app path with Jekyll disabled, `bin/public-site-preview` runs public Jekyll preview with `_config.yml`, and `bin/public-site-build` runs public Jekyll builds with `_config.yml`.
@@ -337,7 +339,7 @@ Transition cleanup backlog:
 | Retire the Jekyll `/studio/` landing shell once the local app owns `/studio/`. | The public site no longer publishes Studio, and the local app home exposes the runtime navigation list. | done |
 | Recheck `main.css` and Studio CSS ownership after route retirements. | Migrated Studio surfaces no longer rely on public-site route CSS. | done; retired Docs Broken Links route CSS removed, local activity styles moved to `assets/studio/css/studio.css`, and still-public catalogue search/shared Studio shell styles left in `main.css` where their pages still load them |
 | Remove compatibility docs that describe old sibling-service startup as the normal path. | `bin/dev-studio` starts only the local app server plus genuinely required background tasks. | partial; `scripts-dev-studio` now documents the explicit launcher split, bridge-runner status, and default Docs management ownership |
-| Extract remaining catalogue write behavior out of the standalone HTTP handler. | Local Studio still reuses `catalogue_write_server.Handler` in-process for bulk save, delete apply, publication preview/apply, and moment save. | partial; focused service modules now own delete preview, build preview/apply, moment preview, prose/moment import apply, work create/save, work-detail create/save, and series create/save |
+| Extract remaining catalogue write behavior out of the standalone HTTP handler. | Local Studio still reuses `catalogue_write_server.Handler` in-process for bulk save. | partial; focused service modules now own delete preview/apply, publication preview/apply, build preview/apply, moment preview/save, prose/moment import apply, work create/save, work-detail create/save, and series create/save |
 
 ## Phase 5: Route Family Migration
 
