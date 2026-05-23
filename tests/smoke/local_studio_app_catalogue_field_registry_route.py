@@ -72,9 +72,11 @@ def main(argv: list[str] | None = None) -> int:
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
             if doc_link != "/docs/?scope=studio&doc=catalogue-field-registry-review&mode=manage":
                 raise AssertionError(f"catalogue-field-registry doc link is not manage-mode: {doc_link!r}")
-            nav_link = page.locator('.site-nav [data-studio-navigate="catalogue_field_registry"]').get_attribute("href")
-            if nav_link != "/studio/catalogue-field-registry/?mode=manage":
-                raise AssertionError(f"catalogue-field-registry nav link is not manage-mode: {nav_link!r}")
+            nav_link = page.locator('.site-nav [data-studio-navigate="studio_catalogue"]').get_attribute("href")
+            if nav_link != "/studio/catalogue/?mode=manage":
+                raise AssertionError(f"catalogue-field-registry parent nav link is not manage-mode: {nav_link!r}")
+            if page.locator('.site-nav [data-studio-navigate="catalogue_field_registry"]').count():
+                raise AssertionError("catalogue-field-registry should not appear as a top-nav item")
             if not registry_requests:
                 raise AssertionError("catalogue-field-registry route did not request the registry data")
 

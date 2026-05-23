@@ -400,6 +400,8 @@ The catalogue editor API consolidation keeps behavior aligned with the existing 
 Catalogue route shells are split into `scripts/studio/studio_catalogue_views.py` so `studio_app_views.py` remains a shared shell module rather than absorbing every route family.
 The Jekyll `/studio/` landing shell is now retired because the local app owns `/studio/` and public builds should not expose Studio.
 The local app home is intentionally a simple runtime navigation list rather than a preserved Jekyll dashboard design; it filters out non-nav internal views such as the per-series tag editor and marks the home root ready for smoke checks.
+The local app shell now uses one compact top navigation row across Studio, including `/studio/`: `dotlineform studio` remains the left home link, and only `docs`, `catalogue`, `analytics`, and `data sharing` appear as right-aligned top-level items.
+The broader `/studio/` home link list remains the place for secondary route links.
 Configured catalogue editor routes now keep `?mode=manage` in runtime/static config.
 Browser callers that add `work=`, `detail=`, `series=`, or `moment=` parameters use the shared route URL builder instead of string concatenation, so the migration can preserve manage mode without depending on Jekyll-style query assembly.
 The UI Catalogue demo routes are now exposed through Local Studio under `/studio/ui-catalogue/demos/`, including the current primitive and pattern demo pages.

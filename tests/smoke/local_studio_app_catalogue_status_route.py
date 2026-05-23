@@ -79,9 +79,11 @@ def main(argv: list[str] | None = None) -> int:
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
             if doc_link != DOC_HREF:
                 raise AssertionError(f"Catalogue Drafts doc link is not manage-mode: {doc_link!r}")
-            nav_link = page.locator(f'.site-nav [data-studio-navigate="{ROUTE_ID}"]').get_attribute("href")
-            if nav_link != ROUTE_PATH:
-                raise AssertionError(f"Catalogue Drafts nav link is not manage-mode: {nav_link!r}")
+            nav_link = page.locator('.site-nav [data-studio-navigate="studio_catalogue"]').get_attribute("href")
+            if nav_link != "/studio/catalogue/?mode=manage":
+                raise AssertionError(f"Catalogue Drafts parent nav link is not manage-mode: {nav_link!r}")
+            if page.locator(f'.site-nav [data-studio-navigate="{ROUTE_ID}"]').count():
+                raise AssertionError("Catalogue Drafts should not appear as a top-nav item")
 
             browser.close()
 

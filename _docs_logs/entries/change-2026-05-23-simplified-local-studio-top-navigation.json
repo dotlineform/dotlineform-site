@@ -1,0 +1,36 @@
+{
+  "id": "change-2026-05-23-simplified-local-studio-top-navigation",
+  "date": "2026-05-23",
+  "title": "Simplified Local Studio Top Navigation",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "studio-ui",
+    "workflow"
+  ],
+  "summary": "Updated the Local Studio shell to use one compact top navigation row across Studio, including /studio/, with dotlineform studio as the left home link and only docs, catalogue, analytics, and data sharing as right-aligned top-level items. The broader /studio/ home link list remains available for secondary routes.",
+  "source": {
+    "file": "_docs/local-studio-app.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-nav",
+    "studio-shell"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "local-studio-app",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/studio/studio_app_config.py",
+    "scripts/studio/studio_app_views.py",
+    "scripts/studio/studio_ui_catalogue_views.py",
+    "assets/css/main.css",
+    "assets/studio/css/studio.css",
+    "tests/smoke/local_studio_navigation_adapter.py",
+    "tests/smoke/local_studio_app_tag_groups.py"
+  ]
+}

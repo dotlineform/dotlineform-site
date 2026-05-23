@@ -10,7 +10,9 @@ viewable: false
 # tmp
 
 we are working on _docs/local-studio-app-implementation-plan.md
-please continue with the next suitable slice.
+please continue with the next slice: ui catalogue
+
+
 
 ---
 
@@ -18,7 +20,7 @@ normal development should use:
 
 - `bin/local-studio` for Studio
 - `bin/public-site-preview` for public Jekyll preview
-- `bin/public-site-build` for public Jekyll build
+- `bin/public-site-preview --livereload`
 
 
 ---

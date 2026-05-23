@@ -235,6 +235,13 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
     },
 }
 
+STUDIO_TOP_NAV_VIEW_IDS: tuple[str, ...] = (
+    "docs",
+    "studio_catalogue",
+    "studio_analytics",
+    "data_sharing",
+)
+
 STUDIO_MEDIA: dict[str, object] = {
     "thumbs": {
         "base": "",
@@ -338,6 +345,7 @@ PRODUCTION_SITE_BASE = "https://dotlineform.com"
 def asset_version(repo_root: Path) -> str:
     candidates = [
         repo_root / "_includes" / "docs_viewer_shell.html",
+        repo_root / "assets" / "css" / "main.css",
         repo_root / "assets" / "docs-viewer" / "js" / "docs-viewer.js",
         repo_root / "assets" / "docs-viewer" / "css" / "docs-viewer.css",
         repo_root / "assets" / "docs-viewer" / "css" / "docs-viewer-management.css",
@@ -416,11 +424,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             for view_id, view in STUDIO_VIEWS.items()
         ],
         "navigation": {
-            "primary": [
-                view_id
-                for view_id, view in STUDIO_VIEWS.items()
-                if view.get("nav", "true") != "false"
-            ],
+            "primary": list(STUDIO_TOP_NAV_VIEW_IDS),
         },
         "modals": {
             "event": STUDIO_STATE_CONFIG["modal_event"],

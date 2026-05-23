@@ -7,22 +7,54 @@ import json
 from pathlib import Path
 
 try:
-    from studio_app_config import STUDIO_MEDIA, STUDIO_VIEWS
+    from studio_app_config import STUDIO_MEDIA, STUDIO_TOP_NAV_VIEW_IDS, STUDIO_VIEWS
 except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
-    from .studio_app_config import STUDIO_MEDIA, STUDIO_VIEWS
+    from .studio_app_config import STUDIO_MEDIA, STUDIO_TOP_NAV_VIEW_IDS, STUDIO_VIEWS
+
+
+STUDIO_TOP_NAV_ACTIVE_VIEW_IDS: dict[str, str] = {
+    "tag_groups": "studio_analytics",
+    "tag_registry": "studio_analytics",
+    "tag_aliases": "studio_analytics",
+    "series_tags": "studio_analytics",
+    "series_tag_editor": "studio_analytics",
+    "data_sharing_prepare": "data_sharing",
+    "data_sharing_review": "data_sharing",
+    "project_state": "studio_catalogue",
+    "thumbnail_quality": "studio_catalogue",
+    "bulk_add_work": "studio_catalogue",
+    "catalogue_field_registry": "studio_catalogue",
+    "catalogue_status": "studio_catalogue",
+    "studio_works": "studio_catalogue",
+    "catalogue_series_editor": "studio_catalogue",
+    "catalogue_work_editor": "studio_catalogue",
+    "catalogue_work_detail_editor": "studio_catalogue",
+    "catalogue_moment_editor": "studio_catalogue",
+}
 
 
 def studio_nav(active_view_id: str = "") -> str:
     items = []
-    for view_id, view in STUDIO_VIEWS.items():
-        if view.get("nav", "true") == "false":
-            continue
+    active_nav_id = STUDIO_TOP_NAV_ACTIVE_VIEW_IDS.get(active_view_id, active_view_id)
+    for view_id in STUDIO_TOP_NAV_VIEW_IDS:
+        view = STUDIO_VIEWS[view_id]
         label = html.escape(view["label"])
         href = html.escape(view["path"], quote=True)
         escaped_view_id = html.escape(view_id, quote=True)
-        active_class = " is-active" if view_id == active_view_id else ""
+        active_class = " is-active" if view_id == active_nav_id else ""
         items.append(f'<a class="nav-item{active_class}" href="{href}" data-studio-navigate="{escaped_view_id}">{label}</a>')
     return "\n        ".join(items)
+
+
+def studio_header(active_view_id: str = "") -> str:
+    return f"""<header class="site-header">
+    <div class="container">
+      <div class="site-title"><a href="/studio/">dotlineform studio</a></div>
+      <nav class="site-nav" aria-label="Studio">
+        {studio_nav(active_view_id)}
+      </nav>
+    </div>
+  </header>"""
 
 
 def studio_route_view(version: str, view_id: str, body_html: str) -> str:
@@ -43,14 +75,7 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
   <link rel="stylesheet" href="/assets/studio/css/studio.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
-  <header class="site-header">
-    <div class="container">
-      <div class="site-title"><a href="/studio/">dotlineform Studio</a></div>
-      <nav class="site-nav" aria-label="Studio">
-        {studio_nav(view_id)}
-      </nav>
-    </div>
-  </header>
+  {studio_header(view_id)}
   <main class="container">
     <div class="studio">
       <div class="studio__headerRow">
@@ -752,14 +777,7 @@ def docs_viewer_manage_view(version: str, repo_root: Path) -> str:
   <link rel="stylesheet" href="/assets/studio/css/studio.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
-  <header class="site-header">
-    <div class="container">
-      <div class="site-title"><a href="/studio/">dotlineform Studio</a></div>
-      <nav class="site-nav" aria-label="Studio">
-        {studio_nav("docs")}
-      </nav>
-    </div>
-  </header>
+  {studio_header("docs")}
   <main class="container studio-local-docs">
     {docs_viewer_shell(version, repo_root)}
   </main>
@@ -792,6 +810,7 @@ def studio_home_view(version: str) -> str:
   <link rel="stylesheet" href="/assets/studio/css/studio.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
+  {studio_header()}
   <main class="container">
     <div class="studio" id="studioHomeRoot" data-studio-ready="true" data-studio-busy="false">
       <div class="studio__headerRow"><h2>Studio</h2></div>

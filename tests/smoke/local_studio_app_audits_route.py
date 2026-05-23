@@ -83,9 +83,8 @@ def main(argv: list[str] | None = None) -> int:
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
             if doc_link != "/docs/?scope=studio&doc=studio-audits&mode=manage":
                 raise AssertionError(f"audits doc link is not manage-mode: {doc_link!r}")
-            nav_link = page.locator('.site-nav [data-studio-navigate="studio_audits"]').get_attribute("href")
-            if nav_link != "/studio/audits/?mode=manage":
-                raise AssertionError(f"audits nav link is not manage-mode: {nav_link!r}")
+            if page.locator('.site-nav [data-studio-navigate="studio_audits"]').count():
+                raise AssertionError("audits should not appear as a top-nav item")
             home_href = page.locator(".site-title a").get_attribute("href")
             if home_href != "/studio/":
                 raise AssertionError(f"unexpected Studio home link: {home_href!r}")

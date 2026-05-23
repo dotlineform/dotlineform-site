@@ -95,6 +95,14 @@ def main(argv: list[str] | None = None) -> int:
                         viewId: link.getAttribute("data-studio-navigate"),
                         href: link.getAttribute("href")
                     }));
+                    const topNavLinks = [...document.querySelectorAll(".site-nav .nav-item")].map((link) => ({
+                        label: link.textContent.trim(),
+                        viewId: link.getAttribute("data-studio-navigate"),
+                        href: link.getAttribute("href"),
+                        active: link.classList.contains("is-active")
+                    }));
+                    const topNavTitle = document.querySelector(".site-title a")?.textContent.trim();
+                    const topNavHomeHref = document.querySelector(".site-title a")?.getAttribute("href");
                     const homeReady = document.querySelector("#studioHomeRoot")?.getAttribute("data-studio-ready");
 
                     let delegatedModalDetail = null;
@@ -126,12 +134,16 @@ def main(argv: list[str] | None = None) -> int:
                         cataloguePublicMissingBaseError,
                         liveWorkUrl,
                         initial,
+                        runtimePrimaryNav: config.app.runtime.navigation.primary,
                         storedContext,
                         consumedContext,
                         consumedAgain,
                         openModalDetail,
                         modalDefaultPrevented: modalEvent.defaultPrevented,
                         homeLinks,
+                        topNavLinks,
+                        topNavTitle,
+                        topNavHomeHref,
                         homeReady,
                         delegatedModalDetail
                     };
@@ -148,6 +160,17 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected production base: {result['productionBase']!r}")
         if result["docsView"] != "/docs/?mode=manage":
             raise AssertionError(f"unexpected Docs view path: {result['docsView']!r}")
+        expected_top_nav = ["docs", "studio_catalogue", "studio_analytics", "data_sharing"]
+        if result["runtimePrimaryNav"] != expected_top_nav:
+            raise AssertionError(f"unexpected runtime primary nav: {result['runtimePrimaryNav']!r}")
+        top_nav_ids = [link["viewId"] for link in result["topNavLinks"]]
+        top_nav_labels = [link["label"] for link in result["topNavLinks"]]
+        if top_nav_ids != expected_top_nav:
+            raise AssertionError(f"unexpected top nav ids: {result['topNavLinks']!r}")
+        if top_nav_labels != ["docs", "catalogue", "analytics", "data sharing"]:
+            raise AssertionError(f"unexpected top nav labels: {result['topNavLinks']!r}")
+        if result["topNavTitle"] != "dotlineform studio" or result["topNavHomeHref"] != "/studio/":
+            raise AssertionError(f"unexpected top nav home link: {result['topNavTitle']!r} {result['topNavHomeHref']!r}")
         if result["dataPath"] != "/assets/studio/data/ui_text/tag-groups.json":
             raise AssertionError(f"unexpected UI text path: {result['dataPath']!r}")
         if result["mediaThumbWorks"] != "/assets/works/img":

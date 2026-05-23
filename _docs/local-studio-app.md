@@ -66,6 +66,8 @@ Current mounted views:
 The local app owns `/studio/`.
 The old Jekyll `/studio/` landing shell has been retired, so Studio home navigation now comes from the local runtime view registry rather than Jekyll/Liquid page data.
 The local home intentionally exposes a plain navigation list for active local views and filters out internal non-nav views such as the per-series tag editor.
+The shared Studio top navigation is separate from that home link list.
+Every local Studio shell, including `/studio/`, shows the same compact top row: `dotlineform studio` on the left, with `docs`, `catalogue`, `analytics`, and `data sharing` right-aligned.
 The Catalogue dashboard route shell is hosted by the local app at `/studio/catalogue/?mode=manage`.
 It reuses the existing dashboard metric module and grouped Catalogue link layout with manage-mode links to the migrated local Catalogue routes.
 The old Jekyll `/studio/catalogue/` shell has been retired.
@@ -156,7 +158,7 @@ This removes another public-site Studio page and keeps the local app as the only
 Migrated views can opt into the local runtime config endpoint with `meta[name="dlf-studio-config-url"]`.
 The endpoint exposes the local app runtime contract for migrated views:
 
-- view ids, labels, paths, docs links, and shell navigation groups
+- view ids, labels, paths, docs links, home-list entries, and shell top-navigation groups
 - local service endpoints such as `/studio/api/docs` and `/studio/api/analytics`
 - generated data, search, and UI-text paths from the checked-in Studio config
 - media and thumbnail bases used by Studio previews

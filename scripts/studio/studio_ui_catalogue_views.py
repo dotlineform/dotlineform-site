@@ -8,10 +8,10 @@ from pathlib import Path
 
 try:
     from studio_app_config import STUDIO_VIEWS
-    from studio_app_views import studio_nav
+    from studio_app_views import studio_header
 except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
     from .studio_app_config import STUDIO_VIEWS
-    from .studio_app_views import studio_nav
+    from .studio_app_views import studio_header
 
 
 UI_CATALOGUE_DEMO_SOURCES: dict[str, str] = {
@@ -62,14 +62,7 @@ def ui_catalogue_demo_view(version: str, repo_root: Path, view_id: str) -> str:
   <link rel="stylesheet" href="/assets/ui-catalogue/css/ui-catalogue-demo.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
-  <header class="site-header">
-    <div class="container">
-      <div class="site-title"><a href="/studio/">dotlineform Studio</a></div>
-      <nav class="site-nav" aria-label="Studio">
-        {studio_nav(active_nav_id)}
-      </nav>
-    </div>
-  </header>
+  {studio_header(active_nav_id)}
   <main class="container">
     <div class="studio">
       <div class="studio__headerRow">

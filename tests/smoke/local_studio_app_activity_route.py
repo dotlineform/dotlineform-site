@@ -120,9 +120,8 @@ def main(argv: list[str] | None = None) -> int:
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
             if doc_link != "/docs/?scope=studio&doc=studio-activity&mode=manage":
                 raise AssertionError(f"activity doc link is not manage-mode: {doc_link!r}")
-            nav_link = page.locator('.site-nav [data-studio-navigate="activity"]').get_attribute("href")
-            if nav_link != "/studio/activity/?mode=manage":
-                raise AssertionError(f"activity nav link is not manage-mode: {nav_link!r}")
+            if page.locator('.site-nav [data-studio-navigate="activity"]').count():
+                raise AssertionError("activity should not appear as a top-nav item")
             if not local_catalogue_requests:
                 raise AssertionError("activity route did not request the local catalogue read API")
             if legacy_catalogue_service_requests:
