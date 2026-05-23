@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-15d0a2efa21dbf9f6ac74ae25e3d524e",
-    "generated_at_utc": "2026-05-23T17:22:09Z",
+    "version": "blake2b-2d7f4c231b0669342e75cb91a85927ed",
+    "generated_at_utc": "2026-05-23T17:32:52Z",
     "count": 294
   },
   "entries": [
@@ -415,10 +415,10 @@
       "kind": "doc",
       "title": "Local Studio Server Architecture",
       "href": "/docs/?scope=studio&doc=local-studio-server-architecture",
-      "last_updated": "2026-05-09 21:45",
+      "last_updated": "2026-05-23",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-09 21:45 • Servers",
+      "display_meta": "2026-05-23 • Servers",
       "search_terms": [
         "local-studio-server-architecture",
         "local",
@@ -427,14 +427,12 @@
         "architecture",
         "local studio server architecture",
         "servers",
-        "2026-05-09 21:45",
+        "2026-05-23",
         "2026",
         "05",
-        "09",
-        "21",
-        "45"
+        "23"
       ],
-      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-05-09 21:45 2026 05 09 21 45"
+      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-05-23 2026 05 23"
     },
     {
       "id": "modal-responsibility-extraction-plan",
