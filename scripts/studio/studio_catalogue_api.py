@@ -15,9 +15,9 @@ for candidate in (SCRIPTS_DIR, STUDIO_DIR):
         sys.path.insert(0, str(candidate))
 
 from catalogue import catalogue_activity as activity  # noqa: E402
+from catalogue import catalogue_prose_import as prose_import  # noqa: E402
 from catalogue import catalogue_lookup_refresh as lookup_refresh  # noqa: E402
 from catalogue import catalogue_write_service  # noqa: E402
-from catalogue import catalogue_write_server as legacy_write_server  # noqa: E402
 from catalogue.catalogue_lookup import (  # noqa: E402
     DEFAULT_LOOKUP_DIR,
     build_series_lookup_payload,
@@ -45,7 +45,7 @@ from catalogue.catalogue_workbook_import import (  # noqa: E402
     normalize_import_mode,
     plan_to_response,
 )
-from catalogue.moment_sources import MOMENT_METADATA_FILENAME  # noqa: E402
+from catalogue.moment_sources import CATALOGUE_MOMENT_PROSE_REL_DIR, MOMENT_METADATA_FILENAME  # noqa: E402
 from catalogue.project_state_report import (  # noqa: E402
     DEFAULT_OUTPUT_REL_PATH,
     PROJECTS_BASE_DIR_ENV_NAME,
@@ -76,10 +76,6 @@ CATALOGUE_READ_KEYS = {
     "catalogue_lookup_work_detail_base",
     "catalogue_lookup_series_base",
 }
-LEGACY_WRITE_ROUTE_BY_API_PATH = {
-    "/bulk-save": legacy_write_server.routes.BULK_SAVE_PATH,
-}
-
 
 def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, list[str]] | None = None) -> dict[str, Any]:
     if api_path == "/health":
@@ -135,8 +131,6 @@ def catalogue_post_response(
         return import_apply_response(repo_root, body, dry_run=dry_run)
     if api_path in catalogue_write_service.SERVICE_POST_PATHS:
         return catalogue_write_service.handle_catalogue_post(repo_root, api_path, body, dry_run=dry_run)
-    if api_path in LEGACY_WRITE_ROUTE_BY_API_PATH:
-        return in_process_catalogue_write_response(repo_root, api_path, body, dry_run=dry_run)
     raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
 
 
@@ -422,9 +416,9 @@ def catalogue_paths(repo_root: Path) -> dict[str, Any]:
         "moments_path": moments_path,
         "allowed_write_paths": allowed_write_paths,
         "allowed_write_roots": {
-            (repo_root / legacy_write_server.prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "works").resolve(),
-            (repo_root / legacy_write_server.prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "series").resolve(),
-            (repo_root / legacy_write_server.CATALOGUE_MOMENT_PROSE_REL_DIR).resolve(),
+            (repo_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "works").resolve(),
+            (repo_root / prose_import.CATALOGUE_PROSE_SOURCE_REL_DIR / "series").resolve(),
+            (repo_root / CATALOGUE_MOMENT_PROSE_REL_DIR).resolve(),
         },
         "backups_dir": (repo_root / BACKUPS_REL_DIR).resolve(),
     }
@@ -470,76 +464,6 @@ def rel_path(repo_root: Path, path: Path) -> str:
         return str(path.resolve().relative_to(repo_root.resolve()))
     except ValueError:
         return path.name
-
-
-class InProcessCatalogueServer:
-    def __init__(self, repo_root: Path, *, dry_run: bool = False):
-        paths = catalogue_paths(repo_root)
-        self.repo_root = repo_root.resolve()
-        self.source_dir = paths["source_dir"]
-        self.lookup_dir = paths["lookup_dir"]
-        self.works_path = paths["works_path"]
-        self.work_details_path = paths["work_details_path"]
-        self.series_path = paths["series_path"]
-        self.moments_path = paths["moments_path"]
-        self.allowed_write_paths = paths["allowed_write_paths"]
-        self.allowed_write_roots = paths["allowed_write_roots"]
-        self.backups_dir = paths["backups_dir"]
-        self.dry_run = dry_run
-        self.field_registry = legacy_write_server.load_catalogue_field_registry(self.repo_root)
-
-    def rel_path(self, path: Path) -> str:
-        return rel_path(self.repo_root, path)
-
-    def log_event(self, event: str, details: dict[str, Any] | None = None) -> None:
-        try:
-            legacy_write_server.append_script_log(
-                Path(legacy_write_server.__file__),
-                event=event,
-                details=details,
-                repo_root=self.repo_root,
-                log_dir_rel=legacy_write_server.LOGS_REL_DIR,
-            )
-        except Exception:
-            pass
-
-    def append_studio_activity(self, entries: Any) -> None:
-        try:
-            append_studio_activity(self.repo_root, entries)
-        except Exception:
-            pass
-
-
-def in_process_catalogue_write_response(
-    repo_root: Path,
-    api_path: str,
-    body: Mapping[str, Any],
-    *,
-    dry_run: bool = False,
-) -> tuple[HTTPStatus, dict[str, Any]]:
-    legacy_path = LEGACY_WRITE_ROUTE_BY_API_PATH.get(api_path)
-    if not legacy_path:
-        raise FileNotFoundError(f"Unknown catalogue API route: {api_path}")
-    handler_name = legacy_write_server.Handler.POST_HANDLERS.get(legacy_path)
-    if not handler_name:
-        raise FileNotFoundError(f"Unknown catalogue write route: {legacy_path}")
-
-    captured: dict[str, Any] = {}
-    handler = object.__new__(legacy_write_server.Handler)
-    handler.server = InProcessCatalogueServer(repo_root, dry_run=dry_run)
-    handler._read_json_body = lambda: dict(body)  # type: ignore[method-assign]
-
-    def capture_json(status: HTTPStatus, payload: dict[str, Any], allowed: str | None = None) -> None:
-        captured["status"] = status
-        captured["payload"] = payload
-
-    handler._send_json = capture_json  # type: ignore[method-assign]
-    getattr(handler, handler_name)(None)
-    status = captured.get("status")
-    payload = captured.get("payload")
-    if not isinstance(status, HTTPStatus) or not isinstance(payload, dict):
-        raise RuntimeError(f"catalogue write route did not produce JSON: {api_path}")
-    return status, payload
 
 
 def log_event(repo_root: Path, event: str, details: dict[str, Any]) -> None:

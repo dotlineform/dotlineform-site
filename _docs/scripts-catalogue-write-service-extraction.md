@@ -28,6 +28,7 @@ The callable catalogue service is split by maintenance ownership:
 | --- | --- |
 | `scripts/catalogue/catalogue_write_service.py` | route dispatch, status selection, compatibility imports |
 | `scripts/catalogue/catalogue_service_context.py` | shared Local Studio catalogue context, source paths, write allowlists, lookup refresh helpers, compact logs, activity append guard |
+| `scripts/catalogue/catalogue_bulk_service.py` | bulk save routes |
 | `scripts/catalogue/catalogue_work_service.py` | work create/save routes |
 | `scripts/catalogue/catalogue_work_detail_service.py` | work-detail create/save routes |
 | `scripts/catalogue/catalogue_series_service.py` | series create/save routes, including explicit member-work update coordination |
@@ -43,11 +44,10 @@ Small shared plumbing belongs in context/helper modules only when it is genuinel
 
 ## Current Coupling
 
-`scripts/studio/studio_catalogue_api.py` still imports `scripts/catalogue/catalogue_write_server.py` as `legacy_write_server`.
-For bulk save, it creates an in-process fake `Handler` instance, attaches an `InProcessCatalogueServer`, replaces `_read_json_body`, captures `_send_json`, and invokes the legacy handler method.
+Local Studio no longer imports `scripts/catalogue/catalogue_write_server.py` or constructs fake `Handler` instances for catalogue writes.
+`scripts/studio/studio_catalogue_api.py` dispatches active catalogue editor write endpoints through `scripts/catalogue/catalogue_write_service.py`.
 
-That coupling means the HTTP server entrypoint is also the reusable behavior owner.
-It keeps Local Studio dependent on the shape of `BaseHTTPRequestHandler` methods for the final route that has not yet moved behind callable service modules.
+The standalone HTTP server entrypoint still exists, but Local Studio no longer depends on the shape of `BaseHTTPRequestHandler` methods.
 
 ## Already Local-App Native
 
@@ -92,6 +92,17 @@ Moment save, publication preview/apply, and delete apply now run through focused
 
 `scripts/studio/studio_catalogue_api.py` no longer maps these routes through `LEGACY_WRITE_ROUTE_BY_API_PATH`.
 
+## Bulk Save Slice
+
+Bulk save now runs through `scripts/catalogue/catalogue_bulk_service.py`:
+
+| Route | Service function path | Notes |
+| --- | --- | --- |
+| `POST /studio/api/catalogue/bulk-save` | `catalogue_bulk_service.bulk_save_payload()` | Owns bulk work/detail request parsing, source validation, transaction writes, compact logging, lookup refresh, and optional per-work build follow-through. |
+
+This was the final Local Studio catalogue write endpoint that used the in-process handler bridge.
+After this slice, `scripts/studio/studio_catalogue_api.py` has no `LEGACY_WRITE_ROUTE_BY_API_PATH`, no `InProcessCatalogueServer`, and no fake `catalogue_write_server.Handler` construction.
+
 ## Create Mutation Slice
 
 Work create behavior now runs through `scripts/catalogue/catalogue_work_service.py`; work-detail create behavior now runs through `scripts/catalogue/catalogue_work_detail_service.py`:
@@ -129,7 +140,7 @@ Series create/save behavior now runs through `scripts/catalogue/catalogue_series
 | --- | ---: | --- | --- | --- |
 | `_catalogue_read_payload` | 45 lines | read | `catalogue_source`, `catalogue_lookup`, activity feed loader | Already replaced for Local Studio by `catalogue_read_payload()`. Keep any final service version as a simple read function. |
 | `_handle_work_save` | 193 lines | work save | `catalogue_source_mutation`, `catalogue_lookup_refresh`, `catalogue_save_build`, `catalogue_activity`, transactions | Moved for Local Studio to `catalogue_work_service.py`; standalone wrapper still has its old handler method. |
-| `_handle_bulk_save` | 209 lines | bulk save | bulk request parsing, source validation, lookup/build planning, activity | Final bridge route. Needs its own bulk-save service function rather than a generic catch-all. |
+| `_handle_bulk_save` | 209 lines | bulk save | bulk request parsing, source validation, lookup/build planning, activity | Moved for Local Studio to `catalogue_bulk_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_publication_preview` | 5 lines | publication | `catalogue_publication.build_publication_preview` | Moved for Local Studio to `catalogue_publication_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_publication_apply` | 151 lines | publication | `catalogue_publication`, cleanup transactions, lookup/build/activity helpers | Moved for Local Studio to `catalogue_publication_service.py`; standalone wrapper still has its old handler method. |
 | `_handle_delete_preview` | 14 lines | delete | `catalogue_delete_plans.build_delete_preview` | Moved for Local Studio to `catalogue_delete_service.py`; standalone wrapper still has its old handler method. |
@@ -161,9 +172,8 @@ Series create/save behavior now runs through `scripts/catalogue/catalogue_series
 3. Treat work and work-detail create/save as the established mutation extraction pattern.
    Keep source mutation planning in `catalogue_source_mutation.py`, transaction writes in `catalogue_transactions.py`, lookup refresh in `catalogue_lookup_refresh.py`, and activity row construction in `catalogue_activity.py`.
 4. Treat moment save, publication preview/apply, and delete apply as extracted for Local Studio.
-5. Move bulk save into its own bulk-save service slice rather than folding it into a generic write module.
-6. Remove the fake handler path from `studio_catalogue_api.py`.
-7. Decide whether the standalone `catalogue_write_server.py` wrapper still has an audience.
+5. Treat bulk save as extracted for Local Studio and the fake handler path as removed from `studio_catalogue_api.py`.
+6. Decide whether the standalone `catalogue_write_server.py` wrapper still has an audience.
    If it does not, remove the `8788` wrapper rather than keeping a compatibility server around as a second exercise path.
 
 ## Non-Goals

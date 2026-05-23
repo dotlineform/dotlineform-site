@@ -1,0 +1,38 @@
+{
+  "id": "change-2026-05-23-extracted-catalogue-bulk-save-service-route",
+  "date": "2026-05-23",
+  "title": "Extracted Catalogue Bulk Save Service Route",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "catalogue",
+    "scripts"
+  ],
+  "summary": "Moved Local Studio catalogue bulk save from fake in-process `catalogue_write_server.Handler` reuse to `catalogue_bulk_service.bulk_save_payload()` behind the callable catalogue write service dispatcher.",
+  "effect": "Local Studio catalogue writes no longer construct legacy HTTP handlers. Bulk work/detail updates now preserve the existing source validation, transaction write, lookup refresh, compact logging, optional build follow-through, and dry-run response behavior through direct Python service functions.",
+  "source": {
+    "file": "_docs/scripts-catalogue-write-service-extraction.md",
+    "archive": "direct"
+  },
+  "subjects": [
+    "local-studio-app",
+    "catalogue-write-service",
+    "service-consolidation",
+    "server-refactor"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "scripts-catalogue-write-service-extraction",
+    "scripts-catalogue-write-server-operations",
+    "local-studio-app",
+    "local-studio-app-implementation-plan"
+  ],
+  "related_files": [
+    "scripts/catalogue/catalogue_bulk_service.py",
+    "scripts/catalogue/catalogue_build_service.py",
+    "scripts/catalogue/catalogue_write_service.py",
+    "scripts/studio/studio_catalogue_api.py",
+    "tests/python/test_studio_app_server.py"
+  ]
+}

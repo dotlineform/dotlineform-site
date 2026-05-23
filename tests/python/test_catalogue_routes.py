@@ -60,7 +60,6 @@ def test_activity_profile_endpoints_are_known_post_routes() -> None:
             "/project-state-report",
             "/thumbnail-quality-preview",
             *studio_catalogue_api.catalogue_write_service.SERVICE_POST_PATHS,
-            *studio_catalogue_api.LEGACY_WRITE_ROUTE_BY_API_PATH.keys(),
         }
     }
     known_endpoints = {*routes.POST_PATHS, *local_app_post_routes}

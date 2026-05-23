@@ -157,6 +157,60 @@ def run_catalogue_search_rebuild(repo_root: Path, *, write: bool) -> dict[str, A
     return payload
 
 
+def run_build_targets(context: CatalogueWriteContext, build_targets: list[dict[str, Any]]) -> dict[str, Any]:
+    if not build_targets:
+        return {
+            "ok": True,
+            "requested_count": 0,
+            "completed_count": 0,
+            "targets": [],
+            "remaining_targets": [],
+        }
+
+    target_results: list[dict[str, Any]] = []
+    for index, target in enumerate(build_targets):
+        work_id = slug_id(target.get("work_id"))
+        extra_series_ids = normalize_series_ids_value(target.get("extra_series_ids"))
+        success, payload = run_build_operation(
+            context,
+            work_id=work_id,
+            series_id="",
+            moment_id="",
+            extra_series_ids=extra_series_ids,
+            extra_work_ids=[],
+            detail_uid="",
+            force=False,
+        )
+        target_results.append(
+            {
+                "work_id": work_id,
+                "extra_series_ids": extra_series_ids,
+                "ok": success,
+                "completed_at_utc": payload.get("completed_at_utc"),
+                "error": payload.get("error"),
+            }
+        )
+        if not success:
+            return {
+                "ok": False,
+                "requested_count": len(build_targets),
+                "completed_count": index,
+                "targets": target_results,
+                "remaining_targets": build_targets[index:],
+                "error": payload.get("error"),
+                "failed_step": payload.get("failed_step"),
+            }
+
+    return {
+        "ok": True,
+        "requested_count": len(build_targets),
+        "completed_count": len(build_targets),
+        "targets": target_results,
+        "remaining_targets": [],
+        "completed_at_utc": activity.utc_now(),
+    }
+
+
 def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, str, list[str], list[str], bool]:
     work_id = str(body.get("work_id") or "").strip()
     series_id = str(body.get("series_id") or "").strip()
