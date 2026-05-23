@@ -52,9 +52,7 @@ MOMENT_SOURCE_METADATA_FIELDS = {
 }
 
 REGISTRY_FIELD_EXEMPTIONS: dict[tuple[str, str], set[str]] = {}
-SOURCE_FIELD_EXEMPTIONS: dict[tuple[str, str], set[str]] = {
-    ("work", "metadata_update"): {"notes"},
-}
+SOURCE_FIELD_EXEMPTIONS: dict[tuple[str, str], set[str]] = {}
 
 
 def fail(message: str) -> None:
@@ -510,18 +508,6 @@ def main() -> None:
                 "rebuild_search": True,
                 "generate_local_media": False,
                 "build_required": True,
-            },
-        ),
-        (
-            "series notes metadata",
-            plan_for(registry, record_family="series", fields=["notes"]),
-            {
-                "rule_id": "series_legacy_notes",
-                "artifacts": ["source-json", "studio-lookup"],
-                "generate_only": [],
-                "rebuild_search": False,
-                "generate_local_media": False,
-                "build_required": False,
             },
         ),
         (

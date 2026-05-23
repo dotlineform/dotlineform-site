@@ -25,9 +25,6 @@ from catalogue.catalogue_service_context import (
 from catalogue.catalogue_source import WORK_FIELDS, normalize_series_ids_value, normalize_status, records_from_json_source, slug_id
 
 
-WORK_UPDATE_FIELDS = tuple(field for field in WORK_FIELDS if field != "notes")
-
-
 def work_create_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -> dict[str, Any]:
     requested_work_id = body.get("work_id")
     work_update = extract_work_update(body)
@@ -316,10 +313,10 @@ def work_save_payload(context: CatalogueWriteContext, body: Mapping[str, Any]) -
 def extract_work_update(body: Mapping[str, Any]) -> dict[str, Any]:
     raw_record = body.get("record", body.get("work"))
     if raw_record is None:
-        raw_record = {field: body[field] for field in WORK_UPDATE_FIELDS if field in body}
+        raw_record = {field: body[field] for field in WORK_FIELDS if field in body}
     if not isinstance(raw_record, dict):
         raise ValueError("record must be an object")
-    unknown = sorted(str(key) for key in raw_record.keys() if str(key) not in WORK_UPDATE_FIELDS)
+    unknown = sorted(str(key) for key in raw_record.keys() if str(key) not in WORK_FIELDS)
     if unknown:
         raise ValueError(f"record contains unsupported fields: {', '.join(unknown)}")
     if not raw_record:

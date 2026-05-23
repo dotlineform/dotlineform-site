@@ -13,7 +13,6 @@
       "year": 2009,
       "year_display": "2009",
       "primary_work_id": "00635",
-      "notes": "test",
       "sort_fields": "work_id"
     },
     "002": {
@@ -25,7 +24,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": null,
-      "notes": null,
       "sort_fields": "work_id"
     },
     "003": {
@@ -37,7 +35,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00639",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "004": {
@@ -49,7 +46,6 @@
       "year": 2025,
       "year_display": "2025",
       "primary_work_id": "00533",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "005": {
@@ -61,7 +57,6 @@
       "year": 2007,
       "year_display": "2007",
       "primary_work_id": "00638",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "006": {
@@ -73,7 +68,6 @@
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "00666",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "007": {
@@ -85,7 +79,6 @@
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "00717",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "008": {
@@ -97,7 +90,6 @@
       "year": 2013,
       "year_display": "2013",
       "primary_work_id": "00729",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "009": {
@@ -109,7 +101,6 @@
       "year": 2025,
       "year_display": "2025",
       "primary_work_id": "00001",
-      "notes": "details attached to 00001",
       "sort_fields": "work_id"
     },
     "010": {
@@ -121,7 +112,6 @@
       "year": 2008,
       "year_display": "2008-10",
       "primary_work_id": "00734",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "011": {
@@ -133,7 +123,6 @@
       "year": 2025,
       "year_display": "2024-25",
       "primary_work_id": "00375",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "012": {
@@ -145,7 +134,6 @@
       "year": 2010,
       "year_display": "2010, 2016",
       "primary_work_id": "00751",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "013": {
@@ -157,7 +145,6 @@
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "00748",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "014": {
@@ -169,7 +156,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00753",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "015": {
@@ -181,7 +167,6 @@
       "year": 2007,
       "year_display": "2007",
       "primary_work_id": "00756",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "016": {
@@ -193,7 +178,6 @@
       "year": 2020,
       "year_display": "2020",
       "primary_work_id": "00781",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "017": {
@@ -205,7 +189,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00782",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "018": {
@@ -217,7 +200,6 @@
       "year": 2008,
       "year_display": "2008",
       "primary_work_id": "01633",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "019": {
@@ -229,7 +211,6 @@
       "year": 2007,
       "year_display": "2007",
       "primary_work_id": "00783",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "020": {
@@ -241,7 +222,6 @@
       "year": 2019,
       "year_display": "2019",
       "primary_work_id": "00792",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "021": {
@@ -253,7 +233,6 @@
       "year": 2010,
       "year_display": "2010",
       "primary_work_id": "00801",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "022": {
@@ -265,7 +244,6 @@
       "year": 2011,
       "year_display": "2011",
       "primary_work_id": "00806",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "023": {
@@ -277,7 +255,6 @@
       "year": 2026,
       "year_display": "2001-26",
       "primary_work_id": "00389",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "024": {
@@ -289,7 +266,6 @@
       "year": 2023,
       "year_display": "2022-23",
       "primary_work_id": "01634",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "025": {
@@ -301,7 +277,6 @@
       "year": 2017,
       "year_display": "2017",
       "primary_work_id": "00811",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "026": {
@@ -313,7 +288,6 @@
       "year": 1998,
       "year_display": "c. 1989-98",
       "primary_work_id": "00049",
-      "notes": null,
       "sort_fields": "title,work_id"
     },
     "027": {
@@ -325,7 +299,6 @@
       "year": 1998,
       "year_display": "c. 1998",
       "primary_work_id": "00226",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "028": {
@@ -337,7 +310,6 @@
       "year": 1996,
       "year_display": "1996",
       "primary_work_id": "00219",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "029": {
@@ -349,7 +321,6 @@
       "year": 2008,
       "year_display": "2008",
       "primary_work_id": "00813",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "030": {
@@ -361,7 +332,6 @@
       "year": 2004,
       "year_display": "2004",
       "primary_work_id": "00391",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "031": {
@@ -373,7 +343,6 @@
       "year": 2012,
       "year_display": "2012",
       "primary_work_id": "00830",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "032": {
@@ -385,7 +354,6 @@
       "year": 2016,
       "year_display": "2016",
       "primary_work_id": "00833",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "033": {
@@ -397,7 +365,6 @@
       "year": 2011,
       "year_display": "2011",
       "primary_work_id": "00849",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "034": {
@@ -409,7 +376,6 @@
       "year": 2017,
       "year_display": "2017, 2022",
       "primary_work_id": "00851",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "035": {
@@ -421,7 +387,6 @@
       "year": 2020,
       "year_display": "2020",
       "primary_work_id": "00867",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "036": {
@@ -433,7 +398,6 @@
       "year": 2025,
       "year_display": "2024-25",
       "primary_work_id": "00361",
-      "notes": "more works to publish",
       "sort_fields": "work_id"
     },
     "037": {
@@ -445,7 +409,6 @@
       "year": 1989,
       "year_display": "1989-2008",
       "primary_work_id": "00872",
-      "notes": null,
       "sort_fields": "year,work_id"
     },
     "038": {
@@ -457,7 +420,6 @@
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "00901",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "039": {
@@ -469,7 +431,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00919",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "040": {
@@ -481,7 +442,6 @@
       "year": 2010,
       "year_display": "2010, 2012",
       "primary_work_id": "00936",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "041": {
@@ -493,7 +453,6 @@
       "year": 2009,
       "year_display": "2009",
       "primary_work_id": "00937",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "042": {
@@ -505,7 +464,6 @@
       "year": 2021,
       "year_display": "2021",
       "primary_work_id": "00949",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "043": {
@@ -517,7 +475,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00455",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "044": {
@@ -529,7 +486,6 @@
       "year": 2010,
       "year_display": "2010",
       "primary_work_id": "00456",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "045": {
@@ -541,7 +497,6 @@
       "year": 2016,
       "year_display": "2014-16",
       "primary_work_id": "01017",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "046": {
@@ -553,7 +508,6 @@
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "01037",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "047": {
@@ -565,7 +519,6 @@
       "year": 2012,
       "year_display": "2012",
       "primary_work_id": "01038",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "048": {
@@ -577,7 +530,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01044",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "049": {
@@ -589,7 +541,6 @@
       "year": 2012,
       "year_display": "2012",
       "primary_work_id": "01046",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "050": {
@@ -601,7 +552,6 @@
       "year": 2025,
       "year_display": "2025",
       "primary_work_id": "01047",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "051": {
@@ -613,7 +563,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01050",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "052": {
@@ -625,7 +574,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01052",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "053": {
@@ -637,7 +585,6 @@
       "year": 2012,
       "year_display": "2012",
       "primary_work_id": "01055",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "054": {
@@ -649,7 +596,6 @@
       "year": 2021,
       "year_display": "2001-02, 2021",
       "primary_work_id": null,
-      "notes": null,
       "sort_fields": "work_id"
     },
     "055": {
@@ -661,7 +607,6 @@
       "year": 2006,
       "year_display": "2006-19",
       "primary_work_id": "01099",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "056": {
@@ -673,7 +618,6 @@
       "year": 2012,
       "year_display": "2012, 2022",
       "primary_work_id": "01107",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "057": {
@@ -685,7 +629,6 @@
       "year": 2013,
       "year_display": "2013-20",
       "primary_work_id": "01161",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "058": {
@@ -697,7 +640,6 @@
       "year": 2025,
       "year_display": "2025",
       "primary_work_id": "00346",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "059": {
@@ -709,7 +651,6 @@
       "year": 2003,
       "year_display": "2003",
       "primary_work_id": "00392",
-      "notes": null,
       "sort_fields": "title,work_id"
     },
     "060": {
@@ -721,7 +662,6 @@
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "01175",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "061": {
@@ -733,7 +673,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00464",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "062": {
@@ -745,7 +684,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00468",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "063": {
@@ -757,7 +695,6 @@
       "year": 2021,
       "year_display": "2021",
       "primary_work_id": "00535",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "064": {
@@ -769,7 +706,6 @@
       "year": 2007,
       "year_display": "2007",
       "primary_work_id": "01183",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "065": {
@@ -781,7 +717,6 @@
       "year": 2011,
       "year_display": "2011",
       "primary_work_id": "01199",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "066": {
@@ -793,7 +728,6 @@
       "year": 1990,
       "year_display": "c. 1990-92?",
       "primary_work_id": "01200",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "067": {
@@ -805,7 +739,6 @@
       "year": 2025,
       "year_display": "2017-25",
       "primary_work_id": "00403",
-      "notes": "more works to publish",
       "sort_fields": "work_id"
     },
     "068": {
@@ -817,7 +750,6 @@
       "year": 1990,
       "year_display": "1990",
       "primary_work_id": "01202",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "069": {
@@ -829,7 +761,6 @@
       "year": 2020,
       "year_display": "c. 2001-11",
       "primary_work_id": "01250",
-      "notes": "put track listing in work_prose",
       "sort_fields": "work_id"
     },
     "070": {
@@ -841,7 +772,6 @@
       "year": 2010,
       "year_display": "c. 2010?",
       "primary_work_id": "00384",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "071": {
@@ -853,7 +783,6 @@
       "year": 2025,
       "year_display": "2025",
       "primary_work_id": "01258",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "072": {
@@ -865,7 +794,6 @@
       "year": 2013,
       "year_display": "2013",
       "primary_work_id": "01363",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "073": {
@@ -877,7 +805,6 @@
       "year": 2018,
       "year_display": "2018",
       "primary_work_id": "01264",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "074": {
@@ -889,7 +816,6 @@
       "year": 2008,
       "year_display": "2008",
       "primary_work_id": "01359",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "075": {
@@ -901,7 +827,6 @@
       "year": 2009,
       "year_display": "2009",
       "primary_work_id": "00379",
-      "notes": null,
       "sort_fields": "title,work_id"
     },
     "076": {
@@ -913,7 +838,6 @@
       "year": 2011,
       "year_display": "2011",
       "primary_work_id": "00469",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "077": {
@@ -925,7 +849,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01367",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "078": {
@@ -937,7 +860,6 @@
       "year": 2021,
       "year_display": "2021",
       "primary_work_id": "01372",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "079": {
@@ -949,7 +871,6 @@
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "01377",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "080": {
@@ -961,7 +882,6 @@
       "year": 2005,
       "year_display": "2005",
       "primary_work_id": "01393",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "081": {
@@ -973,7 +893,6 @@
       "year": 2020,
       "year_display": "c. 2001-11",
       "primary_work_id": "00457",
-      "notes": "put track listing in work_prose",
       "sort_fields": "work_id"
     },
     "082": {
@@ -985,7 +904,6 @@
       "year": 2009,
       "year_display": "2009",
       "primary_work_id": "00625",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "083": {
@@ -997,7 +915,6 @@
       "year": 2008,
       "year_display": "2008",
       "primary_work_id": "01498",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "084": {
@@ -1009,7 +926,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00520",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "085": {
@@ -1021,7 +937,6 @@
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "01394",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "086": {
@@ -1033,7 +948,6 @@
       "year": 2021,
       "year_display": "2021",
       "primary_work_id": "01400",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "087": {
@@ -1045,7 +959,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00516",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "088": {
@@ -1057,7 +970,6 @@
       "year": 2016,
       "year_display": "2016",
       "primary_work_id": "00458",
-      "notes": "add details",
       "sort_fields": "work_id"
     },
     "089": {
@@ -1069,7 +981,6 @@
       "year": 2010,
       "year_display": "c. 2010?, 2022",
       "primary_work_id": "00127",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "090": {
@@ -1081,7 +992,6 @@
       "year": 2012,
       "year_display": "2012-13",
       "primary_work_id": "01401",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "091": {
@@ -1093,7 +1003,6 @@
       "year": 2003,
       "year_display": "2003",
       "primary_work_id": "00388",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "092": {
@@ -1105,7 +1014,6 @@
       "year": 2004,
       "year_display": "1989, 2004",
       "primary_work_id": "00463",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "093": {
@@ -1117,7 +1025,6 @@
       "year": 2004,
       "year_display": "2004, 2011",
       "primary_work_id": "01417",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "094": {
@@ -1129,7 +1036,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01422",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "095": {
@@ -1141,7 +1047,6 @@
       "year": 2016,
       "year_display": "2016-17",
       "primary_work_id": "01423",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "096": {
@@ -1153,7 +1058,6 @@
       "year": 2010,
       "year_display": "2010",
       "primary_work_id": "01441",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "097": {
@@ -1165,7 +1069,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01443",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "098": {
@@ -1177,7 +1080,6 @@
       "year": 2009,
       "year_display": "2004-15",
       "primary_work_id": "00477",
-      "notes": "add dall-e versions",
       "sort_fields": "work_id"
     },
     "099": {
@@ -1189,7 +1091,6 @@
       "year": 1994,
       "year_display": "1994",
       "primary_work_id": "00540",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "100": {
@@ -1201,7 +1102,6 @@
       "year": 2013,
       "year_display": "2013",
       "primary_work_id": "00459",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "101": {
@@ -1213,7 +1113,6 @@
       "year": 2013,
       "year_display": "2013",
       "primary_work_id": "00460",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "102": {
@@ -1225,7 +1124,6 @@
       "year": 2024,
       "year_display": "2024-26",
       "primary_work_id": "00373",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "103": {
@@ -1237,7 +1135,6 @@
       "year": 1995,
       "year_display": "1995",
       "primary_work_id": "01447",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "104": {
@@ -1249,7 +1146,6 @@
       "year": 1993,
       "year_display": "1991-93",
       "primary_work_id": "00160",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "105": {
@@ -1261,7 +1157,6 @@
       "year": 1995,
       "year_display": "1990-95",
       "primary_work_id": "00008",
-      "notes": "works and details to publish",
       "sort_fields": "work_id"
     },
     "106": {
@@ -1273,7 +1168,6 @@
       "year": 2004,
       "year_display": "2004",
       "primary_work_id": "00581",
-      "notes": "add videos",
       "sort_fields": "work_id"
     },
     "107": {
@@ -1285,7 +1179,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01448",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "108": {
@@ -1297,7 +1190,6 @@
       "year": 2012,
       "year_display": "2012",
       "primary_work_id": "01479",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "109": {
@@ -1309,7 +1201,6 @@
       "year": 2020,
       "year_display": "2020",
       "primary_work_id": "01480",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "110": {
@@ -1321,7 +1212,6 @@
       "year": 2008,
       "year_display": "2008",
       "primary_work_id": "00553",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "111": {
@@ -1333,7 +1223,6 @@
       "year": 2013,
       "year_display": "2013",
       "primary_work_id": "01491",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "112": {
@@ -1345,7 +1234,6 @@
       "year": 2004,
       "year_display": "2004",
       "primary_work_id": "01501",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "113": {
@@ -1357,7 +1245,6 @@
       "year": 2012,
       "year_display": "2012",
       "primary_work_id": "01525",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "114": {
@@ -1369,7 +1256,6 @@
       "year": 2022,
       "year_display": "2022",
       "primary_work_id": "01530",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "115": {
@@ -1381,7 +1267,6 @@
       "year": 2001,
       "year_display": "2001-04",
       "primary_work_id": "01538",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "116": {
@@ -1393,7 +1278,6 @@
       "year": 2004,
       "year_display": "2004",
       "primary_work_id": "01580",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "117": {
@@ -1405,7 +1289,6 @@
       "year": 2025,
       "year_display": "2025",
       "primary_work_id": "01593",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "118": {
@@ -1417,7 +1300,6 @@
       "year": 2015,
       "year_display": "2009, 2015",
       "primary_work_id": "00630",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "119": {
@@ -1429,7 +1311,6 @@
       "year": 2001,
       "year_display": "2001",
       "primary_work_id": "00142",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "120": {
@@ -1441,7 +1322,6 @@
       "year": 2005,
       "year_display": "2005-07",
       "primary_work_id": "01596",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "121": {
@@ -1453,7 +1333,6 @@
       "year": 2012,
       "year_display": "2012, 2021",
       "primary_work_id": "01608",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "122": {
@@ -1465,7 +1344,6 @@
       "year": 2007,
       "year_display": "2007-08",
       "primary_work_id": "01629",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "123": {
@@ -1477,7 +1355,6 @@
       "year": 2018,
       "year_display": "2018",
       "primary_work_id": "01655",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "124": {
@@ -1489,7 +1366,6 @@
       "year": 2023,
       "year_display": "2023-24",
       "primary_work_id": "01710",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "125": {
@@ -1501,7 +1377,6 @@
       "year": 2006,
       "year_display": "2006",
       "primary_work_id": "00402",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "126": {
@@ -1513,7 +1388,6 @@
       "year": 2008,
       "year_display": "2008",
       "primary_work_id": "01720",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "127": {
@@ -1525,7 +1399,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01721",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "128": {
@@ -1537,7 +1410,6 @@
       "year": 2014,
       "year_display": "2014",
       "primary_work_id": "01732",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "129": {
@@ -1549,7 +1421,6 @@
       "year": 2012,
       "year_display": "2005-12",
       "primary_work_id": "00573",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "130": {
@@ -1561,7 +1432,6 @@
       "year": 2012,
       "year_display": "2012",
       "primary_work_id": "01735",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "131": {
@@ -1573,7 +1443,6 @@
       "year": 2018,
       "year_display": "2017-18",
       "primary_work_id": "01739",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "132": {
@@ -1585,7 +1454,6 @@
       "year": 2008,
       "year_display": "2008",
       "primary_work_id": "01744",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "133": {
@@ -1597,7 +1465,6 @@
       "year": 2006,
       "year_display": "2006",
       "primary_work_id": "01762",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "134": {
@@ -1609,7 +1476,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01768",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "135": {
@@ -1621,7 +1487,6 @@
       "year": 2019,
       "year_display": "2006-19",
       "primary_work_id": "01868",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "136": {
@@ -1633,7 +1498,6 @@
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "00546",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "137": {
@@ -1645,7 +1509,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01869",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "138": {
@@ -1657,7 +1520,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01874",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "139": {
@@ -1669,7 +1531,6 @@
       "year": 2025,
       "year_display": "2025",
       "primary_work_id": "01883",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "140": {
@@ -1681,7 +1542,6 @@
       "year": 2008,
       "year_display": "2008, 2011",
       "primary_work_id": "00615",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "141": {
@@ -1693,7 +1553,6 @@
       "year": 2013,
       "year_display": "2005-13",
       "primary_work_id": "01912",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "142": {
@@ -1705,7 +1564,6 @@
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01938",
-      "notes": null,
       "sort_fields": "work_id"
     },
     "143": {
@@ -1717,7 +1575,6 @@
       "year": 2026,
       "year_display": "2026",
       "primary_work_id": "01941",
-      "notes": null,
       "sort_fields": "work_id"
     }
   }

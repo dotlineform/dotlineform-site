@@ -20,7 +20,7 @@ Status:
 - Phase 4 in progress with Docs management, analytics tag reads, active analytics tag writes, analytics tag route shells, and explicit local Studio/public-site launchers routed through the local app migration; the old analytics tag Jekyll shells and 8787 browser fallback are retired
 - Phase 5 route migration is implemented for the current route scope: Catalogue dashboard, Analytics dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, catalogue editor, Studio home, and UI Catalogue demo shells are hosted by the local app
 - UI Catalogue demos are first-class local Studio reference surfaces because they are Studio-owned, non-mutating pages rather than public-site pages
-- Phase 6 has a manifest-backed projection contract for canonical source, public projections, Studio projections, and Docs Viewer payloads; public catalogue payloads now omit Studio-only work storage and retired series notes
+- Phase 6 has a manifest-backed projection contract for canonical source, public projections, Studio projections, and Docs Viewer payloads; public catalogue payloads now omit Studio-only work storage and retired notes keys
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -163,7 +163,7 @@ The repositories can remain public.
 Canonical data can include fields that are not published, as long as generated public projections exclude them.
 For catalogue data, [Catalogue Source Model](/docs/?scope=studio&doc=data-models-catalogue-source) already states the rule:
 
-- source-only fields such as `provenance` and legacy `notes` stay out of public projections unless an explicit runtime contract includes them
+- source-only fields such as `provenance` stay out of public projections unless an explicit runtime contract includes them; retired `notes` keys are no longer part of the work or series source schema
 
 The important boundary is:
 

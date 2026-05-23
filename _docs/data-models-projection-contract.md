@@ -44,9 +44,9 @@ Canonical source can remain in a public repo while generated public projections 
 
 Catalogue public builders must treat canonical source JSON as input, not as a browser payload.
 The current manifest-backed leak rule covers source media path fields such as `project_folder`, `project_subfolder`, `project_filename`, `details_subfolder`, `source_image_file`, and `provenance`.
-It also treats work `storage` and retired series `notes` as source-only.
+It also treats work `storage` and any retired `notes` keys as forbidden in public output.
 `storage` remains available to Studio through the Studio-only `assets/studio/data/work_storage_index.json` projection; public catalogue work records, public indexes, and catalogue search must not publish it.
-Series `notes` is a legacy source field that has been superseded by catalogue prose Markdown files, so public series projections must not publish it.
+Work and series `notes` are no longer source-schema fields; catalogue prose Markdown files own narrative text.
 
 Catalogue search is allowed to include selected Studio-derived tag labels or terms when the search builder documents the transform.
 That does not make the tag registry, aliases, assignments, or full Studio lookup payloads public projections.

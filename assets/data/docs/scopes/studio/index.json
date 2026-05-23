@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T22:10:03Z",
+  "generated_at": "2026-05-23T22:17:41Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -601,7 +601,7 @@
       "source_path": "data-models-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-projection-contract.json",
-      "content_text_length": 8799
+      "content_text_length": 8777
     },
     {
       "scope": "studio",
@@ -1912,7 +1912,7 @@
       "source_path": "scripts-verify-catalogue-field-registry.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-verify-catalogue-field-registry.json",
-      "content_text_length": 2807
+      "content_text_length": 2783
     },
     {
       "scope": "studio",
@@ -3089,7 +3089,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 27049,
+      "content_text_length": 27105,
       "ui_status": "in-progress"
     },
     {
@@ -3621,7 +3621,7 @@
       "source_path": "data-models-catalogue-source.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-catalogue-source",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-catalogue-source.json",
-      "content_text_length": 10330
+      "content_text_length": 10497
     },
     {
       "scope": "studio",

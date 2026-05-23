@@ -1023,7 +1023,6 @@ def main() -> None:
                     "series_type": coerce_string(series_record.get("series_type")),
                     "year": year,
                     "year_display": year_display,
-                    "notes": coerce_string(series_record.get("notes")),
                     "project_folders": series_project_folders_by_id.get(series_id, []),
                 })
 

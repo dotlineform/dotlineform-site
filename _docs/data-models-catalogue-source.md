@@ -92,7 +92,8 @@ Other work source-model notes:
 - `series_ids` is an ordered array; the first item is the primary series for work-level context.
 - `width_px` and `height_px` are source metadata once measured, but they are generator/media-maintained rather than normal user-editable metadata.
 - work prose is ID-derived from `_docs_catalogue/works/<work_id>.md`; source records no longer carry a prose filename override field.
-- source-only fields such as `notes` and `provenance` stay out of public projections unless an explicit runtime contract includes them.
+- source-only fields such as `provenance` stay out of public projections unless an explicit runtime contract includes them.
+- retired `notes` fields are no longer part of the work or series source schema; use `_docs_catalogue/works/` and `_docs_catalogue/series/` Markdown prose for catalogue narrative text.
 
 ### Work Detail Source Records
 

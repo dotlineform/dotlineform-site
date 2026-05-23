@@ -7,8 +7,7 @@ const SERIES_FIELD_DEFINITIONS = Object.freeze({
   year: Object.freeze({ key: "year", label: "year", type: "number", step: "1" }),
   year_display: Object.freeze({ key: "year_display", label: "year display", type: "text" }),
   primary_work_id: Object.freeze({ key: "primary_work_id", label: "primary work id", type: "text" }),
-  sort_fields: Object.freeze({ key: "sort_fields", label: "sort fields", type: "text" }),
-  notes: Object.freeze({ key: "notes", label: "notes", type: "textarea" })
+  sort_fields: Object.freeze({ key: "sort_fields", label: "sort fields", type: "text" })
 });
 
 const SERIES_EDITABLE_FIELDS = Object.freeze([
@@ -19,8 +18,7 @@ const SERIES_EDITABLE_FIELDS = Object.freeze([
   SERIES_FIELD_DEFINITIONS.year,
   SERIES_FIELD_DEFINITIONS.year_display,
   SERIES_FIELD_DEFINITIONS.primary_work_id,
-  SERIES_FIELD_DEFINITIONS.sort_fields,
-  SERIES_FIELD_DEFINITIONS.notes
+  SERIES_FIELD_DEFINITIONS.sort_fields
 ]);
 
 const NEW_SERIES_EDITABLE_FIELDS = Object.freeze([
@@ -29,8 +27,7 @@ const NEW_SERIES_EDITABLE_FIELDS = Object.freeze([
   SERIES_FIELD_DEFINITIONS.series_type,
   SERIES_FIELD_DEFINITIONS.year,
   SERIES_FIELD_DEFINITIONS.year_display,
-  SERIES_FIELD_DEFINITIONS.sort_fields,
-  SERIES_FIELD_DEFINITIONS.notes
+  SERIES_FIELD_DEFINITIONS.sort_fields
 ]);
 
 const SERIES_READONLY_FIELDS = Object.freeze([
@@ -113,7 +110,6 @@ function buildSeriesRecordFromDraft(draft, options = {}) {
     ? options.primaryWorkId
     : normalizeWorkId(draft.primary_work_id) || null;
   record.sort_fields = normalizeText(draft.sort_fields) || null;
-  record.notes = normalizeText(draft.notes) || null;
   return record;
 }
 

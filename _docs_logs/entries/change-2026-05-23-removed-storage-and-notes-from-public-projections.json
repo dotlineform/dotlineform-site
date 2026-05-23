@@ -10,7 +10,7 @@
     "build",
     "studio"
   ],
-  "summary": "Tightened the projection contract so public catalogue payloads no longer publish work storage or retired series notes, while keeping storage available through the Studio-only work storage index.",
+  "summary": "Tightened the projection contract so public catalogue payloads no longer publish work storage or retired notes keys, while keeping storage available through the Studio-only work storage index.",
   "source": {
     "file": "_docs/local-studio-app-implementation-plan.md",
     "archive": "change-request"

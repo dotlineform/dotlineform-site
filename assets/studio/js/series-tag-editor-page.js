@@ -34,7 +34,6 @@ async function initSeriesTagEditorPage() {
   const sortFieldsEl = document.getElementById("seriesTagEditorSortFields");
   const primaryWorkEl = document.getElementById("seriesTagEditorPrimaryWork");
   const foldersEl = document.getElementById("seriesTagEditorFolders");
-  const notesEl = document.getElementById("seriesTagEditorNotes");
   const mediaFigureEl = document.getElementById("seriesTagEditorMedia");
   const mediaLinkEl = document.getElementById("seriesTagEditorMediaLink");
   const mediaImgEl = document.getElementById("seriesTagEditorMediaImg");
@@ -206,7 +205,6 @@ async function initSeriesTagEditorPage() {
 
       const folders = Array.isArray(row.project_folders) ? row.project_folders.filter(Boolean) : [];
       foldersEl.textContent = folders.length ? folders.join(", ") : textOrDash(row.project_folders);
-      notesEl.textContent = textOrDash(row.notes);
       defaultMediaWorkId = primaryWorkId;
       defaultMediaTitle = seriesTitle;
       currentMediaWorkId = "";

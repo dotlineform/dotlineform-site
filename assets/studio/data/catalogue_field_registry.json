@@ -350,21 +350,6 @@
       }
     },
     {
-      "id": "series_legacy_notes",
-      "record_family": "series",
-      "operation": "metadata_update",
-      "fields": ["notes"],
-      "current": {
-        "artifacts": ["source-json", "studio-lookup", "series-page", "series-json", "series-index-json", "catalogue-search"],
-        "fallback": false
-      },
-      "target": {
-        "artifacts": ["source-json", "studio-lookup"],
-        "fallback": false,
-        "reason": "Series notes are legacy Studio/source metadata; public series prose comes from Markdown source files."
-      }
-    },
-    {
       "id": "moment_identity",
       "record_family": "moment",
       "operation": "create_delete_identity",

@@ -307,7 +307,6 @@ def series_tag_editor_view(version: str, repo_root: Path) -> str:
                 <div class="page__row" style="display:none;"><span id="seriesTagEditorSortFields">-</span></div>
                 <div class="page__row" style="display:none;"><span id="seriesTagEditorPrimaryWork">-</span></div>
                 <div class="page__row">/<span id="seriesTagEditorFolders">-</span></div>
-                <div class="page__row"><span id="seriesTagEditorNotes">-</span></div>
               </div>
             </section>
           </header>

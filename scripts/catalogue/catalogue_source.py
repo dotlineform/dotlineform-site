@@ -51,7 +51,6 @@ WORK_FIELDS = [
     "medium_type",
     "medium_caption",
     "storage_location",
-    "notes",
     "duration",
     "depth_cm",
     "width_px",
@@ -71,7 +70,6 @@ SERIES_FIELDS = [
     "year",
     "year_display",
     "primary_work_id",
-    "notes",
     "sort_fields",
 ]
 
