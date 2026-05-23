@@ -10,6 +10,7 @@ viewable: true
 # Local Setup
 
 This guide centralizes the current local toolchain needed to run the Python scripts in this repo and to verify the Jekyll site locally.
+
 For cloud-hosted development guidance, see [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments).
 For dependency-role guidance across local and cloud environments, see [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies).
 

@@ -67,6 +67,8 @@ SemanticRefToken = Struct.new(
   keyword_init: true
 )
 
+class FrontMatterSyntaxError < StandardError; end
+
 class DocsDataBuilder
   FRONT_MATTER_PATTERN = /\A---\s*\n(.*?)\n---\s*\n?/m.freeze
   MEDIA_TOKEN_PATTERN = /\[\[media:(.+?)\]\]/.freeze
@@ -276,6 +278,24 @@ class DocsDataBuilder
     front_matter = YAML.safe_load(match[1], permitted_classes: [Date, Time], aliases: false) || {}
     body = raw.sub(FRONT_MATTER_PATTERN, "")
     [front_matter, body]
+  rescue Psych::SyntaxError => error
+    raise FrontMatterSyntaxError, front_matter_syntax_error(path, error)
+  end
+
+  def front_matter_syntax_error(path, error)
+    display_path = begin
+      path.relative_path_from(Pathname.pwd).to_s
+    rescue ArgumentError
+      path.to_s
+    end
+    location = [
+      ("line #{error.line}" if error.respond_to?(:line) && error.line),
+      ("column #{error.column}" if error.respond_to?(:column) && error.column)
+    ].compact.join(" ")
+    detail = error.respond_to?(:problem) && error.problem ? error.problem : error.message
+    message = "problem with front-matter on doc #{display_path}"
+    message += " at #{location}" unless location.empty?
+    "#{message}: #{detail}"
   end
 
   def unpublished_doc?(front_matter)
@@ -1498,19 +1518,24 @@ end
 
 write_docs_viewer_browser_config(scope_configs) if options[:write]
 
-selected_scopes.each do |config|
-  builder = DocsDataBuilder.new(
-    scope_id: config.scope_id,
-    source_dir: options[:source] || config.source,
-    output_dir: options[:output] || config.output,
-    viewer_base_url: options[:viewer_base_url] || config.viewer_base_url,
-    include_scope_param: config.include_scope_param,
-    allow_nested_source: config.allow_nested_source,
-    non_loadable_doc_ids: config.non_loadable_doc_ids,
-    manage_only_tree_root_ids: config.manage_only_tree_root_ids,
-    show_updated_date: config.show_updated_date,
-    allow_unresolved_parent_ids: config.allow_unresolved_parent_ids,
-    only_doc_ids: options[:only_doc_ids]
-  )
-  builder.run(write: options[:write])
+begin
+  selected_scopes.each do |config|
+    builder = DocsDataBuilder.new(
+      scope_id: config.scope_id,
+      source_dir: options[:source] || config.source,
+      output_dir: options[:output] || config.output,
+      viewer_base_url: options[:viewer_base_url] || config.viewer_base_url,
+      include_scope_param: config.include_scope_param,
+      allow_nested_source: config.allow_nested_source,
+      non_loadable_doc_ids: config.non_loadable_doc_ids,
+      manage_only_tree_root_ids: config.manage_only_tree_root_ids,
+      show_updated_date: config.show_updated_date,
+      allow_unresolved_parent_ids: config.allow_unresolved_parent_ids,
+      only_doc_ids: options[:only_doc_ids]
+    )
+    builder.run(write: options[:write])
+  end
+rescue FrontMatterSyntaxError => error
+  warn error.message
+  exit 1
 end

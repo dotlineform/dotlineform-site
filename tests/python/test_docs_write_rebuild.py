@@ -249,6 +249,29 @@ def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
     assert calls == [["/tmp/bundle", "exec", "ruby", "scripts/build_docs.rb", "--scope", "studio", "--write"]]
 
 
+def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
+    original_bundle = with_fake_bundle()
+    original_run = write_rebuild.subprocess.run
+
+    def fake_run(_command, **_kwargs):
+        return Completed(returncode=1, stderr="problem with front-matter on doc _docs/bad.md at line 7 column 1: could not find expected ':'")
+
+    write_rebuild.subprocess.run = fake_run
+    try:
+        with tempfile.TemporaryDirectory() as temp_path:
+            try:
+                write_rebuild.rebuild_scope_outputs(Path(temp_path), "studio")
+            except RuntimeError as exc:
+                message = str(exc)
+            else:
+                raise AssertionError("Expected rebuild failure to propagate")
+    finally:
+        write_rebuild.subprocess.run = original_run
+        write_rebuild.detect_bundle_bin = original_bundle
+
+    assert message == "problem with front-matter on doc _docs/bad.md at line 7 column 1: could not find expected ':'"
+
+
 def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
     events: list[tuple[str, str, list[str]]] = []
     original_set = write_rebuild.set_watch_suppressions
@@ -417,6 +440,7 @@ def main() -> None:
     test_rebuild_scope_outputs_passes_targeted_docs_command()
     test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing()
     test_rebuild_scope_outputs_skips_empty_targeted_search()
+    test_rebuild_scope_outputs_preserves_front_matter_failure_message()
     test_perform_source_write_and_rebuild_marks_pending_then_complete()
     test_perform_source_write_and_rebuild_clears_pending_on_exception()
     test_rebuild_all_docs_outputs_preserves_command_sequence()

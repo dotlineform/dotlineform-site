@@ -24,6 +24,7 @@ from docs_watch_suppression import (
 )
 
 DOCS_BUILDER_DIAGNOSTICS_PREFIX = "Docs builder diagnostics: "
+FRONT_MATTER_ERROR_PREFIX = "problem with front-matter on doc "
 
 
 def detect_bundle_bin() -> Optional[str]:
@@ -155,6 +156,13 @@ def run_rebuild_command(command: list[str], repo_root: Path) -> Dict[str, Any]:
     }
 
 
+def rebuild_failure_message(prefix: str, detail: str) -> str:
+    clean_detail = str(detail or "").strip()
+    if clean_detail.startswith(FRONT_MATTER_ERROR_PREFIX):
+        return clean_detail
+    return f"{prefix}: {clean_detail}"
+
+
 def rebuild_scope_outputs(
     repo_root: Path,
     scope: str,
@@ -223,7 +231,7 @@ def rebuild_scope_outputs(
             search_diagnostics["elapsed_seconds"] = step["elapsed_seconds"]
         if step["returncode"] != 0:
             detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
-            raise RuntimeError(f"rebuild failed for {scope}: {detail}")
+            raise RuntimeError(rebuild_failure_message(f"rebuild failed for {scope}", detail))
     return {
         "ok": True,
         "steps": steps,
@@ -321,7 +329,7 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
             search_diagnostics.append(diagnostics)
         if step["returncode"] != 0:
             detail = step["stderr"] or step["stdout"] or f"exit {step['returncode']}"
-            raise RuntimeError(f"docs rebuild failed: {detail}")
+            raise RuntimeError(rebuild_failure_message("docs rebuild failed", detail))
     return {
         "ok": True,
         "steps": steps,

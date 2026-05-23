@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-89209510f19cc006b26d7f66836fae37",
-    "generated_at_utc": "2026-05-23T16:11:07Z",
+    "version": "blake2b-a57a31a794c708d39e1ad1d7de0a23e9",
+    "generated_at_utc": "2026-05-23T16:21:58Z",
     "count": 294
   },
   "entries": [
@@ -1154,25 +1154,6 @@
       "search_text": "ui-primitive-input ui primitive input input primitive ui catalogue catalogue 2026-05-15 2026 05 15"
     },
     {
-      "id": "local-setup",
-      "kind": "doc",
-      "title": "Local Setup",
-      "href": "/docs/?scope=studio&doc=local-setup",
-      "last_updated": "2026-05-19",
-      "display_meta": "2026-05-19",
-      "search_terms": [
-        "local-setup",
-        "local",
-        "setup",
-        "local setup",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "local-setup local setup local setup 2026-05-19 2026 05 19"
-    },
-    {
       "id": "modal-composition-migration-tracker",
       "kind": "doc",
       "title": "Modal Composition Migration Tracker",
@@ -1463,27 +1444,6 @@
         "00"
       ],
       "search_text": "tag-groups tag groups tag groups analytics 2026-05-09 16:00 2026 05 09 16 00"
-    },
-    {
-      "id": "user-guide",
-      "kind": "doc",
-      "title": "User Guide",
-      "href": "/docs/?scope=studio&doc=user-guide",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
-      "search_terms": [
-        "user-guide",
-        "user",
-        "guide",
-        "user guide",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "user-guide user guide user guide 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "local-setup-toolchain",
@@ -2885,24 +2845,6 @@
       "search_text": "catalogue-series-editor catalogue series editor catalogue series editor user guide user guide 2026-05-22 2026 05 22"
     },
     {
-      "id": "config",
-      "kind": "doc",
-      "title": "Config",
-      "href": "/docs/?scope=studio&doc=config",
-      "last_updated": "2026-05-13 18:15",
-      "display_meta": "2026-05-13 18:15",
-      "search_terms": [
-        "config",
-        "2026-05-13 18:15",
-        "2026",
-        "05",
-        "13",
-        "18",
-        "15"
-      ],
-      "search_text": "config 2026-05-13 18:15 2026 05 13 18 15"
-    },
-    {
       "id": "docs-viewer",
       "kind": "doc",
       "title": "Docs Viewer",
@@ -3209,24 +3151,6 @@
       "search_text": "ui-primitive-modal-shell ui primitive modal shell modal shell primitive ui catalogue catalogue 2026-05-15 2026 05 15"
     },
     {
-      "id": "analytics",
-      "kind": "doc",
-      "title": "Analytics",
-      "href": "/docs/?scope=studio&doc=analytics",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
-      "search_terms": [
-        "analytics",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "analytics 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
       "id": "scripts-main-pipeline",
       "kind": "doc",
       "title": "Build Catalogue",
@@ -3526,6 +3450,24 @@
         "22"
       ],
       "search_text": "studio-activity studio activity studio activity 2026-05-22 2026 05 22"
+    },
+    {
+      "id": "analytics",
+      "kind": "doc",
+      "title": "Analytics",
+      "href": "/docs/?scope=studio&doc=analytics",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "analytics",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "analytics 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "bulk-add-work",
@@ -4208,6 +4150,27 @@
       "search_text": "docs-viewer-semantic-references docs viewer semantic references semantic references docs viewer 2026-05-18 2026 05 18"
     },
     {
+      "id": "data-sharing",
+      "kind": "doc",
+      "title": "Data Sharing",
+      "href": "/docs/?scope=studio&doc=data-sharing",
+      "last_updated": "2026-05-13 17:16",
+      "display_meta": "2026-05-13 17:16",
+      "search_terms": [
+        "data-sharing",
+        "data",
+        "sharing",
+        "data sharing",
+        "2026-05-13 17:16",
+        "2026",
+        "05",
+        "13",
+        "17",
+        "16"
+      ],
+      "search_text": "data-sharing data sharing data sharing 2026-05-13 17:16 2026 05 13 17 16"
+    },
+    {
       "id": "search-studio-v1-index-shape",
       "kind": "doc",
       "title": "Docs Scope Index Shape",
@@ -4517,6 +4480,24 @@
       "search_text": "scripts-docs-import scripts docs import documents returned package script documents returned package script docs viewer viewer 2026-05-19 14:30 2026 05 19 14 30"
     },
     {
+      "id": "llm",
+      "kind": "doc",
+      "title": "LLM",
+      "href": "/docs/?scope=studio&doc=llm",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "llm",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "llm 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
       "id": "search-validation-checklist",
       "kind": "doc",
       "title": "Search Validation Checklist",
@@ -4765,6 +4746,24 @@
       "search_text": "new-pipeline-web-system-spec new pipeline web system spec web system specification specification 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
+      "id": "architecture",
+      "kind": "doc",
+      "title": "Architecture",
+      "href": "/docs/?scope=studio&doc=architecture",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "architecture",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "architecture 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
       "id": "search-catalogue-targeted-plan",
       "kind": "doc",
       "title": "Catalogue Targeted Search Plan",
@@ -4937,6 +4936,42 @@
       "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
+      "id": "servers",
+      "kind": "doc",
+      "title": "Servers",
+      "href": "/docs/?scope=studio&doc=servers",
+      "last_updated": "2026-05-06 20:58",
+      "display_meta": "2026-05-06 20:58",
+      "search_terms": [
+        "servers",
+        "2026-05-06 20:58",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "58"
+      ],
+      "search_text": "servers 2026-05-06 20:58 2026 05 06 20 58"
+    },
+    {
+      "id": "config",
+      "kind": "doc",
+      "title": "Config",
+      "href": "/docs/?scope=studio&doc=config",
+      "last_updated": "2026-05-13 18:15",
+      "display_meta": "2026-05-13 18:15",
+      "search_terms": [
+        "config",
+        "2026-05-13 18:15",
+        "2026",
+        "05",
+        "13",
+        "18",
+        "15"
+      ],
+      "search_text": "config 2026-05-13 18:15 2026 05 13 18 15"
+    },
+    {
       "id": "import-export",
       "kind": "doc",
       "title": "Import/Export Historical Notes",
@@ -4986,24 +5021,6 @@
       "search_text": "config-pipeline-json config pipeline json pipeline config json catalogue 2026-05-12 18:45 2026 05 12 18 45"
     },
     {
-      "id": "servers",
-      "kind": "doc",
-      "title": "Servers",
-      "href": "/docs/?scope=studio&doc=servers",
-      "last_updated": "2026-05-06 20:58",
-      "display_meta": "2026-05-06 20:58",
-      "search_terms": [
-        "servers",
-        "2026-05-06 20:58",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "58"
-      ],
-      "search_text": "servers 2026-05-06 20:58 2026 05 06 20 58"
-    },
-    {
       "id": "docs-viewer-draft-publishing-spec",
       "kind": "doc",
       "title": "Viewability Workflow Spec",
@@ -5030,24 +5047,6 @@
         "20"
       ],
       "search_text": "docs-viewer-draft-publishing-spec docs viewer draft publishing spec viewability workflow spec viewability workflow docs viewer 2026-05-13 20:20 2026 05 13 20"
-    },
-    {
-      "id": "architecture",
-      "kind": "doc",
-      "title": "Architecture",
-      "href": "/docs/?scope=studio&doc=architecture",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
-      "search_terms": [
-        "architecture",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "architecture 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "scripts-docs-management-server",
@@ -5149,6 +5148,27 @@
         "01"
       ],
       "search_text": "new-pipeline-studio-implementation-plan new pipeline studio implementation plan studio implementation plan 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "user-guide",
+      "kind": "doc",
+      "title": "User Guide",
+      "href": "/docs/?scope=studio&doc=user-guide",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "user-guide",
+        "user",
+        "guide",
+        "user guide",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "user-guide user guide user guide 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "scripts-docs-management-server-generated-reads",
@@ -5359,6 +5379,25 @@
       "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher docs viewer viewer 2026-05-19 14:30 2026 05 19 14 30"
     },
     {
+      "id": "local-setup",
+      "kind": "doc",
+      "title": "Local Setup",
+      "href": "/docs/?scope=studio&doc=local-setup",
+      "last_updated": "2026-05-19",
+      "display_meta": "2026-05-19",
+      "search_terms": [
+        "local-setup",
+        "local",
+        "setup",
+        "local setup",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "local-setup local setup local setup 2026-05-19 2026 05 19"
+    },
+    {
       "id": "config-search-build-json",
       "kind": "doc",
       "title": "Search Build Config JSON",
@@ -5409,25 +5448,23 @@
       "search_text": "data-models-catalogue-indexes data models catalogue indexes catalogue indexes and payloads and payloads 2026-05-19 2026 05 19"
     },
     {
-      "id": "data-sharing",
+      "id": "change-requests",
       "kind": "doc",
-      "title": "Data Sharing",
-      "href": "/docs/?scope=studio&doc=data-sharing",
-      "last_updated": "2026-05-13 17:16",
-      "display_meta": "2026-05-13 17:16",
+      "title": "Change Requests",
+      "href": "/docs/?scope=studio&doc=change-requests",
+      "last_updated": "2026-05-19",
+      "display_meta": "2026-05-19",
       "search_terms": [
-        "data-sharing",
-        "data",
-        "sharing",
-        "data sharing",
-        "2026-05-13 17:16",
+        "change-requests",
+        "change",
+        "requests",
+        "change requests",
+        "2026-05-19",
         "2026",
         "05",
-        "13",
-        "17",
-        "16"
+        "19"
       ],
-      "search_text": "data-sharing data sharing data sharing 2026-05-13 17:16 2026 05 13 17 16"
+      "search_text": "change-requests change requests change requests 2026-05-19 2026 05 19"
     },
     {
       "id": "docs-viewer-import-source-registry-spec",
@@ -5631,24 +5668,6 @@
       "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-19 14:30 2026 05 19 14 30"
     },
     {
-      "id": "llm",
-      "kind": "doc",
-      "title": "LLM",
-      "href": "/docs/?scope=studio&doc=llm",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
-      "search_terms": [
-        "llm",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "llm 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
       "id": "new-pipeline-refine-search",
       "kind": "doc",
       "title": "Search Plan",
@@ -5694,25 +5713,6 @@
         "45"
       ],
       "search_text": "config-docs-viewer config docs viewer docs viewer config docs viewer 2026-05-14 14:45 2026 05 14 45"
-    },
-    {
-      "id": "change-requests",
-      "kind": "doc",
-      "title": "Change Requests",
-      "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-19",
-      "display_meta": "2026-05-19",
-      "search_terms": [
-        "change-requests",
-        "change",
-        "requests",
-        "change requests",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "change-requests change requests change requests 2026-05-19 2026 05 19"
     },
     {
       "id": "new-pipeline",
