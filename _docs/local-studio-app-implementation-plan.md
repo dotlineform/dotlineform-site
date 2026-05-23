@@ -2,7 +2,7 @@
 doc_id: local-studio-app-implementation-plan
 title: Local Studio App Implementation Plan
 added_date: 2026-05-22
-last_updated: 2026-05-22
+last_updated: 2026-05-23
 parent_id: local-studio-app
 sort_order: 1000
 published: true
@@ -21,17 +21,16 @@ Status:
 - Phase 0, Phase 1, and Phase 1A are implemented
 - Phase 2 is implemented
 - Phase 3 is implemented for Docs Viewer manage mode and the Docs Broken Links report replacement
-- Phase 4 is in progress with Docs management, Data Sharing, analytics tag routes, Studio audit routes, Project State report, Thumbnail Quality preview, and active catalogue editor APIs consolidated into the local app server
+- Phase 4 is in progress with Docs management, Data Sharing, analytics tag routes, Studio audit routes, Project State report, Thumbnail Quality preview, active catalogue editor APIs, and explicit launcher split consolidated into the local app migration
 - Phase 5 has started with the local Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Data Sharing, Catalogue Field Registry, Studio Works, and catalogue editor route shells
 
 ## Remaining Work Snapshot
 
 Next suitable slices, in dependency order:
 
-1. Define the final launcher split so local Studio and public Jekyll preview/build are explicit commands instead of one bridge command.
-2. Broaden public-site link resolver adoption across migrated Studio routes when those routes are touched.
-3. Start the projection contract work once route and service ownership is less fluid.
-4. Defer the optional repo split decision until the publish/export contract is stable.
+1. Broaden public-site link resolver adoption across migrated Studio routes when those routes are touched.
+2. Start the projection contract work once route and service ownership is less fluid.
+3. Defer the optional repo split decision until the publish/export contract is stable.
 
 ## Lifecycle Rules
 
@@ -118,6 +117,7 @@ Current commit point:
 - Studio Audits now calls `/studio/api/audits/...` through the local app server instead of requiring the old standalone audit service URL
 - Project State now calls `/studio/api/catalogue/project-state-report` and the local Docs API through the local app server instead of requiring the old catalogue/docs sibling service URLs
 - Thumbnail Quality now calls `/studio/api/catalogue/thumbnail-quality-preview` through the local app server instead of requiring the old catalogue sibling service URL
+- Local Studio and public-site launchers are now split into explicit commands: `bin/local-studio`, `bin/public-site-preview`, and `bin/public-site-build`; `bin/dev-studio` remains a transition bridge with `JEKYLL_ENABLED=0` support
 - non-Docs write/manage APIs are intentionally still disabled or partial where not yet migrated
 
 ## Phase 0: Published Surface Cleanup
@@ -279,15 +279,15 @@ Outcomes:
 | Reuse extracted Python domain modules instead of proxying to old services by default. | partial; Docs management, Data Sharing, analytics tag routes, Studio audit routes, Project State report, Thumbnail Quality preview, and catalogue editor APIs use existing domain functions directly or in-process adapters |
 | Preserve loopback binding, CORS limits, write allowlists, backups, compact logs, and preview/apply boundaries. | partial; Docs/Data Sharing writes, analytics tag writes, Studio audit runs, Project State report runs, and Thumbnail Quality preview refreshes preserve existing guardrails, compact logs, and activity attachment where applicable |
 | Update `bin/dev-studio` to start the app server and only necessary background tasks. | partial; Docs management sibling, tag write sibling, and audit sibling retired from default startup |
-| Keep public Jekyll preview/build as an explicit separate action. | pending |
-| Define the final launcher split while keeping `bin/dev-studio` as a bridge command during migration. | pending |
+| Keep public Jekyll preview/build as an explicit separate action. | done |
+| Define the final launcher split while keeping `bin/dev-studio` as a bridge command during migration. | done |
 
 Next steps:
 
 Use the docs-management migration to establish the endpoint ownership pattern.
-`bin/dev-studio` now starts the local app server as a bridge step, but it still starts Jekyll and the remaining sibling services for unmigrated workflows.
-The long-term command boundary should be explicit: local Studio has its own app launcher, and public-site preview/publishing continues to use the normal Bundler/Jekyll commands.
-Keep `bin/dev-studio` as a compatibility bridge until route migration and public-link resolution are settled, then replace or wrap it with the final local Studio command.
+`bin/dev-studio` now starts the local app server as a bridge step, and it can still start Jekyll for transition sessions.
+The command boundary is now explicit: `bin/local-studio` starts local Studio without Jekyll, while `bin/public-site-preview` and `bin/public-site-build` run public Jekyll preview/build with `_config.yml` by default.
+Keep `bin/dev-studio` as a compatibility bridge until route migration and public-link resolution are settled, then reduce or retire it.
 Avoid a broad service merge until one migrated workflow has proven the app-server route-module shape.
 The first analytics-owned slices established read and write ownership separately: `studio_analytics_api.py` serves tag registry, aliases, assignments, and groups through `/studio/api/analytics/...`, and it now handles save-tags, tag assignment import preview/apply, tag alias import/delete/mutate preview/apply, tag registry import/mutate preview/apply, tag alias promotion preview/apply, and tag demotion preview/apply by calling the existing tag assignment, alias mutation, registry mutation, promotion/demotion, alias rewrite, assignment rewrite, atomic-write, logging, and Studio activity helpers directly.
 The migrated local-only tag views now require local analytics read endpoints instead of falling back to static `assets/studio/data/tag_*.json` paths, and `studio_config.json` no longer exposes those static tag-data paths as browser data sources.
@@ -315,6 +315,8 @@ The next catalogue refactor should remove the fake in-process `Handler` dependen
 Pick-up order: moment save first, then publication preview/apply and delete apply as separate workflow slices, then bulk save as its own slice, then remove the fake handler bridge.
 Active Local Studio Docs browser transport now uses `/studio/api/docs/...`; `127.0.0.1:8789` is no longer a browser fallback for migrated routes.
 The standalone Docs Management server entrypoint has been removed; Local Studio imports `scripts/docs/docs_management_service.py` as the dispatcher for focused Docs management modules covering context, reads, capabilities, source mutations, import, Data Sharing, source opening, and broken-links audit behavior.
+The launcher split is now explicit: `bin/local-studio` starts the local Studio app path with Jekyll disabled, `bin/public-site-preview` runs public Jekyll preview with `_config.yml`, and `bin/public-site-build` runs public Jekyll builds with `_config.yml`.
+`bin/dev-studio` remains a bridge command for transition sessions and now has a `JEKYLL_ENABLED=0` switch for local-Studio-only runs.
 
 Transition cleanup backlog:
 
@@ -332,7 +334,7 @@ Transition cleanup backlog:
 | Retire migrated Jekyll Studio route files or replace them with local-only transition redirects. | Each route family has a verified local app view and no public build dependency. | partial; analytics tag route files plus audits, project-state, thumbnail-quality, bulk-add-work, activity, and data-sharing route files retired |
 | Retire the Jekyll `/studio/` landing shell once the local app owns `/studio/`. | The public site no longer publishes Studio, and the local app home exposes the runtime navigation list. | done |
 | Recheck `main.css` and Studio CSS ownership after route retirements. | Migrated Studio surfaces no longer rely on public-site route CSS. | done; retired Docs Broken Links route CSS removed, local activity styles moved to `assets/studio/css/studio.css`, and still-public catalogue search/shared Studio shell styles left in `main.css` where their pages still load them |
-| Remove compatibility docs that describe old sibling-service startup as the normal path. | `bin/dev-studio` starts only the local app server plus genuinely required background tasks. | partial; `scripts-dev-studio` now documents the bridge-runner status and default Docs management ownership |
+| Remove compatibility docs that describe old sibling-service startup as the normal path. | `bin/dev-studio` starts only the local app server plus genuinely required background tasks. | partial; `scripts-dev-studio` now documents the explicit launcher split, bridge-runner status, and default Docs management ownership |
 | Extract remaining catalogue write behavior out of the standalone HTTP handler. | Local Studio still reuses `catalogue_write_server.Handler` in-process for bulk save, delete apply, publication preview/apply, and moment save. | partial; focused service modules now own delete preview, build preview/apply, moment preview, prose/moment import apply, work create/save, work-detail create/save, and series create/save |
 
 ## Phase 5: Route Family Migration

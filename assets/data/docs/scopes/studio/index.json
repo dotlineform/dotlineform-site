@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T16:21:57Z",
+  "generated_at": "2026-05-23T16:41:34Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -312,7 +312,7 @@
       "doc_id": "local-studio-app-implementation-plan",
       "title": "Local Studio App Implementation Plan",
       "added_date": "2026-05-22",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-23",
       "parent_id": "local-studio-app",
       "sort_order": 1000,
       "published": true,
@@ -321,7 +321,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 37517
+      "content_text_length": 37996
     },
     {
       "scope": "studio",
@@ -672,7 +672,7 @@
       "doc_id": "scripts-dev-studio",
       "title": "Dev Studio Runner",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-22 19:20",
+      "last_updated": "2026-05-23",
       "parent_id": "servers",
       "sort_order": 2000,
       "published": true,
@@ -681,7 +681,7 @@
       "source_path": "scripts-dev-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-dev-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-dev-studio.json",
-      "content_text_length": 10296
+      "content_text_length": 12403
     },
     {
       "scope": "studio",
@@ -3016,7 +3016,7 @@
       "doc_id": "site-request-studio-local-vanilla-web-app",
       "title": "Studio Local Vanilla Web App Request",
       "added_date": "2026-05-22",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-23",
       "parent_id": "change-requests",
       "sort_order": 10000,
       "published": true,
@@ -3025,7 +3025,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 25114,
+      "content_text_length": 25605,
       "ui_status": "in-progress"
     },
     {
@@ -3066,7 +3066,7 @@
       "doc_id": "local-studio-app",
       "title": "Local Studio App",
       "added_date": "2026-05-22 08:06",
-      "last_updated": "2026-05-22 08:06",
+      "last_updated": "2026-05-23",
       "parent_id": "change-requests",
       "sort_order": 11000,
       "published": true,
@@ -3075,7 +3075,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 17153
+      "content_text_length": 17261
     },
     {
       "scope": "studio",

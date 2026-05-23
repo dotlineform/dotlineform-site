@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+export JEKYLL_ENABLED="${JEKYLL_ENABLED:-0}"
+export LOCAL_STUDIO_ONLY=1
+export STUDIO_APP_ENABLED="${STUDIO_APP_ENABLED:-1}"
+export RUNNER_NAME="${RUNNER_NAME:-bin/local-studio}"
+
+exec bin/dev-studio

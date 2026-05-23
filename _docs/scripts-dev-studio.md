@@ -2,51 +2,89 @@
 doc_id: scripts-dev-studio
 title: Dev Studio Runner
 added_date: 2026-04-22
-last_updated: "2026-05-22 19:20"
+last_updated: "2026-05-23"
 parent_id: servers
 sort_order: 2000
 ---
 # Dev Studio Runner
 
-Script:
+Scripts:
 
 ```bash
 bin/dev-studio
+bin/local-studio
+bin/public-site-preview
+bin/public-site-build
 ```
 
 ## Purpose
 
-`bin/dev-studio` is the integrated transition runner for local Studio development.
-It remains the easiest command while Studio is still being moved out of Jekyll, but it is not the intended long-term command boundary.
-The target split is a local Studio app launcher plus the normal Bundler/Jekyll public-site preview command.
+Local Studio and public Jekyll preview now have explicit launcher commands.
+`bin/local-studio` is the local Studio app launcher.
+`bin/public-site-preview` and `bin/public-site-build` are public-site Jekyll commands that use `_config.yml` by default.
 
-For a new local session, it is the simplest way to:
+`bin/dev-studio` remains the integrated transition runner while Studio is still being moved out of Jekyll.
+It starts both the local Studio app and the Jekyll dev preview unless Jekyll is disabled, so it should be treated as a bridge command rather than the long-term product boundary.
+
+For a new Studio session, `bin/local-studio` is the clearest command.
+It can:
 
 - optionally refresh one or both docs/docs-search scopes before startup
 - optionally refresh the derived catalogue lookup payloads used by the catalogue editors
 - start the local Python Studio app server for migrated Studio views
-- start the Jekyll site for public-site preview and unmigrated routes during transition
 - optionally start retired standalone write services for fallback/debug runs
 - keep docs source edits synced into same-scope docs payloads and docs search while the runner is active
 
+Use `bin/public-site-preview` alongside it when local Studio links need a running public-site preview.
+
+`bin/dev-studio` adds Jekyll to the same process group for transition sessions that still need public preview and Studio services under one terminal.
 It is intended for route-shell, UI, and localhost write-flow testing. It is not the full content-generation pipeline.
 As migration proceeds, this runner should shrink rather than gain new compatibility layers.
 
-## Default Command
+## Explicit Commands
 
 Run from `dotlineform-site/`:
+
+```bash
+bin/local-studio
+```
+
+This starts the local Studio app without Jekyll.
+
+For public-site preview, run:
+
+```bash
+bin/public-site-preview
+```
+
+For a public-site build, run:
+
+```bash
+bin/public-site-build
+```
+
+`bin/public-site-build` passes any extra arguments through to Jekyll, so an isolated verification build can use:
+
+```bash
+bin/public-site-build --destination /tmp/dlf-jekyll-build
+```
+
+The bridge command remains available:
 
 ```bash
 bin/dev-studio
 ```
 
-The script:
+Each script:
 
 - changes into the repo root
 - loads `var/local/site.env` when present
 - prefers `~/.rbenv/shims/bundle` when present
 - prefers `~/miniconda3/bin/python3` when present
 - otherwise falls back to `bundle` and `python3`
+
+`bin/public-site-preview` and `bin/public-site-build` do not start Studio services.
+They are Jekyll-only public-site commands.
 
 ## Local Configuration
 
@@ -61,6 +99,11 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   default: `4000`
 - `JEKYLL_CONFIG`
   default: `_config.yml,_config.dev-studio.yml`
+- `JEKYLL_ENABLED`
+  default: `1` in `bin/dev-studio`; `bin/local-studio` sets it to `0`
+  set to `0` to skip Jekyll and run only the local Studio side of the runner
+- `LOCAL_STUDIO_ONLY`
+  internal launcher flag used by `bin/local-studio` to keep Jekyll disabled even if `var/local/site.env` has a bridge-runner override
 - `STUDIO_APP_ENABLED`
   default: `1`
   set to `0` to skip the local Python Studio app server during transition
@@ -96,6 +139,15 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 - `DOTLINEFORM_BACKUP_RETENTION`
   default: `on`
   set to `off` or `0` to skip the startup Studio backup retention cleanup
+- `PUBLIC_SITE_HOST`
+  default: `JEKYLL_HOST` when set, otherwise `127.0.0.1`
+  used by `bin/public-site-preview`
+- `PUBLIC_SITE_PORT`
+  default: `JEKYLL_PORT` when set, otherwise `4000`
+  used by `bin/public-site-preview`
+- `PUBLIC_SITE_CONFIG`
+  default: `_config.yml`
+  used by `bin/public-site-preview` and `bin/public-site-build`
 
 Example:
 
@@ -124,7 +176,7 @@ Adding a new docs scope there makes it eligible for startup docs/docs-search reb
 
 Before it starts any rebuilds or long-running servers, `bin/dev-studio` checks that the required ports are available:
 
-1. Jekyll on `JEKYLL_HOST:JEKYLL_PORT`
+1. Jekyll on `JEKYLL_HOST:JEKYLL_PORT` when `JEKYLL_ENABLED` is not `0`
 2. Local Studio App on `STUDIO_APP_HOST:STUDIO_APP_PORT` when `STUDIO_APP_ENABLED` is not `0`
 3. Catalogue Write Server on `127.0.0.1:CATALOGUE_WRITE_PORT` only when `CATALOGUE_WRITE_SERVER_ENABLED` is not `0`
 4. Audit Service on `127.0.0.1:AUDIT_SERVICE_PORT` only when `AUDIT_SERVICE_ENABLED` is not `0`
@@ -177,19 +229,46 @@ After those startup writes succeed, it starts the long-running local processes b
 
 ### Jekyll
 
-- command:
+Bridge command:
 
 ```bash
 bundle exec jekyll serve --config "$JEKYLL_CONFIG" --host "$JEKYLL_HOST" --port "$JEKYLL_PORT"
 ```
 
 - default URL: `http://127.0.0.1:4000`
-- serves the local public-site preview and unmigrated Studio routes during the transition
+- serves the local public-site preview and any still-Jekyll-hosted transition routes when `bin/dev-studio` is used
 - uses `_config.dev-studio.yml` by default as a local-only overlay to exclude generated docs/search JSON from Jekyll's watch surface
 - normal public builds that use `_config.yml` alone still include generated docs/search JSON
 - when launched through `bin/dev-studio`, the Jekyll process loads `scripts/jekyll_webrick_client_reset_filter.rb` through `RUBYOPT`
 - that filter suppresses only WEBrick `Errno::ECONNRESET` server-log entries, which are expected when the browser closes a local connection during refreshes, rebuilds, or cancelled asset loads
 - other WEBrick errors, Jekyll build warnings, and docs watcher messages remain visible
+- `bin/local-studio` disables this Jekyll process
+
+Explicit public-site preview command:
+
+```bash
+bin/public-site-preview
+```
+
+It runs:
+
+```bash
+bundle exec jekyll serve --config "$PUBLIC_SITE_CONFIG" --host "$PUBLIC_SITE_HOST" --port "$PUBLIC_SITE_PORT"
+```
+
+Explicit public-site build command:
+
+```bash
+bin/public-site-build
+```
+
+It runs:
+
+```bash
+bundle exec jekyll build --config "$PUBLIC_SITE_CONFIG"
+```
+
+Both public-site commands use `_config.yml` by default and do not start local Studio services.
 
 ### Catalogue Write Server
 
@@ -240,7 +319,7 @@ CATALOGUE_WRITE_SERVER_ENABLED=1 bin/dev-studio
 
 At startup the runner prints quick links for:
 
-- Jekyll root
+- Jekyll root when enabled
 - Local Studio App
 - Catalogue Write Server
 - Audit Service status
@@ -257,7 +336,7 @@ The runner traps `EXIT`, `INT`, and `TERM`.
 
 When you press `Ctrl+C`, it:
 
-- stops Jekyll
+- stops Jekyll when enabled
 - stops the Local Studio App when enabled
 - stops the Catalogue Write Server
 - stops the Audit Service when enabled
@@ -276,7 +355,7 @@ If any one of the child processes exits unexpectedly, the runner stops monitorin
 - rebuild public search artifacts on startup
 - start a separate frontend asset server
 - replace Jekyll as the public preview host
-- provide the final long-term launcher split; `bin/dev-studio` is still a bridge command
+- replace `bin/local-studio`, `bin/public-site-preview`, or `bin/public-site-build` as the explicit command boundary
 
 If you disable the watcher or want an explicit manual rebuild, use:
 

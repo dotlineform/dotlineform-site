@@ -2,7 +2,7 @@
 doc_id: site-request-studio-local-vanilla-web-app
 title: Studio Local Vanilla Web App Request
 added_date: 2026-05-22
-last_updated: 2026-05-22
+last_updated: 2026-05-23
 ui_status: in-progress
 parent_id: change-requests
 sort_order: 10000
@@ -17,7 +17,7 @@ Status:
 - Phase 0, Phase 1, and Phase 1A implemented
 - Phase 2 implemented
 - Phase 3 implemented for Docs Viewer manage mode
-- Phase 4 in progress with Docs management, analytics tag reads, active analytics tag writes, and analytics tag route shells routed through the local app server; the old analytics tag Jekyll shells and 8787 browser fallback are retired
+- Phase 4 in progress with Docs management, analytics tag reads, active analytics tag writes, analytics tag route shells, and explicit local Studio/public-site launchers routed through the local app migration; the old analytics tag Jekyll shells and 8787 browser fallback are retired
 - Phase 5 started with the Catalogue dashboard, Analytics dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, catalogue editor, and Studio home shells hosted by the local app and their old Jekyll shells retired
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
@@ -217,6 +217,13 @@ The end state should be clearer:
 - local Studio workflows start through a Studio app launcher
 - public-site preview and publishing use the normal Bundler/Jekyll commands
 - `bin/dev-studio` is retired or reduced to a compatibility wrapper once the route migration, public-link resolver, and service consolidation are stable
+
+Initial launcher split implemented on 2026-05-23:
+
+- `bin/local-studio` starts the local Studio app path with Jekyll disabled by default
+- `bin/public-site-preview` runs public-site Jekyll preview with `_config.yml` by default
+- `bin/public-site-build` runs public-site Jekyll build with `_config.yml` by default and passes through extra Jekyll arguments
+- `bin/dev-studio` remains a bridge command and now has a `JEKYLL_ENABLED=0` switch for local-Studio-only runs
 
 Retiring the bridge runner does not mean retiring Jekyll.
 Jekyll remains the public-site publisher and local public-site preview host.

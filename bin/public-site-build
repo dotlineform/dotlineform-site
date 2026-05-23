@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+SITE_ENV_PATH="$ROOT_DIR/var/local/site.env"
+if [ -f "$SITE_ENV_PATH" ]; then
+  set -a
+  # shellcheck source=/dev/null
+  . "$SITE_ENV_PATH"
+  set +a
+fi
+
+if [ -x "$HOME/.rbenv/shims/bundle" ]; then
+  BUNDLE_BIN="$HOME/.rbenv/shims/bundle"
+else
+  BUNDLE_BIN="${BUNDLE_BIN:-bundle}"
+fi
+
+PUBLIC_SITE_CONFIG="${PUBLIC_SITE_CONFIG:-_config.yml}"
+
+echo "Building public site from $ROOT_DIR"
+echo "Jekyll config: $PUBLIC_SITE_CONFIG"
+echo
+
+"$BUNDLE_BIN" exec jekyll build --config "$PUBLIC_SITE_CONFIG" "$@"

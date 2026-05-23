@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a57a31a794c708d39e1ad1d7de0a23e9",
-    "generated_at_utc": "2026-05-23T16:21:58Z",
+    "version": "blake2b-6fd66c92bc931edeb9c90af105c9b988",
+    "generated_at_utc": "2026-05-23T16:37:58Z",
     "count": 294
   },
   "entries": [
@@ -390,10 +390,10 @@
       "kind": "doc",
       "title": "Local Studio App Implementation Plan",
       "href": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-23",
       "parent_id": "local-studio-app",
       "parent_title": "Local Studio App",
-      "display_meta": "2026-05-22 • Local Studio App",
+      "display_meta": "2026-05-23 • Local Studio App",
       "search_terms": [
         "local-studio-app-implementation-plan",
         "local",
@@ -403,12 +403,12 @@
         "plan",
         "local studio app implementation plan",
         "local studio app",
-        "2026-05-22",
+        "2026-05-23",
         "2026",
         "05",
-        "22"
+        "23"
       ],
-      "search_text": "local-studio-app-implementation-plan local studio app implementation plan local studio app implementation plan local studio app 2026-05-22 2026 05 22"
+      "search_text": "local-studio-app-implementation-plan local studio app implementation plan local studio app implementation plan local studio app 2026-05-23 2026 05 23"
     },
     {
       "id": "local-studio-server-architecture",
@@ -929,10 +929,10 @@
       "kind": "doc",
       "title": "Dev Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-05-22 19:20",
+      "last_updated": "2026-05-23",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-22 19:20 • Servers",
+      "display_meta": "2026-05-23 • Servers",
       "search_terms": [
         "scripts-dev-studio",
         "scripts",
@@ -941,14 +941,12 @@
         "dev studio runner",
         "runner",
         "servers",
-        "2026-05-22 19:20",
+        "2026-05-23",
         "2026",
         "05",
-        "22",
-        "19",
-        "20"
+        "23"
       ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-22 19:20 2026 05 22 19 20"
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-23 2026 05 23"
     },
     {
       "id": "user-guide-docs-html-import",
@@ -4551,10 +4549,10 @@
       "kind": "doc",
       "title": "Studio Local Vanilla Web App Request",
       "href": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-23",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-22 • Change Requests",
+      "display_meta": "2026-05-23 • Change Requests",
       "search_terms": [
         "site-request-studio-local-vanilla-web-app",
         "site",
@@ -4568,12 +4566,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-22",
+        "2026-05-23",
         "2026",
         "05",
-        "22"
+        "23"
       ],
-      "search_text": "site-request-studio-local-vanilla-web-app site request studio local vanilla web app studio local vanilla web app request change requests change requests 2026-05-22 2026 05 22"
+      "search_text": "site-request-studio-local-vanilla-web-app site request studio local vanilla web app studio local vanilla web app request change requests change requests 2026-05-23 2026 05 23"
     },
     {
       "id": "tiered-dimension-policy",
@@ -4630,10 +4628,10 @@
       "kind": "doc",
       "title": "Local Studio App",
       "href": "/docs/?scope=studio&doc=local-studio-app",
-      "last_updated": "2026-05-22 08:06",
+      "last_updated": "2026-05-23",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-22 08:06 • Change Requests",
+      "display_meta": "2026-05-23 • Change Requests",
       "search_terms": [
         "local-studio-app",
         "local",
@@ -4643,14 +4641,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-22 08:06",
+        "2026-05-23",
         "2026",
         "05",
-        "22",
-        "08",
-        "06"
+        "23"
       ],
-      "search_text": "local-studio-app local studio app local studio app change requests change requests 2026-05-22 08:06 2026 05 22 08 06"
+      "search_text": "local-studio-app local studio app local studio app change requests change requests 2026-05-23 2026 05 23"
     },
     {
       "id": "scripts-project-state-report",

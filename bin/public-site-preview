@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+SITE_ENV_PATH="$ROOT_DIR/var/local/site.env"
+if [ -f "$SITE_ENV_PATH" ]; then
+  set -a
+  # shellcheck source=/dev/null
+  . "$SITE_ENV_PATH"
+  set +a
+fi
+
+if [ -x "$HOME/.rbenv/shims/bundle" ]; then
+  BUNDLE_BIN="$HOME/.rbenv/shims/bundle"
+else
+  BUNDLE_BIN="${BUNDLE_BIN:-bundle}"
+fi
+
+JEKYLL_WEBRICK_FILTER="$ROOT_DIR/scripts/jekyll_webrick_client_reset_filter.rb"
+PUBLIC_SITE_HOST="${PUBLIC_SITE_HOST:-${JEKYLL_HOST:-127.0.0.1}}"
+PUBLIC_SITE_PORT="${PUBLIC_SITE_PORT:-${JEKYLL_PORT:-4000}}"
+PUBLIC_SITE_CONFIG="${PUBLIC_SITE_CONFIG:-_config.yml}"
+PUBLIC_SITE_RUBYOPT="-r$JEKYLL_WEBRICK_FILTER"
+if [ -n "${RUBYOPT:-}" ]; then
+  PUBLIC_SITE_RUBYOPT="$PUBLIC_SITE_RUBYOPT $RUBYOPT"
+fi
+
+echo "Starting public-site preview from $ROOT_DIR"
+echo "Public site: http://$PUBLIC_SITE_HOST:$PUBLIC_SITE_PORT"
+echo "Jekyll config: $PUBLIC_SITE_CONFIG"
+echo
+
+RUBYOPT="$PUBLIC_SITE_RUBYOPT" "$BUNDLE_BIN" exec jekyll serve \
+  --config "$PUBLIC_SITE_CONFIG" \
+  --host "$PUBLIC_SITE_HOST" \
+  --port "$PUBLIC_SITE_PORT"

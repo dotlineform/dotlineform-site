@@ -2,7 +2,7 @@
 doc_id: local-studio-app
 title: Local Studio App
 added_date: "2026-05-22 08:06"
-last_updated: "2026-05-22 08:06"
+last_updated: "2026-05-23"
 parent_id: change-requests
 sort_order: 11000
 published: true
@@ -28,14 +28,15 @@ Phase 1 added the first Python local Studio app server:
 ./scripts/studio/studio_app_server.py --port 8765
 ```
 
-`bin/dev-studio` now starts this app server by default during the transition.
+`bin/local-studio` starts this app server without Jekyll.
+`bin/dev-studio` still starts this app server by default during the transition, but it remains the bridge command for sessions that also want Jekyll in the same terminal.
 Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
 Docs management is handled by this app server; `bin/dev-studio` does not start a separate Docs management server.
 Active Local Studio browser routes use `/studio/api/docs/...` for Docs management reads/writes; they do not use `127.0.0.1:8789` as a browser fallback.
 The local app adapter imports shared Docs management behavior from `scripts/docs/docs_management_service.py`.
-Jekyll still starts through `bin/dev-studio` for public-site preview and unmigrated Studio routes until the route migration is complete.
-`bin/dev-studio` is a bridge launcher, not the long-term product boundary.
-The intended end state is a local Studio app command for Studio workflows and the normal Bundler/Jekyll serve/build commands for public-site preview and publishing.
+Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
+`bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
+`bin/dev-studio` can still launch Jekyll with the local dev overlay for transition sessions, or skip it with `JEKYLL_ENABLED=0`.
 
 Current mounted views:
 
