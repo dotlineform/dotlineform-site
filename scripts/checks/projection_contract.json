@@ -451,5 +451,31 @@
     "href=\"/studio/\"",
     "href=\"/docs/\"",
     "href=\"/docs/?"
-  ]
+  ],
+  "public_source_reference_audit": {
+    "scan_paths": [
+      "_layouts/**/*.html",
+      "_includes/**/*.html",
+      "assets/js/**/*.js",
+      "assets/css/**/*.css",
+      "*.md"
+    ],
+    "ignore_paths": [
+      "_includes/studio_header_nav.html"
+    ],
+    "forbidden_substrings": [
+      "assets/studio/",
+      "/assets/studio/",
+      "assets/data/docs/scopes/studio",
+      "/assets/data/docs/scopes/studio",
+      "assets/data/search/studio",
+      "/assets/data/search/studio",
+      "href=\"/studio/",
+      "href='/studio/",
+      "baseurl + '/studio/",
+      "baseurl + \"/studio/",
+      "href=\"/docs/?scope=studio",
+      "href='/docs/?scope=studio"
+    ]
+  }
 }

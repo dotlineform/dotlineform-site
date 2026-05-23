@@ -46,6 +46,7 @@ The legacy public-surface audit wrapper now uses the same manifest-backed public
 - manifest schema version, family ids, classifications, owner docs, path lists, public-output policies, and duplicate path declarations
 - `_config.yml` exclusions for families marked `jekyll_exclude_required`
 - checked-in public JSON/search projections for fields listed in manifest `field_leak_rules`
+- public Jekyll templates and public browser assets for forbidden Studio-only source/projection references listed in manifest `public_source_reference_audit`
 - built public output for required and forbidden public-output families when `--site-root` is supplied
 - public Docs Viewer config scope ids when `--site-root` is supplied
 - forbidden public HTML links such as `/studio/` and local `/docs/` management links when `--site-root` is supplied
@@ -68,3 +69,5 @@ When adding a source family, generated payload, local working output, public run
 
 When a field becomes source-only, add it to a manifest `field_leak_rules` entry with the public paths that must not contain it.
 Do not add fields to leak rules if they are still intentionally present in current public runtime payloads.
+
+When a public template or browser asset needs to reference a new generated path, classify that path first and keep public reads pointed at public projections rather than Studio-only source or lookup data.

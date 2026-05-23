@@ -101,7 +101,7 @@ Adding a new generated family requires naming:
 Existing enforcement is split across several checks and builders:
 
 - `scripts/checks/projection_contract.json` classifies current Phase 6 artifact families and owns cross-domain public-build policy
-- `scripts/checks/audit_projection_contract.py` validates the manifest, `_config.yml` exclusions, checked-in public JSON field-leak rules, and optional built public output
+- `scripts/checks/audit_projection_contract.py` validates the manifest, `_config.yml` exclusions, checked-in public JSON field-leak rules, public template/script source references, and optional built public output
 - public build surface audit checks that public output excludes Studio routes, Studio assets, Studio docs payloads/search, and canonical catalogue source
 - catalogue build planners and validators decide which public catalogue projections are refreshed from source edits
 - docs builder excludes unpublished docs and emits viewable/manage-mode metadata according to each scope contract
@@ -112,7 +112,7 @@ The next Phase 6 slices should make this more mechanical:
 
 1. extend manifest-backed checks when new artifact families appear
 2. tighten source-only field rules only when the current public runtime contract changes
-3. verify public Jekyll templates and scripts read generated public projections rather than Studio-only source files
+3. decide whether public `notes` and `storage` fields remain intentional runtime fields or become cleanup candidates
 
 ## Practical Update Rule
 

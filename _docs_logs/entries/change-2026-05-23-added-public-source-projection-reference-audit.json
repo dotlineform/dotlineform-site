@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-05-23-added-public-source-projection-reference-audit",
+  "date": "2026-05-23",
+  "title": "Added Public Source Projection Reference Audit",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "data-models",
+    "build",
+    "scripts",
+    "catalogue"
+  ],
+  "summary": "Extended the projection contract audit to scan public templates and browser assets for Studio-only source/projection references, and removed a public work-page branch that reconstructed a Local Studio URL on the public host.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "projection-contract",
+    "public-source-audit",
+    "public-work-route"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "data-models-projection-contract",
+    "local-studio-app-implementation-plan",
+    "scripts-audit-projection-contract",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/checks/projection_contract.json",
+    "scripts/checks/audit_projection_contract.py",
+    "_layouts/work.html",
+    "_docs/data-models-projection-contract.md",
+    "_docs/scripts-audit-projection-contract.md",
+    "_docs/local-studio-app-implementation-plan.md"
+  ],
+  "effect": "Phase 6 now checks that public templates and scripts read public projections rather than Studio-only data or routes. Public work pages no longer synthesize /studio/studio-works/ links after Local Studio moved to a separate host.",
+  "verification": [
+    "python scripts/checks/audit_projection_contract.py",
+    "python -m py_compile scripts/checks/audit_projection_contract.py scripts/checks/audit_public_build_surface.py scripts/run_checks.py",
+    "ruby scripts/docs/build_docs.rb --scope studio dry run",
+    "bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build",
+    "python scripts/checks/audit_projection_contract.py --site-root /tmp/dlf-jekyll-build",
+    "python scripts/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build",
+    "python tests/smoke/public_work_route.py --base-url http://127.0.0.1:8167"
+  ]
+}

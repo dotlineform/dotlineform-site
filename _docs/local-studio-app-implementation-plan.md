@@ -426,7 +426,7 @@ Outcomes:
 | Populate the manifest with all Phase 6 artifact families: canonical source, public projections, Studio projections, Docs Viewer payloads, local working output, public media, Studio app assets, and UI Catalogue demo assets where relevant. | done for the current Phase 6 scope; future artifact families must be added to the manifest when introduced |
 | Distinguish public projections, Studio projections, and Docs Viewer payloads through manifest-backed docs and checks. | done for current family classification and public-build policy |
 | Add manifest-backed checks for source-only fields leaking into public projections. | done for current source media path fields; broader field tightening such as public `notes` or `storage` needs a separate runtime-contract decision |
-| Verify Jekyll consumes public projections rather than Studio-only data, and that `_config.yml` exclusion/allowance policy matches the manifest. | in progress; manifest check validates `_config.yml` exclusions and public-output policy, while public template/script read audits remain a follow-up |
+| Verify Jekyll consumes public projections rather than Studio-only data, and that `_config.yml` exclusion/allowance policy matches the manifest. | done for current scope; manifest check validates `_config.yml` exclusions, public-output policy, and public template/script source references |
 | Keep generated output paths explicit, boring, and classified in the manifest. | done for current Phase 6 families |
 
 Next steps:
@@ -436,8 +436,9 @@ The first documentation slice is complete: [Projection Contract](/docs/?scope=st
 The implementation direction is to use machine-readable `scripts/checks/projection_contract.json` as the Phase 6 source of truth.
 Existing domain configs should keep their current domain responsibilities: Docs Viewer scope build details stay in `scripts/docs/docs_scopes.json`, search source-family behavior stays in `scripts/search/build_config.json`, catalogue build scoping stays in the catalogue field registry, and `_config.yml` stays the public Jekyll build config.
 The projection contract manifest should own cross-domain classification, public-build policy, source-only leak rules, owner docs, and check coverage.
-The manifest schema, first full-family population, validation check, and public-build audit integration are now in place.
-The next slice should verify public Jekyll templates and browser scripts do not consume Studio-only source/projection paths, then decide whether public `notes` and `storage` fields are intentional runtime contract or cleanup candidates.
+The manifest schema, first full-family population, validation check, public-build audit integration, and public template/script source-reference audit are now in place.
+The source-reference audit also removed the old public work-page JavaScript branch that reconstructed `/studio/studio-works/` on the public-site host for `from=studio_works_index`; that return context now falls back to the public work index because Local Studio has a separate host.
+The next slice should decide whether public `notes` and `storage` fields are intentional runtime contract or cleanup candidates.
 The projection contract matters more than physical repo layout.
 
 ## Phase 7: Optional Repo Split Decision

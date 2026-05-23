@@ -175,7 +175,7 @@ canonical source data
 ```
 
 The current source/projection boundary is documented in [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract).
-That contract is backed by `scripts/checks/projection_contract.json` and `./scripts/checks/audit_projection_contract.py`, and should be tightened before any optional repo split or broad source-tree reorganization.
+That contract is backed by `scripts/checks/projection_contract.json` and `./scripts/checks/audit_projection_contract.py`, including public template/script source-reference checks, and should be tightened before any optional repo split or broad source-tree reorganization.
 
 ## Navigation Principle
 
@@ -497,6 +497,7 @@ For projection-contract slices:
 
 ## Change Log Entries
 
+- `change-2026-05-23-added-public-source-projection-reference-audit`
 - `change-2026-05-23-added-projection-contract-manifest-audit`
 - `change-2026-05-23-documented-projection-contract`
 - `change-2026-05-22-added-local-analytics-tag-promotion-api`

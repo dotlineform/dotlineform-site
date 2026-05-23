@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T21:41:31Z",
+  "generated_at": "2026-05-23T21:49:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -321,7 +321,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 44891
+      "content_text_length": 45103
     },
     {
       "scope": "studio",
@@ -601,7 +601,7 @@
       "source_path": "data-models-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-projection-contract.json",
-      "content_text_length": 8555
+      "content_text_length": 8593
     },
     {
       "scope": "studio",
@@ -2727,7 +2727,7 @@
       "source_path": "scripts-audit-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-projection-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-projection-contract.json",
-      "content_text_length": 2325
+      "content_text_length": 2684
     },
     {
       "scope": "studio",
@@ -3089,7 +3089,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 26846,
+      "content_text_length": 26969,
       "ui_status": "in-progress"
     },
     {

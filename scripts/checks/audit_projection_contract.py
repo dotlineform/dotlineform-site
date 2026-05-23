@@ -136,6 +136,12 @@ def validate_contract(contract: Mapping[str, Any]) -> None:
     as_nonempty_string(public_docs_viewer.get("config_path"), "public_docs_viewer.config_path")
     as_string_list(public_docs_viewer.get("allowed_scope_ids"), "public_docs_viewer.allowed_scope_ids")
     as_string_list(contract.get("public_html_forbidden_hrefs"), "public_html_forbidden_hrefs", allow_empty=True)
+    source_audit = contract.get("public_source_reference_audit")
+    if not isinstance(source_audit, dict):
+        raise ProjectionContractError("public_source_reference_audit must be an object")
+    as_string_list(source_audit.get("scan_paths"), "public_source_reference_audit.scan_paths")
+    as_string_list(source_audit.get("ignore_paths"), "public_source_reference_audit.ignore_paths", allow_empty=True)
+    as_string_list(source_audit.get("forbidden_substrings"), "public_source_reference_audit.forbidden_substrings")
 
 
 def split_exclude_values(config_path: Path) -> list[str]:
@@ -254,6 +260,41 @@ def audit_field_leaks(repo_root: Path, contract: Mapping[str, Any]) -> list[str]
     return failures
 
 
+def matches_any(path: str, patterns: Iterable[str]) -> bool:
+    return any(PurePosixPath(path).match(pattern) for pattern in patterns)
+
+
+def source_reference_scan_files(repo_root: Path, source_audit: Mapping[str, Any]) -> list[Path]:
+    files: dict[str, Path] = {}
+    ignore_paths = list(source_audit.get("ignore_paths", []))
+    for pattern in source_audit.get("scan_paths", []):
+        for path in sorted(repo_root.glob(pattern)):
+            if not path.is_file():
+                continue
+            rel_path = relative(path, repo_root)
+            if matches_any(rel_path, ignore_paths):
+                continue
+            files[rel_path] = path
+    return [files[key] for key in sorted(files)]
+
+
+def audit_public_source_references(repo_root: Path, contract: Mapping[str, Any]) -> list[str]:
+    failures: list[str] = []
+    source_audit = contract.get("public_source_reference_audit")
+    if not isinstance(source_audit, Mapping):
+        return ["public_source_reference_audit must be configured"]
+    forbidden_substrings = list(source_audit.get("forbidden_substrings", []))
+    for path in source_reference_scan_files(repo_root, source_audit):
+        rel_path = relative(path, repo_root)
+        for line_number, line in enumerate(read_text(path).splitlines(), start=1):
+            for forbidden in forbidden_substrings:
+                if forbidden in line:
+                    failures.append(
+                        f"public source reference audit: {rel_path}:{line_number} contains {forbidden!r}"
+                    )
+    return failures
+
+
 def audit_public_docs_viewer_config(site_root: Path, contract: Mapping[str, Any]) -> list[str]:
     failures: list[str] = []
     config_spec = contract["public_docs_viewer"]
@@ -350,6 +391,7 @@ def main(argv: list[str] | None = None) -> int:
 
     failures: list[str] = []
     failures.extend(audit_jekyll_exclusions(repo_root, contract))
+    failures.extend(audit_public_source_references(repo_root, contract))
     if not args.skip_field_leaks:
         failures.extend(audit_field_leaks(repo_root, contract))
     if args.site_root:
