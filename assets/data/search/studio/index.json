@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-546f689e1784ff71cb63584f4530e58a",
-    "generated_at_utc": "2026-05-23T21:40:11Z",
+    "version": "blake2b-0c49e258b24e5f25e9913794d857a98e",
+    "generated_at_utc": "2026-05-23T23:01:29Z",
     "count": 300
   },
   "entries": [
@@ -388,10 +388,10 @@
       "kind": "doc",
       "title": "Local Studio App Implementation Plan",
       "href": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-24",
       "parent_id": "local-studio-app",
       "parent_title": "Local Studio App",
-      "display_meta": "2026-05-23 • Local Studio App",
+      "display_meta": "2026-05-24 • Local Studio App",
       "search_terms": [
         "local-studio-app-implementation-plan",
         "local",
@@ -401,12 +401,12 @@
         "plan",
         "local studio app implementation plan",
         "local studio app",
-        "2026-05-23",
+        "2026-05-24",
         "2026",
         "05",
-        "23"
+        "24"
       ],
-      "search_text": "local-studio-app-implementation-plan local studio app implementation plan local studio app implementation plan local studio app 2026-05-23 2026 05 23"
+      "search_text": "local-studio-app-implementation-plan local studio app implementation plan local studio app implementation plan local studio app 2026-05-24 2026 05 24"
     },
     {
       "id": "local-studio-server-architecture",

@@ -2,7 +2,7 @@
 doc_id: local-studio-app-implementation-plan
 title: Local Studio App Implementation Plan
 added_date: 2026-05-22
-last_updated: 2026-05-23
+last_updated: 2026-05-24
 parent_id: local-studio-app
 sort_order: 1000
 published: true
@@ -23,19 +23,20 @@ Status:
 - Phase 3 is implemented for Docs Viewer manage mode and the Docs Broken Links report replacement
 - Phase 4 active service consolidation and launcher cleanup are done for the current Local Studio route scope
 - Phase 5 operational route migration and UI Catalogue demo visibility are implemented for the current route scope
-- Phase 6 projection contract documentation has started
+- Phase 6 projection contract checks are implemented for the current projection/build scope
 
 ## Remaining Work Snapshot
 
 Next suitable slices, in dependency order:
 
-1. Continue the projection contract work by turning the documented source/projection boundary into focused checks.
-2. Finish the current Studio localization work before broad source-tree moves.
-3. Defer the optional repo split decision until the publish/export contract is stable.
+1. Finish the current Studio localization work before broad source-tree moves.
+2. Run the migration compatibility cleanup gate so no old Jekyll route hosting, sibling-service fallback, or transition-only adapter behavior is retained without an active owner.
+3. Complete the Studio source-tree reorganization so Studio-owned runtime, static, UI Catalogue, and local source files have clear ownership boundaries.
+4. Defer the optional repo split decision until after the Studio source-tree reorganization and the publish/export contract are stable.
 
 Future source-tree work is tracked separately:
 
-- [Studio Source Tree Reorganization Request](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization) covers moving Studio-owned runtime, static, UI Catalogue, and local source files behind a clearer `studio/` boundary after the current localization work settles.
+- [Studio Source Tree Reorganization Request](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization) covers moving Studio-owned runtime, static, UI Catalogue, and local source files behind a clearer `studio/` boundary after the current localization work settles; it must happen before any optional repo split decision.
 - [Docs Viewer Shell Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction) covers the later split between reusable Docs Viewer core/assets and Studio-specific hosting shell work.
 
 Do not combine those reorganization requests with the current localization slices.
@@ -132,9 +133,9 @@ Current commit point:
 - Studio Audits now calls `/studio/api/audits/...` through the local app server instead of requiring the old standalone audit service URL
 - Project State now calls `/studio/api/catalogue/project-state-report` and the local Docs API through the local app server instead of requiring the old catalogue/docs sibling service URLs
 - Thumbnail Quality now calls `/studio/api/catalogue/thumbnail-quality-preview` through the local app server instead of requiring the old catalogue sibling service URL
-- Local Studio and public-site launchers are now split into explicit commands: `bin/local-studio`, `bin/public-site-preview`, and `bin/public-site-build`; `bin/local-studio` has been retired
+- Local Studio and public-site launchers are now split into explicit commands: `bin/local-studio`, `bin/public-site-preview`, and `bin/public-site-build`; `bin/dev-studio` has been retired
 - UI Catalogue demo index, primitive, and pattern routes are now local-app hosted as first-class non-mutating Studio reference surfaces while preserving the isolated demo namespace and demo-ready contract
-- Phase 6 now has a first projection-contract reference that maps canonical source families to public projections, Studio projections, and Docs Viewer payloads before any optional repo split or broad source-tree move
+- Phase 6 now has manifest-backed projection-contract checks that map canonical source families to public projections, Studio projections, and Docs Viewer payloads before broad source-tree moves
 - future non-Docs write/manage APIs should be added through the same local app route-module and domain-service pattern; detailed future-proofing rules live in [Development Checklist](/docs/?scope=studio&doc=development-checklist)
 
 ## Phase 0: Published Surface Cleanup
@@ -183,7 +184,8 @@ Outcomes:
 Next steps:
 
 Phase 1 foundation is implemented.
-The server now exposes `/studio/runtime-config.json`, and migrated views can opt into it with `meta[name="dlf-studio-config-url"]` while unmigrated Jekyll-hosted pages continue to use the static Studio config fallback.
+The server now exposes `/studio/runtime-config.json`, and local-app views opt into it with `meta[name="dlf-studio-config-url"]`.
+Any remaining static Studio config fallback path must be justified by an active route; otherwise it should be removed during the migration compatibility cleanup gate.
 `studio_app_server.py` should stay a thin dispatcher and process entrypoint.
 Local app growth should happen in focused modules such as config, view shells, route-family APIs, and reusable domain services.
 The next slice should start Phase 2 by defining the stable runtime config shape and introducing narrow navigation helpers only where migrated views need them.
@@ -217,7 +219,7 @@ Outcomes:
 
 - migrated views receive config without Liquid
 - navigation is expressed through app APIs rather than hardcoded page URLs
-- current query-state behavior can be used as transitional input without becoming the long-term state owner
+- query-state adapters exist only where an active local route still needs current URL state
 
 | Task | Status |
 | --- | --- |
@@ -232,10 +234,11 @@ Outcomes:
 Next steps:
 
 Phase 2 is implemented.
-`/studio/runtime-config.json` now exposes the local app runtime contract for views, navigation, service endpoints, data/UI-text paths, media/thumb bases, pipeline variants, modal dispatch, and transitional state.
+`/studio/runtime-config.json` now exposes the local app runtime contract for views, navigation, service endpoints, data/UI-text paths, media/thumb bases, pipeline variants, modal dispatch, and active route state.
 `assets/studio/js/studio-navigation.js` now owns the first local app adapter layer: view lookup, URL building, `navigateTo(view, params)`, URL initial-state parsing, `sessionStorage` return-context helpers, and `openModal(name, params)` dispatch through the `studio:open-modal` event.
 `assets/studio/js/studio-config.js` now owns `buildStudioRouteUrl(config, key, params)` for callers that need to append route-specific params to configured Studio routes that may already include `?mode=manage`.
-This is intentionally not a route framework; it is a small compatibility surface for migrated vanilla modules.
+This is intentionally not a route framework; it is a narrow adapter layer for active vanilla modules.
+Before source-tree reorganization, re-audit these helpers and remove transition-only query-state or fallback behavior that no active local route still calls.
 Future route migrations should add only the adapter helpers they actually need, backed by focused smoke tests.
 
 ## Phase 3: Docs Viewer Manage Mode Migration
@@ -274,10 +277,11 @@ It covers create, metadata edit, settings save, archive, delete preview/apply, a
 `tests/smoke/local_studio_docs_management_import_ui.py`, `tests/smoke/local_studio_docs_management_move_ui.py`, and `tests/smoke/local_studio_docs_management_scope_ui.py` cover the remaining managed UI workflows: staged import, drag/drop move, and scope create/delete.
 `tests/smoke/public_docs_viewer_readonly.py` verifies that public `/library/` and `/analysis/` builds stay read-only, do not load management CSS, do not render management controls, and do not load Studio-only assets.
 `bin/local-studio` treats Docs management as owned by the local Studio app server and has no standalone Docs Management server startup path.
-Data-sharing-specific UI behavior remains a later adapter-consolidation slice; the Phase 3 claim is Docs Viewer manage-mode parity for the ordinary source/edit/import/scope workflows.
+Data Sharing adapter consolidation is now covered by Phase 5; the Phase 3 claim remains Docs Viewer manage-mode parity for the ordinary source/edit/import/scope workflows.
 Docs Broken Links is also a Docs Viewer concern because it is a scope-based report over generated docs links.
 It now lives on the `docs-broken-links` Studio docs page through `viewer_report: docs_broken_links`, calls the local Docs API endpoint `POST /docs/broken-links`, and replaces the retired `/studio/docs-broken-links/` shell.
-Do not add a separate always-running Docs Viewer server for normal Studio; keep a possible standalone Docs Viewer launcher as a later portability option over the same modules.
+Do not add a separate always-running Docs Viewer server for normal Studio.
+Any future standalone Docs Viewer launcher belongs in the Docs Viewer shell extraction request, not in this Local Studio migration plan.
 
 ## Phase 4: Local Service Consolidation
 
@@ -398,7 +402,7 @@ Studio Works now uses the same catalogue public-link helper as the catalogue edi
 The per-series tag editor now uses the same catalogue public-link helper for public series/work header links instead of maintaining a route-local resolver.
 Catalogue editor summaries now share `assets/studio/js/catalogue-public-links.js` for public work, series, work detail, and moment links.
 Those links resolve through the configured public preview base during local Studio sessions, while editor-to-editor links continue to use local Studio routes.
-The catalogue editor API consolidation keeps behavior aligned with the existing catalogue write handler by invoking it in-process from `scripts/studio/studio_catalogue_api.py`.
+The catalogue editor API consolidation keeps behavior aligned through focused catalogue service modules called from `scripts/studio/studio_catalogue_api.py`; it must not reintroduce the old catalogue write handler bridge.
 Catalogue route shells are split into `scripts/studio/studio_catalogue_views.py` so `studio_app_views.py` remains a shared shell module rather than absorbing every route family.
 The Jekyll `/studio/` landing shell is now retired because the local app owns `/studio/` and public builds should not expose Studio.
 The local app home is intentionally a simple runtime navigation list rather than a preserved Jekyll dashboard design; it filters out non-nav internal views such as the per-series tag editor and marks the home root ready for smoke checks.
@@ -432,7 +436,7 @@ Outcomes:
 Next steps:
 
 Use this phase to prepare for a future repo split without requiring one.
-The first documentation slice is complete: [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) defines the current canonical source, public projection, Studio projection, and Docs Viewer payload families.
+The manifest-backed implementation slice is complete for the current scope: [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) defines the current canonical source, public projection, Studio projection, and Docs Viewer payload families.
 The implementation direction is to use machine-readable `scripts/checks/projection_contract.json` as the Phase 6 source of truth.
 Existing domain configs should keep their current domain responsibilities: Docs Viewer scope build details stay in `scripts/docs/docs_scopes.json`, search source-family behavior stays in `scripts/search/build_config.json`, catalogue build scoping stays in the catalogue field registry, and `_config.yml` stays the public Jekyll build config.
 The projection contract manifest should own cross-domain classification, public-build policy, source-only leak rules, owner docs, and check coverage.
@@ -441,24 +445,48 @@ The source-reference audit also removed the old public work-page JavaScript bran
 The public `notes` and `storage` cleanup decision is now implemented: `storage` stays available through the Studio-only work storage index for `/studio/studio-works/` management views, while public catalogue records, indexes, and search omit it; retired series `notes` no longer publishes because catalogue prose Markdown is the public narrative source.
 The projection contract matters more than physical repo layout.
 
+## Migration Compatibility Cleanup Gate
+
+Outcomes:
+
+- old Jekyll route hosting assumptions do not survive into the source-tree reorganization
+- old sibling-service URLs, ports, and browser fallbacks are removed or explicitly justified by an active owner
+- transition-only adapters are removed once no active local route needs them
+- portability ideas that are not part of Local Studio migration move to their owning follow-up request
+
+| Cleanup Item | Trigger | Status |
+| --- | --- | --- |
+| Audit static Studio config fallback paths and remove any that no active route still uses. | Operational Studio routes are local-app hosted and should receive runtime config from `/studio/runtime-config.json`. | planned |
+| Audit runtime config, static config, browser modules, and smoke fixtures for old sibling-service URLs and ports. | Local Studio should not retain `127.0.0.1` service fallbacks for retired tag, docs, audit, or catalogue sibling services. | planned |
+| Audit route code for Jekyll-host-relative public links, `from=studio...` return contexts, and temporary redirects. | Public-content links should resolve through configured public-site bases, and old Studio-host return contexts should not reappear. | planned |
+| Audit `studio-navigation.js` and related adapters for transition-only query-state helpers without active callers. | The source-tree reorganization should carry active route helpers, not migration residue. | planned |
+| Confirm Data Sharing adapter consolidation status against the Phase 5 local-app routes. | The plan should not leave Data Sharing listed as both implemented and a future adapter slice. | planned |
+| Move standalone Docs Viewer launcher discussion to the Docs Viewer shell extraction request if it remains useful. | Local Studio should not carry a future standalone server option as a migration fallback. | planned |
+
+Next steps:
+
+Run this gate before Studio source-tree reorganization.
+Each item should end as removed, retained with an active owner and test, or moved to the owning follow-up request.
+
 ## Phase 7: Optional Repo Split Decision
 
 Outcomes:
 
 - repo split remains a separate decision after the local app boundary is proven
+- repo split remains deferred until after Studio source-tree reorganization is complete
 - any split is driven by concrete operational benefit, not tidiness
 - the publish/export contract is already tested before files move between repos
 
 | Task | Status |
 | --- | --- |
-| Review files that now belong to public site, Studio app, canonical data, Docs Viewer, and generated outputs. | planned |
-| Decide whether to keep one repo, split public-site and Studio repos, or extract Docs Viewer first. | planned |
-| Identify deployment, publishing, and local development benefits required to justify a split. | planned |
-| If splitting, define the publish/export contract before moving files. | planned |
+| Review files that now belong to public site, Studio app, canonical data, Docs Viewer, and generated outputs. | deferred until after Studio source-tree reorganization |
+| Decide whether to keep one repo, split public-site and Studio repos, or extract Docs Viewer first. | deferred until after Studio source-tree reorganization |
+| Identify deployment, publishing, and local development benefits required to justify a split. | deferred until after Studio source-tree reorganization |
+| If splitting, define the publish/export contract before moving files. | deferred until after Studio source-tree reorganization |
 
 Next steps:
 
-Defer this decision until Studio runs locally without Jekyll and public output has a stable manifest.
+Defer this decision until Studio runs locally without Jekyll, public output has a stable manifest, and the Studio source-tree reorganization has made ownership boundaries visible in the repo.
 One repo remains acceptable while the boundary settles.
 
 ## Verification
