@@ -1460,9 +1460,10 @@ def run_index_double_click_edit_check(page: Page) -> None:
                 setHistory: () => {}
             });
             controller.render();
+            state.selectedDocId = 'other-doc';
         }"""
     )
-    page.locator("#otherDocLink").dblclick()
+    page.locator("#currentDocLink").dblclick()
     page.wait_for_selector("#docsViewerMetadataModal:not([hidden])")
     state = page.locator("#docsViewerMetadataModal").evaluate(
         """modal => ({
@@ -1472,7 +1473,7 @@ def run_index_double_click_edit_check(page: Page) -> None:
         })"""
     )
     if state["docId"] != "other-doc" or state["titleValue"] != "Other Doc":
-        raise AssertionError(f"double-click did not open edit modal for clicked index doc: {state!r}")
+        raise AssertionError(f"double-click did not open edit modal for the selected index doc: {state!r}")
     page.locator("#docsViewerMetadataCancelButton").click()
 
 

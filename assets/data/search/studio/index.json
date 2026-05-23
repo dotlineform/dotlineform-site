@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-9f89055b16fb74d7c6d0e06af5d044a6",
-    "generated_at_utc": "2026-05-23T14:25:29Z",
-    "count": 296
+    "version": "blake2b-89209510f19cc006b26d7f66836fae37",
+    "generated_at_utc": "2026-05-23T16:11:07Z",
+    "count": 294
   },
   "entries": [
     {
@@ -36,48 +36,6 @@
         "00"
       ],
       "search_text": "site-request-studio-unified-activity-log-inventory site request studio unified activity log inventory activity log coverage inventory coverage studio unified activity log request 2026-05-09 16:00 2026 05 09 16 00"
-    },
-    {
-      "id": "data-models-analysis",
-      "kind": "doc",
-      "title": "Analysis Scope",
-      "href": "/docs/?scope=studio&doc=data-models-analysis",
-      "last_updated": "2026-05-06 20:54",
-      "parent_id": "analytics",
-      "parent_title": "Analytics",
-      "display_meta": "2026-05-06 20:54 • Analytics",
-      "search_terms": [
-        "data-models-analysis",
-        "data",
-        "models",
-        "analysis",
-        "analysis scope",
-        "scope",
-        "analytics",
-        "2026-05-06 20:54",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "54"
-      ],
-      "search_text": "data-models-analysis data models analysis analysis scope scope analytics 2026-05-06 20:54 2026 05 06 20 54"
-    },
-    {
-      "id": "audit",
-      "kind": "doc",
-      "title": "Audit",
-      "href": "/docs/?scope=studio&doc=audit",
-      "last_updated": "2026-05-23",
-      "display_meta": "2026-05-23",
-      "search_terms": [
-        "audit",
-        "2026-05-23",
-        "2026",
-        "05",
-        "23"
-      ],
-      "search_text": "audit 2026-05-23 2026 05 23"
     },
     {
       "id": "site-request-js-config-structural-review-catalogue-editor-extraction-plan",
@@ -386,9 +344,9 @@
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
       "last_updated": "2026-05-11",
-      "parent_id": "library",
-      "parent_title": "Library",
-      "display_meta": "2026-05-11 • Library",
+      "parent_id": "docs-viewer-scopes",
+      "parent_title": "Scopes",
+      "display_meta": "2026-05-11 • Scopes",
       "search_terms": [
         "data-models-library",
         "data",
@@ -396,12 +354,13 @@
         "library",
         "library scope",
         "scope",
+        "scopes",
         "2026-05-11",
         "2026",
         "05",
         "11"
       ],
-      "search_text": "data-models-library data models library library scope scope 2026-05-11 2026 05 11"
+      "search_text": "data-models-library data models library library scope scope scopes 2026-05-11 2026 05 11"
     },
     {
       "id": "llm-dimension",
@@ -610,30 +569,6 @@
       "search_text": "site-request-route-anchor-collection-stubs site request route anchor collection stubs route-anchor collection stubs spec spec field-aware catalogue build scoping field aware catalogue build scoping 2026-04-30 2026 04 30"
     },
     {
-      "id": "runtime-dependencies",
-      "kind": "doc",
-      "title": "Runtime Dependencies",
-      "href": "/docs/?scope=studio&doc=runtime-dependencies",
-      "last_updated": "2026-04-23",
-      "parent_id": "dev-home",
-      "parent_title": "Dev Home",
-      "display_meta": "2026-04-23 • Dev Home",
-      "search_terms": [
-        "runtime-dependencies",
-        "runtime",
-        "dependencies",
-        "runtime dependencies",
-        "dev home",
-        "dev",
-        "home",
-        "2026-04-23",
-        "2026",
-        "04",
-        "23"
-      ],
-      "search_text": "runtime-dependencies runtime dependencies runtime dependencies dev home dev home 2026-04-23 2026 04 23"
-    },
-    {
       "id": "search-overview",
       "kind": "doc",
       "title": "Search Overview",
@@ -793,32 +728,6 @@
       "search_text": "data-models-studio data models studio studio scope scope 2026-05-06 20:51 2026 05 06 20 51"
     },
     {
-      "id": "data-models-catalogue-source",
-      "kind": "doc",
-      "title": "Catalogue Source Model",
-      "href": "/docs/?scope=studio&doc=data-models-catalogue-source",
-      "last_updated": "2026-05-19",
-      "parent_id": "data-models-catalogue",
-      "parent_title": "Catalogue Scope",
-      "display_meta": "2026-05-19 • Catalogue Scope",
-      "search_terms": [
-        "data-models-catalogue-source",
-        "data",
-        "models",
-        "catalogue",
-        "source",
-        "catalogue source model",
-        "model",
-        "catalogue scope",
-        "scope",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "data-models-catalogue-source data models catalogue source catalogue source model model catalogue scope scope 2026-05-19 2026 05 19"
-    },
-    {
       "id": "local-studio-app-public-surface",
       "kind": "doc",
       "title": "Public Published Surface",
@@ -845,59 +754,6 @@
       "search_text": "local-studio-app-public-surface local studio app public surface public published surface published local studio app 2026-05-22 2026 05 22"
     },
     {
-      "id": "data-models-catalogue-indexes",
-      "kind": "doc",
-      "title": "Catalogue Indexes And Payloads",
-      "href": "/docs/?scope=studio&doc=data-models-catalogue-indexes",
-      "last_updated": "2026-05-19",
-      "parent_id": "data-models-catalogue",
-      "parent_title": "Catalogue Scope",
-      "display_meta": "2026-05-19 • Catalogue Scope",
-      "search_terms": [
-        "data-models-catalogue-indexes",
-        "data",
-        "models",
-        "catalogue",
-        "indexes",
-        "catalogue indexes and payloads",
-        "and",
-        "payloads",
-        "catalogue scope",
-        "scope",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "data-models-catalogue-indexes data models catalogue indexes catalogue indexes and payloads and payloads catalogue scope scope 2026-05-19 2026 05 19"
-    },
-    {
-      "id": "data-models-catalogue-maintenance",
-      "kind": "doc",
-      "title": "Catalogue Model Maintenance",
-      "href": "/docs/?scope=studio&doc=data-models-catalogue-maintenance",
-      "last_updated": "2026-05-19",
-      "parent_id": "data-models-catalogue",
-      "parent_title": "Catalogue Scope",
-      "display_meta": "2026-05-19 • Catalogue Scope",
-      "search_terms": [
-        "data-models-catalogue-maintenance",
-        "data",
-        "models",
-        "catalogue",
-        "maintenance",
-        "catalogue model maintenance",
-        "model",
-        "catalogue scope",
-        "scope",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "data-models-catalogue-maintenance data models catalogue maintenance catalogue model maintenance model catalogue scope scope 2026-05-19 2026 05 19"
-    },
-    {
       "id": "development-workflow",
       "kind": "doc",
       "title": "Development Workflow",
@@ -920,6 +776,28 @@
         "19"
       ],
       "search_text": "development-workflow development workflow development workflow dev home dev home 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "library-documents",
+      "kind": "doc",
+      "title": "Library Documents",
+      "href": "/docs/?scope=studio&doc=library-documents",
+      "last_updated": "2026-05-13",
+      "parent_id": "docs-viewer-scopes",
+      "parent_title": "Scopes",
+      "display_meta": "2026-05-13 • Scopes",
+      "search_terms": [
+        "library-documents",
+        "library",
+        "documents",
+        "library documents",
+        "scopes",
+        "2026-05-13",
+        "2026",
+        "05",
+        "13"
+      ],
+      "search_text": "library-documents library documents library documents scopes 2026-05-13 2026 05 13"
     },
     {
       "id": "studio-ui-framework-primitives",
@@ -973,33 +851,6 @@
       "search_text": "css-primitives css primitives css primitives ui catalogue ui catalogue 2026-05-06 20:00 2026 05 06 20 00"
     },
     {
-      "id": "studio-javascript-payload-inventory",
-      "kind": "doc",
-      "title": "JavaScript Inventory Policy",
-      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
-      "last_updated": "2026-05-21",
-      "parent_id": "dev-home",
-      "parent_title": "Dev Home",
-      "display_meta": "2026-05-21 • Dev Home",
-      "search_terms": [
-        "studio-javascript-payload-inventory",
-        "studio",
-        "javascript",
-        "payload",
-        "inventory",
-        "javascript inventory policy",
-        "policy",
-        "dev home",
-        "dev",
-        "home",
-        "2026-05-21",
-        "2026",
-        "05",
-        "21"
-      ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory policy policy dev home dev home 2026-05-21 2026 05 21"
-    },
-    {
       "id": "ui-primitive-button",
       "kind": "doc",
       "title": "Button Primitive",
@@ -1022,6 +873,32 @@
         "15"
       ],
       "search_text": "ui-primitive-button ui primitive button button primitive ui catalogue catalogue 2026-05-15 2026 05 15"
+    },
+    {
+      "id": "data-models-analysis",
+      "kind": "doc",
+      "title": "Analysis Scope",
+      "href": "/docs/?scope=studio&doc=data-models-analysis",
+      "last_updated": "2026-05-06 20:54",
+      "parent_id": "docs-viewer-scopes",
+      "parent_title": "Scopes",
+      "display_meta": "2026-05-06 20:54 • Scopes",
+      "search_terms": [
+        "data-models-analysis",
+        "data",
+        "models",
+        "analysis",
+        "analysis scope",
+        "scope",
+        "scopes",
+        "2026-05-06 20:54",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "54"
+      ],
+      "search_text": "data-models-analysis data models analysis analysis scope scope scopes 2026-05-06 20:54 2026 05 06 20 54"
     },
     {
       "id": "catalogue-status",
@@ -1277,49 +1154,23 @@
       "search_text": "ui-primitive-input ui primitive input input primitive ui catalogue catalogue 2026-05-15 2026 05 15"
     },
     {
-      "id": "library-documents",
-      "kind": "doc",
-      "title": "Library Documents",
-      "href": "/docs/?scope=studio&doc=library-documents",
-      "last_updated": "2026-05-13",
-      "parent_id": "library",
-      "parent_title": "Library",
-      "display_meta": "2026-05-13 • Library",
-      "search_terms": [
-        "library-documents",
-        "library",
-        "documents",
-        "library documents",
-        "2026-05-13",
-        "2026",
-        "05",
-        "13"
-      ],
-      "search_text": "library-documents library documents library documents 2026-05-13 2026 05 13"
-    },
-    {
       "id": "local-setup",
       "kind": "doc",
       "title": "Local Setup",
       "href": "/docs/?scope=studio&doc=local-setup",
       "last_updated": "2026-05-19",
-      "parent_id": "dev-home",
-      "parent_title": "Dev Home",
-      "display_meta": "2026-05-19 • Dev Home",
+      "display_meta": "2026-05-19",
       "search_terms": [
         "local-setup",
         "local",
         "setup",
         "local setup",
-        "dev home",
-        "dev",
-        "home",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "local-setup local setup local setup dev home dev home 2026-05-19 2026 05 19"
+      "search_text": "local-setup local setup local setup 2026-05-19 2026 05 19"
     },
     {
       "id": "modal-composition-migration-tracker",
@@ -1729,6 +1580,30 @@
       "search_text": "search-field-registry-definitions search field registry definitions search field definitions search field registry 2026-05-19 2026 05 19"
     },
     {
+      "id": "runtime-dependencies",
+      "kind": "doc",
+      "title": "Runtime Dependencies",
+      "href": "/docs/?scope=studio&doc=runtime-dependencies",
+      "last_updated": "2026-04-23",
+      "parent_id": "dev-home",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-04-23 • Dev Home",
+      "search_terms": [
+        "runtime-dependencies",
+        "runtime",
+        "dependencies",
+        "runtime dependencies",
+        "dev home",
+        "dev",
+        "home",
+        "2026-04-23",
+        "2026",
+        "04",
+        "23"
+      ],
+      "search_text": "runtime-dependencies runtime dependencies runtime dependencies dev home dev home 2026-04-23 2026 04 23"
+    },
+    {
       "id": "local-setup-recovery",
       "kind": "doc",
       "title": "Local Setup Recovery",
@@ -1821,6 +1696,22 @@
         "22"
       ],
       "search_text": "ui-framework ui framework ui framework 2026-05-22 2026 05 22"
+    },
+    {
+      "id": "audit",
+      "kind": "doc",
+      "title": "Audit",
+      "href": "/docs/?scope=studio&doc=audit",
+      "last_updated": "2026-05-23",
+      "display_meta": "2026-05-23",
+      "search_terms": [
+        "audit",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "audit 2026-05-23 2026 05 23"
     },
     {
       "id": "site-request-js-config-structural-review-catalogue-editor-boundary",
@@ -2087,25 +1978,6 @@
         "08"
       ],
       "search_text": "llm-semantic-enrichment-spec llm semantic enrichment spec llm semantic enrichment spec 2026-05-03 17:08 2026 05 03 17 08"
-    },
-    {
-      "id": "public-site",
-      "kind": "doc",
-      "title": "Public Site",
-      "href": "/docs/?scope=studio&doc=public-site",
-      "last_updated": "2026-05-23",
-      "display_meta": "2026-05-23",
-      "search_terms": [
-        "public-site",
-        "public",
-        "site",
-        "public site",
-        "2026-05-23",
-        "2026",
-        "05",
-        "23"
-      ],
-      "search_text": "public-site public site public site 2026-05-23 2026 05 23"
     },
     {
       "id": "scripts-tag-write-server",
@@ -2382,24 +2254,6 @@
         "19"
       ],
       "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup docs viewer portable scope setup docs viewer portable setup 2026-05-19 2026 05 19"
-    },
-    {
-      "id": "catalogue",
-      "kind": "doc",
-      "title": "Catalogue",
-      "href": "/docs/?scope=studio&doc=catalogue",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
-      "search_terms": [
-        "catalogue",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "catalogue 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "catalogue-field-registry-review",
@@ -2806,6 +2660,22 @@
       "search_text": "tag-registry tag registry tag registry analytics 2026-05-21 2026 05 21"
     },
     {
+      "id": "testing",
+      "kind": "doc",
+      "title": "Testing",
+      "href": "/docs/?scope=studio&doc=testing",
+      "last_updated": "2026-05-15",
+      "display_meta": "2026-05-15",
+      "search_terms": [
+        "testing",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "testing 2026-05-15 2026 05 15"
+    },
+    {
       "id": "studio-ui-conformance",
       "kind": "doc",
       "title": "UI Conformance Spec",
@@ -3033,6 +2903,25 @@
       "search_text": "config 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
+      "id": "docs-viewer",
+      "kind": "doc",
+      "title": "Docs Viewer",
+      "href": "/docs/?scope=studio&doc=docs-viewer",
+      "last_updated": "2026-05-20",
+      "display_meta": "2026-05-20",
+      "search_terms": [
+        "docs-viewer",
+        "docs",
+        "viewer",
+        "docs viewer",
+        "2026-05-20",
+        "2026",
+        "05",
+        "20"
+      ],
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-20 2026 05 20"
+    },
+    {
       "id": "docs-viewer-media-handling",
       "kind": "doc",
       "title": "Docs Viewer Media Handling",
@@ -3055,22 +2944,6 @@
         "18"
       ],
       "search_text": "docs-viewer-media-handling docs viewer media handling docs viewer media handling docs viewer 2026-05-18 2026 05 18"
-    },
-    {
-      "id": "library",
-      "kind": "doc",
-      "title": "Library",
-      "href": "/docs/?scope=studio&doc=library",
-      "last_updated": "2026-05-13",
-      "display_meta": "2026-05-13",
-      "search_terms": [
-        "library",
-        "2026-05-13",
-        "2026",
-        "05",
-        "13"
-      ],
-      "search_text": "library 2026-05-13 2026 05 13"
     },
     {
       "id": "site-request-library-import-generated-parent-nodes",
@@ -3379,6 +3252,24 @@
       "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
+      "id": "catalogue",
+      "kind": "doc",
+      "title": "Catalogue",
+      "href": "/docs/?scope=studio&doc=catalogue",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "catalogue",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "catalogue 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
       "id": "catalogue-moment-editor",
       "kind": "doc",
       "title": "Catalogue Moment Editor",
@@ -3429,6 +3320,31 @@
         "41"
       ],
       "search_text": "doc-ui-status doc ui status doc ui status docs viewer docs viewer 2026-05-13 21:41 2026 05 13 21 41"
+    },
+    {
+      "id": "studio-javascript-payload-inventory",
+      "kind": "doc",
+      "title": "JavaScript Inventory Policy",
+      "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
+      "last_updated": "2026-05-21",
+      "parent_id": "audit",
+      "parent_title": "Audit",
+      "display_meta": "2026-05-21 • Audit",
+      "search_terms": [
+        "studio-javascript-payload-inventory",
+        "studio",
+        "javascript",
+        "payload",
+        "inventory",
+        "javascript inventory policy",
+        "policy",
+        "audit",
+        "2026-05-21",
+        "2026",
+        "05",
+        "21"
+      ],
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory policy policy audit 2026-05-21 2026 05 21"
     },
     {
       "id": "project-state-page",
@@ -3589,34 +3505,6 @@
         "15"
       ],
       "search_text": "series-tags series tags series tags analytics 2026-05-15 2026 05 15"
-    },
-    {
-      "id": "scripts-audit-site-consistency",
-      "kind": "doc",
-      "title": "Site Consistency Audit",
-      "href": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
-      "last_updated": "2026-05-09 22:35",
-      "parent_id": "dev-home",
-      "parent_title": "Dev Home",
-      "display_meta": "2026-05-09 22:35 • Dev Home",
-      "search_terms": [
-        "scripts-audit-site-consistency",
-        "scripts",
-        "audit",
-        "site",
-        "consistency",
-        "site consistency audit",
-        "dev home",
-        "dev",
-        "home",
-        "2026-05-09 22:35",
-        "2026",
-        "05",
-        "09",
-        "22",
-        "35"
-      ],
-      "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit dev home dev home 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "studio-activity",
@@ -3844,6 +3732,31 @@
         "21"
       ],
       "search_text": "search-ui-behaviour search ui behaviour search ui behaviour 2026-05-21 2026 05 21"
+    },
+    {
+      "id": "scripts-audit-site-consistency",
+      "kind": "doc",
+      "title": "Site Consistency Audit",
+      "href": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
+      "last_updated": "2026-05-09 22:35",
+      "parent_id": "audit",
+      "parent_title": "Audit",
+      "display_meta": "2026-05-09 22:35 • Audit",
+      "search_terms": [
+        "scripts-audit-site-consistency",
+        "scripts",
+        "audit",
+        "site",
+        "consistency",
+        "site consistency audit",
+        "2026-05-09 22:35",
+        "2026",
+        "05",
+        "09",
+        "22",
+        "35"
+      ],
+      "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "site-request-studio-activity-follow-ups",
@@ -4350,48 +4263,6 @@
       "search_text": "site-request-docs-semantic-references site request docs semantic references docs semantic references request change requests change requests 2026-05-19 2026 05 19"
     },
     {
-      "id": "docs-viewer",
-      "kind": "doc",
-      "title": "Docs Viewer",
-      "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-20",
-      "display_meta": "2026-05-20",
-      "search_terms": [
-        "docs-viewer",
-        "docs",
-        "viewer",
-        "docs viewer",
-        "2026-05-20",
-        "2026",
-        "05",
-        "20"
-      ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-20 2026 05 20"
-    },
-    {
-      "id": "docs-viewer-scopes",
-      "kind": "doc",
-      "title": "Docs Viewer Scopes",
-      "href": "/docs/?scope=studio&doc=docs-viewer-scopes",
-      "last_updated": "2026-05-20",
-      "parent_id": "docs-viewer",
-      "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-20 • Docs Viewer",
-      "search_terms": [
-        "docs-viewer-scopes",
-        "docs",
-        "viewer",
-        "scopes",
-        "docs viewer scopes",
-        "docs viewer",
-        "2026-05-20",
-        "2026",
-        "05",
-        "20"
-      ],
-      "search_text": "docs-viewer-scopes docs viewer scopes docs viewer scopes docs viewer 2026-05-20 2026 05 20"
-    },
-    {
       "id": "docs-viewer-source-config-report",
       "kind": "doc",
       "title": "Docs Viewer Source Config Report",
@@ -4503,6 +4374,28 @@
       "search_text": "site-request-js-payload-runtime-cleanup site request js payload runtime cleanup javascript payload and runtime cleanup request javascript and javascript and browser config structural review request browser config structural review 2026-05-10 21:19 2026 05 10 21 19"
     },
     {
+      "id": "docs-viewer-scopes",
+      "kind": "doc",
+      "title": "Scopes",
+      "href": "/docs/?scope=studio&doc=docs-viewer-scopes",
+      "last_updated": "2026-05-20",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-20 • Docs Viewer",
+      "search_terms": [
+        "docs-viewer-scopes",
+        "docs",
+        "viewer",
+        "scopes",
+        "docs viewer",
+        "2026-05-20",
+        "2026",
+        "05",
+        "20"
+      ],
+      "search_text": "docs-viewer-scopes docs viewer scopes docs viewer 2026-05-20 2026 05 20"
+    },
+    {
       "id": "thumbnail-quality-page",
       "kind": "doc",
       "title": "Thumbnail Quality Page",
@@ -4524,6 +4417,27 @@
         "22"
       ],
       "search_text": "thumbnail-quality-page thumbnail quality page thumbnail quality page catalogue 2026-05-22 2026 05 22"
+    },
+    {
+      "id": "ui-catalogue",
+      "kind": "doc",
+      "title": "UI Catalogue",
+      "href": "/docs/?scope=studio&doc=ui-catalogue",
+      "last_updated": "2026-05-15",
+      "parent_id": "ui",
+      "parent_title": "UI",
+      "display_meta": "2026-05-15 • UI",
+      "search_terms": [
+        "ui-catalogue",
+        "ui",
+        "catalogue",
+        "ui catalogue",
+        "2026-05-15",
+        "2026",
+        "05",
+        "15"
+      ],
+      "search_text": "ui-catalogue ui catalogue ui catalogue 2026-05-15 2026 05 15"
     },
     {
       "id": "scripts-catalogue-source",
@@ -4731,6 +4645,33 @@
       "search_text": "search-incremental-orchestration-plan search incremental orchestration plan incremental search orchestration plan 2026-05-11 12:50 2026 05 11 12 50"
     },
     {
+      "id": "local-studio-app",
+      "kind": "doc",
+      "title": "Local Studio App",
+      "href": "/docs/?scope=studio&doc=local-studio-app",
+      "last_updated": "2026-05-22 08:06",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-22 08:06 • Change Requests",
+      "search_terms": [
+        "local-studio-app",
+        "local",
+        "studio",
+        "app",
+        "local studio app",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-22 08:06",
+        "2026",
+        "05",
+        "22",
+        "08",
+        "06"
+      ],
+      "search_text": "local-studio-app local studio app local studio app change requests change requests 2026-05-22 08:06 2026 05 22 08 06"
+    },
+    {
       "id": "scripts-project-state-report",
       "kind": "doc",
       "title": "Project State Report",
@@ -4921,25 +4862,6 @@
         "45"
       ],
       "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-12 18:45 2026 05 12 18 45"
-    },
-    {
-      "id": "ui-catalogue",
-      "kind": "doc",
-      "title": "UI Catalogue",
-      "href": "/docs/?scope=studio&doc=ui-catalogue",
-      "last_updated": "2026-05-15",
-      "display_meta": "2026-05-15",
-      "search_terms": [
-        "ui-catalogue",
-        "ui",
-        "catalogue",
-        "ui catalogue",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "ui-catalogue ui catalogue ui catalogue 2026-05-15 2026 05 15"
     },
     {
       "id": "scripts-catalogue-lookup",
@@ -5364,6 +5286,30 @@
       "search_text": "scripts-docs-management-server-operations scripts docs management server operations docs management service operations service docs management service 2026-05-23 2026 05 23"
     },
     {
+      "id": "data-models-catalogue-source",
+      "kind": "doc",
+      "title": "Catalogue Source Model",
+      "href": "/docs/?scope=studio&doc=data-models-catalogue-source",
+      "last_updated": "2026-05-19",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-19 • Catalogue",
+      "search_terms": [
+        "data-models-catalogue-source",
+        "data",
+        "models",
+        "catalogue",
+        "source",
+        "catalogue source model",
+        "model",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "data-models-catalogue-source data models catalogue source catalogue source model model 2026-05-19 2026 05 19"
+    },
+    {
       "id": "scripts-delete-work",
       "kind": "doc",
       "title": "Delete Work",
@@ -5436,6 +5382,31 @@
         "30"
       ],
       "search_text": "config-search-build-json config search build json search build config json 2026-05-11 21:30 2026 05 11 21 30"
+    },
+    {
+      "id": "data-models-catalogue-indexes",
+      "kind": "doc",
+      "title": "Catalogue Indexes And Payloads",
+      "href": "/docs/?scope=studio&doc=data-models-catalogue-indexes",
+      "last_updated": "2026-05-19",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-19 • Catalogue",
+      "search_terms": [
+        "data-models-catalogue-indexes",
+        "data",
+        "models",
+        "catalogue",
+        "indexes",
+        "catalogue indexes and payloads",
+        "and",
+        "payloads",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "data-models-catalogue-indexes data models catalogue indexes catalogue indexes and payloads and payloads 2026-05-19 2026 05 19"
     },
     {
       "id": "data-sharing",
@@ -5536,6 +5507,30 @@
       "search_text": "new-pipeline-refine-analytics new pipeline refine analytics analytics plan plan 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
+      "id": "data-models-catalogue-maintenance",
+      "kind": "doc",
+      "title": "Catalogue Model Maintenance",
+      "href": "/docs/?scope=studio&doc=data-models-catalogue-maintenance",
+      "last_updated": "2026-05-19",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-19 • Catalogue",
+      "search_terms": [
+        "data-models-catalogue-maintenance",
+        "data",
+        "models",
+        "catalogue",
+        "maintenance",
+        "catalogue model maintenance",
+        "model",
+        "2026-05-19",
+        "2026",
+        "05",
+        "19"
+      ],
+      "search_text": "data-models-catalogue-maintenance data models catalogue maintenance catalogue model maintenance model 2026-05-19 2026 05 19"
+    },
+    {
       "id": "docs-broken-links",
       "kind": "doc",
       "title": "Docs Broken Links",
@@ -5608,22 +5603,6 @@
         "19"
       ],
       "search_text": "new-pipeline-studio-ui-polish new pipeline studio ui polish studio ui polish 2026-04-19 2026 04 19"
-    },
-    {
-      "id": "testing",
-      "kind": "doc",
-      "title": "Testing",
-      "href": "/docs/?scope=studio&doc=testing",
-      "last_updated": "2026-05-15",
-      "display_meta": "2026-05-15",
-      "search_terms": [
-        "testing",
-        "2026-05-15",
-        "2026",
-        "05",
-        "15"
-      ],
-      "search_text": "testing 2026-05-15 2026 05 15"
     },
     {
       "id": "scripts-docs-builder",
@@ -5715,28 +5694,6 @@
         "45"
       ],
       "search_text": "config-docs-viewer config docs viewer docs viewer config docs viewer 2026-05-14 14:45 2026 05 14 45"
-    },
-    {
-      "id": "local-studio-app",
-      "kind": "doc",
-      "title": "Local Studio App",
-      "href": "/docs/?scope=studio&doc=local-studio-app",
-      "last_updated": "2026-05-22 08:06",
-      "display_meta": "2026-05-22 08:06",
-      "search_terms": [
-        "local-studio-app",
-        "local",
-        "studio",
-        "app",
-        "local studio app",
-        "2026-05-22 08:06",
-        "2026",
-        "05",
-        "22",
-        "08",
-        "06"
-      ],
-      "search_text": "local-studio-app local studio app local studio app 2026-05-22 08:06 2026 05 22 08 06"
     },
     {
       "id": "change-requests",

@@ -3,8 +3,9 @@ doc_id: local-setup
 title: Local Setup
 added_date: 2026-04-13
 last_updated: 2026-05-19
-parent_id: dev-home
-sort_order: 2000
+parent_id: ""
+sort_order: 16000
+viewable: true
 ---
 # Local Setup
 

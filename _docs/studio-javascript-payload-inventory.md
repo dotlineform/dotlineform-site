@@ -3,8 +3,8 @@ doc_id: studio-javascript-payload-inventory
 title: JavaScript Inventory Policy
 added_date: 2026-05-14
 last_updated: 2026-05-21
-parent_id: dev-home
-sort_order: 1700
+parent_id: audit
+sort_order: 6000
 viewable: true
 ---
 # JavaScript Inventory Policy

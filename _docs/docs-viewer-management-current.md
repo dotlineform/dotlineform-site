@@ -63,7 +63,7 @@ Implemented now:
 - right-click create actions now expose:
   - `New Sibling`
   - `New Child`
-- `Edit` is available for the current doc in the manage toolbar, and double-clicking an index row opens the same metadata modal for that clicked doc
+- `Edit` is available for the current doc in the manage toolbar, and double-clicking the index opens the same metadata modal for the selected doc
 - `Rebuild docs`, `Normalize order`, `Import`, `New`, `Edit`, `Archive`, and `Delete` are grouped under the top-row `Actions` menu
 - `Settings` is grouped under the top-row `Actions` menu and opens the active-scope settings modal
 - the settings modal currently exposes scoped `show_updated_date` only, writes through the local source-config settings endpoint, and rebuilds the affected docs payloads after a changed save

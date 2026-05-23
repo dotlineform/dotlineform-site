@@ -16,7 +16,7 @@ export function createDocsViewerManagementInteractionController(options) {
   var dragDocId = "";
   var dropTargetDocId = "";
   var dropPosition = "";
-  var suppressNextClickDocId = "";
+  var suppressNextClick = false;
   var lastEditRequestDocId = "";
   var lastEditRequestTime = 0;
 
@@ -128,6 +128,10 @@ export function createDocsViewerManagementInteractionController(options) {
     if (callbacks.onEditDoc) callbacks.onEditDoc(normalizedDocId);
   }
 
+  function requestEditSelectedDoc() {
+    requestEditDoc(state.selectedDocId);
+  }
+
   function handleRootClick(event) {
     if (contextMenu && !event.target.closest("#docsViewerContextMenu")) {
       hideContextMenu();
@@ -149,38 +153,28 @@ export function createDocsViewerManagementInteractionController(options) {
 
     nav.addEventListener("click", function (event) {
       if (event.detail >= 2 && !event.target.closest("[data-toggle-doc-id]")) {
-        var editRow = event.target.closest("[data-doc-row-id]");
-        if (editRow && editFromIndexEnabled()) {
-          var editDocId = editRow.dataset.docRowId || "";
-          if (state.docsById.has(editDocId)) {
-            suppressNextClickDocId = "";
-            event.preventDefault();
-            event.stopPropagation();
-            requestEditDoc(editDocId);
-            return;
-          }
+        if (editFromIndexEnabled() && state.docsById.has(state.selectedDocId)) {
+          suppressNextClick = false;
+          event.preventDefault();
+          event.stopPropagation();
+          requestEditSelectedDoc();
+          return;
         }
       }
-      if (!suppressNextClickDocId) return;
-      var row = event.target.closest("[data-doc-row-id]");
-      if (!row || row.dataset.docRowId !== suppressNextClickDocId) return;
-      suppressNextClickDocId = "";
+      if (!suppressNextClick) return;
+      suppressNextClick = false;
       event.preventDefault();
       event.stopPropagation();
     }, true);
 
     nav.addEventListener("mousedown", function (event) {
       if (event.button === 0 && event.detail >= 2 && !event.target.closest("[data-toggle-doc-id]")) {
-        var editRow = event.target.closest("[data-doc-row-id]");
-        if (editRow && editFromIndexEnabled()) {
-          var editDocId = editRow.dataset.docRowId || "";
-          if (state.docsById.has(editDocId)) {
-            suppressNextClickDocId = editDocId;
-            event.preventDefault();
-            event.stopPropagation();
-            requestEditDoc(editDocId);
-            return;
-          }
+        if (editFromIndexEnabled() && state.docsById.has(state.selectedDocId)) {
+          suppressNextClick = true;
+          event.preventDefault();
+          event.stopPropagation();
+          requestEditSelectedDoc();
+          return;
         }
       }
       var row = event.target.closest("[data-doc-row-id]");
@@ -201,10 +195,9 @@ export function createDocsViewerManagementInteractionController(options) {
       if (event.target.closest("[data-toggle-doc-id]")) return;
       var row = event.target.closest("[data-doc-row-id]");
       if (!row || !editFromIndexEnabled()) return;
-      var docId = row.dataset.docRowId || "";
-      if (!state.docsById.has(docId)) return;
+      if (!state.docsById.has(state.selectedDocId)) return;
       event.preventDefault();
-      requestEditDoc(docId);
+      requestEditSelectedDoc();
     });
 
     nav.addEventListener("dragstart", function (event) {

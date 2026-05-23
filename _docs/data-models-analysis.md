@@ -3,8 +3,9 @@ doc_id: data-models-analysis
 title: Analysis Scope
 added_date: 2026-04-26
 last_updated: "2026-05-06 20:54"
-parent_id: analytics
-sort_order: 1000
+parent_id: docs-viewer-scopes
+sort_order: 2000
+viewable: true
 ---
 # Analysis Scope
 

@@ -21,6 +21,10 @@ def docs_api_query_value(params: dict[str, list[str]], key: str) -> str:
 
 
 def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, list[str]]) -> dict[str, object]:
+    if path == routes.GENERATED_DOCS_LOG_PATH:
+        projection = docs_api_query_value(params, "projection") or "search-index"
+        return docs_generated_reads.read_generated_docs_log_projection(repo_root, projection)
+
     scope = source_model.normalize_scope(docs_api_query_value(params, "scope"))
 
     if path in {routes.GENERATED_INDEX_PATH, routes.GENERATED_INDEX_ALT_PATH}:
@@ -32,9 +36,6 @@ def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, li
         if not doc_id:
             raise ValueError("doc_id is required")
         return docs_generated_reads.read_generated_doc_payload(repo_root, scope, doc_id)
-    if path == routes.GENERATED_DOCS_LOG_PATH:
-        projection = docs_api_query_value(params, "projection") or "search-index"
-        return docs_generated_reads.read_generated_docs_log_projection(repo_root, projection)
     if path in {routes.GENERATED_REFERENCES_PATH, routes.GENERATED_REFERENCES_ALT_PATH}:
         return docs_generated_reads.read_generated_references_index(repo_root, scope)
     if path in {routes.GENERATED_REFERENCE_TARGET_PATH, routes.GENERATED_REFERENCE_TARGET_ALT_PATH}:

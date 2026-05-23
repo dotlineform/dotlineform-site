@@ -3,12 +3,21 @@ doc_id: data-models-library
 title: Library Scope
 added_date: 2026-03-31
 last_updated: 2026-05-11
-parent_id: library
+parent_id: docs-viewer-scopes
 sort_order: 1000
+viewable: true
 ---
 # Library Scope
 
-This document covers the current checked-in data model for the Library scope.
+- [Library](/library/?doc=library) is a Docs Viewer page on the public-facing site but it is a distinct data domain from Catalogue
+- Library administration is split across owning Studio and Docs Viewer surfaces rather than a standalone Studio Library dashboard.
+- [Library Documents](/docs/?scope=studio&doc=library-documents) lists generated Library document records for review.
+- Data import/export for Library records uses `/studio/data-sharing/review/?mode=manage&scope=library` and `/studio/data-sharing/prepare/?mode=manage&scope=library`.
+
+## Dependencies
+
+- shared Studio navigation from **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)**
+- any shared write-service or activity conventions used across Studio domains
 
 ## Scope Boundary
 

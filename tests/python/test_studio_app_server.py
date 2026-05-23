@@ -1172,10 +1172,16 @@ def test_docs_generated_read_routes_return_existing_payloads() -> None:
         "/docs/generated/payload",
         {"scope": ["studio"], "doc_id": ["docs-viewer"]},
     )
+    docs_log_payload = studio_docs_api.docs_generated_read_payload(
+        REPO_ROOT,
+        "/docs/generated/docs-log",
+        {"projection": ["search-index"]},
+    )
 
     assert any(doc["doc_id"] == "docs-viewer" for doc in index_payload["docs"])
     assert "entries" in search_payload
     assert doc_payload["doc_id"] == "docs-viewer"
+    assert docs_log_payload["entries"]
 
 
 def test_docs_management_settings_and_dry_run_mutation_routes() -> None:

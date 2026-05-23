@@ -79,7 +79,10 @@ function fetchChangeHistory(context) {
   if (!baseUrl) {
     return Promise.reject(new Error("Local docs-management server is not configured."));
   }
-  return window.fetch(baseUrl + "/docs/generated/docs-log?projection=search-index", {
+  const scope = cleanString(context.reportMeta && context.reportMeta.scope) || cleanString(context.viewerScope);
+  const params = new URLSearchParams({ projection: "search-index" });
+  if (scope) params.set("scope", scope);
+  return window.fetch(baseUrl + "/docs/generated/docs-log?" + params.toString(), {
     headers: { Accept: "application/json" },
     cache: "no-store"
   }).then((response) => {

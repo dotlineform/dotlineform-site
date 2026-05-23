@@ -4,8 +4,8 @@ title: Library Documents
 added_date: 2026-05-07
 last_updated: 2026-05-13
 ui_status: report
-parent_id: library
-sort_order: 2000
+parent_id: docs-viewer-scopes
+sort_order: 1500
 viewable: true
 viewer_report: docs_index_table
 viewer_report_access: manage

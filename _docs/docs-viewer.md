@@ -4,7 +4,7 @@ title: Docs Viewer
 added_date: 2026-04-24
 last_updated: 2026-05-20
 parent_id: ""
-sort_order: 9000
+sort_order: 5000
 viewable: true
 ---
 # Docs Viewer

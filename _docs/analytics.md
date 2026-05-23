@@ -4,7 +4,8 @@ title: Analytics
 added_date: "2026-05-06 18:19"
 last_updated: "2026-05-06 20:49"
 parent_id: ""
-sort_order: 6000
+sort_order: 7
+000
 published: true
 viewable: true
 ---

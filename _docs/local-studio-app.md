@@ -3,8 +3,8 @@ doc_id: local-studio-app
 title: Local Studio App
 added_date: "2026-05-22 08:06"
 last_updated: "2026-05-22 08:06"
-parent_id: ""
-sort_order: 21000
+parent_id: change-requests
+sort_order: 11000
 published: true
 viewable: true
 ---

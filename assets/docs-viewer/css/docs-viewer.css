@@ -609,6 +609,11 @@
   margin-right: auto;
 }
 
+.docsViewer__content a,
+.docsViewer__content code{
+  overflow-wrap: anywhere;
+}
+
 .docsViewer__panelStatus{
   max-width: var(--docs-viewer-measure);
   margin: 0 0 0.85rem;

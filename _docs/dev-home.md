@@ -10,12 +10,20 @@ viewable: true
 ---
 # Dev Home
 
-Technical documentation is organised by functional domain rather than file type. If it is a repo-wide concern, it goes here. Otherwise, it is found under the following domains:
+This section contains technical design guidance for the repo, which is the source for the dotlineform website and deployed via GitHub Pages. The site is served on the domain [dotlineform.com](https://www.dotlineform.com).
+
+The repo also contains the locally run web app **[Studio](/docs/?scope=studio&doc=studio)**, which manages the data for the site.
+
+## Docs Viewer
+
+**[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** is a shared module used to publish source markdown documents. Documents are imported and organised using the 'manage mode'. This is hosted by Studio.
+
+Note on document structure:
+
+- document metadata saved in front-matter YML.
+- `parent_id` is used to create a hierarchical structure to group related documents. Parent documents are often referred to as 'folders' or 'sections', because this is how they appear in the Docs Viewer index-tree. The source Markdown files are saved in a flat folder `_docs/...`
 
 ## Key Documents
-
-**[Studio](/docs/?scope=studio&doc=studio)**<br>
-Studio routes, page wiring, and Studio-specific behavior.
 
 - **[UI](/docs/?scope=studio&doc=ui)**
   site-wide UI framework and maintenance
@@ -30,6 +38,6 @@ Studio routes, page wiring, and Studio-specific behavior.
 - **[Scripts](/docs/?scope=studio&doc=scripts)**
   repo scripts, their flags, outputs, and operational responsibilities.
 - **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)**
-  the shared docs module used by `/docs/` and `/library/`.
+  the shared docs module used by `/docs/` and other installed scopes (e.g. `/library/`).
 - **[Search](/docs/?scope=studio&doc=search)**
   dedicated catalogue search plus inline docs-domain search.

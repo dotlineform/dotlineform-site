@@ -27,7 +27,7 @@ Doc: [Change History](/docs/?scope=studio&doc=change-history&mode=manage)
 The report reads the local generated docs-log search projection through the Docs Management server:
 
 - `_docs_logs/generated/search-index.json`
-- `GET /docs/generated/docs-log?projection=search-index`
+- `GET /docs/generated/docs-log?scope=studio&projection=search-index`
 
 The projection is generated from `_docs_logs/entries/*.json`.<br>
 Run `./scripts/docs_logs/build_indexes.py --write` after changing entries.
