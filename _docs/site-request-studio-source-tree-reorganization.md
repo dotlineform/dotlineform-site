@@ -68,13 +68,44 @@ studio/
 Preserve browser-facing route and asset compatibility during the migration.
 For example, Local Studio may continue to serve `/assets/studio/...` or `/studio/ui-catalogue/...` while the source files move to clearer Studio-owned locations.
 
+## Browser App Direction
+
+The reorganization should also reduce Python ownership of browser presentation over time.
+
+The current Local Studio app server still owns too much shell structure: route labels, top-navigation groups, active-section mapping, HTML shell rendering, per-route script/style inclusion, and runtime config projection.
+That makes small UI shell changes create a relatively broad Python blast radius.
+
+The future direction is a browser-owned Studio app shell with Python as the local server and service boundary:
+
+```text
+Python
+- serves one minimal Studio shell
+- serves static files
+- exposes browser-safe runtime config JSON
+- exposes read/write APIs
+- enforces local write allowlists, backups, previews, applies, and compact logs
+
+JavaScript
+- renders Studio navigation and home link lists from config
+- owns active route and section state
+- mounts route modules based on the current route and runtime metadata
+- owns app-shell UI behavior
+- calls Python only for data, generated reads, previews, applies, writes, and local workflow services
+```
+
+This is not a requirement to adopt a frontend framework or rewrite Studio as a full single-page app in the reorganization slice.
+A vanilla JavaScript shell is enough as the next architectural step.
+The practical goal is to move shell composition and navigation rendering out of Python while keeping Python authoritative for local filesystem writes and service guardrails.
+
 ## Implementation Tasks
 
 - Inventory current Studio-owned source, static, UI Catalogue, and generated-output-adjacent paths.
 - Classify each path as Studio-owned, Docs Viewer-owned, public-site-owned, domain-service-owned, or generated output.
 - Define the final Studio source-tree layout before moving files.
+- Identify which current Python-rendered shell concerns should become browser-shell concerns before moving files.
 - Move Python app-server modules in a small first slice, with import compatibility kept narrow and temporary.
 - Move Studio static assets in a second slice, with local app static serving preserving existing URLs where practical.
+- Move top navigation, active-section mapping, and home-list rendering toward a focused JavaScript shell module when doing so reduces path churn and verification scope.
 - Move UI Catalogue notes and demo source under the Studio boundary, preserving local demo routes.
 - Update smoke tests, docs, Jekyll excludes, and local runner docs in the same slices as the moves.
 - Remove transitional import/path aliases once all references are migrated.
@@ -86,6 +117,7 @@ For example, Local Studio may continue to serve `/assets/studio/...` or `/studio
 - Local Studio routes, UI Catalogue demos, and migrated app workflows still pass their focused smoke checks.
 - Existing public-site builds continue to exclude Studio-only surfaces.
 - Docs Viewer portable/shared files are not buried under Studio unless they are explicitly Studio shell integration files.
+- Python remains the local API/write boundary, but no longer needs broad edits for routine Studio shell navigation changes once the browser-shell step lands.
 
 ## Related References
 

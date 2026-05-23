@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T21:04:59Z",
+  "generated_at": "2026-05-23T21:09:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -3091,7 +3091,7 @@
       "source_path": "site-request-studio-source-tree-reorganization.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization.json",
-      "content_text_length": 3715,
+      "content_text_length": 5570,
       "ui_status": "planned"
     },
     {
