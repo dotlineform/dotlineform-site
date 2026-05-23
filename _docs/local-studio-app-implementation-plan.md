@@ -23,12 +23,13 @@ Status:
 - Phase 3 is implemented for Docs Viewer manage mode and the Docs Broken Links report replacement
 - Phase 4 active service consolidation and launcher cleanup are done for the current Local Studio route scope
 - Phase 5 operational route migration and UI Catalogue demo visibility are implemented for the current route scope
+- Phase 6 projection contract documentation has started
 
 ## Remaining Work Snapshot
 
 Next suitable slices, in dependency order:
 
-1. Start the projection contract work now that route and service ownership is less fluid.
+1. Continue the projection contract work by turning the documented source/projection boundary into focused checks.
 2. Finish the current Studio localization work before broad source-tree moves.
 3. Defer the optional repo split decision until the publish/export contract is stable.
 
@@ -133,6 +134,7 @@ Current commit point:
 - Thumbnail Quality now calls `/studio/api/catalogue/thumbnail-quality-preview` through the local app server instead of requiring the old catalogue sibling service URL
 - Local Studio and public-site launchers are now split into explicit commands: `bin/local-studio`, `bin/public-site-preview`, and `bin/public-site-build`; `bin/local-studio` has been retired
 - UI Catalogue demo index, primitive, and pattern routes are now local-app hosted as first-class non-mutating Studio reference surfaces while preserving the isolated demo namespace and demo-ready contract
+- Phase 6 now has a first projection-contract reference that maps canonical source families to public projections, Studio projections, and Docs Viewer payloads before any optional repo split or broad source-tree move
 - future non-Docs write/manage APIs should be added through the same local app route-module and domain-service pattern; detailed future-proofing rules live in [Development Checklist](/docs/?scope=studio&doc=development-checklist)
 
 ## Phase 0: Published Surface Cleanup
@@ -418,7 +420,7 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Document canonical source families and their public projections. | planned |
+| Document canonical source families and their public projections. | done; see [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) |
 | Distinguish public projections, Studio projections, and Docs Viewer payloads in docs and checks. | planned |
 | Add checks for source-only fields leaking into public projections. | planned |
 | Verify Jekyll consumes public projections rather than Studio-only data. | planned |
@@ -427,6 +429,8 @@ Outcomes:
 Next steps:
 
 Use this phase to prepare for a future repo split without requiring one.
+The first documentation slice is complete: [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) defines the current canonical source, public projection, Studio projection, and Docs Viewer payload families.
+The next slice should make the boundary more mechanical by extending checks for projection-family classification and source-only field leakage.
 The projection contract matters more than physical repo layout.
 
 ## Phase 7: Optional Repo Split Decision

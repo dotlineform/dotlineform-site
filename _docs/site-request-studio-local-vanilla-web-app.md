@@ -20,6 +20,7 @@ Status:
 - Phase 4 in progress with Docs management, analytics tag reads, active analytics tag writes, analytics tag route shells, and explicit local Studio/public-site launchers routed through the local app migration; the old analytics tag Jekyll shells and 8787 browser fallback are retired
 - Phase 5 route migration is implemented for the current route scope: Catalogue dashboard, Analytics dashboard, Studio Audits, Project State, Thumbnail Quality, Bulk Add Work, Studio Activity, Catalogue Field Registry, Catalogue Drafts, Studio Works, catalogue editor, Studio home, and UI Catalogue demo shells are hosted by the local app
 - UI Catalogue demos are first-class local Studio reference surfaces because they are Studio-owned, non-mutating pages rather than public-site pages
+- Phase 6 has started with a projection-contract reference for canonical source, public projections, Studio projections, and Docs Viewer payloads
 
 Related migration documentation under: [Local Studio App](/docs/?scope=studio&mode=manage&doc=local-studio-app)
 
@@ -172,6 +173,9 @@ canonical source data
   -> public projections
   -> Jekyll public site
 ```
+
+The current source/projection boundary is documented in [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract).
+That contract should be tightened with checks before any optional repo split or broad source-tree reorganization.
 
 ## Navigation Principle
 
@@ -493,6 +497,7 @@ For projection-contract slices:
 
 ## Change Log Entries
 
+- `change-2026-05-23-documented-projection-contract`
 - `change-2026-05-22-added-local-analytics-tag-promotion-api`
 - `change-2026-05-23-hosted-ui-catalogue-demos-in-local-studio`
 - `change-2026-05-22-mounted-local-analytics-dashboard-route`

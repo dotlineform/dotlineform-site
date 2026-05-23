@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-48c668d65955ee395406895d51504251",
-    "generated_at_utc": "2026-05-23T20:32:22Z",
-    "count": 298
+    "version": "blake2b-1df90ca6828324eab1ba37cd483c12d8",
+    "generated_at_utc": "2026-05-23T21:17:28Z",
+    "count": 299
   },
   "entries": [
     {
@@ -155,24 +155,22 @@
       "kind": "doc",
       "title": "Data Models",
       "href": "/docs/?scope=studio&doc=data-models",
-      "last_updated": "2026-05-06 21:10",
+      "last_updated": "2026-05-23",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-06 21:10 • Architecture",
+      "display_meta": "2026-05-23 • Architecture",
       "search_terms": [
         "data-models",
         "data",
         "models",
         "data models",
         "architecture",
-        "2026-05-06 21:10",
+        "2026-05-23",
         "2026",
         "05",
-        "06",
-        "21",
-        "10"
+        "23"
       ],
-      "search_text": "data-models data models data models architecture 2026-05-06 21:10 2026 05 06 21 10"
+      "search_text": "data-models data models data models architecture 2026-05-23 2026 05 23"
     },
     {
       "id": "dev-home",
@@ -729,10 +727,10 @@
       "kind": "doc",
       "title": "Public Published Surface",
       "href": "/docs/?scope=studio&doc=local-studio-app-public-surface",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-23",
       "parent_id": "local-studio-app",
       "parent_title": "Local Studio App",
-      "display_meta": "2026-05-22 • Local Studio App",
+      "display_meta": "2026-05-23 • Local Studio App",
       "search_terms": [
         "local-studio-app-public-surface",
         "local",
@@ -743,12 +741,12 @@
         "public published surface",
         "published",
         "local studio app",
-        "2026-05-22",
+        "2026-05-23",
         "2026",
         "05",
-        "22"
+        "23"
       ],
-      "search_text": "local-studio-app-public-surface local studio app public surface public published surface published local studio app 2026-05-22 2026 05 22"
+      "search_text": "local-studio-app-public-surface local studio app public surface public published surface published local studio app 2026-05-23 2026 05 23"
     },
     {
       "id": "development-workflow",
@@ -795,6 +793,30 @@
         "13"
       ],
       "search_text": "library-documents library documents library documents scopes 2026-05-13 2026 05 13"
+    },
+    {
+      "id": "data-models-projection-contract",
+      "kind": "doc",
+      "title": "Projection Contract",
+      "href": "/docs/?scope=studio&doc=data-models-projection-contract",
+      "last_updated": "2026-05-23",
+      "parent_id": "data-models",
+      "parent_title": "Data Models",
+      "display_meta": "2026-05-23 • Data Models",
+      "search_terms": [
+        "data-models-projection-contract",
+        "data",
+        "models",
+        "projection",
+        "contract",
+        "projection contract",
+        "data models",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "data-models-projection-contract data models projection contract projection contract data models 2026-05-23 2026 05 23"
     },
     {
       "id": "studio-ui-framework-primitives",

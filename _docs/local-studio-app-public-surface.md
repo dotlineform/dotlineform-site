@@ -2,7 +2,7 @@
 doc_id: local-studio-app-public-surface
 title: Public Published Surface
 added_date: 2026-05-22
-last_updated: 2026-05-22
+last_updated: 2026-05-23
 parent_id: local-studio-app
 sort_order: 1100
 published: true
@@ -15,6 +15,8 @@ This document defines the current dotlineform.com build surface while Studio is 
 `public` means served on dotlineform.com.
 It does not mean private repository access.
 Canonical source data may remain in a public repo while still staying out of public runtime projections.
+
+For the broader source/projection boundary, see [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract).
 
 ## Public Output
 

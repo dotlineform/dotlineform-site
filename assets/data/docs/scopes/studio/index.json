@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T21:09:26Z",
+  "generated_at": "2026-05-23T21:18:35Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -163,7 +163,7 @@
       "doc_id": "data-models",
       "title": "Data Models",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-06 21:10",
+      "last_updated": "2026-05-23",
       "parent_id": "architecture",
       "sort_order": 1000,
       "published": true,
@@ -172,7 +172,7 @@
       "source_path": "data-models.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models.json",
-      "content_text_length": 461
+      "content_text_length": 589
     },
     {
       "scope": "studio",
@@ -321,7 +321,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 42288
+      "content_text_length": 42921
     },
     {
       "scope": "studio",
@@ -539,7 +539,7 @@
       "doc_id": "local-studio-app-public-surface",
       "title": "Public Published Surface",
       "added_date": "2026-05-22",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-23",
       "parent_id": "local-studio-app",
       "sort_order": 1100,
       "published": true,
@@ -548,7 +548,7 @@
       "source_path": "local-studio-app-public-surface.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-public-surface",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-public-surface.json",
-      "content_text_length": 2880
+      "content_text_length": 2950
     },
     {
       "scope": "studio",
@@ -586,6 +586,22 @@
       "viewer_report_scope": "library",
       "viewer_report_access": "manage",
       "viewer_report_preset": "library_documents_admin"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "data-models-projection-contract",
+      "title": "Projection Contract",
+      "added_date": "2026-05-23",
+      "last_updated": "2026-05-23",
+      "parent_id": "data-models",
+      "sort_order": 1500,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "data-models-projection-contract.md",
+      "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-projection-contract.json",
+      "content_text_length": 7711
     },
     {
       "scope": "studio",
@@ -3057,7 +3073,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 26299,
+      "content_text_length": 26684,
       "ui_status": "in-progress"
     },
     {
