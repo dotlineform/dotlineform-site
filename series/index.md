@@ -203,7 +203,6 @@ permalink: /series/
     var assetFormat = String(root.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
     var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
     var momentsIndexUrl = baseurl + '/assets/data/moments_index.json';
-    var configUrl = baseurl + '/assets/studio/data/studio_config.json';
     var momentsItems = {{ moments_index_items | strip_newlines }};
     var pageSize = 80;
     var modeStorageKey = 'dlf.catalogIndex.mode';
@@ -386,11 +385,6 @@ permalink: /series/
         empty_works: String((source && source.empty_works) || uiTextDefaults.empty_works),
         empty_moments: String((source && source.empty_moments) || uiTextDefaults.empty_moments)
       };
-    }
-
-    function readUiText(configPayload) {
-      var text = configPayload && configPayload.ui_text && configPayload.ui_text.site_series_index;
-      return copyUiText(text);
     }
 
     function fetchJson(url) {
@@ -837,18 +831,16 @@ permalink: /series/
 
     Promise.all([
       fetchJson(seriesIndexUrl),
-      loadMomentsIndexMap(),
-      fetchJson(configUrl).catch(function () { return null; })
+      loadMomentsIndexMap()
     ])
       .then(function (results) {
         var seriesPayload = results[0];
         var momentsIndexMap = results[1];
-        var configPayload = results[2];
         var seriesMap = seriesPayload && seriesPayload.series && typeof seriesPayload.series === 'object'
           ? seriesPayload.series
           : {};
 
-        uiText = readUiText(configPayload);
+        uiText = copyUiText(uiTextDefaults);
         catalogueItems.works = Object.keys(seriesMap).map(function (sid) {
           return buildSeriesItem(seriesMap[sid]);
         }).filter(Boolean);

@@ -106,6 +106,10 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
 - `PUBLIC_SITE_CONFIG`
   default: `_config.yml`
   used by `bin/public-site-preview` and `bin/public-site-build`
+- `PUBLIC_SITE_LIVERELOAD`
+  default: `0`
+  accepted enabled values: `1`, `on`, `true`, or `yes`
+  used by `bin/public-site-preview`; can also be enabled per run with `bin/public-site-preview --livereload`
 
 Example:
 
@@ -187,6 +191,12 @@ It runs:
 
 ```bash
 bundle exec jekyll serve --config "$PUBLIC_SITE_CONFIG" --host "$PUBLIC_SITE_HOST" --port "$PUBLIC_SITE_PORT"
+```
+
+Pass `--livereload` to enable Jekyll LiveReload for a preview session:
+
+```bash
+bin/public-site-preview --livereload
 ```
 
 Explicit public-site build command:

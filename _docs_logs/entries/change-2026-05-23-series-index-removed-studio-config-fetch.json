@@ -1,0 +1,38 @@
+{
+  "id": "change-2026-05-23-series-index-removed-studio-config-fetch",
+  "date": "2026-05-23",
+  "title": "Removed Studio Config Fetch From Series Index",
+  "status": "implemented",
+  "type": "bugfix",
+  "domains": [
+    "site",
+    "studio",
+    "workflow"
+  ],
+  "summary": "Stopped the public series index page from requesting the Studio config payload during public Jekyll preview.",
+  "source": {
+    "file": "series/index.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "public-preview",
+    "series-index",
+    "studio-config"
+  ],
+  "related_docs": [
+    "local-setup-public-site-preview",
+    "scripts-local-studio",
+    "config-studio-config-json"
+  ],
+  "related_files": [
+    "series/index.md",
+    "_config.yml",
+    "assets/studio/data/studio_config.json"
+  ],
+  "effect": "The public series index now uses its built-in UI text defaults instead of optionally fetching `/assets/studio/data/studio_config.json`, which is intentionally excluded from public Jekyll builds.",
+  "verification": [
+    "rg -n \"assets/studio/data/studio_config\\\\.json|configUrl|readUiText\" series/index.md",
+    "git diff --check -- series/index.md",
+    "bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build"
+  ]
+}

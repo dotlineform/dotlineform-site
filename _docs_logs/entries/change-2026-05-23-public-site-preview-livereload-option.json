@@ -1,0 +1,36 @@
+{
+  "id": "change-2026-05-23-public-site-preview-livereload-option",
+  "date": "2026-05-23",
+  "title": "Added Public Site Preview LiveReload Option",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "scripts",
+    "workflow",
+    "studio"
+  ],
+  "summary": "Added an opt-in LiveReload flag and environment setting for the public-site preview wrapper.",
+  "source": {
+    "file": "_docs/local-setup-public-site-preview.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "public-site-preview",
+    "jekyll-livereload",
+    "local-setup"
+  ],
+  "related_docs": [
+    "local-setup-public-site-preview",
+    "scripts-local-studio"
+  ],
+  "related_files": [
+    "bin/public-site-preview",
+    "_docs/local-setup-public-site-preview.md",
+    "_docs/scripts-local-studio.md"
+  ],
+  "effect": "Local public-site preview can now be started with `bin/public-site-preview --livereload`, or LiveReload can be enabled by default through `PUBLIC_SITE_LIVERELOAD=1` in `var/local/site.env`.",
+  "verification": [
+    "bash -n bin/public-site-preview",
+    "git diff --check -- bin/public-site-preview _docs/local-setup-public-site-preview.md _docs/scripts-local-studio.md"
+  ]
+}

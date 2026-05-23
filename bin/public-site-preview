@@ -23,17 +23,51 @@ JEKYLL_WEBRICK_FILTER="$ROOT_DIR/scripts/jekyll_webrick_client_reset_filter.rb"
 PUBLIC_SITE_HOST="${PUBLIC_SITE_HOST:-${JEKYLL_HOST:-127.0.0.1}}"
 PUBLIC_SITE_PORT="${PUBLIC_SITE_PORT:-${JEKYLL_PORT:-4000}}"
 PUBLIC_SITE_CONFIG="${PUBLIC_SITE_CONFIG:-_config.yml}"
+PUBLIC_SITE_LIVERELOAD="${PUBLIC_SITE_LIVERELOAD:-0}"
 PUBLIC_SITE_RUBYOPT="-r$JEKYLL_WEBRICK_FILTER"
 if [ -n "${RUBYOPT:-}" ]; then
   PUBLIC_SITE_RUBYOPT="$PUBLIC_SITE_RUBYOPT $RUBYOPT"
 fi
 
+LIVERELOAD_ENABLED=0
+case "$PUBLIC_SITE_LIVERELOAD" in
+  1|on|ON|On|true|TRUE|True|yes|YES|Yes)
+    LIVERELOAD_ENABLED=1
+    ;;
+esac
+
+JEKYLL_ARGS=(
+  --config "$PUBLIC_SITE_CONFIG"
+  --host "$PUBLIC_SITE_HOST"
+  --port "$PUBLIC_SITE_PORT"
+)
+
+for arg in "$@"; do
+  case "$arg" in
+    --livereload)
+      LIVERELOAD_ENABLED=1
+      ;;
+    --no-livereload)
+      LIVERELOAD_ENABLED=0
+      ;;
+    *)
+      JEKYLL_ARGS+=("$arg")
+      ;;
+  esac
+done
+
+if [ "$LIVERELOAD_ENABLED" -eq 1 ]; then
+  JEKYLL_ARGS+=(--livereload)
+fi
+
 echo "Starting public-site preview from $ROOT_DIR"
 echo "Public site: http://$PUBLIC_SITE_HOST:$PUBLIC_SITE_PORT"
 echo "Jekyll config: $PUBLIC_SITE_CONFIG"
+if [ "$LIVERELOAD_ENABLED" -eq 1 ]; then
+  echo "LiveReload: enabled"
+else
+  echo "LiveReload: disabled"
+fi
 echo
 
-RUBYOPT="$PUBLIC_SITE_RUBYOPT" "$BUNDLE_BIN" exec jekyll serve \
-  --config "$PUBLIC_SITE_CONFIG" \
-  --host "$PUBLIC_SITE_HOST" \
-  --port "$PUBLIC_SITE_PORT"
+RUBYOPT="$PUBLIC_SITE_RUBYOPT" "$BUNDLE_BIN" exec jekyll serve "${JEKYLL_ARGS[@]}"

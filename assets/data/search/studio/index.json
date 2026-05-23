@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-94cc5526d76286cb0242769321d84521",
-    "generated_at_utc": "2026-05-23T18:37:48Z",
-    "count": 295
+    "version": "blake2b-5909112bc08615ee0073677622229afb",
+    "generated_at_utc": "2026-05-23T19:22:24Z",
+    "count": 296
   },
   "entries": [
     {
@@ -946,30 +946,6 @@
       "search_text": "catalogue-status catalogue status catalogue drafts drafts 2026-05-22 20:55 2026 05 22 20 55"
     },
     {
-      "id": "scripts-dev-studio",
-      "kind": "doc",
-      "title": "Dev Studio Runner",
-      "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-05-23",
-      "parent_id": "servers",
-      "parent_title": "Servers",
-      "display_meta": "2026-05-23 • Servers",
-      "search_terms": [
-        "scripts-dev-studio",
-        "scripts",
-        "dev",
-        "studio",
-        "dev studio runner",
-        "runner",
-        "servers",
-        "2026-05-23",
-        "2026",
-        "05",
-        "23"
-      ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner servers 2026-05-23 2026 05 23"
-    },
-    {
       "id": "user-guide-docs-html-import",
       "kind": "doc",
       "title": "Docs Import",
@@ -1171,6 +1147,30 @@
         "15"
       ],
       "search_text": "ui-primitive-input ui primitive input input primitive ui catalogue catalogue 2026-05-15 2026 05 15"
+    },
+    {
+      "id": "scripts-local-studio",
+      "kind": "doc",
+      "title": "Local Studio Runner",
+      "href": "/docs/?scope=studio&doc=scripts-local-studio",
+      "last_updated": "2026-05-23",
+      "parent_id": "servers",
+      "parent_title": "Servers",
+      "display_meta": "2026-05-23 • Servers",
+      "search_terms": [
+        "scripts-local-studio",
+        "scripts",
+        "local",
+        "studio",
+        "local studio runner",
+        "runner",
+        "servers",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "scripts-local-studio scripts local studio local studio runner runner servers 2026-05-23 2026 05 23"
     },
     {
       "id": "modal-composition-migration-tracker",
@@ -1557,6 +1557,31 @@
         "19"
       ],
       "search_text": "search-field-registry-definitions search field registry definitions search field definitions search field registry 2026-05-19 2026 05 19"
+    },
+    {
+      "id": "local-setup-public-site-preview",
+      "kind": "doc",
+      "title": "Local Setup Public Site Preview",
+      "href": "/docs/?scope=studio&doc=local-setup-public-site-preview",
+      "last_updated": "2026-05-23",
+      "parent_id": "local-setup",
+      "parent_title": "Local Setup",
+      "display_meta": "2026-05-23 • Local Setup",
+      "search_terms": [
+        "local-setup-public-site-preview",
+        "local",
+        "setup",
+        "public",
+        "site",
+        "preview",
+        "local setup public site preview",
+        "local setup",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "local-setup-public-site-preview local setup public site preview local setup public site preview local setup 2026-05-23 2026 05 23"
     },
     {
       "id": "runtime-dependencies",
@@ -5403,19 +5428,19 @@
       "kind": "doc",
       "title": "Local Setup",
       "href": "/docs/?scope=studio&doc=local-setup",
-      "last_updated": "2026-05-19",
-      "display_meta": "2026-05-19",
+      "last_updated": "2026-05-23",
+      "display_meta": "2026-05-23",
       "search_terms": [
         "local-setup",
         "local",
         "setup",
         "local setup",
-        "2026-05-19",
+        "2026-05-23",
         "2026",
         "05",
-        "19"
+        "23"
       ],
-      "search_text": "local-setup local setup local setup 2026-05-19 2026 05 19"
+      "search_text": "local-setup local setup local setup 2026-05-23 2026 05 23"
     },
     {
       "id": "config-search-build-json",
