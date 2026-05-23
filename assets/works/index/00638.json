@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-7edecfbf5cd7f1597d91bbe5a09c4049",
+    "version": "blake2b-c8043406b5a0a57a3043a1ba8b94ba80",
     "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00638",
     "count": 53
@@ -14,7 +14,6 @@
     "series_ids": [
       "005"
     ],
-    "storage": "framed",
     "medium_type": "mixed media",
     "medium_caption": "enamel paint on c-type print, aluminium mount",
     "height_cm": 75.0,

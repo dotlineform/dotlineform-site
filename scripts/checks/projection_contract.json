@@ -426,7 +426,9 @@
         "project_filename",
         "details_subfolder",
         "source_image_file",
-        "provenance"
+        "provenance",
+        "storage",
+        "notes"
       ],
       "public_paths": [
         "assets/data/works_index.json",

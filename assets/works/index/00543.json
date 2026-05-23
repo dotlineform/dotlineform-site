@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-e63edd150a856cc86700b70830364df8",
+    "version": "blake2b-28d67831fb8ff0886bc405f7259e1056",
     "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00543",
     "count": 0
@@ -14,7 +14,6 @@
     "series_ids": [
       "099"
     ],
-    "storage": "9",
     "medium_type": "mixed media",
     "medium_caption": "paint on photo",
     "height_cm": 30.3,

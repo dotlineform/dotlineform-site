@@ -263,7 +263,6 @@ def build_series_index_records(
             "year": year,
             "year_display": year_display,
             "primary_work_id": primary_work_id,
-            "notes": coerce_string(series_record.get("notes")),
             "project_folders": context.series_project_folders_by_id.get(sid, []),
             "works": ordered_work_ids,
         })

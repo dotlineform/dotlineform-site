@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-4b4160bc8430b1779ac903e807cce4fe",
+    "version": "blake2b-cf793dab02a8d037e1bdeb9fdd0dd461",
     "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01037",
     "count": 39
@@ -14,7 +14,6 @@
     "series_ids": [
       "046"
     ],
-    "storage": "framed",
     "medium_type": "painting",
     "medium_caption": "ink on paper",
     "height_cm": 61.0,

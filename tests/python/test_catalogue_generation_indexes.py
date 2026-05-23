@@ -24,6 +24,7 @@ def sample_series_records() -> dict[str, dict[str, object]]:
             "sort_fields": "title",
             "primary_work_id": "2",
             "published_date": "2026-5-1",
+            "notes": "Retired source note",
         },
         "010": {
             "series_id": "010",
@@ -125,6 +126,7 @@ def test_series_index_payload_is_published_only_and_validates_primary_work() -> 
     assert payload["series"]["009"]["works"] == ["00002", "00001"]
     assert payload["series"]["009"]["primary_work_id"] == "00002"
     assert payload["series"]["009"]["published_date"] == "2026-05-01"
+    assert "notes" not in payload["series"]["009"]
     assert payload["series"]["010"]["works"] == ["00004", "00002"]
     assert "011" not in payload["series"]
 

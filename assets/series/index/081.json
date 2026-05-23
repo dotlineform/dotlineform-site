@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-9078129d8bf4367e01e3ad26516df391",
+    "version": "blake2b-5e245bda3864f6f5ad55a02f5de9911c",
     "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "081",
     "count": 1
@@ -15,7 +15,6 @@
     "series_type": "primary",
     "year": 2020,
     "year_display": "c. 2001-11",
-    "notes": "put track listing in work_prose",
     "project_folders": [
       "intuition (2020)"
     ]

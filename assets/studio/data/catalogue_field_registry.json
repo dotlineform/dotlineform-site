@@ -200,7 +200,7 @@
       "id": "work_editor_only",
       "record_family": "work",
       "operation": "metadata_update",
-      "fields": ["notes", "provenance"],
+      "fields": ["provenance"],
       "current": {
         "artifacts": ["source-json", "studio-lookup"],
         "fallback": false
@@ -350,7 +350,7 @@
       }
     },
     {
-      "id": "series_public_notes",
+      "id": "series_legacy_notes",
       "record_family": "series",
       "operation": "metadata_update",
       "fields": ["notes"],
@@ -359,9 +359,9 @@
         "fallback": false
       },
       "target": {
-        "artifacts": ["source-json", "studio-lookup", "series-json", "series-index-json"],
+        "artifacts": ["source-json", "studio-lookup"],
         "fallback": false,
-        "reason": "Series notes are public series metadata but are not an independent search dependency unless search begins indexing them."
+        "reason": "Series notes are legacy Studio/source metadata; public series prose comes from Markdown source files."
       }
     },
     {

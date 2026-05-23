@@ -209,7 +209,6 @@ The shared work metadata surface should include the current edit fields:
 - `width_cm`
 - `depth_cm`
 - `storage_location`
-- `notes`
 - `provenance`
 - `artist`
 

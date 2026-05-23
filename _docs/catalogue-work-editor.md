@@ -203,7 +203,7 @@ Current save/publication flow:
 4. user edits form fields
 5. `POST /studio/api/catalogue/work/save` sends the current work id, the expected record hash, the normalized record patch, and internal `apply_build: true` when the current work is already `published`
 6. the local app adapter validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record plus nested public-update status for published saves
-7. the page reloads its focused work lookup payload for preview/detail/download/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `notes` and `provenance` do not disappear after save
+7. the page reloads its focused work lookup payload for preview/detail/download/link context, but keeps the canonical saved record as the editable baseline so source-only fields such as `provenance` do not disappear after save
 8. `POST /studio/api/catalogue/build-preview` reports the scoped public-update impact for the saved work record
 9. the current-record rail `Preview update` button is available for unsaved single-work edits on published works; it sends the changed source field names to `POST /studio/api/catalogue/build-preview` and shows the field-aware result in a modal without saving
 10. the same preview now also carries work media readiness and staged work prose readiness
@@ -306,7 +306,6 @@ The retired standalone work-file and work-link editors no longer own canonical w
 - `width_cm`
 - `depth_cm`
 - `storage_location`
-- `notes`
 - `provenance`
 - `artist`
 - `downloads`

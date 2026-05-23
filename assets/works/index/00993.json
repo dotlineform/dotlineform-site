@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-21c31790097e047e0b804e1b07b4ebce",
+    "version": "blake2b-6d1ff2f170e049a926f9e0a91e78d698",
     "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00993",
     "count": 0
@@ -14,7 +14,6 @@
     "series_ids": [
       "043"
     ],
-    "storage": "6",
     "medium_type": "painting",
     "medium_caption": "paint on carbon paper",
     "height_cm": 25.0,

@@ -183,6 +183,7 @@ def build_work_json_record(work_record: Mapping[str, Any]) -> Dict[str, Any]:
     public_record.pop("series_id", None)
     public_record.pop("series_title", None)
     public_record.pop("series_sort", None)
+    public_record.pop("storage", None)
     public_record.pop("title_sort", None)
     public_record.pop("checksum", None)
     return compact_json_object(public_record)
@@ -194,6 +195,7 @@ def build_series_json_record(series_record: Mapping[str, Any]) -> Dict[str, Any]
     public_record.pop("checksum", None)
     public_record.pop("works", None)
     public_record.pop("primary_work_id", None)
+    public_record.pop("notes", None)
     return compact_json_object(public_record)
 
 

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-422f5b1b66c23e6a3a93915b9aaec636",
+    "version": "blake2b-fe665714957ad99ed7f512780f020954",
     "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "088",
     "count": 1
@@ -15,7 +15,6 @@
     "series_type": "primary",
     "year": 2016,
     "year_display": "2016",
-    "notes": "add details",
     "project_folders": [
       "leaf"
     ]

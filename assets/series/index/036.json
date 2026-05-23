@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-ed758f924e3b845afe373b4955b8a811",
+    "version": "blake2b-6427f955e969b6dcb458c53f1c3c6cc4",
     "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "036",
     "count": 87
@@ -15,7 +15,6 @@
     "series_type": "primary",
     "year": 2025,
     "year_display": "2024-25",
-    "notes": "more works to publish",
     "project_folders": [
       "curve poems (2025)"
     ]

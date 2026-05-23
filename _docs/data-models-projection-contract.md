@@ -44,7 +44,9 @@ Canonical source can remain in a public repo while generated public projections 
 
 Catalogue public builders must treat canonical source JSON as input, not as a browser payload.
 The current manifest-backed leak rule covers source media path fields such as `project_folder`, `project_subfolder`, `project_filename`, `details_subfolder`, `source_image_file`, and `provenance`.
-Fields currently present in public projections, such as some series `notes` values and work `storage`, are not treated as source-only by the v1 check until a separate cleanup changes the runtime contract.
+It also treats work `storage` and retired series `notes` as source-only.
+`storage` remains available to Studio through the Studio-only `assets/studio/data/work_storage_index.json` projection; public catalogue work records, public indexes, and catalogue search must not publish it.
+Series `notes` is a legacy source field that has been superseded by catalogue prose Markdown files, so public series projections must not publish it.
 
 Catalogue search is allowed to include selected Studio-derived tag labels or terms when the search builder documents the transform.
 That does not make the tag registry, aliases, assignments, or full Studio lookup payloads public projections.
@@ -108,11 +110,11 @@ Existing enforcement is split across several checks and builders:
 - search builders own scope-specific flattened search projections
 - site consistency and field-registry checks catch selected catalogue/source relationship drift
 
-The next Phase 6 slices should make this more mechanical:
+The next Phase 6 slices should keep this mechanical:
 
 1. extend manifest-backed checks when new artifact families appear
 2. tighten source-only field rules only when the current public runtime contract changes
-3. decide whether public `notes` and `storage` fields remain intentional runtime fields or become cleanup candidates
+3. populate new manifest families and field-leak rules as Phase 6 work introduces or retires projections
 
 ## Practical Update Rule
 

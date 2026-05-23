@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-10d18c2408ccb352e9db8d3072f3abff",
+    "version": "blake2b-0aae426acf92fb8d07c8d211b7639e24",
     "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00163",
     "count": 10
@@ -14,7 +14,6 @@
     "series_ids": [
       "105"
     ],
-    "storage": "1",
     "medium_type": "mixed media",
     "medium_caption": "bound photocopied printed pages, canvas cover",
     "height_cm": 30.5,

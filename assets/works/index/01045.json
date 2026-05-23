@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-9961cbf39e1d997bcbcfa737fc27b32f",
+    "version": "blake2b-e5ad54d72e853a5bb2aa407e28cd8474",
     "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "01045",
     "count": 2
@@ -14,7 +14,6 @@
     "series_ids": [
       "048"
     ],
-    "storage": "framed",
     "medium_type": "monoprint",
     "medium_caption": "ink and paint on paper",
     "height_cm": 60.0,

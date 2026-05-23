@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-2716110a9b610fc5593b5165d7afc3d6",
+    "version": "blake2b-23c7729ffcd77c9a1d89f254902b6878",
     "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00370",
     "count": 0
@@ -14,7 +14,6 @@
     "series_ids": [
       "036"
     ],
-    "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "ink on paper",
     "height_cm": 42.0,

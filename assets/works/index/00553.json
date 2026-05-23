@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-a5b4d511c2beb0801fbf6943170a243b",
+    "version": "blake2b-4e9dcc239bfb291424b94be12bb2dac0",
     "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00553",
     "count": 0
@@ -14,7 +14,6 @@
     "series_ids": [
       "110"
     ],
-    "storage": "12",
     "medium_type": "paper collage",
     "medium_caption": "paper collage, tracing paper",
     "height_cm": 29.7,

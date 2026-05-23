@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-29e88003045804deaac79accd18ca75c",
+    "version": "blake2b-67c0f8e8d635a586efbfa38677c98a3d",
     "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "009",
     "count": 4
@@ -15,7 +15,6 @@
     "series_type": "primary",
     "year": 2025,
     "year_display": "2025",
-    "notes": "details attached to 00001",
     "project_folders": [
       "a poem divided into 4 parts"
     ]

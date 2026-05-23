@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-af6ea522817a3a39eedd01512cde5985",
+    "version": "blake2b-e99d7e034e3a945d7e75d8df7253a798",
     "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "106",
     "count": 5
@@ -15,7 +15,6 @@
     "series_type": "primary",
     "year": 2004,
     "year_display": "2004",
-    "notes": "add videos",
     "project_folders": [
       "nerve forms"
     ]

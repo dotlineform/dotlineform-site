@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-7746016e3b598f36b58f72f09fe2043c",
+    "version": "blake2b-b1ce2b668ea95cd1e212410d02df69a4",
     "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00176",
     "count": 0
@@ -14,7 +14,6 @@
     "series_ids": [
       "026"
     ],
-    "storage": "1",
     "medium_type": "mixed media",
     "medium_caption": "dried leaf mounted on canvas",
     "height_cm": 25.5,

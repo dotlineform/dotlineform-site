@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-b892137405833078eddbf02236ad8606",
+    "version": "blake2b-9562edca411626cea8ab685d8537bc3c",
     "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00175",
     "count": 0
@@ -14,7 +14,6 @@
     "series_ids": [
       "026"
     ],
-    "storage": "1",
     "medium_type": "mixed media",
     "medium_caption": "cigarette fragments mounted on paper",
     "height_cm": 21.0,

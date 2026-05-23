@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-3f1d0b87278bfd616f998e36fef540f0",
+    "version": "blake2b-624330704bcd7d7b800b6bfe8a3064e4",
     "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00887",
     "count": 0
@@ -14,7 +14,6 @@
     "series_ids": [
       "037"
     ],
-    "storage": "extant",
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
     "height_cm": 31.0,

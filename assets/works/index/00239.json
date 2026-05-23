@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-256a9b2a031621def9b47be7b2a890e4",
+    "version": "blake2b-11443f536145ae2a5ad7f4a3f9e231a0",
     "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00239",
     "count": 0
@@ -14,7 +14,6 @@
     "series_ids": [
       "027"
     ],
-    "storage": "3",
     "medium_type": "digital print",
     "medium_caption": "laserjet print",
     "height_cm": 29.7,

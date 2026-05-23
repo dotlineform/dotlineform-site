@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-e759ff1ae38e2a942fd3624ef73c5c91",
+    "version": "blake2b-87594ae8384c2faaa47b77a16add5281",
     "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "069",
     "count": 1
@@ -15,7 +15,6 @@
     "series_type": "primary",
     "year": 2020,
     "year_display": "c. 2001-11",
-    "notes": "put track listing in work_prose",
     "project_folders": [
       "genetic (2020)"
     ]

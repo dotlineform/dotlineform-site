@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-1d6ad3a3677be21be574b0c55a002950",
+    "version": "blake2b-51cbf5e1fd7b48b2ea6d6e9cd467bd5e",
     "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00160",
     "count": 10
@@ -14,7 +14,6 @@
     "series_ids": [
       "104"
     ],
-    "storage": "1",
     "medium_type": "writing",
     "medium_caption": "typed text, 5 pages",
     "height_cm": 29.7,

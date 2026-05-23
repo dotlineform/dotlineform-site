@@ -1,0 +1,44 @@
+{
+  "id": "change-2026-05-23-retired-work-notes-editor-field",
+  "date": "2026-05-23",
+  "title": "Retired Work Notes Editor Field",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "catalogue",
+    "studio",
+    "data-models"
+  ],
+  "summary": "Removed the legacy work notes field from the Studio Work editor and work-save update contract while keeping storage_location active for Studio storage review workflows.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "catalogue-work-editor",
+    "projection-contract",
+    "phase-6",
+    "studio-works"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "catalogue-work-editor",
+    "scripts-verify-catalogue-field-registry",
+    "site-request-catalogue-work-unified-editor",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "assets/studio/js/catalogue-work-fields.js",
+    "scripts/catalogue/catalogue_work_service.py",
+    "scripts/catalogue/catalogue_bulk_service.py",
+    "assets/studio/data/catalogue_field_registry.json",
+    "scripts/catalogue/verify_catalogue_field_registry.py"
+  ],
+  "effect": "Work notes remains tolerated as legacy source data, but it is no longer shown, created, saved, or bulk-edited through /studio/catalogue-work/. Work storage remains editable and continues to feed the Studio-only work storage index.",
+  "verification": [
+    "node --check assets/studio/js/catalogue-work-fields.js",
+    "python -m py_compile scripts/catalogue/catalogue_work_service.py scripts/catalogue/catalogue_bulk_service.py scripts/catalogue/verify_catalogue_field_registry.py",
+    "python tests/python/test_catalogue_field_registry.py",
+    "python tests/python/test_catalogue_lookup_refresh.py"
+  ]
+}

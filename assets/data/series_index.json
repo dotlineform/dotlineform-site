@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-614d3e82a2de8108682a33fe7e57d37a",
+    "version": "blake2b-b0a7d4b4ac4ba2c15654bc96d907da37",
     "generated_at_utc": "2026-05-08T17:05:42Z",
     "count": 139
   },
@@ -17,7 +17,6 @@
       "year": 2009,
       "year_display": "2009",
       "primary_work_id": "00635",
-      "notes": "test",
       "project_folders": [
         "10000"
       ],
@@ -244,7 +243,6 @@
       "year": 2025,
       "year_display": "2025",
       "primary_work_id": "00001",
-      "notes": "details attached to 00001",
       "project_folders": [
         "a poem divided into 4 parts"
       ],
@@ -1089,7 +1087,6 @@
       "year": 2025,
       "year_display": "2024-25",
       "primary_work_id": "00361",
-      "notes": "more works to publish",
       "project_folders": [
         "curve poems (2025)"
       ],
@@ -2048,7 +2045,6 @@
       "year": 2025,
       "year_display": "2017-25",
       "primary_work_id": "00403",
-      "notes": "more works to publish",
       "project_folders": [
         "found forms"
       ],
@@ -2182,7 +2178,6 @@
       "year": 2020,
       "year_display": "c. 2001-11",
       "primary_work_id": "01250",
-      "notes": "put track listing in work_prose",
       "project_folders": [
         "genetic (2020)"
       ],
@@ -2538,7 +2533,6 @@
       "year": 2020,
       "year_display": "c. 2001-11",
       "primary_work_id": "00457",
-      "notes": "put track listing in work_prose",
       "project_folders": [
         "intuition (2020)"
       ],
@@ -2684,7 +2678,6 @@
       "year": 2016,
       "year_display": "2016",
       "primary_work_id": "00458",
-      "notes": "add details",
       "project_folders": [
         "leaf"
       ],
@@ -2921,7 +2914,6 @@
       "year": 2009,
       "year_display": "2004-15",
       "primary_work_id": "00477",
-      "notes": "add dall-e versions",
       "project_folders": [
         "mm"
       ],
@@ -3092,7 +3084,6 @@
       "year": 1995,
       "year_display": "1990-95",
       "primary_work_id": "00008",
-      "notes": "works and details to publish",
       "project_folders": [
         "nerve",
         "nerve (abattoir)",
@@ -3115,7 +3106,6 @@
       "year": 2004,
       "year_display": "2004",
       "primary_work_id": "00581",
-      "notes": "add videos",
       "project_folders": [
         "nerve forms"
       ],

@@ -84,6 +84,7 @@ def test_canonical_work_record_orders_fields_and_prunes_public_record() -> None:
     ]
     assert canonical["series_title"] == "Primary Series"
     assert canonical["series_sort"] == "001-00042"
+    assert canonical["storage"] == "Rack A"
     assert canonical["links"] == [{"url": "https://example.test", "label": "Example"}]
     assert "checksum" in canonical
 
@@ -91,6 +92,7 @@ def test_canonical_work_record_orders_fields_and_prunes_public_record() -> None:
     assert "series_id" not in public_record
     assert "series_title" not in public_record
     assert "series_sort" not in public_record
+    assert "storage" not in public_record
     assert "title_sort" not in public_record
     assert "checksum" not in public_record
     assert "year_display" not in public_record
@@ -106,7 +108,7 @@ def test_public_series_and_moment_records_prune_internal_fields() -> None:
             "title": "Series",
             "works": ["00001"],
             "primary_work_id": "00001",
-            "notes": None,
+            "notes": "Retired source note",
         }
     )
     assert series == {"series_id": "009", "title": "Series"}

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-9988e6b484957d5cd476b2a479dc57a6",
+    "version": "blake2b-1a71f82ab81de92e11b4888d313eea0c",
     "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00351",
     "count": 0
@@ -14,7 +14,6 @@
     "series_ids": [
       "036"
     ],
-    "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "ink and pencil on paper",
     "height_cm": 42.0,

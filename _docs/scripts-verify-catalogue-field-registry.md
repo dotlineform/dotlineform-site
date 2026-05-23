@@ -48,14 +48,14 @@ It also verifies source/registry drift:
 The verification covers:
 
 - work-local public metadata such as `downloads` and `links`
-- work editor-only metadata such as `notes` and `provenance`
+- work editor-only metadata such as `provenance`
 - work media source fields such as `project_filename`
 - work search enrichment fields such as `medium_type`
 - work display fields with a related series `sort_fields` dependency
 - work publication and membership fields such as `series_ids`
 - work-detail public section metadata such as `section_title` and `sort_order`
 - work-detail source media fields such as `details_subfolder` and `project_filename`
-- series publication fields and series notes
+- series publication fields and legacy series notes
 - moment display fields and moment media source fields
 - unknown-field fallback
 - mixed dependency-class fallback

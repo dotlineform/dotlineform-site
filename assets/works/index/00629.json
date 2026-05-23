@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-077e2a4a6c5ac4552fed721ed8e9cef8",
+    "version": "blake2b-cec889510223bfa06eb6f66fb07fd690",
     "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00629",
     "count": 13
@@ -14,7 +14,6 @@
     "series_ids": [
       "118"
     ],
-    "storage": "framed",
     "medium_type": "digital print",
     "medium_caption": "giclée print",
     "height_cm": 75.0,

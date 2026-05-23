@@ -425,7 +425,7 @@ Outcomes:
 | Document canonical source families and their public projections. | done; see [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) |
 | Populate the manifest with all Phase 6 artifact families: canonical source, public projections, Studio projections, Docs Viewer payloads, local working output, public media, Studio app assets, and UI Catalogue demo assets where relevant. | done for the current Phase 6 scope; future artifact families must be added to the manifest when introduced |
 | Distinguish public projections, Studio projections, and Docs Viewer payloads through manifest-backed docs and checks. | done for current family classification and public-build policy |
-| Add manifest-backed checks for source-only fields leaking into public projections. | done for current source media path fields; broader field tightening such as public `notes` or `storage` needs a separate runtime-contract decision |
+| Add manifest-backed checks for source-only fields leaking into public projections. | done for current source media path fields, work `storage`, and retired series `notes`; public generated payloads were refreshed to match |
 | Verify Jekyll consumes public projections rather than Studio-only data, and that `_config.yml` exclusion/allowance policy matches the manifest. | done for current scope; manifest check validates `_config.yml` exclusions, public-output policy, and public template/script source references |
 | Keep generated output paths explicit, boring, and classified in the manifest. | done for current Phase 6 families |
 
@@ -438,7 +438,7 @@ Existing domain configs should keep their current domain responsibilities: Docs 
 The projection contract manifest should own cross-domain classification, public-build policy, source-only leak rules, owner docs, and check coverage.
 The manifest schema, first full-family population, validation check, public-build audit integration, and public template/script source-reference audit are now in place.
 The source-reference audit also removed the old public work-page JavaScript branch that reconstructed `/studio/studio-works/` on the public-site host for `from=studio_works_index`; that return context now falls back to the public work index because Local Studio has a separate host.
-The next slice should decide whether public `notes` and `storage` fields are intentional runtime contract or cleanup candidates.
+The public `notes` and `storage` cleanup decision is now implemented: `storage` stays available through the Studio-only work storage index for `/studio/studio-works/` management views, while public catalogue records, indexes, and search omit it; retired series `notes` no longer publishes because catalogue prose Markdown is the public narrative source.
 The projection contract matters more than physical repo layout.
 
 ## Phase 7: Optional Repo Split Decision

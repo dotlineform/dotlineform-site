@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-eb6dc0d5dc2abffe2dbd9e5e43c74f99",
+    "version": "blake2b-9bc1ed318fd5cd5a5a2857a3ed1002e8",
     "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00541",
     "count": 0
@@ -14,7 +14,6 @@
     "series_ids": [
       "099"
     ],
-    "storage": "9",
     "medium_type": "collage",
     "medium_caption": "photo collage",
     "height_cm": 30.3,

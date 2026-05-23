@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T21:49:12Z",
+  "generated_at": "2026-05-23T22:10:03Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -321,7 +321,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 45103
+      "content_text_length": 45314
     },
     {
       "scope": "studio",
@@ -601,7 +601,7 @@
       "source_path": "data-models-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-projection-contract.json",
-      "content_text_length": 8593
+      "content_text_length": 8799
     },
     {
       "scope": "studio",
@@ -1232,7 +1232,7 @@
       "source_path": "catalogue-work-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-work-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-editor.json",
-      "content_text_length": 16141
+      "content_text_length": 16125
     },
     {
       "scope": "studio",
@@ -1588,7 +1588,7 @@
       "source_path": "site-request-catalogue-work-unified-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-work-unified-editor.json",
-      "content_text_length": 23378,
+      "content_text_length": 23372,
       "ui_status": "paused"
     },
     {
@@ -1912,7 +1912,7 @@
       "source_path": "scripts-verify-catalogue-field-registry.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-verify-catalogue-field-registry",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-verify-catalogue-field-registry.json",
-      "content_text_length": 2810
+      "content_text_length": 2807
     },
     {
       "scope": "studio",
@@ -3089,7 +3089,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 26969,
+      "content_text_length": 27049,
       "ui_status": "in-progress"
     },
     {

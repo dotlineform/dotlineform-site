@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "work_record_v3",
-    "version": "blake2b-8ca074fc69f45633c7b7a3ccb9c1c248",
+    "version": "blake2b-418305b959e5b56cbd21ba37610d3b4f",
     "generated_at_utc": "2026-05-02T16:39:15Z",
     "work_id": "00166",
     "count": 19
@@ -14,7 +14,6 @@
     "series_ids": [
       "105"
     ],
-    "storage": "1",
     "medium_type": "writing",
     "medium_caption": "bound printed pages, edition 9 [extant]",
     "height_cm": 21.5,

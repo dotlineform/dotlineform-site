@@ -1,0 +1,46 @@
+{
+  "id": "change-2026-05-23-removed-storage-and-notes-from-public-projections",
+  "date": "2026-05-23",
+  "title": "Removed Storage And Notes From Public Projections",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "data-models",
+    "catalogue",
+    "build",
+    "studio"
+  ],
+  "summary": "Tightened the projection contract so public catalogue payloads no longer publish work storage or retired series notes, while keeping storage available through the Studio-only work storage index.",
+  "source": {
+    "file": "_docs/local-studio-app-implementation-plan.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "local-studio-app",
+    "projection-contract",
+    "phase-6",
+    "catalogue-public-projections",
+    "studio-works"
+  ],
+  "change_request_doc_id": "site-request-studio-local-vanilla-web-app",
+  "related_docs": [
+    "data-models-projection-contract",
+    "local-studio-app-implementation-plan",
+    "site-request-studio-local-vanilla-web-app"
+  ],
+  "related_files": [
+    "scripts/catalogue/catalogue_generation_records.py",
+    "scripts/catalogue/catalogue_generation_indexes.py",
+    "scripts/checks/projection_contract.json",
+    "assets/studio/data/work_storage_index.json",
+    "assets/data/series_index.json",
+    "assets/works/index/*.json",
+    "assets/series/index/*.json"
+  ],
+  "effect": "Public catalogue work records, series records, and the series index now align with the source/projection boundary. Studio Works can still use storage data from the excluded Studio-only projection, and the manifest audit now fails if storage or notes reappear in public catalogue JSON/search payloads.",
+  "verification": [
+    "python -m pytest tests/python/test_catalogue_generation_records.py tests/python/test_catalogue_generation_indexes.py",
+    "python -m py_compile scripts/catalogue/catalogue_generation_records.py scripts/catalogue/catalogue_generation_indexes.py scripts/checks/audit_projection_contract.py",
+    "python scripts/checks/audit_projection_contract.py"
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-0764044ffe11c1045a4a05a48d7a5479",
+    "version": "blake2b-83f708b3c871f1adc8f91eeec2031146",
     "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "098",
     "count": 47
@@ -15,7 +15,6 @@
     "series_type": "primary",
     "year": 2009,
     "year_display": "2004-15",
-    "notes": "add dall-e versions",
     "project_folders": [
       "mm"
     ]

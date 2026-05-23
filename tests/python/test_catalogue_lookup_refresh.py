@@ -32,7 +32,7 @@ def write_fixture_source(source_dir: Path) -> CatalogueSourceRecords:
                 "year_display": "2026",
                 "status": "published",
                 "series_ids": ["009"],
-                "notes": "Before",
+                "provenance": "Before",
             },
             "00002": {
                 "work_id": "00002",
@@ -116,11 +116,11 @@ def test_work_single_record_refresh_reports_work_record() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         repo_root, source_dir, lookup_dir, records = fixture_paths(tmp)
         current_record = records.works["00001"]
-        updated_record = dict(current_record, notes="After")
+        updated_record = dict(current_record, provenance="After")
         lookup_plan = lookup_plan_for(
             records,
             record_family="work",
-            changed_fields=["notes"],
+            changed_fields=["provenance"],
             current_record=current_record,
             updated_record=updated_record,
         )

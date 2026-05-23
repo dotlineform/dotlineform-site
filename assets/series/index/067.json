@@ -1,7 +1,7 @@
 {
   "header": {
     "schema": "series_record_v1",
-    "version": "blake2b-72b27b893db4c4232d0895d200887f51",
+    "version": "blake2b-3b23e1b61f1650f2cc44e1a271ba2e0a",
     "generated_at_utc": "2026-04-29T21:18:14Z",
     "series_id": "067",
     "count": 51
@@ -15,7 +15,6 @@
     "series_type": "primary",
     "year": 2025,
     "year_display": "2017-25",
-    "notes": "more works to publish",
     "project_folders": [
       "found forms"
     ]
