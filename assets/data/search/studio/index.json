@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-7fbe77deae9340814236923e9e440dc7",
-    "generated_at_utc": "2026-05-23T23:18:58Z",
+    "version": "blake2b-b90a25ae278b3e91130f5f6d9091900d",
+    "generated_at_utc": "2026-05-23T23:45:37Z",
     "count": 300
   },
   "entries": [
@@ -799,10 +799,10 @@
       "kind": "doc",
       "title": "Projection Contract",
       "href": "/docs/?scope=studio&doc=data-models-projection-contract",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-24",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-05-23 • Data Models",
+      "display_meta": "2026-05-24 • Data Models",
       "search_terms": [
         "data-models-projection-contract",
         "data",
@@ -811,12 +811,12 @@
         "contract",
         "projection contract",
         "data models",
-        "2026-05-23",
+        "2026-05-24",
         "2026",
         "05",
-        "23"
+        "24"
       ],
-      "search_text": "data-models-projection-contract data models projection contract projection contract data models 2026-05-23 2026 05 23"
+      "search_text": "data-models-projection-contract data models projection contract projection contract data models 2026-05-24 2026 05 24"
     },
     {
       "id": "studio-ui-framework-primitives",
@@ -1273,16 +1273,16 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-13",
-      "display_meta": "2026-05-13",
+      "last_updated": "2026-05-24",
+      "display_meta": "2026-05-24",
       "search_terms": [
         "studio",
-        "2026-05-13",
+        "2026-05-24",
         "2026",
         "05",
-        "13"
+        "24"
       ],
-      "search_text": "studio 2026-05-13 2026 05 13"
+      "search_text": "studio 2026-05-24 2026 05 24"
     },
     {
       "id": "site-request-studio-audits-page",
@@ -1424,21 +1424,21 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-24",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-22 • Studio",
+      "display_meta": "2026-05-24 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-05-22",
+        "2026-05-24",
         "2026",
         "05",
-        "22"
+        "24"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-22 2026 05 22"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-05-24 2026 05 24"
     },
     {
       "id": "studio-smoke-testing",
@@ -4776,25 +4776,22 @@
       "kind": "doc",
       "title": "Local Studio App",
       "href": "/docs/?scope=studio&doc=local-studio-app",
-      "last_updated": "2026-05-23",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-23 • Change Requests",
+      "last_updated": "2026-05-24",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-24 • Studio",
       "search_terms": [
         "local-studio-app",
         "local",
         "studio",
         "app",
         "local studio app",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-23",
+        "2026-05-24",
         "2026",
         "05",
-        "23"
+        "24"
       ],
-      "search_text": "local-studio-app local studio app local studio app change requests change requests 2026-05-23 2026 05 23"
+      "search_text": "local-studio-app local studio app local studio app 2026-05-24 2026 05 24"
     },
     {
       "id": "scripts-project-state-report",

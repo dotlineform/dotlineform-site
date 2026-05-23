@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T23:22:33Z",
+  "generated_at": "2026-05-23T23:45:36Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -592,7 +592,7 @@
       "doc_id": "data-models-projection-contract",
       "title": "Projection Contract",
       "added_date": "2026-05-23",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-24",
       "parent_id": "data-models",
       "sort_order": 1500,
       "published": true,
@@ -601,7 +601,7 @@
       "source_path": "data-models-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-projection-contract.json",
-      "content_text_length": 8777
+      "content_text_length": 10706
     },
     {
       "scope": "studio",
@@ -885,7 +885,7 @@
       "doc_id": "studio",
       "title": "Studio",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-13",
+      "last_updated": "2026-05-24",
       "parent_id": "",
       "sort_order": 2000,
       "published": true,
@@ -894,7 +894,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 4121
+      "content_text_length": 4232
     },
     {
       "scope": "studio",
@@ -982,7 +982,7 @@
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-24",
       "parent_id": "studio",
       "sort_order": 2000,
       "published": true,
@@ -991,7 +991,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 14803
+      "content_text_length": 15057
     },
     {
       "scope": "studio",
@@ -3164,8 +3164,8 @@
       "doc_id": "local-studio-app",
       "title": "Local Studio App",
       "added_date": "2026-05-22 08:06",
-      "last_updated": "2026-05-23",
-      "parent_id": "change-requests",
+      "last_updated": "2026-05-24",
+      "parent_id": "studio",
       "sort_order": 11000,
       "published": true,
       "hidden": false,
@@ -3173,7 +3173,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 17321
+      "content_text_length": 17555
     },
     {
       "scope": "studio",

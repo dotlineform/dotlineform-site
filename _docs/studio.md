@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: 2026-05-13
+last_updated: 2026-05-24
 parent_id: ""
 sort_order: 2000
 ---
@@ -48,6 +48,7 @@ Studio landing and dashboard routes expose the shared route-ready contract:
 - **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** for the shared `/docs/` implementation that hosts Studio documentation
 - **[Studio Ready State](/docs/?scope=studio&doc=studio-ready-state)** for the implemented route-ready contract, helper modules, route inventory, and audit coverage
 - **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell, page wiring, and Docs Viewer integration
+- **[Local Studio App](/docs/?scope=studio&doc=local-studio-app)** for the app server, mounted local routes, local API ownership, and current route-level checks
 - **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
 - **[Studio Smoke Testing](/docs/?scope=studio&doc=studio-smoke-testing)** for Codex-run browser smoke-test harness rules
 

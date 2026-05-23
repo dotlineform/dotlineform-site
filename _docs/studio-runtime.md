@@ -2,14 +2,14 @@
 doc_id: studio-runtime
 title: Studio Runtime
 added_date: 2026-04-24
-last_updated: 2026-05-22
+last_updated: 2026-05-24
 parent_id: studio
 sort_order: 2000
 ---
 # Studio Runtime
 
 This document describes the current Studio route shell, shared runtime modules, and the way Studio pages connect into the scoped Docs Viewer.
-Studio route hosting is migrating from Jekyll shells to the local Python Studio app server.
+Studio route hosting now runs through the local Python Studio app server for active operational routes.
 
 ## Route Shell
 
@@ -18,8 +18,8 @@ Legacy Jekyll-hosted Studio pages use:
 - `layout: studio`
 - `_layouts/studio.html`
 
-The local Studio app server now owns many active Studio route shells directly.
-For migrated routes, `scripts/studio/studio_app_views.py` renders the shell, `scripts/studio/studio_app_config.py` advertises the runtime view registry, and `scripts/studio/studio_app_server.py` dispatches the route.
+The local Studio app server owns active Studio route shells directly.
+For local app routes, `scripts/studio/studio_app_views.py` renders the shell, `scripts/studio/studio_app_config.py` advertises the runtime view registry, and `scripts/studio/studio_app_server.py` dispatches the route.
 
 The legacy Studio route shell provides the shared admin-facing navigation model for any pages not yet migrated. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
 
@@ -61,8 +61,8 @@ Route pages own which entry module they load; route controllers do not own cache
 
 ## Studio Pages
 
-Operational Studio route shells have moved to the local app for the current migration scope.
-Active migrated shells include `/studio/`, `/docs/`, `/studio/catalogue/`, `/studio/analytics/`, analytics tag routes, Data Sharing routes, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, and the four catalogue editor routes.
+Operational Studio route shells are hosted by the local app.
+Active local shells include `/studio/`, `/docs/`, `/studio/catalogue/`, `/studio/analytics/`, analytics tag routes, Data Sharing routes, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, and the four catalogue editor routes.
 
 Remaining Jekyll route inventory:
 
@@ -94,7 +94,7 @@ Current page-level doc links:
 Shared Studio runtime and wiring currently live in:
 
 - `assets/studio/js/studio-config.js`
-  loads `assets/studio/data/studio_config.json`, merges defaults, resolves root-relative paths against the current site base path, and builds configured Studio route URLs while preserving existing query state
+  loads the configured runtime URL from `meta[name="dlf-studio-config-url"]`, resolves root-relative paths against the current site base path, and builds configured Studio route URLs while preserving existing query state. Local Studio views use `/studio/runtime-config.json`, which the app server builds from checked-in Studio config plus local runtime endpoints.
 - `assets/studio/js/studio-data.js`
   provides shared JSON loading and common shaping helpers for Studio pages
 - `assets/studio/js/studio-transport.js`
@@ -243,40 +243,41 @@ What it runs before starting long-lived services:
 What it starts:
 
 - `scripts/studio/studio_app_server.py`
-- `scripts/studio/studio_catalogue_api.py`
-- `scripts/catalogue/catalogue_write_service.py`
 - `scripts/docs/docs_live_rebuild_watcher.py`
 
 What it does not start:
 
 - catalogue/search regeneration scripts
 - the retired standalone tag write server
-- the standalone Docs management server unless explicitly enabled for fallback/debug use
+- the standalone Docs management server
 - the retired standalone Audit Service HTTP wrapper
 
 Current local generated Studio feeds surfaced through this runtime:
 
-- unified Studio activity via `GET /catalogue/read?key=activity_log`
+- unified Studio activity via `GET /studio/api/catalogue/read?key=activity_log`
 
 Current mutable catalogue data surfaced through this runtime:
 
 - catalogue source records and catalogue lookup/search records are read through Local Studio catalogue API routes backed by `scripts/studio/studio_catalogue_api.py`
 - Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `var/`, and local `logs/` from the served site so local source/lookup/activity writes do not trigger an extra Jekyll regeneration pass
-- catalogue editors, Catalogue Drafts, and Studio Activity show their existing unavailable/load-failed states instead of falling back to stale static source JSON
+- catalogue editors, Catalogue Drafts, and Studio Activity show their existing unavailable/load-failed states instead of reading stale static source JSON
 
 Current localhost docs-maintenance integration surfaced through this runtime:
 
-- `POST /docs/broken-links`
+- `POST /studio/api/docs/docs/broken-links`
+- `POST /studio/api/docs/docs/rebuild`
 
 Current localhost audit integration surfaced through this runtime:
 
 - `GET /studio/api/audits/audits`
 - `POST /studio/api/audits/audits/run`
-- `POST /docs/rebuild`
 
-Current narrow catalogue-report integration surfaced through this runtime:
+Current catalogue integration surfaced through this runtime:
 
 - `GET /studio/api/catalogue/health`
+- `GET /studio/api/catalogue/read`
+- editor save/create/delete/publication/build/prose-import/moment API routes under `/studio/api/catalogue/...`
+- workbook import routes under `/studio/api/catalogue/import-preview` and `/studio/api/catalogue/import-apply`
 - `POST /studio/api/catalogue/project-state-report`
 - `POST /studio/api/catalogue/thumbnail-quality-preview`
 

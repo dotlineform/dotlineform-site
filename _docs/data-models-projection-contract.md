@@ -2,7 +2,7 @@
 doc_id: data-models-projection-contract
 title: Projection Contract
 added_date: 2026-05-23
-last_updated: 2026-05-23
+last_updated: 2026-05-24
 parent_id: data-models
 sort_order: 1500
 published: true
@@ -89,6 +89,40 @@ Public build configuration is part of the projection contract:
 - `bin/local-studio` serves Studio routes, local runtime config, and management APIs
 - `bin/public-site-preview` and `bin/public-site-build` run public Jekyll preview/build paths
 
+## Public Build Surface
+
+The public Jekyll build should include:
+
+- home, about, recent, palette, and other public site pages
+- public catalogue pages for works, series, work details, and moments
+- public catalogue JSON projections under `assets/data/` and per-record public payloads
+- public catalogue search output under `assets/data/search/catalogue/`
+- public media and thumbnail assets intentionally served by the site
+- shared public JavaScript under `assets/js/`
+- shared public CSS under `assets/css/`
+- Docs Viewer runtime files under `assets/docs-viewer/`
+- public Docs Viewer browser config at `assets/docs-viewer/data/docs-viewer-public-config.json`
+- public read-only Library route at `/library/`
+- public read-only Analysis route at `/analysis/`
+- generated Library docs payloads and search under `assets/data/docs/scopes/library/` and `assets/data/search/library/`
+- generated Analysis docs payloads and search under `assets/data/docs/scopes/analysis/` and `assets/data/search/analysis/`
+
+The public Jekyll build should not include:
+
+- `/studio/` routes
+- `/docs/` local management route
+- Studio app assets under `assets/studio/`
+- generated Studio docs payloads under `assets/data/docs/scopes/studio/`
+- generated Studio docs search under `assets/data/search/studio/`
+- canonical catalogue source data under `assets/studio/data/catalogue/`
+- Studio catalogue lookup data under `assets/studio/data/catalogue_lookup/`
+- local scripts, tests, logs, or `var/` output
+- footer or nav links that point public users to `/studio/` or `/docs/`
+
+`/library/` and `/analysis/` are intentionally public read-only Docs Viewer installs.
+They should keep using public generated docs payloads and public generated docs search.
+`/docs/` is local management infrastructure and should not be published unless a separate curated read-only public docs install is explicitly defined later.
+
 Generated output paths should stay explicit.
 Adding a new generated family requires naming:
 
@@ -105,6 +139,7 @@ Existing enforcement is split across several checks and builders:
 - `scripts/checks/projection_contract.json` classifies current Phase 6 artifact families and owns cross-domain public-build policy
 - `scripts/checks/audit_projection_contract.py` validates the manifest, `_config.yml` exclusions, checked-in public JSON field-leak rules, public template/script source references, and optional built public output
 - public build surface audit checks that public output excludes Studio routes, Studio assets, Studio docs payloads/search, and canonical catalogue source
+- after a public build, run `./scripts/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build` to check the published surface directly
 - catalogue build planners and validators decide which public catalogue projections are refreshed from source edits
 - docs builder excludes unpublished docs and emits viewable/manage-mode metadata according to each scope contract
 - search builders own scope-specific flattened search projections
