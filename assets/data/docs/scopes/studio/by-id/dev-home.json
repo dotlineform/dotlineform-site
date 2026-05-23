@@ -1,0 +1,15 @@
+{
+  "scope": "studio",
+  "doc_id": "dev-home",
+  "title": "Dev Home",
+  "added_date": "2026-04-19",
+  "last_updated": "2026-05-23",
+  "parent_id": "",
+  "sort_order": 1000,
+  "published": true,
+  "hidden": false,
+  "viewable": true,
+  "source_path": "dev-home.md",
+  "viewer_url": "/docs/?scope=studio&doc=dev-home",
+  "content_html": "<h1 id=\"dev-home\">Dev Home</h1>\n\n<p>Use this section for general repo-wide development guidance.</p>\n"
+}

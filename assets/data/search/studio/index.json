@@ -2,11 +2,46 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-09946ec69bb8dabce92f76da90342610",
-    "generated_at_utc": "2026-05-22T23:44:49Z",
-    "count": 293
+    "version": "blake2b-a21aa04b01e4662fec886fcdf6d6c32d",
+    "generated_at_utc": "2026-05-23T13:29:13Z",
+    "count": 295
   },
   "entries": [
+    {
+      "id": "dev",
+      "kind": "doc",
+      "title": "Dev",
+      "href": "/docs/?scope=studio&doc=dev",
+      "last_updated": "2026-05-23",
+      "display_meta": "2026-05-23",
+      "search_terms": [
+        "dev",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "dev 2026-05-23 2026 05 23"
+    },
+    {
+      "id": "public-site",
+      "kind": "doc",
+      "title": "Public Site",
+      "href": "/docs/?scope=studio&doc=public-site",
+      "last_updated": "2026-05-23",
+      "display_meta": "2026-05-23",
+      "search_terms": [
+        "public-site",
+        "public",
+        "site",
+        "public site",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "public-site public site public site 2026-05-23 2026 05 23"
+    },
     {
       "id": "site-request-studio-unified-activity-log-inventory",
       "kind": "doc",
@@ -199,6 +234,25 @@
         "10"
       ],
       "search_text": "data-models data models data models architecture 2026-05-06 21:10 2026 05 06 21 10"
+    },
+    {
+      "id": "dev-home",
+      "kind": "doc",
+      "title": "Dev Home",
+      "href": "/docs/?scope=studio&doc=dev-home",
+      "last_updated": "2026-05-23",
+      "display_meta": "2026-05-23",
+      "search_terms": [
+        "dev-home",
+        "dev",
+        "home",
+        "dev home",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "dev-home dev home dev home 2026-05-23 2026 05 23"
     },
     {
       "id": "docs-build-management-import-export-improvements",
@@ -581,22 +635,22 @@
       "href": "/docs/?scope=studio&doc=runtime-dependencies",
       "last_updated": "2026-04-23",
       "parent_id": "dev-home",
-      "parent_title": "Site Docs",
-      "display_meta": "2026-04-23 • Site Docs",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-04-23 • Dev Home",
       "search_terms": [
         "runtime-dependencies",
         "runtime",
         "dependencies",
         "runtime dependencies",
-        "site docs",
-        "site",
-        "docs",
+        "dev home",
+        "dev",
+        "home",
         "2026-04-23",
         "2026",
         "04",
         "23"
       ],
-      "search_text": "runtime-dependencies runtime dependencies runtime dependencies site docs site docs 2026-04-23 2026 04 23"
+      "search_text": "runtime-dependencies runtime dependencies runtime dependencies dev home dev home 2026-04-23 2026 04 23"
     },
     {
       "id": "search-overview",
@@ -620,25 +674,6 @@
         "30"
       ],
       "search_text": "search-overview search overview search overview 2026-05-11 21:30 2026 05 11 21 30"
-    },
-    {
-      "id": "dev-home",
-      "kind": "doc",
-      "title": "Site Docs",
-      "href": "/docs/?scope=studio&doc=dev-home",
-      "last_updated": "2026-05-19",
-      "display_meta": "2026-05-19",
-      "search_terms": [
-        "dev-home",
-        "site",
-        "docs",
-        "site docs",
-        "2026-05-19",
-        "2026",
-        "05",
-        "19"
-      ],
-      "search_text": "dev-home site docs site docs 2026-05-19 2026 05 19"
     },
     {
       "id": "studio-data-sharing",
@@ -707,8 +742,8 @@
       "href": "/docs/?scope=studio&doc=data-models-studio",
       "last_updated": "2026-05-06 20:51",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-06 20:51 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-06 20:51 • Local Studio",
       "search_terms": [
         "data-models-studio",
         "data",
@@ -716,6 +751,8 @@
         "studio",
         "studio scope",
         "scope",
+        "local studio",
+        "local",
         "2026-05-06 20:51",
         "2026",
         "05",
@@ -723,7 +760,7 @@
         "20",
         "51"
       ],
-      "search_text": "data-models-studio data models studio studio scope scope 2026-05-06 20:51 2026 05 06 20 51"
+      "search_text": "data-models-studio data models studio studio scope scope local studio local 2026-05-06 20:51 2026 05 06 20 51"
     },
     {
       "id": "data-models-catalogue-source",
@@ -837,22 +874,22 @@
       "href": "/docs/?scope=studio&doc=development-workflow",
       "last_updated": "2026-05-19",
       "parent_id": "dev-home",
-      "parent_title": "Site Docs",
-      "display_meta": "2026-05-19 • Site Docs",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-05-19 • Dev Home",
       "search_terms": [
         "development-workflow",
         "development",
         "workflow",
         "development workflow",
-        "site docs",
-        "site",
-        "docs",
+        "dev home",
+        "dev",
+        "home",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "development-workflow development workflow development workflow site docs site docs 2026-05-19 2026 05 19"
+      "search_text": "development-workflow development workflow development workflow dev home dev home 2026-05-19 2026 05 19"
     },
     {
       "id": "studio-ui-framework-primitives",
@@ -912,8 +949,8 @@
       "href": "/docs/?scope=studio&doc=studio-javascript-payload-inventory",
       "last_updated": "2026-05-21",
       "parent_id": "dev-home",
-      "parent_title": "Site Docs",
-      "display_meta": "2026-05-21 • Site Docs",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-05-21 • Dev Home",
       "search_terms": [
         "studio-javascript-payload-inventory",
         "studio",
@@ -922,15 +959,15 @@
         "inventory",
         "javascript inventory policy",
         "policy",
-        "site docs",
-        "site",
-        "docs",
+        "dev home",
+        "dev",
+        "home",
         "2026-05-21",
         "2026",
         "05",
         "21"
       ],
-      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory policy policy site docs site docs 2026-05-21 2026 05 21"
+      "search_text": "studio-javascript-payload-inventory studio javascript payload inventory javascript inventory policy policy dev home dev home 2026-05-21 2026 05 21"
     },
     {
       "id": "ui-primitive-button",
@@ -1237,22 +1274,22 @@
       "href": "/docs/?scope=studio&doc=local-setup",
       "last_updated": "2026-05-19",
       "parent_id": "dev-home",
-      "parent_title": "Site Docs",
-      "display_meta": "2026-05-19 • Site Docs",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-05-19 • Dev Home",
       "search_terms": [
         "local-setup",
         "local",
         "setup",
         "local setup",
-        "site docs",
-        "site",
-        "docs",
+        "dev home",
+        "dev",
+        "home",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "local-setup local setup local setup site docs site docs 2026-05-19 2026 05 19"
+      "search_text": "local-setup local setup local setup dev home dev home 2026-05-19 2026 05 19"
     },
     {
       "id": "modal-composition-migration-tracker",
@@ -1420,19 +1457,21 @@
       "href": "/docs/?scope=studio&doc=studio-runtime",
       "last_updated": "2026-05-22",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-22 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-22 • Local Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
+        "local studio",
+        "local",
         "2026-05-22",
         "2026",
         "05",
         "22"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-05-22 2026 05 22"
+      "search_text": "studio-runtime studio runtime studio runtime local studio local 2026-05-22 2026 05 22"
     },
     {
       "id": "tag-groups",
@@ -1757,17 +1796,17 @@
       "href": "/docs/?scope=studio&doc=scripts-cloud-environments",
       "last_updated": "2026-05-09 21:28",
       "parent_id": "dev-home",
-      "parent_title": "Site Docs",
-      "display_meta": "2026-05-09 21:28 • Site Docs",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-05-09 21:28 • Dev Home",
       "search_terms": [
         "scripts-cloud-environments",
         "scripts",
         "cloud",
         "environments",
         "cloud environments",
-        "site docs",
-        "site",
-        "docs",
+        "dev home",
+        "dev",
+        "home",
         "2026-05-09 21:28",
         "2026",
         "05",
@@ -1775,7 +1814,7 @@
         "21",
         "28"
       ],
-      "search_text": "scripts-cloud-environments scripts cloud environments cloud environments site docs site docs 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "scripts-cloud-environments scripts cloud environments cloud environments dev home dev home 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
       "id": "config-data-sharing-adapters",
@@ -1959,6 +1998,24 @@
       "search_text": "llm-semantic-enrichment-spec llm semantic enrichment spec llm semantic enrichment spec 2026-05-03 17:08 2026 05 03 17 08"
     },
     {
+      "id": "studio",
+      "kind": "doc",
+      "title": "Local Studio",
+      "href": "/docs/?scope=studio&doc=studio",
+      "last_updated": "2026-05-13",
+      "display_meta": "2026-05-13",
+      "search_terms": [
+        "studio",
+        "local studio",
+        "local",
+        "2026-05-13",
+        "2026",
+        "05",
+        "13"
+      ],
+      "search_text": "studio local studio local 2026-05-13 2026 05 13"
+    },
+    {
       "id": "scripts-tag-write-server",
       "kind": "doc",
       "title": "Retired Tag Write Server",
@@ -2033,42 +2090,28 @@
       "search_text": "site-shell-runtime site shell runtime site shell runtime architecture 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
-      "id": "studio",
-      "kind": "doc",
-      "title": "Studio",
-      "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-13",
-      "display_meta": "2026-05-13",
-      "search_terms": [
-        "studio",
-        "2026-05-13",
-        "2026",
-        "05",
-        "13"
-      ],
-      "search_text": "studio 2026-05-13 2026 05 13"
-    },
-    {
       "id": "studio-smoke-testing",
       "kind": "doc",
       "title": "Studio Smoke Testing",
       "href": "/docs/?scope=studio&doc=studio-smoke-testing",
       "last_updated": "2026-05-13",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-13 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-13 • Local Studio",
       "search_terms": [
         "studio-smoke-testing",
         "studio",
         "smoke",
         "testing",
         "studio smoke testing",
+        "local studio",
+        "local",
         "2026-05-13",
         "2026",
         "05",
         "13"
       ],
-      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing 2026-05-13 2026 05 13"
+      "search_text": "studio-smoke-testing studio smoke testing studio smoke testing local studio local 2026-05-13 2026 05 13"
     },
     {
       "id": "tag-editor",
@@ -2438,16 +2481,17 @@
       "href": "/docs/?scope=studio&doc=config-jekyll-site-config",
       "last_updated": "2026-05-11 14:10",
       "parent_id": "dev-home",
-      "parent_title": "Site Docs",
-      "display_meta": "2026-05-11 14:10 • Site Docs",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-05-11 14:10 • Dev Home",
       "search_terms": [
         "config-jekyll-site-config",
         "config",
         "jekyll",
         "site",
         "jekyll site config",
-        "site docs",
-        "docs",
+        "dev home",
+        "dev",
+        "home",
         "2026-05-11 14:10",
         "2026",
         "05",
@@ -2455,7 +2499,7 @@
         "14",
         "10"
       ],
-      "search_text": "config-jekyll-site-config config jekyll site jekyll site config site docs docs 2026-05-11 14:10 2026 05 11 14 10"
+      "search_text": "config-jekyll-site-config config jekyll site jekyll site config dev home dev home 2026-05-11 14:10 2026 05 11 14 10"
     },
     {
       "id": "ui-primitive-panel",
@@ -2554,20 +2598,22 @@
       "href": "/docs/?scope=studio&doc=studio-ready-state",
       "last_updated": "2026-05-15",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-15 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-15 • Local Studio",
       "search_terms": [
         "studio-ready-state",
         "studio",
         "ready",
         "state",
         "studio ready state",
+        "local studio",
+        "local",
         "2026-05-15",
         "2026",
         "05",
         "15"
       ],
-      "search_text": "studio-ready-state studio ready state studio ready state 2026-05-15 2026 05 15"
+      "search_text": "studio-ready-state studio ready state studio ready state local studio local 2026-05-15 2026 05 15"
     },
     {
       "id": "tag-registry",
@@ -2934,23 +2980,23 @@
       "href": "/docs/?scope=studio&doc=scripts-run-checks",
       "last_updated": "2026-05-15",
       "parent_id": "dev-home",
-      "parent_title": "Site Docs",
-      "display_meta": "2026-05-15 • Site Docs",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-05-15 • Dev Home",
       "search_terms": [
         "scripts-run-checks",
         "scripts",
         "run",
         "checks",
         "run checks",
-        "site docs",
-        "site",
-        "docs",
+        "dev home",
+        "dev",
+        "home",
         "2026-05-15",
         "2026",
         "05",
         "15"
       ],
-      "search_text": "scripts-run-checks scripts run checks run checks site docs site docs 2026-05-15 2026 05 15"
+      "search_text": "scripts-run-checks scripts run checks run checks dev home dev home 2026-05-15 2026 05 15"
     },
     {
       "id": "search-normalisation-rules",
@@ -2981,13 +3027,15 @@
       "href": "/docs/?scope=studio&doc=studio-audits",
       "last_updated": "2026-05-06 20:51",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-06 20:51 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-06 20:51 • Local Studio",
       "search_terms": [
         "studio-audits",
         "studio",
         "audits",
         "studio audits",
+        "local studio",
+        "local",
         "2026-05-06 20:51",
         "2026",
         "05",
@@ -2995,7 +3043,7 @@
         "20",
         "51"
       ],
-      "search_text": "studio-audits studio audits studio audits 2026-05-06 20:51 2026 05 06 20 51"
+      "search_text": "studio-audits studio audits studio audits local studio local 2026-05-06 20:51 2026 05 06 20 51"
     },
     {
       "id": "tag-aliases",
@@ -3385,8 +3433,8 @@
       "href": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
       "last_updated": "2026-05-09 22:35",
       "parent_id": "dev-home",
-      "parent_title": "Site Docs",
-      "display_meta": "2026-05-09 22:35 • Site Docs",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-05-09 22:35 • Dev Home",
       "search_terms": [
         "scripts-audit-site-consistency",
         "scripts",
@@ -3394,8 +3442,9 @@
         "site",
         "consistency",
         "site consistency audit",
-        "site docs",
-        "docs",
+        "dev home",
+        "dev",
+        "home",
         "2026-05-09 22:35",
         "2026",
         "05",
@@ -3403,7 +3452,7 @@
         "22",
         "35"
       ],
-      "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit site docs docs 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit dev home dev home 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "studio-activity",
@@ -3412,19 +3461,21 @@
       "href": "/docs/?scope=studio&doc=studio-activity",
       "last_updated": "2026-05-22",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-22 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-22 • Local Studio",
       "search_terms": [
         "studio-activity",
         "studio",
         "activity",
         "studio activity",
+        "local studio",
+        "local",
         "2026-05-22",
         "2026",
         "05",
         "22"
       ],
-      "search_text": "studio-activity studio activity studio activity 2026-05-22 2026 05 22"
+      "search_text": "studio-activity studio activity studio activity local studio local 2026-05-22 2026 05 22"
     },
     {
       "id": "bulk-add-work",
@@ -3594,13 +3645,13 @@
       "href": "/docs/?scope=studio&doc=scripts",
       "last_updated": "2026-05-13 18:15",
       "parent_id": "dev-home",
-      "parent_title": "Site Docs",
-      "display_meta": "2026-05-13 18:15 • Site Docs",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-05-13 18:15 • Dev Home",
       "search_terms": [
         "scripts",
-        "site docs",
-        "site",
-        "docs",
+        "dev home",
+        "dev",
+        "home",
         "2026-05-13 18:15",
         "2026",
         "05",
@@ -3608,7 +3659,7 @@
         "18",
         "15"
       ],
-      "search_text": "scripts site docs site docs 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "scripts dev home dev home 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "search-ui-behaviour",
@@ -3692,8 +3743,8 @@
       "href": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
       "last_updated": "2026-05-19",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-19 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-19 • Local Studio",
       "search_terms": [
         "studio-python-ruby-script-inventory",
         "studio",
@@ -3703,12 +3754,14 @@
         "inventory",
         "studio python and ruby script inventory",
         "and",
+        "local studio",
+        "local",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and 2026-05-19 2026 05 19"
+      "search_text": "studio-python-ruby-script-inventory studio python ruby script inventory studio python and ruby script inventory and local studio local 2026-05-19 2026 05 19"
     },
     {
       "id": "docs-viewer-javascript-inventory",
@@ -3742,20 +3795,22 @@
       "href": "/docs/?scope=studio&doc=studio-docs-inventory",
       "last_updated": "2026-05-19",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-19 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-19 • Local Studio",
       "search_terms": [
         "studio-docs-inventory",
         "studio",
         "docs",
         "inventory",
         "studio docs inventory",
+        "local studio",
+        "local",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "studio-docs-inventory studio docs inventory studio docs inventory 2026-05-19 2026 05 19"
+      "search_text": "studio-docs-inventory studio docs inventory studio docs inventory local studio local 2026-05-19 2026 05 19"
     },
     {
       "id": "site-request-catalogue-js-runtime-consistency",
@@ -3987,8 +4042,8 @@
       "href": "/docs/?scope=studio&doc=scripts-studio-audit-service",
       "last_updated": "2026-05-08 19:25",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-08 19:25 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-08 19:25 • Local Studio",
       "search_terms": [
         "scripts-studio-audit-service",
         "scripts",
@@ -3996,6 +4051,8 @@
         "audit",
         "service",
         "studio audit service",
+        "local studio",
+        "local",
         "2026-05-08 19:25",
         "2026",
         "05",
@@ -4003,7 +4060,7 @@
         "19",
         "25"
       ],
-      "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service 2026-05-08 19:25 2026 05 08 19 25"
+      "search_text": "scripts-studio-audit-service scripts studio audit service studio audit service local studio local 2026-05-08 19:25 2026 05 08 19 25"
     },
     {
       "id": "search-build-pipeline-architecture",
@@ -4345,8 +4402,8 @@
       "href": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
       "last_updated": "2026-05-09 22:35",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-09 22:35 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-09 22:35 • Local Studio",
       "search_terms": [
         "scripts-audit-studio-ready-state",
         "scripts",
@@ -4355,6 +4412,8 @@
         "ready",
         "state",
         "studio ready-state audit",
+        "local studio",
+        "local",
         "2026-05-09 22:35",
         "2026",
         "05",
@@ -4362,7 +4421,7 @@
         "22",
         "35"
       ],
-      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit local studio local 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "thumbnail-quality-page",
@@ -4495,8 +4554,8 @@
       "href": "/docs/?scope=studio&doc=scripts-studio-backup-retention",
       "last_updated": "2026-05-09 22:35",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-09 22:35 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-09 22:35 • Local Studio",
       "search_terms": [
         "scripts-studio-backup-retention",
         "scripts",
@@ -4504,6 +4563,8 @@
         "backup",
         "retention",
         "studio backup retention",
+        "local studio",
+        "local",
         "2026-05-09 22:35",
         "2026",
         "05",
@@ -4511,7 +4572,7 @@
         "22",
         "35"
       ],
-      "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention local studio local 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
       "id": "site-request-studio-local-vanilla-web-app",
@@ -4650,8 +4711,8 @@
       "href": "/docs/?scope=studio&doc=studio-config-and-save-flow",
       "last_updated": "2026-05-09 21:45",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-09 21:45 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-09 21:45 • Local Studio",
       "search_terms": [
         "studio-config-and-save-flow",
         "studio",
@@ -4660,6 +4721,8 @@
         "save",
         "flow",
         "studio config and save flow",
+        "local studio",
+        "local",
         "2026-05-09 21:45",
         "2026",
         "05",
@@ -4667,7 +4730,7 @@
         "21",
         "45"
       ],
-      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-05-09 21:45 2026 05 09 21 45"
+      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow local studio local 2026-05-09 21:45 2026 05 09 21 45"
     },
     {
       "id": "ui",
@@ -4817,14 +4880,16 @@
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
       "last_updated": "2026-05-11 17:50",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-11 17:50 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-11 17:50 • Local Studio",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
+        "local studio",
+        "local",
         "2026-05-11 17:50",
         "2026",
         "05",
@@ -4832,7 +4897,7 @@
         "17",
         "50"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "config-studio-config-json config studio json studio config json local studio local 2026-05-11 17:50 2026 05 11 17 50"
     },
     {
       "id": "ui-catalogue",
@@ -4933,8 +4998,8 @@
       "href": "/docs/?scope=studio&doc=config-studio-config-js",
       "last_updated": "2026-05-13 18:15",
       "parent_id": "studio",
-      "parent_title": "Studio",
-      "display_meta": "2026-05-13 18:15 • Studio",
+      "parent_title": "Local Studio",
+      "display_meta": "2026-05-13 18:15 • Local Studio",
       "search_terms": [
         "config-studio-config-js",
         "config",
@@ -4942,6 +5007,8 @@
         "js",
         "studio config loader js",
         "loader",
+        "local studio",
+        "local",
         "2026-05-13 18:15",
         "2026",
         "05",
@@ -4949,7 +5016,7 @@
         "18",
         "15"
       ],
-      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "config-studio-config-js config studio js studio config loader js loader local studio local 2026-05-13 18:15 2026 05 13 18 15"
     },
     {
       "id": "import-export",

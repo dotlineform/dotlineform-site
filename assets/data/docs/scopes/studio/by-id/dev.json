@@ -1,0 +1,16 @@
+{
+  "scope": "studio",
+  "doc_id": "dev",
+  "title": "Dev",
+  "added_date": "2026-05-23",
+  "last_updated": "2026-05-23",
+  "parent_id": "",
+  "sort_order": 100,
+  "published": true,
+  "hidden": false,
+  "viewable": true,
+  "source_path": "dev.md",
+  "viewer_url": "/docs/?scope=studio&doc=dev",
+  "content_html": "<h1 id=\"dev\">Dev</h1>\n\n<p>For documentation about the main features and design, see the following sections:</p>\n\n<ul>\n  <li><strong><a href=\"/docs/?scope=studio&doc=studio\">Studio</a></strong>\nStudio routes, page wiring, and Studio-specific behavior.</li>\n  <li><strong><a href=\"/docs/?scope=studio&doc=ui\">UI</a></strong>\nsite-wide UI framework and maintenance</li>\n  <li><strong><a href=\"/docs/?scope=studio&doc=change-requests\">Change Requests</a></strong>\nproposed and in-progress request docs, including UI request specs and task breakdowns.</li>\n  <li><strong><a href=\"/docs/?scope=studio&doc=architecture\">Architecture</a></strong>\nroute/runtime building blocks, shared shell behavior, and generated-artifact flow into the live site.</li>\n  <li><strong><a href=\"/docs/?scope=studio&doc=config\">Config</a></strong>\nchecked-in config files and loader modules, what reads them, and when.</li>\n  <li><strong><a href=\"/docs/?scope=studio&doc=data-models\">Data Models</a></strong>\nthe main reference for generated/runtime data contracts and source-data records.</li>\n  <li><strong><a href=\"/docs/?scope=studio&doc=scripts\">Scripts</a></strong>\nrepo scripts, their flags, outputs, and operational responsibilities.</li>\n  <li><strong><a href=\"/docs/?scope=studio&doc=docs-viewer\">Docs Viewer</a></strong>\nthe shared docs module used by <code class=\"language-plaintext highlighter-rouge\">/docs/</code> and <code class=\"language-plaintext highlighter-rouge\">/library/</code>.</li>\n  <li><strong><a href=\"/docs/?scope=studio&doc=search\">Search</a></strong>\ndedicated catalogue search plus inline docs-domain search.</li>\n</ul>\n",
+  "summary": "This section contains technical reference documents that apply to the site as a whole."
+}
