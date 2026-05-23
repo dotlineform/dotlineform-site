@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5909112bc08615ee0073677622229afb",
-    "generated_at_utc": "2026-05-23T19:22:24Z",
-    "count": 296
+    "version": "blake2b-48c668d65955ee395406895d51504251",
+    "generated_at_utc": "2026-05-23T20:32:22Z",
+    "count": 298
   },
   "entries": [
     {
@@ -4646,6 +4646,62 @@
         "54"
       ],
       "search_text": "tiered-dimension-policy tiered dimension policy tiered dimension policy analytics 2026-05-06 20:54 2026 05 06 20 54"
+    },
+    {
+      "id": "site-request-studio-source-tree-reorganization",
+      "kind": "doc",
+      "title": "Studio Source Tree Reorganization Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization",
+      "last_updated": "2026-05-23",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-23 • Change Requests",
+      "search_terms": [
+        "site-request-studio-source-tree-reorganization",
+        "site",
+        "request",
+        "studio",
+        "source",
+        "tree",
+        "reorganization",
+        "studio source tree reorganization request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "site-request-studio-source-tree-reorganization site request studio source tree reorganization studio source tree reorganization request change requests change requests 2026-05-23 2026 05 23"
+    },
+    {
+      "id": "site-request-docs-viewer-shell-extraction",
+      "kind": "doc",
+      "title": "Docs Viewer Shell Extraction Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction",
+      "last_updated": "2026-05-23",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-23 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-shell-extraction",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "shell",
+        "extraction",
+        "docs viewer shell extraction request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-23",
+        "2026",
+        "05",
+        "23"
+      ],
+      "search_text": "site-request-docs-viewer-shell-extraction site request docs viewer shell extraction docs viewer shell extraction request change requests change requests 2026-05-23 2026 05 23"
     },
     {
       "id": "search-incremental-orchestration-plan",

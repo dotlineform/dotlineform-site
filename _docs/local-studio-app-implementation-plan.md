@@ -29,7 +29,16 @@ Status:
 Next suitable slices, in dependency order:
 
 1. Start the projection contract work now that route and service ownership is less fluid.
-2. Defer the optional repo split decision until the publish/export contract is stable.
+2. Finish the current Studio localization work before broad source-tree moves.
+3. Defer the optional repo split decision until the publish/export contract is stable.
+
+Future source-tree work is tracked separately:
+
+- [Studio Source Tree Reorganization Request](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization) covers moving Studio-owned runtime, static, UI Catalogue, and local source files behind a clearer `studio/` boundary after the current localization work settles.
+- [Docs Viewer Shell Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction) covers the later split between reusable Docs Viewer core/assets and Studio-specific hosting shell work.
+
+Do not combine those reorganization requests with the current localization slices.
+The near-term priority is to stabilize Local Studio behavior, routes, APIs, generated payload expectations, and verification before large path changes.
 
 ## Lifecycle Rules
 

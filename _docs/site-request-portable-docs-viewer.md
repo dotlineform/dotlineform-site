@@ -29,6 +29,8 @@ The first target is pragmatic rather than package-manager perfect:
 This request is narrower and more implementation-oriented than [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction).
 It uses the current dotlineform implementation as the first consumer and focuses on making the Docs Viewer self-contained enough to copy into another Jekyll repo.
 
+[Docs Viewer Shell Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction) tracks the later shell/core split that should follow the current Studio localization and source-tree reorganization work.
+
 ## Product Boundary
 
 Docs Viewer owns:

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T20:13:15Z",
+  "generated_at": "2026-05-23T20:32:51Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -321,7 +321,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 41265
+      "content_text_length": 41966
     },
     {
       "scope": "studio",
@@ -386,7 +386,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 26949,
+      "content_text_length": 27108,
       "ui_status": "paused"
     },
     {
@@ -3076,6 +3076,40 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/tiered-dimension-policy.json",
       "content_text_length": 15126,
       "ui_status": "draft"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-studio-source-tree-reorganization",
+      "title": "Studio Source Tree Reorganization Request",
+      "added_date": "2026-05-23",
+      "last_updated": "2026-05-23",
+      "parent_id": "change-requests",
+      "sort_order": 10010,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-studio-source-tree-reorganization.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization.json",
+      "content_text_length": 3715,
+      "ui_status": "planned"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-shell-extraction",
+      "title": "Docs Viewer Shell Extraction Request",
+      "added_date": "2026-05-23",
+      "last_updated": "2026-05-23",
+      "parent_id": "change-requests",
+      "sort_order": 10020,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-shell-extraction.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction.json",
+      "content_text_length": 3325,
+      "ui_status": "planned"
     },
     {
       "scope": "studio",
