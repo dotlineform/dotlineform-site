@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T20:46:12Z",
+  "generated_at": "2026-05-24T21:30:42Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -3123,8 +3123,8 @@
       "source_path": "site-request-docs-viewer-shell-extraction.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction.json",
-      "content_text_length": 7517,
-      "ui_status": "draft"
+      "content_text_length": 10247,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",
@@ -4214,7 +4214,7 @@
       "source_path": "_tmp.md",
       "viewer_url": "/docs/?scope=studio&doc=_tmp",
       "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp.json",
-      "content_text_length": 901
+      "content_text_length": 4552
     },
     {
       "scope": "studio",
