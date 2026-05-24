@@ -8,6 +8,11 @@ sort_order: 90000
 published: true
 viewable: true
 ---
+
+This document is now archived and is no longer maintained.
+
+---
+
 # Public Published Surface
 
 This document defines the current dotlineform.com build surface while Studio is being separated from Jekyll hosting.

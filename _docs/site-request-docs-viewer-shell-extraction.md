@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-shell-extraction
 title: Docs Viewer Shell Extraction Request
 added_date: 2026-05-23
 last_updated: 2026-05-24
-ui_status: planned
+ui_status: draft
 parent_id: change-requests
 sort_order: 10020
 viewable: true
@@ -18,27 +18,35 @@ Status:
 
 ## Summary
 
-Separate Docs Viewer reusable runtime/core concerns from the Studio-hosted shell after Studio localization and Studio source-tree reorganization are stable.
+Separate Docs Viewer runtime, server/services, Docs Viewer source files, config, and associated assets from the Studio-hosted implementation after Studio localization and Studio source-tree reorganization are stable.
 
-The current Docs Viewer remains portable as a product goal, but the immediate Local Studio migration hosts Docs Viewer management through the Studio app server.
-That is acceptable for the current phase.
-The follow-up extraction should make the shell boundary explicit so Docs Viewer can keep working inside Studio while a later portable install can provide its own standalone shell.
+During the Studio source-tree reorganization, the current Docs Viewer remains hosted inside Studio.
+Current Docs Viewer code, server/services, source config, UI text, CSS, associated assets, and Docs Viewer source Markdown may move under a clear internal Studio home such as `studio/docs-viewer/` because Studio owns canonical data and the local Docs Viewer server until extraction.
+They should not be scattered across unrelated Studio folders; the existing Docs Viewer localization work should remain visible as an extraction-ready boundary.
+Canonical publishing Markdown such as `_docs_catalogue/` is Studio-owned site source, not Docs Viewer-owned source, and is not part of the later Docs Viewer extraction.
+Generated docs/search JSON consumed by public installs such as `/library/` and `/analysis/` remains in the public Jekyll site output paths.
+
+This follow-on request is what makes Docs Viewer truly portable.
+Extraction means moving the Docs Viewer runtime, server/services, Docs Viewer source contract, source config, management behavior, and associated assets out of Studio into a reusable boundary such as `docs-viewer/`, with Studio becoming one possible host shell rather than the owner.
 
 ## Boundary Decision
 
-Docs Viewer should not become a Studio subsystem.
-Studio may host Docs Viewer, configure Docs Viewer, and enable management/write affordances, but the reusable viewer runtime and data contract should remain independent.
+Until this extraction starts, Docs Viewer is Studio-hosted for source-tree ownership.
+That interim placement does not mean Docs Viewer is permanently a Studio subsystem.
+Studio may host Docs Viewer, configure Docs Viewer, and enable management/write affordances, but the extraction target is an independent Docs Viewer package boundary.
 
 The extraction should distinguish:
 
 - Docs Viewer core: document loading, navigation, search, rendering, reports, bookmarks, generated data contract, UI text, and read-only viewer behavior
 - Docs Viewer management: import, settings, source-config reports, management-only controls, and docs write API contracts
+- Docs Viewer source: source Markdown, scope config, source-side metadata, and local write/rebuild assumptions needed to generate Docs Viewer payloads
 - Studio shell: Local Studio navigation, app chrome, runtime config handoff, management-mode enablement, and local app API wiring
 - Portable shell: standalone route/page wrapper that can load relative config and generated docs/search payloads without Studio
+- Public generated output: generated docs/search JSON read by `/library/`, `/analysis/`, and other public installs, stored where the consuming Jekyll site publishes it
 
 ## Target Direction
 
-The likely target shape is:
+After extraction, the likely target shape is:
 
 ```text
 docs-viewer/
@@ -56,7 +64,8 @@ studio/
 ```
 
 The exact layout should be revisited when this request starts.
-The first implementation should avoid changing generated payload locations unless the config contract is ready to support that move.
+The starting point for this request should assume the Studio source-tree reorganization has moved the current Docs Viewer implementation under a clear internal Studio home such as `studio/docs-viewer/`.
+The first implementation should move that coherent Docs Viewer subtree out of `studio/` deliberately, without changing generated payload locations unless the config contract is ready to support that move.
 
 ## CSS Ownership Direction
 
@@ -75,9 +84,12 @@ The shell extraction should make the CSS base explicit:
 ## Implementation Tasks
 
 - Inventory current Docs Viewer JS, CSS, includes, browser config, UI text, generated payload assumptions, and Studio integration points.
+- Inventory the Docs Viewer files that the Studio source-tree reorganization placed under `studio/`, including runtime code, server/services, Docs Viewer source Markdown, source config, UI text, CSS, assets, tests, and management endpoints.
 - Define the shell contract: required DOM roots, config attributes, route parameters, events, management capability flags, and write API endpoints.
+- Define the canonical source contract for portable installs: where source Markdown and scope config live, which source files are copied or generated, and which generated JSON/search payloads remain in the consuming Jekyll site's public output paths.
 - Define the CSS shell contract: which base typography, theme, container, link, and spacing tokens are provided by the host shell versus by Docs Viewer-owned CSS.
-- Move or wrap Studio-specific shell code so it is clearly separate from reusable Docs Viewer runtime code.
+- Move reusable Docs Viewer runtime, server/services, canonical source handling, config, UI text, CSS, and associated assets out of Studio into the Docs Viewer boundary.
+- Keep or create Studio-specific shell code inside Studio so Local Studio can continue hosting Docs Viewer management after extraction.
 - Add a minimal portable shell that can load relative Docs Viewer config and generated docs/search payloads without the Studio app server.
 - Add or identify a Docs Viewer-owned base stylesheet for portable installs if the host shell contract is not enough.
 - If a standalone Docs Viewer launcher is still useful, define it here as part of the portable shell contract rather than as a Local Studio migration fallback.
@@ -89,7 +101,8 @@ The shell extraction should make the CSS base explicit:
 
 - Studio can still host `/docs/` management mode through the Local Studio app server.
 - Public read-only `/library/` and `/analysis/` installs remain functional.
-- Reusable Docs Viewer runtime files are not dependent on Studio navigation, Studio app chrome, or Studio-only runtime config.
+- Reusable Docs Viewer runtime, server/services, canonical source contract, config, UI text, CSS, and assets are no longer physically owned by Studio.
+- Reusable Docs Viewer files are not dependent on Studio navigation, Studio app chrome, or Studio-only runtime config.
 - Reusable Docs Viewer CSS is not dependent on Studio-only selectors or on dotlineform public `main.css` except where a public route shell intentionally supplies that file as the host base.
 - A portable shell exists with a documented minimum config and generated-data contract.
 - The active [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer) is updated with the extraction outcome.

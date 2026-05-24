@@ -31,6 +31,15 @@ It uses the current dotlineform implementation as the first consumer and focuses
 
 [Docs Viewer Shell Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction) tracks the later shell/core split that should follow the current Studio localization and source-tree reorganization work.
 
+Current clarification:
+
+- the Studio source-tree reorganization may first move current Docs Viewer runtime, server/services, source config, UI text, CSS, assets, and Docs Viewer source Markdown under a clear internal Studio home such as `studio/docs-viewer/`
+- that internal home should preserve the Docs Viewer localization work already done, rather than scattering Docs Viewer files across generic Studio folders
+- canonical publishing Markdown such as `_docs_catalogue/` is Studio-owned site source, not Docs Viewer-owned source
+- generated docs/search JSON consumed by public installs remains in the public Jekyll site output paths
+- the later portable/extraction work means moving that coherent Docs Viewer subtree back out of Studio into a true reusable boundary such as `docs-viewer/`
+- until that extraction lands, Docs Viewer remains Studio-hosted and the Studio server owns Docs Viewer management/server behavior
+
 ## Product Boundary
 
 Docs Viewer owns:

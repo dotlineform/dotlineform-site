@@ -8,6 +8,11 @@ parent_id: archive
 sort_order: 91000
 viewable: true
 ---
+
+This document is now archived and is no longer maintained.
+
+---
+
 # Studio Local Vanilla Web App Request
 
 Status:

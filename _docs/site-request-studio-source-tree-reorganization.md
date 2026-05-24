@@ -3,7 +3,7 @@ doc_id: site-request-studio-source-tree-reorganization
 title: Studio Source Tree Reorganization Request
 added_date: 2026-05-23
 last_updated: 2026-05-24
-ui_status: planned
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 10010
 viewable: true
@@ -12,9 +12,7 @@ viewable: true
 
 Status:
 
-- drafting spec
-- Local Studio localization work is complete, see [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
-- Docs Viewer portability extraction is a follow-on phase, see [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+- in progress: tracked in [Studio Source Tree Reorganization Tasks](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks)
 
 ## Summary
 
@@ -42,10 +40,14 @@ This request covers the physical ownership boundary between Studio and the publi
 Move under `studio/`:
 
 - canonical website data used by Studio to generate published site data
+- canonical publishing Markdown currently under `_docs_catalogue/`; this is Studio-owned site source, not Docs Viewer-owned source
+- Docs Viewer source Markdown currently under `_docs/`, `_docs_analysis/`, `_docs_library/`, and any other source Markdown folder that Docs Viewer explicitly owns
+- change request workflow source currently under `_docs_logs/`; this is Studio-owned workflow data, not Docs Viewer-owned source
 - Local Studio Python app server modules, route-family modules, and service adapters
 - Studio-owned domain services and workflow support that exist for authoring or maintaining site data
 - Studio frontend JavaScript, shell code, route modules, CSS, UI text, static config, and local runtime config
 - Studio-owned assets, including Studio-only CSS, images, fixture assets, and UI Catalogue demo assets
+- current Docs Viewer runtime code, server/services, source config, UI text, CSS, and associated assets because Docs Viewer remains Studio-hosted until the later extraction
 - UI Catalogue demos and notes that are Studio reference surfaces
 - local-only source, fixtures, tests, and support files that should no longer sit in public Jekyll paths
 
@@ -55,6 +57,7 @@ Remain outside `studio/`:
 - public route JavaScript that reads generated JSON into published pages
 - public CSS and public assets required by the published site
 - generated JSON/search/docs/catalogue outputs consumed by published pages
+- generated Docs Viewer JSON and search payloads consumed by public `/library/` and `/analysis/` installs
 - public thumbnails and media assets used by published pages
 - full Docs Viewer portable extraction
 - package-manager restructuring
@@ -66,8 +69,29 @@ Same-repo boundary:
 - no task in this request should prepare for, imply, or preserve a future Studio repo split
 - repo-split planning should be removed from this request's future direction; it was a hypothetical option, not a target architecture
 
-Docs Viewer integration may move only where it is Studio-specific.
-Reusable Docs Viewer runtime code, data contracts, generated payload expectations, and portable setup decisions belong to the Docs Viewer extraction work.
+Docs Viewer boundary for this request:
+
+- Docs Viewer is both a publishing module and a manage-mode interface
+- as a publishing module, Docs Viewer converts an owned `_docs_*/` canonical source Markdown folder into generated JSON/search payloads that public read-only routes can consume, such as `/library/` and `/analysis/`
+- as a manage-mode interface, Docs Viewer imports source Markdown and edits metadata for an allowed source scope
+- manage mode is currently enabled through `/docs/`
+- `/docs/` has no special source ownership meaning; it defaults to `_docs/`, but manage mode can switch to other allowed Docs Viewer source folders such as `_docs_library/`
+- `_docs/` is therefore just another Docs Viewer-owned source folder, not a privileged root docs source
+- `_docs_library/` and `_docs_analysis/` are Docs Viewer-owned canonical source folders; Docs Viewer decides whether a scope is available locally through Studio, publicly on the site, or both
+- current Docs Viewer code is relatively self-contained but remains Studio-hosted, so it moves under `studio/` with the other Studio source
+- Docs Viewer should have a clear home inside `studio/`, not be scattered through generic Studio app, service, data, or asset folders
+- the existing localization of Docs Viewer scripts, CSS, config, and services should be preserved as a recognizable internal boundary to make later extraction easier
+- the Studio server owns Docs Viewer management/server behavior until a later extraction moves that responsibility out of Studio
+- Docs Viewer source Markdown is unpublished source data, so it moves under the internal Docs Viewer home in `studio/`
+- Docs Viewer reports are Docs Viewer-owned runtime/config/document surfaces even when the report reads data owned by another repo domain
+- for example, the `change-history.md` report is a Docs Viewer report that reads Studio-owned `_docs_logs/` data
+- report ownership does not transfer ownership of the data being read; a Docs Viewer report should be able to read allowed data from anywhere in the repo where Docs Viewer is installed
+- after the move, any remaining `_docs` naming pattern should refer only to Docs Viewer-owned canonical source scopes; Studio-owned `_docs_logs/` and `_docs_catalogue/` should be moved into non-Docs-Viewer Studio homes to remove the current prefix confusion
+- `_docs_logs/` is Studio-owned change request workflow data; generated logs may be consumed by Codex and generated reports may be surfaced for humans through `/docs/`, but Docs Viewer does not own the source workflow or treat `_docs_logs/` as a published Docs Viewer scope
+- `_docs_catalogue/` is canonical publishing Markdown generated into public site data by Studio; it moves under Studio canonical data, not under the internal Docs Viewer home
+- generated Docs Viewer JSON/search payloads are published artifacts read by public installs such as `/library/` and `/analysis/`, so they remain in the public Jekyll site output paths
+- the later Docs Viewer extraction means moving Docs Viewer runtime, server, services, Docs Viewer source files, config, and associated assets out of Studio into a true reusable boundary such as `docs-viewer/`
+- until that later extraction happens, Docs Viewer is not treated as an independent portable package inside this source-tree reorganization
 
 Domain code should be classified by purpose rather than by current path.
 If a script is the canonical source, maintenance service, write workflow, local API adapter, or Studio UI support for website data, it belongs under `studio/`.
@@ -90,8 +114,21 @@ studio/
   services/
     catalogue/
     analytics/
-    docs/
     media/
+  docs-viewer/
+    runtime/
+    server/
+    services/
+    source/
+      studio/
+      library/
+      analysis/
+    config/
+    assets/
+    tests/
+  workflows/
+    change-requests/
+      logs/
   ui-catalogue/
     demos/
     notes/
@@ -100,6 +137,8 @@ studio/
 
 The layout names are not final.
 The important rule is that these are source and authoring locations.
+The `studio/docs-viewer/` branch is an internal Studio-hosted home for the current Docs Viewer implementation.
+It should preserve the work already done to localize Docs Viewer scripts and assets, so the later extraction can move a coherent subtree rather than rediscover scattered files.
 Browser URLs, public output paths, and generated-data destinations should be updated to match the new boundary rather than preserved through compatibility mounts.
 This tree is a same-repo organization boundary.
 It is not a staging step toward moving Studio into a separate repository.
@@ -110,11 +149,16 @@ Studio may generate public artifacts, but those artifacts belong to the public J
 
 Examples:
 
-- canonical catalogue, analytics, docs, and media-maintenance source data moves under `studio/`
+- canonical catalogue data, `_docs_catalogue/` publishing Markdown, analytics source, and media-maintenance source data moves under Studio canonical source
+- Docs Viewer-owned source Markdown, including current `_docs/`, `_docs_library/`, and `_docs_analysis/`, moves under the internal Docs Viewer home in `studio/`
+- Studio-owned change request log source currently under `_docs_logs/entries/` moves under Studio workflow source, not under Docs Viewer
 - generated public catalogue/search/docs JSON consumed by published pages remains under public asset paths
+- generated Docs Viewer JSON/search payloads for public `/library/` and `/analysis/` remain under public asset paths
+- generated change request log data remains Studio-owned even when a Docs Viewer-owned report reads it
+- Docs Viewer report definitions, report documents such as `change-history.md`, report runtime modules, and report registry/config move with Docs Viewer
 - public thumbnails and media used by published pages remain under public asset paths
 - public route JavaScript that reads generated JSON into pages remains outside `studio/`
-- Studio-only config, local runtime config, UI text, editors, reports, and workflow assets move under `studio/`
+- Studio-only config, local runtime config, Docs Viewer source config, UI text, editors, reports, and workflow assets move under `studio/`
 
 The reorganization should make generation direction obvious:
 
@@ -190,22 +234,11 @@ The target is:
 - any selector left in public `main.css` must be used by public routes too, not retained only because Studio needs it
 - Local Studio shell rendering should load Studio-owned CSS directly, then Studio route CSS, without depending on public `main.css`
 
-## Implementation Tasks
+## Implementation Tracking
 
-- Inventory current Studio-owned source, canonical data, config, static assets, UI Catalogue files, local services, tests, and generated-output-adjacent paths.
-- Classify each path as Studio source, public Jekyll source, public generated output, Docs Viewer reusable source, or out-of-scope dependency.
-- Define the final `studio/` source-tree layout before moving files.
-- Move canonical website data and Studio config under `studio/`, then update generators and services to read from the new canonical locations while writing public outputs to the existing Jekyll/public output paths.
-- Move Local Studio Python app-server modules, route-family modules, local API adapters, and Studio-owned services under `studio/`.
-- Move Studio frontend JavaScript, shell code, CSS, UI text, static config, and Studio-only assets under `studio/`.
-- Update the Local Studio server to serve Studio-owned frontend/assets from `studio/` paths, not from public site-owned `/assets/studio/...` paths.
-- Split Studio's CSS base from public `assets/css/main.css`, moving Studio-only tokens/classes into Studio-owned CSS and leaving only public or genuinely shared selectors in public `main.css`.
-- Move top navigation, active-section mapping, and home-list rendering toward a focused JavaScript shell module when doing so helps complete the physical separation cleanly.
-- Move UI Catalogue notes and demo source under the Studio boundary, and update demo routes to read from the new Studio-owned source paths.
-- Update tests, smoke scripts, checks, docs, Jekyll excludes, and local runner docs in the same slices as the moves.
-- Remove old Studio source paths instead of retaining import/path aliases or compatibility serving routes.
-- Verify public Jekyll output still receives the generated data and assets it needs after Studio source moves.
-- Remove any repo-split framing from this request and related implementation notes touched by the slice; Studio remains coupled to this Jekyll site as its canonical authoring system.
+Live implementation tasks are tracked in [Studio Source Tree Reorganization Tasks](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks).
+The current path-family inventory is recorded in [Studio Source Tree Reorganization Inventory](/docs/?scope=studio&mode=manage&doc=site-request-studio-source-tree-reorganization-inventory).
+Keep task status, handover notes, sequencing, and deferred-task reasons there so this request stays focused on the stable boundary decision and acceptance contract.
 
 ## Acceptance Criteria
 
@@ -216,19 +249,28 @@ The target is:
 - Studio can regenerate public artifacts from canonical source under `studio/`.
 - Studio and the Jekyll site remain in one repo; no future repo split is listed or implied as a target outcome of this request.
 - Generated public outputs remain available to Jekyll at stable public paths.
+- Generated Docs Viewer JSON/search payloads used by public `/library/` and `/analysis/` remain available at their public site paths.
+- Current Docs Viewer runtime, server/services, config, Docs Viewer source files, and associated assets are Studio-hosted under a clear internal Docs Viewer home such as `studio/docs-viewer/` until a later extraction moves that coherent subtree to a true portable boundary.
+- Docs Viewer-owned reports can read allowed data owned by Studio or other repo domains; the report implementation/config/document moves with Docs Viewer, while the data remains with its owning domain.
+- `_docs/` is treated as one Docs Viewer-owned source scope among others, not as a special root docs source.
+- `_docs_logs/` is treated as Studio-owned change request workflow data; generated reports may be surfaced through `/docs/`, but Docs Viewer does not own the log source workflow.
 - Public Jekyll preview does not watch Studio-only source, services, config, tests, or demo assets.
 - Local Studio no longer depends on public `assets/css/main.css` for base typography, size, spacing, shell, or Studio-only primitive classes.
 - Public `assets/css/main.css` contains no Studio-only route, editor, modal, dashboard, or operational selectors after the split.
 - Local Studio routes, UI Catalogue demos, and migrated app workflows still pass their focused smoke checks.
 - Existing public-site builds continue to exclude Studio-only surfaces.
-- Docs Viewer portable/shared files are not buried under Studio unless they are explicitly Studio shell integration files.
+- The source-tree reorganization does not attempt the full Docs Viewer portable extraction; that later request is responsible for moving Docs Viewer out of Studio into a reusable package such as `docs-viewer/`.
 - Old Studio source locations such as `assets/studio/...` are removed or reduced to generated public output only; they are not kept alive as source locations through compatibility shims.
 - No broad old-path import aliases, copied migration artifacts, or static serving aliases are committed for moved Studio source.
 - Python remains the local API/write boundary, but no longer needs broad edits for routine Studio shell navigation changes once the browser-shell step lands.
 
-## Related References
+## Related work
 
-- [Studio Source Tree Reorganization Tasks](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks)
+- Local Studio localization work is complete, see [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
+- Docs Viewer portability extraction is a follow-on phase, see [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+
+## References
+
 - [Local Studio App Implementation Plan](/docs/?scope=studio&doc=local-studio-app-implementation-plan)
 - [Studio Local Vanilla Web App Request](/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app)
 - [Docs Viewer Shell Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction)

@@ -8,6 +8,11 @@ parent_id: archive
 sort_order: 88000
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # JavaScript Inventory Implementation Plan
 
 This document turns the scoring policy in [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory) and the current rows in [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) into implementation batches.

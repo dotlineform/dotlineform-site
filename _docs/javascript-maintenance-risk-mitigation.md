@@ -8,6 +8,11 @@ parent_id: archive
 sort_order: 87000
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # JavaScript Maintenance Risk Mitigation
 
 This document records the next course of action after the 2026-05-21 review of [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory).

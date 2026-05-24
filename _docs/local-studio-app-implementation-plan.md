@@ -9,6 +9,11 @@ sort_order: 89000
 published: true
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # Local Studio App Implementation Plan
 
 This plan implements [Studio Local Vanilla Web App Request](/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app).
