@@ -35,7 +35,7 @@ Studio links to public content must not accidentally resolve on the Studio app h
 When a route adds or touches public-content links:
 
 - use `buildPublicSiteUrl(config, path, params)` for general public routes such as `/library/` and `/analysis/`
-- use `assets/studio/js/catalogue-public-links.js` for public catalogue routes such as works, series, work details, and moments
+- use `studio/app/frontend/js/catalogue-public-links.js` for public catalogue routes such as works, series, work details, and moments
 - keep editor-to-editor and Studio navigation links on local Studio routes
 - do not use relative public-content hrefs such as `/works/...`, `/series/...`, `/moments/...`, `/library/`, or `/analysis/` directly in migrated Studio route output
 - do not default to `https://dotlineform.com` unless the action is explicitly a live-site action
@@ -75,7 +75,18 @@ When changing UI Catalogue demo visibility:
 At closeout:
 
 - update the owning docs and any implementation plan or change request status that changed
-- create a `_docs_logs/entries/*.json` entry for meaningful behavior, workflow, runtime, or documentation changes
-- rebuild docs-log generated indexes after adding a log entry
+- create a `studio/workflows/change-requests/logs/entries/*.json` entry for meaningful behavior, workflow, runtime, or documentation changes
+- rebuild docs-log generated indexes after adding a log entry unless the slice explicitly defers generated follow-through
 - do not rebuild Docs Viewer payloads unless the slice explicitly calls for that follow-through
 - report generated payload status separately from source-doc edits
+
+## Source Tree Ownership
+
+When adding or moving repo source:
+
+- use [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) as the maintained ownership contract
+- keep Studio source, local services, frontend modules, checks, tests, UI Catalogue, and workflow source under `studio/`
+- keep public Jekyll layouts, includes, route pages, public runtime files, public CSS/assets, and generated public payloads outside `studio/`
+- keep Docs Viewer source, runtime, CSS, config, build code, and services together under `studio/docs-viewer/` until the portable extraction happens
+- keep local working output, backups, staging, and test logs under `var/` or other ignored output paths
+- do not reintroduce old source homes such as `assets/studio/`, `assets/docs-viewer/`, `_docs_catalogue/`, `_docs_logs/`, root `tests/`, root check folders, or `scripts/docs/`

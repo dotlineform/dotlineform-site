@@ -13,6 +13,8 @@ This repo uses lightweight, opt-in checks rather than a mandatory full test suit
 The goal is to give Codex a standard place to put repeatable checks, run logs, and verification notes when a change is too broad for manual review alone.
 The current Python checks are pytest-collected scripts under `studio/tests/python/`.
 They use ordinary `assert` statements and are run by `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` through pytest.
+Tests, checks, smoke helpers, and public-surface audits are Studio/Codex development infrastructure even when they validate public generated output.
+See [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) for the maintained repo ownership boundary.
 
 ## When To Use Automated Checks
 

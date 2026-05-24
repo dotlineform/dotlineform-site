@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-808201024d1c093171358568ca92dfbd",
-    "generated_at_utc": "2026-05-24T15:19:54Z",
-    "count": 303
+    "version": "blake2b-519d826c430e8bd1fa3c6910c3e8e52c",
+    "generated_at_utc": "2026-05-24T20:35:51Z",
+    "count": 304
   },
   "entries": [
     {
@@ -4999,6 +4999,29 @@
         "45"
       ],
       "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-12 18:45 2026 05 12 18 45"
+    },
+    {
+      "id": "source-tree-ownership",
+      "kind": "doc",
+      "title": "Source Tree Ownership",
+      "href": "/docs/?scope=studio&doc=source-tree-ownership",
+      "last_updated": "2026-05-24",
+      "parent_id": "architecture",
+      "parent_title": "Architecture",
+      "display_meta": "2026-05-24 • Architecture",
+      "search_terms": [
+        "source-tree-ownership",
+        "source",
+        "tree",
+        "ownership",
+        "source tree ownership",
+        "architecture",
+        "2026-05-24",
+        "2026",
+        "05",
+        "24"
+      ],
+      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-05-24 2026 05 24"
     },
     {
       "id": "scripts-catalogue-lookup",

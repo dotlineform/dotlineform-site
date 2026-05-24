@@ -20,21 +20,22 @@ It currently serves these scopes:
 The current implementation uses:
 
 - scope-specific route shells to define the route, scope, and generated data URLs
-- one shared shell include in `_includes/docs_viewer_shell.html`
-- one shared runtime entry module in `assets/docs-viewer/js/docs-viewer.js`
-- document pane, payload rendering, and report mount handoff in `assets/docs-viewer/js/docs-viewer-document-controller.js`
-- pure tree and visibility helpers in `assets/docs-viewer/js/docs-viewer-tree.js`
-- pure inline-search and recently-added helpers in `assets/docs-viewer/js/docs-viewer-search.js`
-- bookmark record and storage helpers in `assets/docs-viewer/js/docs-viewer-favourites.js`
+- one shared shell source under `studio/docs-viewer/runtime/shells/`, with minimal public route adapters where read-only Jekyll routes need them
+- one shared runtime entry module in `studio/docs-viewer/runtime/js/docs-viewer.js`
+- document pane, payload rendering, and report mount handoff in `studio/docs-viewer/runtime/js/docs-viewer-document-controller.js`
+- pure tree and visibility helpers in `studio/docs-viewer/runtime/js/docs-viewer-tree.js`
+- pure inline-search and recently-added helpers in `studio/docs-viewer/runtime/js/docs-viewer-search.js`
+- bookmark record and storage helpers in `studio/docs-viewer/runtime/js/docs-viewer-favourites.js`
 - browser-visible report metadata in `assets/data/docs/reports.json`
-- report module allowlist and access checks in `assets/docs-viewer/js/docs-viewer-reports.js`
-- the first report module in `assets/docs-viewer/js/reports/docs-index-table-report.js`
+- report module allowlist and access checks in `studio/docs-viewer/runtime/js/docs-viewer-reports.js`
+- report modules under `studio/docs-viewer/runtime/js/reports/`
 - generated semantic-reference artifacts under `assets/data/docs/scopes/<scope>/references/`
-- browser-safe Docs Viewer settings in `assets/docs-viewer/data/docs-viewer-config.json`, generated from `studio/docs-viewer/config/scopes/docs_scopes.json`
-- Docs Viewer UI text in `assets/docs-viewer/data/ui-text.json`
-- reusable Docs Viewer CSS in `assets/docs-viewer/css/docs-viewer.css` and `assets/docs-viewer/css/docs-viewer-reports.css`
+- browser-safe Docs Viewer settings in `studio/docs-viewer/config/runtime/docs-viewer-config.json`, generated/projected from `studio/docs-viewer/config/scopes/docs_scopes.json`
+- public read-only Docs Viewer config source in `studio/docs-viewer/config/runtime/docs-viewer-public-config.json`
+- Docs Viewer UI text in `studio/docs-viewer/config/ui-text/ui-text.json`
+- reusable Docs Viewer CSS in `studio/docs-viewer/assets/css/docs-viewer.css` and `studio/docs-viewer/assets/css/docs-viewer-reports.css`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
-- a management-only stylesheet in `assets/docs-viewer/css/docs-viewer-management.css`, loaded only by `/docs/`
+- a management-only stylesheet in `studio/docs-viewer/assets/css/docs-viewer-management.css`, loaded only by `/docs/`
 
 Public viewer routes are read-only:
 
@@ -59,6 +60,7 @@ Those boundaries are intentional:
 
 - build mechanics belong in [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - shared shell and route placement are also referenced in [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)
+- repo-level ownership is maintained in [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
 
 ## Documents
 

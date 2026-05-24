@@ -38,18 +38,19 @@ The current script surface is organized by owner:
 - `studio/services/catalogue/` owns catalogue source models, lookup/build planning, generation, publication/delete/prose workflows, validation/export utilities, and the catalogue write service.
 - `studio/services/analytics/` owns tag metadata services and helpers as the first Analytics metadata layer over catalogue works and series.
 - `studio/docs-viewer/` owns Docs Viewer build, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.
-- `scripts/search/` owns search build configuration and the search builder implementation.
+- `studio/services/catalogue/search/` owns Catalogue search build configuration and implementation.
+- `studio/docs-viewer/build/` owns Docs Viewer search build implementation.
 - `studio/app/server/studio/` owns non-domain-specific Studio runtime services such as audit, backup-retention, and Data Sharing dispatch services.
 - `studio/checks/` owns standalone audits and verification commands.
 - `studio/services/media/` owns media derivation and remote media publishing commands.
-- top-level `scripts/` is reserved for stable wrappers and shared infrastructure modules.
+- top-level `scripts/` is reserved for stable wrappers that delegate into Studio/Docs Viewer owners.
 
 Top-level survivors are intentional:
 
 - `build_docs.rb` and `build_search.rb` are stable operational wrappers over domain-owned implementations.
-- `make_srcset_images.sh` is the stable shell wrapper for the media implementation.
-- `display_paths.py`, `local_env.py`, `pipeline_config.py`, `script_logging.py`, and `studio_activity.py` are shared infrastructure modules with cross-domain callers.
-- `jekyll_markdown_renderer.rb`, `render_markdown_with_jekyll.rb`, and `jekyll_webrick_client_reset_filter.rb` are shared Ruby/Jekyll helpers.
+- `make_srcset_images.sh`, when present, is the stable shell wrapper for the media implementation.
+- shared infrastructure modules now live under `studio/shared/`.
+- shared Ruby/Jekyll helpers now live under `studio/shared/ruby/` or the owning Docs Viewer build path.
 
 ## Current Build Boundaries
 
@@ -69,13 +70,13 @@ Docs-domain builds:
 Search builds:
 
 - `./scripts/build_search.rb`
-  - stable top-level wrapper for `scripts/search/build_search.rb`
+  - stable top-level wrapper that dispatches through `studio/commands/search-adapters.json`
   - source indexes:
     - `assets/data/series_index.json`
     - `assets/data/works_index.json`
     - `assets/data/moments_index.json`
-    - `assets/studio/data/tag_assignments.json`
-    - `assets/studio/data/tag_registry.json`
+    - `studio/data/canonical/analytics/tag-assignments.json`
+    - `studio/data/canonical/analytics/tag-registry.json`
     - `assets/data/docs/scopes/studio/index.json`
     - `assets/data/docs/scopes/analysis/index.json`
     - `assets/data/docs/scopes/library/index.json`
@@ -165,6 +166,7 @@ Catalogue/runtime maintenance:
 
 ## Related References
 
+- [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
 - [Servers](/docs/?scope=studio&doc=servers)
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)

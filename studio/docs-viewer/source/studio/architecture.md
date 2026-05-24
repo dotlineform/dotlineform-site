@@ -27,6 +27,7 @@ This section does not try to be the canonical home for:
 
 Related references:
 
+- **[Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)** for the maintained boundary between Studio source, Docs Viewer source, public Jekyll source, generated output, and local working output
 - **[Data Flow](/docs/?scope=studio&doc=data-flow)** for which generated artifacts each public route reads at runtime
 - **[Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)** for the shared shell, scope split, and docs-viewer shell boundary
 - **[Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)** for canonical ordering across generated artifacts and runtime pages

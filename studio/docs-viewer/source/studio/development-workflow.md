@@ -26,7 +26,7 @@ For any non-trivial change:
 5. Run targeted verification proportional to the blast radius.
 6. Update owning docs and generated payloads when source docs or generated contracts change.
 7. Close out with a concise summary, remaining risks, and follow-up tasks.
-8. Write `_docs_logs/` entries for meaningful completed work. More info: `_docs_logs/README.md`.
+8. Write structured docs-log entries for meaningful completed work. More info: `studio/workflows/change-requests/README.md`.
 
 ## 1. Classify The Work
 
@@ -40,6 +40,7 @@ Use the smallest owning area that explains the change:
 - Docs Viewer behavior: [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - Search behavior, schema, ranking, or build flow: [Search](/docs/?scope=studio&doc=search)
 - Scripts, local services, and command behavior: [Scripts](/docs/?scope=studio&doc=scripts)
+- Source tree ownership or source/public boundary behavior: [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership)
 - Local setup, dependency, or environment behavior: [Local Setup](/docs/?scope=studio&doc=local-setup) and [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)
 - Test strategy and check profiles: [Testing](/docs/?scope=studio&doc=testing), [Run Checks](/docs/?scope=studio&doc=scripts-run-checks), and [Pytest](/docs/?scope=studio&doc=testing-pytest)
 
@@ -165,7 +166,7 @@ When behavior changes, update the owning reference doc in the same change.
 
 Common follow-through:
 
-- `_docs/` changes require Studio docs-viewer payload follow-through.
+- Docs Viewer source changes under `studio/docs-viewer/source/<scope>/` require same-scope docs-viewer payload follow-through when the generated payload update is part of the slice.
 - Search behavior or schema changes require relevant Search child docs and search payload rebuilds.
 - Script behavior changes require the script-specific child doc under [Scripts](/docs/?scope=studio&doc=scripts).
 - Config behavior changes require the owning config doc under [Config](/docs/?scope=studio&doc=config).
@@ -188,13 +189,13 @@ For change requests:
 
 - mark completed tasks clearly
 - move or mark the request according to the current request/archive practice
-- when the structured log system is ready, add references from the completed request to the relevant `_docs_logs/` entry ids when the request has a closure/cleanup task for that
+- add references from the completed request to the relevant structured docs-log entry ids when the request has a closure/cleanup task for that
 
 ## 8. Record Durable Change History
 
-The source model and authoring workflow for change logs are documented in `_docs_logs/README.md`.
+The source model and authoring workflow for change logs are documented in `studio/workflows/change-requests/README.md`.
 
-- create structured log entries `_docs_logs/` for meaningful completed changes
+- create structured log entries under `studio/workflows/change-requests/logs/entries/` for meaningful completed changes
 - include `change_request_doc_id` when a log entry implements or closes a request
 - include related docs and files so Codex can trace decisions later
 - let generated indexes and reports provide human browsing
@@ -208,4 +209,4 @@ These are not part of the current implementation task.
 - Studio UI guidance is split across [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start), framework docs, primitive docs, and the long UI decision log; the decision log likely needs pruning or archival.
 - State routing and module-dependency guidance exists across route, runtime, and script docs but may need a shorter “where to look first” index.
 - Generated docs/search payload follow-through is documented, but a compact checklist may be useful after the change-log workflow is implemented.
-- The new `_docs_logs/` system still needs migration, generated indexes, report UI, and close-out helper support before it replaces the old logs.
+- The structured docs-log system still needs compact archive/view follow-through as it replaces old prose logs.

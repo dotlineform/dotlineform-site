@@ -12,7 +12,7 @@ viewable: true
 
 This document defines the boundary between canonical source, public projections, Studio projections, and Docs Viewer payloads.
 
-It supports the Local Studio migration by making the build/export contract explicit before large source-tree moves under `studio/`.
+It complements [Source Tree Ownership](/docs/?scope=studio&doc=source-tree-ownership) by documenting the source/projection contract rather than the whole repo layout.
 
 The executable source of truth is `studio/checks/projection_contract.json`.
 This document explains that manifest; it should not become a parallel hand-maintained list.
@@ -37,15 +37,15 @@ Canonical source can remain in a public repo while generated public projections 
 
 | Family | Canonical Source | Public Projection | Studio Projection | Owner |
 | --- | --- | --- | --- | --- |
-| Catalogue metadata | `assets/studio/data/catalogue/works.json`, `series.json`, `work_details.json`, `moments.json`, `meta.json` | `_works/`, `_series/`, `_work_details/`, `_moments/`, `assets/data/series_index.json`, `assets/data/works_index.json`, `assets/data/recent_index.json`, `assets/data/moments_index.json`, `assets/series/index/`, `assets/works/index/`, `assets/moments/index/` | `assets/studio/data/catalogue_lookup/`, catalogue editor API read responses, project-state and thumbnail-quality local reports | [Catalogue Source Model](/docs/?scope=studio&doc=data-models-catalogue-source), [Catalogue Indexes And Payloads](/docs/?scope=studio&doc=data-models-catalogue-indexes) |
-| Catalogue prose | `_docs_catalogue/works/`, `_docs_catalogue/series/`, `_docs_catalogue/moments/` | rendered `content_html` in per-record public payloads | editor/source-open workflows and prose import preview/apply state | [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) |
+| Catalogue metadata | `studio/data/canonical/catalogue/works.json`, `series.json`, `work_details.json`, `moments.json`, `meta.json` | `_works/`, `_series/`, `_work_details/`, `_moments/`, `assets/data/series_index.json`, `assets/data/works_index.json`, `assets/data/recent_index.json`, `assets/data/moments_index.json`, `assets/series/index/`, `assets/works/index/`, `assets/moments/index/` | `studio/data/generated/catalogue-lookup/`, catalogue editor API read responses, project-state and thumbnail-quality local reports | [Catalogue Source Model](/docs/?scope=studio&doc=data-models-catalogue-source), [Catalogue Indexes And Payloads](/docs/?scope=studio&doc=data-models-catalogue-indexes) |
+| Catalogue prose | `studio/data/canonical/catalogue-markdown/works/`, `studio/data/canonical/catalogue-markdown/series/`, `studio/data/canonical/catalogue-markdown/moments/` | rendered `content_html` in per-record public payloads | editor/source-open workflows and prose import preview/apply state | [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) |
 | Catalogue media metadata | source image fields in canonical catalogue JSON plus `DOTLINEFORM_PROJECTS_BASE_DIR` media roots | public route thumbnails under `assets/works/img/`, `assets/work_details/img/`, `assets/moments/img/`; public page media URLs from generated payloads | local derivative staging under `var/catalogue/media/` | [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json), [Publish Media To R2](/docs/?scope=studio&doc=scripts-publish-media-to-r2) |
 | Catalogue search | public catalogue projections plus selected Studio tag data | `assets/data/search/catalogue/index.json` | search preview/build diagnostics | [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) |
 
 Catalogue public builders must treat canonical source JSON as input, not as a browser payload.
 The current manifest-backed leak rule covers source media path fields such as `project_folder`, `project_subfolder`, `project_filename`, `details_subfolder`, `source_image_file`, and `provenance`.
 It also treats work `storage` and any retired `notes` keys as forbidden in public output.
-`storage` remains available to Studio through the Studio-only `assets/studio/data/work_storage_index.json` projection; public catalogue work records, public indexes, and catalogue search must not publish it.
+`storage` remains available to Studio through the Studio-only `studio/data/generated/activity/work-storage-index.json` projection; public catalogue work records, public indexes, and catalogue search must not publish it.
 Work and series `notes` are no longer source-schema fields; catalogue prose Markdown files own narrative text.
 
 Catalogue search is allowed to include selected Studio-derived tag labels or terms when the search builder documents the transform.
@@ -55,9 +55,9 @@ That does not make the tag registry, aliases, assignments, or full Studio lookup
 
 | Scope | Canonical Source | Public Projection | Studio Projection | Owner |
 | --- | --- | --- | --- | --- |
-| Studio docs | `_docs/*.md` | none by default | `assets/data/docs/scopes/studio/`, `assets/data/search/studio/index.json`, `/docs/` manage shell payloads | [Studio Scope](/docs/?scope=studio&doc=data-models-studio), [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) |
-| Library docs | `_docs_library/*.md` | `assets/data/docs/scopes/library/`, `assets/data/search/library/index.json`, `/library/` | local manage-mode access to the same generated payloads plus data-sharing working output under `var/studio/data-sharing/library/` | [Library Scope](/docs/?scope=studio&doc=data-models-library) |
-| Analysis docs | `_docs_analysis/**/*.md` | `assets/data/docs/scopes/analysis/`, `assets/data/search/analysis/index.json`, `/analysis/` | local manage-mode access to the same generated payloads | [Analysis Scope](/docs/?scope=studio&doc=data-models-analysis) |
+| Studio docs | `studio/docs-viewer/source/studio/*.md` | none by default | `assets/data/docs/scopes/studio/`, `assets/data/search/studio/index.json`, `/docs/` manage shell payloads | [Studio Scope](/docs/?scope=studio&doc=data-models-studio), [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) |
+| Library docs | `studio/docs-viewer/source/library/*.md` | `assets/data/docs/scopes/library/`, `assets/data/search/library/index.json`, `/library/` | local manage-mode access to the same generated payloads plus data-sharing working output under `var/studio/data-sharing/library/` | [Library Scope](/docs/?scope=studio&doc=data-models-library) |
+| Analysis docs | `studio/docs-viewer/source/analysis/**/*.md` | `assets/data/docs/scopes/analysis/`, `assets/data/search/analysis/index.json`, `/analysis/` | local manage-mode access to the same generated payloads | [Analysis Scope](/docs/?scope=studio&doc=data-models-analysis) |
 
 Docs source files are the canonical authored content.
 Generated Docs Viewer payloads are projections of that source.
@@ -71,14 +71,14 @@ It must not publish Studio docs payloads or Studio docs search unless a separate
 
 | Family | Canonical Source | Public Projection | Studio Projection | Owner |
 | --- | --- | --- | --- | --- |
-| Tag vocabulary and assignments | `assets/studio/data/tag_registry.json`, `tag_aliases.json`, `tag_assignments.json`, `tag_groups.json` | selected derived search terms in catalogue search only when built by the search adapter | local analytics API read/write payloads and tag route views | [Studio Scope](/docs/?scope=studio&doc=data-models-studio), [Analytics](/docs/?scope=studio&doc=analytics) |
-| Work storage lookup | `assets/studio/data/work_storage_index.json` | none | Studio Works storage review data | [Studio Works](/docs/?scope=studio&doc=studio-works) |
-| Studio config and UI text | `assets/studio/data/studio_config.json`, `assets/studio/data/ui_text/*.json`, related checked-in config files | public Docs Viewer config and public search policy only where separately generated or copied by their owners | local runtime config JSON and Studio route UI text payloads | [Config](/docs/?scope=studio&doc=config), [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) |
+| Tag vocabulary and assignments | `studio/data/canonical/analytics/tag-registry.json`, `tag-aliases.json`, `tag-assignments.json`, `tag-groups.json` | selected derived search terms in catalogue search only when built by the search adapter | local analytics API read/write payloads and tag route views | [Studio Scope](/docs/?scope=studio&doc=data-models-studio), [Analytics](/docs/?scope=studio&doc=analytics) |
+| Work storage lookup | `studio/data/generated/activity/work-storage-index.json` | none | Studio Works storage review data | [Studio Works](/docs/?scope=studio&doc=studio-works) |
+| Studio config and UI text | `studio/app/frontend/config/studio-config.json`, `studio/app/frontend/config/ui-text/*.json`, related checked-in config files | public Docs Viewer config and public search policy only where separately generated or copied by their owners | local runtime config JSON and Studio route UI text payloads | [Config](/docs/?scope=studio&doc=config), [Studio Runtime](/docs/?scope=studio&doc=studio-runtime) |
 | Studio activity | local write-service outputs under `var/studio/activity/` | none | Studio Activity route/API data | [Studio Activity](/docs/?scope=studio&doc=studio-activity) |
 
 Studio app data is local by default.
 Public builders can read a narrow subset only through documented adapters.
-The public Jekyll build should exclude `assets/studio/` rather than relying on individual route discipline to keep those files private from dotlineform.com output.
+The public Jekyll build should exclude Studio source paths rather than relying on individual route discipline to keep those files private from dotlineform.com output.
 
 ## Config And Build Outputs
 
@@ -100,8 +100,8 @@ The public Jekyll build should include:
 - public media and thumbnail assets intentionally served by the site
 - shared public JavaScript under `assets/js/`
 - shared public CSS under `assets/css/`
-- Docs Viewer runtime files under `assets/docs-viewer/`
-- public Docs Viewer browser config at `assets/docs-viewer/data/docs-viewer-public-config.json`
+- generated or public-copied Docs Viewer runtime files required by read-only installs
+- public Docs Viewer browser config generated from `studio/docs-viewer/config/runtime/docs-viewer-public-config.json`
 - public read-only Library route at `/library/`
 - public read-only Analysis route at `/analysis/`
 - generated Library docs payloads and search under `assets/data/docs/scopes/library/` and `assets/data/search/library/`
@@ -111,11 +111,11 @@ The public Jekyll build should not include:
 
 - `/studio/` routes
 - `/docs/` local management route
-- Studio app assets under `assets/studio/`
+- Studio app source/assets under `studio/app/`
 - generated Studio docs payloads under `assets/data/docs/scopes/studio/`
 - generated Studio docs search under `assets/data/search/studio/`
-- canonical catalogue source data under `assets/studio/data/catalogue/`
-- Studio catalogue lookup data under `assets/studio/data/catalogue_lookup/`
+- canonical catalogue source data under `studio/data/canonical/catalogue/`
+- Studio catalogue lookup data under `studio/data/generated/catalogue-lookup/`
 - local scripts, tests, logs, or `var/` output
 - footer or nav links that point public users to `/studio/` or `/docs/`
 

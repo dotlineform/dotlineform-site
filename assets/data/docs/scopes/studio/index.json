@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T20:29:15Z",
+  "generated_at": "2026-05-24T20:38:00Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -532,7 +532,7 @@
       "source_path": "development-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/development-workflow.json",
-      "content_text_length": 11167
+      "content_text_length": 11387
     },
     {
       "scope": "studio",
@@ -569,7 +569,7 @@
       "source_path": "data-models-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-projection-contract.json",
-      "content_text_length": 10744
+      "content_text_length": 11001
     },
     {
       "scope": "studio",
@@ -601,7 +601,7 @@
       "source_path": "development-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=development-checklist",
       "content_url": "/assets/data/docs/scopes/studio/by-id/development-checklist.json",
-      "content_text_length": 4017
+      "content_text_length": 4897
     },
     {
       "scope": "studio",
@@ -1784,7 +1784,7 @@
       "source_path": "testing.md",
       "viewer_url": "/docs/?scope=studio&doc=testing",
       "content_url": "/assets/data/docs/scopes/studio/by-id/testing.json",
-      "content_text_length": 4157
+      "content_text_length": 4376
     },
     {
       "scope": "studio",
@@ -1929,7 +1929,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 5249
+      "content_text_length": 5576
     },
     {
       "scope": "studio",
@@ -2431,7 +2431,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 8774
+      "content_text_length": 8822
     },
     {
       "scope": "studio",
@@ -3207,7 +3207,7 @@
       "source_path": "docs-viewer-source-organisation.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-source-organisation.json",
-      "content_text_length": 4527
+      "content_text_length": 4661
     },
     {
       "scope": "studio",
@@ -3255,7 +3255,7 @@
       "source_path": "architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/architecture.json",
-      "content_text_length": 1208
+      "content_text_length": 1366
     },
     {
       "scope": "studio",
@@ -3320,6 +3320,22 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-build-catalogue-json.json",
       "content_text_length": 11065
+    },
+    {
+      "scope": "studio",
+      "doc_id": "source-tree-ownership",
+      "title": "Source Tree Ownership",
+      "added_date": "2026-05-24",
+      "last_updated": "2026-05-24",
+      "parent_id": "architecture",
+      "sort_order": 12100,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "source-tree-ownership.md",
+      "viewer_url": "/docs/?scope=studio&doc=source-tree-ownership",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/source-tree-ownership.json",
+      "content_text_length": 7589
     },
     {
       "scope": "studio",

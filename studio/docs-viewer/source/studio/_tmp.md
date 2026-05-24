@@ -9,11 +9,12 @@ viewable: false
 ---
 # tmp
 
-we are working on site-request-studio-source-tree-reorganization.md
-with tasks tracked in site-request-studio-source-tree-reorganization-tasks
-please continue with task 9.
+docs viewer extraction:
 
-I’m adding one small shared bootstrap helper under scripts/ for Python path setup. That keeps the moved modules from each inventing their own parent-depth logic, while still pointing directly at the new studio/ owners.
+- docs viewer needs to be self contained in a folder .docs-viewer/
+- it is known to the host repo through repo owned config
+- it is not part of Local Studio app. it runs in its own shell, which is started/stopped independently of Local Studio.
+- it advertises it's running local host location e.g port, through config so that other pages (e.g. studio or jekyll hosted pages) can link to documents hosted by docs viewer in either public read-only docs viewer pages or local-only manage-mode docs hosted by docs viewer.
 
 
 ---
