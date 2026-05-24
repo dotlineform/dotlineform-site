@@ -110,7 +110,7 @@ class DocsDataBuilder
     @show_updated_date = show_updated_date != false
     @allow_unresolved_parent_ids = allow_unresolved_parent_ids == true
     @only_doc_ids = only_doc_ids.nil? ? nil : normalize_doc_ids(only_doc_ids)
-    @repo_root = Pathname(__dir__).parent.parent.realpath
+    @repo_root = Pathname(__dir__).parent.parent.parent.realpath
     @output_url_base = output_url_base_for(@output_dir)
     @site_config = load_site_config
     @source_files_scanned = 0
@@ -933,6 +933,8 @@ class DocsDataBuilder
 
   def output_url_base_for(output_dir)
     relative_path = output_dir.relative_path_from(@repo_root).to_s
+    raise "Docs output path must be inside the repo root: #{output_dir}" if relative_path == ".." || relative_path.start_with?("../")
+
     "/#{relative_path}"
   end
 
