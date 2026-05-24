@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dotlineform.local/schemas/docs-viewer-service.schema.json",
+  "title": "Docs Viewer Service Config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "service", "capabilities", "routes", "local_state"],
+  "properties": {
+    "schema_version": {
+      "const": "docs_viewer_service_config_v1"
+    },
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bind_policy", "manage_route", "api_base_path", "env"],
+      "properties": {
+        "bind_policy": {
+          "const": "loopback_only"
+        },
+        "manage_route": {
+          "type": "string",
+          "pattern": "^/.*/$"
+        },
+        "api_base_path": {
+          "type": "string",
+          "pattern": "^(/.*)?$"
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "host",
+            "port",
+            "base_url",
+            "management_enabled",
+            "generated_reads_enabled",
+            "watch_enabled"
+          ],
+          "properties": {
+            "host": { "const": "DOCS_VIEWER_HOST" },
+            "port": { "const": "DOCS_VIEWER_PORT" },
+            "base_url": { "const": "DOCS_VIEWER_BASE_URL" },
+            "management_enabled": { "const": "DOCS_VIEWER_MANAGEMENT_ENABLED" },
+            "generated_reads_enabled": { "const": "DOCS_VIEWER_GENERATED_READS_ENABLED" },
+            "watch_enabled": { "const": "DOCS_VIEWER_WATCH_ENABLED" }
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "management_enabled_default",
+        "generated_reads_enabled_default",
+        "watch_enabled_default"
+      ],
+      "properties": {
+        "management_enabled_default": { "type": "boolean" },
+        "generated_reads_enabled_default": { "type": "boolean" },
+        "watch_enabled_default": { "type": "boolean" }
+      }
+    },
+    "routes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^/.+"
+      },
+      "required": ["health", "capabilities", "generated_index", "generated_payload", "generated_search"]
+    },
+    "local_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["import_staging", "backups", "logs", "watch_suppressions"],
+      "properties": {
+        "import_staging": { "type": "string" },
+        "backups": { "type": "string" },
+        "logs": { "type": "string" },
+        "watch_suppressions": { "type": "string" }
+      }
+    }
+  }
+}

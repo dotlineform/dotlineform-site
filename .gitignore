@@ -58,3 +58,10 @@ assets/studio/data/build_activity.json
 
 # Local environment variables
 var/local/site.env
+
+# Docs Viewer local runtime state
+.docs-viewer/.cache/
+.docs-viewer/.tmp/
+.docs-viewer/logs/
+.docs-viewer/run/
+.docs-viewer/var/

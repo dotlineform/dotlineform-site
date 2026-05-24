@@ -1,0 +1,59 @@
+{
+  "schema_version": "docs_viewer_service_config_v1",
+  "service": {
+    "bind_policy": "loopback_only",
+    "manage_route": "/docs/",
+    "api_base_path": "",
+    "env": {
+      "host": "DOCS_VIEWER_HOST",
+      "port": "DOCS_VIEWER_PORT",
+      "base_url": "DOCS_VIEWER_BASE_URL",
+      "management_enabled": "DOCS_VIEWER_MANAGEMENT_ENABLED",
+      "generated_reads_enabled": "DOCS_VIEWER_GENERATED_READS_ENABLED",
+      "watch_enabled": "DOCS_VIEWER_WATCH_ENABLED"
+    }
+  },
+  "capabilities": {
+    "management_enabled_default": false,
+    "generated_reads_enabled_default": true,
+    "watch_enabled_default": true
+  },
+  "routes": {
+    "health": "/health",
+    "capabilities": "/capabilities",
+    "generated_index": "/docs/generated/index",
+    "generated_payload": "/docs/generated/payload",
+    "generated_search": "/docs/generated/search",
+    "generated_docs_log": "/docs/generated/docs-log",
+    "generated_references": "/docs/generated/references",
+    "generated_reference_target": "/docs/generated/reference-target",
+    "source_config": "/docs/source-config",
+    "source_config_settings": "/docs/source-config-settings",
+    "import_source_files": "/docs/import-source-files",
+    "import_html_files": "/docs/import-html-files",
+    "open_source": "/docs/open-source",
+    "broken_links": "/docs/broken-links",
+    "import_source": "/docs/import-source",
+    "import_html": "/docs/import-html",
+    "update_metadata": "/docs/update-metadata",
+    "update_viewability": "/docs/update-viewability",
+    "update_viewability_bulk": "/docs/update-viewability-bulk",
+    "create": "/docs/create",
+    "rebuild": "/docs/rebuild",
+    "move": "/docs/move",
+    "normalize_order": "/docs/normalize-order",
+    "archive": "/docs/archive",
+    "delete_preview": "/docs/delete-preview",
+    "delete_apply": "/docs/delete-apply",
+    "scope_create_preview": "/docs/scopes/create-preview",
+    "scope_create_apply": "/docs/scopes/create-apply",
+    "scope_delete_preview": "/docs/scopes/delete-preview",
+    "scope_delete_apply": "/docs/scopes/delete-apply"
+  },
+  "local_state": {
+    "import_staging": "var/docs/import-staging",
+    "backups": "var/docs/backups",
+    "logs": "var/docs/logs",
+    "watch_suppressions": "var/docs/watch-suppressions"
+  }
+}

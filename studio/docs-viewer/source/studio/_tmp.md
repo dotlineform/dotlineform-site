@@ -9,16 +9,8 @@ viewable: false
 ---
 # tmp
 
-docs viewer extraction:
-
-the current request doc site-request-docs-viewer-shell-extraction.md states that Studio app may host Docs Viewer. This is not necessary, and would continue to blur the boundary between studio and docs viewer. here is some clarification:
-
-- docs viewer needs to be self contained in a folder .docs-viewer/
-- it is known to the host repo through repo owned config
-- it is not part of Local Studio app. it runs in its own shell, which is started/stopped independently of Local Studio.
-- it advertises it's running local host location e.g port, through config so that other pages (e.g. studio or jekyll hosted pages) can link to documents hosted by docs viewer in either public read-only docs viewer pages or local-only manage-mode docs hosted by docs viewer.
-- therefore for this repo, we might have 3 services running independently: Live Preview, Local Studio, Docs Viewer. (it will be useful for this repo to have a shell script that starts all those services).
-
+we are working on site-request-docs-viewer-shell-extraction-tasks.md
+please continue with next task
 
 ---
 
