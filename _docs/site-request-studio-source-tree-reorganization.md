@@ -45,6 +45,7 @@ Move under `studio/`:
 - change request workflow source currently under `_docs_logs/`; this is Studio-owned workflow data, not Docs Viewer-owned source
 - Local Studio Python app server modules, route-family modules, and service adapters
 - Studio-owned domain services and workflow support that exist for authoring or maintaining site data
+- Studio-owned build scripts, checks, tests, test fixtures, and Codex-run verification support
 - Studio frontend JavaScript, shell code, route modules, CSS, UI text, static config, and local runtime config
 - Studio-owned assets, including Studio-only CSS, images, fixture assets, and UI Catalogue demo assets
 - current Docs Viewer runtime code, server/services, source config, UI text, CSS, and associated assets because Docs Viewer remains Studio-hosted until the later extraction
@@ -58,9 +59,16 @@ Remain outside `studio/`:
 - public CSS and public assets required by the published site
 - generated JSON/search/docs/catalogue outputs consumed by published pages
 - generated Docs Viewer JSON and search payloads consumed by public `/library/` and `/analysis/` installs
+- generated or served Docs Viewer runtime config/report registry payloads needed by public read-only installs
 - public thumbnails and media assets used by published pages
 - full Docs Viewer portable extraction
 - package-manager restructuring
+
+Public-site root rule:
+
+- the public site may contain publishing source and runtime needed by published pages
+- it should not own development tooling, build scripts, checks, tests, fixtures, validators, audit scripts, Studio-only route shells, UI Catalogue source, or Docs Viewer source/runtime internals
+- root convenience commands may remain only as intentional entrypoints into Studio/Docs Viewer tooling, not as old-path compatibility layers
 
 Same-repo boundary:
 
@@ -95,7 +103,9 @@ Docs Viewer boundary for this request:
 
 Domain code should be classified by purpose rather than by current path.
 If a script is the canonical source, maintenance service, write workflow, local API adapter, or Studio UI support for website data, it belongs under `studio/`.
+If a script builds, validates, checks, tests, audits, or generates data for the site, it belongs under Studio or Docs Viewer according to the domain it serves.
 If a file is the published output or public runtime needed by GitHub Pages/Jekyll, it belongs outside `studio/`.
+The public site should contain only publishing infrastructure, route/page source, public runtime scripts for published pages, public CSS/assets, and generated data needed at runtime.
 
 ## Target Direction
 
@@ -115,15 +125,19 @@ studio/
     catalogue/
     analytics/
     media/
+  checks/
+  tests/
   docs-viewer/
     runtime/
     server/
     services/
+    build/
     source/
       studio/
       library/
       analysis/
     config/
+    reports/
     assets/
     tests/
   workflows/
@@ -132,7 +146,6 @@ studio/
   ui-catalogue/
     demos/
     notes/
-  tests/
 ```
 
 The layout names are not final.
@@ -154,8 +167,10 @@ Examples:
 - Studio-owned change request log source currently under `_docs_logs/entries/` moves under Studio workflow source, not under Docs Viewer
 - generated public catalogue/search/docs JSON consumed by published pages remains under public asset paths
 - generated Docs Viewer JSON/search payloads for public `/library/` and `/analysis/` remain under public asset paths
+- generated Catalogue search indexes and policy are produced by Studio; the public site owns only the published search payloads and route runtime that displays them
+- Docs Viewer search indexes and search config are produced by Docs Viewer; public read-only installs consume only the generated payloads and runtime
 - generated change request log data remains Studio-owned even when a Docs Viewer-owned report reads it
-- Docs Viewer report definitions, report documents such as `change-history.md`, report runtime modules, and report registry/config move with Docs Viewer
+- Docs Viewer report definitions, report documents such as `change-history.md`, report runtime modules, and report registry/config move with Docs Viewer; generated public report registry/config payloads may remain outside Studio when read-only installs need them
 - public thumbnails and media used by published pages remain under public asset paths
 - public route JavaScript that reads generated JSON into pages remains outside `studio/`
 - Studio-only config, local runtime config, Docs Viewer source config, UI text, editors, reports, and workflow assets move under `studio/`
@@ -244,12 +259,14 @@ Keep task status, handover notes, sequencing, and deferred-task reasons there so
 
 - Studio-owned source files, canonical data, config, services, frontend code, CSS, local assets, tests, and UI Catalogue source are physically located under a coherent repo-level `studio/` boundary.
 - Public Jekyll source outside `studio/` contains only what is needed to publish the site: Jekyll layouts/includes/pages/config, public runtime JS/CSS, public assets, and generated public data.
+- Build scripts, checks, tests, fixtures, audits, and verification helpers are owned by Studio or Docs Viewer, not by the public Jekyll publishing surface.
 - A reader can understand the public publishing surface without seeing the Studio authoring and maintenance machinery.
 - A reader can understand where the site data comes from by looking under `studio/`.
 - Studio can regenerate public artifacts from canonical source under `studio/`.
 - Studio and the Jekyll site remain in one repo; no future repo split is listed or implied as a target outcome of this request.
 - Generated public outputs remain available to Jekyll at stable public paths.
 - Generated Docs Viewer JSON/search payloads used by public `/library/` and `/analysis/` remain available at their public site paths.
+- Generated or served Docs Viewer report registry/config payloads needed by read-only installs remain available to those installs, while the source report definitions/config/runtime live under Docs Viewer ownership.
 - Current Docs Viewer runtime, server/services, config, Docs Viewer source files, and associated assets are Studio-hosted under a clear internal Docs Viewer home such as `studio/docs-viewer/` until a later extraction moves that coherent subtree to a true portable boundary.
 - Docs Viewer-owned reports can read allowed data owned by Studio or other repo domains; the report implementation/config/document moves with Docs Viewer, while the data remains with its owning domain.
 - `_docs/` is treated as one Docs Viewer-owned source scope among others, not as a special root docs source.
