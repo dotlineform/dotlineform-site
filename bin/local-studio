@@ -28,6 +28,7 @@ fi
 STUDIO_APP_ENABLED="${STUDIO_APP_ENABLED:-1}"
 STUDIO_APP_HOST="${STUDIO_APP_HOST:-127.0.0.1}"
 STUDIO_APP_PORT="${STUDIO_APP_PORT:-8765}"
+STUDIO_APP_ACCESS_LOG="${STUDIO_APP_ACCESS_LOG:-0}"
 DOCS_STARTUP_REBUILD_SCOPES="${DOCS_STARTUP_REBUILD_SCOPES:-}"
 CATALOGUE_STARTUP_LOOKUP_REBUILD="${CATALOGUE_STARTUP_LOOKUP_REBUILD:-off}"
 DOCS_WATCH_ENABLED="${DOCS_WATCH_ENABLED:-1}"
@@ -191,6 +192,14 @@ parse_startup_doc_scopes "$DOCS_STARTUP_REBUILD_SCOPES"
 echo "Starting Local Studio from $ROOT_DIR"
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
   echo "Local Studio App: http://$STUDIO_APP_HOST:$STUDIO_APP_PORT"
+  case "$STUDIO_APP_ACCESS_LOG" in
+    1|on|true|yes)
+      echo "Local Studio App access log: enabled"
+      ;;
+    *)
+      echo "Local Studio App access log: disabled"
+      ;;
+  esac
 else
   echo "Local Studio App: disabled"
 fi
@@ -261,7 +270,13 @@ echo "Press Ctrl+C to stop all processes."
 echo
 
 if [ "$STUDIO_APP_ENABLED" != "0" ]; then
-  "$PYTHON_BIN" scripts/studio/studio_app_server.py --host "$STUDIO_APP_HOST" --port "$STUDIO_APP_PORT" &
+  STUDIO_APP_ARGS=(--host "$STUDIO_APP_HOST" --port "$STUDIO_APP_PORT")
+  case "$STUDIO_APP_ACCESS_LOG" in
+    1|on|true|yes)
+      STUDIO_APP_ARGS+=(--access-log)
+      ;;
+  esac
+  "$PYTHON_BIN" scripts/studio/studio_app_server.py "${STUDIO_APP_ARGS[@]}" &
   STUDIO_APP_PID=$!
 fi
 

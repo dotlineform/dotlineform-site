@@ -2,7 +2,7 @@
 doc_id: scripts-local-studio
 title: Local Studio Runner
 added_date: 2026-04-22
-last_updated: "2026-05-23"
+last_updated: "2026-05-24"
 parent_id: servers
 sort_order: 2000
 ---
@@ -79,6 +79,9 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   default: `127.0.0.1`
 - `STUDIO_APP_PORT`
   default: `8765`
+- `STUDIO_APP_ACCESS_LOG`
+  default: `0`
+  set to `1`, `on`, `true`, or `yes` to print one HTTP access log line for each Local Studio app request
 - `DOCS_STARTUP_REBUILD_SCOPES`
   default: blank
   accepted values: configured docs scope ids from `scripts/docs/docs_scopes.json`, or comma-separated combinations
@@ -117,6 +120,7 @@ Example:
 export DOCS_STARTUP_REBUILD_SCOPES=""
 export CATALOGUE_STARTUP_LOOKUP_REBUILD=off
 export STUDIO_APP_PORT=8765
+export STUDIO_APP_ACCESS_LOG=0
 export DOCS_WATCH_DEBOUNCE_SECONDS=1.5
 export DOCS_WATCH_TARGETED_SEARCH_THRESHOLD=8
 ```
@@ -177,6 +181,7 @@ After those startup writes succeed, it starts the long-running local processes b
 - serves Local Studio views outside Jekyll
 - mounts `/studio/`, `/docs/`, migrated Studio route shells, `/health`, `/studio/runtime-config.json`, local Docs APIs, local Analytics APIs, local audit APIs, and local catalogue APIs
 - can be disabled with `STUDIO_APP_ENABLED=0`
+- access logging is quiet by default; set `STUDIO_APP_ACCESS_LOG=1` or pass `--access-log` to the app server for detailed request logging
 - related doc: [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
 
 ### Public Jekyll Preview

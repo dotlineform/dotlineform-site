@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import mimetypes
+import os
 import sys
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -64,6 +65,14 @@ STATIC_FILES = {
     "/site.webmanifest",
 }
 MAX_BODY_BYTES = 1024 * 1024
+ENABLED_VALUES = {"1", "on", "true", "yes"}
+
+
+def env_flag(name: str, default: bool = False) -> bool:
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.strip().lower() in ENABLED_VALUES
 
 
 class StudioAppRequestHandler(BaseHTTPRequestHandler):
@@ -76,6 +85,10 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
     @property
     def version(self) -> str:
         return self.server.asset_version  # type: ignore[attr-defined]
+
+    def log_request(self, code: int | str = "-", size: int | str = "-") -> None:
+        if self.server.access_log_enabled:  # type: ignore[attr-defined]
+            super().log_request(code, size)
 
     def do_GET(self) -> None:
         request = urlsplit(self.path)
@@ -409,22 +422,29 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
 
 
 class StudioAppServer(ThreadingHTTPServer):
-    def __init__(self, server_address: tuple[str, int], repo_root: Path):
+    def __init__(self, server_address: tuple[str, int], repo_root: Path, access_log_enabled: bool = False):
         super().__init__(server_address, StudioAppRequestHandler)
         self.repo_root = repo_root.resolve()
         self.asset_version = asset_version(self.repo_root)
+        self.access_log_enabled = access_log_enabled
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument(
+        "--access-log",
+        action="store_true",
+        default=env_flag("STUDIO_APP_ACCESS_LOG"),
+        help="Print one access log line for each Studio app HTTP request.",
+    )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    server = StudioAppServer((args.host, args.port), REPO_ROOT)
+    server = StudioAppServer((args.host, args.port), REPO_ROOT, access_log_enabled=args.access_log)
     host, port = server.server_address
     print(f"Studio app server: http://{host}:{port}/studio/", flush=True)
     try:

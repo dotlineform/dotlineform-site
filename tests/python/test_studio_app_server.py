@@ -19,6 +19,7 @@ from scripts.studio import studio_docs_api  # noqa: E402
 from scripts.studio.studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
 from scripts.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from scripts.studio.studio_app_config import runtime_config  # noqa: E402
+from scripts.studio.studio_app_server import env_flag, parse_args  # noqa: E402
 from scripts.studio import studio_catalogue_api  # noqa: E402
 from scripts.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
 
@@ -132,6 +133,21 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["modals"]["event"] == "studio:open-modal"
     assert any(view["id"] == "docs" and view["path"] == "/docs/?mode=manage" for view in runtime["views"])
+
+
+def test_access_log_is_opt_in(monkeypatch) -> None:
+    monkeypatch.delenv("STUDIO_APP_ACCESS_LOG", raising=False)
+    assert env_flag("STUDIO_APP_ACCESS_LOG") is False
+    assert parse_args([]).access_log is False
+
+    monkeypatch.setenv("STUDIO_APP_ACCESS_LOG", "1")
+    assert env_flag("STUDIO_APP_ACCESS_LOG") is True
+    assert parse_args([]).access_log is True
+    assert parse_args(["--access-log"]).access_log is True
+
+    monkeypatch.setenv("STUDIO_APP_ACCESS_LOG", "0")
+    assert parse_args([]).access_log is False
+    assert parse_args(["--access-log"]).access_log is True
 
 
 def test_analytics_tag_groups_route_returns_existing_payload() -> None:

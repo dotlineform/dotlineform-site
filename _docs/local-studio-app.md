@@ -26,6 +26,8 @@ The Python local Studio app server can be started directly:
 
 `bin/local-studio` starts this app server without Jekyll.
 Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
+HTTP access logging is quiet by default so normal browser use does not flood the terminal.
+Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to `studio_app_server.py`, when detailed request logging is needed.
 Docs management is handled by this app server; there is no separate Docs management server in normal local Studio startup.
 Active Local Studio browser routes use `/studio/api/docs/...` for Docs management reads/writes.
 The local app adapter imports shared Docs management behavior from `scripts/docs/docs_management_service.py`.

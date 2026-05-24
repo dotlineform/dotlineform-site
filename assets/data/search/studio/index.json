@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4848e2e2f2b950c9c7adaa7f316477ad",
-    "generated_at_utc": "2026-05-24T13:21:15Z",
+    "version": "blake2b-3ce0003b48e60e5a99ddcc2a7b042ce5",
+    "generated_at_utc": "2026-05-24T15:05:32Z",
     "count": 302
   },
   "entries": [
@@ -1122,10 +1122,10 @@
       "kind": "doc",
       "title": "Local Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-local-studio",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-24",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-23 • Servers",
+      "display_meta": "2026-05-24 • Servers",
       "search_terms": [
         "scripts-local-studio",
         "scripts",
@@ -1134,12 +1134,12 @@
         "local studio runner",
         "runner",
         "servers",
-        "2026-05-23",
+        "2026-05-24",
         "2026",
         "05",
-        "23"
+        "24"
       ],
-      "search_text": "scripts-local-studio scripts local studio local studio runner runner servers 2026-05-23 2026 05 23"
+      "search_text": "scripts-local-studio scripts local studio local studio runner runner servers 2026-05-24 2026 05 24"
     },
     {
       "id": "modal-composition-migration-tracker",

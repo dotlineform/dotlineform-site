@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T14:44:15Z",
+  "generated_at": "2026-05-24T15:05:55Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -788,7 +788,7 @@
       "doc_id": "scripts-local-studio",
       "title": "Local Studio Runner",
       "added_date": "2026-04-22",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-24",
       "parent_id": "servers",
       "sort_order": 2000,
       "published": true,
@@ -797,7 +797,7 @@
       "source_path": "scripts-local-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-local-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-local-studio.json",
-      "content_text_length": 9102
+      "content_text_length": 9398
     },
     {
       "scope": "studio",
@@ -3091,7 +3091,7 @@
       "source_path": "site-request-studio-source-tree-reorganization-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization-tasks.json",
-      "content_text_length": 11844,
+      "content_text_length": 11950,
       "ui_status": "in-progress"
     },
     {
@@ -3108,7 +3108,7 @@
       "source_path": "site-request-studio-source-tree-reorganization-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization-inventory.json",
-      "content_text_length": 17138,
+      "content_text_length": 20055,
       "ui_status": "in-progress"
     },
     {
@@ -3158,7 +3158,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app.json",
-      "content_text_length": 17917
+      "content_text_length": 18147
     },
     {
       "scope": "studio",
