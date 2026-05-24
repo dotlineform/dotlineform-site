@@ -9,8 +9,6 @@ viewable: false
 ---
 # tmp
 
-we are working on _docs/local-studio-app-implementation-plan.md
-please continue with the next slice: ui catalogue
 
 
 
