@@ -89,6 +89,103 @@ For this repo, the local development shape may include three independently runni
 
 This repo should provide a single shell script that can start all three services for local work while still allowing each service to be started and stopped independently.
 
+## Config Ownership Decision
+
+Use a split config model so Docs Viewer remains portable while this repo can advertise and integrate a local Docs Viewer service:
+
+- `var/local/site.env` owns local runtime/service settings, including the Docs Viewer host, port, base URL, and manage-mode enablement.
+- `_config.yml` owns only static Jekyll integration defaults that public or generated pages need at build/render time, such as whether Docs Viewer links are enabled and fallback link behavior.
+- `.gitignore` should ignore generated runtime advertisement files, PID/log files, temporary service state, and Docs Viewer cache/build output if those files are produced.
+- `.docs-viewer/config/` owns Docs Viewer defaults and schema, including route names, generated-data contract defaults, shell defaults, and the capability model.
+- Add a tracked repo integration config such as `config/docs-viewer.yml` only if `_config.yml`, `var/local/site.env`, and Docs Viewer-owned config are not enough.
+
+The host repo may require `var/local/site.env` as a prerequisite for running Docs Viewer locally.
+Docs Viewer-owned config should not contain this repo's local port state.
+
+## Packaging Decision
+
+Keep `.docs-viewer/` as tracked source in this repo for the initial extraction.
+Do not turn it into a submodule, external package, or separately versioned dependency until the standalone Docs Viewer service works locally and the boundary has been proven by focused checks.
+
+The tracked folder should still be shaped like a portable package boundary:
+
+- no hidden dependency on Studio paths, Studio shell, or Studio runtime config
+- no repo-local host, port, or service-state defaults inside `.docs-viewer/`
+- repo-specific integration kept outside `.docs-viewer/` where practical
+- scripts and tests written so future packaging is a mechanical follow-up, not a second architecture rewrite
+
+## Service Location Decision
+
+Use static local service location config for the initial extraction.
+`var/local/site.env` should contain the configured Docs Viewer host, port, and either an explicit or derived base URL.
+The Docs Viewer launcher should start from those values, and Studio/Jekyll integration should link to the same configured location.
+
+For v1:
+
+- do not dynamically allocate a port
+- do not require a runtime advertisement writer
+- fail clearly if the configured port is unavailable
+- keep local link behavior deterministic for tests and manual use
+
+Future options can be revisited after the standalone service works locally:
+
+- Docs Viewer launcher writes a runtime advertisement file on start
+- a shared local service manager writes the active base URL for all local services
+- Docs Viewer supports dynamic port allocation for external packaging or multi-repo use
+- Studio and Jekyll pages probe the configured service before rendering Docs Viewer links
+
+## Link Failure Decision
+
+For v1, Studio and Jekyll pages should render Docs Viewer links from configured static values without probing whether the Docs Viewer service is running.
+If Docs Viewer is not running, links should fail normally through the browser or local server.
+
+Do not add disabled-link UI, warning badges, availability polling, or fallback routing for this slice.
+The normal failure is acceptable operational feedback that the missing local service should be started, matching how Live Preview links already behave in local development.
+Service-aware link UX can be reconsidered later only if normal browser/server failures prove confusing or risky.
+
+## Route Ownership Decision
+
+Docs Viewer owns one built-in local route: `/docs/`.
+That route is served by the Docs Viewer service and is the manage-mode browser page.
+
+Additional public read-only scopes are created or registered from Docs Viewer manage mode, including through the New Scope action.
+Those scopes map to repo/Jekyll-hosted routes such as `/library/` and `/analysis/`.
+At runtime and build time, those host routes use scripts, generated-data contracts, and scope machinery owned by `.docs-viewer/`, but the pages themselves are hosted by the repo/Jekyll route.
+
+Therefore extraction should not treat Docs Viewer as replacing `/library/` or `/analysis/` with Docs Viewer-hosted pages.
+Docs Viewer provides the manage route and the scope creation/registration machinery; public scope routes remain host-repo routes installed or registered by Docs Viewer.
+
+## Manage Mode Locality Decision
+
+Manage mode is local-only for the initial extraction.
+The built-in `/docs/` manage route is served by the local Docs Viewer service and should bind to loopback for v1.
+Manage and write capabilities should be enabled through explicit local capability config, not inferred from public route context.
+
+Do not design this slice around a deployed live manage-mode server.
+The working host assumption is a GitHub Pages-style Jekyll site with `_config.yml`, generated/static routes, and public read-only scope pages.
+New Scope should continue to create or register static/Jekyll-compatible routes such as `/library/` and `/analysis/`.
+
+Future server-backed manage mode can be considered later as a separate product and hosting decision.
+It should not be an implied requirement of the Docs Viewer shell extraction.
+
+## Service Runner Decision
+
+Use a lightweight repo script for the v1 "start all" workflow, modeled on the existing `bin/local-studio` runner pattern.
+The script should start Live Preview, Local Studio, and Docs Viewer as independent child processes while preserving each service's ability to be started and stopped separately.
+
+The v1 runner should:
+
+- load `var/local/site.env`
+- validate configured static ports before startup
+- print the service URLs it starts
+- trap `EXIT`, `INT`, and `TERM`
+- clean up child processes on shutdown
+- fail clearly if a required port is unavailable
+- fail clearly if a managed child process exits unexpectedly
+
+Do not introduce daemonization, persistent PID files, restart loops, log rotation, or a third-party process manager for v1.
+A proper process supervisor can be reconsidered only if the shell runner becomes unreliable or service lifecycle requirements grow.
+
 ## CSS Ownership Direction
 
 Docs Viewer currently works in public `/library/` and `/analysis/` because those routes inherit public `assets/css/main.css` from the site layout before loading Docs Viewer CSS.
@@ -111,6 +208,13 @@ The shell extraction should make the CSS base explicit:
 - Define the canonical source contract for portable installs: where source Markdown and scope config live, which source files are copied or generated, and which generated JSON/search payloads remain in the consuming Jekyll site's public output paths.
 - Define the CSS shell contract: which base typography, theme, container, link, and spacing tokens are provided by the host shell versus by Docs Viewer-owned CSS.
 - Define the repo-owned host config that records Docs Viewer availability, base URL/port, public link behavior, manage-mode availability, generated payload locations, and source/write capability flags.
+- Apply the config ownership decision across `var/local/site.env`, `_config.yml`, `.gitignore`, and `.docs-viewer/config/`, adding tracked repo integration config only if needed.
+- Keep `.docs-viewer/` tracked as repo source for this extraction while avoiding hidden Studio and repo-local runtime dependencies inside that boundary.
+- Use static Docs Viewer host, port, and base URL settings from `var/local/site.env` for v1, with clear startup failure when the configured port is unavailable.
+- Render configured Docs Viewer links without service availability probing; if Docs Viewer is not running, let links fail normally.
+- Preserve route ownership: Docs Viewer service owns built-in `/docs/` manage mode, while public read-only scopes such as `/library/` and `/analysis/` remain repo/Jekyll-hosted routes installed or registered through Docs Viewer scope machinery.
+- Keep manage mode local-only for v1 through loopback binding and explicit local capability flags; public scope routes remain static/Jekyll-compatible read-only routes.
+- Add a `bin/local-studio`-style lightweight "start all" runner for Live Preview, Local Studio, and Docs Viewer with static port validation, signal cleanup, and clear child-process failure behavior.
 - Move reusable Docs Viewer runtime, server/services, canonical source handling, config, UI text, CSS, shell, and associated assets out of Studio into `.docs-viewer/`.
 - Replace Studio-specific Docs Viewer hosting code with Studio integration/link code that points to the advertised Docs Viewer service when available.
 - Add the independent Docs Viewer launcher/start-stop path as part of the `.docs-viewer/` service contract.
