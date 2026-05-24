@@ -1,6 +1,6 @@
 ## General behaviour
 
-- for new features, behavior changes, refactors, and meaningful docs changes, use `_docs/development-workflow.md` as the lifecycle guide and follow its links to task-specific docs.
+- for new features, behavior changes, refactors, and meaningful docs changes, use `studio/docs-viewer/source/studio/development-workflow.md` as the lifecycle guide and follow its links to task-specific docs.
 - answer questions based on applying best practice in this technical or creative domain, provide suggestions to mitigate maintenance risk and improve site or application performance. ask for confirmation before any edits.
 - summarise the intended change set and ask for confirmation before editing unless the request is trivial.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
@@ -22,8 +22,8 @@
 
 ## UI Guidance
 
-- `_docs/ui.md` is the section containing UI guidance and maintenance rules.
-- `_docs/ui-catalogue.md` defines the site-wide UI interaction default UI components.
+- `studio/docs-viewer/source/studio/ui.md` is the section containing UI guidance and maintenance rules.
+- `studio/docs-viewer/source/studio/ui-catalogue.md` defines the site-wide UI interaction default UI components.
 - Keep UI shell concerns separate from application logic, validation, and mutation behavior.
 
 ## Implementation Style
@@ -46,13 +46,13 @@
 - Keep route entry modules as orchestration shells: boot/config, route readiness, event wiring, and handoff between focused modules.
 - Avoid cosmetic splits that only move tiny helpers; extract around stable ownership boundaries.
 - For risk mitigation and scoring, consult as appropriate:
-  - Javascript: `_docs/studio-javascript-payload-inventory.md`
-  - Paython, Ruby: `_docs/studio-python-ruby-script-inventory.md`
+  - Javascript: `studio/docs-viewer/source/studio/studio-javascript-payload-inventory.md`
+  - Python, Ruby: `studio/docs-viewer/source/studio/studio-python-ruby-script-inventory.md`
 
 ## Studio Documentation and Search
 
-- Docs source is flat under `_docs/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders in _docs/.
-- The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not `_docs/` directly.
+- Docs source is flat under `studio/docs-viewer/source/<scope>/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than source folders.
+- The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not source Markdown directly.
 - Do not rebuild doc payloads.
 - When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&mode=manage&doc=<doc_id>`.
 - Use explicit scope for docs search rebuilds:
@@ -61,7 +61,7 @@
 
 ## Change Log
 
-- The source model and authoring workflow for change logs are documented in `_docs_logs/README.md`.
+- The source model and authoring workflow for change logs are documented in `studio/workflows/change-requests/README.md`; entry files live under `studio/workflows/change-requests/logs/entries/`.
 - Keep raw repo file paths for unpublished docs, literal output paths, and non-doc files such as scripts, JSON artifacts, `README.md`, or `AGENTS.md`.
 - Script-specific references for command usage, flags, outputs, and operational notes need to be documented under the parent doc for the scope that own the change, these are top level folders in Docs Viewer. Where a script or functionality crosses scopes (e.g. Catalogue + Library) then it is described under Studio parent. When a script of funmctionality applies across the site, it is described under Site parent.
 - Update the owning runtime, UI, or script doc when behavior, dependencies, or build/write responsibilities changed; do not spread partial schema notes across multiple sections.
@@ -130,8 +130,8 @@
   - installed browsers currently live under `~/Library/Caches/ms-playwright/`
 - If Chromium launch fails in the Codex app sandbox, retry the same Playwright browser check with escalated permissions before treating it as a product or runtime issue.
 - Avoid the raw Edge headless fallback unless Playwright is unavailable; Edge can trigger crash-report noise on this machine.
-- For Studio Playwright smoke tests, follow `_docs/studio-smoke-testing.md`: wait for the route root to be visible and for route-specific loaded status before interacting; for controls below async-rendered lists, scroll into view and verify `document.elementFromPoint()` resolves to the target or a child before pointer clicking; use DOM activation only for setup-only actions, not for the behavior being tested.
-- Use `_docs/testing.md` and `./scripts/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions.
+- For Studio Playwright smoke tests, follow `studio/docs-viewer/source/studio/studio-smoke-testing.md`: wait for the route root to be visible and for route-specific loaded status before interacting; for controls below async-rendered lists, scroll into view and verify `document.elementFromPoint()` resolves to the target or a child before pointer clicking; use DOM activation only for setup-only actions, not for the behavior being tested.
+- Use `studio/docs-viewer/source/studio/testing.md` and `./scripts/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions.
 - Do not run broad profiles by default for every change; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
 - Python tests in `./scripts/run_checks.py` run through pytest using the configured Python interpreter. For focused checks, prefer `$HOME/miniconda3/bin/python3 -m pytest <test-path>` over relying on whichever `python` happens to be active.
 - When `./scripts/run_checks.py` is used, report the profiles, pass/fail result, and `var/test-runs/.../summary.md` path in the final response.

@@ -124,14 +124,14 @@ Docs Viewer shell source, management shell source, config, CSS, report runtime, 
 
 ## Source Moves
 
-| Current path family | Target path family | Notes |
+| Previous path family | Current / target path family | Notes |
 | --- | --- | --- |
 | `_docs/` | `studio/docs-viewer/source/studio/` | Studio docs scope source. |
 | `_docs_library/` | `studio/docs-viewer/source/library/` | Library docs scope source. |
 | `_docs_analysis/` | `studio/docs-viewer/source/analysis/` | Analysis docs scope source. |
 | `assets/docs/interactive/` | `studio/docs-viewer/source-assets/interactive/` | Source interactive HTML assets; public copies should be explicit runtime/generated artifacts if needed. |
 | `assets/docs-viewer/js/` | `studio/docs-viewer/runtime/js/` | Docs Viewer browser runtime and management modules. |
-| `assets/docs-viewer/js/reports/` | `studio/docs-viewer/runtime/reports/` | Report browser modules. |
+| `assets/docs-viewer/js/reports/` | `studio/docs-viewer/runtime/js/reports/` | Report browser modules. |
 | `assets/docs-viewer/css/` | `studio/docs-viewer/assets/css/` | Docs Viewer CSS. |
 | `assets/docs-viewer/data/docs-viewer-config.json` | `studio/docs-viewer/config/runtime/docs-viewer-config.json` | Source runtime config. |
 | `assets/docs-viewer/data/docs-viewer-public-config.json` | `studio/docs-viewer/config/runtime/docs-viewer-public-config.json` | Source for generated/served public install config. |
@@ -209,5 +209,5 @@ These paths are not source and do not need to move as tracked source:
 
 ## Next Use
 
-`STSR-006` should use this layout to define baseline verification before any moves begin.
-Move slices should update this document only if a concrete path decision changes during implementation.
+This layout remains the concrete source-boundary reference as move slices continue.
+Move slices should update this document if a concrete path decision changes during implementation.
