@@ -5,7 +5,7 @@ permalink: /studio/ui-catalogue/demos/
 studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
 ---
 
-<link rel="stylesheet" href="{{ '/assets/ui-catalogue/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 <div
   class="uiCatalogueDemoRoot uiCatalogueDemoPage"
@@ -42,4 +42,4 @@ studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
 </section>
 </div>
 
-<script type="module" src="{{ '/assets/ui-catalogue/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

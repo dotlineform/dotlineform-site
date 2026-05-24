@@ -6,7 +6,7 @@ studio_page_doc: /docs/?scope=studio&doc=ui-primitive-panel
 ui_catalogue_demo_primitive: panel
 ---
 
-<link rel="stylesheet" href="{{ '/assets/ui-catalogue/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture panel_markup %}<div class="uiCatalogueDemoPanel">
   <h4 class="uiCatalogueDemoPanel__heading">Panel Heading</h4>
@@ -188,4 +188,4 @@ ui_catalogue_demo_primitive: panel
   </section>
 </div>
 
-<script type="module" src="{{ '/assets/ui-catalogue/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

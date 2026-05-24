@@ -157,8 +157,8 @@ Current live implementation sources:
 
 Current demo implementation lives in:
 
-- `assets/ui-catalogue/css/ui-catalogue-demo.css`
-- `assets/ui-catalogue/js/ui-catalogue-demo.js`
+- `studio/ui-catalogue/assets/css/ui-catalogue-demo.css`
+- `studio/ui-catalogue/assets/js/ui-catalogue-demo.js`
 - `studio/ui-catalogue/demos/primitives/modal-shell/index.md`
 
 The UI Catalogue demo uses `uiCatalogueDemo*` classes and demo-owned JavaScript.

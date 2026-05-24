@@ -72,8 +72,8 @@ The stored payload should contain the data required to reopen the modal, not jus
 
 Current demo implementation lives in:
 
-- `assets/ui-catalogue/css/ui-catalogue-demo.css`
-- `assets/ui-catalogue/js/ui-catalogue-demo.js`
+- `studio/ui-catalogue/assets/css/ui-catalogue-demo.css`
+- `studio/ui-catalogue/assets/js/ui-catalogue-demo.js`
 - `studio/ui-catalogue/demos/patterns/reopenable-command-result/index.md`
 
 The UI Catalogue demo uses `uiCatalogueDemo*` classes and demo-owned modal JavaScript. Treat the demo as the pattern reference, then map the lifecycle, result storage, modal helper, and class names into the live route.

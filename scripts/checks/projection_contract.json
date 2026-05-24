@@ -381,14 +381,12 @@
       "id": "ui_catalogue_demo_assets",
       "classification": "studio_app_asset",
       "repo_paths": [
-        "assets/ui-catalogue/**",
-        "assets/docs/ui-catalogue/**",
-        "_ui_catalogue_notes/**",
-        "_includes/ui_catalogue_notes/**"
+        "studio/ui-catalogue/**"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
+          "studio/ui-catalogue",
           "assets/ui-catalogue",
           "assets/docs/ui-catalogue",
           "_ui_catalogue_notes",

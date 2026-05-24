@@ -381,8 +381,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             (
                 sys.executable,
                 "tests/smoke/ui_catalogue_modal_demo.py",
-                "--site-root",
-                str(JEKYLL_DESTINATION),
             ),
             "Smoke-check the UI Catalogue modal shell demo semantics, focus behavior, validation, and mobile sizing.",
         ),

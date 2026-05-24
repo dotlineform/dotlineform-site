@@ -44,7 +44,7 @@ Current live implementation lives in:
 
 Current demo implementation lives in:
 
-- `assets/ui-catalogue/css/ui-catalogue-demo.css`
+- `studio/ui-catalogue/assets/css/ui-catalogue-demo.css`
 - `studio/ui-catalogue/demos/primitives/input/index.md`
 
 Primary classes:

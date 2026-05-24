@@ -26,19 +26,19 @@ Save the file under:
 
 Examples:
 
-- `assets/docs/ui-catalogue/panel/default.png`
 - `assets/docs/docs-viewer/example-doc.png`
+- `assets/docs/ui-audits/example-state.png`
 
 Use it in Markdown:
 
 ```md
-![Panel example](/assets/docs/ui-catalogue/panel/default.png)
+![Docs Viewer example](/assets/docs/docs-viewer/example-doc.png)
 ```
 
 Use it in raw HTML:
 
 ```html
-<img src="/assets/docs/ui-catalogue/panel/default.png" alt="Panel example">
+<img src="/assets/docs/docs-viewer/example-doc.png" alt="Docs Viewer example">
 ```
 
 Recommended rule:

@@ -158,6 +158,7 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
 
     assert allowed("/studio/app/frontend/js/catalogue-work-editor.js") is True
     assert allowed("/studio/app/assets/css/studio.css") is True
+    assert allowed("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js") is True
     assert allowed("/studio/docs-viewer/runtime/js/docs-viewer.js") is True
     assert allowed("/studio/docs-viewer/config/runtime/docs-viewer-config.json") is True
     assert allowed("/assets/data/docs/scopes/studio/index.json") is True
@@ -166,6 +167,7 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/assets/studio/img/thumbnail-quality/01-00420-current.webp") is True
 
     assert allowed("/assets/studio/js/catalogue-work-editor.js") is False
+    assert allowed("/assets/ui-catalogue/js/ui-catalogue-demo.js") is False
     assert allowed("/assets/studio/css/studio.css") is False
     assert allowed("/assets/studio/img/panel-backgrounds/aqua.jpg") is False
     assert allowed("/assets/docs-viewer/js/docs-viewer.js") is False
@@ -184,6 +186,8 @@ def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
     for shell in html_shells:
         assert "/studio/app/assets/css/studio.css?v=test-version" in shell
         assert "/assets/css/main.css" not in shell
+    assert "/studio/ui-catalogue/assets/css/ui-catalogue-demo.css?v=test-version" in html_shells[-1]
+    assert "/assets/ui-catalogue/" not in html_shells[-1]
 
 
 def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:

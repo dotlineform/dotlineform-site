@@ -6,7 +6,7 @@ studio_page_doc: /docs/?scope=studio&doc=ui-pattern-reopenable-command-result
 ui_catalogue_demo_pattern: reopenable-command-result
 ---
 
-<link rel="stylesheet" href="{{ '/assets/ui-catalogue/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture status_markup %}<div class="uiCatalogueDemoResultRow">
   <p class="uiCatalogueDemoStatus" data-state="success">Generated 6 Library import preview files.</p>
@@ -101,4 +101,4 @@ ui_catalogue_demo_pattern: reopenable-command-result
   </section>
 </div>
 
-<script type="module" src="{{ '/assets/ui-catalogue/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

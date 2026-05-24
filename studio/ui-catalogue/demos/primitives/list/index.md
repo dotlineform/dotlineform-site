@@ -6,7 +6,7 @@ studio_page_doc: /docs/?scope=studio&doc=ui-primitive-list
 ui_catalogue_demo_primitive: list
 ---
 
-<link rel="stylesheet" href="{{ '/assets/ui-catalogue/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture simple_markup %}<div class="uiCatalogueDemoList uiCatalogueDemoList--simple">
   <ul class="uiCatalogueDemoList__rows">
@@ -212,4 +212,4 @@ ui_catalogue_demo_primitive: list
   </section>
 </div>
 
-<script type="module" src="{{ '/assets/ui-catalogue/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

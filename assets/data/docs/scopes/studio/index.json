@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T18:29:12Z",
+  "generated_at": "2026-05-24T18:39:48Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -238,7 +238,7 @@
       "source_path": "user-guide-docs-images.md",
       "viewer_url": "/docs/?scope=studio&doc=user-guide-docs-images",
       "content_url": "/assets/data/docs/scopes/studio/by-id/user-guide-docs-images.json",
-      "content_text_length": 2507
+      "content_text_length": 2510
     },
     {
       "scope": "studio",
@@ -633,7 +633,7 @@
       "source_path": "ui-primitive-button.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-button.json",
-      "content_text_length": 2037
+      "content_text_length": 2044
     },
     {
       "scope": "studio",
@@ -781,7 +781,7 @@
       "source_path": "ui-primitive-input.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-input",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-input.json",
-      "content_text_length": 2061
+      "content_text_length": 2068
     },
     {
       "scope": "studio",
@@ -813,7 +813,7 @@
       "source_path": "modal-composition-migration-tracker.md",
       "viewer_url": "/docs/?scope=studio&doc=modal-composition-migration-tracker",
       "content_url": "/assets/data/docs/scopes/studio/by-id/modal-composition-migration-tracker.json",
-      "content_text_length": 10194,
+      "content_text_length": 10208,
       "ui_status": "done"
     },
     {
@@ -1313,7 +1313,7 @@
       "source_path": "ui-primitive-list.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-list",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-list.json",
-      "content_text_length": 3402
+      "content_text_length": 3409
     },
     {
       "scope": "studio",
@@ -1460,7 +1460,7 @@
       "source_path": "ui-audits.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-audits",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audits.json",
-      "content_text_length": 2697
+      "content_text_length": 2704
     },
     {
       "scope": "studio",
@@ -1671,7 +1671,7 @@
       "source_path": "ui-primitive-panel.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-panel",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-panel.json",
-      "content_text_length": 2764
+      "content_text_length": 2771
     },
     {
       "scope": "studio",
@@ -2107,7 +2107,7 @@
       "source_path": "ui-primitive-modal-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-modal-shell.json",
-      "content_text_length": 7570
+      "content_text_length": 7584
     },
     {
       "scope": "studio",
@@ -2236,7 +2236,7 @@
       "source_path": "ui-pattern-reopenable-command-result.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-reopenable-command-result",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-reopenable-command-result.json",
-      "content_text_length": 3250
+      "content_text_length": 3264
     },
     {
       "scope": "studio",
@@ -2349,7 +2349,7 @@
       "source_path": "ui-pattern-column-links.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-column-links",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-pattern-column-links.json",
-      "content_text_length": 2582
+      "content_text_length": 2589
     },
     {
       "scope": "studio",
@@ -2496,7 +2496,7 @@
       "source_path": "javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/javascript-inventory.json",
-      "content_text_length": 26491,
+      "content_text_length": 26498,
       "ui_status": "review"
     },
     {
@@ -2945,7 +2945,7 @@
       "source_path": "ui-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-catalogue.json",
-      "content_text_length": 5999
+      "content_text_length": 6108
     },
     {
       "scope": "studio",
@@ -3091,7 +3091,7 @@
       "source_path": "site-request-studio-source-tree-reorganization-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization-tasks.json",
-      "content_text_length": 13707,
+      "content_text_length": 14591,
       "ui_status": "in-progress"
     },
     {
@@ -5068,7 +5068,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 49270,
+      "content_text_length": 49277,
       "ui_status": "done"
     },
     {

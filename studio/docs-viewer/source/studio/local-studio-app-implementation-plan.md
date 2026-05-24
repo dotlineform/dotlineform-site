@@ -417,7 +417,7 @@ The broader `/studio/` home link list remains the place for secondary route link
 Configured catalogue editor routes now keep `?mode=manage` in runtime/static config.
 Browser callers that add `work=`, `detail=`, `series=`, or `moment=` parameters use the shared route URL builder instead of string concatenation, so the migration can preserve manage mode without depending on Jekyll-style query assembly.
 The UI Catalogue demo routes are now exposed through Local Studio under `/studio/ui-catalogue/demos/`, including the current primitive and pattern demo pages.
-They keep the isolated `assets/ui-catalogue/` CSS/JS namespace and `data-ui-catalogue-demo-*` ready-state contract rather than being treated as production Studio workflow routes.
+They keep the isolated `studio/ui-catalogue/assets/` CSS/JS namespace and `data-ui-catalogue-demo-*` ready-state contract rather than being treated as production Studio workflow routes.
 The source Markdown pages remain in `studio/ui-catalogue/demos/` as demo markup input for the local renderer.
 
 ## Phase 6: Projection And Build Contract

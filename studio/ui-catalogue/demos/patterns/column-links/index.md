@@ -6,7 +6,7 @@ studio_page_doc: /docs/?scope=studio&doc=ui-pattern-column-links
 ui_catalogue_demo_pattern: column-links
 ---
 
-<link rel="stylesheet" href="{{ '/assets/ui-catalogue/css/ui-catalogue-demo.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/studio/ui-catalogue/assets/css/ui-catalogue-demo.css' | relative_url }}">
 
 {% capture column_links_markup %}<section class="uiCatalogueDemoColumnLinks" aria-label="Example dashboard links">
   <section class="uiCatalogueDemoColumnLinks__column">
@@ -69,4 +69,4 @@ ui_catalogue_demo_pattern: column-links
   </section>
 </div>
 
-<script type="module" src="{{ '/assets/ui-catalogue/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script type="module" src="{{ '/studio/ui-catalogue/assets/js/ui-catalogue-demo.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

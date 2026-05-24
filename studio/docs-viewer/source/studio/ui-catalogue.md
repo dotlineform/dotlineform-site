@@ -40,11 +40,11 @@ During the Local Studio migration, demo route visibility should move into the lo
 
 Demo implementation lives outside the production Studio namespace:
 
-- demo CSS: `assets/ui-catalogue/css/ui-catalogue-demo.css`
-- demo JS: `assets/ui-catalogue/js/ui-catalogue-demo.js`
+- demo CSS: `studio/ui-catalogue/assets/css/ui-catalogue-demo.css`
+- demo JS: `studio/ui-catalogue/assets/js/ui-catalogue-demo.js`
 - demo classes: `uiCatalogueDemo*`
 
-Do not import `assets/studio/css/studio.css` into demo pages to prove a primitive. Do not use `tagStudio*`, `docsViewer*`, or route-local production classes inside rendered demo markup unless the page is explicitly documenting a migration comparison.
+Do not import `studio/app/assets/css/studio.css` into demo pages to prove a primitive. Do not use `tagStudio*`, `docsViewer*`, or route-local production classes inside rendered demo markup unless the page is explicitly documenting a migration comparison.
 Do not put demo-only fragments in `_includes/`. Demo pages should own their rendered example markup directly.
 
 Markup examples on demo pages should also use the demo namespace. That keeps the examples clear: designers and developers are reading a pattern that must be mapped from demo classes into the live implementation namespace when building real pages.
@@ -106,7 +106,7 @@ The current primitive set includes:
 - toolbar
 - modal shell
 
-Toolbar still needs a complete demo page. Modal shell now has a primitive demo page. Richer modal behavior should stay in `assets/ui-catalogue/js/ui-catalogue-demo.js` or a scoped demo module under `assets/ui-catalogue/js/`.
+Toolbar still needs a complete demo page. Modal shell now has a primitive demo page. Richer modal behavior should stay in `studio/ui-catalogue/assets/js/ui-catalogue-demo.js` or a scoped demo module under `studio/ui-catalogue/assets/js/`.
 
 ## Composition Patterns
 
@@ -123,9 +123,9 @@ Use this structure for new catalogue work:
 
 - `studio/ui-catalogue/demos/primitives/<primitive>/index.md`
 - `studio/ui-catalogue/demos/patterns/<pattern>/index.md`
-- `assets/ui-catalogue/css/ui-catalogue-demo.css`
-- `assets/ui-catalogue/js/ui-catalogue-demo.js`
-- `assets/docs/ui-catalogue/<primitive-or-pattern>/` for reference images
+- `studio/ui-catalogue/assets/css/ui-catalogue-demo.css`
+- `studio/ui-catalogue/assets/js/ui-catalogue-demo.js`
+- `studio/ui-catalogue/assets/docs/<primitive-or-pattern>/` for reference images
 
 Prefer one shared demo stylesheet until a pattern proves it needs its own scoped file.
 Keep route-local demo markup inside the route page. `_includes/` remains reserved for production, layout, or genuinely shared Jekyll partials.
@@ -134,14 +134,14 @@ Keep route-local demo markup inside the route page. `_includes/` remains reserve
 
 UI screenshots and reference images for this catalogue should live in the repo under:
 
-- `assets/docs/ui-catalogue/panel/`
-- `assets/docs/ui-catalogue/button/`
-- `assets/docs/ui-catalogue/input/`
-- `assets/docs/ui-catalogue/list/`
-- `assets/docs/ui-catalogue/toolbar/`
-- `assets/docs/ui-catalogue/modal-shell/`
-- `assets/docs/ui-catalogue/column-links/`
-- `assets/docs/ui-catalogue/reopenable-command-result/`
+- `studio/ui-catalogue/assets/docs/panel/`
+- `studio/ui-catalogue/assets/docs/button/`
+- `studio/ui-catalogue/assets/docs/input/`
+- `studio/ui-catalogue/assets/docs/list/`
+- `studio/ui-catalogue/assets/docs/toolbar/`
+- `studio/ui-catalogue/assets/docs/modal-shell/`
+- `studio/ui-catalogue/assets/docs/column-links/`
+- `studio/ui-catalogue/assets/docs/reopenable-command-result/`
 
 Use these folders for optimized documentation-facing assets only. Live route screenshots collected during UI Audit should be stored or referenced by the owning audit doc.
 

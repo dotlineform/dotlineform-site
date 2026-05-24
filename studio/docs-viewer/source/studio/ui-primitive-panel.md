@@ -47,7 +47,7 @@ Current live implementation lives in:
 
 Current demo implementation lives in:
 
-- `assets/ui-catalogue/css/ui-catalogue-demo.css`
+- `studio/ui-catalogue/assets/css/ui-catalogue-demo.css`
 - `studio/ui-catalogue/demos/primitives/panel/index.md`
 
 Dark-mode panel surfaces must override the Studio surface token set together.

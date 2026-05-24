@@ -16,23 +16,27 @@ This is the tracker for implementing [Studio Source Tree Reorganization Request]
 
 ### just done
 
-- Completed `STSR-015` by verifying the frontend/static/CSS move across Local Studio desktop and mobile surfaces plus the public Jekyll build surface.
-- Verification passed: `$HOME/miniconda3/bin/python3 tests/smoke/local_studio_app_docs_viewer.py`.
-- Verification passed: `$HOME/miniconda3/bin/python3 tests/smoke/local_studio_app_ui_catalogue_routes.py`.
-- Verification passed: one-off Playwright mobile shell check against a temporary Local Studio server for `/studio/analytics/` at `390x844`; the route loaded `studio/app/assets/css/studio.css` once, did not load `/assets/css/main.css`, had no horizontal overflow, and kept the `analytics` nav item active.
+- Completed `STSR-016` by moving UI Catalogue demo CSS/JS and reference-asset placeholders from public `assets/` roots into `studio/ui-catalogue/assets/`.
+- Local Studio now serves UI Catalogue demo static files from `/studio/ui-catalogue/assets/`; `/assets/ui-catalogue/` is no longer an active Local Studio static prefix.
+- Updated UI Catalogue demo source Markdown, local route rendering, runtime view metadata, projection-contract policy, focused smoke assertions, and owning UI Catalogue docs to use the new Studio-owned asset paths.
+- Updated `tests/smoke/ui_catalogue_modal_demo.py` so the modal-specific smoke starts Local Studio by default instead of expecting UI Catalogue demo routes in a built public Jekyll site.
+- Verification passed: `$HOME/miniconda3/bin/python3 -m py_compile scripts/run_checks.py scripts/checks/audit_projection_contract.py scripts/checks/audit_public_build_surface.py studio/app/server/studio/studio_app_config.py studio/app/server/studio/studio_app_server.py studio/app/server/studio/studio_ui_catalogue_views.py tests/smoke/local_studio_app_ui_catalogue_routes.py tests/smoke/ui_catalogue_modal_demo.py tests/python/test_studio_app_server.py`.
+- Verification passed: `$HOME/miniconda3/bin/python3 -m pytest -q tests/python/test_studio_app_server.py`.
+- Verification passed: `$HOME/miniconda3/bin/python3 scripts/checks/audit_projection_contract.py --skip-field-leaks`.
+- Verification passed after sandbox escalation for localhost/Chromium: `$HOME/miniconda3/bin/python3 tests/smoke/local_studio_app_ui_catalogue_routes.py`.
+- Verification passed after sandbox escalation for localhost/Chromium: `$HOME/miniconda3/bin/python3 tests/smoke/ui_catalogue_modal_demo.py`.
 - Verification passed: `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`.
 - Verification passed: `$HOME/miniconda3/bin/python3 scripts/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build`.
-- Verification passed: `$HOME/miniconda3/bin/python3 tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build`.
-- Public read-only Docs Viewer smoke confirmed `/library/` and `/analysis/` did not load Studio-only CSS or scripts and did not expose management controls.
-- Codex did not run a docs/search rebuild command; generated payload follow-through was left to the local watcher/manual workflow.
-- Note: a currently running `bin/local-studio` process must be restarted before it uses the new route HTML and CSS split.
+- Public build spot-check confirmed no `/studio/ui-catalogue/`, `/assets/ui-catalogue/`, or `/assets/docs/ui-catalogue/` output in `/tmp/dlf-jekyll-build`.
+- Codex did not run a docs/search rebuild command; a local docs watcher appeared to update generated docs payloads after source docs changed.
+- Note: a currently running `bin/local-studio` process must be restarted before it uses the new UI Catalogue asset path.
 
 ### steer for next task
 
-- Start with `STSR-016`; move UI Catalogue demo source, notes, demo CSS/JS, fixtures, and assets under the Studio boundary.
-- Keep UI Catalogue local demo routes working from the new source paths, and keep the UI Catalogue out of the public Jekyll publishing surface.
-- When moving UI Catalogue demo static files, update Local Studio static serving and smoke assertions directly rather than adding compatibility paths.
-- Include desktop and mobile UI Catalogue demo verification after the move because those routes exercise Studio shell CSS and demo-specific CSS together.
+- Start with `STSR-017`; move tests, smoke helpers, fixtures, projection/source-boundary checks, public-surface checks, and Codex-run verification helpers under the chosen Studio or Docs Viewer test/check locations.
+- Keep public-site validation as Studio/Codex testing ownership even when a check validates generated public output.
+- Update check entrypoints directly to new locations rather than adding old-path import aliases.
+- Include focused syntax/import verification and at least one representative smoke profile after moving test/check code.
 - Keep `assets/studio/img/thumbnail-quality/` retained as generated workflow output for now; retarget it in a later generated-output cleanup, not in the CSS split.
 - Treat `assets/docs-viewer/` and other empty old source folders as deletion/cleanup candidates in `STSR-019` unless `STSR-013` proves a serving rule still references them.
 - Treat broad user-facing docs path cleanup as part of `STSR-018` unless a stale active path blocks verification before then.
@@ -94,7 +98,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | STSR-013 | done | Update Local Studio static serving so Studio-owned frontend files are served from `studio/` source locations and no old public `assets/studio/...` source-serving path remains active. |
 | STSR-014 | done | Split Studio CSS from public `assets/css/main.css`: move Studio-only base tokens, shell rules, route/editor/modal/dashboard/operational selectors, and Studio primitive classes into Studio-owned CSS under `studio/`; leave only public-site or genuinely shared selectors in public CSS. |
 | STSR-015 | done | Verify the frontend/static/CSS move with Local Studio desktop and mobile smoke checks, UI route readiness checks, and a public Jekyll build or public route check that confirms public CSS and public runtime behavior still work without Studio source. |
-| STSR-016 | planned | Move UI Catalogue demo source, notes, demo CSS/JS, fixtures, and assets under the Studio boundary; update local demo routes to read the new source paths and keep UI Catalogue out of the public Jekyll publishing surface. |
+| STSR-016 | done | Move UI Catalogue demo source, notes, demo CSS/JS, fixtures, and assets under the Studio boundary; update local demo routes to read the new source paths and keep UI Catalogue out of the public Jekyll publishing surface. |
 | STSR-017 | planned | Move tests, smoke helpers, fixtures, projection/source-boundary checks, public-surface checks, and Codex-run verification helpers under the chosen Studio or Docs Viewer test/check locations; public-site validation remains a Studio/Codex testing responsibility, not public-site source ownership. |
 | STSR-018 | planned | Update command entrypoints, local runner docs, development workflow docs, script docs, and task references so Codex and humans use the new `studio/` paths without relying on old source locations. |
 | STSR-019 | planned | Delete old Studio source locations after references are updated; confirm removed paths are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic. |

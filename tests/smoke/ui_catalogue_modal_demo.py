@@ -8,12 +8,17 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
+import sys
 from threading import Thread
 
 from playwright.sync_api import Page, sync_playwright
 
 
 ROOT_SELECTOR = "#uiCatalogueDemoModalShellRoot"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
+
+from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
 
 
 class QuietStaticHandler(SimpleHTTPRequestHandler):
@@ -27,6 +32,13 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
         raise FileNotFoundError(f"site root does not exist: {resolved_root}")
     handler = partial(QuietStaticHandler, directory=str(resolved_root))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    return server, f"http://127.0.0.1:{server.server_address[1]}"
+
+
+def start_studio_server() -> tuple[StudioAppServer, str]:
+    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
@@ -225,15 +237,17 @@ def run_viewport_smoke(page: Page, base_url: str, viewport: dict[str, int], time
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--base-url", default="http://127.0.0.1:4000")
+    parser.add_argument("--base-url")
     parser.add_argument("--site-root", help="Serve a built site root on a temporary local HTTP server.")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()
 
-    static_server = None
+    server = None
     base_url = args.base_url
     if args.site_root:
-        static_server, base_url = start_static_server(Path(args.site_root))
+        server, base_url = start_static_server(Path(args.site_root))
+    elif not base_url:
+        server, base_url = start_studio_server()
 
     errors: list[str] = []
     results: list[dict[str, object]] = []
@@ -248,9 +262,9 @@ def main() -> int:
             finally:
                 browser.close()
     finally:
-        if static_server is not None:
-            static_server.shutdown()
-            static_server.server_close()
+        if server is not None:
+            server.shutdown()
+            server.server_close()
 
     if errors:
         raise AssertionError(f"page errors during UI Catalogue modal demo smoke: {errors!r}")

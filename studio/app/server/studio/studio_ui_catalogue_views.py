@@ -59,7 +59,7 @@ def ui_catalogue_demo_view(version: str, repo_root: Path, view_id: str) -> str:
   <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
   <title>{title} | dotlineform Studio</title>
   <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
-  <link rel="stylesheet" href="/assets/ui-catalogue/css/ui-catalogue-demo.css?v={escaped_version}">
+  <link rel="stylesheet" href="/studio/ui-catalogue/assets/css/ui-catalogue-demo.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
   {studio_header(active_nav_id)}
@@ -84,7 +84,7 @@ def ui_catalogue_demo_view(version: str, repo_root: Path, view_id: str) -> str:
     </div>
   </main>
   <script type="module" src="/studio/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
-  <script type="module" src="/assets/ui-catalogue/js/ui-catalogue-demo.js?v={escaped_version}"></script>
+  <script type="module" src="/studio/ui-catalogue/assets/js/ui-catalogue-demo.js?v={escaped_version}"></script>
 </body>
 </html>
 """
@@ -118,9 +118,9 @@ def render_ui_catalogue_demo_body(repo_root: Path, version: str, view_id: str) -
 def remove_local_shell_assets(body: str) -> str:
     lines = []
     for line in body.splitlines():
-        if "<link" in line and "/assets/ui-catalogue/css/ui-catalogue-demo.css" in line:
+        if "<link" in line and "/studio/ui-catalogue/assets/css/ui-catalogue-demo.css" in line:
             continue
-        if "<script" in line and "/assets/ui-catalogue/js/ui-catalogue-demo.js" in line:
+        if "<script" in line and "/studio/ui-catalogue/assets/js/ui-catalogue-demo.js" in line:
             continue
         lines.append(line)
     return "\n".join(lines)
