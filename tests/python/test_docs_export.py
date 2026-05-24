@@ -123,7 +123,7 @@ def make_repo(config: dict | None = None) -> tempfile.TemporaryDirectory:
     temp_dir = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
     (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
-    write_json(root / "assets/studio/data/library_export_configs.json", config or BASE_CONFIG)
+    write_json(root / "studio/data/config/data-sharing/library-export-configs.json", config or BASE_CONFIG)
     write_json(root / "assets/data/docs/scopes/library/index.json", INDEX_PAYLOAD)
     for doc in INDEX_PAYLOAD["docs"]:
         write_json(

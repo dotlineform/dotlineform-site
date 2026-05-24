@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://dotlineform.local/schemas/docs-log-entry.schema.json",
   "title": "Docs Log Entry",
-  "description": "One structured project change-history entry stored as a per-entry JSON file under _docs_logs/entries/.",
+  "description": "One structured project change-history entry stored as a per-entry JSON file under studio/workflows/change-requests/logs/entries/.",
   "type": "object",
   "additionalProperties": false,
   "required": [

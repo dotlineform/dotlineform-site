@@ -10,7 +10,7 @@ Series index JSON is written to assets/data/series_index.json.
 Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
 Lightweight works index JSON is written to assets/data/works_index.json (object keyed by work_id).
 Recent publications JSON is written to assets/data/recent_index.json.
-Studio-only work storage index JSON is written to assets/studio/data/work_storage_index.json (object keyed by work_id).
+Studio-only work storage index JSON is written to studio/data/generated/activity/work-storage-index.json (object keyed by work_id).
 Moment JSON index files are written to assets/moments/index/<moment_id>.json (one per selected moment).
 Lightweight moments index JSON is written to assets/data/moments_index.json (object keyed by moment_id).
 
@@ -52,7 +52,7 @@ Common flags:
 
 Path variables used by the script:
 - projects_root = [projects-base-dir]/projects (work + work_details source lookup)
-- moment prose root = _docs_catalogue/moments
+- moment prose root = studio/data/canonical/catalogue-markdown/moments
 - moments_images_root = [projects-base-dir]/moments/images (moment source image lookup)
 
 """
@@ -169,7 +169,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
-CATALOGUE_PROSE_SOURCE_REL_DIR = Path("_docs_catalogue")
+CATALOGUE_PROSE_SOURCE_REL_DIR = Path("studio/data/canonical/catalogue-markdown")
 
 
 # ----------------------------
@@ -408,7 +408,7 @@ def main() -> None:
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
     ap.add_argument("--recent-index-json-path", default="assets/data/recent_index.json", help="Output path for generated recent publications index JSON")
-    ap.add_argument("--work-storage-index-json-path", default="assets/studio/data/work_storage_index.json", help="Output path for generated Studio-only work storage index JSON")
+    ap.add_argument("--work-storage-index-json-path", default="studio/data/generated/activity/work-storage-index.json", help="Output path for generated Studio-only work storage index JSON")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
     ap.add_argument("--moments-json-dir", default="assets/moments/index", help="Output folder for generated per-moment JSON index files")
     ap.add_argument("--moments-index-json-path", default="assets/data/moments_index.json", help="Output path for generated lightweight moments index JSON")
@@ -572,7 +572,7 @@ def main() -> None:
     series_json_dir = Path(args.series_json_dir).expanduser()
     series_json_dir.mkdir(parents=True, exist_ok=True)
 
-    tag_assignments_path = Path("assets/studio/data/tag_assignments.json").expanduser()
+    tag_assignments_path = Path("studio/data/canonical/analytics/tag-assignments.json").expanduser()
     tag_assignments_path.parent.mkdir(parents=True, exist_ok=True)
     series_index_json_path = Path(args.series_index_json_path).expanduser()
     series_index_json_path.parent.mkdir(parents=True, exist_ok=True)

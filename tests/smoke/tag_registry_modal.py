@@ -317,7 +317,7 @@ def main() -> int:
             open_direct_modal(
                 page,
                 "patchOpener",
-                "smoke.module.showTagRegistryPatchModal(smoke.state, 'diff --git a/assets/studio/data/tag_registry.json b/assets/studio/data/tag_registry.json');",
+                "smoke.module.showTagRegistryPatchModal(smoke.state, 'diff --git a/studio/data/canonical/analytics/tag-registry.json b/studio/data/canonical/analytics/tag-registry.json');",
             )
             patch_state = assert_shell(
                 page,

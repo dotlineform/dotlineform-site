@@ -407,7 +407,7 @@ def project_state_view(version: str) -> str:
               <div class="tagStudioForm__fields catalogueWorkForm__fields">
                 <div class="tagStudioForm__field">
                   <span class="tagStudioForm__label" id="projectStateOutputLabel">output</span>
-                  <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="projectStateOutputPath">_docs/project-state.md</span>
+                  <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="projectStateOutputPath">studio/docs-viewer/source/studio/project-state.md</span>
                 </div>
                 <div class="tagStudioForm__field">
                   <span class="tagStudioForm__label" id="projectStateSourceLabel">source</span>

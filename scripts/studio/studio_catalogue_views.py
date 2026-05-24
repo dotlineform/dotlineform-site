@@ -145,7 +145,7 @@ def studio_works_view(version: str) -> str:
           data-role="studio-works"
           data-baseurl=""
           data-works-index-url="/assets/data/works_index.json"
-          data-work-storage-index-url="/assets/studio/data/work_storage_index.json"
+          data-work-storage-index-url="/studio/data/generated/activity/work-storage-index.json"
           data-series-index-url="/assets/data/series_index.json"
           hidden
           data-studio-ready="false"

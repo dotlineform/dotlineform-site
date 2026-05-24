@@ -32,8 +32,8 @@ var/test-runs/
 var/local/
 
 # Generated structured docs-log projections
-_docs_logs/generated/*.json
-_docs_logs/reports/*.json
+studio/workflows/change-requests/generated/*.json
+studio/workflows/change-requests/reports/*.json
 
 # Studio local backup output
 var/studio/activity/

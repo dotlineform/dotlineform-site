@@ -46,8 +46,8 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
         touch(root / "assets/data/series_index.json")
         touch(root / "assets/data/recent_index.json")
         touch(root / "assets/series/index/009.json")
-        touch(root / "assets/studio/data/work_storage_index.json")
-        touch(root / "assets/studio/data/tag_assignments.json")
+        touch(root / "studio/data/generated/activity/work-storage-index.json")
+        touch(root / "studio/data/canonical/analytics/tag-assignments.json")
 
         preview = catalogue_cleanup.catalogue_delete_preview_cleanup(
             root,
@@ -67,8 +67,8 @@ def test_work_delete_cleanup_preview_counts_generated_and_media_paths() -> None:
         "assets/series/index/009.json",
     ]
     assert preview["studio_json_updates"] == [
-        "assets/studio/data/work_storage_index.json",
-        "assets/studio/data/tag_assignments.json",
+        "studio/data/generated/activity/work-storage-index.json",
+        "studio/data/canonical/analytics/tag-assignments.json",
     ]
     assert "assets/works/img/00001-thumb-800.jpg" in preview["delete_paths"]
     assert "var/catalogue/media/work_details/srcset_images/thumb/00001-001-thumb-800.webp" in preview["delete_paths"]
@@ -91,7 +91,7 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         write_json(root / "assets/data/works_index.json", {"header": {"schema": "works_index_v4"}, "works": {"00001": {}, "00002": {}}})
-        write_json(root / "assets/studio/data/work_storage_index.json", {"header": {"schema": "work_storage_index_v1"}, "works": {"00001": {}, "00002": {}}})
+        write_json(root / "studio/data/generated/activity/work-storage-index.json", {"header": {"schema": "work_storage_index_v1"}, "works": {"00001": {}, "00002": {}}})
         write_json(
             root / "assets/data/series_index.json",
             {"header": {"schema": "series_index_v2"}, "series": {"009": {"works": ["00001", "00002"], "primary_work_id": "00001"}}},
@@ -110,7 +110,7 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
             root / "assets/series/index/009.json",
             {"header": {"schema": "series_record_v1"}, "series": {"works": ["00001", "00002"], "primary_work_id": "00001"}},
         )
-        write_json(root / "assets/studio/data/tag_assignments.json", {"series": {"009": {"works": {"00001": ["tag"], "00002": ["tag"]}}}})
+        write_json(root / "studio/data/canonical/analytics/tag-assignments.json", {"series": {"009": {"works": {"00001": ["tag"], "00002": ["tag"]}}}})
 
         payloads = catalogue_cleanup.build_catalogue_delete_generated_payloads(
             root,
@@ -124,8 +124,8 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
         "assets/data/series_index.json",
         "assets/data/works_index.json",
         "assets/series/index/009.json",
-        "assets/studio/data/tag_assignments.json",
-        "assets/studio/data/work_storage_index.json",
+        "studio/data/canonical/analytics/tag-assignments.json",
+        "studio/data/generated/activity/work-storage-index.json",
     ]
     assert "00001" not in payloads[(root / "assets/data/works_index.json").resolve()]["works"]
     assert payloads[(root / "assets/data/series_index.json").resolve()]["series"]["009"]["works"] == ["00002"]
@@ -134,7 +134,7 @@ def test_work_delete_generated_payloads_remove_generated_records() -> None:
     ]
     assert "works" not in payloads[(root / "assets/series/index/009.json").resolve()]["series"]
     assert "primary_work_id" not in payloads[(root / "assets/series/index/009.json").resolve()]["series"]
-    assert "00001" not in payloads[(root / "assets/studio/data/tag_assignments.json").resolve()]["series"]["009"]["works"]
+    assert "00001" not in payloads[(root / "studio/data/canonical/analytics/tag-assignments.json").resolve()]["series"]["009"]["works"]
 
 
 def test_moment_delete_generated_payloads_remove_moment_index_record() -> None:

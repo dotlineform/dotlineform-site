@@ -27,14 +27,14 @@ def test_source_records_are_sorted_and_path_defaults_are_bound() -> None:
                 "source_image_file": "custom.jpg",
             },
         },
-        moments_prose_root=Path("/repo/_docs_catalogue/moments"),
+        moments_prose_root=Path("/repo/studio/data/canonical/catalogue-markdown/moments"),
         moments_images_root=Path("/projects/moments/images"),
     )
 
     assert [record["moment_id"] for record in source_records] == ["alpha", "zeta"]
     assert source_records[0]["date"] == "2026-05-09"
     assert source_records[0]["source_image_file"] == "custom.jpg"
-    assert source_records[0]["source_prose_path"] == Path("/repo/_docs_catalogue/moments/alpha.md")
+    assert source_records[0]["source_prose_path"] == Path("/repo/studio/data/canonical/catalogue-markdown/moments/alpha.md")
     assert source_records[0]["source_image_path"] == Path("/projects/moments/images/custom.jpg")
     assert source_records[1]["source_image_file"] == "zeta.jpg"
 

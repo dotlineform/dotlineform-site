@@ -115,7 +115,7 @@ def catalogue_target_for_bundle_file(bundle_root: Path, file_path: Path) -> str 
     if parts[0] == "repo" and len(parts) > 1:
         return str(Path(*parts[1:])).replace("\\", "/")
     if len(parts) == 1 and file_path.suffix == ".json":
-        return str(Path("assets/studio/data/catalogue") / file_path.name).replace("\\", "/")
+        return str(Path("studio/data/canonical/catalogue") / file_path.name).replace("\\", "/")
     return str(rel).replace("\\", "/")
 
 

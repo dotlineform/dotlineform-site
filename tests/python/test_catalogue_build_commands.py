@@ -17,7 +17,7 @@ from catalogue import catalogue_build_commands as commands  # noqa: E402
 
 def test_generate_work_command_preserves_scope_and_flags() -> None:
     repo_root = Path("/repo")
-    source_dir = repo_root / "assets/studio/data/catalogue"
+    source_dir = repo_root / "studio/data/canonical/catalogue"
     scope = {
         "work_ids": ["00001", "00002"],
         "series_ids": ["009"],
@@ -38,7 +38,7 @@ def test_generate_work_command_preserves_scope_and_flags() -> None:
         "/repo/scripts/catalogue/generate_work_pages.py",
         "--internal-json-source-run",
         "--source-dir",
-        "/repo/assets/studio/data/catalogue",
+        "/repo/studio/data/canonical/catalogue",
         "--work-ids",
         "00001,00002",
         "--series-ids",
@@ -57,7 +57,7 @@ def test_generate_moment_command_preserves_scope_and_flags() -> None:
     repo_root = Path("/repo")
     cmd = commands.build_generate_moment_command(
         repo_root,
-        repo_root / "assets/studio/data/catalogue",
+        repo_root / "studio/data/canonical/catalogue",
         {"moment_ids": ["leaves"]},
         write=False,
         force=True,
@@ -69,7 +69,7 @@ def test_generate_moment_command_preserves_scope_and_flags() -> None:
         "/repo/scripts/catalogue/generate_work_pages.py",
         "--internal-json-source-run",
         "--source-dir",
-        "/repo/assets/studio/data/catalogue",
+        "/repo/studio/data/canonical/catalogue",
         "--only",
         "moments",
         "--moment-ids",

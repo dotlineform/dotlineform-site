@@ -124,7 +124,7 @@ export function buildManualPatchForCreateTag(tagRow) {
     message: registryText(
       null,
       "patch_create_message",
-      "Patch mode: new tag row prepared for assets/studio/data/tag_registry.json tags[]."
+      "Patch mode: new tag row prepared for studio/data/canonical/analytics/tag-registry.json tags[]."
     ),
     snippet
   };
@@ -173,7 +173,7 @@ export function buildManualPatchForNewTags(state, importRegistry) {
     message: registryText(
       state.config,
       "patch_import_message",
-      "Patch mode ({import_mode}): {imported_count} imported; {new_count} new tag rows prepared for assets/studio/data/tag_registry.json tags[].",
+      "Patch mode ({import_mode}): {imported_count} imported; {new_count} new tag rows prepared for studio/data/canonical/analytics/tag-registry.json tags[].",
       {
         import_mode: state.importMode,
         imported_count: importTags.length,

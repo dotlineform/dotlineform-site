@@ -159,7 +159,7 @@ def main(argv: list[str] | None = None) -> int:
                 wait_for_doc(page, "archive", args.timeout_ms)
                 browser.close()
 
-            source_path = fixture_root / "_docs" / "ui-smoke-created.md"
+            source_path = fixture_root / "studio/docs-viewer/source/studio" / "ui-smoke-created.md"
             config_path = fixture_root / "scripts" / "docs" / "docs_scopes.json"
             if source_path.exists():
                 raise AssertionError(f"UI delete did not remove fixture source: {source_path}")

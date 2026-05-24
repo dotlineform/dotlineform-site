@@ -192,7 +192,7 @@ def test_batch_c_catalogue_service_contexts_are_normalized() -> None:
 
 
 def test_activity_profiles_match_registry() -> None:
-    contract = json.loads((REPO_ROOT / "assets/studio/data/activity_contract.json").read_text(encoding="utf-8"))
+    contract = json.loads((REPO_ROOT / "studio/data/config/runtime/activity-contract.json").read_text(encoding="utf-8"))
     pages = contract["pages"]
     for profile in activity.ACTIVITY_ACTION_PROFILES:
         page = pages.get(profile.page_id)
@@ -315,7 +315,7 @@ def test_delete_activity_rows_follow_profile_order() -> None:
 
 
 def test_moment_create_stays_out_of_batch_b_contract() -> None:
-    contract = json.loads((REPO_ROOT / "assets/studio/data/activity_contract.json").read_text(encoding="utf-8"))
+    contract = json.loads((REPO_ROOT / "studio/data/config/runtime/activity-contract.json").read_text(encoding="utf-8"))
     moment_actions = contract["pages"]["catalogue-moment"]["actions"]
     if "create-moment" in moment_actions:
         raise AssertionError("moment creation belongs to import/apply coverage, not Batch B create-mode coverage")

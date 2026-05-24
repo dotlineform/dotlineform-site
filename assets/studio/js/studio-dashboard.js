@@ -71,7 +71,7 @@ async function initStudioDashboard() {
       const count = Number(payload?.header?.count || 0) || Object.keys(payload?.moments || {}).length;
       if (payload) setMetric("moments-count", formatNumber(count));
     }),
-    loadJson("/assets/studio/data/tag_registry.json").then((payload) => {
+    loadJson("/studio/data/canonical/analytics/tag-registry.json").then((payload) => {
       const tags = Array.isArray(payload?.tags) ? payload.tags.length : 0;
       const groups = Array.isArray(payload?.policy?.allowed_groups) ? payload.policy.allowed_groups.length : 0;
       setMetric("tag-count", formatNumber(tags));

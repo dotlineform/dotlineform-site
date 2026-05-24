@@ -52,18 +52,18 @@ def make_registry_payload() -> dict[str, object]:
                             "outbound_package_root": "var/studio/data-sharing/tags/exports",
                             "returned_package_staging_root": "var/studio/data-sharing/tags/import-staging",
                             "review_output_root": "var/studio/data-sharing/tags/import-preview",
-                            "source_root": "assets/studio/data",
+                            "source_root": "studio/data/canonical/analytics",
                             "backup_root": "var/studio/data-sharing/tags/backups",
                         },
                         "source_write_targets": {
-                            "tag_registry": "assets/studio/data/tag_registry.json",
-                            "tag_aliases": "assets/studio/data/tag_aliases.json",
-                            "tag_assignments": "assets/studio/data/tag_assignments.json",
+                            "tag_registry": "studio/data/canonical/analytics/tag-registry.json",
+                            "tag_aliases": "studio/data/canonical/analytics/tag-aliases.json",
+                            "tag_assignments": "studio/data/canonical/analytics/tag-assignments.json",
                         },
                         "sources": {
-                            "tag_registry": "assets/studio/data/tag_registry.json",
-                            "tag_aliases": "assets/studio/data/tag_aliases.json",
-                            "tag_assignments": "assets/studio/data/tag_assignments.json",
+                            "tag_registry": "studio/data/canonical/analytics/tag-registry.json",
+                            "tag_aliases": "studio/data/canonical/analytics/tag-aliases.json",
+                            "tag_assignments": "studio/data/canonical/analytics/tag-assignments.json",
                             "series": "assets/data/series_index.json",
                             "works": "assets/data/works_index.json",
                         },
@@ -172,7 +172,7 @@ def make_registry_payload() -> dict[str, object]:
 
 def write_activity_contract(root: Path) -> None:
     write_json(
-        root / "assets/studio/data/activity_contract.json",
+        root / "studio/data/config/runtime/activity-contract.json",
         {
             "pages": {
                 "data-sharing-prepare": {
@@ -216,9 +216,9 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     temp_dir: tempfile.TemporaryDirectory[str] = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
     (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
-    write_json(root / "assets/studio/data/data_sharing_adapters.json", make_registry_payload())
+    write_json(root / "studio/data/config/data-sharing/data-sharing-adapters.json", make_registry_payload())
     write_json(
-        root / "assets/studio/data/tag_registry.json",
+        root / "studio/data/canonical/analytics/tag-registry.json",
         {
             "tag_registry_version": "tag_registry_v1",
             "policy": {"allowed_groups": ["subject", "domain", "form", "theme"]},
@@ -230,14 +230,14 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         },
     )
     write_json(
-        root / "assets/studio/data/tag_aliases.json",
+        root / "studio/data/canonical/analytics/tag-aliases.json",
         {
             "tag_aliases_version": "tag_aliases_v1",
             "aliases": {"woods": {"description": "", "tags": ["subject:trees"]}},
         },
     )
     write_json(
-        root / "assets/studio/data/tag_assignments.json",
+        root / "studio/data/canonical/analytics/tag-assignments.json",
         {
             "tag_assignments_version": "tag_assignments_v1",
             "series": {
@@ -393,14 +393,14 @@ def test_registry_review_and_confirmed_apply_use_backups() -> None:
             dry_run=False,
             dependencies=dependencies(),
         )
-        registry = read_json(root / "assets/studio/data/tag_registry.json")
+        registry = read_json(root / "studio/data/canonical/analytics/tag-registry.json")
 
     assert review["ok"] is True
     assert [row["title"] for row in review["review_rows"]] == ["subject:trees", "subject:sky"]
     assert preflight["requires_confirmation"] is True
     assert preflight["written"] is False
     assert applied["written"] is True
-    assert applied["backup_files"][0].startswith("var/studio/data-sharing/tags/backups/tag_registry.json.bak-")
+    assert applied["backup_files"][0].startswith("var/studio/data-sharing/tags/backups/tag-registry.json.bak-")
     assert {item["tag_id"] for item in registry["tags"]} == {"subject:trees", "subject:water", "subject:stone", "subject:sky"}
 
 
@@ -439,7 +439,7 @@ def test_aliases_review_and_preflight_validate_without_writing() -> None:
             dry_run=False,
             dependencies=dependencies(),
         )
-        aliases = read_json(root / "assets/studio/data/tag_aliases.json")
+        aliases = read_json(root / "studio/data/canonical/analytics/tag-aliases.json")
 
     assert review["counts"]["records"] == 2
     assert [row["type"] for row in review["review_rows"]] == ["alias", "alias"]
@@ -553,13 +553,13 @@ def test_assignments_confirmed_apply_writes_backup_and_activity_groups() -> None
             dry_run=False,
             dependencies=dependencies(),
         )
-        assignments = read_json(root / "assets/studio/data/tag_assignments.json")
+        assignments = read_json(root / "studio/data/canonical/analytics/tag-assignments.json")
         activity_line = (root / "var/studio/activity/activity_log.jsonl").read_text(encoding="utf-8").splitlines()[-1]
         activity = json.loads(activity_line)
 
     assert preflight["requires_confirmation"] is True
     assert applied["written"] is True
-    assert applied["backup_files"][0].startswith("var/studio/data-sharing/tags/backups/tag_assignments.json.bak-")
+    assert applied["backup_files"][0].startswith("var/studio/data-sharing/tags/backups/tag-assignments.json.bak-")
     assert assignments["series"]["series-a"]["tags"] == [{"tag_id": "subject:sky", "w_manual": 0.6}]
     assert activity["record_groups"]["series"]["sample_ids"] == ["series-a"]
     assert activity["record_groups"]["works"]["sample_ids"] == ["00001"]

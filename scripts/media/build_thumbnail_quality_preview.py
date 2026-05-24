@@ -23,7 +23,7 @@ from pipeline_config import env_var_name, load_pipeline_config, resolve_repo_roo
 
 SOURCE_SUBDIR = "thumbnail-quality-preview"
 OUTPUT_IMG_REL_DIR = Path("assets/studio/img/thumbnail-quality")
-OUTPUT_DATA_REL_PATH = Path("assets/studio/data/thumbnail_quality_preview.json")
+OUTPUT_DATA_REL_PATH = Path("studio/data/generated/thumbnail-quality/thumbnail-quality-preview.json")
 SUPPORTED_EXTENSIONS = {".avif", ".heic", ".heif", ".jpeg", ".jpg", ".png", ".tif", ".tiff", ".webp"}
 
 LOWER_VARIANTS = [

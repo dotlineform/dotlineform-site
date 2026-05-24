@@ -157,7 +157,7 @@ async function initTagStudio() {
       studioText(
         config,
         "load_failed_error",
-        "Failed to load tag data. Check /assets/studio/data/tag_registry.json, /assets/studio/data/tag_aliases.json, /assets/studio/data/tag_assignments.json, /assets/data/series_index.json, and /assets/data/works_index.json."
+        "Failed to load tag data. Check /studio/data/canonical/analytics/tag-registry.json, /studio/data/canonical/analytics/tag-aliases.json, /studio/data/canonical/analytics/tag-assignments.json, /assets/data/series_index.json, and /assets/data/works_index.json."
       )
     );
     setStudioRouteReady(routeRoot, true, {

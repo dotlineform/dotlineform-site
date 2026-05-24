@@ -221,10 +221,9 @@ def normalize_publishing_mode(value: Any) -> str:
 
 def normalize_source_root(value: Any, scope_id: str) -> Path:
     source_root = safe_relative_path(value, field="source_root")
-    if len(source_root.parts) != 1 or not source_root.name.startswith("_docs_"):
-        raise ValueError("source_root must be a single allowlisted _docs_<scope> directory")
-    if source_root.name != f"_docs_{scope_id}":
-        raise ValueError(f"source_root must be _docs_{scope_id}")
+    expected = Path("studio/docs-viewer/source") / scope_id
+    if source_root != expected:
+        raise ValueError(f"source_root must be {expected.as_posix()}")
     return source_root
 
 

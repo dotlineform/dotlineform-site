@@ -25,7 +25,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
-DEFAULT_OUTPUT_REL_PATH = Path("_docs/project-state.md")
+DEFAULT_OUTPUT_REL_PATH = Path("studio/docs-viewer/source/studio/project-state.md")
 IMAGE_EXTENSIONS = {
     ".avif",
     ".gif",
@@ -248,9 +248,9 @@ def build_project_state_report(
     )
 
     if write:
-        expected_root = (repo_root / "_docs").resolve()
+        expected_root = (repo_root / "studio/docs-viewer/source/studio").resolve()
         if output.parent != expected_root:
-            raise ValueError("Project-state report writes are restricted to _docs/.")
+            raise ValueError("Project-state report writes are restricted to studio/docs-viewer/source/studio/.")
         output.write_text(markdown, encoding="utf-8")
 
     return {
@@ -318,11 +318,11 @@ def render_report_markdown(
         "",
         f"Generated at `{generated_at_utc}`.",
         "",
-        "This report compares source image candidates under `$DOTLINEFORM_PROJECTS_BASE_DIR/projects` with primary work image references in `assets/studio/data/catalogue/works.json`.",
+        "This report compares source image candidates under `$DOTLINEFORM_PROJECTS_BASE_DIR/projects` with primary work image references in `studio/data/canonical/catalogue/works.json`.",
         "",
         f"Scan mode: {scan_scope}.",
         "",
-        "Work details are intentionally out of scope. Known detail subfolders from `assets/studio/data/catalogue/work_details.json` are skipped so detail images do not appear as unimported primary work images.",
+        "Work details are intentionally out of scope. Known detail subfolders from `studio/data/canonical/catalogue/work_details.json` are skipped so detail images do not appear as unimported primary work images.",
         "",
         "## Summary",
         "",

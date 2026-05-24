@@ -7,7 +7,7 @@
   "description": "Field-to-artifact dependency registry for catalogue source edits. Task 2 records current selected behavior and target behavior; later tasks wire the target rules into build planning.",
   "artifact_families": {
     "source-json": "Canonical Studio catalogue source JSON.",
-    "studio-lookup": "Studio read payloads and search/open payloads under assets/studio/data/catalogue_lookup/.",
+    "studio-lookup": "Studio read payloads and search/open payloads under studio/data/generated/catalogue-lookup/.",
     "work-page": "Metadata-free public work route shell.",
     "work-details-page": "Metadata-free public work-detail route shell.",
     "series-page": "Metadata-free public series route shell.",
@@ -429,7 +429,7 @@
       "record_family": "work",
       "field": "work_prose_file",
       "removed_in": "Task 1A",
-      "replacement": "_docs_catalogue/works/<work_id>.md"
+      "replacement": "studio/data/canonical/catalogue-markdown/works/<work_id>.md"
     },
     {
       "record_family": "work",
@@ -441,7 +441,7 @@
       "record_family": "series",
       "field": "series_prose_file",
       "removed_in": "Task 1A",
-      "replacement": "_docs_catalogue/series/<series_id>.md"
+      "replacement": "studio/data/canonical/catalogue-markdown/series/<series_id>.md"
     }
   ]
 }

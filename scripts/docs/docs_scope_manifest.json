@@ -16,7 +16,7 @@
       "files": [
         {
           "kind": "source_root",
-          "path": "_docs_analysis",
+          "path": "studio/docs-viewer/source/analysis",
           "action": "track",
           "exists": true
         },
@@ -28,7 +28,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "_docs_analysis/analysis.md",
+          "path": "studio/docs-viewer/source/analysis/analysis.md",
           "action": "track",
           "exists": true
         },
@@ -82,7 +82,7 @@
       "files": [
         {
           "kind": "source_root",
-          "path": "_docs_library",
+          "path": "studio/docs-viewer/source/library",
           "action": "track",
           "exists": true
         },
@@ -94,7 +94,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "_docs_library/library.md",
+          "path": "studio/docs-viewer/source/library/library.md",
           "action": "track",
           "exists": true
         },
@@ -148,7 +148,7 @@
       "files": [
         {
           "kind": "source_root",
-          "path": "_docs",
+          "path": "studio/docs-viewer/source/studio",
           "action": "track",
           "exists": true
         },
@@ -160,7 +160,7 @@
         },
         {
           "kind": "default_source_doc",
-          "path": "_docs/dev-home.md",
+          "path": "studio/docs-viewer/source/studio/dev-home.md",
           "action": "track",
           "exists": true
         },

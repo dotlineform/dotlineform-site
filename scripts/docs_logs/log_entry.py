@@ -83,16 +83,16 @@ def slugify(value: str) -> str:
 def infer_domains(*values: str) -> list[str]:
     haystack = " ".join(value.lower() for value in values if value)
     candidates: list[tuple[str, tuple[str, ...]]] = [
-        ("docs-viewer", ("docs-viewer", "docs viewer", "_docs", "docs/", "docs_")),
+        ("docs-viewer", ("docs-viewer", "docs viewer", "studio/docs-viewer/source/studio", "docs/", "docs_")),
         ("search", ("search", "ranking", "normalisation", "normalization", "index")),
         ("catalogue", ("catalogue", "work editor", "series", "moment")),
-        ("library", ("library", "_docs_library")),
+        ("library", ("library", "studio/docs-viewer/source/library")),
         ("studio-ui", ("studio ui", "ui primitive", "modal", "css", "layout")),
         ("build", ("build", "generated", "payload", "jekyll")),
         ("scripts", ("script", "scripts/")),
         ("data-models", ("data model", "schema", "json")),
         ("config", ("config", "settings")),
-        ("workflow", ("workflow", "change log", "docs log", "_docs_logs", "agents.md")),
+        ("workflow", ("workflow", "change log", "docs log", "studio/workflows/change-requests", "agents.md")),
         ("analytics", ("analytics", "tag")),
         ("runtime", ("runtime", "service", "server")),
     ]
@@ -123,12 +123,12 @@ def parse_front_matter(text: str) -> tuple[dict[str, str], list[str]]:
 
 
 def find_doc_by_id(root: Path, doc_id: str) -> tuple[Path, dict[str, str], list[str]]:
-    for path in sorted((root / "_docs").glob("*.md")):
+    for path in sorted((root / "studio/docs-viewer/source/studio").glob("*.md")):
         text = path.read_text(encoding="utf-8")
         front_matter, body_lines = parse_front_matter(text)
         if front_matter.get("doc_id") == doc_id:
             return path, front_matter, body_lines
-    raise ValueError(f"Could not find _docs source for doc_id: {doc_id}")
+    raise ValueError(f"Could not find studio/docs-viewer/source/studio source for doc_id: {doc_id}")
 
 
 def section_lines(body_lines: list[str], heading: str) -> list[str]:
@@ -310,12 +310,12 @@ def validate_record(record: dict[str, Any]) -> list[str]:
 
 
 def entry_path(root: Path, entry_id: str) -> Path:
-    return root / "_docs_logs" / "entries" / f"{entry_id}.json"
+    return root / "studio/workflows/change-requests" / "logs" / "entries" / f"{entry_id}.json"
 
 
 def existing_ids(root: Path) -> set[str]:
     ids: set[str] = set()
-    for path in (root / "_docs_logs" / "entries").glob("*.json"):
+    for path in (root / "studio/workflows/change-requests" / "logs" / "entries").glob("*.json"):
         try:
             row = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
@@ -373,7 +373,7 @@ def maybe_rebuild_generated(root: Path, dry_run: bool, skip: bool) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--from-change-request", help="Seed fields from a _docs change request doc_id.")
+    parser.add_argument("--from-change-request", help="Seed fields from a studio/docs-viewer/source/studio change request doc_id.")
     parser.add_argument("--id", help="Explicit entry id. Defaults to change-<date>-<title-slug>.")
     parser.add_argument("--date", help="Change date in YYYY-MM-DD form. Defaults to today.")
     parser.add_argument("--title", help="Entry title.")

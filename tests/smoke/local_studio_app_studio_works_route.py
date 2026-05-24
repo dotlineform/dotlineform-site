@@ -53,7 +53,7 @@ def main(argv: list[str] | None = None) -> int:
                 lambda request: data_requests.append(request.url)
                 if "/assets/data/works_index.json" in request.url
                 or "/assets/data/series_index.json" in request.url
-                or "/assets/studio/data/work_storage_index.json" in request.url
+                or "/studio/data/generated/activity/work-storage-index.json" in request.url
                 else None,
             )
 

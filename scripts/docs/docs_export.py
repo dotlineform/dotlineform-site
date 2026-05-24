@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_CONFIG_PATH = Path("assets/studio/data/library_export_configs.json")
+DEFAULT_CONFIG_PATH = Path("studio/data/config/data-sharing/library-export-configs.json")
 DOCS_SCOPES_ROOT = Path("assets/data/docs/scopes")
 OUTPUT_ROOT = Path("var/studio/data-sharing")
 SCHEMA_VERSION = "library_export_configs_v1"

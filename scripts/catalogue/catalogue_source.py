@@ -14,7 +14,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue.series_ids import normalize_series_id, parse_series_ids
 
 
-DEFAULT_SOURCE_DIR = Path("assets/studio/data/catalogue")
+DEFAULT_SOURCE_DIR = Path("studio/data/canonical/catalogue")
 
 ACTIONABLE_STATUSES = {"draft", "published"}
 

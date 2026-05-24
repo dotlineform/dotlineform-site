@@ -124,7 +124,7 @@ def readiness_item(key: str) -> dict[str, Any]:
 
 def test_work_scope_includes_extra_series_detail_readiness_and_stable_keys() -> None:
     with tempfile.TemporaryDirectory() as tmp:
-        source_dir = Path(tmp) / "assets/studio/data/catalogue"
+        source_dir = Path(tmp) / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         scope = scopes.build_scope_for_work(
@@ -162,7 +162,7 @@ def test_work_scope_includes_extra_series_detail_readiness_and_stable_keys() -> 
 
 def test_series_scope_includes_extra_work_ids_and_stable_keys() -> None:
     with tempfile.TemporaryDirectory() as tmp:
-        source_dir = Path(tmp) / "assets/studio/data/catalogue"
+        source_dir = Path(tmp) / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         scope = scopes.build_scope_for_series(
@@ -197,7 +197,7 @@ def test_series_scope_includes_extra_work_ids_and_stable_keys() -> None:
 
 def test_invalid_series_scope_reports_build_preconditions() -> None:
     with tempfile.TemporaryDirectory() as tmp:
-        source_dir = Path(tmp) / "assets/studio/data/catalogue"
+        source_dir = Path(tmp) / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         try:
@@ -235,7 +235,7 @@ def test_moment_scope_uses_preview_metadata_and_readiness_dependencies() -> None
         return {"valid": True, "moment_id": "keys", "moment_file": "keys.md", "title": "Keys"}
 
     def metadata(source_dir: Path, moment_id: str, incoming: dict[str, Any] | None) -> dict[str, Any]:
-        assert source_dir == repo_root / "assets/studio/data/catalogue"
+        assert source_dir == repo_root / "studio/data/canonical/catalogue"
         assert moment_id == "keys"
         return {"moment_id": "keys", "title": incoming["title"] if incoming else "Keys"}
 
@@ -270,7 +270,7 @@ def test_moment_scope_uses_preview_metadata_and_readiness_dependencies() -> None
 
 def test_moment_import_metadata_merges_existing_record_and_overrides() -> None:
     with tempfile.TemporaryDirectory() as tmp:
-        source_dir = Path(tmp) / "assets/studio/data/catalogue"
+        source_dir = Path(tmp) / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         metadata = scopes.build_moment_import_metadata(source_dir, "keys", {"title": "Updated Keys"})

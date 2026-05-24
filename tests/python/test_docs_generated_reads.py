@@ -162,7 +162,7 @@ def test_generated_references_reads_scope_index_and_target() -> None:
 def test_generated_docs_log_projection_uses_allowlisted_names() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         repo_root = Path(temp_path)
-        write_json(repo_root / "_docs_logs/generated/search-index.json", {"entries": [{"id": "change-1"}]})
+        write_json(repo_root / "studio/workflows/change-requests/generated/search-index.json", {"entries": [{"id": "change-1"}]})
 
         payload = generated_reads.read_generated_docs_log_projection(repo_root, "search-index")
         try:

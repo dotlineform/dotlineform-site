@@ -26,30 +26,30 @@ from analytics import tag_source_model as tag_source  # noqa: E402
 from analytics import tag_write_transactions as tag_transactions  # noqa: E402
 
 
-DATA_DIR = Path("assets/studio/data")
+ANALYTICS_DATA_DIR = Path("studio/data/canonical/analytics")
 BACKUPS_REL_DIR = Path("var/studio/backups")
 LOGS_REL_DIR = Path("var/studio/logs")
 READ_ENDPOINTS = {
     "/tag-aliases": {
-        "path": DATA_DIR / "tag_aliases.json",
+        "path": ANALYTICS_DATA_DIR / "tag-aliases.json",
         "label": "Tag Aliases",
         "required_key": "aliases",
         "required_type": dict,
     },
     "/tag-assignments": {
-        "path": DATA_DIR / "tag_assignments.json",
+        "path": ANALYTICS_DATA_DIR / "tag-assignments.json",
         "label": "Tag Assignments",
         "required_key": "series",
         "required_type": dict,
     },
     "/tag-groups": {
-        "path": DATA_DIR / "tag_groups.json",
+        "path": ANALYTICS_DATA_DIR / "tag-groups.json",
         "label": "Tag Groups",
         "required_key": "groups",
         "required_type": list,
     },
     "/tag-registry": {
-        "path": DATA_DIR / "tag_registry.json",
+        "path": ANALYTICS_DATA_DIR / "tag-registry.json",
         "label": "Tag Registry",
         "required_key": "tags",
         "required_type": list,

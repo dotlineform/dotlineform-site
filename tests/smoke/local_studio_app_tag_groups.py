@@ -69,7 +69,7 @@ def main(argv: list[str] | None = None) -> int:
             page.on(
                 "request",
                 lambda request: static_group_requests.append(request.url)
-                if "/assets/studio/data/tag_groups.json" in request.url
+                if "/studio/data/canonical/analytics/tag-groups.json" in request.url
                 else None,
             )
             page.goto(f"{base_url}/studio/", wait_until="domcontentloaded")

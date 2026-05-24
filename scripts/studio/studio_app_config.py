@@ -368,7 +368,7 @@ def asset_version(repo_root: Path) -> str:
         repo_root / "assets" / "studio" / "js" / "catalogue-moment-editor.js",
         repo_root / "assets" / "studio" / "js" / "tag-studio.js",
         repo_root / "assets" / "studio" / "css" / "studio.css",
-        repo_root / "assets" / "studio" / "data" / "studio_config.json",
+        repo_root / "studio" / "app" / "frontend" / "config" / "studio-config.json",
         repo_root / "assets" / "ui-catalogue" / "js" / "ui-catalogue-demo.js",
         repo_root / "assets" / "ui-catalogue" / "css" / "ui-catalogue-demo.css",
     ]
@@ -377,7 +377,7 @@ def asset_version(repo_root: Path) -> str:
 
 
 def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
-    config_path = repo_root / "assets" / "studio" / "data" / "studio_config.json"
+    config_path = repo_root / "studio" / "app" / "frontend" / "config" / "studio-config.json"
     pipeline_path = repo_root / "_data" / "pipeline.json"
     try:
         payload = json.loads(config_path.read_text(encoding="utf-8"))

@@ -23,7 +23,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     )
 
 
-DEFAULT_LOOKUP_DIR = Path("assets/studio/data/catalogue_lookup")
+DEFAULT_LOOKUP_DIR = Path("studio/data/generated/catalogue-lookup")
 
 SCHEMAS = {
     "work_search": "studio_catalogue_lookup_work_search_v1",

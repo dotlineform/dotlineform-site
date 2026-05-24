@@ -95,7 +95,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 browser.close()
 
-            imported_path = fixture_root / "_docs" / "staged-doc.md"
+            imported_path = fixture_root / "studio/docs-viewer/source/studio" / "staged-doc.md"
             generated_path = fixture_root / "assets" / "data" / "docs" / "scopes" / "studio" / "by-id" / "staged-doc.json"
             if not imported_path.exists():
                 raise AssertionError(f"UI import did not write fixture source: {imported_path}")

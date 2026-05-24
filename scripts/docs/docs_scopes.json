@@ -3,7 +3,7 @@
   "scopes": [
     {
       "scope_id": "studio",
-      "source": "_docs",
+      "source": "studio/docs-viewer/source/studio",
       "media_path_prefix": "docs/studio",
       "output": "assets/data/docs/scopes/studio",
       "viewer_base_url": "/docs/",
@@ -22,7 +22,7 @@
     },
     {
       "scope_id": "library",
-      "source": "_docs_library",
+      "source": "studio/docs-viewer/source/library",
       "media_path_prefix": "docs/library",
       "output": "assets/data/docs/scopes/library",
       "viewer_base_url": "/library/",
@@ -41,7 +41,7 @@
     },
     {
       "scope_id": "analysis",
-      "source": "_docs_analysis",
+      "source": "studio/docs-viewer/source/analysis",
       "media_path_prefix": "docs/analysis",
       "output": "assets/data/docs/scopes/analysis",
       "viewer_base_url": "/analysis/",

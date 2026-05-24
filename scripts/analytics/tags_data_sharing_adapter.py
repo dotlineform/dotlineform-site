@@ -198,7 +198,7 @@ def load_series_index(repo_root: Path, adapter: AdapterResolution) -> Dict[str, 
     sources = adapter.domain.get("sources") if isinstance(adapter.domain.get("sources"), dict) else {}
     rel_path = sources.get("series") or tag_source_model.SERIES_INDEX_REL_PATH.as_posix()
     path = (repo_root / safe_relative_path(rel_path, field="sources.series")).resolve()
-    if not path.exists() and rel_path == "assets/studio/data/catalogue/series.json":
+    if not path.exists() and rel_path == "studio/data/canonical/catalogue/series.json":
         path = (repo_root / tag_source_model.SERIES_INDEX_REL_PATH).resolve()
     return tag_source_model.load_series_index(path)
 

@@ -43,7 +43,7 @@ def repo_relative(root: Path, path: Path) -> str:
 
 
 def read_entries(root: Path) -> list[dict[str, Any]]:
-    entries_dir = root / "_docs_logs" / "entries"
+    entries_dir = root / "studio/workflows/change-requests" / "logs" / "entries"
     records: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
     for path in sorted(entries_dir.glob("*.json")):
@@ -199,7 +199,7 @@ def build_outputs(records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
 
 
 def write_outputs(root: Path, outputs: dict[str, dict[str, Any]]) -> list[str]:
-    generated_dir = root / "_docs_logs" / "generated"
+    generated_dir = root / "studio/workflows/change-requests" / "generated"
     generated_dir.mkdir(parents=True, exist_ok=True)
     written: list[str] = []
     for key, filename in GENERATED_FILES.items():

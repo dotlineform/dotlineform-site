@@ -102,7 +102,7 @@ def assert_planner_assigns_stable_section_ids() -> None:
 def assert_write_mode_creates_backup_and_is_idempotent() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         repo_root = Path(tmp)
-        source_dir = repo_root / "assets/studio/data/catalogue"
+        source_dir = repo_root / "studio/data/canonical/catalogue"
         backup_dir = repo_root / "var/studio/catalogue/backups"
         minimal_source(source_dir)
         plan = build_migration_plan(source_dir)

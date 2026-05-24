@@ -11,7 +11,7 @@ from typing import Any, Dict, Mapping, Optional
 
 MOMENT_METADATA_SCHEMA = "catalogue_source_moments_v1"
 MOMENT_METADATA_FILENAME = "moments.json"
-CATALOGUE_MOMENT_PROSE_REL_DIR = Path("_docs_catalogue/moments")
+CATALOGUE_MOMENT_PROSE_REL_DIR = Path("studio/data/canonical/catalogue-markdown/moments")
 
 MOMENT_METADATA_FIELDS = [
     "moment_id",

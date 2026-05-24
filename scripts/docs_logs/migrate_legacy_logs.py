@@ -26,11 +26,11 @@ PATH_TOKEN_RE = re.compile(r"`([^`]+)`")
 WHITESPACE_RE = re.compile(r"\s+")
 
 DEFAULT_SOURCE_FILES = (
-    "_docs/site-change-log.md",
-    "_docs/site-change-log-2026-05.md",
-    "_docs/site-change-log-2026-04.md",
-    "_docs/site-change-log-2026-03-and-earlier.md",
-    "_docs/search-change-log.md",
+    "studio/docs-viewer/source/studio/site-change-log.md",
+    "studio/docs-viewer/source/studio/site-change-log-2026-05.md",
+    "studio/docs-viewer/source/studio/site-change-log-2026-04.md",
+    "studio/docs-viewer/source/studio/site-change-log-2026-03-and-earlier.md",
+    "studio/docs-viewer/source/studio/search-change-log.md",
 )
 
 FIELD_ALIASES = {
@@ -166,7 +166,7 @@ def extract_paths(*values: str) -> list[str]:
 
 
 def source_archive(source_file: str) -> str:
-    if source_file == "_docs/search-change-log.md":
+    if source_file == "studio/docs-viewer/source/studio/search-change-log.md":
         return "search"
     match = re.search(r"site-change-log-([0-9]{4}-[0-9]{2}(?:-and-earlier)?)\.md$", source_file)
     if match:
@@ -299,7 +299,7 @@ def build_records(entries: list[LegacyEntry]) -> list[dict[str, Any]]:
 
 
 def entry_path(root: Path, entry_id: str) -> Path:
-    return root / "_docs_logs" / "entries" / f"{entry_id}.json"
+    return root / "studio/workflows/change-requests" / "logs" / "entries" / f"{entry_id}.json"
 
 
 def build_report(records: list[dict[str, Any]], source_files: list[str]) -> dict[str, Any]:
@@ -386,7 +386,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--source-file", action="append", help="Legacy changelog Markdown file. Repeatable.")
     parser.add_argument("--write", action="store_true", help="Write per-entry JSON records and migration report.")
     parser.add_argument("--replace", action="store_true", help="Overwrite existing per-entry migration JSON outputs.")
-    parser.add_argument("--report-path", default="_docs_logs/reports/migration-review.json", help="Migration report path.")
+    parser.add_argument("--report-path", default="studio/workflows/change-requests/reports/migration-review.json", help="Migration report path.")
     parser.add_argument("--json", action="store_true", help="Print the full migration report as JSON.")
     return parser
 

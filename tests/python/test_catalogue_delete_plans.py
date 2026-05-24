@@ -127,7 +127,7 @@ def write_source_fixture(source_dir: Path) -> None:
 def test_work_delete_preview_reports_dependents_and_primary_blocker() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         preview = catalogue_delete_plans.build_delete_preview(source_dir, "work", "00001", repo_root=root)
@@ -147,7 +147,7 @@ def test_work_delete_preview_reports_dependents_and_primary_blocker() -> None:
 def test_detail_series_and_moment_delete_preview_shapes() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         detail = catalogue_delete_plans.build_delete_preview(source_dir, "work_detail", "00001-001", repo_root=root)
@@ -169,7 +169,7 @@ def test_detail_series_and_moment_delete_preview_shapes() -> None:
 def test_draft_series_primary_reference_is_cleared_for_work_delete_validation() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         preview = catalogue_delete_plans.build_delete_preview(source_dir, "work", "00002", repo_root=root)
@@ -181,7 +181,7 @@ def test_draft_series_primary_reference_is_cleared_for_work_delete_validation() 
 def test_delete_apply_plan_builds_source_payloads_and_activity_affected() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         preview = catalogue_delete_plans.build_delete_preview(source_dir, "work", "00002", repo_root=root)

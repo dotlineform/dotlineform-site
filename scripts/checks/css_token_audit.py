@@ -184,7 +184,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--md-out",
-        default="_docs/css-audit-latest.md",
+        default="studio/docs-viewer/source/studio/css-audit-latest.md",
         help="Markdown output path",
     )
     return parser.parse_args()

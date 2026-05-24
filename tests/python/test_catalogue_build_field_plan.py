@@ -106,7 +106,7 @@ def test_infer_record_family_for_scope() -> None:
 
 def test_empty_changed_fields_return_no_plan() -> None:
     with tempfile.TemporaryDirectory() as tmp:
-        source_dir = Path(tmp) / "assets/studio/data/catalogue"
+        source_dir = Path(tmp) / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         plan = field_plan.build_field_plan_for_scope(REPO_ROOT, source_dir, work_scope(source_dir), changed_fields=["", " "])
@@ -116,7 +116,7 @@ def test_empty_changed_fields_return_no_plan() -> None:
 
 def test_work_public_metadata_reduces_to_focused_work_json() -> None:
     with tempfile.TemporaryDirectory() as tmp:
-        source_dir = Path(tmp) / "assets/studio/data/catalogue"
+        source_dir = Path(tmp) / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
         scope = work_scope(source_dir)
 
@@ -136,7 +136,7 @@ def test_work_public_metadata_reduces_to_focused_work_json() -> None:
 
 def test_work_media_source_reduces_to_local_media_only() -> None:
     with tempfile.TemporaryDirectory() as tmp:
-        source_dir = Path(tmp) / "assets/studio/data/catalogue"
+        source_dir = Path(tmp) / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
         scope = work_scope(source_dir)
 
@@ -151,7 +151,7 @@ def test_work_media_source_reduces_to_local_media_only() -> None:
 
 def test_detail_series_and_moment_field_plans_use_inferred_families() -> None:
     with tempfile.TemporaryDirectory() as tmp:
-        source_dir = Path(tmp) / "assets/studio/data/catalogue"
+        source_dir = Path(tmp) / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         detail_plan = field_plan.build_field_plan_for_scope(

@@ -332,8 +332,8 @@ def collect_catalogue_delete_cleanup(
             existing_repo_paths(
                 repo_root,
                 [
-                    Path("assets/studio/data/work_storage_index.json"),
-                    Path("assets/studio/data/tag_assignments.json"),
+                    Path("studio/data/generated/activity/work-storage-index.json"),
+                    Path("studio/data/canonical/analytics/tag-assignments.json"),
                 ],
             )
         )
@@ -358,7 +358,7 @@ def collect_catalogue_delete_cleanup(
         public_json_updates.extend(
             existing_repo_paths(repo_root, [Path("assets/works/index") / f"{work_id}.json" for work_id in work_ids])
         )
-        studio_json_updates.extend(existing_repo_paths(repo_root, [Path("assets/studio/data/tag_assignments.json")]))
+        studio_json_updates.extend(existing_repo_paths(repo_root, [Path("studio/data/canonical/analytics/tag-assignments.json")]))
         rebuild_search = True
     else:
         raise ValueError(f"unsupported catalogue cleanup kind: {kind}")
@@ -609,7 +609,7 @@ def build_catalogue_delete_generated_payloads(
                 del works[record_id]
                 payloads[path] = finalize_works_index_payload(payload)
 
-        work_storage = load_existing(Path("assets/studio/data/work_storage_index.json"))
+        work_storage = load_existing(Path("studio/data/generated/activity/work-storage-index.json"))
         if work_storage is not None:
             path, payload = work_storage
             works = payload.get("works")
@@ -650,7 +650,7 @@ def build_catalogue_delete_generated_payloads(
             if update_recent_entries_for_work_delete(payload, record_id, series_index_payload or {}):
                 payloads[path] = finalize_recent_index_payload(payload)
 
-        tag_assignments = load_existing(Path("assets/studio/data/tag_assignments.json"))
+        tag_assignments = load_existing(Path("studio/data/canonical/analytics/tag-assignments.json"))
         if tag_assignments is not None:
             path, payload = tag_assignments
             if remove_work_overrides_from_tag_assignments(payload, record_id):
@@ -705,7 +705,7 @@ def build_catalogue_delete_generated_payloads(
             if update_recent_entries_for_series_delete(payload, record_id):
                 payloads[path] = finalize_recent_index_payload(payload)
 
-        tag_assignments = load_existing(Path("assets/studio/data/tag_assignments.json"))
+        tag_assignments = load_existing(Path("studio/data/canonical/analytics/tag-assignments.json"))
         if tag_assignments is not None:
             path, payload = tag_assignments
             if remove_series_from_tag_assignments(payload, record_id):

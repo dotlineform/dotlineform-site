@@ -254,7 +254,7 @@ def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
     original_run = write_rebuild.subprocess.run
 
     def fake_run(_command, **_kwargs):
-        return Completed(returncode=1, stderr="problem with front-matter on doc _docs/bad.md at line 7 column 1: could not find expected ':'")
+        return Completed(returncode=1, stderr="problem with front-matter on doc studio/docs-viewer/source/studio/bad.md at line 7 column 1: could not find expected ':'")
 
     write_rebuild.subprocess.run = fake_run
     try:
@@ -269,7 +269,7 @@ def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
         write_rebuild.subprocess.run = original_run
         write_rebuild.detect_bundle_bin = original_bundle
 
-    assert message == "problem with front-matter on doc _docs/bad.md at line 7 column 1: could not find expected ':'"
+    assert message == "problem with front-matter on doc studio/docs-viewer/source/studio/bad.md at line 7 column 1: could not find expected ':'"
 
 
 def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
@@ -294,7 +294,7 @@ def test_perform_source_write_and_rebuild_marks_pending_then_complete() -> None:
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
-            source_path = repo_root / "_docs" / "child.md"
+            source_path = repo_root / "studio/docs-viewer/source/studio" / "child.md"
             source_path.parent.mkdir(parents=True)
             source_path.write_text("# Child\n", encoding="utf-8")
             result = write_rebuild.perform_source_write_and_rebuild(
@@ -336,7 +336,7 @@ def test_perform_source_write_and_rebuild_clears_pending_on_exception() -> None:
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
-            source_path = repo_root / "_docs" / "child.md"
+            source_path = repo_root / "studio/docs-viewer/source/studio" / "child.md"
             source_path.parent.mkdir(parents=True)
             source_path.write_text("# Child\n", encoding="utf-8")
             try:
@@ -409,7 +409,7 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
   "scopes": [
     {
       "scope_id": "studio",
-      "source": "_docs",
+      "source": "studio/docs-viewer/source/studio",
       "media_path_prefix": "docs/studio",
       "output": "assets/data/docs/scopes/studio",
       "viewer_base_url": "/docs/",

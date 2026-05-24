@@ -51,7 +51,7 @@ def generated_docs_log_projection_path(repo_root: Path, projection: str) -> Path
     filename = DOCS_LOG_PROJECTIONS.get(projection)
     if filename is None:
         raise ValueError(f"unsupported docs-log projection: {projection}")
-    return repo_root / "_docs_logs" / "generated" / filename
+    return repo_root / "studio/workflows/change-requests" / "generated" / filename
 
 
 def generated_references_index_path(repo_root: Path, scope: str) -> Path:

@@ -227,12 +227,12 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
         ),
         CheckCommand(
             "studio-config-json",
-            (sys.executable, "-m", "json.tool", "assets/studio/data/studio_config.json"),
+            (sys.executable, "-m", "json.tool", "studio/app/frontend/config/studio-config.json"),
             "Parse Studio config JSON.",
         ),
         CheckCommand(
             "activity-contract-json",
-            (sys.executable, "-m", "json.tool", "assets/studio/data/activity_contract.json"),
+            (sys.executable, "-m", "json.tool", "studio/data/config/runtime/activity-contract.json"),
             "Parse Studio activity contract JSON.",
         ),
     ),

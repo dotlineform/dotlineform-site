@@ -87,7 +87,7 @@ async function fetchJson(url) {
 }
 
 function dataUrl(config) {
-  return getStudioDataPath(config, "thumbnail_quality_preview") || "/assets/studio/data/thumbnail_quality_preview.json";
+  return getStudioDataPath(config, "thumbnail_quality_preview") || "/studio/data/generated/thumbnail-quality/thumbnail-quality-preview.json";
 }
 
 function renderSettingCard(label, settings) {

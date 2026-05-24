@@ -366,7 +366,7 @@ def check_cross_refs(
             add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": ref.get("path", ""), "message": "work JSON references missing work detail page"}, max_samples)
 
     # tag_assignments -> series_index / works_index references
-    assignments_path = site_root / "assets/studio/data/tag_assignments.json"
+    assignments_path = site_root / "studio/data/canonical/analytics/tag-assignments.json"
     if not assignments_path.exists():
         warnings += 1
         add_sample(samples, {"check": "cross_refs", "id": "tag_assignments", "path": str(assignments_path), "message": "missing tag assignments JSON"}, max_samples)
@@ -712,7 +712,7 @@ def check_json_schema(
                         errors += 1
                         add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must not contain empty values"}, max_samples)
 
-    tag_assignments_path = site_root / "assets/studio/data/tag_assignments.json"
+    tag_assignments_path = site_root / "studio/data/canonical/analytics/tag-assignments.json"
     try:
         tag_assignments_obj = json.loads(tag_assignments_path.read_text(encoding="utf-8"))
     except Exception as e:
@@ -1162,7 +1162,7 @@ def main() -> None:
     ap.add_argument("--work-ids", default="", help="Comma-separated work_ids/ranges scope (e.g. 66-74,38-40)")
     ap.add_argument("--strict", action="store_true", help="Exit non-zero when errors are found")
     ap.add_argument("--json-out", default="", help="Optional path to write JSON report")
-    ap.add_argument("--md-out", default="_docs/audit-latest.md", help="Path to write Markdown report (overwrites on each run)")
+    ap.add_argument("--md-out", default="studio/docs-viewer/source/studio/audit-latest.md", help="Path to write Markdown report (overwrites on each run)")
     ap.add_argument("--max-samples", type=int, default=20, help="Max sample findings per check")
     ap.add_argument("--orphans-media", action="store_true", help="Include orphan media-file scan in the orphans check")
     args = ap.parse_args()
@@ -1316,7 +1316,7 @@ def main() -> None:
         "work_ids": "",
         "strict": False,
         "json_out": "",
-        "md_out": "_docs/audit-latest.md",
+        "md_out": "studio/docs-viewer/source/studio/audit-latest.md",
         "max_samples": 20,
         "orphans_media": False,
     }

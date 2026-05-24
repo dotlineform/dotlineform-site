@@ -107,7 +107,7 @@ def touch_outputs(paths: list[Path], *, newer_than: Path) -> None:
 def test_resolves_work_detail_sources_and_missing_metadata_reasons() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
         projects_base.mkdir(parents=True, exist_ok=True)
         write_source_fixture(source_dir)
@@ -144,7 +144,7 @@ def test_local_media_plan_reports_pending_current_blocked_and_unavailable_states
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         repo_root = root / "repo"
-        source_dir = repo_root / "assets/studio/data/catalogue"
+        source_dir = repo_root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
         source_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/alpha/alpha.jpg"
         moment_image = projects_base / source_moments_images_subdir(media.PIPELINE_CONFIG) / "keys-source.jpg"
@@ -260,7 +260,7 @@ def test_thumbnail_only_plan_skips_missing_sources_without_failing() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         repo_root = root / "repo"
-        source_dir = repo_root / "assets/studio/data/catalogue"
+        source_dir = repo_root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
         source_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/alpha/alpha.jpg"
         moment_image = projects_base / source_moments_images_subdir(media.PIPELINE_CONFIG) / "keys-source.jpg"
@@ -308,7 +308,7 @@ def test_execute_thumbnail_only_plan_writes_thumbnails_and_reports_skips() -> No
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         repo_root = root / "repo"
-        source_dir = repo_root / "assets/studio/data/catalogue"
+        source_dir = repo_root / "studio/data/canonical/catalogue"
         projects_base = root / "projects"
         source_image = projects_base / source_works_root_subdir(media.PIPELINE_CONFIG) / "2026/alpha/alpha.jpg"
         moment_image = projects_base / source_moments_images_subdir(media.PIPELINE_CONFIG) / "keys-source.jpg"

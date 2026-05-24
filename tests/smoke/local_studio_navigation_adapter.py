@@ -152,7 +152,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected top nav labels: {result['topNavLinks']!r}")
         if result["topNavTitle"] != "dotlineform studio" or result["topNavHomeHref"] != "/studio/":
             raise AssertionError(f"unexpected top nav home link: {result['topNavTitle']!r} {result['topNavHomeHref']!r}")
-        if result["dataPath"] != "/assets/studio/data/ui_text/tag-groups.json":
+        if result["dataPath"] != "/studio/app/frontend/config/ui-text/tag-groups.json":
             raise AssertionError(f"unexpected UI text path: {result['dataPath']!r}")
         if result["mediaThumbWorks"] != "/assets/works/img":
             raise AssertionError(f"unexpected thumb works path: {result['mediaThumbWorks']!r}")

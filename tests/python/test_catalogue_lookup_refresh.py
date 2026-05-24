@@ -67,8 +67,8 @@ def write_fixture_source(source_dir: Path) -> CatalogueSourceRecords:
 
 def fixture_paths(tmp: str) -> tuple[Path, Path, Path, CatalogueSourceRecords]:
     repo_root = Path(tmp)
-    source_dir = repo_root / "assets/studio/data/catalogue"
-    lookup_dir = repo_root / "assets/studio/data/catalogue_lookup"
+    source_dir = repo_root / "studio/data/canonical/catalogue"
+    lookup_dir = repo_root / "studio/data/generated/catalogue-lookup"
     records = write_fixture_source(source_dir)
     return repo_root, source_dir, lookup_dir, records
 
@@ -108,8 +108,8 @@ def test_full_refresh_reports_all_lookup_artifacts() -> None:
     assert_equal(result["mode"], "full", "full mode")
     assert_equal(result["artifacts"], ["full_lookup_refresh"], "full artifacts")
     assert_equal(result["written_count"], 8, "full written count")
-    assert "assets/studio/data/catalogue_lookup/work_search.json" in result["written_paths"]
-    assert "assets/studio/data/catalogue_lookup/works/00001.json" in result["written_paths"]
+    assert "studio/data/generated/catalogue-lookup/work_search.json" in result["written_paths"]
+    assert "studio/data/generated/catalogue-lookup/works/00001.json" in result["written_paths"]
 
 
 def test_work_single_record_refresh_reports_work_record() -> None:
@@ -140,7 +140,7 @@ def test_work_single_record_refresh_reports_work_record() -> None:
     assert_equal(result["written_count"], 1, "work single written count")
     assert_equal(
         result["written_paths"],
-        ["assets/studio/data/catalogue_lookup/works/00001.json"],
+        ["studio/data/generated/catalogue-lookup/works/00001.json"],
         "work single paths",
     )
     assert_equal(result["invalidation_class"], lookup_refresh.LOOKUP_REFRESH_SINGLE_RECORD, "work single class")
@@ -222,8 +222,8 @@ def test_work_targeted_refresh_reports_related_artifacts() -> None:
         "work targeted artifacts",
     )
     assert_equal(result["written_count"], 4, "work targeted written count")
-    assert "assets/studio/data/catalogue_lookup/series/009.json" in result["written_paths"]
-    assert "assets/studio/data/catalogue_lookup/work_details/00001-001.json" in result["written_paths"]
+    assert "studio/data/generated/catalogue-lookup/series/009.json" in result["written_paths"]
+    assert "studio/data/generated/catalogue-lookup/work_details/00001-001.json" in result["written_paths"]
 
 
 def test_detail_targeted_refresh_reports_detail_and_parent_work() -> None:
@@ -250,9 +250,9 @@ def test_detail_targeted_refresh_reports_detail_and_parent_work() -> None:
     assert_equal(result["mode"], "targeted-multi-record", "detail targeted mode")
     assert_equal(result["artifacts"], ["related_work_records", "work_detail_record", "work_detail_search"], "detail targeted artifacts")
     assert_equal(result["written_count"], 3, "detail targeted written count")
-    assert "assets/studio/data/catalogue_lookup/work_details/00001-001.json" in result["written_paths"]
-    assert "assets/studio/data/catalogue_lookup/work_detail_search.json" in result["written_paths"]
-    assert "assets/studio/data/catalogue_lookup/works/00001.json" in result["written_paths"]
+    assert "studio/data/generated/catalogue-lookup/work_details/00001-001.json" in result["written_paths"]
+    assert "studio/data/generated/catalogue-lookup/work_detail_search.json" in result["written_paths"]
+    assert "studio/data/generated/catalogue-lookup/works/00001.json" in result["written_paths"]
 
 
 def test_series_targeted_refresh_reports_series_search_and_member_works() -> None:
@@ -281,9 +281,9 @@ def test_series_targeted_refresh_reports_series_search_and_member_works() -> Non
         "series targeted artifacts",
     )
     assert_equal(result["written_count"], 4, "series targeted written count")
-    assert "assets/studio/data/catalogue_lookup/series/009.json" in result["written_paths"]
-    assert "assets/studio/data/catalogue_lookup/works/00001.json" in result["written_paths"]
-    assert "assets/studio/data/catalogue_lookup/works/00002.json" in result["written_paths"]
+    assert "studio/data/generated/catalogue-lookup/series/009.json" in result["written_paths"]
+    assert "studio/data/generated/catalogue-lookup/works/00001.json" in result["written_paths"]
+    assert "studio/data/generated/catalogue-lookup/works/00002.json" in result["written_paths"]
 
 
 def main() -> None:

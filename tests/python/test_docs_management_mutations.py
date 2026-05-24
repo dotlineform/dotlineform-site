@@ -18,7 +18,7 @@ import docs_source_model as source_model  # noqa: E402
 
 
 def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: str | None = None) -> None:
-    path = root / "_docs" / filename
+    path = root / "studio/docs-viewer/source/studio" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         source_model.format_source(front_matter, body if body is not None else f"# {front_matter['title']}\n"),
@@ -123,7 +123,7 @@ def test_create_plan_selects_unique_source_path_backup_metadata_and_search_targe
     assert plan.response["record"]["sort_order"] == 15
     assert plan.backup_operation == "create"
     assert plan.backup_metadata is not None
-    assert plan.backup_metadata["path"] == "_docs/target-2.md"
+    assert plan.backup_metadata["path"] == "studio/docs-viewer/source/studio/target-2.md"
     assert plan.search_doc_ids == ["target-2"]
     assert plan.source_writes[0].path.name == "target-2.md"
 

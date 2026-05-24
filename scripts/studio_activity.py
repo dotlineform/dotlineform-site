@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping
 
 
-ACTIVITY_CONTRACT_REL_PATH = Path("assets/studio/data/activity_contract.json")
+ACTIVITY_CONTRACT_REL_PATH = Path("studio/data/config/runtime/activity-contract.json")
 JOURNAL_REL_PATH = Path("var/studio/activity/activity_log.jsonl")
 FEED_REL_PATH = Path("var/studio/activity/activity_log.json")
 JOURNAL_LIMIT = 1000

@@ -151,7 +151,7 @@ def write_source_fixture(source_dir: Path) -> None:
 def test_work_publish_requires_published_series() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         preview = catalogue_publication.build_publication_preview(
@@ -168,7 +168,7 @@ def test_work_publish_requires_published_series() -> None:
 def test_series_publish_bootstraps_draft_member_work() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         preview = catalogue_publication.build_publication_preview(
@@ -186,7 +186,7 @@ def test_series_publish_bootstraps_draft_member_work() -> None:
 def test_detail_publish_requires_published_parent_work() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         preview = catalogue_publication.build_publication_preview(
@@ -206,7 +206,7 @@ def test_detail_publish_requires_published_parent_work() -> None:
 def test_unpublish_preview_attaches_cleanup_impact() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         preview = catalogue_publication.build_publication_preview(
@@ -223,7 +223,7 @@ def test_unpublish_preview_attaches_cleanup_impact() -> None:
 def test_save_published_rejects_status_change() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         assert_raises(
@@ -239,7 +239,7 @@ def test_save_published_rejects_status_change() -> None:
 def test_publication_source_payloads_include_series_bootstrap_work_write() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
 
         preview = catalogue_publication.build_publication_preview(
@@ -263,7 +263,7 @@ def test_publication_source_payloads_include_series_bootstrap_work_write() -> No
 def test_publication_build_transaction_dry_run_preserves_payload_shape() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        source_dir = root / "assets/studio/data/catalogue"
+        source_dir = root / "studio/data/canonical/catalogue"
         write_source_fixture(source_dir)
         called = False
 

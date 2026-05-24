@@ -37,7 +37,7 @@ def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: 
     for key, value in front_matter.items():
         lines.append(f"{key}: {docs_source_model.format_front_matter_value(value)}")
     lines.extend(["---", "", body or f"# {front_matter['title']}", ""])
-    path = root / "_docs" / filename
+    path = root / "studio/docs-viewer/source/studio" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -78,7 +78,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         },
     )
     write_json(
-        repo_root / "assets/studio/data/data_sharing_adapters.json",
+        repo_root / "studio/data/config/data-sharing/data-sharing-adapters.json",
         {
             "schema_version": "data_sharing_adapters_v2",
             "dispatch": [
@@ -101,19 +101,19 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                                 "outbound_package_root": "var/studio/data-sharing/library/exports",
                                 "returned_package_staging_root": "var/studio/data-sharing/library/import-staging",
                                 "review_output_root": "var/studio/data-sharing/library/import-preview",
-                                "source_root": "_docs_library",
+                                "source_root": "studio/docs-viewer/source/library",
                                 "backup_root": "var/docs/backups",
                             },
                             "source_write_targets": {
-                                "documents": "_docs_library",
+                                "documents": "studio/docs-viewer/source/library",
                             },
                             "sources": {
                                 "docs_index": "assets/data/docs/scopes/library/index.json",
                                 "docs_payload_root": "assets/data/docs/scopes/library/by-id",
-                                "source_root": "_docs_library",
+                                "source_root": "studio/docs-viewer/source/library",
                             },
                             "config": {
-                                "sharing_profiles_path": "assets/studio/data/library_export_configs.json",
+                                "sharing_profiles_path": "studio/data/config/data-sharing/library-export-configs.json",
                             },
                         }
                     },
@@ -183,7 +183,7 @@ def write_docs_scope_config(root: Path) -> None:
             "scopes": [
                 {
                     "scope_id": "studio",
-                    "source": "_docs",
+                    "source": "studio/docs-viewer/source/studio",
                     "media_path_prefix": "docs/studio",
                     "output": "assets/data/docs/scopes/studio",
                     "viewer_base_url": "/docs/",
@@ -357,7 +357,7 @@ def test_scope_manifest_backfills_existing_scopes_as_system_owned() -> None:
     assert records["studio"]["owner"] == "system"
     assert records["studio"]["user_created"] is False
     assert records["studio"]["created_by_tool"] is False
-    assert any(file["path"] == "_docs/child.md" for file in records["studio"]["files"])
+    assert any(file["path"] == "studio/docs-viewer/source/studio/child.md" for file in records["studio"]["files"])
 
 
 def test_scope_create_preview_reports_write_set_and_urls() -> None:
@@ -369,7 +369,7 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
             {
                 "scope_id": "research",
                 "title": "Research",
-                "source_root": "_docs_research",
+                "source_root": "studio/docs-viewer/source/research",
                 "default_doc_id": "research",
                 "publishing_mode": "public_readonly",
                 "public_route_path": "/research/",
@@ -383,7 +383,7 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
     assert payload["planned_scope_config"]["viewer_base_url"] == "/research/"
     assert payload["urls"]["management"] == "/docs/?scope=research&mode=manage"
     assert payload["urls"]["public"] == "/research/"
-    assert any(file["path"] == "_docs_research/research.md" for file in payload["created_files"])
+    assert any(file["path"] == "studio/docs-viewer/source/research/research.md" for file in payload["created_files"])
     assert any(command["command"] == "./scripts/build_docs.rb --scope research --write" for command in payload["build_commands"])
 
 
@@ -397,7 +397,7 @@ def test_scope_create_apply_requires_confirmation() -> None:
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "source_root": "_docs_research",
+                    "source_root": "studio/docs-viewer/source/research",
                     "default_doc_id": "research",
                     "publishing_mode": "public_readonly",
                     "public_route_path": "/research/",
@@ -432,7 +432,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "source_root": "_docs_research",
+                    "source_root": "studio/docs-viewer/source/research",
                     "default_doc_id": "research",
                     "publishing_mode": "public_readonly",
                     "public_route_path": "/research/",
@@ -444,7 +444,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             )
             source_payload = json.loads((repo_root / "scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
             manifest_payload = json.loads((repo_root / "scripts/docs/docs_scope_manifest.json").read_text(encoding="utf-8"))
-            default_doc_exists = (repo_root / "_docs_research/research.md").exists()
+            default_doc_exists = (repo_root / "studio/docs-viewer/source/research/research.md").exists()
             route_exists = (repo_root / "research/index.md").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
@@ -492,7 +492,7 @@ def test_scope_delete_preview_keeps_config_as_changed_file() -> None:
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "source_root": "_docs_research",
+                    "source_root": "studio/docs-viewer/source/research",
                     "default_doc_id": "research",
                     "publishing_mode": "public_readonly",
                     "public_route_path": "/research/",
@@ -513,7 +513,7 @@ def test_scope_delete_preview_keeps_config_as_changed_file() -> None:
     assert payload["allowed"] is True
     assert not any(file["kind"] == "scope_config" for file in payload["delete_files"])
     assert any(file["kind"] == "scope_config" for file in payload["changed_files"])
-    assert any(file["path"] == "_docs_research" for file in payload["delete_files"])
+    assert any(file["path"] == "studio/docs-viewer/source/research" for file in payload["delete_files"])
 
 
 def test_scope_delete_apply_requires_confirmation() -> None:
@@ -566,7 +566,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
                 {
                     "scope_id": "research",
                     "title": "Research",
-                    "source_root": "_docs_research",
+                    "source_root": "studio/docs-viewer/source/research",
                     "default_doc_id": "research",
                     "publishing_mode": "public_readonly",
                     "public_route_path": "/research/",
@@ -584,7 +584,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
             )
             source_payload = json.loads((repo_root / "scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
             manifest_payload = json.loads((repo_root / "scripts/docs/docs_scope_manifest.json").read_text(encoding="utf-8"))
-            source_root_exists = (repo_root / "_docs_research").exists()
+            source_root_exists = (repo_root / "studio/docs-viewer/source/research").exists()
             route_exists = (repo_root / "research/index.md").exists()
             generated_docs_exists = (repo_root / "assets/data/docs/scopes/research").exists()
             generated_search_exists = (repo_root / "assets/data/search/research/index.json").exists()
@@ -603,7 +603,7 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
     assert route_exists is False
     assert generated_docs_exists is False
     assert generated_search_exists is False
-    assert any(file["path"] == "_docs_research" for file in payload["deleted_files"])
+    assert any(file["path"] == "studio/docs-viewer/source/research" for file in payload["deleted_files"])
 
 
 def test_source_config_report_reads_known_config_files() -> None:
@@ -618,7 +618,7 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["schema_version"] == "docs_source_config_report_v1"
     assert payload["source_config_path"] == "scripts/docs/docs_scopes.json"
     assert payload["scopes"][0]["scope_id"] == "studio"
-    assert payload["scopes"][0]["source_config"]["source"] == "_docs"
+    assert payload["scopes"][0]["source_config"]["source"] == "studio/docs-viewer/source/studio"
     assert payload["scopes"][0]["browser_config"]["index_url"] == "/assets/data/docs/scopes/studio/index.json"
     assert payload["scopes"][0]["viewer_options"]["show_updated_date"] is True
     assert payload["scopes"][0]["warnings"] == []

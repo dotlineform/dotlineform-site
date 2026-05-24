@@ -321,7 +321,7 @@ def main() -> int:
             open_direct_modal(
                 page,
                 "patchOpener",
-                "smoke.module.showTagAliasesPatchModal(smoke.state, 'diff --git a/assets/studio/data/tag_aliases.json b/assets/studio/data/tag_aliases.json');",
+                "smoke.module.showTagAliasesPatchModal(smoke.state, 'diff --git a/studio/data/canonical/analytics/tag-aliases.json b/studio/data/canonical/analytics/tag-aliases.json');",
             )
             patch_state = assert_shell(
                 page,

@@ -18,7 +18,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import path for tests
     from scripts.docs_logs.log_entry import slugify, validate_record
 
 
-SOURCE_DOC = Path("_docs/studio-ui-rules.md")
+SOURCE_DOC = Path("studio/docs-viewer/source/studio/studio-ui-rules.md")
 ENTRY_HEADING_RE = re.compile(r"^## UI Rule Log (?P<date>\d{4}-\d{2}-\d{2}) / (?P<ui_id>UI-[A-Z0-9]+)\s*$", re.MULTILINE)
 TOP_LEVEL_FIELD_RE = re.compile(r"^- (?P<key>[A-Za-z][A-Za-z ]+):\s*(?P<value>.*)$")
 DOC_LINK_RE = re.compile(r"/docs/\?scope=studio&doc=([a-z0-9]+(?:-[a-z0-9]+)*)")
@@ -56,7 +56,7 @@ def parse_front_matter(text: str) -> dict[str, str]:
 
 def docs_by_source(root: Path) -> dict[str, str]:
     docs: dict[str, str] = {}
-    for path in sorted((root / "_docs").glob("*.md")):
+    for path in sorted((root / "studio/docs-viewer/source/studio").glob("*.md")):
         front_matter = parse_front_matter(path.read_text(encoding="utf-8"))
         doc_id = front_matter.get("doc_id")
         if doc_id:
@@ -142,10 +142,10 @@ def infer_domains(text: str, files: list[str]) -> list[str]:
     haystack = " ".join([text, *files]).lower()
     domains = ["studio-ui"]
     checks: list[tuple[str, tuple[str, ...]]] = [
-        ("docs-viewer", ("docs-viewer", "docs viewer", "/docs/", "_docs/", "docs/", "library/", "analysis/")),
+        ("docs-viewer", ("docs-viewer", "docs viewer", "/docs/", "studio/docs-viewer/source/studio/", "docs/", "library/", "analysis/")),
         ("catalogue", ("catalogue", "work editor", "series editor", "moment", "work-detail", "work_detail")),
         ("search", ("search", "ranking", "search index")),
-        ("library", ("library", "_docs_library")),
+        ("library", ("library", "studio/docs-viewer/source/library")),
         ("build", ("build", "generated", "payload", "jekyll")),
         ("scripts", ("scripts/", "server.py", ".rb", ".py")),
         ("config", ("config", "settings", "studio_config", "ui_text")),
@@ -271,7 +271,7 @@ def build_record(entry: dict[str, Any], docs_map: dict[str, str], used: Counter[
 
 def existing_entry_ids(root: Path) -> set[str]:
     ids: set[str] = set()
-    for path in (root / "_docs_logs" / "entries").glob("*.json"):
+    for path in (root / "studio/workflows/change-requests" / "logs" / "entries").glob("*.json"):
         try:
             record = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
@@ -284,7 +284,7 @@ def existing_entry_ids(root: Path) -> set[str]:
 
 def write_records(root: Path, records: list[dict[str, Any]]) -> list[str]:
     written: list[str] = []
-    entries_dir = root / "_docs_logs" / "entries"
+    entries_dir = root / "studio/workflows/change-requests" / "logs" / "entries"
     entries_dir.mkdir(parents=True, exist_ok=True)
     for record in records:
         path = entries_dir / f"{record['id']}.json"

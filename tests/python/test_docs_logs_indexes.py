@@ -32,7 +32,7 @@ def sample_record(entry_id: str, change_date: str, title: str, domain: str) -> d
         "change_request_doc_id": "site-request-docs-build-incremental",
         "summary": f"{title} summary.",
         "effect": f"{title} effect.",
-        "source": {"file": "_docs/site-change-log.md", "line": 20},
+        "source": {"file": "studio/docs-viewer/source/studio/site-change-log.md", "line": 20},
     }
 
 
@@ -61,7 +61,7 @@ def test_read_entries_validates_and_sorts_records() -> None:
             sample_record("change-2026-05-18-two", "2026-05-18", "Two", "search"),
             sample_record("change-2026-05-19-one", "2026-05-19", "One", "docs-viewer"),
         ]
-        entries_dir = root / "_docs_logs" / "entries"
+        entries_dir = root / "studio/workflows/change-requests" / "logs" / "entries"
         entries_dir.mkdir(parents=True)
         for record in records:
             (entries_dir / f"{record['id']}.json").write_text(json.dumps(record), encoding="utf-8")
@@ -75,7 +75,7 @@ def test_read_entries_rejects_duplicate_ids() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         (root / "_config.yml").write_text("title: test\n", encoding="utf-8")
-        entries_dir = root / "_docs_logs" / "entries"
+        entries_dir = root / "studio/workflows/change-requests" / "logs" / "entries"
         entries_dir.mkdir(parents=True)
         first = sample_record("change-2026-05-19-one", "2026-05-19", "One", "docs-viewer")
         duplicate = sample_record("change-2026-05-19-one", "2026-05-18", "Duplicate", "search")
@@ -106,7 +106,7 @@ def test_log_entry_writes_per_entry_json_and_refuses_duplicate_id() -> None:
         else:
             error = ""
 
-        assert path == root / "_docs_logs" / "entries" / "change-2026-05-19-one.json"
+        assert path == root / "studio/workflows/change-requests" / "logs" / "entries" / "change-2026-05-19-one.json"
         assert json.loads(path.read_text(encoding="utf-8"))["id"] == "change-2026-05-19-one"
         assert "already exists" in error
 
@@ -119,11 +119,11 @@ def test_write_outputs_creates_expected_generated_files() -> None:
         written = build_indexes.write_outputs(root, outputs)
 
         assert written == [
-            "_docs_logs/generated/by-date.json",
-            "_docs_logs/generated/by-domain.json",
-            "_docs_logs/generated/by-related-doc.json",
-            "_docs_logs/generated/by-related-file.json",
-            "_docs_logs/generated/by-change-request.json",
-            "_docs_logs/generated/search-index.json",
+            "studio/workflows/change-requests/generated/by-date.json",
+            "studio/workflows/change-requests/generated/by-domain.json",
+            "studio/workflows/change-requests/generated/by-related-doc.json",
+            "studio/workflows/change-requests/generated/by-related-file.json",
+            "studio/workflows/change-requests/generated/by-change-request.json",
+            "studio/workflows/change-requests/generated/search-index.json",
         ]
-        assert (root / "_docs_logs" / "generated" / "search-index.json").exists()
+        assert (root / "studio/workflows/change-requests" / "generated" / "search-index.json").exists()

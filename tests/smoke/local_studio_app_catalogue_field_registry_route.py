@@ -52,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
             page.on(
                 "request",
                 lambda request: registry_requests.append(request.url)
-                if "/assets/studio/data/catalogue_field_registry.json" in request.url
+                if "/studio/data/config/catalogue/catalogue-field-registry.json" in request.url
                 else None,
             )
 

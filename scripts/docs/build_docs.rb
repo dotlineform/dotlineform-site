@@ -1314,7 +1314,7 @@ class DocsDataBuilder
   end
 
   def load_catalogue_records(filename, root_key, id_field)
-    path = @repo_root.join("assets/studio/data/catalogue/#{filename}")
+    path = @repo_root.join("studio/data/canonical/catalogue/#{filename}")
     payload = JSON.parse(path.read)
     records = payload[root_key]
     pairs = records.is_a?(Hash) ? records.values : Array(records)

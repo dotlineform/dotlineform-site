@@ -128,7 +128,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "tag_registry" not in runtime["data_paths"]["studio"]
     assert "tag_aliases" not in runtime["data_paths"]["studio"]
     assert "tag_assignments" not in runtime["data_paths"]["studio"]
-    assert runtime["data_paths"]["ui_text"]["tag_groups"] == "/assets/studio/data/ui_text/tag-groups.json"
+    assert runtime["data_paths"]["ui_text"]["tag_groups"] == "/studio/app/frontend/config/ui-text/tag-groups.json"
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["modals"]["event"] == "studio:open-modal"
@@ -187,7 +187,7 @@ def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
         projects_base = Path(tmp_dir) / "source"
-        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         project_dir = projects_base / "projects" / "alpha"
         source_dir.mkdir(parents=True)
         project_dir.mkdir(parents=True)
@@ -259,7 +259,7 @@ def test_catalogue_thumbnail_quality_route_uses_fixture_source(monkeypatch) -> N
         assert payload["ok"] is True
         assert payload["dry_run"] is True
         assert payload["source_count"] == 1
-        assert payload["data_path"] == "assets/studio/data/thumbnail_quality_preview.json"
+        assert payload["data_path"] == "studio/data/generated/thumbnail-quality/thumbnail-quality-preview.json"
         assert payload["rows"][0]["source_name"] == "sample.jpg"
         assert payload["rows"][0]["baseline"]["path"].endswith("-current.webp")
 
@@ -267,7 +267,7 @@ def test_catalogue_thumbnail_quality_route_uses_fixture_source(monkeypatch) -> N
 def test_catalogue_read_route_returns_source_and_activity_payloads() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
         (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
         (source_dir / "works.json").write_text(
@@ -299,7 +299,7 @@ def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> No
     openpyxl = pytest.importorskip("openpyxl")
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
         (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
         (source_dir / "works.json").write_text(
@@ -364,7 +364,7 @@ def test_catalogue_thin_service_routes_bypass_legacy_handler() -> None:
 def test_catalogue_delete_preview_uses_callable_service_route() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
         (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
         (source_dir / "works.json").write_text(
@@ -396,7 +396,7 @@ def test_catalogue_delete_preview_uses_callable_service_route() -> None:
 def test_catalogue_bulk_save_work_dry_run_uses_callable_service_route() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
         (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
         (source_dir / "works.json").write_text(
@@ -453,7 +453,7 @@ def test_catalogue_bulk_save_work_dry_run_uses_callable_service_route() -> None:
 def test_catalogue_editor_create_work_dry_run_uses_callable_service_route() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
         (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
         (source_dir / "works.json").write_text(
@@ -472,8 +472,9 @@ def test_catalogue_editor_create_work_dry_run_uses_callable_service_route() -> N
             json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
             encoding="utf-8",
         )
-        registry_target = repo_root / "assets" / "studio" / "data" / "catalogue_field_registry.json"
-        registry_target.write_text((REPO_ROOT / "assets" / "studio" / "data" / "catalogue_field_registry.json").read_text(encoding="utf-8"), encoding="utf-8")
+        registry_target = repo_root / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json"
+        registry_target.parent.mkdir(parents=True, exist_ok=True)
+        registry_target.write_text((REPO_ROOT / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json").read_text(encoding="utf-8"), encoding="utf-8")
 
         status, payload = catalogue_post_response(
             repo_root,
@@ -501,7 +502,7 @@ def test_catalogue_editor_create_work_dry_run_uses_callable_service_route() -> N
 def test_catalogue_editor_create_work_detail_dry_run_uses_callable_service_route() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
         (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
         (source_dir / "works.json").write_text(
@@ -561,7 +562,7 @@ def test_catalogue_editor_create_work_detail_dry_run_uses_callable_service_route
 def test_catalogue_editor_save_work_dry_run_uses_callable_service_route() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
         (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
         (source_dir / "works.json").write_text(
@@ -592,8 +593,9 @@ def test_catalogue_editor_save_work_dry_run_uses_callable_service_route() -> Non
             json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
             encoding="utf-8",
         )
-        registry_target = repo_root / "assets" / "studio" / "data" / "catalogue_field_registry.json"
-        registry_target.write_text((REPO_ROOT / "assets" / "studio" / "data" / "catalogue_field_registry.json").read_text(encoding="utf-8"), encoding="utf-8")
+        registry_target = repo_root / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json"
+        registry_target.parent.mkdir(parents=True, exist_ok=True)
+        registry_target.write_text((REPO_ROOT / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json").read_text(encoding="utf-8"), encoding="utf-8")
 
         status, payload = catalogue_post_response(
             repo_root,
@@ -621,7 +623,7 @@ def test_catalogue_editor_save_work_dry_run_uses_callable_service_route() -> Non
 def test_catalogue_editor_save_work_detail_dry_run_uses_callable_service_route() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
         (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
         (source_dir / "works.json").write_text(
@@ -667,8 +669,9 @@ def test_catalogue_editor_save_work_detail_dry_run_uses_callable_service_route()
             json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
             encoding="utf-8",
         )
-        registry_target = repo_root / "assets" / "studio" / "data" / "catalogue_field_registry.json"
-        registry_target.write_text((REPO_ROOT / "assets" / "studio" / "data" / "catalogue_field_registry.json").read_text(encoding="utf-8"), encoding="utf-8")
+        registry_target = repo_root / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json"
+        registry_target.parent.mkdir(parents=True, exist_ok=True)
+        registry_target.write_text((REPO_ROOT / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json").read_text(encoding="utf-8"), encoding="utf-8")
 
         status, payload = catalogue_post_response(
             repo_root,
@@ -697,7 +700,7 @@ def test_catalogue_editor_save_work_detail_dry_run_uses_callable_service_route()
 def test_catalogue_editor_create_series_dry_run_uses_callable_service_route() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
         (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
         (source_dir / "works.json").write_text(
@@ -744,7 +747,7 @@ def test_catalogue_editor_create_series_dry_run_uses_callable_service_route() ->
 def test_catalogue_editor_save_series_dry_run_uses_callable_service_route() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir) / "repo"
-        source_dir = repo_root / "assets" / "studio" / "data" / "catalogue"
+        source_dir = repo_root / "studio" / "data" / "canonical" / "catalogue"
         source_dir.mkdir(parents=True)
         (repo_root / "_config.yml").write_text("title: fixture\n", encoding="utf-8")
         (source_dir / "works.json").write_text(
@@ -776,8 +779,9 @@ def test_catalogue_editor_save_series_dry_run_uses_callable_service_route() -> N
             json.dumps({"catalogue_source_moments_version": "catalogue_source_moments_v1", "moments": {}}),
             encoding="utf-8",
         )
-        registry_target = repo_root / "assets" / "studio" / "data" / "catalogue_field_registry.json"
-        registry_target.write_text((REPO_ROOT / "assets" / "studio" / "data" / "catalogue_field_registry.json").read_text(encoding="utf-8"), encoding="utf-8")
+        registry_target = repo_root / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json"
+        registry_target.parent.mkdir(parents=True, exist_ok=True)
+        registry_target.write_text((REPO_ROOT / "studio" / "data" / "config" / "catalogue" / "catalogue-field-registry.json").read_text(encoding="utf-8"), encoding="utf-8")
 
         status, payload = catalogue_post_response(
             repo_root,
@@ -805,7 +809,7 @@ def test_catalogue_editor_save_series_dry_run_uses_callable_service_route() -> N
 def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        assignments_path = repo_root / "assets" / "studio" / "data" / "tag_assignments.json"
+        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
         assignments_path.parent.mkdir(parents=True)
         assignments_path.write_text(
             """{
@@ -841,7 +845,7 @@ def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:
 def test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        assignments_path = repo_root / "assets" / "studio" / "data" / "tag_assignments.json"
+        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
         series_index_path = repo_root / "assets" / "data" / "series_index.json"
         assignments_path.parent.mkdir(parents=True)
         series_index_path.parent.mkdir(parents=True)
@@ -916,9 +920,9 @@ def test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract
 def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        registry_path = repo_root / "assets" / "studio" / "data" / "tag_registry.json"
-        aliases_path = repo_root / "assets" / "studio" / "data" / "tag_aliases.json"
-        assignments_path = repo_root / "assets" / "studio" / "data" / "tag_assignments.json"
+        registry_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-registry.json"
+        aliases_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-aliases.json"
+        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
@@ -1016,8 +1020,8 @@ def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
 def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        aliases_path = repo_root / "assets" / "studio" / "data" / "tag_aliases.json"
-        registry_path = repo_root / "assets" / "studio" / "data" / "tag_registry.json"
+        aliases_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-aliases.json"
+        registry_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-registry.json"
         aliases_path.parent.mkdir(parents=True)
         aliases_path.write_text(
             """{
@@ -1120,9 +1124,9 @@ def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
 def test_analytics_promotion_demotion_dry_run_routes_use_promotion_contract() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        registry_path = repo_root / "assets" / "studio" / "data" / "tag_registry.json"
-        aliases_path = repo_root / "assets" / "studio" / "data" / "tag_aliases.json"
-        assignments_path = repo_root / "assets" / "studio" / "data" / "tag_assignments.json"
+        registry_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-registry.json"
+        aliases_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-aliases.json"
+        assignments_path = repo_root / "studio" / "data" / "canonical" / "analytics" / "tag-assignments.json"
         registry_path.parent.mkdir(parents=True)
         registry_path.write_text(
             """{
@@ -1222,7 +1226,7 @@ def test_docs_capabilities_report_scopes_and_management_api() -> None:
 
     assert payload["ok"] is True
     assert studio["available"] is True
-    assert studio["root"] == "_docs"
+    assert studio["root"] == "studio/docs-viewer/source/studio"
     assert capabilities["docs_management"] is True
     assert capabilities["generated_data_reads"] is True
     assert capabilities["html_import"] is True

@@ -194,7 +194,7 @@ async function initTagAliasesPage() {
   } catch (error) {
     renderError(
       state,
-      aliasesText(state.config, "load_failed_error", "Failed to load aliases from /assets/studio/data/tag_aliases.json.")
+      aliasesText(state.config, "load_failed_error", "Failed to load aliases from /studio/data/canonical/analytics/tag-aliases.json.")
     );
     markRouteReady(state, true);
     return;

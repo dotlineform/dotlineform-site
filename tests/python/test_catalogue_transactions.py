@@ -94,7 +94,7 @@ def test_atomic_write_many_rolls_back_replaced_files_on_failure() -> None:
 def test_execute_source_json_write_dry_run_suppresses_write() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        target = root / "assets/studio/data/catalogue/works.json"
+        target = root / "studio/data/canonical/catalogue/works.json"
         backups_dir = root / "var/studio/catalogue/backups"
         write_text(target, json.dumps({"works": {"00001": {"title": "Before"}}}) + "\n")
 
@@ -114,7 +114,7 @@ def test_execute_source_json_write_dry_run_suppresses_write() -> None:
 def test_execute_source_json_write_reports_relative_backup_paths() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        target = root / "assets/studio/data/catalogue/works.json"
+        target = root / "studio/data/canonical/catalogue/works.json"
         backups_dir = root / "var/studio/catalogue/backups"
         write_text(target, json.dumps({"works": {"00001": {"title": "Before"}}}) + "\n")
 
@@ -193,7 +193,7 @@ def test_catalogue_cleanup_transaction_writes_deletes_and_reports_backups() -> N
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         backups_dir = root / "var/studio/catalogue/backups"
-        source = root / "assets/studio/data/catalogue/works.json"
+        source = root / "studio/data/canonical/catalogue/works.json"
         artifact = root / "_works/00001.md"
         search_index = root / "assets/data/search/catalogue/index.json"
         write_text(source, json.dumps({"before": 1}) + "\n")
@@ -227,7 +227,7 @@ def test_catalogue_cleanup_transaction_restores_deleted_files_on_failure() -> No
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         backups_dir = root / "var/studio/catalogue/backups"
-        source = root / "assets/studio/data/catalogue/works.json"
+        source = root / "studio/data/canonical/catalogue/works.json"
         artifact = root / "_works/00001.md"
         search_index = root / "assets/data/search/catalogue/index.json"
         write_text(source, json.dumps({"before": 1}) + "\n")
@@ -257,7 +257,7 @@ def test_catalogue_cleanup_transaction_restores_deleted_files_on_failure() -> No
 def test_moment_cleanup_transaction_dry_run_reports_moment_keys() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
-        metadata = root / "assets/studio/data/catalogue/moments.json"
+        metadata = root / "studio/data/canonical/catalogue/moments.json"
         moments_index = root / "assets/data/moments_index.json"
         write_text(metadata, json.dumps({"moments": {"keys": {"title": "Keys"}}}) + "\n")
         write_text(moments_index, json.dumps({"moments": {"keys": {}}}) + "\n")

@@ -24,9 +24,9 @@ DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
 MANUAL_WEIGHT_VALUES = [0.3, 0.6, 0.9]
 DEFAULT_TAG_WEIGHT = 0.6
 
-ASSIGNMENTS_REL_PATH = Path("assets/studio/data/tag_assignments.json")
-REGISTRY_REL_PATH = Path("assets/studio/data/tag_registry.json")
-ALIASES_REL_PATH = Path("assets/studio/data/tag_aliases.json")
+ASSIGNMENTS_REL_PATH = Path("studio/data/canonical/analytics/tag-assignments.json")
+REGISTRY_REL_PATH = Path("studio/data/canonical/analytics/tag-registry.json")
+ALIASES_REL_PATH = Path("studio/data/canonical/analytics/tag-aliases.json")
 SERIES_INDEX_REL_PATH = Path("assets/data/series_index.json")
 
 

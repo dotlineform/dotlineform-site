@@ -22,8 +22,8 @@ CATALOGUE_DEFAULTS = {
   series_index_path: "assets/data/series_index.json",
   works_index_path: "assets/data/works_index.json",
   moments_index_path: "assets/data/moments_index.json",
-  tag_assignments_path: "assets/studio/data/tag_assignments.json",
-  tag_registry_path: "assets/studio/data/tag_registry.json"
+  tag_assignments_path: "studio/data/canonical/analytics/tag-assignments.json",
+  tag_registry_path: "studio/data/canonical/analytics/tag-registry.json"
 }.freeze
 
 CatalogueSearchTarget = Struct.new(

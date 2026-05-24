@@ -55,7 +55,11 @@ from studio_catalogue_api import catalogue_get_payload, catalogue_post_response 
 from studio_docs_api import docs_management_get_payload, docs_management_post_response  # noqa: E402
 
 
-STATIC_PREFIXES = ("/assets/",)
+STATIC_PREFIXES = (
+    "/assets/",
+    "/studio/app/frontend/config/ui-text/",
+    "/studio/data/",
+)
 STATIC_FILES = {
     "/favicon.ico",
     "/favicon-16x16.png",

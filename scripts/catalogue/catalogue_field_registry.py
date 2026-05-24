@@ -9,8 +9,8 @@ from catalogue.catalogue_source import CatalogueSourceRecords, load_json_file
 from catalogue.series_ids import normalize_series_id, parse_series_ids
 
 
-STUDIO_CONFIG_REL_PATH = Path("assets/studio/data/studio_config.json")
-FALLBACK_CATALOGUE_FIELD_REGISTRY_REL_PATH = Path("assets/studio/data/catalogue_field_registry.json")
+STUDIO_CONFIG_REL_PATH = Path("studio/app/frontend/config/studio-config.json")
+FALLBACK_CATALOGUE_FIELD_REGISTRY_REL_PATH = Path("studio/data/config/catalogue/catalogue-field-registry.json")
 
 REGISTRY_ARTIFACT_TO_GENERATE_ONLY = {
     "work-page": "work-pages",

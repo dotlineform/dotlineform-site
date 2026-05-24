@@ -13,6 +13,10 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 STUDIO_ROOT = REPO_ROOT / "studio"
+IGNORED_PAGE_ROOTS = (
+    STUDIO_ROOT / "data" / "canonical" / "catalogue-markdown",
+    STUDIO_ROOT / "docs-viewer" / "source",
+)
 STATIC_SCRIPT = "studio-static-route.js"
 DASHBOARD_SCRIPT = "studio-dashboard.js"
 
@@ -64,7 +68,14 @@ def has_script(text: str, script_name: str) -> bool:
 
 
 def studio_pages() -> list[Path]:
-    return sorted(path for path in STUDIO_ROOT.rglob("*.md") if path.is_file())
+    pages: list[Path] = []
+    for path in STUDIO_ROOT.rglob("*.md"):
+        if not path.is_file():
+            continue
+        if any(path.is_relative_to(root) for root in IGNORED_PAGE_ROOTS):
+            continue
+        pages.append(path)
+    return sorted(pages)
 
 
 def audit_page(path: Path) -> tuple[list[Finding], dict[str, int]]:

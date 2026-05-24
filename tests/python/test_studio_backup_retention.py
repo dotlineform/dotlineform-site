@@ -74,7 +74,7 @@ def test_catalogue_bundles_are_kept_when_any_contained_target_is_retained() -> N
         write_file(backup_root / "catalogue-save-20260502-100000-000001/works.json")
         write_file(backup_root / "catalogue-save-20260503-100000-000001/work_details.json")
         transaction = backup_root / "catalogue-delete-work-20260501-110000-000001"
-        write_file(transaction / "repo/assets/studio/data/catalogue/works.json")
+        write_file(transaction / "repo/studio/data/canonical/catalogue/works.json")
         write_file(transaction / "repo/assets/data/search/catalogue/index.json")
         write_file(backup_root / "manual-review-bundle/works.json")
 

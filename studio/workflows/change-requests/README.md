@@ -1,20 +1,21 @@
 # Docs Logs
 
-`_docs_logs/` is the structured source for project change-history entries.
+`studio/workflows/change-requests/` is the structured source for project change-history entries.
 
-It is separate from `_docs/` by design:
+It is separate from Docs Viewer source Markdown by design:
 
-- `_docs/` remains the human-authored documentation source for the Docs Viewer.
-- `_docs_logs/entries/*.json` stores durable per-entry change-history records optimized for validation, generated indexes, search, and Codex retrieval.
+- `studio/docs-viewer/source/studio/` remains the Studio documentation source for the Docs Viewer.
+- `studio/workflows/change-requests/logs/entries/*.json` stores durable per-entry change-history records optimized for validation, generated indexes, search, and Codex retrieval.
 - generated reports and search payloads are projections of the JSON records, not the source of truth.
 
 ## Layout
 
 ```text
-_docs_logs/
+studio/workflows/change-requests/
   README.md
   schema.json
-  entries/
+  logs/
+    entries/
   generated/
   reports/
 ```
@@ -121,8 +122,8 @@ Preview a direct entry:
   --domain workflow \
   --subject docs-logs \
   --related-doc development-workflow \
-  --related-file _docs/development-workflow.md \
-  --source-file _docs/development-workflow.md
+  --related-file studio/docs-viewer/source/studio/development-workflow.md \
+  --source-file studio/docs-viewer/source/studio/development-workflow.md
 ```
 
 Seed from a change request:
@@ -166,7 +167,7 @@ Write migration records and the review report:
 ```
 
 The v1 migration created per-entry records from the site and Search change logs.
-Review diagnostics live in `_docs_logs/reports/migration-review.json`.
+Review diagnostics live in `studio/workflows/change-requests/reports/migration-review.json`.
 
 ## Generated Indexes
 
@@ -194,4 +195,4 @@ Expected generated projections include:
 ## Human Views
 
 Human-readable browsing should come from generated reports or compact index views.
-Individual log entries are not normal Docs Viewer documents in v1 and should not be added to `_docs/`.
+Individual log entries are not normal Docs Viewer documents in v1 and should not be added to `studio/docs-viewer/source/studio/`.

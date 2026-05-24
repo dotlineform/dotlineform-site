@@ -89,19 +89,19 @@ def domain_payload(status: str = "active") -> dict[str, object]:
             "outbound_package_root": "var/studio/data-sharing/library/exports",
             "returned_package_staging_root": "var/studio/data-sharing/library/import-staging",
             "review_output_root": "var/studio/data-sharing/library/import-preview",
-            "source_root": "_docs_library",
+            "source_root": "studio/docs-viewer/source/library",
             "backup_root": "var/docs/backups",
         },
         "source_write_targets": {
-            "documents": "_docs_library",
+            "documents": "studio/docs-viewer/source/library",
         },
         "sources": {
             "docs_index": "assets/data/docs/scopes/library/index.json",
             "docs_payload_root": "assets/data/docs/scopes/library/by-id",
-            "source_root": "_docs_library",
+            "source_root": "studio/docs-viewer/source/library",
         },
         "config": {
-            "sharing_profiles_path": "assets/studio/data/library_export_configs.json",
+            "sharing_profiles_path": "studio/data/config/data-sharing/library-export-configs.json",
         },
     }
 
@@ -162,9 +162,9 @@ def registry_payload() -> dict[str, object]:
                     "scope": "tags",
                     "selection_model": "records",
                     "source_write_targets": {
-                        "tag_registry": "assets/studio/data/tag_registry.json",
-                        "tag_aliases": "assets/studio/data/tag_aliases.json",
-                        "tag_assignments": "assets/studio/data/tag_assignments.json",
+                        "tag_registry": "studio/data/canonical/analytics/tag-registry.json",
+                        "tag_aliases": "studio/data/canonical/analytics/tag-aliases.json",
+                        "tag_assignments": "studio/data/canonical/analytics/tag-assignments.json",
                     },
                 },
                 capabilities=[capability("review", status="planned")],
@@ -197,7 +197,7 @@ def test_active_documents_adapter_resolves_with_v2_metadata() -> None:
     assert resolution.adapter_id == "documents"
     assert resolution.scope == "library"
     assert resolution.path("outbound_package_root").as_posix() == "var/studio/data-sharing/library/exports"
-    assert resolution.config_path("sharing_profiles_path").as_posix() == "assets/studio/data/library_export_configs.json"
+    assert resolution.config_path("sharing_profiles_path").as_posix() == "studio/data/config/data-sharing/library-export-configs.json"
     assert resolution.capability["selection_model"] == "documents"
     assert resolution.capability["output_formats"] == ["json"]
 
@@ -209,7 +209,7 @@ def test_tags_adapter_definition_resolves_for_inspection() -> None:
 
     assert resolution.adapter_id == "analytics-tags"
     assert resolution.adapter["module"] == "analytics.tags"
-    assert resolution.domain["source_write_targets"]["tag_registry"] == "assets/studio/data/tag_registry.json"
+    assert resolution.domain["source_write_targets"]["tag_registry"] == "studio/data/canonical/analytics/tag-registry.json"
     assert resolution.capability["status"] == "planned"
 
 
@@ -238,7 +238,7 @@ def test_registry_rejects_duplicate_domain_operation_dispatch() -> None:
 
 def test_registry_rejects_unsafe_paths() -> None:
     payload = registry_payload()
-    payload["adapters"][0]["data_domains"]["library"]["paths"]["source_root"] = "../_docs_library"
+    payload["adapters"][0]["data_domains"]["library"]["paths"]["source_root"] = "../studio/docs-viewer/source/library"
     repo_root = write_registry(payload)
 
     expect_value_error(

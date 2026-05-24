@@ -5,14 +5,14 @@
       "id": "catalogue_canonical_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "assets/studio/data/catalogue/*.json",
-        "_docs_catalogue/**"
+        "studio/data/canonical/catalogue/*.json",
+        "studio/data/canonical/catalogue-markdown/**"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "assets/studio/data/catalogue",
-          "_docs_catalogue"
+          "studio/data/canonical/catalogue",
+          "studio/data/canonical/catalogue-markdown"
         ]
       },
       "jekyll_exclude_required": true,
@@ -94,16 +94,16 @@
       "id": "catalogue_studio_lookup_projections",
       "classification": "studio_projection",
       "repo_paths": [
-        "assets/studio/data/catalogue_lookup/**",
-        "assets/studio/data/catalogue_field_registry.json",
-        "assets/studio/data/work_storage_index.json"
+        "studio/data/generated/catalogue-lookup/**",
+        "studio/data/config/catalogue/catalogue-field-registry.json",
+        "studio/data/generated/activity/work-storage-index.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "assets/studio/data/catalogue_lookup",
-          "assets/studio/data/catalogue_field_registry.json",
-          "assets/studio/data/work_storage_index.json"
+          "studio/data/generated/catalogue-lookup",
+          "studio/data/config/catalogue/catalogue-field-registry.json",
+          "studio/data/generated/activity/work-storage-index.json"
         ]
       },
       "jekyll_exclude_required": true,
@@ -113,18 +113,18 @@
       "id": "studio_tag_source_data",
       "classification": "canonical_source",
       "repo_paths": [
-        "assets/studio/data/tag_registry.json",
-        "assets/studio/data/tag_aliases.json",
-        "assets/studio/data/tag_assignments.json",
-        "assets/studio/data/tag_groups.json"
+        "studio/data/canonical/analytics/tag-registry.json",
+        "studio/data/canonical/analytics/tag-aliases.json",
+        "studio/data/canonical/analytics/tag-assignments.json",
+        "studio/data/canonical/analytics/tag-groups.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "assets/studio/data/tag_registry.json",
-          "assets/studio/data/tag_aliases.json",
-          "assets/studio/data/tag_assignments.json",
-          "assets/studio/data/tag_groups.json"
+          "studio/data/canonical/analytics/tag-registry.json",
+          "studio/data/canonical/analytics/tag-aliases.json",
+          "studio/data/canonical/analytics/tag-assignments.json",
+          "studio/data/canonical/analytics/tag-groups.json"
         ]
       },
       "jekyll_exclude_required": true,
@@ -134,16 +134,16 @@
       "id": "studio_config_and_ui_text",
       "classification": "studio_projection",
       "repo_paths": [
-        "assets/studio/data/studio_config.json",
-        "assets/studio/data/ui_text/*.json",
-        "assets/studio/data/activity_contract.json"
+        "studio/app/frontend/config/studio-config.json",
+        "studio/app/frontend/config/ui-text/*.json",
+        "studio/data/config/runtime/activity-contract.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "assets/studio/data/studio_config.json",
-          "assets/studio/data/ui_text",
-          "assets/studio/data/activity_contract.json"
+          "studio/app/frontend/config/studio-config.json",
+          "studio/app/frontend/config/ui-text",
+          "studio/data/config/runtime/activity-contract.json"
         ]
       },
       "jekyll_exclude_required": true,
@@ -153,12 +153,12 @@
       "id": "studio_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "_docs/*.md"
+        "studio/docs-viewer/source/studio/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "_docs"
+          "studio/docs-viewer/source/studio"
         ]
       },
       "jekyll_exclude_required": true,
@@ -200,12 +200,12 @@
       "id": "library_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "_docs_library/*.md"
+        "studio/docs-viewer/source/library/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "_docs_library"
+          "studio/docs-viewer/source/library"
         ]
       },
       "jekyll_exclude_required": true,
@@ -245,12 +245,12 @@
       "id": "analysis_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "_docs_analysis/**/*.md"
+        "studio/docs-viewer/source/analysis/**/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "_docs_analysis"
+          "studio/docs-viewer/source/analysis"
         ]
       },
       "jekyll_exclude_required": true,
@@ -366,7 +366,7 @@
       "repo_paths": [
         "assets/studio/css/**",
         "assets/studio/js/**",
-        "assets/studio/data/**"
+        "studio/data/**"
       ],
       "public_output": {
         "policy": "forbidden",
