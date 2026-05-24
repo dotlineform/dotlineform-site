@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: 2026-05-20
+last_updated: 2026-05-24
 parent_id: ""
 sort_order: 5000
 viewable: true
@@ -32,6 +32,7 @@ The current implementation uses:
 - generated semantic-reference artifacts under `assets/data/docs/scopes/<scope>/references/`
 - browser-safe Docs Viewer settings in `assets/docs-viewer/data/docs-viewer-config.json`, generated from `scripts/docs/docs_scopes.json`
 - Docs Viewer UI text in `assets/docs-viewer/data/ui-text.json`
+- reusable Docs Viewer CSS in `assets/docs-viewer/css/docs-viewer.css` and `assets/docs-viewer/css/docs-viewer-reports.css`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
 - a management-only stylesheet in `assets/docs-viewer/css/docs-viewer-management.css`, loaded only by `/docs/`
 
@@ -40,6 +41,10 @@ Public viewer routes are read-only:
 - `/library/` loads the Library scope directly and does not expose `?mode=manage`
 - `/analysis/` loads the Analysis scope directly and does not expose `?mode=manage`
 - `/docs/` is the local management shell and can load `studio`, `library`, or `analysis` through its `scope` query parameter
+
+The current route shells still provide the page-level CSS base.
+Public `/library/` and `/analysis/` inherit `assets/css/main.css` from the public site layout, while Local Studio `/docs/` inherits the Studio app shell CSS before the shared Docs Viewer include loads Docs Viewer CSS.
+The planned shell extraction should make that base contract explicit so portable Docs Viewer installs do not accidentally depend on Studio CSS or dotlineform public `main.css`.
 
 This section documents the current Docs Viewer implementation as a common module.
 It explains how the shared viewer serves multiple scopes, how the current viewer behaves, and how source docs are organised.

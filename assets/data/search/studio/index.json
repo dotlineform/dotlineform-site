@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-680bfe837d134c323240d1d9aceaad8a",
-    "generated_at_utc": "2026-05-23T23:53:06Z",
+    "version": "blake2b-4089815b51aa35d2952c780e298be2a6",
+    "generated_at_utc": "2026-05-23T23:58:55Z",
     "count": 300
   },
   "entries": [
@@ -2867,19 +2867,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-20",
-      "display_meta": "2026-05-20",
+      "last_updated": "2026-05-24",
+      "display_meta": "2026-05-24",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-20",
+        "2026-05-24",
         "2026",
         "05",
-        "20"
+        "24"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-20 2026 05 20"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-24 2026 05 24"
     },
     {
       "id": "docs-viewer-media-handling",
@@ -4951,10 +4951,10 @@
       "kind": "doc",
       "title": "Docs Viewer Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-24",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-20 • Docs Viewer",
+      "display_meta": "2026-05-24 • Docs Viewer",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -4963,12 +4963,12 @@
         "boundary",
         "docs viewer runtime boundary",
         "docs viewer",
-        "2026-05-20",
+        "2026-05-24",
         "2026",
         "05",
-        "20"
+        "24"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-20 2026 05 20"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-24 2026 05 24"
     },
     {
       "id": "scripts-generate-work-pages",

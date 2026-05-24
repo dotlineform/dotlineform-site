@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T23:53:05Z",
+  "generated_at": "2026-05-23T23:58:54Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1920,7 +1920,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-24",
       "parent_id": "",
       "sort_order": 5000,
       "published": true,
@@ -1929,7 +1929,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 4661
+      "content_text_length": 5229
     },
     {
       "scope": "studio",
@@ -3091,7 +3091,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction.json",
-      "content_text_length": 3483,
+      "content_text_length": 5104,
       "ui_status": "planned"
     },
     {
@@ -3291,7 +3291,7 @@
       "doc_id": "docs-viewer-runtime-boundary",
       "title": "Docs Viewer Runtime Boundary",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-24",
       "parent_id": "docs-viewer",
       "sort_order": 13000,
       "published": true,
@@ -3300,7 +3300,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 6892
+      "content_text_length": 7917
     },
     {
       "scope": "studio",

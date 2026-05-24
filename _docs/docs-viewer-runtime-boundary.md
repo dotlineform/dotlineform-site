@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: Docs Viewer Runtime Boundary
 added_date: 2026-03-31
-last_updated: 2026-05-20
+last_updated: 2026-05-24
 parent_id: docs-viewer
 sort_order: 13000
 ---
@@ -46,11 +46,21 @@ Current shared implementation:
 - `assets/docs-viewer/js/docs-viewer-render.js` for read-oriented result and bookmark markup helpers imported by the entry and bookmark controllers
 - `assets/docs-viewer/js/docs-viewer-router.js` for URL building, anchor route parsing, browser history writes, requested-doc resolution, canonical route correction, popstate orchestration, and payload-load orchestration imported by the entry controller
 - `_includes/docs_viewer_shell.html`
+- `assets/docs-viewer/css/docs-viewer.css` and `assets/docs-viewer/css/docs-viewer-reports.css` for reusable viewer styling
 - `assets/docs-viewer/css/docs-viewer-management.css` for management-only shell and modal styling
 
 The shell loads the entry controller as an ES module.
 Extracted helper modules must not import the entry controller or mutate its shared state directly.
 The management controller receives a narrow context API from the entry controller so public read-only viewers do not download or execute management orchestration.
+
+Current CSS base boundary:
+
+- public `/library/` and `/analysis/` routes get `assets/css/main.css` from the public site layout, then load Docs Viewer CSS through the shared include
+- Local Studio `/docs/` gets `assets/css/main.css` and `assets/studio/css/studio.css` from the Studio app shell, then loads Docs Viewer CSS through the shared include
+- `assets/docs-viewer/css/docs-viewer.css` already defines Docs Viewer-prefixed tokens with public-token fallbacks, but the surrounding route shell still supplies page-level typography, body, link, container, and theme defaults
+
+Because Docs Viewer has public read-only installs and a planned portable shell, reusable Docs Viewer code should not depend on Studio CSS or unrelated public-site page classes.
+If the portable shell needs a base layer, it should be Docs Viewer-owned or explicitly supplied by the host shell, not implicitly inherited from dotlineform public `main.css`.
 
 Current scope-owned data:
 
