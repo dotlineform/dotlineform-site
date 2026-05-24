@@ -16,6 +16,12 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
+- Completed `DVSE-005` by defining the target `.docs-viewer/` layout, host integration surfaces, public/Jekyll route responsibilities, URL conventions, config layers, shell/adapter split, service model, builder/generated output model, test layout, and move-sequence constraints.
+- Recorded the layout in [Docs Viewer Shell Extraction Target Layout](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-target-layout).
+- Target shape keeps `.docs-viewer/` tracked and self-contained for runtime, shell templates, services, config defaults/schema, source, builders, static CSS/assets, and Docs Viewer-owned tests.
+- Host-owned surfaces remain outside `.docs-viewer/`: `_config.yml`, thin Jekyll route adapters, public route files such as `/library/` and `/analysis/`, generated docs/search payload locations, public media assets, `var/local/site.env`, `var/docs/`, Studio link integration, root script wrappers, and repo-level check entrypoints.
+- Confirmed no compatibility aliases should be added for old `/studio/docs-viewer/...` browser paths; later move slices should update references directly and delete old paths after verification.
+- Did not manually rebuild generated docs/search payloads.
 - Completed `DVSE-004` by resolving the ambiguous ownership points from the inventory before target layout or file moves.
 - Recorded the ownership decisions in [Docs Viewer Shell Extraction Ownership Contract](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-ownership-contract).
 - Key decisions: shell markup is split between a Docs Viewer-owned reusable shell contract and host-owned adapters; built-in `/docs/` manage mode moves to the Docs Viewer service; public scope routes stay host/Jekyll-owned; generated docs/search payloads remain host public output for v1; Docs Viewer owns management APIs, generated reads, source/scope machinery, report schema/loader contract, docs watcher behavior, and reusable runtime/CSS.
@@ -38,7 +44,7 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### steer for next task
 
-- Start with `DVSE-005`, defining the target `.docs-viewer/` layout from the inventory and ownership contract before moving files.
+- Start with `DVSE-006`, establishing the current integrated-tree baseline verification before any extraction file moves.
 - Keep the table sequential: only begin the next non-deferred ID after the current one is `done`.
 - If a task uncovers a new dependency, risk, or unresolved ownership question, add a new task row before continuing rather than widening the active task.
 - Bunch work into coherent slices that reduce repeated verification, but do not combine tasks when the second task depends on evidence from the first.
@@ -89,7 +95,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-002 | done | Re-read the parent request decisions and owning docs for Docs Viewer, portable setup, runtime boundary, source organisation, config, scripts, local setup, and testing; update this tracker if any parent decision is missing or contradicted by an owning doc. |
 | DVSE-003 | done | Inventory current Docs Viewer paths, imports, URL assumptions, generated payload reads/writes, service endpoints, CSS dependencies, scope/source config, tests, smoke scripts, and Studio/Jekyll integration points; record the inventory in a sibling doc such as `site-request-docs-viewer-shell-extraction-inventory.md`. |
 | DVSE-004 | done | Resolve ambiguous ownership from the inventory before moving files; add sibling contract docs or new task rows for any unclear areas such as shell include ownership, public route adapters, Studio link behavior, `/studio/api/docs/*` endpoint mapping, Docs Viewer data-sharing APIs, generated payload locations, New Scope outputs, report inputs, local write APIs, docs watcher ownership, cleanup hygiene, or CSS base dependencies. |
-| DVSE-005 | planned | Define the target `.docs-viewer/` layout, host integration surfaces, and stable public/Jekyll route responsibilities in a sibling target-layout or contract doc; do not start broad file moves until this layout is recorded. |
+| DVSE-005 | done | Define the target `.docs-viewer/` layout, host integration surfaces, and stable public/Jekyll route responsibilities in a sibling target-layout or contract doc; do not start broad file moves until this layout is recorded. |
 | DVSE-006 | planned | Establish the baseline verification run for the current integrated tree, including the smallest useful Docs Viewer, Local Studio, public scope, build, and syntax checks needed to compare before and after extraction slices. |
 | DVSE-007 | planned | Introduce v1 Docs Viewer local service config using static `var/local/site.env` host, port, base URL, and manage capability settings; add only the necessary `_config.yml`, `.gitignore`, and `.docs-viewer/config/` defaults/schema changes, with no dynamic runtime advertisement writer. |
 | DVSE-008 | planned | Move Docs Viewer-owned config, source/scope machinery, generated-data contract defaults, UI text, and non-runtime metadata into the tracked `.docs-viewer/` boundary; update readers/writers directly and keep repo-local host/service state outside `.docs-viewer/`. |
