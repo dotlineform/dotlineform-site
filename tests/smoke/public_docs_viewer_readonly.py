@@ -63,8 +63,8 @@ def main() -> int:
                     })"""
                 )
                 management_css_count = page.locator('link[href*="docs-viewer-management.css"]').count()
-                studio_css_count = page.locator('link[href*="assets/studio/"]').count()
-                studio_script_count = page.locator('script[src*="assets/studio/"]').count()
+                studio_css_count = page.locator('link[href*="assets/studio/"], link[href*="studio/app/"]').count()
+                studio_script_count = page.locator('script[src*="assets/studio/"], script[src*="studio/app/"]').count()
                 manage_actions_count = page.locator(".docsViewer__manageActions").count()
                 manage_button_count = page.locator("#docsViewerManageActionsButton").count()
 

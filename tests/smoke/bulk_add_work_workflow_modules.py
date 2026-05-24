@@ -40,7 +40,7 @@ def assert_bulk_add_work_workflow(page: Page) -> None:
               <p id="warning"></p>
               <p id="result"></p>
             `;
-            const module = await import('/assets/studio/js/bulk-add-work-workflow.js');
+            const module = await import('/studio/app/frontend/js/bulk-add-work-workflow.js');
             const state = {
                 mode: 'works',
                 workbookPath: 'data/works_bulk_import.xlsx',

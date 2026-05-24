@@ -31,7 +31,7 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 def assert_action_workflow_helpers(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const module = await import('/assets/studio/js/catalogue-editor-action-workflow.js');
+            const module = await import('/studio/app/frontend/js/catalogue-editor-action-workflow.js');
             const unchanged = module.resolveCatalogueSaveBuildOutcome({
                 response: { changed: false, saved_at_utc: '2026-05-21T10:00:00Z' },
                 isPublished: true
@@ -157,7 +157,7 @@ def assert_action_workflow_helpers(page: Page) -> None:
                 blockers: [],
                 validation_errors: ['ignored']
             });
-            const workRecordModule = await import('/assets/studio/js/catalogue-work-action-records.js');
+            const workRecordModule = await import('/studio/app/frontend/js/catalogue-work-action-records.js');
             const searchRecord = workRecordModule.projectWorkSearchRecord(' 001 ', {
                 title: 'Work title',
                 year_display: '2026',
@@ -195,10 +195,10 @@ def assert_action_workflow_helpers(page: Page) -> None:
                 { work_id: '004', record_hash: 'ignored', record: null }
             ]);
             await Promise.all([
-                import('/assets/studio/js/catalogue-work-actions.js'),
-                import('/assets/studio/js/catalogue-work-detail-actions.js'),
-                import('/assets/studio/js/catalogue-series-actions.js'),
-                import('/assets/studio/js/catalogue-moment-actions.js')
+                import('/studio/app/frontend/js/catalogue-work-actions.js'),
+                import('/studio/app/frontend/js/catalogue-work-detail-actions.js'),
+                import('/studio/app/frontend/js/catalogue-series-actions.js'),
+                import('/studio/app/frontend/js/catalogue-moment-actions.js')
             ]);
             return {
                 unchanged,

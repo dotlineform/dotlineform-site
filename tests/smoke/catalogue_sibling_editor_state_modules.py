@@ -81,9 +81,9 @@ def assert_sibling_state_factories(page: Page) -> None:
                 <button id="catalogueMomentImportPreview"></button><button id="catalogueMomentImportApply"></button>
               </section>
             `;
-            const detailModule = await import('/assets/studio/js/catalogue-work-detail-editor-state.js');
-            const seriesModule = await import('/assets/studio/js/catalogue-series-editor-state.js');
-            const momentModule = await import('/assets/studio/js/catalogue-moment-editor-state.js');
+            const detailModule = await import('/studio/app/frontend/js/catalogue-work-detail-editor-state.js');
+            const seriesModule = await import('/studio/app/frontend/js/catalogue-series-editor-state.js');
+            const momentModule = await import('/studio/app/frontend/js/catalogue-moment-editor-state.js');
             const detailState = detailModule.createWorkDetailEditorState(
                 detailModule.collectWorkDetailEditorElements(),
                 { mediaConfigLoader: () => ({ source: 'detail-media' }) }
@@ -140,9 +140,9 @@ def assert_sibling_event_binders(page: Page) -> None:
               <button id="momentPreview"></button><button id="momentApply"></button>
               <div id="momentReady"><button data-media-refresh>media</button><button data-prose-import>prose</button></div>
             `;
-            const detailEvents = await import('/assets/studio/js/catalogue-work-detail-editor-events.js');
-            const seriesEvents = await import('/assets/studio/js/catalogue-series-editor-events.js');
-            const momentEvents = await import('/assets/studio/js/catalogue-moment-editor-events.js');
+            const detailEvents = await import('/studio/app/frontend/js/catalogue-work-detail-editor-events.js');
+            const seriesEvents = await import('/studio/app/frontend/js/catalogue-series-editor-events.js');
+            const momentEvents = await import('/studio/app/frontend/js/catalogue-moment-editor-events.js');
             window.__siblingCalls = [];
             const push = (...args) => window.__siblingCalls.push(args);
             detailEvents.bindWorkDetailEditorEvents({

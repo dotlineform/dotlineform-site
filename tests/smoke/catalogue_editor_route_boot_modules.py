@@ -39,7 +39,7 @@ def assert_route_boot_helpers(page: Page) -> None:
                 <div id="catalogueMissing"></div>
               </main>
             `;
-            const module = await import('/assets/studio/js/catalogue-editor-route-boot.js');
+            const module = await import('/studio/app/frontend/js/catalogue-editor-route-boot.js');
             const root = document.getElementById('catalogueRoot');
             const loadingNode = document.getElementById('catalogueLoading');
             const statusNode = document.getElementById('catalogueStatus');
@@ -139,10 +139,10 @@ def assert_route_boot_helpers(page: Page) -> None:
                 }
             });
             await Promise.all([
-                import('/assets/studio/js/catalogue-work-editor.js'),
-                import('/assets/studio/js/catalogue-work-detail-editor.js'),
-                import('/assets/studio/js/catalogue-series-editor.js'),
-                import('/assets/studio/js/catalogue-moment-editor.js')
+                import('/studio/app/frontend/js/catalogue-work-editor.js'),
+                import('/studio/app/frontend/js/catalogue-work-detail-editor.js'),
+                import('/studio/app/frontend/js/catalogue-series-editor.js'),
+                import('/studio/app/frontend/js/catalogue-moment-editor.js')
             ]);
             return {
                 collectedRoot: collected && collected.root === root,

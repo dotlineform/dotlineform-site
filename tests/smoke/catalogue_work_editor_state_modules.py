@@ -77,7 +77,7 @@ def assert_state_factory(page: Page) -> None:
     result = page.evaluate(
         f"""async () => {{
             document.body.innerHTML = `{WORK_EDITOR_DOM}`;
-            const module = await import('/assets/studio/js/catalogue-work-editor-state.js');
+            const module = await import('/studio/app/frontend/js/catalogue-work-editor-state.js');
             const elements = module.collectWorkEditorElements();
             const state = module.createWorkEditorState(elements, {{
                 mediaConfigLoader: (root) => ({{ rootId: root.id, source: 'stub-media' }}),
@@ -141,8 +141,8 @@ def assert_event_binder(page: Page) -> None:
     page.evaluate(
         f"""async () => {{
             document.body.innerHTML = `{WORK_EDITOR_DOM}`;
-            const stateModule = await import('/assets/studio/js/catalogue-work-editor-state.js');
-            const eventModule = await import('/assets/studio/js/catalogue-work-editor-events.js');
+            const stateModule = await import('/studio/app/frontend/js/catalogue-work-editor-state.js');
+            const eventModule = await import('/studio/app/frontend/js/catalogue-work-editor-events.js');
             const elements = stateModule.collectWorkEditorElements();
             const state = stateModule.createWorkEditorState(elements, {{
                 mediaConfigLoader: () => ({{}}),

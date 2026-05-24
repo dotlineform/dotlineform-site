@@ -38,9 +38,9 @@ def main(argv: list[str] | None = None) -> int:
             page.goto(f"{base_url}/studio/", wait_until="domcontentloaded")
             result = page.evaluate(
                 """async () => {
-                    const mod = await import("/assets/studio/js/studio-navigation.js");
-                    const publicLinks = await import("/assets/studio/js/catalogue-public-links.js");
-                    const configMod = await import("/assets/studio/js/studio-config.js");
+                    const mod = await import("/studio/app/frontend/js/studio-navigation.js");
+                    const publicLinks = await import("/studio/app/frontend/js/catalogue-public-links.js");
+                    const configMod = await import("/studio/app/frontend/js/studio-config.js");
                     const config = await (await fetch("/studio/runtime-config.json")).json();
                     const url = mod.buildStudioViewUrl(config, "tag-groups", {
                         scope: "studio",

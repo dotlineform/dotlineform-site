@@ -72,7 +72,7 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
   <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
   <title>{title} | dotlineform Studio</title>
   <link rel="stylesheet" href="/assets/css/main.css?v={escaped_version}">
-  <link rel="stylesheet" href="/assets/studio/css/studio.css?v={escaped_version}">
+  <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
   {studio_header(view_id)}
@@ -96,7 +96,7 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
       </div>
     </div>
   </main>
-  <script type="module" src="/assets/studio/js/studio-navigation.js?v={escaped_version}"></script>
+  <script type="module" src="/studio/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
   <script type="module" src="{script}?v={escaped_version}"></script>
 </body>
 </html>
@@ -266,7 +266,7 @@ def series_tag_editor_view(version: str, repo_root: Path) -> str:
           data-primary-suffix="{html.escape(str(primary_variants.get("suffix") or "primary"), quote=True)}"
           data-asset-format="{html.escape(str(encoding.get("format") or "webp"), quote=True)}"
           data-series-index-url="/assets/data/series_index.json"
-          data-tag-studio-module-url="/assets/studio/js/tag-studio.js?v={escaped_version}"
+          data-tag-studio-module-url="/studio/app/frontend/js/tag-studio.js?v={escaped_version}"
           hidden
           data-studio-ready="false"
           data-studio-busy="false"
@@ -736,10 +736,10 @@ def docs_viewer_shell(version: str, repo_root: Path) -> str:
 
     shell = "\n".join(lines)
     replacements = {
-        "{{ '/assets/docs-viewer/css/docs-viewer.css' | relative_url }}": "/assets/docs-viewer/css/docs-viewer.css",
-        "{{ '/assets/docs-viewer/css/docs-viewer-reports.css' | relative_url }}": "/assets/docs-viewer/css/docs-viewer-reports.css",
-        "{{ '/assets/docs-viewer/css/docs-viewer-management.css' | relative_url }}": "/assets/docs-viewer/css/docs-viewer-management.css",
-        "{{ '/assets/docs-viewer/js/docs-viewer.js' | relative_url }}": "/assets/docs-viewer/js/docs-viewer.js",
+        "{{ '/studio/docs-viewer/assets/css/docs-viewer.css' | relative_url }}": "/studio/docs-viewer/assets/css/docs-viewer.css",
+        "{{ '/studio/docs-viewer/assets/css/docs-viewer-reports.css' | relative_url }}": "/studio/docs-viewer/assets/css/docs-viewer-reports.css",
+        "{{ '/studio/docs-viewer/assets/css/docs-viewer-management.css' | relative_url }}": "/studio/docs-viewer/assets/css/docs-viewer-management.css",
+        "{{ '/studio/docs-viewer/runtime/js/docs-viewer.js' | relative_url }}": "/studio/docs-viewer/runtime/js/docs-viewer.js",
         "{{ site.time | date: '%s' }}": html.escape(version, quote=True),
         "{{ include.index_url }}": "",
         "{{ include.viewer_base_url }}": "/docs/",
@@ -749,8 +749,8 @@ def docs_viewer_shell(version: str, repo_root: Path) -> str:
         "{{ include.allow_scope_query | default: false }}": "true",
         "{{ include.default_doc_id | default: '' }}": "",
         "{{ include.search_index_url | default: '' }}": "",
-        "{{ docs_viewer_config_url | relative_url }}": "/assets/docs-viewer/data/docs-viewer-config.json",
-        "{{ include.ui_text_url | default: '/assets/docs-viewer/data/ui-text.json' | relative_url }}": "/assets/docs-viewer/data/ui-text.json",
+        "{{ docs_viewer_config_url | relative_url }}": "/studio/docs-viewer/config/runtime/docs-viewer-config.json",
+        "{{ include.ui_text_url | default: '/studio/docs-viewer/config/ui-text/ui-text.json' | relative_url }}": "/studio/docs-viewer/config/ui-text/ui-text.json",
         "{{ include.report_registry_url | default: '/assets/data/docs/reports.json' | relative_url }}": "/assets/data/docs/reports.json",
         "{{ docs_viewer_generated_base_url }}": "/studio/api/docs",
         "{{ include.management_base_url | default: '' }}": "/studio/api/docs",
@@ -773,14 +773,14 @@ def docs_viewer_manage_view(version: str, repo_root: Path) -> str:
   <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
   <title>Docs | dotlineform Studio</title>
   <link rel="stylesheet" href="/assets/css/main.css?v={escaped_version}">
-  <link rel="stylesheet" href="/assets/studio/css/studio.css?v={escaped_version}">
+  <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
   {studio_header("docs")}
   <main class="container studio-local-docs">
     {docs_viewer_shell(version, repo_root)}
   </main>
-  <script type="module" src="/assets/studio/js/studio-navigation.js?v={escaped_version}"></script>
+  <script type="module" src="/studio/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
 </body>
 </html>
 """
@@ -806,7 +806,7 @@ def studio_home_view(version: str) -> str:
   <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
   <title>dotlineform Studio</title>
   <link rel="stylesheet" href="/assets/css/main.css?v={escaped_version}">
-  <link rel="stylesheet" href="/assets/studio/css/studio.css?v={escaped_version}">
+  <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
   {studio_header()}
@@ -820,7 +820,7 @@ def studio_home_view(version: str) -> str:
       </div>
     </div>
   </main>
-  <script type="module" src="/assets/studio/js/studio-navigation.js?v={escaped_version}"></script>
+  <script type="module" src="/studio/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
 </body>
 </html>
 """

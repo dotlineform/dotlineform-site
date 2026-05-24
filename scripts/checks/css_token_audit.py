@@ -111,7 +111,7 @@ def build_findings(audits: list[dict[str, object]]) -> list[str]:
 
 def build_recommendations(audits: list[dict[str, object]]) -> list[str]:
     main_audit = next((audit for audit in audits if str(audit["path"]).endswith("assets/css/main.css")), None)
-    studio_audit = next((audit for audit in audits if str(audit["path"]).endswith("assets/studio/css/studio.css")), None)
+    studio_audit = next((audit for audit in audits if str(audit["path"]).endswith("studio/app/assets/css/studio.css")), None)
     recs = [
         "## Recommendations",
         "",
@@ -179,7 +179,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "files",
         nargs="*",
-        default=["assets/css/main.css", "assets/studio/css/studio.css"],
+        default=["assets/css/main.css", "studio/app/assets/css/studio.css"],
         help="CSS files to audit",
     )
     parser.add_argument(

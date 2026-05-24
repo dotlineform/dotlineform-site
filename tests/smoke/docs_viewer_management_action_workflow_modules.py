@@ -35,9 +35,9 @@ def route_url(base_url: str, path: str) -> str:
 def install_fixture(page: Page) -> None:
     page.evaluate(
         """async () => {
-            const workflow = await import('/assets/docs-viewer/js/docs-viewer-management-action-workflow.js');
-            const actions = await import('/assets/docs-viewer/js/docs-viewer-management-actions.js');
-            const management = await import('/assets/docs-viewer/js/docs-viewer-management.js');
+            const workflow = await import('/studio/docs-viewer/runtime/js/docs-viewer-management-action-workflow.js');
+            const actions = await import('/studio/docs-viewer/runtime/js/docs-viewer-management-actions.js');
+            const management = await import('/studio/docs-viewer/runtime/js/docs-viewer-management.js');
             const docs = [
                 { doc_id: 'root', title: 'Root', parent_id: '', hidden: true },
                 { doc_id: 'parent', title: 'Parent', parent_id: 'root', viewable: false },

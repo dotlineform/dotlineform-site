@@ -52,7 +52,7 @@ def main() -> int:
             page.goto(route_url(base_url, "/"), wait_until="domcontentloaded")
             result = page.evaluate(
                 """async () => {
-                    const scoring = await import('/assets/studio/js/analysis-tag-scoring.js');
+                    const scoring = await import('/studio/app/frontend/js/analysis-tag-scoring.js');
                     const registry = new Map([
                         ['subject:trees', { group: 'subject', status: 'active' }],
                         ['domain:studio', { group: 'domain', status: 'active' }],

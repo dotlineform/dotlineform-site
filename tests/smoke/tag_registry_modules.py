@@ -45,10 +45,10 @@ def install_fixture(page: Page) -> None:
                 <div data-role="modal-host"></div>
               </main>
             `;
-            const render = await import('/assets/studio/js/tag-registry-render.js');
-            const importMode = await import('/assets/studio/js/tag-registry-import-mode.js');
-            const modals = await import('/assets/studio/js/tag-registry-modals.js');
-            const workflow = await import('/assets/studio/js/tag-registry-workflow.js');
+            const render = await import('/studio/app/frontend/js/tag-registry-render.js');
+            const importMode = await import('/studio/app/frontend/js/tag-registry-import-mode.js');
+            const modals = await import('/studio/app/frontend/js/tag-registry-modals.js');
+            const workflow = await import('/studio/app/frontend/js/tag-registry-workflow.js');
             const host = document.querySelector('[data-role="modal-host"]');
             const config = {
                 app: {

@@ -291,17 +291,17 @@
       "id": "docs_viewer_runtime",
       "classification": "public_runtime_asset",
       "repo_paths": [
-        "assets/docs-viewer/js/*.js",
-        "assets/docs-viewer/css/*.css",
-        "assets/docs-viewer/data/ui-text.json",
-        "assets/docs-viewer/data/docs-viewer-public-config.json"
+        "studio/docs-viewer/runtime/js/*.js",
+        "studio/docs-viewer/assets/css/*.css",
+        "studio/docs-viewer/config/ui-text/ui-text.json",
+        "studio/docs-viewer/config/runtime/docs-viewer-public-config.json"
       ],
       "public_output": {
         "policy": "required",
         "paths": [
-          "assets/docs-viewer/js/docs-viewer.js",
-          "assets/docs-viewer/css/docs-viewer.css",
-          "assets/docs-viewer/data/docs-viewer-public-config.json"
+          "studio/docs-viewer/runtime/js/docs-viewer.js",
+          "studio/docs-viewer/assets/css/docs-viewer.css",
+          "studio/docs-viewer/config/runtime/docs-viewer-public-config.json"
         ]
       },
       "owner_doc": "docs-viewer-runtime-boundary"
@@ -310,18 +310,18 @@
       "id": "docs_viewer_management_runtime",
       "classification": "studio_projection",
       "repo_paths": [
-        "assets/docs-viewer/js/docs-viewer-management*.js",
-        "assets/docs-viewer/js/docs-html-import*.js",
-        "assets/docs-viewer/css/docs-viewer-management.css",
-        "assets/docs-viewer/data/docs-viewer-config.json"
+        "studio/docs-viewer/runtime/js/docs-viewer-management*.js",
+        "studio/docs-viewer/runtime/js/docs-html-import*.js",
+        "studio/docs-viewer/assets/css/docs-viewer-management.css",
+        "studio/docs-viewer/config/runtime/docs-viewer-config.json"
       ],
       "public_output": {
         "policy": "allowed",
         "paths": [
-          "assets/docs-viewer/js/docs-viewer-management*.js",
-          "assets/docs-viewer/js/docs-html-import*.js",
-          "assets/docs-viewer/css/docs-viewer-management.css",
-          "assets/docs-viewer/data/docs-viewer-config.json"
+          "studio/docs-viewer/runtime/js/docs-viewer-management*.js",
+          "studio/docs-viewer/runtime/js/docs-html-import*.js",
+          "studio/docs-viewer/assets/css/docs-viewer-management.css",
+          "studio/docs-viewer/config/runtime/docs-viewer-config.json"
         ]
       },
       "owner_doc": "docs-viewer-management"
@@ -364,8 +364,8 @@
       "id": "studio_app_assets",
       "classification": "studio_app_asset",
       "repo_paths": [
-        "assets/studio/css/**",
-        "assets/studio/js/**",
+        "studio/app/assets/css/**",
+        "studio/app/frontend/js/**",
         "studio/data/**"
       ],
       "public_output": {
@@ -443,7 +443,7 @@
     }
   ],
   "public_docs_viewer": {
-    "config_path": "assets/docs-viewer/data/docs-viewer-public-config.json",
+    "config_path": "studio/docs-viewer/config/runtime/docs-viewer-public-config.json",
     "allowed_scope_ids": [
       "library",
       "analysis"

@@ -210,7 +210,7 @@ def write_docs_scope_config(root: Path) -> None:
 
 def write_docs_viewer_browser_config(root: Path) -> None:
     write_json(
-        root / "assets/docs-viewer/data/docs-viewer-config.json",
+        root / "studio/docs-viewer/config/runtime/docs-viewer-config.json",
         {
             "schema_version": "docs_viewer_config_v1",
             "default_scope_id": "studio",

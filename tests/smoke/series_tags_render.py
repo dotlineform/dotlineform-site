@@ -53,7 +53,7 @@ def main() -> int:
             result = page.evaluate(
                 """async () => {
                     document.body.innerHTML = '<main><div id="mount"></div></main>';
-                    const render = await import('/assets/studio/js/series-tags-render.js');
+                    const render = await import('/studio/app/frontend/js/series-tags-render.js');
                     const registry = new Map([
                         ['subject:trees', { group: 'subject', label: 'trees', status: 'active' }],
                         ['domain:studio', { group: 'domain', label: 'studio', status: 'active' }],

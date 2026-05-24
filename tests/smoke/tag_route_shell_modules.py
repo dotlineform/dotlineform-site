@@ -31,7 +31,7 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 def assert_tag_save_session_helpers(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const module = await import('/assets/studio/js/tag-route-save-session.js');
+            const module = await import('/studio/app/frontend/js/tag-route-save-session.js');
             const state = {
                 saveMode: 'patch',
                 importAvailable: false,
@@ -80,13 +80,13 @@ def assert_tag_save_session_helpers(page: Page) -> None:
                 }
             });
             await Promise.all([
-                import('/assets/studio/js/tag-studio.js'),
-                import('/assets/studio/js/tag-registry.js'),
-                import('/assets/studio/js/tag-aliases.js'),
-                import('/assets/studio/js/tag-registry-import-mode.js'),
-                import('/assets/studio/js/tag-aliases-import-mode.js'),
-                import('/assets/studio/js/tag-registry-workflow.js'),
-                import('/assets/studio/js/tag-aliases-workflow.js')
+                import('/studio/app/frontend/js/tag-studio.js'),
+                import('/studio/app/frontend/js/tag-registry.js'),
+                import('/studio/app/frontend/js/tag-aliases.js'),
+                import('/studio/app/frontend/js/tag-registry-import-mode.js'),
+                import('/studio/app/frontend/js/tag-aliases-import-mode.js'),
+                import('/studio/app/frontend/js/tag-registry-workflow.js'),
+                import('/studio/app/frontend/js/tag-aliases-workflow.js')
             ]);
             return {
                 availableProbe,
@@ -146,7 +146,7 @@ def assert_tag_registry_modal_workflow(page: Page) -> None:
                 <button id="confirmDemote"></button>
               </section>
             `;
-            const module = await import('/assets/studio/js/tag-registry-modal-workflow.js');
+            const module = await import('/studio/app/frontend/js/tag-registry-modal-workflow.js');
             const state = {
                 config: { ui_text: {} },
                 registryUpdatedAt: '2026-05-21T10:00:00Z',
@@ -245,7 +245,7 @@ def assert_tag_studio_interactions(page: Page) -> None:
               <p id="status"></p>
               <p id="saveResult"></p>
             `;
-            const module = await import('/assets/studio/js/tag-studio-interactions.js');
+            const module = await import('/studio/app/frontend/js/tag-studio-interactions.js');
             const alpha = { tag_id: 'subject:alpha', group: 'subject', label: 'Alpha', slug: 'alpha' };
             const beta = { tag_id: 'domain:beta', group: 'domain', label: 'Beta', slug: 'beta' };
             const gamma = { tag_id: 'theme:gamma', group: 'theme', label: 'Gamma', slug: 'gamma' };
@@ -427,7 +427,7 @@ def assert_tag_aliases_modal_workflow(page: Page) -> None:
                 <button id="saveEditAlias"></button>
               </section>
             `;
-            const module = await import('/assets/studio/js/tag-aliases-modal-workflow.js');
+            const module = await import('/studio/app/frontend/js/tag-aliases-modal-workflow.js');
             const calls = [];
             const state = {
                 mount: document.getElementById('aliases'),

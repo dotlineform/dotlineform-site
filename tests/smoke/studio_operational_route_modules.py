@@ -36,7 +36,7 @@ def assert_operational_route_helpers(page: Page) -> None:
               <button id="run"></button>
               <p id="status"></p>
             `;
-            const module = await import('/assets/studio/js/studio-operational-route.js');
+            const module = await import('/studio/app/frontend/js/studio-operational-route.js');
             const root = document.getElementById('root');
             const run = document.getElementById('run');
             const status = document.getElementById('status');
@@ -83,10 +83,10 @@ def assert_operational_route_helpers(page: Page) -> None:
                 recordLoaded: true
             });
             await Promise.all([
-                import('/assets/studio/js/bulk-add-work.js'),
-                import('/assets/studio/js/project-state.js'),
-                import('/assets/studio/js/studio-audits.js'),
-                import('/assets/studio/js/thumbnail-quality.js')
+                import('/studio/app/frontend/js/bulk-add-work.js'),
+                import('/studio/app/frontend/js/project-state.js'),
+                import('/studio/app/frontend/js/studio-audits.js'),
+                import('/studio/app/frontend/js/thumbnail-quality.js')
             ]);
             return {
                 required,

@@ -176,7 +176,7 @@ ui_catalogue_demo_primitive: list
       <ul class="uiCatalogueDemoList__rows">
         <li class="uiCatalogueDemoList__row uiCatalogueDemoList__row--center">
           <span class="uiCatalogueDemoList__thumb">
-            <img class="uiCatalogueDemoList__thumbImage" src="{{ '/assets/studio/img/panel-backgrounds/01007-primary-800.webp' | relative_url }}" alt="" loading="lazy" decoding="async">
+            <img class="uiCatalogueDemoList__thumbImage" src="{{ '/studio/app/assets/img/panel-backgrounds/01007-primary-800.webp' | relative_url }}" alt="" loading="lazy" decoding="async">
           </span>
           <span class="uiCatalogueDemoList__cell">
             <a class="uiCatalogueDemoList__link" href="#">Soft geometry study</a>

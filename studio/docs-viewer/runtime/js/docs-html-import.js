@@ -59,7 +59,7 @@ function configText(config, path, fallback, tokens = {}) {
   return formatText(String(current == null ? fallback == null ? "" : fallback : current), tokens);
 }
 
-async function loadDocsViewerText(textUrl = "/assets/docs-viewer/data/ui-text.json") {
+async function loadDocsViewerText(textUrl = "/studio/docs-viewer/config/ui-text/ui-text.json") {
   const response = await fetch(textUrl, {
     headers: { Accept: "application/json" },
     cache: "default"
@@ -141,7 +141,7 @@ function markRouteReady(state, ready) {
   setRouteReady(state.root, ready, routeStateDetail(state));
 }
 
-async function loadDocsViewerScopeOptions(configUrl = "/assets/docs-viewer/data/docs-viewer-config.json") {
+async function loadDocsViewerScopeOptions(configUrl = "/studio/docs-viewer/config/runtime/docs-viewer-config.json") {
   const response = await fetch(configUrl, {
     headers: { Accept: "application/json" },
     cache: "default"
@@ -361,7 +361,7 @@ export async function initDocsHtmlImport(options = {}) {
   if (requiredNodes.some((node) => !node)) return;
 
   try {
-    state.config = await loadDocsViewerText(options.uiTextUrl || root.dataset.uiTextUrl || "/assets/docs-viewer/data/ui-text.json");
+    state.config = await loadDocsViewerText(options.uiTextUrl || root.dataset.uiTextUrl || "/studio/docs-viewer/config/ui-text/ui-text.json");
     state.docsScopeIds = await loadDocsViewerScopeOptions(options.docsViewerConfigUrl);
     state.managementBaseUrl = normalizeText(options.managementBaseUrl);
     const serviceAvailable = await fetchManagementJson("/health", "GET", undefined, managementOptionsForState(state))

@@ -38,7 +38,7 @@ def install_modal_fixture(page) -> None:
         """async () => {
             const css = document.createElement('link');
             css.rel = 'stylesheet';
-            css.href = '/assets/studio/css/studio.css';
+            css.href = '/studio/app/assets/css/studio.css';
             const cssLoaded = new Promise((resolve, reject) => {
                 css.addEventListener('load', resolve, { once: true });
                 css.addEventListener('error', reject, { once: true });
@@ -53,7 +53,7 @@ def install_modal_fixture(page) -> None:
                 <div data-role="series-tags-import-modal-host"></div>
               </main>
             `;
-            const module = await import('/assets/studio/js/series-tags-modals.js');
+            const module = await import('/studio/app/frontend/js/series-tags-modals.js');
             const sessionModalHost = document.querySelector('[data-role="series-tags-session-modal-host"]');
             const importModalHost = document.querySelector('[data-role="series-tags-import-modal-host"]');
             const state = {

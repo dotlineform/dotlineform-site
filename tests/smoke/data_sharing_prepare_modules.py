@@ -44,9 +44,9 @@ def install_fixture(page: Page) -> None:
                 <div id="dataSharingPrepareRenderTarget"></div>
               </main>
             `;
-            const workflow = await import('/assets/studio/js/data-sharing-prepare-workflow.js');
-            const render = await import('/assets/studio/js/data-sharing-prepare-render.js');
-            const service = await import('/assets/studio/js/data-sharing-prepare-service.js');
+            const workflow = await import('/studio/app/frontend/js/data-sharing-prepare-workflow.js');
+            const render = await import('/studio/app/frontend/js/data-sharing-prepare-render.js');
+            const service = await import('/studio/app/frontend/js/data-sharing-prepare-service.js');
             const docCapability = {
                 capability: {
                     selection_model: 'documents',

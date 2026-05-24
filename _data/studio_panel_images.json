@@ -1,6 +1,6 @@
 {
   "studio_home": {
-    "base_path": "/assets/studio/img/panel-backgrounds",
+    "base_path": "/studio/app/assets/img/panel-backgrounds",
     "format": "webp",
     "filename_pattern": "{asset_id}-{variant}-{width}.{format}",
     "default_width": 800,

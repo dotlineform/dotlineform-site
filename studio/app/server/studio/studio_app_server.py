@@ -66,7 +66,12 @@ from studio_docs_api import docs_management_get_payload, docs_management_post_re
 
 STATIC_PREFIXES = (
     "/assets/",
-    "/studio/app/frontend/config/ui-text/",
+    "/studio/app/frontend/js/",
+    "/studio/app/frontend/config/",
+    "/studio/app/assets/",
+    "/studio/docs-viewer/runtime/",
+    "/studio/docs-viewer/assets/",
+    "/studio/docs-viewer/config/",
     "/studio/data/",
 )
 STATIC_FILES = {

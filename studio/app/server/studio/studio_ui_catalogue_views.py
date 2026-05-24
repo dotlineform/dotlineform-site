@@ -83,7 +83,7 @@ def ui_catalogue_demo_view(version: str, repo_root: Path, view_id: str) -> str:
       </div>
     </div>
   </main>
-  <script type="module" src="/assets/studio/js/studio-navigation.js?v={escaped_version}"></script>
+  <script type="module" src="/studio/app/frontend/js/studio-navigation.js?v={escaped_version}"></script>
   <script type="module" src="/assets/ui-catalogue/js/ui-catalogue-demo.js?v={escaped_version}"></script>
 </body>
 </html>

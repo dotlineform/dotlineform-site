@@ -46,7 +46,7 @@ def assert_data_sharing_review_workflow(page: Page) -> None:
                 <li data-data-sharing-review-preview="tree-a"><input type="checkbox" value="tree-a"></li>
               </ul>
             `;
-            const module = await import('/assets/studio/js/data-sharing-review-workflow.js');
+            const module = await import('/studio/app/frontend/js/data-sharing-review-workflow.js');
             const applyActions = module.dataSharingReviewApplyActionsForCapability({
                 apply_actions: [
                     {
