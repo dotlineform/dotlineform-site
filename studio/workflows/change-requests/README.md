@@ -4,7 +4,7 @@
 
 It is separate from Docs Viewer source Markdown by design:
 
-- `studio/docs-viewer/source/studio/` remains the Studio documentation source for the Docs Viewer.
+- `docs-viewer/source/studio/` remains the Studio documentation source for the Docs Viewer.
 - `studio/workflows/change-requests/logs/entries/*.json` stores durable per-entry change-history records optimized for validation, generated indexes, search, and Codex retrieval.
 - generated reports and search payloads are projections of the JSON records, not the source of truth.
 
@@ -122,8 +122,8 @@ $HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs
   --domain workflow \
   --subject docs-logs \
   --related-doc development-workflow \
-  --related-file studio/docs-viewer/source/studio/development-workflow.md \
-  --source-file studio/docs-viewer/source/studio/development-workflow.md
+  --related-file docs-viewer/source/studio/development-workflow.md \
+  --source-file docs-viewer/source/studio/development-workflow.md
 ```
 
 Seed from a change request:
@@ -195,4 +195,4 @@ Expected generated projections include:
 ## Human Views
 
 Human-readable browsing should come from generated reports or compact index views.
-Individual log entries are not normal Docs Viewer documents in v1 and should not be added to `studio/docs-viewer/source/studio/`.
+Individual log entries are not normal Docs Viewer documents in v1 and should not be added to `docs-viewer/source/studio/`.

@@ -406,7 +406,7 @@ def project_state_view(version: str) -> str:
               <div class="tagStudioForm__fields catalogueWorkForm__fields">
                 <div class="tagStudioForm__field">
                   <span class="tagStudioForm__label" id="projectStateOutputLabel">output</span>
-                  <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="projectStateOutputPath">studio/docs-viewer/source/studio/project-state.md</span>
+                  <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="projectStateOutputPath">docs-viewer/source/studio/project-state.md</span>
                 </div>
                 <div class="tagStudioForm__field">
                   <span class="tagStudioForm__label" id="projectStateSourceLabel">source</span>
@@ -748,8 +748,8 @@ def docs_viewer_shell(version: str, repo_root: Path) -> str:
         "{{ include.allow_scope_query | default: false }}": "true",
         "{{ include.default_doc_id | default: '' }}": "",
         "{{ include.search_index_url | default: '' }}": "",
-        "{{ docs_viewer_config_url | relative_url }}": "/studio/docs-viewer/config/runtime/docs-viewer-config.json",
-        "{{ include.ui_text_url | default: '/studio/docs-viewer/config/ui-text/ui-text.json' | relative_url }}": "/studio/docs-viewer/config/ui-text/ui-text.json",
+        "{{ docs_viewer_config_url | relative_url }}": "/docs-viewer/config/defaults/docs-viewer-config.json",
+        "{{ include.ui_text_url | default: '/docs-viewer/config/ui-text/ui-text.json' | relative_url }}": "/docs-viewer/config/ui-text/ui-text.json",
         "{{ include.report_registry_url | default: '/assets/data/docs/reports.json' | relative_url }}": "/assets/data/docs/reports.json",
         "{{ docs_viewer_generated_base_url }}": "/studio/api/docs",
         "{{ include.management_base_url | default: '' }}": "/studio/api/docs",

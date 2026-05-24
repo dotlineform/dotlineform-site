@@ -77,14 +77,14 @@ def create_fixture_repo(target_root: Path) -> None:
         "analysis": "analysis",
     }.items():
         source_root = {
-            "studio": "studio/docs-viewer/source/studio",
-            "library": "studio/docs-viewer/source/library",
-            "analysis": "studio/docs-viewer/source/analysis",
+            "studio": "docs-viewer/source/studio",
+            "library": "docs-viewer/source/library",
+            "analysis": "docs-viewer/source/analysis",
         }[scope]
         write_doc(target_root / source_root / f"{default_doc}.md", doc_id=default_doc, title=default_doc.replace("-", " ").title())
-    write_doc(target_root / "studio/docs-viewer/source/studio" / "archive.md", doc_id="archive", title="Archive", sort_order=9000)
-    write_doc(target_root / "studio/docs-viewer/source/studio" / "sibling-doc.md", doc_id="sibling-doc", title="Sibling Doc", sort_order=2000)
-    write_doc(target_root / "studio/docs-viewer/source/studio" / "child-doc.md", doc_id="child-doc", title="Child Doc", parent_id="root-doc", sort_order=1000)
+    write_doc(target_root / "docs-viewer/source/studio" / "archive.md", doc_id="archive", title="Archive", sort_order=9000)
+    write_doc(target_root / "docs-viewer/source/studio" / "sibling-doc.md", doc_id="sibling-doc", title="Sibling Doc", sort_order=2000)
+    write_doc(target_root / "docs-viewer/source/studio" / "child-doc.md", doc_id="child-doc", title="Child Doc", parent_id="root-doc", sort_order=1000)
     (target_root / "var" / "docs" / "import-staging").mkdir(parents=True)
     (target_root / "var" / "docs" / "import-staging" / "staged-doc.md").write_text("# Staged Doc\n", encoding="utf-8")
 
@@ -375,7 +375,7 @@ def main(argv: list[str] | None = None) -> int:
                 {
                     "scope_id": "apismoke",
                     "title": "API Smoke Scope",
-                    "source_root": "studio/docs-viewer/source/apismoke",
+                    "source_root": "docs-viewer/source/apismoke",
                     "default_doc_id": "apismoke",
                     "publishing_mode": "local_uncommitted",
                     "write_generated_outputs": True,
@@ -393,7 +393,7 @@ def main(argv: list[str] | None = None) -> int:
                 {
                     "scope_id": "apismoke",
                     "title": "API Smoke Scope",
-                    "source_root": "studio/docs-viewer/source/apismoke",
+                    "source_root": "docs-viewer/source/apismoke",
                     "default_doc_id": "apismoke",
                     "publishing_mode": "local_uncommitted",
                     "write_generated_outputs": True,
@@ -402,7 +402,7 @@ def main(argv: list[str] | None = None) -> int:
                 },
             )
             assert_ok(scope_created, "scope create apply")
-            if not (fixture_root / "studio/docs-viewer/source/apismoke" / "apismoke.md").exists():
+            if not (fixture_root / "docs-viewer/source/apismoke" / "apismoke.md").exists():
                 raise AssertionError(f"scope create did not write fixture source: {scope_created!r}")
 
             scope_delete_preview = request_json(
@@ -422,7 +422,7 @@ def main(argv: list[str] | None = None) -> int:
                 {"scope_id": "apismoke", "confirm": True},
             )
             assert_ok(scope_deleted, "scope delete apply")
-            if (fixture_root / "studio/docs-viewer/source/apismoke").exists():
+            if (fixture_root / "docs-viewer/source/apismoke").exists():
                 raise AssertionError(f"scope delete did not remove fixture source root: {scope_deleted!r}")
 
             docs_config = (fixture_root / "studio" / "docs-viewer" / "config" / "scopes" / "docs_scopes.json").read_text(encoding="utf-8")

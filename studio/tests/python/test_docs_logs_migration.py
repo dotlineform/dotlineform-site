@@ -20,7 +20,7 @@ def test_parse_entries_splits_dated_h2_sections_with_line_ranges() -> None:
     with tempfile.TemporaryDirectory() as temp_path:
         root = Path(temp_path)
         (root / "_config.yml").write_text("title: test\n", encoding="utf-8")
-        path = root / "studio/docs-viewer/source/studio" / "site-change-log.md"
+        path = root / "docs-viewer/source/studio" / "site-change-log.md"
         path.parent.mkdir(parents=True)
         path.write_text(
             "\n".join(
@@ -55,7 +55,7 @@ def test_parse_entries_splits_dated_h2_sections_with_line_ranges() -> None:
 
 def test_build_record_extracts_metadata_and_validates() -> None:
     entry = migration.LegacyEntry(
-        source_file="studio/docs-viewer/source/studio/site-change-log.md",
+        source_file="docs-viewer/source/studio/site-change-log.md",
         start_line=20,
         end_line=42,
         date="2026-05-19",
@@ -91,13 +91,13 @@ def test_build_record_extracts_metadata_and_validates() -> None:
         "site-request-docs-build-incremental",
     ]
     assert record["change_request_doc_id"] == "site-request-docs-build-incremental"
-    assert record["source"] == {"file": "studio/docs-viewer/source/studio/site-change-log.md", "line": 20, "archive": "current"}
+    assert record["source"] == {"file": "docs-viewer/source/studio/site-change-log.md", "line": 20, "archive": "current"}
 
 
 def test_build_records_suffixes_duplicate_generated_ids() -> None:
     entries = [
-        migration.LegacyEntry("studio/docs-viewer/source/studio/site-change-log.md", 10, 20, "2026-05-19", "Repeated Title", "**Status:** implemented\n\nBody."),
-        migration.LegacyEntry("studio/docs-viewer/source/studio/site-change-log.md", 30, 40, "2026-05-19", "Repeated Title", "**Status:** implemented\n\nBody."),
+        migration.LegacyEntry("docs-viewer/source/studio/site-change-log.md", 10, 20, "2026-05-19", "Repeated Title", "**Status:** implemented\n\nBody."),
+        migration.LegacyEntry("docs-viewer/source/studio/site-change-log.md", 30, 40, "2026-05-19", "Repeated Title", "**Status:** implemented\n\nBody."),
     ]
 
     records = migration.build_records(entries)
@@ -117,7 +117,7 @@ def test_write_entry_records_creates_per_entry_json_and_refuses_existing_output(
             "type": "implementation",
             "domains": ["site"],
             "summary": "One.",
-            "source": {"file": "studio/docs-viewer/source/studio/site-change-log.md"},
+            "source": {"file": "docs-viewer/source/studio/site-change-log.md"},
         },
         {
             "id": "change-2026-04-30-two",
@@ -127,7 +127,7 @@ def test_write_entry_records_creates_per_entry_json_and_refuses_existing_output(
             "type": "implementation",
             "domains": ["search"],
             "summary": "Two.",
-            "source": {"file": "studio/docs-viewer/source/studio/search-change-log.md"},
+            "source": {"file": "docs-viewer/source/studio/search-change-log.md"},
         },
     ]
 
@@ -163,7 +163,7 @@ def test_write_entry_records_rejects_duplicate_ids() -> None:
             "type": "implementation",
             "domains": ["site"],
             "summary": "One.",
-            "source": {"file": "studio/docs-viewer/source/studio/site-change-log.md"},
+            "source": {"file": "docs-viewer/source/studio/site-change-log.md"},
         },
         {
             "id": "change-2026-05-19-one",
@@ -173,7 +173,7 @@ def test_write_entry_records_rejects_duplicate_ids() -> None:
             "type": "implementation",
             "domains": ["site"],
             "summary": "One copy.",
-            "source": {"file": "studio/docs-viewer/source/studio/site-change-log.md"},
+            "source": {"file": "docs-viewer/source/studio/site-change-log.md"},
         },
     ]
 

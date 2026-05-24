@@ -174,7 +174,7 @@ def main(argv: list[str] | None = None) -> int:
             "allowScopeQuery": "true",
             "includeScopeParam": "true",
             "viewerBaseUrl": "/docs/",
-            "configUrl": "/studio/docs-viewer/config/runtime/docs-viewer-config.json",
+            "configUrl": "/docs-viewer/config/defaults/docs-viewer-config.json",
             "managementBaseUrl": "/studio/api/docs",
         }:
             raise AssertionError(f"unexpected Docs Viewer root attrs: {root_attrs!r}")

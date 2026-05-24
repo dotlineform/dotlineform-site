@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-ADAPTERS_PATH = REPO_ROOT / "scripts" / "studio" / "data_sharing_adapters.py"
+ADAPTERS_PATH = REPO_ROOT / "studio" / "app" / "server" / "studio" / "data_sharing_adapters.py"
 
 
 def load_adapters_module():
@@ -89,16 +89,16 @@ def domain_payload(status: str = "active") -> dict[str, object]:
             "outbound_package_root": "var/studio/data-sharing/library/exports",
             "returned_package_staging_root": "var/studio/data-sharing/library/import-staging",
             "review_output_root": "var/studio/data-sharing/library/import-preview",
-            "source_root": "studio/docs-viewer/source/library",
+            "source_root": "docs-viewer/source/library",
             "backup_root": "var/docs/backups",
         },
         "source_write_targets": {
-            "documents": "studio/docs-viewer/source/library",
+            "documents": "docs-viewer/source/library",
         },
         "sources": {
             "docs_index": "assets/data/docs/scopes/library/index.json",
             "docs_payload_root": "assets/data/docs/scopes/library/by-id",
-            "source_root": "studio/docs-viewer/source/library",
+            "source_root": "docs-viewer/source/library",
         },
         "config": {
             "sharing_profiles_path": "studio/data/config/data-sharing/library-export-configs.json",
@@ -238,7 +238,7 @@ def test_registry_rejects_duplicate_domain_operation_dispatch() -> None:
 
 def test_registry_rejects_unsafe_paths() -> None:
     payload = registry_payload()
-    payload["adapters"][0]["data_domains"]["library"]["paths"]["source_root"] = "../studio/docs-viewer/source/library"
+    payload["adapters"][0]["data_domains"]["library"]["paths"]["source_root"] = "../docs-viewer/source/library"
     repo_root = write_registry(payload)
 
     expect_value_error(

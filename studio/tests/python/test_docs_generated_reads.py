@@ -11,9 +11,9 @@ from types import SimpleNamespace
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DOCS_DIR = REPO_ROOT / "scripts" / "docs"
-if str(SCRIPTS_DOCS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DOCS_DIR))
+DOCS_SERVICES_DIR = REPO_ROOT / "studio" / "docs-viewer" / "services"
+if str(DOCS_SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_generated_reads as generated_reads  # noqa: E402
 

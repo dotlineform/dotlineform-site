@@ -10,9 +10,10 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
-SCRIPTS_DOCS_DIR = SCRIPTS_DIR / "docs"
-for path in (SCRIPTS_DOCS_DIR, SCRIPTS_DIR):
+DOCS_SERVICES_DIR = REPO_ROOT / "studio" / "docs-viewer" / "services"
+STUDIO_SERVER_DIR = REPO_ROOT / "studio" / "app" / "server"
+STUDIO_SHARED_PYTHON_DIR = REPO_ROOT / "studio" / "shared" / "python"
+for path in (DOCS_SERVICES_DIR, STUDIO_SERVER_DIR, STUDIO_SHARED_PYTHON_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 

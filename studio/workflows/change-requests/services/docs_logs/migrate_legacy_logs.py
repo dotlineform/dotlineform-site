@@ -26,11 +26,11 @@ PATH_TOKEN_RE = re.compile(r"`([^`]+)`")
 WHITESPACE_RE = re.compile(r"\s+")
 
 DEFAULT_SOURCE_FILES = (
-    "studio/docs-viewer/source/studio/site-change-log.md",
-    "studio/docs-viewer/source/studio/site-change-log-2026-05.md",
-    "studio/docs-viewer/source/studio/site-change-log-2026-04.md",
-    "studio/docs-viewer/source/studio/site-change-log-2026-03-and-earlier.md",
-    "studio/docs-viewer/source/studio/search-change-log.md",
+    "docs-viewer/source/studio/site-change-log.md",
+    "docs-viewer/source/studio/site-change-log-2026-05.md",
+    "docs-viewer/source/studio/site-change-log-2026-04.md",
+    "docs-viewer/source/studio/site-change-log-2026-03-and-earlier.md",
+    "docs-viewer/source/studio/search-change-log.md",
 )
 
 FIELD_ALIASES = {
@@ -166,7 +166,7 @@ def extract_paths(*values: str) -> list[str]:
 
 
 def source_archive(source_file: str) -> str:
-    if source_file == "studio/docs-viewer/source/studio/search-change-log.md":
+    if source_file == "docs-viewer/source/studio/search-change-log.md":
         return "search"
     match = re.search(r"site-change-log-([0-9]{4}-[0-9]{2}(?:-and-earlier)?)\.md$", source_file)
     if match:

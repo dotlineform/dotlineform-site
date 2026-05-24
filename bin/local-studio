@@ -53,7 +53,7 @@ load_docs_scope_ids() {
 import json
 from pathlib import Path
 
-payload = json.loads(Path("studio/docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
+payload = json.loads(Path("docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
 if payload.get("schema_version") != "docs_scopes_v1":
     raise SystemExit("Invalid docs scope config: expected docs_scopes_v1")
 scopes = payload.get("scopes")
@@ -67,7 +67,7 @@ for item in scopes:
 PY
 )
   if [ "${#DOCS_SCOPE_IDS[@]}" -eq 0 ]; then
-    echo "ERROR: No docs scopes found in studio/docs-viewer/config/scopes/docs_scopes.json" >&2
+    echo "ERROR: No docs scopes found in docs-viewer/config/scopes/docs_scopes.json" >&2
     exit 1
   fi
 }

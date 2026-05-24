@@ -14,7 +14,7 @@ from typing import Any, Callable
 from docs_scope_config import CONFIG_REL_PATH, DocsScopeConfig, load_docs_scope_configs, safe_relative_path
 
 
-MANIFEST_REL_PATH = Path("studio/docs-viewer/config/scopes/docs_scope_manifest.json")
+MANIFEST_REL_PATH = Path("docs-viewer/config/scopes/docs_scope_manifest.json")
 SCHEMA_VERSION = "docs_scope_manifest_v1"
 LIFECYCLE_PREVIEW_SCHEMA_VERSION = "docs_scope_lifecycle_preview_v1"
 LIFECYCLE_APPLY_SCHEMA_VERSION = "docs_scope_lifecycle_apply_v1"
@@ -221,7 +221,7 @@ def normalize_publishing_mode(value: Any) -> str:
 
 def normalize_source_root(value: Any, scope_id: str) -> Path:
     source_root = safe_relative_path(value, field="source_root")
-    expected = Path("studio/docs-viewer/source") / scope_id
+    expected = Path("docs-viewer/source") / scope_id
     if source_root != expected:
         raise ValueError(f"source_root must be {expected.as_posix()}")
     return source_root

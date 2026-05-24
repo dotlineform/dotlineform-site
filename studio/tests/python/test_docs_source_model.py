@@ -9,9 +9,9 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DOCS_DIR = REPO_ROOT / "scripts" / "docs"
-if str(SCRIPTS_DOCS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DOCS_DIR))
+DOCS_SERVICES_DIR = REPO_ROOT / "studio" / "docs-viewer" / "services"
+if str(DOCS_SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_source_model as source_model  # noqa: E402
 
@@ -40,7 +40,7 @@ def make_doc(
     body = f"# {front_matter['title']}\n"
     return source_model.ScopeDoc(
         scope="studio",
-        path=Path(f"studio/docs-viewer/source/studio/{stem or doc_id}.md"),
+        path=Path(f"docs-viewer/source/studio/{stem or doc_id}.md"),
         source_text=source_model.format_source(front_matter, body),
         front_matter=front_matter,
         body=body,
@@ -95,8 +95,8 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
 def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
-        write_doc(root, "studio/docs-viewer/source/studio", "first.md", {"doc_id": "duplicate", "title": "First"})
-        write_doc(root, "studio/docs-viewer/source/studio", "second.md", {"doc_id": "duplicate", "title": "Second"})
+        write_doc(root, "docs-viewer/source/studio", "first.md", {"doc_id": "duplicate", "title": "First"})
+        write_doc(root, "docs-viewer/source/studio", "second.md", {"doc_id": "duplicate", "title": "Second"})
 
         try:
             source_model.load_scope_docs(root, "studio")
@@ -111,7 +111,7 @@ def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:
 def test_load_scope_docs_rejects_unknown_studio_parent() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
-        write_doc(root, "studio/docs-viewer/source/studio", "child.md", {"doc_id": "child", "title": "Child", "parent_id": "missing"})
+        write_doc(root, "docs-viewer/source/studio", "child.md", {"doc_id": "child", "title": "Child", "parent_id": "missing"})
 
         try:
             source_model.load_scope_docs(root, "studio")
@@ -128,7 +128,7 @@ def test_load_scope_docs_allows_unknown_library_parent() -> None:
         root = Path(temp)
         write_doc(
             root,
-            "studio/docs-viewer/source/library",
+            "docs-viewer/source/library",
             "child.md",
             {"doc_id": "child", "title": "Child", "parent_id": "external-parent"},
         )

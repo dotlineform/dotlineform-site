@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ '/studio/docs-viewer/assets/css/docs-viewer-management.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 {%- endif -%}
 {%- assign docs_viewer_generated_base_url = include.generated_base_url | default: site.docs_viewer_generated_base_url | default: '' -%}
-{%- assign docs_viewer_config_url = include.docs_viewer_config_url | default: site.docs_viewer_config_url | default: '/studio/docs-viewer/config/runtime/docs-viewer-config.json' -%}
+{%- assign docs_viewer_config_url = include.docs_viewer_config_url | default: site.docs_viewer_config_url | default: '/docs-viewer/config/defaults/docs-viewer-public-config.json' -%}
 
 <section
   class="docsViewer"
@@ -18,7 +18,7 @@
   data-default-doc-id="{{ include.default_doc_id | default: '' }}"
   data-search-index-url="{{ include.search_index_url | default: '' }}"
   data-docs-viewer-config-url="{{ docs_viewer_config_url | relative_url }}"
-  data-ui-text-url="{{ include.ui_text_url | default: '/studio/docs-viewer/config/ui-text/ui-text.json' | relative_url }}"
+  data-ui-text-url="{{ include.ui_text_url | default: '/docs-viewer/config/ui-text/ui-text.json' | relative_url }}"
   data-report-registry-url="{{ include.report_registry_url | default: '/assets/data/docs/reports.json' | relative_url }}"
   data-generated-base-url="{{ docs_viewer_generated_base_url }}"
   data-management-base-url="{{ include.management_base_url | default: '' }}"

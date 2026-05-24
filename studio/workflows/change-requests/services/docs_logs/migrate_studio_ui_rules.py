@@ -18,7 +18,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import path for tests
     from docs_logs.log_entry import slugify, validate_record
 
 
-SOURCE_DOC = Path("studio/docs-viewer/source/studio/studio-ui-rules.md")
+SOURCE_DOC = Path("docs-viewer/source/studio/studio-ui-rules.md")
 ENTRY_HEADING_RE = re.compile(r"^## UI Rule Log (?P<date>\d{4}-\d{2}-\d{2}) / (?P<ui_id>UI-[A-Z0-9]+)\s*$", re.MULTILINE)
 TOP_LEVEL_FIELD_RE = re.compile(r"^- (?P<key>[A-Za-z][A-Za-z ]+):\s*(?P<value>.*)$")
 DOC_LINK_RE = re.compile(r"/docs/\?scope=studio&doc=([a-z0-9]+(?:-[a-z0-9]+)*)")
@@ -56,7 +56,7 @@ def parse_front_matter(text: str) -> dict[str, str]:
 
 def docs_by_source(root: Path) -> dict[str, str]:
     docs: dict[str, str] = {}
-    for path in sorted((root / "studio/docs-viewer/source/studio").glob("*.md")):
+    for path in sorted((root / "docs-viewer/source/studio").glob("*.md")):
         front_matter = parse_front_matter(path.read_text(encoding="utf-8"))
         doc_id = front_matter.get("doc_id")
         if doc_id:
@@ -142,10 +142,10 @@ def infer_domains(text: str, files: list[str]) -> list[str]:
     haystack = " ".join([text, *files]).lower()
     domains = ["studio-ui"]
     checks: list[tuple[str, tuple[str, ...]]] = [
-        ("docs-viewer", ("docs-viewer", "docs viewer", "/docs/", "studio/docs-viewer/source/studio/", "docs/", "library/", "analysis/")),
+        ("docs-viewer", ("docs-viewer", "docs viewer", "/docs/", "docs-viewer/source/studio/", "docs/", "library/", "analysis/")),
         ("catalogue", ("catalogue", "work editor", "series editor", "moment", "work-detail", "work_detail")),
         ("search", ("search", "ranking", "search index")),
-        ("library", ("library", "studio/docs-viewer/source/library")),
+        ("library", ("library", "docs-viewer/source/library")),
         ("build", ("build", "generated", "payload", "jekyll")),
         ("scripts", ("scripts/", "server.py", ".rb", ".py")),
         ("config", ("config", "settings", "studio_config", "ui_text")),

@@ -153,12 +153,12 @@
       "id": "studio_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "studio/docs-viewer/source/studio/*.md"
+        "docs-viewer/source/studio/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "studio/docs-viewer/source/studio"
+          "docs-viewer/source/studio"
         ]
       },
       "jekyll_exclude_required": true,
@@ -200,12 +200,12 @@
       "id": "library_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "studio/docs-viewer/source/library/*.md"
+        "docs-viewer/source/library/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "studio/docs-viewer/source/library"
+          "docs-viewer/source/library"
         ]
       },
       "jekyll_exclude_required": true,
@@ -245,12 +245,12 @@
       "id": "analysis_docs_source",
       "classification": "canonical_source",
       "repo_paths": [
-        "studio/docs-viewer/source/analysis/**/*.md"
+        "docs-viewer/source/analysis/**/*.md"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "studio/docs-viewer/source/analysis"
+          "docs-viewer/source/analysis"
         ]
       },
       "jekyll_exclude_required": true,
@@ -293,15 +293,15 @@
       "repo_paths": [
         "studio/docs-viewer/runtime/js/*.js",
         "studio/docs-viewer/assets/css/*.css",
-        "studio/docs-viewer/config/ui-text/ui-text.json",
-        "studio/docs-viewer/config/runtime/docs-viewer-public-config.json"
+        "docs-viewer/config/ui-text/ui-text.json",
+        "docs-viewer/config/defaults/docs-viewer-public-config.json"
       ],
       "public_output": {
         "policy": "required",
         "paths": [
           "studio/docs-viewer/runtime/js/docs-viewer.js",
           "studio/docs-viewer/assets/css/docs-viewer.css",
-          "studio/docs-viewer/config/runtime/docs-viewer-public-config.json"
+          "docs-viewer/config/defaults/docs-viewer-public-config.json"
         ]
       },
       "owner_doc": "docs-viewer-runtime-boundary"
@@ -313,7 +313,7 @@
         "studio/docs-viewer/runtime/js/docs-viewer-management*.js",
         "studio/docs-viewer/runtime/js/docs-html-import*.js",
         "studio/docs-viewer/assets/css/docs-viewer-management.css",
-        "studio/docs-viewer/config/runtime/docs-viewer-config.json"
+        "docs-viewer/config/defaults/docs-viewer-config.json"
       ],
       "public_output": {
         "policy": "allowed",
@@ -321,7 +321,7 @@
           "studio/docs-viewer/runtime/js/docs-viewer-management*.js",
           "studio/docs-viewer/runtime/js/docs-html-import*.js",
           "studio/docs-viewer/assets/css/docs-viewer-management.css",
-          "studio/docs-viewer/config/runtime/docs-viewer-config.json"
+          "docs-viewer/config/defaults/docs-viewer-config.json"
         ]
       },
       "owner_doc": "docs-viewer-management"
@@ -441,7 +441,7 @@
     }
   ],
   "public_docs_viewer": {
-    "config_path": "studio/docs-viewer/config/runtime/docs-viewer-public-config.json",
+    "config_path": "docs-viewer/config/defaults/docs-viewer-public-config.json",
     "allowed_scope_ids": [
       "library",
       "analysis"

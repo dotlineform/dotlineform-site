@@ -4,7 +4,7 @@ url: "https://www.dotlineform.com"
 baseurl: ""  # custom domain: leave empty
 live_url: "https://www.dotlineform.com"
 docs_viewer_management_enabled: false
-docs_viewer_config_url: "/studio/docs-viewer/config/runtime/docs-viewer-public-config.json"
+docs_viewer_config_url: "/docs-viewer/config/defaults/docs-viewer-public-config.json"
 docs_viewer_links_enabled: true
 docs_viewer_link_fallback: "host_route"
 docs_viewer_service_required_for_public_routes: false
@@ -109,11 +109,14 @@ exclude:
   - studio/checks/
   - studio/tests/
   - studio/docs-viewer/build/
-  - studio/docs-viewer/config/runtime/docs-viewer-config.json
-  - studio/docs-viewer/config/scopes/
+  - docs-viewer/config/defaults/docs-viewer-config.json
+  - docs-viewer/config/defaults/docs-viewer-service.json
+  - docs-viewer/config/reports/
+  - docs-viewer/config/schema/
+  - docs-viewer/config/scopes/
+  - docs-viewer/source/
   - studio/docs-viewer/server/
   - studio/docs-viewer/services/
-  - studio/docs-viewer/source/
   - studio/docs-viewer/source-assets/
   - studio/docs-viewer/tests/
   - studio/ui-catalogue/

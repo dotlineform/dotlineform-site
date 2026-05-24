@@ -60,8 +60,8 @@ assets/studio/data/build_activity.json
 var/local/site.env
 
 # Docs Viewer local runtime state
-.docs-viewer/.cache/
-.docs-viewer/.tmp/
-.docs-viewer/logs/
-.docs-viewer/run/
-.docs-viewer/var/
+docs-viewer/.cache/
+docs-viewer/.tmp/
+docs-viewer/logs/
+docs-viewer/run/
+docs-viewer/var/

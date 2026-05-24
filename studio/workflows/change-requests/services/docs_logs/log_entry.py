@@ -83,10 +83,10 @@ def slugify(value: str) -> str:
 def infer_domains(*values: str) -> list[str]:
     haystack = " ".join(value.lower() for value in values if value)
     candidates: list[tuple[str, tuple[str, ...]]] = [
-        ("docs-viewer", ("docs-viewer", "docs viewer", "studio/docs-viewer/source/studio", "docs/", "docs_")),
+        ("docs-viewer", ("docs-viewer", "docs viewer", "docs-viewer/source/studio", "docs/", "docs_")),
         ("search", ("search", "ranking", "normalisation", "normalization", "index")),
         ("catalogue", ("catalogue", "work editor", "series", "moment")),
-        ("library", ("library", "studio/docs-viewer/source/library")),
+        ("library", ("library", "docs-viewer/source/library")),
         ("studio-ui", ("studio ui", "ui primitive", "modal", "css", "layout")),
         ("build", ("build", "generated", "payload", "jekyll")),
         ("scripts", ("script", "scripts/")),
@@ -123,12 +123,12 @@ def parse_front_matter(text: str) -> tuple[dict[str, str], list[str]]:
 
 
 def find_doc_by_id(root: Path, doc_id: str) -> tuple[Path, dict[str, str], list[str]]:
-    for path in sorted((root / "studio/docs-viewer/source/studio").glob("*.md")):
+    for path in sorted((root / "docs-viewer/source/studio").glob("*.md")):
         text = path.read_text(encoding="utf-8")
         front_matter, body_lines = parse_front_matter(text)
         if front_matter.get("doc_id") == doc_id:
             return path, front_matter, body_lines
-    raise ValueError(f"Could not find studio/docs-viewer/source/studio source for doc_id: {doc_id}")
+    raise ValueError(f"Could not find docs-viewer/source/studio source for doc_id: {doc_id}")
 
 
 def section_lines(body_lines: list[str], heading: str) -> list[str]:
@@ -376,7 +376,7 @@ def maybe_rebuild_generated(root: Path, dry_run: bool, skip: bool) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--from-change-request", help="Seed fields from a studio/docs-viewer/source/studio change request doc_id.")
+    parser.add_argument("--from-change-request", help="Seed fields from a docs-viewer/source/studio change request doc_id.")
     parser.add_argument("--id", help="Explicit entry id. Defaults to change-<date>-<title-slug>.")
     parser.add_argument("--date", help="Change date in YYYY-MM-DD form. Defaults to today.")
     parser.add_argument("--title", help="Entry title.")

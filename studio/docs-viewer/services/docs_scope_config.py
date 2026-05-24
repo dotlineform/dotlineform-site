@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 
-CONFIG_REL_PATH = Path("studio/docs-viewer/config/scopes/docs_scopes.json")
+CONFIG_REL_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
 SCHEMA_VERSION = "docs_scopes_v1"
 
 

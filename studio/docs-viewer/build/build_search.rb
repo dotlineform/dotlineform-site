@@ -10,7 +10,7 @@ require "set"
 require "time"
 
 DEFAULT_SCOPE = "studio"
-DOCS_SCOPE_CONFIG_PATH = "studio/docs-viewer/config/scopes/docs_scopes.json"
+DOCS_SCOPE_CONFIG_PATH = "docs-viewer/config/scopes/docs_scopes.json"
 
 SearchDocRecord = Struct.new(
   :doc_id,

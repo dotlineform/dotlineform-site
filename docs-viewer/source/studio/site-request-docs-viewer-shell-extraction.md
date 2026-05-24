@@ -28,7 +28,7 @@ Canonical publishing Markdown such as `_docs_catalogue/` is Studio-owned site so
 Generated docs/search JSON consumed by public installs such as `/library/` and `/analysis/` remains in the public Jekyll site output paths.
 
 This follow-on request is what makes Docs Viewer truly portable.
-Extraction means moving the Docs Viewer runtime, server/services, Docs Viewer source contract, source config, management behavior, shell, and associated assets out of Studio into a self-contained `.docs-viewer/` folder.
+Extraction means moving the Docs Viewer runtime, server/services, Docs Viewer source contract, source config, management behavior, shell, and associated assets out of Studio into a self-contained `docs-viewer/` folder.
 Studio is not a Docs Viewer host after extraction.
 Instead, Studio and Jekyll-hosted pages are peer consumers that discover Docs Viewer through repo-owned config and link to the Docs Viewer service when it is running.
 Docs Viewer starts and stops independently of Local Studio.
@@ -37,7 +37,7 @@ Docs Viewer starts and stops independently of Local Studio.
 
 Until this extraction starts, current Docs Viewer files remain under Studio for source-tree ownership.
 That interim placement does not mean Docs Viewer is permanently a Studio subsystem.
-The extraction target is an independent Docs Viewer service boundary under `.docs-viewer/`, not a Studio subsystem and not a Studio shell.
+The extraction target is an independent Docs Viewer service boundary under `docs-viewer/`, not a Studio subsystem and not a Studio shell.
 The host repo owns the integration config that tells local pages where the Docs Viewer service is available and which public or local-only document links should point to it.
 Docs Viewer advertises its running local host location through that config, including the active port or base URL, so that Local Studio, Live Preview pages, and generated Jekyll pages can link to:
 
@@ -49,7 +49,7 @@ The extraction should distinguish:
 - Docs Viewer core: document loading, navigation, search, rendering, reports, bookmarks, generated data contract, UI text, and read-only viewer behavior
 - Docs Viewer management: import, settings, source-config reports, management-only controls, and docs write API contracts
 - Docs Viewer source: source Markdown, scope config, source-side metadata, and local write/rebuild assumptions needed to generate Docs Viewer payloads
-- Docs Viewer shell: standalone route/page wrapper and local service entrypoint owned by `.docs-viewer/`, able to load relative config and generated docs/search payloads without Studio
+- Docs Viewer shell: standalone route/page wrapper and local service entrypoint owned by `docs-viewer/`, able to load relative config and generated docs/search payloads without Studio
 - Host integration config: repo-owned config that records the Docs Viewer service base URL, public link behavior, manage-mode availability, generated data locations, and source/write capability flags
 - Studio integration: Local Studio navigation and UI links that point to the Docs Viewer service when it is running, without embedding or hosting the Docs Viewer shell
 - Live Preview integration: Jekyll-hosted pages that can link to Docs Viewer-hosted documents through the advertised Docs Viewer base URL
@@ -60,7 +60,7 @@ The extraction should distinguish:
 After extraction, the likely target shape is:
 
 ```text
-.docs-viewer/
+docs-viewer/
   core/
   shell/
   services/
@@ -97,7 +97,7 @@ Use a split config model so Docs Viewer remains portable while this repo can adv
 - `var/local/site.env` owns local runtime/service settings, including the Docs Viewer host, port, base URL, and manage-mode enablement.
 - `_config.yml` owns only static Jekyll integration defaults that public or generated pages need at build/render time, such as whether Docs Viewer links are enabled and fallback link behavior.
 - `.gitignore` should ignore generated runtime advertisement files, PID/log files, temporary service state, and Docs Viewer cache/build output if those files are produced.
-- `.docs-viewer/config/` owns Docs Viewer defaults and schema, including route names, generated-data contract defaults, shell defaults, and the capability model.
+- `docs-viewer/config/` owns Docs Viewer defaults and schema, including route names, generated-data contract defaults, shell defaults, and the capability model.
 - Add a tracked repo integration config such as `config/docs-viewer.yml` only if `_config.yml`, `var/local/site.env`, and Docs Viewer-owned config are not enough.
 
 The host repo may require `var/local/site.env` as a prerequisite for running Docs Viewer locally.
@@ -105,14 +105,14 @@ Docs Viewer-owned config should not contain this repo's local port state.
 
 ## Packaging Decision
 
-Keep `.docs-viewer/` as tracked source in this repo for the initial extraction.
+Keep `docs-viewer/` as tracked source in this repo for the initial extraction.
 Do not turn it into a submodule, external package, or separately versioned dependency until the standalone Docs Viewer service works locally and the boundary has been proven by focused checks.
 
 The tracked folder should still be shaped like a portable package boundary:
 
 - no hidden dependency on Studio paths, Studio shell, or Studio runtime config
-- no repo-local host, port, or service-state defaults inside `.docs-viewer/`
-- repo-specific integration kept outside `.docs-viewer/` where practical
+- no repo-local host, port, or service-state defaults inside `docs-viewer/`
+- repo-specific integration kept outside `docs-viewer/` where practical
 - scripts and tests written so future packaging is a mechanical follow-up, not a second architecture rewrite
 
 ## Service Location Decision
@@ -151,7 +151,7 @@ That route is served by the Docs Viewer service and is the manage-mode browser p
 
 Additional public read-only scopes are created or registered from Docs Viewer manage mode, including through the New Scope action.
 Those scopes map to repo/Jekyll-hosted routes such as `/library/` and `/analysis/`.
-At runtime and build time, those host routes use scripts, generated-data contracts, and scope machinery owned by `.docs-viewer/`, but the pages themselves are hosted by the repo/Jekyll route.
+At runtime and build time, those host routes use scripts, generated-data contracts, and scope machinery owned by `docs-viewer/`, but the pages themselves are hosted by the repo/Jekyll route.
 
 Therefore extraction should not treat Docs Viewer as replacing `/library/` or `/analysis/` with Docs Viewer-hosted pages.
 Docs Viewer provides the manage route and the scope creation/registration machinery; public scope routes remain host-repo routes installed or registered by Docs Viewer.
@@ -209,16 +209,16 @@ The shell extraction should make the CSS base explicit:
 - Define the canonical source contract for portable installs: where source Markdown and scope config live, which source files are copied or generated, and which generated JSON/search payloads remain in the consuming Jekyll site's public output paths.
 - Define the CSS shell contract: which base typography, theme, container, link, and spacing tokens are provided by the host shell versus by Docs Viewer-owned CSS.
 - Define the repo-owned host config that records Docs Viewer availability, base URL/port, public link behavior, manage-mode availability, generated payload locations, and source/write capability flags.
-- Apply the config ownership decision across `var/local/site.env`, `_config.yml`, `.gitignore`, and `.docs-viewer/config/`, adding tracked repo integration config only if needed.
-- Keep `.docs-viewer/` tracked as repo source for this extraction while avoiding hidden Studio and repo-local runtime dependencies inside that boundary.
+- Apply the config ownership decision across `var/local/site.env`, `_config.yml`, `.gitignore`, and `docs-viewer/config/`, adding tracked repo integration config only if needed.
+- Keep `docs-viewer/` tracked as repo source for this extraction while avoiding hidden Studio and repo-local runtime dependencies inside that boundary.
 - Use static Docs Viewer host, port, and base URL settings from `var/local/site.env` for v1, with clear startup failure when the configured port is unavailable.
 - Render configured Docs Viewer links without service availability probing; if Docs Viewer is not running, let links fail normally.
 - Preserve route ownership: Docs Viewer service owns built-in `/docs/` manage mode, while public read-only scopes such as `/library/` and `/analysis/` remain repo/Jekyll-hosted routes installed or registered through Docs Viewer scope machinery.
 - Keep manage mode local-only for v1 through loopback binding and explicit local capability flags; public scope routes remain static/Jekyll-compatible read-only routes.
 - Add a `bin/local-studio`-style lightweight "start all" runner for Live Preview, Local Studio, and Docs Viewer with static port validation, signal cleanup, and clear child-process failure behavior.
-- Move reusable Docs Viewer runtime, server/services, canonical source handling, config, UI text, CSS, shell, and associated assets out of Studio into `.docs-viewer/`.
+- Move reusable Docs Viewer runtime, server/services, canonical source handling, config, UI text, CSS, shell, and associated assets out of Studio into `docs-viewer/`.
 - Replace Studio-specific Docs Viewer hosting code with Studio integration/link code that points to the advertised Docs Viewer service when available.
-- Add the independent Docs Viewer launcher/start-stop path as part of the `.docs-viewer/` service contract.
+- Add the independent Docs Viewer launcher/start-stop path as part of the `docs-viewer/` service contract.
 - Add or identify a Docs Viewer-owned base stylesheet for standalone Docs Viewer pages if the host shell contract is not enough.
 - Add a repo-level shell script that starts Live Preview, Local Studio, and Docs Viewer together while preserving independent service lifecycles.
 - Verify Studio can link to Docs Viewer management mode through the advertised local Docs Viewer service.
@@ -228,7 +228,7 @@ The shell extraction should make the CSS base explicit:
 
 ## Acceptance Criteria
 
-- Docs Viewer is self-contained under `.docs-viewer/`.
+- Docs Viewer is self-contained under `docs-viewer/`.
 - Docs Viewer runs in its own shell/service and starts/stops independently of Local Studio.
 - The host repo has repo-owned config that advertises the running Docs Viewer local host location, including base URL or port.
 - Local Studio links to Docs Viewer-hosted management pages when the Docs Viewer service is running, without hosting the Docs Viewer shell.

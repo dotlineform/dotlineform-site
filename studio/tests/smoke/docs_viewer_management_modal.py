@@ -965,12 +965,12 @@ def run_import_result_rows_check(page: Page) -> None:
               <p id="docsHtmlImportBootStatus">loading docs import...</p>
             `;
             const responses = {
-                '/studio/docs-viewer/config/ui-text/ui-text.json': {
+                '/docs-viewer/config/ui-text/ui-text.json': {
                     docs_html_import: {
                         script_file_result_type: 'script file'
                     }
                 },
-                '/studio/docs-viewer/config/runtime/docs-viewer-config.json': {
+                '/docs-viewer/config/defaults/docs-viewer-config.json': {
                     schema_version: 'docs_viewer_config_v1',
                     scopes: [{ scope_id: 'library' }]
                 },
@@ -1015,8 +1015,8 @@ def run_import_result_rows_check(page: Page) -> None:
             await module.initDocsHtmlImport({
                 root: document.getElementById('docsHtmlImportRoot'),
                 bootStatus: document.getElementById('docsHtmlImportBootStatus'),
-                docsViewerConfigUrl: '/studio/docs-viewer/config/runtime/docs-viewer-config.json',
-                uiTextUrl: '/studio/docs-viewer/config/ui-text/ui-text.json',
+                docsViewerConfigUrl: '/docs-viewer/config/defaults/docs-viewer-config.json',
+                uiTextUrl: '/docs-viewer/config/ui-text/ui-text.json',
                 managementBaseUrl: 'http://docs-management.test',
                 persistScope: false
             });

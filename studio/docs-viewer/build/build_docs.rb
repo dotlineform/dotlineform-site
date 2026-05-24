@@ -12,9 +12,9 @@ require "yaml"
 
 require_relative "../../shared/ruby/jekyll_markdown_renderer"
 
-DOCS_SCOPE_CONFIG_PATH = File.expand_path("../config/scopes/docs_scopes.json", __dir__)
+DOCS_SCOPE_CONFIG_PATH = File.expand_path("../../../docs-viewer/config/scopes/docs_scopes.json", __dir__)
 DOCS_SCOPE_CONFIG_SCHEMA_VERSION = "docs_scopes_v1"
-DOCS_VIEWER_BROWSER_CONFIG_PATH = File.expand_path("../../../studio/docs-viewer/config/runtime/docs-viewer-config.json", __dir__)
+DOCS_VIEWER_BROWSER_CONFIG_PATH = File.expand_path("../../../docs-viewer/config/defaults/docs-viewer-config.json", __dir__)
 DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v1"
 
 ScopeConfig = Struct.new(

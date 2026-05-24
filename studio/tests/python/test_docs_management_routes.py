@@ -8,9 +8,9 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DOCS_DIR = REPO_ROOT / "scripts" / "docs"
-if str(SCRIPTS_DOCS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DOCS_DIR))
+DOCS_SERVICES_DIR = REPO_ROOT / "studio" / "docs-viewer" / "services"
+if str(DOCS_SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_management_routes as routes  # noqa: E402
 from studio import data_sharing_routes  # noqa: E402

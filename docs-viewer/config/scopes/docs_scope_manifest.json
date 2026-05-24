@@ -16,19 +16,19 @@
       "files": [
         {
           "kind": "source_root",
-          "path": "studio/docs-viewer/source/analysis",
+          "path": "docs-viewer/source/analysis",
           "action": "track",
           "exists": true
         },
         {
           "kind": "scope_config",
-          "path": "studio/docs-viewer/config/scopes/docs_scopes.json",
+          "path": "docs-viewer/config/scopes/docs_scopes.json",
           "action": "track",
           "exists": true
         },
         {
           "kind": "default_source_doc",
-          "path": "studio/docs-viewer/source/analysis/analysis.md",
+          "path": "docs-viewer/source/analysis/analysis.md",
           "action": "track",
           "exists": true
         },
@@ -82,19 +82,19 @@
       "files": [
         {
           "kind": "source_root",
-          "path": "studio/docs-viewer/source/library",
+          "path": "docs-viewer/source/library",
           "action": "track",
           "exists": true
         },
         {
           "kind": "scope_config",
-          "path": "studio/docs-viewer/config/scopes/docs_scopes.json",
+          "path": "docs-viewer/config/scopes/docs_scopes.json",
           "action": "track",
           "exists": true
         },
         {
           "kind": "default_source_doc",
-          "path": "studio/docs-viewer/source/library/library.md",
+          "path": "docs-viewer/source/library/library.md",
           "action": "track",
           "exists": true
         },
@@ -148,19 +148,19 @@
       "files": [
         {
           "kind": "source_root",
-          "path": "studio/docs-viewer/source/studio",
+          "path": "docs-viewer/source/studio",
           "action": "track",
           "exists": true
         },
         {
           "kind": "scope_config",
-          "path": "studio/docs-viewer/config/scopes/docs_scopes.json",
+          "path": "docs-viewer/config/scopes/docs_scopes.json",
           "action": "track",
           "exists": true
         },
         {
           "kind": "default_source_doc",
-          "path": "studio/docs-viewer/source/studio/dev-home.md",
+          "path": "docs-viewer/source/studio/dev-home.md",
           "action": "track",
           "exists": true
         },

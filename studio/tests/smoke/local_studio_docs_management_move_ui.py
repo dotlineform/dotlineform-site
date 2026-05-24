@@ -65,7 +65,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 browser.close()
 
-            source_text = (fixture_root / "studio/docs-viewer/source/studio" / "child-doc.md").read_text(encoding="utf-8")
+            source_text = (fixture_root / "docs-viewer/source/studio" / "child-doc.md").read_text(encoding="utf-8")
             if "parent_id: " not in source_text or "parent_id: root-doc" in source_text:
                 raise AssertionError("UI drag/drop move did not move child-doc to the top level")
             if not any("/docs/move" in url for url in posts):

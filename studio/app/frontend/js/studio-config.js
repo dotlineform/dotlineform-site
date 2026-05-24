@@ -95,7 +95,7 @@ const DEFAULT_STUDIO_CONFIG = {
         "tag_aliases": "/studio/app/frontend/config/ui-text/tag-aliases.json",
         "data_sharing_review": "/studio/app/frontend/config/ui-text/data-sharing-review.json",
         "data_sharing_prepare": "/studio/app/frontend/config/ui-text/data-sharing-prepare.json",
-        "docs_viewer": "/studio/docs-viewer/config/ui-text/ui-text.json",
+        "docs_viewer": "/docs-viewer/config/ui-text/ui-text.json",
         "activity_log": "/studio/app/frontend/config/ui-text/activity-log.json",
         "bulk_add_work": "/studio/app/frontend/config/ui-text/bulk-add-work.json",
         "catalogue_field_registry_review": "/studio/app/frontend/config/ui-text/catalogue-field-registry-review.json",

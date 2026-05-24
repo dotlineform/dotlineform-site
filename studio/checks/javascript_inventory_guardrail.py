@@ -13,7 +13,7 @@ from typing import Iterable
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_INVENTORY = "studio/docs-viewer/source/studio/javascript-inventory.md"
+DEFAULT_INVENTORY = "docs-viewer/source/studio/javascript-inventory.md"
 
 
 @dataclass(frozen=True)

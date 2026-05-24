@@ -1,0 +1,71 @@
+{
+  "schema": "docs_viewer_reports_v1",
+  "reports": [
+    {
+      "report_id": "docs_index_table",
+      "title": "Docs Index Table",
+      "description": "Displays a sortable Docs Viewer index table for a selected docs scope.",
+      "default_access": "public",
+      "loader_id": "docs_index_table",
+      "presets": [
+        {
+          "preset_id": "library_documents_admin",
+          "title": "Library Documents Admin",
+          "description": "Management report for reviewing Library documents by title, doc_id, and hidden status.",
+          "default_scope": "library",
+          "columns": ["title", "doc_id", "hidden"],
+          "filters": ["hidden"],
+          "sortable": ["title", "doc_id", "hidden"]
+        },
+        {
+          "preset_id": "az_index",
+          "title": "A-Z Index",
+          "description": "Single-column alphabetical title index.",
+          "columns": ["title"],
+          "filters": [],
+          "sortable": ["title"]
+        }
+      ]
+    },
+    {
+      "report_id": "reports_list",
+      "title": "Reports List",
+      "description": "Displays the configured Docs Viewer report metadata from the report registry.",
+      "default_access": "public",
+      "loader_id": "reports_list",
+      "presets": []
+    },
+    {
+      "report_id": "source_config",
+      "title": "Source Config",
+      "description": "Displays Docs Viewer source config for all scopes in manage mode.",
+      "default_access": "manage",
+      "loader_id": "source_config",
+      "presets": []
+    },
+    {
+      "report_id": "change_history",
+      "title": "Change History",
+      "description": "Displays structured docs-log entries from local generated projections.",
+      "default_access": "manage",
+      "loader_id": "change_history",
+      "presets": []
+    },
+    {
+      "report_id": "semantic_references",
+      "title": "Semantic References",
+      "description": "Displays generated semantic-reference targets and source docs.",
+      "default_access": "manage",
+      "loader_id": "semantic_references",
+      "presets": []
+    },
+    {
+      "report_id": "docs_broken_links",
+      "title": "Docs Broken Links",
+      "description": "Runs the Docs Viewer broken-links audit for a selected scope.",
+      "default_access": "manage",
+      "loader_id": "docs_broken_links",
+      "presets": []
+    }
+  ]
+}

@@ -10,7 +10,7 @@ from typing import Any
 from docs_scope_config import CONFIG_REL_PATH, load_docs_scope_configs
 
 
-BROWSER_CONFIG_REL_PATH = Path("studio/docs-viewer/config/runtime/docs-viewer-config.json")
+BROWSER_CONFIG_REL_PATH = Path("docs-viewer/config/defaults/docs-viewer-config.json")
 SEARCH_REL_ROOT = Path("assets/data/search")
 SCHEMA_VERSION = "docs_source_config_report_v1"
 

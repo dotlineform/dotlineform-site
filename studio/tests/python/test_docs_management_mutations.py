@@ -9,16 +9,16 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-SCRIPTS_DOCS_DIR = REPO_ROOT / "scripts" / "docs"
-if str(SCRIPTS_DOCS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DOCS_DIR))
+DOCS_SERVICES_DIR = REPO_ROOT / "studio" / "docs-viewer" / "services"
+if str(DOCS_SERVICES_DIR) not in sys.path:
+    sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_management_mutations as mutations  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 
 
 def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: str | None = None) -> None:
-    path = root / "studio/docs-viewer/source/studio" / filename
+    path = root / "docs-viewer/source/studio" / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         source_model.format_source(front_matter, body if body is not None else f"# {front_matter['title']}\n"),
@@ -123,7 +123,7 @@ def test_create_plan_selects_unique_source_path_backup_metadata_and_search_targe
     assert plan.response["record"]["sort_order"] == 15
     assert plan.backup_operation == "create"
     assert plan.backup_metadata is not None
-    assert plan.backup_metadata["path"] == "studio/docs-viewer/source/studio/target-2.md"
+    assert plan.backup_metadata["path"] == "docs-viewer/source/studio/target-2.md"
     assert plan.search_doc_ids == ["target-2"]
     assert plan.source_writes[0].path.name == "target-2.md"
 
