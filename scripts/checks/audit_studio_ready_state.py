@@ -20,10 +20,6 @@ ATTR_RE_TEMPLATE = r"""{name}\s*=\s*["']([^"']+)["']"""
 SCRIPT_TAG_RE = re.compile(r"""<script\b[^>]*>""", re.IGNORECASE)
 SCRIPT_TYPE_RE = re.compile(r"""\btype\s*=\s*(["'])module\1""", re.IGNORECASE)
 SCRIPT_SRC_RE = re.compile(r"""\bsrc\s*=\s*(["'])(.*?)\1""", re.IGNORECASE)
-STUDIO_MODULE_INCLUDE_RE = re.compile(
-    r"""{%\s*include\s+studio_module_script\.html\b(.*?)%}""",
-    re.IGNORECASE | re.DOTALL,
-)
 
 
 @dataclass(frozen=True)
@@ -58,11 +54,6 @@ def module_scripts(text: str) -> list[str]:
         if not SCRIPT_TYPE_RE.search(tag):
             continue
         src_match = SCRIPT_SRC_RE.search(tag)
-        if src_match:
-            scripts.append(src_match.group(2))
-    for include_match in STUDIO_MODULE_INCLUDE_RE.finditer(text):
-        include_args = include_match.group(1)
-        src_match = re.search(r"""\b(?:src|path)\s*=\s*(["'])(.*?)\1""", include_args)
         if src_match:
             scripts.append(src_match.group(2))
     return scripts

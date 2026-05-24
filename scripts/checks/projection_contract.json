@@ -462,9 +462,7 @@
       "assets/css/**/*.css",
       "*.md"
     ],
-    "ignore_paths": [
-      "_includes/studio_header_nav.html"
-    ],
+    "ignore_paths": [],
     "forbidden_substrings": [
       "assets/studio/",
       "/assets/studio/",

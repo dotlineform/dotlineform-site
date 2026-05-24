@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-3ce0003b48e60e5a99ddcc2a7b042ce5",
-    "generated_at_utc": "2026-05-24T15:05:32Z",
-    "count": 302
+    "version": "blake2b-808201024d1c093171358568ca92dfbd",
+    "generated_at_utc": "2026-05-24T15:19:54Z",
+    "count": 303
   },
   "entries": [
     {
@@ -1313,10 +1313,10 @@
       "kind": "doc",
       "title": "Studio Ready-State Audit",
       "href": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
-      "last_updated": "2026-05-09 22:35",
+      "last_updated": "2026-05-24",
       "parent_id": "audit",
       "parent_title": "Audit",
-      "display_meta": "2026-05-09 22:35 • Audit",
+      "display_meta": "2026-05-24 • Audit",
       "search_terms": [
         "scripts-audit-studio-ready-state",
         "scripts",
@@ -1325,14 +1325,12 @@
         "ready",
         "state",
         "studio ready-state audit",
-        "2026-05-09 22:35",
+        "2026-05-24",
         "2026",
         "05",
-        "09",
-        "22",
-        "35"
+        "24"
       ],
-      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "scripts-audit-studio-ready-state scripts audit studio ready state studio ready-state audit 2026-05-24 2026 05 24"
     },
     {
       "id": "site-request-studio-record-hash-simplification",
@@ -4689,6 +4687,33 @@
         "24"
       ],
       "search_text": "site-request-studio-source-tree-reorganization-inventory site request studio source tree reorganization inventory studio source tree reorganization inventory studio source tree reorganization request 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "site-request-studio-source-tree-reorganization-layout",
+      "kind": "doc",
+      "title": "Studio Source Tree Reorganization Layout",
+      "href": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-layout",
+      "last_updated": "2026-05-24",
+      "parent_id": "site-request-studio-source-tree-reorganization",
+      "parent_title": "Studio Source Tree Reorganization Request",
+      "display_meta": "2026-05-24 • Studio Source Tree Reorganization Request",
+      "search_terms": [
+        "site-request-studio-source-tree-reorganization-layout",
+        "site",
+        "request",
+        "studio",
+        "source",
+        "tree",
+        "reorganization",
+        "layout",
+        "studio source tree reorganization layout",
+        "studio source tree reorganization request",
+        "2026-05-24",
+        "2026",
+        "05",
+        "24"
+      ],
+      "search_text": "site-request-studio-source-tree-reorganization-layout site request studio source tree reorganization layout studio source tree reorganization layout studio source tree reorganization request 2026-05-24 2026 05 24"
     },
     {
       "id": "site-request-docs-viewer-shell-extraction",

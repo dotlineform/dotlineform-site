@@ -50,14 +50,8 @@ The `i` link is the page-to-doc bridge for Studio. Each page now points to a sco
 
 This keeps Studio implementation notes in the shared `/docs/` module rather than on page-local routes.
 
-Legacy Jekyll route entry modules are loaded through `_includes/studio_module_script.html`, for example:
-
-```liquid
-{% include studio_module_script.html src='/assets/studio/js/catalogue-work-editor.js' %}
-```
-
-The include appends the same `site.time`-derived asset-version query used by the default layout's shared assets.
-Route pages own which entry module they load; route controllers do not own cache-busting for their own entry script.
+Legacy Jekyll Studio route entry modules no longer use a shared Liquid include.
+Operational Studio route shells are hosted by the local app, and remaining Studio-owned Jekyll-shaped demo pages are cleanup targets for the source-tree move.
 
 ## Studio Pages
 

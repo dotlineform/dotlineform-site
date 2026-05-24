@@ -16,25 +16,26 @@ This is the tracker for implementing [Studio Source Tree Reorganization Request]
 
 ### just done
 
-- Completed `STSR-004` by resolving the ambiguous ownership rows in [Studio Source Tree Reorganization Inventory](/docs/?scope=studio&mode=manage&doc=site-request-studio-source-tree-reorganization-inventory).
-- Recorded that current Jekyll-shaped Studio/UI Catalogue route hosts are Studio-owned cleanup targets, not public-site source.
-- Recorded that Docs Viewer shell, runtime config, UI text, CSS, reports, services, source scopes, interactive assets, and search builder logic should move as a coherent internal subtree under `studio/docs-viewer/`, while public read-only routes may keep only minimal Jekyll adapters and generated runtime payloads.
-- Recorded that `_docs_logs/` source and generated workflow output remain Studio workflow-owned, while Docs Viewer reports may read them only through explicit report/config allowlists.
-- Recorded that derived catalogue lookup payloads are Studio editor read models with a schema contract, while disposable lookup/cache state belongs under `var/`.
-- Recorded that checks, tests, fixtures, public-surface audits, root build/preview helpers, and smoke tests are Studio/Codex development infrastructure.
-- Recorded the search split: Catalogue search generation/config/policy belongs to Studio, Docs Viewer search generation/config belongs to Docs Viewer, and public search route JavaScript/generated payloads remain public runtime/output.
+- Completed `STSR-007` by removing transition-only Studio include dependencies from the public Jekyll shell.
+- Removed the old Studio navigation branch from `_layouts/default.html`; public Jekyll navigation now stays public-only.
+- Deleted `_includes/studio_header_nav.html` and `_includes/studio_module_script.html` after confirming no active source route includes them.
+- Removed `studio_module_script.html` parsing support from `scripts/checks/audit_studio_ready_state.py` and removed `_includes/studio_header_nav.html` from the projection-contract ignore list.
+- Updated owning docs and reorganization docs to record that `_layouts/studio.html` remains only as a UI Catalogue cleanup/move dependency.
+- Verification passed: `./scripts/run_checks.py --profile quick --run-id stsr-007-cleanup-quick`; summary: `var/test-runs/stsr-007-cleanup-quick/summary.md`.
+- Verification passed: isolated public Jekyll build to `/tmp/dlf-jekyll-build` and `./scripts/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build`.
 
 ### steer for next task
 
-- Start with `STSR-005`; define the final concrete `studio/` layout before moving files.
-- Do not move files in `STSR-005`; record concrete repo paths for each owner so later move tasks can update references directly.
+- Start with `STSR-008`; this is the first move slice.
+- Move canonical website data, `_docs_catalogue/`, change request workflow data, Studio config/data, and Docs Viewer source Markdown to the layout recorded in [Studio Source Tree Reorganization Layout](/docs/?scope=studio&mode=manage&doc=site-request-studio-source-tree-reorganization-layout).
+- Update readers/writers directly to the new paths; do not add old-path aliases, static mount shims, or dual-read fallback logic.
 - Treat the table as sequential: only begin the next non-deferred ID after the current one is `done`.
 - Keep generated docs/search payloads untouched unless the active task explicitly says to rebuild them.
 - Treat `_docs/`, `_docs_analysis/`, `_docs_library/`, current `assets/docs-viewer/`, and current `scripts/docs/` as Docs Viewer-owned source/runtime/service inputs that should move into a clear internal Docs Viewer home under `studio/`; separate them from generated public docs/search payloads.
 - Treat `_docs_logs/` and `scripts/docs_logs/` as Studio-owned change request workflow source/service paths, not Docs Viewer-owned paths. Generated log/report artifacts may be consumed by Codex or surfaced through `/docs/`, but that does not transfer source ownership to Docs Viewer.
 - Treat Docs Viewer reports as cross-domain readers: report source/config/runtime belongs with Docs Viewer, while report input data belongs with the domain that owns it.
 - Treat `_docs_catalogue/` as Studio-owned canonical publishing Markdown, not Docs Viewer-owned source; it should move under Studio canonical data.
-- Treat current Jekyll-shaped Studio and UI Catalogue artifacts as cleanup targets, not as acceptable final ownership. If Studio still depends on `_layouts/studio.html`, `_includes/studio_header_nav.html`, `_includes/studio_module_script.html`, or UI Catalogue includes, resolve that as unfinished Local Studio cleanup.
+- Treat current Jekyll-shaped Studio and UI Catalogue artifacts as cleanup targets, not as acceptable final ownership. `_includes/studio_header_nav.html` and `_includes/studio_module_script.html` were removed in `STSR-007`; remaining `_layouts/studio.html` usage is a UI Catalogue cleanup/move dependency.
 - Treat Docs Viewer `_includes/` route files as route-integration debt to decide deliberately: public read-only route adapters may remain minimal Jekyll integration, but Docs Viewer shell/config/runtime source should live under Docs Viewer.
 - Treat `assets/studio/data/catalogue_lookup/` as Studio-generated lookup/read-model data for editors, not public page data; disposable lookup/cache state belongs under `var/`.
 - Treat checks and tests as Studio/Codex development infrastructure even when they validate the public published surface.
@@ -44,6 +45,20 @@ This is the tracker for implementing [Studio Source Tree Reorganization Request]
 - Preserve Docs Viewer's localized boundaries inside Studio; do not scatter its runtime, CSS, config, server/services, source, and assets across generic Studio folders.
 - Do not introduce compatibility paths for moved Studio source; update references to the new `studio/` locations and fix breakage directly.
 - Keep Studio and the public Jekyll site in one repo; do not re-open repository split planning.
+
+### baseline verification set
+
+Use this set before and after move slices when the touched area warrants it:
+
+- Core syntax/projection/data checks: `./scripts/run_checks.py --profile quick`.
+- Public build check: `bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`.
+- Public surface audit: `./scripts/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build`.
+- Local Studio Docs Viewer smoke: `tests/smoke/local_studio_app_docs_viewer.py`.
+- Local Studio Catalogue dashboard smoke: `tests/smoke/local_studio_app_catalogue_dashboard_route.py`.
+- Local Studio UI Catalogue smoke: `tests/smoke/local_studio_app_ui_catalogue_routes.py`.
+- Add route-family or service-specific tests from `scripts/run_checks.py` profiles when a move touches that family.
+
+Codex sandbox note: the Local Studio smoke scripts bind temporary localhost ports and launch Chromium. In sandboxed Codex runs they may need elevated permissions even when the product code is healthy.
 
 ### general steer
 
@@ -61,9 +76,9 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | STSR-002 | done | Create this child task tracker with a Codex handover status section and a single sequential implementation table using the allowed statuses `planned`, `in progress`, `done`, and `deferred`. |
 | STSR-003 | done | Inventory every current Studio-related path and classify it as Studio source, public Jekyll source, public generated output, future Docs Viewer extraction candidate, Studio generated/local working output, mixed ownership, or out-of-scope dependency; include `scripts/`, `assets/studio/`, `assets/docs-viewer/`, `assets/ui-catalogue/`, `_includes/`, `_docs/`, `_docs_analysis/`, `_docs_library/`, `_docs_catalogue/`, `_ui_catalogue_notes/`, `studio/`, tests, checks, local runner files, and generated-output-adjacent data. Inventory recorded in [Studio Source Tree Reorganization Inventory](/docs/?scope=studio&mode=manage&doc=site-request-studio-source-tree-reorganization-inventory). |
 | STSR-004 | done | Resolve ambiguous ownership from the inventory before moving files; update the parent request, inventory, or this table for any path whose owner is unclear, especially canonical catalogue data, `_docs_catalogue/` publishing Markdown, Docs Viewer source scopes, Docs Viewer report source/config/runtime and generated public report registry/config payloads, Studio-owned `_docs_logs/` workflow data consumed by reports, Studio projections and lookup/read-model data, current Docs Viewer code/config/services/assets, generated Docs Viewer public payloads, generated change request log/report artifacts, projection checks, public route JavaScript, search builders/config/policy, tests, and UI Catalogue assets. |
-| STSR-005 | planned | Define the final `studio/` layout using concrete repo paths for canonical data, config, app server, frontend, assets, services, Studio-owned workflow data such as change request logs, UI Catalogue, tests, fixtures, checks, and a clear internal Docs Viewer home such as `studio/docs-viewer/`; save this layout in a sibling doc; do not start file moves until this layout is recorded. |
-| STSR-006 | planned | Capture a baseline verification set for the current tree, including the smallest useful Local Studio smoke checks, public Jekyll build check, projection/public-surface check, and syntax/import checks needed to compare before and after moves. |
-| STSR-007 | planned | Remove or finish any remaining transition-only Local Studio cleanup that would make file moves ambiguous, such as retired sibling-service fallbacks, old Jekyll route-host assumptions, stale static config fallbacks, or unused route adapters. |
+| STSR-005 | done | Define the final `studio/` layout using concrete repo paths for canonical data, config, app server, frontend, assets, services, Studio-owned workflow data such as change request logs, UI Catalogue, tests, fixtures, checks, and a clear internal Docs Viewer home such as `studio/docs-viewer/`; save this layout in a sibling doc; do not start file moves until this layout is recorded. |
+| STSR-006 | done | Capture a baseline verification set for the current tree, including the smallest useful Local Studio smoke checks, public Jekyll build check, projection/public-surface check, and syntax/import checks needed to compare before and after moves. |
+| STSR-007 | done | Remove or finish any remaining transition-only Local Studio cleanup that would make file moves ambiguous, such as retired sibling-service fallbacks, old Jekyll route-host assumptions, stale static config fallbacks, or unused route adapters. |
 | STSR-008 | planned | Move canonical website data, `_docs_catalogue/` publishing Markdown, Studio-owned change request workflow data, and Studio-owned config into the chosen Studio canonical/config/workflow paths, and move Docs Viewer source Markdown into the chosen Docs Viewer source home under `studio/`; then update all generators, validators, services, checks, tests, and docs that read canonical source so public outputs are still written to the existing Jekyll-facing paths. |
 | STSR-009 | planned | Verify the canonical-data move by running targeted source/projection checks and confirming the public Jekyll site still receives the generated JSON and assets it needs without reading canonical source directly. |
 | STSR-010 | planned | Move Local Studio app server modules, route-family modules, local API adapters, Studio-owned workflow services such as docs-log/change-request-log code, and Studio-owned service orchestration into the chosen `studio/app/` and `studio/services/` paths; move current Docs Viewer server/services into the chosen internal Docs Viewer home under `studio/`; update imports directly rather than adding old-path aliases. |
