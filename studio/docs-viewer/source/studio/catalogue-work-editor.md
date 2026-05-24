@@ -17,24 +17,24 @@ Route:
 The route shell is hosted by the local Studio app server.
 The old Jekyll route shell has been retired.
 
-This page edits canonical work source records from `assets/studio/data/catalogue/works.json` through the local catalogue service. It now supports focused single-record edit, bulk edit, and draft create mode on the same route.
+This page edits canonical work source records from `studio/data/canonical/catalogue/works.json` through the local catalogue service. It now supports focused single-record edit, bulk edit, and draft create mode on the same route.
 
 ## Browser Modules
 
-The route entry module is `assets/studio/js/catalogue-work-editor.js`.
+The route entry module is `studio/app/frontend/js/catalogue-work-editor.js`.
 It owns route startup, focused lookup reads, draft state, validation, dirty state interpretation, modal sequencing, route-ready state, and local-service coordination.
 
 Route-local helpers:
 
-- `assets/studio/js/catalogue-work-fields.js`
+- `studio/app/frontend/js/catalogue-work-fields.js`
   owns work field metadata, id normalization, series parsing, draft shaping, and source-record payload helpers.
-- `assets/studio/js/catalogue-work-form.js`
+- `studio/app/frontend/js/catalogue-work-form.js`
   owns editable field rendering, read-only field rendering, series picker UI behavior, form text synchronization, field value synchronization, field availability, and field validation message rendering.
-- `assets/studio/js/catalogue-work-sections.js`
+- `studio/app/frontend/js/catalogue-work-sections.js`
   owns current-record preview rendering, readiness rendering, work-detail section rendering, work-owned file/link section rendering, and the summary rail.
-- `assets/studio/js/catalogue-work-actions.js`
+- `studio/app/frontend/js/catalogue-work-actions.js`
   owns save, create, build-preview, build, prose import, publish/unpublish, media refresh, and delete workflow orchestration for the route.
-- `assets/studio/js/catalogue-work-selection.js`
+- `studio/app/frontend/js/catalogue-work-selection.js`
   owns work-id parsing, numeric range parsing, search-token matching, search result rendering, search/open control binding, initial URL selection, open-selection, and open-by-id behavior for the route.
 
 The form renderer receives route-owned callbacks for text lookup, field input handling, and route state refresh.
@@ -208,10 +208,10 @@ Current save/publication flow:
 9. the current-record rail `Preview update` button is available for unsaved single-work edits on published works; it sends the changed source field names to `POST /studio/api/catalogue/build-preview` and shows the field-aware result in a modal without saving
 10. the same preview now also carries work media readiness and staged work prose readiness
 11. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
-12. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `_docs_catalogue/works/<work_id>.md` after overwrite confirmation when needed
+12. `Import staged prose` previews `var/docs/catalogue/import-staging/works/<work_id>.md` and writes `studio/data/canonical/catalogue-markdown/works/<work_id>.md` after overwrite confirmation when needed
 13. `Publish` and `Unpublish` use `POST /studio/api/catalogue/publication-preview` followed by `POST /studio/api/catalogue/publication-apply`
 14. the public update path stages source media under `var/catalogue/media/`, generates local primary and thumbnail derivatives, copies thumbnails into `assets/works/img/`, and leaves primary derivatives staged for remote publishing
-15. generator lookup now reads `_docs_catalogue/works/<work_id>.md` for public work prose
+15. generator lookup now reads `studio/data/canonical/catalogue-markdown/works/<work_id>.md` for public work prose
 
 The work media readiness panel also exposes `Refresh media` when the configured source image exists. That action calls the same build endpoint with `media_only: true` and `force: true`, so it refreshes thumbnails and staged primary variants from the displayed source path without saving metadata or rebuilding page/json/search outputs. The result message is `Thumbnails updated; primary variants staged for publishing.`
 
@@ -311,7 +311,7 @@ The retired standalone work-file and work-link editors no longer own canonical w
 - `downloads`
 - `links`
 
-Work prose is no longer edited through a source filename field. Use `Import staged prose` to copy staged Markdown into `_docs_catalogue/works/<work_id>.md`; the generator reads that ID-derived source file for public prose.
+Work prose is no longer edited through a source filename field. Use `Import staged prose` to copy staged Markdown into `studio/data/canonical/catalogue-markdown/works/<work_id>.md`; the generator reads that ID-derived source file for public prose.
 
 ## Related References
 

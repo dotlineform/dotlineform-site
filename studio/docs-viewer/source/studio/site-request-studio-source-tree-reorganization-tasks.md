@@ -3,7 +3,7 @@ doc_id: site-request-studio-source-tree-reorganization-tasks
 title: Studio Source Tree Reorganization Tasks
 added_date: 2026-05-24
 last_updated: 2026-05-24
-ui_status: in-progress
+ui_status: complete
 parent_id: site-request-studio-source-tree-reorganization
 sort_order: 10011
 viewable: true
@@ -16,10 +16,13 @@ This is the tracker for implementing [Studio Source Tree Reorganization Request]
 
 ### just done
 
-- Completed `STSR-020` by running the final verification set after the Studio source-tree move and thumbnail-quality generated-preview retarget.
-- Updated the smoke-profile runner so isolated public builds copy only public read-only Docs Viewer generated payloads for `analysis` and `library`, while source-module smoke tests serve the repo root instead of the public build.
-- Replaced the stale public `/docs/` route smoke in `studio/commands/run_checks.py` with the public Docs Viewer read-only smoke for `/library/` and `/analysis/`; Local Studio remains the owner of manage-mode `/docs/`.
-- Final verification passed:
+- Completed `STSR-021` by closing out the request, task tracker, owning docs, and structured docs-log source record.
+- Marked the parent request and this tracker complete.
+- Recorded the final moved-path summary, verification results, generated payload status, and remaining risks in the parent request.
+- Updated active owning docs that still described old source locations as current ownership.
+- Added structured docs-log source entry `change-2026-05-24-completed-studio-source-tree-reorganization`.
+- Generated Docs Viewer payloads, search payloads, and docs-log projections were intentionally not rebuilt during close-out.
+- Final verification from `STSR-020` passed:
   - `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick --run-id stsr-020-quick-final-pass`; summary at `var/test-runs/stsr-020-quick-final-pass/summary.md`.
   - `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile studio-smoke --run-id stsr-020-studio-smoke-final-pass`; summary at `var/test-runs/stsr-020-studio-smoke-final-pass/summary.md`.
   - `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke --run-id stsr-020-docs-viewer-smoke-final-pass`; summary at `var/test-runs/stsr-020-docs-viewer-smoke-final-pass/summary.md`.
@@ -28,7 +31,7 @@ This is the tracker for implementing [Studio Source Tree Reorganization Request]
 
 ### steer for next task
 
-- Start with `STSR-021`; update the parent request, this tracker, related owning docs, and docs-log entry with final statuses, moved-path summary, verification results, generated payload status, and remaining risks.
+- No remaining sequential task in this tracker.
 - Treat the removed old root source locations as gone; do not reintroduce `scripts/checks/`, root `tests/`, `scripts/docs/`, old public UI Catalogue assets, old public Docs Viewer assets, or empty Jekyll route-shell directories under `studio/`.
 - Keep `scripts/run_checks.py` deleted; do not reintroduce a root check-profile wrapper.
 - Keep public-site validation as Studio/Codex testing ownership even when a check validates generated public output.
@@ -72,6 +75,7 @@ Codex sandbox note: the Local Studio smoke scripts bind temporary localhost port
 
 - Do not create compatibility infrastructure for old Studio source paths; reason: the requested implementation model is to move files, update references, and get Studio working again from the new `studio/` locations.
 - Do not perform the full Docs Viewer portable extraction in this sequence; reason: this sequence keeps current Docs Viewer code, server/services, Docs Viewer source, config, and assets Studio-hosted under a clear internal home such as `studio/docs-viewer/`, while the later extraction will move that coherent subtree out to a true reusable boundary such as `docs-viewer/`.
+- Treat future stale active-path cleanup as ordinary owning-doc maintenance unless it blocks runtime verification. Historical/generated records may still mention old paths until their own rebuild or archive refresh.
 
 
 ## Implementation Tasks
@@ -100,4 +104,4 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | STSR-018 | done | Update command entrypoints, local runner docs, development workflow docs, script docs, and task references so Codex and humans use the new `studio/` paths without relying on old source locations. |
 | STSR-019 | done | Delete old Studio source locations after references are updated; confirm removed paths are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic. |
 | STSR-020 | done | Run the agreed final verification set: focused Local Studio smoke checks, UI Catalogue smoke checks, targeted Python/Ruby/JavaScript syntax or unit checks, public Jekyll build, projection/public-build-surface audit, and any changed-doc link/path checks. |
-| STSR-021 | planned | Update the parent request, this tracker, related owning docs, and docs-log entry with final statuses, moved-path summary, verification results, generated payload status, and remaining risks; do not rebuild generated docs payloads unless explicitly requested. |
+| STSR-021 | done | Update the parent request, this tracker, related owning docs, and docs-log entry with final statuses, moved-path summary, verification results, generated payload status, and remaining risks; do not rebuild generated docs payloads unless explicitly requested. |

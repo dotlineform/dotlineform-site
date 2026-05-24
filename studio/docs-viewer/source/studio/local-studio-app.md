@@ -33,8 +33,8 @@ Active Local Studio browser routes use `/studio/api/docs/...` for Docs managemen
 The local app adapter imports shared Docs management behavior from `studio/docs-viewer/services/docs_management_service.py`.
 Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
 `bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
-Local Studio route shells currently load `/assets/css/main.css` before `/assets/studio/css/studio.css`.
-That is a remaining public-site CSS dependency: Studio needs its own base stylesheet for font, size, spacing, layout, and shared primitive tokens, and public `main.css` should not keep Studio-only classes unless a selector is genuinely shared with public routes.
+Local Studio route shells load Studio-owned CSS from `/studio/app/assets/css/studio.css`.
+They no longer depend on public `assets/css/main.css` for Studio base typography, spacing, shell layout, or Studio-only primitive classes.
 
 Current mounted views:
 
@@ -127,10 +127,10 @@ Current app endpoints:
 - `POST /studio/api/catalogue/moment/preview`
 - `POST /studio/api/catalogue/moment/save`
 
-The Tag Groups view reuses the existing Studio CSS, `assets/studio/js/tag-groups.js`, and the route-ready data attributes.
+The Tag Groups view reuses the existing Studio CSS, `studio/app/frontend/js/tag-groups.js`, and the route-ready data attributes.
 In the local app it reads group-description data through `/studio/api/analytics/tag-groups`.
-The shared Studio data loader now requires local analytics read endpoints for tag groups, registry, aliases, and assignments on migrated local-only tag views; static `assets/studio/data/tag_*.json` paths are not runtime browser sources for those views, and `studio_config.json` no longer advertises them as browser data sources.
-The public Jekyll config already excludes `assets/studio/`; the dev Studio Jekyll overlay also excludes the four tag source JSON files so legacy Jekyll-side static reads fail during local development.
+The shared Studio data loader now requires local analytics read endpoints for tag groups, registry, aliases, and assignments on migrated local-only tag views; static `studio/data/canonical/analytics/tag_*.json` paths are source data, not runtime browser sources for those views, and `studio/app/frontend/config/studio-config.json` no longer advertises them as browser data sources.
+The old public `assets/studio/` source surface is gone; analytics tag source JSON now lives under `studio/data/canonical/analytics/`, and migrated local-only tag views read through Local Studio API endpoints.
 The analytics write routes now include `POST /studio/api/analytics/save-tags`, tag assignment import preview/apply, tag alias import/delete/edit preview/apply, tag registry import/edit/delete preview/apply, and cross-artifact promote/demote preview/apply.
 They reuse the existing tag assignment, alias mutation, registry mutation, promotion/demotion, alias rewrite, assignment rewrite, atomic JSON write, backups, compact script logging, and Studio activity helpers from the analytics tag domain modules.
 The legacy tag-server `POST /build-docs` route is deprecated and intentionally not migrated; Docs rebuilds belong to the Docs management API.
@@ -140,36 +140,36 @@ They use local runtime config and local analytics API reads/writes when served f
 The old Jekyll analytics tag route files have been retired, and there is no standalone Analytics tag write service in normal local Studio startup.
 The standalone `studio/services/analytics/tag_write_server.py` HTTP entrypoint has been removed; `studio/app/server/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes.
 The Studio Audits route shell is also hosted by the local app at `/studio/audits/?mode=manage`.
-It reuses `assets/studio/js/studio-audits.js` and now calls `/studio/api/audits/...` on the local app server.
+It reuses `studio/app/frontend/js/studio-audits.js` and now calls `/studio/api/audits/...` on the local app server.
 `studio/app/server/studio/studio_audit_api.py` adapts the allowlisted audit functions from `studio/app/server/studio/audit_runner.py`, so normal Studio sessions no longer need a separate audit sibling service.
 The old Jekyll `/studio/audits/` shell has been retired.
 The Catalogue dashboard is hosted by the local app at `/studio/catalogue/?mode=manage`.
-It reuses `assets/studio/js/studio-dashboard.js`, local index data, and local-app catalogue read keys for source-backed dashboard counts.
+It reuses `studio/app/frontend/js/studio-dashboard.js`, local index data, and local-app catalogue read keys for source-backed dashboard counts.
 The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
-It reuses `assets/studio/js/project-state.js` and now calls local Studio app endpoints for catalogue report generation and source-file opening.
+It reuses `studio/app/frontend/js/project-state.js` and now calls local Studio app endpoints for catalogue report generation and source-file opening.
 `studio/app/server/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` adapter and reuses `studio/services/catalogue/project_state_report.py`.
 The old Jekyll `/studio/project-state/` shell has been retired.
 The Thumbnail Quality route shell is hosted by the local app at `/studio/thumbnail-quality/?mode=manage`.
-It reuses `assets/studio/js/thumbnail-quality.js`, checked-in preview JSON/image data, and `POST /studio/api/catalogue/thumbnail-quality-preview` for refresh.
-The refresh adapter reuses `scripts/media/build_thumbnail_quality_preview.py`.
+It reuses `studio/app/frontend/js/thumbnail-quality.js`, checked-in preview JSON/image data under `studio/data/generated/thumbnail-quality/`, and `POST /studio/api/catalogue/thumbnail-quality-preview` for refresh.
+The refresh adapter reuses `studio/services/media/build_thumbnail_quality_preview.py`.
 The old Jekyll `/studio/thumbnail-quality/` shell has been retired.
 The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-work/?mode=manage`.
 The Data Sharing dashboard, package preparation, and returned-package review route shells are hosted by the local app at `/studio/data-sharing/?mode=manage`, `/studio/data-sharing/prepare/?mode=manage`, and `/studio/data-sharing/review/?mode=manage`.
 They reuse the existing Data Sharing browser modules and now call Data Sharing through `/studio/api/docs/data-sharing/...` on the local app server.
 The old Jekyll route files under `studio/data-sharing/` have been retired.
-It reuses `assets/studio/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply` endpoints.
+It reuses `studio/app/frontend/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply` endpoints.
 The old Jekyll `/studio/bulk-add-work/` shell has been retired.
 The Studio Activity route shell is hosted by the local app at `/studio/activity/?mode=manage`.
-It reuses `assets/studio/js/activity-log.js`, `assets/studio/js/activity-log-modals.js`, and `GET /studio/api/catalogue/read?key=activity_log` on the local app server.
+It reuses `studio/app/frontend/js/activity-log.js`, `studio/app/frontend/js/activity-log-modals.js`, and `GET /studio/api/catalogue/read?key=activity_log` on the local app server.
 The old Jekyll `/studio/activity/` shell has been retired.
 The Catalogue Field Registry route shell is hosted by the local app at `/studio/catalogue-field-registry/?mode=manage`.
-It reuses `assets/studio/js/catalogue-field-registry-review.js` and the checked-in `assets/studio/data/catalogue_field_registry.json` read-only data source.
+It reuses `studio/app/frontend/js/catalogue-field-registry-review.js` and the checked-in `studio/data/config/catalogue/catalogue-field-registry.json` read-only data source.
 The old Jekyll `/studio/catalogue-field-registry/` shell has been retired.
 The Catalogue Drafts route shell is hosted by the local app at `/studio/catalogue-status/?mode=manage`.
-It reuses `assets/studio/js/catalogue-status.js` and local-app catalogue read keys under `GET /studio/api/catalogue/read`.
+It reuses `studio/app/frontend/js/catalogue-status.js` and local-app catalogue read keys under `GET /studio/api/catalogue/read`.
 The old Jekyll `/studio/catalogue-status/` shell has been retired.
 The Studio Works route shell is hosted by the local app at `/studio/studio-works/?mode=manage`.
-It reuses `assets/studio/js/studio-works.js`, checked-in works/series indexes, and the Studio-only work storage index.
+It reuses `studio/app/frontend/js/studio-works.js`, checked-in works/series indexes, and the Studio-only work storage index.
 The old Jekyll `/studio/studio-works/` shell has been retired.
 Its work and series links now resolve through the configured public-site preview base rather than staying on the Studio app host.
 The Catalogue Series, Work, Work Detail, and Moment editor route shells are hosted by the local app at their `?mode=manage` routes.
@@ -188,11 +188,11 @@ The endpoint exposes the local app runtime contract for migrated views:
 - pipeline variant metadata from `_data/pipeline.json`
 - modal event constants
 
-`assets/studio/js/studio-navigation.js` provides the first helper layer over that contract.
+`studio/app/frontend/js/studio-navigation.js` provides the first helper layer over that contract.
 Migrated links can declare `data-studio-navigate="<view-id>"` while retaining a real `href` target for normal link behavior.
 The same module exposes `navigateTo(view, params)`, public-site URL helpers, and `openModal(name, params)` dispatch through the `studio:open-modal` event.
 This adapter is deliberately small and does not introduce a route framework.
-`assets/studio/js/studio-config.js` also exposes `buildStudioRouteUrl(config, key, params)`.
+`studio/app/frontend/js/studio-config.js` also exposes `buildStudioRouteUrl(config, key, params)`.
 Use it when a browser module needs to append record parameters to a configured Studio route, because configured local routes may already contain transition state such as `?mode=manage`.
 Studio-to-public-content links use an explicit second boundary because Studio and the public Jekyll preview are separate local servers.
 The contract is:
@@ -202,9 +202,9 @@ The contract is:
 - public content routes such as `/works/...`, `/series/...`, `/library/`, and `/analysis/` open against the local Jekyll preview when it is running
 - production `https://dotlineform.com` links are used only for explicit live-site actions
 
-The runtime config now exposes `app.runtime.sites.public_preview.base` and `app.runtime.sites.production.base`, and `assets/studio/js/studio-navigation.js` exposes `buildPublicSiteUrl(config, path, params, options)`.
+The runtime config now exposes `app.runtime.sites.public_preview.base` and `app.runtime.sites.production.base`, and `studio/app/frontend/js/studio-navigation.js` exposes `buildPublicSiteUrl(config, path, params, options)`.
 Studio route modules should use that helper when they touch public-content links.
-The migrated per-series tag editor, Catalogue editor summaries, and Studio Works now use this resolver through `assets/studio/js/catalogue-public-links.js` for public catalogue links.
+The migrated per-series tag editor, Catalogue editor summaries, and Studio Works now use this resolver through `studio/app/frontend/js/catalogue-public-links.js` for public catalogue links.
 Those links open on the configured public preview host during local Studio sessions.
 The catalogue helper requires the configured public-site base for public links instead of generating Studio-host-relative public URLs.
 Editor-to-editor links remain local Studio routes.

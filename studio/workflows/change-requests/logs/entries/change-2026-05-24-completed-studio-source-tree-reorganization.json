@@ -1,0 +1,51 @@
+{
+  "id": "change-2026-05-24-completed-studio-source-tree-reorganization",
+  "date": "2026-05-24",
+  "title": "Completed Studio Source Tree Reorganization",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "workflow",
+    "runtime",
+    "build",
+    "docs-viewer",
+    "catalogue"
+  ],
+  "summary": "Moved Studio-owned source, canonical data, services, workflows, frontend, assets, UI Catalogue, checks, and tests under studio/ while leaving generated public artifacts and public Jekyll runtime paths outside Studio.",
+  "source": {
+    "file": "studio/docs-viewer/source/studio/site-request-studio-source-tree-reorganization.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "source-tree-reorganization",
+    "studio-boundary",
+    "public-build-surface"
+  ],
+  "change_request_doc_id": "site-request-studio-source-tree-reorganization",
+  "related_docs": [
+    "site-request-studio-source-tree-reorganization",
+    "site-request-studio-source-tree-reorganization-tasks",
+    "site-request-studio-source-tree-reorganization-layout",
+    "site-request-studio-source-tree-reorganization-inventory",
+    "local-studio-app",
+    "docs-viewer-reports",
+    "scripts-build-catalogue-json",
+    "catalogue-work-editor"
+  ],
+  "related_files": [
+    "studio/docs-viewer/source/studio/site-request-studio-source-tree-reorganization.md",
+    "studio/docs-viewer/source/studio/site-request-studio-source-tree-reorganization-tasks.md",
+    "studio/docs-viewer/source/studio/site-request-studio-source-tree-reorganization-layout.md",
+    "studio/docs-viewer/source/studio/local-studio-app.md",
+    "studio/docs-viewer/source/studio/docs-viewer-reports.md",
+    "studio/docs-viewer/source/studio/scripts-build-catalogue-json.md",
+    "studio/docs-viewer/source/studio/catalogue-work-editor.md"
+  ],
+  "effect": "The repo now separates the authoring system from the public publishing surface without old-path compatibility shims; future work should use the new studio/ source boundaries and treat Docs Viewer portable extraction as a separate follow-on.",
+  "verification": [
+    "quick profile passed: var/test-runs/stsr-020-quick-final-pass/summary.md",
+    "studio-smoke profile passed: var/test-runs/stsr-020-studio-smoke-final-pass/summary.md",
+    "docs-viewer-smoke profile passed: var/test-runs/stsr-020-docs-viewer-smoke-final-pass/summary.md",
+    "public build surface audit passed: studio/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build"
+  ]
+}

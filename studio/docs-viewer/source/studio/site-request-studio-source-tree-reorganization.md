@@ -3,7 +3,7 @@ doc_id: site-request-studio-source-tree-reorganization
 title: Studio Source Tree Reorganization Request
 added_date: 2026-05-23
 last_updated: 2026-05-24
-ui_status: in-progress
+ui_status: complete
 parent_id: change-requests
 sort_order: 10010
 viewable: true
@@ -12,7 +12,7 @@ viewable: true
 
 Status:
 
-- in progress: tracked in [Studio Source Tree Reorganization Tasks](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks)
+- complete: implementation and final verification tracked in [Studio Source Tree Reorganization Tasks](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks)
 
 ## Summary
 
@@ -238,22 +238,56 @@ If the browser-shell step is too broad to complete in the same slice as the phys
 
 ## CSS Ownership Direction
 
-Local Studio currently loads public `assets/css/main.css` for base font, size, spacing, layout, and primitive tokens, then layers Studio CSS on top.
-That is a concrete public-site dependency and should be removed during the source-tree reorganization.
+Before this reorganization, Local Studio loaded public `assets/css/main.css` for base font, size, spacing, layout, and primitive tokens, then layered Studio CSS on top.
+That concrete public-site dependency was removed during the source-tree reorganization.
 
-The target is:
+The implemented split is:
 
 - public `assets/css/main.css` owns public-site styles and genuinely shared primitives only
 - Studio has its own base or main stylesheet under `studio/` for font, size, spacing, layout, shell, and primitive tokens needed by Local Studio
 - Studio route, editor, modal, dashboard, and operational classes live in Studio-owned CSS
 - any selector left in public `main.css` must be used by public routes too, not retained only because Studio needs it
-- Local Studio shell rendering should load Studio-owned CSS directly, then Studio route CSS, without depending on public `main.css`
+- Local Studio shell rendering loads Studio-owned CSS directly without depending on public `main.css`
 
 ## Implementation Tracking
 
-Live implementation tasks are tracked in [Studio Source Tree Reorganization Tasks](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks).
+Implementation tasks are tracked in [Studio Source Tree Reorganization Tasks](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks).
 The current path-family inventory is recorded in [Studio Source Tree Reorganization Inventory](/docs/?scope=studio&mode=manage&doc=site-request-studio-source-tree-reorganization-inventory).
 Keep task status, handover notes, sequencing, and deferred-task reasons there so this request stays focused on the stable boundary decision and acceptance contract.
+
+## Final Status
+
+Completed on 2026-05-24.
+The physical source-tree reorganization is implemented without old-path compatibility shims.
+
+The final moved-path summary is:
+
+- Studio canonical catalogue, analytics, runtime config, generated Studio read models, and thumbnail-quality review output now live under `studio/data/`.
+- Local Studio server, route views, API adapters, frontend modules, UI text, CSS, and Studio-only images now live under `studio/app/`.
+- Catalogue, analytics, media, data-sharing, and shared service code now live under `studio/services/` and `studio/shared/`.
+- Docs Viewer source Markdown, runtime modules, shell source, CSS, config, build scripts, server/services, and tests now live under `studio/docs-viewer/`.
+- Change request workflow source logs, generated workflow projections, reports, and docs-log services now live under `studio/workflows/change-requests/`.
+- UI Catalogue demos, notes, and assets now live under `studio/ui-catalogue/`.
+- Checks, smoke tests, Python tests, fixtures, and the run-checks command now live under `studio/checks/`, `studio/tests/`, and `studio/commands/`.
+- Public Jekyll output remains outside `studio/`: layouts, includes, public route JS, public CSS, public media, generated catalogue/docs/search payloads, and public read-only Docs Viewer route adapters.
+
+Final verification passed:
+
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick --run-id stsr-020-quick-final-pass`; summary at `var/test-runs/stsr-020-quick-final-pass/summary.md`.
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile studio-smoke --run-id stsr-020-studio-smoke-final-pass`; summary at `var/test-runs/stsr-020-studio-smoke-final-pass/summary.md`.
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke --run-id stsr-020-docs-viewer-smoke-final-pass`; summary at `var/test-runs/stsr-020-docs-viewer-smoke-final-pass/summary.md`.
+- `$HOME/miniconda3/bin/python3 studio/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build`.
+- Targeted supporting checks included a public Jekyll build to `/tmp/dlf-jekyll-build`, dry-run Studio docs and Studio search builds, focused Local Studio Docs Viewer/Catalogue/UI Catalogue/thumbnail-quality smokes, focused pytest for Studio app server and Catalogue routes, and targeted JavaScript/Ruby syntax checks.
+
+Generated Docs Viewer payloads and search payloads were intentionally not rebuilt during close-out.
+The task updated source documentation and a structured docs-log source record only.
+
+Remaining risks and follow-ups:
+
+- Some generated docs/search payloads still contain historical path text until the next explicit docs rebuild.
+- Historical request, inventory, and generated change-history records still mention old paths as history; those references should not be treated as active source paths.
+- Docs Viewer remains Studio-hosted under `studio/docs-viewer/`; the portable extraction is a separate follow-on request.
+- Public read-only `/library/` and `/analysis/` remain the owners of public Docs Viewer install validation; manage-mode `/docs/` remains a Local Studio route.
 
 ## Acceptance Criteria
 
@@ -292,3 +326,7 @@ Keep task status, handover notes, sequencing, and deferred-task reasons there so
 - [Studio Local Vanilla Web App Request](/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app)
 - [Docs Viewer Shell Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction)
 - [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
+
+## Change Log Entries
+
+- `change-2026-05-24-completed-studio-source-tree-reorganization`

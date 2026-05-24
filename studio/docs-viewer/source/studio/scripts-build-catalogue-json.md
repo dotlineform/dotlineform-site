@@ -36,7 +36,7 @@ Preview a field-aware work metadata scope:
 $HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001 --changed-fields duration
 ```
 
-The registry path is resolved from `assets/studio/data/studio_config.json` key `paths.data.studio.catalogue_field_registry`.
+The registry path is resolved from `studio/app/frontend/config/studio-config.json` key `paths.data.studio.catalogue_field_registry`.
 
 Field-aware preview output shows the selected planner mode, rule ids, artifact families, generator `--only` values, catalogue-search selection, and local-media selection. For example, a focused work metadata field can preview `work-json` only, while editor-only fields can produce no public build commands.
 
@@ -110,13 +110,13 @@ $HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py -
 
 The helper:
 
-- reads canonical JSON source from `assets/studio/data/catalogue/`
+- reads canonical JSON source from `studio/data/canonical/catalogue/`
 - optionally reads field-aware planning rules from the registry path exposed by `studio_config.json`
 - resolves the current work record and its current published series ids
 - unions any `--extra-series-ids`
 - requires every series in the build scope to have `status: published`
 - requires a series primary work to exist, belong to the series, and have `status: published`
-- lets the generator render optional work and series prose from `_docs_catalogue/works/<work_id>.md` and `_docs_catalogue/series/<series_id>.md`
+- lets the generator render optional work and series prose from `studio/data/canonical/catalogue-markdown/works/<work_id>.md` and `studio/data/canonical/catalogue-markdown/series/<series_id>.md`
 - stages in-scope source images under `var/catalogue/media/`
   - work source media resolves through `project_folder`, optional `project_subfolder`, and `project_filename`
   - work-detail source media resolves through the parent work's `project_folder`, optional detail `details_subfolder`, and detail `project_filename`
@@ -142,8 +142,8 @@ For work scopes, `work-json` writes `assets/works/index/<work_id>.json` with the
 
 For `--moment-file`, the helper:
 
-- resolves moment metadata from `assets/studio/data/catalogue/moments.json`
-- resolves moment prose from `_docs_catalogue/moments/<moment_id>.md`
+- resolves moment metadata from `studio/data/canonical/catalogue/moments.json`
+- resolves moment prose from `studio/data/canonical/catalogue-markdown/moments/<moment_id>.md`
 - validates the moment filename, metadata, and required prose source
 - stages the configured moment source image under `var/catalogue/media/moments/`
 - generates local moment primary and thumbnail srcset derivatives under `var/catalogue/media/moments/`

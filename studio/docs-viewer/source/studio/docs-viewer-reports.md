@@ -66,7 +66,7 @@ It can be used by documentation and by the `reports_list` report without inspect
 
 Executable module loading remains allowlisted in:
 
-- `assets/docs-viewer/js/docs-viewer-reports.js`
+- `studio/docs-viewer/runtime/js/docs-viewer-reports.js`
 
 The JSON registry does not define arbitrary import paths.
 Adding a JSON entry without a matching allowlisted loader does not make a new report executable.
@@ -108,7 +108,7 @@ This document uses it so the list of configured reports stays visible from the D
 It reads through the local docs-management server and shows source config, browser projection, generated output paths, and generated viewer options for every configured scope.
 
 `change_history` renders structured docs-log entries in manage mode.
-It reads ignored local projections under `_docs_logs/generated/` through the docs-management server and provides domain filtering for migrated change history.
+It reads ignored local projections under `studio/workflows/change-requests/generated/` through the Docs management API and provides domain filtering for migrated change history.
 
 `semantic_references` renders generated semantic-reference targets and source docs in manage mode.
 It reads the current scope's `references/index.json` plus per-target buckets from `references/by-target/`.
@@ -133,6 +133,6 @@ Poor report candidates are workflows with writes, long-running operations, broad
 ## Files
 
 - `assets/data/docs/reports.json`
-- `assets/docs-viewer/js/docs-viewer-reports.js`
-- `assets/docs-viewer/js/reports/`
-- `assets/docs-viewer/css/docs-viewer-reports.css`
+- `studio/docs-viewer/runtime/js/docs-viewer-reports.js`
+- `studio/docs-viewer/runtime/js/reports/`
+- `studio/docs-viewer/assets/css/docs-viewer-reports.css`
