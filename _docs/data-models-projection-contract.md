@@ -12,7 +12,7 @@ viewable: true
 
 This document defines the boundary between canonical source, public projections, Studio projections, and Docs Viewer payloads.
 
-It supports the Local Studio migration by making the build/export contract explicit before any optional repo split or large source-tree move.
+It supports the Local Studio migration by making the build/export contract explicit before large source-tree moves under `studio/`.
 
 The executable source of truth is `scripts/checks/projection_contract.json`.
 This document explains that manifest; it should not become a parallel hand-maintained list.

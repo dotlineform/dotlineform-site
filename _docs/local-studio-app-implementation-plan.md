@@ -33,11 +33,11 @@ Next suitable slices, in dependency order:
 1. Finish the current Studio localization work before broad source-tree moves.
 2. Run the migration compatibility cleanup gate so no old Jekyll route hosting, sibling-service fallback, or transition-only adapter behavior is retained without an active owner.
 3. Complete the Studio source-tree reorganization so Studio-owned runtime, static, UI Catalogue, and local source files have clear ownership boundaries.
-4. Defer the optional repo split decision until after the Studio source-tree reorganization and the publish/export contract are stable.
+4. Keep Studio and the Jekyll site in the same repo; use the source-tree reorganization to make the Studio authoring system and public publishing surface physically distinct inside that repo.
 
 Future source-tree work is tracked separately:
 
-- [Studio Source Tree Reorganization Request](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization) covers moving Studio-owned runtime, static, UI Catalogue, and local source files behind a clearer `studio/` boundary after the current localization work settles; it must happen before any optional repo split decision.
+- [Studio Source Tree Reorganization Request](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization) covers moving Studio-owned runtime, static, UI Catalogue, canonical data, config, services, and local source files behind a clearer `studio/` boundary while keeping Studio and the Jekyll site in one repo.
 - [Docs Viewer Shell Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction) covers the later split between reusable Docs Viewer core/assets and Studio-specific hosting shell work.
 
 Do not combine those reorganization requests with the current localization slices.
@@ -436,7 +436,7 @@ Outcomes:
 
 Next steps:
 
-Use this phase to prepare for a future repo split without requiring one.
+Use this phase to make the same-repo source/projection boundary explicit.
 The manifest-backed implementation slice is complete for the current scope: [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) defines the current canonical source, public projection, Studio projection, and Docs Viewer payload families.
 The implementation direction is to use machine-readable `scripts/checks/projection_contract.json` as the Phase 6 source of truth.
 Existing domain configs should keep their current domain responsibilities: Docs Viewer scope build details stay in `scripts/docs/docs_scopes.json`, search source-family behavior stays in `scripts/search/build_config.json`, catalogue build scoping stays in the catalogue field registry, and `_config.yml` stays the public Jekyll build config.
@@ -470,21 +470,21 @@ Next steps:
 Run this gate before Studio source-tree reorganization.
 Each item should end as removed, retained with an active owner and test, or moved to the owning follow-up request.
 
-## Phase 7: Optional Repo Split Decision
+## Phase 7: Same-Repo Source Boundary
 
 Outcomes:
 
-- repo split remains a separate decision after the local app boundary is proven
-- repo split remains deferred until after Studio source-tree reorganization is complete
-- any split is driven by concrete operational benefit, not tidiness
-- the publish/export contract is already tested before files move between repos
+- Studio and the Jekyll site remain in one repo
+- Studio owns canonical data and maintenance workflows, so the public site does not have an independent update path without Studio
+- the Studio source tree and public Jekyll publishing surface are physically distinct inside the repo
+- the publish/export contract is tested before broad source moves under `studio/`
 
 | Task | Status |
 | --- | --- |
-| Review files that now belong to public site, Studio app, canonical data, Docs Viewer, and generated outputs. | deferred until after Studio source-tree reorganization |
-| Decide whether to keep one repo, split public-site and Studio repos, or extract Docs Viewer first. | deferred until after Studio source-tree reorganization |
-| Identify deployment, publishing, and local development benefits required to justify a split. | deferred until after Studio source-tree reorganization |
-| If splitting, define the publish/export contract before moving files. | deferred until after Studio source-tree reorganization |
+| Review files that now belong to public site, Studio app, canonical data, Docs Viewer, and generated outputs. | deferred until Studio source-tree reorganization |
+| Keep Studio and the Jekyll site in one repo while moving Studio-owned source under `studio/`. | planned for Studio source-tree reorganization |
+| Confirm canonical Studio source can regenerate the public projections the Jekyll site needs. | planned for Studio source-tree reorganization |
+| Remove repo-split framing from implementation docs as related sections are touched. | in progress |
 
 Next steps:
 

@@ -4,7 +4,7 @@ title: index workspace
 added_date: 2026-05-21
 last_updated: "2026-05-21"
 parent_id: "_tmp"
-sort_order: 100
+sort_order: 300
 viewable: false
 ---
 

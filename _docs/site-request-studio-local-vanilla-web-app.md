@@ -174,7 +174,7 @@ canonical source data
 ```
 
 The current source/projection boundary is documented in [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract).
-That contract is backed by `scripts/checks/projection_contract.json` and `./scripts/checks/audit_projection_contract.py`, including public template/script source-reference checks, and should be tightened before any optional repo split or broad source-tree reorganization.
+That contract is backed by `scripts/checks/projection_contract.json` and `./scripts/checks/audit_projection_contract.py`, including public template/script source-reference checks, and should be tightened before broad source-tree reorganization.
 
 ## Navigation Principle
 
@@ -353,7 +353,7 @@ Pause by default:
 - inventory-driven JavaScript extractions that are not needed for a migration slice
 - broad Python/Ruby service reshuffles without a concrete migration blocker
 - route cleanup whose only purpose is to improve Jekyll-hosted page organization
-- package or repo split work before the local app boundary is proven
+- package restructuring or broad source-boundary work before the local app boundary is proven
 
 Continue only when needed:
 

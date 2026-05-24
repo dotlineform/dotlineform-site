@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T00:02:41Z",
+  "generated_at": "2026-05-24T11:43:39Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -8,38 +8,6 @@
     "show_updated_date": true
   },
   "docs": [
-    {
-      "scope": "studio",
-      "doc_id": "_tmp-index-space",
-      "title": "index workspace",
-      "added_date": "2026-05-21",
-      "last_updated": "2026-05-21",
-      "parent_id": "_tmp",
-      "sort_order": 100,
-      "published": true,
-      "hidden": true,
-      "viewable": false,
-      "source_path": "_tmp-index-space.md",
-      "viewer_url": "/docs/?scope=studio&doc=_tmp-index-space",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp-index-space.json",
-      "content_text_length": 9069
-    },
-    {
-      "scope": "studio",
-      "doc_id": "_tmp-panel-sizes",
-      "title": "panel sizes",
-      "added_date": "2026-05-20",
-      "last_updated": "2026-05-20 19:37",
-      "parent_id": "_tmp",
-      "sort_order": 100,
-      "published": true,
-      "hidden": true,
-      "viewable": false,
-      "source_path": "_tmp-panel-sizes.md",
-      "viewer_url": "/docs/?scope=studio&doc=_tmp-panel-sizes",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp-panel-sizes.json",
-      "content_text_length": 1483
-    },
     {
       "scope": "studio",
       "doc_id": "_tmp-risk",
@@ -55,6 +23,54 @@
       "viewer_url": "/docs/?scope=studio&doc=_tmp-risk",
       "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp-risk.json",
       "content_text_length": 3703
+    },
+    {
+      "scope": "studio",
+      "doc_id": "_tmp-panel-sizes",
+      "title": "panel sizes",
+      "added_date": "2026-05-20",
+      "last_updated": "2026-05-20 19:37",
+      "parent_id": "_tmp",
+      "sort_order": 200,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "_tmp-panel-sizes.md",
+      "viewer_url": "/docs/?scope=studio&doc=_tmp-panel-sizes",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp-panel-sizes.json",
+      "content_text_length": 1483
+    },
+    {
+      "scope": "studio",
+      "doc_id": "_tmp-index-space",
+      "title": "index workspace",
+      "added_date": "2026-05-21",
+      "last_updated": "2026-05-21",
+      "parent_id": "_tmp",
+      "sort_order": 300,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "_tmp-index-space.md",
+      "viewer_url": "/docs/?scope=studio&doc=_tmp-index-space",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp-index-space.json",
+      "content_text_length": 9069
+    },
+    {
+      "scope": "studio",
+      "doc_id": "_tmp-spa",
+      "title": "SPA",
+      "added_date": "2026-05-22",
+      "last_updated": "2026-05-22",
+      "parent_id": "_tmp",
+      "sort_order": 350,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "_tmp_spa.md",
+      "viewer_url": "/docs/?scope=studio&doc=_tmp-spa",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp-spa.json",
+      "content_text_length": 19395
     },
     {
       "scope": "studio",
@@ -423,22 +439,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "_tmp-spa",
-      "title": "SPA",
-      "added_date": "2026-05-22",
-      "last_updated": "2026-05-22",
-      "parent_id": "_tmp",
-      "sort_order": 1000,
-      "published": true,
-      "hidden": true,
-      "viewable": false,
-      "source_path": "_tmp_spa.md",
-      "viewer_url": "/docs/?scope=studio&doc=_tmp-spa",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp-spa.json",
-      "content_text_length": 19395
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-studio-audit-service",
       "title": "Studio Audit Runner",
       "added_date": "2026-05-03",
@@ -569,7 +569,7 @@
       "source_path": "data-models-projection-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-projection-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-projection-contract.json",
-      "content_text_length": 10706
+      "content_text_length": 10695
     },
     {
       "scope": "studio",
@@ -3074,7 +3074,24 @@
       "source_path": "site-request-studio-source-tree-reorganization.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization.json",
-      "content_text_length": 6987,
+      "content_text_length": 13267,
+      "ui_status": "planned"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-studio-source-tree-reorganization-tasks",
+      "title": "Studio Source Tree Reorganization Tasks",
+      "added_date": "2026-05-24",
+      "last_updated": "2026-05-24",
+      "parent_id": "site-request-studio-source-tree-reorganization",
+      "sort_order": 10011,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-studio-source-tree-reorganization-tasks.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization-tasks.json",
+      "content_text_length": 7464,
       "ui_status": "planned"
     },
     {
@@ -4166,7 +4183,7 @@
       "source_path": "_tmp.md",
       "viewer_url": "/docs/?scope=studio&doc=_tmp",
       "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp.json",
-      "content_text_length": 11842
+      "content_text_length": 1562
     },
     {
       "scope": "studio",
@@ -5017,7 +5034,7 @@
       "source_path": "local-studio-app-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-app-implementation-plan.json",
-      "content_text_length": 49151,
+      "content_text_length": 49178,
       "ui_status": "done"
     },
     {
@@ -5050,7 +5067,7 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 27128,
+      "content_text_length": 27126,
       "ui_status": "done"
     }
   ]

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-4089815b51aa35d2952c780e298be2a6",
-    "generated_at_utc": "2026-05-23T23:58:55Z",
-    "count": 300
+    "version": "blake2b-f31724925b12119dbb02c117351797bd",
+    "generated_at_utc": "2026-05-24T11:40:35Z",
+    "count": 301
   },
   "entries": [
     {
@@ -4635,6 +4635,33 @@
         "24"
       ],
       "search_text": "site-request-studio-source-tree-reorganization site request studio source tree reorganization studio source tree reorganization request change requests change requests 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "site-request-studio-source-tree-reorganization-tasks",
+      "kind": "doc",
+      "title": "Studio Source Tree Reorganization Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks",
+      "last_updated": "2026-05-24",
+      "parent_id": "site-request-studio-source-tree-reorganization",
+      "parent_title": "Studio Source Tree Reorganization Request",
+      "display_meta": "2026-05-24 • Studio Source Tree Reorganization Request",
+      "search_terms": [
+        "site-request-studio-source-tree-reorganization-tasks",
+        "site",
+        "request",
+        "studio",
+        "source",
+        "tree",
+        "reorganization",
+        "tasks",
+        "studio source tree reorganization tasks",
+        "studio source tree reorganization request",
+        "2026-05-24",
+        "2026",
+        "05",
+        "24"
+      ],
+      "search_text": "site-request-studio-source-tree-reorganization-tasks site request studio source tree reorganization tasks studio source tree reorganization tasks studio source tree reorganization request 2026-05-24 2026 05 24"
     },
     {
       "id": "site-request-docs-viewer-shell-extraction",

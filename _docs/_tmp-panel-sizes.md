@@ -4,7 +4,7 @@ title: panel sizes
 added_date: 2026-05-20
 last_updated: "2026-05-20 19:37"
 parent_id: "_tmp"
-sort_order: 100
+sort_order: 200
 viewable: false
 ---
 # panel sizes
