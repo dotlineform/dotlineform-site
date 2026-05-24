@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-39bf09604168f2c0ee7e491a3f4cc473",
-    "generated_at_utc": "2026-05-24T21:52:07Z",
-    "count": 305
+    "version": "blake2b-b675de8d50d6eb26a32bf72424f713de",
+    "generated_at_utc": "2026-05-24T22:11:25Z",
+    "count": 306
   },
   "entries": [
     {
@@ -4741,6 +4741,33 @@
         "24"
       ],
       "search_text": "site-request-docs-viewer-shell-extraction-tasks site request docs viewer shell extraction tasks docs viewer shell extraction tasks docs viewer shell extraction request 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "site-request-docs-viewer-shell-extraction-inventory",
+      "kind": "doc",
+      "title": "Docs Viewer Shell Extraction Inventory",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-inventory",
+      "last_updated": "2026-05-24",
+      "parent_id": "site-request-docs-viewer-shell-extraction",
+      "parent_title": "Docs Viewer Shell Extraction Request",
+      "display_meta": "2026-05-24 • Docs Viewer Shell Extraction Request",
+      "search_terms": [
+        "site-request-docs-viewer-shell-extraction-inventory",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "shell",
+        "extraction",
+        "inventory",
+        "docs viewer shell extraction inventory",
+        "docs viewer shell extraction request",
+        "2026-05-24",
+        "2026",
+        "05",
+        "24"
+      ],
+      "search_text": "site-request-docs-viewer-shell-extraction-inventory site request docs viewer shell extraction inventory docs viewer shell extraction inventory docs viewer shell extraction request 2026-05-24 2026 05 24"
     },
     {
       "id": "search-incremental-orchestration-plan",
