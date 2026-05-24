@@ -69,7 +69,7 @@ Public Jekyll preview/build remains on `_config.yml` and does not expose Studio 
 The public build surface can be checked after a public build with:
 
 ```bash
-./scripts/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build
+$HOME/miniconda3/bin/python3 studio/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build
 ```
 
 ## Public Read-Only Docs Viewer Rule

@@ -179,7 +179,7 @@ canonical source data
 ```
 
 The current source/projection boundary is documented in [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract).
-That contract is backed by `scripts/checks/projection_contract.json` and `./scripts/checks/audit_projection_contract.py`, including public template/script source-reference checks, and should be tightened before broad source-tree reorganization.
+That contract is backed by `studio/checks/projection_contract.json` and `$HOME/miniconda3/bin/python3 studio/checks/audit_projection_contract.py`, including public template/script source-reference checks, and should be tightened before broad source-tree reorganization.
 
 ## Navigation Principle
 

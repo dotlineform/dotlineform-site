@@ -29,7 +29,7 @@ The page root `#worksStudioRoot` exposes the shared Studio route-ready contract:
 
 Primary template:
 
-- `scripts/studio/studio_app_views.py`
+- `studio/app/server/studio/studio_app_views.py`
 
 Page controller:
 
@@ -174,7 +174,7 @@ Because Studio and the public Jekyll preview now have separate local hosts, the 
 
 Focused smoke coverage:
 
-- `tests/smoke/local_studio_app_studio_works_route.py`
+- `studio/tests/smoke/local_studio_app_studio_works_route.py`
 
 ## UI Contract
 

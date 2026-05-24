@@ -39,7 +39,7 @@ The root doc's `doc_id` should match the scope config's `default_doc_id`.
 
 ### 3. Register The Scope For Docs Builds
 
-Add a scope entry to `scripts/docs/docs_scopes.json`:
+Add a scope entry to `studio/docs-viewer/config/scopes/docs_scopes.json`:
 
 ```json
 {
@@ -123,7 +123,7 @@ The dev Studio Jekyll overlay points generated reads and management actions at t
 
 The management scope selector and browser route map come from `assets/docs-viewer/data/docs-viewer-config.json`.
 Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `assets/docs-viewer/js/docs-viewer.js`.
-If the new scope needs UI-status menu options, add them to the `docs_viewer.ui_statuses_by_scope` section in `scripts/docs/docs_scopes.json`, then rerun the docs build so `assets/docs-viewer/data/docs-viewer-config.json` is regenerated.
+If the new scope needs UI-status menu options, add them to the `docs_viewer.ui_statuses_by_scope` section in `studio/docs-viewer/config/scopes/docs_scopes.json`, then rerun the docs build so `assets/docs-viewer/data/docs-viewer-config.json` is regenerated.
 
 Management route adapter inputs:
 
@@ -146,7 +146,7 @@ Management canonical URL behavior:
 
 ### 6. Add Search Support
 
-If the read-only route should have inline search, make sure the scope exists in `scripts/docs/docs_scopes.json`.
+If the read-only route should have inline search, make sure the scope exists in `studio/docs-viewer/config/scopes/docs_scopes.json`.
 The Docs Viewer search builder derives its input and output paths from that scope config:
 
 - input docs index: `assets/data/docs/scopes/<scope>/index.json`
@@ -182,7 +182,7 @@ After this, the public route should be able to fetch:
 
 Run the local Studio app for management.
 Docs management is served through `/studio/api/docs/...`; there is no standalone Docs Management server entrypoint.
-The project still needs `_config.yml`, configured docs scopes in `scripts/docs/docs_scopes.json`, the Docs Viewer build/search scripts, and the Python/Ruby dependencies used by those scripts.
+The project still needs `_config.yml`, configured docs scopes in `studio/docs-viewer/config/scopes/docs_scopes.json`, the Docs Viewer build/search scripts, and the Python/Ruby dependencies used by those scripts.
 
 Then open:
 
@@ -190,7 +190,7 @@ Then open:
 /docs/?scope=research&mode=manage&doc=research
 ```
 
-Docs Import reads the configured scope list and source roots from `scripts/docs/docs_scopes.json`.
+Docs Import reads the configured scope list and source roots from `studio/docs-viewer/config/scopes/docs_scopes.json`.
 Imported media behavior follows each scope's `import_media_storage` settings.
 New portable installs should usually start with `repo_assets`; existing remote-token workflows can keep `staging_manual` and `media_path_prefix`.
 

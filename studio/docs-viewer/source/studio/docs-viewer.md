@@ -30,7 +30,7 @@ The current implementation uses:
 - report module allowlist and access checks in `assets/docs-viewer/js/docs-viewer-reports.js`
 - the first report module in `assets/docs-viewer/js/reports/docs-index-table-report.js`
 - generated semantic-reference artifacts under `assets/data/docs/scopes/<scope>/references/`
-- browser-safe Docs Viewer settings in `assets/docs-viewer/data/docs-viewer-config.json`, generated from `scripts/docs/docs_scopes.json`
+- browser-safe Docs Viewer settings in `assets/docs-viewer/data/docs-viewer-config.json`, generated from `studio/docs-viewer/config/scopes/docs_scopes.json`
 - Docs Viewer UI text in `assets/docs-viewer/data/ui-text.json`
 - reusable Docs Viewer CSS in `assets/docs-viewer/css/docs-viewer.css` and `assets/docs-viewer/css/docs-viewer-reports.css`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`

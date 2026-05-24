@@ -19,7 +19,7 @@ Legacy Jekyll-hosted Studio pages use:
 - `_layouts/studio.html`
 
 The local Studio app server owns active Studio route shells directly.
-For local app routes, `scripts/studio/studio_app_views.py` renders the shell, `scripts/studio/studio_app_config.py` advertises the runtime view registry, and `scripts/studio/studio_app_server.py` dispatches the route.
+For local app routes, `studio/app/server/studio/studio_app_views.py` renders the shell, `studio/app/server/studio/studio_app_config.py` advertises the runtime view registry, and `studio/app/server/studio/studio_app_server.py` dispatches the route.
 
 The legacy Studio route shell provides the shared admin-facing navigation model for any pages not yet migrated. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
 
@@ -232,12 +232,12 @@ What it runs before starting long-lived services:
 
 - required port preflight for the local Studio app
 - optional docs/docs-search rebuilds for scopes listed in `DOCS_STARTUP_REBUILD_SCOPES`
-- `./scripts/catalogue/export_catalogue_lookup.py --write`
+- `$HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py --write`
 
 What it starts:
 
-- `scripts/studio/studio_app_server.py`
-- `scripts/docs/docs_live_rebuild_watcher.py`
+- `studio/app/server/studio/studio_app_server.py`
+- `studio/docs-viewer/services/docs_live_rebuild_watcher.py`
 
 What it does not start:
 
@@ -252,7 +252,7 @@ Current local generated Studio feeds surfaced through this runtime:
 
 Current mutable catalogue data surfaced through this runtime:
 
-- catalogue source records and catalogue lookup/search records are read through Local Studio catalogue API routes backed by `scripts/studio/studio_catalogue_api.py`
+- catalogue source records and catalogue lookup/search records are read through Local Studio catalogue API routes backed by `studio/app/server/studio/studio_catalogue_api.py`
 - Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `var/`, and local `logs/` from the served site so local source/lookup/activity writes do not trigger an extra Jekyll regeneration pass
 - catalogue editors, Catalogue Drafts, and Studio Activity show their existing unavailable/load-failed states instead of reading stale static source JSON
 

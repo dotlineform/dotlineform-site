@@ -73,7 +73,7 @@ Current behavior after successful canonical writes:
 
 - the server refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`
 - single work, work-detail, and series saves first use the catalogue field registry to decide whether `studio-lookup` is affected
-- `scripts/catalogue/catalogue_lookup_refresh.py` derives the precise lookup write set from current serializer dependencies in `scripts/catalogue/catalogue_lookup.py`
+- `studio/services/catalogue/catalogue_lookup_refresh.py` derives the precise lookup write set from current serializer dependencies in `studio/services/catalogue/catalogue_lookup.py`
 - when the changed fields affect only the focused lookup record, the server rewrites only that record file
 - when changes affect search payloads or related summaries, the server rewrites only the focused derived payload set needed for those fields
 - other writes still use a full lookup refresh
@@ -105,7 +105,7 @@ Follow-on direction:
 - the current moment-build dependency mapping remains separate because moment save artifacts are runtime/search outputs, not Studio lookup payloads
   - series fields can affect `series/<series_id>.json`, `series_search.json`, and related work lookup records where `series_summary` embeds the series title
   - work-owned `downloads` and `links` changes refresh the focused work lookup record through the work-save path
-- refresh execution lives in `scripts/catalogue/catalogue_lookup_refresh.py`, which calls the existing `scripts/catalogue/catalogue_lookup.py` builders and writers and returns the Studio-facing `lookup_refresh` result payload shape
+- refresh execution lives in `studio/services/catalogue/catalogue_lookup_refresh.py`, which calls the existing `studio/services/catalogue/catalogue_lookup.py` builders and writers and returns the Studio-facing `lookup_refresh` result payload shape
 - single work, work-detail, and series saves all use registry-derived lookup refresh planning
 - keep parent/id move-style or mixed-class cases on `full` fallback until later tasks
 - changed work-save responses now include `lookup_refresh.mode` so the UI and local operators can tell whether the server used `single-record`, `targeted-multi-record`, or `full`
@@ -369,7 +369,7 @@ Build preview and save-time `apply_build` for single work, work-detail, series, 
 - unknown fields, mixed rule classes, bulk saves, create/delete operations, imports, publication actions, and series saves that also alter member work records keep conservative fallback
 
 The direct `POST /catalogue/build-apply` endpoint still uses the explicit broad request shape unless called through save-time `apply_build`.
-The save-time follow-through logic for work, work-detail, series, and moment saves is shared through `scripts/catalogue/catalogue_save_build.py`; the endpoint handlers still choose the target work, detail, series, or moment build scope and append any Studio Activity build rows.
+The save-time follow-through logic for work, work-detail, series, and moment saves is shared through `studio/services/catalogue/catalogue_save_build.py`; the endpoint handlers still choose the target work, detail, series, or moment build scope and append any Studio Activity build rows.
 
 The apply endpoint updates:
 

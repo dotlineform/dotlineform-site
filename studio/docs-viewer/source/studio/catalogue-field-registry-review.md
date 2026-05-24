@@ -56,7 +56,7 @@ The old Jekyll route shell has been retired.
 
 Focused smoke coverage:
 
-- `tests/smoke/local_studio_app_catalogue_field_registry_route.py`
+- `studio/tests/smoke/local_studio_app_catalogue_field_registry_route.py`
 
 ## Current Scope
 

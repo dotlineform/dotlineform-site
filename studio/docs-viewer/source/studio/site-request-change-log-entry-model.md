@@ -153,7 +153,7 @@ Suggested entry record:
   "subjects": ["docs payloads", "targeted rebuilds"],
   "change_request_doc_id": "site-request-docs-build-incremental",
   "related_docs": ["scripts-docs-builder", "scripts-docs-management-server"],
-  "related_files": ["scripts/docs/build_docs.rb", "scripts/docs/docs_write_rebuild.py"],
+  "related_files": ["studio/docs-viewer/build/build_docs.rb", "studio/docs-viewer/services/docs_write_rebuild.py"],
   "summary": "Docs writes can rebuild explicit generated docs payload ids instead of always rebuilding full scope payloads.",
   "effect": "Small docs source writes create less generated-output churn while preserving index correctness.",
   "source": {
@@ -211,7 +211,7 @@ The scope should support searches like:
 
 - `docs payload rebuild 2026-05`
 - `catalogue publication`
-- `scripts/docs/build_docs.rb`
+- `studio/docs-viewer/build/build_docs.rb`
 - `Docs Viewer management`
 - `recent UI primitive changes`
 
@@ -340,7 +340,7 @@ There should be no assumption of a large manual curation pass after migration.
 
 Implementation notes:
 
-- `scripts/docs_logs/migrate_legacy_logs.py` parses the current site log, May archive, April archive, March-and-earlier archive, and Search change log.
+- `studio/workflows/change-requests/services/migrate_legacy_logs.py` parses the current site log, May archive, April archive, March-and-earlier archive, and Search change log.
 - The initial migration wrote monthly JSONL buckets, which Step 8 later converted to flat per-entry JSON files.
 - `_docs_logs/reports/migration-review.json` records the migration summary and entries that need metadata review.
 
@@ -367,8 +367,8 @@ Generated `_docs_logs/generated/*.json` outputs should rebuild automatically whe
 
 Implementation notes:
 
-- `scripts/docs_logs/build_indexes.py` validates `_docs_logs/entries/*.json` and writes the generated projections.
-- `scripts/docs_logs/log_entry.py` now has an implemented generated rebuild hook through `build_indexes.py`.
+- `studio/workflows/change-requests/services/build_indexes.py` validates `_docs_logs/entries/*.json` and writes the generated projections.
+- `studio/workflows/change-requests/services/log_entry.py` now has an implemented generated rebuild hook through `build_indexes.py`.
 - Generated v1 outputs are `_docs_logs/generated/by-date.json`, `_docs_logs/generated/by-domain.json`, `_docs_logs/generated/by-related-doc.json`, `_docs_logs/generated/by-related-file.json`, `_docs_logs/generated/by-change-request.json`, and `_docs_logs/generated/search-index.json`.
 
 ### Step 7. Replace Long Archives With Compact Human Views
@@ -436,9 +436,9 @@ Implementation requirements:
 
 - convert existing `_docs_logs/entries/*.jsonl` rows to flat `_docs_logs/entries/<id>.json` files
 - preserve the existing record schema and ids
-- update `scripts/docs_logs/log_entry.py` so new entries preview/write one JSON file instead of appending to monthly JSONL
-- update `scripts/docs_logs/build_indexes.py` to read `entries/*.json`
-- update `scripts/docs_logs/migrate_legacy_logs.py` so its write mode creates per-entry JSON files rather than monthly JSONL
+- update `studio/workflows/change-requests/services/log_entry.py` so new entries preview/write one JSON file instead of appending to monthly JSONL
+- update `studio/workflows/change-requests/services/build_indexes.py` to read `entries/*.json`
+- update `studio/workflows/change-requests/services/migrate_legacy_logs.py` so its write mode creates per-entry JSON files rather than monthly JSONL
 - update tests to cover per-entry read/write behavior and duplicate-id handling
 - update `_docs_logs/README.md`, `_docs_logs/entries/README.md`, and this request doc to remove JSONL as the active canonical format
 - remove the monthly JSONL files after the per-entry files are generated and verified
@@ -448,7 +448,7 @@ Implementation requirements:
 Codex retrieval should use simple file search first:
 
 ```bash
-rg -l "scripts/docs/build_search.rb" _docs_logs/entries
+rg -l "studio/docs-viewer/build/build_search.rb" _docs_logs/entries
 rg -l "change-history-report" _docs_logs/entries
 rg -l "\"docs-viewer\"" _docs_logs/entries
 ```
@@ -463,7 +463,7 @@ Implementation notes:
 
 - Existing monthly JSONL rows were converted into 470 flat `_docs_logs/entries/<id>.json` files, then this Step 8 implementation added its own structured entry.
 - The retired monthly JSONL files were removed from `_docs_logs/entries/`.
-- `scripts/docs_logs/log_entry.py`, `scripts/docs_logs/build_indexes.py`, and `scripts/docs_logs/migrate_legacy_logs.py` now use per-entry JSON files.
+- `studio/workflows/change-requests/services/log_entry.py`, `studio/workflows/change-requests/services/build_indexes.py`, and `studio/workflows/change-requests/services/migrate_legacy_logs.py` now use per-entry JSON files.
 - Focused tests cover per-entry read/write behavior and duplicate-id handling.
 
 ## Migration Script Notes

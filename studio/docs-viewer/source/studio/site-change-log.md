@@ -18,8 +18,8 @@ This log has been deprecated. Use the manage-only [Change History](/docs/?scope=
 - canonical detailed entries: `_docs_logs/entries/*.json`
 - generated local projections: `_docs_logs/generated/*.json`
 - migration diagnostics: `_docs_logs/reports/migration-review.json`
-- entry helper: `./scripts/docs_logs/log_entry.py`
-- index builder: `./scripts/docs_logs/build_indexes.py --write`
+- entry helper: `./studio/workflows/change-requests/services/log_entry.py`
+- index builder: `./studio/workflows/change-requests/services/build_indexes.py --write`
 
 Generated projections and reports are ignored local build output.
 

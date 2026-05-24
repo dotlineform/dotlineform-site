@@ -35,19 +35,18 @@ The current script surface is organized by owner:
 
 ## Folder Rules
 
-- `scripts/catalogue/` owns catalogue source models, lookup/build planning, generation, publication/delete/prose workflows, validation/export utilities, and the catalogue write service.
-- `scripts/analytics/` owns tag metadata services and helpers as the first Analytics metadata layer over catalogue works and series.
-- `scripts/docs/` owns Docs Viewer build, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.
+- `studio/services/catalogue/` owns catalogue source models, lookup/build planning, generation, publication/delete/prose workflows, validation/export utilities, and the catalogue write service.
+- `studio/services/analytics/` owns tag metadata services and helpers as the first Analytics metadata layer over catalogue works and series.
+- `studio/docs-viewer/` owns Docs Viewer build, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.
 - `scripts/search/` owns search build configuration and the search builder implementation.
-- `scripts/studio/` owns non-domain-specific Studio runtime services such as audit, backup-retention, and Data Sharing dispatch services.
-- `scripts/checks/` owns standalone audits and verification commands.
-- `scripts/media/` owns media derivation and remote media publishing commands.
+- `studio/app/server/studio/` owns non-domain-specific Studio runtime services such as audit, backup-retention, and Data Sharing dispatch services.
+- `studio/checks/` owns standalone audits and verification commands.
+- `studio/services/media/` owns media derivation and remote media publishing commands.
 - top-level `scripts/` is reserved for stable wrappers and shared infrastructure modules.
 
 Top-level survivors are intentional:
 
 - `build_docs.rb` and `build_search.rb` are stable operational wrappers over domain-owned implementations.
-- `run_checks.py` is the shared check-profile entrypoint.
 - `make_srcset_images.sh` is the stable shell wrapper for the media implementation.
 - `display_paths.py`, `local_env.py`, `pipeline_config.py`, `script_logging.py`, and `studio_activity.py` are shared infrastructure modules with cross-domain callers.
 - `jekyll_markdown_renderer.rb`, `render_markdown_with_jekyll.rb`, and `jekyll_webrick_client_reset_filter.rb` are shared Ruby/Jekyll helpers.
@@ -57,11 +56,11 @@ Top-level survivors are intentional:
 Docs-domain builds:
 
 - `./scripts/build_docs.rb`
-  - stable top-level wrapper for `scripts/docs/build_docs.rb`
+  - stable top-level wrapper for `studio/docs-viewer/build/build_docs.rb`
   - source docs:
-    - `_docs/`
-    - `_docs_analysis/`
-    - `_docs_library/`
+    - `studio/docs-viewer/source/studio/`
+    - `studio/docs-viewer/source/analysis/`
+    - `studio/docs-viewer/source/library/`
   - outputs:
     - `assets/data/docs/scopes/studio/`
     - `assets/data/docs/scopes/analysis/`
@@ -88,26 +87,26 @@ Search builds:
 
 Catalogue/runtime maintenance:
 
-- `./scripts/run_checks.py`
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`
   - runs optional repo check profiles and writes local logs under `var/test-runs/`
-- `./scripts/checks/audit_projection_contract.py`
+- `$HOME/miniconda3/bin/python3 studio/checks/audit_projection_contract.py`
   - validates the Phase 6 projection contract manifest, checked-in public JSON leak rules, `_config.yml` exclusion policy, and optional built public output
-- `./scripts/checks/audit_studio_ready_state.py`
+- `$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py`
   - audits Studio route-ready template contracts and flags static routes that need a route-specific ready/busy implementation
-- `./scripts/catalogue/catalogue_json_build.py`
+- `$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py`
   - previews or runs a scoped JSON-source rebuild for one work or one series scope, including aggregate indexes and catalogue search
-- `./scripts/catalogue/verify_catalogue_field_registry.py`
+- `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py`
   - verifies representative field-aware catalogue build plans without writing files
-- `./scripts/docs/docs_export.py`
+- `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py`
   - prepares generated Docs Viewer data through source-controlled sharing profiles into `var/studio/data-sharing/<scope>/exports/`; also powers the Studio Library Data Sharing prepare service path
-- `./scripts/docs/docs_import.py`
+- `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py`
   - parses staged Library returned-package JSON/JSONL files under `var/studio/data-sharing/library/import-staging/` and returns a structured review report
-- `./scripts/catalogue/validate_catalogue_source.py`
-  - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`; `--target-media-section-schema` verifies migrated detail section fields
-- `./scripts/catalogue/migrate_catalogue_media_sections.py`
+- `$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py`
+  - validates canonical catalogue source JSON under `studio/data/canonical/catalogue/`; `--target-media-section-schema` verifies migrated detail section fields
+- `$HOME/miniconda3/bin/python3 studio/services/catalogue/migrate_catalogue_media_sections.py`
   - previews or applies the work-detail source migration from legacy `project_subfolder` to separated `details_subfolder`, `section_id`, and `section_title`
-- `./scripts/catalogue/export_catalogue_lookup.py`
-  - exports derived Studio lookup JSON from canonical source into `assets/studio/data/catalogue_lookup/`
+- `$HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py`
+  - exports derived Studio lookup JSON from canonical source into `studio/data/generated/catalogue-lookup/`
 - `bash scripts/make_srcset_images.sh`
   - builds derivative image outputs when media work is needed outside the Studio metadata flow
 

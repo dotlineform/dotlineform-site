@@ -11,7 +11,7 @@ sort_order: 19000
 Script:
 
 ```bash
-./scripts/docs/docs_broken_links.py --scope studio
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_broken_links.py --scope studio
 ```
 
 ## Purpose
@@ -58,13 +58,13 @@ Current model:
 Human-readable summary:
 
 ```bash
-./scripts/docs/docs_broken_links.py --scope studio
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_broken_links.py --scope studio
 ```
 
 JSON output:
 
 ```bash
-./scripts/docs/docs_broken_links.py --scope library --json
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_broken_links.py --scope library --json
 ```
 
 Flags:

@@ -37,7 +37,7 @@ The popup reads from the generated browser config:
 
 But that file is generated from the source config:
 
-`scripts/docs/docs_scopes.json`
+`studio/docs-viewer/config/scopes/docs_scopes.json`
 
 So the durable place to add/edit status options is:
 

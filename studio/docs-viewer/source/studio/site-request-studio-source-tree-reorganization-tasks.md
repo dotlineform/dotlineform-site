@@ -16,26 +16,20 @@ This is the tracker for implementing [Studio Source Tree Reorganization Request]
 
 ### just done
 
-- Completed `STSR-016` by moving UI Catalogue demo CSS/JS and reference-asset placeholders from public `assets/` roots into `studio/ui-catalogue/assets/`.
-- Local Studio now serves UI Catalogue demo static files from `/studio/ui-catalogue/assets/`; `/assets/ui-catalogue/` is no longer an active Local Studio static prefix.
-- Updated UI Catalogue demo source Markdown, local route rendering, runtime view metadata, projection-contract policy, focused smoke assertions, and owning UI Catalogue docs to use the new Studio-owned asset paths.
-- Updated `tests/smoke/ui_catalogue_modal_demo.py` so the modal-specific smoke starts Local Studio by default instead of expecting UI Catalogue demo routes in a built public Jekyll site.
-- Verification passed: `$HOME/miniconda3/bin/python3 -m py_compile scripts/run_checks.py scripts/checks/audit_projection_contract.py scripts/checks/audit_public_build_surface.py studio/app/server/studio/studio_app_config.py studio/app/server/studio/studio_app_server.py studio/app/server/studio/studio_ui_catalogue_views.py tests/smoke/local_studio_app_ui_catalogue_routes.py tests/smoke/ui_catalogue_modal_demo.py tests/python/test_studio_app_server.py`.
-- Verification passed: `$HOME/miniconda3/bin/python3 -m pytest -q tests/python/test_studio_app_server.py`.
-- Verification passed: `$HOME/miniconda3/bin/python3 scripts/checks/audit_projection_contract.py --skip-field-leaks`.
-- Verification passed after sandbox escalation for localhost/Chromium: `$HOME/miniconda3/bin/python3 tests/smoke/local_studio_app_ui_catalogue_routes.py`.
-- Verification passed after sandbox escalation for localhost/Chromium: `$HOME/miniconda3/bin/python3 tests/smoke/ui_catalogue_modal_demo.py`.
-- Verification passed: `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`.
-- Verification passed: `$HOME/miniconda3/bin/python3 scripts/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build`.
-- Public build spot-check confirmed no `/studio/ui-catalogue/`, `/assets/ui-catalogue/`, or `/assets/docs/ui-catalogue/` output in `/tmp/dlf-jekyll-build`.
-- Codex did not run a docs/search rebuild command; a local docs watcher appeared to update generated docs payloads after source docs changed.
-- Note: a currently running `bin/local-studio` process must be restarted before it uses the new UI Catalogue asset path.
+- Completed `STSR-018` by removing the root `scripts/run_checks.py` wrapper and making `studio/commands/run_checks.py` the only check-profile entrypoint.
+- Updated AGENTS, testing docs, smoke-testing docs, run-checks docs, script docs, and task references to use `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`, `studio/checks/...`, and `studio/tests/...`.
+- Updated local Studio server/service docs that still referenced moved `scripts/studio/...`, `scripts/catalogue/...`, `scripts/analytics/...`, and `scripts/docs/...` source paths to their current Studio-owned homes.
+- Updated `studio/tests/README.md` so the retained test directory points at the Studio-owned runner with the configured Miniconda interpreter.
+- No old check/test root wrapper or check-script wrapper was kept.
+- Verification passed: `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick --run-id stsr-018-quick`; summary at `var/test-runs/stsr-018-quick/summary.md`.
 
 ### steer for next task
 
-- Start with `STSR-017`; move tests, smoke helpers, fixtures, projection/source-boundary checks, public-surface checks, and Codex-run verification helpers under the chosen Studio or Docs Viewer test/check locations.
+- Start with `STSR-019`; delete old Studio source locations after confirming references are updated.
+- Treat root `scripts/checks/`, root `tests/`, and any generated `__pycache__/` or `.DS_Store` leftovers there as cleanup candidates, not source.
+- Keep `scripts/run_checks.py` deleted; do not reintroduce a root check-profile wrapper.
 - Keep public-site validation as Studio/Codex testing ownership even when a check validates generated public output.
-- Update check entrypoints directly to new locations rather than adding old-path import aliases.
+- Keep check entrypoints at `studio/checks/...`; do not add old `studio/checks/...` wrappers or aliases.
 - Include focused syntax/import verification and at least one representative smoke profile after moving test/check code.
 - Keep `assets/studio/img/thumbnail-quality/` retained as generated workflow output for now; retarget it in a later generated-output cleanup, not in the CSS split.
 - Treat `assets/docs-viewer/` and other empty old source folders as deletion/cleanup candidates in `STSR-019` unless `STSR-013` proves a serving rule still references them.
@@ -61,13 +55,13 @@ This is the tracker for implementing [Studio Source Tree Reorganization Request]
 
 Use this set before and after move slices when the touched area warrants it:
 
-- Core syntax/projection/data checks: `./scripts/run_checks.py --profile quick`.
+- Core syntax/projection/data checks: `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick`.
 - Public build check: `bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`.
-- Public surface audit: `./scripts/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build`.
-- Local Studio Docs Viewer smoke: `tests/smoke/local_studio_app_docs_viewer.py`.
-- Local Studio Catalogue dashboard smoke: `tests/smoke/local_studio_app_catalogue_dashboard_route.py`.
-- Local Studio UI Catalogue smoke: `tests/smoke/local_studio_app_ui_catalogue_routes.py`.
-- Add route-family or service-specific tests from `scripts/run_checks.py` profiles when a move touches that family.
+- Public surface audit: `$HOME/miniconda3/bin/python3 studio/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build`.
+- Local Studio Docs Viewer smoke: `studio/tests/smoke/local_studio_app_docs_viewer.py`.
+- Local Studio Catalogue dashboard smoke: `studio/tests/smoke/local_studio_app_catalogue_dashboard_route.py`.
+- Local Studio UI Catalogue smoke: `studio/tests/smoke/local_studio_app_ui_catalogue_routes.py`.
+- Add route-family or service-specific tests from `studio/commands/run_checks.py` profiles when a move touches that family.
 
 Codex sandbox note: the Local Studio smoke scripts bind temporary localhost ports and launch Chromium. In sandboxed Codex runs they may need elevated permissions even when the product code is healthy.
 
@@ -99,8 +93,8 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | STSR-014 | done | Split Studio CSS from public `assets/css/main.css`: move Studio-only base tokens, shell rules, route/editor/modal/dashboard/operational selectors, and Studio primitive classes into Studio-owned CSS under `studio/`; leave only public-site or genuinely shared selectors in public CSS. |
 | STSR-015 | done | Verify the frontend/static/CSS move with Local Studio desktop and mobile smoke checks, UI route readiness checks, and a public Jekyll build or public route check that confirms public CSS and public runtime behavior still work without Studio source. |
 | STSR-016 | done | Move UI Catalogue demo source, notes, demo CSS/JS, fixtures, and assets under the Studio boundary; update local demo routes to read the new source paths and keep UI Catalogue out of the public Jekyll publishing surface. |
-| STSR-017 | planned | Move tests, smoke helpers, fixtures, projection/source-boundary checks, public-surface checks, and Codex-run verification helpers under the chosen Studio or Docs Viewer test/check locations; public-site validation remains a Studio/Codex testing responsibility, not public-site source ownership. |
-| STSR-018 | planned | Update command entrypoints, local runner docs, development workflow docs, script docs, and task references so Codex and humans use the new `studio/` paths without relying on old source locations. |
+| STSR-017 | done | Move tests, smoke helpers, fixtures, projection/source-boundary checks, public-surface checks, and Codex-run verification helpers under the chosen Studio or Docs Viewer test/check locations; public-site validation remains a Studio/Codex testing responsibility, not public-site source ownership. |
+| STSR-018 | done | Update command entrypoints, local runner docs, development workflow docs, script docs, and task references so Codex and humans use the new `studio/` paths without relying on old source locations. |
 | STSR-019 | planned | Delete old Studio source locations after references are updated; confirm removed paths are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic. |
 | STSR-020 | planned | Run the agreed final verification set: focused Local Studio smoke checks, UI Catalogue smoke checks, targeted Python/Ruby/JavaScript syntax or unit checks, public Jekyll build, projection/public-build-surface audit, and any changed-doc link/path checks. |
 | STSR-021 | planned | Update the parent request, this tracker, related owning docs, and docs-log entry with final statuses, moved-path summary, verification results, generated payload status, and remaining risks; do not rebuild generated docs payloads unless explicitly requested. |

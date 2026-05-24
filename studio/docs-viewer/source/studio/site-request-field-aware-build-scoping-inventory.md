@@ -59,7 +59,7 @@ Important distinction:
 |---|---|
 | `scripts/catalogue_source.py` | `source-json` import/export helpers for works, work details, and series. |
 | `scripts/moment_sources.py` | `source-json` moment metadata helpers. |
-| `scripts/studio/catalogue_write_server.py` | `source-json` writes, service-backed `studio-lookup` reads, build preview/apply orchestration. |
+| `studio/app/server/studio/catalogue_write_server.py` | `source-json` writes, service-backed `studio-lookup` reads, build preview/apply orchestration. |
 | `scripts/catalogue_lookup.py` | `studio-lookup` payload construction. |
 | `scripts/export_catalogue_lookup.py` | `studio-lookup` file export. |
 | `scripts/generate_work_pages.py` | `work-page`, `work-json`, `work-details-page`, `works-index-json`, `work-storage-index-json`, `series-page`, `series-json`, `series-index-json`, `recent-index-json`, `moment-page`, `moment-json`, `moments-index-json`. |

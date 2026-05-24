@@ -33,7 +33,7 @@ Covered write actions include registry import, create tag, edit tag, delete tag,
 
 Primary shell:
 
-- `scripts/studio/studio_app_views.py`
+- `studio/app/server/studio/studio_app_views.py`
 
 Page controller:
 

@@ -14,7 +14,7 @@ Checked-in configuration artifacts that the current site and build scripts load 
 - shared catalogue/media/runtime defaults in `_data/pipeline.json`
 - shared Studio/search browser config in `assets/studio/data/studio_config.json`
 - the Studio/search config loader in `assets/studio/js/studio-config.js`
-- Docs Viewer source scope config in `scripts/docs/docs_scopes.json`
+- Docs Viewer source scope config in `studio/docs-viewer/config/scopes/docs_scopes.json`
 - generated Docs Viewer browser config in `assets/docs-viewer/data/docs-viewer-config.json`
 - Docs Viewer UI text in `assets/docs-viewer/data/ui-text.json`
 - dedicated `/catalogue/search/` runtime policy in `assets/data/search/policy.json`

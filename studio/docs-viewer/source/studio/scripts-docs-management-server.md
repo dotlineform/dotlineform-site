@@ -11,13 +11,13 @@ sort_order: 15000
 Service module:
 
 ```text
-scripts/docs/docs_management_service.py
+studio/docs-viewer/services/docs_management_service.py
 ```
 
 This module owns the shared Docs Viewer management route dispatcher for Local Studio.
-It is called by `scripts/studio/studio_docs_api.py`, and browser traffic reaches it through the Local Studio app at `/studio/api/docs/...`.
+It is called by `studio/app/server/studio/studio_docs_api.py`, and browser traffic reaches it through the Local Studio app at `/studio/api/docs/...`.
 
-The old standalone `scripts/docs/docs_management_server.py` HTTP entrypoint has been removed.
+The old standalone `studio/docs-viewer/services/docs_management_server.py` HTTP entrypoint has been removed.
 There is no supported standalone Docs Management server process and no `127.0.0.1:8789` fallback.
 
 ## Local Studio Path
@@ -29,27 +29,27 @@ browser -> /studio/api/docs/... -> studio_app_server.py -> studio_docs_api.py ->
 The service expects the project to provide:
 
 - a Jekyll `_config.yml` at the repo root
-- `scripts/docs/docs_scopes.json` with at least one configured docs scope
+- `studio/docs-viewer/config/scopes/docs_scopes.json` with at least one configured docs scope
 - Python dependencies needed by the docs import/export helpers
 - Ruby, Bundler, and Jekyll for rebuild commands reached through `./scripts/build_docs.rb` and `./scripts/build_search.rb`
 
 ## Responsibilities
 
-`scripts/docs/docs_management_service.py` dispatches route paths and keeps compatibility imports for existing tests and adapters.
+`studio/docs-viewer/services/docs_management_service.py` dispatches route paths and keeps compatibility imports for existing tests and adapters.
 Focused modules own the workflow behavior behind it:
 
-- `scripts/docs/docs_management_context.py` owns shared paths, backups, repo/root helpers, CORS origin checks, compact logs, and path formatting.
-- `scripts/docs/docs_management_read_service.py` owns generated docs/search/reference reads and GET dispatch.
-- `scripts/docs/docs_management_capabilities_service.py` owns capability and scope availability payloads.
-- `scripts/docs/docs_management_mutation_service.py` owns docs source create, metadata, viewability, move, order normalization, archive, delete apply, and scope lifecycle apply routes.
-- `scripts/docs/docs_management_import_service.py` owns Docs/HTML import-source dependency wiring.
-- `scripts/docs/docs_management_data_sharing_service.py` owns Data Sharing dependency wiring and handler registry assembly.
-- `scripts/docs/docs_management_source_service.py` owns source-file open behavior.
-- `scripts/docs/docs_management_broken_links_service.py` owns broken-links audit route behavior.
+- `studio/docs-viewer/services/docs_management_context.py` owns shared paths, backups, repo/root helpers, CORS origin checks, compact logs, and path formatting.
+- `studio/docs-viewer/services/docs_management_read_service.py` owns generated docs/search/reference reads and GET dispatch.
+- `studio/docs-viewer/services/docs_management_capabilities_service.py` owns capability and scope availability payloads.
+- `studio/docs-viewer/services/docs_management_mutation_service.py` owns docs source create, metadata, viewability, move, order normalization, archive, delete apply, and scope lifecycle apply routes.
+- `studio/docs-viewer/services/docs_management_import_service.py` owns Docs/HTML import-source dependency wiring.
+- `studio/docs-viewer/services/docs_management_data_sharing_service.py` owns Data Sharing dependency wiring and handler registry assembly.
+- `studio/docs-viewer/services/docs_management_source_service.py` owns source-file open behavior.
+- `studio/docs-viewer/services/docs_management_broken_links_service.py` owns broken-links audit route behavior.
 
 Together these modules serve generated docs index, per-doc payload, docs-search, semantic-reference, source-config, and capability payloads; coordinate source mutations, imports, rebuilds, and Data Sharing; append unified activity rows for covered actions; and coordinate successful source writes with the docs live watcher through short-lived suppression markers.
 
-Endpoint constants live in `scripts/docs/docs_management_routes.py`.
+Endpoint constants live in `studio/docs-viewer/services/docs_management_routes.py`.
 HTTP transport lives in the Local Studio app server, not in these Docs modules.
 
 ## Child References

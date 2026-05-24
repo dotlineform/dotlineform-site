@@ -126,7 +126,7 @@ For score-6 or score-7 controllers, leave a lightweight owner note in the releva
 
 Useful checks and follow-through:
 
-- Run `./scripts/checks/javascript_inventory_guardrail.py` before or after a JavaScript risk-reduction batch to inspect maintenance-score counts, line share, churn, overlap risk, and top risk files.
+- Run `$HOME/miniconda3/bin/python3 studio/checks/javascript_inventory_guardrail.py` before or after a JavaScript risk-reduction batch to inspect maintenance-score counts, line share, churn, overlap risk, and top risk files.
 - Use focused browser module smokes where practical: serve the site root through a temporary local static server, import browser modules directly in Playwright, stub config/data/service/DOM inputs, assert helper contracts without full route boot, and import affected route shells to catch syntax and dependency regressions.
 - After material JavaScript risk-reduction work, update [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory), and update [Docs Viewer JavaScript Inventory](/docs/?scope=studio&doc=docs-viewer-javascript-inventory) when Docs Viewer-specific rows or follow-up tasks changed.
 

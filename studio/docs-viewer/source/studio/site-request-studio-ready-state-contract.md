@@ -92,7 +92,7 @@ Static/reference route helper:
 
 Enforcement helper:
 
-- `scripts/checks/audit_studio_ready_state.py`
+- `studio/checks/audit_studio_ready_state.py`
 
 The page also exposes:
 
@@ -191,7 +191,7 @@ For each adopted route:
 - load the route with a required local service unavailable and confirm the page still reaches a stable ready or unavailable state
 - run one command and confirm `data-studio-busy` is true during the command and false afterward
 - update one smoke test to wait on the shared ready contract instead of status text
-- run `./scripts/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
+- run `$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
 
 ## Benefits
 

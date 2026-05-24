@@ -21,9 +21,9 @@ This change request tracks follow-on work to stop the catalogue write server fro
 Current implementation note:
 
 - the catalogue field registry is the authority for whether a changed field affects `studio-lookup`
-- `scripts/catalogue/catalogue_lookup_refresh.py` derives exact lookup artifacts from serializer dependency descriptors in `scripts/catalogue/catalogue_lookup.py`
-- the old work/detail/series lookup invalidation registries in `scripts/catalogue/catalogue_invalidation.py` have been removed
-- `scripts/catalogue/catalogue_invalidation.py` now remains only for moment-build invalidation response metadata
+- `studio/services/catalogue/catalogue_lookup_refresh.py` derives exact lookup artifacts from serializer dependency descriptors in `studio/services/catalogue/catalogue_lookup.py`
+- the old work/detail/series lookup invalidation registries in `studio/services/catalogue/catalogue_invalidation.py` have been removed
+- `studio/services/catalogue/catalogue_invalidation.py` now remains only for moment-build invalidation response metadata
 
 The preferred direction is not "incremental everywhere". It is:
 
@@ -203,7 +203,7 @@ Required output:
 
 Implemented outcome:
 
-- the first invalidation registry now lives in `scripts/studio/catalogue_write_server.py`
+- the first invalidation registry now lives in `studio/app/server/studio/catalogue_write_server.py`
 - it currently covers work-save fields only
 - it also defines the initial full-refresh fallback operation set
 - no write-routing behavior changed yet; later tasks will make the server use this registry to choose refresh scope

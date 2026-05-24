@@ -84,7 +84,7 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   set to `1`, `on`, `true`, or `yes` to print one HTTP access log line for each Local Studio app request
 - `DOCS_STARTUP_REBUILD_SCOPES`
   default: blank
-  accepted values: configured docs scope ids from `scripts/docs/docs_scopes.json`, or comma-separated combinations
+  accepted values: configured docs scope ids from `studio/docs-viewer/config/scopes/docs_scopes.json`, or comma-separated combinations
 - `CATALOGUE_STARTUP_LOOKUP_REBUILD`
   default: `off`
   accepted enabled values: `1`, `on`, `true`, or `yes`
@@ -131,7 +131,7 @@ To run a startup rebuild locally, edit that value to a configured docs scope id 
 Keeping `CATALOGUE_STARTUP_LOOKUP_REBUILD=off` in `var/local/site.env` skips the full derived catalogue lookup export during normal startup.
 Set it to `1`, `on`, `true`, or `yes` when startup should refresh `assets/studio/data/catalogue_lookup/` before the local Studio app starts.
 
-The runner reads valid docs scope ids from `scripts/docs/docs_scopes.json`.
+The runner reads valid docs scope ids from `studio/docs-viewer/config/scopes/docs_scopes.json`.
 Adding a new docs scope there makes it eligible for startup docs/docs-search rebuilds without editing the runner.
 
 ## Startup Sequence
@@ -142,13 +142,13 @@ If the port is unavailable, the runner exits immediately with a message naming `
 After that preflight, `bin/local-studio` runs the startup write steps below:
 
 1. if `DOTLINEFORM_BACKUP_RETENTION` is not `off` or `0`, it runs:
-   - `./scripts/studio/studio_backup_retention.py --write --quiet`
+   - `$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_backup_retention.py --write --quiet`
 2. if `DOCS_STARTUP_REBUILD_SCOPES` is set, it runs:
    - `./scripts/build_docs.rb --scope <scope> --write`
    - `./scripts/build_search.rb --scope <scope> --write`
    for each listed docs scope
 3. if `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled, it runs:
-   - `./scripts/catalogue/export_catalogue_lookup.py --write`
+   - `$HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py --write`
 
 That means a default `bin/local-studio` run skips startup docs/docs-search rebuilds and startup catalogue lookup export.
 The local Studio app catalogue API refreshes derived lookup payloads after catalogue writes.
@@ -174,7 +174,7 @@ After those startup writes succeed, it starts the long-running local processes b
 - command:
 
 ```bash
-./scripts/studio/studio_app_server.py --host "$STUDIO_APP_HOST" --port "$STUDIO_APP_PORT"
+$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --host "$STUDIO_APP_HOST" --port "$STUDIO_APP_PORT"
 ```
 
 - default URL: `http://127.0.0.1:8765/studio/`
@@ -230,7 +230,7 @@ There is no standalone audit HTTP service fallback in `bin/local-studio`.
 For direct automation, call:
 
 ```bash
-./scripts/studio/audit_runner.py --audit-id studio-ready-state
+$HOME/miniconda3/bin/python3 studio/app/server/studio/audit_runner.py --audit-id studio-ready-state
 ```
 
 Related doc: [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-service).
@@ -240,7 +240,7 @@ Related doc: [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-
 - command:
 
 ```bash
-./scripts/docs/docs_live_rebuild_watcher.py --poll-seconds "$DOCS_WATCH_POLL_SECONDS" --debounce-seconds "$DOCS_WATCH_DEBOUNCE_SECONDS"
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_live_rebuild_watcher.py --poll-seconds "$DOCS_WATCH_POLL_SECONDS" --debounce-seconds "$DOCS_WATCH_DEBOUNCE_SECONDS"
 ```
 
 - watches `_docs/*.md` as `studio`
@@ -280,7 +280,7 @@ If either child process exits unexpectedly, the runner stops monitoring and exit
 `bin/local-studio` does not currently:
 
 - start Jekyll
-- run `./scripts/catalogue/catalogue_json_build.py`
+- run `$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py`
 - rebuild any docs/docs-search scope on startup unless `DOCS_STARTUP_REBUILD_SCOPES` is set
 - rebuild catalogue lookup artifacts on startup unless `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled
 - rebuild public search artifacts on startup

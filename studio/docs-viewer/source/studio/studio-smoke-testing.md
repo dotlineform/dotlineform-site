@@ -29,9 +29,9 @@ For one-off static review, use:
 - a local static HTTP server serving that build
 - the catalogue write server when the page reads or writes catalogue source data
 
-`./scripts/run_checks.py --profile docs-viewer-smoke` prepares the temporary Jekyll build used by the retained Docs Viewer route smoke.
-`./scripts/run_checks.py --profile studio-smoke` prepares the same kind of temporary Jekyll build and runs broader retained Studio route smoke scripts.
-Route-specific Playwright scripts should live under `tests/smoke/` when the scenario is worth keeping.
+`$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke` prepares the temporary Jekyll build used by the retained Docs Viewer route smoke.
+`$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile studio-smoke` prepares the same kind of temporary Jekyll build and runs broader retained Studio route smoke scripts.
+Route-specific Playwright scripts should live under `studio/tests/smoke/` when the scenario is worth keeping.
 
 Do not use a raw `file://` URL for Studio pages that depend on module imports, local services, or same-origin asset paths.
 
@@ -131,12 +131,12 @@ The rollout history is tracked in [Studio Ready State Contract Request](/docs/?s
 Run the ready-state audit after changing Studio route shells, route scripts, or route-ready helpers:
 
 ```bash
-./scripts/checks/audit_studio_ready_state.py --strict
+$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict
 ```
 
 The audit is intentionally conservative. It fails when static and dashboard route markers are mixed, when a static route starts to expose dashboard metrics, when required ready/busy baseline attributes are missing, or when dashboard routes are not wired to the dashboard loader. In strict mode it also fails if a static route starts loading another module script, because that usually means the route needs a specific readiness contract before browser tests trust it.
 
-The `quick` profile in `./scripts/run_checks.py` includes this audit so ready-state drift is caught during normal lightweight checks.
+The `quick` profile in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` includes this audit so ready-state drift is caught during normal lightweight checks.
 
 ## Manual Check Pairing
 

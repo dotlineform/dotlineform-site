@@ -11,7 +11,7 @@ sort_order: 2000
 Script:
 
 ```bash
-./scripts/docs/docs_export.py
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py
 ```
 
 ## Scope
@@ -108,43 +108,43 @@ Image handling:
 Dry-run the parent-child relationships export:
 
 ```bash
-./scripts/docs/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library
 ```
 
 Write the parent-child relationships export:
 
 ```bash
-./scripts/docs/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library --write
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library --write
 ```
 
 Use all matching docs for whole-corpus relationship review:
 
 ```bash
-./scripts/docs/docs_export.py --scope library --config-id library-parent-child-relationships --all
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --all
 ```
 
 Prepare explicit documents for profiles that require selected ids:
 
 ```bash
-./scripts/docs/docs_export.py --scope library --config-id library-document-summaries --doc-id library
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --doc-id library
 ```
 
 Use all matching docs for an explicit-selection config:
 
 ```bash
-./scripts/docs/docs_export.py --scope library --config-id library-document-summaries --all
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all
 ```
 
 Disable a summary config's default missing-summary-only filter:
 
 ```bash
-./scripts/docs/docs_export.py --scope library --config-id library-document-summaries --all --include-summary-complete
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all --include-summary-complete
 ```
 
 Write a document-row export as JSON instead of its JSONL default when the config supports both:
 
 ```bash
-./scripts/docs/docs_export.py --scope library --config-id library-document-summaries --all --format json --write
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all --format json --write
 ```
 
 ## Verification
@@ -152,14 +152,14 @@ Write a document-row export as JSON instead of its JSONL default when the config
 Focused package-preparation checks live in:
 
 ```bash
-tests/python/test_docs_export.py
+studio/tests/python/test_docs_export.py
 ```
 
 They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output for a fixed run time, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the three v1 Library sharing profiles.
 The same check runs in the `docs` profile:
 
 ```bash
-./scripts/run_checks.py --profile docs
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs
 ```
 
 ## Report Shape

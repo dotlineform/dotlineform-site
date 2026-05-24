@@ -186,8 +186,8 @@ These risks are acceptable if the importer reports planned filenames before writ
 
 Implementation will likely touch:
 
-- `scripts/docs/docs_html_import.py`
-- `scripts/docs/docs_management_server.py`
+- `studio/docs-viewer/services/docs_html_import.py`
+- `studio/docs-viewer/services/docs_management_server.py`
 - `assets/docs-viewer/js/docs-html-import.js`
 - `assets/docs-viewer/data/ui-text.json`
 - `_docs/user-guide-docs-html-import.md`

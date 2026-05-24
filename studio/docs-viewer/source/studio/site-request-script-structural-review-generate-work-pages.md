@@ -32,15 +32,15 @@ Status:
 
 ## Purpose
 
-This child doc tracks the detailed review and implementation tasks for restructuring `scripts/catalogue/generate_work_pages.py`.
+This child doc tracks the detailed review and implementation tasks for restructuring `studio/services/catalogue/generate_work_pages.py`.
 The parent [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review) stays focused on the broader candidate queue, shared acceptance criteria, and completed priority summaries.
 
 The intended end state is not to make the generator small for its own sake.
-`generate_work_pages.py` should remain the internal JSON-source generator entrypoint used by `scripts/catalogue/catalogue_json_build.py`, while catalogue projection, index payload construction, recent-publication merging, source update planning, and file write mechanics get explicit owners where the boundary is stable and useful.
+`generate_work_pages.py` should remain the internal JSON-source generator entrypoint used by `studio/services/catalogue/catalogue_json_build.py`, while catalogue projection, index payload construction, recent-publication merging, source update planning, and file write mechanics get explicit owners where the boundary is stable and useful.
 
 ## Current Shape
 
-`scripts/catalogue/generate_work_pages.py` currently owns several responsibilities in one file:
+`studio/services/catalogue/generate_work_pages.py` currently owns several responsibilities in one file:
 
 - CLI argument parsing, deprecated direct-entrypoint messaging, `--only` artifact selection, scoped work/series/moment filters, and run-mode decisions
 - canonical source loading, validation, mutable source updates, and final canonical source write-back
@@ -72,7 +72,7 @@ Extracted module owners should take:
 - route-stub and generated-file write decisions
 - source update planning for status, published dates, and image dimensions
 
-Keep `scripts/catalogue/catalogue_json_build.py` as the supported public pipeline entrypoint.
+Keep `studio/services/catalogue/catalogue_json_build.py` as the supported public pipeline entrypoint.
 Do not revive direct manual use of `generate_work_pages.py`, change generated payload schemas, move script folders, or change output paths as part of these slices.
 
 ## Slice Principles
@@ -87,7 +87,7 @@ Do not revive direct manual use of `generate_work_pages.py`, change generated pa
 
 ## Initial Acceptance Criteria
 
-- `scripts/catalogue/catalogue_json_build.py` continues to call the generator with the same internal command shape.
+- `studio/services/catalogue/catalogue_json_build.py` continues to call the generator with the same internal command shape.
 - Existing generated artifact paths and schemas stay stable:
   - `_works/<work_id>.md`
   - `_series/<series_id>.md`
@@ -103,7 +103,7 @@ Do not revive direct manual use of `generate_work_pages.py`, change generated pa
   - `assets/studio/data/work_storage_index.json`
 - Focused tests cover each extracted owner directly.
 - The generator still passes syntax checks after every Python slice.
-- After generator or pipeline-entrypoint changes, `scripts/catalogue/catalogue_json_build.py` previews successfully through a dry-run.
+- After generator or pipeline-entrypoint changes, `studio/services/catalogue/catalogue_json_build.py` previews successfully through a dry-run.
 - Script docs are updated when module ownership, command behavior, or generated-artifact responsibilities change.
 
 ## Planned Slice Sequence
@@ -132,7 +132,7 @@ Acceptance checks:
 
 Read-only review result:
 
-- the supported external command contract comes from `scripts/catalogue/catalogue_json_build.py`, which invokes `scripts/catalogue/generate_work_pages.py` with `--internal-json-source-run`, `--source-dir`, scoped ids, repeated `--only` values, and optional `--write`, `--refresh-published`, and `--force`
+- the supported external command contract comes from `studio/services/catalogue/catalogue_json_build.py`, which invokes `studio/services/catalogue/generate_work_pages.py` with `--internal-json-source-run`, `--source-dir`, scoped ids, repeated `--only` values, and optional `--write`, `--refresh-published`, and `--force`
 - top-level scalar/id/date/list/YAML helpers currently mix three concerns: source value normalization, legacy front-matter dumping, and route-stub construction
 - top-level JSON hash/compaction/version helpers are shared by record builders, aggregate indexes, recent index, and per-record JSON payloads
 - most catalogue-specific builders are nested in `main()`, which makes them hard to test without invoking CLI, path setup, source loading, and write orchestration
@@ -142,24 +142,24 @@ Responsibility map:
 
 | Current area | Current owner | Target owner | Notes |
 |---|---|---|---|
-| CLI and internal-entrypoint contract | `main()` argument parser and direct-entrypoint guard | keep in `generate_work_pages.py` | must remain compatible with `scripts/catalogue/catalogue_json_build.py` command construction |
+| CLI and internal-entrypoint contract | `main()` argument parser and direct-entrypoint guard | keep in `generate_work_pages.py` | must remain compatible with `studio/services/catalogue/catalogue_json_build.py` command construction |
 | artifact selection and scoped ids | `main()` selected-artifact, work/series/moment id parsing, and scoped-run rules | keep in `generate_work_pages.py` for now | extraction would not help until artifact builders are pure and tested |
-| source loading and validation | `records_from_json_source`, `validate_source_records`, write-back validation wrapper | keep in `generate_work_pages.py` | source-model ownership already lives in `scripts/catalogue/catalogue_source.py`; generator should bind it |
-| common value normalization | `slug_id`, `parse_date`, `parse_list`, `normalize_text`, coercers | defer; likely `scripts/catalogue/catalogue_generation_common.py` only when first extracted module needs it | avoid duplicating helper code across new modules |
-| YAML/front-matter route stubs | front-matter dump helpers and `build_route_stub_content()` | `scripts/catalogue/catalogue_generation_writes.py` or a narrower route-stub helper | generated route anchors are metadata-free; legacy scalar YAML helpers may be more than route stubs need |
-| payload hashing and compaction | `compute_payload_version`, hash helpers, `compact_json_object` | `scripts/catalogue_generation_payloads.py` or `scripts/catalogue/catalogue_generation_common.py` | this is a dependency for records, indexes, recent, and moments; move before duplicating constants |
-| work projection | `WORKS_SCHEMA`, `build_work_record_projection`, `build_canonical_work_record` | `scripts/catalogue/catalogue_generation_records.py` | needs injected series title and sort context instead of closing over `main()` locals |
-| detail projection | `build_canonical_detail_record`, `build_sections_from_detail_records` | `scripts/catalogue/catalogue_generation_records.py` | can be pure once section resolution is passed in |
-| series/work sort context | series title/status maps, project-folder aggregation, series sort fields, work ids by series | `scripts/catalogue/catalogue_generation_indexes.py` | should expose one context object consumed by records, series pages, indexes, and recent |
+| source loading and validation | `records_from_json_source`, `validate_source_records`, write-back validation wrapper | keep in `generate_work_pages.py` | source-model ownership already lives in `studio/services/catalogue/catalogue_source.py`; generator should bind it |
+| common value normalization | `slug_id`, `parse_date`, `parse_list`, `normalize_text`, coercers | defer; likely `studio/services/catalogue/catalogue_generation_common.py` only when first extracted module needs it | avoid duplicating helper code across new modules |
+| YAML/front-matter route stubs | front-matter dump helpers and `build_route_stub_content()` | `studio/services/catalogue/catalogue_generation_writes.py` or a narrower route-stub helper | generated route anchors are metadata-free; legacy scalar YAML helpers may be more than route stubs need |
+| payload hashing and compaction | `compute_payload_version`, hash helpers, `compact_json_object` | `scripts/catalogue_generation_payloads.py` or `studio/services/catalogue/catalogue_generation_common.py` | this is a dependency for records, indexes, recent, and moments; move before duplicating constants |
+| work projection | `WORKS_SCHEMA`, `build_work_record_projection`, `build_canonical_work_record` | `studio/services/catalogue/catalogue_generation_records.py` | needs injected series title and sort context instead of closing over `main()` locals |
+| detail projection | `build_canonical_detail_record`, `build_sections_from_detail_records` | `studio/services/catalogue/catalogue_generation_records.py` | can be pure once section resolution is passed in |
+| series/work sort context | series title/status maps, project-folder aggregation, series sort fields, work ids by series | `studio/services/catalogue/catalogue_generation_indexes.py` | should expose one context object consumed by records, series pages, indexes, and recent |
 | per-series JSON record | inline series page loop and `build_series_json_record` | records module for public record shape; generator for prose/render/write | split record shape from Markdown render and file write |
-| series index JSON | published membership, primary work validation, `series_index_v2` payload | `scripts/catalogue/catalogue_generation_indexes.py` | should accept generated timestamp as an injected value |
+| series index JSON | published membership, primary work validation, `series_index_v2` payload | `studio/services/catalogue/catalogue_generation_indexes.py` | should accept generated timestamp as an injected value |
 | work JSON | encountered work ids, detail grouping, `work_record_v3` payload | records module for work/detail shape; generator for prose/render/write | prose rendering must stay bound in generator until there is a renderer abstraction |
-| works index JSON | `works_index_v4` and work storage payload loops | `scripts/catalogue/catalogue_generation_indexes.py` | storage index can be built next to works index because it uses the same canonical work map |
-| recent index JSON | retained entries, publish-transition merge rules, `recent_index_v1` payload | `scripts/catalogue/catalogue_generation_recent.py` | stateful enough to isolate before touching surrounding page loops |
-| work/detail source updates | status/date/dimension mutation logic inside page loops | `scripts/catalogue/catalogue_generation_source_updates.py` | should return update plans and transition records; generator applies plans only when `--write` |
-| moment source collection and records | duplicated per-moment and moments-index construction | `scripts/catalogue/catalogue_generation_moments.py` | should keep prose rendering and actual file writes in the generator |
+| works index JSON | `works_index_v4` and work storage payload loops | `studio/services/catalogue/catalogue_generation_indexes.py` | storage index can be built next to works index because it uses the same canonical work map |
+| recent index JSON | retained entries, publish-transition merge rules, `recent_index_v1` payload | `studio/services/catalogue/catalogue_generation_recent.py` | stateful enough to isolate before touching surrounding page loops |
+| work/detail source updates | status/date/dimension mutation logic inside page loops | `studio/services/catalogue/catalogue_generation_source_updates.py` | should return update plans and transition records; generator applies plans only when `--write` |
+| moment source collection and records | duplicated per-moment and moments-index construction | `studio/services/catalogue/catalogue_generation_moments.py` | should keep prose rendering and actual file writes in the generator |
 | tag assignment series sync | series page loop and `load_tag_assignments_payload` | defer; likely tag/source-model owner after series generation is clearer | current behavior follows `series-pages` selection and writes `assets/studio/data/tag_assignments.json` |
-| file write/version decisions | repeated route exists checks, version reads, JSON writes, and dry-run messages | `scripts/catalogue/catalogue_generation_writes.py` | start with decision objects; keep exact print wording in generator until stable |
+| file write/version decisions | repeated route exists checks, version reads, JSON writes, and dry-run messages | `studio/services/catalogue/catalogue_generation_writes.py` | start with decision objects; keep exact print wording in generator until stable |
 
 Move candidates with low immediate risk:
 
@@ -189,7 +189,7 @@ Status: implemented.
 
 Proposed module owner:
 
-- `scripts/catalogue/catalogue_generation_records.py`
+- `studio/services/catalogue/catalogue_generation_records.py`
 
 Target ownership:
 
@@ -204,10 +204,10 @@ Target ownership:
 
 Implementation result:
 
-- `scripts/catalogue/catalogue_generation_records.py` now owns the pure work, series, detail, and moment record projection helpers
-- `scripts/catalogue/catalogue_generation_common.py` owns the shared coercion, normalization, compaction, and payload-version helpers needed by both the extracted record owner and the generator
-- `scripts/catalogue/generate_work_pages.py` imports the record owner as `records` and keeps CLI parsing, source loading, selection filters, path binding, prose rendering, file writes, and source write-back orchestration local
-- `tests/python/test_catalogue_generation_records.py` pins projection field ordering, `series_ids` normalization, public record field pruning, canonical detail compaction, moment index thumb selection, and deterministic detail-section grouping
+- `studio/services/catalogue/catalogue_generation_records.py` now owns the pure work, series, detail, and moment record projection helpers
+- `studio/services/catalogue/catalogue_generation_common.py` owns the shared coercion, normalization, compaction, and payload-version helpers needed by both the extracted record owner and the generator
+- `studio/services/catalogue/generate_work_pages.py` imports the record owner as `records` and keeps CLI parsing, source loading, selection filters, path binding, prose rendering, file writes, and source write-back orchestration local
+- `studio/tests/python/test_catalogue_generation_records.py` pins projection field ordering, `series_ids` normalization, public record field pruning, canonical detail compaction, moment index thumb selection, and deterministic detail-section grouping
 
 The generator should keep:
 
@@ -220,7 +220,7 @@ The generator should keep:
 
 Tests:
 
-- add `tests/python/test_catalogue_generation_records.py`
+- add `studio/tests/python/test_catalogue_generation_records.py`
 - pin field ordering, empty-field compaction, work `series_ids`, public work/series/moment field pruning, detail section grouping, and deterministic detail ordering
 
 Benefits:
@@ -238,7 +238,7 @@ Status: implemented.
 
 Proposed module owner:
 
-- `scripts/catalogue/catalogue_generation_indexes.py`
+- `studio/services/catalogue/catalogue_generation_indexes.py`
 
 Target ownership:
 
@@ -252,11 +252,11 @@ Target ownership:
 
 Implementation result:
 
-- `scripts/catalogue/catalogue_generation_indexes.py` now owns the pure series/work aggregate context and index payload builders
-- `scripts/catalogue/catalogue_generation_common.py` now owns the shared `slug_id`, status normalization, and numeric-aware sort helper used by the generator and index module
-- `scripts/catalogue/generate_work_pages.py` imports the index owner as `indexes` and keeps output paths, existing-version checks, JSON writes, and dry-run/write messages local
-- `tests/python/test_catalogue_generation_indexes.py` pins custom `sort_fields`, title sort aliasing, numeric sort ordering, published-only series membership, missing/invalid primary work validation, works index payload shape, and storage-index omission for empty storage values
-- `scripts/run_checks.py` quick syntax coverage now includes the extracted catalogue generation modules and direct generation helper tests
+- `studio/services/catalogue/catalogue_generation_indexes.py` now owns the pure series/work aggregate context and index payload builders
+- `studio/services/catalogue/catalogue_generation_common.py` now owns the shared `slug_id`, status normalization, and numeric-aware sort helper used by the generator and index module
+- `studio/services/catalogue/generate_work_pages.py` imports the index owner as `indexes` and keeps output paths, existing-version checks, JSON writes, and dry-run/write messages local
+- `studio/tests/python/test_catalogue_generation_indexes.py` pins custom `sort_fields`, title sort aliasing, numeric sort ordering, published-only series membership, missing/invalid primary work validation, works index payload shape, and storage-index omission for empty storage values
+- `studio/commands/run_checks.py` quick syntax coverage now includes the extracted catalogue generation modules and direct generation helper tests
 
 The generator should keep:
 
@@ -284,7 +284,7 @@ Status: implemented.
 
 Proposed module owner:
 
-- `scripts/catalogue/catalogue_generation_recent.py`
+- `studio/services/catalogue/catalogue_generation_recent.py`
 
 Target ownership:
 
@@ -297,10 +297,10 @@ Target ownership:
 
 Implementation result:
 
-- `scripts/catalogue/catalogue_generation_recent.py` now owns pure recent-entry normalization, deterministic sorting, current-published target filtering, publication-transition merging, latest-series absorption, grouped work publication entries, and `recent_index_v1` payload construction
-- `scripts/catalogue/generate_work_pages.py` imports the recent owner as `recent` and keeps existing recent-index file loading, path selection, version comparison, JSON writes, and dry-run/write reporting local
-- `tests/python/test_catalogue_generation_recent.py` pins retained-entry filtering, series publish entries, grouped work publish entries, latest-series absorption, same-series series/work suppression, cap behavior, and deterministic ordering
-- `scripts/run_checks.py` quick syntax and test coverage now includes the extracted recent-publications module and direct helper tests
+- `studio/services/catalogue/catalogue_generation_recent.py` now owns pure recent-entry normalization, deterministic sorting, current-published target filtering, publication-transition merging, latest-series absorption, grouped work publication entries, and `recent_index_v1` payload construction
+- `studio/services/catalogue/generate_work_pages.py` imports the recent owner as `recent` and keeps existing recent-index file loading, path selection, version comparison, JSON writes, and dry-run/write reporting local
+- `studio/tests/python/test_catalogue_generation_recent.py` pins retained-entry filtering, series publish entries, grouped work publish entries, latest-series absorption, same-series series/work suppression, cap behavior, and deterministic ordering
+- `studio/commands/run_checks.py` quick syntax and test coverage now includes the extracted recent-publications module and direct helper tests
 
 The generator should keep:
 
@@ -310,7 +310,7 @@ The generator should keep:
 
 Tests:
 
-- add `tests/python/test_catalogue_generation_recent.py`
+- add `studio/tests/python/test_catalogue_generation_recent.py`
 - pin retained-entry filtering, series publish entries, grouped work publish entries, latest-series absorption, entry cap behavior, and deterministic ordering
 
 Benefits:
@@ -328,7 +328,7 @@ Status: implemented.
 
 Proposed module owner:
 
-- `scripts/catalogue/catalogue_generation_writes.py`
+- `studio/services/catalogue/catalogue_generation_writes.py`
 
 Target ownership:
 
@@ -339,10 +339,10 @@ Target ownership:
 
 Implementation result:
 
-- `scripts/catalogue/catalogue_generation_writes.py` now owns metadata-free route-stub content, tolerant JSON header scalar extraction, route-stub write/skip decisions, JSON payload version-match decisions, and a shared generated-write decision object
-- `scripts/catalogue/generate_work_pages.py` imports the write-decision owner as `writes` and still owns filesystem reads/writes, path selection, artifact-specific labels, counters, status/source updates, and exact dry-run/write print wording
-- `tests/python/test_catalogue_generation_writes.py` pins skip-on-existing route behavior, force overwrite behavior, JSON header extraction, version-match JSON skip behavior, force overwrite for matching versions, and no-file-write dry-run decision behavior
-- `scripts/run_checks.py` quick syntax and focused test coverage now includes the extracted write-decision module
+- `studio/services/catalogue/catalogue_generation_writes.py` now owns metadata-free route-stub content, tolerant JSON header scalar extraction, route-stub write/skip decisions, JSON payload version-match decisions, and a shared generated-write decision object
+- `studio/services/catalogue/generate_work_pages.py` imports the write-decision owner as `writes` and still owns filesystem reads/writes, path selection, artifact-specific labels, counters, status/source updates, and exact dry-run/write print wording
+- `studio/tests/python/test_catalogue_generation_writes.py` pins skip-on-existing route behavior, force overwrite behavior, JSON header extraction, version-match JSON skip behavior, force overwrite for matching versions, and no-file-write dry-run decision behavior
+- `studio/commands/run_checks.py` quick syntax and focused test coverage now includes the extracted write-decision module
 
 The generator should keep:
 
@@ -369,7 +369,7 @@ Status: implemented.
 
 Proposed module owner:
 
-- `scripts/catalogue/catalogue_generation_source_updates.py`
+- `studio/services/catalogue/catalogue_generation_source_updates.py`
 
 Target ownership:
 
@@ -380,10 +380,10 @@ Target ownership:
 
 Implementation result:
 
-- `scripts/catalogue/catalogue_generation_source_updates.py` now owns pure work and work-detail source update planners for actionable status checks, first-time publication updates, recent work-transition records, source image path plans, structured path warnings, and dimension update suppression
-- `scripts/catalogue/generate_work_pages.py` imports the source-update owner as `source_updates` and still owns configured project-root binding, image dimension reads, warning print wording, applying planned updates only during `--write`, source validation, and canonical source write-back
-- `tests/python/test_catalogue_generation_source_updates.py` pins draft publication updates, published refresh/force actionability without mutation, detail publication updates, unchanged dimension suppression, structured missing-path warnings, and no mutation during dry-run-style planning
-- `scripts/run_checks.py` quick syntax and focused test coverage now includes the extracted source-update planner module
+- `studio/services/catalogue/catalogue_generation_source_updates.py` now owns pure work and work-detail source update planners for actionable status checks, first-time publication updates, recent work-transition records, source image path plans, structured path warnings, and dimension update suppression
+- `studio/services/catalogue/generate_work_pages.py` imports the source-update owner as `source_updates` and still owns configured project-root binding, image dimension reads, warning print wording, applying planned updates only during `--write`, source validation, and canonical source write-back
+- `studio/tests/python/test_catalogue_generation_source_updates.py` pins draft publication updates, published refresh/force actionability without mutation, detail publication updates, unchanged dimension suppression, structured missing-path warnings, and no mutation during dry-run-style planning
+- `studio/commands/run_checks.py` quick syntax and focused test coverage now includes the extracted source-update planner module
 
 The generator should keep:
 
@@ -410,7 +410,7 @@ Status: implemented.
 
 Proposed module owner:
 
-- `scripts/catalogue/catalogue_generation_moments.py`
+- `studio/services/catalogue/catalogue_generation_moments.py`
 
 Target ownership:
 
@@ -422,10 +422,10 @@ Target ownership:
 
 Implementation result:
 
-- `scripts/catalogue/catalogue_generation_moments.py` now owns pure moment metadata source-record collection, slug/actionability/selection decisions, runtime moment record shaping, per-moment `moment_record_v1` payload construction, and `moments_index_v1` payload construction
-- `scripts/catalogue/generate_work_pages.py` imports the moment artifact owner and still owns configured project-root binding, source prose existence checks, source image dimension reads, Markdown rendering, route and JSON file writes, existing-version checks, and dry-run/write reporting
-- `tests/python/test_catalogue_generation_moments.py` pins source-record ordering/default paths, slug-safe decisions, missing-prose skip decisions, image alt fallback, image omission when source media is missing, per-moment JSON payload shape, and moments index payload shape
-- `scripts/run_checks.py` quick syntax and focused test coverage now includes the extracted moment artifact module
+- `studio/services/catalogue/catalogue_generation_moments.py` now owns pure moment metadata source-record collection, slug/actionability/selection decisions, runtime moment record shaping, per-moment `moment_record_v1` payload construction, and `moments_index_v1` payload construction
+- `studio/services/catalogue/generate_work_pages.py` imports the moment artifact owner and still owns configured project-root binding, source prose existence checks, source image dimension reads, Markdown rendering, route and JSON file writes, existing-version checks, and dry-run/write reporting
+- `studio/tests/python/test_catalogue_generation_moments.py` pins source-record ordering/default paths, slug-safe decisions, missing-prose skip decisions, image alt fallback, image omission when source media is missing, per-moment JSON payload shape, and moments index payload shape
+- `studio/commands/run_checks.py` quick syntax and focused test coverage now includes the extracted moment artifact module
 
 The generator should keep:
 
@@ -469,7 +469,7 @@ Tests and checks:
 
 - run syntax checks for changed Python modules
 - run focused new tests for extracted modules
-- run `./scripts/catalogue/catalogue_json_build.py` dry-run for the smallest representative work/series/moment scope available
+- run `$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py` dry-run for the smallest representative work/series/moment scope available
 - run the smallest relevant run-checks profile only if the extraction touched shared catalogue behavior broadly enough to justify it
 
 Benefits:

@@ -8,7 +8,7 @@ sort_order: 5000
 ---
 # Run Checks
 
-`./scripts/run_checks.py` runs optional repo check profiles and writes local logs under `var/test-runs/`.
+`$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` runs optional repo check profiles and writes local logs under `var/test-runs/`.
 
 It is not a mandatory gate for every change. Use it when the change is broad enough that manual checks alone are not a good fit.
 
@@ -17,25 +17,25 @@ It is not a mandatory gate for every change. Use it when the change is broad eno
 List profiles:
 
 ```bash
-./scripts/run_checks.py --list
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --list
 ```
 
 Run a profile:
 
 ```bash
-./scripts/run_checks.py --profile quick
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick
 ```
 
 Combine profiles:
 
 ```bash
-./scripts/run_checks.py --profile quick --profile catalogue
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick --profile catalogue
 ```
 
 Run the broad profile:
 
 ```bash
-./scripts/run_checks.py --profile full
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile full
 ```
 
 ## Profiles

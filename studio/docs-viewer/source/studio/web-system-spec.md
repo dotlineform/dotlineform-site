@@ -380,7 +380,7 @@ Bulk edit apply should:
 
 Recommended implementation:
 
-- add `scripts/catalogue/catalogue_write_server.py`
+- add `studio/services/catalogue/catalogue_write_server.py`
 - keep it separate from `tag_write_server.py` initially to preserve a clear write allowlist and reduce regression risk
 - optionally extract shared localhost server utilities after both services stabilize
 
@@ -471,8 +471,8 @@ First target:
 The live user-facing generator path is the scoped JSON build CLI:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --work-id <work_id>
-./scripts/catalogue/catalogue_json_build.py --work-id <work_id> --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id <work_id>
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id <work_id> --write
 ```
 
 `generate_work_pages.py` remains the internal generation engine behind that command.

@@ -35,7 +35,7 @@ The current system has useful first-generation boundaries, but it is still early
 
 - Library document export/import is the only real implemented adapter path.
 - `/studio/export/` and `/studio/import/` share UI and service transport, but their adapter extension contracts are still evolving.
-- `export_import_adapters.py`, `scripts/docs/docs_export.py`, and `scripts/docs/docs_import.py` are likely to grow as new data domains are added.
+- `export_import_adapters.py`, `studio/docs-viewer/services/docs_export.py`, and `studio/docs-viewer/services/docs_import.py` are likely to grow as new data domains are added.
 - The docs-management server still orchestrates structured import/export calls, but that is a local-service integration concern rather than the right place to decide adapter architecture.
 - Future Catalogue and Analysis workflows will need validation, preview, apply, and backup models that are not document-shaped.
 
@@ -46,7 +46,7 @@ Without a separate review, new requirements could drift into whichever layer is 
 - Define the durable ownership boundary between shared Studio shell, local service orchestration, adapter registry/config, and domain adapters.
 - Decide how adapters declare export, staged-file, preview, apply, validation, backup, and activity capabilities.
 - Keep Library document behavior stable while making its assumptions explicit.
-- Identify which import/export behavior belongs in `export_import_adapters.py`, `scripts/docs/docs_export.py`, `scripts/docs/docs_import.py`, or future domain-specific modules.
+- Identify which import/export behavior belongs in `export_import_adapters.py`, `studio/docs-viewer/services/docs_export.py`, `studio/docs-viewer/services/docs_import.py`, or future domain-specific modules.
 - Decide whether the shared UI needs adapter-provided presentation contracts for preview rows, selectable records, warnings, counts, and apply confirmations.
 - Keep local write safety visible: explicit staging roots, preview roots, source-write targets, backups, dry-run behavior, and confirmation gates.
 - Produce a practical slice plan before implementation.
@@ -74,10 +74,10 @@ Without a separate review, new requirements could drift into whichever layer is 
 - `assets/studio/js/data-export.js`
 - `assets/studio/js/data-import.js`
 - `assets/studio/data/export_import_adapters.json`
-- `scripts/docs/export_import_adapters.py`
-- `scripts/docs/docs_export.py`
-- `scripts/docs/docs_import.py`
-- `scripts/docs/docs_management_server.py`
+- `studio/docs-viewer/services/export_import_adapters.py`
+- `studio/docs-viewer/services/docs_export.py`
+- `studio/docs-viewer/services/docs_import.py`
+- `studio/docs-viewer/services/docs_management_server.py`
 - `/studio/export/`
 - `/studio/import/`
 

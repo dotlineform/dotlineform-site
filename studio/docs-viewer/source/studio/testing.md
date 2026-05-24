@@ -11,8 +11,8 @@ sort_order: 4000
 This repo uses lightweight, opt-in checks rather than a mandatory full test suite.
 
 The goal is to give Codex a standard place to put repeatable checks, run logs, and verification notes when a change is too broad for manual review alone.
-The current Python checks are pytest-collected scripts under `tests/python/`.
-They use ordinary `assert` statements and are run by `./scripts/run_checks.py` through pytest.
+The current Python checks are pytest-collected scripts under `studio/tests/python/`.
+They use ordinary `assert` statements and are run by `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` through pytest.
 
 ## When To Use Automated Checks
 
@@ -31,28 +31,28 @@ Manual checks are still enough for small copy changes, narrow docs edits, and vi
 
 ## Structure
 
-- `tests/python/`
+- `studio/tests/python/`
   Deterministic Python checks. Files expose `test_*` functions for pytest collection; many can also run directly as scripts.
-- `tests/smoke/`
+- `studio/tests/smoke/`
   Focused browser smoke scripts.
-- `tests/fixtures/`
+- `studio/tests/fixtures/`
   Small stable fixtures, only where existing repo data is not safe or sufficient.
 - `var/test-runs/`
   Local check logs and summaries. This path is ignored by git.
 
 ## Runner
 
-Use `./scripts/run_checks.py` to run one or more check profiles and write a local run summary.
+Use `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` to run one or more check profiles and write a local run summary.
 
 Examples:
 
 ```bash
-./scripts/run_checks.py --profile quick
-./scripts/run_checks.py --profile catalogue
-./scripts/run_checks.py --profile docs
-./scripts/run_checks.py --profile docs-viewer-smoke
-./scripts/run_checks.py --profile studio-smoke
-./scripts/run_checks.py --profile full
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile catalogue
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile studio-smoke
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile full
 ```
 
 Profiles are intentionally coarse. Choose the smallest profile that matches the risk.
@@ -68,13 +68,13 @@ Prefer direct module tests over broad end-to-end setup unless the integration bo
 
 Current conventions:
 
-- keep tests in `tests/python/test_<area>.py`
+- keep tests in `studio/tests/python/test_<area>.py`
 - use plain `assert`
-- run grouped profile checks through `./scripts/run_checks.py`, which calls `python -m pytest -q`
+- run grouped profile checks through `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`, which calls the same interpreter with `-m pytest -q`
 - avoid network access
 - use temporary directories or small fixtures when repo data would make the test brittle
 - keep direct script execution working where practical for narrow manual checks
-- add the test file to the smallest relevant pytest command in `./scripts/run_checks.py` when it covers a repeated risk
+- add the test file to the smallest relevant pytest command in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` when it covers a repeated risk
 
 See [Pytest](/docs/?scope=studio&doc=testing-pytest) for focused command examples and local install notes.
 
@@ -108,7 +108,7 @@ Manual checks:
 
 The MVP framework is deliberately small:
 
-- pytest is the Python test collection layer, but `./scripts/run_checks.py` remains the top-level runner
+- pytest is the Python test collection layer, but `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` remains the top-level runner
 - no CI contract
 - no automatic full-suite run before every change
 - no broad fixture duplication

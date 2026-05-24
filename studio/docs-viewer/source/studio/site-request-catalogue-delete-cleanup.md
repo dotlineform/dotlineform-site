@@ -41,7 +41,7 @@ The implementation should preserve the current safety posture:
 
 ## Previous Behavior
 
-Before this request was implemented, `work`, `work_detail`, and `series` deletes in `scripts/studio/catalogue_write_server.py`:
+Before this request was implemented, `work`, `work_detail`, and `series` deletes in `studio/app/server/studio/catalogue_write_server.py`:
 
 - remove canonical catalogue source JSON records
 - cascade work deletes to dependent detail records and work-owned file/link metadata
@@ -186,7 +186,7 @@ The R2 delete path remains dry-run by default and requires `--write`.
 
 Codex-run checks should include:
 
-- syntax check for `scripts/studio/catalogue_write_server.py`
+- syntax check for `studio/app/server/studio/catalogue_write_server.py`
 - dry-run delete preview for one representative work, work detail, and series
 - dry-run delete apply for the same representative records when safe fixtures exist
 - confirm preview cleanup payloads list generated artifacts and repo-local media paths only

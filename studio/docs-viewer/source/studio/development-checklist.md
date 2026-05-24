@@ -20,7 +20,7 @@ Before moving or adding a Studio route:
 
 - classify the route family: Catalogue, Analytics, Docs Viewer, Data Sharing, Audit, operational report, UI Catalogue, or shared Studio shell
 - put route shell rendering in the owning view module, not in `studio_app_server.py`
-- add runtime view config in `scripts/studio/studio_app_config.py`
+- add runtime view config in `studio/app/server/studio/studio_app_config.py`
 - keep route entry modules as orchestration shells for boot, required elements, event wiring, state handoff, and route-ready projection
 - keep service or mutation behavior in the owning API/domain modules
 - preserve existing DOM ids, `data-role` hooks, ready-state attributes, and UI text contracts unless the slice intentionally changes them

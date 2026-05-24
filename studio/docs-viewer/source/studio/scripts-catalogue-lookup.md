@@ -11,7 +11,7 @@ sort_order: 13000
 Script:
 
 ```bash
-./scripts/catalogue/export_catalogue_lookup.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py
 ```
 
 ## Purpose

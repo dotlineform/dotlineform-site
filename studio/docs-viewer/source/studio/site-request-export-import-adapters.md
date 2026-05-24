@@ -235,12 +235,12 @@ Current implementation files reviewed:
 - `assets/studio/data/studio_config.json`
 - `assets/studio/data/library_export_configs.json`
 - `assets/studio/data/library_export_configs.schema.json`
-- `scripts/docs/docs_export.py`
-- `scripts/docs/docs_import.py`
-- `scripts/docs/docs_management_server.py`
-- `tests/python/test_docs_export.py`
-- `tests/python/test_docs_import.py`
-- `tests/python/test_docs_import_service.py`
+- `studio/docs-viewer/services/docs_export.py`
+- `studio/docs-viewer/services/docs_import.py`
+- `studio/docs-viewer/services/docs_management_server.py`
+- `studio/tests/python/test_docs_export.py`
+- `studio/tests/python/test_docs_import.py`
+- `studio/tests/python/test_docs_import_service.py`
 - `_docs/library-export.md`
 - `_docs/library-import.md`
 - `_docs/config-library-export-configs.md`
@@ -287,7 +287,7 @@ Mixed or transitional seams:
 - client modules, DOM ids, ready-state route names, and Studio text keys now use `data-export`/`data-import` naming
 - transport endpoints now use neutral `/docs/export` and `/docs/import/...` paths
 - staged import files and preview files support `library`, `catalogue`, and `analytics` folders, but the parser and preview renderer still assume document-like records
-- source apply is explicitly gated to Library by the client and by `normalize_library_import_scope()` in `scripts/docs/docs_management_server.py`
+- source apply is explicitly gated to Library by the client and by `normalize_library_import_scope()` in `studio/docs-viewer/services/docs_management_server.py`
 - `assets/studio/data/library_export_configs.json` has a `scopes` array, but all enabled configs are Library-only and the schema is still Library-named
 - tests encode useful Library behavior, but they currently test the document workflow and service seams together rather than a separate shared-shell contract and documents-adapter contract
 
@@ -551,7 +551,7 @@ Expected outcome:
 Implementation note:
 
 - added `assets/studio/data/export_import_adapters.json` and `assets/studio/data/export_import_adapters.schema.json`
-- added config-driven dispatch in `scripts/docs/export_import_adapters.py`
+- added config-driven dispatch in `studio/docs-viewer/services/export_import_adapters.py`
 - moved active import file listing, preview, summary apply, and hierarchy apply calls to neutral docs-management endpoints:
   - `GET /docs/import/files?data_domain=library`
   - `POST /docs/import/preview`
@@ -648,7 +648,7 @@ Implementation note:
 - rebuilt generated Studio docs-viewer and Studio docs-search payloads
 - added adapter-dispatch tests for active Library resolution and future stub rejection
 - added a Studio import smoke case for the Catalogue stub unavailable state
-- wired adapter and unsupported-stub checks into `./scripts/run_checks.py`
+- wired adapter and unsupported-stub checks into `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`
 
 Task 6 benefits and risks:
 

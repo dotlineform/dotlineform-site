@@ -13,7 +13,7 @@ Status:
 
 - implementated
 - parser/sanitizer dependencies pinned in `requirements.txt`
-- initial dry-run importer scaffold landed in `scripts/docs/docs_html_import.py`
+- initial dry-run importer scaffold landed in `studio/docs-viewer/services/docs_html_import.py`
 - depends on [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)
 
 ## Goal
@@ -41,7 +41,7 @@ Completed now:
 - four reviewed HTML examples copied into local staging as fixtures
 - parser/sanitizer stack pinned in `requirements.txt`
 - local project Python has the pinned parser/sanitizer stack installed
-- dry-run importer scaffold added at `scripts/docs/docs_html_import.py`
+- dry-run importer scaffold added at `studio/docs-viewer/services/docs_html_import.py`
 - scaffold now parses through the fixed `beautifulsoup4` + `lxml` stack rather than the stdlib HTML parser
 - dry-run `POST /docs/import-html` endpoint added to the Docs Management Server
 - staged import preview now reports conversion summary plus `doc_id` collision detection
@@ -83,7 +83,7 @@ Pinned v1 parser/sanitizer stack:
 Expected implementation files:
 
 - `requirements.txt`
-- `scripts/docs/docs_management_server.py`
+- `studio/docs-viewer/services/docs_management_server.py`
 - new conversion helper(s) under `scripts/docs/`
 - new Studio route under `studio/`
 - new Studio JS controller under `assets/studio/js/`
@@ -174,7 +174,7 @@ Reason:
 
 ### 5. Extend The Docs-Management Server
 
-Add `POST /docs/import-html` to `scripts/docs/docs_management_server.py`.
+Add `POST /docs/import-html` to `studio/docs-viewer/services/docs_management_server.py`.
 
 Required behavior:
 

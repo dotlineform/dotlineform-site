@@ -431,7 +431,7 @@ Implementation result:
 - config-backed Studio route controllers call `loadStudioConfigWithText(...)` before first render, preserving `getStudioText(...)` fallback behavior while logging missing-bundle fallbacks.
 - Docs Viewer receives a `data-ui-text-url` shell attribute and merges `docs-viewer.json` with the bootstrap config before applying visible copy.
 - `assets/data/search/policy.json` now owns public search labels/messages, back links, and static index paths, so `assets/js/search/search-page.js` no longer imports `studio-config.js`.
-- `scripts/checks/check_runtime_payload_budgets.py` checks the bootstrap config, public search policy, and scoped UI-text bundle sizes.
+- `studio/checks/check_runtime_payload_budgets.py` checks the bootstrap config, public search policy, and scoped UI-text bundle sizes.
 
 Acceptance checks:
 

@@ -157,11 +157,11 @@ Ownership decisions for this slice:
 | Docs Viewer shell | `_includes/docs_viewer_shell.html` | Docs Viewer package plus consuming route adapter | Keep the viewer shell include as the route integration boundary until the route-adapter slice defines templates. Docs Import modal markup lives inside that shell rather than a migrated standalone-page include. |
 | Docs Viewer runtime JS | `assets/docs-viewer/js/docs-viewer*.js` | Docs Viewer | Runtime modules live under `assets/docs-viewer/js/`. |
 | Docs Viewer CSS | `assets/docs-viewer/css/docs-viewer-management.css`, `.docsViewer*` rules in `assets/css/main.css` | Docs Viewer | Management CSS lives under `assets/docs-viewer/css/`; public CSS extraction is still a later slice. |
-| Docs Viewer browser config | `scripts/docs/docs_scopes.json`, `assets/studio/data/studio_config.json`, hardcoded route maps | Docs Viewer | Keep `scripts/docs/docs_scopes.json` as source config; add a browser-facing config under `assets/docs-viewer/data/`. |
+| Docs Viewer browser config | `studio/docs-viewer/config/scopes/docs_scopes.json`, `assets/studio/data/studio_config.json`, hardcoded route maps | Docs Viewer | Keep `studio/docs-viewer/config/scopes/docs_scopes.json` as source config; add a browser-facing config under `assets/docs-viewer/data/`. |
 | Docs Viewer UI text | `assets/docs-viewer/data/ui-text.json` | Docs Viewer | Viewer and Docs Import copy lives under `assets/docs-viewer/data/`. |
 | Generated docs payloads | `assets/data/docs/scopes/<scope>/...` | Docs Viewer output, consuming site storage | Keep the current output path for compatibility; treat it as generated output, not package source. |
 | Inline docs search | `assets/data/search/<scope>/index.json`, `scripts/search/build_search.rb`, `scripts/search/build_config.json` | Docs Viewer after the search slice | Leave in the search subsystem until Docs search ownership moves in its dedicated slice. |
-| Docs management server | `scripts/docs/docs_management_server.py` and adjacent `scripts/docs/docs_*` modules | Docs Viewer | Keep under `scripts/docs/`; this is already the right domain boundary. |
+| Docs management server | `studio/docs-viewer/services/docs_management_server.py` and adjacent `scripts/docs/docs_*` modules | Docs Viewer | Keep under `scripts/docs/`; this is already the right domain boundary. |
 | Studio application code | `assets/studio/js/*`, `assets/studio/data/studio_config.json`, Studio generated payloads | Studio | Do not reorganise broad Studio files in this request; only extract Docs Viewer dependencies. |
 | Catalogue and tag tools | `assets/studio/js/catalogue-*`, `assets/studio/js/tag-*`, `scripts/catalogue/`, `scripts/analytics/` | Catalogue, Analytics, Studio | Out of scope except where Docs Viewer currently imports them by mistake. |
 | Public site JS | `assets/js/work.js`, `assets/js/moment.js`, `assets/js/site-nav.js`, `assets/js/theme-toggle.js` | Consuming site/shared public site | Leave in `assets/js/`; this directory should become public site/shared JS after Docs Viewer moves out. |
@@ -186,7 +186,7 @@ Tasks:
 
 - document which current files are portable Docs Viewer files, consuming-site route/theme files, Studio-only files, Catalogue files, or shared site files
 - define the target locations for Docs Viewer runtime JS, CSS, browser config, UI text, generated docs payloads, and local management scripts
-- keep `scripts/docs/docs_scopes.json` as the source-side docs scope registry unless a later slice intentionally replaces it
+- keep `studio/docs-viewer/config/scopes/docs_scopes.json` as the source-side docs scope registry unless a later slice intentionally replaces it
 - define a browser-facing Docs Viewer config location such as `assets/docs-viewer/data/docs-viewer-config.json`
 - define a Docs Viewer UI text location such as `assets/docs-viewer/data/ui-text.json`
 - identify which files should move in the next implementation slice and which broader Studio/Catalogue files should stay put for now
@@ -230,7 +230,7 @@ Acceptance:
 
 Status: implemented.
 
-Current scope data is split between `scripts/docs/docs_scopes.json`, `_includes/docs_viewer_shell.html`, `assets/docs-viewer/js/docs-viewer.js`, search config, and import-service allowlists.
+Current scope data is split between `studio/docs-viewer/config/scopes/docs_scopes.json`, `_includes/docs_viewer_shell.html`, `assets/docs-viewer/js/docs-viewer.js`, search config, and import-service allowlists.
 
 Tasks:
 
@@ -315,7 +315,7 @@ Tasks:
 - move docs-search scope config out of `scripts/search/build_config.json` (done)
 - move docs-search build logic into a Docs Viewer-owned builder/adapter (done)
 - keep the top-level search command as a thin adapter dispatcher (done)
-- make docs scopes derive from `scripts/docs/docs_scopes.json` instead of hardcoded `studio`, `library`, and `analysis` lists (done)
+- make docs scopes derive from `studio/docs-viewer/config/scopes/docs_scopes.json` instead of hardcoded `studio`, `library`, and `analysis` lists (done)
 - keep generated docs-search output compatible during transition (done)
 - make docs-search policy explicit inside Docs Viewer runtime/config (done)
 - keep Catalogue search behavior stable while routing it through the Catalogue adapter (done)
@@ -421,7 +421,7 @@ No other external file stores currently need to be supported, but the config sho
 
 The config ownership should be explicit:
 
-- source/local write behavior belongs in source-side Docs Viewer config, currently `scripts/docs/docs_scopes.json`, or in a small adjacent local/server config if the settings should not be published
+- source/local write behavior belongs in source-side Docs Viewer config, currently `studio/docs-viewer/config/scopes/docs_scopes.json`, or in a small adjacent local/server config if the settings should not be published
 - generated browser config, currently `assets/docs-viewer/data/docs-viewer-config.json`, should only expose browser-safe read/display settings
 - R2 credentials and other secrets must stay out of tracked config and generated browser config
 - `_config.yml` continues to own site-wide media resolution such as `media_base` for rendered <code>&#91;&#91;media:...&#93;&#93;</code> tokens

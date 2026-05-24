@@ -142,8 +142,8 @@ Docs Viewer shell source, management shell source, config, CSS, report runtime, 
 | `_includes/docs_viewer_readonly_route.html` | public minimal adapter plus Docs Viewer-owned shell source | Keep only required public adapter outside `studio/`. |
 | `scripts/docs/` | `studio/docs-viewer/build/`, `studio/docs-viewer/server/`, `studio/docs-viewer/services/`, `studio/docs-viewer/config/scopes/` | Split by role while preserving the Docs Viewer boundary. |
 | `scripts/build_docs.rb` | root wrapper to `studio/docs-viewer/build/build_docs.rb` | Root wrapper is optional convenience, not compatibility source. |
-| `scripts/docs/build_docs.rb` | `studio/docs-viewer/build/build_docs.rb` | Docs Viewer build implementation. |
-| `scripts/docs/build_search.rb` | `studio/docs-viewer/build/build_search.rb` | Docs Viewer search builder. |
+| `studio/docs-viewer/build/build_docs.rb` | `studio/docs-viewer/build/build_docs.rb` | Docs Viewer build implementation. |
+| `studio/docs-viewer/build/build_search.rb` | `studio/docs-viewer/build/build_search.rb` | Docs Viewer search builder. |
 | `_docs_catalogue/` | `studio/data/canonical/catalogue-markdown/` | Studio-owned canonical publishing Markdown. |
 | `assets/studio/data/catalogue/` | `studio/data/canonical/catalogue/` | Canonical catalogue JSON source. |
 | `assets/studio/data/catalogue_lookup/` | `studio/data/generated/catalogue-lookup/` | Derived editor read model; disposable cache remains under `var/`. |
@@ -163,7 +163,7 @@ Docs Viewer shell source, management shell source, config, CSS, report runtime, 
 | `_docs_logs/entries/` | `studio/workflows/change-requests/logs/entries/` | Change request workflow source logs. |
 | `_docs_logs/generated/` | `studio/workflows/change-requests/generated/` | Generated workflow output. |
 | `_docs_logs/reports/` | `studio/workflows/change-requests/reports/` | Generated or workflow-facing reports. |
-| `scripts/docs_logs/` | `studio/workflows/change-requests/services/` | Change request workflow services. |
+| `studio/workflows/change-requests/services/` | `studio/workflows/change-requests/services/` | Change request workflow services. |
 | `_ui_catalogue_notes/` | `studio/ui-catalogue/notes/` | UI Catalogue notes source. |
 | `_includes/ui_catalogue_notes/` | `studio/ui-catalogue/notes/includes/` | Notes include source if still needed. |
 | `assets/ui-catalogue/` | `studio/ui-catalogue/assets/` | UI Catalogue assets. |
@@ -179,15 +179,15 @@ Docs Viewer shell source, management shell source, config, CSS, report runtime, 
 | `scripts/search/build_search.rb`, `scripts/search/build_config.json` | `studio/services/catalogue/search/` | Catalogue search builder/config. |
 | `scripts/search/adapter_registry.json` | `studio/commands/search-adapters.json` or split to owner configs | Root search wrapper may read owner configs; no old-path alias. |
 | `scripts/build_search.rb` | root wrapper to owner-specific search builders | Wrapper chooses Studio Catalogue or Docs Viewer owner by scope. |
-| `scripts/checks/` | `studio/checks/` | Checks, projection contracts, source-boundary audits, and public-surface audits. |
-| `scripts/run_checks.py` | `studio/commands/run_checks.py` plus optional root wrapper | Codex/developer test entrypoint. |
+| former root check scripts | `studio/checks/` | Checks, projection contracts, source-boundary audits, and public-surface audits. |
+| former root check runner | `studio/commands/run_checks.py` | Codex/developer test entrypoint; no public-site root wrapper. |
 | `scripts/display_paths.py`, `scripts/local_env.py`, `scripts/pipeline_config.py`, `scripts/script_logging.py` | `studio/shared/python/` | Shared development/runtime helpers. |
 | `scripts/jekyll_markdown_renderer.rb`, `scripts/render_markdown_with_jekyll.rb`, `scripts/jekyll_webrick_client_reset_filter.rb` | `studio/docs-viewer/build/` or `studio/shared/ruby/` | Place by final consumer during move. |
 | `bin/local-studio` | root wrapper to `studio/commands/local-studio` | Deliberate convenience command. |
 | `bin/public-site-build`, `bin/public-site-preview` | root wrappers to `studio/commands/public-site-build` and `studio/commands/public-site-preview` | Studio/Codex development tooling for the public site. |
-| `tests/python/` | `studio/tests/python/` | Python tests. |
-| `tests/smoke/` | `studio/tests/smoke/` | Smoke tests. |
-| `tests/fixtures/` | `studio/tests/fixtures/` or owner-local fixtures | Fixture ownership follows the tested owner. |
+| former root Python tests | `studio/tests/python/` | Python tests. |
+| former root smoke tests | `studio/tests/smoke/` | Smoke tests. |
+| former root fixtures | `studio/tests/fixtures/` or owner-local fixtures | Fixture ownership follows the tested owner. |
 
 ## Local Working Output
 

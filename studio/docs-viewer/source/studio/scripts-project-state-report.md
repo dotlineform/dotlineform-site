@@ -11,7 +11,7 @@ sort_order: 11000
 Script:
 
 ```bash
-./scripts/catalogue/project_state_report.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/project_state_report.py
 ```
 
 ## Purpose
@@ -34,19 +34,19 @@ Cloud/Codespaces runs can provide the same key through platform environment conf
 Default preview:
 
 ```bash
-./scripts/catalogue/project_state_report.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/project_state_report.py
 ```
 
 Write the persistent Markdown report:
 
 ```bash
-./scripts/catalogue/project_state_report.py --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/project_state_report.py --write
 ```
 
 Include source subfolders in the report:
 
 ```bash
-./scripts/catalogue/project_state_report.py --write --include-subfolders
+$HOME/miniconda3/bin/python3 studio/services/catalogue/project_state_report.py --write --include-subfolders
 ```
 
 The write target is:

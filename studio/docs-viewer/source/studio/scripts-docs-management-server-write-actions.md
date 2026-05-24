@@ -210,7 +210,7 @@ Scope lifecycle preview endpoints:
 
 Scope lifecycle preview behavior:
 
-- reads scope ownership from `scripts/docs/docs_scope_manifest.json`
+- reads scope ownership from `studio/docs-viewer/config/scopes/docs_scope_manifest.json`
 - backfills existing scopes as system-owned when the manifest is missing
 - validates new scope ids, source roots, default doc ids, publishing mode, and public route paths before reporting a write set
 - reports planned created files, changed files, build commands, management URL, and public URL without writing files

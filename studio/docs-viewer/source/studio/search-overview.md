@@ -104,8 +104,8 @@ Current files:
 - Search adapter registry: `scripts/search/adapter_registry.json`
 - Catalogue search build implementation: `scripts/search/build_search.rb`
 - Catalogue search build config: `scripts/search/build_config.json`
-- Docs Viewer search build implementation: `scripts/docs/build_search.rb`
-- Docs Viewer search scope config: `scripts/docs/docs_scopes.json`
+- Docs Viewer search build implementation: `studio/docs-viewer/build/build_search.rb`
+- Docs Viewer search scope config: `studio/docs-viewer/config/scopes/docs_scopes.json`
 
 Current live surfaces:
 

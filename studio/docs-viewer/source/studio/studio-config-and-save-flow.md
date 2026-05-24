@@ -133,7 +133,7 @@ Current local save behavior:
 
 Current write-service implementation notes:
 
-- the local tag API owner is `scripts/studio/studio_analytics_api.py`
+- the local tag API owner is `studio/app/server/studio/studio_analytics_api.py`
 - writes are constrained to Studio-owned JSON files
 - server writes create timestamped backups in `var/studio/backups/`
 - write activity is logged to `var/studio/logs/studio_analytics_api.log`
@@ -260,6 +260,6 @@ Current operational constraints:
 
 - `bin/local-studio` runs startup docs/docs-search rebuilds only when `DOCS_STARTUP_REBUILD_SCOPES` is set, and derived catalogue lookup export only when `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled
 - Studio route behavior depends on the Local Studio app server; public-link inspection also needs `bin/public-site-preview` when local preview links are being checked
-- `scripts/checks/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
+- `studio/checks/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
 
 For command-level usage and script flags, keep **[Scripts](/docs/?scope=studio&doc=scripts)** aligned with Studio workflow changes.

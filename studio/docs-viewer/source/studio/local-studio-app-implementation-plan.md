@@ -113,7 +113,7 @@ Current commit point:
 - Phase 3 now has fixture-backed UI workflow smoke coverage for Docs create, metadata edit, settings save, archive, delete preview/apply, import, drag/drop move, scope create/delete, and generated reload behavior in the local `/docs/` shell
 - Phase 3 now has public read-only smoke coverage for `/library/` and `/analysis/`
 - Phase 3 now hosts Docs Broken Links as a Docs Viewer report and has retired the old `/studio/docs-broken-links/` route shell
-- Phase 3 Docs management now uses `scripts/docs/docs_management_service.py` as a dispatcher over focused Docs management workflow modules; the local Studio app imports that module through `scripts/studio/studio_docs_api.py` instead of loading the standalone HTTP server entrypoint
+- Phase 3 Docs management now uses `studio/docs-viewer/services/docs_management_service.py` as a dispatcher over focused Docs management workflow modules; the local Studio app imports that module through `studio/app/server/studio/studio_docs_api.py` instead of loading the standalone HTTP server entrypoint
 - Phase 4 added the local app server to the local runner and retired the separate Docs management HTTP process from default startup
 - Phase 4 now has the first analytics API route module, serving tag read data through the local app server
 - Phase 4 now has the first analytics write route, `POST /studio/api/analytics/save-tags`, through the local app server
@@ -124,7 +124,7 @@ Current commit point:
 - the active tag write route surface is now accounted for in the local analytics adapter; the deprecated tag-server `/build-docs` route is intentionally not migrated
 - Phase 4 now mounts the tag registry, tag aliases, series-tags, and per-series tag editor route shells in the local app so those pages use local runtime config and local analytics endpoints
 - Phase 4 has retired the Jekyll analytics tag route shells, removed the old `127.0.0.1:8787` browser fallbacks, and stopped launching the standalone tag write server
-- Phase 4 has removed the standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint; `scripts/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes
+- Phase 4 has removed the standalone `studio/services/analytics/tag_write_server.py` HTTP entrypoint; `studio/app/server/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes
 - Phase 5 has mounted `/studio/catalogue/?mode=manage`, `/studio/analytics/?mode=manage`, `/studio/audits/?mode=manage`, `/studio/project-state/?mode=manage`, `/studio/thumbnail-quality/?mode=manage`, `/studio/bulk-add-work/?mode=manage`, `/studio/activity/?mode=manage`, `/studio/catalogue-field-registry/?mode=manage`, `/studio/catalogue-status/?mode=manage`, `/studio/studio-works/?mode=manage`, `/studio/catalogue-series/?mode=manage`, `/studio/catalogue-work/?mode=manage`, `/studio/catalogue-work-detail/?mode=manage`, and `/studio/catalogue-moment/?mode=manage` in the local app, retired the old Jekyll shells, and moved their browser-facing catalogue APIs under `/studio/api/catalogue/...`
 - the old Jekyll `/studio/` landing shell is retired; `/studio/` is now the local app home during Studio sessions
 - Studio route URL building now preserves configured route query state such as `?mode=manage` while appending record parameters for migrated catalogue editor links
@@ -133,7 +133,7 @@ Current commit point:
 - Studio Works now shares the catalogue public-link helper for public work and series links, and the helper fails closed instead of falling back to the Studio app host when a public-site base is missing
 - Catalogue moment save, publication preview/apply, and delete apply now run through focused catalogue service modules rather than the legacy in-process HTTP handler bridge
 - Catalogue bulk save now runs through a focused catalogue service module, and `studio_catalogue_api.py` no longer constructs fake legacy HTTP handlers for Local Studio catalogue writes
-- The standalone `scripts/catalogue/catalogue_write_server.py` wrapper has been retired; local Studio no longer exposes `CATALOGUE_WRITE_SERVER_ENABLED` or `CATALOGUE_WRITE_PORT`
+- The standalone `studio/services/catalogue/catalogue_write_server.py` wrapper has been retired; local Studio no longer exposes `CATALOGUE_WRITE_SERVER_ENABLED` or `CATALOGUE_WRITE_PORT`
 - Docs Broken Links moved into Docs Viewer reports rather than becoming another migrated Studio route shell
 - Data Sharing dashboard, prepare, and review route shells are now local-app hosted and call Data Sharing through the local Docs API adapter instead of the old standalone docs-management service URL
 - Studio Audits now calls `/studio/api/audits/...` through the local app server instead of requiring the old standalone audit service URL
@@ -276,12 +276,12 @@ Phase 3 is implemented for Docs Viewer manage mode by hosting the management she
 The app-server Docs API routes live behind the dedicated `studio_docs_api.py` adapter instead of being embedded in the app-server dispatcher.
 Capabilities now report configured scopes from the live docs scope config file, including user-created scopes that are eligible for scope lifecycle deletion.
 The adapter calls existing docs-management domain functions directly for generated reads, source-config/settings reads, import listings, data-sharing package reads, and management POST routes such as settings, create, metadata update, move, archive/delete, rebuild, scope lifecycle, import, and data sharing.
-`tests/smoke/local_studio_docs_management_workflows.py` now proves the main Docs management API workflow paths against a temporary fixture repo through the local app server.
+`studio/tests/smoke/local_studio_docs_management_workflows.py` now proves the main Docs management API workflow paths against a temporary fixture repo through the local app server.
 It patches rebuild execution and Markdown validation inside the fixture so source writes are exercised without rebuilding real docs payloads, invoking Bundler/Jekyll validation, or touching real `_docs/` files.
-`tests/smoke/local_studio_docs_management_ui.py` proves representative UI-level management workflows through the local `/docs/` shell against the same fixture pattern.
+`studio/tests/smoke/local_studio_docs_management_ui.py` proves representative UI-level management workflows through the local `/docs/` shell against the same fixture pattern.
 It covers create, metadata edit, settings save, archive, delete preview/apply, and browser reloads of generated docs index/payload data after each source mutation.
-`tests/smoke/local_studio_docs_management_import_ui.py`, `tests/smoke/local_studio_docs_management_move_ui.py`, and `tests/smoke/local_studio_docs_management_scope_ui.py` cover the remaining managed UI workflows: staged import, drag/drop move, and scope create/delete.
-`tests/smoke/public_docs_viewer_readonly.py` verifies that public `/library/` and `/analysis/` builds stay read-only, do not load management CSS, do not render management controls, and do not load Studio-only assets.
+`studio/tests/smoke/local_studio_docs_management_import_ui.py`, `studio/tests/smoke/local_studio_docs_management_move_ui.py`, and `studio/tests/smoke/local_studio_docs_management_scope_ui.py` cover the remaining managed UI workflows: staged import, drag/drop move, and scope create/delete.
+`studio/tests/smoke/public_docs_viewer_readonly.py` verifies that public `/library/` and `/analysis/` builds stay read-only, do not load management CSS, do not render management controls, and do not load Studio-only assets.
 `bin/local-studio` treats Docs management as owned by the local Studio app server and has no standalone Docs Management server startup path.
 Data Sharing adapter consolidation is now covered by Phase 5; the Phase 3 claim remains Docs Viewer manage-mode parity for the ordinary source/edit/import/scope workflows.
 Docs Broken Links is also a Docs Viewer concern because it is a scope-based report over generated docs links.
@@ -321,14 +321,14 @@ The migrated local-only tag views now require local analytics read endpoints ins
 The dev Studio Jekyll overlay now excludes the four tag source JSON files as well, so local Jekyll cannot accidentally satisfy a legacy static read.
 The browser transport now requires the local runtime `save_tags`, assignment import, alias import/delete/edit/promote/demote, registry import/mutation, demote, and analytics `health` endpoints for tag writes; old tag write-server URLs are no longer browser fallbacks.
 The deprecated tag-server `POST /build-docs` path is intentionally not migrated and should not be exposed through runtime config.
-The tag registry, tag aliases, series-tags, and per-series tag editor shells now run in the local app and are covered by `tests/smoke/local_studio_app_tag_routes.py`, which verifies local analytics API reads and no `8787` fallback requests.
+The tag registry, tag aliases, series-tags, and per-series tag editor shells now run in the local app and are covered by `studio/tests/smoke/local_studio_app_tag_routes.py`, which verifies local analytics API reads and no `8787` fallback requests.
 The old Jekyll analytics tag route files have been removed, and local Studio no longer starts the standalone tag write server.
-The standalone tag write server HTTP entrypoint has been removed; reusable tag domain modules remain under `scripts/analytics/`.
-Studio Audits now uses `scripts/studio/studio_audit_api.py` for local app `GET /studio/api/audits/audits` and `POST /studio/api/audits/audits/run`.
-The adapter reuses the allowlisted registry and run logic from `scripts/studio/audit_runner.py`.
+The standalone tag write server HTTP entrypoint has been removed; reusable tag domain modules remain under `studio/services/analytics/`.
+Studio Audits now uses `studio/app/server/studio/studio_audit_api.py` for local app `GET /studio/api/audits/audits` and `POST /studio/api/audits/audits/run`.
+The adapter reuses the allowlisted registry and run logic from `studio/app/server/studio/audit_runner.py`.
 The standalone audit HTTP wrapper has been retired; Codex can call the runner directly, while browser audit runs go through the local app API.
-Project State now uses `scripts/studio/studio_catalogue_api.py` for local app `POST /studio/api/catalogue/project-state-report`.
-The adapter reuses `scripts/catalogue/project_state_report.py`, reads the served repo's local environment for `DOTLINEFORM_PROJECTS_BASE_DIR`, preserves Studio activity logging, and lets the browser use local Docs API source opening instead of the old standalone docs-management URL.
+Project State now uses `studio/app/server/studio/studio_catalogue_api.py` for local app `POST /studio/api/catalogue/project-state-report`.
+The adapter reuses `studio/services/catalogue/project_state_report.py`, reads the served repo's local environment for `DOTLINEFORM_PROJECTS_BASE_DIR`, preserves Studio activity logging, and lets the browser use local Docs API source opening instead of the old standalone docs-management URL.
 Thumbnail Quality now uses the same narrow catalogue adapter for `POST /studio/api/catalogue/thumbnail-quality-preview`.
 The adapter reuses `scripts/media/build_thumbnail_quality_preview.py`, keeps initial page loads on the checked-in preview JSON, and removes the browser dependency on `127.0.0.1:8788` for refresh availability.
 Catalogue Drafts and Studio Activity now read through local-app `GET /studio/api/catalogue/read`.
@@ -337,11 +337,11 @@ The catalogue editor write/build/publication/delete/prose-import/moment-import e
 Migrated catalogue editor endpoints call focused catalogue service modules directly; no active Local Studio catalogue write endpoint uses the legacy in-process handler bridge.
 `bin/local-studio` does not start or offer a fallback flag for a standalone catalogue write server.
 The catalogue write service extraction inventory is captured in [Catalogue Write Service Extraction](/docs/?scope=studio&doc=scripts-catalogue-write-service-extraction).
-The callable catalogue service slices now route bulk save, delete preview/apply, publication preview/apply, build preview/apply, moment preview/save, prose import preview/apply, moment import preview/apply, work create/save, work-detail create/save, and series create/save through `scripts/catalogue/catalogue_write_service.py`.
+The callable catalogue service slices now route bulk save, delete preview/apply, publication preview/apply, build preview/apply, moment preview/save, prose import preview/apply, moment import preview/apply, work create/save, work-detail create/save, and series create/save through `studio/services/catalogue/catalogue_write_service.py`.
 `catalogue_write_service.py` is only the dispatcher; ownership lives in focused modules such as `catalogue_bulk_service.py`, `catalogue_work_service.py`, `catalogue_work_detail_service.py`, `catalogue_series_service.py`, `catalogue_build_service.py`, `catalogue_delete_service.py`, `catalogue_moment_service.py`, and `catalogue_prose_import_service.py`, with shared plumbing in `catalogue_service_context.py`.
-The standalone `scripts/catalogue/catalogue_write_server.py` wrapper has been removed now that Local Studio no longer depends on its handler methods.
+The standalone `studio/services/catalogue/catalogue_write_server.py` wrapper has been removed now that Local Studio no longer depends on its handler methods.
 Active Local Studio Docs browser transport now uses `/studio/api/docs/...`; `127.0.0.1:8789` is no longer a browser fallback for migrated routes.
-The standalone Docs Management server entrypoint has been removed; Local Studio imports `scripts/docs/docs_management_service.py` as the dispatcher for focused Docs management modules covering context, reads, capabilities, source mutations, import, Data Sharing, source opening, and broken-links audit behavior.
+The standalone Docs Management server entrypoint has been removed; Local Studio imports `studio/docs-viewer/services/docs_management_service.py` as the dispatcher for focused Docs management modules covering context, reads, capabilities, source mutations, import, Data Sharing, source opening, and broken-links audit behavior.
 The launcher split is now explicit: `bin/local-studio` starts the local Studio app path, `bin/public-site-preview` runs public Jekyll preview with `_config.yml`, and `bin/public-site-build` runs public Jekyll builds with `_config.yml`.
 `bin/dev-studio` has been retired.
 
@@ -350,11 +350,11 @@ Transition cleanup backlog:
 | Cleanup Item | Trigger | Status |
 | --- | --- | --- |
 | Remove old `127.0.0.1:8787` tag write-server fallbacks from `assets/studio/js/studio-transport.js`. | All tag editor/import routes are hosted by the local app shell and use local runtime config. | done |
-| Stop the local runner from starting `scripts/analytics/tag_write_server.py`. | The local app server owns save-tags, assignment import, registry import/mutation, alias import/mutation, and promote/demote; the deprecated `/build-docs` path is excluded rather than migrated; all active tag editor pages are local-app hosted. | done |
-| Retire or archive `scripts/analytics/tag_write_server.py` as an HTTP entrypoint while keeping reusable analytics domain modules. | No migrated UI or fallback/debug workflow needs the standalone tag write HTTP process. | done |
-| Stop the local runner from starting `scripts/studio/audit_service.py`. | The local app server owns the active Studio audit HTTP endpoints. | done |
+| Stop the local runner from starting `studio/services/analytics/tag_write_server.py`. | The local app server owns save-tags, assignment import, registry import/mutation, alias import/mutation, and promote/demote; the deprecated `/build-docs` path is excluded rather than migrated; all active tag editor pages are local-app hosted. | done |
+| Retire or archive `studio/services/analytics/tag_write_server.py` as an HTTP entrypoint while keeping reusable analytics domain modules. | No migrated UI or fallback/debug workflow needs the standalone tag write HTTP process. | done |
+| Stop the local runner from starting `studio/app/server/studio/audit_service.py`. | The local app server owns the active Studio audit HTTP endpoints. | done |
 | Remove old `127.0.0.1:8789` Docs Management fallbacks from active Studio browser transport and route smokes. | Local Studio Docs management and Data Sharing routes are served through `/studio/api/docs/...`. | done |
-| Extract Docs Management reusable behavior out of the standalone HTTP server entrypoint. | The local Studio app needs Docs management behavior without depending on an old sibling server module. | done; `scripts/docs/docs_management_service.py` dispatches to focused `docs_management_*_service.py` workflow modules |
+| Extract Docs Management reusable behavior out of the standalone HTTP server entrypoint. | The local Studio app needs Docs management behavior without depending on an old sibling server module. | done; `studio/docs-viewer/services/docs_management_service.py` dispatches to focused `docs_management_*_service.py` workflow modules |
 | Remove the standalone Docs Management HTTP entrypoint. | No active workflow needs to exercise Docs management outside Local Studio. | done |
 | Remove hardcoded old tag write URLs from tests and browser module fixtures. | Runtime-config endpoints cover the migrated routes and fallback compatibility is no longer required. | done; remaining 8787 references are negative assertions only |
 | Remove static JSON fallbacks for analytics tag data from migrated local-only views where the fallback no longer serves a Jekyll-hosted page. | The corresponding view no longer runs in Jekyll and public output has no Studio shell for it. | done |
@@ -364,7 +364,7 @@ Transition cleanup backlog:
 | Remove compatibility docs that describe old sibling-service startup as the normal path. | `bin/local-studio` starts only the local app server plus genuinely required background tasks. | done |
 | Extract remaining catalogue write behavior out of the standalone HTTP handler. | Local Studio no longer reuses `catalogue_write_server.Handler` in-process for active catalogue writes. | done; focused service modules now own bulk save, delete preview/apply, publication preview/apply, build preview/apply, moment preview/save, prose/moment import apply, work create/save, work-detail create/save, and series create/save |
 | Make `bin/local-studio` independent or move shared runner behavior into a neutral helper. | Normal Studio work should be served by `studio_app_server.py`, with public preview handled by plain Jekyll preview/build commands. | done; `bin/local-studio` now owns Studio startup directly and `bin/dev-studio` is retired |
-| Retire the standalone `scripts/studio/audit_service.py` HTTP wrapper while keeping reusable audit logic plus direct script/module calls. | The local app owns browser audit endpoints, and Codex does not need a sibling localhost audit service. | done; reusable logic moved to `scripts/studio/audit_runner.py` |
+| Retire the standalone `studio/app/server/studio/audit_service.py` HTTP wrapper while keeping reusable audit logic plus direct script/module calls. | The local app owns browser audit endpoints, and Codex does not need a sibling localhost audit service. | done; reusable logic moved to `studio/app/server/studio/audit_runner.py` |
 
 ## Phase 5: Route Family Migration
 
@@ -408,8 +408,8 @@ Studio Works now uses the same catalogue public-link helper as the catalogue edi
 The per-series tag editor now uses the same catalogue public-link helper for public series/work header links instead of maintaining a route-local resolver.
 Catalogue editor summaries now share `assets/studio/js/catalogue-public-links.js` for public work, series, work detail, and moment links.
 Those links resolve through the configured public preview base during local Studio sessions, while editor-to-editor links continue to use local Studio routes.
-The catalogue editor API consolidation keeps behavior aligned through focused catalogue service modules called from `scripts/studio/studio_catalogue_api.py`; it must not reintroduce the old catalogue write handler bridge.
-Catalogue route shells are split into `scripts/studio/studio_catalogue_views.py` so `studio_app_views.py` remains a shared shell module rather than absorbing every route family.
+The catalogue editor API consolidation keeps behavior aligned through focused catalogue service modules called from `studio/app/server/studio/studio_catalogue_api.py`; it must not reintroduce the old catalogue write handler bridge.
+Catalogue route shells are split into `studio/app/server/studio/studio_catalogue_views.py` so `studio_app_views.py` remains a shared shell module rather than absorbing every route family.
 The Jekyll `/studio/` landing shell is now retired because the local app owns `/studio/` and public builds should not expose Studio.
 The local app home is intentionally a simple runtime navigation list rather than a preserved Jekyll dashboard design; it filters out non-nav internal views such as the per-series tag editor and marks the home root ready for smoke checks.
 The local app shell now uses one compact top navigation row across Studio, including `/studio/`: `dotlineform studio` remains the left home link, and only `docs`, `catalogue`, `analytics`, and `data sharing` appear as right-aligned top-level items.
@@ -431,7 +431,7 @@ Outcomes:
 
 | Task | Status |
 | --- | --- |
-| Create projection-contract manifest infrastructure and a validation check entrypoint. | done; `scripts/checks/projection_contract.json` and `scripts/checks/audit_projection_contract.py` now own the executable contract |
+| Create projection-contract manifest infrastructure and a validation check entrypoint. | done; `studio/checks/projection_contract.json` and `studio/checks/audit_projection_contract.py` now own the executable contract |
 | Document canonical source families and their public projections. | done; see [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) |
 | Populate the manifest with all Phase 6 artifact families: canonical source, public projections, Studio projections, Docs Viewer payloads, local working output, public media, Studio app assets, and UI Catalogue demo assets where relevant. | done for the current Phase 6 scope; future artifact families must be added to the manifest when introduced |
 | Distinguish public projections, Studio projections, and Docs Viewer payloads through manifest-backed docs and checks. | done for current family classification and public-build policy |
@@ -443,8 +443,8 @@ Next steps:
 
 Use this phase to make the same-repo source/projection boundary explicit.
 The manifest-backed implementation slice is complete for the current scope: [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) defines the current canonical source, public projection, Studio projection, and Docs Viewer payload families.
-The implementation direction is to use machine-readable `scripts/checks/projection_contract.json` as the Phase 6 source of truth.
-Existing domain configs should keep their current domain responsibilities: Docs Viewer scope build details stay in `scripts/docs/docs_scopes.json`, search source-family behavior stays in `scripts/search/build_config.json`, catalogue build scoping stays in the catalogue field registry, and `_config.yml` stays the public Jekyll build config.
+The implementation direction is to use machine-readable `studio/checks/projection_contract.json` as the Phase 6 source of truth.
+Existing domain configs should keep their current domain responsibilities: Docs Viewer scope build details stay in `studio/docs-viewer/config/scopes/docs_scopes.json`, search source-family behavior stays in `scripts/search/build_config.json`, catalogue build scoping stays in the catalogue field registry, and `_config.yml` stays the public Jekyll build config.
 The projection contract manifest should own cross-domain classification, public-build policy, source-only leak rules, owner docs, and check coverage.
 The manifest schema, first full-family population, validation check, public-build audit integration, and public template/script source-reference audit are now in place.
 The source-reference audit also removed the old public work-page JavaScript branch that reconstructed `/studio/studio-works/` on the public-site host.

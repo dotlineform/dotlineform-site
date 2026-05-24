@@ -37,7 +37,7 @@ The current checked-in Python packages are:
 | `openpyxl` | Not a Docs Viewer dependency; used by workbook/spreadsheet pipeline scripts. | Catalogue or spreadsheet-driven workflows need it. |
 | `pytest` | Test runner used by the repo check profiles. | Running Python tests through the repo check workflow. |
 
-The Docs HTML import implementation currently lives in `scripts/docs/docs_html_import.py`.
+The Docs HTML import implementation currently lives in `studio/docs-viewer/services/docs_html_import.py`.
 Its parser boundary depends on `beautifulsoup4` plus `lxml`, its sanitization contract treats `bleach` as part of the pinned import stack, and Markdown package image conversion depends on `Pillow`.
 
 ## Parser Stack Roles

@@ -57,7 +57,7 @@ In scope:
 Out of scope:
 
 - changing tag write-server endpoint URLs such as `/save-tags` or `/import-tag-registry`
-- moving `scripts/studio/tag_write_server.py` or extracted helper modules
+- moving `studio/app/server/studio/tag_write_server.py` or extracted helper modules
 - renaming `tag_write_server.py` to `analytics_server.py`
 - changing tag data schemas, registry semantics, scoring semantics, or Analytics export/import stubs
 - redesigning the tag pages

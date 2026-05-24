@@ -160,7 +160,7 @@ Current consumers:
 
 - `/studio/data-sharing/prepare/?mode=manage`
 - `POST /studio/api/docs/data-sharing/prepare` on the local Studio app server
-- `./scripts/docs/docs_export.py`
+- `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py`
 
 Current limits:
 
@@ -189,7 +189,7 @@ Current model:
 - the read-only parser accepts Library export-shaped data and minimal document-like JSON/JSONL rows
 - unknown file-level and record-level metadata is preserved in parser reports
 - parser reports compare staged records with the current generated Library docs index and generated payload filenames
-- Markdown preview files are generated only when `./scripts/docs/docs_import.py --write-previews` is used
+- Markdown preview files are generated only when `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py --write-previews` is used
 - summary and full-content imports write one preview file per parsed document
 - relationship imports write one whole-tree preview file per staged relationships file
 - summary apply can update selected source `summary` values through the docs-management service after preflight and confirmation
@@ -198,7 +198,7 @@ Current model:
 
 Current consumers:
 
-- `./scripts/docs/docs_import.py`
+- `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py`
 - `GET /docs/import/files` on the docs-management server
 - `POST /docs/import/preview` on the docs-management server
 - `POST /docs/import/apply` on the docs-management server

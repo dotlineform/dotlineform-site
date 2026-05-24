@@ -10,7 +10,7 @@ sort_order: 3200
 
 ## Source Docs Required Shape
 
-Each scope has a source root, currently configured in `scripts/docs/docs_scopes.json`.
+Each scope has a source root, currently configured in `studio/docs-viewer/config/scopes/docs_scopes.json`.
 
 Current roots:
 

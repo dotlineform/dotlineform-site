@@ -88,7 +88,7 @@ Initial conservative rules:
 - catalogue index shape or source-family config changes fall back to full rebuild
 - unknown source family, ambiguous id, parse failure, or missing current artifact falls back to full rebuild
 
-These rules should be validated against actual `scripts/studio/catalogue_write_server.py` invalidation classes before implementation. The existing `single-record` and `targeted-multi-record` lookup-refresh paths are relevant prior art, but search should still own search-record generation and merge behavior.
+These rules should be validated against actual `studio/app/server/studio/catalogue_write_server.py` invalidation classes before implementation. The existing `single-record` and `targeted-multi-record` lookup-refresh paths are relevant prior art, but search should still own search-record generation and merge behavior.
 
 ## Builder Responsibilities
 

@@ -226,7 +226,7 @@ First implementation should use a dedicated docs-management localhost service ra
 
 Recommended script and ownership:
 
-- script: `scripts/docs/docs_management_server.py`
+- script: `studio/docs-viewer/services/docs_management_server.py`
 - purpose: local-only management writes for shared Docs Viewer source docs
 
 Recommended endpoint surface:

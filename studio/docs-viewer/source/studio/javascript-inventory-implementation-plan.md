@@ -80,7 +80,7 @@ Most existing field, form, and section modules should stay at 4 or 5 unless thei
 
 **Verification**
 
-Focused helper/module smoke: `tests/smoke/catalogue_editor_route_boot_modules.py`.
+Focused helper/module smoke: `studio/tests/smoke/catalogue_editor_route_boot_modules.py`.
 The smoke imports the helper and the four refactored route shells, checks route ready/busy projection, and stubs config, lookup, and server-availability inputs.
 
 ### Batch 2: Catalogue Action Workflows
@@ -121,7 +121,7 @@ The detail/series/moment action modules should drop by 1 point if they share the
 
 **Verification**
 
-Focused helper/module smoke: `tests/smoke/catalogue_editor_action_workflow_modules.py`.
+Focused helper/module smoke: `studio/tests/smoke/catalogue_editor_action_workflow_modules.py`.
 Run representative catalogue editor smoke only for future workflow slices that change user-visible action behavior beyond this shared result contract.
 
 ### Batch 3: Tag Route Shells
@@ -158,8 +158,8 @@ Tag Registry, Data Sharing Prepare, and Series Tags may already be lower after t
 
 **Verification**
 
-Focused helper/module smoke: `tests/smoke/tag_route_shell_modules.py`.
-Existing overlap checks: `tests/smoke/tag_registry_modules.py` and `tests/smoke/tag_aliases_modal.py`.
+Focused helper/module smoke: `studio/tests/smoke/tag_route_shell_modules.py`.
+Existing overlap checks: `studio/tests/smoke/tag_registry_modules.py` and `studio/tests/smoke/tag_aliases_modal.py`.
 Use broader browser smoke only for future slices that materially change modal behavior, route-ready behavior, or editor save interactions beyond these helper contracts.
 
 ### Batch 4: Large Modal Modules
@@ -240,7 +240,7 @@ The shared `docs-viewer.js` score is not part of this plan.
 
 **Verification**
 
-Focused helper/module smoke: `tests/smoke/docs_viewer_management_action_workflow_modules.py`.
+Focused helper/module smoke: `studio/tests/smoke/docs_viewer_management_action_workflow_modules.py`.
 Use Docs Viewer module smoke checks first.
 Run `docs-viewer-smoke` only when route-level management, modal, import, or scope lifecycle behavior changes materially.
 

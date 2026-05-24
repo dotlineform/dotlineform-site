@@ -10,14 +10,14 @@ viewable: true
 # Docs Viewer Config
 
 Docs Viewer configuration is split by audience.
-Source-side and local write settings stay in `scripts/docs/docs_scopes.json`.
+Source-side and local write settings stay in `studio/docs-viewer/config/scopes/docs_scopes.json`.
 Browser-safe route, display, and search settings are generated into `assets/docs-viewer/data/docs-viewer-config.json`.
 Visible viewer and import copy lives in `assets/docs-viewer/data/ui-text.json`.
 Site-wide media token resolution stays in `_config.yml`.
 
 ## Source Scope Config
 
-`scripts/docs/docs_scopes.json` is the source-side Docs Viewer config.
+`studio/docs-viewer/config/scopes/docs_scopes.json` is the source-side Docs Viewer config.
 It is checked in and is read by docs builds, docs search builds, Docs Import, the local management server, live rebuild watching, generated-data reads, and source-write validation.
 
 In local manage mode, [Docs Viewer Source Config Report](/docs/?scope=studio&doc=docs-viewer-source-config-report&mode=manage) reads this source config through the docs-management server and shows it alongside browser and generated projections.
@@ -98,7 +98,7 @@ The local service stages inline extracted media under `var/docs/import-staging/`
 Staged source image and file imports also remain manual-copy flows in this mode.
 
 `r2_upload` is intentionally config-shaped but not operational.
-Do not put R2 credentials or any other remote credentials in `scripts/docs/docs_scopes.json`, generated browser config, docs source, or UI text.
+Do not put R2 credentials or any other remote credentials in `studio/docs-viewer/config/scopes/docs_scopes.json`, generated browser config, docs source, or UI text.
 Future remote upload support should read credentials from environment variables or platform secrets and fail closed when the backend is unavailable.
 
 ## Browser Config
@@ -115,7 +115,7 @@ It exposes browser-safe settings only:
 - viewer display settings under `docs_viewer`
 
 Do not hand-edit this file.
-After changing `scripts/docs/docs_scopes.json`, rerun the docs build for the affected scope or scopes so this generated config stays current.
+After changing `studio/docs-viewer/config/scopes/docs_scopes.json`, rerun the docs build for the affected scope or scopes so this generated config stays current.
 
 ## UI Text
 

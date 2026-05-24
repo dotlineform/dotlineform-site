@@ -20,7 +20,7 @@ sort_order: 15200
 
 Request behavior:
 
-- `scope` must be one of the configured scope ids in `scripts/docs/docs_scopes.json`
+- `scope` must be one of the configured scope ids in `studio/docs-viewer/config/scopes/docs_scopes.json`
 - `title` defaults to `New Doc` when omitted or blank
 - new docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
 - new Studio docs write `published: true`, `viewable: true`
@@ -66,7 +66,7 @@ Supported source formats:
 
 Import behavior:
 
-- `scope` must be one of the configured scope ids in `scripts/docs/docs_scopes.json`
+- `scope` must be one of the configured scope ids in `studio/docs-viewer/config/scopes/docs_scopes.json`
 - `staged_filename` must resolve inside `var/docs/import-staging/`
 - accepts the supported staged source formats listed above
 - parses full staged HTML files through the shared converter
@@ -117,7 +117,7 @@ Import behavior:
 
 Rebuild behavior:
 
-- `scope` must be one of the configured scope ids in `scripts/docs/docs_scopes.json`
+- `scope` must be one of the configured scope ids in `studio/docs-viewer/config/scopes/docs_scopes.json`
 - rebuilds generated docs payloads for the requested scope
 - rebuilds the docs-search artifact for the requested scope
 - includes `docs` and `diagnostics` objects alongside the existing `ok`, `steps`, and `search` keys

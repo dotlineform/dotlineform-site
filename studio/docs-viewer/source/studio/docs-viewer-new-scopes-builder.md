@@ -31,7 +31,7 @@ It should:
 A Docs Viewer scope is made from four parts:
 
 - source root, such as `_docs_research/`
-- scope config entry in `scripts/docs/docs_scopes.json`
+- scope config entry in `studio/docs-viewer/config/scopes/docs_scopes.json`
 - generated viewer/search outputs under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/`
 - optional read-only route page, such as `research/index.md`
 
@@ -84,7 +84,7 @@ Use this option when the scope should become part of the published static site.
 Create and commit:
 
 - source root and Markdown files
-- `scripts/docs/docs_scopes.json` entry
+- `studio/docs-viewer/config/scopes/docs_scopes.json` entry
 - read-only route page
 - generated docs/search JSON if the repo tracks generated outputs for the site
 
@@ -99,7 +99,7 @@ Use this option when the scope should be available to local developers or Codex 
 Create and commit:
 
 - source root and Markdown files
-- `scripts/docs/docs_scopes.json` entry
+- `studio/docs-viewer/config/scopes/docs_scopes.json` entry
 - generated docs/search JSON if local workflows expect checked-in generated data
 
 Do not create a public read-only route page.
@@ -127,8 +127,8 @@ The management UI should label this mode as local-only and make the write set vi
 
 The scope lifecycle workflow now has server-side preview/apply endpoints and a management UI entry point:
 
-- `scripts/docs/docs_scope_manifest.json` records existing scopes as system-owned
-- `scripts/docs/docs_scope_manifest.py` owns manifest loading, backfill, validation, and preview planning
+- `studio/docs-viewer/config/scopes/docs_scope_manifest.json` records existing scopes as system-owned
+- `studio/docs-viewer/services/docs_scope_manifest.py` owns manifest loading, backfill, validation, and preview planning
 - `GET /capabilities` advertises scope lifecycle preview and apply support
 - `POST /docs/scopes/create-preview` reports a validated create write set
 - `POST /docs/scopes/create-apply` creates allowlisted scope files after explicit confirmation
@@ -145,7 +145,7 @@ The stable documentation still needs a final pass after hands-on use, but the co
 
 Manifest file:
 
-- `scripts/docs/docs_scope_manifest.json`
+- `studio/docs-viewer/config/scopes/docs_scope_manifest.json`
 
 Schema version:
 
@@ -196,7 +196,7 @@ Future created scopes must set both `user_created: true` and `created_by_tool: t
     "delete_preview": true,
     "delete_apply": true,
     "publishing_modes": ["public_readonly", "local_committed", "local_uncommitted"],
-    "manifest_path": "scripts/docs/docs_scope_manifest.json"
+    "manifest_path": "studio/docs-viewer/config/scopes/docs_scope_manifest.json"
   }
 }
 ```
@@ -245,7 +245,7 @@ Conditional and optional payload fields:
 Validation rules currently implemented:
 
 - `scope_id` must use lowercase letters, numbers, and single hyphen separators
-- `scope_id` must not already exist in `scripts/docs/docs_scopes.json`
+- `scope_id` must not already exist in `studio/docs-viewer/config/scopes/docs_scopes.json`
 - `scope_id` must not already exist in the scope manifest
 - `source_root` must be a single repo-relative `_docs_<scope>` directory
 - `default_doc_id` must use lowercase letters, numbers, and hyphens
@@ -293,7 +293,7 @@ Apply behavior:
 - requires explicit confirmation
 - re-runs create-preview validation before any write
 - creates the source root and default welcome Markdown document
-- appends the scope config entry to `scripts/docs/docs_scopes.json`
+- appends the scope config entry to `studio/docs-viewer/config/scopes/docs_scopes.json`
 - creates a public read-only route page only for `public_readonly`
 - writes a user-created, tool-created manifest record
 - creates a timestamped backup bundle for the previous scope config and manifest files
@@ -372,8 +372,8 @@ Apply behavior:
 - blocks system-owned scopes and scopes not created by the lifecycle tool
 - deletes existing manifest-owned scope paths, excluding scope config and manifest files
 - reports missing manifest-owned paths without blocking the delete
-- removes the scope entry from `scripts/docs/docs_scopes.json`
-- removes the scope record from `scripts/docs/docs_scope_manifest.json`
+- removes the scope entry from `studio/docs-viewer/config/scopes/docs_scopes.json`
+- removes the scope record from `studio/docs-viewer/config/scopes/docs_scope_manifest.json`
 - creates a timestamped backup bundle for the previous scope config and manifest files
 - refreshes docs viewer generated outputs for the remaining configured scopes
 

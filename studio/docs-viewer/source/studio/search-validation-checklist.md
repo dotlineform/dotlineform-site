@@ -33,7 +33,7 @@ Prefer real site examples over synthetic test strings.
 
 ## A. Catalogue Build And Artifact Checks
 
-- [ ] If the change touched catalogue source generation, refresh the canonical source artifacts with `./scripts/catalogue/generate_work_pages.py`
+- [ ] If the change touched catalogue source generation, refresh the canonical source artifacts with `$HOME/miniconda3/bin/python3 studio/services/catalogue/generate_work_pages.py`
 - [ ] Run `./scripts/build_search.rb --scope catalogue`
 - [ ] Confirm the dry run completes without error, including Catalogue build-config validation
 - [ ] Run `./scripts/build_search.rb --scope catalogue --write`
@@ -69,7 +69,7 @@ Prefer real site examples over synthetic test strings.
 - [ ] Confirm every emitted Catalogue field has a source-family declaration
 - [ ] Confirm Catalogue source-family scope declarations match the intended `targeted_policy`
 - [ ] Confirm Catalogue `targeted_operations` values are valid for the configured `targeted_policy`
-- [ ] Confirm Docs Viewer scopes derive from `scripts/docs/docs_scopes.json`
+- [ ] Confirm Docs Viewer scopes derive from `studio/docs-viewer/config/scopes/docs_scopes.json`
 - [ ] Confirm future Catalogue heavy-index field additions update `scripts/search/build_config.json` before changing builder output
 - [ ] Confirm future Docs Viewer heavy-index field additions update Docs Viewer-owned search config/runtime surfaces before changing builder output
 

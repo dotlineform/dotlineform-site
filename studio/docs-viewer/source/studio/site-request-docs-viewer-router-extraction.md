@@ -104,7 +104,7 @@ The entry controller should keep:
 
 Status: implemented.
 
-Add a focused `tests/smoke/docs_viewer_routes.py` script and wire it into the `docs-viewer-smoke` check profile.
+Add a focused `studio/tests/smoke/docs_viewer_routes.py` script and wire it into the `docs-viewer-smoke` check profile.
 Keep the same route smoke in `studio-smoke` as an optional integration guard.
 
 Acceptance:
@@ -181,12 +181,12 @@ Acceptance:
 
 Required before implementation:
 
-- `tests/smoke/docs_viewer_routes.py` against the current implementation
+- `studio/tests/smoke/docs_viewer_routes.py` against the current implementation
 
 Required after each runtime slice:
 
-- `./scripts/run_checks.py --profile docs-viewer-smoke`
-- optionally run `./scripts/run_checks.py --profile studio-smoke` when the slice should also be checked against broader Studio route smoke coverage
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke`
+- optionally run `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile studio-smoke` when the slice should also be checked against broader Studio route smoke coverage
 
 ## Related References
 

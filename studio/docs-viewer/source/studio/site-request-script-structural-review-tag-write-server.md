@@ -14,30 +14,30 @@ Status:
 
 - initial review tracker created
 - Slice 1 implemented
-- route inventory and POST dispatch are now owned by `scripts/analytics/tag_routes.py` plus `Handler.POST_HANDLERS`
+- route inventory and POST dispatch are now owned by `studio/services/analytics/tag_routes.py` plus `Handler.POST_HANDLERS`
 - Slice 2 implemented
-- tag activity status, changed-state, endpoint, record-group, and activity row helpers are now owned by `scripts/analytics/tag_activity.py`
+- tag activity status, changed-state, endpoint, record-group, and activity row helpers are now owned by `studio/services/analytics/tag_activity.py`
 - Slice 3 implemented
-- tag source artifact paths, loading defaults, tag id/group/alias/weight validation, assignment normalization, import filename sanitization, and import assignment row validation are now owned by `scripts/analytics/tag_source_model.py`
+- tag source artifact paths, loading defaults, tag id/group/alias/weight validation, assignment normalization, import filename sanitization, and import assignment row validation are now owned by `studio/services/analytics/tag_source_model.py`
 - Slice 4 implemented
-- tag assignment save planning, work override planning, assignment import preview/apply decisions, and assignment import response summary text are now owned by `scripts/analytics/tag_assignment_service.py`
+- tag assignment save planning, work override planning, assignment import preview/apply decisions, and assignment import response summary text are now owned by `studio/services/analytics/tag_assignment_service.py`
 - Slice 5 implemented
-- tag registry import add/merge/replace behavior, canonical tag edit/delete planning, registry mutation summary text, alias import add/merge/replace behavior, alias edit/delete planning, alias target rewrite helpers, and alias mutation summary text are now owned by `scripts/analytics/tag_registry_mutations.py` and `scripts/analytics/tag_alias_mutations.py`
+- tag registry import add/merge/replace behavior, canonical tag edit/delete planning, registry mutation summary text, alias import add/merge/replace behavior, alias edit/delete planning, alias target rewrite helpers, and alias mutation summary text are now owned by `studio/services/analytics/tag_registry_mutations.py` and `studio/services/analytics/tag_alias_mutations.py`
 - Slice 6 implemented
-- alias promotion planning, tag demotion planning, demotion assignment rewrites, cross-artifact promotion/demotion response stats, and promotion/demotion summary text are now owned by `scripts/analytics/tag_promotion_mutations.py`
+- alias promotion planning, tag demotion planning, demotion assignment rewrites, cross-artifact promotion/demotion response stats, and promotion/demotion summary text are now owned by `studio/services/analytics/tag_promotion_mutations.py`
 - Slice 7 implemented
-- timestamped backup names, single-file JSON writes with backup, and multi-file JSON writes with backup and rollback are now owned by `scripts/analytics/tag_write_transactions.py`
+- timestamped backup names, single-file JSON writes with backup, and multi-file JSON writes with backup and rollback are now owned by `studio/services/analytics/tag_write_transactions.py`
 - Slice 8 implemented
-- final handler body cleanup is complete: tag activity, script logging, Studio Activity, and extracted helper call sites now use explicit module namespaces; canonical tag assignment rewrites are owned by `scripts/analytics/tag_registry_mutations.py`; `tag_write_server.py` remains the service name until a broader Analytics write-service contract exists
-- Follow-up local Studio app migration retired the standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint; `scripts/studio/studio_analytics_api.py` now owns the local Analytics HTTP surface while the extracted domain modules remain in use.
+- final handler body cleanup is complete: tag activity, script logging, Studio Activity, and extracted helper call sites now use explicit module namespaces; canonical tag assignment rewrites are owned by `studio/services/analytics/tag_registry_mutations.py`; `tag_write_server.py` remains the service name until a broader Analytics write-service contract exists
+- Follow-up local Studio app migration retired the standalone `studio/services/analytics/tag_write_server.py` HTTP entrypoint; `studio/app/server/studio/studio_analytics_api.py` now owns the local Analytics HTTP surface while the extracted domain modules remain in use.
 
 ## Purpose
 
-This child doc tracks the completed review and implementation slices that extracted domain behavior from the former `scripts/analytics/tag_write_server.py`.
+This child doc tracks the completed review and implementation slices that extracted domain behavior from the former `studio/services/analytics/tag_write_server.py`.
 The parent [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review) stays focused on the broader review goals, candidate scripts, completed priority summaries, and acceptance criteria.
 
 The intended end state is not a small file for its own sake.
-The follow-up local Studio app migration moved HTTP ownership to `scripts/studio/studio_analytics_api.py`.
+The follow-up local Studio app migration moved HTTP ownership to `studio/app/server/studio/studio_analytics_api.py`.
 Cohesive route inventory, tag assignment model helpers, registry and alias mutation planning, promotion/demotion flows, activity contracts, and backup/write mechanics remain explicit domain owners.
 
 ## Analytics Context
@@ -52,7 +52,7 @@ Current state:
 - Analytics dashboard links point to the tag pages
 - tag docs such as [Series Tags](/docs/?scope=studio&doc=series-tags), [Tag Editor](/docs/?scope=studio&doc=tag-editor), and [Tag Aliases](/docs/?scope=studio&doc=tag-aliases) already sit under the Analytics docs parent
 - tag UI routes now live under `/studio/analytics/`
-- the write service now lives at `scripts/analytics/tag_write_server.py`
+- the write service now lives at `studio/services/analytics/tag_write_server.py`
 
 Target concept:
 
@@ -82,7 +82,7 @@ This avoids moving a mixed-responsibility server into a new package before its o
 
 ## Current Shape
 
-`scripts/analytics/tag_write_server.py` currently owns several responsibilities in one file:
+`studio/services/analytics/tag_write_server.py` currently owns several responsibilities in one file:
 
 - localhost HTTP transport, CORS, JSON body parsing, route dispatch, response status mapping, and dry-run handling
 - tag assignment normalization and series/work assignment update behavior
@@ -120,11 +120,11 @@ That mix is workable, but it creates the same maintenance risk seen in the compl
 - Should `tag_write_server.py` be renamed to `analytics_server.py` if Analytics registries and scoring workflows start sharing the same local service?
 - Should backup/write helpers become tag-specific first, then be compared with catalogue/docs transaction helpers for a possible shared local-service utility?
 - Is there enough overlap between registry mutation, alias mutation, promotion, and demotion to justify one mutation module, or are separate owners clearer?
-- Should `scripts/run_checks.py` gain a dedicated `tags` profile before implementation slices start?
+- Should `studio/commands/run_checks.py` gain a dedicated `tags` profile before implementation slices start?
 
 ## Recommended First Slice
 
-Start with a read-only review of `scripts/analytics/tag_write_server.py` and produce a concrete extraction map.
+Start with a read-only review of `studio/services/analytics/tag_write_server.py` and produce a concrete extraction map.
 The first implementation slice should probably move only the route inventory and handler dispatch because that creates a stable endpoint constant owner for later activity and mutation slices.
 
 ## Planned Slice Sequence
@@ -135,15 +135,15 @@ The sequence below should be revised after a read-only code review, but it gives
 
 Status: implemented.
 
-The first implementation slice kept endpoint behavior stable while moving the route inventory into `scripts/analytics/tag_routes.py`.
+The first implementation slice kept endpoint behavior stable while moving the route inventory into `studio/services/analytics/tag_routes.py`.
 The new route owner defines `HEALTH_PATH`, every public tag POST endpoint, `POST_PATHS`, and `OPTIONS_PATHS`.
-`scripts/analytics/tag_write_server.py` now imports those route constants, exposes `Handler.POST_HANDLERS`, dispatches POST requests through the table, and uses the parsed request path for OPTIONS, GET, and POST route matching.
-`tests/python/test_tag_routes.py` pins route uniqueness, OPTIONS coverage, and handler coverage for every POST route.
+`studio/services/analytics/tag_write_server.py` now imports those route constants, exposes `Handler.POST_HANDLERS`, dispatches POST requests through the table, and uses the parsed request path for OPTIONS, GET, and POST route matching.
+`studio/tests/python/test_tag_routes.py` pins route uniqueness, OPTIONS coverage, and handler coverage for every POST route.
 The focused tag route test is included in the `quick` run-checks profile.
 
 Proposed module owner:
 
-- `scripts/analytics/tag_routes.py`
+- `studio/services/analytics/tag_routes.py`
 
 Target ownership:
 
@@ -182,15 +182,15 @@ Risks:
 
 Status: implemented.
 
-The second implementation slice kept endpoint behavior stable while moving tag-specific Studio Activity decisions and row construction into `scripts/analytics/tag_activity.py`.
-The helper now owns write-endpoint coverage via route constants from `scripts/analytics/tag_routes.py`, changed-state detection, warning/error status decisions, tag/alias record-group enrichment from normalized activity context, source refs for the tag write-server log, and non-fatal append failure handling.
-`scripts/analytics/tag_write_server.py` still decides when a completed handler should attempt an activity append, passes request and response payloads into the helper, and continues to suppress preview/dry-run activity rows.
-`tests/python/test_tag_activity.py` pins route-owned write endpoints, no-op suppression, dry-run/no-context suppression, tag and alias record groups, source refs, status decisions, and append failure tolerance.
+The second implementation slice kept endpoint behavior stable while moving tag-specific Studio Activity decisions and row construction into `studio/services/analytics/tag_activity.py`.
+The helper now owns write-endpoint coverage via route constants from `studio/services/analytics/tag_routes.py`, changed-state detection, warning/error status decisions, tag/alias record-group enrichment from normalized activity context, source refs for the tag write-server log, and non-fatal append failure handling.
+`studio/services/analytics/tag_write_server.py` still decides when a completed handler should attempt an activity append, passes request and response payloads into the helper, and continues to suppress preview/dry-run activity rows.
+`studio/tests/python/test_tag_activity.py` pins route-owned write endpoints, no-op suppression, dry-run/no-context suppression, tag and alias record groups, source refs, status decisions, and append failure tolerance.
 The focused tag activity test is included in the `quick` run-checks profile.
 
 Proposed module owner:
 
-- `scripts/analytics/tag_activity.py`
+- `studio/services/analytics/tag_activity.py`
 
 Target ownership:
 
@@ -225,14 +225,14 @@ Risks:
 
 Status: implemented.
 
-The third implementation slice kept endpoint behavior stable while moving source artifact path constants, JSON loading defaults, tag id/slug/group/alias/manual-weight validation, assignment tag normalization, import filename sanitization, import registry/alias validation, import assignment row validation, normalized assignment comparison helpers, and series-index membership extraction into `scripts/analytics/tag_source_model.py`.
-`scripts/analytics/tag_write_server.py` now imports that source-model owner and still decides which artifacts each endpoint needs, performs write allowlist checks, executes writes/backups, logs local events, and maps validation failures to HTTP responses.
-`tests/python/test_tag_source_model.py` pins valid and invalid tag ids, alias keys, group and manual-weight rules, assignment row normalization, import filename basename sanitization, import assignment work-id validation, and default payload loading.
+The third implementation slice kept endpoint behavior stable while moving source artifact path constants, JSON loading defaults, tag id/slug/group/alias/manual-weight validation, assignment tag normalization, import filename sanitization, import registry/alias validation, import assignment row validation, normalized assignment comparison helpers, and series-index membership extraction into `studio/services/analytics/tag_source_model.py`.
+`studio/services/analytics/tag_write_server.py` now imports that source-model owner and still decides which artifacts each endpoint needs, performs write allowlist checks, executes writes/backups, logs local events, and maps validation failures to HTTP responses.
+`studio/tests/python/test_tag_source_model.py` pins valid and invalid tag ids, alias keys, group and manual-weight rules, assignment row normalization, import filename basename sanitization, import assignment work-id validation, and default payload loading.
 The focused tag source-model test is included in the `quick` run-checks profile.
 
 Proposed module owner:
 
-- `scripts/analytics/tag_source_model.py`
+- `studio/services/analytics/tag_source_model.py`
 
 Target ownership:
 
@@ -269,15 +269,15 @@ Risks:
 
 Status: implemented.
 
-The fourth implementation slice kept endpoint behavior stable while moving assignment-specific save and import planning into `scripts/analytics/tag_assignment_service.py`.
+The fourth implementation slice kept endpoint behavior stable while moving assignment-specific save and import planning into `studio/services/analytics/tag_assignment_service.py`.
 The helper now owns series assignment row creation, series save planning, work override save planning, inherited-tag stripping, explicit empty work rows, work-row deletion, assignment import preview conflict/missing/invalid decisions, assignment import overwrite/skip apply behavior, and assignment import response summary text.
-`scripts/analytics/tag_write_server.py` still reads HTTP request bodies, loads the needed source artifacts, decides preview versus apply endpoints, validates write allowlists, suppresses writes during dry-run, executes assignment writes/backups, logs local events, and appends Studio Activity after completed writes.
-`tests/python/test_tag_assignment_service.py` pins series saves, work override saves, work-row deletion, empty explicit work rows, import conflict detection, overwrite/skip decisions, invalid/missing skip behavior, no-mutation preview/apply behavior, and response summary text.
+`studio/services/analytics/tag_write_server.py` still reads HTTP request bodies, loads the needed source artifacts, decides preview versus apply endpoints, validates write allowlists, suppresses writes during dry-run, executes assignment writes/backups, logs local events, and appends Studio Activity after completed writes.
+`studio/tests/python/test_tag_assignment_service.py` pins series saves, work override saves, work-row deletion, empty explicit work rows, import conflict detection, overwrite/skip decisions, invalid/missing skip behavior, no-mutation preview/apply behavior, and response summary text.
 The focused tag assignment-service test is included in the `quick` run-checks profile.
 
 Proposed module owner:
 
-- `scripts/analytics/tag_assignment_service.py`
+- `studio/services/analytics/tag_assignment_service.py`
 
 Target ownership:
 
@@ -316,15 +316,15 @@ Risks:
 Status: implemented.
 
 The fifth implementation slice kept endpoint behavior stable while moving registry and alias mutation planning into focused owners.
-`scripts/analytics/tag_registry_mutations.py` now owns registry import add/merge/replace behavior, duplicate import compaction, canonical tag edit/delete planning, canonical rename guards, and registry import/mutation summary text.
-`scripts/analytics/tag_alias_mutations.py` now owns alias import add/merge/replace behavior, duplicate alias compaction, alias edit/delete planning, registry-target validation for aliases, alias target count and one-target-per-group constraints, alias target rewrite helpers, redundant alias cleanup, and alias mutation summary text.
-`scripts/analytics/tag_write_server.py` still reads endpoint bodies, loads the required artifacts, orchestrates cross-artifact registry mutation rewrites, checks write allowlists, suppresses writes during dry-run/preview, executes writes/backups, logs local events, and appends Studio Activity after completed writes.
-`tests/python/test_tag_registry_mutations.py` and `tests/python/test_tag_alias_mutations.py` pin the new owners, and both focused tests are included in the `quick` run-checks profile.
+`studio/services/analytics/tag_registry_mutations.py` now owns registry import add/merge/replace behavior, duplicate import compaction, canonical tag edit/delete planning, canonical rename guards, and registry import/mutation summary text.
+`studio/services/analytics/tag_alias_mutations.py` now owns alias import add/merge/replace behavior, duplicate alias compaction, alias edit/delete planning, registry-target validation for aliases, alias target count and one-target-per-group constraints, alias target rewrite helpers, redundant alias cleanup, and alias mutation summary text.
+`studio/services/analytics/tag_write_server.py` still reads endpoint bodies, loads the required artifacts, orchestrates cross-artifact registry mutation rewrites, checks write allowlists, suppresses writes during dry-run/preview, executes writes/backups, logs local events, and appends Studio Activity after completed writes.
+`studio/tests/python/test_tag_registry_mutations.py` and `studio/tests/python/test_tag_alias_mutations.py` pin the new owners, and both focused tests are included in the `quick` run-checks profile.
 
 Proposed module owners:
 
-- `scripts/analytics/tag_registry_mutations.py`
-- `scripts/analytics/tag_alias_mutations.py`
+- `studio/services/analytics/tag_registry_mutations.py`
+- `studio/services/analytics/tag_alias_mutations.py`
 
 Target ownership:
 
@@ -361,15 +361,15 @@ Risks:
 
 Status: implemented.
 
-The sixth implementation slice kept endpoint behavior stable while moving promotion and demotion planning into `scripts/analytics/tag_promotion_mutations.py`.
+The sixth implementation slice kept endpoint behavior stable while moving promotion and demotion planning into `studio/services/analytics/tag_promotion_mutations.py`.
 The helper now owns alias promotion planning, canonical-tag creation-versus-existing decisions, promoted alias removal, tag demotion target validation, demoted canonical removal, alias-reference rewrites through the alias mutation owner, assignment rewrites for demoted tag references, changed-artifact flags, and promotion/demotion summary text.
-`scripts/analytics/tag_write_server.py` still reads endpoint request bodies, loads the needed source artifacts, sanitizes request values, maps preview versus apply responses, checks write allowlists, suppresses writes during preview/dry-run, executes writes/backups, logs local events, and appends Studio Activity after completed writes.
-`tests/python/test_tag_promotion_mutations.py` pins promotion where the canonical tag already exists, promotion that creates a canonical tag, demotion target validation, demotion assignment rewrites, alias-reference rewrites, no-ref assignment rewrites, and response summary text.
+`studio/services/analytics/tag_write_server.py` still reads endpoint request bodies, loads the needed source artifacts, sanitizes request values, maps preview versus apply responses, checks write allowlists, suppresses writes during preview/dry-run, executes writes/backups, logs local events, and appends Studio Activity after completed writes.
+`studio/tests/python/test_tag_promotion_mutations.py` pins promotion where the canonical tag already exists, promotion that creates a canonical tag, demotion target validation, demotion assignment rewrites, alias-reference rewrites, no-ref assignment rewrites, and response summary text.
 The focused tag promotion-mutation test is included in the `quick` run-checks profile.
 
 Proposed module owner:
 
-- `scripts/analytics/tag_promotion_mutations.py`
+- `studio/services/analytics/tag_promotion_mutations.py`
 
 Target ownership:
 
@@ -404,15 +404,15 @@ Risks:
 
 Status: implemented.
 
-The seventh implementation slice kept endpoint behavior stable while moving tag write-server transaction mechanics into `scripts/analytics/tag_write_transactions.py`.
+The seventh implementation slice kept endpoint behavior stable while moving tag write-server transaction mechanics into `studio/services/analytics/tag_write_transactions.py`.
 The helper now owns timestamped backup names, single-file JSON writes with backup, multi-file JSON writes with shared-stamp backups, temporary-file cleanup, and rollback for replaced or newly created files after simulated multi-file write failures.
-`scripts/analytics/tag_write_server.py` still checks endpoint-specific write allowlists, decides which files are written, suppresses writes for preview/dry-run flows, logs local events, and appends Studio Activity after completed writes.
-`tests/python/test_tag_write_transactions.py` pins backup creation, no-existing-file writes, shared multi-file backup stamps, and rollback/backup restore behavior.
+`studio/services/analytics/tag_write_server.py` still checks endpoint-specific write allowlists, decides which files are written, suppresses writes for preview/dry-run flows, logs local events, and appends Studio Activity after completed writes.
+`studio/tests/python/test_tag_write_transactions.py` pins backup creation, no-existing-file writes, shared multi-file backup stamps, and rollback/backup restore behavior.
 The focused tag write-transaction test is included in the `quick` run-checks profile.
 
 Proposed module owner:
 
-- `scripts/analytics/tag_write_transactions.py`
+- `studio/services/analytics/tag_write_transactions.py`
 
 Target ownership:
 
@@ -447,8 +447,8 @@ Risks:
 
 Status: implemented.
 
-The final closeout kept endpoint behavior stable while removing the remaining canonical tag assignment rewrite helpers from `scripts/analytics/tag_write_server.py`.
-Those helpers now live with canonical tag mutation behavior in `scripts/analytics/tag_registry_mutations.py`, with focused coverage for rename and delete assignment rewrites.
+The final closeout kept endpoint behavior stable while removing the remaining canonical tag assignment rewrite helpers from `studio/services/analytics/tag_write_server.py`.
+Those helpers now live with canonical tag mutation behavior in `studio/services/analytics/tag_registry_mutations.py`, with focused coverage for rename and delete assignment rewrites.
 The server now calls extracted owners through explicit module namespaces for script logging, Studio Activity append, tag activity rows, registry mutation helpers, route constants, source loading/validation, assignment planning, alias mutation planning, promotion/demotion planning, and write transactions.
 
 Later decision: retire the standalone executable during the local Studio app migration.
@@ -462,7 +462,7 @@ Target ownership:
 - remove stale imports and dead helpers
 - verify server call sites use explicit module namespaces
 - refresh [Retired Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) and this slice plan with the final boundary
-- keep `scripts/studio/studio_analytics_api.py` as the active local HTTP owner for tag writes
+- keep `studio/app/server/studio/studio_analytics_api.py` as the active local HTTP owner for tag writes
 - decide whether remaining candidates should be marked `leave` or linked to a separate request: keep lower-priority candidates in the parent queue; folder organization is handled by the directory request
 
 Acceptance checks:
@@ -470,7 +470,7 @@ Acceptance checks:
 - no duplicate endpoint constants outside the route owner
 - no broad compatibility aliases or re-export layers for extracted helpers
 - direct tests exist for each extracted owner
-- `./scripts/run_checks.py --profile quick` passes, or a narrower documented tag profile exists and passes
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick` passes, or a narrower documented tag profile exists and passes
 - rebuild Studio docs/search payloads when docs changed
 
 Benefits:

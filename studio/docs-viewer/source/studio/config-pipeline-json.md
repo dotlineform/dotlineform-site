@@ -27,10 +27,10 @@ Current responsibilities include:
 
 Current Python callers load it through `scripts/pipeline_config.py`:
 
-- `scripts/catalogue/generate_work_pages.py`
-- `scripts/catalogue/catalogue_build_media.py`
+- `studio/services/catalogue/generate_work_pages.py`
+- `studio/services/catalogue/catalogue_build_media.py`
 - `scripts/media/make_srcset_images.py`
-- `scripts/checks/audit_site_consistency.py`
+- `studio/checks/audit_site_consistency.py`
 
 Current Jekyll/Liquid callers read it as `site.data.pipeline`:
 
@@ -67,7 +67,7 @@ Public catalogue index thumbnails use a single configured thumbnail variant:
 The public works, work-detail, and moments index grid layouts read this policy through `site.data.pipeline`, so they emit only the configured thumbnail candidate instead of allowing browsers to choose a larger `192w` thumbnail for retina displays. Catalogue-wide thumbnail regeneration is handled through:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --thumbnail-only --force --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --thumbnail-only --force --write
 ```
 
 What does not stay here:

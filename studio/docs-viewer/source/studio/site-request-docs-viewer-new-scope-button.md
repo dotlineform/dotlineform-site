@@ -122,14 +122,14 @@ Visible UI labels and action copy should come from `studio_config.json` `ui_text
 For public read-only scopes, the server should create:
 
 - source root
-- scope config entry in `scripts/docs/docs_scopes.json`
+- scope config entry in `studio/docs-viewer/config/scopes/docs_scopes.json`
 - public route page using `docs_viewer_readonly_route.html`
 - generated docs/search outputs if immediate writes are requested
 
 For local-only committed scopes, the server should create:
 
 - source root
-- scope config entry in `scripts/docs/docs_scopes.json`
+- scope config entry in `studio/docs-viewer/config/scopes/docs_scopes.json`
 - generated docs/search outputs if local workflows expect checked-in generated data and immediate writes are requested
 
 For local-only uncommitted scopes, the server should create only the requested local files and clearly label the result as local-only drift that may need cleanup.
@@ -230,10 +230,10 @@ Add the scope manifest schema and populate it for all existing Docs Viewer scope
 
 Progress:
 
-- `scripts/docs/docs_scope_manifest.json` now records Studio, Library, and Analysis.
+- `studio/docs-viewer/config/scopes/docs_scope_manifest.json` now records Studio, Library, and Analysis.
 - Existing scopes are marked system-owned, not user-created, and not tool-created.
 - The manifest uses repo-relative file records and records source roots, scope config, default docs, route files, generated docs output, and generated search output.
-- `scripts/docs/docs_scope_manifest.py` can backfill a manifest from `scripts/docs/docs_scopes.json` when the manifest is missing.
+- `studio/docs-viewer/services/docs_scope_manifest.py` can backfill a manifest from `studio/docs-viewer/config/scopes/docs_scopes.json` when the manifest is missing.
 
 Acceptance:
 

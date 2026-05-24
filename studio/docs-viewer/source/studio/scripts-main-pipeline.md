@@ -18,7 +18,7 @@ Status:
 Use:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --work-id <work_id>
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id <work_id>
 ```
 
 Add `--write` only when intentionally applying the generated changes.

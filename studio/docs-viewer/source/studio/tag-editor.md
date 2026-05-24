@@ -36,7 +36,7 @@ Multiple row writes from one Save click share the same initiating action context
 
 Primary shell:
 
-- `scripts/studio/studio_app_views.py`
+- `studio/app/server/studio/studio_app_views.py`
 
 Page boot module:
 

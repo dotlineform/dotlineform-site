@@ -27,7 +27,7 @@ The useful sequence is visibility first, then targeted reductions in generated a
 
 ## Structure Guardrails
 
-- New catalogue generated payload behavior belongs in `scripts/catalogue/catalogue_generation_*`, `catalogue_lookup*`, or source-model modules, not directly in write-server handlers.
+- New catalogue generated payload behavior belongs in `studio/services/catalogue/catalogue_generation_*`, `catalogue_lookup*`, or source-model modules, not directly in write-server handlers.
 - New docs source mutation behavior belongs in `docs_management_mutations.py`, source config/settings modules, or import-source services, not directly in the HTTP server.
 - New tag assignment, registry, alias, promotion, or Data Sharing behavior belongs in the analytics domain modules and local Studio analytics API adapter, not in standalone service scripts.
 - New local-service behavior should preserve explicit write allowlists, dry-run semantics, backup paths, and compact logging.
@@ -59,8 +59,8 @@ Measured on 2026-05-19:
 - Ruby scripts: 8
 - Total Python/Ruby script lines: 41,978
 - Files over the 1,000-line review threshold: 10
-- Largest script family by lines: `scripts/catalogue/`
-- Largest individual script: `scripts/catalogue/catalogue_write_server.py`
+- Largest script family by lines: `studio/services/catalogue/`
+- Largest individual script: `studio/services/catalogue/catalogue_write_server.py`
 
 The script surface is now better structured than the raw size suggests.
 The previous structural-review work extracted major catalogue write-server, docs-management server, tag write-server, generator, and scoped-build responsibilities into named module owners.
@@ -70,12 +70,12 @@ The remaining risk is less about one obvious file to split and more about keepin
 
 | Area | Files | Lines | Maintenance | Structure and consistency | Performance | Main reason |
 | --- | ---: | ---: | --- | --- | --- | --- |
-| `scripts/catalogue/` | 38 | 17,150 | high | medium | high | Large source/build/write surface with multiple generated artifact families, field-aware build planning, media derivation, lookup refreshes, search rebuilds, publication flows, and local write-server orchestration. |
-| `scripts/docs/` | 21 | 13,072 | high | medium | medium | Docs build, import, export, management mutations, generated reads, live rebuild, and search coordination span both Python services and Ruby builders. Targeted docs payload rebuilds reduce routine write cost, while cross-language contracts and resolver-data fallbacks still need care. |
-| `scripts/analytics/` | 11 | 4,419 | medium | medium | low | Tag write flows have clearer module owners after extraction, but Data Sharing and tag import/apply flows remain broad enough to watch. |
-| `scripts/checks/` | 6 | 2,054 | medium | medium | medium | Audit scripts intentionally span many site contracts, especially `audit_site_consistency.py`; risk grows when new checks are added without grouping or shared report contracts. |
+| `studio/services/catalogue/` | 38 | 17,150 | high | medium | high | Large source/build/write surface with multiple generated artifact families, field-aware build planning, media derivation, lookup refreshes, search rebuilds, publication flows, and local write-server orchestration. |
+| `studio/docs-viewer/` | 21 | 13,072 | high | medium | medium | Docs build, import, export, management mutations, generated reads, live rebuild, and search coordination span both Python services and Ruby builders. Targeted docs payload rebuilds reduce routine write cost, while cross-language contracts and resolver-data fallbacks still need care. |
+| `studio/services/analytics/` | 11 | 4,419 | medium | medium | low | Tag write flows have clearer module owners after extraction, but Data Sharing and tag import/apply flows remain broad enough to watch. |
+| `studio/checks/` | 6 | 2,054 | medium | medium | medium | Audit scripts intentionally span many site contracts, especially `audit_site_consistency.py`; risk grows when new checks are added without grouping or shared report contracts. |
 | `scripts/media/` | 5 | 1,792 | medium | medium | high | Media work is subprocess-heavy, file-system-heavy, and mostly serial; performance matters when image batches grow. |
-| `scripts/studio/` | 5 | 1,165 | medium | medium | low | Shared Studio services are small, but Data Sharing dispatch and audit-service mechanics overlap with docs, catalogue, and tag services. |
+| `studio/app/server/studio/` | 5 | 1,165 | medium | medium | low | Shared Studio services are small, but Data Sharing dispatch and audit-service mechanics overlap with docs, catalogue, and tag services. |
 | top-level `scripts/` | 11 | 1,524 | medium | medium | low | Top-level wrappers and shared helpers are mostly intentional survivors; risk is command-shape drift between wrappers and domain implementations. |
 | `scripts/search/` | 1 | 802 | medium | medium | medium | Search has targeted policies, but catalogue search still reads several source indexes and per-record metadata; docs search coordination spans a Ruby adapter and docs scopes. |
 
@@ -91,12 +91,12 @@ The remaining risk is less about one obvious file to split and more about keepin
 
 Relevant files:
 
-- `scripts/catalogue/catalogue_write_server.py`
-- `scripts/catalogue/generate_work_pages.py`
-- `scripts/catalogue/catalogue_json_build.py`
-- `scripts/catalogue/catalogue_build_media.py`
-- `scripts/catalogue/catalogue_lookup_refresh.py`
-- `scripts/catalogue/catalogue_generation_*`
+- `studio/services/catalogue/catalogue_write_server.py`
+- `studio/services/catalogue/generate_work_pages.py`
+- `studio/services/catalogue/catalogue_json_build.py`
+- `studio/services/catalogue/catalogue_build_media.py`
+- `studio/services/catalogue/catalogue_lookup_refresh.py`
+- `studio/services/catalogue/catalogue_generation_*`
 
 The immediate maintenance risk is the breadth of the catalogue workflow.
 A single Studio save can touch canonical source JSON, backups, lookup refreshes, generated public JSON, route stubs, search rebuilds, media derivatives, publication state, and Studio Activity rows.
@@ -126,14 +126,14 @@ Immediate work signal: high.
 
 Relevant files:
 
-- `scripts/docs/build_docs.rb`
-- `scripts/docs/docs_html_import.py`
-- `scripts/docs/docs_export.py`
-- `scripts/docs/docs_import.py`
-- `scripts/docs/docs_management_mutations.py`
-- `scripts/docs/docs_management_server.py`
-- `scripts/docs/docs_live_rebuild_watcher.py`
-- `scripts/docs/build_search.rb`
+- `studio/docs-viewer/build/build_docs.rb`
+- `studio/docs-viewer/services/docs_html_import.py`
+- `studio/docs-viewer/services/docs_export.py`
+- `studio/docs-viewer/services/docs_import.py`
+- `studio/docs-viewer/services/docs_management_mutations.py`
+- `studio/docs-viewer/services/docs_management_server.py`
+- `studio/docs-viewer/services/docs_live_rebuild_watcher.py`
+- `studio/docs-viewer/build/build_search.rb`
 
 Docs have the clearest cross-language ownership risk.
 Ruby owns the generated Docs Viewer payload builder and search adapters, while Python owns management writes, imports, exports, generated reads, live rebuild orchestration, and source configuration writes.
@@ -169,7 +169,7 @@ Relevant files:
 - `scripts/media/make_srcset_images.py`
 - `scripts/media/publish_media_to_r2.py`
 - `scripts/media/build_thumbnail_quality_preview.py`
-- `scripts/catalogue/catalogue_build_media.py`
+- `studio/services/catalogue/catalogue_build_media.py`
 
 Media scripts are smaller than catalogue and docs scripts, but their performance risk is high because they are external-command and file-I/O heavy.
 They also depend on local environment values, source image location, derivative naming, accepted legacy sizes, and R2 credentials.
@@ -194,10 +194,10 @@ Immediate work signal: medium for maintainability, high for performance when med
 
 Relevant files:
 
-- `scripts/catalogue/catalogue_write_server.py`
-- `scripts/docs/docs_management_server.py`
-- `scripts/studio/studio_audit_api.py`
-- `scripts/studio/audit_runner.py`
+- `studio/services/catalogue/catalogue_write_server.py`
+- `studio/docs-viewer/services/docs_management_server.py`
+- `studio/app/server/studio/studio_audit_api.py`
+- `studio/app/server/studio/audit_runner.py`
 - `scripts/script_logging.py`
 - `scripts/studio_activity.py`
 
@@ -224,11 +224,11 @@ Immediate work signal: medium.
 
 Relevant files:
 
-- `scripts/checks/audit_site_consistency.py`
-- `scripts/checks/audit_studio_ready_state.py`
-- `scripts/checks/css_token_audit.py`
-- `scripts/checks/check_runtime_payload_budgets.py`
-- `scripts/run_checks.py`
+- `studio/checks/audit_site_consistency.py`
+- `studio/checks/audit_studio_ready_state.py`
+- `studio/checks/css_token_audit.py`
+- `studio/checks/check_runtime_payload_budgets.py`
+- `studio/commands/run_checks.py`
 
 Audit scripts intentionally cut across the repo, so they will always have broader source knowledge than a domain script.
 The risk is that new checks get appended as unrelated logic without shared output shape, sampling rules, or profile integration.
@@ -246,15 +246,15 @@ Immediate work signal: medium.
 
 | File | Lines | Maintenance | Structure and consistency | Performance | Notes |
 | --- | ---: | --- | --- | --- | --- |
-| `scripts/catalogue/catalogue_write_server.py` | 3,149 | high | medium | medium | Still large, but now primarily HTTP orchestration after earlier extraction. Avoid adding domain planning back into this file. |
-| `scripts/docs/docs_html_import.py` | 2,008 | high | medium | medium | Large conversion surface with HTML, Markdown, package, media, and preview behavior. Watch as import requirements expand. |
-| `scripts/catalogue/generate_work_pages.py` | 1,769 | high | medium | high | Generator orchestration remains broad. Keep new payload shaping in extracted generation modules. |
-| `scripts/docs/build_docs.rb` | 1,516 | high | medium | medium | Central Ruby docs builder. Targeted payload input and diagnostics are implemented; future risk is dependency-rule drift across builder, watcher, and management callers. |
-| `scripts/checks/audit_site_consistency.py` | 1,358 | medium | medium | medium | Broad audit surface. Grouping matters more than splitting by line count. |
-| `scripts/docs/docs_export.py` | 1,250 | medium | medium | medium | Export adapter grows with Data Sharing requirements. Keep profile/config behavior explicit. |
-| `scripts/analytics/tags_data_sharing_adapter.py` | 1,249 | medium | medium | low | Data Sharing apply paths should remain adapter-owned and directly tested. |
-| `scripts/catalogue/catalogue_build_media.py` | 1,184 | medium | medium | high | Local media planning/execution is a concrete performance improvement candidate. |
-| `scripts/docs/docs_import.py` | 1,182 | medium | medium | medium | Returned-package parsing and preview writing should stay separated from source-apply services. |
+| `studio/services/catalogue/catalogue_write_server.py` | 3,149 | high | medium | medium | Still large, but now primarily HTTP orchestration after earlier extraction. Avoid adding domain planning back into this file. |
+| `studio/docs-viewer/services/docs_html_import.py` | 2,008 | high | medium | medium | Large conversion surface with HTML, Markdown, package, media, and preview behavior. Watch as import requirements expand. |
+| `studio/services/catalogue/generate_work_pages.py` | 1,769 | high | medium | high | Generator orchestration remains broad. Keep new payload shaping in extracted generation modules. |
+| `studio/docs-viewer/build/build_docs.rb` | 1,516 | high | medium | medium | Central Ruby docs builder. Targeted payload input and diagnostics are implemented; future risk is dependency-rule drift across builder, watcher, and management callers. |
+| `studio/checks/audit_site_consistency.py` | 1,358 | medium | medium | medium | Broad audit surface. Grouping matters more than splitting by line count. |
+| `studio/docs-viewer/services/docs_export.py` | 1,250 | medium | medium | medium | Export adapter grows with Data Sharing requirements. Keep profile/config behavior explicit. |
+| `studio/services/analytics/tags_data_sharing_adapter.py` | 1,249 | medium | medium | low | Data Sharing apply paths should remain adapter-owned and directly tested. |
+| `studio/services/catalogue/catalogue_build_media.py` | 1,184 | medium | medium | high | Local media planning/execution is a concrete performance improvement candidate. |
+| `studio/docs-viewer/services/docs_import.py` | 1,182 | medium | medium | medium | Returned-package parsing and preview writing should stay separated from source-apply services. |
 
 ## How To Rerun
 

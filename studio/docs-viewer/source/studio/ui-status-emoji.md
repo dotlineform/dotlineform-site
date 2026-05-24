@@ -133,7 +133,7 @@ Status: implemented.
 
 Status: implemented.
 
-- Update `scripts/docs/docs_management_server.py` to accept `ui_status` in `/docs/update-metadata`.
+- Update `studio/docs-viewer/services/docs_management_server.py` to accept `ui_status` in `/docs/update-metadata`.
 - Rewrite front matter so blank status removes `ui_status` and non-blank status writes the selected value.
 - Keep dry-run and write responses clear about whether status changed.
 - Rebuild docs payloads after status changes using the existing docs-management rebuild path.
@@ -165,7 +165,7 @@ Status: implemented.
 
 - Run `./scripts/build_docs.rb --scope studio --write` after docs-source changes.
 - Run `node --check assets/docs-viewer/js/docs-viewer.js` after runtime changes.
-- Run a targeted docs build or `./scripts/run_checks.py --profile docs` if the implementation changes docs builder, docs-management server, generated payloads, and viewer runtime together.
+- Run a targeted docs build or `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs` if the implementation changes docs builder, docs-management server, generated payloads, and viewer runtime together.
 - Manually verify `/docs/` and `/library/` on desktop and mobile: scope-specific status config, index-only prefix rendering, edit-modal default selection, modal save behavior, immediate pill writes in manage mode, read-only pills outside manage mode, status clearing, reload persistence, invalid-status ignore behavior, and no search/recent/bookmark label emoji leakage.
 
 ## Benefits

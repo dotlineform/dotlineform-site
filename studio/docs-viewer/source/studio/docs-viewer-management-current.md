@@ -28,7 +28,7 @@ Status:
 Implemented now:
 
 - `_docs` flattened for Studio docs management
-- dedicated localhost docs-management server added at `scripts/docs/docs_management_server.py`
+- dedicated localhost docs-management server added at `studio/docs-viewer/services/docs_management_server.py`
 - manage mode enabled only for `/docs/` behind `?mode=manage`
 - the `/docs/` management shell is enabled only in Local Studio
 - public builds leave `docs_viewer_management_enabled` false, so `?mode=manage` does not render management CSS, controls, modal markup, or localhost server configuration

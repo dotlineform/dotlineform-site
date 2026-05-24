@@ -186,14 +186,14 @@ Planner output:
 
 Verification:
 
-- `./scripts/catalogue/verify_catalogue_field_registry.py` checks representative target rules, fallback defaults, duplicate field ownership, source/registry field coverage, and optional omit-empty source serialization against the live registry
+- `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py` checks representative target rules, fallback defaults, duplicate field ownership, source/registry field coverage, and optional omit-empty source serialization against the live registry
 
 Notes:
 
 - the registry is JSON so Studio can display it directly
 - current and target rules stay separate so review surfaces can compare historical broad behavior with active narrowed behavior
 - the registry should be updated before adding a new active catalogue source field
-- the registry does not own source field order, normalization, or omit-empty behavior; those live in `scripts/catalogue/catalogue_source.py` and `scripts/catalogue/moment_sources.py`
+- the registry does not own source field order, normalization, or omit-empty behavior; those live in `studio/services/catalogue/catalogue_source.py` and `studio/services/catalogue/moment_sources.py`
 
 ## Work-Owned Files And Links
 

@@ -221,7 +221,7 @@ Status:
 
 - ready
 
-Extend `scripts/studio/catalogue_write_server.py` with moment editor endpoints.
+Extend `studio/app/server/studio/catalogue_write_server.py` with moment editor endpoints.
 
 Recommended endpoints:
 

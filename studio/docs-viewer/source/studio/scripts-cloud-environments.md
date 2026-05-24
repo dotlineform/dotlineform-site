@@ -189,9 +189,9 @@ Use the same command sequence in both environments:
 Example check sequence:
 
 ```bash
-./scripts/checks/audit_site_consistency.py --strict
-./scripts/catalogue/validate_catalogue_source.py
-./scripts/catalogue/catalogue_json_build.py --work-id 00001
+$HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py --strict
+$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001
 ./scripts/build_docs.rb
 ./scripts/build_search.rb
 bundle exec jekyll build --quiet

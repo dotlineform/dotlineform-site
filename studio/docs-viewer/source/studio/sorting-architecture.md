@@ -49,7 +49,7 @@ Whenever series ordering might change (new work in series, title/year edits affe
 Recommended command:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --series-id <series_id> --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --series-id <series_id> --write
 ```
 
 This command is the live scoped rebuild path for JSON-led catalogue maintenance.

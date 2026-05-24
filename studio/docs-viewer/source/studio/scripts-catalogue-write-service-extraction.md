@@ -8,7 +8,7 @@ sort_order: 4400
 ---
 # Catalogue Write Service Extraction
 
-This is the follow-up map for the extraction that retired `scripts/catalogue/catalogue_write_server.py` without replacing one large server file with one large service file.
+This is the follow-up map for the extraction that retired `studio/services/catalogue/catalogue_write_server.py` without replacing one large server file with one large service file.
 
 The target is a normal callable catalogue service boundary that Local Studio can use directly:
 
@@ -26,17 +26,17 @@ The callable catalogue service is split by maintenance ownership:
 
 | Module | Owner scope |
 | --- | --- |
-| `scripts/catalogue/catalogue_write_service.py` | route dispatch, status selection, compatibility imports |
-| `scripts/catalogue/catalogue_service_context.py` | shared Local Studio catalogue context, source paths, write allowlists, lookup refresh helpers, compact logs, activity append guard |
-| `scripts/catalogue/catalogue_bulk_service.py` | bulk save routes |
-| `scripts/catalogue/catalogue_work_service.py` | work create/save routes |
-| `scripts/catalogue/catalogue_work_detail_service.py` | work-detail create/save routes |
-| `scripts/catalogue/catalogue_series_service.py` | series create/save routes, including explicit member-work update coordination |
-| `scripts/catalogue/catalogue_build_service.py` | scoped public build preview/apply routes |
-| `scripts/catalogue/catalogue_delete_service.py` | delete preview/apply routes |
-| `scripts/catalogue/catalogue_moment_service.py` | moment preview/save routes |
-| `scripts/catalogue/catalogue_publication_service.py` | publication preview/apply routes |
-| `scripts/catalogue/catalogue_prose_import_service.py` | prose import apply and moment import apply routes |
+| `studio/services/catalogue/catalogue_write_service.py` | route dispatch, status selection, compatibility imports |
+| `studio/services/catalogue/catalogue_service_context.py` | shared Local Studio catalogue context, source paths, write allowlists, lookup refresh helpers, compact logs, activity append guard |
+| `studio/services/catalogue/catalogue_bulk_service.py` | bulk save routes |
+| `studio/services/catalogue/catalogue_work_service.py` | work create/save routes |
+| `studio/services/catalogue/catalogue_work_detail_service.py` | work-detail create/save routes |
+| `studio/services/catalogue/catalogue_series_service.py` | series create/save routes, including explicit member-work update coordination |
+| `studio/services/catalogue/catalogue_build_service.py` | scoped public build preview/apply routes |
+| `studio/services/catalogue/catalogue_delete_service.py` | delete preview/apply routes |
+| `studio/services/catalogue/catalogue_moment_service.py` | moment preview/save routes |
+| `studio/services/catalogue/catalogue_publication_service.py` | publication preview/apply routes |
+| `studio/services/catalogue/catalogue_prose_import_service.py` | prose import apply and moment import apply routes |
 
 The practical rule for the rest of this migration is ownership by workflow/data item, not ownership by the old standalone server.
 If a route family has distinct lifecycle rules, tests, and maintenance questions, it should get its own focused module or an existing focused module should be extended.
@@ -44,14 +44,14 @@ Small shared plumbing belongs in context/helper modules only when it is genuinel
 
 ## Current Coupling
 
-Local Studio no longer imports the retired `scripts/catalogue/catalogue_write_server.py` wrapper or constructs fake `Handler` instances for catalogue writes.
-`scripts/studio/studio_catalogue_api.py` dispatches active catalogue editor write endpoints through `scripts/catalogue/catalogue_write_service.py`.
+Local Studio no longer imports the retired `studio/services/catalogue/catalogue_write_server.py` wrapper or constructs fake `Handler` instances for catalogue writes.
+`studio/app/server/studio/studio_catalogue_api.py` dispatches active catalogue editor write endpoints through `studio/services/catalogue/catalogue_write_service.py`.
 
 The standalone HTTP server entrypoint still exists, but Local Studio no longer depends on the shape of `BaseHTTPRequestHandler` methods.
 
 ## Already Local-App Native
 
-These routes already have Local Studio API functions in `scripts/studio/studio_catalogue_api.py` and do not require the fake handler path:
+These routes already have Local Studio API functions in `studio/app/server/studio/studio_catalogue_api.py` and do not require the fake handler path:
 
 | Route | Current owner | Notes |
 | --- | --- | --- |
@@ -66,7 +66,7 @@ If a later service module is introduced, these direct functions can move or dele
 
 ## First Service Slice
 
-The first low-risk service group now runs through `scripts/catalogue/catalogue_write_service.py` dispatch and focused service modules:
+The first low-risk service group now runs through `studio/services/catalogue/catalogue_write_service.py` dispatch and focused service modules:
 
 | Route | Service function path | Notes |
 | --- | --- | --- |
@@ -90,22 +90,22 @@ Moment save, publication preview/apply, and delete apply now run through focused
 | `POST /studio/api/catalogue/publication-apply` | `catalogue_publication_service.publication_apply_response()` | Coordinates source writes, publication cleanup/build transactions, lookup refresh, backups, and activity rows through existing domain modules. |
 | `POST /studio/api/catalogue/delete-apply` | `catalogue_delete_service.delete_apply_response()` | Coordinates delete apply plans, cleanup transactions, search rebuild, lookup refresh, backups, and activity rows. |
 
-`scripts/studio/studio_catalogue_api.py` no longer maps these routes through `LEGACY_WRITE_ROUTE_BY_API_PATH`.
+`studio/app/server/studio/studio_catalogue_api.py` no longer maps these routes through `LEGACY_WRITE_ROUTE_BY_API_PATH`.
 
 ## Bulk Save Slice
 
-Bulk save now runs through `scripts/catalogue/catalogue_bulk_service.py`:
+Bulk save now runs through `studio/services/catalogue/catalogue_bulk_service.py`:
 
 | Route | Service function path | Notes |
 | --- | --- | --- |
 | `POST /studio/api/catalogue/bulk-save` | `catalogue_bulk_service.bulk_save_payload()` | Owns bulk work/detail request parsing, source validation, transaction writes, compact logging, lookup refresh, and optional per-work build follow-through. |
 
 This was the final Local Studio catalogue write endpoint that used the in-process handler bridge.
-After this slice, `scripts/studio/studio_catalogue_api.py` has no `LEGACY_WRITE_ROUTE_BY_API_PATH`, no `InProcessCatalogueServer`, and no fake `catalogue_write_server.Handler` construction.
+After this slice, `studio/app/server/studio/studio_catalogue_api.py` has no `LEGACY_WRITE_ROUTE_BY_API_PATH`, no `InProcessCatalogueServer`, and no fake `catalogue_write_server.Handler` construction.
 
 ## Create Mutation Slice
 
-Work create behavior now runs through `scripts/catalogue/catalogue_work_service.py`; work-detail create behavior now runs through `scripts/catalogue/catalogue_work_detail_service.py`:
+Work create behavior now runs through `studio/services/catalogue/catalogue_work_service.py`; work-detail create behavior now runs through `studio/services/catalogue/catalogue_work_detail_service.py`:
 
 | Route | Service function path | Notes |
 | --- | --- | --- |
@@ -127,7 +127,7 @@ These routes moved after create because they coordinate more post-save behavior 
 
 ## Series Mutation Slice
 
-Series create/save behavior now runs through `scripts/catalogue/catalogue_series_service.py`:
+Series create/save behavior now runs through `studio/services/catalogue/catalogue_series_service.py`:
 
 | Route | Service function path | Notes |
 | --- | --- | --- |
@@ -167,7 +167,7 @@ Series create/save behavior now runs through `scripts/catalogue/catalogue_series
 
 ## Extraction Close-Out
 
-1. Keep `scripts/catalogue/catalogue_write_service.py` small: route mapping, status selection, response shaping, and calls into focused workflow modules.
+1. Keep `studio/services/catalogue/catalogue_write_service.py` small: route mapping, status selection, response shaping, and calls into focused workflow modules.
 2. Treat the first service slice as complete for delete preview, build preview/apply, moment preview, prose import preview/apply, and moment import preview/apply.
 3. Treat work and work-detail create/save as the established mutation extraction pattern.
    Keep source mutation planning in `catalogue_source_mutation.py`, transaction writes in `catalogue_transactions.py`, lookup refresh in `catalogue_lookup_refresh.py`, and activity row construction in `catalogue_activity.py`.

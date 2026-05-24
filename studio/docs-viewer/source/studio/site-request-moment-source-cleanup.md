@@ -75,7 +75,7 @@ Inventory likely areas:
 - `scripts/generate_work_pages.py`
 - `scripts/catalogue_json_build.py`
 - `scripts/delete_moment.py`
-- `scripts/studio/catalogue_write_server.py`
+- `studio/app/server/studio/catalogue_write_server.py`
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/data/catalogue/moments.json`
 - `_docs_catalogue/moments/`

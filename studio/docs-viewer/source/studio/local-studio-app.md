@@ -21,7 +21,7 @@ The public publishing boundary is documented in [Projection Contract](/docs/?sco
 The Python local Studio app server can be started directly:
 
 ```bash
-./scripts/studio/studio_app_server.py --port 8765
+$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --port 8765
 ```
 
 `bin/local-studio` starts this app server without Jekyll.
@@ -30,7 +30,7 @@ HTTP access logging is quiet by default so normal browser use does not flood the
 Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to `studio_app_server.py`, when detailed request logging is needed.
 Docs management is handled by this app server; there is no separate Docs management server in normal local Studio startup.
 Active Local Studio browser routes use `/studio/api/docs/...` for Docs management reads/writes.
-The local app adapter imports shared Docs management behavior from `scripts/docs/docs_management_service.py`.
+The local app adapter imports shared Docs management behavior from `studio/docs-viewer/services/docs_management_service.py`.
 Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
 `bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
 Local Studio route shells currently load `/assets/css/main.css` before `/assets/studio/css/studio.css`.
@@ -138,16 +138,16 @@ The browser transport now requires these local runtime endpoints for `saveTags`,
 Tag registry, tag aliases, series-tags, and the per-series tag editor route shells are now also hosted by the local app with their existing browser modules and DOM contracts.
 They use local runtime config and local analytics API reads/writes when served from the local app.
 The old Jekyll analytics tag route files have been retired, and there is no standalone Analytics tag write service in normal local Studio startup.
-The standalone `scripts/analytics/tag_write_server.py` HTTP entrypoint has been removed; `scripts/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes.
+The standalone `studio/services/analytics/tag_write_server.py` HTTP entrypoint has been removed; `studio/app/server/studio/studio_analytics_api.py` is the active local HTTP owner for tag writes.
 The Studio Audits route shell is also hosted by the local app at `/studio/audits/?mode=manage`.
 It reuses `assets/studio/js/studio-audits.js` and now calls `/studio/api/audits/...` on the local app server.
-`scripts/studio/studio_audit_api.py` adapts the allowlisted audit functions from `scripts/studio/audit_runner.py`, so normal Studio sessions no longer need a separate audit sibling service.
+`studio/app/server/studio/studio_audit_api.py` adapts the allowlisted audit functions from `studio/app/server/studio/audit_runner.py`, so normal Studio sessions no longer need a separate audit sibling service.
 The old Jekyll `/studio/audits/` shell has been retired.
 The Catalogue dashboard is hosted by the local app at `/studio/catalogue/?mode=manage`.
 It reuses `assets/studio/js/studio-dashboard.js`, local index data, and local-app catalogue read keys for source-backed dashboard counts.
 The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
 It reuses `assets/studio/js/project-state.js` and now calls local Studio app endpoints for catalogue report generation and source-file opening.
-`scripts/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` adapter and reuses `scripts/catalogue/project_state_report.py`.
+`studio/app/server/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` adapter and reuses `studio/services/catalogue/project_state_report.py`.
 The old Jekyll `/studio/project-state/` shell has been retired.
 The Thumbnail Quality route shell is hosted by the local app at `/studio/thumbnail-quality/?mode=manage`.
 It reuses `assets/studio/js/thumbnail-quality.js`, checked-in preview JSON/image data, and `POST /studio/api/catalogue/thumbnail-quality-preview` for refresh.
@@ -219,25 +219,25 @@ New route families should follow that module-boundary pattern rather than expand
 
 Current focused checks:
 
-- `tests/python/test_studio_app_server.py`
-- `tests/smoke/local_studio_navigation_adapter.py`
-- `tests/smoke/local_studio_app_analytics_dashboard_route.py`
-- `tests/smoke/local_studio_app_catalogue_dashboard_route.py`
-- `tests/smoke/local_studio_app_tag_groups.py`
-- `tests/smoke/local_studio_app_tag_routes.py`
-- `tests/smoke/local_studio_app_audits_route.py`
-- `tests/smoke/local_studio_app_project_state_route.py`
-- `tests/smoke/local_studio_app_thumbnail_quality_route.py`
-- `tests/smoke/local_studio_app_bulk_add_work_route.py`
-- `tests/smoke/local_studio_app_activity_route.py`
-- `tests/smoke/local_studio_app_catalogue_field_registry_route.py`
-- `tests/smoke/local_studio_app_catalogue_status_route.py`
-- `tests/smoke/local_studio_app_studio_works_route.py`
-- `tests/smoke/local_studio_app_catalogue_editor_routes.py`
-- `tests/smoke/local_studio_app_docs_viewer.py`
-- `tests/smoke/local_studio_docs_management_workflows.py`
-- `tests/smoke/local_studio_docs_management_ui.py`
-- `tests/smoke/local_studio_docs_management_import_ui.py`
-- `tests/smoke/local_studio_docs_management_move_ui.py`
-- `tests/smoke/local_studio_docs_management_scope_ui.py`
-- `tests/smoke/public_docs_viewer_readonly.py`
+- `studio/tests/python/test_studio_app_server.py`
+- `studio/tests/smoke/local_studio_navigation_adapter.py`
+- `studio/tests/smoke/local_studio_app_analytics_dashboard_route.py`
+- `studio/tests/smoke/local_studio_app_catalogue_dashboard_route.py`
+- `studio/tests/smoke/local_studio_app_tag_groups.py`
+- `studio/tests/smoke/local_studio_app_tag_routes.py`
+- `studio/tests/smoke/local_studio_app_audits_route.py`
+- `studio/tests/smoke/local_studio_app_project_state_route.py`
+- `studio/tests/smoke/local_studio_app_thumbnail_quality_route.py`
+- `studio/tests/smoke/local_studio_app_bulk_add_work_route.py`
+- `studio/tests/smoke/local_studio_app_activity_route.py`
+- `studio/tests/smoke/local_studio_app_catalogue_field_registry_route.py`
+- `studio/tests/smoke/local_studio_app_catalogue_status_route.py`
+- `studio/tests/smoke/local_studio_app_studio_works_route.py`
+- `studio/tests/smoke/local_studio_app_catalogue_editor_routes.py`
+- `studio/tests/smoke/local_studio_app_docs_viewer.py`
+- `studio/tests/smoke/local_studio_docs_management_workflows.py`
+- `studio/tests/smoke/local_studio_docs_management_ui.py`
+- `studio/tests/smoke/local_studio_docs_management_import_ui.py`
+- `studio/tests/smoke/local_studio_docs_management_move_ui.py`
+- `studio/tests/smoke/local_studio_docs_management_scope_ui.py`
+- `studio/tests/smoke/public_docs_viewer_readonly.py`

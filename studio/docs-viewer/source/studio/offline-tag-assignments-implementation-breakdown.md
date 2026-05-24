@@ -140,7 +140,7 @@ This page is the session hub.
 
 Primary file:
 
-- `scripts/studio/studio_analytics_api.py`
+- `studio/app/server/studio/studio_analytics_api.py`
 
 Responsibilities:
 

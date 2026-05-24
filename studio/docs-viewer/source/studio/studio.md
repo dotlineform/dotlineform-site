@@ -90,8 +90,8 @@ Current runner behavior:
 
 - optionally rebuilds Docs Viewer data when `DOCS_STARTUP_REBUILD_SCOPES` is set
 - starts the local Studio app server for Studio shell, Docs management, Analytics tag APIs, and Studio audit APIs
-- skips the standalone `scripts/docs/docs_management_server.py` by default because Docs management is hosted by the local Studio app
-- has no standalone Studio audit HTTP service; browser audit APIs are hosted by the local Studio app and direct automation uses `scripts/studio/audit_runner.py`
+- skips the standalone `studio/docs-viewer/services/docs_management_server.py` by default because Docs management is hosted by the local Studio app
+- has no standalone Studio audit HTTP service; browser audit APIs are hosted by the local Studio app and direct automation uses `studio/app/server/studio/audit_runner.py`
 - starts the docs live rebuild watcher by default
 - keeps all long-running processes attached to the current terminal
 - stops all long-running processes on `Ctrl+C`

@@ -11,12 +11,12 @@ sort_order: 10000
 Script:
 
 ```bash
-./scripts/studio/studio_backup_retention.py
+$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_backup_retention.py
 ```
 
 ## Purpose
 
-`scripts/studio/studio_backup_retention.py` prunes local Studio backup files so untracked backup folders do not grow indefinitely.
+`studio/app/server/studio/studio_backup_retention.py` prunes local Studio backup files so untracked backup folders do not grow indefinitely.
 
 It manages:
 
@@ -49,19 +49,19 @@ Known local filesystem metadata such as `.DS_Store` is ignored.
 Preview cleanup:
 
 ```bash
-./scripts/studio/studio_backup_retention.py --dry-run
+$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_backup_retention.py --dry-run
 ```
 
 Apply cleanup:
 
 ```bash
-./scripts/studio/studio_backup_retention.py --write
+$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_backup_retention.py --write
 ```
 
 Override retention counts:
 
 ```bash
-./scripts/studio/studio_backup_retention.py --dry-run --studio-keep 20 --catalogue-keep 30
+$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_backup_retention.py --dry-run --studio-keep 20 --catalogue-keep 30
 ```
 
 ## Dev Studio Startup
@@ -69,7 +69,7 @@ Override retention counts:
 `bin/local-studio` runs backup retention once during startup before the long-running services start:
 
 ```bash
-./scripts/studio/studio_backup_retention.py --write --quiet
+$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_backup_retention.py --write --quiet
 ```
 
 If cleanup fails, `bin/local-studio` prints a warning and continues startup.
@@ -87,11 +87,11 @@ DOTLINEFORM_BACKUP_RETENTION=off bin/local-studio
 Focused checks:
 
 ```bash
-./tests/python/test_studio_backup_retention.py
+$HOME/miniconda3/bin/python3 -m pytest -q studio/tests/python/test_studio_backup_retention.py
 ```
 
 The `quick` profile also runs the focused retention check:
 
 ```bash
-./scripts/run_checks.py --profile quick
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick
 ```

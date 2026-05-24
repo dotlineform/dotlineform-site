@@ -15,7 +15,7 @@ The current search build uses one stable entrypoint with domain-owned adapters:
 - stable command wrapper and dispatcher: `scripts/build_search.rb`
 - adapter registry: `scripts/search/adapter_registry.json`
 - Catalogue implementation owner: `scripts/search/build_search.rb`
-- Docs Viewer implementation owner: `scripts/docs/build_search.rb`
+- Docs Viewer implementation owner: `studio/docs-viewer/build/build_search.rb`
 
 Current live search outputs:
 
@@ -70,7 +70,7 @@ Current non-goals across all scopes:
 ## Adapter Registry And Build Config
 
 The top-level command loads `scripts/search/adapter_registry.json` to map requested scopes to domain builders.
-The registry maps `catalogue` to the Catalogue adapter and configured Docs Viewer scopes from `scripts/docs/docs_scopes.json` to the Docs Viewer adapter.
+The registry maps `catalogue` to the Catalogue adapter and configured Docs Viewer scopes from `studio/docs-viewer/config/scopes/docs_scopes.json` to the Docs Viewer adapter.
 
 `scripts/search/build_config.json` is now Catalogue-owned.
 Current Catalogue config responsibilities:
@@ -92,7 +92,7 @@ Current validation responsibilities in `scripts/search/build_search.rb`:
 - reject emitted entry fields that are missing from the config for the current scope
 
 The config is intentionally not a record-generation DSL. The Catalogue builder still owns field derivation, sorting, normalization, hashing, and targeted-update algorithms.
-Docs Viewer search derives scope input and output paths from `scripts/docs/docs_scopes.json`; its `record_update` policy remains in the Docs Viewer builder and generated browser config.
+Docs Viewer search derives scope input and output paths from `studio/docs-viewer/config/scopes/docs_scopes.json`; its `record_update` policy remains in the Docs Viewer builder and generated browser config.
 
 Current targeted policy values:
 

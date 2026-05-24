@@ -11,8 +11,8 @@ sort_order: 15500
 ## Security Constraints
 
 - HTTP access is provided by the Local Studio app at `/studio/api/docs/...`
-- loopback binding and CORS are enforced by `scripts/studio/studio_app_server.py`
-- docs source write targets are allowlisted through `scripts/docs/docs_scopes.json`; in this repo the configured source roots are:
+- loopback binding and CORS are enforced by `studio/app/server/studio/studio_app_server.py`
+- docs source write targets are allowlisted through `studio/docs-viewer/config/scopes/docs_scopes.json`; in this repo the configured source roots are:
   - `_docs/*.md`
   - `_docs_analysis/**/*.md`
   - `_docs_library/*.md`
@@ -22,7 +22,7 @@ sort_order: 15500
   - `var/studio/data-sharing/<data-domain>/import-preview/`
   - `var/docs/logs/`
   - `var/docs/watch-suppressions/`
-- scope lifecycle ownership is recorded in `scripts/docs/docs_scope_manifest.json`; existing scopes are system-owned and not eligible for lifecycle deletion
+- scope lifecycle ownership is recorded in `studio/docs-viewer/config/scopes/docs_scope_manifest.json`; existing scopes are system-owned and not eligible for lifecycle deletion
 - scope create apply creates a backup bundle for the previous scope config and manifest files before writing
 - scope delete apply creates a backup bundle for the previous scope config and manifest files before deleting or changing scope lifecycle state
 - timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch
@@ -34,7 +34,7 @@ sort_order: 15500
 ## Operational Notes
 
 - normal `bin/local-studio` runs host Docs Viewer management through the Local Studio App
-- shared Docs management dispatch lives in `scripts/docs/docs_management_service.py`; workflow behavior is split into focused `docs_management_*_service.py` modules for context, reads, capabilities, source mutations, imports, Data Sharing, source opening, and broken-links audit
+- shared Docs management dispatch lives in `studio/docs-viewer/services/docs_management_service.py`; workflow behavior is split into focused `docs_management_*_service.py` modules for context, reads, capabilities, source mutations, imports, Data Sharing, source opening, and broken-links audit
 - the old standalone Docs Management HTTP server and `127.0.0.1:8789` fallback have been removed
 - the shared Docs Viewer probes `GET /capabilities` for generated-data reads on normal local loads and for write capability when `?mode=manage` is present
 - if the local service is unavailable, the viewer falls back to static generated JSON for normal public-style reads; manage mode stays read-only and shows a manage-mode unavailable message
@@ -46,12 +46,12 @@ sort_order: 15500
 
 Export/import adapter behavior is covered by focused checks:
 
-- `tests/python/test_docs_export.py` verifies the Library export engine and service-facing output contracts.
-- `tests/python/test_docs_import.py` verifies staged Library import parsing, preview rendering, and path allowlists.
-- `tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, backups, and confirmation gates.
-- `tests/python/test_data_sharing_adapters.py` verifies active adapter resolution and future stub rejection.
-- `tests/python/test_docs_activity.py` verifies Docs Management Studio Activity helper suppression, record groups, source refs, and warning status behavior.
-- `tests/smoke/data_sharing_review.py` verifies the Studio import route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
+- `studio/tests/python/test_docs_export.py` verifies the Library export engine and service-facing output contracts.
+- `studio/tests/python/test_docs_import.py` verifies staged Library import parsing, preview rendering, and path allowlists.
+- `studio/tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, backups, and confirmation gates.
+- `studio/tests/python/test_data_sharing_adapters.py` verifies active adapter resolution and future stub rejection.
+- `studio/tests/python/test_docs_activity.py` verifies Docs Management Studio Activity helper suppression, record groups, source refs, and warning status behavior.
+- `studio/tests/smoke/data_sharing_review.py` verifies the Studio import route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
 
 The `docs` profile runs the parser, service, and adapter checks.
 The `studio-smoke` profile builds a temporary site and runs the Studio import route smokes.

@@ -12,7 +12,7 @@ viewable: true
 Script:
 
 ```bash
-python3 ./scripts/checks/css_token_audit.py
+python3 $HOME/miniconda3/bin/python3 studio/checks/css_token_audit.py
 ```
 
 ## Optional Flags

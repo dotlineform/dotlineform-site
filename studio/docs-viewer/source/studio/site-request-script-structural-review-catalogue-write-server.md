@@ -18,7 +18,7 @@ Status:
 
 ## Purpose
 
-This child doc tracks the detailed implementation slices for restructuring `scripts/catalogue/catalogue_write_server.py`.
+This child doc tracks the detailed implementation slices for restructuring `studio/services/catalogue/catalogue_write_server.py`.
 The parent [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review) stays focused on the broader review goals, candidate scripts, and acceptance criteria.
 
 The intended end state is not a small file for its own sake.
@@ -38,10 +38,10 @@ The write server should remain the catalogue local-service HTTP and endpoint orc
 
 Status: superseded for Studio lookup planning; still active for moment-build invalidation.
 
-The first implementation slice extracted lookup and moment-build invalidation constants, registries, and helper functions from `scripts/catalogue/catalogue_write_server.py` into `scripts/catalogue/catalogue_invalidation.py`.
-The Studio lookup field registries from that slice were later removed. Single work, work-detail, and series saves now use the catalogue field registry to decide whether `studio-lookup` is affected, then `scripts/catalogue/catalogue_lookup_refresh.py` derives the precise lookup write set from serializer dependency descriptors in `scripts/catalogue/catalogue_lookup.py`.
-`scripts/catalogue/catalogue_invalidation.py` remains only for the moment-build invalidation helper used by moment save response metadata.
-`tests/python/test_catalogue_invalidation.py` now pins that moment helper, while `tests/python/test_catalogue_lookup_refresh.py` pins registry-derived lookup planning for work, detail, and series saves.
+The first implementation slice extracted lookup and moment-build invalidation constants, registries, and helper functions from `studio/services/catalogue/catalogue_write_server.py` into `studio/services/catalogue/catalogue_invalidation.py`.
+The Studio lookup field registries from that slice were later removed. Single work, work-detail, and series saves now use the catalogue field registry to decide whether `studio-lookup` is affected, then `studio/services/catalogue/catalogue_lookup_refresh.py` derives the precise lookup write set from serializer dependency descriptors in `studio/services/catalogue/catalogue_lookup.py`.
+`studio/services/catalogue/catalogue_invalidation.py` remains only for the moment-build invalidation helper used by moment save response metadata.
+`studio/tests/python/test_catalogue_invalidation.py` now pins that moment helper, while `studio/tests/python/test_catalogue_lookup_refresh.py` pins registry-derived lookup planning for work, detail, and series saves.
 
 Benefits:
 
@@ -58,10 +58,10 @@ Risks:
 
 Status: implemented.
 
-The second implementation slice extracted catalogue-specific Studio Activity profiles, context normalization, row builders, and response-count bookkeeping from `scripts/catalogue/catalogue_write_server.py` into `scripts/catalogue/catalogue_activity.py`.
-It also introduced `scripts/catalogue/catalogue_routes.py` as the single endpoint-path source used by both the write server and activity profiles.
+The second implementation slice extracted catalogue-specific Studio Activity profiles, context normalization, row builders, and response-count bookkeeping from `studio/services/catalogue/catalogue_write_server.py` into `studio/services/catalogue/catalogue_activity.py`.
+It also introduced `studio/services/catalogue/catalogue_routes.py` as the single endpoint-path source used by both the write server and activity profiles.
 The write server now references activity helpers as `activity.*`, invalidation helpers as `invalidation.*`, and route paths as `routes.*`, so moved helper ownership stays visible instead of being re-exported through the server module.
-`tests/python/test_studio_activity_context.py` now exercises `scripts/catalogue/catalogue_activity.py` and `scripts/catalogue/catalogue_invalidation.py` directly.
+`studio/tests/python/test_studio_activity_context.py` now exercises `studio/services/catalogue/catalogue_activity.py` and `studio/services/catalogue/catalogue_invalidation.py` directly.
 
 Benefits:
 
@@ -73,18 +73,18 @@ Benefits:
 
 Risks:
 
-- context normalization for catalogue record ids now has its own local normalizers in `scripts/catalogue/catalogue_activity.py`; keep behavior aligned with request extraction helpers when id formats evolve
-- `scripts/catalogue/catalogue_routes.py` is intentionally small, but future endpoint additions should go there first so route dispatch and activity profiles do not drift
+- context normalization for catalogue record ids now has its own local normalizers in `studio/services/catalogue/catalogue_activity.py`; keep behavior aligned with request extraction helpers when id formats evolve
+- `studio/services/catalogue/catalogue_routes.py` is intentionally small, but future endpoint additions should go there first so route dispatch and activity profiles do not drift
 
 ### Slice 3: generated cleanup helpers
 
 Status: implemented.
 
-The third implementation slice extracted generated public-artifact cleanup planning from `scripts/catalogue/catalogue_write_server.py` into `scripts/catalogue/catalogue_cleanup.py`.
+The third implementation slice extracted generated public-artifact cleanup planning from `studio/services/catalogue/catalogue_write_server.py` into `studio/services/catalogue/catalogue_cleanup.py`.
 The new module owns cleanup path collection for works, work details, series, and moments; cleanup allowlist checks; generated JSON cleanup payload mutation/finalization; and the small file-deletion helper used by delete and unpublish flows.
 The write server now references those helpers as `catalogue_cleanup.*`, keeping HTTP orchestration, source writes, transaction backup timing, and response assembly in the server.
-Shared catalogue id-list and detail-uid normalization moved into `scripts/catalogue/catalogue_source.py` so the cleanup module and write server use one owner for source identity normalization.
-`tests/python/test_catalogue_cleanup.py` exercises cleanup preview counts, cleanup scope rejection, and generated payload mutation directly against the extracted module.
+Shared catalogue id-list and detail-uid normalization moved into `studio/services/catalogue/catalogue_source.py` so the cleanup module and write server use one owner for source identity normalization.
+`studio/tests/python/test_catalogue_cleanup.py` exercises cleanup preview counts, cleanup scope rejection, and generated payload mutation directly against the extracted module.
 
 Benefits:
 
@@ -97,15 +97,15 @@ Benefits:
 Risks:
 
 - delete and unpublish transactions still span the write server and cleanup module, so future transaction-helper extraction must preserve the current backup and restore ordering
-- generated JSON payload mutation now depends on `scripts/catalogue/catalogue_cleanup.py`; future generated artifact schema changes should update that module and its focused test rather than adding ad hoc cleanup edits in the server
+- generated JSON payload mutation now depends on `studio/services/catalogue/catalogue_cleanup.py`; future generated artifact schema changes should update that module and its focused test rather than adding ad hoc cleanup edits in the server
 
 ### Slice 4: catalogue transaction helpers
 
 Status: implemented.
 
-The fourth implementation slice extracted timestamped backup names, transaction backup copying, best-effort restore behavior, transaction path de-duplication, and atomic multi-file JSON writes from `scripts/catalogue/catalogue_write_server.py` into `scripts/catalogue/catalogue_transactions.py`.
+The fourth implementation slice extracted timestamped backup names, transaction backup copying, best-effort restore behavior, transaction path de-duplication, and atomic multi-file JSON writes from `studio/services/catalogue/catalogue_write_server.py` into `studio/services/catalogue/catalogue_transactions.py`.
 The write server still owns endpoint orchestration, delete/unpublish transaction timing, cleanup calls, lookup refreshes, search rebuilds, and response assembly, but it now calls transaction mechanics through the `transactions.*` namespace.
-`tests/python/test_catalogue_transactions.py` pins backup bundle layout, restore behavior for restored and newly-created files, and rollback after a simulated multi-file atomic write failure.
+`studio/tests/python/test_catalogue_transactions.py` pins backup bundle layout, restore behavior for restored and newly-created files, and rollback after a simulated multi-file atomic write failure.
 
 Benefits:
 
@@ -116,16 +116,16 @@ Benefits:
 
 Risks:
 
-- delete and unpublish orchestration still spans the write server, `scripts/catalogue/catalogue_cleanup.py`, and `scripts/catalogue/catalogue_transactions.py`; the next slice should avoid hiding service-specific allowlist checks inside a generic helper
-- `scripts/catalogue/catalogue_transactions.py` imports cleanup only for existing-path de-duplication, so future shared-service extraction should revisit whether that helper belongs in a neutral local-service module
+- delete and unpublish orchestration still spans the write server, `studio/services/catalogue/catalogue_cleanup.py`, and `studio/services/catalogue/catalogue_transactions.py`; the next slice should avoid hiding service-specific allowlist checks inside a generic helper
+- `studio/services/catalogue/catalogue_transactions.py` imports cleanup only for existing-path de-duplication, so future shared-service extraction should revisit whether that helper belongs in a neutral local-service module
 
 ### Slice 5: moment cleanup transaction consolidation
 
 Status: implemented.
 
-The fifth implementation slice consolidated the duplicated moment delete/unpublish public-cleanup transaction path inside `scripts/catalogue/catalogue_write_server.py` and moved moment index cleanup payload mutation into `scripts/catalogue/catalogue_cleanup.py`.
+The fifth implementation slice consolidated the duplicated moment delete/unpublish public-cleanup transaction path inside `studio/services/catalogue/catalogue_write_server.py` and moved moment index cleanup payload mutation into `studio/services/catalogue/catalogue_cleanup.py`.
 The write server still performs the source metadata allowlist check, generated payload allowlist check, cleanup-scope check, backup timing, search rebuild call, lookup/activity orchestration, and response assembly.
-`scripts/catalogue/catalogue_cleanup.py` now owns `build_moment_delete_generated_payloads(...)`, matching its existing ownership of catalogue generated JSON cleanup payload mutation.
+`studio/services/catalogue/catalogue_cleanup.py` now owns `build_moment_delete_generated_payloads(...)`, matching its existing ownership of catalogue generated JSON cleanup payload mutation.
 
 Benefits:
 
@@ -143,11 +143,11 @@ Risks:
 
 Status: implemented.
 
-The sixth implementation slice extracted staged catalogue prose import and draft moment source import helpers from `scripts/catalogue/catalogue_write_server.py` into `scripts/catalogue/catalogue_prose_import.py`.
+The sixth implementation slice extracted staged catalogue prose import and draft moment source import helpers from `studio/services/catalogue/catalogue_write_server.py` into `studio/services/catalogue/catalogue_prose_import.py`.
 The new module owns prose import target normalization, staged Markdown validation, preview payload construction, no-backup prose writes, and the draft moment import metadata/prose apply helper.
 The write server still owns endpoint conflict responses, endpoint-specific allowlist sets, local log events, Studio Activity append timing for moment imports, and response payload assembly.
-The no-backup atomic text write primitive moved into `scripts/catalogue/catalogue_transactions.py` so write mechanics have one module owner.
-`tests/python/test_catalogue_prose_import.py` pins staged prose preview/apply behavior, allowlist rejection, and draft moment metadata/prose application directly against the extracted module.
+The no-backup atomic text write primitive moved into `studio/services/catalogue/catalogue_transactions.py` so write mechanics have one module owner.
+`studio/tests/python/test_catalogue_prose_import.py` pins staged prose preview/apply behavior, allowlist rejection, and draft moment metadata/prose application directly against the extracted module.
 The new focused prose-import and transaction tests are included in the `quick` run-checks profile.
 
 Benefits:
@@ -167,9 +167,9 @@ Risks:
 Status: implemented.
 
 The seventh implementation slice cleaned up catalogue write-server route dispatch without changing endpoint URLs or handler bodies.
-`scripts/catalogue/catalogue_routes.py` now owns the route inventory for POST endpoints and CORS preflight handling through `POST_PATHS` and `OPTIONS_PATHS`.
-`scripts/catalogue/catalogue_write_server.py` now uses a single `Handler.POST_HANDLERS` dispatch table instead of repeating the same endpoint inventory as a long `if` cascade.
-`tests/python/test_catalogue_routes.py` pins route uniqueness, OPTIONS coverage, activity-profile endpoint coverage, and write-server POST dispatch coverage directly against the route owner and handler table.
+`studio/services/catalogue/catalogue_routes.py` now owns the route inventory for POST endpoints and CORS preflight handling through `POST_PATHS` and `OPTIONS_PATHS`.
+`studio/services/catalogue/catalogue_write_server.py` now uses a single `Handler.POST_HANDLERS` dispatch table instead of repeating the same endpoint inventory as a long `if` cascade.
+`studio/tests/python/test_catalogue_routes.py` pins route uniqueness, OPTIONS coverage, activity-profile endpoint coverage, and write-server POST dispatch coverage directly against the route owner and handler table.
 The focused route test is included in the `quick` run-checks profile.
 
 Benefits:
@@ -187,10 +187,10 @@ Risks:
 
 Status: implemented.
 
-The eighth implementation slice extracted lookup refresh execution helpers from `scripts/catalogue/catalogue_write_server.py` into `scripts/catalogue/catalogue_lookup_refresh.py`.
+The eighth implementation slice extracted lookup refresh execution helpers from `studio/services/catalogue/catalogue_write_server.py` into `studio/services/catalogue/catalogue_lookup_refresh.py`.
 The new module owns registry-derived lookup refresh planning, full lookup refresh execution, focused work/detail/series refresh writes, result payload shape, artifact labels, written counts, and written path reporting.
 The write server still decides when a refresh runs, inserts `lookup_refresh` into endpoint responses, writes local service log rows, and appends Studio Activity rows.
-`tests/python/test_catalogue_lookup_refresh.py` pins representative full, work, detail, and series refresh result payloads directly against the extracted module.
+`studio/tests/python/test_catalogue_lookup_refresh.py` pins representative full, work, detail, and series refresh result payloads directly against the extracted module.
 The focused lookup refresh test is included in the `quick` run-checks profile.
 
 Benefits:
@@ -198,7 +198,7 @@ Benefits:
 - reduces repeated handler body logic without moving source-write transactions
 - completes the refresh execution extraction path while leaving field selection with the catalogue field registry
 - gives refresh execution a focused module owner that can be tested without HTTP routing
-- keeps `scripts/catalogue/catalogue_lookup.py` as the payload builder/writer owner instead of duplicating lookup construction
+- keeps `studio/services/catalogue/catalogue_lookup.py` as the payload builder/writer owner instead of duplicating lookup construction
 
 Risks:
 
@@ -210,10 +210,10 @@ Risks:
 
 Status: implemented.
 
-The ninth implementation slice extracted the repeated post-save build decision and execution wrapper used by work, work-detail, series, and moment saves into `scripts/catalogue/catalogue_save_build.py`.
+The ninth implementation slice extracted the repeated post-save build decision and execution wrapper used by work, work-detail, series, and moment saves into `studio/services/catalogue/catalogue_save_build.py`.
 The new module owns `build_requested` and `build_skipped` response decisions, no-public-artifact skip payloads, and the common save-time build runner call.
 The write server still owns source mutation, backup/write timing, changed-state detection, endpoint-specific build target selection, response assembly outside build keys, and Studio Activity append timing.
-`tests/python/test_catalogue_save_build.py` pins representative published, draft, no-public-artifact, moment-message-key, and build-failure payload behavior directly against the extracted module.
+`studio/tests/python/test_catalogue_save_build.py` pins representative published, draft, no-public-artifact, moment-message-key, and build-failure payload behavior directly against the extracted module.
 The focused save-build test is included in the `quick` run-checks profile.
 
 Target ownership:
@@ -221,7 +221,7 @@ Target ownership:
 - `build_requested` and `build_skipped` response decisions
 - no-public-artifact skip handling
 - common scoped build execution payload wrapping
-- build activity row construction should stay in `scripts/catalogue/catalogue_activity.py` unless a clearer owner emerges
+- build activity row construction should stay in `studio/services/catalogue/catalogue_activity.py` unless a clearer owner emerges
 
 The write server should keep source mutation, backup/write timing, changed-state detection, endpoint-specific response assembly, and the endpoint decision to request a build.
 
@@ -240,16 +240,16 @@ Benefits:
 Risks:
 
 - build response payloads are visible to Studio save flows, so the helper should stay covered by direct payload-shape tests
-- moving too much build orchestration could blur the boundary with `scripts/catalogue/catalogue_json_build.py`
+- moving too much build orchestration could blur the boundary with `studio/services/catalogue/catalogue_json_build.py`
 
 ### Slice 10: source mutation planners for save/create paths
 
 Status: implemented.
 
-The tenth implementation slice extracted pure source mutation planning for work, work-detail, series, and moment save/create paths into `scripts/catalogue/catalogue_source_mutation.py`.
+The tenth implementation slice extracted pure source mutation planning for work, work-detail, series, and moment save/create paths into `studio/services/catalogue/catalogue_source_mutation.py`.
 The new module owns source record normalization, changed-field calculation, validation against already-loaded source records, generated section-id planning for new details, series member-work update planning, and source JSON payload construction.
 The write server still owns request body extraction, source payload reads, existence/conflict checks before planner calls, endpoint-specific write allowlist checks, actual transaction writes/backups, lookup/build/activity orchestration, and response assembly.
-`tests/python/test_catalogue_source_mutation.py` pins representative work, detail, series, and moment planner behavior directly against the extracted module.
+`studio/tests/python/test_catalogue_source_mutation.py` pins representative work, detail, series, and moment planner behavior directly against the extracted module.
 
 Target ownership:
 
@@ -284,15 +284,15 @@ Risks:
 
 Status: implemented.
 
-The eleventh implementation slice added a shared source JSON write executor in `scripts/catalogue/catalogue_transactions.py` and switched save, create, bulk-save, and workbook-import apply paths to use it after their existing endpoint-specific allowlist checks.
+The eleventh implementation slice added a shared source JSON write executor in `studio/services/catalogue/catalogue_transactions.py` and switched save, create, bulk-save, and workbook-import apply paths to use it after their existing endpoint-specific allowlist checks.
 The executor owns source payload-map validation, dry-run write suppression, calls into the atomic multi-file JSON writer, and backup path formatting for response payloads.
 The write server still owns request parsing, existence/conflict validation, endpoint-specific allowlist checks, lookup/build/activity timing, and final response assembly.
-`tests/python/test_catalogue_transactions.py` now covers executor dry-runs, response backup paths, empty payload-map rejection, and rollback behavior through the executor path.
+`studio/tests/python/test_catalogue_transactions.py` now covers executor dry-runs, response backup paths, empty payload-map rejection, and rollback behavior through the executor path.
 
 Target ownership:
 
 - target path to payload map validation
-- atomic JSON write calls through `scripts/catalogue/catalogue_transactions.py`
+- atomic JSON write calls through `studio/services/catalogue/catalogue_transactions.py`
 - backup path formatting for response payloads
 - dry-run write suppression behavior where it is actually shared
 
@@ -320,10 +320,10 @@ Risks:
 
 Status: implemented.
 
-The twelfth implementation slice extracted preview-side delete and publication planning into `scripts/catalogue/catalogue_delete_plans.py` and `scripts/catalogue/catalogue_publication.py`.
-The write server now calls those modules for delete preview/apply preflight and publication preview/apply preflight, while keeping HTTP request extraction, apply transaction execution, endpoint-specific allowlist checks, response assembly, and Studio Activity timing in `scripts/catalogue/catalogue_write_server.py`.
-`tests/python/test_catalogue_delete_plans.py` pins representative work, work-detail, series, and moment delete preview payloads.
-`tests/python/test_catalogue_publication.py` pins representative publication blockers, unpublish cleanup attachment, series publish bootstrap behavior, and `save_published` status-change rejection.
+The twelfth implementation slice extracted preview-side delete and publication planning into `studio/services/catalogue/catalogue_delete_plans.py` and `studio/services/catalogue/catalogue_publication.py`.
+The write server now calls those modules for delete preview/apply preflight and publication preview/apply preflight, while keeping HTTP request extraction, apply transaction execution, endpoint-specific allowlist checks, response assembly, and Studio Activity timing in `studio/services/catalogue/catalogue_write_server.py`.
+`studio/tests/python/test_catalogue_delete_plans.py` pins representative work, work-detail, series, and moment delete preview payloads.
+`studio/tests/python/test_catalogue_publication.py` pins representative publication blockers, unpublish cleanup attachment, series publish bootstrap behavior, and `save_published` status-change rejection.
 
 Target ownership:
 
@@ -340,7 +340,7 @@ Acceptance checks:
 
 - preview response payloads for work, detail, series, and moment delete stay stable
 - publish, unpublish, and save-published preview blockers stay stable
-- cleanup preview attachment still uses `scripts/catalogue/catalogue_cleanup.py` as the cleanup owner
+- cleanup preview attachment still uses `studio/services/catalogue/catalogue_cleanup.py` as the cleanup owner
 
 Benefits:
 
@@ -359,12 +359,12 @@ Risks:
 Status: implemented.
 
 The thirteenth implementation slice extracted the riskiest remaining delete/publication apply orchestration after preview planners had focused coverage.
-`scripts/catalogue/catalogue_delete_plans.py` now builds delete apply plans for work, work-detail, series, and moment deletes.
-`scripts/catalogue/catalogue_publication.py` now owns publication source payload construction, unpublish cleanup orchestration, and publication build backup orchestration.
-`scripts/catalogue/catalogue_transactions.py` now executes catalogue and moment cleanup transactions with ordered backups, source/generated writes, cleanup deletes, search rebuild hooks, lookup refresh hooks, and restore behavior.
+`studio/services/catalogue/catalogue_delete_plans.py` now builds delete apply plans for work, work-detail, series, and moment deletes.
+`studio/services/catalogue/catalogue_publication.py` now owns publication source payload construction, unpublish cleanup orchestration, and publication build backup orchestration.
+`studio/services/catalogue/catalogue_transactions.py` now executes catalogue and moment cleanup transactions with ordered backups, source/generated writes, cleanup deletes, search rebuild hooks, lookup refresh hooks, and restore behavior.
 
 The write server keeps endpoint request parsing, endpoint allowlist checks before source publication writes, final response assembly, and Studio Activity append orchestration.
-`tests/python/test_catalogue_transactions.py`, `tests/python/test_catalogue_delete_plans.py`, and `tests/python/test_catalogue_publication.py` pin the new transaction seams.
+`studio/tests/python/test_catalogue_transactions.py`, `studio/tests/python/test_catalogue_delete_plans.py`, and `studio/tests/python/test_catalogue_publication.py` pin the new transaction seams.
 
 Target ownership:
 
@@ -396,7 +396,7 @@ Risks:
 Status: implemented.
 
 The fourteenth implementation slice closed out the catalogue write-server restructuring after the extracted modules owned their domains.
-`scripts/catalogue/catalogue_write_server.py` no longer carries a duplicated endpoint inventory in its script docstring, and the stale local `extract_build_request(...)` helper was removed.
+`studio/services/catalogue/catalogue_write_server.py` no longer carries a duplicated endpoint inventory in its script docstring, and the stale local `extract_build_request(...)` helper was removed.
 The closeout also refreshed module-ownership docs so the delete/publication apply transaction work from Slice 13 is recorded as the final ownership boundary rather than an in-progress extraction.
 
 Target ownership:

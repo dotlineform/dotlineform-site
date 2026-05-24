@@ -53,7 +53,7 @@ Main Studio flows:
 The live rebuild entrypoint is:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py
 ```
 
 The build path reads canonical JSON source records and invokes the internal generator boundary. `generate_work_pages.py` remains the internal generation engine, not the user-facing command.

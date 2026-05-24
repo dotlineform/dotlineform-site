@@ -70,6 +70,7 @@
 ## Runtime and Paths
 
 - Use `$HOME/miniconda3/bin/python3` for all Python commands.
+- Do not invoke Python entrypoints through their shebangs in Codex runs. Use `$HOME/miniconda3/bin/python3 <script>` explicitly.
 - Run project commands from `dotlineform-site/` unless explicitly told otherwise.
 - Env vars are saved in `var/local/site.env`
 - In repo docs and command examples, prefer the shortest project-local script form unless explicitly needed.
@@ -131,10 +132,11 @@
 - If Chromium launch fails in the Codex app sandbox, retry the same Playwright browser check with escalated permissions before treating it as a product or runtime issue.
 - Avoid the raw Edge headless fallback unless Playwright is unavailable; Edge can trigger crash-report noise on this machine.
 - For Studio Playwright smoke tests, follow `studio/docs-viewer/source/studio/studio-smoke-testing.md`: wait for the route root to be visible and for route-specific loaded status before interacting; for controls below async-rendered lists, scroll into view and verify `document.elementFromPoint()` resolves to the target or a child before pointer clicking; use DOM activation only for setup-only actions, not for the behavior being tested.
-- Use `studio/docs-viewer/source/studio/testing.md` and `./scripts/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions.
+- Use `studio/docs-viewer/source/studio/testing.md` and `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` for optional broader verification when a change has enough blast radius that manual checks alone are likely to miss regressions.
 - Do not run broad profiles by default for every change; choose the smallest relevant profile such as `quick`, `catalogue`, `docs`, or `studio-smoke`.
-- Python tests in `./scripts/run_checks.py` run through pytest using the configured Python interpreter. For focused checks, prefer `$HOME/miniconda3/bin/python3 -m pytest <test-path>` over relying on whichever `python` happens to be active.
-- When `./scripts/run_checks.py` is used, report the profiles, pass/fail result, and `var/test-runs/.../summary.md` path in the final response.
+- Python tests in `studio/commands/run_checks.py` must run through the configured Miniconda interpreter. Use `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile <profile>` rather than any root-level wrapper or shebang invocation.
+- For focused checks, use `$HOME/miniconda3/bin/python3 -m pytest <test-path>` over relying on whichever `python` happens to be active.
+- When `studio/commands/run_checks.py` is used, report the profiles, pass/fail result, and `var/test-runs/.../summary.md` path in the final response.
 
 ## Security and Sanitization
 

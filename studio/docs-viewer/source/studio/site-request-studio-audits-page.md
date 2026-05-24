@@ -23,10 +23,10 @@ The first slice is implemented.
 - `/studio/audits/` renders a compact Studio audit page.
 - `/studio/` links to Audits from Resources.
 - `assets/studio/js/studio-audits.js` loads the audit registry through the local app audit API, probes API availability, runs an allowlisted audit, renders results, and maintains route-ready attributes.
-- `scripts/studio/studio_audit_api.py` exposes the active local app audit API.
-- `scripts/studio/audit_runner.py` owns the direct allowlisted runner used by the API and by Codex automation.
-- `scripts/checks/audit_studio_ready_state.py --strict --json` provides structured output for the runner.
-- the original standalone `scripts/studio/audit_service.py` HTTP wrapper has been retired.
+- `studio/app/server/studio/studio_audit_api.py` exposes the active local app audit API.
+- `studio/app/server/studio/audit_runner.py` owns the direct allowlisted runner used by the API and by Codex automation.
+- `studio/checks/audit_studio_ready_state.py --strict --json` provides structured output for the runner.
+- the original standalone `studio/app/server/studio/audit_service.py` HTTP wrapper has been retired.
 
 Only `studio-ready-state` is wired in this slice.
 
@@ -54,7 +54,7 @@ The Studio home page already has a Resources section. Linking an Audits page the
 
 ## Non-Goals
 
-- replacing `./scripts/run_checks.py`
+- replacing `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`
 - running arbitrary repo commands from the browser
 - adding a hosted or public audit runner
 - creating a full CI dashboard
@@ -105,7 +105,7 @@ Initial audit:
 
 | ID | Label | Command owner | Script | Strict? |
 |---|---|---|---|---|
-| `studio-ready-state` | Studio ready state | audit service | `scripts/checks/audit_studio_ready_state.py` | yes |
+| `studio-ready-state` | Studio ready state | audit service | `studio/checks/audit_studio_ready_state.py` | yes |
 
 Future candidates:
 
@@ -171,7 +171,7 @@ The ready-state audit should gain a JSON output mode before the Studio page depe
 Suggested command:
 
 ```bash
-./scripts/checks/audit_studio_ready_state.py --strict --json
+$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict --json
 ```
 
 JSON mode should preserve the existing human-readable terminal output by default and only emit JSON when explicitly requested.
@@ -216,7 +216,7 @@ Finding shape:
 
 ## Implementation Tasks
 
-1. Add JSON output to `scripts/checks/audit_studio_ready_state.py`.
+1. Add JSON output to `studio/checks/audit_studio_ready_state.py`.
 2. Add a loopback-only audit API under the local Studio app with health, registry, and run endpoints.
 3. Add `studio_config.json` entries for the Audits route, labels, and status text. Endpoint URLs remain in `assets/studio/js/studio-transport.js`, matching the existing local-service boundary.
 4. Add `/studio/audits/index.md` with the Studio route root and Resources navigation target.
@@ -231,7 +231,7 @@ Finding shape:
 
 | Slice | Codex-run checks | Manual checks |
 |---|---|---|
-| JSON audit output | Python syntax check; `./scripts/checks/audit_studio_ready_state.py --strict`; JSON output parse check | Compare human and JSON summaries for the same run |
+| JSON audit output | Python syntax check; `$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict`; JSON output parse check | Compare human and JSON summaries for the same run |
 | Audit API | local app API health check; allowed audit run; invalid audit ID rejection | Confirm audit runs accept only allowlisted IDs and logs only minimal run metadata |
 | Studio page | Jekyll build; Playwright smoke for unavailable and passing states | Open `/studio/audits/`, run the audit, inspect findings display and button/busy behavior on desktop and mobile |
 | Home link | Jekyll build; link presence check | Open `/studio/` and follow the Audits link from Resources |

@@ -13,7 +13,7 @@ sort_order: 1000
 Studio currently uses the local Studio app server as the normal HTTP owner for Studio routes and local APIs.
 `bin/local-studio` is the normal Studio runner and starts the local Studio app server:
 
-- `scripts/studio/studio_app_server.py`
+- `studio/app/server/studio/studio_app_server.py`
 
 Public Jekyll preview/build is explicit through `bin/public-site-preview` and `bin/public-site-build`.
 
@@ -21,11 +21,11 @@ Docs management, Data Sharing, Analytics tag APIs, Studio audit APIs, Project St
 The old standalone tag write server has been retired.
 The old standalone Docs management server has been retired.
 The old standalone catalogue write server has been retired.
-The old standalone Audit Service HTTP wrapper has been retired; direct automation uses `scripts/studio/audit_runner.py`.
+The old standalone Audit Service HTTP wrapper has been retired; direct automation uses `studio/app/server/studio/audit_runner.py`.
 
 When docs live watching is enabled, the same runner also starts:
 
-- `scripts/docs/docs_live_rebuild_watcher.py`
+- `studio/docs-viewer/services/docs_live_rebuild_watcher.py`
 
 The current implementation is therefore an integrated local workflow with one normal local Studio HTTP process.
 The important separation is module ownership, not process ownership.
@@ -34,14 +34,14 @@ Focused domain modules own write policy, validation, backups, activity rows, and
 
 Current boundaries:
 
-- `scripts/studio/studio_app_server.py` owns the local HTTP process and request dispatch.
-- `scripts/studio/studio_app_config.py` owns browser runtime config and service endpoint paths.
-- `scripts/studio/studio_app_views.py` owns migrated Studio route shell rendering.
-- `scripts/studio/studio_catalogue_api.py` owns `/studio/api/catalogue/...` adapter routing for catalogue reads, writes, reports, import, and thumbnail-quality refresh.
-- `scripts/catalogue/catalogue_write_service.py` dispatches catalogue mutation/build/import routes to focused catalogue workflow modules.
-- `scripts/studio/studio_docs_api.py` owns `/studio/api/docs/...` and delegates to focused Docs management service modules.
-- `scripts/studio/studio_analytics_api.py` owns `/studio/api/analytics/...` for active tag read/write workflows.
-- `scripts/studio/studio_audit_api.py` owns `/studio/api/audits/...` and keeps audit execution allowlisted.
+- `studio/app/server/studio/studio_app_server.py` owns the local HTTP process and request dispatch.
+- `studio/app/server/studio/studio_app_config.py` owns browser runtime config and service endpoint paths.
+- `studio/app/server/studio/studio_app_views.py` owns migrated Studio route shell rendering.
+- `studio/app/server/studio/studio_catalogue_api.py` owns `/studio/api/catalogue/...` adapter routing for catalogue reads, writes, reports, import, and thumbnail-quality refresh.
+- `studio/services/catalogue/catalogue_write_service.py` dispatches catalogue mutation/build/import routes to focused catalogue workflow modules.
+- `studio/app/server/studio/studio_docs_api.py` owns `/studio/api/docs/...` and delegates to focused Docs management service modules.
+- `studio/app/server/studio/studio_analytics_api.py` owns `/studio/api/analytics/...` for active tag read/write workflows.
+- `studio/app/server/studio/studio_audit_api.py` owns `/studio/api/audits/...` and keeps audit execution allowlisted.
 
 Some migration work remains, but it is no longer about moving endpoint ownership off sibling localhost services.
 Remaining work is mostly route-family cleanup, projection contracts, public/local boundary hardening, and direct launcher cleanup.
@@ -56,15 +56,15 @@ The intended shape is a single process with clear route modules and domain-speci
 Current structure:
 
 ```text
-scripts/studio/studio_app_server.py
-scripts/studio/studio_app_config.py
-scripts/studio/studio_app_views.py
-scripts/studio/studio_catalogue_api.py
-scripts/studio/studio_docs_api.py
-scripts/studio/studio_analytics_api.py
-scripts/studio/studio_audit_api.py
-scripts/catalogue/catalogue_write_service.py
-scripts/docs/docs_management_service.py
+studio/app/server/studio/studio_app_server.py
+studio/app/server/studio/studio_app_config.py
+studio/app/server/studio/studio_app_views.py
+studio/app/server/studio/studio_catalogue_api.py
+studio/app/server/studio/studio_docs_api.py
+studio/app/server/studio/studio_analytics_api.py
+studio/app/server/studio/studio_audit_api.py
+studio/services/catalogue/catalogue_write_service.py
+studio/docs-viewer/services/docs_management_service.py
 ```
 
 Current route namespaces:

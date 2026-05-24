@@ -23,9 +23,9 @@ The page uses:
 
 - `assets/studio/js/studio-audits.js`
 - `assets/studio/js/studio-transport.js`
-- `scripts/studio/studio_audit_api.py`
-- `scripts/studio/audit_runner.py`
-- `scripts/checks/audit_studio_ready_state.py`
+- `studio/app/server/studio/studio_audit_api.py`
+- `studio/app/server/studio/audit_runner.py`
+- `studio/checks/audit_studio_ready_state.py`
 
 Visible runtime copy lives under `ui_text.studio_audits` in `assets/studio/data/studio_config.json`.
 

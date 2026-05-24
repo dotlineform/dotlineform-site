@@ -227,7 +227,7 @@ Implementation targets:
 - `assets/studio/js/data-export.js` and `assets/studio/js/data-import.js` move to Data Sharing module names
 - `assets/studio/js/export-import-adapters.js` moves to `assets/studio/js/data-sharing-adapters.js`
 - `assets/studio/data/export_import_adapters.json` moves to `assets/studio/data/data_sharing_adapters.json`
-- `scripts/docs/export_import_adapters.py` moves to a Data Sharing owner name, preferably under `scripts/studio/`
+- `studio/docs-viewer/services/export_import_adapters.py` moves to a Data Sharing owner name, preferably under `scripts/studio/`
 - existing UI text keys and labels move from data import/export language to Data Sharing language
 - existing tests move from export/import names to Data Sharing names
 - Studio route state, activity context, route ids, script purpose ids, and config data-path keys use Data Sharing terminology
@@ -258,8 +258,8 @@ Define the v2 adapter contract in docs and tests after the terminology cutover.
 Implementation targets:
 
 - `assets/studio/data/data_sharing_adapters.json`
-- shared owner such as `scripts/studio/data_sharing_adapters.py`
-- `tests/python/test_data_sharing_adapters.py`
+- shared owner such as `studio/app/server/studio/data_sharing_adapters.py`
+- `studio/tests/python/test_data_sharing_adapters.py`
 
 Acceptance checks:
 
@@ -274,12 +274,12 @@ Acceptance checks:
 
 Status: implemented.
 
-Extract shared data sharing dispatch out of `scripts/docs/docs_management_server.py` into a Studio-owned data sharing service module.
+Extract shared data sharing dispatch out of `studio/docs-viewer/services/docs_management_server.py` into a Studio-owned data sharing service module.
 
 Implementation targets:
 
-- new shared service owner: `scripts/studio/data_sharing_service.py`
-- neutral data sharing route constants: `scripts/studio/data_sharing_routes.py`
+- new shared service owner: `studio/app/server/studio/data_sharing_service.py`
+- neutral data sharing route constants: `studio/app/server/studio/data_sharing_routes.py`
 - removal of old route ownership from docs-management once the service cutover is complete
 
 Acceptance checks:
@@ -298,9 +298,9 @@ Move Library document package behavior behind the documents adapter wrapper.
 
 Implementation targets:
 
-- `scripts/docs/docs_export.py`
-- `scripts/docs/docs_import.py`
-- possible adapter wrapper such as `scripts/docs/documents_data_sharing_adapter.py`
+- `studio/docs-viewer/services/docs_export.py`
+- `studio/docs-viewer/services/docs_import.py`
+- possible adapter wrapper such as `studio/docs-viewer/services/documents_data_sharing_adapter.py`
 - Data Sharing UI routes
 
 Acceptance checks:
@@ -338,12 +338,12 @@ Add the first real non-document adapter by wiring existing tag planners into the
 
 Implementation targets:
 
-- `scripts/analytics/tag_source_model.py`
-- `scripts/analytics/tag_assignment_service.py`
-- `scripts/analytics/tag_registry_mutations.py`
-- `scripts/analytics/tag_alias_mutations.py`
-- `scripts/analytics/tag_write_transactions.py`
-- new adapter wrapper such as `scripts/analytics/tags_data_sharing_adapter.py`
+- `studio/services/analytics/tag_source_model.py`
+- `studio/services/analytics/tag_assignment_service.py`
+- `studio/services/analytics/tag_registry_mutations.py`
+- `studio/services/analytics/tag_alias_mutations.py`
+- `studio/services/analytics/tag_write_transactions.py`
+- new adapter wrapper such as `studio/services/analytics/tags_data_sharing_adapter.py`
 - `assets/studio/data/data_sharing_adapters.json`
 
 Acceptance checks:

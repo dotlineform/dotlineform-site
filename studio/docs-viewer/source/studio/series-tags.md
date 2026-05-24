@@ -31,7 +31,7 @@ The page root `#series-tags` exposes the shared Studio route-ready contract:
 
 Primary shell:
 
-- `scripts/studio/studio_app_views.py`
+- `studio/app/server/studio/studio_app_views.py`
 
 Page controller:
 

@@ -21,7 +21,7 @@ Use this document for deferred refinement work so `_docs/backlog.md` can stay fo
 
 ## Audit And Review Tooling
 
-- Extend `scripts/checks/css_token_audit.py` beyond token checks into selector and declaration duplication reporting.
+- Extend `studio/checks/css_token_audit.py` beyond token checks into selector and declaration duplication reporting.
 - When a new shared pattern lands in code, update the current-state design docs in the same change rather than leaving the new pattern described only here.
 
 ## Shared Studio Primitives

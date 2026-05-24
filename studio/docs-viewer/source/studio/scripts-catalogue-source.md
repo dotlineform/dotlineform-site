@@ -21,7 +21,7 @@ The Phase 0 workbook export fixture is now retired. Canonical source JSON is mai
 ## Validate
 
 ```bash
-./scripts/catalogue/validate_catalogue_source.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py
 ```
 
 Validation checks the source JSON for core relationship errors:
@@ -37,7 +37,7 @@ Validation checks the source JSON for core relationship errors:
 Use the target media-section schema check for the current migrated source shape:
 
 ```bash
-./scripts/catalogue/validate_catalogue_source.py --target-media-section-schema
+$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py --target-media-section-schema
 ```
 
 The target check requires detail `section_id` and `section_title`, accepts `details_subfolder`, validates `sort_order`, and rejects legacy detail `project_subfolder`.
@@ -45,7 +45,7 @@ The target check requires detail `section_id` and `section_title`, accepts `deta
 ## Media Section Migration
 
 ```bash
-./scripts/catalogue/migrate_catalogue_media_sections.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/migrate_catalogue_media_sections.py
 ```
 
 This previews the work-detail source migration from legacy `project_subfolder` to separated source-folder and public-section metadata:
@@ -59,7 +59,7 @@ The command is dry-run by default. It reports changed record counts, generated s
 Apply the migration only when the preview is accepted:
 
 ```bash
-./scripts/catalogue/migrate_catalogue_media_sections.py --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/migrate_catalogue_media_sections.py --write
 ```
 
 Write mode creates a backup under `var/studio/catalogue/backups/` before updating `assets/studio/data/catalogue/work_details.json`. After the migration has been applied, dry-run output should report `Legacy records: 0`, `Already migrated records: 2681`, and `Result: no changes`.
@@ -69,7 +69,7 @@ The migration does not move external source image files. Public runtime artifact
 ## Project State Report
 
 ```bash
-./scripts/catalogue/project_state_report.py --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/project_state_report.py --write
 ```
 
 The project-state report compares `$DOTLINEFORM_PROJECTS_BASE_DIR/projects` with primary work image references in `assets/studio/data/catalogue/works.json`, then writes `_docs/project-state.md`.
@@ -81,23 +81,23 @@ Use this when you need to find source project folders or primary-image candidate
 Shared source loading, normalization, and validation logic lives in:
 
 ```text
-scripts/catalogue/catalogue_source.py
+studio/services/catalogue/catalogue_source.py
 ```
 
-This module is the shared source-data helper for current JSON source records. Workbook parsing helpers live beside the only retained Excel flow in `scripts/catalogue/catalogue_workbook_import.py`.
+This module is the shared source-data helper for current JSON source records. Workbook parsing helpers live beside the only retained Excel flow in `studio/services/catalogue/catalogue_workbook_import.py`.
 
 ## Source Field Ownership
 
-`scripts/catalogue/catalogue_source.py` owns source field order, shared catalogue id-list and detail-uid normalization, source normalization, and omit-empty serialization for work, work-detail, and series records.
+`studio/services/catalogue/catalogue_source.py` owns source field order, shared catalogue id-list and detail-uid normalization, source normalization, and omit-empty serialization for work, work-detail, and series records.
 
 The field registry at `assets/studio/data/catalogue_field_registry.json` owns changed-field dependency planning for public build work and Studio lookup refresh selection. It does not drive source serialization.
 
 When adding a source field:
 
-1. add it to the relevant source field list in `scripts/catalogue/catalogue_source.py`, or to the moment metadata field list in `scripts/catalogue/moment_sources.py`
+1. add it to the relevant source field list in `studio/services/catalogue/catalogue_source.py`, or to the moment metadata field list in `studio/services/catalogue/moment_sources.py`
 2. decide whether it is identity, derived, or editable metadata
 3. add a matching registry rule when it is editable metadata
-4. run `./scripts/catalogue/verify_catalogue_field_registry.py`
+4. run `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py`
 
 Optional persisted fields currently omitted when empty:
 

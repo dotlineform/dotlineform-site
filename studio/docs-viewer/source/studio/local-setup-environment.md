@@ -98,9 +98,9 @@ Keeping repo-specific runtime config in `var/local/site.env` gives CLI commands,
 Common commands:
 
 ```bash
-./scripts/checks/audit_site_consistency.py --strict
-./scripts/catalogue/validate_catalogue_source.py
-./scripts/catalogue/catalogue_json_build.py --work-id 00001
-python3 ./scripts/checks/css_token_audit.py
+$HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py --strict
+$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001
+python3 $HOME/miniconda3/bin/python3 studio/checks/css_token_audit.py
 bin/local-studio
 ```

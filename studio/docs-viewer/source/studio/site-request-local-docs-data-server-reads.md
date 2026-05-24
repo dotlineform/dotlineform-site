@@ -36,7 +36,7 @@ Current local behavior:
 
 Newly visible noise:
 
-- Python test runs can create `tests/python/__pycache__/*.pyc`
+- Python test runs can create `studio/tests/python/__pycache__/*.pyc`
 - Jekyll currently sees those files and regenerates the site even though they have no site-runtime role
 
 Observed effect:
@@ -269,7 +269,7 @@ Verify the full local loop:
 - confirm the docs watcher rebuilds same-scope docs and targeted search
 - confirm the docs viewer reads the updated index/payload/search data through the local server
 - confirm Jekyll does not regenerate because generated docs/search JSON changed
-- run Python import/export tests and confirm `tests/python/__pycache__` changes do not trigger Jekyll regeneration
+- run Python import/export tests and confirm `studio/tests/python/__pycache__` changes do not trigger Jekyll regeneration
 
 Verification performed:
 

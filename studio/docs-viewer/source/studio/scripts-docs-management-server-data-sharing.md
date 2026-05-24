@@ -31,7 +31,7 @@ Prepare behavior:
 - `select_all: true` asks the export engine to select every doc matching the config filters
 - `missing_summary_only` may be `true`, `false`, or `null`; unsupported configs ignore `true`
 - unsupported config/format combinations return the export engine's structured validation report without writing
-- the endpoint dispatches to `scripts/docs/documents_data_sharing_adapter.py`, which calls `./scripts/docs/docs_export.py`'s shared package-preparation engine in-process
+- the endpoint dispatches to `studio/docs-viewer/services/documents_data_sharing_adapter.py`, which calls `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py`'s shared package-preparation engine in-process
 - output paths are validated by the package-preparation engine and must stay under the adapter-declared outbound package root
 - normal server mode writes the package file and returns `output_written: true`
 - server `--dry-run` mode validates and reports the target path without writing
@@ -74,7 +74,7 @@ Import preview behavior:
 - `data_domain` must resolve exactly one adapter with `review` capability
 - stub adapters and planned capabilities fail closed before the endpoint runs document-specific preview behavior
 - `staged_filename` must resolve inside the adapter-declared staging root
-- dispatches to `scripts/docs/documents_data_sharing_adapter.py`, which parses the staged data file through `./scripts/docs/docs_import.py`
+- dispatches to `studio/docs-viewer/services/documents_data_sharing_adapter.py`, which parses the staged data file through `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py`
 - loads current generated docs index and payload state through the shared import engine for the adapter-declared docs scope
 - writes Markdown previews under the adapter-declared preview root in normal server mode
 - reports planned preview paths without writing when the server runs with `--dry-run`

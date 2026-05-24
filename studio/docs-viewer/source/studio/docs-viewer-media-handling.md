@@ -34,7 +34,7 @@ It does not cover:
 
 ## Scope Configuration
 
-Each Docs Viewer scope defines its media conventions in `scripts/docs/docs_scopes.json`.
+Each Docs Viewer scope defines its media conventions in `studio/docs-viewer/config/scopes/docs_scopes.json`.
 
 Important fields:
 

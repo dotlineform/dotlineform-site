@@ -99,7 +99,7 @@ Goal:
 
 Work:
 
-- create `scripts/studio/catalogue_write_server.py`
+- create `studio/app/server/studio/catalogue_write_server.py`
 - implement `GET /health`
 - implement `POST /catalogue/work/save`
 - enforce CORS and loopback binding

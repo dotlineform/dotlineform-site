@@ -23,7 +23,7 @@ Status:
 
 ## Purpose
 
-This child doc tracks the detailed implementation slices for restructuring `scripts/docs/docs_management_server.py`.
+This child doc tracks the detailed implementation slices for restructuring `studio/docs-viewer/services/docs_management_server.py`.
 The parent [Script Structural Review Request](/docs/?scope=studio&doc=site-request-script-structural-review) stays focused on the broader review goals, candidate scripts, and acceptance criteria.
 
 The intended end state is not a small file for its own sake.
@@ -43,10 +43,10 @@ The server should remain the Docs Viewer local-service HTTP and endpoint orchest
 
 Status: implemented.
 
-The first implementation slice extracted Docs Management endpoint path constants from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_management_routes.py`.
+The first implementation slice extracted Docs Management endpoint path constants from `studio/docs-viewer/services/docs_management_server.py` into `studio/docs-viewer/services/docs_management_routes.py`.
 The server handler now uses explicit `GET_HANDLERS` and `POST_HANDLERS` dispatch tables instead of repeated path conditionals.
 The moved route constants are also used by docs activity attachment helpers, so activity endpoint strings now share the route owner.
-`tests/python/test_docs_management_routes.py` pins route uniqueness, OPTIONS coverage, and GET/POST handler coverage.
+`studio/tests/python/test_docs_management_routes.py` pins route uniqueness, OPTIONS coverage, and GET/POST handler coverage.
 
 Target ownership:
 
@@ -73,14 +73,14 @@ Benefits:
 
 Risks:
 
-- route tables are now part of the service contract; future endpoint additions must update `scripts/docs/docs_management_routes.py` and the handler dispatch table together
+- route tables are now part of the service contract; future endpoint additions must update `studio/docs-viewer/services/docs_management_routes.py` and the handler dispatch table together
 - this slice is structural only and does not reduce the larger source-write, import/apply, or rebuild helper bodies
 
 ### Slice 2: docs source model helpers
 
 Status: implemented.
 
-The second implementation slice extracted Docs source-model helpers from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_source_model.py`.
+The second implementation slice extracted Docs source-model helpers from `studio/docs-viewer/services/docs_management_server.py` into `studio/docs-viewer/services/docs_source_model.py`.
 The server still owns HTTP handlers, request extraction, dry-run decisions, backup timing, rebuild calls, generated-data reads, import/export adapter orchestration, activity append timing, and response assembly.
 The server imports the source-model helpers it still orchestrates so this slice can keep endpoint behavior stable while later slices continue reducing handler-local logic.
 
@@ -98,11 +98,11 @@ Target ownership:
 
 Acceptance checks:
 
-- `tests/python/test_docs_source_model.py` covers front matter parsing/formatting, duplicate ids, unknown-parent behavior, Library's unknown-parent allowance, sort helpers, move placement normalization, descendant cycle support, source rewrite behavior, and unique stem generation
-- `tests/python/test_docs_management_server.py` still passes
-- `tests/python/test_docs_management_routes.py` still passes
-- `tests/python/test_docs_import_service.py` still passes as a compatibility check for source-import flows that use the moved helpers
-- `scripts/docs/docs_management_server.py`, `scripts/docs/docs_source_model.py`, and `tests/python/test_docs_source_model.py` compile with the configured Python interpreter
+- `studio/tests/python/test_docs_source_model.py` covers front matter parsing/formatting, duplicate ids, unknown-parent behavior, Library's unknown-parent allowance, sort helpers, move placement normalization, descendant cycle support, source rewrite behavior, and unique stem generation
+- `studio/tests/python/test_docs_management_server.py` still passes
+- `studio/tests/python/test_docs_management_routes.py` still passes
+- `studio/tests/python/test_docs_import_service.py` still passes as a compatibility check for source-import flows that use the moved helpers
+- `studio/docs-viewer/services/docs_management_server.py`, `studio/docs-viewer/services/docs_source_model.py`, and `studio/tests/python/test_docs_source_model.py` compile with the configured Python interpreter
 
 Benefits:
 
@@ -128,7 +128,7 @@ Importer/exporter note:
 
 The import/export adapters are expected to grow because only a small number of use cases have been implemented so far.
 That argues against folding adapter internals into the docs-management server restructuring.
-For now, `scripts/docs/docs_export.py`, `scripts/docs/docs_import.py`, and `scripts/docs/docs_html_import.py` should remain separate owners.
+For now, `studio/docs-viewer/services/docs_export.py`, `studio/docs-viewer/services/docs_import.py`, and `studio/docs-viewer/services/docs_html_import.py` should remain separate owners.
 The docs-management server should keep only local-service orchestration around those adapters: request validation, dry-run/write decision, response status selection, activity attachment, and rebuild follow-through.
 When adapter use cases expand enough to create their own structural confusion, review those modules as their own request or as a later adapter-specific child doc.
 
@@ -138,7 +138,7 @@ Status: implemented; retained here as the original implementation checklist.
 
 Proposed module owner:
 
-- `scripts/docs/docs_source_model.py`
+- `studio/docs-viewer/services/docs_source_model.py`
 
 Move only source-model and tree helpers that can be exercised without an HTTP handler, subprocess rebuild, or adapter call.
 
@@ -167,13 +167,13 @@ The server should keep:
 
 Acceptance checks:
 
-- add a focused `tests/python/test_docs_source_model.py`
+- add a focused `studio/tests/python/test_docs_source_model.py`
 - cover front matter parsing/formatting for booleans, integers, quoted strings, and blank values
 - cover source loading for duplicate `doc_id`, unknown parent rejection, and Library's current unknown-parent allowance
 - cover sort ordering, next append order, move placement normalization, and descendant cycle support helpers
 - cover source rewrite behavior preserving `added_date`, updating `last_updated`, and removing blank sort order where applicable
-- keep existing `tests/python/test_docs_management_server.py` passing
-- compile `scripts/docs/docs_management_server.py`, `scripts/docs/docs_source_model.py`, and the new test with the configured Python interpreter
+- keep existing `studio/tests/python/test_docs_management_server.py` passing
+- compile `studio/docs-viewer/services/docs_management_server.py`, `studio/docs-viewer/services/docs_source_model.py`, and the new test with the configured Python interpreter
 
 Benefits:
 
@@ -191,13 +191,13 @@ Risks:
 
 Status: implemented.
 
-The third implementation slice extracted generated Docs Viewer JSON read helpers from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_generated_reads.py`.
+The third implementation slice extracted generated Docs Viewer JSON read helpers from `studio/docs-viewer/services/docs_management_server.py` into `studio/docs-viewer/services/docs_generated_reads.py`.
 The server still owns GET route dispatch, query parameter extraction, scope normalization, HTTP status mapping, and raw JSON response writing.
 The generated-read module owns generated artifact paths, JSON loading errors, payload safety checks, and generated-data availability probes used by `/capabilities`.
 
 Module owner:
 
-- `scripts/docs/docs_generated_reads.py`
+- `studio/docs-viewer/services/docs_generated_reads.py`
 
 Target ownership:
 
@@ -217,9 +217,9 @@ The server should keep:
 
 Acceptance checks:
 
-- `tests/python/test_docs_generated_reads.py` covers generated docs/search availability, unsafe `doc_id` rejection, non-viewable indexed payload reads, unlisted payload rejection, unexpected `content_url` rejection, external URL path handling, and invalid generated JSON errors
-- `tests/python/test_docs_management_server.py` keeps `/capabilities` behavior covered
-- `scripts/run_checks.py --profile docs` now includes the generated-read helper tests
+- `studio/tests/python/test_docs_generated_reads.py` covers generated docs/search availability, unsafe `doc_id` rejection, non-viewable indexed payload reads, unlisted payload rejection, unexpected `content_url` rejection, external URL path handling, and invalid generated JSON errors
+- `studio/tests/python/test_docs_management_server.py` keeps `/capabilities` behavior covered
+- `studio/commands/run_checks.py --profile docs` now includes the generated-read helper tests
 
 Benefits:
 
@@ -237,20 +237,20 @@ Risks:
 
 Status: implemented.
 
-The fourth implementation slice extracted Docs Management Studio Activity construction from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_activity.py`.
+The fourth implementation slice extracted Docs Management Studio Activity construction from `studio/docs-viewer/services/docs_management_server.py` into `studio/docs-viewer/services/docs_activity.py`.
 The server still owns endpoint completion timing: each POST handler decides whether work completed far enough to call the activity helper, then tolerates activity append failure without failing the main endpoint.
-The activity module owns docs-specific status selection, record-group id compaction, endpoint constants through `scripts/docs/docs_management_routes.py`, and the docs-management local log source reference used in activity rows.
+The activity module owns docs-specific status selection, record-group id compaction, endpoint constants through `studio/docs-viewer/services/docs_management_routes.py`, and the docs-management local log source reference used in activity rows.
 
 Module owner:
 
-- `scripts/docs/docs_activity.py`
+- `studio/docs-viewer/services/docs_activity.py`
 
 Target ownership:
 
 - docs activity status calculation
 - compact id extraction for docs/file record groups
 - activity row attachment helpers for broken-links audit, docs export, source import, and documents import apply
-- docs activity endpoint constants via `scripts/docs/docs_management_routes.py`
+- docs activity endpoint constants via `studio/docs-viewer/services/docs_management_routes.py`
 - local log source references for docs-management service activity
 
 The server should keep:
@@ -261,11 +261,11 @@ The server should keep:
 
 Acceptance checks:
 
-- `tests/python/test_docs_activity.py` covers dry-run/export no-write suppression, successful export record groups/source refs, import-source preview and overwrite-confirmation suppression, import-apply confirmation suppression, and broken-link warning status when broken links are found
-- activity helper tests use endpoint constants from `scripts/docs/docs_management_routes.py`
-- `scripts/run_checks.py --profile docs` now includes the activity helper tests
-- `scripts/docs/docs_activity.py`, `scripts/docs/docs_management_server.py`, `scripts/run_checks.py`, `tests/python/test_docs_activity.py`, and `tests/python/test_docs_management_server.py` compile with the configured Python interpreter
-- `tests/python/test_docs_management_server.py` and `tests/python/test_docs_management_routes.py` still pass
+- `studio/tests/python/test_docs_activity.py` covers dry-run/export no-write suppression, successful export record groups/source refs, import-source preview and overwrite-confirmation suppression, import-apply confirmation suppression, and broken-link warning status when broken links are found
+- activity helper tests use endpoint constants from `studio/docs-viewer/services/docs_management_routes.py`
+- `studio/commands/run_checks.py --profile docs` now includes the activity helper tests
+- `studio/docs-viewer/services/docs_activity.py`, `studio/docs-viewer/services/docs_management_server.py`, `studio/commands/run_checks.py`, `studio/tests/python/test_docs_activity.py`, and `studio/tests/python/test_docs_management_server.py` compile with the configured Python interpreter
+- `studio/tests/python/test_docs_management_server.py` and `studio/tests/python/test_docs_management_routes.py` still pass
 
 Benefits:
 
@@ -283,13 +283,13 @@ Risks:
 
 Status: implemented.
 
-The fifth implementation slice extracted Docs Management rebuild and source-write follow-through helpers from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_write_rebuild.py`.
+The fifth implementation slice extracted Docs Management rebuild and source-write follow-through helpers from `studio/docs-viewer/services/docs_management_server.py` into `studio/docs-viewer/services/docs_write_rebuild.py`.
 The server still decides which docs changed, when endpoint-specific dry-run or no-op behavior suppresses writes, which search doc ids are targeted, when backups are created, and how response payloads are assembled.
 The extracted module owns the subprocess rebuild command shapes, bundle executable detection, watcher-suppression setup/cleanup/completion, search id de-duplication for rebuilds, and the common source-write followed by rebuild wrapper.
 
 Module owner:
 
-- `scripts/docs/docs_write_rebuild.py`
+- `studio/docs-viewer/services/docs_write_rebuild.py`
 
 Target ownership:
 
@@ -310,12 +310,12 @@ The server keeps:
 
 Acceptance checks:
 
-- `tests/python/test_docs_write_rebuild.py` stubs rebuild execution and covers full same-scope rebuild command shapes
+- `studio/tests/python/test_docs_write_rebuild.py` stubs rebuild execution and covers full same-scope rebuild command shapes
 - targeted search behavior preserves `--only-doc-ids` and `--remove-missing`
 - empty targeted search ids still rebuild docs payloads without a search command
 - watcher suppression is marked pending before writes, complete after successful rebuilds, and cleared on exceptions
 - all-scope rebuild command sequence remains explicit for docs payloads plus studio, library, and analysis search
-- `./scripts/run_checks.py --profile docs` now includes the write/rebuild helper tests
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs` now includes the write/rebuild helper tests
 
 Benefits:
 
@@ -333,13 +333,13 @@ Risks:
 
 Status: implemented.
 
-The sixth implementation slice extracted Docs Management mutation planning from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_management_mutations.py`.
-The server still owns HTTP request handling, dry-run write suppression, backup bundle creation, source write/rebuild execution through `scripts/docs/docs_write_rebuild.py`, local logging after completed writes, and response status mapping.
+The sixth implementation slice extracted Docs Management mutation planning from `studio/docs-viewer/services/docs_management_server.py` into `studio/docs-viewer/services/docs_management_mutations.py`.
+The server still owns HTTP request handling, dry-run write suppression, backup bundle creation, source write/rebuild execution through `studio/docs-viewer/services/docs_write_rebuild.py`, local logging after completed writes, and response status mapping.
 The extracted module owns management mutation decisions: source write/delete plans, backup document-set and manifest metadata selection, delete-preview blockers and warnings, response payload bases, and targeted search doc ids.
 
 Module owner:
 
-- `scripts/docs/docs_management_mutations.py`
+- `studio/docs-viewer/services/docs_management_mutations.py`
 
 Target ownership:
 
@@ -363,18 +363,18 @@ The server keeps:
 
 Acceptance checks:
 
-- `tests/python/test_docs_management_mutations.py` covers create, metadata, viewability, move, restore, archive no-op, delete-preview, and delete-apply planning
+- `studio/tests/python/test_docs_management_mutations.py` covers create, metadata, viewability, move, restore, archive no-op, delete-preview, and delete-apply planning
 - delete-preview blocker text remains `1 child docs still depend on this parent`
 - search target planning is pinned for create, metadata title changes, metadata status-only changes, viewability, move, restore, archive, and delete flows
 - backup operation, document selection, and manifest metadata are planned by the mutation module while reported `backup_dir` shape stays assembled by the server
 - no-op behavior is preserved for already-archived docs and unchanged viewability updates
-- `./scripts/run_checks.py --profile docs` now includes the mutation planner tests
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs` now includes the mutation planner tests
 
 Benefits:
 
 - makes local docs management behavior testable without HTTP transport
 - leaves the server closer to request orchestration while keeping importer/exporter calls separate
-- gives backup/search planning a direct test owner without moving subprocess rebuild mechanics back out of `scripts/docs/docs_write_rebuild.py`
+- gives backup/search planning a direct test owner without moving subprocess rebuild mechanics back out of `studio/docs-viewer/services/docs_write_rebuild.py`
 
 Risks:
 
@@ -386,7 +386,7 @@ Risks:
 
 Status: implemented.
 
-The seventh implementation slice extracted staged source import orchestration from `scripts/docs/docs_management_server.py` into `scripts/docs/docs_import_source_service.py`.
+The seventh implementation slice extracted staged source import orchestration from `studio/docs-viewer/services/docs_management_server.py` into `studio/docs-viewer/services/docs_import_source_service.py`.
 The server still owns endpoint route dispatch, request body parsing, HTTP response status, dependency binding for existing backup/log/rebuild helpers, and Studio Activity append timing.
 The extracted service owns the `/studio/docs-import/` source-import flow around staged source files: import preview/apply orchestration, create versus overwrite response shaping, collision handling, replacement ids/titles, source text construction, inline-media materialization sequencing, backup/rebuild handoff timing, and import-source file listing payloads.
 
@@ -405,7 +405,7 @@ It is not the export/import adapter system used by `/studio/export/` and `/studi
 
 Module owner:
 
-- `scripts/docs/docs_import_source_service.py`
+- `studio/docs-viewer/services/docs_import_source_service.py`
 
 Target ownership:
 
@@ -427,16 +427,16 @@ The server should keep:
 
 Explicit non-goal:
 
-- do not move converter internals out of `scripts/docs/docs_html_import.py`
+- do not move converter internals out of `studio/docs-viewer/services/docs_html_import.py`
 
 Acceptance checks:
 
-- `tests/python/test_docs_import_service.py` now exercises source-import behavior through `scripts/docs/docs_import_source_service.py` while still using the server's dependency binding for backup/log/rebuild helpers
+- `studio/tests/python/test_docs_import_service.py` now exercises source-import behavior through `studio/docs-viewer/services/docs_import_source_service.py` while still using the server's dependency binding for backup/log/rebuild helpers
 - existing coverage pins staged source listing, HTML create, Markdown import, text import, SVG sanitization, standalone image/file wrapper imports, inline-media materialization, invalid inline media skip behavior, and replacement-id collision recovery
 - preserve existing import response keys such as `preview_only`, `requires_overwrite_confirmation`, `inline_media_written`, `backup_dir`, and `summary_text`
 - preserve no-write behavior for dry-run and preview-only requests
-- `scripts/run_checks.py --profile docs` includes the focused import-service tests
-- `scripts/docs/docs_import_source_service.py`, `scripts/docs/docs_management_server.py`, `scripts/run_checks.py`, and `tests/python/test_docs_import_service.py` compile with the configured Python interpreter
+- `studio/commands/run_checks.py --profile docs` includes the focused import-service tests
+- `studio/docs-viewer/services/docs_import_source_service.py`, `studio/docs-viewer/services/docs_management_server.py`, `studio/commands/run_checks.py`, and `studio/tests/python/test_docs_import_service.py` compile with the configured Python interpreter
 
 Benefits:
 
@@ -455,19 +455,19 @@ Risks:
 Status: implemented.
 
 The eighth implementation slice closed the Docs Management Server restructuring work without adding another extracted owner.
-The server now imports the previously extracted owner modules as explicit module namespaces, keeps the public `/docs/import-html` and `/docs/import-html-files` compatibility aliases in `scripts/docs/docs_management_routes.py` and the handler dispatch tables, and removed the temporary `handle_import_html(...)` wrapper functions from the server and source-import service.
+The server now imports the previously extracted owner modules as explicit module namespaces, keeps the public `/docs/import-html` and `/docs/import-html-files` compatibility aliases in `studio/docs-viewer/services/docs_management_routes.py` and the handler dispatch tables, and removed the temporary `handle_import_html(...)` wrapper functions from the server and source-import service.
 Tests that need source-model formatting or write/rebuild stubbing now reach those owners directly instead of treating the server module as a compatibility re-export.
 
 Final module boundary:
 
-- `scripts/docs/docs_management_routes.py`: endpoint path inventory, compatibility aliases, and GET/POST/OPTIONS path sets
-- `scripts/docs/docs_source_model.py`: source front matter, scope loading, source formatting/writes, source tree helpers, and source-model normalization
-- `scripts/docs/docs_generated_reads.py`: generated Docs Viewer JSON reads and manage-mode generated-data safety checks
-- `scripts/docs/docs_activity.py`: docs-specific Studio Activity row construction
-- `scripts/docs/docs_write_rebuild.py`: docs payload/search rebuild command shapes and watcher-suppression follow-through
-- `scripts/docs/docs_management_mutations.py`: management mutation planning for create, metadata, viewability, move, restore, archive, and delete flows
-- `scripts/docs/docs_import_source_service.py`: staged source import preview/apply orchestration for `/studio/docs-import/`
-- `scripts/docs/docs_management_server.py`: localhost HTTP transport, request parsing, response status mapping, dependency binding, backup/log ownership, endpoint timing, and adapter orchestration that has not moved to a separate review
+- `studio/docs-viewer/services/docs_management_routes.py`: endpoint path inventory, compatibility aliases, and GET/POST/OPTIONS path sets
+- `studio/docs-viewer/services/docs_source_model.py`: source front matter, scope loading, source formatting/writes, source tree helpers, and source-model normalization
+- `studio/docs-viewer/services/docs_generated_reads.py`: generated Docs Viewer JSON reads and manage-mode generated-data safety checks
+- `studio/docs-viewer/services/docs_activity.py`: docs-specific Studio Activity row construction
+- `studio/docs-viewer/services/docs_write_rebuild.py`: docs payload/search rebuild command shapes and watcher-suppression follow-through
+- `studio/docs-viewer/services/docs_management_mutations.py`: management mutation planning for create, metadata, viewability, move, restore, archive, and delete flows
+- `studio/docs-viewer/services/docs_import_source_service.py`: staged source import preview/apply orchestration for `/studio/docs-import/`
+- `studio/docs-viewer/services/docs_management_server.py`: localhost HTTP transport, request parsing, response status mapping, dependency binding, backup/log ownership, endpoint timing, and adapter orchestration that has not moved to a separate review
 
 Target ownership:
 
@@ -478,7 +478,7 @@ Target ownership:
 
 Specific closeout checks:
 
-- `handle_import_html(...)` wrappers were removed from `scripts/docs/docs_management_server.py` and `scripts/docs/docs_import_source_service.py`; the public `POST /docs/import-html` alias remains in route dispatch and calls the source-import handler directly
+- `handle_import_html(...)` wrappers were removed from `studio/docs-viewer/services/docs_management_server.py` and `studio/docs-viewer/services/docs_import_source_service.py`; the public `POST /docs/import-html` alias remains in route dispatch and calls the source-import handler directly
 - small local helpers such as `relative_path(...)` and `viewer_url_for(...)` remain duplicated only where each module owns its own response shaping and no shared helper owner is justified
 - backup/log dependency binding for source import remains server-owned because backup helpers still serve multiple server orchestration flows and do not yet need a dedicated owner
 - structured import/export adapter orchestration is deferred to the [Import/Export System Review Request](/docs/?scope=studio&doc=site-request-import-export-system-review); `/studio/import/`, `/studio/export/`, `export_import_adapters.py`, `handle_documents_import_preview(...)`, and `handle_documents_import_apply(...)` stay out of this closeout
@@ -489,7 +489,7 @@ Acceptance checks:
 - no duplicate endpoint constants outside `docs_management_routes`
 - no broad compatibility aliases or re-export layers for extracted helpers
 - direct tests exist for each extracted owner
-- `./scripts/run_checks.py --profile docs` passes
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs` passes
 - rebuild Studio docs/search payloads when docs changed
 
 Benefits:

@@ -93,7 +93,7 @@ Before finishing Studio UI work:
 - update shared docs if the contract changed
 - create a structured docs-log entry for meaningful systemic UI decisions or implementations
 - verify desktop and mobile behavior
-- run `./scripts/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
+- run `$HOME/miniconda3/bin/python3 studio/checks/audit_studio_ready_state.py --strict` after changing Studio route shells or route-ready scripts
 
 The goal is consistency without introducing a heavy component system. Pages should expose their major layout containers in template markup, keep JS focused on dynamic UI, and reuse stable hooks and shared primitives instead of borrowing unrelated page-specific class names.
 

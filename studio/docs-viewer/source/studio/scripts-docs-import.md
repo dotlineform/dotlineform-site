@@ -11,7 +11,7 @@ sort_order: 10000
 Script:
 
 ```bash
-./scripts/docs/docs_import.py
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py
 ```
 
 ## Scope
@@ -70,19 +70,19 @@ Implemented now:
 Parse a staged Library summary package:
 
 ```bash
-./scripts/docs/docs_import.py --scope library --file library-document-summaries.jsonl
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl
 ```
 
 Write Markdown review artifacts for a staged Library summary package:
 
 ```bash
-./scripts/docs/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
 ```
 
 Parse a staged Library relationships package and omit normalized records from the printed report:
 
 ```bash
-./scripts/docs/docs_import.py --scope library --file library-parent-child-relationships.json --no-records
+$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py --scope library --file library-parent-child-relationships.json --no-records
 ```
 
 ## Report Shape
@@ -160,26 +160,26 @@ Apply-time freshness checks belong to the documents adapter apply actions.
 Focused parser checks live in:
 
 ```bash
-tests/python/test_docs_import.py
+studio/tests/python/test_docs_import.py
 ```
 
 They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary review output, full-content review output, relationship whole-tree review output for relationship and non-relationship packages, staged-timestamp review filenames, dry-run review reporting, invalid JSONL blocking, and staging/review path allowlisting.
 Service handler checks live in:
 
 ```bash
-tests/python/test_docs_import_service.py
+studio/tests/python/test_docs_import_service.py
 ```
 
 They cover documents adapter returned-package listing, review writing, dry-run review reporting, non-Library domain rejection, the summary-apply contract for missing target docs, backup creation, skipped rows, source write output, and rebuild diagnostics shape, and the hierarchy-apply contract for missing target docs, backup creation, unknown parent warnings, partial selections, no-write dry runs, preserved `sort_order`, and rebuild diagnostics shape.
 The parser and service checks run in the `docs` profile:
 
 ```bash
-./scripts/run_checks.py --profile docs
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs
 ```
 
-The Studio page shell, unavailable-service route behavior, mocked preview flow, mocked summary-apply confirmation flow, and mocked hierarchy-apply confirmation flow are covered by `tests/smoke/data_sharing_review.py`.
+The Studio page shell, unavailable-service route behavior, mocked preview flow, mocked summary-apply confirmation flow, and mocked hierarchy-apply confirmation flow are covered by `studio/tests/smoke/data_sharing_review.py`.
 That smoke check runs in the `studio-smoke` profile after a temporary Jekyll build:
 
 ```bash
-./scripts/run_checks.py --profile studio-smoke
+$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile studio-smoke
 ```

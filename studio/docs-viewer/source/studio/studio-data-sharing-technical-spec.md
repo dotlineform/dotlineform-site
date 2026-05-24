@@ -26,7 +26,7 @@ They call a loopback local service, render shared lifecycle states, and use adap
 ## Local Service Contract
 
 The docs-management server currently hosts the HTTP process because the documents adapter still depends on Docs Viewer generated-data reads, backups, and rebuild follow-through.
-Neutral route constants and shared dispatch live under `scripts/studio/`.
+Neutral route constants and shared dispatch live under `studio/app/server/studio/`.
 
 Endpoints:
 
@@ -113,9 +113,9 @@ The documents adapter owns:
 - Library sharing profile loading from `assets/studio/data/library_export_configs.json`
 - generated Docs Viewer index and payload reads
 - document tree selection and field mapping
-- outbound package generation through `scripts/docs/docs_export.py`
+- outbound package generation through `studio/docs-viewer/services/docs_export.py`
 - returned Library `.json` and `.jsonl` package listing
-- staged package parsing and Markdown review generation through `scripts/docs/docs_import.py`
+- staged package parsing and Markdown review generation through `studio/docs-viewer/services/docs_import.py`
 - summary and hierarchy apply planning
 - `_docs_library/` writes, docs/search rebuild follow-through, and document activity metadata
 
@@ -218,11 +218,11 @@ The shared shell must not learn document parsing, tag policy, catalogue relation
 
 Focused checks for Data Sharing changes:
 
-- `tests/python/test_data_sharing_adapters.py`
-- `tests/python/test_data_sharing_service.py`
-- `tests/python/test_docs_import_service.py`
-- `tests/python/test_tags_data_sharing_adapter.py`
-- `tests/smoke/data_sharing_prepare.py`
-- `tests/smoke/data_sharing_review.py`
+- `studio/tests/python/test_data_sharing_adapters.py`
+- `studio/tests/python/test_data_sharing_service.py`
+- `studio/tests/python/test_docs_import_service.py`
+- `studio/tests/python/test_tags_data_sharing_adapter.py`
+- `studio/tests/smoke/data_sharing_prepare.py`
+- `studio/tests/smoke/data_sharing_review.py`
 
-Use broader `./scripts/run_checks.py` profiles only when a change touches runtime behavior, route readiness, generated docs/search contracts, or shared Studio service behavior.
+Use broader `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` profiles only when a change touches runtime behavior, route readiness, generated docs/search contracts, or shared Studio service behavior.

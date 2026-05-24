@@ -12,17 +12,17 @@ viewable: true
 Script:
 
 ```bash
-./scripts/studio/audit_runner.py --audit-id studio-ready-state
+$HOME/miniconda3/bin/python3 studio/app/server/studio/audit_runner.py --audit-id studio-ready-state
 ```
 
-Normal Studio sessions do not start a standalone audit service because the local Studio app server owns the active audit HTTP surface through `scripts/studio/studio_audit_api.py`.
-For Codex automation, call `scripts/studio/audit_runner.py` directly instead of starting a sibling localhost service.
+Normal Studio sessions do not start a standalone audit service because the local Studio app server owns the active audit HTTP surface through `studio/app/server/studio/studio_audit_api.py`.
+For Codex automation, call `studio/app/server/studio/audit_runner.py` directly instead of starting a sibling localhost service.
 
 ## Purpose
 
 The audit runner owns the allowlisted Studio maintenance audit registry and direct audit execution behavior.
-The active local Studio browser endpoints are served by `scripts/studio/studio_audit_api.py`, which imports the runner module.
-The retired `scripts/studio/audit_service.py` HTTP wrapper is no longer part of the local development stack.
+The active local Studio browser endpoints are served by `studio/app/server/studio/studio_audit_api.py`, which imports the runner module.
+The retired `studio/app/server/studio/audit_service.py` HTTP wrapper is no longer part of the local development stack.
 
 The first allowlisted audit is:
 
@@ -31,13 +31,13 @@ The first allowlisted audit is:
 List allowlisted audits:
 
 ```bash
-./scripts/studio/audit_runner.py --list
+$HOME/miniconda3/bin/python3 studio/app/server/studio/audit_runner.py --list
 ```
 
 Run the default ready-state audit:
 
 ```bash
-./scripts/studio/audit_runner.py --audit-id studio-ready-state
+$HOME/miniconda3/bin/python3 studio/app/server/studio/audit_runner.py --audit-id studio-ready-state
 ```
 
 ## Endpoints

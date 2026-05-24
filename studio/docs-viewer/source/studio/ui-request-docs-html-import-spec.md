@@ -425,7 +425,7 @@ Recommended library boundary:
 
 ### Phase 3. Add Server-Side Import Write Support
 
-Extend `scripts/docs/docs_management_server.py` with:
+Extend `studio/docs-viewer/services/docs_management_server.py` with:
 
 - staged-file validation
 - import endpoint

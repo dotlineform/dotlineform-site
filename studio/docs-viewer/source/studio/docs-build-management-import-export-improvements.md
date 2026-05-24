@@ -19,8 +19,8 @@ The preferred shape is two implementation slices plus one closeout slice.
 
 The Docs path crosses language and ownership boundaries:
 
-- Ruby owns `scripts/docs/build_docs.rb` and docs search builders.
-- Python owns `scripts/docs/docs_management_server.py`, source mutation planners, generated reads, import/export adapters, live rebuild orchestration, and docs-management response shaping.
+- Ruby owns `studio/docs-viewer/build/build_docs.rb` and docs search builders.
+- Python owns `studio/docs-viewer/services/docs_management_server.py`, source mutation planners, generated reads, import/export adapters, live rebuild orchestration, and docs-management response shaping.
 - The live watcher and docs-management service both coordinate docs payload rebuilds and docs search updates.
 - Semantic references add derived per-doc and per-target relationship artifacts, which makes affected-doc rebuild optimization useful but dependency-sensitive.
 
@@ -72,9 +72,9 @@ Acceptance checks:
 
 Implementation note:
 
-- `scripts/docs/build_docs.rb` now emits one compact diagnostics JSON line per selected scope without changing generated Docs Viewer payload schemas.
-- `scripts/docs/docs_write_rebuild.py` now parses docs-builder diagnostics, adds elapsed timing to rebuild steps, and returns additive `diagnostics.docs` and `diagnostics.search` objects.
-- `scripts/docs/docs_live_rebuild_watcher.py` now logs affected doc ids for targeted search and fallback reasons when affected ids are unavailable.
+- `studio/docs-viewer/build/build_docs.rb` now emits one compact diagnostics JSON line per selected scope without changing generated Docs Viewer payload schemas.
+- `studio/docs-viewer/services/docs_write_rebuild.py` now parses docs-builder diagnostics, adds elapsed timing to rebuild steps, and returns additive `diagnostics.docs` and `diagnostics.search` objects.
+- `studio/docs-viewer/services/docs_live_rebuild_watcher.py` now logs affected doc ids for targeted search and fallback reasons when affected ids are unavailable.
 - The owning builder, management, watcher, import, export, and site change-log docs were updated with the new command, response, and log contracts.
 
 Risks:
@@ -89,7 +89,7 @@ Status: completed in the affected-doc build slice.
 
 Purpose:
 
-- implement a safe affected-doc rebuild path for `scripts/docs/build_docs.rb`
+- implement a safe affected-doc rebuild path for `studio/docs-viewer/build/build_docs.rb`
 - use it from docs-management and watcher paths only when dependency rules prove it is safe
 
 Implementation scope:
@@ -105,8 +105,8 @@ Implementation scope:
   - semantic-reference target moves between target buckets
   - resolver data changes outside docs source, such as catalogue title or route changes
 - update semantic-reference output so affected-doc writes can update all changed by-doc and by-target payloads without leaving stale target buckets
-- update `scripts/docs/docs_write_rebuild.py` to select targeted or full rebuilds and report why
-- update `scripts/docs/docs_live_rebuild_watcher.py` to pass affected doc ids only when safe
+- update `studio/docs-viewer/services/docs_write_rebuild.py` to select targeted or full rebuilds and report why
+- update `studio/docs-viewer/services/docs_live_rebuild_watcher.py` to pass affected doc ids only when safe
 - update docs-management write flows to pass affected doc ids for create, import overwrite, metadata, viewability, move, archive, delete, and settings writes only where the dependency map allows it
 
 Acceptance checks:
@@ -118,7 +118,7 @@ Acceptance checks:
 - metadata changes that affect other rows either update the dependent docs or fall back to full-scope rebuild
 - docs search updates still reconcile missing and non-viewable docs with `--remove-missing`
 - focused tests cover `--only-doc-ids` planning and fallback reasons
-- `./scripts/run_checks.py --profile docs` passes when the implementation is complete
+- `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs` passes when the implementation is complete
 
 Risks:
 
@@ -129,9 +129,9 @@ Risks:
 
 Implementation note:
 
-- `scripts/docs/build_docs.rb` now accepts `--only-doc-ids` for a single selected scope and reports `build_mode` plus `only_doc_ids` in builder diagnostics.
+- `studio/docs-viewer/build/build_docs.rb` now accepts `--only-doc-ids` for a single selected scope and reports `build_mode` plus `only_doc_ids` in builder diagnostics.
 - Targeted docs payload rebuilds still build the scope index from current source metadata, render selected per-doc payloads only, and derive semantic-reference by-target artifacts from refreshed selected by-doc records plus existing unselected by-doc records.
-- `scripts/docs/docs_write_rebuild.py` now returns a `rebuild.docs` object with mode, ids, and reason, and passes targeted docs ids separately from targeted search ids.
+- `studio/docs-viewer/services/docs_write_rebuild.py` now returns a `rebuild.docs` object with mode, ids, and reason, and passes targeted docs ids separately from targeted search ids.
 - Targeted orchestration falls back to a full docs payload rebuild when existing generated output is missing or incomplete.
 - Docs-management mutation planners, source imports, Library returned-package apply flows, and the live watcher now pass docs payload ids only when they have an explicit affected-id set; source-config settings and explicit rebuilds stay full-scope.
 - Focused tests cover targeted command shaping, and a temp-output smoke check covered semantic-reference by-doc and by-target stale removal under targeted rebuild.
@@ -149,11 +149,11 @@ Implementation scope:
 
 - align import/export apply responses with the same rebuild/search diagnostic shape used by management writes
 - keep source write and backup behavior adapter-owned:
-  - `scripts/docs/docs_import.py`
-  - `scripts/docs/docs_export.py`
-  - `scripts/docs/docs_import_source_service.py`
-  - `scripts/docs/documents_data_sharing_adapter.py`
-  - `scripts/studio/data_sharing_service.py`
+  - `studio/docs-viewer/services/docs_import.py`
+  - `studio/docs-viewer/services/docs_export.py`
+  - `studio/docs-viewer/services/docs_import_source_service.py`
+  - `studio/docs-viewer/services/documents_data_sharing_adapter.py`
+  - `studio/app/server/studio/data_sharing_service.py`
 - ensure docs-management server remains a transport/orchestration layer for Data Sharing and Docs Viewer management endpoints
 - update existing technical docs with final behavior:
   - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
@@ -190,7 +190,7 @@ Risks:
 
 This plan is complete.
 
-- `scripts/docs/build_docs.rb` has an explicit affected-doc input contract through `--only-doc-ids`
+- `studio/docs-viewer/build/build_docs.rb` has an explicit affected-doc input contract through `--only-doc-ids`
 - docs-management, live-watcher, import, and export responses expose enough diagnostics to identify expensive rebuild paths
 - targeted rebuilds are used only where dependency rules make them safe
 - semantic-reference artifacts are preserved correctly under targeted docs rebuilds

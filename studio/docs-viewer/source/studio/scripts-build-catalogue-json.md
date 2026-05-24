@@ -11,21 +11,21 @@ sort_order: 12000
 Script:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --work-id 00001
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001
 ```
 
 This helper is the current JSON-source rebuild entrypoint for focused work, series, and moment scopes.
 
 It also supports a focused moment scope used by the first Studio moments import page.
-Scope planning rules for work, series, and moment builds live in `scripts/catalogue/catalogue_build_scopes.py`; media readiness and local derivative work live in `scripts/catalogue/catalogue_build_media.py`; field-aware build narrowing lives in `scripts/catalogue/catalogue_build_field_plan.py`; generator/search command shapes and step result shaping live in `scripts/catalogue/catalogue_build_commands.py`.
-`scripts/catalogue/catalogue_json_build.py` remains the supported CLI and Studio-callable orchestration entrypoint.
+Scope planning rules for work, series, and moment builds live in `studio/services/catalogue/catalogue_build_scopes.py`; media readiness and local derivative work live in `studio/services/catalogue/catalogue_build_media.py`; field-aware build narrowing lives in `studio/services/catalogue/catalogue_build_field_plan.py`; generator/search command shapes and step result shaping live in `studio/services/catalogue/catalogue_build_commands.py`.
+`studio/services/catalogue/catalogue_json_build.py` remains the supported CLI and Studio-callable orchestration entrypoint.
 
 ## Common Runs
 
 Preview the scoped build:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --work-id 00001
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001
 ```
 
 Preview output includes local media counts for the scoped work/detail media plan.
@@ -33,7 +33,7 @@ Preview output includes local media counts for the scoped work/detail media plan
 Preview a field-aware work metadata scope:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --work-id 00001 --changed-fields duration
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001 --changed-fields duration
 ```
 
 The registry path is resolved from `assets/studio/data/studio_config.json` key `paths.data.studio.catalogue_field_registry`.
@@ -43,67 +43,67 @@ Field-aware preview output shows the selected planner mode, rule ids, artifact f
 Run the scoped build:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --work-id 00001 --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001 --write
 ```
 
 Refresh only local image derivatives for a work:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --work-id 00001 --media-only --force --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001 --media-only --force --write
 ```
 
 Refresh only local image derivatives for one work detail:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --work-id 00001 --detail-uid 00001-003 --media-only --force --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001 --detail-uid 00001-003 --media-only --force --write
 ```
 
 Preview catalogue-wide public thumbnail regeneration for works, work details, and moments:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --thumbnail-only --force
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --thumbnail-only --force
 ```
 
 Regenerate only public thumbnails for all works, work details, and moments:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --thumbnail-only --force --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --thumbnail-only --force --write
 ```
 
 Include an additional series when membership changed and the previous series page also needs rebuild:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --work-id 00001 --extra-series-ids 004 --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001 --extra-series-ids 004 --write
 ```
 
 Preview a scoped series build:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --series-id 004
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --series-id 004
 ```
 
 Run a scoped series build:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --series-id 004 --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --series-id 004 --write
 ```
 
 Preview a single moment import scope:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --moment-file keys.md
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --moment-file keys.md
 ```
 
 Run the moment import scope:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --moment-file keys.md --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --moment-file keys.md --write
 ```
 
 Refresh only local image derivatives for one moment:
 
 ```bash
-./scripts/catalogue/catalogue_json_build.py --moment-file keys.md --media-only --force --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --moment-file keys.md --media-only --force --write
 ```
 
 ## Current Behavior
@@ -136,7 +136,7 @@ The extracted build modules own selection and validation rules, media planning/e
 
 When `--changed-fields` is supplied, the `--only` selection, catalogue-search step, and local-media plan are narrowed by the matching registry target rule. The preview prints `Field-aware reasons` lines that group selected artifact families by the changed fields and registry reason. Unknown fields and mixed rule classes use conservative fallback and explain the fallback selection.
 
-Planner behavior is covered by `./scripts/catalogue/verify_catalogue_field_registry.py`.
+Planner behavior is covered by `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py`.
 
 For work scopes, `work-json` writes `assets/works/index/<work_id>.json` with the work record, rendered prose HTML when present, and published detail records grouped under `sections[]`. Each section carries `section_id`, `section_title`, optional `sort_order`, and `details[]`; nested detail records do not repeat section-level metadata.
 

@@ -9,13 +9,13 @@ sort_order: 1000
 # Pytest
 
 Pytest is the Python test collection layer for this repo.
-It sits underneath the existing lightweight check framework rather than replacing `./scripts/run_checks.py`.
+It sits underneath the existing lightweight check framework rather than replacing `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`.
 
 ## Current State
 
 The current test framework requires pytest for grouped Python profile checks.
-Python checks live under `tests/python/`, use plain `assert`, and many files remain directly executable with the configured Python interpreter.
-`./scripts/run_checks.py` remains the top-level runner because it also coordinates Ruby/Jekyll builds, browser smoke checks, JSON parsing checks, diff checks, and local run logs under `var/test-runs/`.
+Python checks live under `studio/tests/python/`, use plain `assert`, and many files remain directly executable with the configured Python interpreter.
+`$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` remains the top-level runner because it also coordinates Ruby/Jekyll builds, browser smoke checks, JSON parsing checks, diff checks, and local run logs under `var/test-runs/`.
 
 That structure should remain the source of truth for Codex close-out unless a future change explicitly replaces it.
 
@@ -23,7 +23,7 @@ That structure should remain the source of truth for Codex close-out unless a fu
 
 Pytest improves the Python layer in ways that fit the existing test style:
 
-- automatic discovery of `test_*` functions across `tests/python/`
+- automatic discovery of `test_*` functions across `studio/tests/python/`
 - clearer assertion failure output than direct script execution
 - `-k` filtering for one behavior or module name
 - reusable fixtures for temporary repos, sample docs trees, generated payloads, and fake services
@@ -35,12 +35,12 @@ The biggest practical benefit is local debugging speed.
 Instead of adding one-off direct runners for a file without a `__main__` block, Codex could run a focused command such as:
 
 ```bash
-python -m pytest tests/python/test_docs_management_service.py -k source_config_settings
+$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_docs_management_service.py -k source_config_settings
 ```
 
 ## Integration Model
 
-Keep `./scripts/run_checks.py` as the user-facing framework.
+Keep `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` as the user-facing framework.
 Use pytest underneath it for Python test collection.
 
 Current integration:
@@ -102,22 +102,22 @@ Do not install with one `python` and test with another.
 After install, run one focused check:
 
 ```bash
-python -m pytest tests/python/test_docs_management_service.py
+$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_docs_management_service.py
 ```
 
 Or, when targeting the interpreter directly:
 
 ```bash
-/path/to/miniconda3/bin/python -m pytest tests/python/test_docs_management_service.py
+/path/to/miniconda3/bin/python -m pytest studio/tests/python/test_docs_management_service.py
 ```
 
 Run all Python tests:
 
 ```bash
-python -m pytest tests/python
+$HOME/miniconda3/bin/python3 -m pytest studio/tests/python
 ```
 
-Pytest is listed in `requirements.txt` because `run_checks.py` now depends on it for grouped Python checks.
+Pytest is listed in `requirements.txt` because `studio/commands/run_checks.py` now depends on it for grouped Python checks.
 
 ## Not Yet Needed
 
@@ -125,7 +125,7 @@ Do not add pytest just to run a single script once.
 The direct-script pattern is still enough when a focused file can be executed with:
 
 ```bash
-python tests/python/test_docs_management_service.py
+$HOME/miniconda3/bin/python3 studio/tests/python/test_docs_management_service.py
 ```
 
 Add pytest when collection, focused selection, fixture reuse, or failure readability would reduce repeated work across multiple test files.

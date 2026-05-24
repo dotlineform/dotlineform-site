@@ -11,7 +11,7 @@ sort_order: 31000
 Script:
 
 ```bash
-./scripts/catalogue/fix_missing_title_sort.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/fix_missing_title_sort.py
 ```
 
 Generated site JSON no longer persists `title_sort`.
@@ -20,19 +20,19 @@ This helper remains only for older or hand-authored `_works` front matter that s
 Dry-run:
 
 ```bash
-./scripts/catalogue/fix_missing_title_sort.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/fix_missing_title_sort.py
 ```
 
 Write changes:
 
 ```bash
-./scripts/catalogue/fix_missing_title_sort.py --write
+$HOME/miniconda3/bin/python3 studio/services/catalogue/fix_missing_title_sort.py --write
 ```
 
 Scope to selected IDs or ranges:
 
 ```bash
-./scripts/catalogue/fix_missing_title_sort.py \
+$HOME/miniconda3/bin/python3 studio/services/catalogue/fix_missing_title_sort.py \
   --work-ids 66-74,38,40 \
   --write
 ```

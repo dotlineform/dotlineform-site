@@ -11,13 +11,13 @@ sort_order: 5000
 Script:
 
 ```bash
-./scripts/catalogue/verify_catalogue_field_registry.py
+$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py
 ```
 
 Test wrapper:
 
 ```bash
-tests/python/test_catalogue_field_registry.py
+studio/tests/python/test_catalogue_field_registry.py
 ```
 
 This read-only helper verifies representative catalogue field-registry build plans and checks that the registry stays aligned with the canonical catalogue source field sets.
@@ -27,11 +27,11 @@ This read-only helper verifies representative catalogue field-registry build pla
 Use this script after changing:
 
 - `assets/studio/data/catalogue_field_registry.json`
-- `scripts/catalogue/catalogue_field_registry.py`
-- `scripts/catalogue/catalogue_source.py`
-- `scripts/catalogue/moment_sources.py`
+- `studio/services/catalogue/catalogue_field_registry.py`
+- `studio/services/catalogue/catalogue_source.py`
+- `studio/services/catalogue/moment_sources.py`
 - field-aware preview or save-time build planning
-- the optional `catalogue` check profile in `./scripts/run_checks.py`
+- the optional `catalogue` check profile in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`
 
 It loads the registry path through `assets/studio/data/studio_config.json`, then checks that target rules and fallback defaults still produce the expected artifact, generator, catalogue-search, and local-media selections.
 
@@ -77,6 +77,6 @@ A failing check exits non-zero and reports the first mismatched plan field.
 
 ## Boundaries
 
-This script verifies planner behavior and source/registry coverage. It does not make the registry the owner of source serialization. Field order, normalization, and omit-empty behavior still live in `scripts/catalogue/catalogue_source.py` and `scripts/catalogue/moment_sources.py`.
+This script verifies planner behavior and source/registry coverage. It does not make the registry the owner of source serialization. Field order, normalization, and omit-empty behavior still live in `studio/services/catalogue/catalogue_source.py` and `studio/services/catalogue/moment_sources.py`.
 
 It does not write generated files, run local media generation, rebuild catalogue search, or verify browser UI behavior.

@@ -30,15 +30,15 @@ The report reads the local generated docs-log search projection through the Docs
 - `GET /docs/generated/docs-log?scope=studio&projection=search-index`
 
 The projection is generated from `_docs_logs/entries/*.json`.<br>
-Run `./scripts/docs_logs/build_indexes.py --write` after changing entries.
+Run `./studio/workflows/change-requests/services/build_indexes.py --write` after changing entries.
 
 **Files**
 
 - `_docs/change-history-reports.md`
 - `_docs/change-history.md`
 - `_docs_logs/entries/*.json`
-- `scripts/docs_logs/build_indexes.py`
-- `scripts/docs_logs/migrate_legacy_logs.py`
+- `studio/workflows/change-requests/services/build_indexes.py`
+- `studio/workflows/change-requests/services/migrate_legacy_logs.py`
 - `assets/docs-viewer/js/reports/change-history-report.js`
 
 ---

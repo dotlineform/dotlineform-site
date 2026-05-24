@@ -62,10 +62,10 @@ Completed implementation history is recorded in `_docs_logs/`:
 
 Current stable follow-through:
 
-- the JavaScript inventory guardrail is available at `scripts/checks/javascript_inventory_guardrail.py`
+- the JavaScript inventory guardrail is available at `studio/checks/javascript_inventory_guardrail.py`
 - the reusable JavaScript maintenance gate lives in [Development Workflow](/docs/?scope=studio&doc=development-workflow)
 - the Docs Viewer index-panel state owner is in place at `assets/docs-viewer/js/docs-viewer-index-panel.js`
-- focused Docs Viewer index-panel module and route smoke checks exist under `tests/smoke/`
+- focused Docs Viewer index-panel module and route smoke checks exist under `studio/tests/smoke/`
 
 ## Next Action
 
@@ -125,7 +125,7 @@ Implemented boundary:
 
 Implemented acceptance checks:
 
-- `tests/smoke/catalogue_editor_action_workflow_modules.py` covers save outcome projection for unchanged, saved, unpublished, applied, partial public-update failure, no-public-artifacts skip cases, generic action presentation projection, and pending build target projection.
+- `studio/tests/smoke/catalogue_editor_action_workflow_modules.py` covers save outcome projection for unchanged, saved, unpublished, applied, partial public-update failure, no-public-artifacts skip cases, generic action presentation projection, and pending build target projection.
 - The smoke keeps import checks for `catalogue-work-actions.js`, `catalogue-work-detail-actions.js`, `catalogue-series-actions.js`, and `catalogue-moment-actions.js`.
 - Touched JavaScript files passed `node --check`.
 - The focused Catalogue action workflow module smoke passed after implementation.
@@ -200,7 +200,7 @@ Scope:
 
 Acceptance checks:
 
-- `tests/smoke/catalogue_editor_route_boot_modules.py` covers shared route mode and record-loaded projections for single, bulk, import, and busy states
+- `studio/tests/smoke/catalogue_editor_route_boot_modules.py` covers shared route mode and record-loaded projections for single, bulk, import, and busy states
 - `node --check` passes for `catalogue-editor-route-boot.js`, `catalogue-work-route-state.js`, and the four editor route shells
 - focused route-boot smoke imports the four editor route shells without page errors
 - inventory rows are revisited without lowering scores unless the route-shell ownership or focused checks materially improve
@@ -233,7 +233,7 @@ Scope:
 
 Acceptance checks:
 
-- `tests/smoke/catalogue_editor_route_boot_modules.py` continues to cover missing-required-element fallback and route-shell importability
+- `studio/tests/smoke/catalogue_editor_route_boot_modules.py` continues to cover missing-required-element fallback and route-shell importability
 - route files still fail closed when required DOM nodes are absent
 
 Implementation notes:
@@ -282,7 +282,7 @@ Expected score movement:
 
 Acceptance checks:
 
-- add `tests/smoke/catalogue_work_editor_state_modules.py`
+- add `studio/tests/smoke/catalogue_work_editor_state_modules.py`
 - prove the state factory returns required defaults, derived panel nodes, route-state options, and modal host wiring from explicit inputs
 - `node --check` for Work editor and the new state module
 - Work ready-state smoke with catalogue service blocked still reaches `data-studio-ready="true"`
@@ -323,7 +323,7 @@ Implementation notes:
 
 - `assets/studio/js/catalogue-work-editor-events.js` now owns Work editor DOM listener attachment and async warning wrappers.
 - Handler implementations remain in existing selection, embedded-item modal, action workflow, and route-state owners; the binder only invokes explicit callbacks.
-- `tests/smoke/catalogue_work_editor_state_modules.py` covers the state factory and uses Playwright DOM actions to verify bound callback activation.
+- `studio/tests/smoke/catalogue_work_editor_state_modules.py` covers the state factory and uses Playwright DOM actions to verify bound callback activation.
 
 #### B6: Catalogue Sibling Route State Factories
 
@@ -388,7 +388,7 @@ Acceptance checks:
 Implementation notes:
 
 - `assets/studio/js/catalogue-work-detail-editor-events.js`, `assets/studio/js/catalogue-series-editor-events.js`, and `assets/studio/js/catalogue-moment-editor-events.js` now own DOM listener attachment for the sibling Catalogue route shells.
-- `tests/smoke/catalogue_sibling_editor_state_modules.py` covers the three state factories and three event binders with stubbed nodes and Playwright-triggered DOM events.
+- `studio/tests/smoke/catalogue_sibling_editor_state_modules.py` covers the three state factories and three event binders with stubbed nodes and Playwright-triggered DOM events.
 - Inventory rows were rescored to target 5 for the Work, Work Detail, Series, and Moment route shells. They did not move to score 4 because route-specific validation, loaded/new/bulk or import transitions, action context construction, and update coordination remain in the shells.
 
 #### B8: Catalogue Action Workflow Revisit
@@ -414,7 +414,7 @@ Expected score movement:
 
 Acceptance checks:
 
-- `tests/smoke/catalogue_editor_action_workflow_modules.py` covers Work action record projection, single mutation, and bulk mutation with stubbed state maps
+- `studio/tests/smoke/catalogue_editor_action_workflow_modules.py` covers Work action record projection, single mutation, and bulk mutation with stubbed state maps
 - `node --check` passes for `catalogue-work-actions.js` and `catalogue-work-action-records.js`
 - focused Catalogue action workflow module smoke imports the action modules without page errors
 
@@ -459,7 +459,7 @@ Expected score movement:
 
 Acceptance checks:
 
-- `tests/smoke/tag_route_shell_modules.py` covers unavailable-server fallback state, patch/manual result projection, focus/pageshow/visibility re-probe callbacks, route-busy projection, and route-shell importability without full route boot
+- `studio/tests/smoke/tag_route_shell_modules.py` covers unavailable-server fallback state, patch/manual result projection, focus/pageshow/visibility re-probe callbacks, route-busy projection, and route-shell importability without full route boot
 - `node --check` passes for the shared save-session helper and adopting Tag route modules
 
 #### C2: Tag Registry Modal Workflow Owner
@@ -485,7 +485,7 @@ Expected score movement:
 
 Acceptance checks:
 
-- `tests/smoke/tag_route_shell_modules.py` covers Registry modal workflow validation, demote selection state, edit apply-result handoff, and route-shell importability with stubbed state/callbacks
+- `studio/tests/smoke/tag_route_shell_modules.py` covers Registry modal workflow validation, demote selection state, edit apply-result handoff, and route-shell importability with stubbed state/callbacks
 - `node --check` passes for `tag-registry.js` and `tag-registry-modal-workflow.js`
 
 #### C3: Tag Studio Interaction State Owner
@@ -509,8 +509,8 @@ Expected score movement:
 
 Acceptance checks:
 
-- `tests/smoke/tag_route_shell_modules.py` covers selected-work changes, tag entry mutation, weight cycling, restore, metrics, and dirty-save enablement from explicit state inputs
-- `tests/smoke/series_tag_editor_ready_state.py` verifies Tag Studio still loads and reaches the Studio ready state for a representative series
+- `studio/tests/smoke/tag_route_shell_modules.py` covers selected-work changes, tag entry mutation, weight cycling, restore, metrics, and dirty-save enablement from explicit state inputs
+- `studio/tests/smoke/series_tag_editor_ready_state.py` verifies Tag Studio still loads and reaches the Studio ready state for a representative series
 
 #### C4: Tag Alias Route Closeout
 
@@ -534,8 +534,8 @@ Expected score movement:
 
 Acceptance checks:
 
-- `tests/smoke/tag_route_shell_modules.py` covers Tag Aliases modal workflow create/edit validation, edit tag selection/removal, demote validation, demote tag selection, and promotion state with stubbed state/callbacks
-- `tests/smoke/tag_aliases_ready_state.py` verifies the Tag Aliases route still loads and reaches the Studio ready state
+- `studio/tests/smoke/tag_route_shell_modules.py` covers Tag Aliases modal workflow create/edit validation, edit tag selection/removal, demote validation, demote tag selection, and promotion state with stubbed state/callbacks
+- `studio/tests/smoke/tag_aliases_ready_state.py` verifies the Tag Aliases route still loads and reaches the Studio ready state
 - `node --check` passes for `tag-aliases.js` and `tag-aliases-modal-workflow.js`
 
 ### Task D: Studio Shared Route Helper Contracts
@@ -582,8 +582,8 @@ Expected score movement:
 
 Acceptance checks:
 
-- `tests/smoke/studio_operational_route_modules.py` covers required-element collection, ready/busy projection, service availability display, run-button disabled projection, and first-adopter route imports
-- `tests/smoke/operational_routes_ready_state.py` verified Bulk Add Work and Docs Broken Links reached the Studio ready state with local service probes blocked before Docs Broken Links moved into Docs Viewer reports
+- `studio/tests/smoke/studio_operational_route_modules.py` covers required-element collection, ready/busy projection, service availability display, run-button disabled projection, and first-adopter route imports
+- `studio/tests/smoke/operational_routes_ready_state.py` verified Bulk Add Work and Docs Broken Links reached the Studio ready state with local service probes blocked before Docs Broken Links moved into Docs Viewer reports
 
 #### D2: Bulk Add Work Workflow Split
 
@@ -607,8 +607,8 @@ Expected score movement:
 
 Acceptance checks:
 
-- `tests/smoke/bulk_add_work_workflow_modules.py` covers preview summary rendering, blocked-row details, run-state view model, apply-blocked projection, and apply result/warning projection
-- `tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work reaches the Studio ready state with local service probes blocked
+- `studio/tests/smoke/bulk_add_work_workflow_modules.py` covers preview summary rendering, blocked-row details, run-state view model, apply-blocked projection, and apply result/warning projection
+- `studio/tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work reaches the Studio ready state with local service probes blocked
 - `node --check` passes for `bulk-add-work.js`, `bulk-add-work-workflow.js`, and `studio-operational-route.js`
 
 #### D3: Data Sharing Review Apply Workflow Owner
@@ -633,7 +633,7 @@ Expected score movement:
 
 Acceptance checks:
 
-- `tests/smoke/data_sharing_review_workflow_modules.py` covers action normalization, scope option projection, selected preview rows, control disabled state, result-button projection, and menu open/close state
+- `studio/tests/smoke/data_sharing_review_workflow_modules.py` covers action normalization, scope option projection, selected preview rows, control disabled state, result-button projection, and menu open/close state
 - `node --check` passes for `data-sharing-review.js` and `data-sharing-review-workflow.js`
 
 #### D4: Operational Audit Routes Closeout
@@ -661,8 +661,8 @@ Expected score movement:
 
 Acceptance checks:
 
-- `tests/smoke/studio_operational_route_modules.py` imports all D1/D4 operational helper adopters and covers required-element collection, route-state projection, service-status rendering, and run-button disabled projection
-- `tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work, Project State, Studio Audits, and Thumbnail Quality reach Studio ready state with local service probes blocked and primary action buttons disabled
+- `studio/tests/smoke/studio_operational_route_modules.py` imports all D1/D4 operational helper adopters and covers required-element collection, route-state projection, service-status rendering, and run-button disabled projection
+- `studio/tests/smoke/operational_routes_ready_state.py` verifies Bulk Add Work, Project State, Studio Audits, and Thumbnail Quality reach Studio ready state with local service probes blocked and primary action buttons disabled
 - `node --check` passes for `project-state.js`, `studio-audits.js`, and `thumbnail-quality.js`
 
 ### Task E: Public Runtime Measurable Maintenance And Performance Follow-Up
@@ -704,8 +704,8 @@ Expected score movement:
 
 Acceptance checks:
 
-- `tests/smoke/catalogue_search_runtime_modules.py` covers entry normalization, query matching/order, render projection, cache reuse, no-result state, prompt state, and query metric projection without full route boot
-- `tests/smoke/catalogue_search_performance.py` verifies the public `/catalogue/search/` route records scoped load and query metrics with `search-performance` instrumentation enabled
+- `studio/tests/smoke/catalogue_search_runtime_modules.py` covers entry normalization, query matching/order, render projection, cache reuse, no-result state, prompt state, and query metric projection without full route boot
+- `studio/tests/smoke/catalogue_search_performance.py` verifies the public `/catalogue/search/` route records scoped load and query metrics with `search-performance` instrumentation enabled
 - `node --check` passes for `catalogue-search.js` and `search/catalogue-search-runtime.js`
 
 #### E2: Public Work Runtime Projection Owner
@@ -730,8 +730,8 @@ Expected score movement:
 
 Acceptance checks:
 
-- `tests/smoke/public_work_runtime_modules.py` covers series id/title lookup, series-link projection, back-link projection, hidden/single-series fallbacks, and prev/next/counter projection
-- `tests/smoke/public_work_route.py` verifies a representative public work page still renders primary title, back link, series link, series navigation, and prev/next targets
+- `studio/tests/smoke/public_work_runtime_modules.py` covers series id/title lookup, series-link projection, back-link projection, hidden/single-series fallbacks, and prev/next/counter projection
+- `studio/tests/smoke/public_work_route.py` verifies a representative public work page still renders primary title, back link, series link, series navigation, and prev/next targets
 - `node --check` passes for `work.js` and `public-catalogue-runtime.js`
 
 #### E3: Public Runtime Closeout

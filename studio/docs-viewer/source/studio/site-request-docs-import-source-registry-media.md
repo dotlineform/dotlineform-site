@@ -32,7 +32,7 @@ The primary additions are:
 
 The current importer now has a generic route and service endpoint, but the implementation still grew from the HTML importer:
 
-- `scripts/docs/docs_html_import.py` owns HTML and Markdown importer logic
+- `studio/docs-viewer/services/docs_html_import.py` owns HTML and Markdown importer logic
 - supported extensions are hardcoded in module-level suffix sets
 - format dispatch is a branch inside `generate_import_preview`
 - the Studio page only knows about the Markdown special case

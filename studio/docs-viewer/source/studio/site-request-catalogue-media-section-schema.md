@@ -281,7 +281,7 @@ Implemented:
 - dry-run is the default; `--write` is required to update source JSON
 - write mode backs up `assets/studio/data/catalogue/work_details.json` under `var/studio/catalogue/backups/`
 - section ids are assigned deterministically per parent work and first-seen legacy section title, using ids such as `00001-1`
-- focused checks live in `tests/python/test_catalogue_media_section_migration.py`
+- focused checks live in `studio/tests/python/test_catalogue_media_section_migration.py`
 - the field registry and canonical source field order were pre-aligned so later source writes can preserve `project_subfolder`, `details_subfolder`, `section_id`, `section_title`, and `sort_order`
 - follow-on source/registry drift verification is tracked separately in [Catalogue Source And Registry Drift Verification Request](/docs/?scope=studio&doc=site-request-catalogue-source-registry-drift-verification)
 
@@ -457,7 +457,7 @@ Implementation notes:
 - Generated work JSON and focused work-detail lookup files no longer carry legacy detail `project_subfolder`; nested generated detail records also do not repeat section-level metadata.
 - Studio work-detail create/edit payload smoke checks confirm `details_subfolder` is persisted, `section_id` remains existing/server-owned, and legacy detail `project_subfolder` is not emitted.
 - Remaining `project_subfolder` references in active code are either the valid work source-media field, migration/import guardrails, or defensive legacy-read fallbacks; they are not unresolved detail-source assumptions.
-- The catalogue and Studio smoke check profiles pass through `./scripts/run_checks.py`, including the separate-destination Jekyll build profile.
+- The catalogue and Studio smoke check profiles pass through `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`, including the separate-destination Jekyll build profile.
 
 ## Benefits
 

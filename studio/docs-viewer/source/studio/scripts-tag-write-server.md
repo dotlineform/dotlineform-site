@@ -8,12 +8,12 @@ sort_order: 3000
 ---
 # Retired Tag Write Server
 
-`scripts/analytics/tag_write_server.py` has been retired.
+`studio/services/analytics/tag_write_server.py` has been retired.
 
 Tag write routes now run through the local Studio app server:
 
-- API module: `scripts/studio/studio_analytics_api.py`
-- route constants: `scripts/analytics/tag_routes.py`
+- API module: `studio/app/server/studio/studio_analytics_api.py`
+- route constants: `studio/services/analytics/tag_routes.py`
 - local API base: `/studio/api/analytics`
 - operational log: `var/studio/logs/studio_analytics_api.log`
 
@@ -23,13 +23,13 @@ Docs rebuilds belong to the Docs management API.
 
 Reusable analytics owners remain active:
 
-- `scripts/analytics/tag_activity.py`
-- `scripts/analytics/tag_source_model.py`
-- `scripts/analytics/tag_assignment_service.py`
-- `scripts/analytics/tag_registry_mutations.py`
-- `scripts/analytics/tag_alias_mutations.py`
-- `scripts/analytics/tag_promotion_mutations.py`
-- `scripts/analytics/tag_write_transactions.py`
+- `studio/services/analytics/tag_activity.py`
+- `studio/services/analytics/tag_source_model.py`
+- `studio/services/analytics/tag_assignment_service.py`
+- `studio/services/analytics/tag_registry_mutations.py`
+- `studio/services/analytics/tag_alias_mutations.py`
+- `studio/services/analytics/tag_promotion_mutations.py`
+- `studio/services/analytics/tag_write_transactions.py`
 
 ## Active Endpoints
 
