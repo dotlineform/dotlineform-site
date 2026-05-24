@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b072fa6a8ae86dffea86b5a25c2415d6",
-    "generated_at_utc": "2026-05-24T22:33:18Z",
-    "count": 308
+    "version": "blake2b-995dae9bb0d6d0981938a4cac25e632c",
+    "generated_at_utc": "2026-05-24T22:37:54Z",
+    "count": 309
   },
   "entries": [
     {
@@ -4824,6 +4824,33 @@
         "24"
       ],
       "search_text": "site-request-docs-viewer-shell-extraction-target-layout site request docs viewer shell extraction target layout docs viewer shell extraction target layout docs viewer shell extraction request 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "site-request-docs-viewer-shell-extraction-baseline",
+      "kind": "doc",
+      "title": "Docs Viewer Shell Extraction Baseline",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-baseline",
+      "last_updated": "2026-05-24",
+      "parent_id": "site-request-docs-viewer-shell-extraction",
+      "parent_title": "Docs Viewer Shell Extraction Request",
+      "display_meta": "2026-05-24 • Docs Viewer Shell Extraction Request",
+      "search_terms": [
+        "site-request-docs-viewer-shell-extraction-baseline",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "shell",
+        "extraction",
+        "baseline",
+        "docs viewer shell extraction baseline",
+        "docs viewer shell extraction request",
+        "2026-05-24",
+        "2026",
+        "05",
+        "24"
+      ],
+      "search_text": "site-request-docs-viewer-shell-extraction-baseline site request docs viewer shell extraction baseline docs viewer shell extraction baseline docs viewer shell extraction request 2026-05-24 2026 05 24"
     },
     {
       "id": "search-incremental-orchestration-plan",

@@ -16,6 +16,12 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
+- Completed `DVSE-006` by establishing the current integrated-tree baseline before extraction file moves.
+- Recorded the baseline in [Docs Viewer Shell Extraction Baseline](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-baseline).
+- Baseline passed: `quick` profile, elevated `docs-viewer-smoke` profile, focused Local Studio Docs Viewer management shell smoke, dry-run docs builders for Studio/Library/Analysis, and dry-run search builders for Studio/Library/Analysis.
+- First `docs-viewer-smoke` attempt failed because the Codex sandbox blocked temporary localhost binding; the elevated rerun passed, so treat the initial failure as an environment permission issue.
+- Builder dry runs reported no generated payload drift. Analysis retains the known unresolved semantic reference `work:00638002` from `analysis/3-symbols`.
+- Did not manually rebuild generated docs/search payloads.
 - Completed `DVSE-005` by defining the target `.docs-viewer/` layout, host integration surfaces, public/Jekyll route responsibilities, URL conventions, config layers, shell/adapter split, service model, builder/generated output model, test layout, and move-sequence constraints.
 - Recorded the layout in [Docs Viewer Shell Extraction Target Layout](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-target-layout).
 - Target shape keeps `.docs-viewer/` tracked and self-contained for runtime, shell templates, services, config defaults/schema, source, builders, static CSS/assets, and Docs Viewer-owned tests.
@@ -44,7 +50,7 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### steer for next task
 
-- Start with `DVSE-006`, establishing the current integrated-tree baseline verification before any extraction file moves.
+- Start with `DVSE-007`, introducing v1 Docs Viewer local service config using static `var/local/site.env`, `_config.yml`, `.gitignore`, and `.docs-viewer/config/` defaults/schema changes only as needed.
 - Keep the table sequential: only begin the next non-deferred ID after the current one is `done`.
 - If a task uncovers a new dependency, risk, or unresolved ownership question, add a new task row before continuing rather than widening the active task.
 - Bunch work into coherent slices that reduce repeated verification, but do not combine tasks when the second task depends on evidence from the first.
@@ -96,7 +102,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-003 | done | Inventory current Docs Viewer paths, imports, URL assumptions, generated payload reads/writes, service endpoints, CSS dependencies, scope/source config, tests, smoke scripts, and Studio/Jekyll integration points; record the inventory in a sibling doc such as `site-request-docs-viewer-shell-extraction-inventory.md`. |
 | DVSE-004 | done | Resolve ambiguous ownership from the inventory before moving files; add sibling contract docs or new task rows for any unclear areas such as shell include ownership, public route adapters, Studio link behavior, `/studio/api/docs/*` endpoint mapping, Docs Viewer data-sharing APIs, generated payload locations, New Scope outputs, report inputs, local write APIs, docs watcher ownership, cleanup hygiene, or CSS base dependencies. |
 | DVSE-005 | done | Define the target `.docs-viewer/` layout, host integration surfaces, and stable public/Jekyll route responsibilities in a sibling target-layout or contract doc; do not start broad file moves until this layout is recorded. |
-| DVSE-006 | planned | Establish the baseline verification run for the current integrated tree, including the smallest useful Docs Viewer, Local Studio, public scope, build, and syntax checks needed to compare before and after extraction slices. |
+| DVSE-006 | done | Establish the baseline verification run for the current integrated tree, including the smallest useful Docs Viewer, Local Studio, public scope, build, and syntax checks needed to compare before and after extraction slices. |
 | DVSE-007 | planned | Introduce v1 Docs Viewer local service config using static `var/local/site.env` host, port, base URL, and manage capability settings; add only the necessary `_config.yml`, `.gitignore`, and `.docs-viewer/config/` defaults/schema changes, with no dynamic runtime advertisement writer. |
 | DVSE-008 | planned | Move Docs Viewer-owned config, source/scope machinery, generated-data contract defaults, UI text, and non-runtime metadata into the tracked `.docs-viewer/` boundary; update readers/writers directly and keep repo-local host/service state outside `.docs-viewer/`. |
 | DVSE-009 | planned | Verify the config/source/scope move with focused syntax checks, dry-run builders where useful, source config validation, and public scope checks that prove generated JSON/search payload outputs still land where Jekyll routes expect them. |
