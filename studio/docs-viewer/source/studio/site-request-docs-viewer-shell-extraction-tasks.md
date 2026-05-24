@@ -16,14 +16,18 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
-- Created this child implementation tracker for the Docs Viewer shell extraction.
-- Captured the current steering decisions from the parent request as implementation constraints.
-- No extraction implementation task has started yet.
+- Completed `DVSE-002` by reviewing the parent request against the owning Docs Viewer, portable setup, runtime boundary, source organisation, config, scripts, local setup, and testing docs.
+- Found no blocker to the parent decisions.
+- Confirmed that several owning docs intentionally describe the current integrated state and will need durable updates during `DVSE-020`, especially:
+  - `scripts-docs-management-server`: currently says there is no standalone Docs Management server process because Local Studio owns HTTP transport today.
+  - `scripts-local-studio`: currently says not to use a combined Studio-plus-Jekyll runner for normal work.
+  - `docs-viewer-runtime-boundary`, `config-docs-viewer`, and portable setup docs still contain current-state path and route assumptions that the extraction will replace.
+- Treat those differences as expected current-state documentation, not contradictions that block extraction planning.
 - Generated Docs Viewer payloads may be refreshed by the local docs watcher when this source file changes.
 
 ### steer for next task
 
-- Start with `DVSE-002`, the owning-doc and parent-decision review.
+- Start with `DVSE-003`, the extraction inventory and dependency map.
 - Keep the table sequential: only begin the next non-deferred ID after the current one is `done`.
 - If a task uncovers a new dependency, risk, or unresolved ownership question, add a new task row before continuing rather than widening the active task.
 - Bunch work into coherent slices that reduce repeated verification, but do not combine tasks when the second task depends on evidence from the first.
@@ -61,6 +65,7 @@ Codex sandbox note: local service, browser, and temporary localhost checks may n
 - Keep generated public docs/search payload locations stable until a specific task proves the config contract can safely move or abstract them.
 - Keep public read-only route shells minimal and host-owned; Docs Viewer owns the scripts, scope machinery, generated-data contracts, and built-in `/docs/` manage route.
 - Keep loopback binding, explicit write capability flags, write allowlists, compact logs, preview/apply boundaries, and backup behavior for local manage/write paths.
+- During inventory, explicitly capture current-state docs that will need permanent updates after extraction, including standalone Docs Viewer service ownership, start-all runner behavior, route ownership, config paths, and CSS/base-shell assumptions.
 - Use sibling docs for large inventories, target layouts, contract tables, or path maps so this tracker remains a concise sequential task list.
 
 ## Implementation Tasks
@@ -70,7 +75,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | ID | status | action |
 | --- | --- | --- |
 | DVSE-001 | done | Create this child task tracker with a Codex handover status section and a single sequential implementation table using the allowed statuses `planned`, `in progress`, `done`, and `deferred`. |
-| DVSE-002 | planned | Re-read the parent request decisions and owning docs for Docs Viewer, portable setup, runtime boundary, source organisation, config, scripts, local setup, and testing; update this tracker if any parent decision is missing or contradicted by an owning doc. |
+| DVSE-002 | done | Re-read the parent request decisions and owning docs for Docs Viewer, portable setup, runtime boundary, source organisation, config, scripts, local setup, and testing; update this tracker if any parent decision is missing or contradicted by an owning doc. |
 | DVSE-003 | planned | Inventory current Docs Viewer paths, imports, URL assumptions, generated payload reads/writes, service endpoints, CSS dependencies, scope/source config, tests, smoke scripts, and Studio/Jekyll integration points; record the inventory in a sibling doc such as `site-request-docs-viewer-shell-extraction-inventory.md`. |
 | DVSE-004 | planned | Resolve ambiguous ownership from the inventory before moving files; add sibling contract docs or new task rows for any unclear areas such as public route adapters, generated payload locations, New Scope outputs, report inputs, local write APIs, docs watcher ownership, or CSS base dependencies. |
 | DVSE-005 | planned | Define the target `.docs-viewer/` layout, host integration surfaces, and stable public/Jekyll route responsibilities in a sibling target-layout or contract doc; do not start broad file moves until this layout is recorded. |
@@ -88,7 +93,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-017 | planned | Preserve and verify public scope route ownership: New Scope continues to create or register static/Jekyll-compatible routes such as `/library/` and `/analysis/`, using `.docs-viewer/` scripts and contracts while the pages remain repo/Jekyll-hosted. |
 | DVSE-018 | planned | Add the lightweight "start all" runner for Live Preview, Local Studio, and Docs Viewer, modeled on `bin/local-studio`: load `var/local/site.env`, validate static ports, print URLs, trap shutdown signals, clean up children, and fail clearly on child-process exits. |
 | DVSE-019 | planned | Move or update tests, smoke helpers, fixtures, checks, and run-check profiles so Docs Viewer-owned checks live with the new boundary where appropriate while repo/Codex verification entrypoints remain discoverable. |
-| DVSE-020 | planned | Update command docs, local setup docs, Docs Viewer portable setup, runtime boundary docs, source organisation docs, config docs, and script docs to describe the extracted boundary, service config, route ownership, and runner behavior. |
+| DVSE-020 | planned | Update command docs, local setup docs, Docs Viewer portable setup, runtime boundary docs, source organisation docs, config docs, and script docs to describe the extracted boundary, service config, route ownership, runner behavior, standalone Docs Viewer service ownership, and retired current-state assumptions. |
 | DVSE-021 | planned | Delete old Studio-owned Docs Viewer source locations after references are updated; confirm removed paths are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic. |
 | DVSE-022 | planned | Run the agreed final verification set: quick profile, Docs Viewer smoke profile, focused Local Studio integration smokes, public Jekyll build, public scope checks, syntax/import checks, and any changed-doc link/path checks. |
 | DVSE-023 | planned | Close out the parent request and this tracker: update statuses, summarize moved paths, record verification results and generated payload status, create structured docs-log entries, copy durable decisions/contracts into permanent owning docs, and note remaining risks before these request docs are archived. |

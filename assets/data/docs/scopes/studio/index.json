@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T22:02:11Z",
+  "generated_at": "2026-05-24T22:05:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -3140,7 +3140,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-tasks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-tasks.json",
-      "content_text_length": 10488,
+      "content_text_length": 11496,
       "ui_status": "draft"
     },
     {
