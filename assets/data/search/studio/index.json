@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b675de8d50d6eb26a32bf72424f713de",
-    "generated_at_utc": "2026-05-24T22:11:25Z",
-    "count": 306
+    "version": "blake2b-8b6d6fd4020cc139f15bdd92fbad6227",
+    "generated_at_utc": "2026-05-24T22:29:20Z",
+    "count": 307
   },
   "entries": [
     {
@@ -4768,6 +4768,34 @@
         "24"
       ],
       "search_text": "site-request-docs-viewer-shell-extraction-inventory site request docs viewer shell extraction inventory docs viewer shell extraction inventory docs viewer shell extraction request 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "site-request-docs-viewer-shell-extraction-ownership-contract",
+      "kind": "doc",
+      "title": "Docs Viewer Shell Extraction Ownership Contract",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-ownership-contract",
+      "last_updated": "2026-05-24",
+      "parent_id": "site-request-docs-viewer-shell-extraction",
+      "parent_title": "Docs Viewer Shell Extraction Request",
+      "display_meta": "2026-05-24 • Docs Viewer Shell Extraction Request",
+      "search_terms": [
+        "site-request-docs-viewer-shell-extraction-ownership-contract",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "shell",
+        "extraction",
+        "ownership",
+        "contract",
+        "docs viewer shell extraction ownership contract",
+        "docs viewer shell extraction request",
+        "2026-05-24",
+        "2026",
+        "05",
+        "24"
+      ],
+      "search_text": "site-request-docs-viewer-shell-extraction-ownership-contract site request docs viewer shell extraction ownership contract docs viewer shell extraction ownership contract docs viewer shell extraction request 2026-05-24 2026 05 24"
     },
     {
       "id": "search-incremental-orchestration-plan",
