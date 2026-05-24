@@ -16,17 +16,20 @@ This is the tracker for implementing [Studio Source Tree Reorganization Request]
 
 ### just done
 
-- Completed `STSR-018` by removing the root `scripts/run_checks.py` wrapper and making `studio/commands/run_checks.py` the only check-profile entrypoint.
-- Updated AGENTS, testing docs, smoke-testing docs, run-checks docs, script docs, and task references to use `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`, `studio/checks/...`, and `studio/tests/...`.
-- Updated local Studio server/service docs that still referenced moved `scripts/studio/...`, `scripts/catalogue/...`, `scripts/analytics/...`, and `scripts/docs/...` source paths to their current Studio-owned homes.
-- Updated `studio/tests/README.md` so the retained test directory points at the Studio-owned runner with the configured Miniconda interpreter.
-- No old check/test root wrapper or check-script wrapper was kept.
-- Verification passed: `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick --run-id stsr-018-quick`; summary at `var/test-runs/stsr-018-quick/summary.md`.
+- Completed `STSR-019` by deleting empty or cache-only old Studio source locations after the path/reference update pass.
+- Removed old root check/test/docs leftovers: `scripts/checks/`, root `tests/`, and `scripts/docs/`.
+- Removed empty old UI Catalogue, Docs Viewer, and docs-log public/source leftovers: `assets/docs-viewer/`, `assets/ui-catalogue/`, `assets/docs/ui-catalogue/`, `_ui_catalogue_notes/`, `_includes/ui_catalogue_notes/`, and `_docs_logs/`.
+- Removed empty retired Jekyll route-shell directories directly under `studio/`, including the old catalogue, analytics, data-sharing, docs-import, docs-broken-links, thumbnail-quality, activity, audits, project-state, Studio Works, and UI Catalogue route folders.
+- Removed stale `_config.yml` exclusions for deleted old root/public source paths while keeping current Studio-owned exclusions and the retained `assets/studio/` generated-output guard.
+- Updated the change-request workflow README files that still pointed at old `scripts/docs_logs/...` and `_docs_logs/...` paths.
+- Confirmed `assets/studio/img/thumbnail-quality/` remains as retained generated workflow output for now.
+- Confirmed the only remaining empty directory under `studio/` is `studio/data/canonical/catalogue-markdown/series/`, which is intentional canonical publishing Markdown shape referenced by the field registry and prose-import tests.
+- Verification passed: `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick --run-id stsr-019-quick-final`; summary at `var/test-runs/stsr-019-quick-final/summary.md`.
 
 ### steer for next task
 
-- Start with `STSR-019`; delete old Studio source locations after confirming references are updated.
-- Treat root `scripts/checks/`, root `tests/`, and any generated `__pycache__/` or `.DS_Store` leftovers there as cleanup candidates, not source.
+- Start with `STSR-020`; run the agreed final verification set.
+- Treat the removed old root source locations as gone; do not reintroduce `scripts/checks/`, root `tests/`, `scripts/docs/`, old public UI Catalogue assets, old public Docs Viewer assets, or empty Jekyll route-shell directories under `studio/`.
 - Keep `scripts/run_checks.py` deleted; do not reintroduce a root check-profile wrapper.
 - Keep public-site validation as Studio/Codex testing ownership even when a check validates generated public output.
 - Keep check entrypoints at `studio/checks/...`; do not add old `studio/checks/...` wrappers or aliases.
@@ -95,6 +98,6 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | STSR-016 | done | Move UI Catalogue demo source, notes, demo CSS/JS, fixtures, and assets under the Studio boundary; update local demo routes to read the new source paths and keep UI Catalogue out of the public Jekyll publishing surface. |
 | STSR-017 | done | Move tests, smoke helpers, fixtures, projection/source-boundary checks, public-surface checks, and Codex-run verification helpers under the chosen Studio or Docs Viewer test/check locations; public-site validation remains a Studio/Codex testing responsibility, not public-site source ownership. |
 | STSR-018 | done | Update command entrypoints, local runner docs, development workflow docs, script docs, and task references so Codex and humans use the new `studio/` paths without relying on old source locations. |
-| STSR-019 | planned | Delete old Studio source locations after references are updated; confirm removed paths are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic. |
+| STSR-019 | done | Delete old Studio source locations after references are updated; confirm removed paths are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic. |
 | STSR-020 | planned | Run the agreed final verification set: focused Local Studio smoke checks, UI Catalogue smoke checks, targeted Python/Ruby/JavaScript syntax or unit checks, public Jekyll build, projection/public-build-surface audit, and any changed-doc link/path checks. |
 | STSR-021 | planned | Update the parent request, this tracker, related owning docs, and docs-log entry with final statuses, moved-path summary, verification results, generated payload status, and remaining risks; do not rebuild generated docs payloads unless explicitly requested. |

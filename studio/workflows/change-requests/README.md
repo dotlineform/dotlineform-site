@@ -110,13 +110,13 @@ The report UI and compact human-facing archive replacement are still part of the
 
 ## Helper Script
 
-Use `scripts/docs_logs/log_entry.py` to preview or write one log entry.
+Use `studio/workflows/change-requests/services/docs_logs/log_entry.py` to preview or write one log entry.
 The script previews by default; it writes only with `--write`.
 
 Preview a direct entry:
 
 ```bash
-./scripts/docs_logs/log_entry.py \
+$HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs/log_entry.py \
   --title "Added Example Workflow" \
   --summary "Added a short example workflow for structured log entries." \
   --domain workflow \
@@ -129,41 +129,41 @@ Preview a direct entry:
 Seed from a change request:
 
 ```bash
-./scripts/docs_logs/log_entry.py \
+$HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs/log_entry.py \
   --from-change-request site-request-change-log-entry-model \
   --title "Added Docs Log Entry Helper" \
   --summary "Added a helper for previewing and writing structured docs-log entries." \
   --domain workflow \
   --domain docs-viewer \
-  --related-file scripts/docs_logs/log_entry.py
+  --related-file studio/workflows/change-requests/services/docs_logs/log_entry.py
 ```
 
 Create the entry file after reviewing the preview:
 
 ```bash
-./scripts/docs_logs/log_entry.py ... --write
+$HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs/log_entry.py ... --write
 ```
 
 Add `--update-change-request` with `--write` when the completed request has a closure task that should reference the created log entry id.
 
 The helper validates required fields and common id/list formats with standard-library checks.
-After writes, the helper runs `scripts/docs_logs/build_indexes.py --write` unless `--no-rebuild-generated` is passed.
+After writes, the helper runs `studio/workflows/change-requests/services/docs_logs/build_indexes.py --write` unless `--no-rebuild-generated` is passed.
 
 ## Migration Script
 
-Use `scripts/docs_logs/migrate_legacy_logs.py` to parse legacy Markdown change logs into per-entry JSON records.
+Use `studio/workflows/change-requests/services/docs_logs/migrate_legacy_logs.py` to parse legacy Markdown change logs into per-entry JSON records.
 The script previews by default and writes only with `--write`.
 
 Preview the migration:
 
 ```bash
-./scripts/docs_logs/migrate_legacy_logs.py
+$HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs/migrate_legacy_logs.py
 ```
 
 Write migration records and the review report:
 
 ```bash
-./scripts/docs_logs/migrate_legacy_logs.py --write
+$HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs/migrate_legacy_logs.py --write
 ```
 
 The v1 migration created per-entry records from the site and Search change logs.
@@ -171,11 +171,11 @@ Review diagnostics live in `studio/workflows/change-requests/reports/migration-r
 
 ## Generated Indexes
 
-Use `scripts/docs_logs/build_indexes.py` to rebuild generated projections from JSON source records.
+Use `studio/workflows/change-requests/services/docs_logs/build_indexes.py` to rebuild generated projections from JSON source records.
 The script previews by default and writes only with `--write`.
 
 ```bash
-./scripts/docs_logs/build_indexes.py --write
+$HOME/miniconda3/bin/python3 studio/workflows/change-requests/services/docs_logs/build_indexes.py --write
 ```
 
 ## Generated Outputs
