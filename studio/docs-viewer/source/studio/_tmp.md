@@ -11,7 +11,7 @@ viewable: false
 
 we are working on _docs/site-request-studio-source-tree-reorganization.md
 with tasks tracked in _docs/site-request-studio-source-tree-reorganization-tasks
-please continue with task 8.
+please continue with task 9.
 
 ---
 

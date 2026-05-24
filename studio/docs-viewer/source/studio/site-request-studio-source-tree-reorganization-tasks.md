@@ -16,23 +16,21 @@ This is the tracker for implementing [Studio Source Tree Reorganization Request]
 
 ### just done
 
-- Completed `STSR-008` by moving the first canonical source/config slice under `studio/`.
-- Moved Docs Viewer source Markdown from `_docs/`, `_docs_library/`, and `_docs_analysis/` to `studio/docs-viewer/source/studio/`, `studio/docs-viewer/source/library/`, and `studio/docs-viewer/source/analysis/`.
-- Moved catalogue canonical JSON and publishing Markdown to `studio/data/canonical/catalogue/` and `studio/data/canonical/catalogue-markdown/`.
-- Moved analytics/tag canonical JSON to `studio/data/canonical/analytics/`, with hyphenated filenames such as `tag-registry.json`, `tag-aliases.json`, and `tag-assignments.json`.
-- Moved Studio config/data source to `studio/data/config/`, `studio/app/frontend/config/`, and Studio-generated read models to `studio/data/generated/`.
-- Moved change-request workflow source from `_docs_logs/` to `studio/workflows/change-requests/`, with entry records under `studio/workflows/change-requests/logs/entries/`.
-- Updated readers/writers, configs, checks, and tests to read the new paths directly; no old-path source aliases or dual-read fallback logic were added.
-- Generated public docs/search payloads were intentionally not rebuilt. `scripts/build_docs.rb --scope studio` dry-run read `studio/docs-viewer/source/studio` successfully and reported one changed doc payload.
-- Verification passed: focused Python pytest set for Docs Viewer source/generated reads, docs-log indexes, tags data sharing, and Studio app server; 59 passed.
-- Verification passed: focused Catalogue source/prose/lookup pytest set; 25 passed.
-- Verification passed: `scripts/checks/audit_projection_contract.py`.
-- Verification passed: `./scripts/run_checks.py --profile quick --run-id stsr-008-canonical-move-quick-3`; summary: `var/test-runs/stsr-008-canonical-move-quick-3/summary.md`.
+- Completed `STSR-009` by verifying the canonical-data move from the public-site side.
+- Verification passed: `$HOME/miniconda3/bin/python3 scripts/checks/audit_projection_contract.py`.
+- Verification passed: `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`.
+- Verification passed: `$HOME/miniconda3/bin/python3 scripts/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build`.
+- Verification passed: `$HOME/miniconda3/bin/python3 scripts/checks/audit_projection_contract.py --site-root /tmp/dlf-jekyll-build`.
+- Verification passed: path-level build check found no copied `studio/data/canonical`, `studio/docs-viewer/source`, `_docs`, `_docs_library`, `_docs_analysis`, `_docs_logs`, or `_docs_catalogue` source directories in `/tmp/dlf-jekyll-build`.
+- Verification passed: generated public docs/search payloads remain present under `/tmp/dlf-jekyll-build/assets/data/docs/...` and `/tmp/dlf-jekyll-build/assets/data/search/...`.
+- Verification passed: `$HOME/miniconda3/bin/python3 scripts/run_checks.py --profile quick --run-id stsr-009-public-projection-quick-miniconda`; summary: `var/test-runs/stsr-009-public-projection-quick-miniconda/summary.md`.
+- Generated public docs/search payloads were intentionally not rebuilt.
 
 ### steer for next task
 
-- Start with `STSR-009`; verify the canonical-data move from the public-site side.
-- Confirm public Jekyll still receives and serves existing generated JSON/assets without reading canonical source directly.
+- Start with `STSR-010`; move Local Studio app server modules, route-family modules, local API adapters, workflow service code, and service orchestration into the chosen `studio/app/` and `studio/services/` paths.
+- Move current Docs Viewer server/services into the chosen internal Docs Viewer home under `studio/`.
+- Update imports directly rather than adding old-path aliases or compatibility shims.
 - Keep generated docs/search payloads untouched unless the active verification step explicitly requires a rebuild.
 - Treat the table as sequential: only begin the next non-deferred ID after the current one is `done`.
 - Treat current `assets/docs-viewer/` and current `scripts/docs/` as Docs Viewer-owned runtime/service inputs for later move slices; separate them from generated public docs/search payloads.
@@ -84,7 +82,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | STSR-006 | done | Capture a baseline verification set for the current tree, including the smallest useful Local Studio smoke checks, public Jekyll build check, projection/public-surface check, and syntax/import checks needed to compare before and after moves. |
 | STSR-007 | done | Remove or finish any remaining transition-only Local Studio cleanup that would make file moves ambiguous, such as retired sibling-service fallbacks, old Jekyll route-host assumptions, stale static config fallbacks, or unused route adapters. |
 | STSR-008 | done | Move canonical website data, `_docs_catalogue/` publishing Markdown, Studio-owned change request workflow data, and Studio-owned config into the chosen Studio canonical/config/workflow paths, and move Docs Viewer source Markdown into the chosen Docs Viewer source home under `studio/`; then update all generators, validators, services, checks, tests, and docs that read canonical source so public outputs are still written to the existing Jekyll-facing paths. |
-| STSR-009 | planned | Verify the canonical-data move by running targeted source/projection checks and confirming the public Jekyll site still receives the generated JSON and assets it needs without reading canonical source directly. |
+| STSR-009 | done | Verify the canonical-data move by running targeted source/projection checks and confirming the public Jekyll site still receives the generated JSON and assets it needs without reading canonical source directly. |
 | STSR-010 | planned | Move Local Studio app server modules, route-family modules, local API adapters, Studio-owned workflow services such as docs-log/change-request-log code, and Studio-owned service orchestration into the chosen `studio/app/` and `studio/services/` paths; move current Docs Viewer server/services into the chosen internal Docs Viewer home under `studio/`; update imports directly rather than adding old-path aliases. |
 | STSR-011 | planned | Verify the Python/server move with syntax/import checks, focused unit tests, and the smallest Local Studio API or route smoke checks that prove the moved server can boot and serve active routes. |
 | STSR-012 | planned | Move Studio frontend JavaScript, shell modules, route modules, UI text, runtime config, and Studio-only static assets into the chosen `studio/app/frontend/` or `studio/app/assets/` paths; move current Docs Viewer runtime code, UI text, config, CSS, and assets into the chosen internal Docs Viewer home under `studio/`; update HTML, runtime config, module imports, tests, and smoke scripts to load from those paths. |
