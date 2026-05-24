@@ -12,7 +12,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
-PUBLISHER_PATH = SCRIPTS_DIR / "media" / "publish_media_to_r2.py"
+PUBLISHER_PATH = REPO_ROOT / "studio" / "services" / "media" / "publish_media_to_r2.py"
 
 
 def load_publisher_module():

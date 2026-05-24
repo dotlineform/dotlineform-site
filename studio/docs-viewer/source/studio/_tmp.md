@@ -13,6 +13,9 @@ we are working on _docs/site-request-studio-source-tree-reorganization.md
 with tasks tracked in _docs/site-request-studio-source-tree-reorganization-tasks
 please continue with task 9.
 
+I’m adding one small shared bootstrap helper under scripts/ for Python path setup. That keeps the moved modules from each inventing their own parent-depth logic, while still pointing directly at the new studio/ owners.
+
+
 ---
 
 normal development should use:

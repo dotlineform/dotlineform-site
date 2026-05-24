@@ -16,7 +16,7 @@ for path in (SCRIPTS_DIR, STUDIO_SCRIPTS_DIR):
 
 from catalogue import catalogue_activity as activity  # noqa: E402
 from catalogue import catalogue_routes as routes  # noqa: E402
-from scripts.studio import studio_catalogue_api  # noqa: E402
+from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:

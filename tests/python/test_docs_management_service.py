@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DOCS_DIR = REPO_ROOT / "scripts" / "docs"
+DOCS_DIR = REPO_ROOT / "studio" / "docs-viewer" / "services"
 DOCS_MANAGEMENT_SERVICE_PATH = DOCS_DIR / "docs_management_service.py"
 
 
@@ -177,7 +177,7 @@ def write_generated_docs(root: Path) -> None:
 
 def write_docs_scope_config(root: Path) -> None:
     write_json(
-        root / "scripts/docs/docs_scopes.json",
+        root / "studio/docs-viewer/config/scopes/docs_scopes.json",
         {
             "schema_version": "docs_scopes_v1",
             "scopes": [
@@ -442,8 +442,8 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
                 },
                 dry_run=False,
             )
-            source_payload = json.loads((repo_root / "scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
-            manifest_payload = json.loads((repo_root / "scripts/docs/docs_scope_manifest.json").read_text(encoding="utf-8"))
+            source_payload = json.loads((repo_root / "studio/docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
+            manifest_payload = json.loads((repo_root / "studio/docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
             default_doc_exists = (repo_root / "studio/docs-viewer/source/research/research.md").exists()
             route_exists = (repo_root / "research/index.md").exists()
     finally:
@@ -460,7 +460,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["research"]["user_created"] is True
     assert records["research"]["created_by_tool"] is True
-    assert any(file["path"] == "scripts/docs/docs_scopes.json" for file in records["research"]["files"])
+    assert any(file["path"] == "studio/docs-viewer/config/scopes/docs_scopes.json" for file in records["research"]["files"])
 
 
 def test_scope_delete_preview_blocks_system_scopes() -> None:
@@ -582,8 +582,8 @@ def test_scope_delete_apply_removes_manifest_scope_and_runs_rebuild() -> None:
                 },
                 dry_run=False,
             )
-            source_payload = json.loads((repo_root / "scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
-            manifest_payload = json.loads((repo_root / "scripts/docs/docs_scope_manifest.json").read_text(encoding="utf-8"))
+            source_payload = json.loads((repo_root / "studio/docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
+            manifest_payload = json.loads((repo_root / "studio/docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
             source_root_exists = (repo_root / "studio/docs-viewer/source/research").exists()
             route_exists = (repo_root / "research/index.md").exists()
             generated_docs_exists = (repo_root / "assets/data/docs/scopes/research").exists()
@@ -616,7 +616,7 @@ def test_source_config_report_reads_known_config_files() -> None:
 
     assert payload["ok"] is True
     assert payload["schema_version"] == "docs_source_config_report_v1"
-    assert payload["source_config_path"] == "scripts/docs/docs_scopes.json"
+    assert payload["source_config_path"] == "studio/docs-viewer/config/scopes/docs_scopes.json"
     assert payload["scopes"][0]["scope_id"] == "studio"
     assert payload["scopes"][0]["source_config"]["source"] == "studio/docs-viewer/source/studio"
     assert payload["scopes"][0]["browser_config"]["index_url"] == "/assets/data/docs/scopes/studio/index.json"
@@ -721,7 +721,7 @@ def test_source_config_settings_apply_writes_allowed_field() -> None:
             "studio",
             {"show_updated_date": False},
         )
-        source_payload = json.loads((repo_root / "scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
+        source_payload = json.loads((repo_root / "studio/docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
 
     assert result["ok"] is True
     assert result["changed"] is True
@@ -741,7 +741,7 @@ def test_source_config_settings_apply_dry_run_does_not_write() -> None:
             {"show_updated_date": False},
             dry_run=True,
         )
-        source_payload = json.loads((repo_root / "scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
+        source_payload = json.loads((repo_root / "studio/docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
 
     assert result["ok"] is True
     assert result["changed"] is True

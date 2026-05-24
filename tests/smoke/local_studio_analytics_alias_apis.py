@@ -15,7 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.studio.studio_app_server import StudioAppServer  # noqa: E402
+from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
 
 
 def write_fixture_data(repo_root: Path) -> tuple[Path, Path]:

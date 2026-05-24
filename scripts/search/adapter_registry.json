@@ -9,7 +9,7 @@
   },
   "docs_viewer": {
     "domain": "docs_viewer",
-    "scope_config": "scripts/docs/docs_scopes.json",
-    "script": "scripts/docs/build_search.rb"
+    "scope_config": "studio/docs-viewer/config/scopes/docs_scopes.json",
+    "script": "studio/docs-viewer/build/build_search.rb"
   }
 }

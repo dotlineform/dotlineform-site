@@ -15,13 +15,13 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.studio import studio_docs_api  # noqa: E402
-from scripts.studio.studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
-from scripts.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
-from scripts.studio.studio_app_config import runtime_config  # noqa: E402
-from scripts.studio.studio_app_server import env_flag, parse_args  # noqa: E402
-from scripts.studio import studio_catalogue_api  # noqa: E402
-from scripts.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
+from studio.app.server.studio import studio_docs_api  # noqa: E402
+from studio.app.server.studio.studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
+from studio.app.server.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
+from studio.app.server.studio.studio_app_config import runtime_config  # noqa: E402
+from studio.app.server.studio.studio_app_server import env_flag, parse_args  # noqa: E402
+from studio.app.server.studio import studio_catalogue_api  # noqa: E402
+from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
 
 
 def test_runtime_config_exposes_adapter_contract() -> None:

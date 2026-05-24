@@ -401,7 +401,7 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
     try:
         with tempfile.TemporaryDirectory() as temp_path:
             repo_root = Path(temp_path)
-            config_path = repo_root / "scripts/docs/docs_scopes.json"
+            config_path = repo_root / "studio/docs-viewer/config/scopes/docs_scopes.json"
             config_path.parent.mkdir(parents=True)
             config_path.write_text(
                 """{

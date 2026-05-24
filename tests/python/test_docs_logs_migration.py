@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCRIPTS_DOCS_LOGS_DIR = REPO_ROOT / "scripts" / "docs_logs"
+SCRIPTS_DOCS_LOGS_DIR = REPO_ROOT / "studio" / "workflows" / "change-requests" / "services" / "docs_logs"
 if str(SCRIPTS_DOCS_LOGS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DOCS_LOGS_DIR))
 
@@ -21,7 +21,7 @@ def test_parse_entries_splits_dated_h2_sections_with_line_ranges() -> None:
         root = Path(temp_path)
         (root / "_config.yml").write_text("title: test\n", encoding="utf-8")
         path = root / "studio/docs-viewer/source/studio" / "site-change-log.md"
-        path.parent.mkdir()
+        path.parent.mkdir(parents=True)
         path.write_text(
             "\n".join(
                 [
@@ -68,8 +68,8 @@ def test_build_record_extracts_metadata_and_validates() -> None:
             "**Effect:**\n"
             "Small docs source writes can avoid rendering every per-doc payload.\n\n"
             "**Affected files/docs:**\n\n"
-            "- `scripts/docs/build_docs.rb`\n"
-            "- `scripts/docs/docs_write_rebuild.py`\n"
+            "- `studio/docs-viewer/build/build_docs.rb`\n"
+            "- `studio/docs-viewer/services/docs_write_rebuild.py`\n"
             "- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)\n"
             "- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n"
             "- [Targeted Docs Build Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)\n"
@@ -84,7 +84,7 @@ def test_build_record_extracts_metadata_and_validates() -> None:
     assert record["type"] == "implementation"
     assert "docs-viewer" in record["domains"]
     assert "build" in record["domains"]
-    assert record["related_files"] == ["scripts/docs/build_docs.rb", "scripts/docs/docs_write_rebuild.py"]
+    assert record["related_files"] == ["studio/docs-viewer/build/build_docs.rb", "studio/docs-viewer/services/docs_write_rebuild.py"]
     assert record["related_docs"] == [
         "scripts-docs-builder",
         "scripts-docs-management-server",

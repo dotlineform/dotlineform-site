@@ -35,7 +35,7 @@ def test_generate_work_command_preserves_scope_and_flags() -> None:
 
     assert cmd == [
         sys.executable,
-        "/repo/scripts/catalogue/generate_work_pages.py",
+        "/repo/studio/services/catalogue/generate_work_pages.py",
         "--internal-json-source-run",
         "--source-dir",
         "/repo/studio/data/canonical/catalogue",
@@ -66,7 +66,7 @@ def test_generate_moment_command_preserves_scope_and_flags() -> None:
 
     assert cmd == [
         sys.executable,
-        "/repo/scripts/catalogue/generate_work_pages.py",
+        "/repo/studio/services/catalogue/generate_work_pages.py",
         "--internal-json-source-run",
         "--source-dir",
         "/repo/studio/data/canonical/catalogue",

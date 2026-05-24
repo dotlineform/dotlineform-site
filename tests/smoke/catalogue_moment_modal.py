@@ -15,7 +15,7 @@ from playwright.sync_api import Route, sync_playwright
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.studio.studio_app_server import StudioAppServer  # noqa: E402
+from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
 
 
 ROOT_SELECTOR = "#catalogueMomentRoot"

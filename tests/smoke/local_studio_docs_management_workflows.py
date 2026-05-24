@@ -18,8 +18,8 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.studio import studio_docs_api  # noqa: E402
-from scripts.studio.studio_app_server import StudioAppServer  # noqa: E402
+from studio.app.server.studio import studio_docs_api  # noqa: E402
+from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -425,7 +425,7 @@ def main(argv: list[str] | None = None) -> int:
             if (fixture_root / "studio/docs-viewer/source/apismoke").exists():
                 raise AssertionError(f"scope delete did not remove fixture source root: {scope_deleted!r}")
 
-            docs_config = (fixture_root / "scripts" / "docs" / "docs_scopes.json").read_text(encoding="utf-8")
+            docs_config = (fixture_root / "studio" / "docs-viewer" / "config" / "scopes" / "docs_scopes.json").read_text(encoding="utf-8")
             if '"show_updated_date": false' not in docs_config:
                 raise AssertionError("settings apply did not update fixture docs_scopes.json")
             if "apismoke" in docs_config:

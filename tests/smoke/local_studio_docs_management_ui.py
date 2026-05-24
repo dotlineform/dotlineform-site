@@ -160,7 +160,7 @@ def main(argv: list[str] | None = None) -> int:
                 browser.close()
 
             source_path = fixture_root / "studio/docs-viewer/source/studio" / "ui-smoke-created.md"
-            config_path = fixture_root / "scripts" / "docs" / "docs_scopes.json"
+            config_path = fixture_root / "studio" / "docs-viewer" / "config" / "scopes" / "docs_scopes.json"
             if source_path.exists():
                 raise AssertionError(f"UI delete did not remove fixture source: {source_path}")
             if '"show_updated_date": false' not in config_path.read_text(encoding="utf-8"):

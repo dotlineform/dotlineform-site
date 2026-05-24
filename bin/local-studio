@@ -53,7 +53,7 @@ load_docs_scope_ids() {
 import json
 from pathlib import Path
 
-payload = json.loads(Path("scripts/docs/docs_scopes.json").read_text(encoding="utf-8"))
+payload = json.loads(Path("studio/docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
 if payload.get("schema_version") != "docs_scopes_v1":
     raise SystemExit("Invalid docs scope config: expected docs_scopes_v1")
 scopes = payload.get("scopes")
@@ -67,7 +67,7 @@ for item in scopes:
 PY
 )
   if [ "${#DOCS_SCOPE_IDS[@]}" -eq 0 ]; then
-    echo "ERROR: No docs scopes found in scripts/docs/docs_scopes.json" >&2
+    echo "ERROR: No docs scopes found in studio/docs-viewer/config/scopes/docs_scopes.json" >&2
     exit 1
   fi
 }
@@ -241,7 +241,7 @@ fi
 if [ "$DOTLINEFORM_BACKUP_RETENTION" = "off" ] || [ "$DOTLINEFORM_BACKUP_RETENTION" = "0" ]; then
   echo "Skipping Studio backup retention cleanup"
 else
-  "$PYTHON_BIN" scripts/studio/studio_backup_retention.py --write --quiet || {
+  "$PYTHON_BIN" studio/app/server/studio/studio_backup_retention.py --write --quiet || {
     echo "WARNING: Studio backup retention cleanup failed; continuing startup." >&2
   }
 fi
@@ -259,7 +259,7 @@ fi
 case "$CATALOGUE_STARTUP_LOOKUP_REBUILD" in
   1|on|true|yes)
     echo "Building catalogue lookup data"
-    "$PYTHON_BIN" scripts/catalogue/export_catalogue_lookup.py --write
+    "$PYTHON_BIN" studio/services/catalogue/export_catalogue_lookup.py --write
     ;;
   *)
     echo "Skipping startup catalogue lookup rebuild"
@@ -276,12 +276,12 @@ if [ "$STUDIO_APP_ENABLED" != "0" ]; then
       STUDIO_APP_ARGS+=(--access-log)
       ;;
   esac
-  "$PYTHON_BIN" scripts/studio/studio_app_server.py "${STUDIO_APP_ARGS[@]}" &
+  "$PYTHON_BIN" studio/app/server/studio/studio_app_server.py "${STUDIO_APP_ARGS[@]}" &
   STUDIO_APP_PID=$!
 fi
 
 if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
-  "$PYTHON_BIN" scripts/docs/docs_live_rebuild_watcher.py \
+  "$PYTHON_BIN" studio/docs-viewer/services/docs_live_rebuild_watcher.py \
     --poll-seconds "$DOCS_WATCH_POLL_SECONDS" \
     --debounce-seconds "$DOCS_WATCH_DEBOUNCE_SECONDS" &
   DOCS_WATCHER_PID=$!
