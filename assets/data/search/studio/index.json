@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-995dae9bb0d6d0981938a4cac25e632c",
-    "generated_at_utc": "2026-05-24T22:37:54Z",
+    "version": "blake2b-c0da820d8f5635aa94ca80778200f373",
+    "generated_at_utc": "2026-05-24T23:17:15Z",
     "count": 309
   },
   "entries": [
@@ -4720,10 +4720,10 @@
       "kind": "doc",
       "title": "Docs Viewer Shell Extraction Tasks",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-tasks",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-05-25",
       "parent_id": "site-request-docs-viewer-shell-extraction",
       "parent_title": "Docs Viewer Shell Extraction Request",
-      "display_meta": "2026-05-24 • Docs Viewer Shell Extraction Request",
+      "display_meta": "2026-05-25 • Docs Viewer Shell Extraction Request",
       "search_terms": [
         "site-request-docs-viewer-shell-extraction-tasks",
         "site",
@@ -4735,12 +4735,12 @@
         "tasks",
         "docs viewer shell extraction tasks",
         "docs viewer shell extraction request",
-        "2026-05-24",
+        "2026-05-25",
         "2026",
         "05",
-        "24"
+        "25"
       ],
-      "search_text": "site-request-docs-viewer-shell-extraction-tasks site request docs viewer shell extraction tasks docs viewer shell extraction tasks docs viewer shell extraction request 2026-05-24 2026 05 24"
+      "search_text": "site-request-docs-viewer-shell-extraction-tasks site request docs viewer shell extraction tasks docs viewer shell extraction tasks docs viewer shell extraction request 2026-05-25 2026 05 25"
     },
     {
       "id": "site-request-docs-viewer-shell-extraction-inventory",

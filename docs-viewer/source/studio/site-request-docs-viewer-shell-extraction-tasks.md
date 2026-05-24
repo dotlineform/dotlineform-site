@@ -2,7 +2,7 @@
 doc_id: site-request-docs-viewer-shell-extraction-tasks
 title: Docs Viewer Shell Extraction Tasks
 added_date: 2026-05-24
-last_updated: 2026-05-24
+last_updated: 2026-05-25
 ui_status: draft
 parent_id: site-request-docs-viewer-shell-extraction
 sort_order: 10021
@@ -16,56 +16,27 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
-- Completed `DVSE-008` by moving Docs Viewer-owned config defaults, service config schema, scope config, UI text, report registry source, and source Markdown roots into the tracked top-level `docs-viewer/` boundary.
-- Switched the extraction boundary from hidden `.docs-viewer/` to non-hidden `docs-viewer/` by user decision during the task; updated the target request docs and active path constants to match.
-- Re-rooted configured source scopes to `docs-viewer/source/<scope>/` while keeping generated docs/search outputs under host-owned `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/`.
-- Moved public browser config and UI text URLs to `docs-viewer/config/defaults/docs-viewer-public-config.json` and `docs-viewer/config/ui-text/ui-text.json`; `_config.yml` excludes the source roots, scope config, report source, schemas, service defaults, and full manage config from public output.
-- Updated readers/writers and operational references across scope config services, source config reports, docs/search builders, `bin/local-studio`, Studio config, Local Studio static serving, project-state output, data-sharing adapter config, projection contract, checks, focused tests, and `AGENTS.md`.
-- Added `docs-viewer/config/reports/reports.json` as the Docs Viewer-owned report registry source while leaving `assets/data/docs/reports.json` as the current host public artifact.
-- Verification passed: config JSON parse/path assertions, Python syntax compile for touched modules, Ruby syntax checks for docs/search builders and wrappers, dry-run docs builders for Studio/Library/Analysis, dry-run search builders for Studio/Library/Analysis, public Jekyll build to `/tmp/dlf-jekyll-build`, public route config URL assertions, focused Docs Viewer/Studio pytest coverage, and `quick` profile.
-- Dry-run docs build reported the known unresolved Analysis semantic reference `work:00638002`; Studio dry-run would write six doc payloads, so generated docs/search payloads were not rebuilt manually in this slice.
-- Fixed legacy Docs Viewer pytest loaders that still pointed at removed `scripts/docs` and `scripts/studio` module paths; focused Docs Viewer/Studio pytest coverage passed with 144 tests.
-- Completed `DVSE-007` by introducing the v1 static Docs Viewer local service config surfaces without adding a runtime advertisement writer or moving implementation files.
-- Added tracked Docs Viewer service defaults and schema under `docs-viewer/config/`, including loopback-only binding policy, stable manage/API route names, local capability defaults, and host-owned local state paths.
-- Added static host/Jekyll defaults to `_config.yml`: Docs Viewer links remain enabled, public routes do not require the local service, and fallback behavior stays host-route based.
-- Added `.gitignore` coverage for future `docs-viewer/` local runtime state such as cache, temp, logs, run, and var directories.
-- Added ignored local `var/local/site.env` defaults for `DOCS_VIEWER_HOST`, `DOCS_VIEWER_PORT`, `DOCS_VIEWER_BASE_URL`, `DOCS_VIEWER_MANAGEMENT_ENABLED`, `DOCS_VIEWER_GENERATED_READS_ENABLED`, and `DOCS_VIEWER_WATCH_ENABLED`.
-- Verification passed: JSON parse/basic config assertion for `docs-viewer/config/`, `_config.yml` YAML parse/key assertion, and public Jekyll build to `/tmp/dlf-jekyll-build`.
-- Completed `DVSE-006` by establishing the current integrated-tree baseline before extraction file moves.
-- Recorded the baseline in [Docs Viewer Shell Extraction Baseline](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-baseline).
-- Baseline passed: `quick` profile, elevated `docs-viewer-smoke` profile, focused Local Studio Docs Viewer management shell smoke, dry-run docs builders for Studio/Library/Analysis, and dry-run search builders for Studio/Library/Analysis.
-- First `docs-viewer-smoke` attempt failed because the Codex sandbox blocked temporary localhost binding; the elevated rerun passed, so treat the initial failure as an environment permission issue.
-- Builder dry runs reported no generated payload drift. Analysis retains the known unresolved semantic reference `work:00638002` from `analysis/3-symbols`.
-- Did not manually rebuild generated docs/search payloads.
-- Completed `DVSE-005` by defining the target `docs-viewer/` layout, host integration surfaces, public/Jekyll route responsibilities, URL conventions, config layers, shell/adapter split, service model, builder/generated output model, test layout, and move-sequence constraints.
-- Recorded the layout in [Docs Viewer Shell Extraction Target Layout](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-target-layout).
-- Target shape keeps `docs-viewer/` tracked and self-contained for runtime, shell templates, services, config defaults/schema, source, builders, static CSS/assets, and Docs Viewer-owned tests.
-- Host-owned surfaces remain outside `docs-viewer/`: `_config.yml`, thin Jekyll route adapters, public route files such as `/library/` and `/analysis/`, generated docs/search payload locations, public media assets, `var/local/site.env`, `var/docs/`, Studio link integration, root script wrappers, and repo-level check entrypoints.
-- Confirmed no compatibility aliases should be added for old `/studio/docs-viewer/...` browser paths; later move slices should update references directly and delete old paths after verification.
-- Did not manually rebuild generated docs/search payloads.
-- Completed `DVSE-004` by resolving the ambiguous ownership points from the inventory before target layout or file moves.
-- Recorded the ownership decisions in [Docs Viewer Shell Extraction Ownership Contract](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-ownership-contract).
-- Key decisions: shell markup is split between a Docs Viewer-owned reusable shell contract and host-owned adapters; built-in `/docs/` manage mode moves to the Docs Viewer service; public scope routes stay host/Jekyll-owned; generated docs/search payloads remain host public output for v1; Docs Viewer owns management APIs, generated reads, source/scope machinery, report schema/loader contract, docs watcher behavior, and reusable runtime/CSS.
-- Kept endpoint names stable for v1 while changing the service owner from Local Studio to Docs Viewer service; Studio should link to configured service URLs without probing and should not proxy or host Docs Viewer after migration.
-- Did not add new implementation rows from `DVSE-004`; existing tasks already cover target layout, config, moves, CSS contract, service shell, Studio link integration, public route preservation, runner, tests, docs, cleanup, and final verification.
-- Did not manually rebuild generated docs/search payloads.
-- Completed `DVSE-003` by inventorying current Docs Viewer paths, imports, URL assumptions, generated payload reads/writes, service endpoints, CSS dependencies, scope/source config, tests, smoke scripts, and Studio/Jekyll integration points.
-- Recorded the inventory in [Docs Viewer Shell Extraction Inventory](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-inventory).
-- Confirmed the current tree already has a coherent interim Docs Viewer home at `studio/docs-viewer/`, while Jekyll route shells, generated payloads, public assets, Local Studio hosting, and check profiles remain outside it.
-- Confirmed new or clarified ownership questions for `DVSE-004`, especially shell include ownership, Local Studio link behavior, `/studio/api/docs/*` endpoint mapping, Docs Viewer data-sharing API ownership, report registry ownership, scope lifecycle route outputs, CSS base contract, generated output ownership, docs watcher ownership, and cleanup of current `.DS_Store` / `__pycache__` noise.
-- Did not rebuild generated docs/search payloads.
-- Completed `DVSE-002` by reviewing the parent request against the owning Docs Viewer, portable setup, runtime boundary, source organisation, config, scripts, local setup, and testing docs.
-- Found no blocker to the parent decisions.
-- Confirmed that several owning docs intentionally describe the current integrated state and will need durable updates during `DVSE-020`, especially:
-  - `scripts-docs-management-server`: currently says there is no standalone Docs Management server process because Local Studio owns HTTP transport today.
-  - `scripts-local-studio`: currently says not to use a combined Studio-plus-Jekyll runner for normal work.
-  - `docs-viewer-runtime-boundary`, `config-docs-viewer`, and portable setup docs still contain current-state path and route assumptions that the extraction will replace.
-- Treat those differences as expected current-state documentation, not contradictions that block extraction planning.
-- Generated Docs Viewer payloads may be refreshed by the local docs watcher when this source file changes.
+- Completed `DVSE-009` by verifying the config/source/scope move without widening into browser runtime, CSS, or service moves.
+- Source/scope config validation passed for the configured `studio`, `library`, and `analysis` scopes: source roots now resolve under `docs-viewer/source/<scope>/`, generated docs outputs remain under `assets/data/docs/scopes/<scope>/`, and search outputs remain under `assets/data/search/<scope>/`.
+- Focused syntax/import checks passed: Python compile for Docs Viewer config/source/generated-read services and Studio API integration; Ruby syntax checks for `scripts/build_docs.rb`, `scripts/build_search.rb`, `studio/docs-viewer/build/build_docs.rb`, and `studio/docs-viewer/build/build_search.rb`.
+- Focused pytest passed for Docs Viewer source-model and generated-read behavior: 21 tests.
+- Dry-run docs builders passed for Studio, Library, and Analysis. Library and Analysis reported no generated output drift; Studio still reported six changed doc payloads, matching the prior handoff.
+- Dry-run search builders passed for Studio, Library, and Analysis with zero writes expected to `assets/data/search/<scope>/index.json`.
+- Public Jekyll build passed to `/tmp/dlf-jekyll-build`; built `/library/` and `/analysis/` remained read-only and pointed at `/docs-viewer/config/defaults/docs-viewer-public-config.json`, `/docs-viewer/config/ui-text/ui-text.json`, `/assets/data/docs/scopes/<scope>/index.json`, and `/assets/data/search/<scope>/index.json` as expected.
+- `quick` profile passed with summary `var/test-runs/20260525-001529/summary.md`.
+- No generated docs/search payloads were rebuilt manually. Analysis still reports the known unresolved semantic reference `work:00638002` from `analysis/3-symbols`.
+
+### completed earlier
+
+- `DVSE-002` through `DVSE-008` are complete; the durable details live in the sibling docs for [Inventory](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-inventory), [Ownership Contract](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-ownership-contract), [Target Layout](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-target-layout), and [Baseline](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-baseline).
+- Key carried decisions: use top-level `docs-viewer/` as the tracked extraction boundary; keep host/Jekyll public routes and generated docs/search outputs outside that boundary; avoid old `/studio/docs-viewer/...` compatibility shims; keep Local Studio as a peer integration after the service move; keep public read-only routes host-owned; keep manage mode local-only with explicit capability flags.
+- Baseline evidence remains valid for comparison: `quick`, elevated `docs-viewer-smoke`, focused Local Studio Docs Viewer management smoke, dry-run docs/search builders for Studio/Library/Analysis, and public Jekyll build passed. The first sandboxed localhost smoke failed due to Codex localhost binding restrictions and passed when rerun elevated.
+- Known carried issue: Analysis still has unresolved semantic reference `work:00638002` from `analysis/3-symbols`; treat this as pre-existing unless the active task touches semantic references.
+- Generated Docs Viewer payloads may be refreshed by the local docs watcher when this source file changes. Do not manually rebuild generated docs/search payloads unless the active task explicitly requires it.
 
 ### steer for next task
 
-- Start with `DVSE-009`, verifying the config/source/scope move and recording generated-output behavior without widening into browser runtime or service moves.
+- Start with `DVSE-010`, moving Docs Viewer browser runtime modules, reusable CSS, management CSS, and static assets into `docs-viewer/` without adding old-path compatibility shims.
 - Keep the table sequential: only begin the next non-deferred ID after the current one is `done`.
 - If a task uncovers a new dependency, risk, or unresolved ownership question, add a new task row before continuing rather than widening the active task.
 - Bunch work into coherent slices that reduce repeated verification, but do not combine tasks when the second task depends on evidence from the first.
@@ -120,7 +91,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-006 | done | Establish the baseline verification run for the current integrated tree, including the smallest useful Docs Viewer, Local Studio, public scope, build, and syntax checks needed to compare before and after extraction slices. |
 | DVSE-007 | done | Introduce v1 Docs Viewer local service config using static `var/local/site.env` host, port, base URL, and manage capability settings; add only the necessary `_config.yml`, `.gitignore`, and `docs-viewer/config/` defaults/schema changes, with no dynamic runtime advertisement writer. |
 | DVSE-008 | done | Move Docs Viewer-owned config, source/scope machinery, generated-data contract defaults, UI text, and non-runtime metadata into the tracked `docs-viewer/` boundary; update readers/writers directly and keep repo-local host/service state outside `docs-viewer/`. |
-| DVSE-009 | planned | Verify the config/source/scope move with focused syntax checks, dry-run builders where useful, source config validation, and public scope checks that prove generated JSON/search payload outputs still land where Jekyll routes expect them. |
+| DVSE-009 | done | Verify the config/source/scope move with focused syntax checks, dry-run builders where useful, source config validation, and public scope checks that prove generated JSON/search payload outputs still land where Jekyll routes expect them. |
 | DVSE-010 | planned | Move Docs Viewer browser runtime modules, rendering/search/router/report/bookmark/favourites code, reusable CSS, management CSS, and static assets into `docs-viewer/`; update public route shells, module imports, and asset references without adding old-path compatibility shims. |
 | DVSE-011 | planned | Define and apply the CSS base contract for standalone Docs Viewer pages, public read-only host routes, and local manage mode; add a Docs Viewer-owned base stylesheet if the host contract is not enough. |
 | DVSE-012 | planned | Verify the browser runtime/CSS/static move with Docs Viewer smoke checks, public `/library/` and `/analysis/` checks, desktop/mobile layout checks where relevant, and targeted JavaScript/CSS reference checks. |

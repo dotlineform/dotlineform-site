@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T22:43:38Z",
+  "generated_at": "2026-05-24T23:17:14Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -3123,7 +3123,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction.json",
-      "content_text_length": 17503,
+      "content_text_length": 17489,
       "ui_status": "in-progress"
     },
     {
@@ -3131,7 +3131,7 @@
       "doc_id": "site-request-docs-viewer-shell-extraction-tasks",
       "title": "Docs Viewer Shell Extraction Tasks",
       "added_date": "2026-05-24",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-05-25",
       "parent_id": "site-request-docs-viewer-shell-extraction",
       "sort_order": 10021,
       "published": true,
@@ -3140,7 +3140,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-tasks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-tasks.json",
-      "content_text_length": 16828,
+      "content_text_length": 13693,
       "ui_status": "draft"
     },
     {
@@ -3157,7 +3157,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-inventory.json",
-      "content_text_length": 14641,
+      "content_text_length": 14632,
       "ui_status": "draft"
     },
     {
@@ -3174,7 +3174,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction-ownership-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-ownership-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-ownership-contract.json",
-      "content_text_length": 10332,
+      "content_text_length": 10326,
       "ui_status": "draft"
     },
     {
@@ -3191,7 +3191,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction-target-layout.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-target-layout",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-target-layout.json",
-      "content_text_length": 11889,
+      "content_text_length": 11859,
       "ui_status": "draft"
     },
     {
@@ -4299,7 +4299,7 @@
       "source_path": "_tmp.md",
       "viewer_url": "/docs/?scope=studio&doc=_tmp",
       "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp.json",
-      "content_text_length": 1341
+      "content_text_length": 467
     },
     {
       "scope": "studio",
