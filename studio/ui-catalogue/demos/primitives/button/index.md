@@ -1,5 +1,4 @@
 ---
-layout: studio
 title: "UI Demo Primitive: Button"
 permalink: /studio/ui-catalogue/demos/primitives/button/
 studio_page_doc: /docs/?scope=studio&doc=ui-primitive-button

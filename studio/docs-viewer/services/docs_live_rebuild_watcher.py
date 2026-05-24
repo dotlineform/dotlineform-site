@@ -27,7 +27,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
-from scripts.studio_python_paths import ensure_studio_python_paths
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DOCS_DIR = Path(__file__).resolve().parent

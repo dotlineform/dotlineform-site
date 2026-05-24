@@ -20,7 +20,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
-from scripts.studio_python_paths import ensure_studio_python_paths
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
@@ -75,7 +75,7 @@ STATIC_PREFIXES = (
     "/assets/site/",
     "/assets/work_details/",
     "/assets/works/",
-    "/assets/studio/img/thumbnail-quality/",
+    "/studio/data/generated/thumbnail-quality/img/",
     "/studio/app/frontend/js/",
     "/studio/app/frontend/config/",
     "/studio/app/assets/",

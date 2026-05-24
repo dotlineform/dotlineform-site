@@ -114,6 +114,5 @@ exclude:
   - studio/docs-viewer/source-assets/
   - studio/docs-viewer/tests/
   - studio/ui-catalogue/
-  - assets/studio/
   - assets/data/docs/scopes/studio/
   - assets/data/search/studio/

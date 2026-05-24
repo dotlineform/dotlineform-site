@@ -164,7 +164,7 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/assets/data/docs/scopes/studio/index.json") is True
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
-    assert allowed("/assets/studio/img/thumbnail-quality/01-00420-current.webp") is True
+    assert allowed("/studio/data/generated/thumbnail-quality/img/01-00420-current.webp") is True
 
     assert allowed("/assets/studio/js/catalogue-work-editor.js") is False
     assert allowed("/assets/ui-catalogue/js/ui-catalogue-demo.js") is False

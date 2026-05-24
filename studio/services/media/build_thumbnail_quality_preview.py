@@ -20,7 +20,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
-from scripts.studio_python_paths import ensure_studio_python_paths
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
@@ -30,7 +30,7 @@ from pipeline_config import env_var_name, load_pipeline_config, resolve_repo_roo
 
 
 SOURCE_SUBDIR = "thumbnail-quality-preview"
-OUTPUT_IMG_REL_DIR = Path("assets/studio/img/thumbnail-quality")
+OUTPUT_IMG_REL_DIR = Path("studio/data/generated/thumbnail-quality/img")
 OUTPUT_DATA_REL_PATH = Path("studio/data/generated/thumbnail-quality/thumbnail-quality-preview.json")
 SUPPORTED_EXTENSIONS = {".avif", ".heic", ".heif", ".jpeg", ".jpg", ".png", ".tif", ".tiff", ".webp"}
 

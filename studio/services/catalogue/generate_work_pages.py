@@ -77,7 +77,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
-from scripts.studio_python_paths import ensure_studio_python_paths
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
@@ -122,12 +122,12 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 try:
     from display_paths import format_display_path
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.display_paths import format_display_path
+    from studio.shared.python.display_paths import format_display_path
 
 try:
     from script_logging import append_script_log
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.script_logging import append_script_log
+    from studio.shared.python.script_logging import append_script_log
 
 try:
     from pipeline_config import (
@@ -138,7 +138,7 @@ try:
         source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.pipeline_config import (
+    from studio.shared.python.pipeline_config import (
         env_var_name,
         env_var_value,
         load_pipeline_config,
@@ -289,7 +289,7 @@ def write_index_json_payload(
 
 def render_markdown_with_jekyll(markdown_path: Path) -> str:
     """Render a markdown file to HTML using the repo's local Jekyll stack."""
-    renderer_script = REPO_ROOT / "scripts" / "render_markdown_with_jekyll.rb"
+    renderer_script = REPO_ROOT / "studio" / "shared" / "ruby" / "render_markdown_with_jekyll.rb"
     if not renderer_script.exists():
         raise SystemExit(f"Markdown renderer helper not found: {renderer_script}")
 

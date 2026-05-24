@@ -9,7 +9,7 @@ require "pathname"
 require "time"
 
 DEFAULT_SCOPE = "catalogue"
-SEARCH_BUILD_CONFIG_PATH = "scripts/search/build_config.json"
+SEARCH_BUILD_CONFIG_PATH = "studio/services/catalogue/search/build_config.json"
 SEARCH_BUILD_TARGETED_POLICIES = %w[full_rebuild record_update additive_only].freeze
 SEARCH_BUILD_TARGETED_POLICY_OPERATIONS = {
   "record_update" => %w[create update delete],
@@ -43,7 +43,7 @@ class CatalogueSearchDataBuilder
     tag_registry_path: nil
   )
     @scope = normalize(scope)
-    @repo_root = Pathname(__dir__).parent.parent.realpath
+    @repo_root = Pathname(__dir__).join("../../../..").realpath
     @schema = CATALOGUE_DEFAULTS.fetch(:schema)
     @output_path = resolve_path(output_path || CATALOGUE_DEFAULTS.fetch(:output_path))
     @series_index_path = resolve_path(series_index_path || CATALOGUE_DEFAULTS.fetch(:series_index_path))

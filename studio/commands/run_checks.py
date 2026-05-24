@@ -7,6 +7,7 @@ import argparse
 import datetime as dt
 import json
 import re
+import shutil
 import shlex
 import subprocess
 import sys
@@ -19,6 +20,13 @@ from typing import Iterable
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RUNS_DIR = REPO_ROOT / "var" / "test-runs"
 JEKYLL_DESTINATION = Path("/tmp/dlf-jekyll-build")
+SOURCE_MODULE_SITE_ROOT = Path(".")
+GENERATED_PUBLIC_PAYLOADS = (
+    Path("assets/data/docs/scopes/analysis"),
+    Path("assets/data/docs/scopes/library"),
+    Path("assets/data/search/analysis"),
+    Path("assets/data/search/library"),
+)
 
 
 @dataclass(frozen=True)
@@ -48,9 +56,12 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "-m",
                 "py_compile",
                 "studio/commands/run_checks.py",
-                "scripts/local_env.py",
-                "scripts/pipeline_config.py",
-                "scripts/studio_python_paths.py",
+                "studio/shared/python/local_env.py",
+                "studio/shared/python/pipeline_config.py",
+                "studio/shared/python/studio_python_paths.py",
+                "studio/shared/python/display_paths.py",
+                "studio/shared/python/script_logging.py",
+                "studio/shared/python/studio_activity.py",
                 "studio/checks/audit_site_consistency.py",
                 "studio/checks/audit_projection_contract.py",
                 "studio/checks/audit_public_build_surface.py",
@@ -91,7 +102,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/app/server/studio/studio_app_server.py",
                 "studio/checks/audit_studio_ready_state.py",
                 "studio/checks/verify_activity_contract.py",
-                "scripts/studio_activity.py",
                 "studio/docs-viewer/services/docs_activity.py",
                 "studio/services/analytics/tag_activity.py",
                 "studio/services/analytics/tag_alias_mutations.py",
@@ -290,14 +300,14 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Build the site to a temporary destination for browser smoke tests.",
         ),
         CheckCommand(
-            "docs-viewer-route-smoke",
+            "public-docs-viewer-readonly-smoke",
             (
                 sys.executable,
-                "studio/tests/smoke/docs_viewer_routes.py",
+                "studio/tests/smoke/public_docs_viewer_readonly.py",
                 "--site-root",
                 str(JEKYLL_DESTINATION),
             ),
-            "Smoke-check Docs Viewer direct route, search, link interception, history, hash, and Library scope behavior.",
+            "Smoke-check public Library and Analysis Docs Viewer installs stay read-only.",
         ),
         CheckCommand(
             "docs-viewer-index-panel-module-smoke",
@@ -305,19 +315,9 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "studio/tests/smoke/docs_viewer_index_panel_modules.py",
                 "--site-root",
-                str(JEKYLL_DESTINATION),
+                str(SOURCE_MODULE_SITE_ROOT),
             ),
             "Smoke-check Docs Viewer index panel state, persistence migration, and projection helpers.",
-        ),
-        CheckCommand(
-            "docs-viewer-index-panel-route-smoke",
-            (
-                sys.executable,
-                "studio/tests/smoke/docs_viewer_index_panel_route.py",
-                "--site-root",
-                str(JEKYLL_DESTINATION),
-            ),
-            "Smoke-check Docs Viewer index panel route toggle states and document pane hiding.",
         ),
         CheckCommand(
             "docs-viewer-management-modal-smoke",
@@ -335,7 +335,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "studio/tests/smoke/docs_viewer_management_action_workflow_modules.py",
                 "--site-root",
-                str(JEKYLL_DESTINATION),
+                str(SOURCE_MODULE_SITE_ROOT),
             ),
             "Smoke-check Docs Viewer management action workflow choices, payloads, and viewability target shaping.",
         ),
@@ -345,7 +345,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "studio/tests/smoke/docs_html_import_modules.py",
                 "--site-root",
-                str(JEKYLL_DESTINATION),
+                str(SOURCE_MODULE_SITE_ROOT),
             ),
             "Smoke-check Docs HTML Import preview, replacement, write failure fallback, and result rendering modules.",
         ),
@@ -357,14 +357,14 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
             "Build the site to a temporary destination for browser smoke tests.",
         ),
         CheckCommand(
-            "docs-viewer-route-smoke",
+            "public-docs-viewer-readonly-smoke",
             (
                 sys.executable,
-                "studio/tests/smoke/docs_viewer_routes.py",
+                "studio/tests/smoke/public_docs_viewer_readonly.py",
                 "--site-root",
                 str(JEKYLL_DESTINATION),
             ),
-            "Smoke-check Docs Viewer direct route, search, link interception, history, hash, and Library scope behavior.",
+            "Smoke-check public Library and Analysis Docs Viewer installs stay read-only.",
         ),
         CheckCommand(
             "docs-html-import-module-smoke",
@@ -372,7 +372,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "studio/tests/smoke/docs_html_import_modules.py",
                 "--site-root",
-                str(JEKYLL_DESTINATION),
+                str(SOURCE_MODULE_SITE_ROOT),
             ),
             "Smoke-check Docs HTML Import preview, replacement, write failure fallback, and result rendering modules.",
         ),
@@ -398,7 +398,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "studio/tests/smoke/data_sharing_prepare_modules.py",
                 "--site-root",
-                str(JEKYLL_DESTINATION),
+                str(SOURCE_MODULE_SITE_ROOT),
             ),
             "Smoke-check Data Sharing prepare state projection, result rendering, and write failure shaping.",
         ),
@@ -426,7 +426,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "studio/tests/smoke/catalogue_editor_route_boot_modules.py",
                 "--site-root",
-                str(JEKYLL_DESTINATION),
+                str(SOURCE_MODULE_SITE_ROOT),
             ),
             "Smoke-check shared Catalogue editor route boot, readiness, and lookup helpers.",
         ),
@@ -436,7 +436,7 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 sys.executable,
                 "studio/tests/smoke/tag_registry_modules.py",
                 "--site-root",
-                str(JEKYLL_DESTINATION),
+                str(SOURCE_MODULE_SITE_ROOT),
             ),
             "Smoke-check Tag Registry render output, import-mode availability, and patch fallback behavior.",
         ),
@@ -453,6 +453,25 @@ def slugify(value: str) -> str:
 
 def command_text(argv: Iterable[str]) -> str:
     return " ".join(shlex.quote(str(part)) for part in argv)
+
+
+def copy_generated_public_payloads(destination: Path) -> list[str]:
+    copied: list[str] = []
+    for rel_path in GENERATED_PUBLIC_PAYLOADS:
+        source = REPO_ROOT / rel_path
+        if not source.exists():
+            continue
+        target = destination / rel_path
+        if source.is_dir():
+            if target.exists():
+                shutil.rmtree(target)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(source, target)
+        else:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
+        copied.append(str(rel_path))
+    return copied
 
 
 def create_run_dir(run_id: str | None) -> Path:
@@ -506,6 +525,13 @@ def run_command(command: CheckCommand, log_path: Path) -> dict[str, object]:
         )
         output = result.stdout or ""
         exit_code = result.returncode
+        if exit_code == 0 and command.name == "jekyll-temp-build":
+            copied = copy_generated_public_payloads(JEKYLL_DESTINATION)
+            payload_lines = ["", "Copied generated public payloads for smoke tests:"]
+            payload_lines.extend(f"  - {path}" for path in copied)
+            if not copied:
+                payload_lines.append("  - none")
+            output = f"{output.rstrip()}\n" + "\n".join(payload_lines) + "\n"
     except FileNotFoundError as error:
         output = f"{error}\n"
         exit_code = 127

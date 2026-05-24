@@ -24,7 +24,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
-from scripts.studio_python_paths import ensure_studio_python_paths
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
@@ -36,11 +36,11 @@ try:
     )
     from local_env import SITE_ENV_REL_PATH, runtime_env, strip_env_value
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.pipeline_config import (
+    from studio.shared.python.pipeline_config import (
         load_pipeline_config,
         media_mode_output_subdir,
     )
-    from scripts.local_env import SITE_ENV_REL_PATH, runtime_env, strip_env_value
+    from studio.shared.python.local_env import SITE_ENV_REL_PATH, runtime_env, strip_env_value
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))

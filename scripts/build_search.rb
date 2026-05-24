@@ -5,7 +5,7 @@ require "json"
 require "pathname"
 
 REPO_ROOT = Pathname(__dir__).parent.realpath
-ADAPTER_REGISTRY_PATH = REPO_ROOT.join("scripts/search/adapter_registry.json")
+ADAPTER_REGISTRY_PATH = REPO_ROOT.join("studio/commands/search-adapters.json")
 
 def normalize_scope(value)
   String(value || "").strip.downcase

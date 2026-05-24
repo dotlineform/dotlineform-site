@@ -14,7 +14,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
-from scripts.studio_python_paths import ensure_studio_python_paths
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
@@ -27,7 +27,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 try:
     from display_paths import format_display_path
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.display_paths import format_display_path
+    from studio.shared.python.display_paths import format_display_path
 
 
 def main() -> int:

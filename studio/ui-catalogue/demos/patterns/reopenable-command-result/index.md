@@ -1,5 +1,4 @@
 ---
-layout: studio
 title: "UI Demo Pattern: Reopenable Command Result"
 permalink: /studio/ui-catalogue/demos/patterns/reopenable-command-result/
 studio_page_doc: /docs/?scope=studio&doc=ui-pattern-reopenable-command-result

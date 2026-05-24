@@ -1106,7 +1106,7 @@ def materialize_inline_raster_media(
 
 
 def validate_markdown_with_jekyll(repo_root: Path, markdown: str) -> dict[str, Any]:
-    renderer_script = repo_root / "scripts" / "render_markdown_with_jekyll.rb"
+    renderer_script = repo_root / "studio" / "shared" / "ruby" / "render_markdown_with_jekyll.rb"
     if not renderer_script.exists():
         raise RuntimeError(f"Markdown renderer helper not found: {relative_path(repo_root, renderer_script)}")
 
@@ -1140,7 +1140,7 @@ def validate_markdown_with_jekyll(repo_root: Path, markdown: str) -> dict[str, A
     return {
         "ok": True,
         "html_chars": len(completed.stdout),
-        "renderer": "scripts/render_markdown_with_jekyll.rb",
+        "renderer": "studio/shared/ruby/render_markdown_with_jekyll.rb",
     }
 
 

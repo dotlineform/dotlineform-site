@@ -1,5 +1,4 @@
 ---
-layout: studio
 title: "UI Demo Pattern: Column Links"
 permalink: /studio/ui-catalogue/demos/patterns/column-links/
 studio_page_doc: /docs/?scope=studio&doc=ui-pattern-column-links

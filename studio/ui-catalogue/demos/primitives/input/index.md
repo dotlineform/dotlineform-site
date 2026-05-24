@@ -1,5 +1,4 @@
 ---
-layout: studio
 title: "UI Demo Primitive: Input"
 permalink: /studio/ui-catalogue/demos/primitives/input/
 studio_page_doc: /docs/?scope=studio&doc=ui-primitive-input

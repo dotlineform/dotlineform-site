@@ -4,7 +4,7 @@
   "scopes": {
     "catalogue": {
       "domain": "catalogue",
-      "script": "scripts/search/build_search.rb"
+      "script": "studio/services/catalogue/search/build_search.rb"
     }
   },
   "docs_viewer": {

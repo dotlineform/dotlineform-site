@@ -10,7 +10,7 @@ require "time"
 require "uri"
 require "yaml"
 
-require_relative "../../../scripts/jekyll_markdown_renderer"
+require_relative "../../shared/ruby/jekyll_markdown_renderer"
 
 DOCS_SCOPE_CONFIG_PATH = File.expand_path("../config/scopes/docs_scopes.json", __dir__)
 DOCS_SCOPE_CONFIG_SCHEMA_VERSION = "docs_scopes_v1"

@@ -18,11 +18,11 @@ def resolve_repo_root(start: str | Path | None = None) -> Path:
 def ensure_studio_python_paths(start: str | Path | None = None) -> Path:
     repo_root = resolve_repo_root(start)
     paths = [
+        repo_root / "studio" / "shared" / "python",
         repo_root / "studio" / "app" / "server",
         repo_root / "studio" / "services",
         repo_root / "studio" / "docs-viewer" / "services",
         repo_root / "studio" / "workflows" / "change-requests" / "services",
-        repo_root / "scripts",
     ]
     for path in reversed(paths):
         text = str(path)

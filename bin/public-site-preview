@@ -19,7 +19,7 @@ else
   BUNDLE_BIN="${BUNDLE_BIN:-bundle}"
 fi
 
-JEKYLL_WEBRICK_FILTER="$ROOT_DIR/scripts/jekyll_webrick_client_reset_filter.rb"
+JEKYLL_WEBRICK_FILTER="$ROOT_DIR/studio/shared/ruby/jekyll_webrick_client_reset_filter.rb"
 PUBLIC_SITE_HOST="${PUBLIC_SITE_HOST:-${JEKYLL_HOST:-127.0.0.1}}"
 PUBLIC_SITE_PORT="${PUBLIC_SITE_PORT:-${JEKYLL_PORT:-4000}}"
 PUBLIC_SITE_CONFIG="${PUBLIC_SITE_CONFIG:-_config.yml}"

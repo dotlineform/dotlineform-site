@@ -20,7 +20,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
-from scripts.studio_python_paths import ensure_studio_python_paths
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
@@ -82,7 +82,7 @@ def build_audit_registry(repo_root: Path) -> dict[str, AuditDefinition]:
             description="Checks Studio route-ready template contracts and static-route drift.",
             argv=(
                 sys.executable,
-                str(repo_root / "scripts" / "checks" / "audit_studio_ready_state.py"),
+                str(repo_root / "studio" / "checks" / "audit_studio_ready_state.py"),
                 "--strict",
                 "--json",
             ),

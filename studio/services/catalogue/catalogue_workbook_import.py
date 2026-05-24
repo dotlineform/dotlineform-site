@@ -7,7 +7,7 @@ from typing import Any, Dict, Iterable, Mapping
 try:
     from pipeline_config import bulk_import_workbook_path, load_pipeline_config
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.pipeline_config import bulk_import_workbook_path, load_pipeline_config
+    from studio.shared.python.pipeline_config import bulk_import_workbook_path, load_pipeline_config
 
 try:
     from catalogue.catalogue_source import (

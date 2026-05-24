@@ -22,7 +22,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
-from scripts.studio_python_paths import ensure_studio_python_paths
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
@@ -30,7 +30,7 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 try:
     from display_paths import format_display_command, format_display_path
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.display_paths import format_display_command, format_display_path
+    from studio.shared.python.display_paths import format_display_command, format_display_path
 
 try:
     from pipeline_config import (
@@ -41,7 +41,7 @@ try:
         media_mode_output_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.pipeline_config import (
+    from studio.shared.python.pipeline_config import (
         env_var_value,
         env_var_name,
         load_pipeline_config,

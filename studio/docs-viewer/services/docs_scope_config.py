@@ -42,7 +42,7 @@ SUPPORTED_IMPORT_MEDIA_STORAGE_MODES = {"repo_assets", "staging_manual", "r2_upl
 
 
 def default_repo_root() -> Path:
-    from scripts.studio_python_paths import resolve_repo_root
+    from studio.shared.python.studio_python_paths import resolve_repo_root
 
     return resolve_repo_root(__file__)
 

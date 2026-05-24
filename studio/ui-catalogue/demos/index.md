@@ -1,5 +1,4 @@
 ---
-layout: studio
 title: "UI Catalogue Demos"
 permalink: /studio/ui-catalogue/demos/
 studio_page_doc: /docs/?scope=studio&doc=ui-catalogue

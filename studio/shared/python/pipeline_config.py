@@ -9,9 +9,9 @@ from pathlib import Path
 from typing import Any, Dict, Mapping
 
 try:
+    from .local_env import runtime_env
+except ImportError:  # pragma: no cover - direct sys.path import fallback
     from local_env import runtime_env
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.local_env import runtime_env
 
 
 CONFIG_REL_PATH = Path("_data/pipeline.json")

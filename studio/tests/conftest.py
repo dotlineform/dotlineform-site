@@ -10,7 +10,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.studio_python_paths import ensure_studio_python_paths  # noqa: E402
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths  # noqa: E402
 
 
 ensure_studio_python_paths(__file__)

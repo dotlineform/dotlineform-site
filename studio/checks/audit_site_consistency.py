@@ -31,7 +31,7 @@ for path in (
 try:
     from pipeline_config import load_pipeline_config
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.pipeline_config import load_pipeline_config
+    from studio.shared.python.pipeline_config import load_pipeline_config
 
 try:
     from catalogue.series_ids import normalize_series_id

@@ -18,7 +18,7 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
             sys.path.insert(0, str(_candidate))
         break
 
-from scripts.studio_python_paths import ensure_studio_python_paths
+from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
@@ -28,7 +28,7 @@ try:
     from pipeline_config import env_var_name, env_var_value, load_pipeline_config, source_works_root_subdir
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from catalogue.catalogue_source import DEFAULT_SOURCE_DIR, SOURCE_FILES, normalize_text, records_from_json_source
-    from scripts.pipeline_config import env_var_name, env_var_value, load_pipeline_config, source_works_root_subdir
+    from studio.shared.python.pipeline_config import env_var_name, env_var_value, load_pipeline_config, source_works_root_subdir
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))

@@ -1,5 +1,4 @@
 ---
-layout: studio
 title: "UI Demo Primitive: Modal Shell"
 permalink: /studio/ui-catalogue/demos/primitives/modal-shell/
 studio_page_doc: /docs/?scope=studio&doc=ui-primitive-modal-shell

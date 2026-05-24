@@ -176,7 +176,7 @@ def viewer_url_for(scope: str, doc_id: str) -> str:
 
 def log_event(repo_root: Path, event: str, details: Dict[str, Any]) -> None:
     append_script_log(
-        repo_root / "scripts" / "docs" / "docs_management_service.py",
+        repo_root / "studio" / "docs-viewer" / "services" / "docs_management_service.py",
         event,
         details=details,
         repo_root=repo_root,

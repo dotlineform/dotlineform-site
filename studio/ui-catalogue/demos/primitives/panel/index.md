@@ -1,5 +1,4 @@
 ---
-layout: studio
 title: "UI Demo Primitive: Panel"
 permalink: /studio/ui-catalogue/demos/primitives/panel/
 studio_page_doc: /docs/?scope=studio&doc=ui-primitive-panel
