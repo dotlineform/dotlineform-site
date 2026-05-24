@@ -131,6 +131,8 @@ def main(argv: list[str] | None = None) -> int:
                     managementBaseUrl: root.dataset.managementBaseUrl
                 })"""
             )
+            main_css_count = page.locator('link[href*="/assets/css/main.css"]').count()
+            studio_css_count = page.locator('link[href*="/studio/app/assets/css/studio.css"]').count()
             management_css_count = page.locator('link[href*="docs-viewer-management.css"]').count()
             docs_script_count = page.locator('script[src*="docs-viewer.js"]').count()
             nav_link = page.locator('[data-studio-navigate="docs"]').get_attribute("href")
@@ -190,6 +192,10 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError("could not measure local Docs Viewer layout")
         if abs(header_box["x"] - docs_box["x"]) > 1:
             raise AssertionError(f"Docs Viewer should align with the centered shell content: header={header_box}, docs={docs_box}")
+        if main_css_count:
+            raise AssertionError(f"Docs Viewer management shell should not load public main CSS, got {main_css_count}")
+        if studio_css_count != 1:
+            raise AssertionError(f"expected one Studio shell stylesheet, got {studio_css_count}")
         if management_css_count != 1:
             raise AssertionError(f"expected one management stylesheet, got {management_css_count}")
         if docs_script_count != 1:

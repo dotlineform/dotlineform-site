@@ -16,35 +16,26 @@ This is the tracker for implementing [Studio Source Tree Reorganization Request]
 
 ### just done
 
-- Completed `STSR-012` by moving Studio and Docs Viewer frontend/static source under `studio/`.
-- Moved Studio browser modules from `assets/studio/js/` to `studio/app/frontend/js/`.
-- Moved Studio CSS from `assets/studio/css/` to `studio/app/assets/css/`.
-- Moved Studio panel background source assets from `assets/studio/img/panel-backgrounds/` to `studio/app/assets/img/panel-backgrounds/`.
-- Moved Docs Viewer browser runtime from `assets/docs-viewer/js/` to `studio/docs-viewer/runtime/js/`.
-- Moved Docs Viewer CSS from `assets/docs-viewer/css/` to `studio/docs-viewer/assets/css/`.
-- Moved Docs Viewer runtime config and UI text from `assets/docs-viewer/data/` to `studio/docs-viewer/config/runtime/` and `studio/docs-viewer/config/ui-text/`.
-- Updated Local Studio route config, HTML shell rendering, runtime config, static serving allowlist, tests, smoke helpers, projection contract, and CSS audit defaults to use the new paths.
-- Updated the public Docs Viewer include and `_config.yml` so public read-only `/library/` and `/analysis/` can publish only the moved Docs Viewer runtime/config subset while excluding Studio app, services, source, checks, tests, and management-only Docs Viewer source/config.
-- Verification passed: Python syntax check for touched server/check/test modules.
-- Verification passed: Ruby syntax check for `studio/docs-viewer/build/build_docs.rb`.
-- Verification passed: JSON syntax checks for Studio config, Docs Viewer config, Docs Viewer public config, and Docs Viewer UI text.
-- Verification passed: `scripts/checks/audit_projection_contract.py`.
-- Verification passed: `$HOME/miniconda3/bin/python3 -m pytest tests/python/test_studio_app_server.py tests/python/test_docs_management_service.py`; 50 passed.
-- Verification passed: `$HOME/miniconda3/bin/python3 -m pytest tests/python/test_javascript_inventory_guardrail.py`; 2 passed.
-- Verification passed: booted Local Studio on `127.0.0.1:8877`, checked moved Studio CSS/JS and Docs Viewer JS/config/text static URLs, then shut it down.
-- Verification passed: isolated public Jekyll build to `/tmp/dlf-jekyll-build-stsr-012`.
-- Verification passed: `scripts/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build-stsr-012`.
-- Verification passed: public Docs Viewer read-only browser smoke for `/library/` and `/analysis/` against `/tmp/dlf-jekyll-build-stsr-012`.
-- Verification passed: Local Studio Docs Viewer management browser smoke.
-- Verification passed: `tests/smoke/catalogue_editor_route_boot_modules.py --site-root .`.
-- Verification passed: Local Studio navigation adapter browser smoke.
-- Generated public docs/search payloads were intentionally not rebuilt.
+- Completed `STSR-014` by making Local Studio shells stop loading public `assets/css/main.css`.
+- Moved the Studio-local base tokens, typography defaults, theme variables, container/header/nav rules, shell layout rules, and shared Studio content-shell rules into `studio/app/assets/css/studio.css`.
+- Updated Local Studio route shells, Docs Viewer management shell, Studio home, and UI Catalogue demo shell to load `studio/app/assets/css/studio.css` directly with no public `main.css` dependency.
+- Removed `assets/css/main.css` from Local Studio asset-version inputs so public CSS edits no longer churn Studio cache versions.
+- Updated focused unit/smoke coverage so Studio shell HTML and rendered UI Catalogue/Docs Viewer management routes assert that `studio.css` is requested and `main.css` is not requested.
+- Left public `/library/` and `/analysis/` route-shell portability for the Docs Viewer extraction request; the current public Jekyll routes may still use `layout: default`, while Docs Viewer component CSS remains in the Docs Viewer-owned `studio/docs-viewer/assets/css/` subtree.
+- Verification passed: `$HOME/miniconda3/bin/python3 -m py_compile studio/app/server/studio/studio_app_config.py studio/app/server/studio/studio_app_views.py studio/app/server/studio/studio_ui_catalogue_views.py tests/python/test_studio_app_server.py tests/smoke/local_studio_app_docs_viewer.py tests/smoke/local_studio_app_ui_catalogue_routes.py`.
+- Verification passed: `$HOME/miniconda3/bin/python3 -m pytest tests/python/test_studio_app_server.py`; 29 passed.
+- Verification passed: `$HOME/miniconda3/bin/python3 tests/smoke/local_studio_app_docs_viewer.py`.
+- Verification passed: `$HOME/miniconda3/bin/python3 tests/smoke/local_studio_app_ui_catalogue_routes.py`.
+- Verification passed: `$HOME/miniconda3/bin/python3 tests/smoke/local_studio_navigation_adapter.py`.
+- Browser check passed against a temporary Local Studio server: `/studio/` requested only `/studio/app/assets/css/studio.css`; `/docs/?scope=studio&doc=docs-viewer&mode=manage` requested Studio shell CSS plus Docs Viewer-owned CSS, with no `/assets/css/main.css`.
+- Note: a currently running `bin/local-studio` process must be restarted before it uses the new route HTML and CSS split.
 
 ### steer for next task
 
-- Start with `STSR-013`; finish tightening Local Studio static serving and old public asset source cleanup after the frontend/static move.
-- Confirm no active Local Studio route still requests old source URLs under `/assets/studio/js/`, `/assets/studio/css/`, `/assets/studio/img/panel-backgrounds/`, `/assets/docs-viewer/js/`, `/assets/docs-viewer/css/`, or `/assets/docs-viewer/data/`.
-- Decide whether remaining `assets/studio/img/thumbnail-quality/` is retained as generated workflow output for now or retargeted in a later generated-output cleanup; it was not moved as Studio source in `STSR-012`.
+- Start with `STSR-015`; verify the frontend/static/CSS move across the broader Local Studio and public build surfaces.
+- In `STSR-015`, include at least one mobile-sized Local Studio route check because `studio.css` now owns the shell/header/nav base rules.
+- Confirm public Jekyll routes still build and render without needing Studio source CSS; do not turn the public `/library/` and `/analysis/` portable CSS work into this sequence unless it blocks verification.
+- Keep `assets/studio/img/thumbnail-quality/` retained as generated workflow output for now; retarget it in a later generated-output cleanup, not in the CSS split.
 - Treat `assets/docs-viewer/` and other empty old source folders as deletion/cleanup candidates in `STSR-019` unless `STSR-013` proves a serving rule still references them.
 - Treat broad user-facing docs path cleanup as part of `STSR-018` unless a stale active path blocks verification before then.
 - Keep generated docs/search payloads untouched unless the active verification step explicitly requires a rebuild.
@@ -102,8 +93,8 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | STSR-010 | done | Move Local Studio app server modules, route-family modules, local API adapters, Studio-owned workflow services such as docs-log/change-request-log code, and Studio-owned service orchestration into the chosen `studio/app/` and `studio/services/` paths; move current Docs Viewer server/services into the chosen internal Docs Viewer home under `studio/`; update imports directly rather than adding old-path aliases. |
 | STSR-011 | done | Verify the Python/server move with syntax/import checks, focused unit tests, and the smallest Local Studio API or route smoke checks that prove the moved server can boot and serve active routes. |
 | STSR-012 | done | Move Studio frontend JavaScript, shell modules, route modules, UI text, runtime config, and Studio-only static assets into the chosen `studio/app/frontend/` or `studio/app/assets/` paths; move current Docs Viewer runtime code, UI text, config, CSS, and assets into the chosen internal Docs Viewer home under `studio/`; update HTML, runtime config, module imports, tests, and smoke scripts to load from those paths. |
-| STSR-013 | planned | Update Local Studio static serving so Studio-owned frontend files are served from `studio/` source locations and no old public `assets/studio/...` source-serving path remains active. |
-| STSR-014 | planned | Split Studio CSS from public `assets/css/main.css`: move Studio-only base tokens, shell rules, route/editor/modal/dashboard/operational selectors, and Studio primitive classes into Studio-owned CSS under `studio/`; leave only public-site or genuinely shared selectors in public CSS. |
+| STSR-013 | done | Update Local Studio static serving so Studio-owned frontend files are served from `studio/` source locations and no old public `assets/studio/...` source-serving path remains active. |
+| STSR-014 | done | Split Studio CSS from public `assets/css/main.css`: move Studio-only base tokens, shell rules, route/editor/modal/dashboard/operational selectors, and Studio primitive classes into Studio-owned CSS under `studio/`; leave only public-site or genuinely shared selectors in public CSS. |
 | STSR-015 | planned | Verify the frontend/static/CSS move with Local Studio desktop and mobile smoke checks, UI route readiness checks, and a public Jekyll build or public route check that confirms public CSS and public runtime behavior still work without Studio source. |
 | STSR-016 | planned | Move UI Catalogue demo source, notes, demo CSS/JS, fixtures, and assets under the Studio boundary; update local demo routes to read the new source paths and keep UI Catalogue out of the public Jekyll publishing surface. |
 | STSR-017 | planned | Move tests, smoke helpers, fixtures, projection/source-boundary checks, public-surface checks, and Codex-run verification helpers under the chosen Studio or Docs Viewer test/check locations; public-site validation remains a Studio/Codex testing responsibility, not public-site source ownership. |

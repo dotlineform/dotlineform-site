@@ -71,7 +71,6 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
   <meta name="dlf-asset-version" content="{escaped_version}">
   <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
   <title>{title} | dotlineform Studio</title>
-  <link rel="stylesheet" href="/assets/css/main.css?v={escaped_version}">
   <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
@@ -772,7 +771,6 @@ def docs_viewer_manage_view(version: str, repo_root: Path) -> str:
   <meta name="dlf-asset-version" content="{escaped_version}">
   <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
   <title>Docs | dotlineform Studio</title>
-  <link rel="stylesheet" href="/assets/css/main.css?v={escaped_version}">
   <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">
@@ -805,7 +803,6 @@ def studio_home_view(version: str) -> str:
   <meta name="dlf-asset-version" content="{escaped_version}">
   <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
   <title>dotlineform Studio</title>
-  <link rel="stylesheet" href="/assets/css/main.css?v={escaped_version}">
   <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">

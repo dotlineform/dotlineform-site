@@ -191,9 +191,11 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError("UI Catalogue demo CSS was not requested")
         if not any("/assets/ui-catalogue/js/ui-catalogue-demo.js" in request for request in requests):
             raise AssertionError("UI Catalogue demo JS was not requested")
-        studio_css_requests = [request for request in requests if "/studio/app/assets/css/studio.css" in request]
-        if studio_css_requests:
-            raise AssertionError(f"UI Catalogue demos should not request production Studio CSS: {studio_css_requests!r}")
+        if not any("/studio/app/assets/css/studio.css" in request for request in requests):
+            raise AssertionError("UI Catalogue demos should request Studio shell CSS")
+        main_css_requests = [request for request in requests if "/assets/css/main.css" in request]
+        if main_css_requests:
+            raise AssertionError(f"UI Catalogue demos should not request public main CSS: {main_css_requests!r}")
         if failed_responses:
             raise AssertionError(f"failed responses: {failed_responses}")
         if console_errors:

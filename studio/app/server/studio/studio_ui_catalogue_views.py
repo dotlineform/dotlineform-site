@@ -58,7 +58,7 @@ def ui_catalogue_demo_view(version: str, repo_root: Path, view_id: str) -> str:
   <meta name="dlf-asset-version" content="{escaped_version}">
   <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
   <title>{title} | dotlineform Studio</title>
-  <link rel="stylesheet" href="/assets/css/main.css?v={escaped_version}">
+  <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
   <link rel="stylesheet" href="/assets/ui-catalogue/css/ui-catalogue-demo.css?v={escaped_version}">
 </head>
 <body class="studio-local-app">

@@ -65,7 +65,18 @@ from studio_docs_api import docs_management_get_payload, docs_management_post_re
 
 
 STATIC_PREFIXES = (
-    "/assets/",
+    "/assets/css/",
+    "/assets/data/",
+    "/assets/docs/",
+    "/assets/home/",
+    "/assets/js/",
+    "/assets/moments/",
+    "/assets/series/",
+    "/assets/site/",
+    "/assets/ui-catalogue/",
+    "/assets/work_details/",
+    "/assets/works/",
+    "/assets/studio/img/thumbnail-quality/",
     "/studio/app/frontend/js/",
     "/studio/app/frontend/config/",
     "/studio/app/assets/",

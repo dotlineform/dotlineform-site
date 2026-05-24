@@ -18,10 +18,12 @@ if str(REPO_ROOT) not in sys.path:
 from studio.app.server.studio import studio_docs_api  # noqa: E402
 from studio.app.server.studio.studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
 from studio.app.server.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
-from studio.app.server.studio.studio_app_config import runtime_config  # noqa: E402
-from studio.app.server.studio.studio_app_server import env_flag, parse_args  # noqa: E402
+from studio.app.server.studio.studio_app_config import asset_version, runtime_config  # noqa: E402
+from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, env_flag, parse_args  # noqa: E402
+from studio.app.server.studio.studio_app_views import docs_viewer_manage_view, studio_home_view, studio_route_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
+from studio.app.server.studio.studio_ui_catalogue_views import ui_catalogue_demo_view  # noqa: E402
 
 
 def test_runtime_config_exposes_adapter_contract() -> None:
@@ -148,6 +150,56 @@ def test_access_log_is_opt_in(monkeypatch) -> None:
     monkeypatch.setenv("STUDIO_APP_ACCESS_LOG", "0")
     assert parse_args([]).access_log is False
     assert parse_args(["--access-log"]).access_log is True
+
+
+def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots() -> None:
+    def allowed(path: str) -> bool:
+        return StudioAppRequestHandler.is_allowed_static_path(object(), path)
+
+    assert allowed("/studio/app/frontend/js/catalogue-work-editor.js") is True
+    assert allowed("/studio/app/assets/css/studio.css") is True
+    assert allowed("/studio/docs-viewer/runtime/js/docs-viewer.js") is True
+    assert allowed("/studio/docs-viewer/config/runtime/docs-viewer-config.json") is True
+    assert allowed("/assets/data/docs/scopes/studio/index.json") is True
+    assert allowed("/assets/works/img/00001.jpg") is True
+    assert allowed("/assets/js/work.js") is True
+    assert allowed("/assets/studio/img/thumbnail-quality/01-00420-current.webp") is True
+
+    assert allowed("/assets/studio/js/catalogue-work-editor.js") is False
+    assert allowed("/assets/studio/css/studio.css") is False
+    assert allowed("/assets/studio/img/panel-backgrounds/aqua.jpg") is False
+    assert allowed("/assets/docs-viewer/js/docs-viewer.js") is False
+    assert allowed("/assets/docs-viewer/css/docs-viewer.css") is False
+    assert allowed("/assets/docs-viewer/data/docs-viewer-config.json") is False
+
+
+def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
+    html_shells = [
+        studio_home_view("test-version"),
+        studio_route_view("test-version", "studio_analytics", "<p>Analytics</p>"),
+        docs_viewer_manage_view("test-version", REPO_ROOT),
+        ui_catalogue_demo_view("test-version", REPO_ROOT, "ui_catalogue_demos"),
+    ]
+
+    for shell in html_shells:
+        assert "/studio/app/assets/css/studio.css?v=test-version" in shell
+        assert "/assets/css/main.css" not in shell
+
+
+def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        repo_root = Path(tmp_dir)
+        docs_shell = repo_root / "_includes" / "docs_viewer_shell.html"
+        public_css = repo_root / "assets" / "css" / "main.css"
+        studio_css = repo_root / "studio" / "app" / "assets" / "css" / "studio.css"
+        for path in (docs_shell, public_css, studio_css):
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("/* fixture */\n", encoding="utf-8")
+        os.utime(docs_shell, (100, 100))
+        os.utime(studio_css, (200, 200))
+        os.utime(public_css, (300, 300))
+
+        assert asset_version(repo_root) == "200"
 
 
 def test_analytics_tag_groups_route_returns_existing_payload() -> None:
@@ -1293,6 +1345,9 @@ def test_docs_api_post_rejects_disallowed_origin() -> None:
 
 if __name__ == "__main__":
     test_runtime_config_exposes_adapter_contract()
+    test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots()
+    test_local_studio_shells_load_studio_css_without_public_main_css()
+    test_local_studio_asset_version_does_not_follow_public_main_css()
     test_analytics_tag_groups_route_returns_existing_payload()
     test_analytics_save_tags_dry_run_route_uses_assignment_contract()
     test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract()
