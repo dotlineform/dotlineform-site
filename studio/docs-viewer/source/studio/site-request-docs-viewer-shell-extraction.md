@@ -12,9 +12,10 @@ viewable: true
 
 Status:
 
-- planned follow-up
+- in progress
 - related to, and narrower than, the active [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
 - should follow Studio source-tree reorganization rather than run alongside it
+- implementation tasks are tracked in [Docs Viewer Shell Extraction Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-tasks)
 
 ## Summary
 
