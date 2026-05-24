@@ -9,7 +9,7 @@ sort_order: 91000
 viewable: true
 ---
 
-This document is now archived and is no longer maintained.
+This document is archived and is no longer maintained.
 
 ---
 

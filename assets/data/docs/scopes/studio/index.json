@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T20:42:21Z",
+  "generated_at": "2026-05-24T20:46:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -3062,23 +3062,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "site-request-studio-source-tree-reorganization",
-      "title": "Studio Source Tree Reorganization Request",
-      "added_date": "2026-05-23",
-      "last_updated": "2026-05-24",
-      "parent_id": "change-requests",
-      "sort_order": 10010,
-      "published": true,
-      "hidden": false,
-      "viewable": true,
-      "source_path": "site-request-studio-source-tree-reorganization.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization.json",
-      "content_text_length": 22901,
-      "ui_status": "complete"
-    },
-    {
-      "scope": "studio",
       "doc_id": "site-request-studio-source-tree-reorganization-tasks",
       "title": "Studio Source Tree Reorganization Tasks",
       "added_date": "2026-05-24",
@@ -3091,8 +3074,8 @@
       "source_path": "site-request-studio-source-tree-reorganization-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization-tasks.json",
-      "content_text_length": 14475,
-      "ui_status": "complete"
+      "content_text_length": 14570,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -3108,8 +3091,7 @@
       "source_path": "site-request-studio-source-tree-reorganization-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization-inventory.json",
-      "content_text_length": 19769,
-      "ui_status": "in-progress"
+      "content_text_length": 19868
     },
     {
       "scope": "studio",
@@ -3125,8 +3107,7 @@
       "source_path": "site-request-studio-source-tree-reorganization-layout.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-layout",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization-layout.json",
-      "content_text_length": 11595,
-      "ui_status": "in-progress"
+      "content_text_length": 11691
     },
     {
       "scope": "studio",
@@ -5117,7 +5098,24 @@
       "source_path": "site-request-studio-local-vanilla-web-app.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-local-vanilla-web-app.json",
-      "content_text_length": 27247,
+      "content_text_length": 27243,
+      "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-studio-source-tree-reorganization",
+      "title": "Studio Source Tree Reorganization Request",
+      "added_date": "2026-05-23",
+      "last_updated": "2026-05-24",
+      "parent_id": "archive",
+      "sort_order": 92000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-studio-source-tree-reorganization.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization.json",
+      "content_text_length": 22998,
       "ui_status": "done"
     }
   ]

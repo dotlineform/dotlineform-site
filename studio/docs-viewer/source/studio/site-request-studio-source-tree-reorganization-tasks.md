@@ -3,11 +3,16 @@ doc_id: site-request-studio-source-tree-reorganization-tasks
 title: Studio Source Tree Reorganization Tasks
 added_date: 2026-05-24
 last_updated: 2026-05-24
-ui_status: complete
+ui_status: done
 parent_id: site-request-studio-source-tree-reorganization
 sort_order: 10011
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # Studio Source Tree Reorganization Tasks
 
 This is the tracker for implementing [Studio Source Tree Reorganization Request](/docs/?scope=studio&mode=manage&doc=site-request-studio-source-tree-reorganization).

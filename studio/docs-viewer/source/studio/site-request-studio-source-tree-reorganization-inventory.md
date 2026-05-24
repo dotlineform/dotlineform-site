@@ -3,11 +3,15 @@ doc_id: site-request-studio-source-tree-reorganization-inventory
 title: Studio Source Tree Reorganization Inventory
 added_date: 2026-05-24
 last_updated: 2026-05-24
-ui_status: in-progress
 parent_id: site-request-studio-source-tree-reorganization
 sort_order: 10012
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # Studio Source Tree Reorganization Inventory
 
 This inventory supports [Studio Source Tree Reorganization Request](/docs/?scope=studio&mode=manage&doc=site-request-studio-source-tree-reorganization) and [Studio Source Tree Reorganization Tasks](/docs/?scope=studio&mode=manage&doc=site-request-studio-source-tree-reorganization-tasks).

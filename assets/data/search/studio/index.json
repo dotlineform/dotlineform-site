@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-519d826c430e8bd1fa3c6910c3e8e52c",
-    "generated_at_utc": "2026-05-24T20:35:51Z",
+    "version": "blake2b-d43e376bc9399e0e7a2025e8e2680aaf",
+    "generated_at_utc": "2026-05-24T20:44:06Z",
     "count": 304
   },
   "entries": [
@@ -4607,34 +4607,6 @@
       "search_text": "tiered-dimension-policy tiered dimension policy tiered dimension policy analytics 2026-05-06 20:54 2026 05 06 20 54"
     },
     {
-      "id": "site-request-studio-source-tree-reorganization",
-      "kind": "doc",
-      "title": "Studio Source Tree Reorganization Request",
-      "href": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization",
-      "last_updated": "2026-05-24",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-24 • Change Requests",
-      "search_terms": [
-        "site-request-studio-source-tree-reorganization",
-        "site",
-        "request",
-        "studio",
-        "source",
-        "tree",
-        "reorganization",
-        "studio source tree reorganization request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-24",
-        "2026",
-        "05",
-        "24"
-      ],
-      "search_text": "site-request-studio-source-tree-reorganization site request studio source tree reorganization studio source tree reorganization request change requests change requests 2026-05-24 2026 05 24"
-    },
-    {
       "id": "site-request-studio-source-tree-reorganization-tasks",
       "kind": "doc",
       "title": "Studio Source Tree Reorganization Tasks",
@@ -7568,6 +7540,30 @@
         "23"
       ],
       "search_text": "site-request-studio-local-vanilla-web-app site request studio local vanilla web app studio local vanilla web app request 2026-05-23 2026 05 23"
+    },
+    {
+      "id": "site-request-studio-source-tree-reorganization",
+      "kind": "doc",
+      "title": "Studio Source Tree Reorganization Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization",
+      "last_updated": "2026-05-24",
+      "parent_id": "archive",
+      "display_meta": "2026-05-24",
+      "search_terms": [
+        "site-request-studio-source-tree-reorganization",
+        "site",
+        "request",
+        "studio",
+        "source",
+        "tree",
+        "reorganization",
+        "studio source tree reorganization request",
+        "2026-05-24",
+        "2026",
+        "05",
+        "24"
+      ],
+      "search_text": "site-request-studio-source-tree-reorganization site request studio source tree reorganization studio source tree reorganization request 2026-05-24 2026 05 24"
     }
   ]
 }

@@ -3,11 +3,16 @@ doc_id: site-request-studio-source-tree-reorganization
 title: Studio Source Tree Reorganization Request
 added_date: 2026-05-23
 last_updated: 2026-05-24
-ui_status: complete
-parent_id: change-requests
-sort_order: 10010
+ui_status: done
+parent_id: archive
+sort_order: 92000
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # Studio Source Tree Reorganization Request
 
 Status:
