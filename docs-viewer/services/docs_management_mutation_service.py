@@ -33,15 +33,32 @@ def execute_management_mutation_plan(repo_root: Path, plan: mutations.Management
             for source_delete in plan.source_deletes:
                 source_delete.path.unlink()
 
-        rebuild = write_rebuild.perform_source_write_and_rebuild(
-            repo_root,
-            plan.scope,
-            plan.changed_paths,
-            write_operation,
-            suppression_reason=plan.suppression_reason or "docs-management",
-            docs_doc_ids=plan.build_doc_ids,
-            search_doc_ids=plan.search_doc_ids,
-        )
+        if plan.rebuilds:
+            rebuild = write_rebuild.perform_multi_scope_source_write_and_rebuild(
+                repo_root,
+                [
+                    {
+                        "scope": rebuild_plan.scope,
+                        "changed_paths": list(rebuild_plan.changed_paths),
+                        "docs_doc_ids": rebuild_plan.build_doc_ids,
+                        "search_doc_ids": rebuild_plan.search_doc_ids,
+                        "include_search": rebuild_plan.include_search,
+                    }
+                    for rebuild_plan in plan.rebuilds
+                ],
+                write_operation,
+                suppression_reason=plan.suppression_reason or "docs-management",
+            )
+        else:
+            rebuild = write_rebuild.perform_source_write_and_rebuild(
+                repo_root,
+                plan.scope,
+                plan.changed_paths,
+                write_operation,
+                suppression_reason=plan.suppression_reason or "docs-management",
+                docs_doc_ids=plan.build_doc_ids,
+                search_doc_ids=plan.search_doc_ids,
+            )
         if plan.log_event_name:
             log_event(repo_root, plan.log_event_name, plan.log_details)
 

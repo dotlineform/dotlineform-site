@@ -27,6 +27,7 @@ import {
   buildDocsViewerDeletePreviewBody,
   openDocsViewerChoiceModal,
   openDocsViewerConfirmModal,
+  openDocsViewerNoticeModal,
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modals.js";
 
@@ -87,6 +88,13 @@ export function createDocsViewerManagementActionController(options) {
 
   function reloadDocsIndex(targetDocId, summaryText) {
     return callbacks.reloadDocsIndex ? callbacks.reloadDocsIndex(targetDocId, summaryText) : Promise.resolve();
+  }
+
+  function archiveScopeAvailable() {
+    var capabilities = state.managementCapabilities || {};
+    var scopes = capabilities.scopes || {};
+    var archiveCaps = scopes.archive || null;
+    return Boolean(archiveCaps && archiveCaps.available);
   }
 
   async function viewabilityTargetDocIds(doc) {
@@ -403,6 +411,15 @@ export function createDocsViewerManagementActionController(options) {
   async function handleArchiveDoc() {
     var doc = currentSelectedDoc();
     if (!doc) return;
+    if (!archiveScopeAvailable()) {
+      await openDocsViewerNoticeModal({
+        root: root,
+        title: state.managementText.archiveUnavailableTitle,
+        body: state.managementText.archiveScopeMissingPrompt,
+        primaryLabel: state.managementText.scopeResultOkButton || "OK"
+      });
+      return;
+    }
     var confirmed = await openDocsViewerConfirmModal({
       root: root,
       title: state.managementText.archiveConfirmTitle,
@@ -417,8 +434,9 @@ export function createDocsViewerManagementActionController(options) {
 
     archiveManagedDoc(doc.doc_id, managementClientOptions())
       .then(function (payload) {
+        var reloadTargetDocId = String(doc.parent_id || "").trim() || context.defaultRouteDocId() || context.defaultDocId();
         setManagementMessage("", false);
-        return reloadDocsIndex(payload.doc_id, "");
+        return reloadDocsIndex(reloadTargetDocId, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Archive failed.", true);

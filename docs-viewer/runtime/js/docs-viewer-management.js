@@ -383,8 +383,7 @@ export function initDocsViewerManagement(context) {
       state.managementBusy ||
       !doc ||
       state.searchRouteActive ||
-      !managementArchiveAvailable() ||
-      doc.parent_id === "archive"
+      viewerScope() === "archive"
     );
     var deleteDisabled = (
       state.managementBusy ||

@@ -144,6 +144,26 @@ def write_docs_scope_config(target_root: Path) -> None:
                         "repo_assets_public_path_prefix": "/assets/docs/analysis",
                     },
                 },
+                {
+                    "scope_id": "archive",
+                    "source": "docs-viewer/source/archive",
+                    "media_path_prefix": "docs/archive",
+                    "output": "docs-viewer/generated/docs/archive",
+                    "search_output": "docs-viewer/generated/search/archive/index.json",
+                    "viewer_base_url": "/docs/",
+                    "include_scope_param": True,
+                    "default_doc_id": "archive",
+                    "allow_nested_source": False,
+                    "non_loadable_doc_ids": [],
+                    "manage_only_tree_root_ids": [],
+                    "show_updated_date": True,
+                    "allow_unresolved_parent_ids": False,
+                    "import_media_storage": {
+                        "storage_mode": "staging_manual",
+                        "repo_assets_path_prefix": "assets/docs/archive",
+                        "repo_assets_public_path_prefix": "/assets/docs/archive",
+                    },
+                },
             ],
             "docs_viewer": {
                 "recently_added_limit": 10,
@@ -192,6 +212,15 @@ def write_browser_config(target_root: Path) -> None:
                     "media_path_prefix": "docs/analysis",
                     "index_url": "/assets/data/docs/scopes/analysis/index.json",
                     "search_index_url": "/assets/data/search/analysis/index.json",
+                },
+                {
+                    "scope_id": "archive",
+                    "viewer_base_url": "/docs/",
+                    "include_scope_param": True,
+                    "default_doc_id": "archive",
+                    "media_path_prefix": "docs/archive",
+                    "index_url": "/docs-viewer/generated/docs/archive/index.json",
+                    "search_index_url": "/docs-viewer/generated/search/archive/index.json",
                 },
             ],
             "docs_viewer": {"recently_added_limit": 10},
@@ -250,11 +279,13 @@ def create_fixture_repo(target_root: Path) -> None:
         "studio": "root-doc",
         "library": "library",
         "analysis": "analysis",
+        "archive": "archive",
     }.items():
         source_root = {
             "studio": "docs-viewer/source/studio",
             "library": "docs-viewer/source/library",
             "analysis": "docs-viewer/source/analysis",
+            "archive": "docs-viewer/source/archive",
         }[scope]
         write_doc(target_root / source_root / f"{default_doc}.md", doc_id=default_doc, title=default_doc.replace("-", " ").title())
     write_doc(target_root / "docs-viewer/source/studio" / "archive.md", doc_id="archive", title="Archive", sort_order=9000)
@@ -518,14 +549,15 @@ def main(argv: list[str] | None = None) -> int:
                 {"scope": "studio", "doc_id": doc_id},
             )
             assert_ok(archived, "archive")
-            if archived["record"]["parent_id"] != "archive":
-                raise AssertionError(f"archive did not move doc under archive: {archived!r}")
+            if archived.get("archive_scope") != "archive" or archived["record"]["path"] != "docs-viewer/source/archive/api-smoke-created.md":
+                raise AssertionError(f"archive did not move doc into archive scope: {archived!r}")
+            archived_path = fixture_root / str(archived["record"]["path"])
 
             delete_preview = request_json(
                 base_url,
                 "POST",
                 "/docs/delete-preview",
-                {"scope": "studio", "doc_id": doc_id},
+                {"scope": "archive", "doc_id": doc_id},
             )
             assert_ok(delete_preview, "delete preview")
             if delete_preview.get("allowed") is not True:
@@ -535,11 +567,11 @@ def main(argv: list[str] | None = None) -> int:
                 base_url,
                 "POST",
                 "/docs/delete-apply",
-                {"scope": "studio", "doc_id": doc_id, "confirm": True},
+                {"scope": "archive", "doc_id": doc_id, "confirm": True},
             )
             assert_ok(deleted, "delete apply")
-            if created_path.exists():
-                raise AssertionError(f"delete apply did not remove fixture source file: {created_path}")
+            if archived_path.exists():
+                raise AssertionError(f"delete apply did not remove fixture source file: {archived_path}")
 
             rebuild = request_json(
                 base_url,

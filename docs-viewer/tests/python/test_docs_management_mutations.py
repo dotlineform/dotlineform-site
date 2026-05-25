@@ -17,8 +17,14 @@ import docs_management_mutations as mutations  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 
 
-def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: str | None = None) -> None:
-    path = root / "docs-viewer/source/studio" / filename
+def write_doc(
+    root: Path,
+    filename: str,
+    front_matter: dict[str, object],
+    body: str | None = None,
+    scope: str = "studio",
+) -> None:
+    path = root / "docs-viewer/source" / scope / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         source_model.format_source(front_matter, body if body is not None else f"# {front_matter['title']}\n"),
@@ -30,6 +36,18 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     temp_dir = tempfile.TemporaryDirectory()
     repo_root = Path(temp_dir.name)
     (repo_root / "_config.yml").write_text("title: test\n", encoding="utf-8")
+    write_doc(
+        repo_root,
+        "archive.md",
+        {
+            "doc_id": "archive",
+            "title": "Archive",
+            "sort_order": 10,
+            "published": True,
+            "viewable": False,
+        },
+        scope="archive",
+    )
     write_doc(
         repo_root,
         "archive.md",
@@ -283,17 +301,17 @@ def test_archive_plan_preserves_already_archived_noop() -> None:
         plan = mutations.plan_archive(
             repo_root,
             {
-                "scope": "studio",
+                "scope": "archive",
                 "doc_id": "archive",
             },
         )
 
     assert plan.has_source_changes is False
     assert plan.include_write_result_keys is False
-    assert plan.response["summary_text"] == "archive is the archive parent and was not changed."
+    assert plan.response["summary_text"] == "archive is already in the archive scope."
 
 
-def test_archive_plan_preserves_last_updated_for_tree_metadata_change() -> None:
+def test_archive_plan_moves_doc_to_archive_scope() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
         plan = mutations.plan_archive(
@@ -305,8 +323,15 @@ def test_archive_plan_preserves_last_updated_for_tree_metadata_change() -> None:
         )
 
     assert plan.source_writes
+    assert plan.source_deletes
+    assert plan.rebuilds[0].scope == "studio"
+    assert plan.rebuilds[1].scope == "archive"
+    assert plan.response["archive_scope"] == "archive"
+    assert plan.response["record"]["from_path"] == "docs-viewer/source/studio/sibling.md"
+    assert plan.response["record"]["path"] == "docs-viewer/source/archive/sibling.md"
+    assert plan.response["record"]["parent_id"] == ""
     assert 'last_updated: "2026-05-02 11:00"' in plan.source_writes[0].text
-    assert "parent_id: archive" in plan.source_writes[0].text
+    assert "parent_id:" not in plan.source_writes[0].text
 
 
 def test_delete_preview_preserves_child_blocker_and_inbound_warning() -> None:
@@ -353,7 +378,7 @@ def main() -> None:
         test_move_plan_keeps_search_target_for_reparent,
         test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_search,
         test_archive_plan_preserves_already_archived_noop,
-        test_archive_plan_preserves_last_updated_for_tree_metadata_change,
+        test_archive_plan_moves_doc_to_archive_scope,
         test_delete_preview_preserves_child_blocker_and_inbound_warning,
         test_delete_apply_plan_selects_backup_doc_delete_path_and_search_target,
     ]

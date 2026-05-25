@@ -1,0 +1,16 @@
+{
+  "scope": "archive",
+  "doc_id": "docs-viewer-management",
+  "title": "Docs Viewer Management",
+  "added_date": "2026-04-22",
+  "last_updated": "2026-05-22",
+  "parent_id": "",
+  "sort_order": 54000,
+  "published": true,
+  "hidden": false,
+  "viewable": true,
+  "source_path": "docs-viewer-management.md",
+  "viewer_url": "/docs/?scope=archive&doc=docs-viewer-management",
+  "content_html": "<h1 id=\"docs-viewer-management\">Docs Viewer Management</h1>\n\n<p>This archived planning/reference page now acts as the index for the Docs Viewer management-mode split.\nThe current implementation is complete for the confirmed local workflow, and the detailed contract has been moved into child references for easier search and review.</p>\n\n<h2 id=\"current-status\">Current Status</h2>\n\n<p>Implemented management mode covers:</p>\n\n<ul>\n  <li>local-only <code class=\"language-plaintext highlighter-rouge\">/docs/?mode=manage</code> availability through the standalone Docs Viewer service</li>\n  <li>active-scope management for Studio, Library, and Analysis from <code class=\"language-plaintext highlighter-rouge\">/docs/</code></li>\n  <li>create, import, metadata edit, status edit, viewability, move, normalize order, archive, delete, settings, source-open, copy-link, and rebuild actions</li>\n  <li>dedicated client-side management modules under <code class=\"language-plaintext highlighter-rouge\">docs-viewer/runtime/js/</code></li>\n  <li>local write service backing through <a href=\"/docs/?scope=studio&amp;doc=scripts-docs-management-server\">Docs Management Service</a></li>\n</ul>\n\n<h2 id=\"child-references\">Child References</h2>\n\n<ul>\n  <li><a href=\"/docs/?scope=studio&amp;doc=docs-viewer-management-current\">Current State</a> lists implemented phases, management UI/module responsibilities, unavailable items, and follow-on candidates.</li>\n  <li><a href=\"/docs/?scope=studio&amp;doc=docs-viewer-management-contract\">Contract</a> preserves the original management-mode goals, scope, guardrails, and phase-1 contract.</li>\n  <li><a href=\"/docs/?scope=studio&amp;doc=docs-viewer-management-write-model\">Write Model</a> records command semantics, builder implications, non-goals, phases, and decisions.</li>\n</ul>\n",
+  "ui_status": "done"
+}

@@ -165,7 +165,9 @@ import {
     generatedDataReadAvailable: false,
     generatedDataReadRequestPromise: null,
     managementText: {
-      archiveUnavailableNote: "Archive is unavailable for this scope until `archive` exists.",
+      archiveUnavailableNote: "Archive is unavailable until the archive scope exists.",
+      archiveUnavailableTitle: "Archive unavailable",
+      archiveScopeMissingPrompt: "archive scope doesn't exist.",
       checkingNote: "Checking manage mode...",
       clearSearchNote: "Clear search to manage the current doc.",
       serverNotConfiguredError: "Local docs-management server is not configured.",
@@ -921,6 +923,13 @@ import {
     }
   }
 
+  function clearManagementMessageForDocChange(docId) {
+    var targetDocId = String(docId || "").trim();
+    if (!targetDocId || targetDocId === state.selectedDocId || !state.managementMessage) return;
+    state.managementMessage = "";
+    state.managementMessageIsError = false;
+  }
+
   function initializeManagement() {
     if (!allowManagement) return;
     state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
@@ -995,6 +1004,7 @@ import {
   }
 
   function loadDoc(docId, options) {
+    clearManagementMessageForDocChange(docId);
     return loadViewerDoc({
       docId: docId,
       expandTrailForDoc: expandTrail,

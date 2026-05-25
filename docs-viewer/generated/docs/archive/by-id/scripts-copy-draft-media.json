@@ -1,0 +1,15 @@
+{
+  "scope": "archive",
+  "doc_id": "scripts-copy-draft-media",
+  "title": "Copy Draft Media",
+  "added_date": "2026-04-18",
+  "last_updated": "2026-05-01",
+  "parent_id": "",
+  "sort_order": 10000,
+  "published": true,
+  "hidden": false,
+  "viewable": true,
+  "source_path": "scripts-copy-draft-media.md",
+  "viewer_url": "/docs/?scope=archive&doc=scripts-copy-draft-media",
+  "content_html": "<h1 id=\"deprecated-copy-draft-media\">Deprecated: Copy Draft Media</h1>\n\n<p>Status:</p>\n\n<ul>\n  <li>retired workbook-led media staging reference</li>\n  <li>kept only as an archive stub so old docs links do not break</li>\n</ul>\n\n<p><code class=\"language-plaintext highlighter-rouge\">scripts/copy_draft_media_files.py</code> has been removed. This page no longer documents a current media workflow. Current catalogue builds use source JSON for metadata; media staging and derivative generation should be handled through the active media/build surfaces when a change explicitly requires them.</p>\n\n<p>Current references:</p>\n\n<ul>\n  <li><a href=\"/docs/?scope=studio&amp;doc=scripts-build-catalogue-json\">Build Catalogue JSON</a></li>\n  <li><a href=\"/docs/?scope=studio&amp;doc=scripts-srcset-builder\">Srcset Builder</a></li>\n</ul>\n"
+}

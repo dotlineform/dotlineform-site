@@ -55,6 +55,15 @@ class SourceDelete:
 
 
 @dataclass(frozen=True)
+class ScopeRebuild:
+    scope: str
+    changed_paths: tuple[Path, ...]
+    build_doc_ids: Optional[list[str]] = None
+    search_doc_ids: Optional[list[str]] = None
+    include_search: bool = True
+
+
+@dataclass(frozen=True)
 class ManagementMutationPlan:
     scope: str
     response: Dict[str, Any]
@@ -66,6 +75,7 @@ class ManagementMutationPlan:
     suppression_reason: Optional[str] = None
     build_doc_ids: Optional[list[str]] = None
     search_doc_ids: Optional[list[str]] = None
+    rebuilds: tuple[ScopeRebuild, ...] = ()
     log_event_name: Optional[str] = None
     log_details: Dict[str, Any] = field(default_factory=dict)
     include_write_result_keys: bool = False
@@ -663,77 +673,123 @@ def plan_normalize_order(repo_root: Path, body: Dict[str, Any]) -> ManagementMut
 
 def plan_archive(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan:
     scope = source_model.normalize_scope(body.get("scope"))
+    archive_scope = "archive"
     doc_id = str(body.get("doc_id") or "").strip()
     if not doc_id:
         raise ValueError("doc_id is required")
+    if archive_scope not in source_model.SCOPE_ROOTS or not source_model.scope_root(repo_root, archive_scope).exists():
+        raise ValueError("archive scope doesn't exist.")
+    if scope == archive_scope:
+        docs = source_model.load_scope_docs(repo_root, scope)
+        target = next((doc for doc in docs if doc.doc_id == doc_id), None)
+        if target is None:
+            raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
+        return ManagementMutationPlan(
+            scope=scope,
+            response={
+                "ok": True,
+                "scope": scope,
+                "archive_scope": archive_scope,
+                "doc_id": target.doc_id,
+                "path": relative_path(repo_root, target.path),
+                "summary_text": f"{target.doc_id} is already in the archive scope.",
+            },
+        )
 
     docs = source_model.load_scope_docs(repo_root, scope)
     docs_by_id = {doc.doc_id: doc for doc in docs}
     target = docs_by_id.get(doc_id)
     if target is None:
         raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
-    if "archive" not in docs_by_id:
-        raise ValueError(f"scope {scope} does not define archive doc")
-    if target.doc_id == "archive":
-        return ManagementMutationPlan(
-            scope=scope,
-            response={
-                "ok": True,
-                "scope": scope,
-                "doc_id": target.doc_id,
-                "path": relative_path(repo_root, target.path),
-                "summary_text": "archive is the archive parent and was not changed.",
-            },
-        )
-    if target.parent_id == "archive":
-        return ManagementMutationPlan(
-            scope=scope,
-            response={
-                "ok": True,
-                "scope": scope,
-                "doc_id": target.doc_id,
-                "path": relative_path(repo_root, target.path),
-                "summary_text": f"{target.doc_id} is already archived.",
-            },
-        )
+    archive_docs = source_model.load_scope_docs(repo_root, archive_scope)
+    archive_doc_ids = {doc.doc_id for doc in archive_docs}
+    moving_doc_ids = {target.doc_id, *source_model.descendant_doc_ids(docs, target.doc_id)}
+    duplicate_doc_ids = sorted(moving_doc_ids.intersection(archive_doc_ids))
+    if duplicate_doc_ids:
+        raise ValueError(f"archive scope already contains doc_id: {', '.join(duplicate_doc_ids)}")
 
-    next_order = source_model.next_sort_order(docs, "archive")
-    timestamp = source_model.current_doc_timestamp()
-    updated_front_matter = dict(target.front_matter)
-    updated_front_matter["added_date"] = str(
-        updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
-    ).strip()
-    updated_front_matter["parent_id"] = "archive"
-    updated_front_matter["sort_order"] = next_order
+    moving_docs = (target,) + tuple(
+        doc for doc in docs if doc.doc_id in moving_doc_ids and doc.doc_id != target.doc_id
+    )
+    archive_root = source_model.scope_root(repo_root, archive_scope)
+    archive_paths = {doc.path.name for doc in archive_docs}
+    source_writes: list[SourceWrite] = []
+    source_deletes: list[SourceDelete] = []
+    moved_records: list[Dict[str, Any]] = []
+    for doc in moving_docs:
+        if doc.path.name in archive_paths:
+            raise ValueError(f"archive scope already contains source file: {doc.path.name}")
+        updated_front_matter = dict(doc.front_matter)
+        updated_front_matter["added_date"] = str(
+            updated_front_matter.get("added_date")
+            or updated_front_matter.get("last_updated")
+            or source_model.current_doc_timestamp()
+        ).strip()
+        if doc.doc_id == target.doc_id:
+            updated_front_matter.pop("parent_id", None)
+        archive_path = archive_root / doc.path.name
+        source_writes.append(SourceWrite(archive_path, source_model.format_source(updated_front_matter, doc.body)))
+        source_deletes.append(SourceDelete(doc.path))
+        moved_records.append(
+            {
+                "doc_id": doc.doc_id,
+                "from_path": relative_path(repo_root, doc.path),
+                "path": relative_path(repo_root, archive_path),
+                "parent_id": str(updated_front_matter.get("parent_id") or ""),
+                "sort_order": updated_front_matter.get("sort_order"),
+            }
+        )
+        archive_paths.add(doc.path.name)
 
     return ManagementMutationPlan(
         scope=scope,
         response={
             "ok": True,
             "scope": scope,
+            "archive_scope": archive_scope,
             "doc_id": target.doc_id,
-            "path": relative_path(repo_root, target.path),
-            "record": {
-                "parent_id": "archive",
-                "sort_order": next_order,
-            },
-            "summary_text": f"Archived {target.doc_id}.",
+            "path": moved_records[0]["path"],
+            "from_path": relative_path(repo_root, target.path),
+            "record": moved_records[0],
+            "records": moved_records,
+            "moved_doc_ids": [record["doc_id"] for record in moved_records],
+            "summary_text": f"Archived {target.doc_id} to archive scope.",
         },
         backup_operation="archive",
-        backup_docs=(target,),
+        backup_docs=moving_docs,
         backup_metadata={
             "doc_id": target.doc_id,
-            "from_parent_id": target.parent_id,
-            "to_parent_id": "archive",
-            "from_sort_order": target.sort_order,
-            "to_sort_order": next_order,
+            "from_scope": scope,
+            "to_scope": archive_scope,
+            "moved_doc_ids": [doc.doc_id for doc in moving_docs],
         },
-        source_writes=(SourceWrite(target.path, source_model.format_source(updated_front_matter, target.body)),),
+        source_writes=tuple(source_writes),
+        source_deletes=tuple(source_deletes),
         suppression_reason="docs-archive",
-        build_doc_ids=[target.doc_id],
-        search_doc_ids=[target.doc_id],
+        build_doc_ids=[doc.doc_id for doc in moving_docs],
+        search_doc_ids=[doc.doc_id for doc in moving_docs],
+        rebuilds=(
+            ScopeRebuild(
+                scope=scope,
+                changed_paths=tuple(delete.path for delete in source_deletes),
+                build_doc_ids=[doc.doc_id for doc in moving_docs],
+                search_doc_ids=[doc.doc_id for doc in moving_docs],
+            ),
+            ScopeRebuild(
+                scope=archive_scope,
+                changed_paths=tuple(write.path for write in source_writes),
+                build_doc_ids=[doc.doc_id for doc in moving_docs],
+                search_doc_ids=[doc.doc_id for doc in moving_docs],
+            ),
+        ),
         log_event_name="docs-archive",
-        log_details={"scope": scope, "doc_id": target.doc_id, "path": relative_path(repo_root, target.path)},
+        log_details={
+            "scope": scope,
+            "archive_scope": archive_scope,
+            "doc_id": target.doc_id,
+            "moved_doc_ids": [doc.doc_id for doc in moving_docs],
+            "path": relative_path(repo_root, target.path),
+        },
         include_write_result_keys=True,
     )
 

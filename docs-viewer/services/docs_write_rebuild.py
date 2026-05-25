@@ -297,6 +297,65 @@ def perform_source_write_and_rebuild(
     return rebuild
 
 
+def perform_multi_scope_source_write_and_rebuild(
+    repo_root: Path,
+    rebuild_plans: list[Dict[str, Any]],
+    write_operation: Callable[[], Any],
+    *,
+    suppression_reason: str,
+) -> Dict[str, Any]:
+    suppressions: list[tuple[str, list[str]]] = []
+    for plan in rebuild_plans:
+        scope = str(plan.get("scope") or "").strip()
+        root = scope_root(repo_root, scope)
+        filenames = sorted(
+            {
+                path.resolve().relative_to(root.resolve()).as_posix()
+                for path in plan.get("changed_paths", [])
+                if isinstance(path, Path)
+            }
+        )
+        if filenames:
+            set_watch_suppressions(
+                repo_root,
+                scope,
+                filenames,
+                status=SUPPRESSION_PENDING,
+                reason=suppression_reason,
+                ttl_seconds=DEFAULT_PENDING_TTL_SECONDS,
+            )
+            suppressions.append((scope, filenames))
+    try:
+        write_operation()
+        rebuilds: Dict[str, Any] = {}
+        for plan in rebuild_plans:
+            scope = str(plan.get("scope") or "").strip()
+            rebuilds[scope] = rebuild_scope_outputs(
+                repo_root,
+                scope,
+                include_search=plan.get("include_search") is not False,
+                search_doc_ids=plan.get("search_doc_ids"),
+                docs_doc_ids=plan.get("docs_doc_ids"),
+            )
+    except Exception:
+        for scope, filenames in suppressions:
+            clear_watch_suppressions(repo_root, scope, filenames)
+        raise
+    for scope, filenames in suppressions:
+        set_watch_suppressions(
+            repo_root,
+            scope,
+            filenames,
+            status=SUPPRESSION_COMPLETE,
+            reason=suppression_reason,
+            ttl_seconds=DEFAULT_COMPLETE_TTL_SECONDS,
+        )
+    return {
+        "ok": True,
+        "scopes": rebuilds,
+    }
+
+
 def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
     bundle_bin = detect_bundle_bin()
     if not bundle_bin:

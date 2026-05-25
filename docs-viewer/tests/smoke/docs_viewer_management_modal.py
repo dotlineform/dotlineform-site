@@ -515,6 +515,37 @@ def run_transient_confirm_check(page: Page) -> None:
         raise AssertionError("confirm modal did not return focus to opener")
 
 
+def run_transient_notice_check(page: Page) -> None:
+    page.locator("#transientOpener").focus()
+    page.evaluate(
+        """() => {
+            const smoke = window.__docsViewerManagementModalSmoke;
+            smoke.noticePromise = smoke.managementModals.openDocsViewerNoticeModal({
+                root: smoke.root,
+                title: 'Archive unavailable',
+                body: "archive scope doesn't exist.",
+                primaryLabel: 'OK'
+            }).then(value => smoke.noticeResult = value);
+        }"""
+    )
+    page.wait_for_function("() => document.querySelector('[data-role=\"docs-viewer-management-modal\"]')")
+    page.wait_for_function("() => document.activeElement?.dataset.role === 'modal-primary'")
+    state = assert_shell(
+        page,
+        '[data-role="docs-viewer-management-modal"]',
+        "Archive unavailable",
+        ["OK"],
+        active_role="modal-primary",
+        size_class="docsViewer__modalCard--compact",
+    )
+    if "archive scope doesn't exist." not in state["bodyText"]:
+        raise AssertionError(f"notice modal did not render body text: {state!r}")
+    page.locator('[data-role="modal-primary"]').click()
+    page.wait_for_function("() => window.__docsViewerManagementModalSmoke.noticeResult?.confirmed === true")
+    if active_id(page) != "transientOpener":
+        raise AssertionError("notice modal did not return focus to opener")
+
+
 def run_transient_text_check(page: Page) -> None:
     page.locator("#transientOpener").focus()
     page.evaluate(
@@ -1215,6 +1246,9 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                         studio: {
                             available: true,
                             archive_available: true
+                        },
+                        archive: {
+                            available: true
                         }
                     }
                 },
@@ -1402,7 +1436,7 @@ def run_index_double_click_edit_check(page: Page) -> None:
                 managementChecked: true,
                 managementAvailable: true,
                 managementBusy: false,
-                managementCapabilities: { scopes: { studio: { available: true, archive_available: true } } },
+                managementCapabilities: { scopes: { studio: { available: true, archive_available: true }, archive: { available: true } } },
                 managementText: {
                     archiveUnavailableNote: 'Archive unavailable.',
                     checkingNote: 'Checking manage mode...',
@@ -1487,6 +1521,7 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
     run_import_modal_check(page)
     run_settings_modal_check(page)
     run_transient_confirm_check(page)
+    run_transient_notice_check(page)
     run_transient_text_check(page)
     run_transient_choice_check(page)
     run_filename_conflict_check(page)
@@ -1504,6 +1539,7 @@ def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) 
             "import",
             "settings",
             "transient-confirm",
+            "transient-notice",
             "transient-text",
             "transient-choice",
             "filename-conflict",

@@ -212,6 +212,18 @@ export function openDocsViewerConfirmModal(options = {}) {
   });
 }
 
+export function openDocsViewerNoticeModal(options = {}) {
+  return openDocsViewerManagementModal({
+    root: options.root,
+    title: options.title,
+    size: options.size || "compact",
+    bodyHtml: bodyHtmlFromText(options.body),
+    actions: [
+      { role: "modal-primary", label: options.primaryLabel || options.closeLabel || "OK" }
+    ]
+  });
+}
+
 export function openDocsViewerTextInputModal(options = {}) {
   var inputId = normalizeText(options.inputId) || "docsViewerManagementModalInput";
   var bodyHtml = bodyHtmlFromText(options.body) +

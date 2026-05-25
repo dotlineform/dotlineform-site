@@ -14,6 +14,7 @@ export {
   openDocsViewerChoiceModal,
   openDocsViewerConfirmModal,
   openDocsViewerManagementModal,
+  openDocsViewerNoticeModal,
   openDocsViewerTextInputModal
 } from "./docs-viewer-management-modal-shell.js";
 

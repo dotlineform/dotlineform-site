@@ -33,12 +33,12 @@ docs_scope_config = sys.modules["docs_scope_config"]
 docs_source_model = sys.modules["docs_source_model"]
 
 
-def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "") -> None:
+def write_doc(root: Path, filename: str, front_matter: dict[str, object], body: str = "", scope: str = "studio") -> None:
     lines = ["---"]
     for key, value in front_matter.items():
         lines.append(f"{key}: {docs_source_model.format_front_matter_value(value)}")
     lines.extend(["---", "", body or f"# {front_matter['title']}", ""])
-    path = root / "docs-viewer/source/studio" / filename
+    path = root / "docs-viewer/source" / scope / filename
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -47,6 +47,17 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     temp_dir = tempfile.TemporaryDirectory()
     repo_root = Path(temp_dir.name)
     (repo_root / "_config.yml").write_text("title: test\n", encoding="utf-8")
+    write_doc(
+        repo_root,
+        "archive.md",
+        {
+            "doc_id": "archive",
+            "title": "Archive",
+            "published": True,
+            "viewable": False,
+        },
+        scope="archive",
+    )
     write_doc(
         repo_root,
         "archive.md",
@@ -310,7 +321,7 @@ def test_archive_command_noops_on_archive_parent() -> None:
         result = docs_management_service.handle_archive(
             repo_root,
             {
-                "scope": "studio",
+                "scope": "archive",
                 "doc_id": "archive",
             },
             dry_run=True,
@@ -318,7 +329,7 @@ def test_archive_command_noops_on_archive_parent() -> None:
 
     assert result["ok"] is True
     assert result["doc_id"] == "archive"
-    assert "not changed" in result["summary_text"]
+    assert "already in the archive scope" in result["summary_text"]
 
 
 def test_capabilities_advertise_generated_data_reads() -> None:
@@ -1084,8 +1095,9 @@ def main() -> None:
         test_source_config_settings_validation_reports_rebuild_artifact,
         test_source_config_settings_rejects_blocked_and_deferred_fields,
         test_source_config_settings_rejects_invalid_updated_date_value,
+        test_source_config_settings_apply_writes_allowed_field,
+        test_source_config_settings_apply_dry_run_does_not_write,
         test_source_config_settings_warns_when_generated_projection_is_stale,
-        test_json_responses_are_not_cached,
         test_docs_export_request_passes_target_format,
     ]
     for test in tests:

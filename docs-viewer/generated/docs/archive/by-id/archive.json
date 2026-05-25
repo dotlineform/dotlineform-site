@@ -5,12 +5,11 @@
   "added_date": "2026-05-25",
   "last_updated": "2026-05-25",
   "parent_id": "",
-  "sort_order": null,
+  "sort_order": 100,
   "published": true,
   "hidden": false,
   "viewable": true,
   "source_path": "archive.md",
   "viewer_url": "/docs/?scope=archive&doc=archive",
-  "content_html": "<h1 id=\"archive\">archive</h1>\n\n<p>Start writing archive docs here.</p>\n",
-  "ui_status": "draft"
+  "content_html": "<h1 id=\"archive\">archive</h1>\n\n<p>Use this scope for completed change requests and deprecated guidance. Documents here will not be maintained.</p>\n"
 }

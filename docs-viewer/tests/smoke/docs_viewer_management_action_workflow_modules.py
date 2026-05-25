@@ -178,10 +178,96 @@ def assert_changed_module_imports(page: Page) -> None:
         raise AssertionError(f"changed Docs Viewer management modules failed import contract: {result!r}")
 
 
+def assert_archive_reload_target(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            document.body.innerHTML = '<main id="docsViewerRoot"></main>';
+            const smoke = window.__docsViewerManagementActionWorkflowSmoke;
+            const root = document.getElementById('docsViewerRoot');
+            const reloadTargets = [];
+            const messages = [];
+            const doc = smoke.docsById.get('current');
+            const controller = smoke.actions.createDocsViewerManagementActionController({
+                root,
+                state: {
+                    managementCapabilities: {
+                        scopes: {
+                            studio: { available: true },
+                            archive: { available: true }
+                        }
+                    },
+                    managementText: {
+                        archiveConfirmTitle: 'Confirm archive',
+                        archiveConfirmBody: 'Archive {title}?',
+                        archiveConfirmButton: 'Archive',
+                        archiveScopeMissingPrompt: "archive scope doesn't exist.",
+                        archiveUnavailableTitle: 'Archive unavailable',
+                        cancelButton: 'Cancel',
+                        scopeResultOkButton: 'OK'
+                    }
+                },
+                context: {
+                    defaultDocId: () => 'default-doc',
+                    defaultRouteDocId: () => 'route-default',
+                    formatText: smoke.formatText
+                },
+                callbacks: {
+                    currentSelectedDoc: () => doc,
+                    managementClientOptions: () => ({
+                        baseUrl: 'http://docs-management.test',
+                        scope: 'studio',
+                        fetch: () => Promise.resolve({
+                            ok: true,
+                            json: () => Promise.resolve({
+                                ok: true,
+                                doc_id: doc.doc_id,
+                                summary_text: 'Archived current to archive scope.'
+                            })
+                        })
+                    }),
+                    reloadDocsIndex: (targetDocId) => {
+                        reloadTargets.push(targetDocId);
+                        return Promise.resolve();
+                    },
+                    setManagementBusy: () => {},
+                    setManagementMessage: (message, isError) => messages.push({ message, isError: Boolean(isError) }),
+                    renderManagementUi: () => {}
+                }
+            });
+            const archivePromise = controller.handleArchiveDoc();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            root.querySelector('[data-role="modal-primary"]').click();
+            await archivePromise;
+            await new Promise((resolve) => {
+                const wait = () => reloadTargets.length >= 1 ? resolve() : setTimeout(wait, 0);
+                wait();
+            });
+
+            doc.parent_id = '';
+            const rootArchivePromise = controller.handleArchiveDoc();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            root.querySelector('[data-role="modal-primary"]').click();
+            await rootArchivePromise;
+            await new Promise((resolve) => {
+                const wait = () => reloadTargets.length >= 2 ? resolve() : setTimeout(wait, 0);
+                wait();
+            });
+            doc.parent_id = 'parent';
+
+            return { reloadTargets, messages };
+        }"""
+    )
+    if result["reloadTargets"] != ["parent", "route-default"]:
+        raise AssertionError(f"archive reload target changed: {result!r}")
+    if any("Archived" in record["message"] for record in result["messages"]):
+        raise AssertionError(f"archive should not leave a success status message: {result!r}")
+
+
 def run_smoke(page: Page, base_url: str) -> None:
     page.goto(route_url(base_url, "/"), wait_until="domcontentloaded")
     install_fixture(page)
     assert_changed_module_imports(page)
+    assert_archive_reload_target(page)
     assert_normalize_order(page)
     assert_viewability_targets(page)
 

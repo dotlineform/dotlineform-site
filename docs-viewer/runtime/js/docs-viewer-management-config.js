@@ -1,5 +1,7 @@
 var MANAGEMENT_TEXT_KEYS = [
   ["archiveUnavailableNote", "docs_viewer.manage_archive_unavailable_note"],
+  ["archiveUnavailableTitle", "docs_viewer.archive_unavailable_title"],
+  ["archiveScopeMissingPrompt", "docs_viewer.archive_scope_missing_prompt"],
   ["checkingNote", "docs_viewer.manage_checking_note"],
   ["clearSearchNote", "docs_viewer.manage_clear_search_note"],
   ["serverNotConfiguredError", "docs_viewer.manage_server_not_configured_error"],

@@ -1,0 +1,49 @@
+{
+  "id": "change-2026-05-25-fixed-manage-mode-scope-refresh-and-generated-reads",
+  "date": "2026-05-25",
+  "title": "Fixed Manage-Mode Scope Refresh And Generated Reads",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "runtime",
+    "workflow"
+  ],
+  "summary": "Fixed newly created manage-mode Docs Viewer scopes so the scope selector refreshes without a browser reload, sorts scopes alphabetically, and can load the created scope default document through current generated-read scope config.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-committed-manage-mode-scope-storage.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "manage-mode-scopes",
+    "scope-lifecycle",
+    "generated-reads",
+    "browser-config"
+  ],
+  "change_request_doc_id": "site-request-committed-manage-mode-scope-storage",
+  "related_docs": [
+    "site-request-committed-manage-mode-scope-storage",
+    "docs-viewer-new-scopes-builder",
+    "docs-viewer-portable-scope-setup"
+  ],
+  "related_files": [
+    "docs-viewer/runtime/js/docs-viewer-config-controller.js",
+    "docs-viewer/runtime/js/docs-viewer-management.js",
+    "docs-viewer/runtime/js/docs-viewer.js",
+    "docs-viewer/services/docs_generated_reads.py",
+    "docs-viewer/services/docs_management_read_service.py",
+    "docs-viewer/services/docs_scope_manifest.py",
+    "docs-viewer/source/archive/archive.md",
+    "docs-viewer/tests/smoke/docs_viewer_management_scope_ui.py",
+    "docs-viewer/tests/smoke/docs_viewer_management_workflows.py",
+    "docs-viewer/tests/python/test_docs_generated_reads.py",
+    "docs-viewer/tests/python/test_docs_management_service.py"
+  ],
+  "effect": "Creating a local or committed manage-mode scope now produces a usable browser session immediately: the new scope appears in the selector, the default document renders after switching scopes, and generated-read API requests no longer reject scopes added after service startup.",
+  "verification": [
+    "Targeted Python suite passed: docs management, generated reads, write rebuild, viewer service, broken links, and Studio app server tests.",
+    "Python compile checks passed for changed service and smoke-test modules.",
+    "Ruby syntax checks and archive/studio docs/search builder dry-runs passed.",
+    "Docs Viewer scope lifecycle Playwright smoke passed, including newly created scope selector refresh, alpha ordering, and default-doc render."
+  ]
+}

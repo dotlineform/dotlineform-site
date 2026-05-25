@@ -1,0 +1,15 @@
+{
+  "scope": "archive",
+  "doc_id": "import-export",
+  "title": "Import/Export Historical Notes",
+  "added_date": "2026-05-06 18:39",
+  "last_updated": "2026-05-13 18:15",
+  "parent_id": "",
+  "sort_order": 14000,
+  "published": true,
+  "hidden": false,
+  "viewable": true,
+  "source_path": "import-export.md",
+  "viewer_url": "/docs/?scope=archive&doc=import-export",
+  "content_html": "<h1 id=\"importexport-historical-notes\">Import/Export Historical Notes</h1>\n\n<p>This page is archived.\nThe current shared workflow is <a href=\"/docs/?scope=studio&amp;doc=studio-data-sharing\">Studio Data Sharing</a>, with the durable architecture contract in <a href=\"/docs/?scope=studio&amp;doc=studio-data-sharing-technical-spec\">Studio Data Sharing Technical Spec</a>.</p>\n\n<p>Current Studio routes are:</p>\n\n<ul>\n  <li><code class=\"language-plaintext highlighter-rouge\">/studio/data-sharing/</code></li>\n  <li><code class=\"language-plaintext highlighter-rouge\">/studio/data-sharing/prepare/?mode=manage</code></li>\n  <li><code class=\"language-plaintext highlighter-rouge\">/studio/data-sharing/review/?mode=manage</code></li>\n</ul>\n\n<p>Older import/export terminology in this repo described generated JSON files copied out for external editing and staged JSON/JSONL files returned for review.\nThose decisions have been carried forward into the Data Sharing docs and adapter registry.</p>\n"
+}

@@ -1,0 +1,15 @@
+{
+  "scope": "archive",
+  "doc_id": "search-change-log",
+  "title": "Search Change Log",
+  "added_date": "2026-04-24",
+  "last_updated": "2026-05-11",
+  "parent_id": "",
+  "sort_order": 76000,
+  "published": true,
+  "hidden": false,
+  "viewable": true,
+  "source_path": "search-change-log.md",
+  "viewer_url": "/docs/?scope=archive&doc=search-change-log",
+  "content_html": "<p>This log has been deprecated. Logs are now in <code class=\"language-plaintext highlighter-rouge\">_docs_logs/</code> and the change log process is described in <a href=\"/docs/?scope=studio&amp;doc=development-workflow\">Development Workflow</a></p>\n\n"
+}
