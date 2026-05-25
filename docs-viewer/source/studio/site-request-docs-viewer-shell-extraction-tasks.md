@@ -16,6 +16,14 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
+- Completed `DVSE-022` with the agreed final verification set for the extracted Docs Viewer shell boundary.
+- `quick` passed: `var/test-runs/docs-viewer-shell-final-quick/summary.md`.
+- The first sandboxed `docs-viewer-smoke` run reproduced the expected localhost bind restriction after the temporary Jekyll build passed; the elevated rerun passed all 7 checks, including the standalone Docs Viewer manage shell, public `/library/` and `/analysis/` read-only smoke, Docs Viewer browser module smokes, management modal, action workflow modules, and Docs HTML import modules. Summary: `var/test-runs/docs-viewer-shell-final-docs-viewer-smoke-elevated/summary.md`.
+- Elevated `studio-smoke` passed all 10 checks, including the public read-only smoke, Local Studio Data Sharing routes, Data Sharing prepare module, returned-package review flow, and retained Studio browser smokes. Summary: `var/test-runs/docs-viewer-shell-final-studio-smoke/summary.md`.
+- Focused Local Studio integration smokes passed for the Docs Viewer boundary route, Studio navigation adapter, Data Sharing routes, and Data Sharing review with a mocked Docs Viewer service.
+- Focused syntax/import checks passed for Docs Viewer JavaScript modules, `docs-viewer/build/build_docs.rb`, `docs-viewer/build/build_search.rb`, Docs Viewer services/tests, and the Local Studio Docs Viewer integration module.
+- Active runtime/config/test path sweeps found only intentional negative assertions for retired `/studio/docs-viewer` and `/studio/api/docs` paths. A wider docs-source sweep still finds historical or inventory-style `docs_management_server.py` references; handle any needed cleanup in `DVSE-023`.
+- No generated docs/search payloads were rebuilt manually.
 - Completed `DVSE-021` by moving Docs Viewer Ruby builder implementations from `studio/docs-viewer/build/` to `docs-viewer/build/` and deleting the remaining old `studio/docs-viewer/` tree.
 - Follow-up command cleanup removed the root `scripts/build_docs.rb` and `scripts/build_search.rb` aliases. Docs Viewer rebuilds now call `docs-viewer/build/build_docs.rb` and `docs-viewer/build/build_search.rb` directly; Catalogue search calls `studio/services/catalogue/search/build_search.rb` directly.
 - `_config.yml` now excludes `docs-viewer/build/` from public Jekyll output and no longer carries retired `studio/docs-viewer/` excludes.
@@ -170,5 +178,5 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-019 | done | Move or update tests, smoke helpers, fixtures, checks, and run-check profiles so Docs Viewer-owned checks live with the new boundary where appropriate while repo/Codex verification entrypoints remain discoverable. |
 | DVSE-020 | done | Update command docs, local setup docs, Docs Viewer portable setup, runtime boundary docs, source organisation docs, config docs, and script docs to describe the extracted boundary, service config, route ownership, runner behavior, standalone Docs Viewer service ownership, and retired current-state assumptions. |
 | DVSE-021 | done | Delete old Studio-owned Docs Viewer source locations after references are updated; confirm removed paths are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic. |
-| DVSE-022 | planned | Run the agreed final verification set: quick profile, Docs Viewer smoke profile, focused Local Studio integration smokes, public Jekyll build, public scope checks, syntax/import checks, and any changed-doc link/path checks. |
+| DVSE-022 | done | Run the agreed final verification set: quick profile, Docs Viewer smoke profile, focused Local Studio integration smokes, public Jekyll build, public scope checks, syntax/import checks, and any changed-doc link/path checks. |
 | DVSE-023 | planned | Close out the parent request and this tracker: update statuses, summarize moved paths, record verification results and generated payload status, create structured docs-log entries, copy durable decisions/contracts into permanent owning docs, and note remaining risks before these request docs are archived. |
