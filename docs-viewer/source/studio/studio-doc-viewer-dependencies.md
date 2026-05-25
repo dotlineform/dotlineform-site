@@ -108,8 +108,8 @@ The broad list exists so shared Studio browser modules can use one runtime servi
 
 ## Review Issues
 
-1. `DVSE-018` is now important operational follow-through.
-   Studio has several useful links and actions that require Docs Viewer to be running, but there is not yet one runner that starts Live Preview, Local Studio, and Docs Viewer together.
+1. The all-services runner exists, but route copy and smoke coverage should stay aligned with it.
+   Studio has several useful links and actions that require Docs Viewer to be running; `bin/local-all` starts Live Preview, Local Studio, and Docs Viewer together for that workflow.
 
 2. Browser fallback endpoints can hide runtime-config mistakes.
    `studio-transport.js` falls back to `http://127.0.0.1:8776` if runtime config is unavailable or not applied.

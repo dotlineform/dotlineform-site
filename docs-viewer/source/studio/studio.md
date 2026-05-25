@@ -87,11 +87,17 @@ Use the repo-local runner from `dotlineform-site/`:
 bin/local-studio
 ```
 
+Use the start-all runner when the same terminal should supervise public-site Live Preview, Local Studio, and Docs Viewer together:
+
+```bash
+bin/local-all
+```
+
 Current runner behavior:
 
 - optionally rebuilds Docs Viewer data when `DOCS_STARTUP_REBUILD_SCOPES` is set
 - starts the local Studio app server for the Studio shell, Analytics tag APIs, Catalogue APIs, Data Sharing routes, and Studio audit APIs
-- does not start the standalone Docs Viewer service; use `docs-viewer/bin/docs-viewer` directly until the start-all runner exists
+- does not start the standalone Docs Viewer service; use `docs-viewer/bin/docs-viewer` directly or `bin/local-all` for the supervised all-services workflow
 - has no standalone Studio audit HTTP service; browser audit APIs are hosted by the local Studio app and direct automation uses `studio/app/server/studio/audit_runner.py`
 - starts the docs live rebuild watcher by default
 - keeps all long-running processes attached to the current terminal

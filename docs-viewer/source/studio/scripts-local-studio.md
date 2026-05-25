@@ -1,35 +1,48 @@
 ---
 doc_id: scripts-local-studio
-title: Local Studio Runner
+title: Local Runners
 added_date: 2026-04-22
 last_updated: 2026-05-25
 parent_id: servers
 sort_order: 2000
 ---
-# Local Studio Runner
+# Local Runners
 
 Scripts:
 
 ```bash
+bin/local-all
 bin/local-studio
 bin/public-site-preview
 bin/public-site-build
+docs-viewer/bin/docs-viewer
 ```
 
 ## Purpose
 
-Local Studio and public Jekyll preview have separate launcher commands.
-`bin/local-studio` starts the local Studio app, Studio APIs, docs live watcher, and optional startup maintenance tasks.
-It does not start the standalone Docs Viewer service and no longer serves the Docs Viewer `/docs/` shell.
+Local Studio, public Jekyll preview, and Docs Viewer have separate launcher commands.
+`bin/local-studio` starts the Local Studio app, Studio APIs, the docs live rebuild watcher, and optional startup maintenance tasks.
+The docs live rebuild watcher is not the Docs Viewer web service; it only watches source Markdown and rebuilds generated docs/search payloads after source changes.
+`bin/local-studio` does not start the Docs Viewer web service and no longer serves `/docs/`.
+`docs-viewer/bin/docs-viewer` starts the standalone Docs Viewer web service that owns the `/docs/` manage-mode page.
 `bin/public-site-preview` and `bin/public-site-build` are public-site Jekyll commands that use `_config.yml` by default.
+`bin/local-all` is the optional host-owned orchestration runner for starting Live Preview, Local Studio, and the Docs Viewer web service together.
 
 The old combined bridge command has been retired.
-Do not use a combined Studio-plus-Jekyll runner for normal work.
-Run `bin/local-studio` for Studio and run `bin/public-site-preview` in a separate terminal only when Studio links need a live public-site preview host.
+Do not use a combined Studio-plus-Jekyll runner for normal single-service work.
+Run `bin/local-studio` for Studio and run `bin/public-site-preview` in a separate terminal when Studio links need a live public-site preview host.
+Run `bin/local-all` when a local session needs all three services supervised together.
 
 ## Explicit Commands
 
 Run from `dotlineform-site/`:
+
+```bash
+bin/local-all
+```
+
+This starts public-site Live Preview, Local Studio, and the Docs Viewer web service as sibling child processes.
+Each underlying service can still be started independently with its own command.
 
 ```bash
 bin/local-studio
@@ -55,17 +68,16 @@ bin/public-site-build
 bin/public-site-build --destination /tmp/dlf-jekyll-build
 ```
 
-Each script:
+Each command:
 
 - changes into the repo root
 - loads `var/local/site.env` when present
-- prefers `~/.rbenv/shims/bundle` when present
-- prefers `~/miniconda3/bin/python3` when present
-- otherwise falls back to `bundle` and `python3`
+- uses the repo's preferred Ruby or Python executable when that command needs one
+- otherwise falls back to the corresponding executable on `PATH`
 
 `bin/public-site-preview` and `bin/public-site-build` do not start Studio services.
 `bin/local-studio` does not start Jekyll.
-Until the start-all runner exists, start the standalone Docs Viewer service separately with:
+Start the Docs Viewer web service separately with:
 
 ```bash
 docs-viewer/bin/docs-viewer
@@ -73,7 +85,7 @@ docs-viewer/bin/docs-viewer
 
 ## Local Configuration
 
-The runner does not currently take CLI flags.
+These runner scripts do not currently take general CLI flags, except for public-site preview/build pass-through behavior documented below.
 For local runs, configure repo-specific defaults in `var/local/site.env`.
 Values in that file are loaded before defaults are evaluated and win over inherited shell values.
 If `var/local/site.env` is absent, the runner falls back to process environment variables.
@@ -119,6 +131,15 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   default: `0`
   accepted enabled values: `1`, `on`, `true`, or `yes`
   used by `bin/public-site-preview`; can also be enabled per run with `bin/public-site-preview --livereload`
+- `DOCS_VIEWER_HOST`
+  default: `127.0.0.1`
+  used by the Docs Viewer web service and preflighted by `bin/local-all`
+- `DOCS_VIEWER_PORT`
+  default: `8776`
+  used by the Docs Viewer web service and preflighted by `bin/local-all`
+- `DOCS_VIEWER_BASE_URL`
+  default: `http://$DOCS_VIEWER_HOST:$DOCS_VIEWER_PORT`
+  printed by `bin/local-all` and used by Studio links
 
 Example:
 
@@ -141,6 +162,22 @@ The runner reads valid docs scope ids from `docs-viewer/config/scopes/docs_scope
 Adding a new docs scope there makes it eligible for startup docs/docs-search rebuilds without editing the runner.
 
 ## Startup Sequence
+
+### Start All
+
+Before it starts any child process, `bin/local-all` loads `var/local/site.env`, resolves the configured public preview, Local Studio, and Docs Viewer web service host/port settings, and checks that those ports are both distinct and available.
+If a configured port is unavailable or two services are configured for the same binding, the runner exits before starting any service.
+
+After preflight, `bin/local-all` starts:
+
+1. `bin/public-site-preview`
+2. `bin/local-studio`
+3. `docs-viewer/bin/docs-viewer`
+
+The runner prints the public-site preview, Local Studio app, and Docs Viewer web service URLs.
+If any child process exits, `bin/local-all` prints which service exited, stops the remaining children, and exits with a non-zero status for clean early exits or the failing child status otherwise.
+
+### Local Studio
 
 Before it starts any rebuilds or long-running processes, `bin/local-studio` checks that the Local Studio app port is available when the app server is enabled.
 If the port is unavailable, the runner exits immediately with a message naming `STUDIO_APP_PORT`.
@@ -185,10 +222,10 @@ $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --hos
 
 - default URL: `http://127.0.0.1:8765/studio/`
 
-The Local Studio app does not serve `/docs/` or `/docs-viewer/...` assets.
-Docs Viewer manage mode is owned by the standalone Docs Viewer service.
 - serves Local Studio views outside Jekyll
-- mounts `/studio/`, `/docs/`, migrated Studio route shells, `/health`, `/studio/runtime-config.json`, local Docs APIs, local Analytics APIs, local audit APIs, and local catalogue APIs
+- mounts `/studio/`, migrated Studio route shells, `/health`, `/studio/runtime-config.json`, local Analytics APIs, local audit APIs, and local catalogue APIs
+- does not serve `/docs/`, `/docs-viewer/...` assets, Docs Viewer generated reads, Docs Viewer management APIs, or Docs data-sharing document APIs
+- links to Docs Viewer manage mode through the configured Docs Viewer web service URL
 - can be disabled with `STUDIO_APP_ENABLED=0`
 - access logging is quiet by default; set `STUDIO_APP_ACCESS_LOG=1` or pass `--access-log` to the app server for detailed request logging
 - related doc: [Local Studio App](/docs/?scope=studio&doc=local-studio-app)
@@ -227,6 +264,27 @@ bundle exec jekyll build --config "$PUBLIC_SITE_CONFIG"
 
 Both public-site commands use `_config.yml` by default and do not start local Studio services.
 
+### Docs Viewer Web Service
+
+Explicit Docs Viewer command:
+
+```bash
+docs-viewer/bin/docs-viewer
+```
+
+It runs:
+
+```bash
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_viewer_service.py
+```
+
+- default URL: `http://127.0.0.1:8776/docs/`
+- owns the local `/docs/` manage-mode page
+- serves Docs Viewer runtime/static assets under `/docs-viewer/...`
+- serves Docs Viewer generated reads, management APIs, and Docs data-sharing document APIs
+- uses `DOCS_VIEWER_HOST`, `DOCS_VIEWER_PORT`, and `DOCS_VIEWER_BASE_URL`
+- stays independent of Local Studio; `bin/local-all` only supervises it as a sibling child process
+
 ### Catalogue APIs
 
 The local Studio app owns the active browser-facing catalogue APIs under `/studio/api/catalogue/...`.
@@ -246,6 +304,9 @@ Related doc: [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-
 
 ### Docs Live Rebuild Watcher
 
+The docs live rebuild watcher is a background rebuild helper started by `bin/local-studio`.
+It is separate from the Docs Viewer web service.
+
 - command:
 
 ```bash
@@ -263,6 +324,7 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_live_rebuild_watcher.py -
 
 At startup the runner prints quick links for:
 
+- Start All service URLs when `bin/local-all` is used
 - Local Studio App
 - local API ownership
 - startup docs rebuild scopes
@@ -274,21 +336,26 @@ At startup the runner prints quick links for:
 
 ## Shutdown Behavior
 
-The runner traps `EXIT`, `INT`, and `TERM`.
+`bin/local-all` and `bin/local-studio` both trap `EXIT`, `INT`, and `TERM`.
 
-When you press `Ctrl+C`, it:
+When you press `Ctrl+C`, `bin/local-all` stops the public-site preview, Local Studio runner, and Docs Viewer service before exiting.
+
+When you press `Ctrl+C` in `bin/local-studio`, it:
 
 - stops the Local Studio App when enabled
 - stops the Docs Live Rebuild Watcher when enabled
 - waits for those child processes before exiting
 
-If either child process exits unexpectedly, the runner stops monitoring and exits after waiting on that failed process.
+If any `bin/local-all` child process exits unexpectedly, the runner stops the remaining children and reports the child name and exit status.
+If either `bin/local-studio` child process exits unexpectedly, that runner stops monitoring and exits after waiting on the failed process.
 
 ## What It Does Not Do
 
 `bin/local-studio` does not currently:
 
 - start Jekyll
+- start the Docs Viewer web service
+- serve `/docs/` or Docs Viewer management APIs
 - run `$HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py`
 - rebuild any docs/docs-search scope on startup unless `DOCS_STARTUP_REBUILD_SCOPES` is set
 - rebuild catalogue lookup artifacts on startup unless `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled

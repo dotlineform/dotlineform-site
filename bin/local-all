@@ -1,0 +1,253 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+SITE_ENV_PATH="$ROOT_DIR/var/local/site.env"
+if [ -f "$SITE_ENV_PATH" ]; then
+  set -a
+  # shellcheck source=/dev/null
+  . "$SITE_ENV_PATH"
+  set +a
+fi
+
+if [ -x "$HOME/miniconda3/bin/python3" ]; then
+  PYTHON_BIN="$HOME/miniconda3/bin/python3"
+else
+  PYTHON_BIN="${PYTHON_BIN:-python3}"
+fi
+
+RUNNER_NAME="bin/local-all"
+PUBLIC_SITE_HOST="${PUBLIC_SITE_HOST:-${JEKYLL_HOST:-127.0.0.1}}"
+PUBLIC_SITE_PORT="${PUBLIC_SITE_PORT:-${JEKYLL_PORT:-4000}}"
+STUDIO_APP_ENABLED="${STUDIO_APP_ENABLED:-1}"
+STUDIO_APP_HOST="${STUDIO_APP_HOST:-127.0.0.1}"
+STUDIO_APP_PORT="${STUDIO_APP_PORT:-8765}"
+DOCS_VIEWER_HOST="${DOCS_VIEWER_HOST:-127.0.0.1}"
+DOCS_VIEWER_PORT="${DOCS_VIEWER_PORT:-8776}"
+DOCS_VIEWER_BASE_URL="${DOCS_VIEWER_BASE_URL:-http://$DOCS_VIEWER_HOST:$DOCS_VIEWER_PORT}"
+
+CHILD_PIDS=()
+CHILD_NAMES=()
+USED_BIND_HOSTS=()
+USED_BIND_PORTS=()
+USED_BIND_NAMES=()
+
+port_available() {
+  local host="$1"
+  local port="$2"
+
+  "$PYTHON_BIN" - "$host" "$port" <<'PY'
+import socket
+import sys
+
+host = sys.argv[1]
+try:
+    port = int(sys.argv[2])
+except ValueError:
+    print("port must be an integer", file=sys.stderr)
+    raise SystemExit(1)
+
+last_error = None
+try:
+    addrinfo = socket.getaddrinfo(
+        host, port, type=socket.SOCK_STREAM, flags=socket.AI_PASSIVE
+    )
+except OSError as exc:
+    print(exc, file=sys.stderr)
+    raise SystemExit(1)
+
+for family, socktype, proto, _canonname, sockaddr in addrinfo:
+    sock = socket.socket(family, socktype, proto)
+    try:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind(sockaddr)
+        raise SystemExit(0)
+    except OSError as exc:
+        last_error = exc
+    finally:
+        sock.close()
+
+if last_error is not None:
+    print(last_error, file=sys.stderr)
+raise SystemExit(1)
+PY
+}
+
+host_binding_group() {
+  local host="$1"
+  case "$host" in
+    ""|"0.0.0.0"|"::")
+      printf 'any'
+      ;;
+    "127.0.0.1"|"localhost"|"::1")
+      printf 'loopback'
+      ;;
+    *)
+      printf '%s' "$host"
+      ;;
+  esac
+}
+
+bindings_conflict() {
+  local first_host="$1"
+  local first_port="$2"
+  local second_host="$3"
+  local second_port="$4"
+  local first_group
+  local second_group
+
+  if [ "$first_port" != "$second_port" ]; then
+    return 1
+  fi
+
+  first_group="$(host_binding_group "$first_host")"
+  second_group="$(host_binding_group "$second_host")"
+  if [ "$first_group" = "any" ] || [ "$second_group" = "any" ]; then
+    return 0
+  fi
+  if [ "$first_group" = "$second_group" ]; then
+    return 0
+  fi
+  return 1
+}
+
+remember_binding() {
+  local service_name="$1"
+  local host="$2"
+  local port="$3"
+  local index
+
+  for index in "${!USED_BIND_HOSTS[@]}"; do
+    if bindings_conflict "$host" "$port" "${USED_BIND_HOSTS[$index]}" "${USED_BIND_PORTS[$index]}"; then
+      echo "ERROR: $service_name and ${USED_BIND_NAMES[$index]} are both configured for $host:$port." >&2
+      echo "Set one of the configured ports to a different value, then rerun $RUNNER_NAME." >&2
+      exit 1
+    fi
+  done
+
+  USED_BIND_NAMES+=("$service_name")
+  USED_BIND_HOSTS+=("$host")
+  USED_BIND_PORTS+=("$port")
+}
+
+require_open_port() {
+  local service_name="$1"
+  local host="$2"
+  local port="$3"
+  local env_name="$4"
+
+  if port_available "$host" "$port"; then
+    return 0
+  fi
+
+  echo "ERROR: $service_name cannot start on $host:$port because the port is unavailable." >&2
+  echo "Set $env_name to a different port or stop the conflicting process, then rerun $RUNNER_NAME." >&2
+  exit 1
+}
+
+cleanup() {
+  local pid
+
+  trap - EXIT INT TERM
+  if [ "${#CHILD_PIDS[@]}" -eq 0 ]; then
+    return 0
+  fi
+  for pid in "${CHILD_PIDS[@]}"; do
+    if kill -0 "$pid" 2>/dev/null; then
+      kill "$pid" 2>/dev/null || true
+    fi
+  done
+  for pid in "${CHILD_PIDS[@]}"; do
+    wait "$pid" 2>/dev/null || true
+  done
+}
+
+handle_interrupt() {
+  cleanup
+  exit 130
+}
+
+handle_term() {
+  cleanup
+  exit 143
+}
+
+start_child() {
+  local service_name="$1"
+  shift
+
+  echo "Starting $service_name"
+  "$@" &
+  CHILD_NAMES+=("$service_name")
+  CHILD_PIDS+=("$!")
+}
+
+child_is_running() {
+  local pid="$1"
+  local running_pids
+
+  running_pids="$(jobs -pr)"
+  case " $running_pids " in
+    *" $pid "*)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+trap cleanup EXIT
+trap handle_interrupt INT
+trap handle_term TERM
+
+echo "Starting local services from $ROOT_DIR"
+echo "Public site preview: http://$PUBLIC_SITE_HOST:$PUBLIC_SITE_PORT"
+if [ "$STUDIO_APP_ENABLED" != "0" ]; then
+  echo "Local Studio app: http://$STUDIO_APP_HOST:$STUDIO_APP_PORT/studio/"
+else
+  echo "Local Studio app: disabled by STUDIO_APP_ENABLED=0"
+fi
+echo "Docs Viewer: $DOCS_VIEWER_BASE_URL/docs/"
+echo
+
+remember_binding "Public site preview" "$PUBLIC_SITE_HOST" "$PUBLIC_SITE_PORT"
+if [ "$STUDIO_APP_ENABLED" != "0" ]; then
+  remember_binding "Local Studio" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT"
+fi
+remember_binding "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT"
+
+require_open_port "Public site preview" "$PUBLIC_SITE_HOST" "$PUBLIC_SITE_PORT" "PUBLIC_SITE_PORT"
+if [ "$STUDIO_APP_ENABLED" != "0" ]; then
+  require_open_port "Local Studio" "$STUDIO_APP_HOST" "$STUDIO_APP_PORT" "STUDIO_APP_PORT"
+fi
+require_open_port "Docs Viewer" "$DOCS_VIEWER_HOST" "$DOCS_VIEWER_PORT" "DOCS_VIEWER_PORT"
+
+echo "Press Ctrl+C to stop all processes."
+echo
+
+start_child "Public site preview" "$ROOT_DIR/bin/public-site-preview"
+start_child "Local Studio runner" "$ROOT_DIR/bin/local-studio"
+start_child "Docs Viewer" "$ROOT_DIR/docs-viewer/bin/docs-viewer"
+
+while true; do
+  for index in "${!CHILD_PIDS[@]}"; do
+    pid="${CHILD_PIDS[$index]}"
+    if ! child_is_running "$pid"; then
+      set +e
+      wait "$pid"
+      status=$?
+      set -e
+      echo "ERROR: ${CHILD_NAMES[$index]} exited with status $status; stopping remaining services." >&2
+      cleanup
+      if [ "$status" -eq 0 ]; then
+        exit 1
+      fi
+      exit "$status"
+    fi
+  done
+  sleep 1
+done

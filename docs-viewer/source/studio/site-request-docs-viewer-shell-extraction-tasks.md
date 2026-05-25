@@ -16,6 +16,11 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
+- Completed `DVSE-018` by adding the host-owned `bin/local-all` runner for public-site Live Preview, Local Studio, and Docs Viewer.
+- `bin/local-all` loads `var/local/site.env`, resolves static host/port settings, checks for duplicate configured bindings, checks port availability before starting children, prints service URLs, starts the three existing independent entrypoints, traps shutdown signals, cleans up children, and reports the child name/status when a child exits.
+- The existing independent start paths remain available: `bin/public-site-preview`, `bin/local-studio`, and `docs-viewer/bin/docs-viewer`.
+- Source docs were updated for the start-all runner in the Local Studio runner, Studio, Docs Viewer dependency, and local setup environment docs.
+- Focused verification passed: shell syntax for `bin/local-all`, `bin/local-studio`, `bin/public-site-preview`, and `docs-viewer/bin/docs-viewer`; isolated duplicate-binding failure smoke using a temporary copy of `bin/local-all`; stale start-all TODO copy check. No generated docs/search payloads were rebuilt manually.
 - Completed `DVSE-017` by preserving the host-owned public read-only route contract while keeping New Scope creation inside the Docs Viewer boundary.
 - `./scripts/build_docs.rb --write` now refreshes both the full local Docs Viewer browser config and the public read-only config; the public config is projected from configured static route scopes and excludes the `/docs/` manage route.
 - New Scope focused tests now pin that `public_readonly` scope creation writes a Jekyll route using `docs_viewer_readonly_route.html`, records the route file in the scope manifest, and configures route links without `scope` query parameters, while local-only scope creation skips public route files.
@@ -145,7 +150,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-015 | done | Verify the service/API/shell move with focused Python syntax/import checks, management workflow tests, loopback/startup checks, `/docs/` manage-mode smoke coverage, and checks that Local Studio no longer hosts the Docs Viewer shell. |
 | DVSE-016 | done | Replace Studio-specific Docs Viewer hosting behavior with Studio integration/link behavior that points to the configured Docs Viewer service; keep Studio navigation and UI links as peer-service integration, not embedded Docs Viewer hosting. |
 | DVSE-017 | done | Preserve and verify public scope route ownership: New Scope continues to create or register static/Jekyll-compatible routes such as `/library/` and `/analysis/`, using `docs-viewer/` scripts and contracts while the pages remain repo/Jekyll-hosted. |
-| DVSE-018 | planned | Add the lightweight "start all" runner for Live Preview, Local Studio, and Docs Viewer, modeled on `bin/local-studio`: load `var/local/site.env`, validate static ports, print URLs, trap shutdown signals, clean up children, and fail clearly on child-process exits. |
+| DVSE-018 | done | Add the lightweight "start all" runner for Live Preview, Local Studio, and Docs Viewer, modeled on `bin/local-studio`: load `var/local/site.env`, validate static ports, print URLs, trap shutdown signals, clean up children, and fail clearly on child-process exits. |
 | DVSE-019 | planned | Move or update tests, smoke helpers, fixtures, checks, and run-check profiles so Docs Viewer-owned checks live with the new boundary where appropriate while repo/Codex verification entrypoints remain discoverable. |
 | DVSE-020 | planned | Update command docs, local setup docs, Docs Viewer portable setup, runtime boundary docs, source organisation docs, config docs, and script docs to describe the extracted boundary, service config, route ownership, runner behavior, standalone Docs Viewer service ownership, and retired current-state assumptions. |
 | DVSE-021 | planned | Delete old Studio-owned Docs Viewer source locations after references are updated; confirm removed paths are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic. |

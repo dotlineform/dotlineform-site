@@ -31,7 +31,7 @@ export R2_BUCKET="..."
 export R2_ENDPOINT="https://<account_id>.r2.cloudflarestorage.com"
 ```
 
-Local repo scripts and `bin/local-studio` read this file directly.
+Local repo scripts, `bin/local-studio`, `bin/local-all`, and `docs-viewer/bin/docs-viewer` read this file directly.
 Do not duplicate these repo-specific values in shell startup files.
 
 What the shared variables mean:
