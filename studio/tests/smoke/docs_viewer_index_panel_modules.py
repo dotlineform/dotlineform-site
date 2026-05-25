@@ -31,7 +31,7 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
 def assert_index_panel_helpers(page: Page) -> None:
     result = page.evaluate(
         """async () => {
-            const module = await import('/studio/docs-viewer/runtime/js/docs-viewer-index-panel.js');
+            const module = await import('/docs-viewer/runtime/js/docs-viewer-index-panel.js');
             const storage = new Map();
             const storageAdapter = {
                 getItem: (key) => storage.has(key) ? storage.get(key) : null,

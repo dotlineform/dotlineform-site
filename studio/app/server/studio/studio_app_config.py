@@ -13,7 +13,7 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "title": "Docs",
         "path": "/docs/?mode=manage",
         "doc_href": "/docs/?scope=studio&doc=docs-viewer&mode=manage",
-        "script": "/studio/docs-viewer/runtime/js/docs-viewer.js",
+        "script": "/docs-viewer/runtime/js/docs-viewer.js",
     },
     "studio_catalogue": {
         "label": "catalogue",
@@ -341,10 +341,10 @@ PRODUCTION_SITE_BASE = "https://dotlineform.com"
 def asset_version(repo_root: Path) -> str:
     candidates = [
         repo_root / "_includes" / "docs_viewer_shell.html",
-        repo_root / "studio" / "docs-viewer" / "runtime" / "js" / "docs-viewer.js",
-        repo_root / "studio" / "docs-viewer" / "assets" / "css" / "docs-viewer.css",
-        repo_root / "studio" / "docs-viewer" / "assets" / "css" / "docs-viewer-management.css",
-        repo_root / "studio" / "docs-viewer" / "config" / "runtime" / "docs-viewer-config.json",
+        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer.js",
+        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer.css",
+        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-management.css",
+        repo_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-config.json",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "tag-groups.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "tag-registry.js",

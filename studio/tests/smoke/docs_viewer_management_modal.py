@@ -38,7 +38,7 @@ def install_modal_fixture(page: Page) -> None:
         """async () => {
             const css = document.createElement('link');
             css.rel = 'stylesheet';
-            css.href = '/studio/docs-viewer/assets/css/docs-viewer-management.css';
+            css.href = '/docs-viewer/static/css/docs-viewer-management.css';
             const cssLoaded = new Promise((resolve, reject) => {
                 css.addEventListener('load', resolve, { once: true });
                 css.addEventListener('error', reject, { once: true });
@@ -168,8 +168,8 @@ def install_modal_fixture(page: Page) -> None:
               </main>
             `;
 
-            const managementModals = await import('/studio/docs-viewer/runtime/js/docs-viewer-management-modals.js');
-            const importModals = await import('/studio/docs-viewer/runtime/js/docs-html-import-modals.js');
+            const managementModals = await import('/docs-viewer/runtime/js/docs-viewer-management-modals.js');
+            const importModals = await import('/docs-viewer/runtime/js/docs-html-import-modals.js');
             const root = document.getElementById('docsViewerRoot');
             const nav = document.getElementById('docsViewerNav');
             const state = {
@@ -655,7 +655,7 @@ def run_import_render_module_check(page: Page) -> None:
                 </div>
               </main>
             `;
-            const render = await import('/studio/docs-viewer/runtime/js/docs-html-import-render.js');
+            const render = await import('/docs-viewer/runtime/js/docs-html-import-render.js');
             const state = {
                 config: {
                     docs_html_import: {
@@ -794,7 +794,7 @@ def run_import_workflow_module_check(page: Page) -> None:
                 </div>
               </main>
             `;
-            const workflow = await import('/studio/docs-viewer/runtime/js/docs-html-import-workflow.js');
+            const workflow = await import('/docs-viewer/runtime/js/docs-html-import-workflow.js');
             const state = {
                 root: document.getElementById('docsHtmlImportRoot'),
                 config: {
@@ -1011,7 +1011,7 @@ def run_import_result_rows_check(page: Page) -> None:
                     json: async () => responses[key]
                 };
             };
-            const module = await import('/studio/docs-viewer/runtime/js/docs-html-import.js');
+            const module = await import('/docs-viewer/runtime/js/docs-html-import.js');
             await module.initDocsHtmlImport({
                 root: document.getElementById('docsHtmlImportRoot'),
                 bootStatus: document.getElementById('docsHtmlImportBootStatus'),
@@ -1076,7 +1076,7 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
                     })
                 };
             };
-            const lifecycle = await import('/studio/docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js');
+            const lifecycle = await import('/docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js');
             window.__docsViewerScopeCreatePromise = lifecycle.openCreateScopeFlow({
                 root: document.getElementById('docsViewerRoot'),
                 state: {
@@ -1256,7 +1256,7 @@ def run_delete_confirm_idle_check(page: Page) -> None:
                     }, 20);
                 });
             };
-            const management = await import('/studio/docs-viewer/runtime/js/docs-viewer-management.js');
+            const management = await import('/docs-viewer/runtime/js/docs-viewer-management.js');
             const controller = management.initDocsViewerManagement({
                 root,
                 nav,
@@ -1434,7 +1434,7 @@ def run_index_double_click_edit_check(page: Page) -> None:
                 managementStatusOwnsViewerStatus: false,
                 statusMenuOpen: false
             };
-            const management = await import('/studio/docs-viewer/runtime/js/docs-viewer-management.js');
+            const management = await import('/docs-viewer/runtime/js/docs-viewer-management.js');
             const controller = management.initDocsViewerManagement({
                 root: document.getElementById('docsViewerRoot'),
                 nav: document.getElementById('docsViewerNav'),
@@ -1479,7 +1479,7 @@ def run_index_double_click_edit_check(page: Page) -> None:
 
 def run_smoke_for_viewport(page: Page, base_url: str, viewport: dict[str, int]) -> dict[str, object]:
     page.set_viewport_size(viewport)
-    page.goto(route_url(base_url, "/studio/docs-viewer/assets/css/docs-viewer-management.css"), wait_until="domcontentloaded")
+    page.goto(route_url(base_url, "/docs-viewer/static/css/docs-viewer-management.css"), wait_until="domcontentloaded")
     install_modal_fixture(page)
     run_metadata_modal_check(page)
     run_import_modal_check(page)

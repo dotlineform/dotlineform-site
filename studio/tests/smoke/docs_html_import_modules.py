@@ -58,8 +58,8 @@ def install_fixture(page: Page) -> None:
                 </section>
               </main>
             `;
-            const workflow = await import('/studio/docs-viewer/runtime/js/docs-html-import-workflow.js');
-            const render = await import('/studio/docs-viewer/runtime/js/docs-html-import-render.js');
+            const workflow = await import('/docs-viewer/runtime/js/docs-html-import-workflow.js');
+            const render = await import('/docs-viewer/runtime/js/docs-html-import-render.js');
             const root = document.getElementById('docsHtmlImportRoot');
             const config = {
                 docs_html_import: {

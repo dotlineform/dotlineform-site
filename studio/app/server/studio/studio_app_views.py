@@ -735,10 +735,10 @@ def docs_viewer_shell(version: str, repo_root: Path) -> str:
 
     shell = "\n".join(lines)
     replacements = {
-        "{{ '/studio/docs-viewer/assets/css/docs-viewer.css' | relative_url }}": "/studio/docs-viewer/assets/css/docs-viewer.css",
-        "{{ '/studio/docs-viewer/assets/css/docs-viewer-reports.css' | relative_url }}": "/studio/docs-viewer/assets/css/docs-viewer-reports.css",
-        "{{ '/studio/docs-viewer/assets/css/docs-viewer-management.css' | relative_url }}": "/studio/docs-viewer/assets/css/docs-viewer-management.css",
-        "{{ '/studio/docs-viewer/runtime/js/docs-viewer.js' | relative_url }}": "/studio/docs-viewer/runtime/js/docs-viewer.js",
+        "{{ '/docs-viewer/static/css/docs-viewer.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer.css",
+        "{{ '/docs-viewer/static/css/docs-viewer-reports.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer-reports.css",
+        "{{ '/docs-viewer/static/css/docs-viewer-management.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer-management.css",
+        "{{ '/docs-viewer/runtime/js/docs-viewer.js' | relative_url }}": "/docs-viewer/runtime/js/docs-viewer.js",
         "{{ site.time | date: '%s' }}": html.escape(version, quote=True),
         "{{ include.index_url }}": "",
         "{{ include.viewer_base_url }}": "/docs/",

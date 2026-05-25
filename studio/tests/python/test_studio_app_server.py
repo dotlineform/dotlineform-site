@@ -159,7 +159,8 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/studio/app/frontend/js/catalogue-work-editor.js") is True
     assert allowed("/studio/app/assets/css/studio.css") is True
     assert allowed("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js") is True
-    assert allowed("/studio/docs-viewer/runtime/js/docs-viewer.js") is True
+    assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
     assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is True
     assert allowed("/assets/data/docs/scopes/studio/index.json") is True
     assert allowed("/assets/works/img/00001.jpg") is True
@@ -173,6 +174,7 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/assets/docs-viewer/js/docs-viewer.js") is False
     assert allowed("/assets/docs-viewer/css/docs-viewer.css") is False
     assert allowed("/assets/docs-viewer/data/docs-viewer-config.json") is False
+    assert allowed("/studio/docs-viewer/runtime/js/docs-viewer.js") is False
 
 
 def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:

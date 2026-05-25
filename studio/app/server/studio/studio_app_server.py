@@ -81,8 +81,8 @@ STATIC_PREFIXES = (
     "/studio/app/assets/",
     "/studio/ui-catalogue/assets/",
     "/docs-viewer/config/",
-    "/studio/docs-viewer/runtime/",
-    "/studio/docs-viewer/assets/",
+    "/docs-viewer/runtime/",
+    "/docs-viewer/static/",
     "/studio/data/",
 )
 STATIC_FILES = {

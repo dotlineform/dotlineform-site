@@ -1,4 +1,4 @@
-/* studio/docs-viewer/assets/css/docs-viewer.css */
+/* docs-viewer/static/css/docs-viewer.css */
 
 .docsViewer{
   --docs-viewer-measure: var(--content-measure, 72ch);
