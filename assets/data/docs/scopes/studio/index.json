@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T13:06:26Z",
+  "generated_at": "2026-05-25T13:28:38Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -172,7 +172,7 @@
       "source_path": "current-pipeline-map.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-current-pipeline-map",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-current-pipeline-map.json",
-      "content_text_length": 2313
+      "content_text_length": 2338
     },
     {
       "scope": "studio",
@@ -221,7 +221,7 @@
       "source_path": "docs-build-management-import-export-improvements.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-build-management-import-export-improvements",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-build-management-import-export-improvements.json",
-      "content_text_length": 11888,
+      "content_text_length": 11918,
       "ui_status": "done"
     },
     {
@@ -271,7 +271,7 @@
       "source_path": "site-request-catalogue-compatibility-cleanup-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-compatibility-cleanup-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-compatibility-cleanup-inventory.json",
-      "content_text_length": 13789
+      "content_text_length": 13809
     },
     {
       "scope": "studio",
@@ -287,7 +287,7 @@
       "source_path": "site-request-moment-source-cleanup-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-moment-source-cleanup-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-moment-source-cleanup-inventory.json",
-      "content_text_length": 11639,
+      "content_text_length": 11659,
       "ui_status": "done"
     },
     {
@@ -386,7 +386,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 28120,
+      "content_text_length": 28054,
       "ui_status": "paused"
     },
     {
@@ -435,7 +435,7 @@
       "source_path": "search-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-overview.json",
-      "content_text_length": 4838
+      "content_text_length": 4867
     },
     {
       "scope": "studio",
@@ -499,7 +499,7 @@
       "source_path": "site-request-js-config-structural-review-module-versioning.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-module-versioning",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-module-versioning.json",
-      "content_text_length": 6237,
+      "content_text_length": 6257,
       "ui_status": "done"
     },
     {
@@ -714,7 +714,7 @@
       "source_path": "site-request-js-config-structural-review-docs-viewer-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-docs-viewer-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-docs-viewer-boundary.json",
-      "content_text_length": 7484,
+      "content_text_length": 7504,
       "ui_status": "done"
     },
     {
@@ -797,7 +797,7 @@
       "source_path": "scripts-local-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-local-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-local-studio.json",
-      "content_text_length": 13283
+      "content_text_length": 13343
     },
     {
       "scope": "studio",
@@ -862,7 +862,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json",
-      "content_text_length": 4710
+      "content_text_length": 4720
     },
     {
       "scope": "studio",
@@ -959,7 +959,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json",
-      "content_text_length": 15074
+      "content_text_length": 15084
     },
     {
       "scope": "studio",
@@ -1183,7 +1183,7 @@
       "source_path": "site-request-js-config-structural-review-catalogue-editor-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-catalogue-editor-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-catalogue-editor-boundary.json",
-      "content_text_length": 14810,
+      "content_text_length": 14830,
       "ui_status": "done"
     },
     {
@@ -1232,7 +1232,7 @@
       "source_path": "scripts-cloud-environments.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-cloud-environments",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-cloud-environments.json",
-      "content_text_length": 9302
+      "content_text_length": 9382
     },
     {
       "scope": "studio",
@@ -1280,7 +1280,7 @@
       "source_path": "site-request-field-aware-build-scoping-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-field-aware-build-scoping-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-field-aware-build-scoping-inventory.json",
-      "content_text_length": 30714
+      "content_text_length": 30764
     },
     {
       "scope": "studio",
@@ -1476,7 +1476,7 @@
       "source_path": "docs-viewer-portable-files.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 9369
+      "content_text_length": 9245
     },
     {
       "scope": "studio",
@@ -1508,7 +1508,7 @@
       "source_path": "docs-viewer-portable-scope-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-scope-setup.json",
-      "content_text_length": 7728
+      "content_text_length": 7768
     },
     {
       "scope": "studio",
@@ -1639,7 +1639,7 @@
       "source_path": "config-jekyll-site-config.md",
       "viewer_url": "/docs/?scope=studio&doc=config-jekyll-site-config",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-jekyll-site-config.json",
-      "content_text_length": 2185
+      "content_text_length": 2195
     },
     {
       "scope": "studio",
@@ -1978,7 +1978,7 @@
       "source_path": "site-request-js-config-structural-review-public-runtime-extraction.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-js-config-structural-review-public-runtime-extraction",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-js-config-structural-review-public-runtime-extraction.json",
-      "content_text_length": 8351,
+      "content_text_length": 8371,
       "ui_status": "done"
     },
     {
@@ -2011,7 +2011,7 @@
       "source_path": "search-normalisation-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=search-normalisation-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-normalisation-rules.json",
-      "content_text_length": 10183
+      "content_text_length": 10246
     },
     {
       "scope": "studio",
@@ -2171,7 +2171,7 @@
       "source_path": "doc-ui-status.md",
       "viewer_url": "/docs/?scope=studio&doc=doc-ui-status",
       "content_url": "/assets/data/docs/scopes/studio/by-id/doc-ui-status.json",
-      "content_text_length": 753
+      "content_text_length": 763
     },
     {
       "scope": "studio",
@@ -2431,7 +2431,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 8809
+      "content_text_length": 8888
     },
     {
       "scope": "studio",
@@ -2679,7 +2679,7 @@
       "source_path": "search-build-pipeline-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline-architecture.json",
-      "content_text_length": 4645
+      "content_text_length": 4482
     },
     {
       "scope": "studio",
@@ -2711,7 +2711,7 @@
       "source_path": "search-build-pipeline-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline-catalogue.json",
-      "content_text_length": 3561
+      "content_text_length": 3636
     },
     {
       "scope": "studio",
@@ -2727,7 +2727,7 @@
       "source_path": "search-build-pipeline-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline-studio.json",
-      "content_text_length": 2423
+      "content_text_length": 2483
     },
     {
       "scope": "studio",
@@ -2743,7 +2743,7 @@
       "source_path": "search-build-pipeline-library.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline-library.json",
-      "content_text_length": 2573
+      "content_text_length": 2633
     },
     {
       "scope": "studio",
@@ -2759,7 +2759,7 @@
       "source_path": "search-build-pipeline-analysis.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-analysis",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline-analysis.json",
-      "content_text_length": 2441
+      "content_text_length": 2501
     },
     {
       "scope": "studio",
@@ -2810,7 +2810,7 @@
       "source_path": "search-studio-v1-index-shape.md",
       "viewer_url": "/docs/?scope=studio&doc=search-studio-v1-index-shape",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-studio-v1-index-shape.json",
-      "content_text_length": 2858
+      "content_text_length": 2878
     },
     {
       "scope": "studio",
@@ -2826,7 +2826,7 @@
       "source_path": "site-request-docs-semantic-references.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-semantic-references.json",
-      "content_text_length": 16665,
+      "content_text_length": 16675,
       "ui_status": "paused"
     },
     {
@@ -3025,7 +3025,7 @@
       "source_path": "search-validation-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=search-validation-checklist",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-validation-checklist.json",
-      "content_text_length": 8729
+      "content_text_length": 8879
     },
     {
       "scope": "studio",
@@ -3074,7 +3074,7 @@
       "source_path": "site-request-studio-source-tree-reorganization-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-tasks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization-tasks.json",
-      "content_text_length": 14616,
+      "content_text_length": 14636,
       "ui_status": "done"
     },
     {
@@ -3091,7 +3091,7 @@
       "source_path": "site-request-studio-source-tree-reorganization-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization-inventory.json",
-      "content_text_length": 19881
+      "content_text_length": 19891
     },
     {
       "scope": "studio",
@@ -3107,7 +3107,7 @@
       "source_path": "site-request-studio-source-tree-reorganization-layout.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization-layout",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization-layout.json",
-      "content_text_length": 11699
+      "content_text_length": 11709
     },
     {
       "scope": "studio",
@@ -3140,7 +3140,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-tasks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-tasks.json",
-      "content_text_length": 29817,
+      "content_text_length": 29958,
       "ui_status": "draft"
     },
     {
@@ -3157,7 +3157,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-inventory.json",
-      "content_text_length": 14572,
+      "content_text_length": 14582,
       "ui_status": "draft"
     },
     {
@@ -3191,7 +3191,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction-target-layout.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-target-layout",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-target-layout.json",
-      "content_text_length": 11859,
+      "content_text_length": 11785,
       "ui_status": "draft"
     },
     {
@@ -3225,7 +3225,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction-baseline.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-baseline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-baseline.json",
-      "content_text_length": 3944,
+      "content_text_length": 4004,
       "ui_status": "draft"
     },
     {
@@ -3242,7 +3242,7 @@
       "source_path": "search-incremental-orchestration-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=search-incremental-orchestration-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-incremental-orchestration-plan.json",
-      "content_text_length": 19165
+      "content_text_length": 19228
     },
     {
       "scope": "studio",
@@ -3354,7 +3354,7 @@
       "source_path": "search-catalogue-targeted-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=search-catalogue-targeted-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-catalogue-targeted-plan.json",
-      "content_text_length": 6931
+      "content_text_length": 7006
     },
     {
       "scope": "studio",
@@ -3562,7 +3562,7 @@
       "source_path": "scripts-docs-management-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server.json",
-      "content_text_length": 4497
+      "content_text_length": 4517
     },
     {
       "scope": "studio",
@@ -3642,7 +3642,7 @@
       "source_path": "scripts-docs-management-server-generated-reads.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-management-server-generated-reads.json",
-      "content_text_length": 10169
+      "content_text_length": 10179
     },
     {
       "scope": "studio",
@@ -3754,7 +3754,7 @@
       "source_path": "scripts-docs-live-rebuild-watcher.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-live-rebuild-watcher.json",
-      "content_text_length": 5464
+      "content_text_length": 5524
     },
     {
       "scope": "studio",
@@ -3786,7 +3786,7 @@
       "source_path": "config-search-build-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-search-build-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-search-build-json.json",
-      "content_text_length": 3049
+      "content_text_length": 3124
     },
     {
       "scope": "studio",
@@ -3850,7 +3850,7 @@
       "source_path": "studio-e2e-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-e2e-checklist.json",
-      "content_text_length": 12567
+      "content_text_length": 12577
     },
     {
       "scope": "studio",
@@ -3966,7 +3966,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 14611
+      "content_text_length": 14659
     },
     {
       "scope": "studio",
@@ -3998,7 +3998,7 @@
       "source_path": "config-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=config-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-docs-viewer.json",
-      "content_text_length": 6738
+      "content_text_length": 6748
     },
     {
       "scope": "studio",
@@ -4130,7 +4130,7 @@
       "source_path": "library-import-export-v2.md",
       "viewer_url": "/docs/?scope=studio&doc=library-import-export-v2",
       "content_url": "/assets/data/docs/scopes/studio/by-id/library-import-export-v2.json",
-      "content_text_length": 18321,
+      "content_text_length": 18331,
       "ui_status": "done"
     },
     {
@@ -4231,7 +4231,7 @@
       "source_path": "site-request-docs-build-incremental.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-build-incremental.json",
-      "content_text_length": 13361,
+      "content_text_length": 13421,
       "ui_status": "done"
     },
     {
@@ -4282,7 +4282,7 @@
       "source_path": "ui-status-emoji.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-status-emoji",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-status-emoji.json",
-      "content_text_length": 9217,
+      "content_text_length": 9237,
       "ui_status": "done"
     },
     {
@@ -4383,7 +4383,7 @@
       "source_path": "site-request-catalogue-media-section-schema.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-media-section-schema",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-media-section-schema.json",
-      "content_text_length": 24355,
+      "content_text_length": 24365,
       "ui_status": "done"
     },
     {
@@ -4400,7 +4400,7 @@
       "source_path": "site-request-catalogue-delete-cleanup.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-delete-cleanup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-delete-cleanup.json",
-      "content_text_length": 9641,
+      "content_text_length": 9661,
       "ui_status": "done"
     },
     {
@@ -4485,7 +4485,7 @@
       "source_path": "site-request-catalogue-moment-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-moment-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-moment-editor.json",
-      "content_text_length": 10894,
+      "content_text_length": 10914,
       "ui_status": "done"
     },
     {
@@ -4720,7 +4720,7 @@
       "source_path": "ui-request-docs-html-import-task.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-html-import-task",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-html-import-task.json",
-      "content_text_length": 9301,
+      "content_text_length": 9321,
       "ui_status": "done"
     },
     {
@@ -4805,7 +4805,7 @@
       "source_path": "site-request-scripts-directory-organization.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-scripts-directory-organization.json",
-      "content_text_length": 44548,
+      "content_text_length": 44303,
       "ui_status": "done"
     },
     {
@@ -4890,7 +4890,7 @@
       "source_path": "site-request-docs-viewer-new-scope-button.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-new-scope-button",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-new-scope-button.json",
-      "content_text_length": 16836,
+      "content_text_length": 16856,
       "ui_status": "done"
     },
     {
