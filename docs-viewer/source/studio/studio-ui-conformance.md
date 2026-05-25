@@ -239,7 +239,7 @@ Record:
 Save page-level audit outputs as child docs of [UI Audits](/docs/?scope=studio&doc=ui-audits), using:
 
 - `doc_id: ui-audit-<page-key>-<yyyymmdd>`
-- source file: `_docs/ui-audit-<page-key>-<yyyymmdd>.md`
+- source file: `docs-viewer/source/studio/ui-audit-<page-key>-<yyyymmdd>.md`
 
 Working rule:
 

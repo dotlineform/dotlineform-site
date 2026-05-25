@@ -20,7 +20,7 @@ The preferred shape is two implementation slices plus one closeout slice.
 The Docs path crosses language and ownership boundaries:
 
 - Ruby owns `studio/docs-viewer/build/build_docs.rb` and docs search builders.
-- Python owns `studio/docs-viewer/services/docs_management_server.py`, source mutation planners, generated reads, import/export adapters, live rebuild orchestration, and docs-management response shaping.
+- Python owns `docs-viewer/services/docs_management_server.py`, source mutation planners, generated reads, import/export adapters, live rebuild orchestration, and docs-management response shaping.
 - The live watcher and docs-management service both coordinate docs payload rebuilds and docs search updates.
 - Semantic references add derived per-doc and per-target relationship artifacts, which makes affected-doc rebuild optimization useful but dependency-sensitive.
 
@@ -32,7 +32,7 @@ That means a small source edit can still require parsing a whole docs scope befo
 - expose enough rebuild diagnostics to know which docs path is slow before optimizing
 - define a durable affected-doc build contract for `build_docs.rb`
 - make targeted docs payload rebuilds safe around semantic references, deleted docs, metadata changes, and resolver-data changes
-- keep docs-management server logic as orchestration, not as the owner of builder, import, export, or mutation rules
+- keep Docs management service logic as orchestration, not as the owner of builder, import, export, or mutation rules
 - keep import/export adapter behavior explicit and documented
 - refresh the script inventory back to as-is after the implementation is complete
 
@@ -68,13 +68,13 @@ Acceptance checks:
 - `./scripts/build_docs.rb --scope studio --write` reports the new diagnostics without changing generated payload schemas beyond intentional metadata or console output
 - focused tests cover diagnostic payload shaping where the behavior is structured
 - docs-management service responses keep existing keys stable
-- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder), [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server), [Docs Import](/docs/?scope=studio&doc=scripts-docs-import), and [Docs Export](/docs/?scope=studio&doc=scripts-docs-export) are updated if command output or response contracts change
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder), [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server), [Docs Import](/docs/?scope=studio&doc=scripts-docs-import), and [Docs Export](/docs/?scope=studio&doc=scripts-docs-export) are updated if command output or response contracts change
 
 Implementation note:
 
 - `studio/docs-viewer/build/build_docs.rb` now emits one compact diagnostics JSON line per selected scope without changing generated Docs Viewer payload schemas.
-- `studio/docs-viewer/services/docs_write_rebuild.py` now parses docs-builder diagnostics, adds elapsed timing to rebuild steps, and returns additive `diagnostics.docs` and `diagnostics.search` objects.
-- `studio/docs-viewer/services/docs_live_rebuild_watcher.py` now logs affected doc ids for targeted search and fallback reasons when affected ids are unavailable.
+- `docs-viewer/services/docs_write_rebuild.py` now parses docs-builder diagnostics, adds elapsed timing to rebuild steps, and returns additive `diagnostics.docs` and `diagnostics.search` objects.
+- `docs-viewer/services/docs_live_rebuild_watcher.py` now logs affected doc ids for targeted search and fallback reasons when affected ids are unavailable.
 - The owning builder, management, watcher, import, export, and site change-log docs were updated with the new command, response, and log contracts.
 
 Risks:
@@ -105,8 +105,8 @@ Implementation scope:
   - semantic-reference target moves between target buckets
   - resolver data changes outside docs source, such as catalogue title or route changes
 - update semantic-reference output so affected-doc writes can update all changed by-doc and by-target payloads without leaving stale target buckets
-- update `studio/docs-viewer/services/docs_write_rebuild.py` to select targeted or full rebuilds and report why
-- update `studio/docs-viewer/services/docs_live_rebuild_watcher.py` to pass affected doc ids only when safe
+- update `docs-viewer/services/docs_write_rebuild.py` to select targeted or full rebuilds and report why
+- update `docs-viewer/services/docs_live_rebuild_watcher.py` to pass affected doc ids only when safe
 - update docs-management write flows to pass affected doc ids for create, import overwrite, metadata, viewability, move, archive, delete, and settings writes only where the dependency map allows it
 
 Acceptance checks:
@@ -131,7 +131,7 @@ Implementation note:
 
 - `studio/docs-viewer/build/build_docs.rb` now accepts `--only-doc-ids` for a single selected scope and reports `build_mode` plus `only_doc_ids` in builder diagnostics.
 - Targeted docs payload rebuilds still build the scope index from current source metadata, render selected per-doc payloads only, and derive semantic-reference by-target artifacts from refreshed selected by-doc records plus existing unselected by-doc records.
-- `studio/docs-viewer/services/docs_write_rebuild.py` now returns a `rebuild.docs` object with mode, ids, and reason, and passes targeted docs ids separately from targeted search ids.
+- `docs-viewer/services/docs_write_rebuild.py` now returns a `rebuild.docs` object with mode, ids, and reason, and passes targeted docs ids separately from targeted search ids.
 - Targeted orchestration falls back to a full docs payload rebuild when existing generated output is missing or incomplete.
 - Docs-management mutation planners, source imports, Library returned-package apply flows, and the live watcher now pass docs payload ids only when they have an explicit affected-id set; source-config settings and explicit rebuilds stay full-scope.
 - Focused tests cover targeted command shaping, and a temp-output smoke check covered semantic-reference by-doc and by-target stale removal under targeted rebuild.
@@ -149,15 +149,15 @@ Implementation scope:
 
 - align import/export apply responses with the same rebuild/search diagnostic shape used by management writes
 - keep source write and backup behavior adapter-owned:
-  - `studio/docs-viewer/services/docs_import.py`
-  - `studio/docs-viewer/services/docs_export.py`
-  - `studio/docs-viewer/services/docs_import_source_service.py`
-  - `studio/docs-viewer/services/documents_data_sharing_adapter.py`
+  - `docs-viewer/services/docs_import.py`
+  - `docs-viewer/services/docs_export.py`
+  - `docs-viewer/services/docs_import_source_service.py`
+  - `docs-viewer/services/documents_data_sharing_adapter.py`
   - `studio/app/server/studio/data_sharing_service.py`
-- ensure docs-management server remains a transport/orchestration layer for Data Sharing and Docs Viewer management endpoints
+- ensure Docs management service remains a transport/orchestration layer for Data Sharing and Docs Viewer management endpoints
 - update existing technical docs with final behavior:
   - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-  - [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+  - [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
   - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
   - [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
   - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)
@@ -207,7 +207,7 @@ Remaining deferred work:
 
 - [Studio Python And Ruby Script Inventory](/docs/?scope=studio&doc=studio-python-ruby-script-inventory)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
 - [Docs Import](/docs/?scope=studio&doc=scripts-docs-import)
 - [Docs Export](/docs/?scope=studio&doc=scripts-docs-export)

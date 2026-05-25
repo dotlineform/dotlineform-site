@@ -29,7 +29,7 @@ The report reads the generated Library docs index:
 - `assets/data/docs/scopes/library/index.json`
 
 The report uses `viewer_report_scope: library`, so it reads Library docs even though this request document lives in the Studio docs scope.
-When local generated-data reads are available, the report can read the generated Library index through the docs-management service.
+When local generated-data reads are available, the report can read the generated Library index through the Docs Viewer service.
 Otherwise, it reads the static generated JSON asset.
 
 ## UI Contract
@@ -66,7 +66,7 @@ If this document is opened in a public read-only Docs Viewer route, the document
 
 ## Files
 
-- `_docs/library-documents.md`
-- `assets/docs-viewer/js/docs-viewer-reports.js`
-- `assets/docs-viewer/js/reports/docs-index-table-report.js`
-- `assets/docs-viewer/css/docs-viewer-reports.css`
+- `docs-viewer/source/studio/library-documents.md`
+- `docs-viewer/runtime/js/docs-viewer-reports.js`
+- `docs-viewer/runtime/js/reports/docs-index-table-report.js`
+- `docs-viewer/static/css/docs-viewer-reports.css`

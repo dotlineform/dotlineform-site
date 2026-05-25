@@ -15,7 +15,7 @@ Status:
 
 ## Summary
 
-This change request proposes moving local docs-viewer reads for generated docs and docs-search JSON through the localhost docs-management server while `bin/local-studio` is running.
+This change request proposes moving local docs-viewer reads for generated docs and docs-search JSON through the localhost Docs management service while `bin/local-studio` is running.
 
 The goal is to preserve automatic local docs refresh behavior without making Jekyll watch every generated docs/search asset rewrite.
 
@@ -29,7 +29,7 @@ That fixed the docs watcher loop, but it did not fully remove Jekyll watcher chu
 
 Current local behavior:
 
-- a source doc changes under `_docs/`, `_docs_library/`, or `_docs_analysis/`
+- a source doc changes under `docs-viewer/source/studio/`, `docs-viewer/source/library/`, or `docs-viewer/source/analysis/`
 - `docs_live_rebuild_watcher.py` correctly rebuilds the matching generated docs payloads and docs-search index
 - Jekyll still sees changed files under `assets/data/docs/scopes/...` and `assets/data/search/...`
 - Jekyll performs its own regeneration pass even though those JSON files are runtime data, not Liquid source
@@ -86,7 +86,7 @@ Endpoint behavior:
 
 ### Docs Viewer Runtime Behavior
 
-When the local docs-management server is available, local docs-viewer reads should prefer server endpoints for:
+When the local Docs management service is available, local docs-viewer reads should prefer server endpoints for:
 
 - scope index JSON
 - per-doc payload JSON
@@ -119,7 +119,7 @@ The generated docs/search exclusions should wait until local server reads are av
 
 ### Public Build Boundary
 
-Normal Jekyll build and public hosting behavior should not depend on the docs-management server.
+Normal Jekyll build and public hosting behavior should not depend on the Docs management service.
 
 The generated JSON files remain the public/static data contract for:
 
@@ -139,7 +139,7 @@ The server-read path is a local development optimization and local Studio runtim
 
 Resolved:
 
-- Server reads are enabled for all docs-viewer reads when the configured localhost docs-management server advertises generated-data read capability, not only in `mode=manage`.
+- Server reads are enabled for all docs-viewer reads when the configured localhost Docs management service advertises generated-data read capability, not only in `mode=manage`.
 - `studio`, `library`, and `analysis` use the same generated-data endpoints.
 - Generated-data endpoints return the raw generated JSON unchanged.
 - Local Studio now serves Docs Viewer management and generated-data reads through the Python app server; normal public builds keep `_config.yml`.
@@ -212,7 +212,7 @@ Status:
 
 - implemented
 
-Update the docs viewer runtime so localhost/server-capable sessions can read generated docs data through the docs-management server.
+Update the docs viewer runtime so localhost/server-capable sessions can read generated docs data through the Docs management service.
 
 Implementation note:
 
@@ -286,5 +286,5 @@ Reason:
 - [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
 - [Local Studio Runner](/docs/?scope=studio&doc=scripts-local-studio)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)

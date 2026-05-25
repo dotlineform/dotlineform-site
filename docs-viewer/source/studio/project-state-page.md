@@ -12,7 +12,7 @@ Route:
 
 - `/studio/project-state/?mode=manage`
 
-This page runs the project-state report and writes `_docs/project-state.md`.
+This page runs the project-state report and writes `docs-viewer/source/studio/project-state.md`.
 The route shell is served by the local Studio app, not by a Jekyll Studio page.
 The browser module uses Local Studio for report generation and the configured Docs Viewer service for source-file opening:
 

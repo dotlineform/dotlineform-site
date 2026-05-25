@@ -21,7 +21,7 @@ Status:
 
 ## Summary
 
-Extract the Docs Viewer route/history/document-loading spine out of `assets/docs-viewer/js/docs-viewer.js` into a dedicated router boundary.
+Extract the Docs Viewer route/history/document-loading spine out of `docs-viewer/runtime/js/docs-viewer.js` into a dedicated router boundary.
 
 This work should happen now, while Docs Viewer routing is the current focus, rather than waiting for the next local route requirement to force the issue.
 The current entry controller is still carrying too much broad behavior, and route changes are likely to keep arriving through local Studio and management workflows even if public internet-facing routes do not expand soon.
@@ -77,7 +77,7 @@ Management-mode route smoke coverage should be added when the isolated test buil
 
 Candidate file:
 
-- `assets/docs-viewer/js/docs-viewer-router.js`
+- `docs-viewer/runtime/js/docs-viewer-router.js`
 
 The router should own or wrap:
 
@@ -121,8 +121,8 @@ Move pure URL and route parsing helpers first.
 
 Implementation result:
 
-- `assets/docs-viewer/js/docs-viewer-router.js` owns current-scope URL building, cross-scope URL building, anchor route parsing, and history writes.
-- `assets/docs-viewer/js/docs-viewer.js` keeps small wrapper functions for existing controller call sites while delegating the route mechanics.
+- `docs-viewer/runtime/js/docs-viewer-router.js` owns current-scope URL building, cross-scope URL building, anchor route parsing, and history writes.
+- `docs-viewer/runtime/js/docs-viewer.js` keeps small wrapper functions for existing controller call sites while delegating the route mechanics.
 - A pre-existing direct-hash route issue was fixed so canonical URL replacement preserves `#hash` fragments before payload rendering.
 
 Acceptance:
@@ -139,8 +139,8 @@ Move requested-doc resolution, history writes, and current-route application beh
 
 Implementation result:
 
-- `assets/docs-viewer/js/docs-viewer-router.js` now owns requested-doc resolution, canonical route correction decisions, search-route state setup, current-route application, and the popstate route branch.
-- `assets/docs-viewer/js/docs-viewer.js` delegates route application to the router while retaining DOM lookup, payload fetching/rendering, report mounting, sidebar/search/bookmark/management controller wiring, and small callback adapters for existing controller call sites.
+- `docs-viewer/runtime/js/docs-viewer-router.js` now owns requested-doc resolution, canonical route correction decisions, search-route state setup, current-route application, and the popstate route branch.
+- `docs-viewer/runtime/js/docs-viewer.js` delegates route application to the router while retaining DOM lookup, payload fetching/rendering, report mounting, sidebar/search/bookmark/management controller wiring, and small callback adapters for existing controller call sites.
 - Search route rendering remains delegated through the search controller; the router only sets route state and calls the provided search-render callback.
 - Non-loadable docs still resolve to the first loadable descendant or the configured/default loadable target before history correction and document load.
 
@@ -159,8 +159,8 @@ Move document-load orchestration only if it can be done without hiding rendering
 
 Implementation result:
 
-- `assets/docs-viewer/js/docs-viewer-router.js` now owns document-load orchestration, including non-loadable redirects, selected-doc state, load history writes, payload-cache hits, request-id stale protection, payload fetch initiation, payload-cache storage, and stale-safe error handling.
-- `assets/docs-viewer/js/docs-viewer.js` keeps the concrete generated-payload fetch dependency, loading-shell DOM updates, missing-doc/error display, final payload rendering, report mounting, and document-pane ownership.
+- `docs-viewer/runtime/js/docs-viewer-router.js` now owns document-load orchestration, including non-loadable redirects, selected-doc state, load history writes, payload-cache hits, request-id stale protection, payload fetch initiation, payload-cache storage, and stale-safe error handling.
+- `docs-viewer/runtime/js/docs-viewer.js` keeps the concrete generated-payload fetch dependency, loading-shell DOM updates, missing-doc/error display, final payload rendering, report mounting, and document-pane ownership.
 - Management and search callers still use the same entry-controller `loadDoc(...)` wrapper, so the external controller contract stays stable.
 
 Acceptance:

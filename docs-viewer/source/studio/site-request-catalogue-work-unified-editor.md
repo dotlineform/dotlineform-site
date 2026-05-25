@@ -48,14 +48,14 @@ Current edit route:
 - `studio/catalogue-work/index.md`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/data/studio_config.json` key `catalogue_work_editor`
-- docs in `_docs/catalogue-work-editor.md`
+- docs in `docs-viewer/source/studio/catalogue-work-editor.md`
 
 Current create route:
 
 - `studio/catalogue-new-work/index.md`
 - `assets/studio/js/catalogue-new-work-editor.js`
 - `assets/studio/data/studio_config.json` key `catalogue_new_work_editor`
-- docs in `_docs/catalogue-new-work-editor.md`
+- docs in `docs-viewer/source/studio/catalogue-new-work-editor.md`
 
 The two scripts currently duplicate several concepts:
 
@@ -486,10 +486,10 @@ Update route references after the unified page is stable:
 
 - catalogue dashboard links
 - `studio_config.json` route keys and UI text
-- `_docs/catalogue-work-editor.md`
-- `_docs/catalogue-new-work-editor.md` or a replacement compatibility note
-- `_docs/studio-runtime.md`
-- `_docs/user-guide.md`
+- `docs-viewer/source/studio/catalogue-work-editor.md`
+- `docs-viewer/source/studio/catalogue-new-work-editor.md` or a replacement compatibility note
+- `docs-viewer/source/studio/studio-runtime.md`
+- `docs-viewer/source/studio/user-guide.md`
 - structured docs-log entries if a reusable Studio mode-toggle rule emerges
 - draft-work list route or dashboard/status documentation, depending on the chosen implementation
 

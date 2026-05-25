@@ -23,7 +23,7 @@ Use it for:
 Create one child doc per meaningful page audit using:
 
 - `doc_id: ui-audit-<page-key>-<yyyymmdd>`
-- source file: `_docs/ui-audit-<page-key>-<yyyymmdd>.md`
+- source file: `docs-viewer/source/studio/ui-audit-<page-key>-<yyyymmdd>.md`
 
 Examples:
 

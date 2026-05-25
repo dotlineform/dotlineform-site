@@ -32,7 +32,7 @@ The primary additions are:
 
 The current importer now has a generic route and service endpoint, but the implementation still grew from the HTML importer:
 
-- `studio/docs-viewer/services/docs_html_import.py` owns HTML and Markdown importer logic
+- `docs-viewer/services/docs_html_import.py` owns HTML and Markdown importer logic
 - supported extensions are hardcoded in module-level suffix sets
 - format dispatch is a branch inside `generate_import_preview`
 - the Studio page only knows about the Markdown special case
@@ -309,7 +309,7 @@ The Docs Viewer management modal should:
 - show planned media paths and manual-copy requirements for media imports
 - prompt for a replacement title when the proposed `doc_id` collides with an existing Markdown source stem
 - keep command feedback next to the import controls
-- use Docs Viewer-owned runtime copy from `assets/docs-viewer/data/ui-text.json`
+- use Docs Viewer-owned runtime copy from `docs-viewer/config/ui-text/ui-text.json`
 
 For media imports, the result panel should show:
 
@@ -363,7 +363,7 @@ It should treat media-store copying as a manual post-import action until a later
    Show format-specific labels, hide irrelevant controls, display planned media paths in result payloads, and prompt for replacement titles on `doc_id` collisions.
 
 8. Update docs and checks.
-   Update the Docs Import user guide, Docs Management Server reference, Studio UI rules, and targeted service tests.
+   Update the Docs Import user guide, Docs Management Service reference, Studio UI rules, and targeted service tests.
 
 ## Acceptance Criteria
 
@@ -402,6 +402,6 @@ This request is complete when:
 
 - [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
 - [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)
 - [Change Requests](/docs/?scope=studio&doc=change-requests)

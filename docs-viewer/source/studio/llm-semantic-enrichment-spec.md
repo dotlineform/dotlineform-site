@@ -372,7 +372,7 @@ Canonical source data remains domain-owned.
 
 Examples:
 
-- `_docs_library/*.md` for Library summary front matter
+- `docs-viewer/source/library/*.md` for Library summary front matter
 - `assets/studio/data/tag_assignments.json`
 - `assets/studio/data/tag_registry.json`
 - future catalogue dimension/scoring source if implemented

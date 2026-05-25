@@ -37,10 +37,10 @@ The migration converted dated site and Search change-log sections into structure
 
 Migrated source files:
 
-- `_docs/site-change-log.md`
-- `_docs/site-change-log-2026-05.md`
-- `_docs/site-change-log-2026-04.md`
-- `_docs/site-change-log-2026-03-and-earlier.md`
-- `_docs/search-change-log.md`
+- `docs-viewer/source/studio/site-change-log.md`
+- `docs-viewer/source/studio/site-change-log-2026-05.md`
+- `docs-viewer/source/studio/site-change-log-2026-04.md`
+- `docs-viewer/source/studio/site-change-log-2026-03-and-earlier.md`
+- `docs-viewer/source/studio/search-change-log.md`
 
 Migrated entries now live as flat files under `_docs_logs/entries/change-YYYY-MM-DD-entry-slug.json`.

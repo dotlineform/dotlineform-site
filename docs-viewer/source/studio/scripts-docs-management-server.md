@@ -56,7 +56,7 @@ Links to `/docs/` or the configured Docs Viewer service URL are rendered without
 
 ## Responsibilities
 
-`docs-viewer/services/docs_management_service.py` dispatches route paths and keeps compatibility imports for existing tests and adapters.
+`docs-viewer/services/docs_management_service.py` dispatches route paths for the standalone Docs Viewer service.
 Focused modules own the workflow behavior behind it:
 
 - `docs-viewer/services/docs_management_context.py` owns shared paths, backups, repo/root helpers, CORS origin checks, compact logs, and path formatting.
@@ -72,7 +72,7 @@ Together these modules serve generated docs index, per-doc payload, docs-search,
 
 Endpoint constants live in `docs-viewer/services/docs_management_routes.py`.
 HTTP transport for built-in manage mode lives in `docs-viewer/services/docs_viewer_service.py`.
-The Local Studio API adapter is temporary peer-integration scaffolding during the extraction and should not be treated as the long-term Docs Viewer shell owner.
+Local Studio does not provide a Docs Viewer API adapter; it only renders configured peer-service links and consumes configured Docs Viewer service endpoints.
 
 ## Child References
 

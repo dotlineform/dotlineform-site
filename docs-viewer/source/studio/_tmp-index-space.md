@@ -23,22 +23,22 @@ This new behaviour is a precursor to introducing alternative index structures (e
 
 Blast radius is **medium**, mostly because this changes layout state semantics rather than just CSS.
 
-Current sidebar state is binary in [docs-viewer.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/docs-viewer/js/docs-viewer.js:587): `state.sidebarCollapsed` plus `data-sidebar-state="collapsed|expanded"`. The first design issue is that today’s `"expanded"` really means “normal”. A third state would need a small state-machine cleanup.
+Current sidebar state is binary in [docs-viewer.js](docs-viewer/runtime/js/docs-viewer.js:587): `state.sidebarCollapsed` plus `data-sidebar-state="collapsed|expanded"`. The first design issue is that today’s `"expanded"` really means “normal”. A third state would need a small state-machine cleanup.
 
 Likely touched files:
 
-- [docs-viewer.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/docs-viewer/js/docs-viewer.js:587): replace boolean `sidebarCollapsed` with something like `sidebarState: "collapsed" | "normal" | "expanded"`, update localStorage, toggle order, labels, resize behavior.
-- [docs-viewer.css](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/docs-viewer/css/docs-viewer.css:23): add grid rules for full-width index mode and hide the main/document column in expanded mode.
-- [_includes/docs_viewer_shell.html](/Users/dlf/Developer/dotlineform/dotlineform-site/_includes/docs_viewer_shell.html:145): possibly update button label/icon assumptions, maybe no structural change.
-- [docs-viewer-document-controller.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/docs-viewer/js/docs-viewer-document-controller.js:160): only if “expanded mode hides selected document” is handled as pane state rather than pure CSS.
-- [docs-viewer-management-interactions.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/docs-viewer/js/docs-viewer-management-interactions.js) and management CSS: needs smoke testing because drag/drop/context menu operate in the index.
+- [docs-viewer.js](docs-viewer/runtime/js/docs-viewer.js:587): replace boolean `sidebarCollapsed` with something like `sidebarState: "collapsed" | "normal" | "expanded"`, update localStorage, toggle order, labels, resize behavior.
+- [docs-viewer.css](docs-viewer/static/css/docs-viewer.css:23): add grid rules for full-width index mode and hide the main/document column in expanded mode.
+- [_includes/docs_viewer_shell.html](_includes/docs_viewer_shell.html:145): possibly update button label/icon assumptions, maybe no structural change.
+- [docs-viewer-document-controller.js](docs-viewer/runtime/js/docs-viewer-document-controller.js:160): only if “expanded mode hides selected document” is handled as pane state rather than pure CSS.
+- [docs-viewer-management-interactions.js](docs-viewer/runtime/js/docs-viewer-management-interactions.js) and management CSS: needs smoke testing because drag/drop/context menu operate in the index.
 
 Relationship to risk mitigation: yes, directly.
 
-- It lands on [docs-viewer.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/docs-viewer/js/docs-viewer.js:587), which the new inventory marks as high risk because shared runtime state can attract unrelated behavior.
+- It lands on [docs-viewer.js](docs-viewer/runtime/js/docs-viewer.js:587), which the new inventory marks as high risk because shared runtime state can attract unrelated behavior.
 - It touches the “status ownership” lesson indirectly: this should become an **index layout/view-state owner**, not another broad set of ad hoc conditionals in the entry controller.
-- It relates to [docs-viewer-javascript-inventory.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/docs-viewer-javascript-inventory.md:91): “alternative index structures” are exactly the kind of future feature that argues for a focused boundary before the entry controller grows again.
-- It also brushes [docs-viewer-runtime-boundary.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/docs-viewer-runtime-boundary.md:116): a graph index is okay as an alternate index view if the viewer remains the same route/content model, but a fundamentally different navigation model would be a runtime-boundary concern.
+- It relates to [docs-viewer-javascript-inventory.md](docs-viewer/source/studio/docs-viewer-javascript-inventory.md:91): “alternative index structures” are exactly the kind of future feature that argues for a focused boundary before the entry controller grows again.
+- It also brushes [docs-viewer-runtime-boundary.md](docs-viewer/source/studio/docs-viewer-runtime-boundary.md:116): a graph index is okay as an alternate index view if the viewer remains the same route/content model, but a fundamentally different navigation model would be a runtime-boundary concern.
 
 Implementation recommendation: don’t just extend `sidebarCollapsed`. Add a small `docs-viewer-index-layout` or similar helper if this is genuinely a precursor to graph/index modes. For a one-off tri-state, it is easy to do inline; for “expanded mode hosts alternate index structures”, inline would increase the exact risk we just documented.
 

@@ -13,11 +13,11 @@ This document holds the main design and UI follow-up work for the site.
 
 Keep current implementation rules in:
 
-- `_docs/ui-framework.md`
-- `_docs/studio-ui-framework.md`
-- `_docs/css-primitives.md`
+- `docs-viewer/source/studio/ui-framework.md`
+- `docs-viewer/source/studio/studio-ui-framework.md`
+- `docs-viewer/source/studio/css-primitives.md`
 
-Use this document for deferred refinement work so `_docs/backlog.md` can stay focused on repo-level tasks.
+Use this document for deferred refinement work so `docs-viewer/source/studio/backlog.md` can stay focused on repo-level tasks.
 
 ## Audit And Review Tooling
 
@@ -56,7 +56,7 @@ Use this document for deferred refinement work so `_docs/backlog.md` can stay fo
 - Keep one backlog item per pattern, not per selector.
 - Split behaviour changes from presentation changes when they do not need to ship together.
 - Update the relevant current-state docs when a design task lands, especially:
-  - `_docs/studio-ui-framework.md`
-  - `_docs/ui-framework.md`
-  - `_docs/css-primitives.md`
-  - the affected Studio page docs in the Studio section under `_docs/studio.md`
+  - `docs-viewer/source/studio/studio-ui-framework.md`
+  - `docs-viewer/source/studio/ui-framework.md`
+  - `docs-viewer/source/studio/css-primitives.md`
+  - the affected Studio page docs in the Studio section under `docs-viewer/source/studio/studio.md`

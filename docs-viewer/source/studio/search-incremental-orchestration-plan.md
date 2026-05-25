@@ -263,7 +263,7 @@ Risks:
 
 Resolved decisions:
 
-- docs-management server writes use targeted docs-search updates when the handler has explicit affected doc ids
+- Docs management service writes use targeted docs-search updates when the handler has explicit affected doc ids
 - docs-management targeted calls always pass `--remove-missing`
 - title-change child expansion happens in docs-management orchestration because child entries include `parent_title`
 - watcher-targeted updates use a parsed previous snapshot rather than a filename equals `doc_id` assumption

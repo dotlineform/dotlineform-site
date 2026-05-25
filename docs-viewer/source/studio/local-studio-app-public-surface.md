@@ -34,8 +34,8 @@ The public Jekyll build should include:
 - public media and thumbnail assets that are intentionally served by the site
 - shared public JavaScript under `assets/js/`
 - shared public CSS under `assets/css/`
-- Docs Viewer runtime files under `assets/docs-viewer/`
-- public Docs Viewer browser config at `assets/docs-viewer/data/docs-viewer-public-config.json`
+- Docs Viewer runtime/static files served under `/docs-viewer/`
+- public Docs Viewer browser config defaults at `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - public read-only Library route at `/library/`
 - public read-only Analysis route at `/analysis/`
 - generated Library docs payloads under `assets/data/docs/scopes/library/`
@@ -63,7 +63,7 @@ Public Jekyll builds use `_config.yml`.
 That config excludes local-only Studio routes, local-management docs routes, Studio app assets, and Studio docs payload/search outputs.
 It also points Docs Viewer routes at the public browser config, which includes only `library` and `analysis` scopes.
 
-Local Studio development uses `bin/local-studio`, which serves Studio routes and Docs Viewer management directly through the local app server.
+Local Studio development uses `bin/local-studio` for Studio routes. Docs Viewer management is served separately by `docs-viewer/bin/docs-viewer`; use `bin/local-all` when both services and public preview should run together.
 Public Jekyll preview/build remains on `_config.yml` and does not expose Studio management surfaces.
 
 The public build surface can be checked after a public build with:

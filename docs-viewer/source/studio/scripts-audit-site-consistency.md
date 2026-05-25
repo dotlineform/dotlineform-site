@@ -28,7 +28,7 @@ $HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py \
   --checks cross_refs,schema,json_schema,links,media,orphans \
   --series-ids collected-1989-1998 \
   --json-out /tmp/site-audit.json \
-  --md-out _docs/audit-latest.md \
+  --md-out docs-viewer/source/studio/audit-latest.md \
   --strict
 ```
 
@@ -85,7 +85,7 @@ $HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py \
   --orphans-media
 ```
 
-Markdown report defaults to `_docs/audit-latest.md`.
+Markdown report defaults to `docs-viewer/source/studio/audit-latest.md`.
 
 ## Source And Target Artifacts
 

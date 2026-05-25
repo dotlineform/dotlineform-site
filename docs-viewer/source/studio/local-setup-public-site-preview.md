@@ -66,9 +66,9 @@ Notes:
 
 The public Jekyll config excludes these local-only roots from conversion and watch:
 
-- `_docs/`
-- `_docs_analysis/`
-- `_docs_library/`
+- `docs-viewer/source/studio/`
+- `docs-viewer/source/analysis/`
+- `docs-viewer/source/library/`
 - `_docs_catalogue/`
 - `_docs_logs/`
 - `_ui_catalogue_notes/`

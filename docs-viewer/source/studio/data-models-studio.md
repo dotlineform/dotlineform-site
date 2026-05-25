@@ -29,7 +29,7 @@ Current checked-in Studio data artifacts:
     - `var/studio/activity/activity_log.json`
     - `var/studio/activity/activity_log.jsonl`
 - Studio docs source:
-  - `_docs/*.md`
+  - `docs-viewer/source/studio/*.md`
 - generated Studio docs data:
   - `assets/data/docs/scopes/studio/index.json`
   - `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
@@ -202,7 +202,7 @@ Current enforcement:
 
 ## Studio Docs Data
 
-### `_docs/*.md`
+### `docs-viewer/source/studio/*.md`
 
 Purpose:
 
@@ -292,7 +292,7 @@ Current site mapping:
 
 Why it is derived from the docs index rather than the source Markdown directly:
 
-- the canonical generated Studio docs corpus is the generated docs index, not every source file under `_docs/`
+- the canonical generated Studio docs corpus is the generated docs index, not every source file under `docs-viewer/source/studio/`
 - this keeps `published: false` source docs out of the generated corpus automatically
 - docs with `viewable: false` can have generated payloads for manage mode, but are filtered out of public/default docs search
 

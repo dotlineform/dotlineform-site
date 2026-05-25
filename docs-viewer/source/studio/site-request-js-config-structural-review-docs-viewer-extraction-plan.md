@@ -340,7 +340,7 @@ Favourites:
 Manage mode unavailable:
 
 - route: `/docs/?scope=studio&mode=manage&doc=studio-runtime`
-- setup: no docs-management server
+- setup: no Docs management service
 - expect: manage row appears with unavailable message and controls disabled/hidden according to current behavior
 
 Metadata save:

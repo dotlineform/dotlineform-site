@@ -65,17 +65,17 @@ It also passes the current scope configuration into the DOM through `data-*` att
 
 The viewer behavior is coordinated by:
 
-- `assets/docs-viewer/js/docs-viewer.js`
+- `docs-viewer/runtime/js/docs-viewer.js`
 
 The entry module imports focused helper modules as responsibilities are extracted.
 Current helper modules:
 
-- `assets/docs-viewer/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
-- `assets/docs-viewer/js/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering
-- `assets/docs-viewer/js/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers
-- `assets/docs-viewer/js/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/missing/error states, and report mount handoff
-- `assets/docs-viewer/js/docs-viewer-reports.js` owns report lookup and access checks
-- `assets/docs-viewer/js/reports/docs-index-table-report.js` owns the reusable docs-index table report
+- `docs-viewer/runtime/js/docs-viewer-tree.js` owns pure document sorting, children-map construction, visibility checks, and doc-id set normalization
+- `docs-viewer/runtime/js/docs-viewer-search.js` owns pure search-entry normalization, scoring, matching, result ordering, and recently-added document ordering
+- `docs-viewer/runtime/js/docs-viewer-favourites.js` owns bookmark record normalization, ordering, key generation, and IndexedDB persistence helpers
+- `docs-viewer/runtime/js/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/missing/error states, and report mount handoff
+- `docs-viewer/runtime/js/docs-viewer-reports.js` owns report lookup and access checks
+- `docs-viewer/runtime/js/reports/docs-index-table-report.js` owns the reusable docs-index table report
 
 This runtime is shared across the current docs scopes.
 It reads the shell configuration, loads the generated JSON for the active scope, coordinates tree navigation, loads document payloads, and delegates document/search pane rendering to focused controllers.
@@ -93,7 +93,7 @@ Current URL state:
 - `doc` selects the active document
 - `scope` selects the active docs scope on `/docs/`
 - `q` activates inline docs search for the current scope
-- `mode=manage` enables local manage mode only on `/docs/` when the docs-management server is available
+- `mode=manage` enables local manage mode only on `/docs/` when the Docs Viewer service is available
 - `report_sort`, `report_dir`, and `report_filter` hold state for report-backed document panes
 - `#hash` targets a heading within the rendered document
 

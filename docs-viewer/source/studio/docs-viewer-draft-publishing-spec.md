@@ -28,7 +28,7 @@ The desired workflow is:
 - make selected docs viewable when they are ready
 - avoid creating a parallel manage-only docs index if the existing index can carry the needed state
 
-The first implementation is now in place for the shared Docs Viewer, docs builder, docs search builder, and docs-management server.
+The first implementation is now in place for the shared Docs Viewer, docs builder, docs search builder, and Docs Viewer service management endpoints.
 
 ## Current Model
 
@@ -196,7 +196,7 @@ Future controls:
 Make-viewable action:
 
 - requires manage mode
-- requires docs-management server availability
+- requires Docs Viewer service availability
 - writes `viewable: true` to the selected source doc
 - rebuilds the same docs scope
 - rebuilds docs search if search remains viewable-only and the doc should now appear
@@ -344,7 +344,7 @@ Status: implemented.
 ### Phase 4. Make-viewable action
 
 - add make-selected-doc-viewable button
-- write `viewable: true` through docs-management server
+- write `viewable: true` through the Docs Viewer service
 - rebuild docs and search
 - reload viewer state
 

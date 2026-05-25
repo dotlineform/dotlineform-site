@@ -1,12 +1,12 @@
 ---
 doc_id: scripts-docs-management-server-write-actions
-title: Docs Management Server Write Actions
+title: Docs Management Service Write Actions
 added_date: 2026-05-19
 last_updated: 2026-05-22
 parent_id: scripts-docs-management-server
 sort_order: 15400
 ---
-# Docs Management Server Write Actions
+# Docs Management Service Write Actions
 
 `POST /docs/open-source` expects:
 
@@ -210,7 +210,7 @@ Scope lifecycle preview endpoints:
 
 Scope lifecycle preview behavior:
 
-- reads scope ownership from `studio/docs-viewer/config/scopes/docs_scope_manifest.json`
+- reads scope ownership from `docs-viewer/config/scopes/docs_scope_manifest.json`
 - backfills existing scopes as system-owned when the manifest is missing
 - validates new scope ids, source roots, default doc ids, publishing mode, and public route paths before reporting a write set
 - reports planned created files, changed files, build commands, management URL, and public URL without writing files

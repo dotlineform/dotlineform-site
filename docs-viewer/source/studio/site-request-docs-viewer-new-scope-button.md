@@ -33,7 +33,7 @@ The desired end state is:
 - scope-created files are recorded in a manifest
 - user-created scopes can be deleted from the same management boundary
 - public read-only routes never expose scope-creation controls or management endpoints
-- the docs-management server performs all writes through explicit allowlists
+- the Docs management service performs all writes through explicit allowlists
 - the result clearly reports created files, changed files, build actions, and resulting URLs
 
 ## Scope
@@ -42,8 +42,8 @@ Included:
 
 - New scope UI entry point in the Docs Viewer management shell
 - local form or modal for scope metadata and publishing mode
-- docs-management server endpoint for creating scope files
-- docs-management server endpoint for deleting eligible user-created scopes
+- Docs management service endpoint for creating scope files
+- Docs management service endpoint for deleting eligible user-created scopes
 - manifest-style JSON file that records files created for every scope
 - retrospective manifest population for existing scopes
 - validation for scope ids, source roots, default doc ids, route paths, and output choices
@@ -69,7 +69,7 @@ The New scope and Delete scope controls should be available only when the Docs V
 Allowed context:
 
 - `/docs/?mode=manage`
-- local docs-management server available
+- local Docs management service available
 - server capability advertises scope lifecycle actions
 
 Disallowed contexts:
@@ -122,14 +122,14 @@ Visible UI labels and action copy should come from `studio_config.json` `ui_text
 For public read-only scopes, the server should create:
 
 - source root
-- scope config entry in `studio/docs-viewer/config/scopes/docs_scopes.json`
+- scope config entry in `docs-viewer/config/scopes/docs_scopes.json`
 - public route page using `docs_viewer_readonly_route.html`
 - generated docs/search outputs if immediate writes are requested
 
 For local-only committed scopes, the server should create:
 
 - source root
-- scope config entry in `studio/docs-viewer/config/scopes/docs_scopes.json`
+- scope config entry in `docs-viewer/config/scopes/docs_scopes.json`
 - generated docs/search outputs if local workflows expect checked-in generated data and immediate writes are requested
 
 For local-only uncommitted scopes, the server should create only the requested local files and clearly label the result as local-only drift that may need cleanup.
@@ -195,7 +195,7 @@ The result should list:
 
 ## Safety Rules
 
-- all writes must run through the loopback docs-management server
+- all writes must run through the loopback Docs management service
 - scope ids must be validated before any write
 - route paths must be normalized and validated before route creation
 - source roots and generated output paths must resolve inside configured repo allowlists
@@ -230,10 +230,10 @@ Add the scope manifest schema and populate it for all existing Docs Viewer scope
 
 Progress:
 
-- `studio/docs-viewer/config/scopes/docs_scope_manifest.json` now records Studio, Library, and Analysis.
+- `docs-viewer/config/scopes/docs_scope_manifest.json` now records Studio, Library, and Analysis.
 - Existing scopes are marked system-owned, not user-created, and not tool-created.
 - The manifest uses repo-relative file records and records source roots, scope config, default docs, route files, generated docs output, and generated search output.
-- `studio/docs-viewer/services/docs_scope_manifest.py` can backfill a manifest from `studio/docs-viewer/config/scopes/docs_scopes.json` when the manifest is missing.
+- `docs-viewer/services/docs_scope_manifest.py` can backfill a manifest from `docs-viewer/config/scopes/docs_scopes.json` when the manifest is missing.
 
 Acceptance:
 
@@ -286,9 +286,9 @@ Commands to be added to the Actions button:
 
 Implementation approach:
 
-- keep `assets/docs-viewer/js/docs-viewer-management.js` as the management command coordinator
-- add a dedicated scope lifecycle UI module, `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js`
-- keep endpoint wrappers in `assets/docs-viewer/js/docs-viewer-management-client.js`
+- keep `docs-viewer/runtime/js/docs-viewer-management.js` as the management command coordinator
+- add a dedicated scope lifecycle UI module, `docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js`
+- keep endpoint wrappers in `docs-viewer/runtime/js/docs-viewer-management-client.js`
 - have the scope lifecycle module own create-scope form rendering, publishing-mode field state, preview/apply result rendering, delete target selection, and delete preview/apply result rendering
 - reuse the existing Docs Viewer management modal shell/helpers rather than adding a second modal framework
 - expose narrow flow entry points from the new module, such as `openCreateScopeFlow(...)` and `openDeleteScopeFlow(...)`, for `docs-viewer-management.js` to call from the Actions menu
@@ -296,7 +296,7 @@ Implementation approach:
 Progress:
 
 - the Actions menu now includes capability-gated `New scope` and `Delete scope` commands
-- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js` owns the scope create/delete modal flows
+- `docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js` owns the scope create/delete modal flows
 - the create flow collects scope metadata, switches public route visibility based on publishing mode, previews the write set, and applies only after confirmation
 - the delete flow asks the operator to select an eligible user-created target scope before previewing deletion
 - create/delete apply payloads send `confirm: true`
@@ -373,7 +373,7 @@ After a scope is created or deleted, run the required docs and search build comm
 
 Acceptance:
 
-- `assets/docs-viewer/data/docs-viewer-config.json` is refreshed or reported as needing refresh - implemented for create apply through the docs rebuild command
+- `docs-viewer/config/defaults/docs-viewer-config.json` is refreshed or reported as needing refresh - implemented for create apply through the docs rebuild command
 - generated docs payloads are written when requested - implemented for create apply
 - deleted scope generated payloads are removed by delete apply
 - inline search output is written only when enabled - implemented for create apply

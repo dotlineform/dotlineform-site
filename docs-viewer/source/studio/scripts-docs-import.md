@@ -11,7 +11,7 @@ sort_order: 10000
 Script:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py
 ```
 
 ## Scope
@@ -70,19 +70,19 @@ Implemented now:
 Parse a staged Library summary package:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl
 ```
 
 Write Markdown review artifacts for a staged Library summary package:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
 ```
 
 Parse a staged Library relationships package and omit normalized records from the printed report:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py --scope library --file library-parent-child-relationships.json --no-records
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --scope library --file library-parent-child-relationships.json --no-records
 ```
 
 ## Report Shape
@@ -135,7 +135,7 @@ When an apply action writes Library Markdown source:
 - `rebuild.docs` reports whether docs payloads used targeted mode or a full fallback
 - `rebuild.diagnostics.docs` comes from the docs builder diagnostics line
 - `rebuild.diagnostics.search` describes the full or targeted search update
-- activity rows are attached by the docs-management server after successful apply handling
+- activity rows are attached by the Docs Viewer service after successful apply handling
 
 The parser CLI remains read-only unless `--write-previews` is passed, and preview writes do not trigger generated docs or docs-search rebuilds.
 

@@ -108,7 +108,7 @@ Current write endpoints include:
 
 Current non-catalogue local action behavior also includes:
 
-- the docs viewer manage-mode rebuild action uses the separate docs-management service and rebuilds the current docs scope plus that scope's docs search
+- the docs viewer manage-mode rebuild action uses the standalone Docs Viewer service and rebuilds the current docs scope plus that scope's docs search
 - the legacy tag write-service `POST /build-docs` path is retired and was not migrated into the local Studio app
 
 ## Save Modes

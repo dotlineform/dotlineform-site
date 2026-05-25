@@ -13,24 +13,25 @@ This document answers two practical questions from the current implementation st
 - what must be copied into an existing Jekyll project to use the Docs Viewer
 - how to set up a new Library-style docs scope with one local management view and one read-only public view
 
-It intentionally describes the current repo as it is now.
-The extraction plan for making these steps shorter and more self-contained lives in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
+It intentionally describes the current repo as it is now after the initial shell/service extraction.
+The older portability plan for reducing host integration work lives in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
 
 ## Current Shape
 
-The Docs Viewer is not a standalone plugin yet.
-It is a shared Jekyll include, browser runtime, generated JSON format, build script, and optional localhost management server.
+The Docs Viewer is not a separately packaged plugin yet.
+It is a tracked `docs-viewer/` source boundary plus host-owned Jekyll route adapters, generated JSON outputs, and wrapper build commands.
+The standalone Docs Viewer service owns local `/docs/` manage mode.
 
 Current live scopes:
 
-- `studio`: source docs in `_docs/`, managed at `/docs/?scope=studio&mode=manage`, read at `/docs/?scope=studio`
-- `library`: source docs in `_docs_library/`, managed at `/docs/?scope=library&mode=manage`, read at `/library/`
-- `analysis`: source docs in `_docs_analysis/`, managed at `/docs/?scope=analysis&mode=manage`, read at `/analysis/`
+- `studio`: source docs in `docs-viewer/source/studio/`, managed at `<DOCS_VIEWER_BASE_URL>/docs/?scope=studio&mode=manage`
+- `library`: source docs in `docs-viewer/source/library/`, managed at `<DOCS_VIEWER_BASE_URL>/docs/?scope=library&mode=manage`, read at `/library/`
+- `analysis`: source docs in `docs-viewer/source/analysis/`, managed at `<DOCS_VIEWER_BASE_URL>/docs/?scope=analysis&mode=manage`, read at `/analysis/`
 
 The public `/library/` and `/analysis/` routes are read-only.
 They should not expose `?mode=manage`, management CSS, management JS, localhost write endpoints, or Docs Import.
 
-The `/docs/` route is the local management shell.
+The `/docs/` route is the local management page served by `docs-viewer/bin/docs-viewer`.
 It can switch the active scope with the `scope` query parameter.
 ## Child References
 

@@ -132,7 +132,7 @@ Current page controllers:
 
 - `assets/studio/js/activity-log.js`
 - `assets/studio/js/studio-audits.js`
-- `assets/docs-viewer/js/docs-html-import.js`
+- `docs-viewer/runtime/js/docs-html-import.js`
 - `assets/studio/js/bulk-add-work.js`
 - `assets/studio/js/catalogue-moment-editor.js`
 - `assets/studio/js/catalogue-status.js`
@@ -216,11 +216,11 @@ Studio no longer owns a separate documentation route. Its docs are served by the
 
 Current Studio usage of the Docs Viewer:
 
-- Studio section docs live in `_docs/`
+- Studio section docs live in `docs-viewer/source/studio/`
 - `scripts/build_docs.rb` builds the Studio docs payload into the Studio docs scope
-- `/docs/?scope=studio&doc=<doc_id>` opens those docs in the shared Docs Viewer shell
+- `<DOCS_VIEWER_BASE_URL>/docs/?scope=studio&doc=<doc_id>` opens those docs in the standalone Docs Viewer service
 - Studio page `i` links use those scoped URLs directly
-- the Studio docs page uses the same top header nav and also renders a `Rebuild docs` action beside the docs search input
+- the Docs Viewer service owns manage-mode actions such as rebuild beside the docs search input
 
 This means Studio documentation changes must stay aligned with the shared Docs Viewer behavior documented in **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** and **[Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)**.
 
@@ -237,13 +237,13 @@ What it runs before starting long-lived services:
 What it starts:
 
 - `studio/app/server/studio/studio_app_server.py`
-- `studio/docs-viewer/services/docs_live_rebuild_watcher.py`
+- `docs-viewer/services/docs_live_rebuild_watcher.py`
 
 What it does not start:
 
 - catalogue/search regeneration scripts
 - the retired standalone tag write server
-- the standalone Docs management server
+- the standalone Docs Viewer service; use `docs-viewer/bin/docs-viewer` directly or `bin/local-all` for all local services
 - the retired standalone Audit Service HTTP wrapper
 
 Current local generated Studio feeds surfaced through this runtime:

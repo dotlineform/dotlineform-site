@@ -11,7 +11,7 @@ sort_order: 2000
 Script:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py
 ```
 
 ## Scope
@@ -108,43 +108,43 @@ Image handling:
 Dry-run the parent-child relationships export:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library
 ```
 
 Write the parent-child relationships export:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library --write
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --doc-id library --write
 ```
 
 Use all matching docs for whole-corpus relationship review:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --all
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-parent-child-relationships --all
 ```
 
 Prepare explicit documents for profiles that require selected ids:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --doc-id library
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --doc-id library
 ```
 
 Use all matching docs for an explicit-selection config:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all
 ```
 
 Disable a summary config's default missing-summary-only filter:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all --include-summary-complete
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all --include-summary-complete
 ```
 
 Write a document-row export as JSON instead of its JSONL default when the config supports both:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all --format json --write
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py --scope library --config-id library-document-summaries --all --format json --write
 ```
 
 ## Verification

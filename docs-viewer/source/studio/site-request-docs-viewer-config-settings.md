@@ -22,8 +22,8 @@ Maintain the current Docs Viewer configuration model, add a management UI for gu
 
 The current Docs Viewer config model is:
 
-- `studio/docs-viewer/config/scopes/docs_scopes.json` is the source-side install/build registry
-- `assets/docs-viewer/data/docs-viewer-config.json` is the browser-facing generated scope registry
+- `docs-viewer/config/scopes/docs_scopes.json` is the source-side install/build registry
+- `docs-viewer/config/defaults/docs-viewer-config.json` is the browser-facing generated scope registry
 - `assets/data/docs/scopes/<scope>/index.json.viewer_options` carries per-corpus viewer behavior inside generated docs output
 
 That split is the intended model.
@@ -45,7 +45,7 @@ The current config docs and source config report now answer the stable model que
 The remaining problem is narrower: decide which existing source config fields are safe enough to edit through a manage-mode settings modal, and define the guardrails for those writes.
 
 The immediate example is `show_updated_date`.
-It is defined in `studio/docs-viewer/config/scopes/docs_scopes.json`, projected into generated `index.json.viewer_options`, and consumed by the browser runtime.
+It is defined in `docs-viewer/config/scopes/docs_scopes.json`, projected into generated `index.json.viewer_options`, and consumed by the browser runtime.
 The settings modal should edit that source config directly, with guardrails, rather than moving the setting to another config layer.
 
 The previous inspection problem has been addressed by the manage-mode source config report.
@@ -77,10 +77,10 @@ Source config no longer needs to be audited only by opening JSON files directly.
 
 | Surface | Current purpose | Edit model |
 | --- | --- | --- |
-| `studio/docs-viewer/config/scopes/docs_scopes.json` | source roots, generated output paths, route bases, default docs, validation/build behavior | install-time source config |
-| `assets/docs-viewer/data/docs-viewer-config.json` | browser-safe scope registry generated from scope config | generated; do not hand edit |
+| `docs-viewer/config/scopes/docs_scopes.json` | source roots, generated output paths, route bases, default docs, validation/build behavior | install-time source config |
+| `docs-viewer/config/defaults/docs-viewer-config.json` | browser-safe scope registry generated from scope config | generated; do not hand edit |
 | `assets/data/docs/scopes/<scope>/index.json.viewer_options` | options bundled with generated docs tree data | generated; do not hand edit |
-| `assets/docs-viewer/data/ui-text.json` | Docs Viewer UI copy | package/source config for now |
+| `docs-viewer/config/ui-text/ui-text.json` | Docs Viewer UI copy | package/source config for now |
 | `assets/studio/data/studio_config.json` | remaining Studio-owned UI/status settings consumed by Docs Viewer | transitional dependency |
 
 ## Settings Classification
@@ -132,7 +132,7 @@ Initial scoped controls should begin with:
 The modal should:
 
 - load current effective settings for the active scope
-- save allowlisted changes back to the source config through the local docs-management server
+- save allowlisted changes back to the source config through the local Docs management service
 - trigger or request the minimal rebuild needed for generated browser/config payloads
 - leave public read-only routes with no write surface
 - show a clear unavailable state if the management server is not running
@@ -149,12 +149,12 @@ Add a `/docs/` scope, manage-mode, read-only Docs Viewer report that displays so
 The report should:
 
 - be available only from `/docs/?scope=studio&mode=manage`
-- read source config through the local docs-management server
+- read source config through the local Docs management service
 - show config for all configured Docs Viewer scopes
 - include a scope dropdown so the view can show all scopes or one selected scope
 - present source config in grouped, readable sections rather than raw JSON alone
 - identify source-owned values, generated projections, and runtime-only values where useful
-- include file/source references such as `studio/docs-viewer/config/scopes/docs_scopes.json` where that helps audit ownership
+- include file/source references such as `docs-viewer/config/scopes/docs_scopes.json` where that helps audit ownership
 - avoid any save, edit, delete, or rebuild controls
 
 Candidate sections:

@@ -18,7 +18,7 @@ Status:
 ## Summary
 
 This request is closed as a broad extraction proposal.
-Its original question was whether the Docs Viewer, generated docs/search pipeline, local docs-management server, and export/import workflow should become one reusable docs toolkit.
+Its original question was whether the Docs Viewer, generated docs/search pipeline, local Docs management service, and export/import workflow should become one reusable docs toolkit.
 
 That combined boundary is no longer the current direction.
 The work has split into clearer, narrower surfaces:
@@ -37,7 +37,7 @@ Do not extract a single combined docs toolkit at this stage.
 
 Use these boundaries instead:
 
-- Docs Viewer core: read-only viewer, generated docs data, inline docs search, local management shell, Docs Import, route adapters, config, UI text, CSS, and local docs-management server.
+- Docs Viewer core: read-only viewer, generated docs data, inline docs search, local management shell, Docs Import, route adapters, config, UI text, CSS, and local Docs management service.
 - Documents Data Sharing adapter: optional document package preparation, returned-package review, and document apply behavior for Docs Viewer corpora.
 - Studio Data Sharing module: Studio-owned shell, adapter registry, local service dispatch, lifecycle states, confirmations, status presentation, and activity context.
 - Non-document adapters: domain-owned implementations such as Analytics tags, with their own source parsing, validation, backups, review rows, writes, and apply actions.

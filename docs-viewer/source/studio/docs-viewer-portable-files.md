@@ -173,7 +173,7 @@ For the full dependency-role explanation, see [Docs Viewer Dependencies](/docs/?
 
 ### Management Service
 
-For local manage mode, copy the docs-management service support:
+For local manage mode, copy the Docs Viewer service support:
 
 - `docs-viewer/bin/docs-viewer`
 - `docs-viewer/services/docs_viewer_service.py`

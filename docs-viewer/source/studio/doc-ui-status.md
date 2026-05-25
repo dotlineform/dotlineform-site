@@ -33,11 +33,11 @@ viewable: true
 
 The popup reads from the generated browser config:
 
-`assets/docs-viewer/data/docs-viewer-config.json`
+`docs-viewer/config/defaults/docs-viewer-config.json`
 
 But that file is generated from the source config:
 
-`studio/docs-viewer/config/scopes/docs_scopes.json`
+`docs-viewer/config/scopes/docs_scopes.json`
 
 So the durable place to add/edit status options is:
 
@@ -56,4 +56,4 @@ Then regenerate with:
 
 `./scripts/build_docs.rb --scope studio --write`
 
-Editing `assets/docs-viewer/data/docs-viewer-config.json` directly can work temporarily, but it will be overwritten by the next docs build.
+Editing `docs-viewer/config/defaults/docs-viewer-config.json` directly can work temporarily, but it will be overwritten by the next docs build.

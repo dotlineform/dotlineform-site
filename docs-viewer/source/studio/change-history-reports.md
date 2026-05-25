@@ -24,7 +24,7 @@ Doc: [Change History](/docs/?scope=studio&doc=change-history&mode=manage)
 - show 20 entries per page with compact pagination controls in the filter row and below the entry list
 - `viewer_report_access: manage` The report tree root is listed in the Studio scope's `manage_only_tree_root_ids`, so these report pages stay out of public navigation and public docs search.
 
-The report reads the local generated docs-log search projection through the Docs Management server:
+The report reads the local generated docs-log search projection through the Docs Viewer service:
 
 - `_docs_logs/generated/search-index.json`
 - `GET /docs/generated/docs-log?scope=studio&projection=search-index`
@@ -34,11 +34,11 @@ Run `./studio/workflows/change-requests/services/build_indexes.py --write` after
 
 **Files**
 
-- `_docs/change-history-reports.md`
-- `_docs/change-history.md`
+- `docs-viewer/source/studio/change-history-reports.md`
+- `docs-viewer/source/studio/change-history.md`
 - `_docs_logs/entries/*.json`
 - `studio/workflows/change-requests/services/build_indexes.py`
 - `studio/workflows/change-requests/services/migrate_legacy_logs.py`
-- `assets/docs-viewer/js/reports/change-history-report.js`
+- `docs-viewer/runtime/js/reports/change-history-report.js`
 
 ---

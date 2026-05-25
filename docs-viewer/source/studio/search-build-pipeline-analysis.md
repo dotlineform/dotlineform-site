@@ -22,7 +22,7 @@ sort_order: 8500
 
 - `assets/data/docs/scopes/analysis/index.json`
 
-The current Analysis search artifact is derived from the generated Analysis docs index rather than directly from `_docs_analysis/`.
+The current Analysis search artifact is derived from the generated Analysis docs index rather than directly from `docs-viewer/source/analysis/`.
 Rows with `viewable: false` are skipped so draft Analysis docs can be generated for manage-mode review without appearing in public/default search.
 
 ### Current Commands
@@ -73,4 +73,4 @@ Current builder behaviour for Analysis:
 - the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes
 - targeted docs-search updates rebuild only affected Analysis docs entries by `doc_id`, remove affected ids that are missing or non-viewable, and report diagnostic counts for Codex/server use
 - if `DOCS_STARTUP_REBUILD_SCOPES` includes `analysis`, `bin/local-studio` runs a startup `analysis` docs-search rebuild
-- while `bin/local-studio` is running, the Docs Live Rebuild Watcher keeps `_docs_analysis/**/*.md` changes aligned with `assets/data/search/analysis/index.json`
+- while `bin/local-studio` is running, the Docs Live Rebuild Watcher keeps `docs-viewer/source/analysis/**/*.md` changes aligned with `assets/data/search/analysis/index.json`

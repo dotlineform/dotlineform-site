@@ -12,8 +12,8 @@ The Docs Viewer import source registry is the server-side format contract for st
 
 It was introduced by [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media) to move Docs Import from an HTML-specific workflow into a format-dispatched ingestion path.
 
-The registry currently lives in `studio/docs-viewer/services/docs_html_import.py`.
-The service boundary that turns previews into source writes lives in `studio/docs-viewer/services/docs_import_source_service.py`.
+The registry currently lives in `docs-viewer/services/docs_html_import.py`.
+The service boundary that turns previews into source writes lives in `docs-viewer/services/docs_import_source_service.py` and is exposed through the standalone Docs Viewer service.
 
 ## Goals
 
@@ -253,7 +253,7 @@ To add a new source format:
 3. Add dispatch in `generate_import_preview()`.
 4. Decide whether the format uses `media_plan`, `media_plans`, or neither.
 5. Add tests for staged-file listing, preview, collision behavior, and write behavior when applicable.
-6. Update [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import) and [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server).
+6. Update [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import) and [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server).
 
 New formats should not write files directly from preview builders.
 Keep writes in the service layer so backup, rebuild, and search behavior remain consistent across formats.
@@ -262,6 +262,6 @@ Keep writes in the service layer so backup, rebuild, and search behavior remain 
 
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer)
 - [Docs Import Source Registry And Media Support Request](/docs/?scope=studio&doc=site-request-docs-import-source-registry-media)

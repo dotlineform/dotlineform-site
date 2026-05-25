@@ -22,7 +22,7 @@ sort_order: 8400
 
 - `assets/data/docs/scopes/library/index.json`
 
-The current Library search artifact is derived from the generated Library docs index rather than directly from `_docs_library/`.
+The current Library search artifact is derived from the generated Library docs index rather than directly from `docs-viewer/source/library/`.
 Rows with `viewable: false` are skipped so draft Library docs can be generated for manage-mode review without appearing in public/default search.
 Archive docs follow the same rule as every other doc: set `viewable: false` when they should remain generated and manageable without appearing in public/default search.
 
@@ -73,4 +73,4 @@ Current builder behaviour for Library:
 - the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes
 - targeted docs-search updates rebuild only affected Library docs entries by `doc_id`, remove affected ids that are missing or non-viewable, and report diagnostic counts for Codex/server use
 - if `DOCS_STARTUP_REBUILD_SCOPES` includes `library`, `bin/local-studio` runs a startup `library` docs-search rebuild
-- while `bin/local-studio` is running, the Docs Live Rebuild Watcher keeps `_docs_library/*.md` changes aligned with `assets/data/search/library/index.json`
+- while `bin/local-studio` is running, the Docs Live Rebuild Watcher keeps `docs-viewer/source/library/*.md` changes aligned with `assets/data/search/library/index.json`

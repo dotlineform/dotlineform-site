@@ -68,8 +68,8 @@ Permanent source roots:
 
 The source root is repo-local and clearly separate from:
 
-- `_docs/`
-- `_docs_library/`
+- `docs-viewer/source/studio/`
+- `docs-viewer/source/library/`
 - any future `_docs_analysis_src/`
 
 Source filenames are ID-derived:

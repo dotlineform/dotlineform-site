@@ -255,8 +255,8 @@ Implemented decisions:
 
 - `bin/local-studio` starts a local docs watcher while running
 - scope detection is source-root based:
-  - `_docs/*.md` -> `studio`
-  - `_docs_library/*.md` -> `library`
+  - `docs-viewer/source/studio/*.md` -> `studio`
+  - `docs-viewer/source/library/*.md` -> `library`
 - live rebuilds avoid loops by watching source roots only and ignoring generated outputs
 - same-scope rebuilds are debounced and serialized; if more source changes arrive during a rebuild, that scope is scheduled for one more pass
 - Task 10 later narrowed the startup side of this contract so startup docs/docs-search rebuilds are now opt-in rather than default

@@ -130,21 +130,21 @@ Docs Viewer shell source, management shell source, config, CSS, report runtime, 
 
 | Previous path family | Current / target path family | Notes |
 | --- | --- | --- |
-| `_docs/` | `studio/docs-viewer/source/studio/` | Studio docs scope source. |
-| `_docs_library/` | `studio/docs-viewer/source/library/` | Library docs scope source. |
-| `_docs_analysis/` | `studio/docs-viewer/source/analysis/` | Analysis docs scope source. |
+| `docs-viewer/source/studio/` | `docs-viewer/source/studio/` | Studio docs scope source. |
+| `docs-viewer/source/library/` | `docs-viewer/source/library/` | Library docs scope source. |
+| `docs-viewer/source/analysis/` | `docs-viewer/source/analysis/` | Analysis docs scope source. |
 | `assets/docs/interactive/` | `studio/docs-viewer/source-assets/interactive/` | Source interactive HTML assets; public copies should be explicit runtime/generated artifacts if needed. |
-| `assets/docs-viewer/js/` | `studio/docs-viewer/runtime/js/` | Docs Viewer browser runtime and management modules. |
-| `assets/docs-viewer/js/reports/` | `studio/docs-viewer/runtime/js/reports/` | Report browser modules. |
-| `assets/docs-viewer/css/` | `studio/docs-viewer/assets/css/` | Docs Viewer CSS. |
-| `assets/docs-viewer/data/docs-viewer-config.json` | `studio/docs-viewer/config/runtime/docs-viewer-config.json` | Source runtime config. |
-| `assets/docs-viewer/data/docs-viewer-public-config.json` | `studio/docs-viewer/config/runtime/docs-viewer-public-config.json` | Source for generated/served public install config. |
-| `assets/docs-viewer/data/ui-text.json` | `studio/docs-viewer/config/ui-text/ui-text.json` | Docs Viewer UI text. |
+| `docs-viewer/runtime/js/` | `studio/docs-viewer/runtime/js/` | Docs Viewer browser runtime and management modules. |
+| `docs-viewer/runtime/js/reports/` | `studio/docs-viewer/runtime/js/reports/` | Report browser modules. |
+| `docs-viewer/static/css/` | `studio/docs-viewer/assets/css/` | Docs Viewer CSS. |
+| `docs-viewer/config/defaults/docs-viewer-config.json` | `docs-viewer/config/defaults/docs-viewer-config.json` | Source runtime config. |
+| `assets/docs-viewer/data/docs-viewer-public-config.json` | `docs-viewer/config/defaults/docs-viewer-public-config.json` | Source for generated/served public install config. |
+| `docs-viewer/config/ui-text/ui-text.json` | `studio/docs-viewer/config/ui-text/ui-text.json` | Docs Viewer UI text. |
 | `assets/data/docs/reports.json` source/config | `studio/docs-viewer/config/reports/reports.json` | Keep generated public copy outside `studio/` only as needed. |
 | `_includes/docs_viewer_shell.html` | `studio/docs-viewer/runtime/shells/docs-viewer-shell.html` | Move shell source; public route adapters should not embed shell internals. |
 | `_includes/docs_viewer_management_route.html` | `studio/docs-viewer/runtime/shells/docs-viewer-management-route.html` | Move management shell source. |
 | `_includes/docs_viewer_readonly_route.html` | public minimal adapter plus Docs Viewer-owned shell source | Keep only required public adapter outside `studio/`. |
-| `scripts/docs/` | `studio/docs-viewer/build/`, `studio/docs-viewer/server/`, `studio/docs-viewer/services/`, `studio/docs-viewer/config/scopes/` | Split by role while preserving the Docs Viewer boundary. |
+| `scripts/docs/` | `studio/docs-viewer/build/`, `studio/docs-viewer/server/`, `docs-viewer/services/`, `docs-viewer/config/scopes/` | Split by role while preserving the Docs Viewer boundary. |
 | `scripts/build_docs.rb` | root wrapper to `studio/docs-viewer/build/build_docs.rb` | Root wrapper is optional convenience, not compatibility source. |
 | `studio/docs-viewer/build/build_docs.rb` | `studio/docs-viewer/build/build_docs.rb` | Docs Viewer build implementation. |
 | `studio/docs-viewer/build/build_search.rb` | `studio/docs-viewer/build/build_search.rb` | Docs Viewer search builder. |

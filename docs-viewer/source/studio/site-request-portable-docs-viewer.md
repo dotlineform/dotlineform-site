@@ -155,21 +155,21 @@ Ownership decisions for this slice:
 | Area | Current examples | Target owner | Decision |
 | --- | --- | --- | --- |
 | Docs Viewer shell | `_includes/docs_viewer_shell.html` | Docs Viewer package plus consuming route adapter | Keep the viewer shell include as the route integration boundary until the route-adapter slice defines templates. Docs Import modal markup lives inside that shell rather than a migrated standalone-page include. |
-| Docs Viewer runtime JS | `assets/docs-viewer/js/docs-viewer*.js` | Docs Viewer | Runtime modules live under `assets/docs-viewer/js/`. |
-| Docs Viewer CSS | `assets/docs-viewer/css/docs-viewer-management.css`, `.docsViewer*` rules in `assets/css/main.css` | Docs Viewer | Management CSS lives under `assets/docs-viewer/css/`; public CSS extraction is still a later slice. |
-| Docs Viewer browser config | `studio/docs-viewer/config/scopes/docs_scopes.json`, `assets/studio/data/studio_config.json`, hardcoded route maps | Docs Viewer | Keep `studio/docs-viewer/config/scopes/docs_scopes.json` as source config; add a browser-facing config under `assets/docs-viewer/data/`. |
-| Docs Viewer UI text | `assets/docs-viewer/data/ui-text.json` | Docs Viewer | Viewer and Docs Import copy lives under `assets/docs-viewer/data/`. |
+| Docs Viewer runtime JS | `docs-viewer/runtime/js/docs-viewer*.js` | Docs Viewer | Runtime modules live under `docs-viewer/runtime/js/`. |
+| Docs Viewer CSS | `docs-viewer/static/css/docs-viewer-management.css`, `.docsViewer*` rules in `assets/css/main.css` | Docs Viewer | Management CSS lives under `docs-viewer/static/css/`; public CSS extraction is still a later slice. |
+| Docs Viewer browser config | `docs-viewer/config/scopes/docs_scopes.json`, `assets/studio/data/studio_config.json`, hardcoded route maps | Docs Viewer | Keep `docs-viewer/config/scopes/docs_scopes.json` as source config; add a browser-facing config under `assets/docs-viewer/data/`. |
+| Docs Viewer UI text | `docs-viewer/config/ui-text/ui-text.json` | Docs Viewer | Viewer and Docs Import copy lives under `assets/docs-viewer/data/`. |
 | Generated docs payloads | `assets/data/docs/scopes/<scope>/...` | Docs Viewer output, consuming site storage | Keep the current output path for compatibility; treat it as generated output, not package source. |
 | Inline docs search | `assets/data/search/<scope>/index.json`, `scripts/search/build_search.rb`, `scripts/search/build_config.json` | Docs Viewer after the search slice | Leave in the search subsystem until Docs search ownership moves in its dedicated slice. |
-| Docs management server | `studio/docs-viewer/services/docs_management_server.py` and adjacent `scripts/docs/docs_*` modules | Docs Viewer | Keep under `scripts/docs/`; this is already the right domain boundary. |
+| Docs management server | `docs-viewer/services/docs_management_server.py` and adjacent `scripts/docs/docs_*` modules | Docs Viewer | Keep under `scripts/docs/`; this is already the right domain boundary. |
 | Studio application code | `assets/studio/js/*`, `assets/studio/data/studio_config.json`, Studio generated payloads | Studio | Do not reorganise broad Studio files in this request; only extract Docs Viewer dependencies. |
 | Catalogue and tag tools | `assets/studio/js/catalogue-*`, `assets/studio/js/tag-*`, `scripts/catalogue/`, `scripts/analytics/` | Catalogue, Analytics, Studio | Out of scope except where Docs Viewer currently imports them by mistake. |
 | Public site JS | `assets/js/work.js`, `assets/js/moment.js`, `assets/js/site-nav.js`, `assets/js/theme-toggle.js` | Consuming site/shared public site | Leave in `assets/js/`; this directory should become public site/shared JS after Docs Viewer moves out. |
 
 The file-move implementation slice should move or introduce only:
 
-- `assets/docs-viewer/js/` for the Docs Viewer runtime modules
-- `assets/docs-viewer/css/` for Docs Viewer-owned CSS
+- `docs-viewer/runtime/js/` for the Docs Viewer runtime modules
+- `docs-viewer/static/css/` for Docs Viewer-owned CSS
 - `assets/docs-viewer/data/` for browser config and Docs Viewer UI text
 - include path updates needed by `_includes/docs_viewer_shell.html` and route pages
 
@@ -186,9 +186,9 @@ Tasks:
 
 - document which current files are portable Docs Viewer files, consuming-site route/theme files, Studio-only files, Catalogue files, or shared site files
 - define the target locations for Docs Viewer runtime JS, CSS, browser config, UI text, generated docs payloads, and local management scripts
-- keep `studio/docs-viewer/config/scopes/docs_scopes.json` as the source-side docs scope registry unless a later slice intentionally replaces it
-- define a browser-facing Docs Viewer config location such as `assets/docs-viewer/data/docs-viewer-config.json`
-- define a Docs Viewer UI text location such as `assets/docs-viewer/data/ui-text.json`
+- keep `docs-viewer/config/scopes/docs_scopes.json` as the source-side docs scope registry unless a later slice intentionally replaces it
+- define a browser-facing Docs Viewer config location such as `docs-viewer/config/defaults/docs-viewer-config.json`
+- define a Docs Viewer UI text location such as `docs-viewer/config/ui-text/ui-text.json`
 - identify which files should move in the next implementation slice and which broader Studio/Catalogue files should stay put for now
 - update [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup) only if the current install instructions need a terminology or ownership clarification
 
@@ -208,10 +208,10 @@ This slice is mostly mechanical, but it should leave the live routes working fro
 
 Tasks:
 
-- create `assets/docs-viewer/js/`, `assets/docs-viewer/css/`, and `assets/docs-viewer/data/` (done)
-- move existing `assets/js/docs-viewer*.js` modules into `assets/docs-viewer/js/` (done)
-- move `assets/css/docs-viewer-management.css` into `assets/docs-viewer/css/` (done)
-- add a Docs Viewer-owned public CSS file under `assets/docs-viewer/css/` only if a small extracted stylesheet is needed to keep includes coherent before the full CSS extraction slice (not needed in this slice)
+- create `docs-viewer/runtime/js/`, `docs-viewer/static/css/`, and `assets/docs-viewer/data/` (done)
+- move existing `assets/js/docs-viewer*.js` modules into `docs-viewer/runtime/js/` (done)
+- move `assets/css/docs-viewer-management.css` into `docs-viewer/static/css/` (done)
+- add a Docs Viewer-owned public CSS file under `docs-viewer/static/css/` only if a small extracted stylesheet is needed to keep includes coherent before the full CSS extraction slice (not needed in this slice)
 - move or copy Docs Viewer UI text needed by the current runtime into `assets/docs-viewer/data/`, while leaving any Studio-only source in place until callers are switched (done for viewer UI text)
 - update `_includes/docs_viewer_shell.html`, route pages, and module imports to load from the new Docs Viewer paths (done through the shared include)
 - keep generated docs payloads under `assets/data/docs/scopes/` and docs-search payloads under `assets/data/search/` for compatibility (done)
@@ -220,8 +220,8 @@ Tasks:
 
 Acceptance:
 
-- `/docs/`, `/library/`, and `/analysis/` load Docs Viewer runtime modules from `assets/docs-viewer/js/`
-- management mode loads Docs Viewer management CSS from `assets/docs-viewer/css/`
+- `/docs/`, `/library/`, and `/analysis/` load Docs Viewer runtime modules from `docs-viewer/runtime/js/`
+- management mode loads Docs Viewer management CSS from `docs-viewer/static/css/`
 - no `assets/js/docs-viewer*.js` source modules remain as the active runtime path
 - the old file locations are not kept as compatibility duplicates unless a specific route still requires them and the reason is documented
 - no unrelated Studio or Catalogue reorganisation is included
@@ -230,14 +230,14 @@ Acceptance:
 
 Status: implemented.
 
-Current scope data is split between `studio/docs-viewer/config/scopes/docs_scopes.json`, `_includes/docs_viewer_shell.html`, `assets/docs-viewer/js/docs-viewer.js`, search config, and import-service allowlists.
+Current scope data is split between `docs-viewer/config/scopes/docs_scopes.json`, `_includes/docs_viewer_shell.html`, `docs-viewer/runtime/js/docs-viewer.js`, search config, and import-service allowlists.
 
 Tasks:
 
 - create a Docs Viewer-owned browser config (done)
 - generate or load the management scope list from scope config (done)
 - remove hardcoded scope options from `_includes/docs_viewer_shell.html` (done)
-- remove hardcoded `DOCS_ROUTE_SCOPES` entries from `assets/docs-viewer/js/docs-viewer.js` (done)
+- remove hardcoded `DOCS_ROUTE_SCOPES` entries from `docs-viewer/runtime/js/docs-viewer.js` (done)
 - make generated data URLs, search URLs, default doc ids, route bases, and `include_scope_param` scope-config driven (done)
 - remove remaining hardcoded scope lists that the generated config replaces in the same slice (done for viewer runtime, Docs Import scope options, management URLs, docs-source validation, docs rebuild loops, live rebuild watching, and broken-link route parsing)
 
@@ -257,8 +257,8 @@ Management mode also loads `assets/studio/css/studio.css` for importer and modal
 Target CSS cascade:
 
 - the consuming Jekyll layout continues to load the host stylesheet, currently `assets/css/main.css`
-- the Docs Viewer include always loads `assets/docs-viewer/css/docs-viewer.css`
-- management mode also loads `assets/docs-viewer/css/docs-viewer-management.css`
+- the Docs Viewer include always loads `docs-viewer/static/css/docs-viewer.css`
+- management mode also loads `docs-viewer/static/css/docs-viewer-management.css`
 - management mode no longer loads `assets/studio/css/studio.css`
 
 The host stylesheet remains responsible for site tokens, base typography, prose/document rules, responsive media defaults, and the `.content` contract used by generated docs HTML.
@@ -266,9 +266,9 @@ Docs Viewer styles should define the viewer shell, index, controls, search, resu
 
 Tasks:
 
-- create `assets/docs-viewer/css/docs-viewer.css` for public Docs Viewer shell/component styles (done)
-- move read-only `.docsViewer*` CSS out of `assets/css/main.css` into `assets/docs-viewer/css/docs-viewer.css` (done)
-- keep management-only styles in `assets/docs-viewer/css/docs-viewer-management.css` (done)
+- create `docs-viewer/static/css/docs-viewer.css` for public Docs Viewer shell/component styles (done)
+- move read-only `.docsViewer*` CSS out of `assets/css/main.css` into `docs-viewer/static/css/docs-viewer.css` (done)
+- keep management-only styles in `docs-viewer/static/css/docs-viewer-management.css` (done)
 - copy the narrow `tagStudio*` form/control styles used by Docs Import into Docs Viewer management CSS as a transitional dependency (done)
 - remove `assets/studio/css/studio.css` from `_includes/docs_viewer_shell.html` (done)
 - keep generic host styles such as font tokens, `.content`, document typography, and responsive image defaults in `assets/css/main.css` (done)
@@ -315,7 +315,7 @@ Tasks:
 - move docs-search scope config out of `scripts/search/build_config.json` (done)
 - move docs-search build logic into a Docs Viewer-owned builder/adapter (done)
 - keep the top-level search command as a thin adapter dispatcher (done)
-- make docs scopes derive from `studio/docs-viewer/config/scopes/docs_scopes.json` instead of hardcoded `studio`, `library`, and `analysis` lists (done)
+- make docs scopes derive from `docs-viewer/config/scopes/docs_scopes.json` instead of hardcoded `studio`, `library`, and `analysis` lists (done)
 - keep generated docs-search output compatible during transition (done)
 - make docs-search policy explicit inside Docs Viewer runtime/config (done)
 - keep Catalogue search behavior stable while routing it through the Catalogue adapter (done)
@@ -421,8 +421,8 @@ No other external file stores currently need to be supported, but the config sho
 
 The config ownership should be explicit:
 
-- source/local write behavior belongs in source-side Docs Viewer config, currently `studio/docs-viewer/config/scopes/docs_scopes.json`, or in a small adjacent local/server config if the settings should not be published
-- generated browser config, currently `assets/docs-viewer/data/docs-viewer-config.json`, should only expose browser-safe read/display settings
+- source/local write behavior belongs in source-side Docs Viewer config, currently `docs-viewer/config/scopes/docs_scopes.json`, or in a small adjacent local/server config if the settings should not be published
+- generated browser config, currently `docs-viewer/config/defaults/docs-viewer-config.json`, should only expose browser-safe read/display settings
 - R2 credentials and other secrets must stay out of tracked config and generated browser config
 - `_config.yml` continues to own site-wide media resolution such as `media_base` for rendered <code>&#91;&#91;media:...&#93;&#93;</code> tokens
 

@@ -16,12 +16,12 @@ The repo also contains the locally run web app **[Studio](/docs/?scope=studio&do
 
 ## Docs Viewer
 
-**[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** is a shared module used to publish source markdown documents. Documents are imported and organised using the 'manage mode'. This is hosted by Studio.
+**[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** is a shared module used to publish source markdown documents. Documents are imported and organised using manage mode, which is served by the standalone Docs Viewer service.
 
 Note on document structure:
 
 - document metadata saved in front-matter YML.
-- `parent_id` is used to create a hierarchical structure to group related documents. Parent documents are often referred to as 'folders' or 'sections', because this is how they appear in the Docs Viewer index-tree. The source Markdown files are saved in a flat folder `_docs/...`
+- `parent_id` is used to create a hierarchical structure to group related documents. Parent documents are often referred to as 'folders' or 'sections', because this is how they appear in the Docs Viewer index-tree. The source Markdown files are saved in a flat folder `docs-viewer/source/studio/...`
 
 ## Key Documents
 

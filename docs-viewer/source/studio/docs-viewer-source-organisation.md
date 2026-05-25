@@ -26,27 +26,27 @@ The shared Docs Viewer currently serves three separate source trees.
 
 Studio docs source root:
 
-- `studio/docs-viewer/source/studio/`
+- `docs-viewer/source/studio/`
 
 Analysis docs source root:
 
-- `studio/docs-viewer/source/analysis/`
+- `docs-viewer/source/analysis/`
 
 Library docs source root:
 
-- `studio/docs-viewer/source/library/`
+- `docs-viewer/source/library/`
 
 Each scope owns its own source-doc tree and generated output tree.
 The shared viewer does not merge those scopes into one combined docs corpus.
 
 Studio and Library source roots are flat:
 
-- Studio docs: `studio/docs-viewer/source/studio/*.md`
-- Library docs: `studio/docs-viewer/source/library/*.md`
+- Studio docs: `docs-viewer/source/studio/*.md`
+- Library docs: `docs-viewer/source/library/*.md`
 
 Analysis allows nested source folders:
 
-- Analysis docs: `studio/docs-viewer/source/analysis/**/*.md`
+- Analysis docs: `docs-viewer/source/analysis/**/*.md`
 
 Analysis folder names are source-organisation affordances for future helpers such as series/work analysis lookup. Viewer navigation still comes from `doc_id`, `parent_id`, and `sort_order`.
 

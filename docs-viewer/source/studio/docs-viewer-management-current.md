@@ -19,21 +19,21 @@ Status:
 - Phase 7 implemented: drag/drop into any node
 - Phase 8 implemented: management mode is scoped to `/docs/`, and `/docs/` can manage `studio`, `library`, or `analysis` by changing the active docs scope
 - Phase 9 implemented: Docs Import runs inside the Docs Viewer management modal from the shared importer module
-- Phase 10 implemented: management UI orchestration lives in `assets/docs-viewer/js/docs-viewer-management.js`, loaded only for management-enabled viewer shells
-- Phase 11 implemented: public builds render `/docs/` through the read-only shell; Local Studio serves the management shell through the Python app server
+- Phase 10 implemented: management UI orchestration lives in `docs-viewer/runtime/js/docs-viewer-management.js`, loaded only for management-enabled viewer shells
+- Phase 11 implemented: public builds keep Docs Viewer routes read-only; the standalone Docs Viewer service serves the management shell locally
 - current follow-on work is optional rather than required for the local management surface
 
 ## Implementation Status
 
 Implemented now:
 
-- `_docs` flattened for Studio docs management
-- dedicated localhost docs-management server added at `studio/docs-viewer/services/docs_management_server.py`
+- Studio docs source is flat under `docs-viewer/source/studio/`
+- Docs Viewer management behavior is now served through the standalone Docs Viewer service at `docs-viewer/services/docs_viewer_service.py`
 - manage mode enabled only for `/docs/` behind `?mode=manage`
-- the `/docs/` management shell is enabled only in Local Studio
+- the `/docs/` management shell is enabled only in the local Docs Viewer service
 - public builds leave `docs_viewer_management_enabled` false, so `?mode=manage` does not render management CSS, controls, modal markup, or localhost server configuration
 - `/docs/` can change the active management scope with `?scope=studio`, `?scope=library`, or `?scope=analysis`
-- public `/library/` and `/analysis/` viewer routes remain read-only and do not render management controls, configure the local docs-management server, or load management-only CSS
+- public `/library/` and `/analysis/` viewer routes remain read-only and do not render management controls, configure the local Docs Viewer service for writes, or load management-only CSS
 - public read-only viewer routes use the shared reader controller without loading the management controller module
 - create, archive, delete-preview, and delete-apply implemented
 - drag/drop move implemented for leaf docs only
@@ -92,16 +92,16 @@ Implemented now:
 - when the metadata modal changes `parent_id` to root, the visible `sort_order` field is respected rather than converted to append
 - metadata edits rebuild docs payloads plus same-scope docs search, except `ui_status`-only edits skip search because status emoji are viewer-only metadata
 - Docs Import is reachable from the `/docs/` management toolbar as an import modal seeded with the active scope
-- `assets/docs-viewer/js/docs-html-import.js` exports the importer initializer used by the Docs Viewer modal
+- `docs-viewer/runtime/js/docs-html-import.js` exports the importer initializer used by the Docs Viewer modal
 - Docs Import reads its scope list, target source roots, and media token path prefixes from the Docs Viewer scope config
-- `assets/docs-viewer/js/docs-viewer-management.js` owns manage-mode toolbar rendering, status-pill events, metadata/import modal coordination, metadata payload collection, settings reads, busy/message/reload callbacks, and navigation
-- `assets/docs-viewer/js/docs-viewer-management-interactions.js` owns manage-mode nav drag/drop event handling, double-click edit dispatch, transient drag/drop visual state, context-menu active-doc state, context-menu positioning, and context-menu action dispatch
-- `assets/docs-viewer/js/docs-viewer-management-actions.js` owns create, metadata/status save, settings save, rebuild, archive/delete, viewability, move, source-open, and copy-link write/action orchestration
-- `assets/docs-viewer/js/docs-viewer-management-capabilities.js` owns management capability helpers and the capability probe/retry state machine
-- `assets/docs-viewer/js/docs-viewer-management-config.js` owns management UI-text/config application
-- `assets/docs-viewer/js/docs-viewer-management-render.js` owns management-only markup helpers for status pills, metadata parent/status controls, and settings warnings
-- `assets/docs-viewer/js/docs-viewer.js` keeps the reader/search/history controller plus a small management bridge for shared state and lazy controller loading
-- `assets/docs-viewer/js/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/error states, and report mount handoff
+- `docs-viewer/runtime/js/docs-viewer-management.js` owns manage-mode toolbar rendering, status-pill events, metadata/import modal coordination, metadata payload collection, settings reads, busy/message/reload callbacks, and navigation
+- `docs-viewer/runtime/js/docs-viewer-management-interactions.js` owns manage-mode nav drag/drop event handling, double-click edit dispatch, transient drag/drop visual state, context-menu active-doc state, context-menu positioning, and context-menu action dispatch
+- `docs-viewer/runtime/js/docs-viewer-management-actions.js` owns create, metadata/status save, settings save, rebuild, archive/delete, viewability, move, source-open, and copy-link write/action orchestration
+- `docs-viewer/runtime/js/docs-viewer-management-capabilities.js` owns management capability helpers and the capability probe/retry state machine
+- `docs-viewer/runtime/js/docs-viewer-management-config.js` owns management UI-text/config application
+- `docs-viewer/runtime/js/docs-viewer-management-render.js` owns management-only markup helpers for status pills, metadata parent/status controls, and settings warnings
+- `docs-viewer/runtime/js/docs-viewer.js` keeps the reader/search/history controller plus a small management bridge for shared state and lazy controller loading
+- `docs-viewer/runtime/js/docs-viewer-document-controller.js` owns document pane visibility, payload rendering, loading/error states, and report mount handoff
 
 Not implemented yet:
 

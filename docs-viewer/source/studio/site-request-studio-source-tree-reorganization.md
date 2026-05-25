@@ -46,7 +46,7 @@ Move under `studio/`:
 
 - canonical website data used by Studio to generate published site data
 - canonical publishing Markdown under `studio/data/canonical/catalogue-markdown/`; this is Studio-owned site source, not Docs Viewer-owned source
-- Docs Viewer source Markdown under `studio/docs-viewer/source/studio/`, `studio/docs-viewer/source/analysis/`, `studio/docs-viewer/source/library/`, and any other source Markdown folder that Docs Viewer explicitly owns
+- Docs Viewer source Markdown under `docs-viewer/source/studio/`, `docs-viewer/source/analysis/`, `docs-viewer/source/library/`, and any other source Markdown folder that Docs Viewer explicitly owns
 - change request workflow source under `studio/workflows/change-requests/logs/entries/`; this is Studio-owned workflow data, not Docs Viewer-owned source
 - Local Studio Python app server modules, route-family modules, and service adapters
 - Studio-owned domain services and workflow support that exist for authoring or maintaining site data
@@ -85,12 +85,12 @@ Same-repo boundary:
 Docs Viewer boundary for this request:
 
 - Docs Viewer is both a publishing module and a manage-mode interface
-- as a publishing module, Docs Viewer converts an owned source scope folder under `studio/docs-viewer/source/<scope>/` into generated JSON/search payloads that public read-only routes can consume, such as `/library/` and `/analysis/`
+- as a publishing module, Docs Viewer converts an owned source scope folder under `docs-viewer/source/<scope>/` into generated JSON/search payloads that public read-only routes can consume, such as `/library/` and `/analysis/`
 - as a manage-mode interface, Docs Viewer imports source Markdown and edits metadata for an allowed source scope
 - manage mode is currently enabled through `/docs/`
-- `/docs/` has no special source ownership meaning; it defaults to the `studio` scope under `studio/docs-viewer/source/studio/`, but manage mode can switch to other allowed Docs Viewer source folders such as `studio/docs-viewer/source/library/`
-- `studio/docs-viewer/source/studio/` is therefore just another Docs Viewer-owned source folder, not a privileged root docs source
-- `studio/docs-viewer/source/library/` and `studio/docs-viewer/source/analysis/` are Docs Viewer-owned canonical source folders; Docs Viewer decides whether a scope is available locally through Studio, publicly on the site, or both
+- `/docs/` has no special source ownership meaning; it defaults to the `studio` scope under `docs-viewer/source/studio/`, but manage mode can switch to other allowed Docs Viewer source folders such as `docs-viewer/source/library/`
+- `docs-viewer/source/studio/` is therefore just another Docs Viewer-owned source folder, not a privileged root docs source
+- `docs-viewer/source/library/` and `docs-viewer/source/analysis/` are Docs Viewer-owned canonical source folders; Docs Viewer decides whether a scope is available locally through Studio, publicly on the site, or both
 - current Docs Viewer code is relatively self-contained but remains Studio-hosted, so it moves under `studio/` with the other Studio source
 - Docs Viewer should have a clear home inside `studio/`, not be scattered through generic Studio app, service, data, or asset folders
 - the existing localization of Docs Viewer scripts, CSS, config, and services should be preserved as a recognizable internal boundary to make later extraction easier
@@ -168,7 +168,7 @@ Studio may generate public artifacts, but those artifacts belong to the public J
 Examples:
 
 - canonical catalogue data, `studio/data/canonical/catalogue-markdown/` publishing Markdown, analytics source, and media-maintenance source data live under Studio canonical source
-- Docs Viewer-owned source Markdown, including `studio/docs-viewer/source/studio/`, `studio/docs-viewer/source/library/`, and `studio/docs-viewer/source/analysis/`, lives under the internal Docs Viewer home in `studio/`
+- Docs Viewer-owned source Markdown, including `docs-viewer/source/studio/`, `docs-viewer/source/library/`, and `docs-viewer/source/analysis/`, lives under the internal Docs Viewer home in `studio/`
 - Studio-owned change request log source under `studio/workflows/change-requests/logs/entries/` lives under Studio workflow source, not under Docs Viewer
 - generated public catalogue/search/docs JSON consumed by published pages remains under public asset paths
 - generated Docs Viewer JSON/search payloads for public `/library/` and `/analysis/` remain under public asset paths
@@ -308,7 +308,7 @@ Remaining risks and follow-ups:
 - Generated or served Docs Viewer report registry/config payloads needed by read-only installs remain available to those installs, while the source report definitions/config/runtime live under Docs Viewer ownership.
 - Current Docs Viewer runtime, server/services, config, Docs Viewer source files, and associated assets are Studio-hosted under a clear internal Docs Viewer home such as `studio/docs-viewer/` until a later extraction moves that coherent subtree to a true portable boundary.
 - Docs Viewer-owned reports can read allowed data owned by Studio or other repo domains; the report implementation/config/document moves with Docs Viewer, while the data remains with its owning domain.
-- `studio/docs-viewer/source/studio/` is treated as one Docs Viewer-owned source scope among others, not as a special root docs source.
+- `docs-viewer/source/studio/` is treated as one Docs Viewer-owned source scope among others, not as a special root docs source.
 - `studio/workflows/change-requests/` is treated as Studio-owned change request workflow data; generated reports may be surfaced through `/docs/`, but Docs Viewer does not own the log source workflow.
 - Public Jekyll preview does not watch Studio-only source, services, config, tests, or demo assets.
 - Local Studio no longer depends on public `assets/css/main.css` for base typography, size, spacing, shell, or Studio-only primitive classes.

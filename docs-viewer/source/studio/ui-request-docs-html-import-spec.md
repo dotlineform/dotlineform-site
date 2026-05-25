@@ -20,8 +20,8 @@ Add a local-only HTML import flow that takes a self-contained `.html` file and c
 
 The flow should support both docs scopes:
 
-- `studio` -> `_docs/`
-- `library` -> `_docs_library/`
+- `studio` -> `docs-viewer/source/studio/`
+- `library` -> `docs-viewer/source/library/`
 
 This is not a new editing or publishing model.
 It is an ingestion shortcut for externally authored HTML, especially self-contained exports that include inline CSS and inline SVG.
@@ -51,7 +51,7 @@ This should be a local Studio maintenance feature, not a hosted-site feature.
 Recommended first-pass boundary:
 
 - add a new Studio page for docs HTML import
-- use the localhost docs-management server for import writes
+- use the localhost Docs management service for import writes
 - avoid arbitrary server-side file-system browsing
 - keep original HTML files in a repo-local staging directory before import
 - write only new Markdown docs into the flat scope roots
@@ -121,8 +121,8 @@ Current confirmed decision:
 
 The import should create a normal source Markdown file in the chosen scope root:
 
-- `_docs/*.md`
-- `_docs_library/*.md`
+- `docs-viewer/source/studio/*.md`
+- `docs-viewer/source/library/*.md`
 
 Current root-layout implication:
 
@@ -425,7 +425,7 @@ Recommended library boundary:
 
 ### Phase 3. Add Server-Side Import Write Support
 
-Extend `studio/docs-viewer/services/docs_management_server.py` with:
+Extend `docs-viewer/services/docs_management_server.py` with:
 
 - staged-file validation
 - import endpoint
@@ -468,7 +468,7 @@ Reason:
 After implementation, update:
 
 - Studio docs for the new page
-- Docs Management Server doc for the new endpoint
+- Docs Management Service doc for the new endpoint
 - Docs Viewer Builder doc if the import path changes authoring guidance
 - site and search change logs where the shipped behavior materially changes
 
@@ -676,7 +676,7 @@ Interpretation:
 
 - Studio has a local-only page for docs HTML import
 - the user can choose one staged `.html` file and a target scope
-- successful import creates one new Markdown source doc in `_docs/` or `_docs_library/`
+- successful import creates one new Markdown source doc in `docs-viewer/source/studio/` or `docs-viewer/source/library/`
 - import can overwrite an existing doc only after an explicit warning and confirmation step
 - the converter removes `head`, scripts, and irrelevant page-shell styling
 - external links remain usable
@@ -697,5 +697,5 @@ Interpretation:
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Docs Viewer Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)
 - [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)

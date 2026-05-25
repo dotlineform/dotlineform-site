@@ -15,13 +15,13 @@ This document lists all browser JavaScript files under `assets/`, scored with th
 Rescored on 2026-05-21 from the current filesystem inventory.
 Category scores may range from 0 to 3 under the current policy.
 The normal acceptable target remains 4 or lower; no current row uses a category score of 0.
-`assets/docs-viewer/js/docs-viewer.js` remains in the table for completeness, but implementation work for that shared entry runtime is tracked separately.
+`docs-viewer/runtime/js/docs-viewer.js` remains in the table for completeness, but implementation work for that shared entry runtime is tracked separately.
 
 ## Summary
 
 - Browser JavaScript files under `assets/`: 170
 - Total browser JavaScript lines under `assets/`: 44,549
-- Files above target score 4, excluding `assets/docs-viewer/js/docs-viewer.js`: 55
+- Files above target score 4, excluding `docs-viewer/runtime/js/docs-viewer.js`: 55
 - Target score: 4 or lower, with 4 meaning every risk category is present but low.
 
 | Score | Files |
@@ -37,42 +37,42 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 
 | Rank | File | Family | Maint. | Struct. | Perf. | Arch. | Risk | Focus |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | `assets/docs-viewer/js/docs-viewer.js` | Docs Viewer separate track | 2 | 2 | 3 | 1 | 8 | Shared Docs Viewer runtime after index-panel state owner extraction; route loading and payload composition remain. |
+| 1 | `docs-viewer/runtime/js/docs-viewer.js` | Docs Viewer separate track | 2 | 2 | 3 | 1 | 8 | Shared Docs Viewer runtime after index-panel state owner extraction; route loading and payload composition remain. |
 | 2 | `assets/studio/js/tag-studio.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Series tag editor route shell after shared route-state projection, shared save-mode re-probe lifecycle extraction, and selected-work/tag-entry interaction state extraction; route boot, shell rendering, event wiring, save handoff, and status/result rendering remain route-local. |
 | 3 | `assets/studio/js/catalogue-work-actions.js` | Catalogue editors | 2 | 1 | 2 | 1 | 6 | Work action coordinator after shared save/build/action presentation projection, bulk build-target projection, and Work action record/store sync extraction; service request construction, action sequencing, route refresh, delete navigation, and media refresh remain route-local. |
 | 4 | `assets/studio/js/catalogue-work-editor.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue work route shell after state construction moved to `catalogue-work-editor-state.js` and DOM event binding moved to `catalogue-work-editor-events.js`; validation, update coordination, selection/action context handoff, and Work-specific route-state transitions remain route-local. |
 | 5 | `assets/studio/js/bulk-add-work.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Bulk import/add route shell after shared operational route helper adoption and preview/apply workflow extraction; endpoint calls, activity context, service probing, and event handoff remain route-local. |
 | 6 | `assets/studio/js/tag-registry.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag registry route shell after render, modal lifecycle, import-mode, service workflow, shared save-session, and modal workflow extraction; list/filter route handoff and import orchestration remain route-local. |
 | 7 | `assets/js/catalogue-search.js` | Public runtime | 2 | 1 | 1 | 1 | 5 | Public catalogue/search route shell after query normalization/evaluation, result ordering, result HTML projection, and metric view-model construction moved to `search/catalogue-search-runtime.js`; route loading, policy/config handoff, DOM event wiring, and instrumentation recording remain local. |
-| 8 | `assets/docs-viewer/js/docs-viewer-management.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management coordinator after shared action workflow helper extraction. |
-| 9 | `assets/docs-viewer/js/docs-viewer-management-modals.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management modal controller after transient modal shell and metadata parent-picker extraction. |
+| 8 | `docs-viewer/runtime/js/docs-viewer-management.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management coordinator after shared action workflow helper extraction. |
+| 9 | `docs-viewer/runtime/js/docs-viewer-management-modals.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management modal controller after transient modal shell and metadata parent-picker extraction. |
 | 10 | `assets/studio/js/tag-aliases-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag modal rendering after shared shell/focus lifecycle extraction. |
 | 11 | `assets/studio/js/tag-registry-modals.js` | Tag routes | 2 | 2 | 1 | 1 | 6 | Tag registry modal rendering after shared shell/focus lifecycle extraction. |
 | 12 | `assets/studio/js/tag-aliases.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag aliases route shell after mutation-state, save/import workflow, shared save-session, and modal workflow extraction; list filtering, import orchestration, service action sequencing, and route-state handoff remain route-local. |
 | 13 | `assets/studio/js/catalogue-moment-editor.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue moment route shell after state construction moved to `catalogue-moment-editor-state.js` and DOM event binding moved to `catalogue-moment-editor-events.js`; import/action workflow context, preview sequencing, and dirty-state coordination remain route-local. |
 | 14 | `assets/studio/js/catalogue-series-editor.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue series route shell after state construction moved to `catalogue-series-editor-state.js` and DOM event binding moved to `catalogue-series-editor-events.js`; validation, membership workflow handoff, and action context coordination remain route-local. |
 | 15 | `assets/studio/js/catalogue-work-detail-editor.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Catalogue work-detail route shell after state construction moved to `catalogue-work-detail-editor-state.js` and DOM event binding moved to `catalogue-work-detail-editor-events.js`; validation, loaded/new/bulk transitions, and action context coordination remain route-local. |
-| 16 | `assets/docs-viewer/js/docs-viewer-bookmarks.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer bookmark/favourite support. |
-| 17 | `assets/docs-viewer/js/docs-viewer-management-actions.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management support module. |
-| 18 | `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer runtime support module. |
+| 16 | `docs-viewer/runtime/js/docs-viewer-bookmarks.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer bookmark/favourite support. |
+| 17 | `docs-viewer/runtime/js/docs-viewer-management-actions.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer management support module. |
+| 18 | `docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js` | Docs Viewer non-entry | 2 | 2 | 1 | 1 | 6 | Docs Viewer runtime support module. |
 | 19 | `assets/studio/js/catalogue-series-actions.js` | Catalogue editors | 2 | 1 | 2 | 1 | 6 | Series action coordinator after shared save/build/action presentation projection; membership mutation, service sequencing, route refresh, and delete navigation remain route-local. |
 | 20 | `assets/studio/js/catalogue-work-detail-actions.js` | Catalogue editors | 2 | 1 | 2 | 1 | 6 | Work-detail action coordinator after shared save/build/action presentation projection and bulk build-target projection; single/bulk mutation, service sequencing, route refresh, delete navigation, and media refresh remain route-local. |
 | 21 | `assets/studio/js/catalogue-moment-import.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue route support module. |
 | 22 | `assets/studio/js/catalogue-work-sections.js` | Catalogue editors | 2 | 2 | 1 | 1 | 6 | Catalogue section rendering/helper. |
 | 23 | `assets/studio/js/data-sharing-prepare.js` | Data sharing | 2 | 2 | 1 | 1 | 6 | Data sharing package preparation route shell after workflow, render, service, and module-smoke coverage. |
 | 24 | `assets/studio/js/data-sharing-review.js` | Data sharing | 2 | 1 | 1 | 1 | 5 | Returned-package review route shell after scope/action normalization, apply-action menu state, preview selection state, and result-button projection moved to `data-sharing-review-workflow.js`; service requests, result modal handoff, and route boot remain local. |
-| 25 | `assets/docs-viewer/js/reports/docs-broken-links-report.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs Broken Links report module after the old Studio route controller was retired; scope selection, local Docs API request payloads, sorting, and result rendering are report-local. |
+| 25 | `docs-viewer/runtime/js/reports/docs-broken-links-report.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs Broken Links report module after the old Studio route controller was retired; scope selection, local Docs API request payloads, sorting, and result rendering are report-local. |
 | 26 | `assets/studio/js/project-state.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Project state route after shared operational required-element, route-state, service-status, and run/open button projection helper adoption; report rendering, service calls, and activity context remain route-local. |
 | 27 | `assets/studio/js/catalogue-status.js` | Studio routes and shared runtime | 2 | 1 | 2 | 1 | 6 | Catalogue status route/helper. |
 | 28 | `assets/studio/js/series-tags.js` | Tag routes | 2 | 1 | 2 | 1 | 6 | Series Tags route shell after scoring, report rendering, and offline-session activation extraction. |
 | 29 | `assets/studio/js/studio-audits.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Studio audit route after shared operational required-element, ready/busy projection, and audit run-button state adoption; audit normalization, result rendering, and service sequencing remain route-local. |
 | 30 | `assets/studio/js/studio-works.js` | Studio routes and shared runtime | 2 | 1 | 2 | 1 | 6 | Browser runtime support module. |
 | 31 | `assets/studio/js/thumbnail-quality.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Thumbnail quality route after shared operational required-element, ready/busy projection, and refresh-button service gating adoption; payload rendering and preview refresh sequencing remain route-local. |
-| 32 | `assets/docs-viewer/js/docs-html-import.js` | Docs Viewer non-entry | 2 | 1 | 1 | 2 | 6 | Docs import controller after explicit workflow handoff and focused module-smoke coverage. |
+| 32 | `docs-viewer/runtime/js/docs-html-import.js` | Docs Viewer non-entry | 2 | 1 | 1 | 2 | 6 | Docs import controller after explicit workflow handoff and focused module-smoke coverage. |
 | 33 | `assets/studio/js/catalogue-moment-actions.js` | Catalogue editors | 2 | 1 | 1 | 1 | 5 | Moment action coordinator after shared preview blocker extraction, save/build normalization, and shared action presentation projection. |
-| 34 | `assets/docs-viewer/js/docs-html-import-workflow.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs import preview/write workflow helper. |
-| 35 | `assets/docs-viewer/js/docs-viewer-config-controller.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs Viewer config/scope setup. |
-| 36 | `assets/docs-viewer/js/docs-viewer-search-controller.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs Viewer search helper or controller. |
+| 34 | `docs-viewer/runtime/js/docs-html-import-workflow.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs import preview/write workflow helper. |
+| 35 | `docs-viewer/runtime/js/docs-viewer-config-controller.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs Viewer config/scope setup. |
+| 36 | `docs-viewer/runtime/js/docs-viewer-search-controller.js` | Docs Viewer non-entry | 2 | 1 | 1 | 1 | 5 | Docs Viewer search helper or controller. |
 | 37 | `assets/js/work.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public work route shell after series link, back-link, and prev/next navigation projection moved to `public-catalogue-runtime.js`; DOM insertion, series-index loading, refresh handoff, and keyboard navigation remain local. |
 | 38 | `assets/studio/js/activity-log.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Activity log or activity context support. |
 | 39 | `assets/studio/js/catalogue-field-registry-review.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Catalogue route support module. |
@@ -89,30 +89,30 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 50 | `assets/studio/js/tag-groups.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag route runtime. |
 | 51 | `assets/studio/js/tag-studio-render.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag route rendering helper. |
 | 52 | `assets/studio/js/tag-studio-save-controller.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag manual patch/save helper. |
-| 53 | `assets/docs-viewer/js/docs-viewer-document-controller.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer document rendering/controller support. |
-| 54 | `assets/docs-viewer/js/docs-viewer-reports.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer runtime support module. |
-| 55 | `assets/docs-viewer/js/docs-viewer-router.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer routing and history helper. |
+| 53 | `docs-viewer/runtime/js/docs-viewer-document-controller.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer document rendering/controller support. |
+| 54 | `docs-viewer/runtime/js/docs-viewer-reports.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer runtime support module. |
+| 55 | `docs-viewer/runtime/js/docs-viewer-router.js` | Docs Viewer non-entry | 1 | 2 | 1 | 1 | 5 | Docs Viewer routing and history helper. |
 | 56 | `assets/studio/js/catalogue-work-route-state.js` | Catalogue editors | 1 | 2 | 1 | 1 | 5 | Work loaded/new/bulk state transition helper; ready/busy detail projection now delegates to shared route boot. |
 | 57 | `assets/studio/js/series-tags-modals.js` | Tag routes | 1 | 2 | 1 | 1 | 5 | Tag modal rendering and lifecycle helper. |
-| 58 | `assets/docs-viewer/js/docs-html-import-modals.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 59 | `assets/docs-viewer/js/docs-html-import-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs import result rendering helper. |
-| 60 | `assets/docs-viewer/js/docs-viewer-data.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 61 | `assets/docs-viewer/js/docs-viewer-drag-drop.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 62 | `assets/docs-viewer/js/docs-viewer-favourites.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer bookmark/favourite support. |
-| 63 | `assets/docs-viewer/js/docs-viewer-management-capabilities.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 64 | `assets/docs-viewer/js/docs-viewer-management-client.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 65 | `assets/docs-viewer/js/docs-viewer-management-config.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 66 | `assets/docs-viewer/js/docs-viewer-management-interactions.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 67 | `assets/docs-viewer/js/docs-viewer-management-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
-| 68 | `assets/docs-viewer/js/docs-viewer-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer rendering helper. |
-| 69 | `assets/docs-viewer/js/docs-viewer-search.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer search helper or controller. |
-| 70 | `assets/docs-viewer/js/docs-viewer-sidebar.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 71 | `assets/docs-viewer/js/docs-viewer-tree.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
-| 72 | `assets/docs-viewer/js/reports/change-history-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 73 | `assets/docs-viewer/js/reports/docs-index-table-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 74 | `assets/docs-viewer/js/reports/reports-list-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 75 | `assets/docs-viewer/js/reports/semantic-references-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
-| 76 | `assets/docs-viewer/js/reports/source-config-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 58 | `docs-viewer/runtime/js/docs-html-import-modals.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 59 | `docs-viewer/runtime/js/docs-html-import-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs import result rendering helper. |
+| 60 | `docs-viewer/runtime/js/docs-viewer-data.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 61 | `docs-viewer/runtime/js/docs-viewer-drag-drop.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 62 | `docs-viewer/runtime/js/docs-viewer-favourites.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer bookmark/favourite support. |
+| 63 | `docs-viewer/runtime/js/docs-viewer-management-capabilities.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 64 | `docs-viewer/runtime/js/docs-viewer-management-client.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 65 | `docs-viewer/runtime/js/docs-viewer-management-config.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 66 | `docs-viewer/runtime/js/docs-viewer-management-interactions.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 67 | `docs-viewer/runtime/js/docs-viewer-management-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management support module. |
+| 68 | `docs-viewer/runtime/js/docs-viewer-render.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer rendering helper. |
+| 69 | `docs-viewer/runtime/js/docs-viewer-search.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer search helper or controller. |
+| 70 | `docs-viewer/runtime/js/docs-viewer-sidebar.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 71 | `docs-viewer/runtime/js/docs-viewer-tree.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer runtime support module. |
+| 72 | `docs-viewer/runtime/js/reports/change-history-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 73 | `docs-viewer/runtime/js/reports/docs-index-table-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 74 | `docs-viewer/runtime/js/reports/reports-list-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 75 | `docs-viewer/runtime/js/reports/semantic-references-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
+| 76 | `docs-viewer/runtime/js/reports/source-config-report.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer report module. |
 | 77 | `assets/js/public-catalogue-runtime.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public catalogue URL, payload, thumbnail, and work navigation projection helper. |
 | 78 | `assets/js/moment.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public moment route runtime after shared public catalogue runtime helper adoption. |
 | 79 | `assets/js/search/search-performance.js` | Public runtime | 1 | 1 | 1 | 1 | 4 | Public catalogue/search route runtime. |
@@ -187,10 +187,10 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 149 | `assets/studio/js/tag-aliases-workflow.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Tag aliases save/import workflow fallback helper. |
 | 150 | `assets/studio/js/tag-studio-route-state.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Series tag editor route ready/busy projection helper. |
 | 151 | `assets/studio/js/tag-modal-shell.js` | Tag routes | 1 | 1 | 1 | 1 | 4 | Shared tag modal shell, focus lifecycle, status, and escaping helper. |
-| 152 | `assets/docs-viewer/js/docs-viewer-management-modal-shell.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer transient management modal shell, focus lifecycle, and choice/text/confirm helper. |
-| 153 | `assets/docs-viewer/js/docs-viewer-management-parent-picker.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer metadata parent-picker matching, popup, active option, and resolution helper. |
-| 154 | `assets/docs-viewer/js/docs-viewer-management-action-workflow.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
-| 155 | `assets/docs-viewer/js/docs-viewer-index-panel.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, persistence migration, toggle projection, and document-pane visibility helper. |
+| 152 | `docs-viewer/runtime/js/docs-viewer-management-modal-shell.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer transient management modal shell, focus lifecycle, and choice/text/confirm helper. |
+| 153 | `docs-viewer/runtime/js/docs-viewer-management-parent-picker.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer metadata parent-picker matching, popup, active option, and resolution helper. |
+| 154 | `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer management normalize-order and viewability target workflow helper. |
+| 155 | `docs-viewer/runtime/js/docs-viewer-index-panel.js` | Docs Viewer non-entry | 1 | 1 | 1 | 1 | 4 | Docs Viewer index panel state, persistence migration, toggle projection, and document-pane visibility helper. |
 | 156 | `assets/studio/js/catalogue-work-editor-state.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Work editor state factory for required elements, initial route state, derived panel nodes, media config, modal host, and route-state option projection. |
 | 157 | `assets/studio/js/catalogue-work-editor-events.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Work editor event binder that attaches DOM listeners and delegates to injected selection, embedded-item, action, and route-state callbacks. |
 | 158 | `assets/studio/js/catalogue-work-detail-editor-state.js` | Catalogue editors | 1 | 1 | 1 | 1 | 4 | Work-detail editor state factory for required elements, initial route state, media config, and shared route-state options. |

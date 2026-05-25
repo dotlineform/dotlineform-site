@@ -168,9 +168,9 @@ Poor candidates:
 
 Candidate files:
 
-- `assets/docs-viewer/js/docs-viewer-reports.js`
-- `assets/docs-viewer/js/reports/docs-index-table-report.js`
-- `assets/docs-viewer/css/docs-viewer-reports.css`
+- `docs-viewer/runtime/js/docs-viewer-reports.js`
+- `docs-viewer/runtime/js/reports/docs-index-table-report.js`
+- `docs-viewer/static/css/docs-viewer-reports.css`
 
 Responsibilities:
 

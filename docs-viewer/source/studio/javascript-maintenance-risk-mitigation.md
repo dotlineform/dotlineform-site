@@ -64,7 +64,7 @@ Current stable follow-through:
 
 - the JavaScript inventory guardrail is available at `studio/checks/javascript_inventory_guardrail.py`
 - the reusable JavaScript maintenance gate lives in [Development Workflow](/docs/?scope=studio&doc=development-workflow)
-- the Docs Viewer index-panel state owner is in place at `assets/docs-viewer/js/docs-viewer-index-panel.js`
+- the Docs Viewer index-panel state owner is in place at `docs-viewer/runtime/js/docs-viewer-index-panel.js`
 - focused Docs Viewer index-panel module and route smoke checks exist under `studio/tests/smoke/`
 
 ## Next Action

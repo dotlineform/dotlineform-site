@@ -13,7 +13,7 @@ Status:
 
 - implementated
 - parser/sanitizer dependencies pinned in `requirements.txt`
-- initial dry-run importer scaffold landed in `studio/docs-viewer/services/docs_html_import.py`
+- initial dry-run importer scaffold landed in `docs-viewer/services/docs_html_import.py`
 - depends on [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)
 
 ## Goal
@@ -41,9 +41,9 @@ Completed now:
 - four reviewed HTML examples copied into local staging as fixtures
 - parser/sanitizer stack pinned in `requirements.txt`
 - local project Python has the pinned parser/sanitizer stack installed
-- dry-run importer scaffold added at `studio/docs-viewer/services/docs_html_import.py`
+- dry-run importer scaffold added at `docs-viewer/services/docs_html_import.py`
 - scaffold now parses through the fixed `beautifulsoup4` + `lxml` stack rather than the stdlib HTML parser
-- dry-run `POST /docs/import-html` endpoint added to the Docs Management Server
+- dry-run `POST /docs/import-html` endpoint added to the Docs Management Service
 - staged import preview now reports conversion summary plus `doc_id` collision detection
 - staged import preview now validates generated Markdown through the repo's Jekyll renderer helper before returning success
 - `POST /docs/import-html` now supports create and warned overwrite writes with backup/rebuild follow-through
@@ -61,7 +61,7 @@ The implementation should stay inside the current local docs-management and Stud
 Primary ownership:
 
 - Studio page and client controller
-- docs-management server endpoint and write flow
+- Docs management service endpoint and write flow
 - shared conversion module under `scripts/docs/`
 
 Locked implementation direction:
@@ -83,7 +83,7 @@ Pinned v1 parser/sanitizer stack:
 Expected implementation files:
 
 - `requirements.txt`
-- `studio/docs-viewer/services/docs_management_server.py`
+- `docs-viewer/services/docs_management_server.py`
 - new conversion helper(s) under `scripts/docs/`
 - new Studio route under `studio/`
 - new Studio JS controller under `assets/studio/js/`
@@ -93,7 +93,7 @@ Expected implementation files:
 Likely docs follow-through after implementation:
 
 - [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Studio](/docs/?scope=studio&doc=studio)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
@@ -174,7 +174,7 @@ Reason:
 
 ### 5. Extend The Docs-Management Server
 
-Add `POST /docs/import-html` to `studio/docs-viewer/services/docs_management_server.py`.
+Add `POST /docs/import-html` to `docs-viewer/services/docs_management_server.py`.
 
 Required behavior:
 
@@ -248,7 +248,7 @@ After the implementation lands, update the runtime/reference docs so the feature
 Minimum docs follow-through:
 
 - new Studio page doc if the route is user-facing
-- docs-management server endpoint documentation
+- Docs management service endpoint documentation
 - Studio/runtime docs if route inventory changes
 - site change log entry
 
@@ -289,7 +289,7 @@ Manual checks:
 ## Done Criteria
 
 - Studio has a working local HTML import page
-- the docs-management server can import staged HTML into `studio` or `library`
+- the Docs management service can import staged HTML into `studio` or `library`
 - create and overwrite both work under the confirmed warning/backup contract
 - generated Markdown renders successfully through the Jekyll docs path
 - the four reviewed example files are covered by implementation verification
@@ -301,5 +301,5 @@ Manual checks:
 - [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
 - [Studio](/docs/?scope=studio&doc=studio)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)

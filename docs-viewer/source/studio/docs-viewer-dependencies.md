@@ -22,7 +22,7 @@ Python package dependencies for repo scripts are pinned in:
 It is not generated from the Docs Viewer code, and it does not install the Ruby/Jekyll stack.
 The Ruby/Jekyll build contract remains owned by `Gemfile`, `Gemfile.lock`, and `.ruby-version`.
 
-Portable Docs Viewer installs that copy the build scripts, management server, or Docs Import should also copy `requirements.txt` or an equivalent pinned dependency file.
+Portable Docs Viewer installs that copy the build scripts, Docs Viewer service, or Docs Import should also copy `requirements.txt` or an equivalent pinned dependency file.
 
 ## Current Python Packages
 
@@ -37,7 +37,7 @@ The current checked-in Python packages are:
 | `openpyxl` | Not a Docs Viewer dependency; used by workbook/spreadsheet pipeline scripts. | Catalogue or spreadsheet-driven workflows need it. |
 | `pytest` | Test runner used by the repo check profiles. | Running Python tests through the repo check workflow. |
 
-The Docs HTML import implementation currently lives in `studio/docs-viewer/services/docs_html_import.py`.
+The Docs HTML import implementation currently lives in `docs-viewer/services/docs_html_import.py`.
 Its parser boundary depends on `beautifulsoup4` plus `lxml`, its sanitization contract treats `bleach` as part of the pinned import stack, and Markdown package image conversion depends on `Pillow`.
 
 ## Parser Stack Roles
@@ -78,13 +78,13 @@ Before treating Docs Import as available in a new environment, confirm the parse
 python -c "import bs4, lxml, bleach, PIL"
 ```
 
-If this fails, install the pinned packages from `requirements.txt` in the active Python environment before starting the docs-management server or running Docs Import checks.
+If this fails, install the pinned packages from `requirements.txt` in the active Python environment before starting the Docs Viewer service or running Docs Import checks.
 
 ## Related References
 
 - [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
 - [Docs Viewer Import Source Registry Spec](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies)
 - [Docs HTML Import Spec](/docs/?scope=studio&doc=ui-request-docs-html-import-spec)
 - [Docs HTML Import Task](/docs/?scope=studio&doc=ui-request-docs-html-import-task)

@@ -21,9 +21,9 @@ The implementation lives in `studio/docs-viewer/build/build_docs.rb` so Docs bui
 
 Source location:
 
-- `_docs/`
-- `_docs_analysis/`
-- `_docs_library/`
+- `docs-viewer/source/studio/`
+- `docs-viewer/source/analysis/`
+- `docs-viewer/source/library/`
 
 Published viewer route:
 
@@ -45,10 +45,10 @@ Generated outputs:
 
 Scope configuration:
 
-- `studio/docs-viewer/config/scopes/docs_scopes.json`
+- `docs-viewer/config/scopes/docs_scopes.json`
 
 This config is the shared source of truth for docs scope ids, Markdown source roots, generated output roots, viewer route bases, imported-media path prefixes, nested-source policy, updated-date display, unresolved-parent validation policy, and browser-safe Docs Viewer settings.
-`./scripts/build_docs.rb`, the docs-management server, the docs HTML importer, and the live rebuild watcher all read the same config.
+`./scripts/build_docs.rb`, the Docs Viewer service, the docs HTML importer, and the live rebuild watcher all read the same config.
 
 ## What The Builder Does
 
@@ -64,15 +64,15 @@ This config is the shared source of truth for docs scope ids, Markdown source ro
 - emits scope-level viewer options such as compatibility non-loadable ids, compatibility manage-only tree root ids, and document-view updated-date visibility
 - writes one index payload plus one per-doc payload for each configured scope
 - writes incremental semantic-reference relationship artifacts under `references/`
-- writes `assets/docs-viewer/data/docs-viewer-config.json` from `studio/docs-viewer/config/scopes/docs_scopes.json`, including route/scope data and the `docs_viewer` browser settings used by public and management routes
+- writes `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from `docs-viewer/config/scopes/docs_scopes.json`, including route/scope data and the `docs_viewer` browser settings used by local manage mode and public read-only routes
 - writes incrementally: unchanged payloads and unchanged Docs Viewer browser config are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
 - supports targeted same-scope payload rebuilds through `--only-doc-ids` when an orchestration layer has already proven the affected ids are safe
 
 ## Publishing Rules
 
-- every root-level `.md` file in `_docs/` is published by default
-- every root-level `.md` file in `_docs_library/` is published by default
-- every `.md` file under `_docs_analysis/` is published by default, including nested docs
+- every root-level `.md` file in `docs-viewer/source/studio/` is published by default
+- every root-level `.md` file in `docs-viewer/source/library/` is published by default
+- every `.md` file under `docs-viewer/source/analysis/` is published by default, including nested docs
 - nested Markdown docs are rejected for Studio and Library so their flat source-layout contract stays explicit
 - nested Markdown docs are allowed for Analysis, but viewer organisation still comes from `doc_id`, `parent_id`, and `sort_order`
 - add front matter with `published: false` to keep a Markdown file in either source root without generating it into docs-viewer JSON
@@ -236,11 +236,11 @@ Current fields:
 ## Operational Notes
 
 - `bin/local-studio` runs this builder only when `DOCS_STARTUP_REBUILD_SCOPES` requests a startup docs/docs-search rebuild
-- `bin/local-studio` also starts the Docs Live Rebuild Watcher, which watches `_docs/*.md`, `_docs_analysis/**/*.md`, and `_docs_library/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
+- `bin/local-studio` also starts the Docs Live Rebuild Watcher, which watches `docs-viewer/source/studio/*.md`, `docs-viewer/source/analysis/**/*.md`, and `docs-viewer/source/library/*.md` and then rebuilds same-scope docs payloads plus same-scope docs search
 - if you disable the watcher or want explicit control while the dev runner is already running, re-run `./scripts/build_docs.rb --scope <scope> --write`
-- docs viewer manage mode rebuilds the current docs scope through the localhost docs-management service
+- Docs Viewer manage mode rebuilds the current docs scope through the standalone Docs Viewer service
 - manual `./scripts/build_docs.rb --scope <scope> --write` remains a low-level docs-payload rebuild only
-- live docs-management actions chain same-scope docs search through the docs-management service rather than through `build_docs.rb` itself
+- live Docs Viewer management actions chain same-scope docs search through the Docs Viewer service rather than through `build_docs.rb` itself
 - changing only the docs data does not require any separate asset pipeline
 - manual `./scripts/build_docs.rb --write` with no `--scope` rebuilds all configured docs scopes, currently `studio`, `analysis`, and `library`
 - current write behavior is incremental within the rebuilt scope:

@@ -36,7 +36,7 @@ Current shared implementation:
 - `docs-viewer/runtime/js/docs-viewer.js` as the shared entry controller
 - `docs-viewer/runtime/js/docs-viewer-management.js` as the management-mode controller loaded only by management-enabled viewer shells
 - `docs-viewer/runtime/js/docs-viewer-management-render.js` for management-only markup helpers imported by the management controller
-- `docs-viewer/runtime/js/docs-viewer-management-client.js` for docs-management server transport helpers used by the management controller
+- `docs-viewer/runtime/js/docs-viewer-management-client.js` for Docs Viewer service transport helpers used by the management controller
 - `docs-viewer/runtime/js/docs-viewer-drag-drop.js` for drag/drop helpers used by the management controller
 - `docs-viewer/runtime/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by the entry controller
 - `docs-viewer/runtime/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the entry controller
@@ -57,7 +57,7 @@ The management controller receives a narrow context API from the entry controlle
 Current CSS base boundary:
 
 - public `/library/` and `/analysis/` routes intentionally get `assets/css/main.css` from the public site layout, then load Docs Viewer-owned CSS through the shared include
-- Local Studio `/docs/` gets `studio/app/assets/css/studio.css` from the Studio app shell, then loads Docs Viewer-owned CSS through the shared include
+- standalone local `/docs/` gets Docs Viewer-owned base CSS from the Docs Viewer service shell, then loads reusable viewer CSS and management CSS
 - `docs-viewer/static/css/docs-viewer-base.css` supplies portable Docs Viewer tokens and shell utilities such as `visually-hidden`, `muted`, `small`, and hidden-state handling inside `.docsViewer`
 - `docs-viewer/static/css/docs-viewer.css` defines viewer component tokens with Docs Viewer theme-token and host-token fallbacks
 
@@ -72,11 +72,11 @@ Current scope-owned data:
 
 Current route capability boundary:
 
-- `/docs/` is the only route shell that enables `?mode=manage`
+- `/docs/` is the only route that enables `?mode=manage`; it is served by the standalone Docs Viewer service
 - `/docs/` can switch the loaded docs scope with `?scope=studio`, `?scope=library`, or `?scope=analysis`
 - `/library/` and `/analysis/` are public read-only viewer routes and do not render management controls, configure write-capable management mode, or load management-only CSS
 - public read-only viewer routes also avoid loading the management controller module
-- local `bin/local-studio` serves Docs Viewer management and generated-data reads through the local app server rather than through a Jekyll overlay
+- local `bin/local-studio` links to the configured Docs Viewer service but does not serve Docs Viewer management, generated reads, or Docs Viewer assets
 - a `mode=manage` query on a public viewer route is normalized away by the shared runtime because those routes cannot perform local writes on the static public site
 - canonical internal docs links stay read-only-safe and omit `mode=manage`; the management-capable `/docs/` shell preserves manage mode at runtime only when the current session is already in manage mode
 

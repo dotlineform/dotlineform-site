@@ -85,7 +85,7 @@ Likely ownership:
 - shared shell markup in `_includes/docs_viewer_shell.html`
 - shared runtime in `assets/js/docs-viewer.js`
 - shared docs-viewer CSS in `assets/css/main.css`
-- docs-management server only if a dedicated undo endpoint is preferred over reusing metadata/move writes
+- Docs management service only if a dedicated undo endpoint is preferred over reusing metadata/move writes
 - follow-up docs under the Docs Viewer management/runtime docs after implementation
 
 The implementation should preserve the current front-matter-only tree model:

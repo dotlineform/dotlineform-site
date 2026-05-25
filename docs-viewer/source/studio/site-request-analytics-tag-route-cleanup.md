@@ -85,7 +85,7 @@ Confirm every current route reference before editing:
 - dashboard links in `studio/analytics/index.md`
 - page controllers under `assets/studio/js/`
 - smoke tests and route-ready docs
-- tag reference docs under `_docs/`
+- tag reference docs under `docs-viewer/source/studio/`
 
 Acceptance checks:
 

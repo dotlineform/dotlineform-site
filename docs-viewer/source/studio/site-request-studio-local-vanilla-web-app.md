@@ -402,7 +402,7 @@ Carry forward the recent Python service-refactoring rules:
 
 Docs and generated-payload follow-through remains explicit:
 
-- source docs under `_docs/` are not the runtime payload
+- source docs under `docs-viewer/source/studio/` are not the runtime payload
 - Studio docs payloads under `assets/data/docs/scopes/studio/...` must be updated before docs output is treated as final
 - do not manually rebuild docs payloads when `bin/local-studio` or the docs watcher is expected to do it
 - if generated docs/search payloads are not rebuilt in a slice, state that in close-out

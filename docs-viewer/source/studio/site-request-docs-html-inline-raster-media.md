@@ -186,12 +186,12 @@ These risks are acceptable if the importer reports planned filenames before writ
 
 Implementation will likely touch:
 
-- `studio/docs-viewer/services/docs_html_import.py`
-- `studio/docs-viewer/services/docs_management_server.py`
-- `assets/docs-viewer/js/docs-html-import.js`
-- `assets/docs-viewer/data/ui-text.json`
-- `_docs/user-guide-docs-html-import.md`
-- `_docs/scripts-docs-management-server.md`
-- `_docs/site-request-docs-import-source-registry-media.md`
+- `docs-viewer/services/docs_html_import.py`
+- `docs-viewer/services/docs_management_server.py`
+- `docs-viewer/runtime/js/docs-html-import.js`
+- `docs-viewer/config/ui-text/ui-text.json`
+- `docs-viewer/source/studio/user-guide-docs-html-import.md`
+- `docs-viewer/source/studio/scripts-docs-management-server.md`
+- `docs-viewer/source/studio/site-request-docs-import-source-registry-media.md`
 
 If the behavior becomes part of the standard Docs Import contract, update the relevant docs and rebuild the Studio docs payload.

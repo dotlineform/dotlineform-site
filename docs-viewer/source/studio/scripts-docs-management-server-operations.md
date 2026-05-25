@@ -39,7 +39,7 @@ sort_order: 15500
 - the shared Docs Viewer probes `GET /capabilities` for generated-data reads on normal local loads and for write capability when `?mode=manage` is present
 - if the local service is unavailable, the viewer falls back to static generated JSON for normal public-style reads; manage mode stays read-only and shows a manage-mode unavailable message
 - successful source writes leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the Docs management service
-- `var/` is excluded from Jekyll because docs-management backups, logs, staged imports, and watcher-suppression markers are local operational files rather than publishable site input
+- `var/` is excluded from Jekyll because Docs Viewer management backups, logs, staged imports, and watcher-suppression markers are local operational files rather than publishable site input
 - `docs-viewer/bin/docs-viewer` serves Docs Viewer management and generated docs/search reads without starting Jekyll
 
 ## Verification

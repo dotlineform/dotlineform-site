@@ -151,8 +151,8 @@ Current live implementation sources:
 
 - `assets/studio/js/studio-modal.js`
 - `assets/studio/css/studio.css`
-- `assets/docs-viewer/js/docs-viewer-management-modals.js`
-- `assets/docs-viewer/css/docs-viewer-management.css`
+- `docs-viewer/runtime/js/docs-viewer-management-modals.js`
+- `docs-viewer/static/css/docs-viewer-management.css`
 - `_includes/docs_viewer_shell.html`
 
 Current demo implementation lives in:

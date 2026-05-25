@@ -96,7 +96,7 @@ Search-specific history belongs in:
 Add new entries to [Site Change Log](/docs/?scope=studio&doc=site-change-log).
 
 Keep older entries in dated archive child docs under the same parent when the current page becomes too long to edit comfortably.
-Use flat `_docs/*.md` files with `parent_id: site-change-log` so the docs-viewer tree remains metadata-driven.
+Use flat `docs-viewer/source/studio/*.md` files with `parent_id: site-change-log` so the docs-viewer tree remains metadata-driven.
 
 Current archive docs:
 
@@ -122,7 +122,7 @@ If a change materially affects both, add short entries to both logs.
 
 If a change is meaningful enough to alter behaviour, architecture, data contracts, or maintenance burden, update the site change log in the same change set.
 
-Do not add an entry merely because `_docs/` changed.
+Do not add an entry merely because `docs-viewer/source/studio/` changed.
 The focused owning doc should usually carry small implementation notes without promoting them into site history.
 
 ### 3. Codex writes the entry at close-out
@@ -272,5 +272,5 @@ For any meaningful non-search site or Studio change, Codex should do this before
 1. update the relevant focused docs
 2. add or revise the site change-log entry
 3. archive older site change-log entries if the current page has grown beyond the preferred compact window
-4. rebuild docs payloads if `_docs/` changed
+4. rebuild docs payloads if `docs-viewer/source/studio/` changed
 5. include the site-log update in the final summary

@@ -72,7 +72,7 @@ Current flow:
 This is a Docs Viewer management report for a read-only docs audit, not a public hosted feature.
 
 The old `/studio/docs-broken-links/` route shell and Studio page controller have been retired.
-The reusable Python audit remains under `studio/docs-viewer/services/docs_broken_links.py`, and the local Docs API endpoint remains `POST /docs/broken-links`.
+The reusable Python audit remains under `docs-viewer/services/docs_broken_links.py`, and the local Docs API endpoint remains `POST /docs/broken-links`.
 
 ## Related References
 
@@ -80,4 +80,4 @@ The reusable Python audit remains under `studio/docs-viewer/services/docs_broken
 - [Docs Viewer](/docs/?scope=studio&doc=docs-viewer)
 - [Docs Viewer Reports](/docs/?scope=studio&doc=docs-viewer-reports)
 - [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)

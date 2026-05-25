@@ -19,7 +19,7 @@ Status:
 Library hierarchy import should eventually be able to create new parent/group docs while applying an externally organized parent-child mapping.
 
 The current hierarchy apply contract allows unknown `parent_id` values and renders them as root-level relationships in generated Library docs data.
-That is useful as a safe interim behavior, but it is not enough for the intended external-organization workflow: an external service may create a better hierarchy by introducing new parent nodes that do not exist in `_docs_library/` yet.
+That is useful as a safe interim behavior, but it is not enough for the intended external-organization workflow: an external service may create a better hierarchy by introducing new parent nodes that do not exist in `docs-viewer/source/library/` yet.
 
 ## Context
 
@@ -36,7 +36,7 @@ The desired outcome:
 - new parent/group nodes are explicitly declared in the import JSON
 - apply preflight shows which source docs will be created and which existing docs will be reparented
 - apply creates backup(s) before writing
-- new docs are source-controlled Library docs under `_docs_library/`
+- new docs are source-controlled Library docs under `docs-viewer/source/library/`
 - generated Library docs data no longer needs to treat those parent ids as unresolved after apply
 
 ## Proposed Staged JSON Contract
@@ -148,7 +148,7 @@ Status:
 
 - proposed
 
-Create missing parent docs under `_docs_library/` before applying selected child parent changes, with backups and source-write allowlists.
+Create missing parent docs under `docs-viewer/source/library/` before applying selected child parent changes, with backups and source-write allowlists.
 
 ### Task 5. Add Studio UI Review
 

@@ -313,8 +313,9 @@ It is separate from the Docs Viewer web service.
 $HOME/miniconda3/bin/python3 docs-viewer/services/docs_live_rebuild_watcher.py --poll-seconds "$DOCS_WATCH_POLL_SECONDS" --debounce-seconds "$DOCS_WATCH_DEBOUNCE_SECONDS"
 ```
 
-- watches `_docs/*.md` as `studio`
-- watches `_docs_library/*.md` as `library`
+- watches `docs-viewer/source/studio/*.md` as `studio`
+- watches `docs-viewer/source/analysis/**/*.md` as `analysis`
+- watches `docs-viewer/source/library/*.md` as `library`
 - rebuilds same-scope docs payloads plus same-scope docs search after source changes
 - can be disabled with `DOCS_WATCH_ENABLED=0`
 - uses targeted docs-search updates for safe small source changes and full same-scope search rebuilds for threshold overflow or ambiguous source state

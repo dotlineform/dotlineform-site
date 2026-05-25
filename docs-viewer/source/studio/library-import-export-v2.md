@@ -128,7 +128,7 @@ The following actions are available on the data-import page:
 
 ### Update summary
 
-- sets the source `_docs_library/*.md` summary metadata field with the summary text in the staged JSON for the documents selected in the list
+- sets the source `docs-viewer/source/library/*.md` summary metadata field with the summary text in the staged JSON for the documents selected in the list
 - a confirmation modal is displayed which shows the count of documents that will be updated
 - the modal has OK and Cancel buttons
 
@@ -154,7 +154,7 @@ example:
 
 - The v2 work should start with the Import UI because the existing v1 import route, parser, preview renderer, and local service already provide enough data to reshape the page without changing source-write behavior.
 - The first import milestone should remain preview-only. Summary and hierarchy apply actions write canonical Library source and need a narrower confirmation, backup, and validation contract before they are enabled.
-- The source-write target for Library documents should be `_docs_library/*.md`, not `_docs/*.md`.
+- The source-write target for Library documents should be `docs-viewer/source/library/*.md`, not `docs-viewer/source/studio/*.md`.
 - Preview files should continue to use Markdown-style preview files under `var/studio/export-import/library/import-preview/`; they are review artifacts, not source Markdown documents.
 - Export changes are lower risk if treated as small additions to the existing data export page in Library scope: list-filter pills first, then output-format options after the export config/runtime format contract is checked.
 
@@ -168,7 +168,7 @@ example:
 - `Update summary` validation should only require that each selected `doc_id` exists as a target Library source document.
 - `Apply hierarchy` validation should only require that each selected `doc_id` exists as a target Library source document. Missing or unknown `parent_id` values are allowed, and the viewer should behave as if `parent_id` were blank.
 - `Apply hierarchy` should preserve current `sort_order` values for now.
-- Source-write actions should create timestamped backups before editing `_docs_library/*.md`, and those backups should be covered by a retention policy before write actions are enabled.
+- Source-write actions should create timestamped backups before editing `docs-viewer/source/library/*.md`, and those backups should be covered by a retention policy before write actions are enabled.
 - Export format options should expose both JSON and JSONL, with unsupported config/format combinations disabled.
 - The `no content` export filter means no body content after plain-text extraction.
 - The `not viewable` export filter means published docs that are present in generated data but hidden from the public docs viewer.
@@ -190,7 +190,7 @@ Reshape `/studio/import/` to mirror the data export page’s layout, status hand
 Expected outputs:
 
 - staged-file selector remains the first control
-- preview action remains disabled when the docs-management service is unavailable
+- preview action remains disabled when the Docs Viewer service is unavailable
 - generated preview results render in the main document list area
 - selection controls include `select all` and `clear`
 - import-action buttons are present but disabled until their service contracts exist
@@ -307,7 +307,7 @@ Expected outputs:
 - validation limited to selected `doc_id` values that do not exist as target Library source documents
 - confirmation modal with OK and Cancel
 - timestamped backup before writing source files, using the easiest compatible retention-managed backup root
-- write service endpoint constrained to `_docs_library/`
+- write service endpoint constrained to `docs-viewer/source/library/`
 - tests for missing target docs, backup creation, and write output
 
 Implementation notes:
@@ -315,7 +315,7 @@ Implementation notes:
 - Studio enables `Update summary` only after at least one document preview row is selected.
 - The browser sends selected staged `record_index` values to `POST /docs/import/apply` with `operation: "summary_apply"`; relationship-tree preview rows are not apply targets.
 - The endpoint performs a preflight when `confirm: false`, reports update, skipped, warning, and error counts, and opens a shared OK/Cancel confirmation modal only when writes are available.
-- Apply mode requires `confirm: true`, creates a timestamped `documents-summary-apply` backup bundle under the existing `var/docs/backups/` retention-managed root, then writes only selected `_docs_library/*.md` source documents.
+- Apply mode requires `confirm: true`, creates a timestamped `documents-summary-apply` backup bundle under the existing `var/docs/backups/` retention-managed root, then writes only selected `docs-viewer/source/library/*.md` source documents.
 - Validation errors are limited to selected `doc_id` values that do not resolve to current Library source docs. Missing summaries, duplicate selected ids, missing staged rows, and unchanged summaries are reported as skipped rows.
 - The write path updates only `summary`, preserves `added_date`, refreshes `last_updated`, rebuilds Library docs payloads, and runs targeted docs-search updates for changed ids.
 
@@ -344,7 +344,7 @@ Implementation notes:
 - Studio enables `Apply hierarchy` only after at least one document preview row is selected.
 - The browser sends selected staged `record_index` values to `POST /docs/import/apply` with `operation: "hierarchy_apply"`; relationship-tree preview rows are not apply targets.
 - The endpoint performs a preflight when `confirm: false`, reports changed, unchanged, skipped, warning, and error counts, and opens a shared OK/Cancel confirmation modal only when writes are available.
-- Apply mode requires `confirm: true`, creates a timestamped `documents-hierarchy-apply` backup bundle under the existing `var/docs/backups/` retention-managed root, then writes only selected `_docs_library/*.md` source documents.
+- Apply mode requires `confirm: true`, creates a timestamped `documents-hierarchy-apply` backup bundle under the existing `var/docs/backups/` retention-managed root, then writes only selected `docs-viewer/source/library/*.md` source documents.
 - Validation errors remain limited to selected `doc_id` values that do not resolve to current Library source docs. Unknown staged `parent_id` values are warnings and are allowed.
 - The write path updates only `parent_id`, preserves current `sort_order`, preserves `added_date`, refreshes `last_updated`, rebuilds Library docs payloads, and runs targeted docs-search updates for changed ids.
 - Generated Library docs data normalizes unresolved source `parent_id` values to root-level relationships so `/library/` can render the tree while preserving the imported `parent_id` in source.
@@ -359,8 +359,8 @@ Keep the v2 request, stable Library import/export docs, script docs, and generat
 
 Expected outputs:
 
-- update `_docs/library-import.md` when preview or apply behavior changes
-- update `_docs/library-export.md` when filter or format behavior changes
+- update `docs-viewer/source/studio/library-import.md` when preview or apply behavior changes
+- update `docs-viewer/source/studio/library-export.md` when filter or format behavior changes
 - update script docs if CLI or service contracts change
 - run `./scripts/build_docs.rb --scope studio --write` after docs-source changes
 - run focused parser/service/UI checks for any runtime changes
@@ -368,7 +368,7 @@ Expected outputs:
 Implementation notes:
 
 - stable Library import, Library export, docs-management, docs-import, docs-builder, Studio config, Library data-model, and change-log docs were updated as the runtime contracts changed
-- generated Studio docs-viewer payloads and Studio docs-search payloads were rebuilt after docs-source changes
+- generated Studio docs payloads and Studio docs-search payloads were rebuilt after docs-source changes
 - focused parser/service and Studio smoke checks were added or extended for each implemented runtime surface
 - Library import/export v2 now has a separate follow-up request for generated parent nodes: [Library Import Generated Parent Nodes Request](/docs/?scope=studio&doc=site-request-library-import-generated-parent-nodes)
 - The Studio export/import route shell now reads data-domain availability from `assets/studio/data/export_import_adapters.json`. Library remains the only active data domain with implemented export configs, staged-file listing, preview generation, and source-write import apply actions in this v2 task. Catalogue and Analytics are named stub adapters only; their export config shapes, source adapters, preview file expectations, and apply actions remain future work.

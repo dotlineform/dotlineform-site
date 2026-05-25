@@ -14,7 +14,7 @@ Status:
 
 - closed; priorities 1-5 are complete and the remaining candidates are deferred as low priority
 - Priority 1 catalogue write-server sequence complete; see [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server)
-- Priority 2 docs-management server sequence complete; see [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server)
+- Priority 2 Docs management service sequence complete; see [Docs Management Service Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server)
 - Priority 3 tag write-server sequence complete through Slice 8 closeout; see [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server)
 - Priority 4 generate-work-pages sequence complete; see [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages)
 - Priority 5 catalogue-json-build sequence complete; see [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build)
@@ -49,12 +49,12 @@ Small changes can therefore require broad local knowledge and can carry hidden s
 | Priority | Script | Review focus | Status or likely direction |
 |---|---|---|---|
 | 1 | `studio/services/catalogue/catalogue_write_server.py` | structural confusion around HTTP handlers, catalogue source writes, publication/delete planning, activity rows, lookup refreshes, build orchestration, prose imports, and generated cleanup | complete; final boundary recorded in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server) |
-| 2 | `studio/docs-viewer/services/docs_management_server.py` | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | complete; final boundary recorded in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server) |
+| 2 | `docs-viewer/services/docs_management_server.py` | docs source editing, generated-data reads, import/export adapters, rebuild orchestration, activity rows, and HTTP transport are tightly packed | complete; final boundary recorded in [Docs Management Service Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server) |
 | 3 | retired tag write server | Analytics tag assignment, registry, alias, import, promotion/demotion, activity, backups, and HTTP routing originally shared one service file | complete; domain owners retained and HTTP ownership moved to the local Studio analytics API |
 | 4 | `studio/services/catalogue/generate_work_pages.py` | generator internals contain source projection, validation, route stubs, aggregate indexes, recent entries, rendering, and writeback-adjacent logic | complete; final boundary recorded in [Generate Work Pages Slices](/docs/?scope=studio&doc=site-request-script-structural-review-generate-work-pages) |
 | 5 | `studio/services/catalogue/catalogue_json_build.py` | scoped build planning, media readiness, media generation, field-aware planning, and subprocess orchestration are mixed | complete; final boundary recorded in [Catalogue JSON Build Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-json-build) |
 | 6 | `scripts/audit_site_consistency.py` | audit checks can grow into a dense list of unrelated validators | deferred; low priority until audit checks become harder to maintain |
-| 7 | `studio/docs-viewer/services/docs_html_import.py`, `studio/docs-viewer/services/docs_export.py`, `studio/docs-viewer/services/docs_import.py` | import/export adapters may need clearer boundaries as Library and Docs workflows evolve | deferred; low priority until import/export requirements expand or adapter friction appears |
+| 7 | `docs-viewer/services/docs_html_import.py`, `docs-viewer/services/docs_export.py`, `docs-viewer/services/docs_import.py` | import/export adapters may need clearer boundaries as Library and Docs workflows evolve | deferred; low priority until import/export requirements expand or adapter friction appears |
 
 The line counts are a starting signal, not the decision rule.
 Files lower on the list should remain untouched unless a concrete maintenance pain appears.
@@ -67,7 +67,7 @@ The completed tracks covered the scripts with the clearest day-to-day maintenanc
 The remaining candidates stay on the watch list rather than becoming active work:
 
 - `scripts/audit_site_consistency.py` can wait until the audit surface grows enough that grouped validators or shared report contracts would clearly reduce maintenance cost.
-- `studio/docs-viewer/services/docs_html_import.py`, `studio/docs-viewer/services/docs_export.py`, and `studio/docs-viewer/services/docs_import.py` can wait until Library/Docs import-export requirements create concrete adapter friction beyond the boundaries already captured in the import/export review requests.
+- `docs-viewer/services/docs_html_import.py`, `docs-viewer/services/docs_export.py`, and `docs-viewer/services/docs_import.py` can wait until Library/Docs import-export requirements create concrete adapter friction beyond the boundaries already captured in the import/export review requests.
 
 Future work should reopen or create a narrower request for one of those candidates only when there is a specific maintenance pain, new feature requirement, or testability gap.
 
@@ -130,16 +130,16 @@ The catalogue, docs, and Analytics local APIs share several local-service concer
 This request should review whether those should become a small shared local-service utility module.
 The risk is over-generalizing too early; shared code should be introduced only where it removes repeated, well-understood mechanics without hiding service-specific safety rules.
 
-## Priority 2 Review: Docs Management Server
+## Priority 2 Review: Docs Management Service
 
-`studio/docs-viewer/services/docs_management_server.py` was reviewed around responsibility boundaries.
-The detailed implementation record lives in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
+`docs-viewer/services/docs_management_server.py` was reviewed around responsibility boundaries.
+The detailed implementation record lives in [Docs Management Service Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
 
 Status: complete through Slice 8 closeout.
 
 End result:
 
-- `studio/docs-viewer/services/docs_management_server.py` remains the Docs Viewer local-service HTTP orchestration layer
+- `docs-viewer/services/docs_management_server.py` remains the Docs Viewer local-service HTTP orchestration layer
 - the server keeps HTTP transport, request parsing, endpoint orchestration, response status mapping, backup/log dependency binding, structured import/export adapter orchestration, and Studio Activity append timing
 - endpoint path inventories, docs source-model helpers, generated Docs Viewer JSON reads, docs-specific Studio Activity construction, write/rebuild follow-through, management mutation planning, and staged source-import orchestration now have explicit module owners
 - temporary `handle_import_html(...)` wrapper layers were removed while the public `/docs/import-html` route alias remains an intentional compatibility endpoint in the route table
@@ -203,8 +203,8 @@ If the deferred candidates become painful later, create or reopen a narrower req
 Priority 1 catalogue write-server slices are tracked in [Catalogue Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-catalogue-write-server).
 That child doc records implemented Slices 1-14 and the final module ownership boundary for `studio/services/catalogue/catalogue_write_server.py`.
 
-Priority 2 docs-management server slices are tracked in [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
-That child doc records implemented Slices 1-8 and the final module ownership boundary for `studio/docs-viewer/services/docs_management_server.py`.
+Priority 2 Docs management service slices are tracked in [Docs Management Service Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
+That child doc records implemented Slices 1-8 and the final module ownership boundary for `docs-viewer/services/docs_management_server.py`.
 
 Priority 3 tag write-server slices are tracked in [Tag Write Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-tag-write-server).
 That child doc records the implemented route, activity, source-model, assignment-service, mutation-planner, promotion/demotion, write-transaction, and final handler-body closeout boundary for `studio/services/analytics/tag_write_server.py`.

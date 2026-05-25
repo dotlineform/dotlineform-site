@@ -166,7 +166,7 @@ When behavior changes, update the owning reference doc in the same change.
 
 Common follow-through:
 
-- Docs Viewer source changes under `studio/docs-viewer/source/<scope>/` require same-scope docs-viewer payload follow-through when the generated payload update is part of the slice.
+- Docs Viewer source changes under `docs-viewer/source/<scope>/` require same-scope docs-viewer payload follow-through when the generated payload update is part of the slice.
 - Search behavior or schema changes require relevant Search child docs and search payload rebuilds.
 - Script behavior changes require the script-specific child doc under [Scripts](/docs/?scope=studio&doc=scripts).
 - Config behavior changes require the owning config doc under [Config](/docs/?scope=studio&doc=config).

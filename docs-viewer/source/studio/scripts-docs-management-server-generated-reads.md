@@ -1,12 +1,12 @@
 ---
 doc_id: scripts-docs-management-server-generated-reads
-title: Docs Management Server Generated Reads
+title: Docs Management Service Generated Reads
 added_date: 2026-05-19
 last_updated: 2026-05-22
 parent_id: scripts-docs-management-server
 sort_order: 15100
 ---
-# Docs Management Server Generated Reads
+# Docs Management Service Generated Reads
 
 ## Endpoints And Behavior
 
@@ -133,7 +133,7 @@ Compatibility aliases:
 
 Generated-read behavior:
 
-- `scope` must be one of the configured scope ids in `studio/docs-viewer/config/scopes/docs_scopes.json`
+- `scope` must be one of the configured scope ids in `docs-viewer/config/scopes/docs_scopes.json`
 - responses return the raw generated JSON unchanged
 - all JSON responses include `Cache-Control: no-store`
 - index reads resolve only the configured scope output path plus `index.json`
@@ -165,13 +165,13 @@ Source-config settings endpoints:
 
 Source-config settings behavior:
 
-- reads only `studio/docs-viewer/config/scopes/docs_scopes.json` and configured generated scope indexes
+- reads only `docs-viewer/config/scopes/docs_scopes.json` and configured generated scope indexes
 - returns the allowlisted source config fields that manage-mode settings controls may edit
 - currently allowlists scoped `show_updated_date` only
 - reports blocked install-time fields such as source roots, route bases, output roots, and import media storage
 - reports deferred global fields such as `recently_added_limit`
 - validates setting changes through `docs-viewer/services/docs_source_config_settings.py`
-- writes only allowlisted source config fields back to `studio/docs-viewer/config/scopes/docs_scopes.json`
+- writes only allowlisted source config fields back to `docs-viewer/config/scopes/docs_scopes.json`
 - rebuilds the affected generated docs scope after a changed setting is saved; `show_updated_date` uses a docs-only rebuild because docs search output is unaffected
 - warns when generated `viewer_options` are stale relative to source config or when a proposed change requires a generated docs rebuild
 - rejects blocked, deferred, unsupported, malformed, or wrong-type fields

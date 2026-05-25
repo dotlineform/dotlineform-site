@@ -346,7 +346,7 @@ When omitted, the selected config's default `target.format` is used.
 The Studio page shows JSON and JSONL format options, disables unsupported config/format combinations before submission, and includes the selected format in the result modal.
 The endpoint calls the shared read-only export engine and writes only under the adapter-declared export root.
 It logs ids, counts, format, and write state, but not document body content or full export payloads.
-When the docs-management server runs with `--dry-run`, the endpoint validates and reports the target file path without writing the export file.
+When the Docs Viewer service runs the endpoint in dry-run mode, it validates and reports the target file path without writing the export file.
 
 Adapter dispatch rules:
 
@@ -414,11 +414,11 @@ Export reports should include:
 The Library export v1 runtime has three entry points around one shared export engine:
 
 - Studio page: `/studio/data-sharing/prepare/?mode=manage`
-- local service endpoint: `POST /docs/export` on `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_management_server.py`
-- CLI: `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py`
+- local service endpoint: `POST /docs/export` on the standalone Docs Viewer service
+- CLI: `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py`
 
 The Studio page is the normal interactive path.
-It loads enabled Library export configs, loads the generated Library docs index, applies the config's selection behavior, and posts the selected config plus explicit document ids to the docs-management service.
+It loads enabled Library export configs, loads the generated Library docs index, applies the config's selection behavior, and posts the selected config plus explicit document ids to the Docs Viewer service.
 The browser does not write files directly.
 
 The local service endpoint is the Studio write boundary.
@@ -469,14 +469,14 @@ Status: implemented in `assets/studio/data/library_export_configs.json`.
 
 Implement a read-only exporter that loads the selected Docs Viewer scope, applies the selected config, resolves selected `doc_id` values, writes the export file, and returns a structured report.
 
-Status: implemented by `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py`; see [Docs Export](/docs/?scope=studio&doc=scripts-docs-export).
+Status: implemented by `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py`; see [Docs Export](/docs/?scope=studio&doc=scripts-docs-export).
 
 ### Task 4. Add Source Text Extraction
 
 Add plain-text extraction from rendered Docs Viewer content for configs that include body text.
 Keep extraction deterministic and avoid including raw HTML in default exports.
 
-Status: implemented in `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py`, including config-driven image/SVG text handling.
+Status: implemented in `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py`, including config-driven image/SVG text handling.
 
 ### Task 5. Add Studio Library Export Page
 
@@ -491,20 +491,20 @@ Their config shape, source indexes, record shapes, and import actions remain fut
 
 Expose the export engine through a loopback-only Studio service endpoint with an allowlisted output directory and minimal logs.
 
-Status: implemented as `POST /docs/export` on `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_management_server.py`; the Studio data export page now runs exports through that endpoint with config-driven adapter dispatch and displays the output file, format, counts, and warnings.
+Status: implemented as `POST /docs/export` on the standalone Docs Viewer service; the Studio data export page now runs exports through that endpoint with config-driven adapter dispatch and displays the output file, format, counts, and warnings.
 
 ### Task 7. Add Validation And Reporting
 
 Validate export config shape, selected documents, output paths, and required fields.
 Return counts and warnings to the Studio UI.
 
-Status: implemented in `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py`, `POST /docs/export`, and the Studio Library export result UI.
+Status: implemented in `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py`, `POST /docs/export`, and the Studio Library export result UI.
 
 ### Task 8. Document Runtime And Config Usage
 
 Update Library, Studio, config, scripts, and data-model docs as needed once implementation begins.
 
-Status: implemented across this doc, [Docs Export](/docs/?scope=studio&doc=scripts-docs-export), [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server), [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs), [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json), [Library Scope](/docs/?scope=studio&doc=data-models-library), [Studio](/docs/?scope=studio&doc=studio), and [Scripts](/docs/?scope=studio&doc=scripts).
+Status: implemented across this doc, [Docs Export](/docs/?scope=studio&doc=scripts-docs-export), [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server), [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs), [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json), [Library Scope](/docs/?scope=studio&doc=data-models-library), [Studio](/docs/?scope=studio&doc=studio), and [Scripts](/docs/?scope=studio&doc=scripts).
 
 ### Task 9. Verify Export Workflows
 

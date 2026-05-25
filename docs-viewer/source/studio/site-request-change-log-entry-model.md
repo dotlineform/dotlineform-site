@@ -52,7 +52,7 @@ This makes the change log less useful as technical memory over time.
 - store detailed entries in a structured format optimized for validation, retrieval, and search
 - support browsing by date and domain without duplicating entry prose manually
 - keep the main Studio change log compact and readable
-- keep detailed change entries out of `_docs/` and out of the normal Studio Docs Viewer index
+- keep detailed change entries out of `docs-viewer/source/studio/` and out of the normal Studio Docs Viewer index
 - allow a change-history scope or search corpus to use weighting and filters that fit changelog lookup
 - preserve existing historical entries during migration
 - include existing Search change-log entries in the same structured history corpus
@@ -74,7 +74,7 @@ Keep two layers:
 - a compact [Site Change Log](/docs/?scope=studio&doc=site-change-log) page for recent notable changes and links into generated date/domain indexes
 - a dedicated `_docs_logs/` source root for detailed change entries
 
-Detailed entries should not be stored in `_docs/`.
+Detailed entries should not be stored in `docs-viewer/source/studio/`.
 They should be stored as structured per-entry JSON records under `_docs_logs/`.
 The records should be optimized for retrieval, search indexing, validation, and script processing rather than normal human reading in the Docs Viewer.
 
@@ -153,11 +153,11 @@ Suggested entry record:
   "subjects": ["docs payloads", "targeted rebuilds"],
   "change_request_doc_id": "site-request-docs-build-incremental",
   "related_docs": ["scripts-docs-builder", "scripts-docs-management-server"],
-  "related_files": ["studio/docs-viewer/build/build_docs.rb", "studio/docs-viewer/services/docs_write_rebuild.py"],
+  "related_files": ["studio/docs-viewer/build/build_docs.rb", "docs-viewer/services/docs_write_rebuild.py"],
   "summary": "Docs writes can rebuild explicit generated docs payload ids instead of always rebuilding full scope payloads.",
   "effect": "Small docs source writes create less generated-output churn while preserving index correctness.",
   "source": {
-    "file": "_docs/site-change-log.md",
+    "file": "docs-viewer/source/studio/site-change-log.md",
     "line": 20,
     "archive": "current"
   }
@@ -235,7 +235,7 @@ Status:
 Create the `_docs_logs/` source conventions, structured record schema, generated index structure, and search policy.
 
 V1 should treat `_docs_logs/` as the canonical source root for detailed change entries.
-The normal `_docs/` tree should keep only the compact Studio-facing summary and the request/planning docs.
+The normal `docs-viewer/source/studio/` tree should keep only the compact Studio-facing summary and the request/planning docs.
 
 Expected outputs:
 
@@ -254,7 +254,7 @@ Status:
 
 - completed
 
-Create `_docs/development-workflow.md` under [Site Docs](/docs/?scope=studio&doc=dev-home) so AGENTS.md can reference it before and during implementation work.
+Create `docs-viewer/source/studio/development-workflow.md` under [Site Docs](/docs/?scope=studio&doc=dev-home) so AGENTS.md can reference it before and during implementation work.
 Part of this work should review the current AGENTS.md content and move detailed procedural guidance into the workflow document where that guidance does not need to be read for every task.
 AGENTS.md should become more directional: it should tell Codex which workflow sections to consult for the current class of work rather than carrying every detailed rule inline.
 
@@ -403,11 +403,11 @@ That keeps the report doc and its descendants out of public navigation and publi
 
 Implementation notes:
 
-- `_docs/site-change-log.md` and the dated site archive docs are compact migration stubs.
-- `_docs/change-history-reports.md` is the manage-only report-tree root.
-- `_docs/change-history.md` uses `viewer_report: change_history` and `viewer_report_access: manage`.
+- `docs-viewer/source/studio/site-change-log.md` and the dated site archive docs are compact migration stubs.
+- `docs-viewer/source/studio/change-history-reports.md` is the manage-only report-tree root.
+- `docs-viewer/source/studio/change-history.md` uses `viewer_report: change_history` and `viewer_report_access: manage`.
 - The Studio scope lists `change-history-reports` in `manage_only_tree_root_ids`.
-- `assets/docs-viewer/js/reports/change-history-report.js` renders the v1 domain-filtered report from `_docs_logs/generated/search-index.json` via `GET /docs/generated/docs-log?projection=search-index`.
+- `docs-viewer/runtime/js/reports/change-history-report.js` renders the v1 domain-filtered report from `_docs_logs/generated/search-index.json` via `GET /docs/generated/docs-log?projection=search-index`.
 
 Additional filter granularity can be designed iteratively after the basic report is useful.
 
@@ -497,7 +497,7 @@ The scripts should not delete or rewrite the original log files until the genera
 - seeding and populating entries is expected to be Codex-driven from current context or a change request doc
 - helper scripts are useful only insofar as they support Codex-driven workflow, validation, and generated-output refresh
 - completed request docs should be updated with log-entry references when a defined closure/cleanup task calls for it
-- AGENTS.md should point to `_docs/development-workflow.md`, a [Site Docs](/docs/?scope=studio&doc=dev-home) child doc that includes this close-out behavior
+- AGENTS.md should point to `docs-viewer/source/studio/development-workflow.md`, a [Site Docs](/docs/?scope=studio&doc=dev-home) child doc that includes this close-out behavior
 - detailed procedural guidance that does not need to be loaded for every task should move from AGENTS.md into the development workflow doc, leaving AGENTS.md as a concise directional entrypoint
 
 ## Benefits And Risks

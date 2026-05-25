@@ -53,11 +53,11 @@ That does not make the tag registry, aliases, assignments, or full Studio lookup
 
 ## Docs Viewer Scopes
 
-| Scope | Canonical Source | Public Projection | Studio Projection | Owner |
+| Scope | Canonical Source | Public Projection | Local Docs Viewer Projection | Owner |
 | --- | --- | --- | --- | --- |
-| Studio docs | `studio/docs-viewer/source/studio/*.md` | none by default | `assets/data/docs/scopes/studio/`, `assets/data/search/studio/index.json`, `/docs/` manage shell payloads | [Studio Scope](/docs/?scope=studio&doc=data-models-studio), [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) |
-| Library docs | `studio/docs-viewer/source/library/*.md` | `assets/data/docs/scopes/library/`, `assets/data/search/library/index.json`, `/library/` | local manage-mode access to the same generated payloads plus data-sharing working output under `var/studio/data-sharing/library/` | [Library Scope](/docs/?scope=studio&doc=data-models-library) |
-| Analysis docs | `studio/docs-viewer/source/analysis/**/*.md` | `assets/data/docs/scopes/analysis/`, `assets/data/search/analysis/index.json`, `/analysis/` | local manage-mode access to the same generated payloads | [Analysis Scope](/docs/?scope=studio&doc=data-models-analysis) |
+| Studio docs | `docs-viewer/source/studio/*.md` | none by default | `assets/data/docs/scopes/studio/`, `assets/data/search/studio/index.json`, `<DOCS_VIEWER_BASE_URL>/docs/` manage payload reads | [Studio Scope](/docs/?scope=studio&doc=data-models-studio), [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder) |
+| Library docs | `docs-viewer/source/library/*.md` | `assets/data/docs/scopes/library/`, `assets/data/search/library/index.json`, `/library/` | local manage-mode access to the same generated payloads plus data-sharing working output under `var/studio/data-sharing/library/` | [Library Scope](/docs/?scope=studio&doc=data-models-library) |
+| Analysis docs | `docs-viewer/source/analysis/**/*.md` | `assets/data/docs/scopes/analysis/`, `assets/data/search/analysis/index.json`, `/analysis/` | local manage-mode access to the same generated payloads | [Analysis Scope](/docs/?scope=studio&doc=data-models-analysis) |
 
 Docs source files are the canonical authored content.
 Generated Docs Viewer payloads are projections of that source.
@@ -86,7 +86,8 @@ Public build configuration is part of the projection contract:
 
 - `_config.yml` is the public Jekyll build config
 - public Docs Viewer config exposes only public read-only scopes
-- `bin/local-studio` serves Studio routes, local runtime config, and management APIs
+- `bin/local-studio` serves Studio routes, local runtime config, and Studio-owned APIs
+- `docs-viewer/bin/docs-viewer` serves Docs Viewer manage mode, generated reads, Docs management APIs, and document Data Sharing endpoints
 - `bin/public-site-preview` and `bin/public-site-build` run public Jekyll preview/build paths
 
 ## Public Build Surface
@@ -101,7 +102,7 @@ The public Jekyll build should include:
 - shared public JavaScript under `assets/js/`
 - shared public CSS under `assets/css/`
 - generated or public-copied Docs Viewer runtime files required by read-only installs
-- public Docs Viewer browser config generated from `studio/docs-viewer/config/runtime/docs-viewer-public-config.json`
+- public Docs Viewer browser config generated from `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - public read-only Library route at `/library/`
 - public read-only Analysis route at `/analysis/`
 - generated Library docs payloads and search under `assets/data/docs/scopes/library/` and `assets/data/search/library/`

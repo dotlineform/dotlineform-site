@@ -9,7 +9,7 @@ viewable: false
 ---
 # panel sizes
 
-Current Docs Viewer desktop layout is defined in `assets/docs-viewer/css/docs-viewer.css`.
+Current Docs Viewer desktop layout is defined in `docs-viewer/static/css/docs-viewer.css`.
 
 Assuming default `1rem = 16px` and desktop container max width:
 

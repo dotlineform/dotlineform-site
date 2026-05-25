@@ -54,7 +54,7 @@ Current shared build conventions:
 - content-version hashing is used for write skipping
 - generated payloads stay compact and avoid body-prose indexing
 - Catalogue fields declare their source artifact family and dependency policy in `scripts/search/build_config.json`
-- Docs search policy is Docs Viewer-owned and emitted through `assets/docs-viewer/data/docs-viewer-config.json`
+- Docs search policy is Docs Viewer-owned and emitted through `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - builder code validates the relevant domain config while keeping record-generation algorithms in code
 - public search artifacts should not become operation logs; targeted-update changed-id diagnostics belong in CLI/server output or local logs, not in the artifact by default
 - keep one combined artifact per scope until payload size or browser performance proves sidecar payloads are needed
@@ -70,7 +70,7 @@ Current non-goals across all scopes:
 ## Adapter Registry And Build Config
 
 The top-level command loads `scripts/search/adapter_registry.json` to map requested scopes to domain builders.
-The registry maps `catalogue` to the Catalogue adapter and configured Docs Viewer scopes from `studio/docs-viewer/config/scopes/docs_scopes.json` to the Docs Viewer adapter.
+The registry maps `catalogue` to the Catalogue adapter and configured Docs Viewer scopes from `docs-viewer/config/scopes/docs_scopes.json` to the Docs Viewer adapter.
 
 `scripts/search/build_config.json` is now Catalogue-owned.
 Current Catalogue config responsibilities:
@@ -92,7 +92,7 @@ Current validation responsibilities in `scripts/search/build_search.rb`:
 - reject emitted entry fields that are missing from the config for the current scope
 
 The config is intentionally not a record-generation DSL. The Catalogue builder still owns field derivation, sorting, normalization, hashing, and targeted-update algorithms.
-Docs Viewer search derives scope input and output paths from `studio/docs-viewer/config/scopes/docs_scopes.json`; its `record_update` policy remains in the Docs Viewer builder and generated browser config.
+Docs Viewer search derives scope input and output paths from `docs-viewer/config/scopes/docs_scopes.json`; its `record_update` policy remains in the Docs Viewer builder and generated browser config.
 
 Current targeted policy values:
 

@@ -96,14 +96,14 @@ The exact model is open.
 
 Source root:
 
-- `_docs_analysis/`
+- `docs-viewer/source/analysis/`
 
 Generated output:
 
 - `assets/data/docs/scopes/analysis/index.json`
 - `assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
 
-The first implementation follows the existing Studio and Library docs model, with one source-layout exception: Analysis allows nested Markdown files under `_docs_analysis/`.
+The first implementation follows the existing Studio and Library docs model, with one source-layout exception: Analysis allows nested Markdown files under `docs-viewer/source/analysis/`.
 
 ## Future Family Model
 

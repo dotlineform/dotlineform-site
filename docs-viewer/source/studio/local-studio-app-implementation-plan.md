@@ -113,7 +113,7 @@ Current commit point:
 - Phase 3 now has fixture-backed UI workflow smoke coverage for Docs create, metadata edit, settings save, archive, delete preview/apply, import, drag/drop move, scope create/delete, and generated reload behavior in the local `/docs/` shell
 - Phase 3 now has public read-only smoke coverage for `/library/` and `/analysis/`
 - Phase 3 now hosts Docs Broken Links as a Docs Viewer report and has retired the old `/studio/docs-broken-links/` route shell
-- Phase 3 Docs management now uses `studio/docs-viewer/services/docs_management_service.py` as a dispatcher over focused Docs management workflow modules; the local Studio app imports that module through `studio/app/server/studio/studio_docs_api.py` instead of loading the standalone HTTP server entrypoint
+- Phase 3 Docs management now uses `docs-viewer/services/docs_management_service.py` as a dispatcher over focused Docs management workflow modules; the local Studio app imports that module through `studio/app/server/studio/studio_docs_api.py` instead of loading the standalone HTTP server entrypoint
 - Phase 4 added the local app server to the local runner and retired the separate Docs management HTTP process from default startup
 - Phase 4 now has the first analytics API route module, serving tag read data through the local app server
 - Phase 4 now has the first analytics write route, `POST /studio/api/analytics/save-tags`, through the local app server
@@ -277,7 +277,7 @@ The app-server Docs API routes live behind the dedicated `studio_docs_api.py` ad
 Capabilities now report configured scopes from the live docs scope config file, including user-created scopes that are eligible for scope lifecycle deletion.
 The adapter calls existing docs-management domain functions directly for generated reads, source-config/settings reads, import listings, data-sharing package reads, and management POST routes such as settings, create, metadata update, move, archive/delete, rebuild, scope lifecycle, import, and data sharing.
 The current moved smoke file is `docs-viewer/tests/smoke/docs_viewer_management_workflows.py`; it proves the main Docs management API workflow paths against a temporary fixture repo.
-It patches rebuild execution and Markdown validation inside the fixture so source writes are exercised without rebuilding real docs payloads, invoking Bundler/Jekyll validation, or touching real `_docs/` files.
+It patches rebuild execution and Markdown validation inside the fixture so source writes are exercised without rebuilding real docs payloads, invoking Bundler/Jekyll validation, or touching real `docs-viewer/source/studio/` files.
 The current moved smoke file is `docs-viewer/tests/smoke/docs_viewer_management_ui.py`; it proves representative UI-level management workflows against the same fixture pattern.
 It covers create, metadata edit, settings save, archive, delete preview/apply, and browser reloads of generated docs index/payload data after each source mutation.
 `docs-viewer/tests/smoke/docs_viewer_management_import_ui.py`, `docs-viewer/tests/smoke/docs_viewer_management_move_ui.py`, and `docs-viewer/tests/smoke/docs_viewer_management_scope_ui.py` cover the remaining managed UI workflows: staged import, drag/drop move, and scope create/delete.
@@ -341,7 +341,7 @@ The callable catalogue service slices now route bulk save, delete preview/apply,
 `catalogue_write_service.py` is only the dispatcher; ownership lives in focused modules such as `catalogue_bulk_service.py`, `catalogue_work_service.py`, `catalogue_work_detail_service.py`, `catalogue_series_service.py`, `catalogue_build_service.py`, `catalogue_delete_service.py`, `catalogue_moment_service.py`, and `catalogue_prose_import_service.py`, with shared plumbing in `catalogue_service_context.py`.
 The standalone `studio/services/catalogue/catalogue_write_server.py` wrapper has been removed now that Local Studio no longer depends on its handler methods.
 Active Local Studio Docs browser transport now uses `/studio/api/docs/...`; `127.0.0.1:8789` is no longer a browser fallback for migrated routes.
-The standalone Docs Management server entrypoint has been removed; Local Studio imports `studio/docs-viewer/services/docs_management_service.py` as the dispatcher for focused Docs management modules covering context, reads, capabilities, source mutations, import, Data Sharing, source opening, and broken-links audit behavior.
+The standalone Docs Management server entrypoint has been removed; Local Studio imports `docs-viewer/services/docs_management_service.py` as the dispatcher for focused Docs management modules covering context, reads, capabilities, source mutations, import, Data Sharing, source opening, and broken-links audit behavior.
 The launcher split is now explicit: `bin/local-studio` starts the local Studio app path, `bin/public-site-preview` runs public Jekyll preview with `_config.yml`, and `bin/public-site-build` runs public Jekyll builds with `_config.yml`.
 `bin/dev-studio` has been retired.
 
@@ -354,7 +354,7 @@ Transition cleanup backlog:
 | Retire or archive `studio/services/analytics/tag_write_server.py` as an HTTP entrypoint while keeping reusable analytics domain modules. | No migrated UI or fallback/debug workflow needs the standalone tag write HTTP process. | done |
 | Stop the local runner from starting `studio/app/server/studio/audit_service.py`. | The local app server owns the active Studio audit HTTP endpoints. | done |
 | Remove old `127.0.0.1:8789` Docs Management fallbacks from active Studio browser transport and route smokes. | Local Studio Docs management and Data Sharing routes are served through `/studio/api/docs/...`. | done |
-| Extract Docs Management reusable behavior out of the standalone HTTP server entrypoint. | The local Studio app needs Docs management behavior without depending on an old sibling server module. | done; `studio/docs-viewer/services/docs_management_service.py` dispatches to focused `docs_management_*_service.py` workflow modules |
+| Extract Docs Management reusable behavior out of the standalone HTTP server entrypoint. | The local Studio app needs Docs management behavior without depending on an old sibling server module. | done; `docs-viewer/services/docs_management_service.py` dispatches to focused `docs_management_*_service.py` workflow modules |
 | Remove the standalone Docs Management HTTP entrypoint. | No active workflow needs to exercise Docs management outside Local Studio. | done |
 | Remove hardcoded old tag write URLs from tests and browser module fixtures. | Runtime-config endpoints cover the migrated routes and fallback compatibility is no longer required. | done; remaining 8787 references are negative assertions only |
 | Remove static JSON fallbacks for analytics tag data from migrated local-only views where the fallback no longer serves a Jekyll-hosted page. | The corresponding view no longer runs in Jekyll and public output has no Studio shell for it. | done |
@@ -444,7 +444,7 @@ Next steps:
 Use this phase to make the same-repo source/projection boundary explicit.
 The manifest-backed implementation slice is complete for the current scope: [Projection Contract](/docs/?scope=studio&doc=data-models-projection-contract) defines the current canonical source, public projection, Studio projection, and Docs Viewer payload families.
 The implementation direction is to use machine-readable `studio/checks/projection_contract.json` as the Phase 6 source of truth.
-Existing domain configs should keep their current domain responsibilities: Docs Viewer scope build details stay in `studio/docs-viewer/config/scopes/docs_scopes.json`, search source-family behavior stays in `scripts/search/build_config.json`, catalogue build scoping stays in the catalogue field registry, and `_config.yml` stays the public Jekyll build config.
+Existing domain configs should keep their current domain responsibilities: Docs Viewer scope build details stay in `docs-viewer/config/scopes/docs_scopes.json`, search source-family behavior stays in `scripts/search/build_config.json`, catalogue build scoping stays in the catalogue field registry, and `_config.yml` stays the public Jekyll build config.
 The projection contract manifest should own cross-domain classification, public-build policy, source-only leak rules, owner docs, and check coverage.
 The manifest schema, first full-family population, validation check, public-build audit integration, and public template/script source-reference audit are now in place.
 The source-reference audit also removed the old public work-page JavaScript branch that reconstructed `/studio/studio-works/` on the public-site host.

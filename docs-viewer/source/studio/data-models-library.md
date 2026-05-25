@@ -26,7 +26,7 @@ The Library scope is currently docs-only.
 Current source and generated artifacts:
 
 - source docs:
-  - `_docs_library/*.md`
+  - `docs-viewer/source/library/*.md`
 - generated docs data:
   - `assets/data/docs/scopes/library/index.json`
   - `assets/data/docs/scopes/library/by-id/<doc_id>.json`
@@ -53,7 +53,7 @@ Current public route:
 
 ## Source Model
 
-### `_docs_library/*.md`
+### `docs-viewer/source/library/*.md`
 
 Purpose:
 
@@ -151,7 +151,7 @@ Generated output:
 Current model:
 
 - configs read generated Library Docs Viewer index and per-doc payload data
-- configs do not mutate `_docs_library/*.md`
+- configs do not mutate `docs-viewer/source/library/*.md`
 - export files are ignored by git and are safe to delete
 - export files are reproducible from generated Library docs data, the selected config, and the selected document ids
 - document body export uses plain text derived from rendered `content_html`; default exports should not expose raw rendered HTML
@@ -185,23 +185,23 @@ Preview output:
 Current model:
 
 - staged files are ignored by git and are safe to delete
-- import v1 reads staged data files but does not mutate `_docs_library/*.md`
+- import v1 reads staged data files but does not mutate `docs-viewer/source/library/*.md`
 - the read-only parser accepts Library export-shaped data and minimal document-like JSON/JSONL rows
 - unknown file-level and record-level metadata is preserved in parser reports
 - parser reports compare staged records with the current generated Library docs index and generated payload filenames
-- Markdown preview files are generated only when `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py --write-previews` is used
+- Markdown preview files are generated only when `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --write-previews` is used
 - summary and full-content imports write one preview file per parsed document
 - relationship imports write one whole-tree preview file per staged relationships file
-- summary apply can update selected source `summary` values through the docs-management service after preflight and confirmation
-- hierarchy apply can update selected source `parent_id` values through the docs-management service after preflight and confirmation; current `sort_order` values are preserved
+- summary apply can update selected source `summary` values through the Docs Viewer service after preflight and confirmation
+- hierarchy apply can update selected source `parent_id` values through the Docs Viewer service after preflight and confirmation; current `sort_order` values are preserved
 - hierarchy apply allows unresolved imported `parent_id` values as warnings; generated Library docs data treats those unresolved parents as root-level relationships
 
 Current consumers:
 
-- `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py`
-- `GET /docs/import/files` on the docs-management server
-- `POST /docs/import/preview` on the docs-management server
-- `POST /docs/import/apply` on the docs-management server
+- `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py`
+- `GET <DOCS_VIEWER_BASE_URL>/docs/import/files`
+- `POST <DOCS_VIEWER_BASE_URL>/docs/import/preview`
+- `POST <DOCS_VIEWER_BASE_URL>/docs/import/apply`
 - `/studio/data-sharing/review/?mode=manage`
 
 Current limits:

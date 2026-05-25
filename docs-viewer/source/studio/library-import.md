@@ -21,7 +21,7 @@ The first goal is not to write canonical Library source.
 The first goal is to turn staged JSON or JSONL files into human-readable Markdown preview documents so the user can compare:
 
 - the staged data file
-- the current canonical source under `_docs_library/`
+- the current canonical source under `docs-viewer/source/library/`
 - the current rendered Library Docs Viewer output
 - any external edits, summaries, or relationship recommendations contained in the staged file
 
@@ -48,7 +48,7 @@ It should:
 - parse minimal hand-authored JSON or JSONL files when they contain document-like records
 - generate Markdown preview files under a repo-local `var/` preview folder
 - show staged-file choices, document preview rows, operation counts, and report issues in Studio
-- keep canonical `_docs_library/` files unchanged
+- keep canonical `docs-viewer/source/library/` files unchanged
 
 It should not:
 
@@ -254,7 +254,7 @@ Imported summaries should be treated as proposed replacement summaries until exp
 
 Potential later apply flows:
 
-- summary import apply: write `summary` into `_docs_library/*.md`
+- summary import apply: write `summary` into `docs-viewer/source/library/*.md`
 - relationship recommendation review: present proposed parent changes, but apply only after a dedicated tree editor or diff workflow exists
 - full content import apply: likely requires a much stronger Markdown round-trip and diff review story before source writes are safe
 
@@ -307,7 +307,7 @@ Implement a parser that reads staged `.json` and `.jsonl` files, detects support
 
 The parser should not write source docs.
 
-Status: implemented in `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py`.
+Status: implemented in `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py`.
 The parser reads only from `var/studio/data-sharing/library/import-staging/`, supports JSON envelopes, JSON arrays, and JSONL document rows, detects the three v1 Library export families or minimal document records, preserves unknown file and record metadata in the report, and treats malformed records as warnings where parsing can continue.
 It does not render Markdown previews or write any output files.
 
@@ -317,7 +317,7 @@ Load the generated Library Docs Viewer index and report staged records against c
 
 This task should keep file-level blockers narrow and treat record-level problems as report warnings unless parsing cannot continue.
 
-Status: implemented in `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py`.
+Status: implemented in `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py`.
 The parser now loads `assets/data/docs/scopes/library/index.json` plus generated payload filenames under `assets/data/docs/scopes/library/by-id/`, adds current-Library summary data to the report, annotates normalized records with current existence, publication, viewability, payload, and parent state, and reports lookup problems as warnings.
 Current-Library lookup warnings include unknown `doc_id`, unpublished current records, missing generated payloads, missing parent ids, unpublished parents, and parents without generated payloads.
 If the current index is missing or unreadable, parsing still proceeds and the index problem is reported as a warning.
@@ -335,7 +335,7 @@ All import types should generate one Markdown file per parsed document.
 When relationship metadata is present, the renderer should also generate one whole-tree preview file containing the candidate hierarchy.
 Source-file provenance and diagnostics should remain in the Studio report.
 
-Status: implemented in `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py`.
+Status: implemented in `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py`.
 The parser can now render Markdown preview files with `--write-previews`.
 Imports write one file per parsed document under `var/studio/data-sharing/library/import-preview/`, using `<doc_id>-<timestamp>.md`, `<doc_id>-record-<n>-<timestamp>.md` for duplicate ids, and `record-<n>-<timestamp>.md` for missing ids.
 The timestamp comes from the staged filename suffix when present, otherwise from the current preview-generation time.
@@ -344,7 +344,7 @@ Preview files include front-matter-like matched-config, staged-only, and preview
 
 ### Task 5. Add Local Service Endpoints
 
-Expose staged-file listing and preview generation through the docs-management local service.
+Expose staged-file listing and preview generation through the Docs Viewer local service.
 
 Likely endpoints:
 
@@ -354,7 +354,7 @@ Likely endpoints:
 
 Endpoint logs should include filenames, counts, status, and preview paths, not full document content.
 
-Status: implemented in `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_management_server.py`.
+Status: implemented through the standalone Docs Viewer service in `docs-viewer/services/docs_viewer_service.py`.
 `GET /docs/import/files?data_domain=library` lists staged `.json` and `.jsonl` files through the configured `documents` adapter path for Library.
 `POST /docs/import/preview` parses the selected staged file through the configured `documents` adapter, runs current generated-doc lookup for Library, renders Markdown previews through the shared import engine, writes previews in normal server mode, and reports planned previews without writing when the server is running with `--dry-run`.
 The endpoint returns the same structured report as the CLI and logs only scope, staged filename, dry-run state, import type, counts, issue counts, and preview paths.
@@ -390,8 +390,8 @@ Status note:
 - enables `Update summary` and `Apply hierarchy` for selected document preview rows
 - keeps `Update summary` and `Apply hierarchy` disabled outside the Library scope until those source-write contracts exist
 - keeps all staged-file, preview, and apply controls disabled for future stub adapters
-- runs a preflight through `POST /docs/import/apply` with `operation: "summary_apply"`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected summary changes only to `_docs_library/*.md`
-- runs a preflight through `POST /docs/import/apply` with `operation: "hierarchy_apply"`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected `parent_id` changes only to `_docs_library/*.md`
+- runs a preflight through `POST /docs/import/apply` with `operation: "summary_apply"`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected summary changes only to `docs-viewer/source/library/*.md`
+- runs a preflight through `POST /docs/import/apply` with `operation: "hierarchy_apply"`, shows an OK/Cancel confirmation modal, creates a timestamped backup, and applies selected `parent_id` changes only to `docs-viewer/source/library/*.md`
 - preserves current `sort_order` values when applying hierarchy changes
 - allows unknown staged `parent_id` values as warnings; generated Library docs data treats unresolved parent ids as root-level relationships
 - keeps the route disabled when the docs-management local service is unavailable
@@ -426,7 +426,7 @@ Parser and renderer coverage for JSONL parsing, JSON envelope parsing, minimal J
 Local service handler coverage for staged-file listing, preview writing, dry-run preview reporting, non-Library scope rejection, summary-apply missing target docs, backup creation, skipped rows, hierarchy missing target docs, hierarchy backup creation, unknown parent warnings, partial selections, no-write dry runs, and source write output is implemented in `docs-viewer/tests/python/test_docs_import_service.py`.
 A light Studio smoke test for the page shell and unavailable-service behavior is implemented in `studio/tests/smoke/data_sharing_review.py`.
 The `docs` profile in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` runs the parser and local service checks.
-The `studio-smoke` profile builds the site to a temporary Jekyll destination and runs data import route smokes with the docs-management service blocked and with mocked Library preview, summary-apply, and hierarchy-apply responses.
+The `studio-smoke` profile builds the site to a temporary Jekyll destination and runs data import route smokes with the Docs Viewer service blocked and with mocked Library preview, summary-apply, and hierarchy-apply responses.
 
 ### Task 9. Decide Summary Apply Scope
 

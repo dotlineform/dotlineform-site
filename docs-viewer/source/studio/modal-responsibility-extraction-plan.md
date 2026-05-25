@@ -76,8 +76,8 @@ Route controllers or opener commands should continue to own:
 
 Review and extract modal responsibilities from these files:
 
-- `assets/docs-viewer/js/docs-viewer-management.js`
-- `assets/docs-viewer/js/docs-html-import.js`
+- `docs-viewer/runtime/js/docs-viewer-management.js`
+- `docs-viewer/runtime/js/docs-html-import.js`
 - `assets/studio/js/tag-studio.js`
 - `assets/studio/js/tag-registry.js`
 - `assets/studio/js/tag-aliases.js`
@@ -92,7 +92,7 @@ Add files if the inventory finds additional modal behavior.
 
 Additional files found during implementation inventory:
 
-- `assets/docs-viewer/js/docs-viewer-management-modals.js`
+- `docs-viewer/runtime/js/docs-viewer-management-modals.js`
 - `assets/studio/js/catalogue-editor-action-modals.js`
 - `assets/studio/js/catalogue-work-editor-modals.js`
 - `assets/studio/js/tag-studio-modals.js`
@@ -123,17 +123,17 @@ Additional files found during implementation inventory:
 
 Completed slices:
 
-- Extracted the Docs HTML import filename-conflict modal from `assets/docs-viewer/js/docs-html-import.js` into `assets/docs-viewer/js/docs-html-import-modals.js`.
+- Extracted the Docs HTML import filename-conflict modal from `docs-viewer/runtime/js/docs-html-import.js` into `docs-viewer/runtime/js/docs-html-import-modals.js`.
   The modal module now owns the transient host, shell/actions rendering, local replacement `doc_id` validation, focus entry, Escape/cancel behavior, and result object construction.
   The import route still owns status messaging, import retries, overwrite confirmation payloads, service calls, and route busy state.
 - Replaced native Studio catalogue action confirmations in `assets/studio/js/catalogue-work-actions.js`, `assets/studio/js/catalogue-work-detail-actions.js`, `assets/studio/js/catalogue-series-actions.js`, and `assets/studio/js/catalogue-moment-actions.js`.
   These routes now use `assets/studio/js/catalogue-editor-action-modals.js`, a small transient confirmation wrapper over `openConfirmModal()`.
   The helper owns body-line normalization and the modal confirmation result; the route action modules still own prose import, publication, delete, service calls, status updates, and navigation.
-- Replaced Docs Viewer management native browser dialogs in `assets/docs-viewer/js/docs-viewer-management.js`.
-  The route now uses `assets/docs-viewer/js/docs-viewer-management-modals.js` for transient confirm, text-input, and choice modals covering make-viewable parent/descendant decisions, new doc title entry, archive confirmation, and delete confirmation.
+- Replaced Docs Viewer management native browser dialogs in `docs-viewer/runtime/js/docs-viewer-management.js`.
+  The route now uses `docs-viewer/runtime/js/docs-viewer-management-modals.js` for transient confirm, text-input, and choice modals covering make-viewable parent/descendant decisions, new doc title entry, archive confirmation, and delete confirmation.
   The modal module owns shell rendering, focus entry and return, Escape/cancel behavior, local text/choice result collection, and delete preview body formatting.
   The management controller still owns create, archive, delete, viewability writes, service calls, busy state, messages, context menu behavior, and index reloads.
-- Extracted the Docs Viewer management embedded modal lifecycle slice from `assets/docs-viewer/js/docs-viewer-management.js` into `assets/docs-viewer/js/docs-viewer-management-modals.js`.
+- Extracted the Docs Viewer management embedded modal lifecycle slice from `docs-viewer/runtime/js/docs-viewer-management.js` into `docs-viewer/runtime/js/docs-viewer-management-modals.js`.
   The modal module now owns metadata modal open/close/focus behavior, metadata status option rendering, metadata parent picker popup state/rendering/keyboard selection, import modal cancel-button insertion and close behavior, settings modal shell/status/warning state, embedded modal root-click/Escape handling, and modal form/control listener wiring.
   The management controller still owns metadata payload validation and save decisions, parent option source data, settings config read/write service calls, import modal module initialization, route busy state, route messages, context/manage action menus, index reloads, and navigation.
 - Extracted the Series Tags offline session and import modal rendering from `assets/studio/js/series-tags.js` into `assets/studio/js/series-tags-modals.js`.
@@ -193,7 +193,7 @@ Completed slices:
 
 Inventory notes:
 
-- No `window.prompt()`, `window.confirm()`, or `window.alert()` uses remain under `assets/studio/js` or `assets/docs-viewer/js` after this slice.
+- No `window.prompt()`, `window.confirm()`, or `window.alert()` uses remain under `assets/studio/js` or `docs-viewer/runtime/js` after this slice.
 - The catalogue action modules were added to the extraction file set because native confirmation dialogs lived outside the original modal file list.
 - Final route-file scan found no remaining avoidable modal rendering or lifecycle bulk in the audited route/controllers. Remaining modal references are route bridge calls into extracted modal modules or shared transient modal helpers, with route-owned copy/payload/service decisions preserved.
 - `assets/studio/js/studio-modal.js` remains the shared transient modal and frame helper. It is intentionally not extracted further in this plan; it is the next pattern-redesign target.

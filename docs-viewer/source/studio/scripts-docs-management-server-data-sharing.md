@@ -1,12 +1,12 @@
 ---
 doc_id: scripts-docs-management-server-data-sharing
-title: Docs Management Server Data Sharing
+title: Docs Management Service Data Sharing
 added_date: 2026-05-19
 last_updated: 2026-05-19
 parent_id: scripts-docs-management-server
 sort_order: 15300
 ---
-# Docs Management Server Data Sharing
+# Docs Management Service Data Sharing
 
 `POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare` expects:
 
@@ -84,7 +84,7 @@ Import preview behavior:
 Runtime role:
 
 - this endpoint is the browser-to-filesystem boundary for import preview files
-- it does not mutate `_docs_library/*.md`
+- it does not mutate `docs-viewer/source/library/*.md`
 - it does not apply summaries, relationship recommendations, or full-content changes to canonical source
 - generated preview files are local working artifacts for Studio review
 - unconfigured data domains fail closed instead of falling back to document parsing
@@ -110,7 +110,7 @@ Library import summary-apply behavior:
 - `record_indices` must be a non-empty list of selected staged record indexes
 - `confirm: false` runs a non-writing preflight and reports selected rows, updates, skipped rows, warnings, errors, and counts
 - `confirm: true` applies the selected summary updates when the preflight has no blocking errors
-- selected rows map back to parsed staged records by `record_index`, then to current source docs loaded from `_docs_library/`
+- selected rows map back to parsed staged records by `record_index`, then to current source docs loaded from `docs-viewer/source/library/`
 - only selected missing target source docs are blocking errors
 - selected rows with missing staged records, missing `doc_id`, duplicate `doc_id`, missing summary text, or unchanged summary text are skipped
 - source writes update only `summary`, preserve or initialize `added_date`, and refresh `last_updated`
@@ -146,7 +146,7 @@ Library import hierarchy-apply behavior:
 - `record_indices` must be a non-empty list of selected staged record indexes
 - `confirm: false` runs a non-writing preflight and reports selected rows, changed rows, unchanged rows, skipped rows, warnings, errors, and counts
 - `confirm: true` applies the selected `parent_id` updates when the preflight has no blocking errors
-- selected rows map back to parsed staged records by `record_index`, then to current source docs loaded from `_docs_library/`
+- selected rows map back to parsed staged records by `record_index`, then to current source docs loaded from `docs-viewer/source/library/`
 - only selected missing target source docs are blocking errors
 - selected rows with missing staged records, missing `doc_id`, duplicate `doc_id`, or self-parent ids are skipped
 - unknown non-empty staged `parent_id` values are warnings and are allowed

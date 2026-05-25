@@ -29,7 +29,7 @@ The project target is a risk score of 4 or lower for normal browser JavaScript f
 - A score of 4 remains the normal acceptable target: maintenance, structural, performance, and architectural risk are each present but low.
 - A category score of 0 is allowed only when that risk dimension is materially absent or inapplicable for a physically achievable reason.
 
-`assets/docs-viewer/js/docs-viewer.js` is tracked separately because it is the shared Docs Viewer entry runtime and needs its own feature-driven mitigation path.
+`docs-viewer/runtime/js/docs-viewer.js` is tracked separately because it is the shared Docs Viewer entry runtime and needs its own feature-driven mitigation path.
 
 ## Risk Categories
 

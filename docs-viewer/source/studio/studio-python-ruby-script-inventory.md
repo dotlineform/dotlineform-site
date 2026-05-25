@@ -63,7 +63,7 @@ Measured on 2026-05-19:
 - Largest individual script: `studio/services/catalogue/catalogue_write_server.py`
 
 The script surface is now better structured than the raw size suggests.
-The previous structural-review work extracted major catalogue write-server, docs-management server, tag write-server, generator, and scoped-build responsibilities into named module owners.
+The previous structural-review work extracted major catalogue write-server, Docs management service, tag write-server, generator, and scoped-build responsibilities into named module owners.
 The remaining risk is less about one obvious file to split and more about keeping future changes inside the right owner, reducing repeated rebuild work, and standardizing command and service mechanics.
 
 ## Family Risk Matrix
@@ -127,12 +127,12 @@ Immediate work signal: high.
 Relevant files:
 
 - `studio/docs-viewer/build/build_docs.rb`
-- `studio/docs-viewer/services/docs_html_import.py`
-- `studio/docs-viewer/services/docs_export.py`
-- `studio/docs-viewer/services/docs_import.py`
-- `studio/docs-viewer/services/docs_management_mutations.py`
-- `studio/docs-viewer/services/docs_management_server.py`
-- `studio/docs-viewer/services/docs_live_rebuild_watcher.py`
+- `docs-viewer/services/docs_html_import.py`
+- `docs-viewer/services/docs_export.py`
+- `docs-viewer/services/docs_import.py`
+- `docs-viewer/services/docs_management_mutations.py`
+- `docs-viewer/services/docs_management_server.py`
+- `docs-viewer/services/docs_live_rebuild_watcher.py`
 - `studio/docs-viewer/build/build_search.rb`
 
 Docs have the clearest cross-language ownership risk.
@@ -195,7 +195,7 @@ Immediate work signal: medium for maintainability, high for performance when med
 Relevant files:
 
 - `studio/services/catalogue/catalogue_write_server.py`
-- `studio/docs-viewer/services/docs_management_server.py`
+- `docs-viewer/services/docs_management_server.py`
 - `studio/app/server/studio/studio_audit_api.py`
 - `studio/app/server/studio/audit_runner.py`
 - `scripts/script_logging.py`
@@ -247,14 +247,14 @@ Immediate work signal: medium.
 | File | Lines | Maintenance | Structure and consistency | Performance | Notes |
 | --- | ---: | --- | --- | --- | --- |
 | `studio/services/catalogue/catalogue_write_server.py` | 3,149 | high | medium | medium | Still large, but now primarily HTTP orchestration after earlier extraction. Avoid adding domain planning back into this file. |
-| `studio/docs-viewer/services/docs_html_import.py` | 2,008 | high | medium | medium | Large conversion surface with HTML, Markdown, package, media, and preview behavior. Watch as import requirements expand. |
+| `docs-viewer/services/docs_html_import.py` | 2,008 | high | medium | medium | Large conversion surface with HTML, Markdown, package, media, and preview behavior. Watch as import requirements expand. |
 | `studio/services/catalogue/generate_work_pages.py` | 1,769 | high | medium | high | Generator orchestration remains broad. Keep new payload shaping in extracted generation modules. |
 | `studio/docs-viewer/build/build_docs.rb` | 1,516 | high | medium | medium | Central Ruby docs builder. Targeted payload input and diagnostics are implemented; future risk is dependency-rule drift across builder, watcher, and management callers. |
 | `studio/checks/audit_site_consistency.py` | 1,358 | medium | medium | medium | Broad audit surface. Grouping matters more than splitting by line count. |
-| `studio/docs-viewer/services/docs_export.py` | 1,250 | medium | medium | medium | Export adapter grows with Data Sharing requirements. Keep profile/config behavior explicit. |
+| `docs-viewer/services/docs_export.py` | 1,250 | medium | medium | medium | Export adapter grows with Data Sharing requirements. Keep profile/config behavior explicit. |
 | `studio/services/analytics/tags_data_sharing_adapter.py` | 1,249 | medium | medium | low | Data Sharing apply paths should remain adapter-owned and directly tested. |
 | `studio/services/catalogue/catalogue_build_media.py` | 1,184 | medium | medium | high | Local media planning/execution is a concrete performance improvement candidate. |
-| `studio/docs-viewer/services/docs_import.py` | 1,182 | medium | medium | medium | Returned-package parsing and preview writing should stay separated from source-apply services. |
+| `docs-viewer/services/docs_import.py` | 1,182 | medium | medium | medium | Returned-package parsing and preview writing should stay separated from source-apply services. |
 
 ## How To Rerun
 
@@ -310,5 +310,5 @@ A large file can be low performance risk if it is rarely run, and a small file c
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Docs Semantic References Request](/docs/?scope=studio&doc=site-request-docs-semantic-references)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)

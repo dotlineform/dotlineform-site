@@ -17,14 +17,14 @@ python3 $HOME/miniconda3/bin/python3 studio/checks/css_token_audit.py
 
 ## Optional Flags
 
-- `--md-out _docs/css-audit-latest.md`: override Markdown output path
+- `--md-out docs-viewer/source/studio/css-audit-latest.md`: override Markdown output path
 - `assets/css/main.css assets/studio/css/studio.css`: optional file-list override
 
 ## Behavior
 
 - scans CSS for `font-size` declarations and color literals
 - reports repeated raw typography values and direct color literals
-- writes the current snapshot to `_docs/css-audit-latest.md`
+- writes the current snapshot to `docs-viewer/source/studio/css-audit-latest.md`
 
 ## Source And Target Artifacts
 
@@ -37,7 +37,7 @@ Source artifacts:
 
 Target artifact:
 
-- Markdown audit snapshot at `_docs/css-audit-latest.md` by default
+- Markdown audit snapshot at `docs-viewer/source/studio/css-audit-latest.md` by default
 - or the path passed through `--md-out`
 
 ## Related References

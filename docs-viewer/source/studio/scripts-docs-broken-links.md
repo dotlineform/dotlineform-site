@@ -11,7 +11,7 @@ sort_order: 19000
 Script:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_broken_links.py --scope studio
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_broken_links.py --scope studio
 ```
 
 ## Purpose
@@ -58,13 +58,13 @@ Current model:
 Human-readable summary:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_broken_links.py --scope studio
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_broken_links.py --scope studio
 ```
 
 JSON output:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_broken_links.py --scope library --json
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_broken_links.py --scope library --json
 ```
 
 Flags:
@@ -89,5 +89,5 @@ That keeps the browser report thin while leaving the audit reusable from the ter
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
 - [Docs Broken Links](/docs/?scope=studio&doc=docs-broken-links)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)

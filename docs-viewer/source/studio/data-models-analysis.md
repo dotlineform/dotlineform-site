@@ -18,7 +18,7 @@ The Analysis scope is currently docs-only.
 Current checked-in artifacts:
 
 - source docs:
-  - `_docs_analysis/**/*.md`
+  - `docs-viewer/source/analysis/**/*.md`
 - generated docs data:
   - `assets/data/docs/scopes/analysis/index.json`
   - `assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
@@ -31,7 +31,7 @@ Current public route:
 
 ## Source Model
 
-### `_docs_analysis/**/*.md`
+### `docs-viewer/source/analysis/**/*.md`
 
 Purpose:
 
@@ -47,8 +47,8 @@ Current design:
 
 Expected future source-folder conventions:
 
-- `_docs_analysis/series/series-<series_id>.md`
-- `_docs_analysis/works/work-<work_id>.md`
+- `docs-viewer/source/analysis/series/series-<series_id>.md`
+- `docs-viewer/source/analysis/works/work-<work_id>.md`
 
 Those folders are a source-organisation affordance for future UI lookup and generation helpers. They are not the primary viewer navigation model.
 

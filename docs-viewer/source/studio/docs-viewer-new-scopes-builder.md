@@ -21,7 +21,7 @@ The New Scopes Builder is the local-management workflow for creating and deletin
 It should:
 
 - create the same files a developer would otherwise create by hand
-- keep all write behavior behind the loopback docs-management server
+- keep all write behavior behind the loopback Docs Viewer service
 - preserve public read-only routes
 - show the planned write or delete set before any write
 - record ownership in a scope manifest so deletion can fail closed
@@ -31,17 +31,17 @@ It should:
 A Docs Viewer scope is made from four parts:
 
 - source root, such as `_docs_research/`
-- scope config entry in `studio/docs-viewer/config/scopes/docs_scopes.json`
+- scope config entry in `docs-viewer/config/scopes/docs_scopes.json`
 - generated viewer/search outputs under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/`
 - optional read-only route page, such as `research/index.md`
 
-The localhost docs-management server may create or update those files.
+The localhost Docs Viewer service may create or update those files.
 The public browser runtime must not.
 
 Scope creation should run only through:
 
 - `/docs/?mode=manage`
-- the loopback docs-management server
+- the loopback Docs Viewer service
 - explicit write allowlists in the server
 - normal rebuild commands after the write
 
@@ -70,7 +70,7 @@ permalink: /research/
 
 Use `docs_viewer_management_route.html` only for the local management shell.
 In this repo, that route is `/docs/`.
-The adapter requires `docs_viewer_management_enabled: true`; public builds leave the flag false and receive the read-only shell, while Local Studio serves `/docs/` management through the Python app server.
+The adapter requires `docs_viewer_management_enabled: true`; public builds leave the flag false and receive the read-only shell, while the standalone Docs Viewer service serves `/docs/` management locally.
 
 The management shell can switch scopes with the `scope` query parameter.
 Public read-only routes ignore and normalize away `scope` and `mode` so they cannot become management routes by query string.
@@ -84,7 +84,7 @@ Use this option when the scope should become part of the published static site.
 Create and commit:
 
 - source root and Markdown files
-- `studio/docs-viewer/config/scopes/docs_scopes.json` entry
+- `docs-viewer/config/scopes/docs_scopes.json` entry
 - read-only route page
 - generated docs/search JSON if the repo tracks generated outputs for the site
 
@@ -99,7 +99,7 @@ Use this option when the scope should be available to local developers or Codex 
 Create and commit:
 
 - source root and Markdown files
-- `studio/docs-viewer/config/scopes/docs_scopes.json` entry
+- `docs-viewer/config/scopes/docs_scopes.json` entry
 - generated docs/search JSON if local workflows expect checked-in generated data
 
 Do not create a public read-only route page.
@@ -127,17 +127,17 @@ The management UI should label this mode as local-only and make the write set vi
 
 The scope lifecycle workflow now has server-side preview/apply endpoints and a management UI entry point:
 
-- `studio/docs-viewer/config/scopes/docs_scope_manifest.json` records existing scopes as system-owned
-- `studio/docs-viewer/services/docs_scope_manifest.py` owns manifest loading, backfill, validation, and preview planning
+- `docs-viewer/config/scopes/docs_scope_manifest.json` records existing scopes as system-owned
+- `docs-viewer/services/docs_scope_manifest.py` owns manifest loading, backfill, validation, and preview planning
 - `GET /capabilities` advertises scope lifecycle preview and apply support
 - `POST /docs/scopes/create-preview` reports a validated create write set
 - `POST /docs/scopes/create-apply` creates allowlisted scope files after explicit confirmation
 - `POST /docs/scopes/delete-preview` reports a manifest-backed delete plan and blocks system scopes
 - `POST /docs/scopes/delete-apply` deletes eligible user-created scopes after explicit confirmation
 - the `/docs/?mode=manage` Actions menu exposes capability-gated `New scope` and `Delete scope` commands
-- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js` owns the create/delete modal flows
-- `assets/docs-viewer/js/docs-viewer-management.js` remains the management command coordinator
-- `assets/docs-viewer/js/docs-viewer-management-client.js` owns the scope lifecycle endpoint wrappers
+- `docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js` owns the create/delete modal flows
+- `docs-viewer/runtime/js/docs-viewer-management.js` remains the management command coordinator
+- `docs-viewer/runtime/js/docs-viewer-management-client.js` owns the scope lifecycle endpoint wrappers
 
 The stable documentation still needs a final pass after hands-on use, but the core lifecycle UI and server contracts are implemented.
 
@@ -145,7 +145,7 @@ The stable documentation still needs a final pass after hands-on use, but the co
 
 Manifest file:
 
-- `studio/docs-viewer/config/scopes/docs_scope_manifest.json`
+- `docs-viewer/config/scopes/docs_scope_manifest.json`
 
 Schema version:
 
@@ -196,7 +196,7 @@ Future created scopes must set both `user_created: true` and `created_by_tool: t
     "delete_preview": true,
     "delete_apply": true,
     "publishing_modes": ["public_readonly", "local_committed", "local_uncommitted"],
-    "manifest_path": "studio/docs-viewer/config/scopes/docs_scope_manifest.json"
+    "manifest_path": "docs-viewer/config/scopes/docs_scope_manifest.json"
   }
 }
 ```
@@ -245,7 +245,7 @@ Conditional and optional payload fields:
 Validation rules currently implemented:
 
 - `scope_id` must use lowercase letters, numbers, and single hyphen separators
-- `scope_id` must not already exist in `studio/docs-viewer/config/scopes/docs_scopes.json`
+- `scope_id` must not already exist in `docs-viewer/config/scopes/docs_scopes.json`
 - `scope_id` must not already exist in the scope manifest
 - `source_root` must be a single repo-relative `_docs_<scope>` directory
 - `default_doc_id` must use lowercase letters, numbers, and hyphens
@@ -293,7 +293,7 @@ Apply behavior:
 - requires explicit confirmation
 - re-runs create-preview validation before any write
 - creates the source root and default welcome Markdown document
-- appends the scope config entry to `studio/docs-viewer/config/scopes/docs_scopes.json`
+- appends the scope config entry to `docs-viewer/config/scopes/docs_scopes.json`
 - creates a public read-only route page only for `public_readonly`
 - writes a user-created, tool-created manifest record
 - creates a timestamped backup bundle for the previous scope config and manifest files
@@ -372,8 +372,8 @@ Apply behavior:
 - blocks system-owned scopes and scopes not created by the lifecycle tool
 - deletes existing manifest-owned scope paths, excluding scope config and manifest files
 - reports missing manifest-owned paths without blocking the delete
-- removes the scope entry from `studio/docs-viewer/config/scopes/docs_scopes.json`
-- removes the scope record from `studio/docs-viewer/config/scopes/docs_scope_manifest.json`
+- removes the scope entry from `docs-viewer/config/scopes/docs_scopes.json`
+- removes the scope record from `docs-viewer/config/scopes/docs_scope_manifest.json`
 - creates a timestamped backup bundle for the previous scope config and manifest files
 - refreshes docs viewer generated outputs for the remaining configured scopes
 
@@ -426,7 +426,7 @@ Delete apply removes manifest-owned scope files, updates config and manifest sta
 
 ## Management UI Flow
 
-The management shell exposes scope lifecycle commands only when the local docs-management server advertises the matching lifecycle capability.
+The management shell exposes scope lifecycle commands only when the local Docs Viewer service advertises the matching lifecycle capability.
 
 `New scope` opens a dedicated modal flow that:
 
@@ -448,10 +448,10 @@ After target selection, the flow:
 
 Implementation ownership:
 
-- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js` owns the modal body rendering, field state, preview summaries, selected delete target, and apply result summaries
-- `assets/docs-viewer/js/docs-viewer-management.js` owns Actions menu wiring, capability-gated command visibility, busy/status state, and management capability refresh after apply
-- `assets/docs-viewer/js/docs-viewer-management-client.js` owns the HTTP wrappers for create/delete preview and apply endpoints
-- `assets/docs-viewer/js/docs-viewer-management-modals.js` provides the reusable modal shell; the lifecycle flow does not define a separate modal framework
+- `docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js` owns the modal body rendering, field state, preview summaries, selected delete target, and apply result summaries
+- `docs-viewer/runtime/js/docs-viewer-management.js` owns Actions menu wiring, capability-gated command visibility, busy/status state, and management capability refresh after apply
+- `docs-viewer/runtime/js/docs-viewer-management-client.js` owns the HTTP wrappers for create/delete preview and apply endpoints
+- `docs-viewer/runtime/js/docs-viewer-management-modals.js` provides the reusable modal shell; the lifecycle flow does not define a separate modal framework
 
 ## Safety Rules
 
@@ -460,4 +460,4 @@ Implementation ownership:
 - The write server should validate scope ids and route paths before writing.
 - The write server should refuse paths outside the configured repo allowlist.
 - Local-only uncommitted scopes should be easy to identify in the response and cleanup guidance.
-- Generated data should be rebuilt after scope config changes so `assets/docs-viewer/data/docs-viewer-config.json` stays current.
+- Generated data should be rebuilt after scope config changes so `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` stay current.

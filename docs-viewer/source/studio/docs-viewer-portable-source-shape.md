@@ -10,13 +10,13 @@ sort_order: 3200
 
 ## Source Docs Required Shape
 
-Each scope has a source root, currently configured in `studio/docs-viewer/config/scopes/docs_scopes.json`.
+Each scope has a source root, currently configured in `docs-viewer/config/scopes/docs_scopes.json`.
 
 Current roots:
 
-- `_docs/` for `studio`
-- `_docs_library/` for `library`
-- `_docs_analysis/` for `analysis`
+- `docs-viewer/source/studio/` for `studio`
+- `docs-viewer/source/library/` for `library`
+- `docs-viewer/source/analysis/` for `analysis`
 
 Each source doc is Markdown with optional YAML front matter.
 Important fields:
@@ -28,7 +28,7 @@ Important fields:
 - `summary`: optional short summary
 - `ui_status`: optional viewer status pill
 - `published`: `false` removes the doc from generated viewer data
-- `hidden`: `true` keeps the doc generated but hidden from read-only public views
+- `viewable`: `false` keeps the doc generated but hidden from read-only public views
 - `last_updated`: display/search metadata
 - `added_date`: recently-added metadata
 

@@ -79,11 +79,11 @@ Current modal implementations now fall into these broad groups:
 
 - Shared Studio helper modals: `assets/studio/js/studio-modal.js` renders transient confirm, detail-confirm, patch-preview, and notice modals, then wires the current primary/cancel buttons directly. These work well for simple promise-style flows where the caller awaits a result.
 - Route-local Studio modal modules: Tag Registry, Tag Aliases, Tag Studio, Series Tags, Catalogue Work Editor, Data Sharing Prepare, Data Sharing Review, Activity Log, and catalogue action confirmations now route modal rendering, event wiring, or transient invocations through `*-modals.js` helpers. Route controllers still own service calls, busy state, reloads, validation decisions, and list/control rendering.
-- Docs Viewer modal modules: Docs Viewer management now delegates transient confirm/text/choice modals and embedded metadata/import/settings modal lifecycle to `assets/docs-viewer/js/docs-viewer-management-modals.js`. Docs HTML import delegates filename-conflict resolution to `assets/docs-viewer/js/docs-html-import-modals.js`.
+- Docs Viewer modal modules: Docs Viewer management now delegates transient confirm/text/choice modals and embedded metadata/import/settings modal lifecycle to `docs-viewer/runtime/js/docs-viewer-management-modals.js`. Docs HTML import delegates filename-conflict resolution to `docs-viewer/runtime/js/docs-html-import-modals.js`.
 - Static or route-owned shell details remain where they are implementation constraints, especially Docs Viewer management shell markup and portable `docsViewer__*` CSS. Those details should still follow the shared modal composition contract.
 - Non-modal suggestion/autocomplete popups remain feature-owned. They support inline editing/search workflows and are not part of the modal composition boundary.
 
-No `window.prompt()`, `window.confirm()`, or `window.alert()` uses remain under `assets/studio/js` or `assets/docs-viewer/js`.
+No `window.prompt()`, `window.confirm()`, or `window.alert()` uses remain under `assets/studio/js` or `docs-viewer/runtime/js`.
 
 The issue is no longer embedded modal bulk in route controllers. The pattern phase chose the stable shared shell contract, standardized the current modal pages against it, and documented how Studio and portable Docs Viewer implementations stay visually and behaviorally aligned.
 

@@ -50,9 +50,9 @@ Inventory and retire legacy create-route artifacts from the older split editor m
 - `assets/studio/js/catalogue-new-work-editor.js`
 - `assets/studio/js/catalogue-new-work-detail-editor.js`
 - `assets/studio/js/catalogue-new-series-editor.js`
-- `_docs/catalogue-new-work-editor.md`
-- `_docs/catalogue-new-work-detail-editor.md`
-- `_docs/catalogue-new-series-editor.md`
+- `docs-viewer/source/studio/catalogue-new-work-editor.md`
+- `docs-viewer/source/studio/catalogue-new-work-detail-editor.md`
+- `docs-viewer/source/studio/catalogue-new-series-editor.md`
 - any remaining `catalogue_new_*` route, UI text, or dashboard references in Studio config
 
 Before deleting route pages, decide whether old URLs should:
@@ -140,9 +140,9 @@ Inventory outcome:
   - `studio/catalogue-new-work-detail/index.md`
   - `studio/catalogue-new-series/index.md`
 - compatibility docs:
-  - `_docs/catalogue-new-work-editor.md`
-  - `_docs/catalogue-new-work-detail-editor.md`
-  - `_docs/catalogue-new-series-editor.md`
+  - `docs-viewer/source/studio/catalogue-new-work-editor.md`
+  - `docs-viewer/source/studio/catalogue-new-work-detail-editor.md`
+  - `docs-viewer/source/studio/catalogue-new-series-editor.md`
 - stale implementation code:
   - `assets/studio/js/catalogue-new-work-editor.js`
   - `assets/studio/js/catalogue-new-work-detail-editor.js`

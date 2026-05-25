@@ -121,7 +121,7 @@ Current Phase 1 answers are captured in the contract above and in the decision l
 ### Archive
 
 - What does `archive` mean?
-- Move the file into `_docs/archive/`?
+- Move the file into `docs-viewer/source/studio/archive/`?
 - Set `published: false`?
 - Change `parent_id` to `archive`?
 - Some combination of the above?
@@ -175,19 +175,19 @@ The Studio docs source root is now flat before viewer management writes source d
 
 Target shape:
 
-- Studio docs: `_docs/*.md`
-- Library docs: `_docs_library/*.md`
+- Studio docs: `docs-viewer/source/studio/*.md`
+- Library docs: `docs-viewer/source/library/*.md`
 
 Implications:
 
-- source folders under `_docs/` stop carrying storage meaning
+- source folders under `docs-viewer/source/studio/` stop carrying storage meaning
 - visible docs hierarchy remains metadata-driven through `doc_id`, `parent_id`, and `sort_order`
 - special viewer groupings such as Archive continue to exist as docs in the tree, not as filesystem folders
 - `doc_id` remains stable even if title changes later
 
 Implemented flattening work:
 
-- moved Studio markdown docs from nested folders into the `_docs/` root
+- moved Studio markdown docs from nested folders into the `docs-viewer/source/studio/` root
 - preserving existing `doc_id` values
 - preserving tree position through front matter, not file placement
 - rewriting any relative markdown links that currently depend on nested source paths
@@ -206,7 +206,7 @@ Management mode uses this query contract:
 Management controls are shown only when both conditions are true:
 
 - the current URL includes `mode=manage`
-- the local docs-management server reports support for the current scope
+- the local Docs management service reports support for the current scope
 
 If `mode=manage` is present but the local server is unavailable, the viewer must:
 
@@ -252,8 +252,8 @@ Recommended capabilities shape:
 
 Write allowlist:
 
-- Studio scope may write only `_docs/*.md`
-- Library scope may write only `_docs_library/*.md`
+- Studio scope may write only `docs-viewer/source/studio/*.md`
+- Library scope may write only `docs-viewer/source/library/*.md`
 - backups may write only under `var/docs/backups/`
 - operational logs may write only under `var/docs/logs/`
 
@@ -300,7 +300,7 @@ Behavior:
 - default `doc_id` is a slug-friendly version of title
 - default filename stem matches `doc_id`
 - if the generated stem already exists, append `-2`, `-3`, and so on until both filename and `doc_id` are unique
-- default target root is `_docs/` for Studio or `_docs_library/` for Library
+- default target root is `docs-viewer/source/studio/` for Studio or `docs-viewer/source/library/` for Library
 - default `parent_id` is blank unless the user creates from a specific parent context
 - default position is last sibling under the chosen parent
 - initial markdown body may be a minimal heading based on title

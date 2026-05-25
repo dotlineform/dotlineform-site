@@ -56,7 +56,7 @@ $HOME/miniconda3/bin/python3 studio/checks/audit_public_build_surface.py --site-
 This script owns the cross-domain projection classification check.
 It does not replace domain-specific configs:
 
-- Docs Viewer scope build details stay in `studio/docs-viewer/config/scopes/docs_scopes.json`
+- Docs Viewer scope build details stay in `docs-viewer/config/scopes/docs_scopes.json`
 - search source-family behavior stays in `scripts/search/build_config.json`
 - catalogue field-aware build scoping stays in `assets/studio/data/catalogue_field_registry.json`
 - `_config.yml` stays the public Jekyll build config

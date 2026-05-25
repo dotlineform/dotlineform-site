@@ -22,7 +22,7 @@ sort_order: 8300
 
 - `assets/data/docs/scopes/studio/index.json`
 
-The current Studio search artifact is derived from the published Studio docs index rather than directly from `_docs/`.
+The current Studio search artifact is derived from the published Studio docs index rather than directly from `docs-viewer/source/studio/`.
 
 ### Current Commands
 
@@ -85,4 +85,4 @@ Current derived search support fields:
 - the explicit `POST /docs/rebuild` endpoint still runs a full same-scope docs-search rebuild
 - the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes
 - targeted docs-search updates rebuild only affected Studio docs entries by `doc_id`, remove affected ids that are missing or non-viewable, and report diagnostic counts for Codex/server use
-- `bin/local-studio` only runs startup `studio` docs-search rebuilds when `DOCS_STARTUP_REBUILD_SCOPES` includes `studio`, and then uses the Docs Live Rebuild Watcher to keep `_docs/*.md` changes aligned with `assets/data/search/studio/index.json`
+- `bin/local-studio` only runs startup `studio` docs-search rebuilds when `DOCS_STARTUP_REBUILD_SCOPES` includes `studio`, and then uses the Docs Live Rebuild Watcher to keep `docs-viewer/source/studio/*.md` changes aligned with `assets/data/search/studio/index.json`

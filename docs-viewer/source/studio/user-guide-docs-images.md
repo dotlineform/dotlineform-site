@@ -47,7 +47,7 @@ Recommended rule:
 - group them by topic under `assets/docs/`
 - use clear names such as `default.png`, `example-docs-viewer.png`, or `state-disabled.png`
 
-Do not save docs images under `_docs/`. The docs source root is for Markdown source docs, not published image assets.
+Do not save docs images under `docs-viewer/source/studio/`. The docs source root is for Markdown source docs, not published image assets.
 
 ## 2. Remote Docs Media
 

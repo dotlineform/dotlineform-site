@@ -251,7 +251,7 @@ The page root `#docsHtmlImportRoot` exposes the shared Studio route-ready contra
 - `data-studio-ready` is `false` during initial config, service, and staged-file checks, then `true` after the initial disabled or interactive state is rendered
 - `data-studio-busy` is `true` while an import or confirmed overwrite is running
 - `data-studio-mode` is `idle` before import, `confirm` when an overwrite warning is shown, and `result` after a successful import
-- `data-studio-service` reports whether the Docs Management Server is available
+- `data-studio-service` reports whether the Docs Management Service is available
 - `data-studio-record-loaded` is `true` when supported staged files are available
 
 ## Current Practical Limits
@@ -284,5 +284,5 @@ They are still validated through the current Jekyll docs renderer before write s
 
 - [User Guide](/docs/?scope=studio&doc=user-guide)
 - [Docs Images And Assets](/docs/?scope=studio&doc=user-guide-docs-images)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Studio Ready State Contract Request](/docs/?scope=studio&doc=site-request-studio-ready-state-contract)

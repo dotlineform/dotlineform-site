@@ -203,7 +203,7 @@ Create the route shell and documentation hooks:
 
 - add `studio/catalogue-moment/index.md`
 - set permalink to `/studio/catalogue-moment/`
-- add a page doc such as `_docs/catalogue-moment-editor.md`
+- add a page doc such as `docs-viewer/source/studio/catalogue-moment-editor.md`
 - add the route to `studio_config.json` route lookup
 - add an `Edit Moment` link to `/studio/catalogue/`
 - add the editor doc to the User Guide list

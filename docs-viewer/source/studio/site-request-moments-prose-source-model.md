@@ -348,4 +348,4 @@ That future work should cover:
 - [Catalogue Moment Editor](/docs/?scope=studio&doc=catalogue-moment-editor)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
-- `_docs/moments-json-migration-plan.md`
+- `docs-viewer/source/studio/moments-json-migration-plan.md`

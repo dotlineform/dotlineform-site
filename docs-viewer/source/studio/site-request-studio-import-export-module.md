@@ -20,8 +20,8 @@ Status:
 
 Implement Studio Data Sharing as its own portable module with domain adapters.
 
-This request follows the closed [Import/Export System Review Request](/docs/?scope=studio&doc=site-request-import-export-system-review) and the completed [Docs Management Server Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
-The docs-management server cleanup is complete, and structured data sharing orchestration should now move into an explicitly owned module instead of continuing to grow inside the docs-management service.
+This request follows the closed [Import/Export System Review Request](/docs/?scope=studio&doc=site-request-import-export-system-review) and the completed [Docs Management Service Slices](/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server).
+The Docs management service cleanup is complete, and structured data sharing orchestration should now move into an explicitly owned module instead of continuing to grow inside the docs-management service.
 
 The target direction is:
 
@@ -67,7 +67,7 @@ Do not add new user-facing UI labels or new module names using import/export ter
 ## Rationale
 
 The current implementation has a useful first adapter registry, but the executable behavior is still mostly document-shaped.
-The registry can declare Library, Catalogue, and Analytics domains, but the docs-management server currently resolves only the documents adapter for real package preparation and returned-package review work.
+The registry can declare Library, Catalogue, and Analytics domains, but the Docs management service currently resolves only the documents adapter for real package preparation and returned-package review work.
 The `/studio/export/` and `/studio/import/` shells also still assume generated docs indexes, `doc_id` rows, document preview files, and summary/hierarchy apply actions.
 
 That is workable for the Library document workflow, but it is the wrong place to add tags.
@@ -75,7 +75,7 @@ Tags are Analytics-owned data that relate to Catalogue series and works through 
 They need registry, alias, assignment, validation, review, apply, backup, and activity behavior that is not document-shaped.
 
 The local Studio analytics API already has extracted domain owners for those behaviors.
-The missing layer is a shared Data Sharing contract that can call those owners without making the docs-management server or the document package adapter responsible for Analytics data.
+The missing layer is a shared Data Sharing contract that can call those owners without making the Docs management service or the document package adapter responsible for Analytics data.
 
 ## Portability Direction
 
@@ -227,7 +227,7 @@ Implementation targets:
 - `assets/studio/js/data-export.js` and `assets/studio/js/data-import.js` move to Data Sharing module names
 - `assets/studio/js/export-import-adapters.js` moves to `assets/studio/js/data-sharing-adapters.js`
 - `assets/studio/data/export_import_adapters.json` moves to `assets/studio/data/data_sharing_adapters.json`
-- `studio/docs-viewer/services/export_import_adapters.py` moves to a Data Sharing owner name, preferably under `scripts/studio/`
+- `docs-viewer/services/export_import_adapters.py` moves to a Data Sharing owner name, preferably under `scripts/studio/`
 - existing UI text keys and labels move from data import/export language to Data Sharing language
 - existing tests move from export/import names to Data Sharing names
 - Studio route state, activity context, route ids, script purpose ids, and config data-path keys use Data Sharing terminology
@@ -274,7 +274,7 @@ Acceptance checks:
 
 Status: implemented.
 
-Extract shared data sharing dispatch out of `studio/docs-viewer/services/docs_management_server.py` into a Studio-owned data sharing service module.
+Extract shared data sharing dispatch out of `docs-viewer/services/docs_management_server.py` into a Studio-owned data sharing service module.
 
 Implementation targets:
 
@@ -287,7 +287,7 @@ Acceptance checks:
 - normal data sharing operations may be unavailable during the cutover except for targeted tests
 - there are no retained compatibility wrappers or legacy route aliases at slice acceptance
 - unsupported adapters fail with explicit planned/stub messages
-- docs-management server no longer decides non-document adapter architecture
+- Docs management service no longer decides non-document adapter architecture
 - data sharing routes remain local-only and loopback-safe
 
 ### Slice 3: documents adapter wrapper
@@ -298,9 +298,9 @@ Move Library document package behavior behind the documents adapter wrapper.
 
 Implementation targets:
 
-- `studio/docs-viewer/services/docs_export.py`
-- `studio/docs-viewer/services/docs_import.py`
-- possible adapter wrapper such as `studio/docs-viewer/services/documents_data_sharing_adapter.py`
+- `docs-viewer/services/docs_export.py`
+- `docs-viewer/services/docs_import.py`
+- possible adapter wrapper such as `docs-viewer/services/documents_data_sharing_adapter.py`
 - Data Sharing UI routes
 
 Acceptance checks:
@@ -400,7 +400,7 @@ Acceptance checks:
 
 ## Benefits
 
-- prevents docs-management server from becoming the owner of all Studio data movement
+- prevents Docs management service from becoming the owner of all Studio data movement
 - gives tags a clean path into data sharing without pretending they are documents
 - keeps Docs Viewer portable by letting it ship a documents adapter without owning unrelated adapters
 - creates a practical second adapter that tests the contract against real non-document behavior

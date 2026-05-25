@@ -22,9 +22,9 @@ Examples:
 - `_series/*.md`
 - `_work_details/*.md`
 - `_moments/*.md`
-- `_docs/*.md`
-- `_docs_library/*.md`
-- `_docs_analysis/**/*.md`
+- `docs-viewer/source/studio/*.md`
+- `docs-viewer/source/library/*.md`
+- `docs-viewer/source/analysis/**/*.md`
 
 Purpose:
 

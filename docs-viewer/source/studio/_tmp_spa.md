@@ -32,7 +32,7 @@ Current facts in the repo:
 - Generated Studio docs/search payloads are also published today unless excluded.
 
 Relevant files:
-[public config](/Users/dlf/Developer/dotlineform/dotlineform-site/_config.yml), [local launcher](/Users/dlf/Developer/dotlineform/dotlineform-site/bin/local-studio), [docs shell gate](/Users/dlf/Developer/dotlineform/dotlineform-site/_includes/docs_viewer_management_route.html).
+[public config](_config.yml), [local launcher](bin/local-studio), [docs shell gate](_includes/docs_viewer_management_route.html).
 
 **Recommended Direction**
 
@@ -52,7 +52,7 @@ I would do this in stages:
 4. **Do not start with native Swift**
    A local web app is the pragmatic next architecture. Native shell only becomes attractive if you need OS integration, offline packaging, file pickers, tray behavior, or a more app-like distribution model.
 
-On Markdown/rendering: yes, the markdown does not need to be GitHub/Jekyll-publishable if Docs Viewer consumes generated HTML. The real contract is “source markdown plus tokens in, viewer-safe HTML JSON out.” Current docs rendering is Jekyll-coupled through [scripts/jekyll_markdown_renderer.rb](/Users/dlf/Developer/dotlineform/dotlineform-site/scripts/jekyll_markdown_renderer.rb), but that can be replaced later with golden-output tests around headings, links, code, media tokens, semantic refs, and interactive HTML.
+On Markdown/rendering: yes, the markdown does not need to be GitHub/Jekyll-publishable if Docs Viewer consumes generated HTML. The real contract is “source markdown plus tokens in, viewer-safe HTML JSON out.” Current docs rendering is Jekyll-coupled through [scripts/jekyll_markdown_renderer.rb](scripts/jekyll_markdown_renderer.rb), but that can be replaced later with golden-output tests around headings, links, code, media tokens, semantic refs, and interactive HTML.
 
 One caveat: excluding docs from the published site does not make them private if the GitHub repo itself is public. If privacy is the goal, source docs need a private repo/submodule or separate private data package.
 
@@ -114,7 +114,7 @@ My recommendation: first clean the build/public boundary in-place, then split re
 
 yes. happy to stay with one repo until everything settles. disengaging studio from jekyll is more important, because I think it gives us more problems to solve than it helps (e.g. all the regenerating issues we have had)
 
-a further clarification on public vs private. there is some canonical data about works that is not published, but it is not private in the sense that it cannot be saved in a public repo. quote from _docs/data-models-catalogue-source.md: 'source-only fields such as `notes` and `provenance` stay out of public projections unless an explicit runtime contract includes them.'
+a further clarification on public vs private. there is some canonical data about works that is not published, but it is not private in the sense that it cannot be saved in a public repo. quote from docs-viewer/source/studio/data-models-catalogue-source.md: 'source-only fields such as `notes` and `provenance` stay out of public projections unless an explicit runtime contract includes them.'
 
 Codex:
 
@@ -220,15 +220,15 @@ if studio is a plain local web app, how hard is reusing existing js modules, giv
 
 Not very hard if we keep it as a **plain vanilla local web app** and preserve the DOM contracts. It becomes hard only if we use the move as an excuse to rewrite the UI framework.
 
-Most existing JS modules look reusable because they are already browser ES modules, fetch JSON, bind to stable IDs/data roles, and render into existing DOM. For example, [studio-data.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/js/studio-data.js) is already mostly runtime/data helpers, and [studio-ui.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/js/studio-ui.js) defines explicit UI contracts. That is good news.
+Most existing JS modules look reusable because they are already browser ES modules, fetch JSON, bind to stable IDs/data roles, and render into existing DOM. For example, [studio-data.js](assets/studio/js/studio-data.js) is already mostly runtime/data helpers, and [studio-ui.js](assets/studio/js/studio-ui.js) defines explicit UI contracts. That is good news.
 
-The less reusable part is the route shell. A route like [studio/catalogue-work/index.md](/Users/dlf/Developer/dotlineform/dotlineform-site/studio/catalogue-work/index.md) mixes:
+The less reusable part is the route shell. A route like [studio/catalogue-work/index.md](studio/catalogue-work/index.md) mixes:
 
 - front matter: route title, permalink, docs link
 - Liquid config expansion from `_config.yml` and `_data/pipeline`
 - HTML markup with fixed IDs/classes/data attributes
 - Jekyll `relative_url`
-- script include via [studio_module_script.html](/Users/dlf/Developer/dotlineform/dotlineform-site/_includes/studio_module_script.html)
+- script include via [studio_module_script.html](_includes/studio_module_script.html)
 
 That is all replaceable. It is not business logic. The migration task is mostly to turn those Jekyll/Liquid shells into local app templates and feed them config from JSON instead of Liquid.
 

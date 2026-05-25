@@ -117,14 +117,14 @@ The documents adapter owns:
 - returned Library `.json` and `.jsonl` package listing
 - staged package parsing and Markdown review generation through `docs-viewer/services/docs_import.py`
 - summary and hierarchy apply planning
-- `_docs_library/` writes, docs/search rebuild follow-through, and document activity metadata
+- `docs-viewer/source/library/` writes, docs/search rebuild follow-through, and document activity metadata
 
 Library workflow roots:
 
 - outbound packages: `var/studio/data-sharing/library/exports/`
 - returned package staging: `var/studio/data-sharing/library/import-staging/`
 - review artifacts: `var/studio/data-sharing/library/import-preview/`
-- source root: `_docs_library/`
+- source root: `docs-viewer/source/library/`
 - backup root: `var/docs/backups/`
 
 The documents adapter is the optional companion a portable Docs Viewer install can ship when it wants Library or other Docs Viewer corpus Data Sharing behavior.

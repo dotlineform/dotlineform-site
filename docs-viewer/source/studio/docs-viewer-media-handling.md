@@ -34,7 +34,7 @@ It does not cover:
 
 ## Scope Configuration
 
-Each Docs Viewer scope defines its media conventions in `studio/docs-viewer/config/scopes/docs_scopes.json`.
+Each Docs Viewer scope defines its media conventions in `docs-viewer/config/scopes/docs_scopes.json`.
 
 Important fields:
 
@@ -283,6 +283,6 @@ For Markdown package imports, copy the whole package folder under `var/docs/impo
 
 - [Docs Import](/docs/?scope=studio&doc=user-guide-docs-html-import)
 - [Docs Viewer Import Source Registry Spec](/docs/?scope=studio&doc=docs-viewer-import-source-registry-spec)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
 - [Docs Viewer Portable Setup](/docs/?scope=studio&doc=docs-viewer-portable-setup)
 - [Docs HTML Inline Raster Media Request](/docs/?scope=studio&doc=site-request-docs-html-inline-raster-media)

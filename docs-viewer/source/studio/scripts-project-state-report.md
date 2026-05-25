@@ -52,7 +52,7 @@ $HOME/miniconda3/bin/python3 studio/services/catalogue/project_state_report.py -
 The write target is:
 
 ```text
-_docs/project-state.md
+docs-viewer/source/studio/project-state.md
 ```
 
 The generated document has `published: false`, so it is a local project-state artifact rather than a published Studio docs page.

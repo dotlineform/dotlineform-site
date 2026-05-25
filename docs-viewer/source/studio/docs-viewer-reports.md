@@ -105,7 +105,7 @@ It is used by [Library Documents](/docs/?scope=studio&doc=library-documents) to 
 This document uses it so the list of configured reports stays visible from the Docs Viewer.
 
 `source_config` renders the Docs Viewer source config report in manage mode.
-It reads through the local docs-management server and shows source config, browser projection, generated output paths, and generated viewer options for every configured scope.
+It reads through the standalone Docs Viewer service and shows source config, browser projection, generated output paths, and generated viewer options for every configured scope.
 
 `change_history` renders structured docs-log entries in manage mode.
 It reads ignored local projections under `studio/workflows/change-requests/generated/` through the Docs management API and provides domain filtering for migrated change history.

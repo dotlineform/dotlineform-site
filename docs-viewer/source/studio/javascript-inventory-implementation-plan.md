@@ -17,7 +17,7 @@ This document is archived and is no longer maintained.
 
 This document turns the scoring policy in [JavaScript Inventory Policy](/docs/?scope=studio&doc=studio-javascript-payload-inventory) and the current rows in [Javascript Inventory](/docs/?scope=studio&doc=javascript-inventory) into implementation batches.
 The target for normal browser JavaScript files is risk score 4.
-`assets/docs-viewer/js/docs-viewer.js` is excluded from this plan because the shared Docs Viewer entry runtime is handled separately.
+`docs-viewer/runtime/js/docs-viewer.js` is excluded from this plan because the shared Docs Viewer entry runtime is handled separately.
 
 ## Implementation Principles
 
@@ -176,9 +176,9 @@ The remaining Docs Viewer management modal controller owns metadata modal lifecy
 - `assets/studio/js/tag-aliases-modals.js`
 - `assets/studio/js/tag-registry-modals.js`
 - `assets/studio/js/tag-modal-shell.js`
-- `assets/docs-viewer/js/docs-viewer-management-modals.js`
-- `assets/docs-viewer/js/docs-viewer-management-modal-shell.js`
-- `assets/docs-viewer/js/docs-viewer-management-parent-picker.js`
+- `docs-viewer/runtime/js/docs-viewer-management-modals.js`
+- `docs-viewer/runtime/js/docs-viewer-management-modal-shell.js`
+- `docs-viewer/runtime/js/docs-viewer-management-parent-picker.js`
 - related small modal helpers where they share the same shell conventions
 
 **Why this batch should follow route-shell work**
@@ -213,17 +213,17 @@ The action controller still owns command invocation, busy/status projection, mod
 
 **Primary files**
 
-- `assets/docs-viewer/js/docs-html-import.js`
-- `assets/docs-viewer/js/docs-viewer-management.js`
-- `assets/docs-viewer/js/docs-viewer-management-actions.js`
-- `assets/docs-viewer/js/docs-viewer-management-action-workflow.js`
-- `assets/docs-viewer/js/docs-viewer-management-modals.js`
-- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js`
+- `docs-viewer/runtime/js/docs-html-import.js`
+- `docs-viewer/runtime/js/docs-viewer-management.js`
+- `docs-viewer/runtime/js/docs-viewer-management-actions.js`
+- `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js`
+- `docs-viewer/runtime/js/docs-viewer-management-modals.js`
+- `docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js`
 - report/search/bookmark helpers that remain above score 4
 
 **Scope boundary**
 
-Do not include `assets/docs-viewer/js/docs-viewer.js` in this batch.
+Do not include `docs-viewer/runtime/js/docs-viewer.js` in this batch.
 The shared entry runtime has separate feature-driven work around payload loading, index panel ownership, and management lazy boundaries.
 
 **Concrete tasks**

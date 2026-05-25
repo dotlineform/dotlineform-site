@@ -159,7 +159,7 @@ Is filename generation automatic from the title, from the doc_id, or user-specif
 A: doc_id is slug friendly version of title. doc_id is used as file name stem
 
 Which directory does a new doc go into by default?  
-A: _docs/
+A: docs-viewer/source/studio/
 
 If a doc is reparented in the viewer, does only parent_id change, or should the file also move into a different folder?  
 A: file doesn't move on disk (flat structure).

@@ -137,7 +137,7 @@ Initial data domain:
 
 Initial source/write domain:
 
-- `_docs_library/*.md`
+- `docs-viewer/source/library/*.md`
 
 Current behavior to preserve:
 
@@ -235,16 +235,16 @@ Current implementation files reviewed:
 - `assets/studio/data/studio_config.json`
 - `assets/studio/data/library_export_configs.json`
 - `assets/studio/data/library_export_configs.schema.json`
-- `studio/docs-viewer/services/docs_export.py`
-- `studio/docs-viewer/services/docs_import.py`
-- `studio/docs-viewer/services/docs_management_server.py`
+- `docs-viewer/services/docs_export.py`
+- `docs-viewer/services/docs_import.py`
+- `docs-viewer/services/docs_management_server.py`
 - `studio/tests/python/test_docs_export.py`
 - `studio/tests/python/test_docs_import.py`
 - `studio/tests/python/test_docs_import_service.py`
-- `_docs/library-export.md`
-- `_docs/library-import.md`
-- `_docs/config-library-export-configs.md`
-- `_docs/data-models-library.md`
+- `docs-viewer/source/studio/library-export.md`
+- `docs-viewer/source/studio/library-import.md`
+- `docs-viewer/source/studio/config-library-export-configs.md`
+- `docs-viewer/source/studio/data-models-library.md`
 
 Shared-shell lifecycle behavior:
 
@@ -278,7 +278,7 @@ Library-document adapter behavior:
 - Markdown preview rendering with one preview file per document plus an optional relationship-tree preview
 - preview row rendering as document rows and relationship-tree rows
 - selected document `record_index` apply targeting
-- summary apply and hierarchy apply against `_docs_library/*.md`
+- summary apply and hierarchy apply against `docs-viewer/source/library/*.md`
 - source-write rebuild/search refresh for Library docs after summary or hierarchy writes
 
 Mixed or transitional seams:
@@ -287,7 +287,7 @@ Mixed or transitional seams:
 - client modules, DOM ids, ready-state route names, and Studio text keys now use `data-export`/`data-import` naming
 - transport endpoints now use neutral `/docs/export` and `/docs/import/...` paths
 - staged import files and preview files support `library`, `catalogue`, and `analytics` folders, but the parser and preview renderer still assume document-like records
-- source apply is explicitly gated to Library by the client and by `normalize_library_import_scope()` in `studio/docs-viewer/services/docs_management_server.py`
+- source apply is explicitly gated to Library by the client and by `normalize_library_import_scope()` in `docs-viewer/services/docs_management_server.py`
 - `assets/studio/data/library_export_configs.json` has a `scopes` array, but all enabled configs are Library-only and the schema is still Library-named
 - tests encode useful Library behavior, but they currently test the document workflow and service seams together rather than a separate shared-shell contract and documents-adapter contract
 
@@ -504,7 +504,7 @@ First adapter mapping:
 - adapter id: `documents`
 - initial data domain: `library`
 - source data: generated Docs Viewer index and per-doc payloads for Library
-- source write root: `_docs_library/*.md`
+- source write root: `docs-viewer/source/library/*.md`
 - export config source: `assets/studio/data/library_export_configs.json`
 - import staging input: JSON/JSONL document-like staged files
 - preview output: Markdown document previews plus optional relationship tree preview
@@ -546,12 +546,12 @@ Expected outcome:
 - shared shell no longer assumes preview results are documents
 - Library document behavior remains available through the neutral shared routes
 - status/result UI remains familiar
-- source writes still target `_docs_library/*.md`
+- source writes still target `docs-viewer/source/library/*.md`
 
 Implementation note:
 
 - added `assets/studio/data/export_import_adapters.json` and `assets/studio/data/export_import_adapters.schema.json`
-- added config-driven dispatch in `studio/docs-viewer/services/export_import_adapters.py`
+- added config-driven dispatch in `docs-viewer/services/export_import_adapters.py`
 - moved active import file listing, preview, summary apply, and hierarchy apply calls to neutral docs-management endpoints:
   - `GET /docs/import/files?data_domain=library`
   - `POST /docs/import/preview`
@@ -696,4 +696,4 @@ Current status:
 - [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction)
 - [Library Import](/docs/?scope=studio&doc=library-import)
 - [Library Export](/docs/?scope=studio&doc=library-export)
-- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)

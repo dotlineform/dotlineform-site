@@ -24,11 +24,11 @@ It is intended as a local development helper for `bin/local-studio`, not as the 
 
 The watcher maps source roots directly onto docs scopes:
 
-- `_docs/*.md` -> `studio`
-- `_docs_analysis/**/*.md` -> `analysis`
-- `_docs_library/*.md` -> `library`
+- `docs-viewer/source/studio/*.md` -> `studio`
+- `docs-viewer/source/analysis/**/*.md` -> `analysis`
+- `docs-viewer/source/library/*.md` -> `library`
 
-The scope map comes from `docs-viewer/config/scopes/docs_scopes.json`, which is shared with `./scripts/build_docs.rb` and the docs-management service.
+The scope map comes from `docs-viewer/config/scopes/docs_scopes.json`, which is shared with `./scripts/build_docs.rb` and the Docs Viewer service.
 
 It watches source roots only. It does not watch generated outputs under:
 
@@ -102,7 +102,7 @@ The watcher treats these Markdown changes as rebuild triggers:
 - rename
 
 It does this by comparing the current `.md` file set, file mtimes, and file sizes on each poll.
-Studio and Library watch only root-level `.md` files. Analysis watches nested `.md` files under `_docs_analysis/`.
+Studio and Library watch only root-level `.md` files. Analysis watches nested `.md` files under `docs-viewer/source/analysis/`.
 
 For targeted docs payloads and targeted search, it also keeps a parsed per-scope source snapshot from the last successful watcher rebuild. The snapshot maps filenames to front-matter-derived values including `doc_id`, `title`, `parent_id`, `published`, and `viewable`. The watcher does not assume filename equals `doc_id`.
 
@@ -125,7 +125,7 @@ Watcher diagnostics are intentionally log-only. They report affected doc ids and
 - `DOCS_WATCH_POLL_SECONDS`, `DOCS_WATCH_DEBOUNCE_SECONDS`, and `DOCS_WATCH_TARGETED_SEARCH_THRESHOLD` default from `var/local/site.env` for local runs, including when the watcher is started through `bin/local-studio`
 - manual rebuild commands remain available and are still the fallback path when you want explicit control
 - because the watcher rebuilds from source-root changes only, generated output writes do not loop back into new watcher-triggered rebuilds
-- when the localhost docs-management server writes a source doc and rebuilds the same scope itself, it now leaves a short-lived suppression marker under `var/docs/watch-suppressions/`; the watcher uses that marker to avoid a redundant second rebuild for the same source change
+- when the localhost Docs Viewer service writes a source doc and rebuilds the same scope itself, it leaves a short-lived suppression marker under `var/docs/watch-suppressions/`; the watcher uses that marker to avoid a redundant second rebuild for the same source change
 - `var/` is excluded from Jekyll so transient watcher-suppression marker writes do not trigger Jekyll serve regenerations or file-watch stat races
 
 ## Related References

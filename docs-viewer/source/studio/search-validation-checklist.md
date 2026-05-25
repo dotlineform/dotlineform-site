@@ -69,7 +69,7 @@ Prefer real site examples over synthetic test strings.
 - [ ] Confirm every emitted Catalogue field has a source-family declaration
 - [ ] Confirm Catalogue source-family scope declarations match the intended `targeted_policy`
 - [ ] Confirm Catalogue `targeted_operations` values are valid for the configured `targeted_policy`
-- [ ] Confirm Docs Viewer scopes derive from `studio/docs-viewer/config/scopes/docs_scopes.json`
+- [ ] Confirm Docs Viewer scopes derive from `docs-viewer/config/scopes/docs_scopes.json`
 - [ ] Confirm future Catalogue heavy-index field additions update `scripts/search/build_config.json` before changing builder output
 - [ ] Confirm future Docs Viewer heavy-index field additions update Docs Viewer-owned search config/runtime surfaces before changing builder output
 

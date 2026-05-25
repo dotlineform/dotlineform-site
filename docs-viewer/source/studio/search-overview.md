@@ -98,14 +98,14 @@ Current files:
 
 - Catalogue browser runtime: `assets/js/catalogue-search.js`
 - Catalogue runtime policy: `assets/data/search/policy.json`
-- Docs browser runtime: `assets/docs-viewer/js/docs-viewer.js`
-- Docs search helpers: `assets/docs-viewer/js/docs-viewer-search.js`
+- Docs browser runtime: `docs-viewer/runtime/js/docs-viewer.js`
+- Docs search helpers: `docs-viewer/runtime/js/docs-viewer-search.js`
 - Search build entrypoint and dispatcher: `scripts/build_search.rb`
 - Search adapter registry: `scripts/search/adapter_registry.json`
 - Catalogue search build implementation: `scripts/search/build_search.rb`
 - Catalogue search build config: `scripts/search/build_config.json`
 - Docs Viewer search build implementation: `studio/docs-viewer/build/build_search.rb`
-- Docs Viewer search scope config: `studio/docs-viewer/config/scopes/docs_scopes.json`
+- Docs Viewer search scope config: `docs-viewer/config/scopes/docs_scopes.json`
 
 Current live surfaces:
 
