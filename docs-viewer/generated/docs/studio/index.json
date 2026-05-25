@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T20:25:26Z",
+  "generated_at": "2026-05-25T20:35:15Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -3121,23 +3121,6 @@
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-broken-links",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-broken-links.json",
       "content_text_length": 2062
-    },
-    {
-      "scope": "studio",
-      "doc_id": "archive",
-      "title": "Archive",
-      "added_date": "2026-04-18",
-      "last_updated": "2026-05-06 20:49",
-      "parent_id": "",
-      "sort_order": 20000,
-      "published": true,
-      "hidden": true,
-      "viewable": false,
-      "source_path": "archive.md",
-      "viewer_url": "/docs/?scope=studio&doc=archive",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/archive.json",
-      "content_text_length": 163,
-      "summary": "This section is for deprecated or no longer maintained documents. Refer to change logs for previous implementation notes."
     },
     {
       "scope": "studio",

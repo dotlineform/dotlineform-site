@@ -8,7 +8,7 @@ sort_order: 17000
 ---
 # Change Requests
 
-This section stores proposed and in-progress feature or infrastructure changes. When implementation is complete or closed, the request is manually moved to [Archive](/docs/?scope=studio&doc=archive).
+This section stores proposed and in-progress feature or infrastructure changes. When implementation is complete or closed, the request is manually moved to [Archive](/docs/?scope=archive&doc=archive).
 
 Use it for:
 

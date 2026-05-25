@@ -334,6 +334,39 @@ def test_archive_plan_moves_doc_to_archive_scope() -> None:
     assert "parent_id:" not in plan.source_writes[0].text
 
 
+def test_archive_plan_moves_archive_children_without_moving_archive_doc() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_doc(
+            repo_root,
+            "archived-child.md",
+            {
+                "doc_id": "archived-child",
+                "title": "Archived Child",
+                "parent_id": "archive",
+                "sort_order": 10,
+                "published": True,
+                "viewable": True,
+            },
+        )
+        plan = mutations.plan_archive(
+            repo_root,
+            {
+                "scope": "studio",
+                "doc_id": "archive",
+            },
+        )
+
+    assert plan.response["doc_id"] == "archive"
+    assert plan.response["moved_doc_ids"] == ["archived-child"]
+    assert plan.response["record"]["path"] == "docs-viewer/source/archive/archived-child.md"
+    assert plan.response["record"]["parent_id"] == ""
+    assert [delete.path.name for delete in plan.source_deletes] == ["archived-child.md"]
+    assert [write.path.name for write in plan.source_writes] == ["archived-child.md"]
+    assert "parent_id:" not in plan.source_writes[0].text
+    assert "archive.md" not in [delete.path.name for delete in plan.source_deletes]
+
+
 def test_delete_preview_preserves_child_blocker_and_inbound_warning() -> None:
     with make_repo() as temp_path:
         repo_root = Path(temp_path)
@@ -379,6 +412,7 @@ def main() -> None:
         test_normalize_order_plan_repairs_single_sibling_group_without_backup_or_search,
         test_archive_plan_preserves_already_archived_noop,
         test_archive_plan_moves_doc_to_archive_scope,
+        test_archive_plan_moves_archive_children_without_moving_archive_doc,
         test_delete_preview_preserves_child_blocker_and_inbound_warning,
         test_delete_apply_plan_selects_backup_doc_delete_path_and_search_target,
     ]

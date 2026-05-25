@@ -703,14 +703,30 @@ def plan_archive(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPla
         raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
     archive_docs = source_model.load_scope_docs(repo_root, archive_scope)
     archive_doc_ids = {doc.doc_id for doc in archive_docs}
-    moving_doc_ids = {target.doc_id, *source_model.descendant_doc_ids(docs, target.doc_id)}
+    target_already_exists_in_archive = target.doc_id in archive_doc_ids
+    move_target = not (target.doc_id == archive_scope and target_already_exists_in_archive)
+    moving_doc_ids = source_model.descendant_doc_ids(docs, target.doc_id)
+    if move_target:
+        moving_doc_ids.add(target.doc_id)
     duplicate_doc_ids = sorted(moving_doc_ids.intersection(archive_doc_ids))
     if duplicate_doc_ids:
         raise ValueError(f"archive scope already contains doc_id: {', '.join(duplicate_doc_ids)}")
+    if not moving_doc_ids:
+        return ManagementMutationPlan(
+            scope=scope,
+            response={
+                "ok": True,
+                "scope": scope,
+                "archive_scope": archive_scope,
+                "doc_id": target.doc_id,
+                "path": relative_path(repo_root, target.path),
+                "summary_text": f"{target.doc_id} has no child docs to archive.",
+            },
+        )
 
-    moving_docs = (target,) + tuple(
-        doc for doc in docs if doc.doc_id in moving_doc_ids and doc.doc_id != target.doc_id
-    )
+    moving_docs = tuple(
+        [target] if move_target else []
+    ) + tuple(doc for doc in docs if doc.doc_id in moving_doc_ids and doc.doc_id != target.doc_id)
     archive_root = source_model.scope_root(repo_root, archive_scope)
     archive_paths = {doc.path.name for doc in archive_docs}
     source_writes: list[SourceWrite] = []
@@ -725,7 +741,7 @@ def plan_archive(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPla
             or updated_front_matter.get("last_updated")
             or source_model.current_doc_timestamp()
         ).strip()
-        if doc.doc_id == target.doc_id:
+        if doc.doc_id == target.doc_id or (not move_target and doc.parent_id == target.doc_id):
             updated_front_matter.pop("parent_id", None)
         archive_path = archive_root / doc.path.name
         source_writes.append(SourceWrite(archive_path, source_model.format_source(updated_front_matter, doc.body)))
@@ -753,7 +769,11 @@ def plan_archive(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPla
             "record": moved_records[0],
             "records": moved_records,
             "moved_doc_ids": [record["doc_id"] for record in moved_records],
-            "summary_text": f"Archived {target.doc_id} to archive scope.",
+            "summary_text": (
+                f"Archived {target.doc_id} to archive scope."
+                if move_target
+                else f"Archived {len(moving_docs)} child docs from {target.doc_id} to archive scope."
+            ),
         },
         backup_operation="archive",
         backup_docs=moving_docs,
