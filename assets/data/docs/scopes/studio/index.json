@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T09:40:44Z",
+  "generated_at": "2026-05-25T10:03:28Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1467,7 +1467,7 @@
       "doc_id": "docs-viewer-portable-files",
       "title": "Docs Viewer Portable File Manifest",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer-portable-setup",
       "sort_order": 3100,
       "published": true,
@@ -1476,7 +1476,7 @@
       "source_path": "docs-viewer-portable-files.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 7979
+      "content_text_length": 8630
     },
     {
       "scope": "studio",
@@ -1920,7 +1920,7 @@
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-05-25",
       "parent_id": "",
       "sort_order": 5000,
       "published": true,
@@ -1929,7 +1929,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json",
-      "content_text_length": 5576
+      "content_text_length": 5653
     },
     {
       "scope": "studio",
@@ -2588,7 +2588,7 @@
       "doc_id": "docs-viewer-reports",
       "title": "Docs Viewer Reports",
       "added_date": "2026-05-13",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "sort_order": 8000,
       "published": true,
@@ -2597,7 +2597,7 @@
       "source_path": "docs-viewer-reports.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-reports",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-reports.json",
-      "content_text_length": 5759,
+      "content_text_length": 5731,
       "viewer_report": "reports_list",
       "viewer_report_access": "public"
     },
@@ -3140,7 +3140,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-tasks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-tasks.json",
-      "content_text_length": 13544,
+      "content_text_length": 14755,
       "ui_status": "draft"
     },
     {
@@ -3344,7 +3344,7 @@
       "doc_id": "docs-viewer-css-cascade-design",
       "title": "Docs Viewer CSS Cascade Design",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "sort_order": 12000,
       "published": true,
@@ -3353,7 +3353,7 @@
       "source_path": "docs-viewer-css-cascade-design.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-css-cascade-design",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-css-cascade-design.json",
-      "content_text_length": 5028
+      "content_text_length": 6449
     },
     {
       "scope": "studio",
@@ -3424,7 +3424,7 @@
       "doc_id": "docs-viewer-runtime-boundary",
       "title": "Docs Viewer Runtime Boundary",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "sort_order": 13000,
       "published": true,
@@ -3433,7 +3433,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 7917
+      "content_text_length": 8139
     },
     {
       "scope": "studio",

@@ -160,6 +160,7 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/studio/app/assets/css/studio.css") is True
     assert allowed("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js") is True
     assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is True
+    assert allowed("/docs-viewer/static/css/docs-viewer-base.css") is True
     assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
     assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is True
     assert allowed("/assets/data/docs/scopes/studio/index.json") is True

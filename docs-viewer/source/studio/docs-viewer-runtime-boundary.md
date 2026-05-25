@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: Docs Viewer Runtime Boundary
 added_date: 2026-03-31
-last_updated: 2026-05-24
+last_updated: 2026-05-25
 parent_id: docs-viewer
 sort_order: 13000
 ---
@@ -13,7 +13,7 @@ sort_order: 13000
 This document records the current boundary between:
 
 - scope-specific docs page shells such as `/docs/` and `/library/`
-- the shared docs viewer runtime in `assets/docs-viewer/js/docs-viewer.js`
+- the shared docs viewer runtime in `docs-viewer/runtime/js/docs-viewer.js`
 
 It exists as a guardrail so the repo can continue adding scope-specific docs behavior without forking the core viewer too early.
 
@@ -33,21 +33,22 @@ Current route-shell examples:
 
 Current shared implementation:
 
-- `assets/docs-viewer/js/docs-viewer.js` as the shared entry controller
-- `assets/docs-viewer/js/docs-viewer-management.js` as the management-mode controller loaded only by management-enabled viewer shells
-- `assets/docs-viewer/js/docs-viewer-management-render.js` for management-only markup helpers imported by the management controller
-- `assets/docs-viewer/js/docs-viewer-management-client.js` for docs-management server transport helpers used by the management controller
-- `assets/docs-viewer/js/docs-viewer-drag-drop.js` for drag/drop helpers used by the management controller
-- `assets/docs-viewer/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by the entry controller
-- `assets/docs-viewer/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the entry controller
-- `assets/docs-viewer/js/docs-viewer-bookmarks.js` for bookmark state, rendering, IndexedDB storage orchestration, and events imported by the entry controller
-- `assets/docs-viewer/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the bookmark controller
-- `assets/docs-viewer/js/docs-viewer-document-controller.js` for document pane visibility, loading/missing/error states, final payload rendering, and report mount context imported by the entry controller
-- `assets/docs-viewer/js/docs-viewer-render.js` for read-oriented result and bookmark markup helpers imported by the entry and bookmark controllers
-- `assets/docs-viewer/js/docs-viewer-router.js` for URL building, anchor route parsing, browser history writes, requested-doc resolution, canonical route correction, popstate orchestration, and payload-load orchestration imported by the entry controller
+- `docs-viewer/runtime/js/docs-viewer.js` as the shared entry controller
+- `docs-viewer/runtime/js/docs-viewer-management.js` as the management-mode controller loaded only by management-enabled viewer shells
+- `docs-viewer/runtime/js/docs-viewer-management-render.js` for management-only markup helpers imported by the management controller
+- `docs-viewer/runtime/js/docs-viewer-management-client.js` for docs-management server transport helpers used by the management controller
+- `docs-viewer/runtime/js/docs-viewer-drag-drop.js` for drag/drop helpers used by the management controller
+- `docs-viewer/runtime/js/docs-viewer-tree.js` for pure tree and visibility helpers imported by the entry controller
+- `docs-viewer/runtime/js/docs-viewer-search.js` for pure inline-search and recently-added helpers imported by the entry controller
+- `docs-viewer/runtime/js/docs-viewer-bookmarks.js` for bookmark state, rendering, IndexedDB storage orchestration, and events imported by the entry controller
+- `docs-viewer/runtime/js/docs-viewer-favourites.js` for bookmark record and IndexedDB storage helpers imported by the bookmark controller
+- `docs-viewer/runtime/js/docs-viewer-document-controller.js` for document pane visibility, loading/missing/error states, final payload rendering, and report mount context imported by the entry controller
+- `docs-viewer/runtime/js/docs-viewer-render.js` for read-oriented result and bookmark markup helpers imported by the entry and bookmark controllers
+- `docs-viewer/runtime/js/docs-viewer-router.js` for URL building, anchor route parsing, browser history writes, requested-doc resolution, canonical route correction, popstate orchestration, and payload-load orchestration imported by the entry controller
 - `_includes/docs_viewer_shell.html`
-- `assets/docs-viewer/css/docs-viewer.css` and `assets/docs-viewer/css/docs-viewer-reports.css` for reusable viewer styling
-- `assets/docs-viewer/css/docs-viewer-management.css` for management-only shell and modal styling
+- `docs-viewer/static/css/docs-viewer-base.css` for portable Docs Viewer tokens and shell utilities
+- `docs-viewer/static/css/docs-viewer.css` and `docs-viewer/static/css/docs-viewer-reports.css` for reusable viewer styling
+- `docs-viewer/static/css/docs-viewer-management.css` for management-only shell and modal styling
 
 The shell loads the entry controller as an ES module.
 Extracted helper modules must not import the entry controller or mutate its shared state directly.
@@ -55,12 +56,13 @@ The management controller receives a narrow context API from the entry controlle
 
 Current CSS base boundary:
 
-- public `/library/` and `/analysis/` routes get `assets/css/main.css` from the public site layout, then load Docs Viewer CSS through the shared include
-- Local Studio `/docs/` gets `assets/css/main.css` and `assets/studio/css/studio.css` from the Studio app shell, then loads Docs Viewer CSS through the shared include
-- `assets/docs-viewer/css/docs-viewer.css` already defines Docs Viewer-prefixed tokens with public-token fallbacks, but the surrounding route shell still supplies page-level typography, body, link, container, and theme defaults
+- public `/library/` and `/analysis/` routes intentionally get `assets/css/main.css` from the public site layout, then load Docs Viewer-owned CSS through the shared include
+- Local Studio `/docs/` gets `studio/app/assets/css/studio.css` from the Studio app shell, then loads Docs Viewer-owned CSS through the shared include
+- `docs-viewer/static/css/docs-viewer-base.css` supplies portable Docs Viewer tokens and shell utilities such as `visually-hidden`, `muted`, `small`, and hidden-state handling inside `.docsViewer`
+- `docs-viewer/static/css/docs-viewer.css` defines viewer component tokens with Docs Viewer theme-token and host-token fallbacks
 
 Because Docs Viewer has public read-only installs and a planned portable shell, reusable Docs Viewer code should not depend on Studio CSS or unrelated public-site page classes.
-If the portable shell needs a base layer, it should be Docs Viewer-owned or explicitly supplied by the host shell, not implicitly inherited from dotlineform public `main.css`.
+Standalone Docs Viewer pages should use the Docs Viewer-owned base layer for page-level shell defaults, while public Jekyll routes may continue to inherit their public host base intentionally.
 
 Current scope-owned data:
 

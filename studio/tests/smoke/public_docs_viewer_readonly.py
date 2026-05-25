@@ -62,6 +62,7 @@ def main() -> int:
                         viewerBaseUrl: root.dataset.viewerBaseUrl || ""
                     })"""
                 )
+                base_css_count = page.locator('link[href*="docs-viewer-base.css"]').count()
                 management_css_count = page.locator('link[href*="docs-viewer-management.css"]').count()
                 studio_css_count = page.locator('link[href*="assets/studio/"], link[href*="studio/app/"]').count()
                 studio_script_count = page.locator('script[src*="assets/studio/"], script[src*="studio/app/"]').count()
@@ -74,6 +75,8 @@ def main() -> int:
                     raise AssertionError(f"{route} unexpectedly exposes management base URL: {root_attrs!r}")
                 if root_attrs["viewerBaseUrl"] not in {"/library/", "/analysis/"}:
                     raise AssertionError(f"{route} has unexpected viewer base URL: {root_attrs!r}")
+                if base_css_count != 1:
+                    raise AssertionError(f"{route} expected one Docs Viewer base stylesheet, got {base_css_count}")
                 if management_css_count:
                     raise AssertionError(f"{route} loaded management CSS")
                 if studio_css_count or studio_script_count:

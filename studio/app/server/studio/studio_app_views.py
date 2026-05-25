@@ -735,6 +735,7 @@ def docs_viewer_shell(version: str, repo_root: Path) -> str:
 
     shell = "\n".join(lines)
     replacements = {
+        "{{ '/docs-viewer/static/css/docs-viewer-base.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer-base.css",
         "{{ '/docs-viewer/static/css/docs-viewer.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer.css",
         "{{ '/docs-viewer/static/css/docs-viewer-reports.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer-reports.css",
         "{{ '/docs-viewer/static/css/docs-viewer-management.css' | relative_url }}": "/docs-viewer/static/css/docs-viewer-management.css",

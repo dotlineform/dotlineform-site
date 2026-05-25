@@ -2,7 +2,7 @@
 doc_id: docs-viewer-css-cascade-design
 title: Docs Viewer CSS Cascade Design
 added_date: 2026-05-11
-last_updated: "2026-05-13 20:20"
+last_updated: 2026-05-25
 parent_id: docs-viewer
 sort_order: 12000
 viewable: true
@@ -12,19 +12,28 @@ viewable: true
 ## Summary
 
 Docs Viewer should be portable without becoming visually isolated from the site that hosts it.
-The host project should provide the page layout, base typography, prose defaults, and theme tokens.
-Docs Viewer should provide its own shell, navigation, search, result, bookmark, status, and management component styles.
+Public host routes should provide page layout, prose defaults, and public-site chrome.
+Docs Viewer should provide its own portable base contract plus shell, navigation, search, result, bookmark, status, report, and management component styles.
 
 ## Target Stylesheet Order
 
-The intended cascade is:
+The intended cascade for public Jekyll routes is:
 
 1. host layout stylesheet, currently `assets/css/main.css`
-2. Docs Viewer public stylesheet, `assets/docs-viewer/css/docs-viewer.css`
-3. Docs Viewer management stylesheet, `assets/docs-viewer/css/docs-viewer-management.css`, only when management mode is enabled
+2. Docs Viewer base stylesheet, `docs-viewer/static/css/docs-viewer-base.css`
+3. Docs Viewer public stylesheet, `docs-viewer/static/css/docs-viewer.css`
+4. Docs Viewer report stylesheet, `docs-viewer/static/css/docs-viewer-reports.css`
 
-The host stylesheet is not loaded by Docs Viewer at runtime.
-It is part of the consuming Jekyll layout.
+The intended cascade for local or standalone management routes is:
+
+1. explicit local shell stylesheet when the host has one, currently `studio/app/assets/css/studio.css` for Local Studio's temporary manage shell
+2. Docs Viewer base stylesheet, `docs-viewer/static/css/docs-viewer-base.css`
+3. Docs Viewer public stylesheet, `docs-viewer/static/css/docs-viewer.css`
+4. Docs Viewer report stylesheet, `docs-viewer/static/css/docs-viewer-reports.css`
+5. Docs Viewer management stylesheet, `docs-viewer/static/css/docs-viewer-management.css`
+
+Public read-only routes intentionally inherit the public host stylesheet so `/library/` and `/analysis/` continue to belong to the public site.
+Docs Viewer does not require the public stylesheet to function.
 The Docs Viewer include adds only Docs Viewer-owned stylesheets.
 
 ## Host Stylesheet Responsibilities
@@ -34,7 +43,6 @@ The host stylesheet owns site-wide presentation:
 - font family and baseline type scale
 - theme tokens such as text, panel, border, muted, and link colors
 - page layout containers
-- global utility classes such as `muted`, `small`, and `visually-hidden`
 - prose/document rules through `.content`
 - generated document media defaults, including responsive images
 
@@ -47,9 +55,20 @@ Generated docs HTML is rendered inside:
 The `content` class is intentional.
 It lets generated markdown output inherit the host project's document typography and media behavior instead of requiring Docs Viewer to recreate every prose rule.
 
+## Docs Viewer Base Stylesheet Responsibilities
+
+`docs-viewer/static/css/docs-viewer-base.css` owns the small portable base contract required by Docs Viewer shells:
+
+- Docs Viewer-prefixed font, type scale, spacing, color, radius, and container tokens with host-token fallbacks
+- `.docsViewer`-scoped utilities such as `visually-hidden`, `muted`, `small`, and hidden-state handling
+- minimal monospace inheritance for code blocks rendered inside the viewer shell
+- opt-in standalone shell body/container defaults for Docs Viewer-owned service pages
+
+It should not restyle public host page chrome or override public `assets/css/main.css` tokens on `/library/` and `/analysis/`.
+
 ## Docs Viewer Public Stylesheet Responsibilities
 
-`assets/docs-viewer/css/docs-viewer.css` should own reusable viewer UI:
+`docs-viewer/static/css/docs-viewer.css` should own reusable viewer UI:
 
 - `.docsViewer` grid and responsive shell
 - sidebar/index layout
@@ -67,7 +86,7 @@ It should not define broad site typography or unrelated public-site layout.
 
 ## Docs Viewer Management Stylesheet Responsibilities
 
-`assets/docs-viewer/css/docs-viewer-management.css` should only load when `allow_management=true`.
+`docs-viewer/static/css/docs-viewer-management.css` should only load when `allow_management=true`.
 It should own management-only surfaces:
 
 - management toolbar row
@@ -80,7 +99,7 @@ It should own management-only surfaces:
 - management notes and unavailable/error states
 - transitional Docs Import form/control styles copied from Studio CSS
 
-Management mode should not depend on `assets/studio/css/studio.css`.
+Management mode should not depend on Studio CSS for Docs Viewer controls, modals, or import surfaces.
 If Docs Import still uses `tagStudio*` class names, copy only the narrow required rules into Docs Viewer management CSS as a transitional compatibility layer.
 Rename or refactor those classes later after the dependency is contained.
 
@@ -116,15 +135,16 @@ This keeps three override levels:
 - Docs Viewer portable fallbacks
 - explicit Docs Viewer theme overrides such as `--docs-viewer-theme-panel`
 
-## What Should Move In Slice 5
+## Applied Extraction State
 
-Move out of `assets/css/main.css`:
+The reusable Docs Viewer browser CSS now lives under `docs-viewer/static/css/`.
+The public stylesheet extraction moved out of `assets/css/main.css`:
 
 - all `.docsViewer*` shell and component rules that are part of the viewer
 - viewer-specific search, bookmark, status, and result styles
 - viewer-specific responsive layout rules
 
-Keep in `assets/css/main.css`:
+The public site stylesheet still owns:
 
 - site chrome
 - general layout/container styles
@@ -133,7 +153,7 @@ Keep in `assets/css/main.css`:
 - generic responsive image rules
 - unrelated Studio, Catalogue, and public-site UI
 
-Move or copy into `assets/docs-viewer/css/docs-viewer-management.css`:
+Management-only styles live in `docs-viewer/static/css/docs-viewer-management.css`:
 
 - management-only `.docsViewer*` rules
 - only the `tagStudio*` form/control rules required by the Docs Import modal
@@ -148,7 +168,7 @@ After changing the cascade:
 - smoke `/library/`
 - smoke `/analysis/`
 - open `/docs/?scope=studio&mode=manage&import=1` and verify the import modal still has usable form controls
-- confirm public routes do not load `assets/studio/css/studio.css`
+- confirm public routes do not load Studio CSS
 - confirm generated docs content still uses host prose and responsive image styling
 
 ## Related Docs

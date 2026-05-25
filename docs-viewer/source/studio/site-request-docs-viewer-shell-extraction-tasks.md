@@ -16,6 +16,12 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
+- Completed `DVSE-011` by adding `docs-viewer/static/css/docs-viewer-base.css` as the explicit Docs Viewer base contract.
+- The shared Docs Viewer include now loads base, viewer, and report CSS for public read-only routes, and adds management CSS only for management-enabled shells.
+- The base stylesheet is intentionally scoped: public `/library/` and `/analysis/` can keep inheriting public `assets/css/main.css`, while standalone/local Docs Viewer shells can opt into Docs Viewer-owned body/container defaults without relying on public `main.css` or Studio CSS.
+- `docs-viewer/static/css/docs-viewer.css` now resolves component color/radius tokens through explicit Docs Viewer theme variables, then Docs Viewer base variables, then host tokens and portable fallbacks.
+- Focused verification passed: Local Studio app server pytest, public Jekyll build to `/tmp/dlf-jekyll-build`, elevated public Docs Viewer read-only smoke for `/library/` and `/analysis/`, and elevated Local Studio Docs Viewer management smoke.
+- Source docs were updated for the CSS base contract and current `docs-viewer/` CSS/runtime paths. No generated docs/search payloads were rebuilt manually; local docs-watcher output may have refreshed the published Studio docs/search JSON after source doc edits.
 - Completed `DVSE-010` by moving Docs Viewer browser runtime modules from `studio/docs-viewer/runtime/js/` to `docs-viewer/runtime/js/` and reusable/management CSS from `studio/docs-viewer/assets/css/` to `docs-viewer/static/css/`.
 - Public route shells and Local Studio's temporary manage shell now reference `/docs-viewer/runtime/js/docs-viewer.js` and `/docs-viewer/static/css/docs-viewer*.css`; old `/studio/docs-viewer/runtime/` and `/studio/docs-viewer/assets/` static serving was removed rather than shimmed.
 - Focused reference checks found no old Studio-owned runtime/static browser paths in the live shell/server/test surfaces. Remaining `studio/docs-viewer/...` references are for later service/build/docs slices or negative tests.
@@ -35,7 +41,7 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### steer for next task
 
-- Start with `DVSE-011`, defining and applying the CSS base contract for standalone Docs Viewer pages, public read-only host routes, and local manage mode.
+- Start with `DVSE-012`, verifying the browser runtime/CSS/static move across the broader smoke set and reference checks.
 - Keep the table sequential: only begin the next non-deferred ID after the current one is `done`.
 - If a task uncovers a new dependency, risk, or unresolved ownership question, add a new task row before continuing rather than widening the active task.
 - Bunch work into coherent slices that reduce repeated verification, but do not combine tasks when the second task depends on evidence from the first.
@@ -92,7 +98,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-008 | done | Move Docs Viewer-owned config, source/scope machinery, generated-data contract defaults, UI text, and non-runtime metadata into the tracked `docs-viewer/` boundary; update readers/writers directly and keep repo-local host/service state outside `docs-viewer/`. |
 | DVSE-009 | done | Verify the config/source/scope move with focused syntax checks, dry-run builders where useful, source config validation, and public scope checks that prove generated JSON/search payload outputs still land where Jekyll routes expect them. |
 | DVSE-010 | done | Move Docs Viewer browser runtime modules, rendering/search/router/report/bookmark/favourites code, reusable CSS, management CSS, and static assets into `docs-viewer/`; update public route shells, module imports, and asset references without adding old-path compatibility shims. |
-| DVSE-011 | planned | Define and apply the CSS base contract for standalone Docs Viewer pages, public read-only host routes, and local manage mode; add a Docs Viewer-owned base stylesheet if the host contract is not enough. |
+| DVSE-011 | done | Define and apply the CSS base contract for standalone Docs Viewer pages, public read-only host routes, and local manage mode; add a Docs Viewer-owned base stylesheet if the host contract is not enough. |
 | DVSE-012 | planned | Verify the browser runtime/CSS/static move with Docs Viewer smoke checks, public `/library/` and `/analysis/` checks, desktop/mobile layout checks where relevant, and targeted JavaScript/CSS reference checks. |
 | DVSE-013 | planned | Move Docs Viewer service modules, management write workflows, local write API contracts, docs watcher or rebuild helpers owned by Docs Viewer, and shell server entrypoints into `docs-viewer/`; keep manage mode loopback-only with explicit local capability flags. |
 | DVSE-014 | planned | Implement the standalone Docs Viewer service shell for built-in `/docs/` manage mode using static `var/local/site.env` service location, clear port-unavailable failure, normal link failure when the service is stopped, and no deployed live manage-mode assumption. |

@@ -2,7 +2,7 @@
 doc_id: docs-viewer
 title: Docs Viewer
 added_date: 2026-04-24
-last_updated: 2026-05-24
+last_updated: 2026-05-25
 parent_id: ""
 sort_order: 5000
 viewable: true
@@ -20,22 +20,23 @@ It currently serves these scopes:
 The current implementation uses:
 
 - scope-specific route shells to define the route, scope, and generated data URLs
-- one shared shell source under `studio/docs-viewer/runtime/shells/`, with minimal public route adapters where read-only Jekyll routes need them
-- one shared runtime entry module in `studio/docs-viewer/runtime/js/docs-viewer.js`
-- document pane, payload rendering, and report mount handoff in `studio/docs-viewer/runtime/js/docs-viewer-document-controller.js`
-- pure tree and visibility helpers in `studio/docs-viewer/runtime/js/docs-viewer-tree.js`
-- pure inline-search and recently-added helpers in `studio/docs-viewer/runtime/js/docs-viewer-search.js`
-- bookmark record and storage helpers in `studio/docs-viewer/runtime/js/docs-viewer-favourites.js`
+- one shared shell include in `_includes/docs_viewer_shell.html`, with minimal public route adapters where read-only Jekyll routes need them
+- one shared runtime entry module in `docs-viewer/runtime/js/docs-viewer.js`
+- document pane, payload rendering, and report mount handoff in `docs-viewer/runtime/js/docs-viewer-document-controller.js`
+- pure tree and visibility helpers in `docs-viewer/runtime/js/docs-viewer-tree.js`
+- pure inline-search and recently-added helpers in `docs-viewer/runtime/js/docs-viewer-search.js`
+- bookmark record and storage helpers in `docs-viewer/runtime/js/docs-viewer-favourites.js`
 - browser-visible report metadata in `assets/data/docs/reports.json`
-- report module allowlist and access checks in `studio/docs-viewer/runtime/js/docs-viewer-reports.js`
-- report modules under `studio/docs-viewer/runtime/js/reports/`
+- report module allowlist and access checks in `docs-viewer/runtime/js/docs-viewer-reports.js`
+- report modules under `docs-viewer/runtime/js/reports/`
 - generated semantic-reference artifacts under `assets/data/docs/scopes/<scope>/references/`
-- browser-safe Docs Viewer settings in `studio/docs-viewer/config/runtime/docs-viewer-config.json`, generated/projected from `studio/docs-viewer/config/scopes/docs_scopes.json`
-- public read-only Docs Viewer config source in `studio/docs-viewer/config/runtime/docs-viewer-public-config.json`
-- Docs Viewer UI text in `studio/docs-viewer/config/ui-text/ui-text.json`
-- reusable Docs Viewer CSS in `studio/docs-viewer/assets/css/docs-viewer.css` and `studio/docs-viewer/assets/css/docs-viewer-reports.css`
+- browser-safe Docs Viewer settings in `docs-viewer/config/defaults/docs-viewer-config.json`, projected from `docs-viewer/config/scopes/docs_scopes.json`
+- public read-only Docs Viewer config source in `docs-viewer/config/defaults/docs-viewer-public-config.json`
+- Docs Viewer UI text in `docs-viewer/config/ui-text/ui-text.json`
+- Docs Viewer base CSS in `docs-viewer/static/css/docs-viewer-base.css`
+- reusable Docs Viewer CSS in `docs-viewer/static/css/docs-viewer.css` and `docs-viewer/static/css/docs-viewer-reports.css`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
-- a management-only stylesheet in `studio/docs-viewer/assets/css/docs-viewer-management.css`, loaded only by `/docs/`
+- a management-only stylesheet in `docs-viewer/static/css/docs-viewer-management.css`, loaded only by management-enabled shells
 
 Public viewer routes are read-only:
 
@@ -43,9 +44,10 @@ Public viewer routes are read-only:
 - `/analysis/` loads the Analysis scope directly and does not expose `?mode=manage`
 - `/docs/` is the local management shell and can load `studio`, `library`, or `analysis` through its `scope` query parameter
 
-The current route shells still provide the page-level CSS base.
-Public `/library/` and `/analysis/` inherit `assets/css/main.css` from the public site layout, while Local Studio `/docs/` inherits the Studio app shell CSS before the shared Docs Viewer include loads Docs Viewer CSS.
-The planned shell extraction should make that base contract explicit so portable Docs Viewer installs do not accidentally depend on Studio CSS or dotlineform public `main.css`.
+The CSS base contract is explicit.
+Public `/library/` and `/analysis/` intentionally inherit `assets/css/main.css` from the public site layout so generated docs content keeps host prose and media styling.
+The shared Docs Viewer include also loads `docs-viewer/static/css/docs-viewer-base.css`, which supplies Docs Viewer-owned tokens and small utilities required by the viewer shell.
+Standalone/local Docs Viewer shells can opt into the base page layer with a Docs Viewer shell body class instead of depending on Studio CSS or dotlineform public `main.css`.
 
 This section documents the current Docs Viewer implementation as a common module.
 It explains how the shared viewer serves multiple scopes, how the current viewer behaves, and how source docs are organised.

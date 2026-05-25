@@ -1,19 +1,19 @@
 /* docs-viewer/static/css/docs-viewer.css */
 
 .docsViewer{
-  --docs-viewer-measure: var(--content-measure, 72ch);
+  --docs-viewer-measure: var(--docs-viewer-content-measure, var(--content-measure, 72ch));
   --docs-viewer-draft-color: var(--docs-viewer-muted);
-  --docs-viewer-text: var(--text, #111);
-  --docs-viewer-muted: var(--muted, #555);
-  --docs-viewer-bg: var(--bg, #fff);
-  --docs-viewer-panel: var(--panel, #fff);
-  --docs-viewer-panel-2: var(--panel-2, #f6f6f6);
-  --docs-viewer-border: var(--border, #d8d8d8);
-  --docs-viewer-border-strong: var(--border-strong, #aaa);
-  --docs-viewer-link: var(--link, #333);
-  --docs-viewer-link-hover: var(--link-hover, #111);
-  --docs-viewer-link-visited: var(--link-visited, #5b2aa6);
-  --docs-viewer-radius: var(--radius, 0.625rem);
+  --docs-viewer-text: var(--docs-viewer-theme-text, var(--docs-viewer-base-text, var(--text, #111)));
+  --docs-viewer-muted: var(--docs-viewer-theme-muted, var(--docs-viewer-base-muted, var(--muted, #555)));
+  --docs-viewer-bg: var(--docs-viewer-theme-bg, var(--docs-viewer-base-bg, var(--bg, #fff)));
+  --docs-viewer-panel: var(--docs-viewer-theme-panel, var(--docs-viewer-base-panel, var(--panel, #fff)));
+  --docs-viewer-panel-2: var(--docs-viewer-theme-panel-2, var(--docs-viewer-base-panel-2, var(--panel-2, #f6f6f6)));
+  --docs-viewer-border: var(--docs-viewer-theme-border, var(--docs-viewer-base-border, var(--border, #d8d8d8)));
+  --docs-viewer-border-strong: var(--docs-viewer-theme-border-strong, var(--docs-viewer-base-border-strong, var(--border-strong, #aaa)));
+  --docs-viewer-link: var(--docs-viewer-theme-link, var(--docs-viewer-base-link, var(--link, #333)));
+  --docs-viewer-link-hover: var(--docs-viewer-theme-link-hover, var(--docs-viewer-base-link-hover, var(--link-hover, #111)));
+  --docs-viewer-link-visited: var(--docs-viewer-theme-link-visited, var(--docs-viewer-base-link-visited, var(--link-visited, #5b2aa6)));
+  --docs-viewer-radius: var(--docs-viewer-theme-radius, var(--radius, 0.625rem));
   --docs-viewer-font-small: var(--font-small, 0.875rem);
   --docs-viewer-line-snug: var(--line-snug, 1.25);
   --docs-viewer-space-2: var(--space-2, 0.625rem);

@@ -2,7 +2,7 @@
 doc_id: docs-viewer-reports
 title: Docs Viewer Reports
 added_date: 2026-05-13
-last_updated: 2026-05-20
+last_updated: 2026-05-25
 parent_id: docs-viewer
 sort_order: 8000
 viewer_report: reports_list
@@ -66,7 +66,7 @@ It can be used by documentation and by the `reports_list` report without inspect
 
 Executable module loading remains allowlisted in:
 
-- `studio/docs-viewer/runtime/js/docs-viewer-reports.js`
+- `docs-viewer/runtime/js/docs-viewer-reports.js`
 
 The JSON registry does not define arbitrary import paths.
 Adding a JSON entry without a matching allowlisted loader does not make a new report executable.
@@ -133,6 +133,6 @@ Poor report candidates are workflows with writes, long-running operations, broad
 ## Files
 
 - `assets/data/docs/reports.json`
-- `studio/docs-viewer/runtime/js/docs-viewer-reports.js`
-- `studio/docs-viewer/runtime/js/reports/`
-- `studio/docs-viewer/assets/css/docs-viewer-reports.css`
+- `docs-viewer/runtime/js/docs-viewer-reports.js`
+- `docs-viewer/runtime/js/reports/`
+- `docs-viewer/static/css/docs-viewer-reports.css`

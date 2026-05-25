@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-files
 title: Docs Viewer Portable File Manifest
 added_date: 2026-05-19
-last_updated: 2026-05-20
+last_updated: 2026-05-25
 parent_id: docs-viewer-portable-setup
 sort_order: 3100
 ---
@@ -10,8 +10,8 @@ sort_order: 3100
 
 ## Files To Copy
 
-These lists are the current copy set, not the desired future package boundary.
-Reusable Docs Viewer runtime, CSS, and UI text now lives under `assets/docs-viewer/`.
+These lists are the current copy set during the shell extraction, not the final standalone package boundary.
+Reusable Docs Viewer runtime, CSS, config defaults, and UI text now live under `docs-viewer/`.
 Docs Import is part of that package boundary when management mode is enabled.
 
 ### Viewer Shell
@@ -41,68 +41,76 @@ That adapter renders management markup only when `docs_viewer_management_enabled
 
 Copy the shared viewer runtime files:
 
-- `assets/docs-viewer/js/docs-viewer.js`
-- `assets/docs-viewer/js/docs-viewer-config-controller.js`
-- `assets/docs-viewer/js/docs-viewer-data.js`
-- `assets/docs-viewer/js/docs-viewer-document-controller.js`
-- `assets/docs-viewer/js/docs-viewer-tree.js`
-- `assets/docs-viewer/js/docs-viewer-sidebar.js`
-- `assets/docs-viewer/js/docs-viewer-search.js`
-- `assets/docs-viewer/js/docs-viewer-search-controller.js`
-- `assets/docs-viewer/js/docs-viewer-bookmarks.js`
-- `assets/docs-viewer/js/docs-viewer-favourites.js`
-- `assets/docs-viewer/js/docs-viewer-render.js`
-- `assets/docs-viewer/js/docs-viewer-reports.js`
-- `assets/docs-viewer/js/docs-viewer-router.js`
-- `assets/docs-viewer/js/reports/`
+- `docs-viewer/runtime/js/docs-viewer.js`
+- `docs-viewer/runtime/js/docs-viewer-config-controller.js`
+- `docs-viewer/runtime/js/docs-viewer-data.js`
+- `docs-viewer/runtime/js/docs-viewer-document-controller.js`
+- `docs-viewer/runtime/js/docs-viewer-tree.js`
+- `docs-viewer/runtime/js/docs-viewer-sidebar.js`
+- `docs-viewer/runtime/js/docs-viewer-index-panel.js`
+- `docs-viewer/runtime/js/docs-viewer-search.js`
+- `docs-viewer/runtime/js/docs-viewer-search-controller.js`
+- `docs-viewer/runtime/js/docs-viewer-bookmarks.js`
+- `docs-viewer/runtime/js/docs-viewer-favourites.js`
+- `docs-viewer/runtime/js/docs-viewer-render.js`
+- `docs-viewer/runtime/js/docs-viewer-reports.js`
+- `docs-viewer/runtime/js/docs-viewer-router.js`
+- `docs-viewer/runtime/js/reports/`
 
 For management mode, also copy:
 
-- `assets/docs-viewer/js/docs-viewer-management.js`
-- `assets/docs-viewer/js/docs-viewer-management-actions.js`
-- `assets/docs-viewer/js/docs-viewer-management-capabilities.js`
-- `assets/docs-viewer/js/docs-viewer-management-client.js`
-- `assets/docs-viewer/js/docs-viewer-management-config.js`
-- `assets/docs-viewer/js/docs-viewer-management-interactions.js`
-- `assets/docs-viewer/js/docs-viewer-management-modals.js`
-- `assets/docs-viewer/js/docs-viewer-management-render.js`
-- `assets/docs-viewer/js/docs-viewer-scope-lifecycle.js`
-- `assets/docs-viewer/js/docs-viewer-drag-drop.js`
+- `docs-viewer/runtime/js/docs-viewer-management.js`
+- `docs-viewer/runtime/js/docs-viewer-management-action-workflow.js`
+- `docs-viewer/runtime/js/docs-viewer-management-actions.js`
+- `docs-viewer/runtime/js/docs-viewer-management-capabilities.js`
+- `docs-viewer/runtime/js/docs-viewer-management-client.js`
+- `docs-viewer/runtime/js/docs-viewer-management-config.js`
+- `docs-viewer/runtime/js/docs-viewer-management-interactions.js`
+- `docs-viewer/runtime/js/docs-viewer-management-modal-shell.js`
+- `docs-viewer/runtime/js/docs-viewer-management-modals.js`
+- `docs-viewer/runtime/js/docs-viewer-management-parent-picker.js`
+- `docs-viewer/runtime/js/docs-viewer-management-render.js`
+- `docs-viewer/runtime/js/docs-viewer-scope-lifecycle.js`
+- `docs-viewer/runtime/js/docs-viewer-drag-drop.js`
 
 For Docs Import inside the management modal, also copy:
 
-- `assets/docs-viewer/js/docs-html-import.js`
-- `assets/docs-viewer/js/docs-html-import-modals.js`
+- `docs-viewer/runtime/js/docs-html-import.js`
+- `docs-viewer/runtime/js/docs-html-import-modals.js`
+- `docs-viewer/runtime/js/docs-html-import-render.js`
+- `docs-viewer/runtime/js/docs-html-import-workflow.js`
 
 ### CSS
 
 Copy:
 
-- `assets/docs-viewer/css/docs-viewer-management.css`
-- `assets/docs-viewer/css/docs-viewer.css`
-- `assets/docs-viewer/css/docs-viewer-reports.css`
+- `docs-viewer/static/css/docs-viewer-base.css`
+- `docs-viewer/static/css/docs-viewer.css`
+- `docs-viewer/static/css/docs-viewer-reports.css`
+- `docs-viewer/static/css/docs-viewer-management.css`
 
 The host site should still load its own base stylesheet for tokens, prose rules, responsive media defaults, and the `.content` contract used by generated docs HTML.
-The viewer include now loads Docs Viewer-owned CSS for the shell, controls, index, search, results, bookmarks, status menu, management surfaces, and the transitional Docs Import form/control primitives.
-Management mode no longer loads `assets/studio/css/studio.css`.
+The viewer include now loads Docs Viewer-owned CSS for the portable base contract, shell, controls, index, search, results, bookmarks, status menu, report components, management surfaces, and the transitional Docs Import form/control primitives.
+Public read-only routes may intentionally inherit public host CSS; standalone/local Docs Viewer shells should not require public `assets/css/main.css`.
 
 ### Config And UI Text
 
 Copy:
 
-- `assets/docs-viewer/data/docs-viewer-config.json`
-- `assets/docs-viewer/data/ui-text.json`
+- `docs-viewer/config/defaults/docs-viewer-config.json`
+- `docs-viewer/config/defaults/docs-viewer-public-config.json`
+- `docs-viewer/config/ui-text/ui-text.json`
 - `assets/data/docs/reports.json`
 
-`assets/docs-viewer/data/docs-viewer-config.json` is generated from `studio/docs-viewer/config/scopes/docs_scopes.json`.
+`docs-viewer/config/defaults/docs-viewer-config.json` is projected from `docs-viewer/config/scopes/docs_scopes.json`.
 It is required by the browser runtime and now includes the browser-safe Docs Viewer settings such as recently-added limits, hidden-doc styling, hidden-doc emoji, and per-scope UI-status options.
 Each configured scope also carries its Docs Viewer search policy and search index URL in this browser config.
 The viewer does not keep a hardcoded fallback scope list.
-Docs Import copy is nested in `assets/docs-viewer/data/ui-text.json` under `docs_html_import`.
-Settings-modal copy is also owned by `assets/docs-viewer/data/ui-text.json`.
+Docs Import copy is nested in `docs-viewer/config/ui-text/ui-text.json` under `docs_html_import`.
+Settings-modal copy is also owned by `docs-viewer/config/ui-text/ui-text.json`.
 `assets/data/docs/reports.json` is the browser-visible report metadata registry.
 It lists report ids, titles, descriptions, access defaults, and presets.
-The executable report module allowlist remains in `assets/docs-viewer/js/docs-viewer-reports.js`, so changing the JSON alone cannot make the viewer import an arbitrary module.
+The executable report module allowlist remains in `docs-viewer/runtime/js/docs-viewer-reports.js`, so changing the JSON alone cannot make the viewer import an arbitrary module.
 
 ### Generated Data Outputs
 

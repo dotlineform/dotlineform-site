@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c0da820d8f5635aa94ca80778200f373",
-    "generated_at_utc": "2026-05-24T23:17:15Z",
+    "version": "blake2b-962004e72d109eaba41ce6b9c998da2d",
+    "generated_at_utc": "2026-05-25T10:00:54Z",
     "count": 309
   },
   "entries": [
@@ -2153,10 +2153,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable File Manifest",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-files",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Docs Viewer Portable Setup",
-      "display_meta": "2026-05-20 • Docs Viewer Portable Setup",
+      "display_meta": "2026-05-25 • Docs Viewer Portable Setup",
       "search_terms": [
         "docs-viewer-portable-files",
         "docs",
@@ -2168,12 +2168,12 @@
         "manifest",
         "docs viewer portable setup",
         "setup",
-        "2026-05-20",
+        "2026-05-25",
         "2026",
         "05",
-        "20"
+        "25"
       ],
-      "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-20 2026 05 20"
+      "search_text": "docs-viewer-portable-files docs viewer portable files docs viewer portable file manifest file manifest docs viewer portable setup setup 2026-05-25 2026 05 25"
     },
     {
       "id": "docs-viewer-portable-source-shape",
@@ -2865,19 +2865,19 @@
       "kind": "doc",
       "title": "Docs Viewer",
       "href": "/docs/?scope=studio&doc=docs-viewer",
-      "last_updated": "2026-05-24",
-      "display_meta": "2026-05-24",
+      "last_updated": "2026-05-25",
+      "display_meta": "2026-05-25",
       "search_terms": [
         "docs-viewer",
         "docs",
         "viewer",
         "docs viewer",
-        "2026-05-24",
+        "2026-05-25",
         "2026",
         "05",
-        "24"
+        "25"
       ],
-      "search_text": "docs-viewer docs viewer docs viewer 2026-05-24 2026 05 24"
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-25 2026 05 25"
     },
     {
       "id": "docs-viewer-media-handling",
@@ -3910,10 +3910,10 @@
       "kind": "doc",
       "title": "Docs Viewer Reports",
       "href": "/docs/?scope=studio&doc=docs-viewer-reports",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-20 • Docs Viewer",
+      "display_meta": "2026-05-25 • Docs Viewer",
       "search_terms": [
         "docs-viewer-reports",
         "docs",
@@ -3921,12 +3921,12 @@
         "reports",
         "docs viewer reports",
         "docs viewer",
-        "2026-05-20",
+        "2026-05-25",
         "2026",
         "05",
-        "20"
+        "25"
       ],
-      "search_text": "docs-viewer-reports docs viewer reports docs viewer reports docs viewer 2026-05-20 2026 05 20"
+      "search_text": "docs-viewer-reports docs viewer reports docs viewer reports docs viewer 2026-05-25 2026 05 25"
     },
     {
       "id": "search",
@@ -5040,10 +5040,10 @@
       "kind": "doc",
       "title": "Docs Viewer CSS Cascade Design",
       "href": "/docs/?scope=studio&doc=docs-viewer-css-cascade-design",
-      "last_updated": "2026-05-13 20:20",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-13 20:20 • Docs Viewer",
+      "display_meta": "2026-05-25 • Docs Viewer",
       "search_terms": [
         "docs-viewer-css-cascade-design",
         "docs",
@@ -5053,13 +5053,12 @@
         "design",
         "docs viewer css cascade design",
         "docs viewer",
-        "2026-05-13 20:20",
+        "2026-05-25",
         "2026",
         "05",
-        "13",
-        "20"
+        "25"
       ],
-      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design docs viewer css cascade design docs viewer 2026-05-13 20:20 2026 05 13 20"
+      "search_text": "docs-viewer-css-cascade-design docs viewer css cascade design docs viewer css cascade design docs viewer 2026-05-25 2026 05 25"
     },
     {
       "id": "new-pipeline-implementation-plan",
@@ -5162,10 +5161,10 @@
       "kind": "doc",
       "title": "Docs Viewer Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-24 • Docs Viewer",
+      "display_meta": "2026-05-25 • Docs Viewer",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -5174,12 +5173,12 @@
         "boundary",
         "docs viewer runtime boundary",
         "docs viewer",
-        "2026-05-24",
+        "2026-05-25",
         "2026",
         "05",
-        "24"
+        "25"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-24 2026 05 24"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-25 2026 05 25"
     },
     {
       "id": "scripts-generate-work-pages",
