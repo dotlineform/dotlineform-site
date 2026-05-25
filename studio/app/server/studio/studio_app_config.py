@@ -340,11 +340,6 @@ PRODUCTION_SITE_BASE = "https://dotlineform.com"
 
 def asset_version(repo_root: Path) -> str:
     candidates = [
-        repo_root / "_includes" / "docs_viewer_shell.html",
-        repo_root / "docs-viewer" / "runtime" / "js" / "docs-viewer.js",
-        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer.css",
-        repo_root / "docs-viewer" / "static" / "css" / "docs-viewer-management.css",
-        repo_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-config.json",
         repo_root / "studio" / "app" / "frontend" / "js" / "studio-navigation.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "tag-groups.js",
         repo_root / "studio" / "app" / "frontend" / "js" / "tag-registry.js",

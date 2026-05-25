@@ -39,7 +39,7 @@ def main(argv: list[str] | None = None) -> int:
                 page.on(
                     "request",
                     lambda request: posts.append(request.url)
-                    if request.method == "POST" and "/studio/api/docs/docs/" in request.url
+                    if request.method == "POST" and "/docs/" in request.url
                     else None,
                 )
 
@@ -72,7 +72,7 @@ def main(argv: list[str] | None = None) -> int:
                 raise AssertionError(f"missing expected move POST; saw {posts!r}")
             if errors:
                 raise AssertionError(f"page errors during local Docs move UI smoke: {errors!r}")
-            print(f"local Studio Docs move UI OK: {base_url}/docs/?scope=studio&doc=root-doc&mode=manage")
+            print(f"Docs Viewer service move UI OK: {base_url}/docs/?scope=studio&doc=root-doc&mode=manage")
             return 0
         finally:
             server.shutdown()

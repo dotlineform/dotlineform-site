@@ -20,7 +20,7 @@ from studio.app.server.studio.studio_analytics_api import analytics_get_payload,
 from studio.app.server.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio.app.server.studio.studio_app_config import asset_version, runtime_config  # noqa: E402
 from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, env_flag, parse_args  # noqa: E402
-from studio.app.server.studio.studio_app_views import docs_viewer_manage_view, studio_home_view, studio_route_view  # noqa: E402
+from studio.app.server.studio.studio_app_views import studio_home_view, studio_route_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
 from studio.app.server.studio.studio_ui_catalogue_views import ui_catalogue_demo_view  # noqa: E402
@@ -159,10 +159,6 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/studio/app/frontend/js/catalogue-work-editor.js") is True
     assert allowed("/studio/app/assets/css/studio.css") is True
     assert allowed("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js") is True
-    assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is True
-    assert allowed("/docs-viewer/static/css/docs-viewer-base.css") is True
-    assert allowed("/docs-viewer/static/css/docs-viewer.css") is True
-    assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is True
     assert allowed("/assets/data/docs/scopes/studio/index.json") is True
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
@@ -176,13 +172,15 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/assets/docs-viewer/css/docs-viewer.css") is False
     assert allowed("/assets/docs-viewer/data/docs-viewer-config.json") is False
     assert allowed("/studio/docs-viewer/runtime/js/docs-viewer.js") is False
+    assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is False
+    assert allowed("/docs-viewer/static/css/docs-viewer-base.css") is False
+    assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is False
 
 
 def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
     html_shells = [
         studio_home_view("test-version"),
         studio_route_view("test-version", "studio_analytics", "<p>Analytics</p>"),
-        docs_viewer_manage_view("test-version", REPO_ROOT),
         ui_catalogue_demo_view("test-version", REPO_ROOT, "ui_catalogue_demos"),
     ]
 
@@ -196,13 +194,11 @@ def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
 def test_local_studio_asset_version_does_not_follow_public_main_css() -> None:
     with tempfile.TemporaryDirectory() as tmp_dir:
         repo_root = Path(tmp_dir)
-        docs_shell = repo_root / "_includes" / "docs_viewer_shell.html"
         public_css = repo_root / "assets" / "css" / "main.css"
         studio_css = repo_root / "studio" / "app" / "assets" / "css" / "studio.css"
-        for path in (docs_shell, public_css, studio_css):
+        for path in (public_css, studio_css):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("/* fixture */\n", encoding="utf-8")
-        os.utime(docs_shell, (100, 100))
         os.utime(studio_css, (200, 200))
         os.utime(public_css, (300, 300))
 

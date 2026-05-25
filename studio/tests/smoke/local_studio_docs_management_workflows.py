@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import json
 import shutil
 import sys
@@ -17,9 +18,10 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
+sys.path.insert(0, str(REPO_ROOT / "docs-viewer" / "services"))
 
 from studio.app.server.studio import studio_docs_api  # noqa: E402
-from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
+from docs_viewer_service import DocsViewerServer, DocsViewerServiceConfig  # noqa: E402
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -56,21 +58,144 @@ def copy_scripts_fixture(target_root: Path) -> None:
         target_root / "scripts",
         ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
     )
-    (target_root / "_includes").mkdir(parents=True, exist_ok=True)
-    shutil.copy2(REPO_ROOT / "_includes" / "docs_viewer_shell.html", target_root / "_includes" / "docs_viewer_shell.html")
-    shutil.copytree(REPO_ROOT / "assets" / "docs-viewer", target_root / "assets" / "docs-viewer")
-    shutil.copytree(REPO_ROOT / "assets" / "studio", target_root / "assets" / "studio")
-    (target_root / "assets" / "css").mkdir(parents=True, exist_ok=True)
-    shutil.copy2(REPO_ROOT / "assets" / "css" / "main.css", target_root / "assets" / "css" / "main.css")
+    shutil.copytree(REPO_ROOT / "docs-viewer" / "runtime", target_root / "docs-viewer" / "runtime")
+    shutil.copytree(REPO_ROOT / "docs-viewer" / "static", target_root / "docs-viewer" / "static")
+    shutil.copytree(REPO_ROOT / "docs-viewer" / "shell", target_root / "docs-viewer" / "shell")
+    shutil.copytree(REPO_ROOT / "docs-viewer" / "config" / "ui-text", target_root / "docs-viewer" / "config" / "ui-text")
+    (target_root / "docs-viewer" / "config" / "defaults").mkdir(parents=True, exist_ok=True)
+    shutil.copy2(
+        REPO_ROOT / "docs-viewer" / "config" / "defaults" / "docs-viewer-service.json",
+        target_root / "docs-viewer" / "config" / "defaults" / "docs-viewer-service.json",
+    )
     reports_path = REPO_ROOT / "assets" / "data" / "docs" / "reports.json"
     if reports_path.exists():
         (target_root / "assets" / "data" / "docs").mkdir(parents=True, exist_ok=True)
         shutil.copy2(reports_path, target_root / "assets" / "data" / "docs" / "reports.json")
 
 
+def write_docs_scope_config(target_root: Path) -> None:
+    write_json(
+        target_root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v1",
+            "scopes": [
+                {
+                    "scope_id": "studio",
+                    "source": "docs-viewer/source/studio",
+                    "media_path_prefix": "docs/studio",
+                    "output": "assets/data/docs/scopes/studio",
+                    "viewer_base_url": "/docs/",
+                    "include_scope_param": True,
+                    "default_doc_id": "root-doc",
+                    "allow_nested_source": False,
+                    "non_loadable_doc_ids": [],
+                    "manage_only_tree_root_ids": [],
+                    "show_updated_date": True,
+                    "allow_unresolved_parent_ids": False,
+                    "import_media_storage": {
+                        "storage_mode": "staging_manual",
+                        "repo_assets_path_prefix": "assets/docs/studio",
+                        "repo_assets_public_path_prefix": "/assets/docs/studio",
+                    },
+                },
+                {
+                    "scope_id": "library",
+                    "source": "docs-viewer/source/library",
+                    "media_path_prefix": "docs/library",
+                    "output": "assets/data/docs/scopes/library",
+                    "viewer_base_url": "/library/",
+                    "include_scope_param": False,
+                    "default_doc_id": "library",
+                    "allow_nested_source": False,
+                    "non_loadable_doc_ids": [],
+                    "manage_only_tree_root_ids": [],
+                    "show_updated_date": True,
+                    "allow_unresolved_parent_ids": False,
+                    "import_media_storage": {
+                        "storage_mode": "staging_manual",
+                        "repo_assets_path_prefix": "assets/docs/library",
+                        "repo_assets_public_path_prefix": "/assets/docs/library",
+                    },
+                },
+                {
+                    "scope_id": "analysis",
+                    "source": "docs-viewer/source/analysis",
+                    "media_path_prefix": "docs/analysis",
+                    "output": "assets/data/docs/scopes/analysis",
+                    "viewer_base_url": "/analysis/",
+                    "include_scope_param": False,
+                    "default_doc_id": "analysis",
+                    "allow_nested_source": False,
+                    "non_loadable_doc_ids": [],
+                    "manage_only_tree_root_ids": [],
+                    "show_updated_date": True,
+                    "allow_unresolved_parent_ids": False,
+                    "import_media_storage": {
+                        "storage_mode": "staging_manual",
+                        "repo_assets_path_prefix": "assets/docs/analysis",
+                        "repo_assets_public_path_prefix": "/assets/docs/analysis",
+                    },
+                },
+            ],
+            "docs_viewer": {
+                "recently_added_limit": 10,
+                "ui_statuses_by_scope": {
+                    "studio": [
+                        {"ui_status": "draft", "label": "Draft", "emoji": "D"},
+                        {"ui_status": "review", "label": "Review", "emoji": "R"},
+                        {"ui_status": "done", "label": "Done", "emoji": "Y"},
+                    ]
+                },
+            },
+        },
+    )
+
+
+def write_browser_config(target_root: Path) -> None:
+    write_json(
+        target_root / "docs-viewer/config/defaults/docs-viewer-config.json",
+        {
+            "schema_version": "docs_viewer_config_v1",
+            "default_scope_id": "studio",
+            "scopes": [
+                {
+                    "scope_id": "studio",
+                    "viewer_base_url": "/docs/",
+                    "include_scope_param": True,
+                    "default_doc_id": "root-doc",
+                    "media_path_prefix": "docs/studio",
+                    "index_url": "/assets/data/docs/scopes/studio/index.json",
+                    "search_index_url": "/assets/data/search/studio/index.json",
+                },
+                {
+                    "scope_id": "library",
+                    "viewer_base_url": "/library/",
+                    "include_scope_param": False,
+                    "default_doc_id": "library",
+                    "media_path_prefix": "docs/library",
+                    "index_url": "/assets/data/docs/scopes/library/index.json",
+                    "search_index_url": "/assets/data/search/library/index.json",
+                },
+                {
+                    "scope_id": "analysis",
+                    "viewer_base_url": "/analysis/",
+                    "include_scope_param": False,
+                    "default_doc_id": "analysis",
+                    "media_path_prefix": "docs/analysis",
+                    "index_url": "/assets/data/docs/scopes/analysis/index.json",
+                    "search_index_url": "/assets/data/search/analysis/index.json",
+                },
+            ],
+            "docs_viewer": {"recently_added_limit": 10},
+        },
+    )
+
+
 def create_fixture_repo(target_root: Path) -> None:
     copy_scripts_fixture(target_root)
     (target_root / "_config.yml").write_text("title: docs workflow fixture\n", encoding="utf-8")
+    write_docs_scope_config(target_root)
+    write_browser_config(target_root)
     for scope, default_doc in {
         "studio": "root-doc",
         "library": "library",
@@ -233,12 +358,22 @@ def patch_rebuilds(repo_root: Path) -> None:
     sys.modules["docs_html_import"].validate_markdown_with_jekyll = fake_validate_markdown_with_jekyll
 
 
-def start_server(repo_root: Path) -> tuple[StudioAppServer, str]:
+def start_server(repo_root: Path) -> tuple[DocsViewerServer, str]:
     patch_rebuilds(repo_root)
-    server = StudioAppServer(("127.0.0.1", 0), repo_root)
+    config = DocsViewerServiceConfig(
+        host="127.0.0.1",
+        port=0,
+        base_url="http://127.0.0.1:0",
+        management_enabled=True,
+        generated_reads_enabled=True,
+        watch_enabled=True,
+    )
+    server = DocsViewerServer(("127.0.0.1", 0), repo_root, config)
+    base_url = f"http://127.0.0.1:{server.server_address[1]}"
+    server.docs_viewer_config = replace(config, port=server.server_address[1], base_url=base_url)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
-    return server, f"http://127.0.0.1:{server.server_address[1]}"
+    return server, base_url
 
 
 def request_json(base_url: str, method: str, path: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -267,7 +402,7 @@ def main(argv: list[str] | None = None) -> int:
         create_fixture_repo(fixture_root)
         server, base_url = start_server(fixture_root)
         try:
-            settings = request_json(base_url, "GET", "/studio/api/docs/docs/source-config-settings?scope=studio")
+            settings = request_json(base_url, "GET", "/docs/source-config-settings?scope=studio")
             assert_ok(settings, "source config settings")
             if settings["scopes"][0]["scope_id"] != "studio":
                 raise AssertionError(f"unexpected settings payload: {settings!r}")
@@ -275,14 +410,14 @@ def main(argv: list[str] | None = None) -> int:
             settings_apply = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/source-config-settings",
+                "/docs/source-config-settings",
                 {"scope": "studio", "changes": {"show_updated_date": False}},
             )
             assert_ok(settings_apply, "source config settings apply")
             if settings_apply.get("rebuild", {}).get("fixture_rebuild") is not True:
                 raise AssertionError(f"settings apply did not rebuild through fixture patch: {settings_apply!r}")
 
-            import_listing = request_json(base_url, "GET", "/studio/api/docs/docs/import-source-files")
+            import_listing = request_json(base_url, "GET", "/docs/import-source-files")
             assert_ok(import_listing, "import source files")
             if not any(item.get("filename") == "staged-doc.md" for item in import_listing.get("files", [])):
                 raise AssertionError(f"staged import file not listed: {import_listing!r}")
@@ -290,7 +425,7 @@ def main(argv: list[str] | None = None) -> int:
             created = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/create",
+                "/docs/create",
                 {"scope": "studio", "title": "API Smoke Created", "parent_id": ""},
             )
             assert_ok(created, "create")
@@ -302,7 +437,7 @@ def main(argv: list[str] | None = None) -> int:
             metadata = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/update-metadata",
+                "/docs/update-metadata",
                 {
                     "scope": "studio",
                     "doc_id": doc_id,
@@ -321,7 +456,7 @@ def main(argv: list[str] | None = None) -> int:
             moved = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/move",
+                "/docs/move",
                 {"scope": "studio", "doc_id": doc_id, "target_doc_id": "sibling-doc", "position": "after"},
             )
             assert_ok(moved, "move")
@@ -331,7 +466,7 @@ def main(argv: list[str] | None = None) -> int:
             archived = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/archive",
+                "/docs/archive",
                 {"scope": "studio", "doc_id": doc_id},
             )
             assert_ok(archived, "archive")
@@ -341,7 +476,7 @@ def main(argv: list[str] | None = None) -> int:
             delete_preview = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/delete-preview",
+                "/docs/delete-preview",
                 {"scope": "studio", "doc_id": doc_id},
             )
             assert_ok(delete_preview, "delete preview")
@@ -351,7 +486,7 @@ def main(argv: list[str] | None = None) -> int:
             deleted = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/delete-apply",
+                "/docs/delete-apply",
                 {"scope": "studio", "doc_id": doc_id, "confirm": True},
             )
             assert_ok(deleted, "delete apply")
@@ -361,7 +496,7 @@ def main(argv: list[str] | None = None) -> int:
             rebuild = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/rebuild",
+                "/docs/rebuild",
                 {"scope": "studio"},
             )
             assert_ok(rebuild, "rebuild")
@@ -371,7 +506,7 @@ def main(argv: list[str] | None = None) -> int:
             scope_create_preview = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/scopes/create-preview",
+                "/docs/scopes/create-preview",
                 {
                     "scope_id": "apismoke",
                     "title": "API Smoke Scope",
@@ -389,7 +524,7 @@ def main(argv: list[str] | None = None) -> int:
             scope_created = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/scopes/create-apply",
+                "/docs/scopes/create-apply",
                 {
                     "scope_id": "apismoke",
                     "title": "API Smoke Scope",
@@ -408,7 +543,7 @@ def main(argv: list[str] | None = None) -> int:
             scope_delete_preview = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/scopes/delete-preview",
+                "/docs/scopes/delete-preview",
                 {"scope_id": "apismoke"},
             )
             assert_ok(scope_delete_preview, "scope delete preview")
@@ -418,19 +553,19 @@ def main(argv: list[str] | None = None) -> int:
             scope_deleted = request_json(
                 base_url,
                 "POST",
-                "/studio/api/docs/docs/scopes/delete-apply",
+                "/docs/scopes/delete-apply",
                 {"scope_id": "apismoke", "confirm": True},
             )
             assert_ok(scope_deleted, "scope delete apply")
             if (fixture_root / "docs-viewer/source/apismoke").exists():
                 raise AssertionError(f"scope delete did not remove fixture source root: {scope_deleted!r}")
 
-            docs_config = (fixture_root / "studio" / "docs-viewer" / "config" / "scopes" / "docs_scopes.json").read_text(encoding="utf-8")
+            docs_config = (fixture_root / "docs-viewer" / "config" / "scopes" / "docs_scopes.json").read_text(encoding="utf-8")
             if '"show_updated_date": false' not in docs_config:
                 raise AssertionError("settings apply did not update fixture docs_scopes.json")
             if "apismoke" in docs_config:
                 raise AssertionError("scope delete did not remove fixture scope config")
-            print(f"local Studio Docs management workflows OK: {base_url}/studio/api/docs")
+            print(f"Docs Viewer service management workflows OK: {base_url}")
             return 0
         finally:
             server.shutdown()

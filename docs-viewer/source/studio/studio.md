@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: 2026-05-24
+last_updated: 2026-05-25
 parent_id: ""
 sort_order: 2000
 ---
@@ -19,7 +19,8 @@ The current Studio shell is organized around active admin entry points:
 - `Data Sharing`
 - `Docs`
 
-Document management and Docs Import are inside `/docs/` manage-mode.
+Document management and Docs Import are inside the standalone Docs Viewer service's `/docs/` manage-mode.
+Local Studio keeps Docs as a navigation integration point, but does not serve the Docs Viewer shell or Docs Viewer runtime/static/config files.
 
 Sharing profile definitions live in `assets/studio/data/library_export_configs.json`, not in route code or `studio_config.json`.
 
@@ -89,8 +90,8 @@ bin/local-studio
 Current runner behavior:
 
 - optionally rebuilds Docs Viewer data when `DOCS_STARTUP_REBUILD_SCOPES` is set
-- starts the local Studio app server for Studio shell, Docs management, Analytics tag APIs, and Studio audit APIs
-- skips the standalone `studio/docs-viewer/services/docs_management_server.py` by default because Docs management is hosted by the local Studio app
+- starts the local Studio app server for the Studio shell, Analytics tag APIs, Catalogue APIs, Data Sharing routes, and Studio audit APIs
+- does not start the standalone Docs Viewer service; use `docs-viewer/bin/docs-viewer` directly until the start-all runner exists
 - has no standalone Studio audit HTTP service; browser audit APIs are hosted by the local Studio app and direct automation uses `studio/app/server/studio/audit_runner.py`
 - starts the docs live rebuild watcher by default
 - keeps all long-running processes attached to the current terminal
@@ -100,6 +101,7 @@ Current runner behavior:
 Current limits:
 
 - it does not enable `--livereload`
+- it does not serve `/docs/`; Docs Viewer manage mode belongs to the standalone Docs Viewer service
 - it does not rebuild docs or docs-search artifacts on startup unless `DOCS_STARTUP_REBUILD_SCOPES` is set
 - it does not start Jekyll; use `bin/public-site-preview` for public-site preview
 - it does not replace the standalone scripts documented in **[Scripts](/docs/?scope=studio&doc=scripts)**

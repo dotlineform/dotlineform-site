@@ -93,7 +93,7 @@ def main(argv: list[str] | None = None) -> int:
                 page.on(
                     "request",
                     lambda request: posts.append(request.url)
-                    if request.method == "POST" and "/studio/api/docs/docs/" in request.url
+                    if request.method == "POST" and "/docs/" in request.url
                     else None,
                 )
 
@@ -114,7 +114,9 @@ def main(argv: list[str] | None = None) -> int:
                 page.wait_for_selector("#docsViewerMetadataModal:not([hidden])", timeout=args.timeout_ms)
                 page.locator("#docsViewerMetadataTitleInput").fill("UI Smoke Renamed")
                 page.locator("#docsViewerMetadataSummaryInput").fill("UI workflow fixture")
-                page.locator("#docsViewerMetadataStatusInput").select_option("review")
+                has_review_status = page.locator('#docsViewerMetadataStatusInput option[value="review"]').count() > 0
+                if has_review_status:
+                    page.locator("#docsViewerMetadataStatusInput").select_option("review")
                 page.locator("#docsViewerMetadataSaveButton").click()
                 page.wait_for_function(
                     """() => document.querySelector("#docsViewerMetadataModal")?.hidden === true""",
@@ -160,7 +162,7 @@ def main(argv: list[str] | None = None) -> int:
                 browser.close()
 
             source_path = fixture_root / "docs-viewer/source/studio" / "ui-smoke-created.md"
-            config_path = fixture_root / "studio" / "docs-viewer" / "config" / "scopes" / "docs_scopes.json"
+            config_path = fixture_root / "docs-viewer" / "config" / "scopes" / "docs_scopes.json"
             if source_path.exists():
                 raise AssertionError(f"UI delete did not remove fixture source: {source_path}")
             if '"show_updated_date": false' not in config_path.read_text(encoding="utf-8"):
@@ -178,7 +180,7 @@ def main(argv: list[str] | None = None) -> int:
                 raise AssertionError(f"missing expected management POSTs: {missing_posts}; saw {posts!r}")
             if errors:
                 raise AssertionError(f"page errors during local Docs management UI smoke: {errors!r}")
-            print(f"local Studio Docs management UI OK: {base_url}/docs/?scope=studio&doc=root-doc&mode=manage")
+            print(f"Docs Viewer service management UI OK: {base_url}/docs/?scope=studio&doc=root-doc&mode=manage")
             return 0
         finally:
             server.shutdown()

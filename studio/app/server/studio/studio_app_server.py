@@ -46,7 +46,6 @@ from studio_app_views import (  # noqa: E402
     data_sharing_dashboard_view,
     data_sharing_prepare_view,
     data_sharing_review_view,
-    docs_viewer_manage_view,
     project_state_view,
     series_tags_view,
     series_tag_editor_view,
@@ -80,9 +79,6 @@ STATIC_PREFIXES = (
     "/studio/app/frontend/config/",
     "/studio/app/assets/",
     "/studio/ui-catalogue/assets/",
-    "/docs-viewer/config/",
-    "/docs-viewer/runtime/",
-    "/docs-viewer/static/",
     "/studio/data/",
 )
 STATIC_FILES = {
@@ -144,9 +140,6 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path in {"/studio", "/studio/"}:
             self.send_html(studio_home_view(self.version))
-            return
-        if path in {"/docs", "/docs/"}:
-            self.send_html(docs_viewer_manage_view(self.version, self.repo_root))
             return
         if path in {"/studio/analytics/tag-groups", "/studio/analytics/tag-groups/"}:
             self.send_html(tag_groups_view(self.version))

@@ -20,6 +20,7 @@ bin/public-site-build
 
 Local Studio and public Jekyll preview have separate launcher commands.
 `bin/local-studio` starts the local Studio app, Studio APIs, docs live watcher, and optional startup maintenance tasks.
+It does not start the standalone Docs Viewer service and no longer serves the Docs Viewer `/docs/` shell.
 `bin/public-site-preview` and `bin/public-site-build` are public-site Jekyll commands that use `_config.yml` by default.
 
 The old combined bridge command has been retired.
@@ -64,6 +65,11 @@ Each script:
 
 `bin/public-site-preview` and `bin/public-site-build` do not start Studio services.
 `bin/local-studio` does not start Jekyll.
+Until the start-all runner exists, start the standalone Docs Viewer service separately with:
+
+```bash
+docs-viewer/bin/docs-viewer
+```
 
 ## Local Configuration
 
@@ -178,6 +184,9 @@ $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --hos
 ```
 
 - default URL: `http://127.0.0.1:8765/studio/`
+
+The Local Studio app does not serve `/docs/` or `/docs-viewer/...` assets.
+Docs Viewer manage mode is owned by the standalone Docs Viewer service.
 - serves Local Studio views outside Jekyll
 - mounts `/studio/`, `/docs/`, migrated Studio route shells, `/health`, `/studio/runtime-config.json`, local Docs APIs, local Analytics APIs, local audit APIs, and local catalogue APIs
 - can be disabled with `STUDIO_APP_ENABLED=0`

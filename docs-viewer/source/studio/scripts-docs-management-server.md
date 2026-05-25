@@ -19,7 +19,8 @@ docs-viewer/services/docs_management_service.py
 It serves the built-in `/docs/` manage shell, Docs Viewer runtime/config/static files, generated-data reads, and the management API from the Docs Viewer service base URL configured in `var/local/site.env`.
 
 `docs-viewer/services/docs_management_service.py` owns the shared Docs Viewer management route dispatcher used by the standalone service.
-Local Studio still has a temporary adapter at `studio/app/server/studio/studio_docs_api.py` until the Studio integration/link slice removes embedded Docs Viewer hosting.
+Local Studio still has a temporary API adapter at `studio/app/server/studio/studio_docs_api.py` until the Studio integration/link slice removes the old `/studio/api/docs/...` peer adapter.
+Local Studio no longer serves the Docs Viewer `/docs/` shell or Docs Viewer runtime/static/config files.
 
 The old standalone `docs-viewer/services/docs_management_server.py` HTTP entrypoint remains removed.
 Use `docs-viewer/services/docs_viewer_service.py` or `docs-viewer/bin/docs-viewer` for the standalone Docs Viewer service.
