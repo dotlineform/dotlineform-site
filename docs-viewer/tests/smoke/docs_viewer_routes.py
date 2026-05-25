@@ -264,6 +264,32 @@ def run_route_smoke(page: Page, base_url: str, timeout_ms: int) -> dict[str, obj
     overview_title = wait_for_doc(page, "docs-viewer-overview", timeout_ms)
     assert_marker_survived(page, "history forward")
 
+    page.evaluate(
+        """() => {
+            const link = document.createElement('a');
+            link.id = 'docsViewerRouteSmokeMissingLink';
+            link.href = '/docs/?scope=studio&doc=missing-route-smoke';
+            link.textContent = 'Missing route smoke';
+            document.querySelector('#docsViewerContent').appendChild(link);
+        }"""
+    )
+    page.locator("#docsViewerRouteSmokeMissingLink").click()
+    page.wait_for_function(
+        """([selector, expectedDoc]) => {
+            const content = document.querySelector(selector);
+            return content &&
+                !content.hidden &&
+                content.textContent.includes('Document not found.') &&
+                new URL(window.location.href).searchParams.get('doc') === expectedDoc;
+        }""",
+        arg=[CONTENT_SELECTOR, "missing-route-smoke"],
+        timeout=timeout_ms,
+    )
+    assert_marker_survived(page, "missing-doc routing")
+    page.go_back(wait_until="domcontentloaded")
+    wait_for_doc(page, "docs-viewer-overview", timeout_ms)
+    assert_marker_survived(page, "missing-doc history back")
+
     page.goto(
         route_url(base_url, "/docs/?scope=studio&doc=docs-viewer-overview#current-url-and-state-contract"),
         wait_until="domcontentloaded",

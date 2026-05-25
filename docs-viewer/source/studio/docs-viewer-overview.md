@@ -97,6 +97,9 @@ Current URL state:
 - `report_sort`, `report_dir`, and `report_filter` hold state for report-backed document panes
 - `#hash` targets a heading within the rendered document
 
+Explicit `doc` values are preserved in browser history even when the document no longer exists.
+In that case the viewer shows `Document not found.` at the clicked URL so Back/Forward navigation behaves like a normal page visit.
+
 The local management shell normalizes onto canonical scoped URLs:
 
 - `/docs/?scope=studio&doc=<doc_id>`

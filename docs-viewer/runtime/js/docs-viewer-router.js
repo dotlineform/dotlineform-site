@@ -106,6 +106,15 @@ export function resolveViewerRouteDocId(options) {
     };
   }
 
+  if (requestedDocId && !docsById.has(requestedDocId)) {
+    return {
+      requestedDocId: requestedDocId,
+      docId: requestedDocId,
+      corrected: false,
+      missing: true
+    };
+  }
+
   if (!docsById.has(resolvedDocId) && defaultRouteDocId && docsById.has(defaultRouteDocId)) {
     resolvedDocId = defaultRouteDocId;
   }
@@ -257,6 +266,9 @@ export function loadViewerDoc(options) {
 
   var doc = state && state.docsById ? state.docsById.get(docId) : null;
   if (!doc) {
+    if (typeof settings.setHistory === "function") {
+      settings.setHistory(docId, hash, "", mode);
+    }
     if (typeof settings.handleMissingDoc === "function") {
       settings.handleMissingDoc();
     }
