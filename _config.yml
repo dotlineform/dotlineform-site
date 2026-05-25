@@ -109,11 +109,14 @@ exclude:
   - studio/checks/
   - studio/tests/
   - studio/docs-viewer/build/
+  - docs-viewer/bin/
   - docs-viewer/config/defaults/docs-viewer-config.json
   - docs-viewer/config/defaults/docs-viewer-service.json
   - docs-viewer/config/reports/
   - docs-viewer/config/schema/
   - docs-viewer/config/scopes/
+  - docs-viewer/services/
+  - docs-viewer/shell/
   - docs-viewer/source/
   - studio/docs-viewer/server/
   - studio/docs-viewer/services/

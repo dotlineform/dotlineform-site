@@ -2,7 +2,7 @@
 doc_id: scripts
 title: Scripts
 added_date: 2026-04-23
-last_updated: 2026-05-23
+last_updated: 2026-05-25
 parent_id: dev-home
 sort_order: 7000
 ---
@@ -37,7 +37,7 @@ The current script surface is organized by owner:
 
 - `studio/services/catalogue/` owns catalogue source models, lookup/build planning, generation, publication/delete/prose workflows, validation/export utilities, and the catalogue write service.
 - `studio/services/analytics/` owns tag metadata services and helpers as the first Analytics metadata layer over catalogue works and series.
-- `studio/docs-viewer/` owns Docs Viewer build, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.
+- `docs-viewer/` owns Docs Viewer config, source docs, browser runtime, local service, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.
 - `studio/services/catalogue/search/` owns Catalogue search build configuration and implementation.
 - `studio/docs-viewer/build/` owns Docs Viewer search build implementation.
 - `studio/app/server/studio/` owns non-domain-specific Studio runtime services such as audit, backup-retention, and Data Sharing dispatch services.
@@ -59,9 +59,9 @@ Docs-domain builds:
 - `./scripts/build_docs.rb`
   - stable top-level wrapper for `studio/docs-viewer/build/build_docs.rb`
   - source docs:
-    - `studio/docs-viewer/source/studio/`
-    - `studio/docs-viewer/source/analysis/`
-    - `studio/docs-viewer/source/library/`
+    - `docs-viewer/source/studio/`
+    - `docs-viewer/source/analysis/`
+    - `docs-viewer/source/library/`
   - outputs:
     - `assets/data/docs/scopes/studio/`
     - `assets/data/docs/scopes/analysis/`
@@ -98,9 +98,9 @@ Catalogue/runtime maintenance:
   - previews or runs a scoped JSON-source rebuild for one work or one series scope, including aggregate indexes and catalogue search
 - `$HOME/miniconda3/bin/python3 studio/services/catalogue/verify_catalogue_field_registry.py`
   - verifies representative field-aware catalogue build plans without writing files
-- `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py`
+- `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py`
   - prepares generated Docs Viewer data through source-controlled sharing profiles into `var/studio/data-sharing/<scope>/exports/`; also powers the Studio Library Data Sharing prepare service path
-- `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py`
+- `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py`
   - parses staged Library returned-package JSON/JSONL files under `var/studio/data-sharing/library/import-staging/` and returns a structured review report
 - `$HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py`
   - validates canonical catalogue source JSON under `studio/data/canonical/catalogue/`; `--target-media-section-schema` verifies migrated detail section fields
@@ -130,7 +130,7 @@ Catalogue/runtime maintenance:
 - [Docs Broken Links Audit](/docs/?scope=studio&doc=scripts-docs-broken-links)
   Audit Studio or Library docs links for missing targets.
 - [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server)
-  Maintain the Docs Viewer management service used by the Local Studio `/studio/api/docs/...` API.
+  Maintain the standalone Docs Viewer service and shared management API dispatcher.
 - [Documents Package Preparation Script](/docs/?scope=studio&doc=scripts-docs-export)
   Prepare generated Docs Viewer data through configured documents Data Sharing profiles.
 - [Documents Returned Package Script](/docs/?scope=studio&doc=scripts-docs-import)

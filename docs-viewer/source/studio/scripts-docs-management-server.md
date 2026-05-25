@@ -8,22 +8,27 @@ sort_order: 15000
 ---
 # Docs Management Service
 
-Service module:
+Service modules:
 
 ```text
+docs-viewer/services/docs_viewer_service.py
 docs-viewer/services/docs_management_service.py
 ```
 
-This module owns the shared Docs Viewer management route dispatcher for Local Studio.
-It is called by `studio/app/server/studio/studio_docs_api.py`, and browser traffic reaches it through the Local Studio app at `/studio/api/docs/...`.
+`docs-viewer/services/docs_viewer_service.py` is the standalone local Docs Viewer HTTP service.
+It serves the built-in `/docs/` manage shell, Docs Viewer runtime/config/static files, generated-data reads, and the management API from the Docs Viewer service base URL configured in `var/local/site.env`.
 
-The old standalone `docs-viewer/services/docs_management_server.py` HTTP entrypoint has been removed.
-There is no supported standalone Docs Management server process and no `127.0.0.1:8789` fallback.
+`docs-viewer/services/docs_management_service.py` owns the shared Docs Viewer management route dispatcher used by the standalone service.
+Local Studio still has a temporary adapter at `studio/app/server/studio/studio_docs_api.py` until the Studio integration/link slice removes embedded Docs Viewer hosting.
 
-## Local Studio Path
+The old standalone `docs-viewer/services/docs_management_server.py` HTTP entrypoint remains removed.
+Use `docs-viewer/services/docs_viewer_service.py` or `docs-viewer/bin/docs-viewer` for the standalone Docs Viewer service.
+
+## Local Service Path
 
 ```text
-browser -> /studio/api/docs/... -> studio_app_server.py -> studio_docs_api.py -> docs_management_service.py
+browser -> /docs/ -> docs_viewer_service.py -> docs_management_service.py
+browser -> /docs/... API path -> docs_viewer_service.py -> docs_management_service.py
 ```
 
 The service expects the project to provide:
@@ -32,6 +37,21 @@ The service expects the project to provide:
 - `docs-viewer/config/scopes/docs_scopes.json` with at least one configured docs scope
 - Python dependencies needed by the docs import/export helpers
 - Ruby, Bundler, and Jekyll for rebuild commands reached through `./scripts/build_docs.rb` and `./scripts/build_search.rb`
+
+Local service location is static for v1 and comes from `var/local/site.env`:
+
+```text
+DOCS_VIEWER_HOST
+DOCS_VIEWER_PORT
+DOCS_VIEWER_BASE_URL
+DOCS_VIEWER_MANAGEMENT_ENABLED
+DOCS_VIEWER_GENERATED_READS_ENABLED
+DOCS_VIEWER_WATCH_ENABLED
+```
+
+`DOCS_VIEWER_HOST` and `DOCS_VIEWER_BASE_URL` must remain loopback-only.
+If the configured port is unavailable, startup fails with a clear error instead of falling back to another port.
+Links to `/docs/` or the configured Docs Viewer service URL are rendered without probing service availability; when the service is stopped, they fail normally.
 
 ## Responsibilities
 
@@ -50,7 +70,8 @@ Focused modules own the workflow behavior behind it:
 Together these modules serve generated docs index, per-doc payload, docs-search, semantic-reference, source-config, and capability payloads; coordinate source mutations, imports, rebuilds, and Data Sharing; append unified activity rows for covered actions; and coordinate successful source writes with the docs live watcher through short-lived suppression markers.
 
 Endpoint constants live in `docs-viewer/services/docs_management_routes.py`.
-HTTP transport lives in the Local Studio app server, not in these Docs modules.
+HTTP transport for built-in manage mode lives in `docs-viewer/services/docs_viewer_service.py`.
+The Local Studio API adapter is temporary peer-integration scaffolding during the extraction and should not be treated as the long-term Docs Viewer shell owner.
 
 ## Child References
 

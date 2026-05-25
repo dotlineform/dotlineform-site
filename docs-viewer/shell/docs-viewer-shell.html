@@ -1,0 +1,359 @@
+<link rel="stylesheet" href="{{ '/docs-viewer/static/css/docs-viewer-base.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+<link rel="stylesheet" href="{{ '/docs-viewer/static/css/docs-viewer.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+<link rel="stylesheet" href="{{ '/docs-viewer/static/css/docs-viewer-reports.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+{%- if include.allow_management -%}
+<link rel="stylesheet" href="{{ '/docs-viewer/static/css/docs-viewer-management.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+{%- endif -%}
+{%- assign docs_viewer_generated_base_url = include.generated_base_url | default: site.docs_viewer_generated_base_url | default: '' -%}
+{%- assign docs_viewer_config_url = include.docs_viewer_config_url | default: site.docs_viewer_config_url | default: '/docs-viewer/config/defaults/docs-viewer-public-config.json' -%}
+
+<section
+  class="docsViewer"
+  id="docsViewerRoot"
+  data-index-url="{{ include.index_url }}"
+  data-viewer-base-url="{{ include.viewer_base_url }}"
+  data-viewer-scope="{{ include.viewer_scope | default: '' }}"
+  data-include-scope-param="{{ include.include_scope_param | default: false }}"
+  data-allow-management="{{ include.allow_management | default: false }}"
+  data-allow-scope-query="{{ include.allow_scope_query | default: false }}"
+  data-default-doc-id="{{ include.default_doc_id | default: '' }}"
+  data-search-index-url="{{ include.search_index_url | default: '' }}"
+  data-docs-viewer-config-url="{{ docs_viewer_config_url | relative_url }}"
+  data-ui-text-url="{{ include.ui_text_url | default: '/docs-viewer/config/ui-text/ui-text.json' | relative_url }}"
+  data-report-registry-url="{{ include.report_registry_url | default: '/assets/data/docs/reports.json' | relative_url }}"
+  data-generated-base-url="{{ docs_viewer_generated_base_url }}"
+  data-management-base-url="{{ include.management_base_url | default: '' }}"
+>
+  <div class="docsViewer__controls">
+    {%- unless include.enable_search == false -%}
+    <div class="docsViewer__searchRow">
+      {%- if include.allow_scope_query -%}
+      <label class="docsViewer__scopeField" for="docsViewerScopeSelect" aria-label="Docs scope">
+        <select class="docsViewer__scopeSelect" id="docsViewerScopeSelect"></select>
+      </label>
+      {%- endif -%}
+      <button class="docsViewer__actionButton docsViewer__recentButton" type="button" id="docsViewerRecentButton" aria-pressed="false">recently added</button>
+      <div class="docsViewer__search">
+        <label class="visually-hidden" for="docsViewerSearchInput">{{ include.search_aria_label | default: 'Search docs' }}</label>
+        <input
+          class="docsViewer__searchInput"
+          id="docsViewerSearchInput"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="{{ include.search_placeholder | default: 'search docs' }}"
+          aria-label="{{ include.search_aria_label | default: 'Search docs' }}"
+        >
+      </div>
+      {%- if include.allow_management -%}
+      <div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>
+        <div class="docsViewer__manageActions">
+          <div class="docsViewer__actionsMenuHost">
+            <button
+              class="docsViewer__actionButton"
+              type="button"
+              id="docsViewerManageActionsButton"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="docsViewerManageActionsMenu"
+            >Actions</button>
+            <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageRebuildButton">Rebuild docs</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNormalizeOrderButton">Normalize order</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageSettingsButton">Settings</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewScopeButton" hidden>New scope</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageDeleteScopeButton" hidden>Delete scope</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageImportButton">Import</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewButton">New</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageEditButton">Edit</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageArchiveButton">Archive</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageDeleteButton">Delete</button>
+            </div>
+          </div>
+          <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton">Show</button>
+          <label class="docsViewer__draftToggle">
+            <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox">
+            <span class="docsViewer__draftLabel">hidden</span>
+          </label>
+        </div>
+      </div>
+      {%- endif -%}
+    </div>
+    {%- endunless -%}
+    {%- if include.allow_scope_query and include.enable_search == false -%}
+    <div class="docsViewer__searchRow">
+      <label class="docsViewer__scopeField" for="docsViewerScopeSelect" aria-label="Docs scope">
+        <select class="docsViewer__scopeSelect" id="docsViewerScopeSelect"></select>
+      </label>
+      {%- if include.allow_management -%}
+      <div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>
+        <div class="docsViewer__manageActions">
+          <div class="docsViewer__actionsMenuHost">
+            <button
+              class="docsViewer__actionButton"
+              type="button"
+              id="docsViewerManageActionsButton"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="docsViewerManageActionsMenu"
+            >Actions</button>
+            <div class="docsViewer__actionsMenu" id="docsViewerManageActionsMenu" role="menu" hidden>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageRebuildButton">Rebuild docs</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNormalizeOrderButton">Normalize order</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageSettingsButton">Settings</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewScopeButton" hidden>New scope</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageDeleteScopeButton" hidden>Delete scope</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageImportButton">Import</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageNewButton">New</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageEditButton">Edit</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageArchiveButton">Archive</button>
+              <button class="docsViewer__actionMenuItem" role="menuitem" type="button" id="docsViewerManageDeleteButton">Delete</button>
+            </div>
+          </div>
+          <button class="docsViewer__actionButton" type="button" id="docsViewerManageViewableButton">Show</button>
+          <label class="docsViewer__draftToggle">
+            <input class="docsViewer__draftInput" id="docsViewerDraftToggle" type="checkbox">
+            <span class="docsViewer__draftLabel">hidden</span>
+          </label>
+        </div>
+      </div>
+      {%- endif -%}
+    </div>
+    {%- endif -%}
+    <p class="docsViewer__status muted small" id="docsViewerStatus" hidden></p>
+    <div class="docsViewer__bookmarkRow" id="docsViewerBookmarkRow" hidden></div>
+  </div>
+
+  <aside class="docsViewer__sidebar" aria-label="Docs index">
+    <div class="docsViewer__sidebarInner">
+      <div class="docsViewer__sidebarHeader">
+        <button
+          class="docsViewer__sidebarToggle"
+          type="button"
+          id="docsViewerSidebarToggle"
+          aria-controls="docsViewerNav"
+          aria-expanded="true"
+          aria-label="Collapse docs index"
+          title="Collapse docs index"
+        >
+          <span class="docsViewer__sidebarToggleIcon" aria-hidden="true">‹</span>
+        </button>
+        <button
+          class="docsViewer__sidebarToggle"
+          type="button"
+          id="docsViewerSidebarExpand"
+          aria-controls="docsViewerNav"
+          aria-expanded="true"
+          aria-label="Expand docs index"
+          title="Expand docs index"
+        >
+          <span class="docsViewer__sidebarToggleIcon" aria-hidden="true">⤢</span>
+        </button>
+      </div>
+      <nav class="docsViewer__nav" id="docsViewerNav" aria-label="Docs tree"></nav>
+    </div>
+  </aside>
+  {%- if include.allow_management -%}
+  <div class="docsViewer__contextMenu" id="docsViewerContextMenu" hidden>
+    <button class="docsViewer__contextAction" type="button" data-context-action="copy-link">Copy Link</button>
+    <div class="docsViewer__contextDivider" aria-hidden="true"></div>
+    <button class="docsViewer__contextAction" type="button" data-context-action="open">Open</button>
+    <button class="docsViewer__contextAction" type="button" data-context-action="open-vscode">Open In VS Code</button>
+    <div class="docsViewer__contextDivider" aria-hidden="true"></div>
+    <button class="docsViewer__contextAction" type="button" data-context-action="new-sibling">New Sibling</button>
+    <button class="docsViewer__contextAction" type="button" data-context-action="new-child">New Child</button>
+  </div>
+  <div class="docsViewer__modal" id="docsViewerMetadataModal" hidden>
+    <div class="docsViewer__modalBackdrop" data-metadata-close="true"></div>
+    <div class="docsViewer__modalCard" role="dialog" aria-modal="true" aria-labelledby="docsViewerMetadataHeading">
+      <div class="docsViewer__modalHeader">
+        <div class="docsViewer__modalHeaderCopy">
+          <h2 class="docsViewer__modalTitle" id="docsViewerMetadataHeading">Edit metadata</h2>
+          <p class="docsViewer__modalMeta muted small" id="docsViewerMetadataDocId"></p>
+        </div>
+      </div>
+      <form class="docsViewer__modalForm" id="docsViewerMetadataForm">
+        <label class="docsViewer__field">
+          <span class="docsViewer__fieldLabel">title</span>
+          <input class="docsViewer__fieldInput" id="docsViewerMetadataTitleInput" name="title" type="text" autocomplete="off" spellcheck="false" required>
+        </label>
+        <label class="docsViewer__field">
+          <span class="docsViewer__fieldLabel">summary</span>
+          <textarea class="docsViewer__fieldInput docsViewer__fieldInput--textarea" id="docsViewerMetadataSummaryInput" name="summary" rows="4"></textarea>
+        </label>
+        <label class="docsViewer__field">
+          <span class="docsViewer__fieldLabel" id="docsViewerMetadataStatusLabel">status</span>
+          <select class="docsViewer__fieldInput docsViewer__fieldInput--listbox" id="docsViewerMetadataStatusInput" name="ui_status"></select>
+        </label>
+        <label class="docsViewer__field docsViewer__field--checkbox">
+          <input class="docsViewer__checkboxInput" id="docsViewerMetadataHiddenInput" name="hidden" type="checkbox">
+          <span class="docsViewer__fieldLabel" id="docsViewerMetadataHiddenLabel">hidden</span>
+        </label>
+        <div class="docsViewer__field docsViewer__field--parent">
+          <label class="docsViewer__fieldLabel" for="docsViewerMetadataParentInput">parent</label>
+          <div class="docsViewer__parentPicker">
+            <input
+              class="docsViewer__fieldInput"
+              id="docsViewerMetadataParentInput"
+              name="parent_id"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded="false"
+              aria-controls="docsViewerMetadataParentPopup"
+            >
+            <div class="docsViewer__parentPopup" id="docsViewerMetadataParentPopup" role="listbox" hidden></div>
+          </div>
+        </div>
+        <label class="docsViewer__field">
+          <span class="docsViewer__fieldLabel">sort order</span>
+          <input class="docsViewer__fieldInput" id="docsViewerMetadataSortOrderInput" name="sort_order" type="number" step="1" inputmode="numeric" placeholder="blank">
+        </label>
+        <p class="docsViewer__modalNote muted small" id="docsViewerMetadataNote">Blank sort order leaves the doc unordered.</p>
+        <div class="docsViewer__modalActions">
+          <button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="button" id="docsViewerMetadataCancelButton">Cancel</button>
+          <button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="submit" id="docsViewerMetadataSaveButton">OK</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="docsViewer__modal" id="docsViewerImportModal" hidden>
+    <div class="docsViewer__modalBackdrop" data-import-close="true"></div>
+    <div class="docsViewer__modalCard docsViewer__modalCard--document" role="dialog" aria-modal="true" aria-labelledby="docsViewerImportHeading">
+      <div class="docsViewer__modalHeader">
+        <div class="docsViewer__modalHeaderCopy">
+          <h2 class="docsViewer__modalTitle" id="docsViewerImportHeading">Import docs</h2>
+        </div>
+      </div>
+      <div class="docsViewer__importBody" id="docsViewerImportBody">
+        <div
+          class="docsViewerImport"
+          id="docsHtmlImportRoot"
+          hidden
+          data-studio-ready="false"
+          data-studio-busy="false"
+        >
+          <div class="docsViewerImport__panel">
+            <div class="docsViewerImport__scrollRegion">
+              <p class="docsViewerImport__intro" id="docsHtmlImportIntro"></p>
+
+              <div class="docsViewerImport__controls">
+                <label class="docsViewerImport__field docsViewerImport__field--inline docsViewerImport__field--scope">
+                  <span class="docsViewerImport__fieldLabel" id="docsHtmlImportScopeLabel"></span>
+                  <span class="docsViewerImport__fieldControl">
+                    <select class="docsViewerImport__input" id="docsHtmlImportScopeSelect"></select>
+                  </span>
+                </label>
+
+                <label class="docsViewerImport__field docsViewerImport__field--inline docsViewerImport__field--file">
+                  <span class="docsViewerImport__fieldLabel" id="docsHtmlImportFileLabel"></span>
+                  <span class="docsViewerImport__fieldControl">
+                    <select class="docsViewerImport__input" id="docsHtmlImportFileSelect"></select>
+                  </span>
+                </label>
+              </div>
+
+              <label class="docsViewerImport__toggle" id="docsHtmlImportIncludePromptMetaWrap">
+                <input type="checkbox" id="docsHtmlImportIncludePromptMeta">
+                <span id="docsHtmlImportIncludePromptMetaLabel"></span>
+              </label>
+              <p class="docsViewerImport__meta docsViewerImport__toggleHint" id="docsHtmlImportIncludePromptMetaHint"></p>
+
+              <div class="docsViewerImport__warning" id="docsHtmlImportWarning" hidden>
+                <h3 id="docsHtmlImportCollisionHeading"></h3>
+                <p id="docsHtmlImportCollisionBody"></p>
+                <p class="docsViewerImport__meta" id="docsHtmlImportCollisionMeta"></p>
+              </div>
+
+              <div class="docsViewerImport__result" id="docsHtmlImportResult" hidden>
+                <h3 id="docsHtmlImportResultTitle"></h3>
+                <dl class="docsViewerImport__resultGrid" id="docsHtmlImportResultGrid">
+                  <div>
+                    <dd id="docsHtmlImportResultDocId"></dd>
+                    <dd id="docsHtmlImportResultCounts"></dd>
+                  </div>
+                </dl>
+                <div class="docsViewerImport__warnings" id="docsHtmlImportWarnings" hidden>
+                  <h4 id="docsHtmlImportWarningsHeading"></h4>
+                  <ul id="docsHtmlImportWarningsList"></ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="docsViewerImport__footer">
+              <p class="docsViewerImport__status" id="docsHtmlImportStatus"></p>
+
+              <div class="docsViewerImport__actions">
+                <button type="button" class="docsViewerImport__button docsViewerImport__button--defaultWidth" id="docsHtmlImportRun"></button>
+                <button
+                  type="button"
+                  class="docsViewerImport__button docsViewerImport__button--defaultWidth"
+                  id="docsHtmlImportConfirm"
+                  hidden
+                ></button>
+                <button
+                  type="button"
+                  class="docsViewerImport__button docsViewerImport__button--defaultWidth"
+                  id="docsHtmlImportCancel"
+                  hidden
+                ></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="docsViewerImport__status" id="docsHtmlImportBootStatus">loading docs import...</p>
+      </div>
+    </div>
+  </div>
+  <div class="docsViewer__modal" id="docsViewerSettingsModal" hidden>
+    <div class="docsViewer__modalBackdrop" data-settings-close="true"></div>
+    <div class="docsViewer__modalCard docsViewer__modalCard--compact" role="dialog" aria-modal="true" aria-labelledby="docsViewerSettingsHeading">
+      <div class="docsViewer__modalHeader">
+        <div class="docsViewer__modalHeaderCopy">
+          <h2 class="docsViewer__modalTitle" id="docsViewerSettingsHeading">Settings</h2>
+          <p class="docsViewer__modalMeta muted small" id="docsViewerSettingsScope"></p>
+        </div>
+      </div>
+      <form class="docsViewer__modalForm" id="docsViewerSettingsForm">
+        <label class="docsViewer__field docsViewer__field--checkbox">
+          <input class="docsViewer__checkboxInput" id="docsViewerSettingsUpdatedInput" name="show_updated_date" type="checkbox">
+          <span class="docsViewer__fieldLabel" id="docsViewerSettingsUpdatedLabel">show updated dates</span>
+        </label>
+        <div class="docsViewer__settingsWarnings muted small" id="docsViewerSettingsWarnings" hidden></div>
+        <p class="docsViewer__modalNote muted small" id="docsViewerSettingsStatus" hidden></p>
+        <div class="docsViewer__modalActions">
+          <button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="button" id="docsViewerSettingsCancelButton">Cancel</button>
+          <button class="docsViewer__actionButton docsViewer__actionButton--defaultWidth" type="submit" id="docsViewerSettingsSaveButton">OK</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  {%- endif -%}
+
+  <article class="docsViewer__main" aria-live="polite">
+    <div class="docsViewer__meta" id="docsViewerMeta" hidden>
+      <div class="docsViewer__metaRow">
+        <div class="docsViewer__metaCopy">
+          <p class="docsViewer__path small" id="docsViewerPath"></p>
+          <p class="docsViewer__updated muted small" id="docsViewerUpdated"></p>
+          <p class="docsViewer__summary muted small" id="docsViewerSummary"></p>
+        </div>
+        <div class="docsViewer__metaActions">
+          <div class="docsViewer__statusPills" id="docsViewerStatusPills" hidden></div>
+          <button class="docsViewer__bookmarkToggle" id="docsViewerBookmarkToggle" type="button" hidden aria-label="Add bookmark" aria-pressed="false" title="Add bookmark">☆</button>
+        </div>
+      </div>
+    </div>
+    <div class="docsViewer__content content" id="docsViewerContent">
+      <noscript>This docs viewer requires JavaScript to load the generated docs index.</noscript>
+    </div>
+    <p class="docsViewer__panelStatus muted small" id="docsViewerResultsStatus" hidden></p>
+    <ol class="docsViewer__results" id="docsViewerResults" hidden></ol>
+    <div class="docsViewer__more" id="docsViewerMore" hidden></div>
+  </article>
+</section>
+
+<script type="module" src="{{ '/docs-viewer/runtime/js/docs-viewer.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

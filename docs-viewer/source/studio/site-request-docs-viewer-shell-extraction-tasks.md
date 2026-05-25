@@ -16,6 +16,14 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
+- Completed `DVSE-014` by adding the standalone Docs Viewer service shell at `docs-viewer/services/docs_viewer_service.py`, with the service launcher `docs-viewer/bin/docs-viewer` and service-owned shell template `docs-viewer/shell/docs-viewer-shell.html`.
+- The standalone service reads `DOCS_VIEWER_HOST`, `DOCS_VIEWER_PORT`, `DOCS_VIEWER_BASE_URL`, `DOCS_VIEWER_MANAGEMENT_ENABLED`, `DOCS_VIEWER_GENERATED_READS_ENABLED`, and `DOCS_VIEWER_WATCH_ENABLED` from `var/local/site.env`, validates loopback-only local binding, and fails clearly when configured service settings are invalid or the port is unavailable.
+- Built-in `/docs/` manage mode is now available from the Docs Viewer service, with Docs Viewer assets served from `/docs-viewer/`, generated reads and management requests using the configured Docs Viewer service base URL, and management markup gated by the local capability flag.
+- The service exposes `/health`, `/capabilities`, generated read endpoints, data-sharing endpoints, local write endpoints, CORS-limited loopback APIs, and scoped static serving for Docs Viewer runtime/config/static and public generated docs assets.
+- `_config.yml` now excludes `docs-viewer/bin/`, `docs-viewer/services/`, and `docs-viewer/shell/` from public Jekyll output while leaving browser-safe Docs Viewer runtime/static/config assets publishable.
+- Focused tests were added in `studio/tests/python/test_docs_viewer_service.py` for static service config, local-only validation, manage shell attributes, capability flag shaping, and static path policy.
+- Focused verification passed: `py_compile` for the new service/test, 32 focused Python tests across the standalone Docs Viewer service and shared management dispatcher, `docs-viewer/bin/docs-viewer --help`, public Jekyll build to `/tmp/dlf-jekyll-build`, built-output checks confirming service/shell/bin files are excluded while runtime/static assets remain publishable, and an elevated loopback startup/API smoke on `127.0.0.1:8916` for `/health`, `/capabilities`, and `/docs/?scope=studio&doc=docs-viewer&mode=manage`.
+- Source docs were updated for the standalone service, shell ownership, config split, portable file manifest, source-tree ownership, and Jekyll exclusion contract. No generated docs/search payloads were rebuilt manually; local docs-watcher output may refresh published Studio docs/search JSON after these source edits.
 - Completed `DVSE-013` by moving Docs Viewer service modules from `studio/docs-viewer/services/*.py` to `docs-viewer/services/*.py`.
 - Moved service ownership includes management dispatch, route constants, generated-data reads, source/scope config helpers, mutation/write workflows, import/export helpers, broken-links auditing, data-sharing adapter, watcher suppression, and the live rebuild watcher.
 - Local Studio now imports Docs management behavior from `docs-viewer/services/` through `studio/app/server/studio/studio_docs_api.py`; `bin/local-studio` starts the watcher from `docs-viewer/services/docs_live_rebuild_watcher.py`.
@@ -56,7 +64,7 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### steer for next task
 
-- Start with `DVSE-014`, implementing the standalone Docs Viewer service shell for built-in `/docs/` manage mode.
+- Start with `DVSE-015`, verifying the standalone Docs Viewer service shell, API, and Local Studio hosting boundary.
 - Keep the table sequential: only begin the next non-deferred ID after the current one is `done`.
 - If a task uncovers a new dependency, risk, or unresolved ownership question, add a new task row before continuing rather than widening the active task.
 - Bunch work into coherent slices that reduce repeated verification, but do not combine tasks when the second task depends on evidence from the first.
@@ -116,7 +124,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-011 | done | Define and apply the CSS base contract for standalone Docs Viewer pages, public read-only host routes, and local manage mode; add a Docs Viewer-owned base stylesheet if the host contract is not enough. |
 | DVSE-012 | done | Verify the browser runtime/CSS/static move with Docs Viewer smoke checks, public `/library/` and `/analysis/` checks, desktop/mobile layout checks where relevant, and targeted JavaScript/CSS reference checks. |
 | DVSE-013 | done | Move Docs Viewer service modules, management write workflows, local write API contracts, docs watcher or rebuild helpers owned by Docs Viewer, and shell server entrypoints into `docs-viewer/`; keep manage mode loopback-only with explicit local capability flags. |
-| DVSE-014 | planned | Implement the standalone Docs Viewer service shell for built-in `/docs/` manage mode using static `var/local/site.env` service location, clear port-unavailable failure, normal link failure when the service is stopped, and no deployed live manage-mode assumption. |
+| DVSE-014 | done | Implement the standalone Docs Viewer service shell for built-in `/docs/` manage mode using static `var/local/site.env` service location, clear port-unavailable failure, normal link failure when the service is stopped, and no deployed live manage-mode assumption. |
 | DVSE-015 | planned | Verify the service/API/shell move with focused Python syntax/import checks, management workflow tests, loopback/startup checks, `/docs/` manage-mode smoke coverage, and checks that Local Studio no longer hosts the Docs Viewer shell. |
 | DVSE-016 | planned | Replace Studio-specific Docs Viewer hosting behavior with Studio integration/link behavior that points to the configured Docs Viewer service; keep Studio navigation and UI links as peer-service integration, not embedded Docs Viewer hosting. |
 | DVSE-017 | planned | Preserve and verify public scope route ownership: New Scope continues to create or register static/Jekyll-compatible routes such as `/library/` and `/analysis/`, using `docs-viewer/` scripts and contracts while the pages remain repo/Jekyll-hosted. |

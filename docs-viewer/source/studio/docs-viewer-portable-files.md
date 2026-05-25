@@ -18,6 +18,7 @@ Docs Import is part of that package boundary when management mode is enabled.
 
 Copy:
 
+- `docs-viewer/shell/docs-viewer-shell.html`
 - `_includes/docs_viewer_shell.html`
 - `_includes/docs_viewer_readonly_route.html`
 - `_includes/docs_viewer_management_route.html`
@@ -34,8 +35,9 @@ Examples in this repo are:
 - `analysis/index.md`
 
 Use `docs_viewer_readonly_route.html` for public corpus routes such as `/library/` and `/analysis/`.
-Use `docs_viewer_management_route.html` for the local `/docs/` management shell.
-That adapter renders management markup only when `docs_viewer_management_enabled: true`; public Jekyll config leaves the flag false, while Local Studio serves `/docs/` management through the Python app server.
+Use `docs-viewer/shell/docs-viewer-shell.html` through the standalone Docs Viewer service for the local `/docs/` management shell.
+The standalone service renders management markup only when `DOCS_VIEWER_MANAGEMENT_ENABLED` enables it in `var/local/site.env`.
+The Jekyll management adapter remains a host integration artifact during the extraction and should not be treated as the durable service shell owner.
 
 ### Browser Runtime
 
@@ -99,6 +101,7 @@ Copy:
 
 - `docs-viewer/config/defaults/docs-viewer-config.json`
 - `docs-viewer/config/defaults/docs-viewer-public-config.json`
+- `docs-viewer/config/defaults/docs-viewer-service.json`
 - `docs-viewer/config/ui-text/ui-text.json`
 - `assets/data/docs/reports.json`
 
@@ -172,6 +175,8 @@ For the full dependency-role explanation, see [Docs Viewer Dependencies](/docs/?
 
 For local manage mode, copy the docs-management service support:
 
+- `docs-viewer/bin/docs-viewer`
+- `docs-viewer/services/docs_viewer_service.py`
 - `docs-viewer/services/docs_management_service.py`
 - `docs-viewer/services/docs_management_routes.py`
 - `docs-viewer/services/docs_management_context.py`
@@ -199,8 +204,9 @@ Optional adjacent docs tools:
 - `docs-viewer/services/docs_export.py`
 - `docs-viewer/services/docs_import.py`
 
-The management service is local-only and should be exposed only through a loopback-bound host service.
+The management service is local-only and should be exposed only through the loopback-bound standalone Docs Viewer service.
 It is not part of the public static site.
+The v1 service reads host, port, base URL, and capability flags from `var/local/site.env`.
 Generated-data reads, source writes, import targets, and rebuild commands use `docs-viewer/config/scopes/docs_scopes.json` as the docs scope contract.
 The local management package also includes the read-only source config report and the Settings modal.
 The report inspects configured source, browser, and generated projections.

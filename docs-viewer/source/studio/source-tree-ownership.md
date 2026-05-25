@@ -2,7 +2,7 @@
 doc_id: source-tree-ownership
 title: Source Tree Ownership
 added_date: 2026-05-24
-last_updated: 2026-05-24
+last_updated: 2026-05-25
 parent_id: architecture
 sort_order: 12100
 viewable: true
@@ -51,26 +51,26 @@ Studio-owned source should not be reintroduced under old public paths such as `a
 
 ## Docs Viewer
 
-Docs Viewer is currently Studio-hosted under `studio/docs-viewer/`.
-It remains internally cohesive so a future portable extraction can move one recognizable subtree.
+Docs Viewer is extracted into the tracked `docs-viewer/` boundary.
+It remains in this repository for v1, while public route adapters, generated publishable output, local service settings, and orchestration runners stay host-owned.
 
 Current Docs Viewer-owned source homes:
 
 | Path | Owner / role |
 | --- | --- |
-| `studio/docs-viewer/source/studio/` | Studio docs source scope. |
-| `studio/docs-viewer/source/library/` | Library docs source scope. |
-| `studio/docs-viewer/source/analysis/` | Analysis docs source scope. |
-| `studio/docs-viewer/source-assets/` | Docs Viewer source assets such as interactive docs assets before any public copy/generation step. |
-| `studio/docs-viewer/runtime/` | Shared Docs Viewer browser runtime, management runtime, report modules, and shell source. |
-| `studio/docs-viewer/assets/` | Docs Viewer CSS and runtime-owned static assets. |
-| `studio/docs-viewer/config/` | Scope config, runtime config source, UI text, and report/source config. |
-| `studio/docs-viewer/build/` | Docs Viewer docs and search builders. |
-| `studio/docs-viewer/server/` and `studio/docs-viewer/services/` | Docs management, import/export, generated-read, scope, live rebuild, and data-sharing services. |
-| `studio/docs-viewer/tests/` | Docs Viewer-owned tests when they are scoped to that module. |
+| `docs-viewer/source/studio/` | Studio docs source scope. |
+| `docs-viewer/source/library/` | Library docs source scope. |
+| `docs-viewer/source/analysis/` | Analysis docs source scope. |
+| `docs-viewer/runtime/` | Shared Docs Viewer browser runtime, management runtime, report modules, and browser shell behavior. |
+| `docs-viewer/static/` | Docs Viewer CSS and runtime-owned static assets. |
+| `docs-viewer/shell/` | Standalone Docs Viewer service shell template for built-in `/docs/` manage mode. |
+| `docs-viewer/config/` | Scope config, runtime config source, UI text, report/source config, and local service defaults/schema. |
+| `docs-viewer/services/` | Standalone Docs Viewer service, Docs management, import/export, generated-read, scope, live rebuild, and data-sharing services. |
+| `docs-viewer/bin/` | Docs Viewer-owned launcher for the standalone local service. |
 
 Public read-only installs such as `/library/` and `/analysis/` consume generated Docs Viewer payloads outside `studio/`.
-Manage-mode `/docs/` is a Local Studio route that uses the same Docs Viewer source scopes and services through Local Studio APIs.
+Manage-mode `/docs/` is owned by the standalone Docs Viewer service.
+Local Studio may link to that configured service, but it should not be the durable owner of the Docs Viewer shell or management endpoints.
 
 ## Public Jekyll Surface
 
@@ -89,7 +89,7 @@ Public Jekyll source and runtime remain outside `studio/`:
 | `assets/data/*.json`, `assets/works/`, `assets/series/`, `assets/moments/`, `assets/work_details/`, `assets/home/`, `assets/site/` | Generated or published public catalogue/site data and media. |
 
 Public route adapters for Docs Viewer should stay minimal.
-Docs Viewer shell source, management shell source, config, CSS, reports, and services belong under `studio/docs-viewer/`.
+Docs Viewer shell source, management shell source, config, CSS, reports, and services belong under `docs-viewer/`.
 
 ## Generated Output Rule
 

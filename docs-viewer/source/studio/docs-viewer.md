@@ -21,6 +21,7 @@ The current implementation uses:
 
 - scope-specific route shells to define the route, scope, and generated data URLs
 - one shared shell include in `_includes/docs_viewer_shell.html`, with minimal public route adapters where read-only Jekyll routes need them
+- a standalone manage shell template in `docs-viewer/shell/docs-viewer-shell.html`, served by `docs-viewer/services/docs_viewer_service.py`
 - one shared runtime entry module in `docs-viewer/runtime/js/docs-viewer.js`
 - document pane, payload rendering, and report mount handoff in `docs-viewer/runtime/js/docs-viewer-document-controller.js`
 - pure tree and visibility helpers in `docs-viewer/runtime/js/docs-viewer-tree.js`
@@ -37,12 +38,13 @@ The current implementation uses:
 - reusable Docs Viewer CSS in `docs-viewer/static/css/docs-viewer.css` and `docs-viewer/static/css/docs-viewer-reports.css`
 - scope-owned generated docs data under `assets/data/docs/scopes/<scope>/`
 - a management-only stylesheet in `docs-viewer/static/css/docs-viewer-management.css`, loaded only by management-enabled shells
+- a standalone service runner at `docs-viewer/bin/docs-viewer`, using `var/local/site.env` for the static local Docs Viewer host, port, base URL, and capability flags
 
 Public viewer routes are read-only:
 
 - `/library/` loads the Library scope directly and does not expose `?mode=manage`
 - `/analysis/` loads the Analysis scope directly and does not expose `?mode=manage`
-- `/docs/` is the local management shell and can load `studio`, `library`, or `analysis` through its `scope` query parameter
+- `/docs/` is the local management shell served by the standalone Docs Viewer service and can load `studio`, `library`, or `analysis` through its `scope` query parameter
 
 The CSS base contract is explicit.
 Public `/library/` and `/analysis/` intentionally inherit `assets/css/main.css` from the public site layout so generated docs content keeps host prose and media styling.
