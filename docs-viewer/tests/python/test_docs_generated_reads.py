@@ -192,7 +192,10 @@ def test_generated_doc_paths_use_scope_config_output() -> None:
     original_configs = generated_reads.DOCS_SCOPE_CONFIGS
     generated_reads.DOCS_SCOPE_CONFIGS = {
         **original_configs,
-        "research": SimpleNamespace(output=Path("custom/generated/research")),
+        "research": SimpleNamespace(
+            output=Path("custom/generated/research"),
+            search_output=Path("custom/generated/search/research/index.json"),
+        ),
     }
     try:
         with tempfile.TemporaryDirectory() as temp_path:
@@ -215,6 +218,34 @@ def test_generated_doc_paths_use_scope_config_output() -> None:
         generated_reads.DOCS_SCOPE_CONFIGS = original_configs
 
     assert payload["doc_id"] == "research"
+
+
+def test_generated_search_path_uses_scope_config_search_output() -> None:
+    original_configs = generated_reads.DOCS_SCOPE_CONFIGS
+    generated_reads.DOCS_SCOPE_CONFIGS = {
+        **original_configs,
+        "research": SimpleNamespace(
+            output=Path("custom/generated/research"),
+            search_output=Path("custom/generated/search/research/index.json"),
+        ),
+    }
+    try:
+        with tempfile.TemporaryDirectory() as temp_path:
+            repo_root = Path(temp_path)
+            write_json(
+                repo_root / "custom/generated/search/research/index.json",
+                {"entries": [{"doc_id": "research"}]},
+            )
+
+            assert (
+                generated_reads.generated_search_index_path(repo_root, "research")
+                == repo_root / "custom/generated/search/research/index.json"
+            )
+            payload = generated_reads.read_generated_search_index(repo_root, "research")
+    finally:
+        generated_reads.DOCS_SCOPE_CONFIGS = original_configs
+
+    assert payload["entries"][0]["doc_id"] == "research"
 
 
 def test_read_generated_json_reports_invalid_json() -> None:
@@ -240,6 +271,7 @@ def main() -> None:
     test_generated_docs_log_projection_uses_allowlisted_names()
     test_generated_reference_target_rejects_unsafe_path_parts()
     test_generated_doc_paths_use_scope_config_output()
+    test_generated_search_path_uses_scope_config_search_output()
     test_read_generated_json_reports_invalid_json()
     print("Docs generated-read tests OK")
 

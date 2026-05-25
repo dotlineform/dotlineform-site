@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T17:41:55Z",
+  "generated_at": "2026-05-25T17:50:27Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1508,7 +1508,7 @@
       "source_path": "docs-viewer-portable-scope-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-scope-setup.json",
-      "content_text_length": 7807
+      "content_text_length": 7868
     },
     {
       "scope": "studio",
@@ -2718,7 +2718,7 @@
       "doc_id": "search-build-pipeline-studio",
       "title": "Search Build Pipeline Studio Scope",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-25",
       "parent_id": "search-build-pipeline",
       "sort_order": 8300,
       "published": true,
@@ -2727,7 +2727,7 @@
       "source_path": "search-build-pipeline-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline-studio.json",
-      "content_text_length": 2483
+      "content_text_length": 2789
     },
     {
       "scope": "studio",
@@ -3957,7 +3957,7 @@
       "doc_id": "scripts-docs-builder",
       "title": "Docs Viewer Builder",
       "added_date": "2026-04-23",
-      "last_updated": "2026-05-19 14:30",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "sort_order": 20000,
       "published": true,
@@ -3966,7 +3966,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 14659
+      "content_text_length": 14817
     },
     {
       "scope": "studio",
@@ -5234,7 +5234,7 @@
       "source_path": "site-request-committed-manage-mode-scope-storage.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-committed-manage-mode-scope-storage",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-committed-manage-mode-scope-storage.json",
-      "content_text_length": 9915,
+      "content_text_length": 10499,
       "ui_status": "draft"
     },
     {

@@ -47,6 +47,7 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
   "source": "docs-viewer/source/research",
   "media_path_prefix": "docs/research",
   "output": "assets/data/docs/scopes/research",
+  "search_output": "assets/data/search/research/index.json",
   "viewer_base_url": "/research/",
   "include_scope_param": false,
   "default_doc_id": "research",

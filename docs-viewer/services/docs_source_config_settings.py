@@ -40,6 +40,7 @@ BLOCKED_SCOPE_FIELDS = {
     "source": "Source roots are install-time config and require manual review.",
     "media_path_prefix": "Media prefixes are install-time config and affect imports.",
     "output": "Generated output roots are install-time config and affect build artifacts.",
+    "search_output": "Generated search output paths are install-time config and affect build artifacts.",
     "viewer_base_url": "Route bases are install-time config and affect public URLs.",
     "include_scope_param": "Route parameter behavior is part of the portable route contract.",
     "default_doc_id": "Default documents affect route behavior and should be guarded separately.",

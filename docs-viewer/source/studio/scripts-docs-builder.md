@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: Docs Viewer Builder
 added_date: 2026-04-23
-last_updated: "2026-05-19 14:30"
+last_updated: 2026-05-25
 parent_id: docs-viewer
 sort_order: 20000
 ---
@@ -47,8 +47,10 @@ Scope configuration:
 
 - `docs-viewer/config/scopes/docs_scopes.json`
 
-This config is the shared source of truth for docs scope ids, Markdown source roots, generated output roots, viewer route bases, imported-media path prefixes, nested-source policy, updated-date display, unresolved-parent validation policy, and browser-safe Docs Viewer settings.
+This config is the shared source of truth for docs scope ids, Markdown source roots, generated docs output roots, generated search output paths, viewer route bases, imported-media path prefixes, nested-source policy, updated-date display, unresolved-parent validation policy, and browser-safe Docs Viewer settings.
 `./docs-viewer/build/build_docs.rb`, the Docs Viewer service, the docs HTML importer, and the live rebuild watcher all read the same config.
+The `output` field owns the generated docs payload root.
+The `search_output` field owns the generated docs-search index path.
 
 ## What The Builder Does
 

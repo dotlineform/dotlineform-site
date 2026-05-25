@@ -29,7 +29,7 @@ class DocsViewerSearchDataBuilder
     @scope_config = docs_scope_config(@scope)
     @schema = "search_index_#{@scope}_v1"
     @source_index_path = resolve_path(source_index_path || File.join(@scope_config.fetch("output"), "index.json"))
-    @output_path = resolve_path(output_path || File.join("assets/data/search", @scope, "index.json"))
+    @output_path = resolve_path(output_path || search_output_path(@scope_config))
   end
 
   def run(write:, force:, only_doc_ids: nil, remove_missing: false)
@@ -57,6 +57,13 @@ class DocsViewerSearchDataBuilder
 
     available = scopes.filter_map { |item| normalize(item["scope_id"]) if item.is_a?(Hash) }.reject(&:empty?)
     raise SystemExit, "Unsupported docs search scope: #{scope}. Current Docs Viewer scopes: #{available.join(', ')}"
+  end
+
+  def search_output_path(config)
+    value = config["search_output"].to_s.strip
+    raise SystemExit, "Docs Viewer scope #{@scope} missing search_output" if value.empty?
+
+    value
   end
 
   def build_docs_payload(target_doc_ids: nil, remove_missing: false)

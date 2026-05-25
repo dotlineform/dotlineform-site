@@ -44,7 +44,10 @@ def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path
 
 
 def generated_search_index_path(repo_root: Path, scope: str) -> Path:
-    return repo_root / "assets" / "data" / "search" / scope / "index.json"
+    config = DOCS_SCOPE_CONFIGS.get(scope)
+    if config is None:
+        raise ValueError(f"unsupported docs scope: {scope}")
+    return repo_root / config.search_output
 
 
 def generated_docs_log_projection_path(repo_root: Path, projection: str) -> Path:

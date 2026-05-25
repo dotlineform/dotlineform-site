@@ -29,6 +29,7 @@ def load_docs_management_module(module_name: str, module_path: Path):
 
 docs_management_service = load_docs_management_module("docs_management_service", DOCS_MANAGEMENT_SERVICE_PATH)
 docs_management_mutations = sys.modules["docs_management_mutations"]
+docs_scope_config = sys.modules["docs_scope_config"]
 docs_source_model = sys.modules["docs_source_model"]
 
 
@@ -186,6 +187,7 @@ def write_docs_scope_config(root: Path) -> None:
                     "source": "docs-viewer/source/studio",
                     "media_path_prefix": "docs/studio",
                     "output": "assets/data/docs/scopes/studio",
+                    "search_output": "assets/data/search/studio/index.json",
                     "viewer_base_url": "/docs/",
                     "include_scope_param": True,
                     "default_doc_id": "child",
@@ -381,10 +383,39 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
     assert payload["ok"] is True
     assert payload["scope_id"] == "research"
     assert payload["planned_scope_config"]["viewer_base_url"] == "/research/"
+    assert payload["planned_scope_config"]["search_output"] == "assets/data/search/research/index.json"
     assert payload["urls"]["management"] == "/docs/?scope=research&mode=manage"
     assert payload["urls"]["public"] == "/research/"
     assert any(file["path"] == "docs-viewer/source/research/research.md" for file in payload["created_files"])
     assert any(command["command"] == "./docs-viewer/build/build_docs.rb --scope research --write" for command in payload["build_commands"])
+
+
+def test_docs_scope_config_requires_search_output() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_json(
+            repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+            {
+                "schema_version": "docs_scopes_v1",
+                "scopes": [
+                    {
+                        "scope_id": "studio",
+                        "source": "docs-viewer/source/studio",
+                        "media_path_prefix": "docs/studio",
+                        "output": "assets/data/docs/scopes/studio",
+                        "viewer_base_url": "/docs/",
+                        "include_scope_param": True,
+                        "default_doc_id": "child",
+                    }
+                ],
+            },
+        )
+        try:
+            docs_scope_config.load_docs_scope_configs(repo_root)
+        except ValueError as exc:
+            assert "scopes[0].search_output" in str(exc)
+        else:
+            raise AssertionError("Expected docs scope config to require search_output")
 
 
 def test_scope_create_apply_requires_confirmation() -> None:
@@ -461,6 +492,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert "allow_management" not in route_text
     assert source_payload["scopes"][1]["scope_id"] == "research"
     assert source_payload["scopes"][1]["viewer_base_url"] == "/research/"
+    assert source_payload["scopes"][1]["search_output"] == "assets/data/search/research/index.json"
     assert source_payload["scopes"][1]["include_scope_param"] is False
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["research"]["user_created"] is True
@@ -662,6 +694,7 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["scopes"][0]["scope_id"] == "studio"
     assert payload["scopes"][0]["source_config"]["source"] == "docs-viewer/source/studio"
     assert payload["scopes"][0]["browser_config"]["index_url"] == "/assets/data/docs/scopes/studio/index.json"
+    assert payload["scopes"][0]["generated"]["search_index"] == "assets/data/search/studio/index.json"
     assert payload["scopes"][0]["viewer_options"]["show_updated_date"] is True
     assert payload["scopes"][0]["warnings"] == []
 
@@ -858,6 +891,7 @@ def main() -> None:
         test_capabilities_advertise_source_config_reads,
         test_scope_manifest_backfills_existing_scopes_as_system_owned,
         test_scope_create_preview_reports_write_set_and_urls,
+        test_docs_scope_config_requires_search_output,
         test_scope_create_apply_requires_confirmation,
         test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild,
         test_scope_create_apply_skips_public_route_for_local_scopes,

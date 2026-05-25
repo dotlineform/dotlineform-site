@@ -11,7 +11,6 @@ from docs_scope_config import CONFIG_REL_PATH, load_docs_scope_configs
 
 
 BROWSER_CONFIG_REL_PATH = Path("docs-viewer/config/defaults/docs-viewer-config.json")
-SEARCH_REL_ROOT = Path("assets/data/search")
 SCHEMA_VERSION = "docs_source_config_report_v1"
 
 
@@ -92,6 +91,7 @@ def _safe_raw_subset(raw: dict[str, Any]) -> dict[str, Any]:
         "source",
         "media_path_prefix",
         "output",
+        "search_output",
         "viewer_base_url",
         "include_scope_param",
         "default_doc_id",
@@ -120,7 +120,6 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
         raw = raw_by_scope.get(scope_id, {})
         browser = browser_by_scope.get(scope_id, {})
         viewer_options, warnings = _read_viewer_options(repo_root, config.output, scope_id)
-        search_index_path = SEARCH_REL_ROOT / scope_id / "index.json"
         scopes.append(
             {
                 "scope_id": scope_id,
@@ -134,7 +133,7 @@ def build_source_config_report(repo_root: Path) -> dict[str, Any]:
                     "docs_output": config.output.as_posix(),
                     "docs_index": (config.output / "index.json").as_posix(),
                     "docs_payload_root": (config.output / "by-id").as_posix(),
-                    "search_index": search_index_path.as_posix(),
+                    "search_index": config.search_output.as_posix(),
                 },
                 "paths": {
                     "source_root": config.source.as_posix(),

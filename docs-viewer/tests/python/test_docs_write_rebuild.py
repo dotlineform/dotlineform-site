@@ -412,6 +412,7 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
       "source": "docs-viewer/source/studio",
       "media_path_prefix": "docs/studio",
       "output": "assets/data/docs/scopes/studio",
+      "search_output": "assets/data/search/studio/index.json",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
       "default_doc_id": "dev-home"

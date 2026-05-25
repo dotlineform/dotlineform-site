@@ -62,8 +62,10 @@ def render_json(payload: dict[str, Any]) -> str:
     return json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
 
 
-def generated_search_index_path(repo_root: Path, scope_id: str) -> Path:
-    return repo_root / "assets" / "data" / "search" / scope_id / "index.json"
+def generated_search_index_path(repo_root: Path, config: DocsScopeConfig | dict[str, Any]) -> Path:
+    if isinstance(config, DocsScopeConfig):
+        return repo_root / config.search_output
+    return repo_root / safe_relative_path(config.get("search_output"), field="planned_scope_config.search_output")
 
 
 def route_file_for_config(repo_root: Path, config: DocsScopeConfig) -> Path:
@@ -122,7 +124,7 @@ def backfilled_scope_record(repo_root: Path, config: DocsScopeConfig) -> dict[st
             path_record(repo_root, "generated_docs_root", repo_root / config.output),
             path_record(repo_root, "generated_docs_index", repo_root / config.output / "index.json"),
             path_record(repo_root, "generated_docs_payload_root", repo_root / config.output / "by-id"),
-            path_record(repo_root, "generated_search_index", generated_search_index_path(repo_root, config.scope_id)),
+            path_record(repo_root, "generated_search_index", generated_search_index_path(repo_root, config)),
         ]
     )
     return {
@@ -267,6 +269,7 @@ def planned_scope_config_record(scope_id: str, source_root: Path, public_route_p
         "source": source_root.as_posix(),
         "media_path_prefix": f"docs/{scope_id}",
         "output": f"assets/data/docs/scopes/{scope_id}",
+        "search_output": f"assets/data/search/{scope_id}/index.json",
         "viewer_base_url": viewer_base_url,
         "include_scope_param": public_route_path == "",
         "default_doc_id": default_doc_id,
@@ -632,6 +635,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     build_inline_search = bool_value(body, "build_inline_search", True)
     write_generated_outputs = bool_value(body, "write_generated_outputs", True)
     public_route_path = normalize_route_path(body.get("public_route_path")) if publishing_mode == PUBLIC_MODE else ""
+    planned_scope_config = planned_scope_config_record(scope_id, source_root, public_route_path, default_doc_id)
 
     existing_configs = load_docs_scope_configs(repo_root)
     if scope_id in existing_configs:
@@ -661,7 +665,14 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
             ]
         )
         if build_inline_search:
-            created_files.append(path_record(repo_root, "generated_search_index", generated_search_index_path(repo_root, scope_id), action="create"))
+            created_files.append(
+                path_record(
+                    repo_root,
+                    "generated_search_index",
+                    generated_search_index_path(repo_root, planned_scope_config),
+                    action="create",
+                )
+            )
 
     conflicts = [record["path"] for record in created_files if record.get("exists")]
     if conflicts:
@@ -684,7 +695,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "publishing_mode": publishing_mode,
         "build_inline_search": build_inline_search,
         "write_generated_outputs": write_generated_outputs,
-        "planned_scope_config": planned_scope_config_record(scope_id, source_root, public_route_path, default_doc_id),
+        "planned_scope_config": planned_scope_config,
         "created_files": created_files,
         "changed_files": changed_files,
         "build_commands": commands,

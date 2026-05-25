@@ -159,13 +159,20 @@ Required output:
 
 Status:
 
-- not started
+- completed
 
 Update the scope config model so a scope can distinguish public static output from committed manage-mode output.
 
 The builder and runtime should not infer public-ness only from the presence of `assets/data/...` paths.
 The existing `output` field should remain the generated docs payload root.
 Add an explicit generated search output field, such as `search_output`, so search readers and builders do not assume `assets/data/search/<scope>/index.json`.
+
+Implementation note:
+
+- `docs-viewer/config/scopes/docs_scopes.json` now carries `search_output` for each configured scope.
+- Python scope config readers expose `DocsScopeConfig.search_output`.
+- Docs generated-read helpers, source config reporting, scope lifecycle planning, and Ruby Docs Viewer builders use the configured `search_output`.
+- Existing public/static behavior is preserved for current scopes by setting `search_output` to the existing `assets/data/search/<scope>/index.json` paths; moving Studio to `docs-viewer/generated/search/studio/index.json` remains part of the Studio migration task.
 
 ### Task 3. Update New Scope Preview And Apply
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-78118286ef5cd3231d0441964a499214",
-    "generated_at_utc": "2026-05-25T16:20:42Z",
+    "version": "blake2b-a889f00b71145e3049002b0b876e7fd9",
+    "generated_at_utc": "2026-05-25T17:48:53Z",
     "count": 311
   },
   "entries": [
@@ -4090,10 +4090,10 @@
       "kind": "doc",
       "title": "Search Build Pipeline Studio Scope",
       "href": "/docs/?scope=studio&doc=search-build-pipeline-studio",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-25",
       "parent_id": "search-build-pipeline",
       "parent_title": "Search Build Pipeline",
-      "display_meta": "2026-05-19 • Search Build Pipeline",
+      "display_meta": "2026-05-25 • Search Build Pipeline",
       "search_terms": [
         "search-build-pipeline-studio",
         "search",
@@ -4103,12 +4103,12 @@
         "search build pipeline studio scope",
         "scope",
         "search build pipeline",
-        "2026-05-19",
+        "2026-05-25",
         "2026",
         "05",
-        "19"
+        "25"
       ],
-      "search_text": "search-build-pipeline-studio search build pipeline studio search build pipeline studio scope scope search build pipeline 2026-05-19 2026 05 19"
+      "search_text": "search-build-pipeline-studio search build pipeline studio search build pipeline studio scope scope search build pipeline 2026-05-25 2026 05 25"
     },
     {
       "id": "search-build-pipeline-library",
@@ -5913,10 +5913,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-05-19 14:30",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-19 14:30 • Docs Viewer",
+      "display_meta": "2026-05-25 • Docs Viewer",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -5925,14 +5925,12 @@
         "docs viewer builder",
         "viewer",
         "docs viewer",
-        "2026-05-19 14:30",
+        "2026-05-25",
         "2026",
         "05",
-        "19",
-        "14",
-        "30"
+        "25"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-19 14:30 2026 05 19 14 30"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-25 2026 05 25"
     },
     {
       "id": "new-pipeline-refine-search",

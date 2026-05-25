@@ -2,7 +2,7 @@
 doc_id: search-build-pipeline-studio
 title: Search Build Pipeline Studio Scope
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-25
 parent_id: search-build-pipeline
 sort_order: 8300
 ---
@@ -18,9 +18,14 @@ sort_order: 8300
 
 - `assets/data/search/studio/index.json`
 
+The path comes from the `studio` scope's `search_output` field in `docs-viewer/config/scopes/docs_scopes.json`.
+The search builder no longer derives the output path from the scope id alone.
+
 ### Current Source Input
 
 - `assets/data/docs/scopes/studio/index.json`
+
+The source index path comes from the same scope config's generated docs `output` field unless `--source-index` overrides it.
 
 The current Studio search artifact is derived from the published Studio docs index rather than directly from `docs-viewer/source/studio/`.
 

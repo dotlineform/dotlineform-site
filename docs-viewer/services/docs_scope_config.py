@@ -27,6 +27,7 @@ class DocsScopeConfig:
     source: Path
     media_path_prefix: Path
     output: Path
+    search_output: Path
     viewer_base_url: str
     include_scope_param: bool
     default_doc_id: str
@@ -160,6 +161,10 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             source=safe_relative_path(item.get("source"), field=f"scopes[{index}].source"),
             media_path_prefix=media_path_prefix,
             output=safe_relative_path(item.get("output"), field=f"scopes[{index}].output"),
+            search_output=safe_relative_path(
+                item.get("search_output"),
+                field=f"scopes[{index}].search_output",
+            ),
             viewer_base_url=normalize_viewer_base_url(item.get("viewer_base_url")),
             include_scope_param=item.get("include_scope_param") is True,
             default_doc_id=normalize_doc_id(

@@ -24,6 +24,7 @@ ScopeConfig = Struct.new(
   :source,
   :media_path_prefix,
   :output,
+  :search_output,
   :viewer_base_url,
   :include_scope_param,
   :default_doc_id,
@@ -1377,7 +1378,7 @@ def browser_docs_index_url(config)
 end
 
 def browser_search_index_url(config)
-  "/assets/data/search/#{config.scope_id}/index.json"
+  "/#{config.search_output.sub(%r{\A/+}, "")}"
 end
 
 def browser_search_policy_payload(config)
@@ -1477,6 +1478,10 @@ def load_scope_configs(path = DOCS_SCOPE_CONFIG_PATH)
         "scopes[#{index}].media_path_prefix"
       ),
       output: normalize_scope_config_path(item["output"], "scopes[#{index}].output"),
+      search_output: normalize_scope_config_path(
+        item["search_output"],
+        "scopes[#{index}].search_output"
+      ),
       viewer_base_url: item["viewer_base_url"].to_s,
       include_scope_param: item["include_scope_param"] == true,
       default_doc_id: default_doc_id,
