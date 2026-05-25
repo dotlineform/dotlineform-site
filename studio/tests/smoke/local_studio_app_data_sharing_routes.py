@@ -132,29 +132,39 @@ def review_payload() -> dict[str, object]:
     }
 
 
-def install_mock_docs_api(page, base_url: str) -> list[dict[str, object]]:
+def install_mock_docs_api(page) -> list[dict[str, object]]:
     calls: list[dict[str, object]] = []
 
     def handle(route) -> None:
         request = route.request
         parsed = urlparse(request.url)
+        docs_paths = {
+            "/health",
+            "/docs/generated/index",
+            "/data-sharing/prepare",
+            "/data-sharing/returned-packages",
+            "/data-sharing/review",
+        }
+        if parsed.path not in docs_paths:
+            route.continue_()
+            return
         calls.append({"method": request.method, "path": parsed.path})
         payload: dict[str, object]
-        if parsed.path == "/studio/api/docs/health":
-            payload = {"ok": True, "service": "docs_management", "dry_run": False}
-        elif parsed.path == "/studio/api/docs/docs/generated/index":
+        if parsed.path == "/health":
+            payload = {"ok": True, "service": "docs_viewer", "dry_run": False}
+        elif parsed.path == "/docs/generated/index":
             payload = generated_docs_index()
-        elif parsed.path == "/studio/api/docs/data-sharing/prepare":
+        elif parsed.path == "/data-sharing/prepare":
             payload = prepare_payload()
-        elif parsed.path == "/studio/api/docs/data-sharing/returned-packages":
+        elif parsed.path == "/data-sharing/returned-packages":
             payload = returned_packages_payload()
-        elif parsed.path == "/studio/api/docs/data-sharing/review":
+        elif parsed.path == "/data-sharing/review":
             payload = review_payload()
         else:
             payload = {"ok": False, "error": f"Unexpected Docs API route: {parsed.path}"}
         route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
 
-    page.route(f"{base_url}/studio/api/docs/**", handle)
+    page.route("**/*", handle)
     return calls
 
 
@@ -232,7 +242,7 @@ def main(argv: list[str] | None = None) -> int:
             page_errors: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
-            docs_api_calls = install_mock_docs_api(page, base_url)
+            docs_api_calls = install_mock_docs_api(page)
 
             assert_dashboard(page, base_url)
             assert_prepare(page, base_url)
@@ -240,11 +250,11 @@ def main(argv: list[str] | None = None) -> int:
             browser.close()
 
         required_paths = {
-            "/studio/api/docs/health",
-            "/studio/api/docs/docs/generated/index",
-            "/studio/api/docs/data-sharing/prepare",
-            "/studio/api/docs/data-sharing/returned-packages",
-            "/studio/api/docs/data-sharing/review",
+            "/health",
+            "/docs/generated/index",
+            "/data-sharing/prepare",
+            "/data-sharing/returned-packages",
+            "/data-sharing/review",
         }
         seen_paths = {str(call["path"]) for call in docs_api_calls}
         missing_paths = required_paths.difference(seen_paths)

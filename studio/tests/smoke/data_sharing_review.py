@@ -138,9 +138,18 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
 
     def handle(route):
         parsed = urlparse(route.request.url)
-        if parsed.path in {"/health", "/studio/api/docs/health"}:
+        docs_paths = {
+            "/health",
+            "/data-sharing/returned-packages",
+            "/data-sharing/review",
+            "/data-sharing/apply",
+        }
+        if parsed.path not in docs_paths:
+            route.continue_()
+            return
+        if parsed.path == "/health":
             payload = {"ok": True}
-        elif parsed.path in {"/data-sharing/returned-packages", "/studio/api/docs/data-sharing/returned-packages"}:
+        elif parsed.path == "/data-sharing/returned-packages":
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -155,7 +164,7 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
                     }
                 ],
             }
-        elif parsed.path in {"/data-sharing/review", "/studio/api/docs/data-sharing/review"}:
+        elif parsed.path == "/data-sharing/review":
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -272,7 +281,7 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
                     },
                 ],
             }
-        elif parsed.path in {"/data-sharing/apply", "/studio/api/docs/data-sharing/apply"}:
+        elif parsed.path == "/data-sharing/apply":
             request_body = {}
             try:
                 post_data_json = route.request.post_data_json
@@ -353,8 +362,16 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
             payload = {"ok": False, "error": f"Unhandled mock route: {parsed.path}"}
         route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
 
-    page.route("**/studio/api/docs/**", handle)
+    page.route("**/*", handle)
     return apply_requests
+
+
+def block_docs_service(route) -> None:
+    parsed = urlparse(route.request.url)
+    if parsed.path in {"/health", "/data-sharing/returned-packages", "/data-sharing/review", "/data-sharing/apply"}:
+        route.abort()
+        return
+    route.continue_()
 
 
 def modal_shell_state(page) -> dict[str, object]:
@@ -641,7 +658,7 @@ def main() -> int:
                 page = browser.new_page()
                 apply_requests: list[dict[str, object]] = []
                 if args.block_docs_service:
-                    page.route("**/studio/api/docs/**", lambda route: route.abort())
+                    page.route("**/*", block_docs_service)
                 elif args.mock_docs_service:
                     apply_requests = install_mock_docs_service(page)
                 page.goto(route_url(base_url, args.route_path), wait_until="domcontentloaded")

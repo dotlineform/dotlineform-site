@@ -20,7 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "docs-viewer" / "services"))
 
-from studio.app.server.studio import studio_docs_api  # noqa: E402
+import docs_management_service  # noqa: E402
 from docs_viewer_service import DocsViewerServer, DocsViewerServiceConfig  # noqa: E402
 
 
@@ -217,9 +217,8 @@ def create_fixture_repo(target_root: Path) -> None:
 
 
 def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
-    module = studio_docs_api.load_docs_management_service_module(repo_root)
-    source_model = module.source_model
-    configs = module.docs_source_config_settings.load_docs_scope_configs(repo_root)
+    source_model = docs_management_service.source_model
+    configs = docs_management_service.docs_source_config_settings.load_docs_scope_configs(repo_root)
     config = configs[scope]
     try:
         docs = source_model.load_scope_docs(repo_root, scope)
@@ -291,8 +290,6 @@ def materialize_fixture_generated_docs(repo_root: Path, scope: str) -> None:
 
 
 def patch_rebuilds(repo_root: Path) -> None:
-    module = studio_docs_api.load_docs_management_service_module(repo_root)
-
     def fake_rebuild_scope_outputs(
         _repo_root: Path,
         scope: str,
@@ -352,8 +349,8 @@ def patch_rebuilds(repo_root: Path) -> None:
             "renderer": "fixture-markdown-validator",
         }
 
-    module.write_rebuild.rebuild_scope_outputs = fake_rebuild_scope_outputs
-    module.write_rebuild.rebuild_all_docs_outputs = fake_rebuild_all_docs_outputs
+    docs_management_service.write_rebuild.rebuild_scope_outputs = fake_rebuild_scope_outputs
+    docs_management_service.write_rebuild.rebuild_all_docs_outputs = fake_rebuild_all_docs_outputs
     module.write_rebuild.perform_source_write_and_rebuild = fake_perform_source_write_and_rebuild
     sys.modules["docs_html_import"].validate_markdown_with_jekyll = fake_validate_markdown_with_jekyll
 

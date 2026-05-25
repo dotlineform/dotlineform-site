@@ -28,9 +28,9 @@ $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --por
 Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
 HTTP access logging is quiet by default so normal browser use does not flood the terminal.
 Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to `studio_app_server.py`, when detailed request logging is needed.
-Docs management is handled by this app server; there is no separate Docs management server in normal local Studio startup.
-Active Local Studio browser routes use `/studio/api/docs/...` for Docs management reads/writes.
-The local app adapter imports shared Docs management behavior from `docs-viewer/services/docs_management_service.py`.
+Docs Viewer management is handled by the standalone Docs Viewer service configured through `DOCS_VIEWER_BASE_URL` in `var/local/site.env`.
+Active Local Studio browser routes use runtime-configured Docs Viewer service URLs for Docs links, generated reads, source-file opening, and Data Sharing document endpoints.
+Local Studio renders those peer-service links without probing service availability; when the Docs Viewer service is stopped, the links and service calls fail normally.
 Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
 `bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
 Local Studio route shells load Studio-owned CSS from `/studio/app/assets/css/studio.css`.
@@ -39,7 +39,6 @@ They no longer depend on public `assets/css/main.css` for Studio base typography
 Current mounted views:
 
 - `/studio/`
-- `/docs/`
 - `/studio/catalogue/?mode=manage`
 - `/studio/analytics/?mode=manage`
 - `/studio/analytics/tag-groups/`
@@ -97,10 +96,6 @@ Current app endpoints:
 - `POST /studio/api/analytics/mutate-tag-preview`
 - `POST /studio/api/analytics/mutate-tag`
 - `POST /studio/api/analytics/save-tags`
-- `/studio/api/docs/capabilities`
-- `/studio/api/docs/docs/generated/...`
-- `/studio/api/docs/docs/...` management GET/POST routes migrated from the Docs management server
-- `/studio/api/docs/data-sharing/...` package preparation, returned-package listing, review, and apply routes
 - `/studio/api/catalogue/health`
 - `/studio/api/catalogue/read`
 - `POST /studio/api/catalogue/import-preview`
@@ -146,7 +141,7 @@ The old Jekyll `/studio/audits/` shell has been retired.
 The Catalogue dashboard is hosted by the local app at `/studio/catalogue/?mode=manage`.
 It reuses `studio/app/frontend/js/studio-dashboard.js`, local index data, and local-app catalogue read keys for source-backed dashboard counts.
 The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
-It reuses `studio/app/frontend/js/project-state.js` and now calls local Studio app endpoints for catalogue report generation and source-file opening.
+It reuses `studio/app/frontend/js/project-state.js`, calls Local Studio for catalogue report generation, and calls the configured Docs Viewer service for source-file opening.
 `studio/app/server/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` adapter and reuses `studio/services/catalogue/project_state_report.py`.
 The old Jekyll `/studio/project-state/` shell has been retired.
 The Thumbnail Quality route shell is hosted by the local app at `/studio/thumbnail-quality/?mode=manage`.
@@ -155,7 +150,7 @@ The refresh adapter reuses `studio/services/media/build_thumbnail_quality_previe
 The old Jekyll `/studio/thumbnail-quality/` shell has been retired.
 The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-work/?mode=manage`.
 The Data Sharing dashboard, package preparation, and returned-package review route shells are hosted by the local app at `/studio/data-sharing/?mode=manage`, `/studio/data-sharing/prepare/?mode=manage`, and `/studio/data-sharing/review/?mode=manage`.
-They reuse the existing Data Sharing browser modules and now call Data Sharing through `/studio/api/docs/data-sharing/...` on the local app server.
+They reuse the existing Data Sharing browser modules and now call document package endpoints on the configured Docs Viewer service.
 The old Jekyll route files under `studio/data-sharing/` have been retired.
 It reuses `studio/app/frontend/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply` endpoints.
 The old Jekyll `/studio/bulk-add-work/` shell has been retired.
@@ -182,7 +177,7 @@ Local app views declare the runtime config endpoint with `meta[name="dlf-studio-
 The endpoint exposes the local app runtime contract for migrated views:
 
 - view ids, labels, paths, docs links, home-list entries, and shell top-navigation groups
-- local service endpoints such as `/studio/api/docs` and `/studio/api/analytics`
+- local service endpoints such as the configured Docs Viewer service base URL and `/studio/api/analytics`
 - generated data, search, and UI-text paths from the checked-in Studio config
 - media and thumbnail bases used by Studio previews
 - pipeline variant metadata from `_data/pipeline.json`
@@ -198,7 +193,7 @@ Studio-to-public-content links use an explicit second boundary because Studio an
 The contract is:
 
 - Studio app routes open on the local Studio app server
-- Docs management routes open on the local Studio app server
+- Docs management routes open on the configured Docs Viewer service
 - public content routes such as `/works/...`, `/series/...`, `/library/`, and `/analysis/` open against the local Jekyll preview when it is running
 - production `https://dotlineform.com` links are used only for explicit live-site actions
 
@@ -208,13 +203,14 @@ The migrated per-series tag editor, Catalogue editor summaries, and Studio Works
 Those links open on the configured public preview host during local Studio sessions.
 The catalogue helper requires the configured public-site base for public links instead of generating Studio-host-relative public URLs.
 Editor-to-editor links remain local Studio routes.
-The local `/docs/` route hosts the Docs Viewer management shell through the Python app server while still using the existing Docs Viewer JavaScript, CSS, config, and generated docs payloads.
-Its management API base is `/studio/api/docs`; this now exposes live configured-scope availability and Docs management capabilities, serves generated docs read endpoints, and calls shared Docs management service functions directly for migrated management routes.
-The main management API workflow routes are covered through a temporary fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the local app server without touching real docs.
+The local `/docs/` route is no longer hosted by Local Studio.
+The runtime config exposes the configured Docs Viewer service base URL for the top-level `docs` view, page implementation links, generated reads, Data Sharing document endpoints, and source-file opening.
+`studio/app/server/studio/studio_docs_viewer_integration.py` owns this link and endpoint shaping.
+The main management API workflow routes are covered through a fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the standalone Docs Viewer service without touching real docs.
 Browser-level fixture smokes cover local `/docs/` manage-mode workflows through the actual UI: create, metadata edit, settings save, archive, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
-The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns shared HTML shells, `studio_catalogue_views.py` owns catalogue route shells, `studio_docs_api.py` owns the Docs Viewer API adapter, `studio_analytics_api.py` owns Analytics tag APIs, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
+The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_docs_viewer_integration.py` owns configured peer-service Docs Viewer links, `studio_app_views.py` owns shared HTML shells, `studio_catalogue_views.py` owns catalogue route shells, `studio_analytics_api.py` owns Analytics tag APIs, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
 New route families should follow that module-boundary pattern rather than expanding the server entrypoint.
 
 Current focused checks:

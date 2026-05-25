@@ -44,25 +44,27 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   health: "/studio/api/catalogue/health"
 });
 
-const DOCS_MANAGEMENT_ENDPOINTS = Object.freeze({
-  health: "/studio/api/docs/health",
-  generatedIndex: "/studio/api/docs/docs/generated/index",
-  generatedSearch: "/studio/api/docs/docs/generated/search",
-  importSource: "/studio/api/docs/docs/import-source",
-  importSourceFiles: "/studio/api/docs/docs/import-source-files",
-  importHtml: "/studio/api/docs/docs/import-html",
-  importHtmlFiles: "/studio/api/docs/docs/import-html-files",
-  openSource: "/studio/api/docs/docs/open-source"
-});
+const DEFAULT_DOCS_VIEWER_BASE_URL = "http://127.0.0.1:8776";
 
-const DATA_SHARING_ENDPOINTS = Object.freeze({
-  health: "/studio/api/docs/health",
-  generatedIndex: "/studio/api/docs/docs/generated/index",
-  prepare: "/studio/api/docs/data-sharing/prepare",
-  returnedPackages: "/studio/api/docs/data-sharing/returned-packages",
-  review: "/studio/api/docs/data-sharing/review",
-  apply: "/studio/api/docs/data-sharing/apply"
-});
+const DOCS_MANAGEMENT_ENDPOINTS = {
+  health: `${DEFAULT_DOCS_VIEWER_BASE_URL}/health`,
+  generatedIndex: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/generated/index`,
+  generatedSearch: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/generated/search`,
+  importSource: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/import-source`,
+  importSourceFiles: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/import-source-files`,
+  importHtml: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/import-html`,
+  importHtmlFiles: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/import-html-files`,
+  openSource: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/open-source`
+};
+
+const DATA_SHARING_ENDPOINTS = {
+  health: `${DEFAULT_DOCS_VIEWER_BASE_URL}/health`,
+  generatedIndex: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/generated/index`,
+  prepare: `${DEFAULT_DOCS_VIEWER_BASE_URL}/data-sharing/prepare`,
+  returnedPackages: `${DEFAULT_DOCS_VIEWER_BASE_URL}/data-sharing/returned-packages`,
+  review: `${DEFAULT_DOCS_VIEWER_BASE_URL}/data-sharing/review`,
+  apply: `${DEFAULT_DOCS_VIEWER_BASE_URL}/data-sharing/apply`
+};
 
 const AUDIT_API_ENDPOINTS = Object.freeze({
   health: "/studio/api/audits/health",
@@ -70,12 +72,12 @@ const AUDIT_API_ENDPOINTS = Object.freeze({
   run: "/studio/api/audits/audits/run"
 });
 
-const PROJECT_STATE_ENDPOINTS = Object.freeze({
+const PROJECT_STATE_ENDPOINTS = {
   catalogueHealth: "/studio/api/catalogue/health",
-  docsHealth: "/studio/api/docs/health",
+  docsHealth: `${DEFAULT_DOCS_VIEWER_BASE_URL}/health`,
   report: "/studio/api/catalogue/project-state-report",
-  openSource: "/studio/api/docs/docs/open-source"
-});
+  openSource: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/open-source`
+};
 
 const THUMBNAIL_QUALITY_ENDPOINTS = Object.freeze({
   catalogueHealth: "/studio/api/catalogue/health",
@@ -103,6 +105,47 @@ export {
   PROJECT_STATE_ENDPOINTS,
   THUMBNAIL_QUALITY_ENDPOINTS
 };
+
+export function configureStudioTransport(config) {
+  const docs = config && config.app && config.app.runtime && config.app.runtime.services
+    ? config.app.runtime.services.docs
+    : null;
+  if (!docs || typeof docs !== "object") return;
+
+  const configured = normalizeDocsEndpoints(docs);
+  Object.assign(DOCS_MANAGEMENT_ENDPOINTS, {
+    health: configured.health || DOCS_MANAGEMENT_ENDPOINTS.health,
+    generatedIndex: configured.generated_index || DOCS_MANAGEMENT_ENDPOINTS.generatedIndex,
+    generatedSearch: configured.generated_search || DOCS_MANAGEMENT_ENDPOINTS.generatedSearch,
+    importSource: configured.import_source || DOCS_MANAGEMENT_ENDPOINTS.importSource,
+    importSourceFiles: configured.import_source_files || DOCS_MANAGEMENT_ENDPOINTS.importSourceFiles,
+    importHtml: configured.import_html || DOCS_MANAGEMENT_ENDPOINTS.importHtml,
+    importHtmlFiles: configured.import_html_files || DOCS_MANAGEMENT_ENDPOINTS.importHtmlFiles,
+    openSource: configured.open_source || DOCS_MANAGEMENT_ENDPOINTS.openSource
+  });
+  Object.assign(DATA_SHARING_ENDPOINTS, {
+    health: configured.health || DATA_SHARING_ENDPOINTS.health,
+    generatedIndex: configured.generated_index || DATA_SHARING_ENDPOINTS.generatedIndex,
+    prepare: configured.data_sharing_prepare || DATA_SHARING_ENDPOINTS.prepare,
+    returnedPackages: configured.data_sharing_returned_packages || DATA_SHARING_ENDPOINTS.returnedPackages,
+    review: configured.data_sharing_review || DATA_SHARING_ENDPOINTS.review,
+    apply: configured.data_sharing_apply || DATA_SHARING_ENDPOINTS.apply
+  });
+  Object.assign(PROJECT_STATE_ENDPOINTS, {
+    docsHealth: configured.health || PROJECT_STATE_ENDPOINTS.docsHealth,
+    openSource: configured.open_source || PROJECT_STATE_ENDPOINTS.openSource
+  });
+}
+
+function normalizeDocsEndpoints(docs) {
+  const normalized = {};
+  for (const [key, value] of Object.entries(docs || {})) {
+    if (typeof value === "string" && value.trim()) {
+      normalized[key] = value.trim();
+    }
+  }
+  return normalized;
+}
 
 export function getStudioWriteEndpoint(key, config = null) {
   const runtimeKey = STUDIO_WRITE_RUNTIME_KEYS[key] || "";

@@ -256,10 +256,10 @@ Current mutable catalogue data surfaced through this runtime:
 - Jekyll excludes `assets/studio/data/catalogue/`, `assets/studio/data/catalogue_lookup/`, `var/`, and local `logs/` from the served site so local source/lookup/activity writes do not trigger an extra Jekyll regeneration pass
 - catalogue editors, Catalogue Drafts, and Studio Activity show their existing unavailable/load-failed states instead of reading stale static source JSON
 
-Current localhost docs-maintenance integration surfaced through this runtime:
+Current Docs Viewer service integration surfaced through this runtime:
 
-- `POST /studio/api/docs/docs/broken-links`
-- `POST /studio/api/docs/docs/rebuild`
+- `POST <DOCS_VIEWER_BASE_URL>/docs/broken-links`
+- `POST <DOCS_VIEWER_BASE_URL>/docs/rebuild`
 
 Current localhost audit integration surfaced through this runtime:
 

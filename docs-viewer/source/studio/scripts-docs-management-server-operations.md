@@ -10,19 +10,19 @@ sort_order: 15500
 
 ## Security Constraints
 
-- HTTP access is provided by the Local Studio app at `/studio/api/docs/...`
-- loopback binding and CORS are enforced by `studio/app/server/studio/studio_app_server.py`
-- docs source write targets are allowlisted through `studio/docs-viewer/config/scopes/docs_scopes.json`; in this repo the configured source roots are:
-  - `_docs/*.md`
-  - `_docs_analysis/**/*.md`
-  - `_docs_library/*.md`
+- HTTP access is provided by the standalone Docs Viewer service at `DOCS_VIEWER_BASE_URL`
+- loopback binding and CORS are enforced by `docs-viewer/services/docs_viewer_service.py`
+- docs source write targets are allowlisted through `docs-viewer/config/scopes/docs_scopes.json`; in this repo the configured source roots are:
+  - `docs-viewer/source/studio/*.md`
+  - `docs-viewer/source/analysis/**/*.md`
+  - `docs-viewer/source/library/*.md`
 - non-source write targets are allowlisted to:
   - `var/docs/backups/`
   - `var/studio/data-sharing/<data-domain>/exports/`
   - `var/studio/data-sharing/<data-domain>/import-preview/`
   - `var/docs/logs/`
   - `var/docs/watch-suppressions/`
-- scope lifecycle ownership is recorded in `studio/docs-viewer/config/scopes/docs_scope_manifest.json`; existing scopes are system-owned and not eligible for lifecycle deletion
+- scope lifecycle ownership is recorded in `docs-viewer/config/scopes/docs_scope_manifest.json`; existing scopes are system-owned and not eligible for lifecycle deletion
 - scope create apply creates a backup bundle for the previous scope config and manifest files before writing
 - scope delete apply creates a backup bundle for the previous scope config and manifest files before deleting or changing scope lifecycle state
 - timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch
@@ -33,14 +33,14 @@ sort_order: 15500
 
 ## Operational Notes
 
-- normal `bin/local-studio` runs host Docs Viewer management through the Local Studio App
-- shared Docs management dispatch lives in `studio/docs-viewer/services/docs_management_service.py`; workflow behavior is split into focused `docs_management_*_service.py` modules for context, reads, capabilities, source mutations, imports, Data Sharing, source opening, and broken-links audit
+- normal `bin/local-studio` renders configured Docs Viewer links but does not host Docs Viewer management
+- shared Docs management dispatch lives in `docs-viewer/services/docs_management_service.py`; workflow behavior is split into focused `docs_management_*_service.py` modules for context, reads, capabilities, source mutations, imports, Data Sharing, source opening, and broken-links audit
 - the old standalone Docs Management HTTP server and `127.0.0.1:8789` fallback have been removed
 - the shared Docs Viewer probes `GET /capabilities` for generated-data reads on normal local loads and for write capability when `?mode=manage` is present
 - if the local service is unavailable, the viewer falls back to static generated JSON for normal public-style reads; manage mode stays read-only and shows a manage-mode unavailable message
 - successful source writes leave short-lived suppression markers under `var/docs/watch-suppressions/` so the docs live watcher can skip duplicate same-scope rebuilds for the exact files already rebuilt by the Docs management service
 - `var/` is excluded from Jekyll because docs-management backups, logs, staged imports, and watcher-suppression markers are local operational files rather than publishable site input
-- `bin/local-studio` serves Docs Viewer management and generated docs/search reads through the Local Studio app without starting Jekyll
+- `docs-viewer/bin/docs-viewer` serves Docs Viewer management and generated docs/search reads without starting Jekyll
 
 ## Verification
 

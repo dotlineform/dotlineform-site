@@ -31,10 +31,10 @@ Exposed endpoints:
 - `GET /docs/import-html-files`
 - `POST /docs/import-source`
 - `POST /docs/import-html`
-- `GET /studio/api/docs/data-sharing/returned-packages` through the local Studio app
-- `POST /studio/api/docs/data-sharing/prepare` through the local Studio app
-- `POST /studio/api/docs/data-sharing/review` through the local Studio app
-- `POST /studio/api/docs/data-sharing/apply` through the local Studio app
+- `GET /data-sharing/returned-packages` through the Docs Viewer service
+- `POST /data-sharing/prepare` through the Docs Viewer service
+- `POST /data-sharing/review` through the Docs Viewer service
+- `POST /data-sharing/apply` through the Docs Viewer service
 - `POST /docs/broken-links`
 - `POST /docs/rebuild`
 - `POST /docs/open-source`
@@ -54,16 +54,16 @@ Exposed endpoints:
 Current behavior:
 
 - local-only write service for the shared Docs Viewer
-- endpoint path constants are owned by `studio/docs-viewer/services/docs_management_routes.py`; the server handler uses explicit GET and POST dispatch tables
-- docs source-model helpers are owned by `studio/docs-viewer/services/docs_source_model.py`
-- generated Docs Viewer JSON read helpers are owned by `studio/docs-viewer/services/docs_generated_reads.py`
-- source config report payloads are owned by `studio/docs-viewer/services/docs_source_config_report.py`
-- source config settings allowlist, validation payloads, and allowlisted source-config writes are owned by `studio/docs-viewer/services/docs_source_config_settings.py`
-- docs-specific Studio Activity row construction is owned by `studio/docs-viewer/services/docs_activity.py`
-- docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `studio/docs-viewer/services/docs_write_rebuild.py`
-- staged source import orchestration for the Docs Viewer import modal is owned by `studio/docs-viewer/services/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
-- management mutation planners for create, metadata, viewability, move, normalize-order, archive, and delete flows are owned by `studio/docs-viewer/services/docs_management_mutations.py`; the server still parses requests, performs backups where configured, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
-- Data Sharing HTTP endpoints are exposed through the local Studio app Docs API adapter, with neutral route constants and shared dispatch owned by `studio/app/server/studio/` and Library document behavior owned by `studio/docs-viewer/services/documents_data_sharing_adapter.py`
+- endpoint path constants are owned by `docs-viewer/services/docs_management_routes.py`; the server handler uses explicit GET and POST dispatch tables
+- docs source-model helpers are owned by `docs-viewer/services/docs_source_model.py`
+- generated Docs Viewer JSON read helpers are owned by `docs-viewer/services/docs_generated_reads.py`
+- source config report payloads are owned by `docs-viewer/services/docs_source_config_report.py`
+- source config settings allowlist, validation payloads, and allowlisted source-config writes are owned by `docs-viewer/services/docs_source_config_settings.py`
+- docs-specific Studio Activity row construction is owned by `docs-viewer/services/docs_activity.py`
+- docs payload/search rebuild command shapes and watcher-suppression follow-through are owned by `docs-viewer/services/docs_write_rebuild.py`
+- staged source import orchestration for the Docs Viewer import modal is owned by `docs-viewer/services/docs_import_source_service.py`; the server binds the existing backup, log, and rebuild helpers and keeps activity append timing
+- management mutation planners for create, metadata, viewability, move, normalize-order, archive, and delete flows are owned by `docs-viewer/services/docs_management_mutations.py`; the server still parses requests, performs backups where configured, calls source write/rebuild helpers, logs completed writes, and returns endpoint responses
+- Data Sharing HTTP endpoints are exposed through the Docs Viewer service, with neutral route constants and shared dispatch owned by `studio/app/server/studio/` behind the Docs Viewer adapter boundary and Library document behavior owned by `docs-viewer/services/documents_data_sharing_adapter.py`
 - used by `/docs/?scope=<scope>&mode=manage` for configured docs scopes
 - also used by the `docs_broken_links` Docs Viewer report for a read-only docs link audit
 - also used by the `/docs/` management import modal for staged-file listing and source import writes
@@ -85,8 +85,8 @@ Current behavior:
 Unified activity coverage:
 
 - `POST /docs/import-source` writes `import source data` rows after a source doc is created or overwritten; preview, replacement-required, and confirmation-only responses are excluded
-- `POST /studio/api/docs/data-sharing/prepare` writes package-preparation rows only when an outbound package artifact is written
-- `POST /studio/api/docs/data-sharing/apply` writes update rows only for confirmed summary or hierarchy apply writes
+- `POST /data-sharing/prepare` writes package-preparation rows only when an outbound package artifact is written
+- `POST /data-sharing/apply` writes update rows only for confirmed summary or hierarchy apply writes
 - `POST /docs/broken-links` writes `run audit` rows with checked and broken-link counts
 
 Search update behavior:
@@ -170,7 +170,7 @@ Source-config settings behavior:
 - currently allowlists scoped `show_updated_date` only
 - reports blocked install-time fields such as source roots, route bases, output roots, and import media storage
 - reports deferred global fields such as `recently_added_limit`
-- validates setting changes through `studio/docs-viewer/services/docs_source_config_settings.py`
+- validates setting changes through `docs-viewer/services/docs_source_config_settings.py`
 - writes only allowlisted source config fields back to `studio/docs-viewer/config/scopes/docs_scopes.json`
 - rebuilds the affected generated docs scope after a changed setting is saved; `show_updated_date` uses a docs-only rebuild because docs search output is unaffected
 - warns when generated `viewer_options` are stale relative to source config or when a proposed change requires a generated docs rebuild

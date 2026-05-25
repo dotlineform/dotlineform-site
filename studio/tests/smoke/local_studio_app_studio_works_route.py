@@ -83,7 +83,7 @@ def main(argv: list[str] | None = None) -> int:
                 raise AssertionError(f"series link did not resolve through the public preview base: {series_href!r}")
 
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-            if doc_link != "/docs/?scope=studio&doc=studio-works&mode=manage":
+            if not str(doc_link).endswith("/docs/?scope=studio&doc=studio-works&mode=manage"):
                 raise AssertionError(f"studio-works doc link is not manage-mode: {doc_link!r}")
             nav_link = page.locator('.site-nav [data-studio-navigate="studio_catalogue"]').get_attribute("href")
             if nav_link != "/studio/catalogue/?mode=manage":

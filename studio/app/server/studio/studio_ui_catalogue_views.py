@@ -7,10 +7,10 @@ import re
 from pathlib import Path
 
 try:
-    from studio_app_config import STUDIO_VIEWS
+    from studio_app_config import studio_views
     from studio_app_views import studio_header
 except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
-    from .studio_app_config import STUDIO_VIEWS
+    from .studio_app_config import studio_views
     from .studio_app_views import studio_header
 
 
@@ -44,7 +44,7 @@ RAW_CAPTURE_RE = re.compile(r"{{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*}}")
 
 
 def ui_catalogue_demo_view(version: str, repo_root: Path, view_id: str) -> str:
-    view = STUDIO_VIEWS[view_id]
+    view = studio_views(repo_root)[view_id]
     escaped_version = html.escape(version, quote=True)
     title = html.escape(view["title"])
     doc_href = html.escape(view["doc_href"], quote=True)

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+from http import HTTPStatus
 from pathlib import Path
 import sys
 import tempfile
@@ -15,7 +16,6 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from studio.app.server.studio import studio_docs_api  # noqa: E402
 from studio.app.server.studio.studio_analytics_api import analytics_get_payload, analytics_post_response  # noqa: E402
 from studio.app.server.studio.studio_audit_api import audit_get_payload, audit_post_response  # noqa: E402
 from studio.app.server.studio.studio_app_config import asset_version, runtime_config  # noqa: E402
@@ -23,6 +23,7 @@ from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, 
 from studio.app.server.studio.studio_app_views import studio_home_view, studio_route_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
+from studio.app.server.studio.studio_docs_viewer_integration import docs_viewer_base_url  # noqa: E402
 from studio.app.server.studio.studio_ui_catalogue_views import ui_catalogue_demo_view  # noqa: E402
 
 
@@ -41,12 +42,16 @@ def test_runtime_config_exposes_adapter_contract() -> None:
             else:
                 os.environ[key] = value
     runtime = payload["app"]["runtime"]
+    docs_base_url = docs_viewer_base_url(REPO_ROOT)
 
     assert runtime["host"] == "local-studio-app"
     assert runtime["asset_version"] == "test-version"
     assert runtime["routes"]["runtime_config"] == "/studio/runtime-config.json"
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
+    assert payload["paths"]["routes"]["docs_page"] == f"{docs_base_url}/docs/"
+    assert payload["paths"]["routes"]["docs_html_import"] == f"{docs_base_url}/docs/?mode=manage&import=1"
+    assert any(view["id"] == "docs" and view["path"] == f"{docs_base_url}/docs/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "studio_catalogue" and view["path"] == "/studio/catalogue/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "studio_analytics" and view["path"] == "/studio/analytics/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "tag_registry" and view["path"] == "/studio/analytics/tag-registry/" for view in runtime["views"])
@@ -84,20 +89,20 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["analytics"]["mutate_tag"] == "/studio/api/analytics/mutate-tag"
     assert runtime["services"]["analytics"]["promote_tag_alias_preview"] == "/studio/api/analytics/promote-tag-alias-preview"
     assert runtime["services"]["analytics"]["promote_tag_alias"] == "/studio/api/analytics/promote-tag-alias"
-    assert runtime["services"]["docs"]["base"] == "/studio/api/docs"
-    assert runtime["services"]["docs"]["health"] == "/studio/api/docs/health"
-    assert runtime["services"]["docs"]["capabilities"] == "/studio/api/docs/capabilities"
-    assert runtime["services"]["docs"]["generated_index"] == "/studio/api/docs/docs/generated/index"
-    assert runtime["services"]["docs"]["generated_search"] == "/studio/api/docs/docs/generated/search"
-    assert runtime["services"]["docs"]["import_source"] == "/studio/api/docs/docs/import-source"
-    assert runtime["services"]["docs"]["import_source_files"] == "/studio/api/docs/docs/import-source-files"
-    assert runtime["services"]["docs"]["import_html"] == "/studio/api/docs/docs/import-html"
-    assert runtime["services"]["docs"]["import_html_files"] == "/studio/api/docs/docs/import-html-files"
-    assert runtime["services"]["docs"]["open_source"] == "/studio/api/docs/docs/open-source"
-    assert runtime["services"]["docs"]["data_sharing_prepare"] == "/studio/api/docs/data-sharing/prepare"
-    assert runtime["services"]["docs"]["data_sharing_returned_packages"] == "/studio/api/docs/data-sharing/returned-packages"
-    assert runtime["services"]["docs"]["data_sharing_review"] == "/studio/api/docs/data-sharing/review"
-    assert runtime["services"]["docs"]["data_sharing_apply"] == "/studio/api/docs/data-sharing/apply"
+    assert runtime["services"]["docs"]["base"] == docs_base_url
+    assert runtime["services"]["docs"]["health"] == f"{docs_base_url}/health"
+    assert runtime["services"]["docs"]["capabilities"] == f"{docs_base_url}/capabilities"
+    assert runtime["services"]["docs"]["generated_index"] == f"{docs_base_url}/docs/generated/index"
+    assert runtime["services"]["docs"]["generated_search"] == f"{docs_base_url}/docs/generated/search"
+    assert runtime["services"]["docs"]["import_source"] == f"{docs_base_url}/docs/import-source"
+    assert runtime["services"]["docs"]["import_source_files"] == f"{docs_base_url}/docs/import-source-files"
+    assert runtime["services"]["docs"]["import_html"] == f"{docs_base_url}/docs/import-html"
+    assert runtime["services"]["docs"]["import_html_files"] == f"{docs_base_url}/docs/import-html-files"
+    assert runtime["services"]["docs"]["open_source"] == f"{docs_base_url}/docs/open-source"
+    assert runtime["services"]["docs"]["data_sharing_prepare"] == f"{docs_base_url}/data-sharing/prepare"
+    assert runtime["services"]["docs"]["data_sharing_returned_packages"] == f"{docs_base_url}/data-sharing/returned-packages"
+    assert runtime["services"]["docs"]["data_sharing_review"] == f"{docs_base_url}/data-sharing/review"
+    assert runtime["services"]["docs"]["data_sharing_apply"] == f"{docs_base_url}/data-sharing/apply"
     assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
     assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
@@ -134,7 +139,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
     assert runtime["modals"]["event"] == "studio:open-modal"
-    assert any(view["id"] == "docs" and view["path"] == "/docs/?mode=manage" for view in runtime["views"])
 
 
 def test_access_log_is_opt_in(monkeypatch) -> None:
@@ -284,7 +288,7 @@ def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
         )
 
         assert health_payload["ok"] is True
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["dry_run"] is True
         assert payload["written"] is False
@@ -310,7 +314,7 @@ def test_catalogue_thumbnail_quality_route_uses_fixture_source(monkeypatch) -> N
             dry_run=True,
         )
 
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["dry_run"] is True
         assert payload["source_count"] == 1
@@ -381,10 +385,10 @@ def test_catalogue_import_preview_and_apply_dry_run_use_fixture_workbook() -> No
         status, preview_payload = catalogue_post_response(repo_root, "/import-preview", {"mode": "works"}, dry_run=True)
         apply_status, apply_payload = catalogue_post_response(repo_root, "/import-apply", {"mode": "works"}, dry_run=True)
 
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert preview_payload["preview"]["summary"]["importable_count"] == 1
         assert preview_payload["preview"]["importable_ids"] == ["00042"]
-        assert apply_status == studio_docs_api.HTTPStatus.OK
+        assert apply_status == HTTPStatus.OK
         assert apply_payload["dry_run"] is True
         assert apply_payload["would_write"] is True
         assert json.loads((source_dir / "works.json").read_text(encoding="utf-8"))["works"] == {}
@@ -441,7 +445,7 @@ def test_catalogue_delete_preview_uses_callable_service_route() -> None:
 
         status, payload = catalogue_post_response(repo_root, "/delete-preview", {"kind": "work", "id": "42"})
 
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["kind"] == "work"
         assert payload["id"] == "00042"
@@ -494,7 +498,7 @@ def test_catalogue_bulk_save_work_dry_run_uses_callable_service_route() -> None:
             dry_run=True,
         )
 
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["kind"] == "works"
         assert payload["changed"] is True
@@ -545,7 +549,7 @@ def test_catalogue_editor_create_work_dry_run_uses_callable_service_route() -> N
             dry_run=True,
         )
 
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["work_id"] == "00042"
         assert payload["created"] is True
@@ -604,7 +608,7 @@ def test_catalogue_editor_create_work_detail_dry_run_uses_callable_service_route
             dry_run=True,
         )
 
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["detail_uid"] == "00042-001"
         assert payload["work_id"] == "00042"
@@ -664,7 +668,7 @@ def test_catalogue_editor_save_work_dry_run_uses_callable_service_route() -> Non
             dry_run=True,
         )
 
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["work_id"] == "00042"
         assert payload["changed"] is True
@@ -740,7 +744,7 @@ def test_catalogue_editor_save_work_detail_dry_run_uses_callable_service_route()
             dry_run=True,
         )
 
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["detail_uid"] == "00042-001"
         assert payload["work_id"] == "00042"
@@ -790,7 +794,7 @@ def test_catalogue_editor_create_series_dry_run_uses_callable_service_route() ->
             dry_run=True,
         )
 
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["series_id"] == "009"
         assert payload["created"] is True
@@ -850,7 +854,7 @@ def test_catalogue_editor_save_series_dry_run_uses_callable_service_route() -> N
             dry_run=True,
         )
 
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["series_id"] == "009"
         assert payload["changed"] is True
@@ -888,7 +892,7 @@ def test_analytics_save_tags_dry_run_route_uses_assignment_contract() -> None:
         )
 
         persisted = assignments_path.read_text(encoding="utf-8")
-        assert status == studio_docs_api.HTTPStatus.OK
+        assert status == HTTPStatus.OK
         assert payload["ok"] is True
         assert payload["series_id"] == "series-a"
         assert payload["tag_count"] == 1
@@ -961,10 +965,10 @@ def test_analytics_import_tag_assignments_dry_run_routes_use_assignment_contract
         )
 
         persisted = assignments_path.read_text(encoding="utf-8")
-        assert preview_status == studio_docs_api.HTTPStatus.OK
+        assert preview_status == HTTPStatus.OK
         assert preview_payload["ok"] is True
         assert preview_payload["applicable_count"] == 1
-        assert apply_status == studio_docs_api.HTTPStatus.OK
+        assert apply_status == HTTPStatus.OK
         assert apply_payload["ok"] is True
         assert apply_payload["applied_series"] == 1
         assert apply_payload["dry_run"] is True
@@ -1060,11 +1064,11 @@ def test_analytics_tag_registry_dry_run_routes_use_registry_contract() -> None:
         )
 
         persisted = registry_path.read_text(encoding="utf-8")
-        assert import_status == studio_docs_api.HTTPStatus.OK
+        assert import_status == HTTPStatus.OK
         assert import_payload["ok"] is True
         assert import_payload["added"] == 1
         assert import_payload["dry_run"] is True
-        assert preview_status == studio_docs_api.HTTPStatus.OK
+        assert preview_status == HTTPStatus.OK
         assert preview_payload["ok"] is True
         assert preview_payload["preview"] is True
         assert preview_payload["action"] == "delete"
@@ -1161,15 +1165,15 @@ def test_analytics_tag_alias_dry_run_routes_use_alias_contract() -> None:
         )
 
         persisted = aliases_path.read_text(encoding="utf-8")
-        assert import_status == studio_docs_api.HTTPStatus.OK
+        assert import_status == HTTPStatus.OK
         assert import_payload["ok"] is True
         assert import_payload["added"] == 1
         assert import_payload["dry_run"] is True
-        assert delete_status == studio_docs_api.HTTPStatus.OK
+        assert delete_status == HTTPStatus.OK
         assert delete_payload["ok"] is True
         assert delete_payload["alias"] == "foliage"
         assert delete_payload["dry_run"] is True
-        assert preview_status == studio_docs_api.HTTPStatus.OK
+        assert preview_status == HTTPStatus.OK
         assert preview_payload["ok"] is True
         assert preview_payload["preview"] is True
         assert preview_payload["renamed"] is True
@@ -1261,89 +1265,17 @@ def test_analytics_promotion_demotion_dry_run_routes_use_promotion_contract() ->
 
         registry_persisted = registry_path.read_text(encoding="utf-8")
         aliases_persisted = json.loads(aliases_path.read_text(encoding="utf-8"))
-        assert promote_status == studio_docs_api.HTTPStatus.OK
+        assert promote_status == HTTPStatus.OK
         assert promote_payload["ok"] is True
         assert promote_payload["preview"] is True
         assert promote_payload["new_tag_id"] == "theme:foliage"
-        assert demote_status == studio_docs_api.HTTPStatus.OK
+        assert demote_status == HTTPStatus.OK
         assert demote_payload["ok"] is True
         assert demote_payload["preview"] is True
         assert demote_payload["alias_key"] == "trees"
         assert demote_payload["series_tag_refs_rewritten"] == 1
         assert "theme:foliage" not in registry_persisted
         assert "trees" not in aliases_persisted["aliases"]
-
-
-def test_docs_capabilities_report_scopes_and_management_api() -> None:
-    payload = studio_docs_api.docs_capabilities_payload(REPO_ROOT)
-    capabilities = payload["capabilities"]
-    studio = capabilities["scopes"]["studio"]
-
-    assert payload["ok"] is True
-    assert studio["available"] is True
-    assert studio["root"] == "docs-viewer/source/studio"
-    assert capabilities["docs_management"] is True
-    assert capabilities["generated_data_reads"] is True
-    assert capabilities["html_import"] is True
-    assert capabilities["source_config_settings_reads"] is True
-    assert capabilities["scope_lifecycle"]["create_apply"] is True
-    assert studio["generated_data_reads"] is True
-    assert studio["generated_search_reads"] is True
-
-
-def test_docs_generated_read_routes_return_existing_payloads() -> None:
-    params = {"scope": ["studio"]}
-    index_payload = studio_docs_api.docs_generated_read_payload(
-        REPO_ROOT,
-        "/docs/generated/index",
-        params,
-    )
-    search_payload = studio_docs_api.docs_generated_read_payload(
-        REPO_ROOT,
-        "/docs/generated/search",
-        params,
-    )
-    doc_payload = studio_docs_api.docs_generated_read_payload(
-        REPO_ROOT,
-        "/docs/generated/payload",
-        {"scope": ["studio"], "doc_id": ["docs-viewer"]},
-    )
-    docs_log_payload = studio_docs_api.docs_generated_read_payload(
-        REPO_ROOT,
-        "/docs/generated/docs-log",
-        {"projection": ["search-index"]},
-    )
-
-    assert any(doc["doc_id"] == "docs-viewer" for doc in index_payload["docs"])
-    assert "entries" in search_payload
-    assert doc_payload["doc_id"] == "docs-viewer"
-    assert docs_log_payload["entries"]
-
-
-def test_docs_management_settings_and_dry_run_mutation_routes() -> None:
-    settings_payload = studio_docs_api.docs_management_get_payload(
-        REPO_ROOT,
-        "/docs/source-config-settings",
-        {"scope": ["studio"]},
-    )
-    preview_status, preview_payload = studio_docs_api.docs_management_post_response(
-        REPO_ROOT,
-        "/docs/delete-preview",
-        {"scope": "studio", "doc_id": "docs-viewer"},
-        dry_run=True,
-    )
-
-    assert settings_payload["ok"] is True
-    assert any(scope["scope_id"] == "studio" for scope in settings_payload["scopes"])
-    assert preview_status == studio_docs_api.HTTPStatus.OK
-    assert preview_payload["ok"] is True
-    assert preview_payload["doc_id"] == "docs-viewer"
-    assert "blockers" in preview_payload
-
-
-def test_docs_api_post_rejects_disallowed_origin() -> None:
-    assert studio_docs_api.docs_allowed_origin(REPO_ROOT, "http://127.0.0.1:8765") == "http://127.0.0.1:8765"
-    assert studio_docs_api.docs_allowed_origin(REPO_ROOT, "https://example.com") == ""
 
 
 if __name__ == "__main__":
@@ -1357,8 +1289,4 @@ if __name__ == "__main__":
     test_analytics_tag_registry_dry_run_routes_use_registry_contract()
     test_analytics_tag_alias_dry_run_routes_use_alias_contract()
     test_analytics_promotion_demotion_dry_run_routes_use_promotion_contract()
-    test_docs_capabilities_report_scopes_and_management_api()
-    test_docs_generated_read_routes_return_existing_payloads()
-    test_docs_management_settings_and_dry_run_mutation_routes()
-    test_docs_api_post_rejects_disallowed_origin()
     print("studio app server tests OK")

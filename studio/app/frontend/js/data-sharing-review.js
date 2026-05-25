@@ -1,6 +1,7 @@
 import { getStudioDataPath, getStudioText, loadStudioConfigWithText } from "./studio-config.js";
 import {
   DATA_SHARING_ENDPOINTS,
+  configureStudioTransport,
   getJson,
   postJson,
   probeDataSharingHealth
@@ -274,6 +275,7 @@ async function init() {
 
   try {
     state.config = await loadStudioConfigWithText("data_sharing_review");
+    configureStudioTransport(state.config);
     const adapterRegistry = await loadAdapterRegistry(state.config);
     state.adapterRegistry = adapterRegistry;
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "list_returned", DATA_SHARING_REVIEW_SCOPES);
@@ -327,7 +329,7 @@ async function init() {
         getStudioText(
           state.config,
           "data_sharing_review.service_unavailable",
-          "Docs management service unavailable. Start bin/local-studio to review {scope_label} returned packages.",
+          "Docs Viewer service unavailable. Start docs-viewer/bin/docs-viewer to review {scope_label} returned packages.",
           { scope_label: dataSharingReviewScopeLabel(state) }
         )
       );

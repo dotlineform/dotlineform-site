@@ -30,10 +30,10 @@ The prepare page:
 
 - loads enabled Library sharing profiles from `assets/studio/data/library_export_configs.json`
 - loads enabled Analytics tag sharing profiles from `assets/studio/data/data_sharing_adapters.json`
-- reads the generated Library docs index through the docs-management local service
+- reads the generated Library docs index through the configured Docs Viewer service
 - renders a selectable hierarchical document list in Docs Viewer order
 - supports JSON and JSONL target formats according to each profile
-- posts the selected profile, format, and document ids to the local docs-management service
+- posts the selected profile, format, and document ids to the configured Docs Viewer service
 - can prepare tag registry, tag aliases, tag assignments, or a combined tags bundle
 - displays the output package path, counts, warnings, and errors returned by the service
 
@@ -48,12 +48,12 @@ The review page:
 - reports tag assignment applicable rows, conflicts, missing series, and invalid work rows
 - can apply selected tag registry, alias, or applicable assignment rows after confirmation
 
-The local service gateway uses neutral Data Sharing endpoints:
+The configured Docs Viewer service uses neutral Data Sharing endpoints:
 
-- `GET /studio/api/docs/data-sharing/returned-packages`
-- `POST /studio/api/docs/data-sharing/prepare`
-- `POST /studio/api/docs/data-sharing/review`
-- `POST /studio/api/docs/data-sharing/apply`
+- `GET <DOCS_VIEWER_BASE_URL>/data-sharing/returned-packages`
+- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare`
+- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/review`
+- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/apply`
 
 ## Runtime
 
@@ -69,7 +69,7 @@ The page shells load:
 - `assets/studio/data/library_export_configs.json`
 - `studio/app/server/studio/data_sharing_routes.py`
 - `studio/app/server/studio/data_sharing_service.py`
-- `studio/docs-viewer/services/documents_data_sharing_adapter.py`
+- `docs-viewer/services/documents_data_sharing_adapter.py`
 - `studio/services/analytics/tags_data_sharing_adapter.py`
 
 The dashboard, prepare, and review shells are hosted by the local Studio app server.
@@ -78,7 +78,8 @@ The documents adapter wrapper owns the implemented Library config set, source in
 The Analytics tags adapter owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior, using existing Analytics tag planners and backup/write helpers.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
 Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.
-The docs-management server hosts the loopback HTTP process and supplies backup, log, and rebuild dependencies, but Data Sharing route ownership and shared adapter dispatch live under `studio/app/server/studio/`.
+The Docs Viewer service hosts the loopback HTTP process and supplies backup, log, generated-read, and rebuild dependencies.
+Shared adapter dispatch still uses the Studio Data Sharing service modules behind an explicit Docs Viewer adapter boundary.
 
 ## Activity
 

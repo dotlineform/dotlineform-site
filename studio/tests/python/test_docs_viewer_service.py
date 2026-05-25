@@ -185,3 +185,23 @@ def test_static_path_policy_is_docs_viewer_scoped() -> None:
     assert allowed("/studio/app/assets/css/studio.css") is False
     assert allowed("/studio/docs-viewer/runtime/js/docs-viewer.js") is False
     assert allowed("/docs-viewer/source/studio/docs-viewer.md") is False
+
+
+def test_public_browser_config_projects_public_readonly_scope_routes() -> None:
+    source_payload = json.loads((REPO_ROOT / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
+    public_payload = json.loads((REPO_ROOT / "docs-viewer/config/defaults/docs-viewer-public-config.json").read_text(encoding="utf-8"))
+
+    public_source_scopes = [
+        scope
+        for scope in source_payload["scopes"]
+        if scope.get("include_scope_param") is False and scope.get("viewer_base_url") != "/docs/"
+    ]
+    public_scope_ids = [scope["scope_id"] for scope in public_source_scopes]
+
+    assert public_payload["schema_version"] == "docs_viewer_config_v1"
+    assert public_payload["default_scope_id"] == public_scope_ids[0]
+    assert [scope["scope_id"] for scope in public_payload["scopes"]] == public_scope_ids
+    assert [scope["viewer_base_url"] for scope in public_payload["scopes"]] == [
+        scope["viewer_base_url"] for scope in public_source_scopes
+    ]
+    assert "studio" not in public_payload["docs_viewer"]["ui_statuses_by_scope"]

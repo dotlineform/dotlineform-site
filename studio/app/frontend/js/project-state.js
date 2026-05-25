@@ -4,6 +4,7 @@ import {
 } from "./studio-config.js";
 import {
   PROJECT_STATE_ENDPOINTS,
+  configureStudioTransport,
   postJson,
   probeProjectStateCatalogueHealth,
   probeProjectStateDocsHealth
@@ -213,6 +214,7 @@ async function init() {
 
   try {
     const config = await loadStudioConfigWithText("project_state");
+    configureStudioTransport(config);
     const catalogueServerAvailable = Boolean(await probeProjectStateCatalogueHealth());
     const docsServerAvailable = Boolean(await probeProjectStateDocsHealth());
     const state = {
@@ -257,7 +259,7 @@ async function init() {
     if (!docsServerAvailable) {
       renderOperationalServiceStatus(warningNode, state, {
         serviceAvailable: (routeState) => routeState.docsServerAvailable,
-        unavailableText: () => t(state, "docs_server_unavailable_hint", "Local docs-management server unavailable. Opening the Markdown file is disabled."),
+        unavailableText: () => t(state, "docs_server_unavailable_hint", "Docs Viewer service unavailable. Opening the Markdown file is disabled."),
         unavailableState: "warn"
       });
     }

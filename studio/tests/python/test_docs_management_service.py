@@ -445,7 +445,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
             manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
             default_doc_exists = (repo_root / "docs-viewer/source/research/research.md").exists()
-            route_exists = (repo_root / "research/index.md").exists()
+            route_text = (repo_root / "research/index.md").read_text(encoding="utf-8")
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
 
@@ -455,12 +455,54 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert payload["build_commands"][0]["status"] == "completed"
     assert calls == [(repo_root, "research", {"include_search": True})]
     assert default_doc_exists is True
-    assert route_exists is True
+    assert "permalink: /research/" in route_text
+    assert "docs_viewer_readonly_route.html" in route_text
+    assert "docs_viewer_management_route.html" not in route_text
+    assert "allow_management" not in route_text
     assert source_payload["scopes"][1]["scope_id"] == "research"
+    assert source_payload["scopes"][1]["viewer_base_url"] == "/research/"
+    assert source_payload["scopes"][1]["include_scope_param"] is False
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["research"]["user_created"] is True
     assert records["research"]["created_by_tool"] is True
     assert any(file["path"] == "docs-viewer/config/scopes/docs_scopes.json" for file in records["research"]["files"])
+    assert any(file["path"] == "research/index.md" and file["kind"] == "route_file" for file in records["research"]["files"])
+
+
+def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
+    original_rebuild = docs_management_service.write_rebuild.rebuild_scope_outputs
+    docs_management_service.write_rebuild.rebuild_scope_outputs = lambda *_args, **_kwargs: {"ok": True}
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            write_docs_scope_config(repo_root)
+            payload = docs_management_service.handle_scope_create_apply(
+                repo_root,
+                {
+                    "scope_id": "notes",
+                    "title": "Notes",
+                    "source_root": "docs-viewer/source/notes",
+                    "default_doc_id": "notes",
+                    "publishing_mode": "local_committed",
+                    "public_route_path": "/notes/",
+                    "confirm": True,
+                },
+                dry_run=False,
+            )
+            source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
+            manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
+            route_exists = (repo_root / "notes/index.md").exists()
+    finally:
+        docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
+
+    assert payload["ok"] is True
+    assert payload["urls"]["public"] == ""
+    assert route_exists is False
+    assert source_payload["scopes"][1]["viewer_base_url"] == "/docs/"
+    assert source_payload["scopes"][1]["include_scope_param"] is True
+    records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
+    assert records["notes"]["scope_type"] == "local"
+    assert not any(file["kind"] == "route_file" for file in records["notes"]["files"])
 
 
 def test_scope_delete_preview_blocks_system_scopes() -> None:
@@ -818,6 +860,7 @@ def main() -> None:
         test_scope_create_preview_reports_write_set_and_urls,
         test_scope_create_apply_requires_confirmation,
         test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild,
+        test_scope_create_apply_skips_public_route_for_local_scopes,
         test_scope_delete_preview_blocks_system_scopes,
         test_scope_delete_preview_keeps_config_as_changed_file,
         test_scope_delete_apply_requires_confirmation,

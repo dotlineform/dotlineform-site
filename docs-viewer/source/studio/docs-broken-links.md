@@ -59,14 +59,14 @@ Current behavior:
 
 ## Runtime Boundary
 
-The report depends on the local Docs management API through the local Studio app server.
+The report depends on the local Docs management API through the configured Docs Viewer service.
 
 Current flow:
 
 1. Docs Viewer loads this report-backed document in manage mode
 2. the report module selects the current or requested docs scope
-3. the report sends `POST /docs/broken-links` through `/studio/api/docs`
-4. the API adapter runs the shared docs broken-links audit logic for that scope
+3. the report sends `POST <DOCS_VIEWER_BASE_URL>/docs/broken-links`
+4. the Docs Viewer service runs the shared docs broken-links audit logic for that scope
 5. the report renders the returned issue list
 
 This is a Docs Viewer management report for a read-only docs audit, not a public hosted feature.

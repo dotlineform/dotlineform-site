@@ -25,15 +25,15 @@ They call a loopback local service, render shared lifecycle states, and use adap
 
 ## Local Service Contract
 
-The docs-management server currently hosts the HTTP process because the documents adapter still depends on Docs Viewer generated-data reads, backups, and rebuild follow-through.
-Neutral route constants and shared dispatch live under `studio/app/server/studio/`.
+The Docs Viewer service hosts the HTTP process because the documents adapter depends on Docs Viewer generated-data reads, backups, and rebuild follow-through.
+Neutral route constants and shared dispatch still live under `studio/app/server/studio/` behind the Docs Viewer adapter boundary.
 
 Endpoints:
 
-- `GET /studio/api/docs/data-sharing/returned-packages`
-- `POST /studio/api/docs/data-sharing/prepare`
-- `POST /studio/api/docs/data-sharing/review`
-- `POST /studio/api/docs/data-sharing/apply`
+- `GET <DOCS_VIEWER_BASE_URL>/data-sharing/returned-packages`
+- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare`
+- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/review`
+- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/apply`
 
 The shared service layer owns:
 
@@ -113,9 +113,9 @@ The documents adapter owns:
 - Library sharing profile loading from `assets/studio/data/library_export_configs.json`
 - generated Docs Viewer index and payload reads
 - document tree selection and field mapping
-- outbound package generation through `studio/docs-viewer/services/docs_export.py`
+- outbound package generation through `docs-viewer/services/docs_export.py`
 - returned Library `.json` and `.jsonl` package listing
-- staged package parsing and Markdown review generation through `studio/docs-viewer/services/docs_import.py`
+- staged package parsing and Markdown review generation through `docs-viewer/services/docs_import.py`
 - summary and hierarchy apply planning
 - `_docs_library/` writes, docs/search rebuild follow-through, and document activity metadata
 

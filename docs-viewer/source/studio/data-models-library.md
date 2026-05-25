@@ -159,8 +159,8 @@ Current model:
 Current consumers:
 
 - `/studio/data-sharing/prepare/?mode=manage`
-- `POST /studio/api/docs/data-sharing/prepare` on the local Studio app server
-- `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py`
+- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare` on the Docs Viewer service
+- `docs-viewer/services/docs_export.py`
 
 Current limits:
 

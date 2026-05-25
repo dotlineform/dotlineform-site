@@ -8,7 +8,7 @@ sort_order: 15300
 ---
 # Docs Management Server Data Sharing
 
-`POST /studio/api/docs/data-sharing/prepare` expects:
+`POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare` expects:
 
 ```json
 {
@@ -31,7 +31,7 @@ Prepare behavior:
 - `select_all: true` asks the export engine to select every doc matching the config filters
 - `missing_summary_only` may be `true`, `false`, or `null`; unsupported configs ignore `true`
 - unsupported config/format combinations return the export engine's structured validation report without writing
-- the endpoint dispatches to `studio/docs-viewer/services/documents_data_sharing_adapter.py`, which calls `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py`'s shared package-preparation engine in-process
+- the endpoint dispatches to `docs-viewer/services/documents_data_sharing_adapter.py`, which calls `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_export.py`'s shared package-preparation engine in-process
 - output paths are validated by the package-preparation engine and must stay under the adapter-declared outbound package root
 - normal server mode writes the package file and returns `output_written: true`
 - server `--dry-run` mode validates and reports the target path without writing
@@ -45,7 +45,7 @@ Runtime role:
 - config-defined paths are resolved and allowlisted by the shared export engine
 - generated package files are local working artifacts for Studio reporting or manual external use
 
-`GET /studio/api/docs/data-sharing/returned-packages` accepts:
+`GET <DOCS_VIEWER_BASE_URL>/data-sharing/returned-packages` accepts:
 
 ```text
 ?data_domain=library
@@ -60,7 +60,7 @@ Import file listing behavior:
 - returns filename, repo-relative path, format, size, and modified time
 - does not parse or log file content
 
-`POST /studio/api/docs/data-sharing/review` expects:
+`POST <DOCS_VIEWER_BASE_URL>/data-sharing/review` expects:
 
 ```json
 {
@@ -74,7 +74,7 @@ Import preview behavior:
 - `data_domain` must resolve exactly one adapter with `review` capability
 - stub adapters and planned capabilities fail closed before the endpoint runs document-specific preview behavior
 - `staged_filename` must resolve inside the adapter-declared staging root
-- dispatches to `studio/docs-viewer/services/documents_data_sharing_adapter.py`, which parses the staged data file through `$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_import.py`
+- dispatches to `docs-viewer/services/documents_data_sharing_adapter.py`, which parses the staged data file through `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py`
 - loads current generated docs index and payload state through the shared import engine for the adapter-declared docs scope
 - writes Markdown previews under the adapter-declared preview root in normal server mode
 - reports planned preview paths without writing when the server runs with `--dry-run`
@@ -89,7 +89,7 @@ Runtime role:
 - generated preview files are local working artifacts for Studio review
 - unconfigured data domains fail closed instead of falling back to document parsing
 
-`POST /studio/api/docs/data-sharing/apply` expects for summary updates:
+`POST <DOCS_VIEWER_BASE_URL>/data-sharing/apply` expects for summary updates:
 
 ```json
 {
@@ -125,7 +125,7 @@ Runtime role:
 - it does not apply full content, `parent_id`, `sort_order`, or other relationship changes
 - backups use the existing docs-management backup root so Studio backup retention can manage them with the other docs source-write backups
 
-`POST /studio/api/docs/data-sharing/apply` expects for hierarchy updates:
+`POST <DOCS_VIEWER_BASE_URL>/data-sharing/apply` expects for hierarchy updates:
 
 ```json
 {

@@ -39,7 +39,7 @@ The root doc's `doc_id` should match the scope config's `default_doc_id`.
 
 ### 3. Register The Scope For Docs Builds
 
-Add a scope entry to `studio/docs-viewer/config/scopes/docs_scopes.json`:
+Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
 
 ```json
 {
@@ -66,7 +66,8 @@ Add a scope entry to `studio/docs-viewer/config/scopes/docs_scopes.json`:
 Use `include_scope_param: false` for a public route that only ever reads one scope.
 Use `include_scope_param: true` only when the configured route should publish links with an explicit scope query.
 
-Running `./scripts/build_docs.rb --write` updates `assets/docs-viewer/data/docs-viewer-config.json` from this source config.
+Running `./scripts/build_docs.rb --write` updates `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from this source config.
+The public config is filtered to static read-only routes, so a new `public_readonly` scope becomes available to its Jekyll route after the docs build refreshes the config and generated docs payloads.
 `repo_assets` makes Docs Import copy imported images and files below `assets/docs/research/` and write literal `/assets/docs/research/...` links.
 Use `staging_manual` instead when imported media should stay in `var/docs/import-staging/` until you manually copy it to the configured `media_path_prefix`.
 
@@ -111,19 +112,19 @@ Read-only canonical URL behavior:
 
 ### 5. Add The Scope To The Management Shell
 
-The current management shell is `docs/index.md`.
-In local Studio runs, it renders `/docs/` through `docs_viewer_management_route.html` with:
+The current management shell is served by `docs-viewer/services/docs_viewer_service.py` at the configured Docs Viewer service base URL.
+It renders `/docs/` with:
 
 - `allow_management=true`
 - `allow_scope_query=true`
-- `management_base_url='/studio/api/docs'` in the local Studio app shell
+- `management_base_url=<DOCS_VIEWER_BASE_URL>` in the standalone Docs Viewer service shell
 
 Public builds keep `docs_viewer_management_enabled: false`, so the same route adapter emits the read-only shell and ignores `mode=manage` without loading management CSS or localhost server configuration.
-The dev Studio Jekyll overlay points generated reads and management actions at the local Studio app default, `http://127.0.0.1:8765/studio/api/docs`, rather than the standalone Docs management process.
+Local Studio points Docs links, generated reads, and management actions at the configured Docs Viewer service rather than hosting the shell itself.
 
-The management scope selector and browser route map come from `assets/docs-viewer/data/docs-viewer-config.json`.
-Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `assets/docs-viewer/js/docs-viewer.js`.
-If the new scope needs UI-status menu options, add them to the `docs_viewer.ui_statuses_by_scope` section in `studio/docs-viewer/config/scopes/docs_scopes.json`, then rerun the docs build so `assets/docs-viewer/data/docs-viewer-config.json` is regenerated.
+The management scope selector and browser route map come from `docs-viewer/config/defaults/docs-viewer-config.json`.
+Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `docs-viewer/runtime/js/docs-viewer.js`.
+If the new scope needs UI-status menu options, add them to the `docs_viewer.ui_statuses_by_scope` section in `docs-viewer/config/scopes/docs_scopes.json`, then rerun the docs build so the generated Docs Viewer browser configs are regenerated.
 
 Management route adapter inputs:
 
@@ -146,7 +147,7 @@ Management canonical URL behavior:
 
 ### 6. Add Search Support
 
-If the read-only route should have inline search, make sure the scope exists in `studio/docs-viewer/config/scopes/docs_scopes.json`.
+If the read-only route should have inline search, make sure the scope exists in `docs-viewer/config/scopes/docs_scopes.json`.
 The Docs Viewer search builder derives its input and output paths from that scope config:
 
 - input docs index: `assets/data/docs/scopes/<scope>/index.json`
@@ -180,9 +181,9 @@ After this, the public route should be able to fetch:
 
 ### 8. Start Local Management
 
-Run the local Studio app for management.
-Docs management is served through `/studio/api/docs/...`; there is no standalone Docs Management server entrypoint.
-The project still needs `_config.yml`, configured docs scopes in `studio/docs-viewer/config/scopes/docs_scopes.json`, the Docs Viewer build/search scripts, and the Python/Ruby dependencies used by those scripts.
+Run the Docs Viewer service for management.
+Docs management is served through `DOCS_VIEWER_BASE_URL`; Local Studio only links to that peer service.
+The project still needs `_config.yml`, configured docs scopes in `docs-viewer/config/scopes/docs_scopes.json`, the Docs Viewer build/search scripts, and the Python/Ruby dependencies used by those scripts.
 
 Then open:
 
@@ -190,7 +191,7 @@ Then open:
 /docs/?scope=research&mode=manage&doc=research
 ```
 
-Docs Import reads the configured scope list and source roots from `studio/docs-viewer/config/scopes/docs_scopes.json`.
+Docs Import reads the configured scope list and source roots from `docs-viewer/config/scopes/docs_scopes.json`.
 Imported media behavior follows each scope's `import_media_storage` settings.
 New portable installs should usually start with `repo_assets`; existing remote-token workflows can keep `staging_manual` and `media_path_prefix`.
 

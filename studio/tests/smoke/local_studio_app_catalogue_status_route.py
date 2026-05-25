@@ -77,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
             expect(root).to_have_attribute("data-studio-service", "available", timeout=10_000)
 
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-            if doc_link != DOC_HREF:
+            if not str(doc_link).endswith(DOC_HREF):
                 raise AssertionError(f"Catalogue Drafts doc link is not manage-mode: {doc_link!r}")
             nav_link = page.locator('.site-nav [data-studio-navigate="studio_catalogue"]').get_attribute("href")
             if nav_link != "/studio/catalogue/?mode=manage":

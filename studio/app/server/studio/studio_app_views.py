@@ -7,9 +7,12 @@ import json
 from pathlib import Path
 
 try:
-    from studio_app_config import STUDIO_MEDIA, STUDIO_TOP_NAV_VIEW_IDS, STUDIO_VIEWS
+    from studio_app_config import STUDIO_MEDIA, STUDIO_TOP_NAV_VIEW_IDS, studio_views
 except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
-    from .studio_app_config import STUDIO_MEDIA, STUDIO_TOP_NAV_VIEW_IDS, STUDIO_VIEWS
+    from .studio_app_config import STUDIO_MEDIA, STUDIO_TOP_NAV_VIEW_IDS, studio_views
+
+
+REPO_ROOT = Path(__file__).resolve().parents[4]
 
 
 STUDIO_TOP_NAV_ACTIVE_VIEW_IDS: dict[str, str] = {
@@ -36,8 +39,9 @@ STUDIO_TOP_NAV_ACTIVE_VIEW_IDS: dict[str, str] = {
 def studio_nav(active_view_id: str = "") -> str:
     items = []
     active_nav_id = STUDIO_TOP_NAV_ACTIVE_VIEW_IDS.get(active_view_id, active_view_id)
+    views = studio_views(REPO_ROOT)
     for view_id in STUDIO_TOP_NAV_VIEW_IDS:
-        view = STUDIO_VIEWS[view_id]
+        view = views[view_id]
         label = html.escape(view["label"])
         href = html.escape(view["path"], quote=True)
         escaped_view_id = html.escape(view_id, quote=True)
@@ -58,7 +62,7 @@ def studio_header(active_view_id: str = "") -> str:
 
 
 def studio_route_view(version: str, view_id: str, body_html: str) -> str:
-    view = STUDIO_VIEWS[view_id]
+    view = studio_views(REPO_ROOT)[view_id]
     escaped_version = html.escape(version, quote=True)
     title = html.escape(view["title"])
     doc_href = html.escape(view["doc_href"], quote=True)
@@ -235,7 +239,7 @@ def series_tags_view(version: str) -> str:
 
 
 def series_tag_editor_view(version: str, repo_root: Path) -> str:
-    view = STUDIO_VIEWS["series_tag_editor"]
+    view = studio_views(repo_root)["series_tag_editor"]
     escaped_version = html.escape(version, quote=True)
     title = html.escape(view["title"])
     doc_href = html.escape(view["doc_href"], quote=True)
@@ -714,7 +718,7 @@ def studio_home_view(version: str) -> str:
             view_id=html.escape(view_id, quote=True),
             label=html.escape(view["title"]),
         )
-        for view_id, view in STUDIO_VIEWS.items()
+        for view_id, view in studio_views(REPO_ROOT).items()
         if view.get("nav", "true") != "false"
     )
     return f"""<!doctype html>

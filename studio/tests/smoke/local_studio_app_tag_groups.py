@@ -88,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
             browser.close()
 
         expected_groups = {"subject", "domain", "form", "theme"}
-        if docs_home_link != "/docs/?mode=manage":
+        if not docs_home_link.startswith("http://127.0.0.1:") or not docs_home_link.endswith("/docs/?mode=manage"):
             raise AssertionError(f"unexpected home Docs navigation href: {docs_home_link!r}")
         if home_link != "/studio/analytics/tag-groups/":
             raise AssertionError(f"unexpected home navigation href: {home_link!r}")
@@ -100,7 +100,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"expected record loaded, got {record_loaded!r}")
         if expected_groups - set(chips):
             raise AssertionError(f"missing expected group chips: {sorted(expected_groups - set(chips))}")
-        if doc_link != "/docs/?scope=studio&doc=tag-groups&mode=manage":
+        if not doc_link.startswith("http://127.0.0.1:") or not doc_link.endswith("/docs/?scope=studio&doc=tag-groups&mode=manage"):
             raise AssertionError(f"unexpected doc link: {doc_link!r}")
         if "No group descriptions available" in content_text:
             raise AssertionError("Tag Groups rendered empty fallback unexpectedly")

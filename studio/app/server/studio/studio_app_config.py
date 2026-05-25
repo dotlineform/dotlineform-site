@@ -6,6 +6,19 @@ import json
 import os
 from pathlib import Path
 
+try:
+    from studio_docs_viewer_integration import (
+        apply_docs_viewer_route_overrides,
+        docs_viewer_manage_url,
+        docs_viewer_service_endpoints,
+    )
+except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
+    from .studio_docs_viewer_integration import (
+        apply_docs_viewer_route_overrides,
+        docs_viewer_manage_url,
+        docs_viewer_service_endpoints,
+    )
+
 
 STUDIO_VIEWS: dict[str, dict[str, str]] = {
     "docs": {
@@ -282,20 +295,20 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "save_tags": "/studio/api/analytics/save-tags",
     },
     "docs": {
-        "base": "/studio/api/docs",
-        "health": "/studio/api/docs/health",
-        "capabilities": "/studio/api/docs/capabilities",
-        "generated_index": "/studio/api/docs/docs/generated/index",
-        "generated_search": "/studio/api/docs/docs/generated/search",
-        "import_source": "/studio/api/docs/docs/import-source",
-        "import_source_files": "/studio/api/docs/docs/import-source-files",
-        "import_html": "/studio/api/docs/docs/import-html",
-        "import_html_files": "/studio/api/docs/docs/import-html-files",
-        "open_source": "/studio/api/docs/docs/open-source",
-        "data_sharing_prepare": "/studio/api/docs/data-sharing/prepare",
-        "data_sharing_returned_packages": "/studio/api/docs/data-sharing/returned-packages",
-        "data_sharing_review": "/studio/api/docs/data-sharing/review",
-        "data_sharing_apply": "/studio/api/docs/data-sharing/apply",
+        "base": "",
+        "health": "",
+        "capabilities": "",
+        "generated_index": "",
+        "generated_search": "",
+        "import_source": "",
+        "import_source_files": "",
+        "import_html": "",
+        "import_html_files": "",
+        "open_source": "",
+        "data_sharing_prepare": "",
+        "data_sharing_returned_packages": "",
+        "data_sharing_review": "",
+        "data_sharing_apply": "",
     },
     "audits": {
         "base": "/studio/api/audits",
@@ -336,6 +349,33 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
 STUDIO_MODAL_EVENT = "studio:open-modal"
 
 PRODUCTION_SITE_BASE = "https://dotlineform.com"
+
+
+def studio_views(repo_root: Path) -> dict[str, dict[str, str]]:
+    views = {view_id: dict(view) for view_id, view in STUDIO_VIEWS.items()}
+    docs_view = views["docs"]
+    docs_view["path"] = docs_viewer_manage_url(repo_root)
+    docs_view["doc_href"] = docs_viewer_manage_url(repo_root, scope="studio", doc="docs-viewer")
+    for view in views.values():
+        doc_href = view.get("doc_href", "")
+        if doc_href.startswith("/docs/?"):
+            query = dict(
+                part.split("=", 1)
+                for part in doc_href.removeprefix("/docs/?").split("&")
+                if "=" in part
+            )
+            view["doc_href"] = docs_viewer_manage_url(
+                repo_root,
+                scope=query.get("scope", ""),
+                doc=query.get("doc", ""),
+            )
+    return views
+
+
+def studio_service_endpoints(repo_root: Path) -> dict[str, object]:
+    endpoints = {service: dict(values) for service, values in STUDIO_SERVICE_ENDPOINTS.items()}
+    endpoints["docs"] = docs_viewer_service_endpoints(repo_root)
+    return endpoints
 
 
 def asset_version(repo_root: Path) -> str:
@@ -379,6 +419,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         raise RuntimeError(f"Could not read Studio config: {config_path}") from error
     if not isinstance(payload, dict):
         raise RuntimeError(f"Studio config must be a JSON object: {config_path}")
+    payload = apply_docs_viewer_route_overrides(repo_root, payload)
     try:
         pipeline_payload = json.loads(pipeline_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -401,7 +442,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
             "health": "/health",
             "runtime_config": "/studio/runtime-config.json",
         },
-        "services": STUDIO_SERVICE_ENDPOINTS,
+        "services": studio_service_endpoints(repo_root),
         "sites": runtime_site_bases(),
         "data_paths": data_paths,
         "media": STUDIO_MEDIA,
@@ -410,7 +451,7 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         },
         "views": [
             {"id": view_id, **view}
-            for view_id, view in STUDIO_VIEWS.items()
+            for view_id, view in studio_views(repo_root).items()
         ],
         "navigation": {
             "primary": list(STUDIO_TOP_NAV_VIEW_IDS),

@@ -94,5 +94,5 @@ Tags package preparation writes outbound packages under `var/studio/data-sharing
 
 - `studio/app/server/studio/data_sharing_adapters.py` validates duplicate dispatch, canonical operation names, status values, and safe relative paths before resolving adapters.
 - `studio/app/server/studio/data_sharing_service.py` uses the resolved adapter before running package preparation, returned-package listing, review, or apply behavior.
-- `studio/docs-viewer/services/docs_management_service.py` owns Docs/Data Sharing behavior for the Local Studio `/studio/api/docs/...` endpoints and delegates Data Sharing dispatch to `studio/app/server/studio/data_sharing_service.py`.
-- `assets/studio/js/studio-transport.js` defines the service endpoints used by the browser.
+- `docs-viewer/services/docs_management_service.py` owns Docs/Data Sharing behavior for the standalone Docs Viewer service and delegates Data Sharing dispatch to `studio/app/server/studio/data_sharing_service.py`.
+- `studio/app/frontend/js/studio-transport.js` applies the configured Docs Viewer service endpoints exposed by Local Studio runtime config.

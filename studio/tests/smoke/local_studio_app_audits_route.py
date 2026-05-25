@@ -81,7 +81,7 @@ def main(argv: list[str] | None = None) -> int:
             expect(page.locator("[data-run-audit]").first).to_be_enabled(timeout=10_000)
 
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-            if doc_link != "/docs/?scope=studio&doc=studio-audits&mode=manage":
+            if not str(doc_link).endswith("/docs/?scope=studio&doc=studio-audits&mode=manage"):
                 raise AssertionError(f"audits doc link is not manage-mode: {doc_link!r}")
             if page.locator('.site-nav [data-studio-navigate="studio_audits"]').count():
                 raise AssertionError("audits should not appear as a top-nav item")

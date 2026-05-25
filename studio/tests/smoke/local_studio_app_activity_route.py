@@ -118,7 +118,7 @@ def main(argv: list[str] | None = None) -> int:
                 raise AssertionError(f"unexpected activity modal title: {modal_title!r}")
 
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-            if doc_link != "/docs/?scope=studio&doc=studio-activity&mode=manage":
+            if not str(doc_link).endswith("/docs/?scope=studio&doc=studio-activity&mode=manage"):
                 raise AssertionError(f"activity doc link is not manage-mode: {doc_link!r}")
             if page.locator('.site-nav [data-studio-navigate="activity"]').count():
                 raise AssertionError("activity should not appear as a top-nav item")

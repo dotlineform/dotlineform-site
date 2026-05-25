@@ -95,7 +95,7 @@ def main(argv: list[str] | None = None) -> int:
             expect(page.locator('[data-studio-metric="tag-group-count"]')).not_to_have_text("--", timeout=10_000)
 
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-            if doc_link != DOC_HREF:
+            if not str(doc_link).endswith(DOC_HREF):
                 raise AssertionError(f"Analytics dashboard doc link is not manage-mode: {doc_link!r}")
             nav_link = page.locator(f'.site-nav [data-studio-navigate="{ROUTE_ID}"]').get_attribute("href")
             if nav_link != ROUTE_PATH:

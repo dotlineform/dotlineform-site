@@ -17,7 +17,8 @@ Studio currently uses the local Studio app server as the normal HTTP owner for S
 
 Public Jekyll preview/build is explicit through `bin/public-site-preview` and `bin/public-site-build`.
 
-Docs management, Data Sharing, Analytics tag APIs, Studio audit APIs, Project State report API, Thumbnail Quality preview API, catalogue reads, workbook import, catalogue editor mutations, and migrated Studio route shells are now owned by the local Studio app server.
+Analytics tag APIs, Studio audit APIs, Project State report API, Thumbnail Quality preview API, catalogue reads, workbook import, catalogue editor mutations, and migrated Studio route shells are owned by the local Studio app server.
+Docs Viewer management, generated reads, Docs source opening, and document Data Sharing endpoints are owned by the standalone Docs Viewer service configured through `DOCS_VIEWER_BASE_URL`.
 The old standalone tag write server has been retired.
 The old standalone Docs management server has been retired.
 The old standalone catalogue write server has been retired.
@@ -25,10 +26,10 @@ The old standalone Audit Service HTTP wrapper has been retired; direct automatio
 
 When docs live watching is enabled, the same runner also starts:
 
-- `studio/docs-viewer/services/docs_live_rebuild_watcher.py`
+- `docs-viewer/services/docs_live_rebuild_watcher.py`
 
-The current implementation is therefore an integrated local workflow with one normal local Studio HTTP process.
-The important separation is module ownership, not process ownership.
+The current implementation is therefore a split local workflow: Local Studio and Docs Viewer are peer services.
+The important separation is service and module ownership.
 The local app server owns loopback HTTP, route dispatch, runtime config, static asset serving, and Studio route shells.
 Focused domain modules own write policy, validation, backups, activity rows, and result shaping.
 
@@ -36,10 +37,10 @@ Current boundaries:
 
 - `studio/app/server/studio/studio_app_server.py` owns the local HTTP process and request dispatch.
 - `studio/app/server/studio/studio_app_config.py` owns browser runtime config and service endpoint paths.
+- `studio/app/server/studio/studio_docs_viewer_integration.py` owns configured Docs Viewer peer-service links and endpoint shaping.
 - `studio/app/server/studio/studio_app_views.py` owns migrated Studio route shell rendering.
 - `studio/app/server/studio/studio_catalogue_api.py` owns `/studio/api/catalogue/...` adapter routing for catalogue reads, writes, reports, import, and thumbnail-quality refresh.
 - `studio/services/catalogue/catalogue_write_service.py` dispatches catalogue mutation/build/import routes to focused catalogue workflow modules.
-- `studio/app/server/studio/studio_docs_api.py` owns `/studio/api/docs/...` and delegates to focused Docs management service modules.
 - `studio/app/server/studio/studio_analytics_api.py` owns `/studio/api/analytics/...` for active tag read/write workflows.
 - `studio/app/server/studio/studio_audit_api.py` owns `/studio/api/audits/...` and keeps audit execution allowlisted.
 
@@ -48,23 +49,24 @@ Remaining work is mostly route-family cleanup, projection contracts, public/loca
 
 ## Current Direction
 
-The target shape is now mostly implemented: one local Studio server process with separate domain modules.
+The target shape is now mostly implemented: peer Local Studio and Docs Viewer services with separate domain modules.
 
-The target is not a pile of independent long-running servers, and it is not one large mixed script.
-The intended shape is a single process with clear route modules and domain-specific write policies.
+The target is not one large mixed script.
+The intended shape is independent services with clear route modules and domain-specific write policies.
 
 Current structure:
 
 ```text
 studio/app/server/studio/studio_app_server.py
 studio/app/server/studio/studio_app_config.py
+studio/app/server/studio/studio_docs_viewer_integration.py
 studio/app/server/studio/studio_app_views.py
 studio/app/server/studio/studio_catalogue_api.py
-studio/app/server/studio/studio_docs_api.py
 studio/app/server/studio/studio_analytics_api.py
 studio/app/server/studio/studio_audit_api.py
 studio/services/catalogue/catalogue_write_service.py
-studio/docs-viewer/services/docs_management_service.py
+docs-viewer/services/docs_viewer_service.py
+docs-viewer/services/docs_management_service.py
 ```
 
 Current route namespaces:
@@ -74,16 +76,23 @@ GET  /health
 GET  /studio/
 GET  /studio/runtime-config.json
 GET  /studio/<route>/?mode=manage
-GET  /docs/
 GET  /studio/api/catalogue/health
 GET  /studio/api/catalogue/read
 POST /studio/api/catalogue/<workflow>
-GET  /studio/api/docs/<workflow>
-POST /studio/api/docs/<workflow>
 GET  /studio/api/analytics/<workflow>
 POST /studio/api/analytics/<workflow>
 GET  /studio/api/audits/<workflow>
 POST /studio/api/audits/<workflow>
+```
+
+Docs Viewer routes are served by the configured Docs Viewer service, not Local Studio:
+
+```text
+GET  <DOCS_VIEWER_BASE_URL>/docs/
+GET  <DOCS_VIEWER_BASE_URL>/docs/<workflow>
+POST <DOCS_VIEWER_BASE_URL>/docs/<workflow>
+GET  <DOCS_VIEWER_BASE_URL>/data-sharing/<workflow>
+POST <DOCS_VIEWER_BASE_URL>/data-sharing/<workflow>
 ```
 
 ## Write Policy
@@ -103,7 +112,7 @@ Catalogue routes write only through explicit service allowlists:
 - catalogue backup and log paths
 - focused generated/public outputs when a scoped build, publication, delete, import, Project State, or Thumbnail Quality workflow explicitly owns them
 
-Docs routes write only through Docs management mutation/import/rebuild services and their allowlisted paths.
+Docs routes write only through the Docs Viewer service and its management mutation/import/rebuild services.
 
 Audit routes run only allowlisted local checks.
 

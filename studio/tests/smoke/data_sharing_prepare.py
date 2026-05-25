@@ -101,21 +101,24 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
     def handle(route):
         request = route.request
         parsed = urlparse(request.url)
-        if parsed.path == "/studio/api/docs/health":
+        if parsed.path not in {"/health", "/docs/generated/index", "/data-sharing/prepare"}:
+            route.continue_()
+            return
+        if parsed.path == "/health":
             route.fulfill(
                 status=200,
                 content_type="application/json",
-                body=json.dumps({"ok": True, "service": "docs_management", "dry_run": True}),
+                body=json.dumps({"ok": True, "service": "docs_viewer", "dry_run": True}),
             )
             return
-        if parsed.path == "/studio/api/docs/docs/generated/index":
+        if parsed.path == "/docs/generated/index":
             route.fulfill(
                 status=200,
                 content_type="application/json",
                 body=json.dumps(generated_docs_index()),
             )
             return
-        if parsed.path == "/studio/api/docs/data-sharing/prepare":
+        if parsed.path == "/data-sharing/prepare":
             post_data_json = request.post_data_json
             prepare_requests.append(post_data_json() if callable(post_data_json) else post_data_json)
             route.fulfill(
@@ -130,8 +133,16 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
             body=json.dumps({"ok": False, "error": "Unexpected mock docs-management route"}),
         )
 
-    page.route("**/studio/api/docs/**", handle)
+    page.route("**/*", handle)
     return prepare_requests
+
+
+def block_docs_service(route) -> None:
+    parsed = urlparse(route.request.url)
+    if parsed.path in {"/health", "/docs/generated/index", "/data-sharing/prepare"}:
+        route.abort()
+        return
+    route.continue_()
 
 
 def wait_for_studio_route_ready(page, root_selector: str, timeout_ms: int) -> dict[str, str]:
@@ -408,7 +419,7 @@ def main() -> int:
             if args.mock_docs_service:
                 prepare_requests = install_mock_docs_service(page)
             elif args.block_docs_service:
-                page.route("**/studio/api/docs/**", lambda route: route.abort())
+                page.route("**/*", block_docs_service)
             page.goto(route_url(base_url, "/studio/data-sharing/prepare/?mode=manage"), wait_until="domcontentloaded")
             attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
             assert_ready_contract(attrs)

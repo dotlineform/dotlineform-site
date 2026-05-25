@@ -15,7 +15,9 @@ require_relative "../../shared/ruby/jekyll_markdown_renderer"
 DOCS_SCOPE_CONFIG_PATH = File.expand_path("../../../docs-viewer/config/scopes/docs_scopes.json", __dir__)
 DOCS_SCOPE_CONFIG_SCHEMA_VERSION = "docs_scopes_v1"
 DOCS_VIEWER_BROWSER_CONFIG_PATH = File.expand_path("../../../docs-viewer/config/defaults/docs-viewer-config.json", __dir__)
+DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = File.expand_path("../../../docs-viewer/config/defaults/docs-viewer-public-config.json", __dir__)
 DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v1"
+DOCS_VIEWER_MANAGE_ROUTE_BASE_URL = "/docs/"
 
 ScopeConfig = Struct.new(
   :scope_id,
@@ -1388,6 +1390,20 @@ def browser_search_policy_payload(config)
   }
 end
 
+def docs_viewer_settings_payload(scope_configs)
+  docs_scope_payload = JSON.parse(File.read(DOCS_SCOPE_CONFIG_PATH))
+  docs_viewer_settings = docs_scope_payload["docs_viewer"]
+  return nil unless docs_viewer_settings.is_a?(Hash)
+
+  settings = JSON.parse(JSON.generate(docs_viewer_settings))
+  statuses_by_scope = settings["ui_statuses_by_scope"]
+  if statuses_by_scope.is_a?(Hash)
+    scope_ids = scope_configs.map(&:scope_id)
+    settings["ui_statuses_by_scope"] = statuses_by_scope.select { |scope_id, _value| scope_ids.include?(scope_id) }
+  end
+  settings
+end
+
 def browser_scope_config_payload(scope_configs)
   payload = {
     "schema_version" => DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION,
@@ -1405,24 +1421,33 @@ def browser_scope_config_payload(scope_configs)
       }
     end
   }
-  docs_scope_payload = JSON.parse(File.read(DOCS_SCOPE_CONFIG_PATH))
-  docs_viewer_settings = docs_scope_payload["docs_viewer"]
-  if docs_viewer_settings.is_a?(Hash)
-    payload["docs_viewer"] = docs_viewer_settings
-  end
+  docs_viewer_settings = docs_viewer_settings_payload(scope_configs)
+  payload["docs_viewer"] = docs_viewer_settings if docs_viewer_settings
   payload
 end
 
-def write_docs_viewer_browser_config(scope_configs)
+def write_docs_viewer_browser_config(scope_configs, path: DOCS_VIEWER_BROWSER_CONFIG_PATH, label: "Docs Viewer browser config")
   payload = browser_scope_config_payload(scope_configs)
   text = JSON.pretty_generate(payload) + "\n"
-  FileUtils.mkdir_p(File.dirname(DOCS_VIEWER_BROWSER_CONFIG_PATH))
-  if File.exist?(DOCS_VIEWER_BROWSER_CONFIG_PATH) && File.read(DOCS_VIEWER_BROWSER_CONFIG_PATH) == text
-    puts "Docs Viewer browser config unchanged: #{DOCS_VIEWER_BROWSER_CONFIG_PATH}"
+  FileUtils.mkdir_p(File.dirname(path))
+  if File.exist?(path) && File.read(path) == text
+    puts "#{label} unchanged: #{path}"
     return
   end
-  File.write(DOCS_VIEWER_BROWSER_CONFIG_PATH, text)
-  puts "Docs Viewer browser config wrote: #{DOCS_VIEWER_BROWSER_CONFIG_PATH}"
+  File.write(path, text)
+  puts "#{label} wrote: #{path}"
+end
+
+def public_readonly_scope_config?(config)
+  !config.include_scope_param && normalized_browser_viewer_base_url(config.viewer_base_url) != DOCS_VIEWER_MANAGE_ROUTE_BASE_URL
+end
+
+def write_docs_viewer_public_browser_config(scope_configs)
+  write_docs_viewer_browser_config(
+    scope_configs.select { |config| public_readonly_scope_config?(config) },
+    path: DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH,
+    label: "Docs Viewer public browser config"
+  )
 end
 
 def load_scope_configs(path = DOCS_SCOPE_CONFIG_PATH)
@@ -1523,7 +1548,10 @@ if !options[:only_doc_ids].nil? && selected_scopes.length != 1
   raise "--only-doc-ids can only be used when exactly one scope is selected"
 end
 
-write_docs_viewer_browser_config(scope_configs) if options[:write]
+if options[:write]
+  write_docs_viewer_browser_config(scope_configs)
+  write_docs_viewer_public_browser_config(scope_configs)
+end
 
 begin
   selected_scopes.each do |config|

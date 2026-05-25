@@ -104,6 +104,7 @@ def main(argv: list[str] | None = None) -> int:
 
                     return {
                         serviceBase: mod.getStudioServices(config).docs.base,
+                        docsHealth: mod.getStudioServices(config).docs.health,
                         publicPreviewBase: mod.getStudioSiteBase(config, "public_preview"),
                         productionBase: mod.getStudioSiteBase(config, "production"),
                         docsView: mod.getStudioView(config, "docs").path,
@@ -133,13 +134,15 @@ def main(argv: list[str] | None = None) -> int:
             browser.close()
 
         expected_url = "/studio/analytics/tag-groups/?scope=studio&zero=0"
-        if result["serviceBase"] != "/studio/api/docs":
+        if not str(result["serviceBase"]).startswith("http://127.0.0.1:"):
             raise AssertionError(f"unexpected Docs service base: {result['serviceBase']!r}")
+        if result["docsHealth"] != f"{result['serviceBase']}/health":
+            raise AssertionError(f"unexpected Docs health endpoint: {result['docsHealth']!r}")
         if result["publicPreviewBase"] != "http://127.0.0.1:4000":
             raise AssertionError(f"unexpected public preview base: {result['publicPreviewBase']!r}")
         if result["productionBase"] != "https://dotlineform.com":
             raise AssertionError(f"unexpected production base: {result['productionBase']!r}")
-        if result["docsView"] != "/docs/?mode=manage":
+        if result["docsView"] != f"{result['serviceBase']}/docs/?mode=manage":
             raise AssertionError(f"unexpected Docs view path: {result['docsView']!r}")
         expected_top_nav = ["docs", "studio_catalogue", "studio_analytics", "data_sharing"]
         if result["runtimePrimaryNav"] != expected_top_nav:

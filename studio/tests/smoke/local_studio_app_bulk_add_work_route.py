@@ -77,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
             if workbook_path != "data/works_bulk_import.xlsx" or data_workbook_path != "data/works_bulk_import.xlsx":
                 raise AssertionError(f"unexpected workbook path: text={workbook_path!r}, data={data_workbook_path!r}")
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
-            if doc_link != "/docs/?scope=studio&doc=bulk-add-work&mode=manage":
+            if not str(doc_link).endswith("/docs/?scope=studio&doc=bulk-add-work&mode=manage"):
                 raise AssertionError(f"bulk-add-work doc link is not manage-mode: {doc_link!r}")
             nav_link = page.locator('.site-nav [data-studio-navigate="studio_catalogue"]').get_attribute("href")
             if nav_link != "/studio/catalogue/?mode=manage":

@@ -1,4 +1,5 @@
 import {
+  configureStudioTransport,
   probeDataSharingHealth
 } from "./studio-transport.js";
 import {
@@ -212,7 +213,7 @@ function updateStatus(state) {
       getStudioText(
         state.config,
         "data_sharing_prepare.service_unavailable",
-        "Docs management service unavailable. Start bin/local-studio to prepare packages."
+        "Docs Viewer service unavailable. Start docs-viewer/bin/docs-viewer to prepare packages."
       )
     );
     state.runButton.disabled = true;
@@ -338,6 +339,7 @@ async function init() {
   try {
     markBusy(state, true);
     state.config = await loadStudioConfigWithText("data_sharing_prepare");
+    configureStudioTransport(state.config);
     const adapterRegistry = await loadAdapterRegistry(state.config);
     state.workflowScopes = workflowDomainsForOperation(adapterRegistry, "prepare", WORKFLOW_SCOPES);
     state.scope = workflowScopeFromUrl(state.workflowScopes);
@@ -384,7 +386,7 @@ async function init() {
     state.runButton.title = getStudioText(
       state.config,
       "data_sharing_prepare.run_disabled_title",
-      "Requires the local docs-management service."
+      "Requires the local Docs Viewer service."
     );
 
     renderDataSharingPrepareConfigSelect(state);
