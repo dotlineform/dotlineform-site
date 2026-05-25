@@ -117,13 +117,34 @@ The expected implementation and tests should be written so they can migrate into
   Public scopes should configure docs/search outputs under `assets/`; committed manage-mode scopes should configure docs/search outputs under `docs-viewer/generated/`.
   Public read-only routes remain static and portable because their configured outputs remain public assets, while manage-mode reads can be served by the local Docs Viewer service from the configured non-public generated paths.
 
+## Committed Manage-Mode Output Contract
+
+Committed manage-mode generated docs payloads should use:
+
+- docs payload root: `docs-viewer/generated/docs/<scope>/`
+- docs index: `docs-viewer/generated/docs/<scope>/index.json`
+- docs by-id payloads: `docs-viewer/generated/docs/<scope>/by-id/`
+- docs references payloads, when present: `docs-viewer/generated/docs/<scope>/references/`
+
+Committed manage-mode generated search payloads should use:
+
+- search payload root: `docs-viewer/generated/search/<scope>/`
+- search index: `docs-viewer/generated/search/<scope>/index.json`
+
+Generated JSON under `docs-viewer/generated/` is tracked for `local_committed` scopes.
+It is generated runtime data, not source Markdown, but it travels with the repo so local manage-mode scopes can load without requiring every checkout to rebuild before first use.
+
+`docs-viewer/generated/` is not a public static asset path.
+The path sits under the Docs Viewer-owned package boundary rather than `assets/`, and the public Jekyll config excludes `docs-viewer/` from public builds.
+Public read-only routes therefore continue to publish from configured `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/index.json` paths, while committed manage-mode scopes are served through the local Docs Viewer service from configured non-public generated outputs.
+
 ## Implementation Tasks
 
 ### Task 1. Define Committed Manage-Mode Output Paths
 
 Status:
 
-- not started
+- completed
 
 Choose the path contract for committed manage-mode generated docs/search payloads.
 
