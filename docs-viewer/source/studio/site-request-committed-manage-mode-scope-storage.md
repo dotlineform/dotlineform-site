@@ -33,7 +33,7 @@ The desired end state is:
 - committed manage-mode scopes are available through `/docs/?scope=<scope>&mode=manage` and travel with the repo
 - committed manage-mode scopes do not create public read-only routes
 - committed manage-mode scopes do not publish generated runtime payloads under `assets/`
-- committed manage-mode generated docs/search payloads live under a tracked non-public path
+- committed manage-mode generated docs/search payloads live under a tracked Docs Viewer-owned non-public generated-data path
 - the existing `studio` scope is migrated to the committed manage-mode contract
 - New Scope preview/apply accurately shows different write sets for public read-only and committed manage-mode scopes
 
@@ -73,11 +73,11 @@ They should use:
 - manage-mode access only: `/docs/?scope=<scope>&mode=manage`
 - no public read-only route
 - repo-tracked source Markdown
-- generated runtime output under a tracked non-public path, not `assets/`
+- generated runtime output under a tracked Docs Viewer-owned non-public generated-data path, not `assets/` or `var/`
 - explicit `.gitignore` exceptions or an equivalent tracked-path strategy if the selected path is otherwise ignored
 
 The implementation must choose and document the exact tracked non-public path.
-A candidate shape is `var/docs-viewer/committed/scopes/<scope>/` for generated docs payloads and `var/docs-viewer/committed/search/<scope>/index.json` for generated search payloads, but the final path should be selected with the runtime reader and builder contracts in mind.
+A candidate shape is `docs-viewer/generated/docs/<scope>/` for generated docs payloads and `docs-viewer/generated/search/<scope>/index.json` for generated search payloads, but the final path should be selected with the runtime reader and builder contracts in mind.
 
 ## Studio Migration
 
@@ -87,7 +87,7 @@ Migration requirements:
 
 - `studio` remains reachable through the local Docs Viewer manage-mode route
 - generated Studio docs/search runtime payloads move out of `assets/data/docs/scopes/studio/` and `assets/data/search/studio/`
-- the replacement generated Studio payloads live under the selected tracked non-public path
+- the replacement generated Studio payloads live under the selected tracked Docs Viewer-owned non-public path
 - local Studio startup, live rebuild, Docs Viewer service reads, and Docs Viewer search reads all use the new committed manage-mode output path
 - public static site builds do not need Studio generated payloads under `assets/`
 - docs and tests stop treating `studio` generated runtime assets as public static assets
@@ -102,12 +102,20 @@ That larger request will eventually generalize scope path resolution so Docs Vie
 This near-term request is still useful because it fixes the immediate publication-boundary problem for Studio and local committed scopes.
 The expected implementation and tests should be written so they can migrate into the workspace model later.
 
-## Open Design Questions
+## Decisions
 
-- Should committed manage-mode source Markdown stay under `docs-viewer/source/<scope>/`, or move under a Studio-owned source path?
-- Should committed manage-mode generated payloads be tracked under `var/`, or should they be reproducible local cache with only source/config tracked?
-- What non-public path naming should distinguish committed manage-mode generated payloads from disposable local runtime output?
-- How should generated payload readers resolve a committed manage-mode scope whose output root is outside `assets/` while keeping public read-only routes static and portable?
+- Committed manage-mode source Markdown stays under `docs-viewer/source/<scope>/`.
+  This request does not change Docs Viewer source ownership; it only changes where committed manage-mode generated runtime payloads live.
+- Committed manage-mode generated JSON is tracked, the same as public scope generated JSON.
+  Manage-mode status changes where the generated payloads live, not whether they are committed.
+- Committed manage-mode generated JSON should not live under `var/`.
+  In this repo, `var/` means local working output, backups, logs, staging, caches, and test artifacts.
+  Use a tracked Docs Viewer-owned generated-data path, such as `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json`.
+- Generated docs payload readers should resolve from each scope's configured `output` field.
+  The scope config already states the generated docs output folder.
+- Generated search payload readers should resolve from an explicit scope config field, such as `search_output`.
+  Public scopes should configure docs/search outputs under `assets/`; committed manage-mode scopes should configure docs/search outputs under `docs-viewer/generated/`.
+  Public read-only routes remain static and portable because their configured outputs remain public assets, while manage-mode reads can be served by the local Docs Viewer service from the configured non-public generated paths.
 
 ## Implementation Tasks
 
@@ -123,7 +131,7 @@ Required output:
 
 - exact docs payload root
 - exact search payload root
-- tracked/ignored behavior
+- tracked generated JSON behavior
 - docs explaining why these outputs are not public static assets
 
 ### Task 2. Extend Scope Config For Non-Public Outputs
@@ -135,6 +143,8 @@ Status:
 Update the scope config model so a scope can distinguish public static output from committed manage-mode output.
 
 The builder and runtime should not infer public-ness only from the presence of `assets/data/...` paths.
+The existing `output` field should remain the generated docs payload root.
+Add an explicit generated search output field, such as `search_output`, so search readers and builders do not assume `assets/data/search/<scope>/index.json`.
 
 ### Task 3. Update New Scope Preview And Apply
 
