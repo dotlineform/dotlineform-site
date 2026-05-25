@@ -240,7 +240,7 @@ The shared `docs-viewer.js` score is not part of this plan.
 
 **Verification**
 
-Focused helper/module smoke: `studio/tests/smoke/docs_viewer_management_action_workflow_modules.py`.
+Focused helper/module smoke: `docs-viewer/tests/smoke/docs_viewer_management_action_workflow_modules.py`.
 Use Docs Viewer module smoke checks first.
 Run `docs-viewer-smoke` only when route-level management, modal, import, or scope lifecycle behavior changes materially.
 

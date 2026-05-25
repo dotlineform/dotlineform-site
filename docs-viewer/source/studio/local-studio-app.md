@@ -207,7 +207,7 @@ The local `/docs/` route is no longer hosted by Local Studio.
 The runtime config exposes the configured Docs Viewer service base URL for the top-level `docs` view, page implementation links, generated reads, Data Sharing document endpoints, and source-file opening.
 `studio/app/server/studio/studio_docs_viewer_integration.py` owns this link and endpoint shaping.
 The main management API workflow routes are covered through a fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the standalone Docs Viewer service without touching real docs.
-Browser-level fixture smokes cover local `/docs/` manage-mode workflows through the actual UI: create, metadata edit, settings save, archive, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.
+Docs Viewer fixture smokes cover `/docs/` manage-mode workflows through the Docs Viewer service UI: create, metadata edit, settings save, archive, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
 The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_docs_viewer_integration.py` owns configured peer-service Docs Viewer links, `studio_app_views.py` owns shared HTML shells, `studio_catalogue_views.py` owns catalogue route shells, `studio_analytics_api.py` owns Analytics tag APIs, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
@@ -231,9 +231,9 @@ Current focused checks:
 - `studio/tests/smoke/local_studio_app_studio_works_route.py`
 - `studio/tests/smoke/local_studio_app_catalogue_editor_routes.py`
 - `studio/tests/smoke/local_studio_app_docs_viewer.py`
-- `studio/tests/smoke/local_studio_docs_management_workflows.py`
-- `studio/tests/smoke/local_studio_docs_management_ui.py`
-- `studio/tests/smoke/local_studio_docs_management_import_ui.py`
-- `studio/tests/smoke/local_studio_docs_management_move_ui.py`
-- `studio/tests/smoke/local_studio_docs_management_scope_ui.py`
-- `studio/tests/smoke/public_docs_viewer_readonly.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_workflows.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_ui.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_import_ui.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_move_ui.py`
+- `docs-viewer/tests/smoke/docs_viewer_management_scope_ui.py`
+- `docs-viewer/tests/smoke/public_docs_viewer_readonly.py`

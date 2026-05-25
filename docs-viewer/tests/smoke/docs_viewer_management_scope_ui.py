@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check local Docs Viewer scope lifecycle UI through the Studio app server."""
+"""Smoke-check Docs Viewer scope lifecycle UI through the Docs Viewer service."""
 
 from __future__ import annotations
 
@@ -16,8 +16,8 @@ SMOKE_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(SMOKE_DIR))
 
-from local_studio_docs_management_ui import open_actions_menu, wait_for_doc, wait_for_management_ready  # noqa: E402
-from local_studio_docs_management_workflows import create_fixture_repo, start_server  # noqa: E402
+from docs_viewer_management_ui import open_actions_menu, wait_for_doc, wait_for_management_ready  # noqa: E402
+from docs_viewer_management_workflows import create_fixture_repo, start_server  # noqa: E402
 
 
 def modal_title(page: Page) -> str:

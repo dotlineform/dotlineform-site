@@ -35,7 +35,7 @@ The biggest practical benefit is local debugging speed.
 Instead of adding one-off direct runners for a file without a `__main__` block, Codex could run a focused command such as:
 
 ```bash
-$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_docs_management_service.py -k source_config_settings
+$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_management_service.py -k source_config_settings
 ```
 
 ## Integration Model
@@ -102,13 +102,13 @@ Do not install with one `python` and test with another.
 After install, run one focused check:
 
 ```bash
-$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_docs_management_service.py
+$HOME/miniconda3/bin/python3 -m pytest docs-viewer/tests/python/test_docs_management_service.py
 ```
 
 Or, when targeting the interpreter directly:
 
 ```bash
-/path/to/miniconda3/bin/python -m pytest studio/tests/python/test_docs_management_service.py
+/path/to/miniconda3/bin/python -m pytest docs-viewer/tests/python/test_docs_management_service.py
 ```
 
 Run all Python tests:
@@ -125,7 +125,7 @@ Do not add pytest just to run a single script once.
 The direct-script pattern is still enough when a focused file can be executed with:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/tests/python/test_docs_management_service.py
+$HOME/miniconda3/bin/python3 docs-viewer/tests/python/test_docs_management_service.py
 ```
 
 Add pytest when collection, focused selection, fixture reuse, or failure readability would reduce repeated work across multiple test files.

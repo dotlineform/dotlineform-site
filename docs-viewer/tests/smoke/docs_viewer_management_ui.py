@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check local Docs Viewer management UI workflows."""
+"""Smoke-check Docs Viewer management UI workflows."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ SMOKE_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(SMOKE_DIR))
 
-from local_studio_docs_management_workflows import create_fixture_repo, start_server  # noqa: E402
+from docs_viewer_management_workflows import create_fixture_repo, start_server  # noqa: E402
 
 
 def wait_for_doc(page: Page, doc_id: str, timeout_ms: int) -> str:

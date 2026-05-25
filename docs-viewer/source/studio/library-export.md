@@ -511,4 +511,4 @@ Status: implemented across this doc, [Docs Export](/docs/?scope=studio&doc=scrip
 Add targeted checks for config loading, deterministic output, selected-doc resolution, and representative Library exports.
 Add a light Studio smoke test once the UI exists.
 
-Status: implemented in `studio/tests/python/test_docs_export.py`, `studio/tests/smoke/data_sharing_prepare.py`, and the `docs` profile in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`.
+Status: implemented in `docs-viewer/tests/python/test_docs_export.py`, `studio/tests/smoke/data_sharing_prepare.py`, and the `docs` profile in `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py`.

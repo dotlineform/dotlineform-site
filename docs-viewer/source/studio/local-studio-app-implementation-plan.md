@@ -276,12 +276,12 @@ Phase 3 is implemented for Docs Viewer manage mode by hosting the management she
 The app-server Docs API routes live behind the dedicated `studio_docs_api.py` adapter instead of being embedded in the app-server dispatcher.
 Capabilities now report configured scopes from the live docs scope config file, including user-created scopes that are eligible for scope lifecycle deletion.
 The adapter calls existing docs-management domain functions directly for generated reads, source-config/settings reads, import listings, data-sharing package reads, and management POST routes such as settings, create, metadata update, move, archive/delete, rebuild, scope lifecycle, import, and data sharing.
-`studio/tests/smoke/local_studio_docs_management_workflows.py` now proves the main Docs management API workflow paths against a temporary fixture repo through the local app server.
+The current moved smoke file is `docs-viewer/tests/smoke/docs_viewer_management_workflows.py`; it proves the main Docs management API workflow paths against a temporary fixture repo.
 It patches rebuild execution and Markdown validation inside the fixture so source writes are exercised without rebuilding real docs payloads, invoking Bundler/Jekyll validation, or touching real `_docs/` files.
-`studio/tests/smoke/local_studio_docs_management_ui.py` proves representative UI-level management workflows through the local `/docs/` shell against the same fixture pattern.
+The current moved smoke file is `docs-viewer/tests/smoke/docs_viewer_management_ui.py`; it proves representative UI-level management workflows against the same fixture pattern.
 It covers create, metadata edit, settings save, archive, delete preview/apply, and browser reloads of generated docs index/payload data after each source mutation.
-`studio/tests/smoke/local_studio_docs_management_import_ui.py`, `studio/tests/smoke/local_studio_docs_management_move_ui.py`, and `studio/tests/smoke/local_studio_docs_management_scope_ui.py` cover the remaining managed UI workflows: staged import, drag/drop move, and scope create/delete.
-`studio/tests/smoke/public_docs_viewer_readonly.py` verifies that public `/library/` and `/analysis/` builds stay read-only, do not load management CSS, do not render management controls, and do not load Studio-only assets.
+`docs-viewer/tests/smoke/docs_viewer_management_import_ui.py`, `docs-viewer/tests/smoke/docs_viewer_management_move_ui.py`, and `docs-viewer/tests/smoke/docs_viewer_management_scope_ui.py` cover the remaining managed UI workflows: staged import, drag/drop move, and scope create/delete.
+`docs-viewer/tests/smoke/public_docs_viewer_readonly.py` verifies that public `/library/` and `/analysis/` builds stay read-only, do not load management CSS, do not render management controls, and do not load Studio-only assets.
 `bin/local-studio` treats Docs management as owned by the local Studio app server and has no standalone Docs Management server startup path.
 Data Sharing adapter consolidation is now covered by Phase 5; the Phase 3 claim remains Docs Viewer manage-mode parity for the ordinary source/edit/import/scope workflows.
 Docs Broken Links is also a Docs Viewer concern because it is a scope-based report over generated docs links.

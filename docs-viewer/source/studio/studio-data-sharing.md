@@ -101,5 +101,5 @@ The retained smoke entry points are:
 - `studio/tests/smoke/data_sharing_prepare.py`
 - `studio/tests/smoke/data_sharing_review.py`
 - `studio/tests/python/test_data_sharing_service.py`
-- `studio/tests/python/test_docs_import_service.py`
+- `docs-viewer/tests/python/test_docs_import_service.py`
 - `studio/tests/python/test_tags_data_sharing_adapter.py`

@@ -152,7 +152,7 @@ $HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_export.py --scope 
 Focused package-preparation checks live in:
 
 ```bash
-studio/tests/python/test_docs_export.py
+docs-viewer/tests/python/test_docs_export.py
 ```
 
 They cover config loading, semantic config validation, selected-document descendant resolution, deterministic JSONL output for a fixed run time, JSON format overrides for document-row packages, unsupported format overrides, and representative dry-runs for the three v1 Library sharing profiles.

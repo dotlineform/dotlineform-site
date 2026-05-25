@@ -46,11 +46,11 @@ sort_order: 15500
 
 Export/import adapter behavior is covered by focused checks:
 
-- `studio/tests/python/test_docs_export.py` verifies the Library export engine and service-facing output contracts.
-- `studio/tests/python/test_docs_import.py` verifies staged Library import parsing, preview rendering, and path allowlists.
-- `studio/tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, backups, and confirmation gates.
+- `docs-viewer/tests/python/test_docs_export.py` verifies the Library export engine and service-facing output contracts.
+- `docs-viewer/tests/python/test_docs_import.py` verifies staged Library import parsing, preview rendering, and path allowlists.
+- `docs-viewer/tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, backups, and confirmation gates.
 - `studio/tests/python/test_data_sharing_adapters.py` verifies active adapter resolution and future stub rejection.
-- `studio/tests/python/test_docs_activity.py` verifies Docs Management Studio Activity helper suppression, record groups, source refs, and warning status behavior.
+- `docs-viewer/tests/python/test_docs_activity.py` verifies Docs Management Studio Activity helper suppression, record groups, source refs, and warning status behavior.
 - `studio/tests/smoke/data_sharing_review.py` verifies the Studio import route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
 
 The `docs` profile runs the parser, service, and adapter checks.

@@ -58,8 +58,8 @@ $HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile full
 ```
 
 Profiles are intentionally coarse. Choose the smallest profile that matches the risk.
-The `docs` profile includes Library import parser, Library import service, and Docs Management service checks.
-The `docs-viewer-smoke` profile builds a temporary Jekyll site and runs retained Docs Viewer route and management-modal smoke checks.
+The `docs` profile includes Docs Viewer-owned pytest checks from `docs-viewer/tests/python/` plus shared Data Sharing adapter checks that remain under `studio/tests/python/`.
+The `docs-viewer-smoke` profile builds a temporary Jekyll site and runs Docs Viewer smoke checks from `docs-viewer/tests/smoke/`.
 The `studio-smoke` profile builds a temporary Jekyll site and runs retained browser smoke scripts such as the UI Catalogue modal demo and data import route checks.
 Those checks cover both the docs-management-unavailable state and a mocked Library import preview flow.
 

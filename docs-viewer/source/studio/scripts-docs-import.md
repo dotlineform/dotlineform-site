@@ -160,14 +160,14 @@ Apply-time freshness checks belong to the documents adapter apply actions.
 Focused parser checks live in:
 
 ```bash
-studio/tests/python/test_docs_import.py
+docs-viewer/tests/python/test_docs_import.py
 ```
 
 They cover JSONL rows, JSON envelopes, full-content structural detection, minimal hand-authored rows, unknown metadata preservation, malformed records, current-Library lookup warnings, summary review output, full-content review output, relationship whole-tree review output for relationship and non-relationship packages, staged-timestamp review filenames, dry-run review reporting, invalid JSONL blocking, and staging/review path allowlisting.
 Service handler checks live in:
 
 ```bash
-studio/tests/python/test_docs_import_service.py
+docs-viewer/tests/python/test_docs_import_service.py
 ```
 
 They cover documents adapter returned-package listing, review writing, dry-run review reporting, non-Library domain rejection, the summary-apply contract for missing target docs, backup creation, skipped rows, source write output, and rebuild diagnostics shape, and the hierarchy-apply contract for missing target docs, backup creation, unknown parent warnings, partial selections, no-write dry runs, preserved `sort_order`, and rebuild diagnostics shape.

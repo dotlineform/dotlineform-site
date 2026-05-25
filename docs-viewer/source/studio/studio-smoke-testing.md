@@ -29,9 +29,9 @@ For one-off static review, use:
 - a local static HTTP server serving that build
 - the catalogue write server when the page reads or writes catalogue source data
 
-`$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke` prepares the temporary Jekyll build used by the retained Docs Viewer route smoke.
+`$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke` prepares the temporary Jekyll build used by Docs Viewer smoke scripts under `docs-viewer/tests/smoke/`.
 `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile studio-smoke` prepares the same kind of temporary Jekyll build and runs broader retained Studio route smoke scripts.
-Route-specific Playwright scripts should live under `studio/tests/smoke/` when the scenario is worth keeping.
+Route-specific Playwright scripts should live under the owning boundary when the scenario is worth keeping: `docs-viewer/tests/smoke/` for Docs Viewer and `studio/tests/smoke/` for Studio.
 
 Do not use a raw `file://` URL for Studio pages that depend on module imports, local services, or same-origin asset paths.
 

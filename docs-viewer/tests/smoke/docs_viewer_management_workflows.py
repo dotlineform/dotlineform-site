@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke-check local Studio Docs management workflows against a fixture repo."""
+"""Smoke-check Docs Viewer management workflows against a fixture repo."""
 
 from __future__ import annotations
 

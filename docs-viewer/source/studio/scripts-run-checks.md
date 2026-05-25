@@ -45,11 +45,11 @@ $HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile full
 - `catalogue`
   Runs grouped pytest checks for catalogue-profile Python modules and a representative field-aware build preview.
 - `docs`
-  Runs grouped pytest checks for Docs Viewer export, Library import, generated-read helpers, Docs Management service, Docs routes, and Docs Broken Links behavior, then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
+  Runs grouped pytest checks for Docs Viewer export, Library import, generated-read helpers, Docs Management service, Docs routes, and Docs Broken Links behavior from `docs-viewer/tests/python/`, plus shared Data Sharing checks that remain under `studio/tests/python/`; then rebuilds Studio docs-viewer payloads and Studio docs search payloads.
 - `docs-viewer-smoke`
-  Builds the site to a temporary Jekyll destination and runs retained Docs Viewer smoke checks for direct loads, search route state, link interception, history, hash fragments, Library scope loading, and management modal behavior.
+  Builds the site to a temporary Jekyll destination and runs Docs Viewer smoke checks from `docs-viewer/tests/smoke/` for the standalone service, public read-only installs, browser modules, and management UI behavior.
 - `studio-smoke`
-  Builds the site to a temporary Jekyll destination and runs retained browser smoke checks, including the Docs Viewer route smoke, the UI Catalogue modal demo, Studio data import route checks with docs-management unavailable, and a mocked Library import preview flow.
+  Builds the site to a temporary Jekyll destination and runs retained browser smoke checks, including public Docs Viewer read-only coverage, the UI Catalogue modal demo, Studio data import route checks with docs-service unavailable, and a mocked Library import preview flow.
 - `full`
   Runs `quick`, `catalogue`, `docs`, and `studio-smoke`.
 
