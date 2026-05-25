@@ -16,6 +16,13 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
+- Completed `DVSE-012` with the broader browser runtime/CSS/static verification pass.
+- Elevated `docs-viewer-smoke` passed all 6 checks: temporary Jekyll build, public Docs Viewer read-only smoke, index-panel module smoke, management modal smoke, management action workflow module smoke, and Docs HTML import module smoke. Summary: `var/test-runs/20260525-110629/summary.md`.
+- Targeted built-page reference checks confirmed `/library/` and `/analysis/` load `/docs-viewer/static/css/docs-viewer-base.css`, `/docs-viewer/static/css/docs-viewer.css`, `/docs-viewer/static/css/docs-viewer-reports.css`, and `/docs-viewer/runtime/js/docs-viewer.js`, with no old `/studio/docs-viewer/runtime/` or `/studio/docs-viewer/assets/` paths.
+- Targeted source reference checks found old Docs Viewer browser/static paths only in intentional negative tests and historical/request docs, not in live shell/server/test surfaces.
+- A focused elevated desktop/mobile public layout smoke passed for built `/library/` and `/analysis/`, confirming public main CSS remains the host base, management CSS and Studio CSS are absent, runtime/static assets come from `docs-viewer/`, and desktop columns/mobile stacking still behave.
+- JavaScript syntax passed for all `docs-viewer/runtime/js/**/*.js` files with `node --check`.
+- No generated docs/search payloads were rebuilt manually. Source tracker edits may be refreshed into published Studio docs/search JSON by the local docs watcher.
 - Completed `DVSE-011` by adding `docs-viewer/static/css/docs-viewer-base.css` as the explicit Docs Viewer base contract.
 - The shared Docs Viewer include now loads base, viewer, and report CSS for public read-only routes, and adds management CSS only for management-enabled shells.
 - The base stylesheet is intentionally scoped: public `/library/` and `/analysis/` can keep inheriting public `assets/css/main.css`, while standalone/local Docs Viewer shells can opt into Docs Viewer-owned body/container defaults without relying on public `main.css` or Studio CSS.
@@ -29,7 +36,7 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 - Python compile passed for Local Studio server/config/view modules, and focused Local Studio server pytest passed: 29 tests.
 - Public Jekyll build passed to `/tmp/dlf-jekyll-build`; built `/library/` and `/analysis/` load the moved `/docs-viewer/static/` CSS and `/docs-viewer/runtime/` module, and no old `/studio/docs-viewer/runtime/` or `/studio/docs-viewer/assets/` paths appear in those built pages.
 - Focused browser module smokes passed after rerunning elevated for sandbox loopback binding: index panel modules, Docs HTML import modules, management action workflow modules, and management modal coverage across desktop/mobile viewports.
-- No generated docs/search payloads were rebuilt manually. `DVSE-012` still owns the broader runtime/CSS/static verification pass.
+- No generated docs/search payloads were rebuilt manually for the runtime/static move; `DVSE-012` has now completed the broader verification pass.
 
 ### completed earlier
 
@@ -41,7 +48,7 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### steer for next task
 
-- Start with `DVSE-012`, verifying the browser runtime/CSS/static move across the broader smoke set and reference checks.
+- Start with `DVSE-013`, moving Docs Viewer service modules, management write workflows, local write API contracts, docs watcher or rebuild helpers owned by Docs Viewer, and shell server entrypoints into `docs-viewer/`.
 - Keep the table sequential: only begin the next non-deferred ID after the current one is `done`.
 - If a task uncovers a new dependency, risk, or unresolved ownership question, add a new task row before continuing rather than widening the active task.
 - Bunch work into coherent slices that reduce repeated verification, but do not combine tasks when the second task depends on evidence from the first.
@@ -99,7 +106,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-009 | done | Verify the config/source/scope move with focused syntax checks, dry-run builders where useful, source config validation, and public scope checks that prove generated JSON/search payload outputs still land where Jekyll routes expect them. |
 | DVSE-010 | done | Move Docs Viewer browser runtime modules, rendering/search/router/report/bookmark/favourites code, reusable CSS, management CSS, and static assets into `docs-viewer/`; update public route shells, module imports, and asset references without adding old-path compatibility shims. |
 | DVSE-011 | done | Define and apply the CSS base contract for standalone Docs Viewer pages, public read-only host routes, and local manage mode; add a Docs Viewer-owned base stylesheet if the host contract is not enough. |
-| DVSE-012 | planned | Verify the browser runtime/CSS/static move with Docs Viewer smoke checks, public `/library/` and `/analysis/` checks, desktop/mobile layout checks where relevant, and targeted JavaScript/CSS reference checks. |
+| DVSE-012 | done | Verify the browser runtime/CSS/static move with Docs Viewer smoke checks, public `/library/` and `/analysis/` checks, desktop/mobile layout checks where relevant, and targeted JavaScript/CSS reference checks. |
 | DVSE-013 | planned | Move Docs Viewer service modules, management write workflows, local write API contracts, docs watcher or rebuild helpers owned by Docs Viewer, and shell server entrypoints into `docs-viewer/`; keep manage mode loopback-only with explicit local capability flags. |
 | DVSE-014 | planned | Implement the standalone Docs Viewer service shell for built-in `/docs/` manage mode using static `var/local/site.env` service location, clear port-unavailable failure, normal link failure when the service is stopped, and no deployed live manage-mode assumption. |
 | DVSE-015 | planned | Verify the service/API/shell move with focused Python syntax/import checks, management workflow tests, loopback/startup checks, `/docs/` manage-mode smoke coverage, and checks that Local Studio no longer hosts the Docs Viewer shell. |
