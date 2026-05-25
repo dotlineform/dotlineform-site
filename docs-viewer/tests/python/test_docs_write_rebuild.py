@@ -434,6 +434,54 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
     ]
 
 
+def test_rebuild_all_docs_outputs_rejects_manage_mode_assets_outputs() -> None:
+    original_bundle = with_fake_bundle()
+    original_run = write_rebuild.subprocess.run
+    calls: list[list[str]] = []
+
+    def fake_run(command, **_kwargs):
+        calls.append(list(command))
+        return Completed()
+
+    write_rebuild.subprocess.run = fake_run
+    try:
+        with tempfile.TemporaryDirectory() as temp_path:
+            repo_root = Path(temp_path)
+            config_path = repo_root / "docs-viewer/config/scopes/docs_scopes.json"
+            config_path.parent.mkdir(parents=True)
+            config_path.write_text(
+                """{
+  "schema_version": "docs_scopes_v1",
+  "scopes": [
+    {
+      "scope_id": "studio",
+      "source": "docs-viewer/source/studio",
+      "media_path_prefix": "docs/studio",
+      "output": "assets/data/docs/scopes/studio",
+      "search_output": "assets/data/search/studio/index.json",
+      "viewer_base_url": "/docs/",
+      "include_scope_param": true,
+      "default_doc_id": "dev-home"
+    }
+  ]
+}
+""",
+                encoding="utf-8",
+            )
+            try:
+                write_rebuild.rebuild_all_docs_outputs(repo_root)
+            except ValueError as exc:
+                assert "manage-mode scope 'studio'" in str(exc)
+                assert "assets/data/docs/scopes" in str(exc)
+            else:
+                raise AssertionError("Expected docs rebuild to reject manage-mode public generated roots")
+    finally:
+        write_rebuild.subprocess.run = original_run
+        write_rebuild.detect_bundle_bin = original_bundle
+
+    assert calls == []
+
+
 def main() -> None:
     test_rebuild_scope_outputs_preserves_full_command_shapes()
     test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics()
@@ -446,6 +494,7 @@ def main() -> None:
     test_perform_source_write_and_rebuild_clears_pending_on_exception()
     test_rebuild_all_docs_outputs_preserves_command_sequence()
     test_rebuild_all_docs_outputs_uses_current_scope_config()
+    test_rebuild_all_docs_outputs_rejects_manage_mode_assets_outputs()
     print("Docs write/rebuild tests OK")
 
 

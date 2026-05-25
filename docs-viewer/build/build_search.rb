@@ -53,7 +53,10 @@ class DocsViewerSearchDataBuilder
     end
 
     config = scopes.find { |item| item.is_a?(Hash) && normalize(item["scope_id"]) == scope }
-    return config if config
+    if config
+      validate_generated_output_contract!(config)
+      return config
+    end
 
     available = scopes.filter_map { |item| normalize(item["scope_id"]) if item.is_a?(Hash) }.reject(&:empty?)
     raise SystemExit, "Unsupported docs search scope: #{scope}. Current Docs Viewer scopes: #{available.join(', ')}"
@@ -64,6 +67,31 @@ class DocsViewerSearchDataBuilder
     raise SystemExit, "Docs Viewer scope #{@scope} missing search_output" if value.empty?
 
     value
+  end
+
+  def path_under?(path, root)
+    normalized_path = path.to_s.sub(%r{\A/+}, "")
+    normalized_root = root.to_s.sub(%r{\A/+}, "").sub(%r{/+\z}, "")
+    normalized_path == normalized_root || normalized_path.start_with?("#{normalized_root}/")
+  end
+
+  def normalized_viewer_base_url(value)
+    text = value.to_s.strip
+    text = "/docs/" if text.empty?
+    text = "/#{text}" unless text.start_with?("/")
+    text.end_with?("/") ? text : "#{text}/"
+  end
+
+  def validate_generated_output_contract!(config)
+    manage_mode = config["include_scope_param"] == true || normalized_viewer_base_url(config["viewer_base_url"]) == "/docs/"
+    return unless manage_mode
+
+    if path_under?(config["output"], "assets/data/docs/scopes")
+      raise SystemExit, "Docs Viewer scope #{@scope} is manage-mode; output must not be under assets/data/docs/scopes"
+    end
+    if path_under?(config["search_output"], "assets/data/search")
+      raise SystemExit, "Docs Viewer scope #{@scope} is manage-mode; search_output must not be under assets/data/search"
+    end
   end
 
   def build_docs_payload(target_doc_ids: nil, remove_missing: false)

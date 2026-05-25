@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T18:14:17Z",
+  "generated_at": "2026-05-25T18:26:31Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -5234,7 +5234,7 @@
       "source_path": "site-request-committed-manage-mode-scope-storage.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-committed-manage-mode-scope-storage",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-committed-manage-mode-scope-storage.json",
-      "content_text_length": 11901,
+      "content_text_length": 12640,
       "ui_status": "draft"
     },
     {

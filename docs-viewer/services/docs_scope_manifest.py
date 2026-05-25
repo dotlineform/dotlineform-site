@@ -274,6 +274,29 @@ def planned_search_output(scope_id: str, publishing_mode: str) -> Path:
     return Path("docs-viewer/generated/search") / scope_id / "index.json"
 
 
+def path_is_relative_to(path: Path, parent: Path) -> bool:
+    try:
+        path.relative_to(parent)
+    except ValueError:
+        return False
+    return True
+
+
+def validate_planned_storage_paths(scope_id: str, publishing_mode: str, config: dict[str, Any]) -> None:
+    docs_output = safe_relative_path(config.get("output"), field="planned_scope_config.output")
+    search_output = safe_relative_path(config.get("search_output"), field="planned_scope_config.search_output")
+    if publishing_mode == PUBLIC_MODE:
+        return
+    if path_is_relative_to(docs_output, Path("assets/data/docs/scopes")):
+        raise ValueError(
+            f"committed manage-mode scope {scope_id!r} must not write generated docs under assets/data/docs/scopes"
+        )
+    if path_is_relative_to(search_output, Path("assets/data/search")):
+        raise ValueError(
+            f"committed manage-mode scope {scope_id!r} must not write generated search under assets/data/search"
+        )
+
+
 def planned_scope_config_record(
     scope_id: str,
     source_root: Path,
@@ -697,6 +720,7 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         default_doc_id,
         publishing_mode,
     )
+    validate_planned_storage_paths(scope_id, publishing_mode, planned_scope_config)
 
     existing_configs = load_docs_scope_configs(repo_root)
     if scope_id in existing_configs:

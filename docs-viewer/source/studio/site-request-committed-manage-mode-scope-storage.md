@@ -220,7 +220,7 @@ Implementation note:
 
 Status:
 
-- not started
+- completed
 
 Add checks that prevent manage-mode-only generated runtime payloads from being written under public `assets/` roots unless the scope is explicitly public read-only.
 
@@ -231,6 +231,14 @@ At minimum, cover:
 - Docs Viewer service reads for committed manage-mode scopes
 - search reads for committed manage-mode scopes
 - a regression check that Studio no longer requires generated payloads under `assets/`
+
+Implementation note:
+
+- source scope config loading rejects manage-mode scopes whose docs/search generated outputs are under `assets/data/docs/scopes/` or `assets/data/search/`
+- scope lifecycle preview/apply validates planned committed manage-mode output paths before reporting or writing files
+- docs rebuild helpers now fail invalid scope config instead of silently falling back to imported defaults
+- Ruby docs and search builders validate the same manage-mode/public-generated-root boundary before writing
+- tests cover public read-only `assets/` outputs, committed manage-mode non-public outputs, regression-blocked lifecycle preview/apply, generated service/search reads from `docs-viewer/generated/`, and Studio no longer needing old `assets/` payloads
 
 ### Task 6. Update Documentation
 

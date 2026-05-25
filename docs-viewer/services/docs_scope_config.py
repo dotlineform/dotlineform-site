@@ -11,6 +11,9 @@ from typing import Any
 
 CONFIG_REL_PATH = Path("docs-viewer/config/scopes/docs_scopes.json")
 SCHEMA_VERSION = "docs_scopes_v1"
+DOCS_VIEWER_MANAGE_ROUTE_BASE_URL = "/docs/"
+PUBLIC_DOCS_OUTPUT_ROOT = Path("assets/data/docs/scopes")
+PUBLIC_SEARCH_OUTPUT_ROOT = Path("assets/data/search")
 
 
 @dataclass(frozen=True)
@@ -73,6 +76,41 @@ def normalize_viewer_base_url(value: Any) -> str:
     if not text.startswith("/"):
         text = f"/{text}"
     return text if text.endswith("/") else f"{text}/"
+
+
+def path_is_relative_to(path: Path, parent: Path) -> bool:
+    try:
+        path.relative_to(parent)
+    except ValueError:
+        return False
+    return True
+
+
+def is_public_readonly_scope(*, viewer_base_url: str, include_scope_param: bool) -> bool:
+    return not include_scope_param and normalize_viewer_base_url(viewer_base_url) != DOCS_VIEWER_MANAGE_ROUTE_BASE_URL
+
+
+def validate_generated_output_contract(
+    *,
+    scope_id: str,
+    output: Path,
+    search_output: Path,
+    viewer_base_url: str,
+    include_scope_param: bool,
+    field_prefix: str,
+) -> None:
+    if is_public_readonly_scope(viewer_base_url=viewer_base_url, include_scope_param=include_scope_param):
+        return
+    if path_is_relative_to(output, PUBLIC_DOCS_OUTPUT_ROOT):
+        raise ValueError(
+            f"docs scope config {field_prefix}.output for manage-mode scope {scope_id!r} "
+            "must not be under assets/data/docs/scopes"
+        )
+    if path_is_relative_to(search_output, PUBLIC_SEARCH_OUTPUT_ROOT):
+        raise ValueError(
+            f"docs scope config {field_prefix}.search_output for manage-mode scope {scope_id!r} "
+            "must not be under assets/data/search"
+        )
 
 
 def normalize_doc_id(value: Any, *, field: str) -> str:
@@ -156,17 +194,29 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
             item.get("media_path_prefix") or f"docs/{scope_id}",
             field=f"scopes[{index}].media_path_prefix",
         )
+        output = safe_relative_path(item.get("output"), field=f"scopes[{index}].output")
+        search_output = safe_relative_path(
+            item.get("search_output"),
+            field=f"scopes[{index}].search_output",
+        )
+        viewer_base_url = normalize_viewer_base_url(item.get("viewer_base_url"))
+        include_scope_param = item.get("include_scope_param") is True
+        validate_generated_output_contract(
+            scope_id=scope_id,
+            output=output,
+            search_output=search_output,
+            viewer_base_url=viewer_base_url,
+            include_scope_param=include_scope_param,
+            field_prefix=f"scopes[{index}]",
+        )
         configs[scope_id] = DocsScopeConfig(
             scope_id=scope_id,
             source=safe_relative_path(item.get("source"), field=f"scopes[{index}].source"),
             media_path_prefix=media_path_prefix,
-            output=safe_relative_path(item.get("output"), field=f"scopes[{index}].output"),
-            search_output=safe_relative_path(
-                item.get("search_output"),
-                field=f"scopes[{index}].search_output",
-            ),
-            viewer_base_url=normalize_viewer_base_url(item.get("viewer_base_url")),
-            include_scope_param=item.get("include_scope_param") is True,
+            output=output,
+            search_output=search_output,
+            viewer_base_url=viewer_base_url,
+            include_scope_param=include_scope_param,
             default_doc_id=normalize_doc_id(
                 item.get("default_doc_id"),
                 field=f"scopes[{index}].default_doc_id",

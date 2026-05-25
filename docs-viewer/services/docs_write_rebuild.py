@@ -304,7 +304,7 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
 
     try:
         scope_ids = list(load_docs_scope_configs(repo_root).keys())
-    except (FileNotFoundError, ValueError):
+    except FileNotFoundError:
         scope_ids = list(DOCS_SCOPE_CONFIGS.keys())
 
     commands = [

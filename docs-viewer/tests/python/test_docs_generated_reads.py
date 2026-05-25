@@ -61,6 +61,8 @@ def test_generated_data_availability_checks_scope_files() -> None:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
 
+        assert not (repo_root / "assets/data/docs/scopes/studio/index.json").exists()
+        assert not (repo_root / "assets/data/search/studio/index.json").exists()
         assert generated_reads.generated_scope_data_available(repo_root, "studio") is True
         assert generated_reads.generated_search_data_available(repo_root, "studio") is True
         assert generated_reads.generated_scope_data_available(repo_root, "library") is False

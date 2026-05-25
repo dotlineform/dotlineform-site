@@ -1381,6 +1381,27 @@ def browser_search_index_url(config)
   "/#{config.search_output.sub(%r{\A/+}, "")}"
 end
 
+def path_under?(path, root)
+  normalized_path = path.to_s.sub(%r{\A/+}, "")
+  normalized_root = root.to_s.sub(%r{\A/+}, "").sub(%r{/+\z}, "")
+  normalized_path == normalized_root || normalized_path.start_with?("#{normalized_root}/")
+end
+
+def manage_mode_scope_config?(config)
+  config.include_scope_param == true || normalized_browser_viewer_base_url(config.viewer_base_url) == DOCS_VIEWER_MANAGE_ROUTE_BASE_URL
+end
+
+def validate_generated_output_contract!(config, index)
+  return unless manage_mode_scope_config?(config)
+
+  if path_under?(config.output, "assets/data/docs/scopes")
+    raise "Docs scope config scopes[#{index}].output for manage-mode scope #{config.scope_id.inspect} must not be under assets/data/docs/scopes"
+  end
+  if path_under?(config.search_output, "assets/data/search")
+    raise "Docs scope config scopes[#{index}].search_output for manage-mode scope #{config.scope_id.inspect} must not be under assets/data/search"
+  end
+end
+
 def browser_search_policy_payload(config)
   {
     "domain" => "docs_viewer",
@@ -1470,7 +1491,7 @@ def load_scope_configs(path = DOCS_SCOPE_CONFIG_PATH)
     raise "Docs scope config scope_id #{scope_id.inspect} is duplicated" if seen[scope_id]
 
     seen[scope_id] = true
-    ScopeConfig.new(
+    config = ScopeConfig.new(
       scope_id: scope_id,
       source: normalize_scope_config_path(item["source"], "scopes[#{index}].source"),
       media_path_prefix: normalize_scope_config_path(
@@ -1497,6 +1518,8 @@ def load_scope_configs(path = DOCS_SCOPE_CONFIG_PATH)
       show_updated_date: item["show_updated_date"] != false,
       allow_unresolved_parent_ids: item["allow_unresolved_parent_ids"] == true
     )
+    validate_generated_output_contract!(config, index)
+    config
   end
 end
 

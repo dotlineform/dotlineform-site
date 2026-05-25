@@ -326,7 +326,11 @@ def test_capabilities_advertise_generated_data_reads() -> None:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
         payload = docs_management_service.capabilities_payload(repo_root)
+        old_docs_assets_exist = (repo_root / "assets/data/docs/scopes/studio/index.json").exists()
+        old_search_assets_exist = (repo_root / "assets/data/search/studio/index.json").exists()
 
+    assert old_docs_assets_exist is False
+    assert old_search_assets_exist is False
     assert payload["capabilities"]["generated_data_reads"] is True
     assert payload["capabilities"]["scopes"]["studio"]["generated_data_reads"] is True
     assert payload["capabilities"]["scopes"]["studio"]["generated_search_reads"] is True
@@ -454,6 +458,127 @@ def test_docs_scope_config_requires_search_output() -> None:
             assert "scopes[0].search_output" in str(exc)
         else:
             raise AssertionError("Expected docs scope config to require search_output")
+
+
+def test_docs_scope_config_rejects_manage_mode_assets_outputs() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_json(
+            repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+            {
+                "schema_version": "docs_scopes_v1",
+                "scopes": [
+                    {
+                        "scope_id": "studio",
+                        "source": "docs-viewer/source/studio",
+                        "media_path_prefix": "docs/studio",
+                        "output": "assets/data/docs/scopes/studio",
+                        "search_output": "assets/data/search/studio/index.json",
+                        "viewer_base_url": "/docs/",
+                        "include_scope_param": True,
+                        "default_doc_id": "child",
+                    }
+                ],
+            },
+        )
+        try:
+            docs_scope_config.load_docs_scope_configs(repo_root)
+        except ValueError as exc:
+            assert "manage-mode scope 'studio'" in str(exc)
+            assert "assets/data/docs/scopes" in str(exc)
+        else:
+            raise AssertionError("Expected manage-mode scope config to reject public generated asset roots")
+
+
+def test_docs_scope_config_allows_public_readonly_assets_outputs() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_json(
+            repo_root / "docs-viewer/config/scopes/docs_scopes.json",
+            {
+                "schema_version": "docs_scopes_v1",
+                "scopes": [
+                    {
+                        "scope_id": "research",
+                        "source": "docs-viewer/source/research",
+                        "media_path_prefix": "docs/research",
+                        "output": "assets/data/docs/scopes/research",
+                        "search_output": "assets/data/search/research/index.json",
+                        "viewer_base_url": "/research/",
+                        "include_scope_param": False,
+                        "default_doc_id": "research",
+                    }
+                ],
+            },
+        )
+        configs = docs_scope_config.load_docs_scope_configs(repo_root)
+
+    assert configs["research"].output.as_posix() == "assets/data/docs/scopes/research"
+    assert configs["research"].search_output.as_posix() == "assets/data/search/research/index.json"
+
+
+def test_scope_create_preview_blocks_committed_manage_mode_assets_regression() -> None:
+    original_docs_output = docs_management_service.docs_scope_manifest.planned_docs_output
+    original_search_output = docs_management_service.docs_scope_manifest.planned_search_output
+    docs_management_service.docs_scope_manifest.planned_docs_output = lambda scope_id, _mode: Path("assets/data/docs/scopes") / scope_id
+    docs_management_service.docs_scope_manifest.planned_search_output = (
+        lambda scope_id, _mode: Path("assets/data/search") / scope_id / "index.json"
+    )
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            write_docs_scope_config(repo_root)
+            try:
+                docs_management_service.docs_scope_manifest.plan_create_scope_preview(
+                    repo_root,
+                    {
+                        "scope_id": "notes",
+                        "title": "Notes",
+                        "source_root": "docs-viewer/source/notes",
+                        "default_doc_id": "notes",
+                        "publishing_mode": "local_committed",
+                    },
+                )
+            except ValueError as exc:
+                assert "must not write generated docs under assets/data/docs/scopes" in str(exc)
+            else:
+                raise AssertionError("Expected committed manage-mode preview to reject assets output roots")
+    finally:
+        docs_management_service.docs_scope_manifest.planned_docs_output = original_docs_output
+        docs_management_service.docs_scope_manifest.planned_search_output = original_search_output
+
+
+def test_scope_create_apply_blocks_committed_manage_mode_assets_regression() -> None:
+    original_docs_output = docs_management_service.docs_scope_manifest.planned_docs_output
+    original_search_output = docs_management_service.docs_scope_manifest.planned_search_output
+    docs_management_service.docs_scope_manifest.planned_docs_output = lambda scope_id, _mode: Path("assets/data/docs/scopes") / scope_id
+    docs_management_service.docs_scope_manifest.planned_search_output = (
+        lambda scope_id, _mode: Path("assets/data/search") / scope_id / "index.json"
+    )
+    try:
+        with make_repo() as temp_path:
+            repo_root = Path(temp_path)
+            write_docs_scope_config(repo_root)
+            try:
+                docs_management_service.handle_scope_create_apply(
+                    repo_root,
+                    {
+                        "scope_id": "notes",
+                        "title": "Notes",
+                        "source_root": "docs-viewer/source/notes",
+                        "default_doc_id": "notes",
+                        "publishing_mode": "local_committed",
+                        "confirm": True,
+                    },
+                    dry_run=True,
+                )
+            except ValueError as exc:
+                assert "must not write generated docs under assets/data/docs/scopes" in str(exc)
+            else:
+                raise AssertionError("Expected committed manage-mode apply to reject assets output roots")
+    finally:
+        docs_management_service.docs_scope_manifest.planned_docs_output = original_docs_output
+        docs_management_service.docs_scope_manifest.planned_search_output = original_search_output
 
 
 def test_scope_create_apply_requires_confirmation() -> None:
@@ -937,6 +1062,10 @@ def main() -> None:
         test_scope_create_preview_reports_write_set_and_urls,
         test_scope_create_preview_reports_committed_manage_mode_outputs,
         test_docs_scope_config_requires_search_output,
+        test_docs_scope_config_rejects_manage_mode_assets_outputs,
+        test_docs_scope_config_allows_public_readonly_assets_outputs,
+        test_scope_create_preview_blocks_committed_manage_mode_assets_regression,
+        test_scope_create_apply_blocks_committed_manage_mode_assets_regression,
         test_scope_create_apply_requires_confirmation,
         test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild,
         test_scope_create_apply_skips_public_route_for_local_scopes,
