@@ -172,25 +172,25 @@
         },
         {
           "kind": "generated_docs_root",
-          "path": "assets/data/docs/scopes/studio",
+          "path": "docs-viewer/generated/docs/studio",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_index",
-          "path": "assets/data/docs/scopes/studio/index.json",
+          "path": "docs-viewer/generated/docs/studio/index.json",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_docs_payload_root",
-          "path": "assets/data/docs/scopes/studio/by-id",
+          "path": "docs-viewer/generated/docs/studio/by-id",
           "action": "track",
           "exists": true
         },
         {
           "kind": "generated_search_index",
-          "path": "assets/data/search/studio/index.json",
+          "path": "docs-viewer/generated/search/studio/index.json",
           "action": "track",
           "exists": true
         }

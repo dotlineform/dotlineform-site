@@ -64,7 +64,7 @@ Docs-domain builds:
     - `docs-viewer/source/analysis/`
     - `docs-viewer/source/library/`
   - outputs:
-    - `assets/data/docs/scopes/studio/`
+    - `docs-viewer/generated/docs/studio/`
     - `assets/data/docs/scopes/analysis/`
     - `assets/data/docs/scopes/library/`
 
@@ -73,11 +73,11 @@ Search builds:
 - `./docs-viewer/build/build_search.rb`
   - Docs Viewer-owned search builder for configured docs scopes
   - source indexes:
-    - `assets/data/docs/scopes/studio/index.json`
+    - `docs-viewer/generated/docs/studio/index.json`
     - `assets/data/docs/scopes/analysis/index.json`
     - `assets/data/docs/scopes/library/index.json`
   - outputs:
-    - `assets/data/search/studio/index.json`
+    - `docs-viewer/generated/search/studio/index.json`
     - `assets/data/search/analysis/index.json`
     - `assets/data/search/library/index.json`
 - `./studio/services/catalogue/search/build_search.rb`

@@ -71,7 +71,7 @@ def capabilities_payload(repo_root: Path) -> Dict[str, Any]:
             "root": relative_path(repo_root, root),
             "archive_available": any(doc.doc_id == "archive" for doc in scope_docs),
             "generated_data_reads": (repo_root / config.output / "index.json").exists(),
-            "generated_search_reads": (repo_root / "assets" / "data" / "search" / scope / "index.json").exists(),
+            "generated_search_reads": (repo_root / config.search_output).exists(),
             "count": len(scope_docs),
             "scope_lifecycle": {
                 "manifest_recorded": manifest_record is not None,

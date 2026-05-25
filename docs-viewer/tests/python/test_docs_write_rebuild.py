@@ -86,7 +86,7 @@ def test_rebuild_scope_outputs_extracts_docs_and_search_diagnostics() -> None:
             stdout=(
                 "Targeted search index JSON done. Wrote: 1. Skipped: 0. "
                 "Changed: 2. Removed: 1. Unchanged: 3. Full fallback: 0. "
-                "Path: assets/data/search/studio/index.json\n"
+                "Path: docs-viewer/generated/search/studio/index.json\n"
             )
         )
 
@@ -411,8 +411,8 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
       "scope_id": "studio",
       "source": "docs-viewer/source/studio",
       "media_path_prefix": "docs/studio",
-      "output": "assets/data/docs/scopes/studio",
-      "search_output": "assets/data/search/studio/index.json",
+      "output": "docs-viewer/generated/docs/studio",
+      "search_output": "docs-viewer/generated/search/studio/index.json",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
       "default_doc_id": "dev-home"

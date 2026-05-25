@@ -168,14 +168,14 @@
       "id": "studio_docs_payloads",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "assets/data/docs/scopes/studio/index.json",
-        "assets/data/docs/scopes/studio/by-id/*.json",
-        "assets/data/docs/scopes/studio/references/**"
+        "docs-viewer/generated/docs/studio/index.json",
+        "docs-viewer/generated/docs/studio/by-id/*.json",
+        "docs-viewer/generated/docs/studio/references/**"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "assets/data/docs/scopes/studio"
+          "docs-viewer/generated/docs/studio"
         ]
       },
       "jekyll_exclude_required": true,
@@ -185,12 +185,12 @@
       "id": "studio_docs_search",
       "classification": "docs_viewer_payload",
       "repo_paths": [
-        "assets/data/search/studio/index.json"
+        "docs-viewer/generated/search/studio/index.json"
       ],
       "public_output": {
         "policy": "forbidden",
         "paths": [
-          "assets/data/search/studio"
+          "docs-viewer/generated/search/studio"
         ]
       },
       "jekyll_exclude_required": true,
@@ -461,14 +461,14 @@
       "*.md"
     ],
     "ignore_paths": [],
-    "forbidden_substrings": [
-      "assets/studio/",
-      "/assets/studio/",
-      "assets/data/docs/scopes/studio",
-      "/assets/data/docs/scopes/studio",
-      "assets/data/search/studio",
-      "/assets/data/search/studio",
-      "href=\"/studio/",
+      "forbidden_substrings": [
+        "assets/studio/",
+        "/assets/studio/",
+        "docs-viewer/generated/docs/studio",
+        "/docs-viewer/generated/docs/studio",
+        "docs-viewer/generated/search/studio",
+        "/docs-viewer/generated/search/studio",
+        "href=\"/studio/",
       "href='/studio/",
       "baseurl + '/studio/",
       "baseurl + \"/studio/",

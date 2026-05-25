@@ -8,12 +8,12 @@
       "include_scope_param": true,
       "default_doc_id": "dev-home",
       "media_path_prefix": "docs/studio",
-      "index_url": "/assets/data/docs/scopes/studio/index.json",
-      "search_index_url": "/assets/data/search/studio/index.json",
+      "index_url": "/docs-viewer/generated/docs/studio/index.json",
+      "search_index_url": "/docs-viewer/generated/search/studio/index.json",
       "search": {
         "domain": "docs_viewer",
         "schema": "search_index_studio_v1",
-        "index_url": "/assets/data/search/studio/index.json",
+        "index_url": "/docs-viewer/generated/search/studio/index.json",
         "targeted_policy": "record_update",
         "targeted_operations": [
           "create",

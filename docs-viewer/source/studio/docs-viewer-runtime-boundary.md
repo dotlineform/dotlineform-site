@@ -66,7 +66,7 @@ Standalone Docs Viewer pages should use the Docs Viewer-owned base layer for pag
 
 Current scope-owned data:
 
-- `assets/data/docs/scopes/studio/`
+- `docs-viewer/generated/docs/studio/`
 - `assets/data/docs/scopes/library/`
 - `assets/data/docs/scopes/analysis/`
 

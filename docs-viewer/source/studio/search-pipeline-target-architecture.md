@@ -116,7 +116,7 @@ The shell should not assume all scopes have the same upstream schema or the same
 Expected search outputs:
 
 - `assets/data/search/catalogue/index.json`
-- `assets/data/search/studio/index.json`
+- `docs-viewer/generated/search/studio/index.json`
 - `assets/data/search/library/index.json`
 
 Later additions may include:

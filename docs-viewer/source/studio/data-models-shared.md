@@ -87,7 +87,7 @@ Purpose:
 Examples:
 
 - `assets/data/search/catalogue/index.json`
-- `assets/data/search/studio/index.json`
+- `docs-viewer/generated/search/studio/index.json`
 - `assets/data/search/analysis/index.json`
 - `assets/data/search/library/index.json`
 

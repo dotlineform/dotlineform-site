@@ -31,7 +31,7 @@ def write_generated_docs(root: Path) -> None:
             "title": "Archive",
             "published": True,
             "viewable": False,
-            "content_url": "/assets/data/docs/scopes/studio/by-id/archive.json",
+            "content_url": "/docs-viewer/generated/docs/studio/by-id/archive.json",
         },
         {
             "scope": "studio",
@@ -39,21 +39,21 @@ def write_generated_docs(root: Path) -> None:
             "title": "Child",
             "published": True,
             "viewable": True,
-            "content_url": "/assets/data/docs/scopes/studio/by-id/child.json",
+            "content_url": "/docs-viewer/generated/docs/studio/by-id/child.json",
         },
     ]
-    write_json(root / "assets/data/docs/scopes/studio/index.json", {"docs": docs})
-    write_json(root / "assets/data/docs/scopes/studio/by-id/archive.json", {"doc_id": "archive"})
-    write_json(root / "assets/data/docs/scopes/studio/by-id/child.json", {"doc_id": "child"})
+    write_json(root / "docs-viewer/generated/docs/studio/index.json", {"docs": docs})
+    write_json(root / "docs-viewer/generated/docs/studio/by-id/archive.json", {"doc_id": "archive"})
+    write_json(root / "docs-viewer/generated/docs/studio/by-id/child.json", {"doc_id": "child"})
     write_json(
-        root / "assets/data/docs/scopes/studio/references/index.json",
+        root / "docs-viewer/generated/docs/studio/references/index.json",
         {"targets": [{"target_kind": "work", "target_id": "00638"}]},
     )
     write_json(
-        root / "assets/data/docs/scopes/studio/references/by-target/work/00638.json",
+        root / "docs-viewer/generated/docs/studio/references/by-target/work/00638.json",
         {"target_kind": "work", "target_id": "00638", "references": []},
     )
-    write_json(root / "assets/data/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
+    write_json(root / "docs-viewer/generated/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
 
 
 def test_generated_data_availability_checks_scope_files() -> None:
@@ -93,7 +93,7 @@ def test_generated_doc_payload_requires_index_record() -> None:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
         write_json(
-            repo_root / "assets/data/docs/scopes/studio/by-id/unlisted.json",
+            repo_root / "docs-viewer/generated/docs/studio/by-id/unlisted.json",
             {"doc_id": "unlisted"},
         )
         try:
@@ -109,7 +109,7 @@ def test_generated_doc_payload_rejects_unexpected_content_url() -> None:
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
         write_json(
-            repo_root / "assets/data/docs/scopes/studio/index.json",
+            repo_root / "docs-viewer/generated/docs/studio/index.json",
             {
                 "docs": [
                     {
@@ -132,12 +132,12 @@ def test_generated_doc_payload_allows_external_content_url_with_expected_path() 
         repo_root = Path(temp_path)
         write_generated_docs(repo_root)
         write_json(
-            repo_root / "assets/data/docs/scopes/studio/index.json",
+            repo_root / "docs-viewer/generated/docs/studio/index.json",
             {
                 "docs": [
                     {
                         "doc_id": "child",
-                        "content_url": "https://example.com/assets/data/docs/scopes/studio/by-id/child.json",
+                        "content_url": "https://example.com/docs-viewer/generated/docs/studio/by-id/child.json",
                     }
                 ]
             },

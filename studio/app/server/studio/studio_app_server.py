@@ -73,6 +73,7 @@ STATIC_PREFIXES = (
     "/assets/site/",
     "/assets/work_details/",
     "/assets/works/",
+    "/docs-viewer/generated/",
     "/studio/data/generated/thumbnail-quality/img/",
     "/studio/app/frontend/js/",
     "/studio/app/frontend/config/",

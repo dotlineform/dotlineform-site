@@ -31,10 +31,10 @@ Current checked-in Studio data artifacts:
 - Studio docs source:
   - `docs-viewer/source/studio/*.md`
 - generated Studio docs data:
-  - `assets/data/docs/scopes/studio/index.json`
-  - `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
+  - `docs-viewer/generated/docs/studio/index.json`
+  - `docs-viewer/generated/docs/studio/by-id/<doc_id>.json`
 - Studio docs search:
-  - `assets/data/search/studio/index.json`
+  - `docs-viewer/generated/search/studio/index.json`
 
 Related config, documented separately:
 
@@ -228,7 +228,7 @@ Why Markdown is part of the data model here:
 - for docs, the source Markdown is the canonical authored content
 - the builder turns that content into the generated docs-viewer payloads
 
-### `assets/data/docs/scopes/studio/index.json`
+### `docs-viewer/generated/docs/studio/index.json`
 
 Purpose:
 
@@ -250,7 +250,7 @@ Why it exists separately from the per-doc payload:
 - the docs viewer needs tree metadata for many docs at once
 - it should not load full rendered HTML for every doc on first page load
 
-### `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
+### `docs-viewer/generated/docs/studio/by-id/<doc_id>.json`
 
 Purpose:
 
@@ -273,7 +273,7 @@ Why it is per-doc:
 
 ## Studio Docs Search Data
 
-### `assets/data/search/studio/index.json`
+### `docs-viewer/generated/search/studio/index.json`
 
 Purpose:
 

@@ -16,14 +16,14 @@ sort_order: 8300
 
 ### Current Output
 
-- `assets/data/search/studio/index.json`
+- `docs-viewer/generated/search/studio/index.json`
 
 The path comes from the `studio` scope's `search_output` field in `docs-viewer/config/scopes/docs_scopes.json`.
 The search builder no longer derives the output path from the scope id alone.
 
 ### Current Source Input
 
-- `assets/data/docs/scopes/studio/index.json`
+- `docs-viewer/generated/docs/studio/index.json`
 
 The source index path comes from the same scope config's generated docs `output` field unless `--source-index` overrides it.
 
@@ -90,4 +90,4 @@ Current derived search support fields:
 - the explicit `POST /docs/rebuild` endpoint still runs a full same-scope docs-search rebuild
 - the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes
 - targeted docs-search updates rebuild only affected Studio docs entries by `doc_id`, remove affected ids that are missing or non-viewable, and report diagnostic counts for Codex/server use
-- `bin/local-studio` only runs startup `studio` docs-search rebuilds when `DOCS_STARTUP_REBUILD_SCOPES` includes `studio`, and then uses the Docs Live Rebuild Watcher to keep `docs-viewer/source/studio/*.md` changes aligned with `assets/data/search/studio/index.json`
+- `bin/local-studio` only runs startup `studio` docs-search rebuilds when `DOCS_STARTUP_REBUILD_SCOPES` includes `studio`, and then uses the Docs Live Rebuild Watcher to keep `docs-viewer/source/studio/*.md` changes aligned with `docs-viewer/generated/search/studio/index.json`

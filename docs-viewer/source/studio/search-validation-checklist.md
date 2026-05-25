@@ -47,7 +47,7 @@ Prefer real site examples over synthetic test strings.
 - [ ] Run `./docs-viewer/build/build_docs.rb`
 - [ ] Confirm the docs dry run completes without error for configured docs scopes
 - [ ] Run `./docs-viewer/build/build_search.rb --scope studio`
-- [ ] Confirm the dry run reports `assets/data/search/studio/index.json` or correctly skips by version check
+- [ ] Confirm the dry run reports `docs-viewer/generated/search/studio/index.json` or correctly skips by version check
 - [ ] Run `./docs-viewer/build/build_search.rb --scope library`
 - [ ] Confirm the dry run reports `assets/data/search/library/index.json` or correctly skips by version check
 - [ ] Run `./docs-viewer/build/build_search.rb --scope analysis`

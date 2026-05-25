@@ -45,6 +45,7 @@ STATIC_PREFIXES = (
     "/assets/data/",
     "/assets/docs/",
     "/docs-viewer/config/",
+    "/docs-viewer/generated/",
     "/docs-viewer/runtime/",
     "/docs-viewer/static/",
 )

@@ -65,6 +65,7 @@ Current Docs Viewer-owned source homes:
 | `docs-viewer/static/` | Docs Viewer CSS and runtime-owned static assets. |
 | `docs-viewer/shell/` | Standalone Docs Viewer service shell template for built-in `/docs/` manage mode. |
 | `docs-viewer/config/` | Scope config, runtime config source, UI text, report/source config, and local service defaults/schema. |
+| `docs-viewer/generated/` | Tracked non-public generated Docs Viewer runtime payloads for committed manage-mode scopes such as Studio. |
 | `docs-viewer/services/` | Standalone Docs Viewer service, Docs management, import/export, generated-read, scope, live rebuild, and data-sharing services. |
 | `docs-viewer/bin/` | Docs Viewer-owned launcher for the standalone local service. |
 
@@ -84,7 +85,7 @@ Public Jekyll source and runtime remain outside `studio/`:
 | `works/`, `series/`, `catalogue/`, `recent/`, `search/`, `analysis/`, `library/`, `docs/`, `data/`, `logs/` | Public route surfaces and minimal route adapters when they publish pages or generated runtime payloads. |
 | `assets/js/` | Public browser runtime for published pages. |
 | `assets/css/main.css` | Public site CSS and genuinely shared public primitives. Studio-only selectors live under `studio/app/assets/css/`. |
-| `assets/data/docs/scopes/` | Generated Docs Viewer payloads consumed by public read-only installs and local manage routes. |
+| `assets/data/docs/scopes/` | Generated Docs Viewer payloads consumed by public read-only installs. |
 | `assets/data/search/` | Generated public search payloads. |
 | `assets/data/*.json`, `assets/works/`, `assets/series/`, `assets/moments/`, `assets/work_details/`, `assets/home/`, `assets/site/` | Generated or published public catalogue/site data and media. |
 
@@ -104,6 +105,7 @@ Examples include public catalogue JSON, public search indexes, public Docs Viewe
 
 Generated Studio read models remain under `studio/data/generated/` when they are only for Local Studio authoring/review.
 Generated change-history projections remain under `studio/workflows/change-requests/generated/`.
+Generated committed manage-mode Docs Viewer payloads remain under `docs-viewer/generated/`; they are tracked for local manage-mode runtime use but are not public static assets.
 
 `var/` remains local working output for staging, backups, imports, generated run logs, temporary media derivatives, and test run summaries.
 

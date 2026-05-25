@@ -14,7 +14,7 @@ This document defines the current search-record shape for the docs-domain search
 
 It covers the current generated outputs for:
 
-- `assets/data/search/studio/index.json`
+- `docs-viewer/generated/search/studio/index.json`
 - `assets/data/search/library/index.json`
 
 These are the current search artifacts used by the inline Docs Viewer search on `/docs/` and `/library/`.
@@ -28,7 +28,7 @@ For the wider docs-scope model that these artifacts sit on top of, use:
 
 The docs-domain search builder reads the generated docs indexes:
 
-- `assets/data/docs/scopes/studio/index.json`
+- `docs-viewer/generated/docs/studio/index.json`
 - `assets/data/docs/scopes/library/index.json`
 
 It does not read raw Markdown source files directly.

@@ -134,8 +134,8 @@ Current route shells:
 
 - `/docs/`
   - Studio docs
-  - loads `assets/data/docs/scopes/studio/index.json`
-  - enables inline Studio docs search with `assets/data/search/studio/index.json`
+  - loads `docs-viewer/generated/docs/studio/index.json`
+  - enables inline Studio docs search with `docs-viewer/generated/search/studio/index.json`
 - `/library/`
   - library docs
   - loads `assets/data/docs/scopes/library/index.json`

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a889f00b71145e3049002b0b876e7fd9",
-    "generated_at_utc": "2026-05-25T17:48:53Z",
-    "count": 311
+    "version": "blake2b-c0cabbdcc0f309fd391b02536ba70942",
+    "generated_at_utc": "2026-05-25T18:04:14Z",
+    "count": 312
   },
   "entries": [
     {
@@ -196,10 +196,10 @@
       "kind": "doc",
       "title": "Docs Build Management Import Export Improvements",
       "href": "/docs/?scope=studio&doc=docs-build-management-import-export-improvements",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-25",
       "parent_id": "studio-python-ruby-script-inventory",
       "parent_title": "Studio Python And Ruby Script Inventory",
-      "display_meta": "2026-05-19 • Studio Python And Ruby Script Inventory",
+      "display_meta": "2026-05-25 • Studio Python And Ruby Script Inventory",
       "search_terms": [
         "docs-build-management-import-export-improvements",
         "docs",
@@ -216,12 +216,12 @@
         "ruby",
         "script",
         "inventory",
-        "2026-05-19",
+        "2026-05-25",
         "2026",
         "05",
-        "19"
+        "25"
       ],
-      "search_text": "docs-build-management-import-export-improvements docs build management import export improvements docs build management import export improvements studio python and ruby script inventory studio python and ruby script inventory 2026-05-19 2026 05 19"
+      "search_text": "docs-build-management-import-export-improvements docs build management import export improvements docs build management import export improvements studio python and ruby script inventory studio python and ruby script inventory 2026-05-25 2026 05 25"
     },
     {
       "id": "user-guide-docs-images",
@@ -461,10 +461,10 @@
       "kind": "doc",
       "title": "Portable Docs Viewer Request",
       "href": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
-      "last_updated": "2026-05-12 10:55",
+      "last_updated": "2026-05-25",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-12 10:55 • Change Requests",
+      "display_meta": "2026-05-25 • Change Requests",
       "search_terms": [
         "site-request-portable-docs-viewer",
         "site",
@@ -476,14 +476,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-12 10:55",
+        "2026-05-25",
         "2026",
         "05",
-        "12",
-        "10",
-        "55"
+        "25"
       ],
-      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-12 10:55 2026 05 12 10 55"
+      "search_text": "site-request-portable-docs-viewer site request portable docs viewer portable docs viewer request change requests change requests 2026-05-25 2026 05 25"
     },
     {
       "id": "testing-pytest",
@@ -702,10 +700,10 @@
       "kind": "doc",
       "title": "Development Workflow",
       "href": "/docs/?scope=studio&doc=development-workflow",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-25",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-05-19 • Dev Home",
+      "display_meta": "2026-05-25 • Dev Home",
       "search_terms": [
         "development-workflow",
         "development",
@@ -714,12 +712,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-05-19",
+        "2026-05-25",
         "2026",
         "05",
-        "19"
+        "25"
       ],
-      "search_text": "development-workflow development workflow development workflow dev home dev home 2026-05-19 2026 05 19"
+      "search_text": "development-workflow development workflow development workflow dev home dev home 2026-05-25 2026 05 25"
     },
     {
       "id": "library-documents",
@@ -943,7 +941,7 @@
     {
       "id": "site-request-script-structural-review-docs-management-server",
       "kind": "doc",
-      "title": "Docs Management Server Slices",
+      "title": "Docs Management Service Slices",
       "href": "/docs/?scope=studio&doc=site-request-script-structural-review-docs-management-server",
       "last_updated": "2026-05-09 14:56",
       "parent_id": "site-request-script-structural-review",
@@ -959,7 +957,8 @@
         "docs",
         "management",
         "server",
-        "docs management server slices",
+        "docs management service slices",
+        "service",
         "slices",
         "script structural review request",
         "2026-05-09 14:56",
@@ -969,7 +968,7 @@
         "14",
         "56"
       ],
-      "search_text": "site-request-script-structural-review-docs-management-server site request script structural review docs management server docs management server slices slices script structural review request 2026-05-09 14:56 2026 05 09 14 56"
+      "search_text": "site-request-script-structural-review-docs-management-server site request script structural review docs management server docs management service slices service slices script structural review request 2026-05-09 14:56 2026 05 09 14 56"
     },
     {
       "id": "site-request-js-config-structural-review-docs-viewer-boundary",
@@ -1120,7 +1119,7 @@
     {
       "id": "scripts-local-studio",
       "kind": "doc",
-      "title": "Local Studio Runner",
+      "title": "Local Runners",
       "href": "/docs/?scope=studio&doc=scripts-local-studio",
       "last_updated": "2026-05-25",
       "parent_id": "servers",
@@ -1131,15 +1130,15 @@
         "scripts",
         "local",
         "studio",
-        "local studio runner",
-        "runner",
+        "local runners",
+        "runners",
         "servers",
         "2026-05-25",
         "2026",
         "05",
         "25"
       ],
-      "search_text": "scripts-local-studio scripts local studio local studio runner runner servers 2026-05-25 2026 05 25"
+      "search_text": "scripts-local-studio scripts local studio local runners runners servers 2026-05-25 2026 05 25"
     },
     {
       "id": "modal-composition-migration-tracker",
@@ -1220,16 +1219,16 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-24",
-      "display_meta": "2026-05-24",
+      "last_updated": "2026-05-25",
+      "display_meta": "2026-05-25",
       "search_terms": [
         "studio",
-        "2026-05-24",
+        "2026-05-25",
         "2026",
         "05",
-        "24"
+        "25"
       ],
-      "search_text": "studio 2026-05-24 2026 05 24"
+      "search_text": "studio 2026-05-25 2026 05 25"
     },
     {
       "id": "site-request-studio-audits-page",
@@ -2421,10 +2420,10 @@
       "kind": "doc",
       "title": "Jekyll Site Config",
       "href": "/docs/?scope=studio&doc=config-jekyll-site-config",
-      "last_updated": "2026-05-11 14:10",
+      "last_updated": "2026-05-25",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-05-11 14:10 • Dev Home",
+      "display_meta": "2026-05-25 • Dev Home",
       "search_terms": [
         "config-jekyll-site-config",
         "config",
@@ -2434,14 +2433,12 @@
         "dev home",
         "dev",
         "home",
-        "2026-05-11 14:10",
+        "2026-05-25",
         "2026",
         "05",
-        "11",
-        "14",
-        "10"
+        "25"
       ],
-      "search_text": "config-jekyll-site-config config jekyll site jekyll site config dev home dev home 2026-05-11 14:10 2026 05 11 14 10"
+      "search_text": "config-jekyll-site-config config jekyll site jekyll site config dev home dev home 2026-05-25 2026 05 25"
     },
     {
       "id": "config-library-export-configs",
@@ -3649,21 +3646,21 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-25",
       "parent_id": "dev-home",
       "parent_title": "Dev Home",
-      "display_meta": "2026-05-23 • Dev Home",
+      "display_meta": "2026-05-25 • Dev Home",
       "search_terms": [
         "scripts",
         "dev home",
         "dev",
         "home",
-        "2026-05-23",
+        "2026-05-25",
         "2026",
         "05",
-        "23"
+        "25"
       ],
-      "search_text": "scripts dev home dev home 2026-05-23 2026 05 23"
+      "search_text": "scripts dev home dev home 2026-05-25 2026 05 25"
     },
     {
       "id": "search-ui-behaviour",
@@ -4692,10 +4689,9 @@
       "kind": "doc",
       "title": "Docs Viewer Shell Extraction Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction",
-      "last_updated": "2026-05-24",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-24 • Change Requests",
+      "last_updated": "2026-05-25",
+      "parent_id": "archive",
+      "display_meta": "2026-05-25",
       "search_terms": [
         "site-request-docs-viewer-shell-extraction",
         "site",
@@ -4705,15 +4701,12 @@
         "shell",
         "extraction",
         "docs viewer shell extraction request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-24",
+        "2026-05-25",
         "2026",
         "05",
-        "24"
+        "25"
       ],
-      "search_text": "site-request-docs-viewer-shell-extraction site request docs viewer shell extraction docs viewer shell extraction request change requests change requests 2026-05-24 2026 05 24"
+      "search_text": "site-request-docs-viewer-shell-extraction site request docs viewer shell extraction docs viewer shell extraction request 2026-05-25 2026 05 25"
     },
     {
       "id": "site-request-docs-viewer-shell-extraction-tasks",
@@ -4824,6 +4817,33 @@
         "24"
       ],
       "search_text": "site-request-docs-viewer-shell-extraction-target-layout site request docs viewer shell extraction target layout docs viewer shell extraction target layout docs viewer shell extraction request 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "studio-doc-viewer-dependencies",
+      "kind": "doc",
+      "title": "Studio Docs Viewer Dependencies",
+      "href": "/docs/?scope=studio&doc=studio-doc-viewer-dependencies",
+      "last_updated": "2026-05-25",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-25 • Change Requests",
+      "search_terms": [
+        "studio-doc-viewer-dependencies",
+        "studio",
+        "doc",
+        "viewer",
+        "dependencies",
+        "studio docs viewer dependencies",
+        "docs",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-25",
+        "2026",
+        "05",
+        "25"
+      ],
+      "search_text": "studio-doc-viewer-dependencies studio doc viewer dependencies studio docs viewer dependencies docs change requests change requests 2026-05-25 2026 05 25"
     },
     {
       "id": "site-request-docs-viewer-shell-extraction-baseline",
@@ -5113,10 +5133,10 @@
       "kind": "doc",
       "title": "Source Tree Ownership",
       "href": "/docs/?scope=studio&doc=source-tree-ownership",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-05-25",
       "parent_id": "architecture",
       "parent_title": "Architecture",
-      "display_meta": "2026-05-24 • Architecture",
+      "display_meta": "2026-05-25 • Architecture",
       "search_terms": [
         "source-tree-ownership",
         "source",
@@ -5124,12 +5144,12 @@
         "ownership",
         "source tree ownership",
         "architecture",
-        "2026-05-24",
+        "2026-05-25",
         "2026",
         "05",
-        "24"
+        "25"
       ],
-      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-05-24 2026 05 24"
+      "search_text": "source-tree-ownership source tree ownership source tree ownership architecture 2026-05-25 2026 05 25"
     },
     {
       "id": "scripts-catalogue-lookup",
@@ -5442,7 +5462,7 @@
     {
       "id": "scripts-docs-management-server-generated-reads",
       "kind": "doc",
-      "title": "Docs Management Server Generated Reads",
+      "title": "Docs Management Service Generated Reads",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
       "last_updated": "2026-05-22",
       "parent_id": "scripts-docs-management-server",
@@ -5456,20 +5476,20 @@
         "server",
         "generated",
         "reads",
-        "docs management server generated reads",
-        "docs management service",
+        "docs management service generated reads",
         "service",
+        "docs management service",
         "2026-05-22",
         "2026",
         "05",
         "22"
       ],
-      "search_text": "scripts-docs-management-server-generated-reads scripts docs management server generated reads docs management server generated reads docs management service service 2026-05-22 2026 05 22"
+      "search_text": "scripts-docs-management-server-generated-reads scripts docs management server generated reads docs management service generated reads service docs management service 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-docs-management-server-import-rebuild",
       "kind": "doc",
-      "title": "Docs Management Server Import And Rebuild",
+      "title": "Docs Management Service Import And Rebuild",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-import-rebuild",
       "last_updated": "2026-05-19",
       "parent_id": "scripts-docs-management-server",
@@ -5483,21 +5503,21 @@
         "server",
         "import",
         "rebuild",
-        "docs management server import and rebuild",
+        "docs management service import and rebuild",
+        "service",
         "and",
         "docs management service",
-        "service",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "scripts-docs-management-server-import-rebuild scripts docs management server import rebuild docs management server import and rebuild and docs management service service 2026-05-19 2026 05 19"
+      "search_text": "scripts-docs-management-server-import-rebuild scripts docs management server import rebuild docs management service import and rebuild service and docs management service 2026-05-19 2026 05 19"
     },
     {
       "id": "scripts-docs-management-server-data-sharing",
       "kind": "doc",
-      "title": "Docs Management Server Data Sharing",
+      "title": "Docs Management Service Data Sharing",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing",
       "last_updated": "2026-05-19",
       "parent_id": "scripts-docs-management-server",
@@ -5511,20 +5531,20 @@
         "server",
         "data",
         "sharing",
-        "docs management server data sharing",
-        "docs management service",
+        "docs management service data sharing",
         "service",
+        "docs management service",
         "2026-05-19",
         "2026",
         "05",
         "19"
       ],
-      "search_text": "scripts-docs-management-server-data-sharing scripts docs management server data sharing docs management server data sharing docs management service service 2026-05-19 2026 05 19"
+      "search_text": "scripts-docs-management-server-data-sharing scripts docs management server data sharing docs management service data sharing service docs management service 2026-05-19 2026 05 19"
     },
     {
       "id": "scripts-docs-management-server-write-actions",
       "kind": "doc",
-      "title": "Docs Management Server Write Actions",
+      "title": "Docs Management Service Write Actions",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-write-actions",
       "last_updated": "2026-05-22",
       "parent_id": "scripts-docs-management-server",
@@ -5538,15 +5558,15 @@
         "server",
         "write",
         "actions",
-        "docs management server write actions",
-        "docs management service",
+        "docs management service write actions",
         "service",
+        "docs management service",
         "2026-05-22",
         "2026",
         "05",
         "22"
       ],
-      "search_text": "scripts-docs-management-server-write-actions scripts docs management server write actions docs management server write actions docs management service service 2026-05-22 2026 05 22"
+      "search_text": "scripts-docs-management-server-write-actions scripts docs management server write actions docs management service write actions service docs management service 2026-05-22 2026 05 22"
     },
     {
       "id": "scripts-docs-management-server-operations",
@@ -5960,10 +5980,10 @@
       "kind": "doc",
       "title": "Docs Viewer Config",
       "href": "/docs/?scope=studio&doc=config-docs-viewer",
-      "last_updated": "2026-05-14 14:45",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-14 14:45 • Docs Viewer",
+      "display_meta": "2026-05-25 • Docs Viewer",
       "search_terms": [
         "config-docs-viewer",
         "config",
@@ -5971,13 +5991,12 @@
         "viewer",
         "docs viewer config",
         "docs viewer",
-        "2026-05-14 14:45",
+        "2026-05-25",
         "2026",
         "05",
-        "14",
-        "45"
+        "25"
       ],
-      "search_text": "config-docs-viewer config docs viewer docs viewer config docs viewer 2026-05-14 14:45 2026 05 14 45"
+      "search_text": "config-docs-viewer config docs viewer docs viewer config docs viewer 2026-05-25 2026 05 25"
     },
     {
       "id": "new-pipeline",

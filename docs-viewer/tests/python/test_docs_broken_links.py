@@ -37,7 +37,7 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
 
 def write_doc_payload(repo_root: Path, scope: str, doc_id: str, content_html: str) -> None:
     write_json(
-        repo_root / "assets/data/docs/scopes" / scope / "by-id" / f"{doc_id}.json",
+        repo_root / "docs-viewer/generated/docs" / scope / "by-id" / f"{doc_id}.json",
         {
             "doc_id": doc_id,
             "content_html": content_html,
@@ -50,7 +50,7 @@ def make_repo(content_html: str) -> tempfile.TemporaryDirectory[str]:
     repo_root = Path(temp_dir.name)
     (repo_root / "_config.yml").write_text("title: test\n", encoding="utf-8")
     write_json(
-        repo_root / "assets/data/docs/scopes/studio/index.json",
+        repo_root / "docs-viewer/generated/docs/studio/index.json",
         {
             "docs": [
                 {

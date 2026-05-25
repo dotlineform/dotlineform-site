@@ -50,8 +50,8 @@ The public Jekyll build should not include:
 - `/studio/` routes
 - `/docs/` local management route
 - Studio app assets under `assets/studio/`
-- generated Studio docs payloads under `assets/data/docs/scopes/studio/`
-- generated Studio docs search under `assets/data/search/studio/`
+- generated Studio docs payloads under `docs-viewer/generated/docs/studio/`
+- generated Studio docs search under `docs-viewer/generated/search/studio/`
 - canonical catalogue source data under `assets/studio/data/catalogue/`
 - Studio catalogue lookup data under `assets/studio/data/catalogue_lookup/`
 - local scripts, tests, logs, or var output

@@ -78,8 +78,8 @@ The public Jekyll config excludes these local-only roots from conversion and wat
 - `assets/ui-catalogue/`
 - `assets/docs/ui-catalogue/`
 - `assets/studio/`
-- `assets/data/docs/scopes/studio/`
-- `assets/data/search/studio/`
+- `docs-viewer/generated/docs/studio/`
+- `docs-viewer/generated/search/studio/`
 
 Restart `bin/public-site-preview` after changing `_config.yml`; an already-running Jekyll process does not reload updated exclude rules.
 

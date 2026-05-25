@@ -42,8 +42,8 @@ The audit reads generated docs payloads rather than raw source Markdown.
 
 Current inputs:
 
-- `assets/data/docs/scopes/studio/index.json`
-- `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
+- `docs-viewer/generated/docs/studio/index.json`
+- `docs-viewer/generated/docs/studio/by-id/<doc_id>.json`
 - `assets/data/docs/scopes/library/index.json`
 - `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 

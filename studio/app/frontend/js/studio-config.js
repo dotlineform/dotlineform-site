@@ -65,7 +65,7 @@ const DEFAULT_STUDIO_CONFIG = {
             "index": "/assets/data/docs/scopes/library/index.json"
           },
           "studio": {
-            "index": "/assets/data/docs/scopes/studio/index.json"
+            "index": "/docs-viewer/generated/docs/studio/index.json"
           }
         }
       },
@@ -79,7 +79,7 @@ const DEFAULT_STUDIO_CONFIG = {
             "index": "/assets/data/search/library/index.json"
           },
           "studio": {
-            "index": "/assets/data/search/studio/index.json"
+            "index": "/docs-viewer/generated/search/studio/index.json"
           },
           "analysis": {
             "index": "/assets/data/search/analysis/index.json"

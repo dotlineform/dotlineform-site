@@ -115,9 +115,8 @@ exclude:
   - docs-viewer/config/reports/
   - docs-viewer/config/schema/
   - docs-viewer/config/scopes/
+  - docs-viewer/generated/
   - docs-viewer/services/
   - docs-viewer/shell/
   - docs-viewer/source/
   - studio/ui-catalogue/
-  - assets/data/docs/scopes/studio/
-  - assets/data/search/studio/

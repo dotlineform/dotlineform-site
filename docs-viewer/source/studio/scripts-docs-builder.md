@@ -33,11 +33,11 @@ Published viewer route:
 
 Generated outputs:
 
-- `assets/data/docs/scopes/studio/index.json`
-- `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
-- `assets/data/docs/scopes/studio/references/index.json`
-- `assets/data/docs/scopes/studio/references/by-doc/<doc_id>.json`
-- `assets/data/docs/scopes/studio/references/by-target/<target_kind>/<target_id_slug>.json`
+- `docs-viewer/generated/docs/studio/index.json`
+- `docs-viewer/generated/docs/studio/by-id/<doc_id>.json`
+- `docs-viewer/generated/docs/studio/references/index.json`
+- `docs-viewer/generated/docs/studio/references/by-doc/<doc_id>.json`
+- `docs-viewer/generated/docs/studio/references/by-target/<target_kind>/<target_id_slug>.json`
 - `assets/data/docs/scopes/analysis/index.json`
 - `assets/data/docs/scopes/analysis/by-id/<doc_id>.json`
 - `assets/data/docs/scopes/library/index.json`

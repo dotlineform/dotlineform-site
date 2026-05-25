@@ -200,11 +200,21 @@ Implementation note:
 
 Status:
 
-- not started
+- completed
 
 Move the existing `studio` generated runtime payload contract from public `assets/` paths to the selected committed manage-mode paths.
 
 Update affected readers, builders, startup scripts, smoke tests, and docs.
+
+Implementation note:
+
+- the Studio scope now writes generated docs to `docs-viewer/generated/docs/studio/`
+- the Studio scope now writes generated search to `docs-viewer/generated/search/studio/index.json`
+- the local Docs Viewer and Studio app static readers allow `/docs-viewer/generated/`
+- public Jekyll builds exclude `docs-viewer/generated/`
+- the old Studio docs/search payloads under `assets/data/docs/scopes/studio/` and `assets/data/search/studio/` were removed from the runtime contract
+- Studio docs payloads and docs search were rebuilt under the committed manage-mode generated path
+- focused Python tests, builder dry-runs, projection audit, and a temporary Jekyll build passed for the migration slice
 
 ### Task 5. Add Guardrails
 

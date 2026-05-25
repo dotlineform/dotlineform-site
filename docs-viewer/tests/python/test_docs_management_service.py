@@ -149,7 +149,7 @@ def write_generated_docs(root: Path) -> None:
             "title": "Archive",
             "published": True,
             "viewable": False,
-            "content_url": "/assets/data/docs/scopes/studio/by-id/archive.json",
+            "content_url": "/docs-viewer/generated/docs/studio/by-id/archive.json",
         },
         {
             "scope": "studio",
@@ -157,11 +157,11 @@ def write_generated_docs(root: Path) -> None:
             "title": "Child",
             "published": True,
             "viewable": True,
-            "content_url": "/assets/data/docs/scopes/studio/by-id/child.json",
+            "content_url": "/docs-viewer/generated/docs/studio/by-id/child.json",
         },
     ]
     write_json(
-        root / "assets/data/docs/scopes/studio/index.json",
+        root / "docs-viewer/generated/docs/studio/index.json",
         {
             "viewer_options": {
                 "show_updated_date": True,
@@ -171,9 +171,9 @@ def write_generated_docs(root: Path) -> None:
             "docs": docs,
         },
     )
-    write_json(root / "assets/data/docs/scopes/studio/by-id/archive.json", {"doc_id": "archive"})
-    write_json(root / "assets/data/docs/scopes/studio/by-id/child.json", {"doc_id": "child"})
-    write_json(root / "assets/data/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
+    write_json(root / "docs-viewer/generated/docs/studio/by-id/archive.json", {"doc_id": "archive"})
+    write_json(root / "docs-viewer/generated/docs/studio/by-id/child.json", {"doc_id": "child"})
+    write_json(root / "docs-viewer/generated/search/studio/index.json", {"entries": [{"doc_id": "child"}]})
 
 
 def write_docs_scope_config(root: Path) -> None:
@@ -186,8 +186,8 @@ def write_docs_scope_config(root: Path) -> None:
                     "scope_id": "studio",
                     "source": "docs-viewer/source/studio",
                     "media_path_prefix": "docs/studio",
-                    "output": "assets/data/docs/scopes/studio",
-                    "search_output": "assets/data/search/studio/index.json",
+                    "output": "docs-viewer/generated/docs/studio",
+                    "search_output": "docs-viewer/generated/search/studio/index.json",
                     "viewer_base_url": "/docs/",
                     "include_scope_param": True,
                     "default_doc_id": "child",
@@ -223,8 +223,8 @@ def write_docs_viewer_browser_config(root: Path) -> None:
                     "include_scope_param": True,
                     "default_doc_id": "child",
                     "media_path_prefix": "docs/studio",
-                    "index_url": "/assets/data/docs/scopes/studio/index.json",
-                    "search_index_url": "/assets/data/search/studio/index.json",
+                    "index_url": "/docs-viewer/generated/docs/studio/index.json",
+                    "search_index_url": "/docs-viewer/generated/search/studio/index.json",
                 }
             ],
             "docs_viewer": {
@@ -440,7 +440,7 @@ def test_docs_scope_config_requires_search_output() -> None:
                         "scope_id": "studio",
                         "source": "docs-viewer/source/studio",
                         "media_path_prefix": "docs/studio",
-                        "output": "assets/data/docs/scopes/studio",
+                        "output": "docs-viewer/generated/docs/studio",
                         "viewer_base_url": "/docs/",
                         "include_scope_param": True,
                         "default_doc_id": "child",
@@ -737,8 +737,8 @@ def test_source_config_report_reads_known_config_files() -> None:
     assert payload["source_config_path"] == "docs-viewer/config/scopes/docs_scopes.json"
     assert payload["scopes"][0]["scope_id"] == "studio"
     assert payload["scopes"][0]["source_config"]["source"] == "docs-viewer/source/studio"
-    assert payload["scopes"][0]["browser_config"]["index_url"] == "/assets/data/docs/scopes/studio/index.json"
-    assert payload["scopes"][0]["generated"]["search_index"] == "assets/data/search/studio/index.json"
+    assert payload["scopes"][0]["browser_config"]["index_url"] == "/docs-viewer/generated/docs/studio/index.json"
+    assert payload["scopes"][0]["generated"]["search_index"] == "docs-viewer/generated/search/studio/index.json"
     assert payload["scopes"][0]["viewer_options"]["show_updated_date"] is True
     assert payload["scopes"][0]["warnings"] == []
 
@@ -778,7 +778,7 @@ def test_source_config_settings_validation_reports_rebuild_artifact() -> None:
     assert payload["requires_rebuild"] is True
     assert payload["changes"]["show_updated_date"]["current_value"] is True
     assert payload["changes"]["show_updated_date"]["proposed_value"] is False
-    assert payload["affected_artifacts"] == ["assets/data/docs/scopes/studio/index.json"]
+    assert payload["affected_artifacts"] == ["docs-viewer/generated/docs/studio/index.json"]
     assert any("requires rebuilding" in warning for warning in payload["warnings"])
 
 
@@ -872,7 +872,7 @@ def test_source_config_settings_warns_when_generated_projection_is_stale() -> No
         repo_root = Path(temp_path)
         write_docs_scope_config(repo_root)
         write_generated_docs(repo_root)
-        index_path = repo_root / "assets/data/docs/scopes/studio/index.json"
+        index_path = repo_root / "docs-viewer/generated/docs/studio/index.json"
         payload = json.loads(index_path.read_text(encoding="utf-8"))
         payload["viewer_options"]["show_updated_date"] = False
         write_json(index_path, payload)
