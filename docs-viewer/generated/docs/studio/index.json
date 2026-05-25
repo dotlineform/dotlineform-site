@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T18:32:45Z",
+  "generated_at": "2026-05-25T18:36:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -516,7 +516,7 @@
       "source_path": "data-models-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-studio.json",
-      "content_text_length": 9038
+      "content_text_length": 9370
     },
     {
       "scope": "studio",
@@ -846,7 +846,7 @@
       "source_path": "data-models-shared.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-shared",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-shared.json",
-      "content_text_length": 5563
+      "content_text_length": 6120
     },
     {
       "scope": "studio",
@@ -1071,7 +1071,7 @@
       "source_path": "local-setup-public-site-preview.md",
       "viewer_url": "/docs/?scope=studio&doc=local-setup-public-site-preview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-setup-public-site-preview.json",
-      "content_text_length": 4392
+      "content_text_length": 4768
     },
     {
       "scope": "studio",
@@ -1508,7 +1508,7 @@
       "source_path": "docs-viewer-portable-scope-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-portable-scope-setup.json",
-      "content_text_length": 7868
+      "content_text_length": 10358
     },
     {
       "scope": "studio",
@@ -2075,7 +2075,7 @@
       "source_path": "docs-viewer-new-scopes-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-new-scopes-builder.json",
-      "content_text_length": 16110
+      "content_text_length": 17502
     },
     {
       "scope": "studio",
@@ -5234,7 +5234,7 @@
       "source_path": "site-request-committed-manage-mode-scope-storage.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-committed-manage-mode-scope-storage",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-committed-manage-mode-scope-storage.json",
-      "content_text_length": 12642,
+      "content_text_length": 13212,
       "ui_status": "draft"
     },
     {

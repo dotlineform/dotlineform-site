@@ -40,6 +40,7 @@ Examples:
 - `assets/data/works_index.json`
 - `assets/data/moments_index.json`
 - `assets/data/docs/scopes/<scope>/index.json`
+- `docs-viewer/generated/docs/<scope>/index.json`
 
 Purpose:
 
@@ -67,6 +68,14 @@ Docs-scope index rows can also carry optional metadata from source front matter:
 
 Search indexes do not consume these optional fields until a scope-specific search task explicitly promotes them.
 
+Docs-scope generated index location depends on the scope's publishing contract:
+
+- public read-only scopes use `assets/data/docs/scopes/<scope>/index.json`
+- committed manage-mode scopes use `docs-viewer/generated/docs/<scope>/index.json`
+
+Both are generated runtime data.
+The `assets/` location is a public static asset location; `docs-viewer/generated/` is a tracked non-public Docs Viewer data location served by the local Docs Viewer service for manage-mode scopes.
+
 ### 3. Generated per-record JSON
 
 Examples:
@@ -75,6 +84,7 @@ Examples:
 - `assets/works/index/<work_id>.json`
 - `assets/moments/index/<moment_id>.json`
 - `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
+- `docs-viewer/generated/docs/<scope>/by-id/<doc_id>.json`
 
 Purpose:
 

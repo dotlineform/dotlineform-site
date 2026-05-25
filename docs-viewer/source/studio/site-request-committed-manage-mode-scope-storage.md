@@ -244,7 +244,7 @@ Implementation note:
 
 Status:
 
-- not started
+- completed
 
 Update the owning Docs Viewer docs after implementation:
 
@@ -252,6 +252,13 @@ Update the owning Docs Viewer docs after implementation:
 - Portable Scope Setup
 - data model or projection-contract docs that distinguish source, public generated assets, and committed manage-mode generated runtime payloads
 - local Studio operating guidance
+
+Implementation note:
+
+- New Scopes Builder now states mode-specific generated docs/search roots and the guardrail that manage-mode scopes cannot use public `assets/data/` generated roots
+- Portable Scope Setup now has separate public read-only and committed manage-mode setup procedures
+- shared and Studio data-model docs distinguish public static generated assets from tracked non-public Docs Viewer generated runtime data
+- local public-site preview guidance records that committed manage-mode generated payloads stay under `docs-viewer/generated/` and outside public Jekyll builds
 
 ## Acceptance Criteria
 

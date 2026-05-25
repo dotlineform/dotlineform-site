@@ -32,8 +32,21 @@ A Docs Viewer scope is made from four parts:
 
 - source root, such as `docs-viewer/source/research/`
 - scope config entry in `docs-viewer/config/scopes/docs_scopes.json`
-- generated viewer/search outputs under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/`
-- optional read-only route page, such as `research/index.md`
+- generated viewer/search outputs, whose roots depend on publishing mode
+- optional read-only route page, such as `research/index.md`, only for public read-only scopes
+
+Public read-only scopes use generated outputs under:
+
+- `assets/data/docs/scopes/<scope>/`
+- `assets/data/search/<scope>/index.json`
+
+Committed manage-mode scopes use generated outputs under:
+
+- `docs-viewer/generated/docs/<scope>/`
+- `docs-viewer/generated/search/<scope>/index.json`
+
+Manage-mode scopes must not write generated docs/search runtime payloads under `assets/data/docs/scopes/` or `assets/data/search/`.
+Those `assets/` roots are public static-site payload roots and are reserved for scopes that are explicitly public read-only.
 
 The localhost Docs Viewer service may create or update those files.
 The public browser runtime must not.
@@ -252,6 +265,8 @@ Validation rules currently implemented:
 - `default_doc_id` must use lowercase letters, numbers, and hyphens
 - `publishing_mode` must be `public_readonly`, `local_committed`, or `local_uncommitted`
 - `public_route_path` must use lowercase route segments with hyphens
+- committed manage-mode generated docs output must not be under `assets/data/docs/scopes/`
+- committed manage-mode generated search output must not be under `assets/data/search/`
 - planned created paths must not already exist
 
 Preview response fields:
@@ -279,6 +294,12 @@ The preview response uses file records with `kind`, `path`, `action`, and `exist
 It reports planned generated docs/search outputs only when generated output writes are requested.
 It reports a public URL only for public read-only scopes.
 The `storage_contract` block is displayed before save so the operator can see whether generated output is public static asset data or manage-mode runtime data served by the local Docs Viewer service.
+
+Expected preview storage paths:
+
+- `public_readonly`: `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/index.json`
+- `local_committed`: `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json`
+- `local_uncommitted`: the same non-public generated path shape as `local_committed`, but the resulting local worktree changes should not be committed
 
 ## Create Apply Endpoint
 
@@ -462,5 +483,7 @@ Implementation ownership:
 - Public routes must remain read-only even if `mode=manage` or `scope=<other-scope>` appears in the URL.
 - The write server should validate scope ids and route paths before writing.
 - The write server should refuse paths outside the configured repo allowlist.
+- Manage-mode scopes must keep generated docs/search payloads out of `assets/data/docs/scopes/` and `assets/data/search/`; config loading, lifecycle preview/apply, and Ruby builders fail closed if a manage-mode scope points there.
+- Public read-only scopes are the only scopes that should use those public generated asset roots.
 - Local-only uncommitted scopes should be easy to identify in the response and cleanup guidance.
 - Generated data should be rebuilt after scope config changes so `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` stay current.

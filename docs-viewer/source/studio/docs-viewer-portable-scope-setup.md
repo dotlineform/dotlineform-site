@@ -13,6 +13,9 @@ sort_order: 3300
 Use this when adding a scope that behaves like the current `library` scope:
 a public read-only route plus local management through `/docs/`.
 
+For a repo-tracked manage-mode-only scope, do not use the public `assets/data/` generated roots.
+Use the committed manage-mode procedure below instead.
+
 ### 1. Choose Scope Values
 
 Decide:
@@ -66,6 +69,8 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
 
 Use `include_scope_param: false` for a public route that only ever reads one scope.
 Use `include_scope_param: true` only when the configured route should publish links with an explicit scope query.
+Only public read-only scopes should use `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/index.json` as generated output roots.
+Manage-mode scopes use `docs-viewer/generated/` roots instead, and the builders reject manage-mode configs that point generated docs/search output at public `assets/data/` roots.
 
 Running `./docs-viewer/build/build_docs.rb --write` updates `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from this source config.
 The public config is filtered to static read-only routes, so a new `public_readonly` scope becomes available to its Jekyll route after the docs build refreshes the config and generated docs payloads.
@@ -212,3 +217,67 @@ Confirm:
 - `?mode=manage` is ignored or normalized away on the public route
 - no management controls are rendered
 - no management-only CSS or import JavaScript is fetched
+
+## Setup Procedure For A Committed Manage-Mode Scope
+
+Use this when adding a scope that should travel with the repo for local management, but should not publish a public read-only route.
+The current `studio` scope is the model for this storage contract.
+
+Choose:
+
+- scope id: for example `notes`
+- source root: `docs-viewer/source/notes`
+- generated docs output: `docs-viewer/generated/docs/notes`
+- generated search output: `docs-viewer/generated/search/notes/index.json`
+- management route: `/docs/?scope=notes&mode=manage`
+- root doc id: for example `notes`
+
+Scope config example:
+
+```json
+{
+  "scope_id": "notes",
+  "source": "docs-viewer/source/notes",
+  "media_path_prefix": "docs/notes",
+  "output": "docs-viewer/generated/docs/notes",
+  "search_output": "docs-viewer/generated/search/notes/index.json",
+  "viewer_base_url": "/docs/",
+  "include_scope_param": true,
+  "default_doc_id": "notes",
+  "allow_nested_source": false,
+  "non_loadable_doc_ids": [],
+  "manage_only_tree_root_ids": [],
+  "show_updated_date": true,
+  "allow_unresolved_parent_ids": false,
+  "import_media_storage": {
+    "storage_mode": "staging_manual",
+    "repo_assets_path_prefix": "assets/docs/notes",
+    "repo_assets_public_path_prefix": "/assets/docs/notes"
+  }
+}
+```
+
+Do not create a Jekyll route page such as `notes/index.md`.
+The scope is loaded through the local Docs Viewer management shell, not through a public static route.
+
+Build the generated docs and search payloads:
+
+```sh
+./docs-viewer/build/build_docs.rb --scope notes --write
+./docs-viewer/build/build_search.rb --scope notes --write
+```
+
+After this, the local Docs Viewer service should be able to fetch:
+
+- `/docs-viewer/generated/docs/notes/index.json`
+- `/docs-viewer/generated/docs/notes/by-id/notes.json`
+- `/docs-viewer/generated/search/notes/index.json`
+
+Keep the generated JSON under `docs-viewer/generated/` tracked when the scope is committed.
+Do not place committed manage-mode generated runtime payloads under `assets/data/docs/scopes/` or `assets/data/search/`; those are public static payload roots.
+
+Open:
+
+```text
+/docs/?scope=notes&mode=manage&doc=notes
+```

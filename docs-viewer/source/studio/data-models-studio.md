@@ -36,6 +36,10 @@ Current checked-in Studio data artifacts:
 - Studio docs search:
   - `docs-viewer/generated/search/studio/index.json`
 
+Studio is a committed manage-mode Docs Viewer scope.
+Its generated docs and search runtime payloads are tracked repo data, but they are not public static assets.
+Do not move Studio generated docs/search back under `assets/data/docs/scopes/studio/` or `assets/data/search/studio/`; those roots are reserved for public read-only scopes.
+
 Related config, documented separately:
 
 - `assets/studio/data/studio_config.json`

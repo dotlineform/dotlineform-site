@@ -83,6 +83,10 @@ The public Jekyll config excludes these local-only roots from conversion and wat
 
 Restart `bin/public-site-preview` after changing `_config.yml`; an already-running Jekyll process does not reload updated exclude rules.
 
+Committed manage-mode Docs Viewer scopes should keep generated runtime JSON under `docs-viewer/generated/`.
+Those payloads are for local Docs Viewer service reads, not public Jekyll preview/build output.
+If another committed manage-mode scope is added, keep its generated docs/search payloads under `docs-viewer/generated/` and keep that root excluded from public Jekyll builds.
+
 ## LiveReload
 
 Jekyll can also refresh the browser automatically after rebuilds with LiveReload:
