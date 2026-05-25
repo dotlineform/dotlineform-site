@@ -61,6 +61,26 @@
           "delete"
         ]
       }
+    },
+    {
+      "scope_id": "archive",
+      "viewer_base_url": "/docs/",
+      "include_scope_param": true,
+      "default_doc_id": "archive",
+      "media_path_prefix": "docs/archive",
+      "index_url": "/docs-viewer/generated/docs/archive/index.json",
+      "search_index_url": "/docs-viewer/generated/search/archive/index.json",
+      "search": {
+        "domain": "docs_viewer",
+        "schema": "search_index_archive_v1",
+        "index_url": "/docs-viewer/generated/search/archive/index.json",
+        "targeted_policy": "record_update",
+        "targeted_operations": [
+          "create",
+          "update",
+          "delete"
+        ]
+      }
     }
   ],
   "docs_viewer": {

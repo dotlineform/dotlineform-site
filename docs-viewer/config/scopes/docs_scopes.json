@@ -12,7 +12,9 @@
       "default_doc_id": "dev-home",
       "allow_nested_source": false,
       "non_loadable_doc_ids": [],
-      "manage_only_tree_root_ids": ["change-history-reports"],
+      "manage_only_tree_root_ids": [
+        "change-history-reports"
+      ],
       "show_updated_date": true,
       "allow_unresolved_parent_ids": false,
       "import_media_storage": {
@@ -59,6 +61,26 @@
         "storage_mode": "staging_manual",
         "repo_assets_path_prefix": "assets/docs/analysis",
         "repo_assets_public_path_prefix": "/assets/docs/analysis"
+      }
+    },
+    {
+      "scope_id": "archive",
+      "source": "docs-viewer/source/archive",
+      "media_path_prefix": "docs/archive",
+      "output": "docs-viewer/generated/docs/archive",
+      "search_output": "docs-viewer/generated/search/archive/index.json",
+      "viewer_base_url": "/docs/",
+      "include_scope_param": true,
+      "default_doc_id": "archive",
+      "allow_nested_source": false,
+      "non_loadable_doc_ids": [],
+      "manage_only_tree_root_ids": [],
+      "show_updated_date": true,
+      "allow_unresolved_parent_ids": false,
+      "import_media_storage": {
+        "storage_mode": "staging_manual",
+        "repo_assets_path_prefix": "assets/docs/archive",
+        "repo_assets_public_path_prefix": "/assets/docs/archive"
       }
     }
   ],

@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "search_index_archive_v1",
+    "scope": "archive",
+    "version": "blake2b-c9a273ac3dd0c71f08268ef97804daaa",
+    "generated_at_utc": "2026-05-25T18:45:22Z",
+    "count": 1
+  },
+  "entries": [
+    {
+      "id": "archive",
+      "kind": "doc",
+      "title": "archive",
+      "href": "/docs/?scope=archive&doc=archive",
+      "last_updated": "2026-05-25",
+      "display_meta": "2026-05-25",
+      "search_terms": [
+        "archive",
+        "2026-05-25",
+        "2026",
+        "05",
+        "25"
+      ],
+      "search_text": "archive 2026-05-25 2026 05 25"
+    }
+  ]
+}

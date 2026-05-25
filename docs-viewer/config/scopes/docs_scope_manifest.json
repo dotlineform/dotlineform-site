@@ -1,7 +1,7 @@
 {
   "schema_version": "docs_scope_manifest_v1",
   "tool_id": "docs-viewer-scope-lifecycle",
-  "updated_at": "2026-05-15T00:00:00Z",
+  "updated_at": "2026-05-25T18:45:21Z",
   "scopes": [
     {
       "scope_id": "analysis",
@@ -199,6 +199,69 @@
         "backfilled": true,
         "viewer_base_url": "/docs/",
         "default_doc_id": "dev-home"
+      }
+    },
+    {
+      "scope_id": "archive",
+      "scope_type": "local",
+      "owner": "user",
+      "user_created": true,
+      "created_by_tool": true,
+      "tool_id": "docs-viewer-scope-lifecycle",
+      "repo_status_at_creation": "tracked",
+      "created_at": "2026-05-25T18:45:21Z",
+      "updated_at": "2026-05-25T18:45:21Z",
+      "files": [
+        {
+          "kind": "source_root",
+          "path": "docs-viewer/source/archive",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "default_source_doc",
+          "path": "docs-viewer/source/archive/archive.md",
+          "action": "track",
+          "exists": true
+        },
+        {
+          "kind": "generated_docs_root",
+          "path": "docs-viewer/generated/docs/archive",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "generated_docs_index",
+          "path": "docs-viewer/generated/docs/archive/index.json",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "generated_docs_payload_root",
+          "path": "docs-viewer/generated/docs/archive/by-id",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "generated_search_index",
+          "path": "docs-viewer/generated/search/archive/index.json",
+          "action": "track",
+          "exists": false
+        },
+        {
+          "kind": "scope_config",
+          "path": "docs-viewer/config/scopes/docs_scopes.json",
+          "action": "track",
+          "exists": true
+        }
+      ],
+      "metadata": {
+        "backfilled": false,
+        "viewer_base_url": "/docs/",
+        "default_doc_id": "archive",
+        "publishing_mode": "local_committed",
+        "build_inline_search": true,
+        "write_generated_outputs": true
       }
     }
   ]

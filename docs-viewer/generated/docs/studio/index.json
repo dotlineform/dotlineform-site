@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T18:36:12Z",
+  "generated_at": "2026-05-25T18:43:40Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -5226,7 +5226,7 @@
       "title": "Committed Manage-Mode Scope Storage Request",
       "added_date": "2026-05-25",
       "last_updated": "2026-05-25",
-      "parent_id": "change-requests",
+      "parent_id": "archive",
       "sort_order": 93000,
       "published": true,
       "hidden": false,
@@ -5235,7 +5235,7 @@
       "viewer_url": "/docs/?scope=studio&doc=site-request-committed-manage-mode-scope-storage",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-committed-manage-mode-scope-storage.json",
       "content_text_length": 13212,
-      "ui_status": "draft"
+      "ui_status": "done"
     },
     {
       "scope": "studio",

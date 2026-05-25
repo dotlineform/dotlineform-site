@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c0cabbdcc0f309fd391b02536ba70942",
-    "generated_at_utc": "2026-05-25T18:04:14Z",
+    "version": "blake2b-dc0d5195080ec8819469d33fea1fb409",
+    "generated_at_utc": "2026-05-25T18:43:40Z",
     "count": 312
   },
   "entries": [
@@ -7722,9 +7722,8 @@
       "title": "Committed Manage-Mode Scope Storage Request",
       "href": "/docs/?scope=studio&doc=site-request-committed-manage-mode-scope-storage",
       "last_updated": "2026-05-25",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-25 • Change Requests",
+      "parent_id": "archive",
+      "display_meta": "2026-05-25",
       "search_terms": [
         "site-request-committed-manage-mode-scope-storage",
         "site",
@@ -7735,15 +7734,12 @@
         "scope",
         "storage",
         "committed manage-mode scope storage request",
-        "change requests",
-        "change",
-        "requests",
         "2026-05-25",
         "2026",
         "05",
         "25"
       ],
-      "search_text": "site-request-committed-manage-mode-scope-storage site request committed manage mode scope storage committed manage-mode scope storage request change requests change requests 2026-05-25 2026 05 25"
+      "search_text": "site-request-committed-manage-mode-scope-storage site request committed manage mode scope storage committed manage-mode scope storage request 2026-05-25 2026 05 25"
     },
     {
       "id": "site-request-docs-viewer-workspace-mount-architecture",
