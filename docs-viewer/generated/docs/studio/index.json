@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T21:14:55Z",
+  "generated_at": "2026-05-25T21:37:45Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2444,6 +2444,23 @@
       "viewer_url": "/docs/?scope=studio&doc=ui-catalogue",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-catalogue.json",
       "content_text_length": 6108
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-local-report-snapshot-boundary",
+      "title": "Local Report Snapshot Boundary",
+      "added_date": "2026-05-25",
+      "last_updated": "2026-05-25",
+      "parent_id": "change-requests",
+      "sort_order": 9500,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-local-report-snapshot-boundary.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-local-report-snapshot-boundary",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-local-report-snapshot-boundary.json",
+      "content_text_length": 5220,
+      "ui_status": "planned"
     },
     {
       "scope": "studio",
