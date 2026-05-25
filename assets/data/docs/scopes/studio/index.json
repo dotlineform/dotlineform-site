@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T14:04:15Z",
+  "generated_at": "2026-05-25T14:31:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -4316,7 +4316,7 @@
       "source_path": "_tmp.md",
       "viewer_url": "/docs/?scope=studio&doc=_tmp",
       "content_url": "/assets/data/docs/scopes/studio/by-id/_tmp.json",
-      "content_text_length": 467
+      "content_text_length": 977
     },
     {
       "scope": "studio",

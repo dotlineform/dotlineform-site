@@ -1,10 +1,11 @@
 ## General behaviour
 
-- for new features, behavior changes, refactors, and meaningful docs changes, use `docs-viewer/source/studio/development-workflow.md` as the lifecycle guide and follow its links to task-specific docs.
+- use `docs-viewer/source/studio/development-workflow.md` as the primary guide and follow its links to task-specific docs.
 - answer questions based on applying best practice in this technical or creative domain, provide suggestions to mitigate maintenance risk and improve site or application performance. ask for confirmation before any edits.
 - code changes: summarise the intended change set and ask for confirmation before editing code unless the request is trivial.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
 - update source documents but do not rebuild doc payloads, this is done manually or by `bin/local-studio` / the docs-watcher. If docs-watcher re-generates published JSON when source documents change, let it. Do not revert published changes created by docs-watcher.
+- when a command is clearly a localhost/browser smoke that binds a server or launches Playwright, run it elevated immediately with a concise justification instead of doing the doomed sandbox attempt first. For non-network checks like quick, syntax checks, git diff --check, and pure pytest that doesn’t bind ports, keep them sandboxed.
 
 ## Project Priorities and Tradeoffs
 

@@ -12,14 +12,26 @@ viewable: false
 we are working on site-request-docs-viewer-shell-extraction-tasks.md
 please continue with next task
 
+
+
 ---
 
-normal development should use:
+servers:
 
-- `bin/local-studio` for Studio
-- `bin/public-site-preview` for public Jekyll preview
+- `bin/local-all` - Studio, Jekyll site, Docs Viewer, docs watcher
+- `bin/local-studio` - Studio + Docs Watcher: `http://127.0.0.1:8765/studio/`
+- `docs-viewer/bin/docs-viewer` - Docs Viewer: `http://127.0.0.1:8776/docs/?scope=studio&mode=manage&doc=change-requests`
+- `bin/public-site-preview` - public Jekyll preview: `http://127.0.0.1:4000/series/`
 - `bin/public-site-preview --livereload`
 
+scripts:
+
+./docs-viewer/build/build_docs.rb --scope studio
+./docs-viewer/build/build_docs.rb --scope studio --write
+./docs-viewer/build/build_docs.rb --scope studio --write --only-doc-ids example-doc
+./docs-viewer/build/build_search.rb
+
+./studio/services/catalogue/search/build_search.rb
 
 
 ---
