@@ -29,12 +29,12 @@ Treat the first failed run as an environment permission result, not a product re
 | Initial sandbox smoke attempt | `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke` | Failed because localhost bind was blocked by sandbox | `var/test-runs/20260524-233448/summary.md` |
 | Quick profile | `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick` | Passed | `var/test-runs/20260524-233607/summary.md` |
 | Local Studio Docs Viewer management shell | `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_docs_viewer.py` | Passed with elevated localhost permission | Temporary `/docs/?scope=studio&doc=docs-viewer&mode=manage` route loaded and management API checks passed |
-| Studio docs builder dry run | `$HOME/.rbenv/shims/bundle exec ruby scripts/build_docs.rb --scope studio` | Passed | 316 docs emitted, 0 payload writes, 0 stale removals, 0 warnings |
-| Library docs builder dry run | `$HOME/.rbenv/shims/bundle exec ruby scripts/build_docs.rb --scope library` | Passed | 15 docs emitted, 0 payload writes, 0 stale removals, 0 warnings |
-| Analysis docs builder dry run | `$HOME/.rbenv/shims/bundle exec ruby scripts/build_docs.rb --scope analysis` | Passed with existing content warning | 3 docs emitted, 0 payload writes, 0 stale removals, 1 unresolved semantic-reference warning |
-| Studio search builder dry run | `$HOME/.rbenv/shims/bundle exec ruby scripts/build_search.rb --scope studio` | Passed | Would write 0; skipped 1; path `assets/data/search/studio/index.json` |
-| Library search builder dry run | `$HOME/.rbenv/shims/bundle exec ruby scripts/build_search.rb --scope library` | Passed | Would write 0; skipped 1; path `assets/data/search/library/index.json` |
-| Analysis search builder dry run | `$HOME/.rbenv/shims/bundle exec ruby scripts/build_search.rb --scope analysis` | Passed | Would write 0; skipped 1; path `assets/data/search/analysis/index.json` |
+| Studio docs builder dry run | `$HOME/.rbenv/shims/bundle exec ruby docs-viewer/build/build_docs.rb --scope studio` | Passed | 316 docs emitted, 0 payload writes, 0 stale removals, 0 warnings |
+| Library docs builder dry run | `$HOME/.rbenv/shims/bundle exec ruby docs-viewer/build/build_docs.rb --scope library` | Passed | 15 docs emitted, 0 payload writes, 0 stale removals, 0 warnings |
+| Analysis docs builder dry run | `$HOME/.rbenv/shims/bundle exec ruby docs-viewer/build/build_docs.rb --scope analysis` | Passed with existing content warning | 3 docs emitted, 0 payload writes, 0 stale removals, 1 unresolved semantic-reference warning |
+| Studio search builder dry run | `$HOME/.rbenv/shims/bundle exec ruby docs-viewer/build/build_search.rb --scope studio` | Passed | Would write 0; skipped 1; path `assets/data/search/studio/index.json` |
+| Library search builder dry run | `$HOME/.rbenv/shims/bundle exec ruby docs-viewer/build/build_search.rb --scope library` | Passed | Would write 0; skipped 1; path `assets/data/search/library/index.json` |
+| Analysis search builder dry run | `$HOME/.rbenv/shims/bundle exec ruby docs-viewer/build/build_search.rb --scope analysis` | Passed | Would write 0; skipped 1; path `assets/data/search/analysis/index.json` |
 
 ## Coverage
 

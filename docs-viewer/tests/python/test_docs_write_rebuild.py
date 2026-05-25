@@ -65,8 +65,8 @@ def test_rebuild_scope_outputs_preserves_full_command_shapes() -> None:
     }
     assert result["search"] == {"mode": "full", "doc_ids": []}
     assert calls == [
-        (["/tmp/bundle", "exec", "ruby", "scripts/build_docs.rb", "--scope", "studio", "--write"], calls[0][1]),
-        (["/tmp/bundle", "exec", "ruby", "scripts/build_search.rb", "--scope", "studio", "--write"], calls[0][1]),
+        (["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", "studio", "--write"], calls[0][1]),
+        (["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "studio", "--write"], calls[0][1]),
     ]
     assert result["diagnostics"]["search"]["mode"] == "full"
     assert result["diagnostics"]["search"]["doc_ids"] == []
@@ -139,7 +139,7 @@ def test_rebuild_scope_outputs_preserves_targeted_search_command() -> None:
         "/tmp/bundle",
         "exec",
         "ruby",
-        "scripts/build_search.rb",
+        "docs-viewer/build/build_search.rb",
         "--scope",
         "library",
         "--write",
@@ -185,7 +185,7 @@ def test_rebuild_scope_outputs_passes_targeted_docs_command() -> None:
             "/tmp/bundle",
             "exec",
             "ruby",
-            "scripts/build_docs.rb",
+            "docs-viewer/build/build_docs.rb",
             "--scope",
             "studio",
             "--write",
@@ -225,7 +225,7 @@ def test_rebuild_scope_outputs_falls_back_when_targeted_docs_outputs_are_missing
         "doc_ids": ["body-doc"],
         "reason": "full-scope fallback: existing docs index missing",
     }
-    assert calls == [["/tmp/bundle", "exec", "ruby", "scripts/build_docs.rb", "--scope", "studio", "--write"]]
+    assert calls == [["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", "studio", "--write"]]
 
 
 def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
@@ -246,7 +246,7 @@ def test_rebuild_scope_outputs_skips_empty_targeted_search() -> None:
         write_rebuild.detect_bundle_bin = original_bundle
 
     assert result["search"] == {"mode": "none", "doc_ids": []}
-    assert calls == [["/tmp/bundle", "exec", "ruby", "scripts/build_docs.rb", "--scope", "studio", "--write"]]
+    assert calls == [["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", "studio", "--write"]]
 
 
 def test_rebuild_scope_outputs_preserves_front_matter_failure_message() -> None:
@@ -381,10 +381,10 @@ def test_rebuild_all_docs_outputs_preserves_command_sequence() -> None:
 
     assert result["ok"] is True
     assert calls == [
-        ["/tmp/bundle", "exec", "ruby", "scripts/build_docs.rb", "--write"],
-        ["/tmp/bundle", "exec", "ruby", "scripts/build_search.rb", "--scope", "studio", "--write"],
-        ["/tmp/bundle", "exec", "ruby", "scripts/build_search.rb", "--scope", "library", "--write"],
-        ["/tmp/bundle", "exec", "ruby", "scripts/build_search.rb", "--scope", "analysis", "--write"],
+        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--write"],
+        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "studio", "--write"],
+        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "library", "--write"],
+        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "analysis", "--write"],
     ]
 
 
@@ -428,8 +428,8 @@ def test_rebuild_all_docs_outputs_uses_current_scope_config() -> None:
 
     assert result["ok"] is True
     assert calls == [
-        ["/tmp/bundle", "exec", "ruby", "scripts/build_docs.rb", "--write"],
-        ["/tmp/bundle", "exec", "ruby", "scripts/build_search.rb", "--scope", "studio", "--write"],
+        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_docs.rb", "--write"],
+        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "studio", "--write"],
     ]
 
 

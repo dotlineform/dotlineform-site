@@ -187,8 +187,8 @@ After that preflight, `bin/local-studio` runs the startup write steps below:
 1. if `DOTLINEFORM_BACKUP_RETENTION` is not `off` or `0`, it runs:
    - `$HOME/miniconda3/bin/python3 studio/app/server/studio/studio_backup_retention.py --write --quiet`
 2. if `DOCS_STARTUP_REBUILD_SCOPES` is set, it runs:
-   - `./scripts/build_docs.rb --scope <scope> --write`
-   - `./scripts/build_search.rb --scope <scope> --write`
+   - `./docs-viewer/build/build_docs.rb --scope <scope> --write`
+   - `./docs-viewer/build/build_search.rb --scope <scope> --write`
    for each listed docs scope
 3. if `CATALOGUE_STARTUP_LOOKUP_REBUILD` is enabled, it runs:
    - `$HOME/miniconda3/bin/python3 studio/services/catalogue/export_catalogue_lookup.py --write`
@@ -367,10 +367,10 @@ If either `bin/local-studio` child process exits unexpectedly, that runner stops
 If you disable the watcher or want an explicit manual rebuild, use:
 
 ```bash
-./scripts/build_docs.rb --scope studio --write
-./scripts/build_search.rb --scope studio --write
-./scripts/build_docs.rb --scope library --write
-./scripts/build_search.rb --scope library --write
+./docs-viewer/build/build_docs.rb --scope studio --write
+./docs-viewer/build/build_search.rb --scope studio --write
+./docs-viewer/build/build_docs.rb --scope library --write
+./docs-viewer/build/build_search.rb --scope library --write
 ```
 
 ## Related References

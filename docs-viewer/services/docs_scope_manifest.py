@@ -562,13 +562,13 @@ def apply_delete_build_commands(repo_root: Path, scope_id: str, *, dry_run: bool
     ]
     commands = [
         {
-            "command": "./scripts/build_docs.rb --write",
+            "command": "./docs-viewer/build/build_docs.rb --write",
             "status": status,
         },
     ]
     commands.extend(
         {
-            "command": f"./scripts/build_search.rb --scope {remaining_scope_id} --write",
+            "command": f"./docs-viewer/build/build_search.rb --scope {remaining_scope_id} --write",
             "status": status,
         }
         for remaining_scope_id in remaining_scope_ids
@@ -669,9 +669,9 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
 
     commands = []
     if write_generated_outputs:
-        commands.append({"command": f"./scripts/build_docs.rb --scope {scope_id} --write", "status": "planned"})
+        commands.append({"command": f"./docs-viewer/build/build_docs.rb --scope {scope_id} --write", "status": "planned"})
         if build_inline_search:
-            commands.append({"command": f"./scripts/build_search.rb --scope {scope_id} --write", "status": "planned"})
+            commands.append({"command": f"./docs-viewer/build/build_search.rb --scope {scope_id} --write", "status": "planned"})
 
     management_url = f"/docs/?scope={scope_id}&mode=manage"
     return {

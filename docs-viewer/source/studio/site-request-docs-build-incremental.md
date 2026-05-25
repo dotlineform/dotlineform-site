@@ -65,7 +65,7 @@ The cleanup behavior is a real implementation concern, not just a warning note. 
 
 Original implementation facts at request start:
 
-- `scripts/build_docs.rb --write` rebuilds the full selected docs scope and rewrites the full generated output set for that scope
+- `docs-viewer/build/build_docs.rb --write` rebuilds the full selected docs scope and rewrites the full generated output set for that scope
 - by default it selects both `studio` and `library` when `--scope` is omitted
 - it deletes and recreates the scope `by-id/` output directory before writing payloads
 - it always writes a fresh `generated_at` timestamp into the docs index
@@ -120,12 +120,12 @@ The intended model is:
 
 Minimum explicit command forms:
 
-- `./scripts/build_docs.rb --scope studio --write`
-- `./scripts/build_docs.rb --scope library --write`
+- `./docs-viewer/build/build_docs.rb --scope studio --write`
+- `./docs-viewer/build/build_docs.rb --scope library --write`
 
 Apply that rule to:
 
-- `scripts/build_docs.rb`
+- `docs-viewer/build/build_docs.rb`
 - `bin/local-studio`
 - Studio docs rebuild endpoints
 - any docs-management rebuild helpers
@@ -233,8 +233,8 @@ Implemented decisions:
 
 - user-facing live docs-management actions now rebuild same-scope docs search automatically
 - low-level manual builder entrypoints remain split for advanced/manual use:
-  - `./scripts/build_docs.rb --scope <scope> --write`
-  - `./scripts/build_search.rb --scope <scope> --write`
+  - `./docs-viewer/build/build_docs.rb --scope <scope> --write`
+  - `./docs-viewer/build/build_search.rb --scope <scope> --write`
 - the legacy Studio tag-server `POST /build-docs` path is now deprecated and no longer part of the live docs workflow
 
 Reason:

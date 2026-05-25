@@ -28,7 +28,7 @@ The watcher maps source roots directly onto docs scopes:
 - `docs-viewer/source/analysis/**/*.md` -> `analysis`
 - `docs-viewer/source/library/*.md` -> `library`
 
-The scope map comes from `docs-viewer/config/scopes/docs_scopes.json`, which is shared with `./scripts/build_docs.rb` and the Docs Viewer service.
+The scope map comes from `docs-viewer/config/scopes/docs_scopes.json`, which is shared with `./docs-viewer/build/build_docs.rb` and the Docs Viewer service.
 
 It watches source roots only. It does not watch generated outputs under:
 
@@ -68,21 +68,21 @@ Default behavior:
 When the watcher sees a change for one scope, it runs:
 
 ```bash
-./scripts/build_docs.rb --scope <scope> --write
-./scripts/build_search.rb --scope <scope> --write --only-doc-ids <ids> --remove-missing
+./docs-viewer/build/build_docs.rb --scope <scope> --write
+./docs-viewer/build/build_search.rb --scope <scope> --write --only-doc-ids <ids> --remove-missing
 ```
 
 When affected ids are safe, the docs payload command becomes:
 
 ```bash
-./scripts/build_docs.rb --scope <scope> --write --only-doc-ids <ids>
+./docs-viewer/build/build_docs.rb --scope <scope> --write --only-doc-ids <ids>
 ```
 
 When the changed-file count exceeds `--targeted-search-threshold`, or when the parsed snapshot cannot safely identify affected ids, the search step falls back to:
 
 ```bash
-./scripts/build_docs.rb --scope <scope> --write
-./scripts/build_search.rb --scope <scope> --write
+./docs-viewer/build/build_docs.rb --scope <scope> --write
+./docs-viewer/build/build_search.rb --scope <scope> --write
 ```
 
 That means a source change under one docs root keeps both:

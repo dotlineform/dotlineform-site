@@ -91,7 +91,7 @@ def test_search_command_uses_configured_bundle_and_catalogue_scope() -> None:
         "/custom/bundle",
         "exec",
         "ruby",
-        "/repo/scripts/build_search.rb",
+        "/repo/studio/services/catalogue/search/build_search.rb",
         "--scope",
         "catalogue",
         "--write",

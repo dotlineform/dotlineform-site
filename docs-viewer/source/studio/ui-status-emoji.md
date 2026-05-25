@@ -103,7 +103,7 @@ Status: implemented.
 
 Status: implemented.
 
-- Update `scripts/build_docs.rb` so `ui_status` is parsed from document front matter.
+- Update `docs-viewer/build/build_docs.rb` so `ui_status` is parsed from document front matter.
 - Include the normalized raw status value in generated docs index entries and per-doc payloads.
 - Keep missing or blank status values out of rendered UI while preserving deterministic generated output.
 - Do not validate `ui_status` against config in the builder for v1; let the viewer ignore unknown values per scope.
@@ -163,7 +163,7 @@ Status: implemented.
 
 Status: implemented.
 
-- Run `./scripts/build_docs.rb --scope studio --write` after docs-source changes.
+- Run `./docs-viewer/build/build_docs.rb --scope studio --write` after docs-source changes.
 - Run `node --check docs-viewer/runtime/js/docs-viewer.js` after runtime changes.
 - Run a targeted docs build or `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs` if the implementation changes docs builder, Docs Viewer service, generated payloads, and viewer runtime together.
 - Manually verify `/docs/` and `/library/` on desktop and mobile: scope-specific status config, index-only prefix rendering, edit-modal default selection, modal save behavior, immediate pill writes in manage mode, read-only pills outside manage mode, status clearing, reload persistence, invalid-status ignore behavior, and no search/recent/bookmark label emoji leakage.

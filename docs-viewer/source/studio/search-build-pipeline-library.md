@@ -12,7 +12,7 @@ sort_order: 8400
 
 ### Current Writer
 
-- `./scripts/build_search.rb --scope library`, dispatched to `docs-viewer/build/build_search.rb`
+- `./docs-viewer/build/build_search.rb --scope library`, dispatched to `docs-viewer/build/build_search.rb`
 
 ### Current Output
 
@@ -31,13 +31,13 @@ Archive docs follow the same rule as every other doc: set `viewable: false` when
 Default write command:
 
 ```bash
-./scripts/build_search.rb --scope library --write
+./docs-viewer/build/build_search.rb --scope library --write
 ```
 
 Dry run:
 
 ```bash
-./scripts/build_search.rb --scope library
+./docs-viewer/build/build_search.rb --scope library
 ```
 
 Current supported overrides:
@@ -64,10 +64,10 @@ Current builder behaviour for Library:
 - consumed by inline docs search on `/library/`
 - not consumed by the dedicated `/catalogue/search/` page
 - manual docs rebuilds remain split:
-  - `./scripts/build_docs.rb --scope library --write`
-  - `./scripts/build_search.rb --scope library --write`
+  - `./docs-viewer/build/build_docs.rb --scope library --write`
+  - `./docs-viewer/build/build_search.rb --scope library --write`
 - targeted docs-search command:
-  - `./scripts/build_search.rb --scope library --write --only-doc-ids library --remove-missing`
+  - `./docs-viewer/build/build_search.rb --scope library --write --only-doc-ids library --remove-missing`
 - live docs-management actions rebuild the current docs scope and then run targeted same-scope docs-search updates for explicit affected ids
 - the explicit `POST /docs/rebuild` endpoint still runs a full same-scope docs-search rebuild
 - the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes

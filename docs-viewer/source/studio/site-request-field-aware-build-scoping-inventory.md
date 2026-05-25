@@ -64,7 +64,7 @@ Important distinction:
 | `scripts/export_catalogue_lookup.py` | `studio-lookup` file export. |
 | `scripts/generate_work_pages.py` | `work-page`, `work-json`, `work-details-page`, `works-index-json`, `work-storage-index-json`, `series-page`, `series-json`, `series-index-json`, `recent-index-json`, `moment-page`, `moment-json`, `moments-index-json`. |
 | `scripts/catalogue_json_build.py` | Scoped build planning/apply orchestration and `local-media`. |
-| `scripts/build_search.rb` | `catalogue-search`. |
+| `studio/services/catalogue/search/build_search.rb` | `catalogue-search`. |
 
 ## `source-json` Fields
 
@@ -351,7 +351,7 @@ Route page artifacts are metadata-free route anchors. Field-aware planning shoul
 
 ## `catalogue-search` Fields
 
-Targeted catalogue search means invoking `scripts/build_search.rb --scope catalogue --only-records kind:id,...` to merge selected `work`, `series`, or `moment` records into the existing public search artifact instead of rebuilding the full catalogue search index.
+Targeted catalogue search means invoking `studio/services/catalogue/search/build_search.rb --scope catalogue --only-records kind:id,...` to merge selected `work`, `series`, or `moment` records into the existing public search artifact instead of rebuilding the full catalogue search index.
 
 Current targeted catalogue search is additive-only: it can insert missing new records, treat identical existing records as unchanged, and refuse changed existing records. It does not update or remove existing catalogue search records. This is the current policy because catalogue search entries are not isolated single-source records. A work search entry can depend on work index data, focused work JSON, series titles, series membership, and tags; series and moment records have their own cross-artifact dependencies. Until Task 2 defines executable field-to-record invalidation rules for those dependencies, metadata edits, relationship edits, tag changes, removals, and ambiguous states should continue to trigger a full catalogue search rebuild.
 

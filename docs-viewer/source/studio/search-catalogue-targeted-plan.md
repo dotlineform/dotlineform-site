@@ -26,7 +26,7 @@ Catalogue targeted search is intentionally separate from the docs-domain impleme
 
 Current catalogue search behavior:
 
-- `./scripts/build_search.rb --scope catalogue --write` performs a full rebuild
+- `./studio/services/catalogue/search/build_search.rb --scope catalogue --write` performs a full rebuild
 - `--only-doc-ids` is refused for `catalogue`
 - `--only-records` supports additive catalogue inserts for `work`, `series`, and `moment`
 - `scripts/search/build_config.json` marks the catalogue scope with `targeted_policy: "additive_only"` and `targeted_operations: ["create"]`
@@ -57,7 +57,7 @@ Do not reuse `--only-doc-ids` for catalogue.
 A catalogue-specific interface names catalogue record identity explicitly:
 
 ```bash
-./scripts/build_search.rb --scope catalogue --write --only-records work:00001,series:009,moment:blue-sky
+./studio/services/catalogue/search/build_search.rb --scope catalogue --write --only-records work:00001,series:009,moment:blue-sky
 ```
 
 Accepted record kinds:
@@ -117,7 +117,7 @@ Catalogue write/build orchestration should own:
 
 - detecting which catalogue source records changed
 - mapping source changes to affected catalogue search records
-- deciding targeted versus full rebuild before invoking `scripts/build_search.rb`
+- deciding targeted versus full rebuild before invoking `studio/services/catalogue/search/build_search.rb`
 - batching many source writes into one search update
 - falling back to full rebuild when dependency state is ambiguous
 

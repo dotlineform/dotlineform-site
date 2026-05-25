@@ -192,8 +192,8 @@ Example check sequence:
 $HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py --strict
 $HOME/miniconda3/bin/python3 studio/services/catalogue/validate_catalogue_source.py
 $HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id 00001
-./scripts/build_docs.rb
-./scripts/build_search.rb
+./docs-viewer/build/build_docs.rb
+./docs-viewer/build/build_search.rb --scope studio
 bundle exec jekyll build --quiet
 ```
 
@@ -231,13 +231,13 @@ Potential future incompatibilities and how they surface:
 
 - **Ruby/Bundler lockfile mismatch**: setup output will show Bundler mismatch against `Gemfile.lock`; bundler install retries with fallback and surfaces hard failure if unresolved.
 - **Python dependency floor changes**: pip install errors in setup python phase will fail early before generator/build commands run.
-- **Jekyll/github-pages drift**: incompatibilities appear during explicit follow-up checks (`./scripts/build_docs.rb`, `bundle exec jekyll build --quiet`) even if setup itself passes.
+- **Jekyll/github-pages drift**: incompatibilities appear during explicit follow-up checks (`./docs-viewer/build/build_docs.rb`, `bundle exec jekyll build --quiet`) even if setup itself passes.
 - **Media toolchain drift**: `ffmpeg`/`heif-convert` failures appear in media generation commands; setup only verifies `ffmpeg` when present.
 
 Recommended response loop:
 
 1. rerun setup with parity-oriented flags (`FORCE_APT_PACKAGES=1 BUNDLER_FALLBACK_VERSION=2.6.9`)
-2. run full parity checks (`./scripts/build_docs.rb`, `./scripts/build_search.rb`, `bundle exec jekyll build --quiet`)
+2. run full parity checks (`./docs-viewer/build/build_docs.rb`, `./docs-viewer/build/build_search.rb --scope studio`, `bundle exec jekyll build --quiet`)
 3. if mismatch persists, update pinned versions in `.ruby-version`, `Gemfile.lock`, and cloud runtime files together (plus docs) in one change set
 
 ## Codespaces Consistency Notes

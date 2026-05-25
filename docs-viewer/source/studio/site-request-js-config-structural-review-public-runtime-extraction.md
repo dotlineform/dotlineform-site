@@ -180,8 +180,8 @@ Verification run for this slice:
 
 - `node --check assets/js/public-catalogue-runtime.js`
 - `node --check assets/js/work.js`
-- `./scripts/build_docs.rb --scope studio --write`
-- `./scripts/build_search.rb --scope studio --write`
+- `./docs-viewer/build/build_docs.rb --scope studio --write`
+- `./docs-viewer/build/build_search.rb --scope studio --write`
 - Jekyll build to a separate destination because local Studio/Jekyll services may already be running
 - static Playwright smoke for a representative work page, work-detail page, and series page
 

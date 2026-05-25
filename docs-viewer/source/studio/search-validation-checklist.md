@@ -34,9 +34,9 @@ Prefer real site examples over synthetic test strings.
 ## A. Catalogue Build And Artifact Checks
 
 - [ ] If the change touched catalogue source generation, refresh the canonical source artifacts with `$HOME/miniconda3/bin/python3 studio/services/catalogue/generate_work_pages.py`
-- [ ] Run `./scripts/build_search.rb --scope catalogue`
+- [ ] Run `./studio/services/catalogue/search/build_search.rb --scope catalogue`
 - [ ] Confirm the dry run completes without error, including Catalogue build-config validation
-- [ ] Run `./scripts/build_search.rb --scope catalogue --write`
+- [ ] Run `./studio/services/catalogue/search/build_search.rb --scope catalogue --write`
 - [ ] Confirm `assets/data/search/catalogue/index.json` is updated or correctly skipped by version check
 - [ ] Confirm the output is valid JSON
 - [ ] Confirm the header contains `schema`, `version`, `generated_at_utc`, and `count`
@@ -44,19 +44,19 @@ Prefer real site examples over synthetic test strings.
 
 ## B. Docs-Domain Build And Artifact Checks
 
-- [ ] Run `./scripts/build_docs.rb`
+- [ ] Run `./docs-viewer/build/build_docs.rb`
 - [ ] Confirm the docs dry run completes without error for configured docs scopes
-- [ ] Run `./scripts/build_search.rb --scope studio`
+- [ ] Run `./docs-viewer/build/build_search.rb --scope studio`
 - [ ] Confirm the dry run reports `assets/data/search/studio/index.json` or correctly skips by version check
-- [ ] Run `./scripts/build_search.rb --scope library`
+- [ ] Run `./docs-viewer/build/build_search.rb --scope library`
 - [ ] Confirm the dry run reports `assets/data/search/library/index.json` or correctly skips by version check
-- [ ] Run `./scripts/build_search.rb --scope analysis`
+- [ ] Run `./docs-viewer/build/build_search.rb --scope analysis`
 - [ ] Confirm the dry run reports `assets/data/search/analysis/index.json` or correctly skips by version check
-- [ ] If the change touched targeted docs-search updates, run `./scripts/build_search.rb --scope studio --only-doc-ids search-build-pipeline --remove-missing`
+- [ ] If the change touched targeted docs-search updates, run `./docs-viewer/build/build_search.rb --scope studio --only-doc-ids search-build-pipeline --remove-missing`
 - [ ] Confirm targeted dry run reports diagnostic counts for changed, removed, unchanged, skipped, and full-fallback behavior
 - [ ] If the change touched docs-management search orchestration, confirm docs-management rebuild responses report `search.mode: targeted` for explicit affected ids
-- [ ] Confirm `./scripts/build_search.rb --scope catalogue --only-doc-ids anything --remove-missing` fails closed because catalogue uses `--only-records`
-- [ ] If the change touched catalogue targeted search, run `./scripts/build_search.rb --scope catalogue --only-records moment:4-stories`
+- [ ] Confirm `./studio/services/catalogue/search/build_search.rb --scope catalogue --only-doc-ids anything --remove-missing` fails closed because catalogue uses `--only-records`
+- [ ] If the change touched catalogue targeted search, run `./studio/services/catalogue/search/build_search.rb --scope catalogue --only-records moment:4-stories`
 - [ ] Confirm catalogue targeted dry run reports changed, removed, unchanged, skipped, and full-fallback behavior
 - [ ] Confirm catalogue targeted mode refuses changed existing records and `--remove-missing`
 - [ ] On write runs, confirm the Studio and Library search artifacts update or correctly skip by version check

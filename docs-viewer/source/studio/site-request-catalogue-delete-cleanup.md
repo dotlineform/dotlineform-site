@@ -191,8 +191,8 @@ Codex-run checks should include:
 - dry-run delete apply for the same representative records when safe fixtures exist
 - confirm preview cleanup payloads list generated artifacts and repo-local media paths only
 - confirm stale search/index references are absent after an apply in a disposable test case
-- `./scripts/build_docs.rb --scope studio --write` after docs updates
-- `./scripts/build_search.rb --scope studio --write` when docs search output should remain current
+- `./docs-viewer/build/build_docs.rb --scope studio --write` after docs updates
+- `./docs-viewer/build/build_search.rb --scope studio --write` when docs search output should remain current
 - Jekyll build to a separate destination when generated public artifacts or layouts are touched
 
 Manual checks should include:

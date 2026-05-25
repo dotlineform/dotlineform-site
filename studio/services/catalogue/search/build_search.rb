@@ -732,7 +732,7 @@ options = {
 }
 
 OptionParser.new do |parser|
-  parser.banner = "Usage: ./scripts/build_search.rb [options]"
+  parser.banner = "Usage: ./studio/services/catalogue/search/build_search.rb [options]"
 
   parser.on("--scope NAME", "Catalogue search scope to build") do |value|
     options[:scope] = value

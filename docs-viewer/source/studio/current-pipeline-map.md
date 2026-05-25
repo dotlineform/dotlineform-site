@@ -68,7 +68,7 @@ Generated runtime artifacts include:
 Search remains downstream of generated/runtime artifacts:
 
 ```bash
-./scripts/build_search.rb --scope catalogue --write
+./studio/services/catalogue/search/build_search.rb --scope catalogue --write
 ```
 
 ## Deprecated Boundary

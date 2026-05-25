@@ -10,10 +10,8 @@ sort_order: 8100
 
 ## Current Design And Implementation
 
-The current search build uses one stable entrypoint with domain-owned adapters:
+The current search build uses explicit domain-owned entrypoints:
 
-- stable command wrapper and dispatcher: `scripts/build_search.rb`
-- adapter registry: `studio/commands/search-adapters.json`
 - Catalogue implementation owner: `studio/services/catalogue/search/build_search.rb`
 - Docs Viewer implementation owner: `docs-viewer/build/build_search.rb`
 
@@ -69,8 +67,8 @@ Current non-goals across all scopes:
 
 ## Adapter Registry And Build Config
 
-The top-level command loads `studio/commands/search-adapters.json` to map requested scopes to domain builders.
-The registry maps `catalogue` to the Catalogue adapter and configured Docs Viewer scopes from `docs-viewer/config/scopes/docs_scopes.json` to the Docs Viewer adapter.
+Call the owner script for the scope being rebuilt.
+Catalogue search uses `studio/services/catalogue/search/build_search.rb`; configured Docs Viewer scopes from `docs-viewer/config/scopes/docs_scopes.json` use `docs-viewer/build/build_search.rb`.
 
 `studio/services/catalogue/search/build_config.json` is Catalogue-owned.
 Current Catalogue config responsibilities:

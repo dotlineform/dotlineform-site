@@ -64,7 +64,7 @@ def test_build_record_extracts_metadata_and_validates() -> None:
             "**Status:** implemented\n\n"
             "**Area:** Docs Viewer builder / management\n\n"
             "**Summary:**\n"
-            "`./scripts/build_docs.rb --scope <scope> --write --only-doc-ids <ids>` now supports targeted same-scope docs payload rebuilds.\n\n"
+            "`./docs-viewer/build/build_docs.rb --scope <scope> --write --only-doc-ids <ids>` now supports targeted same-scope docs payload rebuilds.\n\n"
             "**Effect:**\n"
             "Small docs source writes can avoid rendering every per-doc payload.\n\n"
             "**Affected files/docs:**\n\n"

@@ -382,8 +382,8 @@ Acceptance:
 
 Progress:
 
-- Create apply runs `./scripts/build_docs.rb --scope <scope> --write` when generated outputs are requested.
-- Create apply runs `./scripts/build_search.rb --scope <scope> --write` only when inline search is enabled.
+- Create apply runs `./docs-viewer/build/build_docs.rb --scope <scope> --write` when generated outputs are requested.
+- Create apply runs `./docs-viewer/build/build_search.rb --scope <scope> --write` only when inline search is enabled.
 - Delete apply runs the full docs output refresh for the remaining configured scopes after removing the deleted scope from config.
 
 ### Task 7. Document The Completed Workflow

@@ -83,7 +83,7 @@ def build_search_command(repo_root: Path, *, write: bool, force: bool, env: Mapp
         resolve_bundle_bin(env),
         "exec",
         "ruby",
-        str(repo_root / "scripts" / "build_search.rb"),
+        str(repo_root / "studio" / "services" / "catalogue" / "search" / "build_search.rb"),
         "--scope",
         "catalogue",
     ]

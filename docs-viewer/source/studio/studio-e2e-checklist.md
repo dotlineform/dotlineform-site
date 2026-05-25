@@ -472,7 +472,7 @@ Use these as companion checks during execution:
 
 ```bash
 python -m py_compile studio/services/catalogue/generate_work_pages.py studio/services/catalogue/catalogue_json_build.py studio/services/catalogue/catalogue_write_server.py
-./scripts/build_docs.rb --scope studio --write
+./docs-viewer/build/build_docs.rb --scope studio --write
 bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
 $HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --work-id <work_id>
 $HOME/miniconda3/bin/python3 studio/services/catalogue/catalogue_json_build.py --moment-file <moment_file>.md

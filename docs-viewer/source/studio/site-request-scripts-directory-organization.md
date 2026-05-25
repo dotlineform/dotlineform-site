@@ -26,7 +26,7 @@ After this request is implemented, the user should be able to look at `scripts/`
 The current layout has useful subfolders, but their rule is inconsistent:
 
 - `scripts/docs/` is a coherent Docs domain package containing the docs builder implementation, Docs management service, docs source-model helpers, import/export helpers, generated-read helpers, rebuild helpers, and docs route constants.
-- `scripts/search/` contains search configuration and the search builder implementation, while `scripts/build_search.rb` remains the stable top-level command wrapper.
+- Search builder ownership is split by domain, with Catalogue search under `studio/services/catalogue/search/` and Docs Viewer search under `docs-viewer/build/`.
 - `scripts/studio/` contains local Studio runtime modules such as `studio_app_server.py`, `studio_audit_api.py`, and `audit_runner.py`; catalogue and Analytics tag domain helpers live with their owning domains.
 - Catalogue has many top-level modules: `catalogue_source.py`, `catalogue_json_build.py`, `catalogue_lookup.py`, `catalogue_transactions.py`, `catalogue_routes.py`, `catalogue_publication.py`, and related helpers.
 - Shared helpers such as `script_logging.py`, `studio_activity.py`, `pipeline_config.py`, and `display_paths.py` also live at top level, which is reasonable only if top level is explicitly treated as shared infrastructure plus stable entrypoints.
@@ -60,12 +60,10 @@ Proposed target folders:
 - `scripts/catalogue/`
   - Catalogue source model, lookup, field registry, save/build planning, publication/delete planning, prose import, workbook import, catalogue write server, catalogue route constants, catalogue transactions, and catalogue-specific validation/export helpers.
   - Candidate moves include current `catalogue_*` modules, `generate_work_pages.py` if it remains the internal catalogue JSON engine, `validate_catalogue_source.py`, `verify_catalogue_field_registry.py`, `export_catalogue_lookup.py`, and `migrate_catalogue_media_sections.py`.
-- `scripts/docs/`
-  - Keep as the Docs domain package.
-  - Docs builder implementation lives here; the top-level `scripts/build_docs.rb` wrapper remains the stable operational command.
-- `scripts/search/`
-  - Search build configuration and search builder ownership.
-  - Search builder implementation lives here; the top-level `scripts/build_search.rb` wrapper remains the stable operational command.
+- `docs-viewer/build/`
+  - Docs Viewer docs and docs-search builders live here and are called directly.
+- `studio/services/catalogue/search/`
+  - Catalogue search build configuration and builder implementation live here and are called directly.
 - `scripts/analytics/`
   - Analytics metadata and analysis services over catalogue works and series.
   - Current tag helper modules live here as the first Analytics metadata layer.
@@ -134,9 +132,9 @@ Proposed folder ownership rules:
 |---|---|---|---|---|---|---|
 | `scripts/audit_site_consistency.py` | entrypoint | Checks | `studio/checks/audit_site_consistency.py` | `./scripts/audit_site_consistency.py` | docs: `docs-viewer/source/studio/site-change-log-2026-05.md`, `docs-viewer/source/studio/site-change-log-2026-03-and-earlier.md` +11 | high |
 | `scripts/audit_studio_ready_state.py` | entrypoint | Checks | `studio/checks/audit_studio_ready_state.py` | `./scripts/audit_studio_ready_state.py` | docs: `docs-viewer/source/studio/site-change-log-2026-05.md`, `docs-viewer/source/studio/studio-audits.md` +6 | high |
-| `scripts/build_docs.rb` | wrapper | Docs | stable wrapper for `docs-viewer/build/build_docs.rb` | `bin/local-studio`, `./scripts/build_docs.rb` | tests: `studio/tests/python/test_docs_write_rebuild.py`; docs: `docs-viewer/source/studio/site-request-docs-build-incremental.md`, `docs-viewer/source/studio/site-request-catalogue-delete-cleanup.md` +23 | high |
+| `docs-viewer/build/build_docs.rb` | entrypoint | Docs Viewer | owner command | `bin/local-studio`, `./docs-viewer/build/build_docs.rb` | tests: `docs-viewer/tests/python/test_docs_write_rebuild.py`; docs: `docs-viewer/source/studio/site-request-docs-build-incremental.md`, `docs-viewer/source/studio/site-request-catalogue-delete-cleanup.md` +23 | high |
 | `scripts/build_palette_data.py` | entrypoint | Media | `scripts/media/build_palette_data.py` | `./scripts/build_palette_data.py` | - | medium |
-| `scripts/build_search.rb` | wrapper | Search | stable wrapper for `scripts/search/build_search.rb` | `bin/local-studio`, `./scripts/build_search.rb` | tests: `studio/tests/python/test_catalogue_build_commands.py`, `studio/tests/python/test_docs_write_rebuild.py`; docs: `docs-viewer/source/studio/site-request-docs-build-incremental.md`, `docs-viewer/source/studio/site-request-catalogue-delete-cleanup.md` +23 | high |
+| `docs-viewer/build/build_search.rb` | entrypoint | Docs Viewer | owner command | `bin/local-studio`, `./docs-viewer/build/build_search.rb` | tests: `docs-viewer/tests/python/test_docs_write_rebuild.py`; docs: `docs-viewer/source/studio/site-request-docs-build-incremental.md` +23 | high |
 | `scripts/catalogue_activity.py` | helper | Catalogue | `studio/services/catalogue/catalogue_activity.py` | - | tests: `studio/tests/python/test_catalogue_routes.py`, `studio/tests/python/test_studio_activity_context.py`; docs: `docs-viewer/source/studio/scripts-catalogue-write-server.md`, `docs-viewer/source/studio/site-change-log.md` +1 | medium |
 | `scripts/catalogue_build_commands.py` | helper | Catalogue | `studio/services/catalogue/catalogue_build_commands.py` | - | tests: `studio/tests/python/test_catalogue_build_commands.py`; docs: `docs-viewer/source/studio/site-request-script-structural-review-catalogue-json-build.md`, `docs-viewer/source/studio/scripts-build-catalogue-json.md` +1 | medium |
 | `scripts/catalogue_build_field_plan.py` | helper | Catalogue | `studio/services/catalogue/catalogue_build_field_plan.py` | - | tests: `studio/tests/python/test_catalogue_build_field_plan.py`; docs: `docs-viewer/source/studio/site-request-script-structural-review-catalogue-json-build.md`, `docs-viewer/source/studio/scripts-build-catalogue-json.md` +1 | medium |
@@ -325,10 +323,11 @@ Acceptance checks:
 
 Slice 4 split implementation ownership from the stable command surface:
 
-- `./scripts/build_docs.rb` remains the supported operational command and now wraps `docs-viewer/build/build_docs.rb`
-- `./scripts/build_search.rb` remains the supported operational command and now wraps `scripts/search/build_search.rb`
+- `./docs-viewer/build/build_docs.rb` is the supported Docs Viewer docs build command
+- `./docs-viewer/build/build_search.rb` is the supported Docs Viewer search build command
+- `./studio/services/catalogue/search/build_search.rb` is the supported Catalogue search build command
 
-This keeps existing docs, services, and runbook commands stable while making the implementation location match the Docs and Search domains.
+This makes command paths show their owning domain directly instead of hiding ownership behind root wrappers.
 The wrappers are intentionally not compatibility clutter; they are the public command API for common build operations.
 
 ### Slice 5: shared infrastructure and final closeout
@@ -407,8 +406,8 @@ Final validation:
 - Focused tests for activity contract, R2 publishing, and Studio backup retention.
 - Ready-state audit through the new Checks path.
 - `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile quick`.
-- `./scripts/build_docs.rb --scope studio --write`.
-- `./scripts/build_search.rb --scope studio --write`.
+- `./docs-viewer/build/build_docs.rb --scope studio --write`.
+- `./docs-viewer/build/build_search.rb --scope studio --write`.
 
 ## Benefits
 

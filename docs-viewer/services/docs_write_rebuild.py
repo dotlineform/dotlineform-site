@@ -177,7 +177,7 @@ def rebuild_scope_outputs(
     docs_mode = "full"
     docs_target_doc_ids: list[str] = []
     docs_reason = "full-scope fallback: no targeted docs payload ids provided"
-    docs_command = [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"]
+    docs_command = [bundle_bin, "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", scope, "--write"]
     if docs_doc_ids is not None:
         docs_target_doc_ids = ordered_docs_doc_ids(docs_doc_ids)
         if docs_target_doc_ids:
@@ -195,7 +195,7 @@ def rebuild_scope_outputs(
     if include_search:
         if search_doc_ids is None:
             search = {"mode": "full", "doc_ids": []}
-            commands.append(("search", [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"]))
+            commands.append(("search", [bundle_bin, "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", scope, "--write"]))
         else:
             target_doc_ids = ordered_search_doc_ids(search_doc_ids)
             search = {"mode": "targeted" if target_doc_ids else "none", "doc_ids": target_doc_ids}
@@ -207,7 +207,7 @@ def rebuild_scope_outputs(
                             bundle_bin,
                             "exec",
                             "ruby",
-                            "scripts/build_search.rb",
+                            "docs-viewer/build/build_search.rb",
                             "--scope",
                             scope,
                             "--write",
@@ -308,10 +308,10 @@ def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
         scope_ids = list(DOCS_SCOPE_CONFIGS.keys())
 
     commands = [
-        ("docs", [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--write"]),
+        ("docs", [bundle_bin, "exec", "ruby", "docs-viewer/build/build_docs.rb", "--write"]),
     ]
     for scope in scope_ids:
-        commands.append(("search", [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"]))
+        commands.append(("search", [bundle_bin, "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", scope, "--write"]))
     steps = []
     docs_diagnostics: list[Dict[str, Any]] = []
     search_diagnostics: list[Dict[str, Any]] = []

@@ -32,7 +32,7 @@ This is the tracker for implementing [Studio Source Tree Reorganization Request]
   - `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile studio-smoke --run-id stsr-020-studio-smoke-final-pass`; summary at `var/test-runs/stsr-020-studio-smoke-final-pass/summary.md`.
   - `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py --profile docs-viewer-smoke --run-id stsr-020-docs-viewer-smoke-final-pass`; summary at `var/test-runs/stsr-020-docs-viewer-smoke-final-pass/summary.md`.
   - `$HOME/miniconda3/bin/python3 studio/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build`.
-  - Targeted checks: public Jekyll build to `/tmp/dlf-jekyll-build`, dry-run `./scripts/build_docs.rb --scope studio`, dry-run `./scripts/build_search.rb --scope studio`, focused Local Studio Docs Viewer/Catalogue/UI Catalogue/thumbnail-quality smokes, focused pytest for `test_studio_app_server.py` and `test_catalogue_routes.py`, and targeted JS/Ruby syntax checks.
+  - Targeted checks: public Jekyll build to `/tmp/dlf-jekyll-build`, dry-run `./docs-viewer/build/build_docs.rb --scope studio`, dry-run `./docs-viewer/build/build_search.rb --scope studio`, focused Local Studio Docs Viewer/Catalogue/UI Catalogue/thumbnail-quality smokes, focused pytest for `test_studio_app_server.py` and `test_catalogue_routes.py`, and targeted JS/Ruby syntax checks.
 
 ### steer for next task
 

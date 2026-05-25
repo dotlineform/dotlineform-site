@@ -56,8 +56,8 @@ Top-level survivors are intentional:
 
 Docs-domain builds:
 
-- `./scripts/build_docs.rb`
-  - stable top-level wrapper for `docs-viewer/build/build_docs.rb`
+- `./docs-viewer/build/build_docs.rb`
+  - Docs Viewer-owned docs payload builder
   - source docs:
     - `docs-viewer/source/studio/`
     - `docs-viewer/source/analysis/`
@@ -69,22 +69,26 @@ Docs-domain builds:
 
 Search builds:
 
-- `./scripts/build_search.rb`
-  - stable top-level wrapper that dispatches through `studio/commands/search-adapters.json`
+- `./docs-viewer/build/build_search.rb`
+  - Docs Viewer-owned search builder for configured docs scopes
+  - source indexes:
+    - `assets/data/docs/scopes/studio/index.json`
+    - `assets/data/docs/scopes/analysis/index.json`
+    - `assets/data/docs/scopes/library/index.json`
+  - outputs:
+    - `assets/data/search/studio/index.json`
+    - `assets/data/search/analysis/index.json`
+    - `assets/data/search/library/index.json`
+- `./studio/services/catalogue/search/build_search.rb`
+  - Catalogue-owned search builder
   - source indexes:
     - `assets/data/series_index.json`
     - `assets/data/works_index.json`
     - `assets/data/moments_index.json`
     - `studio/data/canonical/analytics/tag-assignments.json`
     - `studio/data/canonical/analytics/tag-registry.json`
-    - `assets/data/docs/scopes/studio/index.json`
-    - `assets/data/docs/scopes/analysis/index.json`
-    - `assets/data/docs/scopes/library/index.json`
   - outputs:
     - `assets/data/search/catalogue/index.json`
-    - `assets/data/search/studio/index.json`
-    - `assets/data/search/analysis/index.json`
-    - `assets/data/search/library/index.json`
 
 Catalogue/runtime maintenance:
 

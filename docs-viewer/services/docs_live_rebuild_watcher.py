@@ -219,13 +219,13 @@ def rebuild_scope(
     docs_doc_ids: Optional[list[str]] = None,
     search_doc_ids: Optional[list[str]] = None,
 ) -> bool:
-    docs_command = [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"]
+    docs_command = [bundle_bin, "exec", "ruby", "docs-viewer/build/build_docs.rb", "--scope", scope, "--write"]
     docs_target_doc_ids = ordered_unique(docs_doc_ids or [])
     if docs_doc_ids is not None and docs_target_doc_ids:
         docs_command.extend(["--only-doc-ids", ",".join(docs_target_doc_ids)])
     commands = [("docs", docs_command)]
     if search_doc_ids is None:
-        commands.append(("search", [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"]))
+        commands.append(("search", [bundle_bin, "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", scope, "--write"]))
         log(f"Rebuilding {scope} docs and full docs search.")
     else:
         target_doc_ids = ordered_unique(search_doc_ids)
@@ -237,7 +237,7 @@ def rebuild_scope(
                         bundle_bin,
                         "exec",
                         "ruby",
-                        "scripts/build_search.rb",
+                        "docs-viewer/build/build_search.rb",
                         "--scope",
                         scope,
                         "--write",

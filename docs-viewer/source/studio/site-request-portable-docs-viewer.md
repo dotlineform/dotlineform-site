@@ -295,18 +295,16 @@ Direction:
 
 - Catalogue search and Docs search are separate data-domain products
 - Docs Viewer owns document-domain search for `/docs/`, `/library/`, and `/analysis/`
-- the stable public command shape can remain `./scripts/build_search.rb --scope <scope> --write`
+- the stable public command shape can remain `./docs-viewer/build/build_search.rb --scope <scope> --write`
 - the shared command should dispatch to domain adapters, not force Catalogue and Docs into one universal builder
 - Catalogue search remains Catalogue-owned behind its adapter
 - Docs search becomes Docs Viewer-owned behind its adapter
 - the top-level `/search/` route should not remain as a global or merged-result search product
 
-Adapter direction:
+Owner-command direction:
 
-- keep `scripts/build_search.rb` as the compatibility entrypoint
-- add a small config-driven adapter registry that maps each scope to a search domain
-- route `catalogue` to a Catalogue search adapter
-- route configured docs scopes to a Docs Viewer search adapter
+- call the Catalogue search builder at `studio/services/catalogue/search/build_search.rb`
+- call the Docs Viewer search builder at `docs-viewer/build/build_search.rb`
 - share only domain-neutral helper code such as text normalization, deterministic JSON writing, and basic validation
 - do not generalize Catalogue joins, tag enrichment, docs `viewable` filtering, or docs route policy into a single abstract schema engine in this slice
 
@@ -325,7 +323,7 @@ Tasks:
 
 Acceptance:
 
-- `./scripts/build_search.rb --scope <scope> --write` still works for Catalogue and docs scopes
+- `./docs-viewer/build/build_search.rb --scope <scope> --write` still works for Catalogue and docs scopes
 - the command dispatches through domain adapters rather than one mixed Catalogue/docs implementation
 - a portable Docs Viewer install can build inline docs search without copying Catalogue/public search files
 - Catalogue search continues to build and run independently

@@ -12,7 +12,7 @@ sort_order: 8300
 
 ### Current Writer
 
-- `./scripts/build_search.rb --scope studio`, dispatched to `docs-viewer/build/build_search.rb`
+- `./docs-viewer/build/build_search.rb --scope studio`, dispatched to `docs-viewer/build/build_search.rb`
 
 ### Current Output
 
@@ -29,13 +29,13 @@ The current Studio search artifact is derived from the published Studio docs ind
 Default write command:
 
 ```bash
-./scripts/build_search.rb --scope studio --write
+./docs-viewer/build/build_search.rb --scope studio --write
 ```
 
 Dry run:
 
 ```bash
-./scripts/build_search.rb --scope studio
+./docs-viewer/build/build_search.rb --scope studio
 ```
 
 Current supported overrides:
@@ -77,10 +77,10 @@ Current derived search support fields:
 - consumed by inline docs search on `/docs/`
 - not consumed by the dedicated `/catalogue/search/` page
 - manual docs rebuilds remain split:
-  - `./scripts/build_docs.rb --scope studio --write`
-  - `./scripts/build_search.rb --scope studio --write`
+  - `./docs-viewer/build/build_docs.rb --scope studio --write`
+  - `./docs-viewer/build/build_search.rb --scope studio --write`
 - targeted docs-search command:
-  - `./scripts/build_search.rb --scope studio --write --only-doc-ids search-build-pipeline --remove-missing`
+  - `./docs-viewer/build/build_search.rb --scope studio --write --only-doc-ids search-build-pipeline --remove-missing`
 - live docs-management actions rebuild the current docs scope and then run targeted same-scope docs-search updates for explicit affected ids
 - the explicit `POST /docs/rebuild` endpoint still runs a full same-scope docs-search rebuild
 - the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes

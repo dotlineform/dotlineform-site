@@ -116,5 +116,5 @@ Current limits:
 If you disable the watcher or need an explicit rebuild, rebuild docs payloads manually by scope:
 
 ```bash
-./scripts/build_docs.rb --scope studio --write
+./docs-viewer/build/build_docs.rb --scope studio --write
 ```

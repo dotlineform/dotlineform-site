@@ -64,8 +64,8 @@ Implementation scope:
 
 Acceptance checks:
 
-- `./scripts/build_docs.rb --scope studio` dry run still works without writing
-- `./scripts/build_docs.rb --scope studio --write` reports the new diagnostics without changing generated payload schemas beyond intentional metadata or console output
+- `./docs-viewer/build/build_docs.rb --scope studio` dry run still works without writing
+- `./docs-viewer/build/build_docs.rb --scope studio --write` reports the new diagnostics without changing generated payload schemas beyond intentional metadata or console output
 - focused tests cover diagnostic payload shaping where the behavior is structured
 - docs-management service responses keep existing keys stable
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder), [Docs Management Service](/docs/?scope=studio&doc=scripts-docs-management-server), [Docs Import](/docs/?scope=studio&doc=scripts-docs-import), and [Docs Export](/docs/?scope=studio&doc=scripts-docs-export) are updated if command output or response contracts change
@@ -94,7 +94,7 @@ Purpose:
 
 Implementation scope:
 
-- add a dry-run-first `--only-doc-ids` option to `./scripts/build_docs.rb --scope <scope>`
+- add a dry-run-first `--only-doc-ids` option to `./docs-viewer/build/build_docs.rb --scope <scope>`
 - keep full-scope rebuild as the fallback when dependency rules are incomplete or unsafe
 - define affected-doc dependency rules for:
   - edited source body

@@ -54,6 +54,6 @@ So the durable place to add/edit status options is:
 
 Then regenerate with:
 
-`./scripts/build_docs.rb --scope studio --write`
+`./docs-viewer/build/build_docs.rb --scope studio --write`
 
 Editing `docs-viewer/config/defaults/docs-viewer-config.json` directly can work temporarily, but it will be overwritten by the next docs build.

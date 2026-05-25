@@ -384,7 +384,7 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
     assert payload["urls"]["management"] == "/docs/?scope=research&mode=manage"
     assert payload["urls"]["public"] == "/research/"
     assert any(file["path"] == "docs-viewer/source/research/research.md" for file in payload["created_files"])
-    assert any(command["command"] == "./scripts/build_docs.rb --scope research --write" for command in payload["build_commands"])
+    assert any(command["command"] == "./docs-viewer/build/build_docs.rb --scope research --write" for command in payload["build_commands"])
 
 
 def test_scope_create_apply_requires_confirmation() -> None:

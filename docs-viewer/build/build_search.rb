@@ -454,7 +454,7 @@ options = {
 }
 
 OptionParser.new do |parser|
-  parser.banner = "Usage: ./scripts/build_search.rb [options]"
+  parser.banner = "Usage: ./docs-viewer/build/build_search.rb [options]"
 
   parser.on("--scope NAME", "Docs Viewer search scope to build") do |value|
     options[:scope] = value

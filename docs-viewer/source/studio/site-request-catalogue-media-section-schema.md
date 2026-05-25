@@ -411,7 +411,7 @@ Expected docs:
 Acceptance checks:
 
 - published docs link with `/docs/?scope=studio&doc=<doc_id>` where cross-references are needed
-- Studio docs payloads are rebuilt with `./scripts/build_docs.rb --scope studio --write`
+- Studio docs payloads are rebuilt with `./docs-viewer/build/build_docs.rb --scope studio --write`
 - Studio search is rebuilt if changed docs need search output to stay current
 - docs avoid machine-specific paths or local credentials
 

@@ -273,7 +273,7 @@ Codex-run checks:
 
 - `node --check assets/js/search/search-page.js`
 - `node --check assets/js/search/search-policy.js`
-- `./scripts/build_docs.rb --write` if docs change
+- `./docs-viewer/build/build_docs.rb --write` if docs change
 - `bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
 
 Manual checks:

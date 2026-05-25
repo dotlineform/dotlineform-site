@@ -66,7 +66,7 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
 Use `include_scope_param: false` for a public route that only ever reads one scope.
 Use `include_scope_param: true` only when the configured route should publish links with an explicit scope query.
 
-Running `./scripts/build_docs.rb --write` updates `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from this source config.
+Running `./docs-viewer/build/build_docs.rb --write` updates `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json` from this source config.
 The public config is filtered to static read-only routes, so a new `public_readonly` scope becomes available to its Jekyll route after the docs build refreshes the config and generated docs payloads.
 `repo_assets` makes Docs Import copy imported images and files below `assets/docs/research/` and write literal `/assets/docs/research/...` links.
 Use `staging_manual` instead when imported media should stay in `var/docs/import-staging/` until you manually copy it to the configured `media_path_prefix`.
@@ -156,7 +156,7 @@ The Docs Viewer search builder derives its input and output paths from that scop
 Then build search with:
 
 ```sh
-./scripts/build_search.rb --scope research --write
+./docs-viewer/build/build_search.rb --scope research --write
 ```
 
 ### 7. Build Docs Data
@@ -164,13 +164,13 @@ Then build search with:
 Build the viewer JSON:
 
 ```sh
-./scripts/build_docs.rb --scope research --write
+./docs-viewer/build/build_docs.rb --scope research --write
 ```
 
 Build the search JSON if search is enabled:
 
 ```sh
-./scripts/build_search.rb --scope research --write
+./docs-viewer/build/build_search.rb --scope research --write
 ```
 
 After this, the public route should be able to fetch:

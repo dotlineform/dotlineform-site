@@ -362,7 +362,7 @@ Expected outputs:
 - update `docs-viewer/source/studio/library-import.md` when preview or apply behavior changes
 - update `docs-viewer/source/studio/library-export.md` when filter or format behavior changes
 - update script docs if CLI or service contracts change
-- run `./scripts/build_docs.rb --scope studio --write` after docs-source changes
+- run `./docs-viewer/build/build_docs.rb --scope studio --write` after docs-source changes
 - run focused parser/service/UI checks for any runtime changes
 
 Implementation notes:

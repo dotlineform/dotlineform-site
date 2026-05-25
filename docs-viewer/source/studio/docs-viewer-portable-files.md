@@ -133,20 +133,17 @@ Copy them only if you are copying existing built content; otherwise generate the
 
 Copy:
 
-- `scripts/build_docs.rb`
 - `docs-viewer/build/build_docs.rb`
 - `docs-viewer/config/scopes/docs_scopes.json`
 - `studio/shared/ruby/jekyll_markdown_renderer.rb`
 
 For inline docs search, copy:
 
-- `scripts/build_search.rb`
 - `docs-viewer/build/build_search.rb`
-- `studio/commands/search-adapters.json`
 
-`scripts/build_search.rb` is a compatibility dispatcher.
-Configured docs scopes route to `docs-viewer/build/build_search.rb`, while the Catalogue adapter remains separate in this repo.
-Adding a new docs scope should only require adding that scope to `docs-viewer/config/scopes/docs_scopes.json`, rebuilding docs data, and then running the same search command for the new scope.
+Docs Viewer search scopes use `docs-viewer/build/build_search.rb` directly.
+The Catalogue search builder remains separate in this repo.
+Adding a new docs scope should only require adding that scope to `docs-viewer/config/scopes/docs_scopes.json`, rebuilding docs data, and then running the Docs Viewer search builder for the new scope.
 
 The target direction is tracked in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
 

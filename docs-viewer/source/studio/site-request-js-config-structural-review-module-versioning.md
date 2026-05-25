@@ -97,8 +97,8 @@ The same smoke test confirmed static imports such as `studio-route-state.js` rem
 - representative static Studio route loads and reaches ready state
 - representative async Studio route loads and reaches ready state
 - network or DOM inspection confirms the entry module URL includes the version query
-- `./scripts/build_docs.rb --scope studio --write` is run if docs are changed
-- `./scripts/build_search.rb --scope studio --write` is run if Studio docs search output changes
+- `./docs-viewer/build/build_docs.rb --scope studio --write` is run if docs are changed
+- `./docs-viewer/build/build_search.rb --scope studio --write` is run if Studio docs search output changes
 
 ## Benefits
 

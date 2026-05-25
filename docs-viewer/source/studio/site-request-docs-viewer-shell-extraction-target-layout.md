@@ -237,10 +237,10 @@ The host start-all runner may start the Docs Viewer service as a child process, 
 
 ## Builder And Generated Output Model
 
-Root-level scripts may stay as compatibility entrypoints for command discoverability:
+Command paths should show their owning boundary:
 
-- `scripts/build_docs.rb` can load or invoke `docs-viewer/build/build_docs.rb`
-- `scripts/build_search.rb` can delegate Docs Viewer scopes to `docs-viewer/build/build_search.rb`
+- `docs-viewer/build/build_docs.rb` owns Docs Viewer payload builds
+- `docs-viewer/build/build_search.rb` owns Docs Viewer search builds
 
 The actual Docs Viewer builder implementation belongs under `docs-viewer/build/`.
 For v1, generated outputs remain in the existing host public paths:

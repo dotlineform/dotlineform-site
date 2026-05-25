@@ -485,7 +485,7 @@ Implemented on 2026-05-19.
 `build_docs.rb` now accepts targeted same-scope docs payload input:
 
 ```sh
-./scripts/build_docs.rb --scope studio --write --only-doc-ids example-doc
+./docs-viewer/build/build_docs.rb --scope studio --write --only-doc-ids example-doc
 ```
 
 Current behavior:

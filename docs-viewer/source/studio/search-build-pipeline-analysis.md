@@ -12,7 +12,7 @@ sort_order: 8500
 
 ### Current Writer
 
-- `./scripts/build_search.rb --scope analysis`, dispatched to `docs-viewer/build/build_search.rb`
+- `./docs-viewer/build/build_search.rb --scope analysis`, dispatched to `docs-viewer/build/build_search.rb`
 
 ### Current Output
 
@@ -30,13 +30,13 @@ Rows with `viewable: false` are skipped so draft Analysis docs can be generated 
 Default write command:
 
 ```bash
-./scripts/build_search.rb --scope analysis --write
+./docs-viewer/build/build_search.rb --scope analysis --write
 ```
 
 Dry run:
 
 ```bash
-./scripts/build_search.rb --scope analysis
+./docs-viewer/build/build_search.rb --scope analysis
 ```
 
 Current supported overrides:
@@ -64,10 +64,10 @@ Current builder behaviour for Analysis:
 - consumed by inline docs search on `/analysis/`
 - not consumed by the dedicated `/catalogue/search/` page
 - manual docs rebuilds remain split:
-  - `./scripts/build_docs.rb --scope analysis --write`
-  - `./scripts/build_search.rb --scope analysis --write`
+  - `./docs-viewer/build/build_docs.rb --scope analysis --write`
+  - `./docs-viewer/build/build_search.rb --scope analysis --write`
 - targeted docs-search command:
-  - `./scripts/build_search.rb --scope analysis --write --only-doc-ids analysis --remove-missing`
+  - `./docs-viewer/build/build_search.rb --scope analysis --write --only-doc-ids analysis --remove-missing`
 - live docs-management actions rebuild the current docs scope and then run targeted same-scope docs-search updates for explicit affected ids
 - the explicit `POST /docs/rebuild` endpoint still runs a full same-scope docs-search rebuild
 - the Docs Live Rebuild Watcher uses targeted same-scope docs-search updates for safe small source changes and falls back to full rebuilds for ambiguous or broad changes

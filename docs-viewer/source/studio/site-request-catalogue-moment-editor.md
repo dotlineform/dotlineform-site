@@ -349,8 +349,8 @@ Update supporting docs and generated payloads:
 
 Acceptance checks:
 
-- `./scripts/build_docs.rb --scope studio --write`
-- `./scripts/build_search.rb --scope studio --write`
+- `./docs-viewer/build/build_docs.rb --scope studio --write`
+- `./docs-viewer/build/build_search.rb --scope studio --write`
 - Jekyll build passes
 
 ### Task 7. Verification Pass

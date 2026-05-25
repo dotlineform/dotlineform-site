@@ -140,8 +140,8 @@ The first recommended implementation slice is documented as Slice A in [Docs Vie
 - the first extraction slice is small enough to implement and verify independently
 - read-only, search, favourites, manage-mode, metadata-save, move/undo, and generated-data smoke checks are listed
 - no Docs Viewer runtime files are split before the boundary spec is accepted
-- `./scripts/build_docs.rb --scope studio --write` is run after this doc changes
-- `./scripts/build_search.rb --scope studio --write` is run after Studio docs search output changes
+- `./docs-viewer/build/build_docs.rb --scope studio --write` is run after this doc changes
+- `./docs-viewer/build/build_search.rb --scope studio --write` is run after Studio docs search output changes
 
 ## Benefits
 

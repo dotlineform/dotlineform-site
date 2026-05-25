@@ -259,8 +259,8 @@ Codex-run checks:
 - Python syntax checks for new/changed Python files using the configured project Python interpreter
 - confirm the pinned parser/sanitizer libraries are importable in the configured project Python
 - dry-run style fixture execution where possible before live writes
-- `./scripts/build_docs.rb --scope studio --write`
-- `./scripts/build_search.rb --scope studio --write`
+- `./docs-viewer/build/build_docs.rb --scope studio --write`
+- `./docs-viewer/build/build_search.rb --scope studio --write`
 - targeted import tests against the reviewed HTML fixtures
 - Jekyll render verification for generated Markdown through the current docs pipeline
 

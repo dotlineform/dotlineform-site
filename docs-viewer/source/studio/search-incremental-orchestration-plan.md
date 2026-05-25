@@ -36,7 +36,7 @@ The core decision is that incremental search is primarily an orchestration conce
 - no browser-side write path for generated search artifacts
 - no hidden-draft search surface in the first implementation
 - no catalogue body/prose indexing in the first slice
-- no replacement for the full `./scripts/build_search.rb --scope <scope> --write` command
+- no replacement for the full `./docs-viewer/build/build_search.rb --scope <scope> --write` command
 
 ## Current State
 
@@ -176,7 +176,7 @@ Resolved decisions:
 - output should report full diagnostic counts for Codex/server use, not for routine human review
 - targeted mode refuses catalogue scope until there is a catalogue-specific dependency model
 
-Status: implemented for docs-domain scopes in `scripts/build_search.rb`.
+Status: implemented for docs-domain scopes in `docs-viewer/build/build_search.rb`.
 Targeted mode currently supports `studio` and `library` by `doc_id`; `catalogue` still falls back to full rebuilds only.
 
 ### Manual checks needed:
@@ -361,7 +361,7 @@ Initial build-config concept:
 
 This is a contract sketch rather than a committed file path. The implementation should choose a build-owned config location and keep runtime-facing policy separate unless a rule is genuinely shared by both builder and browser.
 
-Phase 4 status: implemented as a small source-family/dependency config at `scripts/search/build_config.json`, with builder validation in `scripts/build_search.rb` before adding body or summary fields.
+Phase 4 status: implemented as a small source-family/dependency config at `studio/services/catalogue/search/build_config.json`, with builder validation in `studio/services/catalogue/search/build_search.rb` before adding body or summary fields.
 
 ## Historical First Implementation Slice
 

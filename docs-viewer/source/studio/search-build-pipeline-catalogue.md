@@ -12,7 +12,7 @@ sort_order: 8200
 
 ### Current Writer
 
-- `./scripts/build_search.rb --scope catalogue`
+- `./studio/services/catalogue/search/build_search.rb --scope catalogue`
 
 ### Current Output
 
@@ -60,13 +60,13 @@ Current integration facts:
 Default write command:
 
 ```bash
-./scripts/build_search.rb --scope catalogue --write
+./studio/services/catalogue/search/build_search.rb --scope catalogue --write
 ```
 
 Dry run:
 
 ```bash
-./scripts/build_search.rb --scope catalogue
+./studio/services/catalogue/search/build_search.rb --scope catalogue
 ```
 
 Current supported overrides:

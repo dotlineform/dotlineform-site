@@ -145,7 +145,7 @@ Docs Viewer shell source, management shell source, config, CSS, report runtime, 
 | `_includes/docs_viewer_management_route.html` | `studio/docs-viewer/runtime/shells/docs-viewer-management-route.html` | Move management shell source. |
 | `_includes/docs_viewer_readonly_route.html` | public minimal adapter plus Docs Viewer-owned shell source | Keep only required public adapter outside `studio/`. |
 | `scripts/docs/` | `studio/docs-viewer/build/`, `studio/docs-viewer/server/`, `docs-viewer/services/`, `docs-viewer/config/scopes/` | Split by role while preserving the Docs Viewer boundary. |
-| `scripts/build_docs.rb` | root wrapper to `studio/docs-viewer/build/build_docs.rb` | Root wrapper is optional convenience, not compatibility source. |
+| `docs-viewer/build/build_docs.rb` | root wrapper to `studio/docs-viewer/build/build_docs.rb` | Root wrapper is optional convenience, not compatibility source. |
 | `studio/docs-viewer/build/build_docs.rb` | `studio/docs-viewer/build/build_docs.rb` | Docs Viewer build implementation. |
 | `studio/docs-viewer/build/build_search.rb` | `studio/docs-viewer/build/build_search.rb` | Docs Viewer search builder. |
 | `_docs_catalogue/` | `studio/data/canonical/catalogue-markdown/` | Studio-owned canonical publishing Markdown. |

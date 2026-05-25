@@ -261,8 +261,8 @@ For this boundary-spec slice, no runtime smoke is required because no catalogue 
 - create/edit/bulk modes are listed as stability constraints
 - representative load, edit/save, build-preview, publish/delete, and generated-data checks are listed
 - no catalogue editor runtime files are split before the boundary spec is accepted
-- `./scripts/build_docs.rb --scope studio --write` is run after this doc changes
-- `./scripts/build_search.rb --scope studio --write` is run after Studio docs search output changes
+- `./docs-viewer/build/build_docs.rb --scope studio --write` is run after this doc changes
+- `./docs-viewer/build/build_search.rb --scope studio --write` is run after Studio docs search output changes
 
 ## Benefits
 

@@ -251,9 +251,9 @@ if [ "${#STARTUP_DOC_SCOPES[@]}" -eq 0 ]; then
 else
   for scope in "${STARTUP_DOC_SCOPES[@]}"; do
     echo "Building docs viewer data for scope: $scope"
-    "$BUNDLE_BIN" exec ruby scripts/build_docs.rb --scope "$scope" --write
+    "$BUNDLE_BIN" exec ruby docs-viewer/build/build_docs.rb --scope "$scope" --write
     echo "Building docs search data for scope: $scope"
-    "$BUNDLE_BIN" exec ruby scripts/build_search.rb --scope "$scope" --write
+    "$BUNDLE_BIN" exec ruby docs-viewer/build/build_search.rb --scope "$scope" --write
   done
 fi
 case "$CATALOGUE_STARTUP_LOOKUP_REBUILD" in
