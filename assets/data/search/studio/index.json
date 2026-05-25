@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6d7d78e9b2ffd64439e306883632ba3b",
-    "generated_at_utc": "2026-05-25T15:29:09Z",
-    "count": 309
+    "version": "blake2b-78118286ef5cd3231d0441964a499214",
+    "generated_at_utc": "2026-05-25T16:20:42Z",
+    "count": 311
   },
   "entries": [
     {
@@ -5719,19 +5719,19 @@
       "kind": "doc",
       "title": "Change Requests",
       "href": "/docs/?scope=studio&doc=change-requests",
-      "last_updated": "2026-05-19",
-      "display_meta": "2026-05-19",
+      "last_updated": "2026-05-25",
+      "display_meta": "2026-05-25",
       "search_terms": [
         "change-requests",
         "change",
         "requests",
         "change requests",
-        "2026-05-19",
+        "2026-05-25",
         "2026",
         "05",
-        "19"
+        "25"
       ],
-      "search_text": "change-requests change requests change requests 2026-05-19 2026 05 19"
+      "search_text": "change-requests change requests change requests 2026-05-25 2026 05 25"
     },
     {
       "id": "docs-viewer-import-source-registry-spec",
@@ -7698,6 +7698,64 @@
         "24"
       ],
       "search_text": "site-request-studio-source-tree-reorganization site request studio source tree reorganization studio source tree reorganization request 2026-05-24 2026 05 24"
+    },
+    {
+      "id": "site-request-committed-manage-mode-scope-storage",
+      "kind": "doc",
+      "title": "Committed Manage-Mode Scope Storage Request",
+      "href": "/docs/?scope=studio&doc=site-request-committed-manage-mode-scope-storage",
+      "last_updated": "2026-05-25",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-25 • Change Requests",
+      "search_terms": [
+        "site-request-committed-manage-mode-scope-storage",
+        "site",
+        "request",
+        "committed",
+        "manage",
+        "mode",
+        "scope",
+        "storage",
+        "committed manage-mode scope storage request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-25",
+        "2026",
+        "05",
+        "25"
+      ],
+      "search_text": "site-request-committed-manage-mode-scope-storage site request committed manage mode scope storage committed manage-mode scope storage request change requests change requests 2026-05-25 2026 05 25"
+    },
+    {
+      "id": "site-request-docs-viewer-workspace-mount-architecture",
+      "kind": "doc",
+      "title": "Docs Viewer Workspace Mount Architecture Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture",
+      "last_updated": "2026-05-25",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-25 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-workspace-mount-architecture",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "workspace",
+        "mount",
+        "architecture",
+        "docs viewer workspace mount architecture request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-25",
+        "2026",
+        "05",
+        "25"
+      ],
+      "search_text": "site-request-docs-viewer-workspace-mount-architecture site request docs viewer workspace mount architecture docs viewer workspace mount architecture request change requests change requests 2026-05-25 2026 05 25"
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T15:29:09Z",
+  "generated_at": "2026-05-25T16:20:42Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -3809,7 +3809,7 @@
       "doc_id": "change-requests",
       "title": "Change Requests",
       "added_date": "2026-04-28",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-25",
       "parent_id": "",
       "sort_order": 17000,
       "published": true,
@@ -5219,6 +5219,40 @@
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-studio-source-tree-reorganization.json",
       "content_text_length": 22907,
       "ui_status": "done"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-committed-manage-mode-scope-storage",
+      "title": "Committed Manage-Mode Scope Storage Request",
+      "added_date": "2026-05-25",
+      "last_updated": "2026-05-25",
+      "parent_id": "change-requests",
+      "sort_order": 93000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-committed-manage-mode-scope-storage.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-committed-manage-mode-scope-storage",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-committed-manage-mode-scope-storage.json",
+      "content_text_length": 7521,
+      "ui_status": "draft"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-viewer-workspace-mount-architecture",
+      "title": "Docs Viewer Workspace Mount Architecture Request",
+      "added_date": "2026-05-25",
+      "last_updated": "2026-05-25",
+      "parent_id": "change-requests",
+      "sort_order": 94000,
+      "published": true,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-docs-viewer-workspace-mount-architecture.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-workspace-mount-architecture.json",
+      "content_text_length": 6612,
+      "ui_status": "draft"
     }
   ]
 }
