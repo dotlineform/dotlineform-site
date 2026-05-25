@@ -3,11 +3,16 @@ doc_id: site-request-docs-viewer-shell-extraction-baseline
 title: Docs Viewer Shell Extraction Baseline
 added_date: 2026-05-24
 last_updated: 2026-05-24
-ui_status: draft
+ui_status: done
 parent_id: site-request-docs-viewer-shell-extraction
 sort_order: 10025
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # Docs Viewer Shell Extraction Baseline
 
 This document records the current integrated-tree baseline before any Docs Viewer extraction file moves.

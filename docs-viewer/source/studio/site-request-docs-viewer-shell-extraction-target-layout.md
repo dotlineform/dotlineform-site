@@ -3,11 +3,16 @@ doc_id: site-request-docs-viewer-shell-extraction-target-layout
 title: Docs Viewer Shell Extraction Target Layout
 added_date: 2026-05-24
 last_updated: 2026-05-24
-ui_status: draft
+ui_status: done
 parent_id: site-request-docs-viewer-shell-extraction
 sort_order: 10024
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # Docs Viewer Shell Extraction Target Layout
 
 This document defines the v1 target layout for the Docs Viewer shell extraction.

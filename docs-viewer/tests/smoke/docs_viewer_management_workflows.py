@@ -53,11 +53,16 @@ def write_doc(path: Path, *, doc_id: str, title: str, parent_id: str = "", sort_
 
 
 def copy_scripts_fixture(target_root: Path) -> None:
-    shutil.copytree(
-        REPO_ROOT / "scripts",
-        target_root / "scripts",
-        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
-    )
+    scripts_source = REPO_ROOT / "scripts"
+    scripts_target = target_root / "scripts"
+    if scripts_source.exists():
+        shutil.copytree(
+            scripts_source,
+            scripts_target,
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        )
+    else:
+        scripts_target.mkdir(parents=True, exist_ok=True)
     shutil.copytree(REPO_ROOT / "docs-viewer" / "runtime", target_root / "docs-viewer" / "runtime")
     shutil.copytree(REPO_ROOT / "docs-viewer" / "static", target_root / "docs-viewer" / "static")
     shutil.copytree(REPO_ROOT / "docs-viewer" / "shell", target_root / "docs-viewer" / "shell")
@@ -309,7 +314,7 @@ def patch_rebuilds(repo_root: Path) -> None:
         }
 
     def fake_rebuild_all_docs_outputs(_repo_root: Path) -> dict[str, Any]:
-        configs = module.docs_source_config_settings.load_docs_scope_configs(_repo_root)
+        configs = docs_management_service.docs_source_config_settings.load_docs_scope_configs(_repo_root)
         for scope in sorted(configs):
             materialize_fixture_generated_docs(_repo_root, scope)
         return {
@@ -351,7 +356,7 @@ def patch_rebuilds(repo_root: Path) -> None:
 
     docs_management_service.write_rebuild.rebuild_scope_outputs = fake_rebuild_scope_outputs
     docs_management_service.write_rebuild.rebuild_all_docs_outputs = fake_rebuild_all_docs_outputs
-    module.write_rebuild.perform_source_write_and_rebuild = fake_perform_source_write_and_rebuild
+    docs_management_service.write_rebuild.perform_source_write_and_rebuild = fake_perform_source_write_and_rebuild
     sys.modules["docs_html_import"].validate_markdown_with_jekyll = fake_validate_markdown_with_jekyll
 
 

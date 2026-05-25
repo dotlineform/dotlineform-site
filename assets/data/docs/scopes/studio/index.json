@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T14:31:26Z",
+  "generated_at": "2026-05-25T15:29:09Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1499,7 +1499,7 @@
       "doc_id": "docs-viewer-portable-scope-setup",
       "title": "Docs Viewer Portable Scope Setup",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer-portable-setup",
       "sort_order": 3300,
       "published": true,
@@ -1508,7 +1508,7 @@
       "source_path": "docs-viewer-portable-scope-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-scope-setup.json",
-      "content_text_length": 7768
+      "content_text_length": 7807
     },
     {
       "scope": "studio",
@@ -2066,7 +2066,7 @@
       "doc_id": "docs-viewer-new-scopes-builder",
       "title": "New Scopes Builder",
       "added_date": "2026-05-15",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "sort_order": 5500,
       "published": true,
@@ -2075,7 +2075,7 @@
       "source_path": "docs-viewer-new-scopes-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-new-scopes-builder.json",
-      "content_text_length": 15524
+      "content_text_length": 15552
     },
     {
       "scope": "studio",
@@ -3157,8 +3157,8 @@
       "source_path": "site-request-docs-viewer-shell-extraction-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-inventory.json",
-      "content_text_length": 14582,
-      "ui_status": "draft"
+      "content_text_length": 14676,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -3174,8 +3174,8 @@
       "source_path": "site-request-docs-viewer-shell-extraction-ownership-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-ownership-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-ownership-contract.json",
-      "content_text_length": 10326,
-      "ui_status": "draft"
+      "content_text_length": 10429,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -3191,8 +3191,8 @@
       "source_path": "site-request-docs-viewer-shell-extraction-target-layout.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-target-layout",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-target-layout.json",
-      "content_text_length": 11785,
-      "ui_status": "draft"
+      "content_text_length": 11883,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -3225,8 +3225,8 @@
       "source_path": "site-request-docs-viewer-shell-extraction-baseline.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-baseline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-baseline.json",
-      "content_text_length": 4004,
-      "ui_status": "draft"
+      "content_text_length": 4097,
+      "ui_status": "done"
     },
     {
       "scope": "studio",

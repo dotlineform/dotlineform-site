@@ -141,9 +141,16 @@ function wireCreateForm(api, state) {
   var writeGeneratedInput = host.querySelector('[data-role="scope-write-generated"]');
   var buildSearchInput = host.querySelector('[data-role="scope-build-search"]');
 
+  function expectedTitle() {
+    var slug = slugFromScopeInput(scopeInput && scopeInput.value);
+    return slug.split(/[-_]+/g).filter(Boolean).map(function (part) {
+      return part.charAt(0).toUpperCase() + part.slice(1);
+    }).join(" ");
+  }
+
   function expectedSourceRoot() {
     var slug = slugFromScopeInput(scopeInput && scopeInput.value);
-    return slug ? "_docs_" + slug : "";
+    return slug ? "docs-viewer/source/" + slug : "";
   }
 
   function expectedDefaultDocId() {
@@ -156,6 +163,10 @@ function wireCreateForm(api, state) {
   }
 
   function applyScopeDefaults() {
+    if (titleInput && (!titleInput.value || titleInput.dataset.auto === "true")) {
+      titleInput.value = expectedTitle();
+      titleInput.dataset.auto = "true";
+    }
     if (sourceInput && (!sourceInput.value || sourceInput.dataset.auto === "true")) {
       sourceInput.value = expectedSourceRoot();
       sourceInput.dataset.auto = "true";
@@ -167,9 +178,6 @@ function wireCreateForm(api, state) {
     if (routeInput && (!routeInput.value || routeInput.dataset.auto === "true")) {
       routeInput.value = expectedRoutePath();
       routeInput.dataset.auto = "true";
-    }
-    if (titleInput && !titleInput.value) {
-      titleInput.value = normalizeText(scopeInput && scopeInput.value).replace(/[-_]+/g, " ");
     }
   }
 
@@ -188,7 +196,7 @@ function wireCreateForm(api, state) {
   if (scopeInput) {
     scopeInput.addEventListener("input", applyScopeDefaults);
   }
-  [sourceInput, defaultDocInput, routeInput].forEach(function (input) {
+  [titleInput, sourceInput, defaultDocInput, routeInput].forEach(function (input) {
     if (!input) return;
     input.dataset.auto = "true";
     input.addEventListener("input", function () {

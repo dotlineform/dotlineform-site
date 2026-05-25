@@ -3,11 +3,16 @@ doc_id: site-request-docs-viewer-shell-extraction-ownership-contract
 title: Docs Viewer Shell Extraction Ownership Contract
 added_date: 2026-05-24
 last_updated: 2026-05-24
-ui_status: draft
+ui_status: done
 parent_id: site-request-docs-viewer-shell-extraction
 sort_order: 10023
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # Docs Viewer Shell Extraction Ownership Contract
 
 This contract resolves the ambiguous ownership points found in [Docs Viewer Shell Extraction Inventory](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction-inventory).

@@ -1135,7 +1135,9 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
         size_class="docsViewer__modalCard--wide",
     )
     page.locator('[data-role="scope-id"]').fill("private-notes")
-    page.locator('[data-role="scope-title"]').fill("Private Notes")
+    auto_title = page.locator('[data-role="scope-title"]').input_value()
+    if auto_title != "Private Notes":
+        raise AssertionError(f"scope title did not auto-fill from scope id: {auto_title!r}")
     page.locator('[data-role="scope-write-generated"]').uncheck()
     page.locator('[data-role="modal-primary"]').click()
     page.wait_for_function("() => window.__docsViewerScopeCreateRequests.length === 1")
@@ -1143,7 +1145,7 @@ def run_scope_lifecycle_create_payload_check(page: Page) -> None:
     expected_body = {
         "scope_id": "private-notes",
         "title": "Private Notes",
-        "source_root": "_docs_private-notes",
+        "source_root": "docs-viewer/source/private-notes",
         "default_doc_id": "private-notes",
         "publishing_mode": "public_readonly",
         "public_route_path": "/private-notes/",

@@ -3,11 +3,16 @@ doc_id: site-request-docs-viewer-shell-extraction-inventory
 title: Docs Viewer Shell Extraction Inventory
 added_date: 2026-05-24
 last_updated: 2026-05-24
-ui_status: draft
+ui_status: done
 parent_id: site-request-docs-viewer-shell-extraction
 sort_order: 10022
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # Docs Viewer Shell Extraction Inventory
 
 This inventory records the current integrated Docs Viewer state before the shell extraction moves reusable ownership into `docs-viewer/`.

@@ -95,9 +95,9 @@ def main(argv: list[str] | None = None) -> int:
                 click_modal_primary(page, args.timeout_ms)
                 browser.close()
 
-            docs_config = (fixture_root / "studio" / "docs-viewer" / "config" / "scopes" / "docs_scopes.json").read_text(encoding="utf-8")
-            manifest_path = fixture_root / "studio" / "docs-viewer" / "config" / "scopes" / "docs_scope_manifest.json"
-            if (fixture_root / "_docs_uiscope").exists():
+            docs_config = (fixture_root / "docs-viewer" / "config" / "scopes" / "docs_scopes.json").read_text(encoding="utf-8")
+            manifest_path = fixture_root / "docs-viewer" / "config" / "scopes" / "docs_scope_manifest.json"
+            if (fixture_root / "docs-viewer" / "source" / "uiscope").exists():
                 raise AssertionError("UI scope delete did not remove fixture source root")
             if "uiscope" in docs_config:
                 raise AssertionError("UI scope delete did not remove fixture scope config")

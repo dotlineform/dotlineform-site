@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8141b88d40addaf29deb054d2909db95",
-    "generated_at_utc": "2026-05-25T10:19:34Z",
+    "version": "blake2b-6d7d78e9b2ffd64439e306883632ba3b",
+    "generated_at_utc": "2026-05-25T15:29:09Z",
     "count": 309
   },
   "entries": [
@@ -2206,10 +2206,10 @@
       "kind": "doc",
       "title": "Docs Viewer Portable Scope Setup",
       "href": "/docs/?scope=studio&doc=docs-viewer-portable-scope-setup",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer-portable-setup",
       "parent_title": "Docs Viewer Portable Setup",
-      "display_meta": "2026-05-19 • Docs Viewer Portable Setup",
+      "display_meta": "2026-05-25 • Docs Viewer Portable Setup",
       "search_terms": [
         "docs-viewer-portable-scope-setup",
         "docs",
@@ -2219,12 +2219,12 @@
         "setup",
         "docs viewer portable scope setup",
         "docs viewer portable setup",
-        "2026-05-19",
+        "2026-05-25",
         "2026",
         "05",
-        "19"
+        "25"
       ],
-      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup docs viewer portable scope setup docs viewer portable setup 2026-05-19 2026 05 19"
+      "search_text": "docs-viewer-portable-scope-setup docs viewer portable scope setup docs viewer portable scope setup docs viewer portable setup 2026-05-25 2026 05 25"
     },
     {
       "id": "catalogue-field-registry-review",
@@ -3093,10 +3093,10 @@
       "kind": "doc",
       "title": "New Scopes Builder",
       "href": "/docs/?scope=studio&doc=docs-viewer-new-scopes-builder",
-      "last_updated": "2026-05-15",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-15 • Docs Viewer",
+      "display_meta": "2026-05-25 • Docs Viewer",
       "search_terms": [
         "docs-viewer-new-scopes-builder",
         "docs",
@@ -3106,12 +3106,12 @@
         "builder",
         "new scopes builder",
         "docs viewer",
-        "2026-05-15",
+        "2026-05-25",
         "2026",
         "05",
-        "15"
+        "25"
       ],
-      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-05-15 2026 05 15"
+      "search_text": "docs-viewer-new-scopes-builder docs viewer new scopes builder new scopes builder docs viewer 2026-05-25 2026 05 25"
     },
     {
       "id": "studio-ui-framework-modal-implementation",

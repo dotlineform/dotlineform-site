@@ -2,7 +2,7 @@
 doc_id: docs-viewer-new-scopes-builder
 title: New Scopes Builder
 added_date: 2026-05-15
-last_updated: 2026-05-15
+last_updated: 2026-05-25
 parent_id: docs-viewer
 sort_order: 5500
 viewable: true
@@ -30,7 +30,7 @@ It should:
 
 A Docs Viewer scope is made from four parts:
 
-- source root, such as `_docs_research/`
+- source root, such as `docs-viewer/source/research/`
 - scope config entry in `docs-viewer/config/scopes/docs_scopes.json`
 - generated viewer/search outputs under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/`
 - optional read-only route page, such as `research/index.md`
@@ -247,7 +247,7 @@ Validation rules currently implemented:
 - `scope_id` must use lowercase letters, numbers, and single hyphen separators
 - `scope_id` must not already exist in `docs-viewer/config/scopes/docs_scopes.json`
 - `scope_id` must not already exist in the scope manifest
-- `source_root` must be a single repo-relative `_docs_<scope>` directory
+- `source_root` must be the single repo-relative `docs-viewer/source/<scope>` directory
 - `default_doc_id` must use lowercase letters, numbers, and hyphens
 - `publishing_mode` must be `public_readonly`, `local_committed`, or `local_uncommitted`
 - `public_route_path` must use lowercase route segments with hyphens

@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-scope-setup
 title: Docs Viewer Portable Scope Setup
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-25
 parent_id: docs-viewer-portable-setup
 sort_order: 3300
 ---
@@ -18,7 +18,7 @@ a public read-only route plus local management through `/docs/`.
 Decide:
 
 - scope id: for example `research`
-- source root: for example `_docs_research`
+- source root: for example `docs-viewer/source/research`
 - media path prefix: for example `docs/research`
 - import media storage: usually `repo_assets` for a new portable install without remote media
 - generated docs output: `assets/data/docs/scopes/research`
@@ -33,7 +33,7 @@ The current JavaScript assumes simple scope strings.
 
 Create the source directory and at least one root doc:
 
-- `_docs_research/research.md`
+- `docs-viewer/source/research/research.md`
 
 The root doc's `doc_id` should match the scope config's `default_doc_id`.
 
@@ -44,7 +44,7 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
 ```json
 {
   "scope_id": "research",
-  "source": "_docs_research",
+  "source": "docs-viewer/source/research",
   "media_path_prefix": "docs/research",
   "output": "assets/data/docs/scopes/research",
   "viewer_base_url": "/research/",
