@@ -175,7 +175,7 @@ Top-level fields:
 Scope record fields:
 
 - `scope_id`: configured Docs Viewer scope id
-- `scope_type`: `public` or `local`
+- `scope_type`: `public`, `local`, or `local_uncommitted`
 - `owner`: `system` or a future user/tool owner value
 - `user_created`: whether the scope was created by a local operator
 - `created_by_tool`: whether this lifecycle tool created the scope
@@ -300,6 +300,14 @@ Expected preview storage paths:
 - `public_readonly`: `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/index.json`
 - `local_committed`: `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json`
 - `local_uncommitted`: the same non-public generated path shape as `local_committed`, but the resulting local worktree changes should not be committed
+
+The planned source-scope config also stores a browser-facing `scope_type`:
+
+- `public_readonly` -> `public`
+- `local_committed` -> `local`
+- `local_uncommitted` -> `local_uncommitted`
+
+The Docs Viewer scope dropdown maps these types through `docs_viewer.scope_type_badges`.
 
 ## Create Apply Endpoint
 

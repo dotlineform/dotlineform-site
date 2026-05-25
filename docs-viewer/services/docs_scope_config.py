@@ -27,6 +27,7 @@ class DocsImportMediaConfig:
 @dataclass(frozen=True)
 class DocsScopeConfig:
     scope_id: str
+    scope_type: str
     source: Path
     media_path_prefix: Path
     output: Path
@@ -211,6 +212,7 @@ def load_docs_scope_configs(repo_root: Path | None = None) -> dict[str, DocsScop
         )
         configs[scope_id] = DocsScopeConfig(
             scope_id=scope_id,
+            scope_type=str(item.get("scope_type") or "").strip().lower(),
             source=safe_relative_path(item.get("source"), field=f"scopes[{index}].source"),
             media_path_prefix=media_path_prefix,
             output=output,

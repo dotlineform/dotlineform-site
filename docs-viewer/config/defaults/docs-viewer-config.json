@@ -4,6 +4,7 @@
   "scopes": [
     {
       "scope_id": "studio",
+      "scope_type": "local",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
       "default_doc_id": "dev-home",
@@ -24,6 +25,7 @@
     },
     {
       "scope_id": "library",
+      "scope_type": "public",
       "viewer_base_url": "/library/",
       "include_scope_param": false,
       "default_doc_id": "library",
@@ -44,6 +46,7 @@
     },
     {
       "scope_id": "analysis",
+      "scope_type": "public",
       "viewer_base_url": "/analysis/",
       "include_scope_param": false,
       "default_doc_id": "analysis",
@@ -64,6 +67,7 @@
     },
     {
       "scope_id": "archive",
+      "scope_type": "local",
       "viewer_base_url": "/docs/",
       "include_scope_param": true,
       "default_doc_id": "archive",
@@ -87,6 +91,20 @@
     "recently_added_limit": 10,
     "hidden_nav_color": "var(--muted)",
     "doc_hidden_emoji": "🚫",
+    "scope_type_badges": {
+      "public": {
+        "label": "Public",
+        "emoji": "🌐"
+      },
+      "local": {
+        "label": "Local",
+        "emoji": "💻"
+      },
+      "local_uncommitted": {
+        "label": "Local only",
+        "emoji": "🧪"
+      }
+    },
     "ui_statuses_by_scope": {
       "studio": [
         {

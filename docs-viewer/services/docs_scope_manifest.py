@@ -274,6 +274,14 @@ def planned_search_output(scope_id: str, publishing_mode: str) -> Path:
     return Path("docs-viewer/generated/search") / scope_id / "index.json"
 
 
+def planned_scope_type(publishing_mode: str) -> str:
+    if publishing_mode == PUBLIC_MODE:
+        return "public"
+    if publishing_mode == LOCAL_UNCOMMITTED_MODE:
+        return "local_uncommitted"
+    return "local"
+
+
 def path_is_relative_to(path: Path, parent: Path) -> bool:
     try:
         path.relative_to(parent)
@@ -307,6 +315,7 @@ def planned_scope_config_record(
     viewer_base_url = public_route_path or "/docs/"
     return {
         "scope_id": scope_id,
+        "scope_type": planned_scope_type(publishing_mode),
         "source": source_root.as_posix(),
         "media_path_prefix": f"docs/{scope_id}",
         "output": planned_docs_output(scope_id, publishing_mode).as_posix(),

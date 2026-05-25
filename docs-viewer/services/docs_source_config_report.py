@@ -88,6 +88,7 @@ def _scope_title(raw: dict[str, Any], scope_id: str) -> str:
 def _safe_raw_subset(raw: dict[str, Any]) -> dict[str, Any]:
     allowed = {
         "scope_id",
+        "scope_type",
         "source",
         "media_path_prefix",
         "output",

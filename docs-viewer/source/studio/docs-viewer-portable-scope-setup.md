@@ -47,6 +47,7 @@ Add a scope entry to `docs-viewer/config/scopes/docs_scopes.json`:
 ```json
 {
   "scope_id": "research",
+  "scope_type": "public",
   "source": "docs-viewer/source/research",
   "media_path_prefix": "docs/research",
   "output": "assets/data/docs/scopes/research",
@@ -131,6 +132,7 @@ Local Studio points Docs links, generated reads, and management actions at the c
 The management scope selector and browser route map come from `docs-viewer/config/defaults/docs-viewer-config.json`.
 Adding a configured scope no longer requires editing `_includes/docs_viewer_shell.html` or `docs-viewer/runtime/js/docs-viewer.js`.
 If the new scope needs UI-status menu options, add them to the `docs_viewer.ui_statuses_by_scope` section in `docs-viewer/config/scopes/docs_scopes.json`, then rerun the docs build so the generated Docs Viewer browser configs are regenerated.
+If the new scope uses a new availability type, add or update its `docs_viewer.scope_type_badges` entry so the management scope dropdown can prefix the scope name consistently.
 
 Management route adapter inputs:
 

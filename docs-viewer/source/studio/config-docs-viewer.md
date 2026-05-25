@@ -34,6 +34,7 @@ The `/docs/` manage-mode Settings modal writes allowlisted changes through that 
 Each scope entry owns:
 
 - `scope_id`: stable scope key, such as `studio`, `library`, or `analysis`
+- `scope_type`: display and ownership type, such as `public` or `local`
 - `source`: Markdown source root for that scope
 - `media_path_prefix`: token path prefix used by <code>&#91;&#91;media:...&#93;&#93;</code> links
 - `output`: generated docs JSON output root
@@ -111,6 +112,7 @@ It exposes browser-safe settings only:
 
 - default scope id
 - each scope's viewer base URL
+- each scope's type, used with `docs_viewer.scope_type_badges` for scope selector prefixes
 - scope route policy such as `include_scope_param`
 - default document id
 - generated docs index URL
@@ -123,6 +125,10 @@ Public route files such as `library/index.md` and `analysis/index.md` remain hos
 
 Do not hand-edit this file.
 After changing `docs-viewer/config/scopes/docs_scopes.json`, rerun the docs build for the affected scope or scopes so both generated browser configs stay current.
+
+`docs_viewer.scope_type_badges` maps scope types to selector display labels and emoji.
+The Docs Viewer scope dropdown prefixes each scope id with the configured emoji for its `scope_type`.
+Use type-level badges for shared meaning such as public versus local availability, not per-scope branding.
 
 ## UI Text
 

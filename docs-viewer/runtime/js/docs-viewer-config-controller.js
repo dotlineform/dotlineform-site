@@ -53,6 +53,7 @@ export function initDocsViewerConfigController(context) {
     }
     return {
       scopeId: scopeId,
+      scopeType: String(rawScope.scope_type || "").trim().toLowerCase(),
       viewerBaseUrl: viewerBase,
       includeScopeParam: rawScope.include_scope_param === true,
       defaultDocId: String(rawScope.default_doc_id || "").trim(),
@@ -132,10 +133,17 @@ export function initDocsViewerConfigController(context) {
     return state.defaultScopeId;
   }
 
+  function scopeOptionLabel(config) {
+    var badges = getConfigValue(state.docsViewerConfig, "docsViewerSettings.scope_type_badges");
+    var badge = badges && typeof badges === "object" ? badges[config.scopeType] : null;
+    var emoji = badge && typeof badge === "object" ? String(badge.emoji || "").trim() : "";
+    return (emoji ? emoji + " " : "") + config.scopeId;
+  }
+
   function renderScopeOptions() {
     if (!scopeSelect) return;
     scopeSelect.innerHTML = state.scopeConfigs.map(function (config) {
-      return '<option value="' + escapeHtml(config.scopeId) + '">' + escapeHtml(config.scopeId) + '</option>';
+      return '<option value="' + escapeHtml(config.scopeId) + '">' + escapeHtml(scopeOptionLabel(config)) + '</option>';
     }).join("");
     scopeSelect.value = context.viewerScope();
   }

@@ -37,6 +37,7 @@ EDITABLE_SCOPE_FIELDS = {
 
 BLOCKED_SCOPE_FIELDS = {
     "scope_id": "Scope identity controls route and generated-data ownership.",
+    "scope_type": "Scope type controls availability labeling and should be guarded with route ownership.",
     "source": "Source roots are install-time config and require manual review.",
     "media_path_prefix": "Media prefixes are install-time config and affect imports.",
     "output": "Generated output roots are install-time config and affect build artifacts.",
