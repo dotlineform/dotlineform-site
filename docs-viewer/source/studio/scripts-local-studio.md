@@ -2,7 +2,7 @@
 doc_id: scripts-local-studio
 title: Local Studio Runner
 added_date: 2026-04-22
-last_updated: "2026-05-24"
+last_updated: 2026-05-25
 parent_id: servers
 sort_order: 2000
 ---
@@ -84,7 +84,7 @@ If `var/local/site.env` is absent, the runner falls back to process environment 
   set to `1`, `on`, `true`, or `yes` to print one HTTP access log line for each Local Studio app request
 - `DOCS_STARTUP_REBUILD_SCOPES`
   default: blank
-  accepted values: configured docs scope ids from `studio/docs-viewer/config/scopes/docs_scopes.json`, or comma-separated combinations
+  accepted values: configured docs scope ids from `docs-viewer/config/scopes/docs_scopes.json`, or comma-separated combinations
 - `CATALOGUE_STARTUP_LOOKUP_REBUILD`
   default: `off`
   accepted enabled values: `1`, `on`, `true`, or `yes`
@@ -131,7 +131,7 @@ To run a startup rebuild locally, edit that value to a configured docs scope id 
 Keeping `CATALOGUE_STARTUP_LOOKUP_REBUILD=off` in `var/local/site.env` skips the full derived catalogue lookup export during normal startup.
 Set it to `1`, `on`, `true`, or `yes` when startup should refresh `assets/studio/data/catalogue_lookup/` before the local Studio app starts.
 
-The runner reads valid docs scope ids from `studio/docs-viewer/config/scopes/docs_scopes.json`.
+The runner reads valid docs scope ids from `docs-viewer/config/scopes/docs_scopes.json`.
 Adding a new docs scope there makes it eligible for startup docs/docs-search rebuilds without editing the runner.
 
 ## Startup Sequence
@@ -240,7 +240,7 @@ Related doc: [Studio Audit Runner](/docs/?scope=studio&doc=scripts-studio-audit-
 - command:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_live_rebuild_watcher.py --poll-seconds "$DOCS_WATCH_POLL_SECONDS" --debounce-seconds "$DOCS_WATCH_DEBOUNCE_SECONDS"
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_live_rebuild_watcher.py --poll-seconds "$DOCS_WATCH_POLL_SECONDS" --debounce-seconds "$DOCS_WATCH_DEBOUNCE_SECONDS"
 ```
 
 - watches `_docs/*.md` as `studio`

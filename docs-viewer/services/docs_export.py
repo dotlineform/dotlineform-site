@@ -2,8 +2,8 @@
 """Export generated Docs Viewer data through configured export patterns.
 
 Run:
-  ./studio/docs-viewer/services/docs_export.py --config-id library-parent-child-relationships --scope library
-  ./studio/docs-viewer/services/docs_export.py --config-id library-parent-child-relationships --scope library --write
+  ./docs-viewer/services/docs_export.py --config-id library-parent-child-relationships --scope library
+  ./docs-viewer/services/docs_export.py --config-id library-parent-child-relationships --scope library --write
 """
 
 from __future__ import annotations

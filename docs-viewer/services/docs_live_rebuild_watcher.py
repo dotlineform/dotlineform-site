@@ -3,9 +3,9 @@
 Watch docs source roots and rebuild same-scope docs payloads plus docs search.
 
 Run:
-  ./studio/docs-viewer/services/docs_live_rebuild_watcher.py
-  ./studio/docs-viewer/services/docs_live_rebuild_watcher.py --poll-seconds 0.5 --debounce-seconds 1.5
-  ./studio/docs-viewer/services/docs_live_rebuild_watcher.py --repo-root /path/to/dotlineform-site
+  ./docs-viewer/services/docs_live_rebuild_watcher.py
+  ./docs-viewer/services/docs_live_rebuild_watcher.py --poll-seconds 0.5 --debounce-seconds 1.5
+  ./docs-viewer/services/docs_live_rebuild_watcher.py --repo-root /path/to/dotlineform-site
 """
 
 from __future__ import annotations
@@ -32,7 +32,7 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DOCS_DIR = Path(__file__).resolve().parent
 SCRIPTS_DIR = REPO_ROOT / "scripts"
-for path in (SCRIPTS_DOCS_DIR, SCRIPTS_DIR):
+for path in (SCRIPTS_DIR, SCRIPTS_DOCS_DIR):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 

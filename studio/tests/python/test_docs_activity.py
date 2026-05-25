@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DOCS_SERVICES_DIR = REPO_ROOT / "studio" / "docs-viewer" / "services"
+DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
 STUDIO_SERVER_DIR = REPO_ROOT / "studio" / "app" / "server"
 STUDIO_SHARED_PYTHON_DIR = REPO_ROOT / "studio" / "shared" / "python"
 for path in (DOCS_SERVICES_DIR, STUDIO_SERVER_DIR, STUDIO_SHARED_PYTHON_DIR):

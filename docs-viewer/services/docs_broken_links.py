@@ -2,8 +2,8 @@
 """Audit Docs Viewer links for missing targets.
 
 Run:
-  ./studio/docs-viewer/services/docs_broken_links.py --scope studio
-  ./studio/docs-viewer/services/docs_broken_links.py --scope library --json
+  ./docs-viewer/services/docs_broken_links.py --scope studio
+  ./docs-viewer/services/docs_broken_links.py --scope library --json
 """
 
 from __future__ import annotations

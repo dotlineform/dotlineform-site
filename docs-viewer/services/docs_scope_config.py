@@ -42,9 +42,11 @@ SUPPORTED_IMPORT_MEDIA_STORAGE_MODES = {"repo_assets", "staging_manual", "r2_upl
 
 
 def default_repo_root() -> Path:
-    from studio.shared.python.studio_python_paths import resolve_repo_root
-
-    return resolve_repo_root(__file__)
+    current = Path(__file__).resolve()
+    for candidate in [current.parent, *current.parents]:
+        if (candidate / "_config.yml").exists():
+            return candidate
+    raise ValueError("could not resolve repo root")
 
 
 def safe_relative_path(value: Any, *, field: str) -> Path:

@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-WATCHER_PATH = REPO_ROOT / "scripts" / "docs" / "docs_live_rebuild_watcher.py"
+WATCHER_PATH = REPO_ROOT / "docs-viewer" / "services" / "docs_live_rebuild_watcher.py"
 
 
 def load_docs_live_rebuild_watcher_module():

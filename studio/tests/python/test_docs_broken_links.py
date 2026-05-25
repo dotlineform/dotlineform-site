@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DOCS_BROKEN_LINKS_PATH = REPO_ROOT / "studio" / "docs-viewer" / "services" / "docs_broken_links.py"
+DOCS_BROKEN_LINKS_PATH = REPO_ROOT / "docs-viewer" / "services" / "docs_broken_links.py"
 DOCS_SERVICES_DIR = DOCS_BROKEN_LINKS_PATH.parent
 if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))

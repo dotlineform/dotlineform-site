@@ -16,6 +16,14 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
+- Completed `DVSE-013` by moving Docs Viewer service modules from `studio/docs-viewer/services/*.py` to `docs-viewer/services/*.py`.
+- Moved service ownership includes management dispatch, route constants, generated-data reads, source/scope config helpers, mutation/write workflows, import/export helpers, broken-links auditing, data-sharing adapter, watcher suppression, and the live rebuild watcher.
+- Local Studio now imports Docs management behavior from `docs-viewer/services/` through `studio/app/server/studio/studio_docs_api.py`; `bin/local-studio` starts the watcher from `docs-viewer/services/docs_live_rebuild_watcher.py`.
+- Repo Python path bootstrap, run-check compile paths, projection contract paths, and focused docs tests now use the `docs-viewer/services/` boundary.
+- Direct CLI help checks passed for `docs_live_rebuild_watcher.py`, `docs_export.py`, `docs_import.py`, `docs_html_import.py`, and `docs_broken_links.py`; `docs_scope_config.default_repo_root()` now resolves the repo root without relying on Studio's path helper.
+- Focused verification passed: service compile check, 139 focused docs Python tests, Local Studio app server pytest (29 tests), elevated Local Studio Docs Viewer management smoke, and `quick` profile. Quick summary: `var/test-runs/20260525-112252/summary.md`.
+- Live code/test/check reference checks found no remaining `studio/docs-viewer/services/` or old `scripts/docs/` service paths. Old `studio/docs-viewer/services/__pycache__/` files were left for the later cleanup task; no source `.py` files remain there.
+- Source docs for the management service, watcher, Local Studio runner/app, management contract, and portable file manifest were updated for the moved service paths. Generated Studio docs/search JSON may have been refreshed by the local docs watcher; no manual docs/search rebuild was run.
 - Completed `DVSE-012` with the broader browser runtime/CSS/static verification pass.
 - Elevated `docs-viewer-smoke` passed all 6 checks: temporary Jekyll build, public Docs Viewer read-only smoke, index-panel module smoke, management modal smoke, management action workflow module smoke, and Docs HTML import module smoke. Summary: `var/test-runs/20260525-110629/summary.md`.
 - Targeted built-page reference checks confirmed `/library/` and `/analysis/` load `/docs-viewer/static/css/docs-viewer-base.css`, `/docs-viewer/static/css/docs-viewer.css`, `/docs-viewer/static/css/docs-viewer-reports.css`, and `/docs-viewer/runtime/js/docs-viewer.js`, with no old `/studio/docs-viewer/runtime/` or `/studio/docs-viewer/assets/` paths.
@@ -48,7 +56,7 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### steer for next task
 
-- Start with `DVSE-013`, moving Docs Viewer service modules, management write workflows, local write API contracts, docs watcher or rebuild helpers owned by Docs Viewer, and shell server entrypoints into `docs-viewer/`.
+- Start with `DVSE-014`, implementing the standalone Docs Viewer service shell for built-in `/docs/` manage mode.
 - Keep the table sequential: only begin the next non-deferred ID after the current one is `done`.
 - If a task uncovers a new dependency, risk, or unresolved ownership question, add a new task row before continuing rather than widening the active task.
 - Bunch work into coherent slices that reduce repeated verification, but do not combine tasks when the second task depends on evidence from the first.
@@ -107,7 +115,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-010 | done | Move Docs Viewer browser runtime modules, rendering/search/router/report/bookmark/favourites code, reusable CSS, management CSS, and static assets into `docs-viewer/`; update public route shells, module imports, and asset references without adding old-path compatibility shims. |
 | DVSE-011 | done | Define and apply the CSS base contract for standalone Docs Viewer pages, public read-only host routes, and local manage mode; add a Docs Viewer-owned base stylesheet if the host contract is not enough. |
 | DVSE-012 | done | Verify the browser runtime/CSS/static move with Docs Viewer smoke checks, public `/library/` and `/analysis/` checks, desktop/mobile layout checks where relevant, and targeted JavaScript/CSS reference checks. |
-| DVSE-013 | planned | Move Docs Viewer service modules, management write workflows, local write API contracts, docs watcher or rebuild helpers owned by Docs Viewer, and shell server entrypoints into `docs-viewer/`; keep manage mode loopback-only with explicit local capability flags. |
+| DVSE-013 | done | Move Docs Viewer service modules, management write workflows, local write API contracts, docs watcher or rebuild helpers owned by Docs Viewer, and shell server entrypoints into `docs-viewer/`; keep manage mode loopback-only with explicit local capability flags. |
 | DVSE-014 | planned | Implement the standalone Docs Viewer service shell for built-in `/docs/` manage mode using static `var/local/site.env` service location, clear port-unavailable failure, normal link failure when the service is stopped, and no deployed live manage-mode assumption. |
 | DVSE-015 | planned | Verify the service/API/shell move with focused Python syntax/import checks, management workflow tests, loopback/startup checks, `/docs/` manage-mode smoke coverage, and checks that Local Studio no longer hosts the Docs Viewer shell. |
 | DVSE-016 | planned | Replace Studio-specific Docs Viewer hosting behavior with Studio integration/link behavior that points to the configured Docs Viewer service; keep Studio navigation and UI links as peer-service integration, not embedded Docs Viewer hosting. |

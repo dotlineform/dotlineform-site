@@ -291,16 +291,16 @@
       "id": "docs_viewer_runtime",
       "classification": "public_runtime_asset",
       "repo_paths": [
-        "studio/docs-viewer/runtime/js/*.js",
-        "studio/docs-viewer/assets/css/*.css",
+        "docs-viewer/runtime/js/*.js",
+        "docs-viewer/static/css/*.css",
         "docs-viewer/config/ui-text/ui-text.json",
         "docs-viewer/config/defaults/docs-viewer-public-config.json"
       ],
       "public_output": {
         "policy": "required",
         "paths": [
-          "studio/docs-viewer/runtime/js/docs-viewer.js",
-          "studio/docs-viewer/assets/css/docs-viewer.css",
+          "docs-viewer/runtime/js/docs-viewer.js",
+          "docs-viewer/static/css/docs-viewer.css",
           "docs-viewer/config/defaults/docs-viewer-public-config.json"
         ]
       },
@@ -310,17 +310,17 @@
       "id": "docs_viewer_management_runtime",
       "classification": "studio_projection",
       "repo_paths": [
-        "studio/docs-viewer/runtime/js/docs-viewer-management*.js",
-        "studio/docs-viewer/runtime/js/docs-html-import*.js",
-        "studio/docs-viewer/assets/css/docs-viewer-management.css",
+        "docs-viewer/runtime/js/docs-viewer-management*.js",
+        "docs-viewer/runtime/js/docs-html-import*.js",
+        "docs-viewer/static/css/docs-viewer-management.css",
         "docs-viewer/config/defaults/docs-viewer-config.json"
       ],
       "public_output": {
         "policy": "allowed",
         "paths": [
-          "studio/docs-viewer/runtime/js/docs-viewer-management*.js",
-          "studio/docs-viewer/runtime/js/docs-html-import*.js",
-          "studio/docs-viewer/assets/css/docs-viewer-management.css",
+          "docs-viewer/runtime/js/docs-viewer-management*.js",
+          "docs-viewer/runtime/js/docs-html-import*.js",
+          "docs-viewer/static/css/docs-viewer-management.css",
           "docs-viewer/config/defaults/docs-viewer-config.json"
         ]
       },

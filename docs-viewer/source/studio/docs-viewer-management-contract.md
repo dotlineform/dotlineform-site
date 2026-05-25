@@ -2,7 +2,7 @@
 doc_id: docs-viewer-management-contract
 title: Docs Viewer Management Contract
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-25
 parent_id: docs-viewer-management
 sort_order: 54200
 ---
@@ -226,7 +226,7 @@ First implementation should use a dedicated docs-management localhost service ra
 
 Recommended script and ownership:
 
-- script: `studio/docs-viewer/services/docs_management_server.py`
+- service module: `docs-viewer/services/docs_management_service.py`
 - purpose: local-only management writes for shared Docs Viewer source docs
 
 Recommended endpoint surface:

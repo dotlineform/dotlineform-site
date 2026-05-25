@@ -2,7 +2,7 @@
 doc_id: local-studio-app
 title: Local Studio App
 added_date: "2026-05-22 08:06"
-last_updated: "2026-05-24"
+last_updated: 2026-05-25
 parent_id: studio
 sort_order: 11000
 published: true
@@ -30,7 +30,7 @@ HTTP access logging is quiet by default so normal browser use does not flood the
 Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to `studio_app_server.py`, when detailed request logging is needed.
 Docs management is handled by this app server; there is no separate Docs management server in normal local Studio startup.
 Active Local Studio browser routes use `/studio/api/docs/...` for Docs management reads/writes.
-The local app adapter imports shared Docs management behavior from `studio/docs-viewer/services/docs_management_service.py`.
+The local app adapter imports shared Docs management behavior from `docs-viewer/services/docs_management_service.py`.
 Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
 `bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
 Local Studio route shells load Studio-owned CSS from `/studio/app/assets/css/studio.css`.

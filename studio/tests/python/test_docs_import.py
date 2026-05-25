@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DOCS_IMPORT_PATH = REPO_ROOT / "scripts" / "docs" / "docs_import.py"
+DOCS_IMPORT_PATH = REPO_ROOT / "docs-viewer" / "services" / "docs_import.py"
 
 
 def load_docs_import_module():

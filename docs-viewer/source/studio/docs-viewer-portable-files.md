@@ -132,7 +132,7 @@ Copy:
 
 - `scripts/build_docs.rb`
 - `studio/docs-viewer/build/build_docs.rb`
-- `studio/docs-viewer/config/scopes/docs_scopes.json`
+- `docs-viewer/config/scopes/docs_scopes.json`
 - `scripts/jekyll_markdown_renderer.rb`
 
 For inline docs search, copy:
@@ -143,7 +143,7 @@ For inline docs search, copy:
 
 `scripts/build_search.rb` is a compatibility dispatcher.
 Configured docs scopes route to `studio/docs-viewer/build/build_search.rb`, while the Catalogue adapter remains separate in this repo.
-Adding a new docs scope should only require adding that scope to `studio/docs-viewer/config/scopes/docs_scopes.json`, rebuilding docs data, and then running the same search command for the new scope.
+Adding a new docs scope should only require adding that scope to `docs-viewer/config/scopes/docs_scopes.json`, rebuilding docs data, and then running the same search command for the new scope.
 
 The target direction is tracked in [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer).
 
@@ -168,33 +168,41 @@ The parser/sanitizer/conversion packages are essential when the portable install
 
 For the full dependency-role explanation, see [Docs Viewer Dependencies](/docs/?scope=studio&doc=docs-viewer-dependencies).
 
-### Management Server
+### Management Service
 
-For local manage mode, copy the docs-management server support:
+For local manage mode, copy the docs-management service support:
 
-- `studio/docs-viewer/services/docs_management_server.py`
-- `studio/docs-viewer/services/docs_management_routes.py`
-- `studio/docs-viewer/services/docs_scope_config.py`
-- `studio/docs-viewer/services/docs_source_model.py`
-- `studio/docs-viewer/services/docs_management_mutations.py`
-- `studio/docs-viewer/services/docs_write_rebuild.py`
-- `studio/docs-viewer/services/docs_generated_reads.py`
-- `studio/docs-viewer/services/docs_import_source_service.py`
-- `studio/docs-viewer/services/docs_html_import.py`
-- `studio/docs-viewer/services/docs_activity.py`
-- `studio/docs-viewer/services/docs_watch_suppression.py`
+- `docs-viewer/services/docs_management_service.py`
+- `docs-viewer/services/docs_management_routes.py`
+- `docs-viewer/services/docs_management_context.py`
+- `docs-viewer/services/docs_management_read_service.py`
+- `docs-viewer/services/docs_management_capabilities_service.py`
+- `docs-viewer/services/docs_management_mutation_service.py`
+- `docs-viewer/services/docs_management_import_service.py`
+- `docs-viewer/services/docs_management_data_sharing_service.py`
+- `docs-viewer/services/docs_management_source_service.py`
+- `docs-viewer/services/docs_management_broken_links_service.py`
+- `docs-viewer/services/docs_scope_config.py`
+- `docs-viewer/services/docs_source_model.py`
+- `docs-viewer/services/docs_management_mutations.py`
+- `docs-viewer/services/docs_write_rebuild.py`
+- `docs-viewer/services/docs_generated_reads.py`
+- `docs-viewer/services/docs_import_source_service.py`
+- `docs-viewer/services/docs_html_import.py`
+- `docs-viewer/services/docs_activity.py`
+- `docs-viewer/services/docs_watch_suppression.py`
 
 Optional adjacent docs tools:
 
-- `studio/docs-viewer/services/docs_live_rebuild_watcher.py`
-- `studio/docs-viewer/services/docs_broken_links.py`
-- `studio/docs-viewer/services/docs_export.py`
-- `studio/docs-viewer/services/docs_import.py`
+- `docs-viewer/services/docs_live_rebuild_watcher.py`
+- `docs-viewer/services/docs_broken_links.py`
+- `docs-viewer/services/docs_export.py`
+- `docs-viewer/services/docs_import.py`
 
-The management server is local-only and should bind to loopback.
+The management service is local-only and should be exposed only through a loopback-bound host service.
 It is not part of the public static site.
-Generated-data reads, source writes, import targets, and rebuild commands use `studio/docs-viewer/config/scopes/docs_scopes.json` as the docs scope contract.
+Generated-data reads, source writes, import targets, and rebuild commands use `docs-viewer/config/scopes/docs_scopes.json` as the docs scope contract.
 The local management package also includes the read-only source config report and the Settings modal.
 The report inspects configured source, browser, and generated projections.
-The Settings modal writes only allowlisted source config fields; the first portable field is scoped `show_updated_date`, which saves to `studio/docs-viewer/config/scopes/docs_scopes.json` and triggers a same-scope docs rebuild.
+The Settings modal writes only allowlisted source config fields; the first portable field is scoped `show_updated_date`, which saves to `docs-viewer/config/scopes/docs_scopes.json` and triggers a same-scope docs rebuild.
 For the full config split and media-storage choices, see [Docs Viewer Config](/docs/?scope=studio&doc=config-docs-viewer).

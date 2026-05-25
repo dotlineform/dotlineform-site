@@ -2,7 +2,7 @@
 doc_id: scripts-docs-live-rebuild-watcher
 title: Docs Live Rebuild Watcher
 added_date: 2026-04-24
-last_updated: "2026-05-19 14:30"
+last_updated: 2026-05-25
 parent_id: docs-viewer
 sort_order: 16000
 ---
@@ -11,7 +11,7 @@ sort_order: 16000
 Script:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_live_rebuild_watcher.py
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_live_rebuild_watcher.py
 ```
 
 ## Purpose
@@ -28,7 +28,7 @@ The watcher maps source roots directly onto docs scopes:
 - `_docs_analysis/**/*.md` -> `analysis`
 - `_docs_library/*.md` -> `library`
 
-The scope map comes from `studio/docs-viewer/config/scopes/docs_scopes.json`, which is shared with `./scripts/build_docs.rb` and the docs-management server.
+The scope map comes from `docs-viewer/config/scopes/docs_scopes.json`, which is shared with `./scripts/build_docs.rb` and the docs-management service.
 
 It watches source roots only. It does not watch generated outputs under:
 
@@ -40,7 +40,7 @@ It watches source roots only. It does not watch generated outputs under:
 Run from `dotlineform-site/`:
 
 ```bash
-$HOME/miniconda3/bin/python3 studio/docs-viewer/services/docs_live_rebuild_watcher.py
+$HOME/miniconda3/bin/python3 docs-viewer/services/docs_live_rebuild_watcher.py
 ```
 
 Default behavior:

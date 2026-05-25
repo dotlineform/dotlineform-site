@@ -19,8 +19,8 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
-SCRIPTS_DOCS_DIR = REPO_ROOT / "studio" / "docs-viewer" / "services"
-for path in (SCRIPTS_DOCS_DIR, SCRIPTS_DIR):
+SCRIPTS_DOCS_DIR = REPO_ROOT / "docs-viewer" / "services"
+for path in (SCRIPTS_DIR, SCRIPTS_DOCS_DIR):
     path_str = str(path)
     if path_str not in sys.path:
         sys.path.insert(0, path_str)

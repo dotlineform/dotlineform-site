@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DOCS_DIR = REPO_ROOT / "studio" / "docs-viewer" / "services"
+DOCS_DIR = REPO_ROOT / "docs-viewer" / "services"
 DOCS_MANAGEMENT_SERVICE_PATH = DOCS_DIR / "docs_management_service.py"
 
 

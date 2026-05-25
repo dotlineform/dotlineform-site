@@ -2,9 +2,9 @@
 """Parse staged Docs Viewer import data and optionally write Markdown previews.
 
 Run:
-  ./studio/docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl
-  ./studio/docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
-  ./studio/docs-viewer/services/docs_import.py --scope catalogue --file works.jsonl --write-previews
+  ./docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl
+  ./docs-viewer/services/docs_import.py --scope library --file library-document-summaries.jsonl --write-previews
+  ./docs-viewer/services/docs_import.py --scope catalogue --file works.jsonl --write-previews
 """
 
 from __future__ import annotations

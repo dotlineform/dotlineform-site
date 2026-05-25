@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-962004e72d109eaba41ce6b9c998da2d",
-    "generated_at_utc": "2026-05-25T10:00:54Z",
+    "version": "blake2b-8141b88d40addaf29deb054d2909db95",
+    "generated_at_utc": "2026-05-25T10:19:34Z",
     "count": 309
   },
   "entries": [
@@ -1122,10 +1122,10 @@
       "kind": "doc",
       "title": "Local Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-local-studio",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-05-25",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-24 • Servers",
+      "display_meta": "2026-05-25 • Servers",
       "search_terms": [
         "scripts-local-studio",
         "scripts",
@@ -1134,12 +1134,12 @@
         "local studio runner",
         "runner",
         "servers",
-        "2026-05-24",
+        "2026-05-25",
         "2026",
         "05",
-        "24"
+        "25"
       ],
-      "search_text": "scripts-local-studio scripts local studio local studio runner runner servers 2026-05-24 2026 05 24"
+      "search_text": "scripts-local-studio scripts local studio local studio runner runner servers 2026-05-25 2026 05 25"
     },
     {
       "id": "modal-composition-migration-tracker",
@@ -4882,22 +4882,22 @@
       "kind": "doc",
       "title": "Local Studio App",
       "href": "/docs/?scope=studio&doc=local-studio-app",
-      "last_updated": "2026-05-24",
+      "last_updated": "2026-05-25",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-05-24 • Studio",
+      "display_meta": "2026-05-25 • Studio",
       "search_terms": [
         "local-studio-app",
         "local",
         "studio",
         "app",
         "local studio app",
-        "2026-05-24",
+        "2026-05-25",
         "2026",
         "05",
-        "24"
+        "25"
       ],
-      "search_text": "local-studio-app local studio app local studio app 2026-05-24 2026 05 24"
+      "search_text": "local-studio-app local studio app local studio app 2026-05-25 2026 05 25"
     },
     {
       "id": "scripts-project-state-report",
@@ -5322,10 +5322,10 @@
       "kind": "doc",
       "title": "Docs Management Service",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-23 • Docs Viewer",
+      "display_meta": "2026-05-25 • Docs Viewer",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -5336,12 +5336,12 @@
         "service",
         "docs viewer",
         "viewer",
-        "2026-05-23",
+        "2026-05-25",
         "2026",
         "05",
-        "23"
+        "25"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management service service docs viewer viewer 2026-05-23 2026 05 23"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management service service docs viewer viewer 2026-05-25 2026 05 25"
     },
     {
       "id": "scripts-publish-media-to-r2",
@@ -5624,10 +5624,10 @@
       "kind": "doc",
       "title": "Docs Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
-      "last_updated": "2026-05-19 14:30",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-19 14:30 • Docs Viewer",
+      "display_meta": "2026-05-25 • Docs Viewer",
       "search_terms": [
         "scripts-docs-live-rebuild-watcher",
         "scripts",
@@ -5638,14 +5638,12 @@
         "docs live rebuild watcher",
         "docs viewer",
         "viewer",
-        "2026-05-19 14:30",
+        "2026-05-25",
         "2026",
         "05",
-        "19",
-        "14",
-        "30"
+        "25"
       ],
-      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher docs viewer viewer 2026-05-19 14:30 2026 05 19 14 30"
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher docs viewer viewer 2026-05-25 2026 05 25"
     },
     {
       "id": "local-setup",
@@ -6806,10 +6804,10 @@
       "kind": "doc",
       "title": "Docs Viewer Management Contract",
       "href": "/docs/?scope=studio&doc=docs-viewer-management-contract",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer-management",
       "parent_title": "Docs Viewer Management",
-      "display_meta": "2026-05-19 • Docs Viewer Management",
+      "display_meta": "2026-05-25 • Docs Viewer Management",
       "search_terms": [
         "docs-viewer-management-contract",
         "docs",
@@ -6818,12 +6816,12 @@
         "contract",
         "docs viewer management contract",
         "docs viewer management",
-        "2026-05-19",
+        "2026-05-25",
         "2026",
         "05",
-        "19"
+        "25"
       ],
-      "search_text": "docs-viewer-management-contract docs viewer management contract docs viewer management contract docs viewer management 2026-05-19 2026 05 19"
+      "search_text": "docs-viewer-management-contract docs viewer management contract docs viewer management contract docs viewer management 2026-05-25 2026 05 25"
     },
     {
       "id": "docs-viewer-management-write-model",

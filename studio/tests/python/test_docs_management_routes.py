@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-DOCS_SERVICES_DIR = REPO_ROOT / "studio" / "docs-viewer" / "services"
+DOCS_SERVICES_DIR = REPO_ROOT / "docs-viewer" / "services"
 if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
