@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T20:53:33Z",
+  "generated_at": "2026-05-25T21:14:55Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -227,7 +227,7 @@
       "doc_id": "docs-viewer-overview",
       "title": "Overview",
       "added_date": "2026-04-24",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "sort_order": 1000,
       "published": true,
@@ -236,7 +236,7 @@
       "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-overview.json",
-      "content_text_length": 9590
+      "content_text_length": 9783
     },
     {
       "scope": "studio",
@@ -1255,7 +1255,7 @@
       "source_path": "site-request-catalogue-work-unified-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-work-unified-editor",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-catalogue-work-unified-editor.json",
-      "content_text_length": 23492,
+      "content_text_length": 23145,
       "ui_status": "paused"
     },
     {

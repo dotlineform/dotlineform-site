@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-e770d7bdcb015f6c006baef156c8fc77",
-    "generated_at_utc": "2026-05-25T20:25:26Z",
+    "version": "blake2b-ce89fddfef1d2427c0a45ab09fe64398",
+    "generated_at_utc": "2026-05-25T21:14:26Z",
     "count": 190
   },
   "entries": [
@@ -205,22 +205,22 @@
       "kind": "doc",
       "title": "Overview",
       "href": "/docs/?scope=studio&doc=docs-viewer-overview",
-      "last_updated": "2026-05-20",
+      "last_updated": "2026-05-25",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-20 • Docs Viewer",
+      "display_meta": "2026-05-25 • Docs Viewer",
       "search_terms": [
         "docs-viewer-overview",
         "docs",
         "viewer",
         "overview",
         "docs viewer",
-        "2026-05-20",
+        "2026-05-25",
         "2026",
         "05",
-        "20"
+        "25"
       ],
-      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-05-20 2026 05 20"
+      "search_text": "docs-viewer-overview docs viewer overview docs viewer 2026-05-25 2026 05 25"
     },
     {
       "id": "site-request-portable-docs-viewer",

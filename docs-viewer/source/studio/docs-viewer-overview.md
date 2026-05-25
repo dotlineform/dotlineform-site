@@ -2,7 +2,7 @@
 doc_id: docs-viewer-overview
 title: Overview
 added_date: 2026-04-24
-last_updated: 2026-05-20
+last_updated: 2026-05-25
 parent_id: docs-viewer
 sort_order: 1000
 ---
@@ -149,6 +149,7 @@ Current search behavior:
 - docs search excludes docs where `viewable: false`
 - the viewer lazily loads the scope search index when `q` is present
 - result links route back into the same viewer URL model
+- modified, non-primary, target, and download clicks on result links and document links keep native browser behavior, so command-click and context-menu open-in-new-tab are handled by the browser
 - search and recently-added list entries use title plus muted metadata rather than showing `doc_id`
 - search metadata uses `last_updated` and, when available, parent title in the form `date • parent`
 

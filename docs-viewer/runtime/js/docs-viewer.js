@@ -1038,6 +1038,14 @@ import {
     });
   }
 
+  function shouldUseNativeNavigation(event, anchor) {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+      return true;
+    }
+    var target = anchor.getAttribute("target");
+    return Boolean((target && target !== "_self") || anchor.hasAttribute("download"));
+  }
+
   function bindLinkInterception() {
     root.addEventListener("click", function (event) {
       if (managementController && managementController.handleRootClick(event)) {
@@ -1057,6 +1065,7 @@ import {
 
       var anchor = event.target.closest("a[href]");
       if (!anchor) return;
+      if (shouldUseNativeNavigation(event, anchor)) return;
 
       var route = routeFromAnchor(anchor);
       if (!route) return;
