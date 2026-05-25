@@ -13,7 +13,10 @@ we are working on site-request-docs-viewer-shell-extraction-tasks.md
 please continue with next task
 
 
----
+
+
+
+bin/local-all
 
 normal development should use:
 
@@ -21,7 +24,7 @@ normal development should use:
 - `bin/public-site-preview` for public Jekyll preview
 - `bin/public-site-preview --livereload`
 
-
+./scripts/build_docs.rb --scope studio --write
 
 ---
 

@@ -13,9 +13,9 @@ sort_order: 8100
 The current search build uses one stable entrypoint with domain-owned adapters:
 
 - stable command wrapper and dispatcher: `scripts/build_search.rb`
-- adapter registry: `scripts/search/adapter_registry.json`
-- Catalogue implementation owner: `scripts/search/build_search.rb`
-- Docs Viewer implementation owner: `studio/docs-viewer/build/build_search.rb`
+- adapter registry: `studio/commands/search-adapters.json`
+- Catalogue implementation owner: `studio/services/catalogue/search/build_search.rb`
+- Docs Viewer implementation owner: `docs-viewer/build/build_search.rb`
 
 Current live search outputs:
 
@@ -53,7 +53,7 @@ Current shared build conventions:
 - records are generated at build time, not assembled in the browser
 - content-version hashing is used for write skipping
 - generated payloads stay compact and avoid body-prose indexing
-- Catalogue fields declare their source artifact family and dependency policy in `scripts/search/build_config.json`
+- Catalogue fields declare their source artifact family and dependency policy in `studio/services/catalogue/search/build_config.json`
 - Docs search policy is Docs Viewer-owned and emitted through `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - builder code validates the relevant domain config while keeping record-generation algorithms in code
 - public search artifacts should not become operation logs; targeted-update changed-id diagnostics belong in CLI/server output or local logs, not in the artifact by default
@@ -69,10 +69,10 @@ Current non-goals across all scopes:
 
 ## Adapter Registry And Build Config
 
-The top-level command loads `scripts/search/adapter_registry.json` to map requested scopes to domain builders.
+The top-level command loads `studio/commands/search-adapters.json` to map requested scopes to domain builders.
 The registry maps `catalogue` to the Catalogue adapter and configured Docs Viewer scopes from `docs-viewer/config/scopes/docs_scopes.json` to the Docs Viewer adapter.
 
-`scripts/search/build_config.json` is now Catalogue-owned.
+`studio/services/catalogue/search/build_config.json` is Catalogue-owned.
 Current Catalogue config responsibilities:
 
 - declare source families such as `catalogue_indexes`, `catalogue_work_payloads`, `tag_assignments`, and `tag_registry`
@@ -81,7 +81,7 @@ Current Catalogue config responsibilities:
 - map emitted search fields to source families
 - keep the Catalogue artifact strategy combined
 
-Current validation responsibilities in `scripts/search/build_search.rb`:
+Current validation responsibilities in `studio/services/catalogue/search/build_search.rb`:
 
 - reject unsupported config versions
 - reject source-family references outside the Catalogue scope

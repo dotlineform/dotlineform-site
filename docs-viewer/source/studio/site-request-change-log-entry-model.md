@@ -153,7 +153,7 @@ Suggested entry record:
   "subjects": ["docs payloads", "targeted rebuilds"],
   "change_request_doc_id": "site-request-docs-build-incremental",
   "related_docs": ["scripts-docs-builder", "scripts-docs-management-server"],
-  "related_files": ["studio/docs-viewer/build/build_docs.rb", "docs-viewer/services/docs_write_rebuild.py"],
+  "related_files": ["docs-viewer/build/build_docs.rb", "docs-viewer/services/docs_write_rebuild.py"],
   "summary": "Docs writes can rebuild explicit generated docs payload ids instead of always rebuilding full scope payloads.",
   "effect": "Small docs source writes create less generated-output churn while preserving index correctness.",
   "source": {
@@ -211,7 +211,7 @@ The scope should support searches like:
 
 - `docs payload rebuild 2026-05`
 - `catalogue publication`
-- `studio/docs-viewer/build/build_docs.rb`
+- `docs-viewer/build/build_docs.rb`
 - `Docs Viewer management`
 - `recent UI primitive changes`
 
@@ -448,7 +448,7 @@ Implementation requirements:
 Codex retrieval should use simple file search first:
 
 ```bash
-rg -l "studio/docs-viewer/build/build_search.rb" _docs_logs/entries
+rg -l "docs-viewer/build/build_search.rb" _docs_logs/entries
 rg -l "change-history-report" _docs_logs/entries
 rg -l "\"docs-viewer\"" _docs_logs/entries
 ```

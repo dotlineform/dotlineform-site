@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T12:47:16Z",
+  "generated_at": "2026-05-25T13:06:26Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -221,7 +221,7 @@
       "source_path": "docs-build-management-import-export-improvements.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-build-management-import-export-improvements",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-build-management-import-export-improvements.json",
-      "content_text_length": 11923,
+      "content_text_length": 11888,
       "ui_status": "done"
     },
     {
@@ -435,7 +435,7 @@
       "source_path": "search-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-overview.json",
-      "content_text_length": 4809
+      "content_text_length": 4838
     },
     {
       "scope": "studio",
@@ -523,7 +523,7 @@
       "doc_id": "development-workflow",
       "title": "Development Workflow",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-25",
       "parent_id": "dev-home",
       "sort_order": 1500,
       "published": true,
@@ -532,7 +532,7 @@
       "source_path": "development-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/development-workflow.json",
-      "content_text_length": 11380
+      "content_text_length": 11960
     },
     {
       "scope": "studio",
@@ -1476,7 +1476,7 @@
       "source_path": "docs-viewer-portable-files.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-portable-files",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-portable-files.json",
-      "content_text_length": 9379
+      "content_text_length": 9369
     },
     {
       "scope": "studio",
@@ -1735,7 +1735,7 @@
       "source_path": "studio-python-ruby-script-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-python-ruby-script-inventory.json",
-      "content_text_length": 17545,
+      "content_text_length": 17517,
       "ui_status": "urgent"
     },
     {
@@ -2431,7 +2431,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 8813
+      "content_text_length": 8809
     },
     {
       "scope": "studio",
@@ -2679,7 +2679,7 @@
       "source_path": "search-build-pipeline-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline-architecture.json",
-      "content_text_length": 4584
+      "content_text_length": 4645
     },
     {
       "scope": "studio",
@@ -2727,7 +2727,7 @@
       "source_path": "search-build-pipeline-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline-studio.json",
-      "content_text_length": 2430
+      "content_text_length": 2423
     },
     {
       "scope": "studio",
@@ -2743,7 +2743,7 @@
       "source_path": "search-build-pipeline-library.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline-library.json",
-      "content_text_length": 2580
+      "content_text_length": 2573
     },
     {
       "scope": "studio",
@@ -2759,7 +2759,7 @@
       "source_path": "search-build-pipeline-analysis.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline-analysis",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline-analysis.json",
-      "content_text_length": 2448
+      "content_text_length": 2441
     },
     {
       "scope": "studio",
@@ -2826,7 +2826,7 @@
       "source_path": "site-request-docs-semantic-references.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-semantic-references",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-semantic-references.json",
-      "content_text_length": 16672,
+      "content_text_length": 16665,
       "ui_status": "paused"
     },
     {
@@ -3140,7 +3140,7 @@
       "source_path": "site-request-docs-viewer-shell-extraction-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-tasks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-tasks.json",
-      "content_text_length": 28922,
+      "content_text_length": 29817,
       "ui_status": "draft"
     },
     {
@@ -3966,7 +3966,7 @@
       "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json",
-      "content_text_length": 14616
+      "content_text_length": 14611
     },
     {
       "scope": "studio",
@@ -4805,7 +4805,7 @@
       "source_path": "site-request-scripts-directory-organization.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-scripts-directory-organization",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-scripts-directory-organization.json",
-      "content_text_length": 44562,
+      "content_text_length": 44548,
       "ui_status": "done"
     },
     {
@@ -4924,7 +4924,7 @@
       "source_path": "site-request-change-log-entry-model.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-change-log-entry-model",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-change-log-entry-model.json",
-      "content_text_length": 23755,
+      "content_text_length": 23734,
       "ui_status": "done"
     },
     {

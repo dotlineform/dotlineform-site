@@ -23,7 +23,7 @@ Add an authored semantic-reference token for Docs Viewer Markdown.
 
 Implementation note:
 
-- v1 is implemented in `studio/docs-viewer/build/build_docs.rb` for `work`, `series`, and `moment` references.
+- v1 is implemented in `docs-viewer/build/build_docs.rb` for `work`, `series`, and `moment` references.
 - Generated relationship artifacts are written under `assets/data/docs/scopes/<scope>/references/`.
 - The management report is [Semantic References](/docs/?scope=studio&doc=docs-viewer-semantic-references).
 

@@ -12,7 +12,7 @@ sort_order: 8400
 
 ### Current Writer
 
-- `./scripts/build_search.rb --scope library`, dispatched to `studio/docs-viewer/build/build_search.rb`
+- `./scripts/build_search.rb --scope library`, dispatched to `docs-viewer/build/build_search.rb`
 
 ### Current Output
 

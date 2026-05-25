@@ -10,6 +10,6 @@
   "docs_viewer": {
     "domain": "docs_viewer",
     "scope_config": "docs-viewer/config/scopes/docs_scopes.json",
-    "script": "studio/docs-viewer/build/build_search.rb"
+    "script": "docs-viewer/build/build_search.rb"
   }
 }

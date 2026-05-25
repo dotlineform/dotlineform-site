@@ -108,7 +108,7 @@ exclude:
   - studio/workflows/
   - studio/checks/
   - studio/tests/
-  - studio/docs-viewer/build/
+  - docs-viewer/build/
   - docs-viewer/bin/
   - docs-viewer/config/defaults/docs-viewer-config.json
   - docs-viewer/config/defaults/docs-viewer-service.json
@@ -118,10 +118,6 @@ exclude:
   - docs-viewer/services/
   - docs-viewer/shell/
   - docs-viewer/source/
-  - studio/docs-viewer/server/
-  - studio/docs-viewer/services/
-  - studio/docs-viewer/source-assets/
-  - studio/docs-viewer/tests/
   - studio/ui-catalogue/
   - assets/data/docs/scopes/studio/
   - assets/data/search/studio/

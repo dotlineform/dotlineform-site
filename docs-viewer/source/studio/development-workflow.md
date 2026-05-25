@@ -2,7 +2,7 @@
 doc_id: development-workflow
 title: Development Workflow
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-25
 parent_id: dev-home
 sort_order: 1500
 viewable: true
@@ -159,6 +159,14 @@ Choose the smallest useful check set:
 
 Use explicit toolchain paths where the repo requires them.
 See [Local Setup](/docs/?scope=studio&doc=local-setup), [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies), and [Testing](/docs/?scope=studio&doc=testing).
+
+### Defensive Tests During Refactors
+
+Temporary defensive tests are useful while a migration or extraction is in progress, especially to catch accidental compatibility shims, proxy paths, or retired write surfaces.
+Before closeout, remove those tests unless they enforce a current architecture contract.
+
+If a defensive assertion remains, phrase it around the positive architecture that must hold, such as the owning service boundary, allowed route surface, capability model, or write contract.
+Avoid permanent tests that only enumerate historical "do not restore this old path" cases.
 
 ## 6. Update Docs And Generated Artifacts
 

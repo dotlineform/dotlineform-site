@@ -134,7 +134,7 @@ Proposed folder ownership rules:
 |---|---|---|---|---|---|---|
 | `scripts/audit_site_consistency.py` | entrypoint | Checks | `studio/checks/audit_site_consistency.py` | `./scripts/audit_site_consistency.py` | docs: `docs-viewer/source/studio/site-change-log-2026-05.md`, `docs-viewer/source/studio/site-change-log-2026-03-and-earlier.md` +11 | high |
 | `scripts/audit_studio_ready_state.py` | entrypoint | Checks | `studio/checks/audit_studio_ready_state.py` | `./scripts/audit_studio_ready_state.py` | docs: `docs-viewer/source/studio/site-change-log-2026-05.md`, `docs-viewer/source/studio/studio-audits.md` +6 | high |
-| `scripts/build_docs.rb` | wrapper | Docs | stable wrapper for `studio/docs-viewer/build/build_docs.rb` | `bin/local-studio`, `./scripts/build_docs.rb` | tests: `studio/tests/python/test_docs_write_rebuild.py`; docs: `docs-viewer/source/studio/site-request-docs-build-incremental.md`, `docs-viewer/source/studio/site-request-catalogue-delete-cleanup.md` +23 | high |
+| `scripts/build_docs.rb` | wrapper | Docs | stable wrapper for `docs-viewer/build/build_docs.rb` | `bin/local-studio`, `./scripts/build_docs.rb` | tests: `studio/tests/python/test_docs_write_rebuild.py`; docs: `docs-viewer/source/studio/site-request-docs-build-incremental.md`, `docs-viewer/source/studio/site-request-catalogue-delete-cleanup.md` +23 | high |
 | `scripts/build_palette_data.py` | entrypoint | Media | `scripts/media/build_palette_data.py` | `./scripts/build_palette_data.py` | - | medium |
 | `scripts/build_search.rb` | wrapper | Search | stable wrapper for `scripts/search/build_search.rb` | `bin/local-studio`, `./scripts/build_search.rb` | tests: `studio/tests/python/test_catalogue_build_commands.py`, `studio/tests/python/test_docs_write_rebuild.py`; docs: `docs-viewer/source/studio/site-request-docs-build-incremental.md`, `docs-viewer/source/studio/site-request-catalogue-delete-cleanup.md` +23 | high |
 | `scripts/catalogue_activity.py` | helper | Catalogue | `studio/services/catalogue/catalogue_activity.py` | - | tests: `studio/tests/python/test_catalogue_routes.py`, `studio/tests/python/test_studio_activity_context.py`; docs: `docs-viewer/source/studio/scripts-catalogue-write-server.md`, `docs-viewer/source/studio/site-change-log.md` +1 | medium |
@@ -325,7 +325,7 @@ Acceptance checks:
 
 Slice 4 split implementation ownership from the stable command surface:
 
-- `./scripts/build_docs.rb` remains the supported operational command and now wraps `studio/docs-viewer/build/build_docs.rb`
+- `./scripts/build_docs.rb` remains the supported operational command and now wraps `docs-viewer/build/build_docs.rb`
 - `./scripts/build_search.rb` remains the supported operational command and now wraps `scripts/search/build_search.rb`
 
 This keeps existing docs, services, and runbook commands stable while making the implementation location match the Docs and Search domains.

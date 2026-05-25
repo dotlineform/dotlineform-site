@@ -68,7 +68,7 @@ def test_build_record_extracts_metadata_and_validates() -> None:
             "**Effect:**\n"
             "Small docs source writes can avoid rendering every per-doc payload.\n\n"
             "**Affected files/docs:**\n\n"
-            "- `studio/docs-viewer/build/build_docs.rb`\n"
+            "- `docs-viewer/build/build_docs.rb`\n"
             "- `docs-viewer/services/docs_write_rebuild.py`\n"
             "- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)\n"
             "- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)\n"
@@ -84,7 +84,7 @@ def test_build_record_extracts_metadata_and_validates() -> None:
     assert record["type"] == "implementation"
     assert "docs-viewer" in record["domains"]
     assert "build" in record["domains"]
-    assert record["related_files"] == ["studio/docs-viewer/build/build_docs.rb", "docs-viewer/services/docs_write_rebuild.py"]
+    assert record["related_files"] == ["docs-viewer/build/build_docs.rb", "docs-viewer/services/docs_write_rebuild.py"]
     assert record["related_docs"] == [
         "scripts-docs-builder",
         "scripts-docs-management-server",

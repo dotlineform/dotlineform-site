@@ -10,12 +10,12 @@ require "time"
 require "uri"
 require "yaml"
 
-require_relative "../../shared/ruby/jekyll_markdown_renderer"
+require_relative "../../studio/shared/ruby/jekyll_markdown_renderer"
 
-DOCS_SCOPE_CONFIG_PATH = File.expand_path("../../../docs-viewer/config/scopes/docs_scopes.json", __dir__)
+DOCS_SCOPE_CONFIG_PATH = File.expand_path("../config/scopes/docs_scopes.json", __dir__)
 DOCS_SCOPE_CONFIG_SCHEMA_VERSION = "docs_scopes_v1"
-DOCS_VIEWER_BROWSER_CONFIG_PATH = File.expand_path("../../../docs-viewer/config/defaults/docs-viewer-config.json", __dir__)
-DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = File.expand_path("../../../docs-viewer/config/defaults/docs-viewer-public-config.json", __dir__)
+DOCS_VIEWER_BROWSER_CONFIG_PATH = File.expand_path("../config/defaults/docs-viewer-config.json", __dir__)
+DOCS_VIEWER_PUBLIC_BROWSER_CONFIG_PATH = File.expand_path("../config/defaults/docs-viewer-public-config.json", __dir__)
 DOCS_VIEWER_BROWSER_CONFIG_SCHEMA_VERSION = "docs_viewer_config_v1"
 DOCS_VIEWER_MANAGE_ROUTE_BASE_URL = "/docs/"
 
@@ -112,7 +112,7 @@ class DocsDataBuilder
     @show_updated_date = show_updated_date != false
     @allow_unresolved_parent_ids = allow_unresolved_parent_ids == true
     @only_doc_ids = only_doc_ids.nil? ? nil : normalize_doc_ids(only_doc_ids)
-    @repo_root = Pathname(__dir__).parent.parent.parent.realpath
+    @repo_root = Pathname(__dir__).parent.parent.realpath
     @output_url_base = output_url_base_for(@output_dir)
     @site_config = load_site_config
     @source_files_scanned = 0

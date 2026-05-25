@@ -28,7 +28,7 @@ def sample_record(entry_id: str, change_date: str, title: str, domain: str) -> d
         "domains": [domain],
         "subjects": ["payloads"],
         "related_docs": ["scripts-docs-builder"],
-        "related_files": ["studio/docs-viewer/build/build_docs.rb"],
+        "related_files": ["docs-viewer/build/build_docs.rb"],
         "change_request_doc_id": "site-request-docs-build-incremental",
         "summary": f"{title} summary.",
         "effect": f"{title} effect.",
@@ -48,7 +48,7 @@ def test_build_outputs_groups_entries_by_required_indexes() -> None:
     assert outputs["by_date"]["years"][0]["months"][0]["month"] == "2026-05"
     assert outputs["by_domain"]["domains"]["docs-viewer"][0]["id"] == "change-2026-05-19-one"
     assert outputs["by_related_doc"]["related_docs"]["scripts-docs-builder"][0]["id"] == "change-2026-05-19-one"
-    assert outputs["by_related_file"]["related_files"]["studio/docs-viewer/build/build_docs.rb"][1]["id"] == "change-2026-04-30-two"
+    assert outputs["by_related_file"]["related_files"]["docs-viewer/build/build_docs.rb"][1]["id"] == "change-2026-04-30-two"
     assert outputs["by_change_request"]["change_requests"]["site-request-docs-build-incremental"][0]["id"] == "change-2026-05-19-one"
     assert outputs["search_index"]["entries"][0]["search_text"]["trace"].count("scripts-docs-builder") == 1
 

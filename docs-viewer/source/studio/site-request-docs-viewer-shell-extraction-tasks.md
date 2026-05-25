@@ -16,6 +16,11 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
+- Completed `DVSE-021` by moving Docs Viewer Ruby builder implementations from `studio/docs-viewer/build/` to `docs-viewer/build/` and deleting the remaining old `studio/docs-viewer/` tree.
+- `scripts/build_docs.rb` now loads `docs-viewer/build/build_docs.rb`, and the search adapter registry routes Docs Viewer scopes to `docs-viewer/build/build_search.rb`.
+- `_config.yml` now excludes `docs-viewer/build/` from public Jekyll output and no longer carries retired `studio/docs-viewer/` excludes.
+- Current owning docs for scripts, Docs Viewer portable files, docs builder behavior, search build ownership, semantic references, and script inventory were updated away from the active `studio/docs-viewer/build/` path.
+- Targeted stale-reference checks found no old Studio-owned Docs Viewer paths in active code/config/runtime/service/test surfaces except intentional negative assertions and historical change-log test fixtures. No generated docs/search payloads were rebuilt manually.
 - Completed `DVSE-020` by updating current command, setup, portable, runtime-boundary, source-organisation, config, and script docs for the extracted Docs Viewer boundary.
 - Durable docs now describe `docs-viewer/` as the owner of source docs, runtime modules, CSS, config defaults, UI text, local services, management workflows, generated reads, and Docs Viewer-owned tests, while host/Jekyll adapters remain outside that boundary.
 - Local setup and runner docs now distinguish `bin/local-studio` as the Studio app plus docs source watcher, `docs-viewer/bin/docs-viewer` as the standalone `/docs/` service, and `bin/local-all` as the combined public preview, Studio, and Docs Viewer runner.
@@ -97,7 +102,7 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### steer for next task
 
-- Start with `DVSE-018`, adding the lightweight "start all" runner for Live Preview, Local Studio, and Docs Viewer.
+- Start with `DVSE-022`, the agreed final verification set.
 - Keep the table sequential: only begin the next non-deferred ID after the current one is `done`.
 - If a task uncovers a new dependency, risk, or unresolved ownership question, add a new task row before continuing rather than widening the active task.
 - Bunch work into coherent slices that reduce repeated verification, but do not combine tasks when the second task depends on evidence from the first.
@@ -164,6 +169,6 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-018 | done | Add the lightweight "start all" runner for Live Preview, Local Studio, and Docs Viewer, modeled on `bin/local-studio`: load `var/local/site.env`, validate static ports, print URLs, trap shutdown signals, clean up children, and fail clearly on child-process exits. |
 | DVSE-019 | done | Move or update tests, smoke helpers, fixtures, checks, and run-check profiles so Docs Viewer-owned checks live with the new boundary where appropriate while repo/Codex verification entrypoints remain discoverable. |
 | DVSE-020 | done | Update command docs, local setup docs, Docs Viewer portable setup, runtime boundary docs, source organisation docs, config docs, and script docs to describe the extracted boundary, service config, route ownership, runner behavior, standalone Docs Viewer service ownership, and retired current-state assumptions. |
-| DVSE-021 | planned | Delete old Studio-owned Docs Viewer source locations after references are updated; confirm removed paths are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic. |
+| DVSE-021 | done | Delete old Studio-owned Docs Viewer source locations after references are updated; confirm removed paths are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic. |
 | DVSE-022 | planned | Run the agreed final verification set: quick profile, Docs Viewer smoke profile, focused Local Studio integration smokes, public Jekyll build, public scope checks, syntax/import checks, and any changed-doc link/path checks. |
 | DVSE-023 | planned | Close out the parent request and this tracker: update statuses, summarize moved paths, record verification results and generated payload status, create structured docs-log entries, copy durable decisions/contracts into permanent owning docs, and note remaining risks before these request docs are archived. |

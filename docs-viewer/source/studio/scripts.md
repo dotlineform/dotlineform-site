@@ -39,7 +39,7 @@ The current script surface is organized by owner:
 - `studio/services/analytics/` owns tag metadata services and helpers as the first Analytics metadata layer over catalogue works and series.
 - `docs-viewer/` owns Docs Viewer config, source docs, browser runtime, local service, Docs Import, documents Data Sharing adapter behavior, live rebuild, generated-read, and docs-management behavior.
 - `studio/services/catalogue/search/` owns Catalogue search build configuration and implementation.
-- `studio/docs-viewer/build/` owns Docs Viewer search build implementation.
+- `docs-viewer/build/` owns Docs Viewer docs and search build implementations.
 - `studio/app/server/studio/` owns non-domain-specific Studio runtime services such as audit, backup-retention, and Data Sharing dispatch services.
 - `studio/checks/` owns standalone audits and verification commands.
 - `studio/services/media/` owns media derivation and remote media publishing commands.
@@ -57,7 +57,7 @@ Top-level survivors are intentional:
 Docs-domain builds:
 
 - `./scripts/build_docs.rb`
-  - stable top-level wrapper for `studio/docs-viewer/build/build_docs.rb`
+  - stable top-level wrapper for `docs-viewer/build/build_docs.rb`
   - source docs:
     - `docs-viewer/source/studio/`
     - `docs-viewer/source/analysis/`

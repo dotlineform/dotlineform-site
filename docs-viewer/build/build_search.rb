@@ -25,7 +25,7 @@ SearchDocRecord = Struct.new(
 class DocsViewerSearchDataBuilder
   def initialize(scope:, source_index_path: nil, output_path: nil)
     @scope = normalize(scope)
-    @repo_root = Pathname(__dir__).parent.parent.parent.realpath
+    @repo_root = Pathname(__dir__).parent.parent.realpath
     @scope_config = docs_scope_config(@scope)
     @schema = "search_index_#{@scope}_v1"
     @source_index_path = resolve_path(source_index_path || File.join(@scope_config.fetch("output"), "index.json"))

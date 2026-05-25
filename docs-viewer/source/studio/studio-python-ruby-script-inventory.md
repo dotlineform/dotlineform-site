@@ -71,7 +71,7 @@ The remaining risk is less about one obvious file to split and more about keepin
 | Area | Files | Lines | Maintenance | Structure and consistency | Performance | Main reason |
 | --- | ---: | ---: | --- | --- | --- | --- |
 | `studio/services/catalogue/` | 38 | 17,150 | high | medium | high | Large source/build/write surface with multiple generated artifact families, field-aware build planning, media derivation, lookup refreshes, search rebuilds, publication flows, and local write-server orchestration. |
-| `studio/docs-viewer/` | 21 | 13,072 | high | medium | medium | Docs build, import, export, management mutations, generated reads, live rebuild, and search coordination span both Python services and Ruby builders. Targeted docs payload rebuilds reduce routine write cost, while cross-language contracts and resolver-data fallbacks still need care. |
+| `docs-viewer/` | 30 | 13,577 | high | medium | medium | Docs build, import, export, management mutations, generated reads, live rebuild, and search coordination span both Python services and Ruby builders. Targeted docs payload rebuilds reduce routine write cost, while cross-language contracts and resolver-data fallbacks still need care. |
 | `studio/services/analytics/` | 11 | 4,419 | medium | medium | low | Tag write flows have clearer module owners after extraction, but Data Sharing and tag import/apply flows remain broad enough to watch. |
 | `studio/checks/` | 6 | 2,054 | medium | medium | medium | Audit scripts intentionally span many site contracts, especially `audit_site_consistency.py`; risk grows when new checks are added without grouping or shared report contracts. |
 | `scripts/media/` | 5 | 1,792 | medium | medium | high | Media work is subprocess-heavy, file-system-heavy, and mostly serial; performance matters when image batches grow. |
@@ -126,14 +126,14 @@ Immediate work signal: high.
 
 Relevant files:
 
-- `studio/docs-viewer/build/build_docs.rb`
+- `docs-viewer/build/build_docs.rb`
 - `docs-viewer/services/docs_html_import.py`
 - `docs-viewer/services/docs_export.py`
 - `docs-viewer/services/docs_import.py`
 - `docs-viewer/services/docs_management_mutations.py`
 - `docs-viewer/services/docs_management_server.py`
 - `docs-viewer/services/docs_live_rebuild_watcher.py`
-- `studio/docs-viewer/build/build_search.rb`
+- `docs-viewer/build/build_search.rb`
 
 Docs have the clearest cross-language ownership risk.
 Ruby owns the generated Docs Viewer payload builder and search adapters, while Python owns management writes, imports, exports, generated reads, live rebuild orchestration, and source configuration writes.
@@ -249,7 +249,7 @@ Immediate work signal: medium.
 | `studio/services/catalogue/catalogue_write_server.py` | 3,149 | high | medium | medium | Still large, but now primarily HTTP orchestration after earlier extraction. Avoid adding domain planning back into this file. |
 | `docs-viewer/services/docs_html_import.py` | 2,008 | high | medium | medium | Large conversion surface with HTML, Markdown, package, media, and preview behavior. Watch as import requirements expand. |
 | `studio/services/catalogue/generate_work_pages.py` | 1,769 | high | medium | high | Generator orchestration remains broad. Keep new payload shaping in extracted generation modules. |
-| `studio/docs-viewer/build/build_docs.rb` | 1,516 | high | medium | medium | Central Ruby docs builder. Targeted payload input and diagnostics are implemented; future risk is dependency-rule drift across builder, watcher, and management callers. |
+| `docs-viewer/build/build_docs.rb` | 1,576 | high | medium | medium | Central Ruby docs builder. Targeted payload input and diagnostics are implemented; future risk is dependency-rule drift across builder, watcher, and management callers. |
 | `studio/checks/audit_site_consistency.py` | 1,358 | medium | medium | medium | Broad audit surface. Grouping matters more than splitting by line count. |
 | `docs-viewer/services/docs_export.py` | 1,250 | medium | medium | medium | Export adapter grows with Data Sharing requirements. Keep profile/config behavior explicit. |
 | `studio/services/analytics/tags_data_sharing_adapter.py` | 1,249 | medium | medium | low | Data Sharing apply paths should remain adapter-owned and directly tested. |

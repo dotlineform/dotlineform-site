@@ -15,7 +15,7 @@ Script:
 ```
 
 The stable operational entrypoint is the top-level wrapper above.
-The implementation lives in `studio/docs-viewer/build/build_docs.rb` so Docs build behavior is owned by the Docs script domain while existing commands remain stable.
+The implementation lives in `docs-viewer/build/build_docs.rb` so Docs build behavior is owned by the Docs Viewer boundary while existing commands remain stable.
 
 ## Scope
 
