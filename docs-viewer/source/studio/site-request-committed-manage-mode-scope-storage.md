@@ -178,7 +178,7 @@ Implementation note:
 
 Status:
 
-- not started
+- completed
 
 Change the New Scope lifecycle planner so the created/changed file list reflects the selected publishing mode.
 
@@ -187,6 +187,14 @@ Required behavior:
 - public read-only previews continue to show `assets/` generated output
 - committed manage-mode previews show tracked non-public source and generated output
 - preview copy makes the public-vs-manage-mode boundary explicit before apply
+
+Implementation note:
+
+- create preview and create apply now share the same planned scope config record.
+- public read-only scopes plan generated docs/search outputs under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/index.json`.
+- committed manage-mode scopes plan generated docs/search outputs under `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json`.
+- preview/apply responses include a `storage_contract` object that states whether generated output is public static asset data and lists the docs/search output paths shown in the preview modal.
+- the UI labels `local_committed` as a committed manage-mode scope and renders the storage contract before the file write set.
 
 ### Task 4. Migrate Studio To Committed Manage-Mode
 

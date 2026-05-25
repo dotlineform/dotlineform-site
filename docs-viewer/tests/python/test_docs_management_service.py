@@ -383,11 +383,49 @@ def test_scope_create_preview_reports_write_set_and_urls() -> None:
     assert payload["ok"] is True
     assert payload["scope_id"] == "research"
     assert payload["planned_scope_config"]["viewer_base_url"] == "/research/"
+    assert payload["planned_scope_config"]["output"] == "assets/data/docs/scopes/research"
     assert payload["planned_scope_config"]["search_output"] == "assets/data/search/research/index.json"
+    assert payload["storage_contract"]["public_static_assets"] is True
+    assert "public static assets" in payload["storage_contract"]["summary"]
     assert payload["urls"]["management"] == "/docs/?scope=research&mode=manage"
     assert payload["urls"]["public"] == "/research/"
     assert any(file["path"] == "docs-viewer/source/research/research.md" for file in payload["created_files"])
+    assert any(file["path"] == "assets/data/docs/scopes/research" for file in payload["created_files"])
+    assert any(file["path"] == "assets/data/search/research/index.json" for file in payload["created_files"])
     assert any(command["command"] == "./docs-viewer/build/build_docs.rb --scope research --write" for command in payload["build_commands"])
+
+
+def test_scope_create_preview_reports_committed_manage_mode_outputs() -> None:
+    with make_repo() as temp_path:
+        repo_root = Path(temp_path)
+        write_docs_scope_config(repo_root)
+        payload = docs_management_service.docs_scope_manifest.plan_create_scope_preview(
+            repo_root,
+            {
+                "scope_id": "notes",
+                "title": "Notes",
+                "source_root": "docs-viewer/source/notes",
+                "default_doc_id": "notes",
+                "publishing_mode": "local_committed",
+                "public_route_path": "/notes/",
+                "build_inline_search": True,
+                "write_generated_outputs": True,
+            },
+        )
+
+    assert payload["ok"] is True
+    assert payload["planned_scope_config"]["viewer_base_url"] == "/docs/"
+    assert payload["planned_scope_config"]["include_scope_param"] is True
+    assert payload["planned_scope_config"]["output"] == "docs-viewer/generated/docs/notes"
+    assert payload["planned_scope_config"]["search_output"] == "docs-viewer/generated/search/notes/index.json"
+    assert payload["storage_contract"]["public_static_assets"] is False
+    assert "non-public Docs Viewer" in payload["storage_contract"]["summary"]
+    assert payload["urls"]["public"] == ""
+    assert not any(file["kind"] == "route_file" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/generated/docs/notes" for file in payload["created_files"])
+    assert any(file["path"] == "docs-viewer/generated/search/notes/index.json" for file in payload["created_files"])
+    assert not any(file["path"].startswith("assets/data/docs/scopes/notes") for file in payload["created_files"])
+    assert not any(file["path"].startswith("assets/data/search/notes") for file in payload["created_files"])
 
 
 def test_docs_scope_config_requires_search_output() -> None:
@@ -492,6 +530,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert "allow_management" not in route_text
     assert source_payload["scopes"][1]["scope_id"] == "research"
     assert source_payload["scopes"][1]["viewer_base_url"] == "/research/"
+    assert source_payload["scopes"][1]["output"] == "assets/data/docs/scopes/research"
     assert source_payload["scopes"][1]["search_output"] == "assets/data/search/research/index.json"
     assert source_payload["scopes"][1]["include_scope_param"] is False
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
@@ -532,8 +571,13 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     assert route_exists is False
     assert source_payload["scopes"][1]["viewer_base_url"] == "/docs/"
     assert source_payload["scopes"][1]["include_scope_param"] is True
+    assert source_payload["scopes"][1]["output"] == "docs-viewer/generated/docs/notes"
+    assert source_payload["scopes"][1]["search_output"] == "docs-viewer/generated/search/notes/index.json"
+    assert payload["storage_contract"]["public_static_assets"] is False
     records = {record["scope_id"]: record for record in manifest_payload["scopes"]}
     assert records["notes"]["scope_type"] == "local"
+    assert any(file["path"] == "docs-viewer/generated/docs/notes" for file in records["notes"]["files"])
+    assert any(file["path"] == "docs-viewer/generated/search/notes/index.json" for file in records["notes"]["files"])
     assert not any(file["kind"] == "route_file" for file in records["notes"]["files"])
 
 
@@ -891,6 +935,7 @@ def main() -> None:
         test_capabilities_advertise_source_config_reads,
         test_scope_manifest_backfills_existing_scopes_as_system_owned,
         test_scope_create_preview_reports_write_set_and_urls,
+        test_scope_create_preview_reports_committed_manage_mode_outputs,
         test_docs_scope_config_requires_search_output,
         test_scope_create_apply_requires_confirmation,
         test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild,

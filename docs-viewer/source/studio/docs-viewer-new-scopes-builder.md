@@ -86,13 +86,13 @@ Create and commit:
 - source root and Markdown files
 - `docs-viewer/config/scopes/docs_scopes.json` entry
 - read-only route page
-- generated docs/search JSON if the repo tracks generated outputs for the site
+- generated docs/search JSON under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/index.json` if the repo tracks generated outputs for the site
 
 Then deploy through the normal static site workflow.
 Readers use the public route, such as `/research/`.
 Local edits still happen through `/docs/?scope=research&mode=manage`.
 
-### Local-Only Scope Committed To Repo
+### Committed Manage-Mode Scope
 
 Use this option when the scope should be available to local developers or Codex sessions, but not published as a public route.
 
@@ -100,10 +100,11 @@ Create and commit:
 
 - source root and Markdown files
 - `docs-viewer/config/scopes/docs_scopes.json` entry
-- generated docs/search JSON if local workflows expect checked-in generated data
+- generated docs/search JSON under `docs-viewer/generated/docs/<scope>/` and `docs-viewer/generated/search/<scope>/index.json` if local workflows expect checked-in generated data
 
 Do not create a public read-only route page.
 The scope remains available through `/docs/?scope=<scope>&mode=manage` when the local server is running.
+The generated JSON is tracked runtime data, but it is not a public static asset because it lives under the Docs Viewer-owned `docs-viewer/` boundary rather than under `assets/`.
 
 This is useful for private planning notes, local drafts, or internal review material that should move with the repo but not have a public URL.
 
@@ -265,6 +266,7 @@ Preview response fields:
 - `build_inline_search`
 - `write_generated_outputs`
 - `planned_scope_config`
+- `storage_contract`
 - `created_files`
 - `changed_files`
 - `build_commands`
@@ -276,6 +278,7 @@ Preview response fields:
 The preview response uses file records with `kind`, `path`, `action`, and `exists`.
 It reports planned generated docs/search outputs only when generated output writes are requested.
 It reports a public URL only for public read-only scopes.
+The `storage_contract` block is displayed before save so the operator can see whether generated output is public static asset data or manage-mode runtime data served by the local Docs Viewer service.
 
 ## Create Apply Endpoint
 

@@ -58,7 +58,7 @@ function publishingModes(capabilities) {
 function modeLabel(state, mode) {
   var labels = {
     public_readonly: managementText(state, "scopePublicReadonlyMode", "public read-only scope"),
-    local_committed: managementText(state, "scopeLocalCommittedMode", "local-only committed scope"),
+    local_committed: managementText(state, "scopeLocalCommittedMode", "committed manage-mode scope"),
     local_uncommitted: managementText(state, "scopeLocalUncommittedMode", "local-only uncommitted scope")
   };
   return labels[mode] || mode;
@@ -67,7 +67,7 @@ function modeLabel(state, mode) {
 function modeNote(state, mode) {
   var notes = {
     public_readonly: managementText(state, "scopePublicReadonlyModeNote", "Creates a source root, scope config, read-only route, manifest record, and generated outputs when requested."),
-    local_committed: managementText(state, "scopeLocalCommittedModeNote", "Creates a source root, scope config, manifest record, and generated outputs when requested. No public route is created."),
+    local_committed: managementText(state, "scopeLocalCommittedModeNote", "Creates tracked source, config, manifest, and non-public generated outputs under docs-viewer/generated/ when requested. No public route is created."),
     local_uncommitted: managementText(state, "scopeLocalUncommittedModeNote", "Creates local-only scope files and records the result as uncommitted local drift. No public route is created.")
   };
   return notes[mode] || "";
@@ -292,6 +292,27 @@ function renderUrls(urls) {
   );
 }
 
+function renderStorageContract(contract) {
+  if (!contract || typeof contract !== "object") return "";
+  var rows = [];
+  var summary = normalizeText(contract.summary);
+  var docsOutput = normalizeText(contract.docs_output);
+  var searchOutput = normalizeText(contract.search_output);
+  var publicAssets = contract.public_static_assets === true ? "yes" : "no";
+  rows.push(["public static assets", publicAssets]);
+  if (docsOutput) rows.push(["docs output", docsOutput]);
+  if (searchOutput) rows.push(["search output", searchOutput]);
+  return (
+    '<section class="docsViewerScopeLifecycle__section">' +
+      '<h3>' + escapeHtml("Storage") + '</h3>' +
+      (summary ? '<p class="docsViewer__modalNote muted small">' + escapeHtml(summary) + '</p>' : "") +
+      '<dl class="docsViewerScopeLifecycle__summaryGrid">' + rows.map(function (entry) {
+        return '<div><dt>' + escapeHtml(entry[0]) + '</dt><dd>' + escapeHtml(entry[1]) + '</dd></div>';
+      }).join("") + '</dl>' +
+    '</section>'
+  );
+}
+
 function renderPreviewHtml(payload, options) {
   var settings = options || {};
   var title = normalizeText(payload && payload.title) || normalizeText(payload && payload.scope_id);
@@ -301,7 +322,9 @@ function renderPreviewHtml(payload, options) {
     '<div class="docsViewerScopeLifecycle docsViewerScopeLifecycle--preview">' +
       (summary ? '<p class="docsViewer__modalNote muted small">' + escapeHtml(summary) + '</p>' : "") +
       (title ? '<dl class="docsViewerScopeLifecycle__summaryGrid"><div><dt>scope</dt><dd>' + escapeHtml(payload.scope_id) + '</dd></div><div><dt>title</dt><dd>' + escapeHtml(title) + '</dd></div></dl>' : "") +
+      renderStorageContract(payload && payload.storage_contract) +
       (blockers.length ? '<section class="docsViewerScopeLifecycle__section"><h3>Blockers</h3>' + renderList(blockers, "") + '</section>' : "") +
+      (Array.isArray(payload && payload.warnings) && payload.warnings.length ? '<section class="docsViewerScopeLifecycle__section"><h3>Warnings</h3>' + renderList(payload.warnings, "") + '</section>' : "") +
       (Array.isArray(payload && payload.created_files) ? '<section class="docsViewerScopeLifecycle__section"><h3>' + escapeHtml(settings.createdHeading || "Created files") + '</h3>' + renderList(payload && payload.created_files, "No files will be created.") + '</section>' : "") +
       '<section class="docsViewerScopeLifecycle__section"><h3>' + escapeHtml(settings.changedHeading || "Changed files") + '</h3>' + renderList(payload && payload.changed_files, "No files will be changed.") + '</section>' +
       (Array.isArray(payload && payload.deleted_files) && payload.deleted_files.length ? '<section class="docsViewerScopeLifecycle__section"><h3>Deleted files</h3>' + renderList(payload.deleted_files, "") + '</section>' : "") +

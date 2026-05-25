@@ -262,14 +262,32 @@ def require_confirmed(body: dict[str, Any]) -> None:
         raise ValueError("confirm must be true to apply scope lifecycle changes")
 
 
-def planned_scope_config_record(scope_id: str, source_root: Path, public_route_path: str, default_doc_id: str) -> dict[str, Any]:
+def planned_docs_output(scope_id: str, publishing_mode: str) -> Path:
+    if publishing_mode == PUBLIC_MODE:
+        return Path("assets/data/docs/scopes") / scope_id
+    return Path("docs-viewer/generated/docs") / scope_id
+
+
+def planned_search_output(scope_id: str, publishing_mode: str) -> Path:
+    if publishing_mode == PUBLIC_MODE:
+        return Path("assets/data/search") / scope_id / "index.json"
+    return Path("docs-viewer/generated/search") / scope_id / "index.json"
+
+
+def planned_scope_config_record(
+    scope_id: str,
+    source_root: Path,
+    public_route_path: str,
+    default_doc_id: str,
+    publishing_mode: str,
+) -> dict[str, Any]:
     viewer_base_url = public_route_path or "/docs/"
     return {
         "scope_id": scope_id,
         "source": source_root.as_posix(),
         "media_path_prefix": f"docs/{scope_id}",
-        "output": f"assets/data/docs/scopes/{scope_id}",
-        "search_output": f"assets/data/search/{scope_id}/index.json",
+        "output": planned_docs_output(scope_id, publishing_mode).as_posix(),
+        "search_output": planned_search_output(scope_id, publishing_mode).as_posix(),
         "viewer_base_url": viewer_base_url,
         "include_scope_param": public_route_path == "",
         "default_doc_id": default_doc_id,
@@ -283,6 +301,42 @@ def planned_scope_config_record(scope_id: str, source_root: Path, public_route_p
             "repo_assets_path_prefix": f"assets/docs/{scope_id}",
             "repo_assets_public_path_prefix": f"/assets/docs/{scope_id}",
         },
+    }
+
+
+def planned_storage_contract(preview: dict[str, Any]) -> dict[str, Any]:
+    publishing_mode = str(preview["publishing_mode"])
+    config = preview["planned_scope_config"]
+    docs_output = str(config["output"])
+    search_output = str(config["search_output"])
+    if publishing_mode == PUBLIC_MODE:
+        summary = (
+            "Public read-only scope: generated docs and search payloads are public static assets under assets/ "
+            "and a public route is created."
+        )
+        access = "public_readonly_route_and_local_manage"
+        public_static_assets = True
+    elif publishing_mode == LOCAL_COMMITTED_MODE:
+        summary = (
+            "Committed manage-mode scope: generated docs and search payloads are tracked non-public Docs Viewer "
+            "runtime data under docs-viewer/generated/ and no public route is created."
+        )
+        access = "local_manage_only"
+        public_static_assets = False
+    else:
+        summary = (
+            "Uncommitted manage-mode scope: generated docs and search payloads use the non-public "
+            "docs-viewer/generated/ path shape for local preview and no public route is created."
+        )
+        access = "local_manage_only"
+        public_static_assets = False
+    return {
+        "publishing_mode": publishing_mode,
+        "public_static_assets": public_static_assets,
+        "access": access,
+        "docs_output": docs_output,
+        "search_output": search_output,
+        "summary": summary,
     }
 
 
@@ -503,6 +557,7 @@ def apply_create_scope(
         "scope_id": scope_id,
         "title": preview["title"],
         "publishing_mode": preview["publishing_mode"],
+        "storage_contract": preview.get("storage_contract", {}),
         "created_files": preview["created_files"],
         "changed_files": preview["changed_files"],
         "deleted_files": [],
@@ -635,7 +690,13 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     build_inline_search = bool_value(body, "build_inline_search", True)
     write_generated_outputs = bool_value(body, "write_generated_outputs", True)
     public_route_path = normalize_route_path(body.get("public_route_path")) if publishing_mode == PUBLIC_MODE else ""
-    planned_scope_config = planned_scope_config_record(scope_id, source_root, public_route_path, default_doc_id)
+    planned_scope_config = planned_scope_config_record(
+        scope_id,
+        source_root,
+        public_route_path,
+        default_doc_id,
+        publishing_mode,
+    )
 
     existing_configs = load_docs_scope_configs(repo_root)
     if scope_id in existing_configs:
@@ -656,7 +717,10 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
     if public_route_path:
         created_files.append(path_record(repo_root, "route_file", route_file_for_public_path(repo_root, public_route_path), action="create"))
     if write_generated_outputs:
-        docs_output = repo_root / "assets" / "data" / "docs" / "scopes" / scope_id
+        docs_output = repo_root / safe_relative_path(
+            planned_scope_config["output"],
+            field="planned_scope_config.output",
+        )
         created_files.extend(
             [
                 path_record(repo_root, "generated_docs_root", docs_output, action="create"),
@@ -696,6 +760,12 @@ def plan_create_scope_preview(repo_root: Path, body: dict[str, Any]) -> dict[str
         "build_inline_search": build_inline_search,
         "write_generated_outputs": write_generated_outputs,
         "planned_scope_config": planned_scope_config,
+        "storage_contract": planned_storage_contract(
+            {
+                "publishing_mode": publishing_mode,
+                "planned_scope_config": planned_scope_config,
+            }
+        ),
         "created_files": created_files,
         "changed_files": changed_files,
         "build_commands": commands,
