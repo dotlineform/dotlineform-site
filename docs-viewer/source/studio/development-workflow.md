@@ -160,6 +160,30 @@ Choose the smallest useful check set:
 Use explicit toolchain paths where the repo requires them.
 See [Local Setup](/docs/?scope=studio&doc=local-setup), [Runtime Dependencies](/docs/?scope=studio&doc=runtime-dependencies), and [Testing](/docs/?scope=studio&doc=testing).
 
+For checks that clearly bind loopback ports or launch browser smokes, run them with elevated localhost permissions immediately when working in the Codex sandbox.
+This applies to local-service smokes, Playwright checks that start a temporary HTTP server, and run-check profiles whose purpose is browser or service verification.
+Keep pure syntax checks, `git diff --check`, JSON parsing, and non-network pytest runs sandboxed.
+
+When sweeping for stale references during verification, keep the scan focused on the surface that can regress:
+
+- always scan active code, config, runtime assets, scripts, and tests relevant to the change
+- scan current owning docs when documentation is part of the task
+- scan active request or task docs when closing or updating that request
+- exclude logs, archived requests, historical change docs, and broad request-history docs by default
+
+Only include historical logs or archive material when the active task is specifically to clean docs history, close/archive a request, or verify that a durable decision has been copied out of a request document.
+Use this as the default shape for repo sweeps, replacing `PATTERN` with the retired path, symbol, or URL under review:
+
+```bash
+rg -n "PATTERN" \
+  bin _config.yml docs-viewer studio scripts assets \
+  --glob '!docs-viewer/source/studio/site-change-log*.md' \
+  --glob '!docs-viewer/source/studio/site-request-*.md' \
+  --glob '!studio/workflows/change-requests/logs/**'
+```
+
+Run a separate targeted docs sweep only when needed, against current owning docs such as `docs-viewer.md`, `scripts-*.md`, `local-setup.md`, or `source-tree-ownership.md`.
+
 ### Defensive Tests During Refactors
 
 Temporary defensive tests are useful while a migration or extraction is in progress, especially to catch accidental compatibility shims, proxy paths, or retired write surfaces.
@@ -198,6 +222,7 @@ For change requests:
 - mark completed tasks clearly
 - move or mark the request according to the current request/archive practice
 - add references from the completed request to the relevant structured docs-log entry ids when the request has a closure/cleanup task for that
+- archive only when the parent request is complete, durable docs contain the important decisions, verification is recorded, and remaining risks are explicit
 
 ## 8. Record Durable Change History
 
@@ -207,6 +232,10 @@ The source model and authoring workflow for change logs are documented in `studi
 - include `change_request_doc_id` when a log entry implements or closes a request
 - include related docs and files so Codex can trace decisions later
 - let generated indexes and reports provide human browsing
+
+Create structured docs-log entries when the work changes durable behavior or closes a meaningful request: runtime behavior, command or service contracts, public routes, generated-data schemas, material workflow/process decisions, or a completed change request that future sessions need to trace.
+Do not create docs-log entries for routine task-row status updates, verification-only slices, small copy fixes, local smoke reruns, mechanical path-reference cleanup, or no-code/no-behavior confirmations.
+For multi-task requests, prefer one close-out log entry at the closure slice instead of one log entry per verification or bookkeeping subtask.
 
 ## Documentation Review Candidates
 

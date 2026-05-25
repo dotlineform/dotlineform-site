@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T13:38:10Z",
+  "generated_at": "2026-05-25T14:04:15Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -212,7 +212,7 @@
       "doc_id": "docs-build-management-import-export-improvements",
       "title": "Docs Build Management Import Export Improvements",
       "added_date": "2026-05-19",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-25",
       "parent_id": "studio-python-ruby-script-inventory",
       "sort_order": 1000,
       "published": true,
@@ -221,7 +221,7 @@
       "source_path": "docs-build-management-import-export-improvements.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-build-management-import-export-improvements",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-build-management-import-export-improvements.json",
-      "content_text_length": 11918,
+      "content_text_length": 11965,
       "ui_status": "done"
     },
     {
@@ -377,7 +377,7 @@
       "doc_id": "site-request-portable-docs-viewer",
       "title": "Portable Docs Viewer Request",
       "added_date": "2026-05-11",
-      "last_updated": "2026-05-12 10:55",
+      "last_updated": "2026-05-25",
       "parent_id": "change-requests",
       "sort_order": 1000,
       "published": true,
@@ -386,7 +386,7 @@
       "source_path": "site-request-portable-docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-portable-docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-portable-docs-viewer.json",
-      "content_text_length": 28054,
+      "content_text_length": 28186,
       "ui_status": "paused"
     },
     {
@@ -532,7 +532,7 @@
       "source_path": "development-workflow.md",
       "viewer_url": "/docs/?scope=studio&doc=development-workflow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/development-workflow.json",
-      "content_text_length": 11960
+      "content_text_length": 14350
     },
     {
       "scope": "studio",
@@ -1735,7 +1735,7 @@
       "source_path": "studio-python-ruby-script-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-python-ruby-script-inventory",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-python-ruby-script-inventory.json",
-      "content_text_length": 17517,
+      "content_text_length": 17604,
       "ui_status": "urgent"
     },
     {
@@ -2431,7 +2431,7 @@
       "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json",
-      "content_text_length": 8888
+      "content_text_length": 9039
     },
     {
       "scope": "studio",
@@ -3114,8 +3114,8 @@
       "doc_id": "site-request-docs-viewer-shell-extraction",
       "title": "Docs Viewer Shell Extraction Request",
       "added_date": "2026-05-23",
-      "last_updated": "2026-05-24",
-      "parent_id": "change-requests",
+      "last_updated": "2026-05-25",
+      "parent_id": "archive",
       "sort_order": 10020,
       "published": true,
       "hidden": false,
@@ -3123,8 +3123,8 @@
       "source_path": "site-request-docs-viewer-shell-extraction.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction.json",
-      "content_text_length": 17489,
-      "ui_status": "in-progress"
+      "content_text_length": 20266,
+      "ui_status": "done"
     },
     {
       "scope": "studio",
@@ -3140,8 +3140,8 @@
       "source_path": "site-request-docs-viewer-shell-extraction-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-tasks",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-viewer-shell-extraction-tasks.json",
-      "content_text_length": 31641,
-      "ui_status": "draft"
+      "content_text_length": 33373,
+      "ui_status": "done"
     },
     {
       "scope": "studio",

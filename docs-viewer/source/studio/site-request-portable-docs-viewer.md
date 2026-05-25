@@ -2,7 +2,7 @@
 doc_id: site-request-portable-docs-viewer
 title: Portable Docs Viewer Request
 added_date: 2026-05-11
-last_updated: "2026-05-12 10:55"
+last_updated: 2026-05-25
 ui_status: paused
 parent_id: change-requests
 sort_order: 1000
@@ -29,16 +29,16 @@ The first target is pragmatic rather than package-manager perfect:
 This request is narrower and more implementation-oriented than [Docs Toolkit Extraction Request](/docs/?scope=studio&doc=site-request-docs-toolkit-extraction).
 It uses the current dotlineform implementation as the first consumer and focuses on making the Docs Viewer self-contained enough to copy into another Jekyll repo.
 
-[Docs Viewer Shell Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction) tracks the later shell/core split that should follow the current Studio localization and source-tree reorganization work.
+[Docs Viewer Shell Extraction Request](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction) completed the first shell/service extraction after Studio localization and source-tree reorganization work.
 
 Current clarification:
 
-- the Studio source-tree reorganization may first move current Docs Viewer runtime, server/services, source config, UI text, CSS, assets, and Docs Viewer source Markdown under a clear internal Studio home such as `studio/docs-viewer/`
-- that internal home should preserve the Docs Viewer localization work already done, rather than scattering Docs Viewer files across generic Studio folders
+- Docs Viewer runtime, server/services, source config, UI text, CSS, assets, build scripts, and Docs Viewer source Markdown now live under the tracked top-level `docs-viewer/` boundary
+- Local Studio is now a peer integration that links to the configured Docs Viewer service; it does not host the Docs Viewer shell or proxy Docs Viewer APIs
 - canonical publishing Markdown such as `_docs_catalogue/` is Studio-owned site source, not Docs Viewer-owned source
 - generated docs/search JSON consumed by public installs remains in the public Jekyll site output paths
-- the later portable/extraction work means moving that coherent Docs Viewer subtree back out of Studio into a true reusable boundary such as `docs-viewer/`
-- until that extraction lands, Docs Viewer remains Studio-hosted and the Studio server owns Docs Viewer management/server behavior
+- public read-only scope routes such as `/library/` and `/analysis/` remain host/Jekyll-owned route adapters that consume Docs Viewer runtime/config/generated-data contracts
+- the remaining portable work should reduce host integration work and packaging friction from the current `docs-viewer/` boundary, not move files out of Studio
 
 ## Product Boundary
 
@@ -157,11 +157,11 @@ Ownership decisions for this slice:
 | Docs Viewer shell | `_includes/docs_viewer_shell.html` | Docs Viewer package plus consuming route adapter | Keep the viewer shell include as the route integration boundary until the route-adapter slice defines templates. Docs Import modal markup lives inside that shell rather than a migrated standalone-page include. |
 | Docs Viewer runtime JS | `docs-viewer/runtime/js/docs-viewer*.js` | Docs Viewer | Runtime modules live under `docs-viewer/runtime/js/`. |
 | Docs Viewer CSS | `docs-viewer/static/css/docs-viewer-management.css`, `.docsViewer*` rules in `assets/css/main.css` | Docs Viewer | Management CSS lives under `docs-viewer/static/css/`; public CSS extraction is still a later slice. |
-| Docs Viewer browser config | `docs-viewer/config/scopes/docs_scopes.json`, `assets/studio/data/studio_config.json`, hardcoded route maps | Docs Viewer | Keep `docs-viewer/config/scopes/docs_scopes.json` as source config; add a browser-facing config under `assets/docs-viewer/data/`. |
-| Docs Viewer UI text | `docs-viewer/config/ui-text/ui-text.json` | Docs Viewer | Viewer and Docs Import copy lives under `assets/docs-viewer/data/`. |
+| Docs Viewer browser config | `docs-viewer/config/scopes/docs_scopes.json`, `docs-viewer/config/defaults/docs-viewer-config.json`, `docs-viewer/config/defaults/docs-viewer-public-config.json` | Docs Viewer | Keep `docs-viewer/config/scopes/docs_scopes.json` as source config; generate browser-facing defaults through the Docs Viewer builder. |
+| Docs Viewer UI text | `docs-viewer/config/ui-text/ui-text.json` | Docs Viewer | Viewer and Docs Import copy lives under Docs Viewer config. |
 | Generated docs payloads | `assets/data/docs/scopes/<scope>/...` | Docs Viewer output, consuming site storage | Keep the current output path for compatibility; treat it as generated output, not package source. |
 | Inline docs search | `assets/data/search/<scope>/index.json`, `scripts/search/build_search.rb`, `scripts/search/build_config.json` | Docs Viewer after the search slice | Leave in the search subsystem until Docs search ownership moves in its dedicated slice. |
-| Docs management server | `docs-viewer/services/docs_management_server.py` and adjacent `scripts/docs/docs_*` modules | Docs Viewer | Keep under `scripts/docs/`; this is already the right domain boundary. |
+| Docs Viewer local service | `docs-viewer/services/docs_viewer_service.py`, `docs-viewer/services/docs_management_service.py`, and adjacent Docs Viewer service modules | Docs Viewer | Keep the standalone service and management dispatcher under `docs-viewer/services/`; the old `docs_management_server.py` entrypoint is removed. |
 | Studio application code | `assets/studio/js/*`, `assets/studio/data/studio_config.json`, Studio generated payloads | Studio | Do not reorganise broad Studio files in this request; only extract Docs Viewer dependencies. |
 | Catalogue and tag tools | `assets/studio/js/catalogue-*`, `assets/studio/js/tag-*`, `scripts/catalogue/`, `scripts/analytics/` | Catalogue, Analytics, Studio | Out of scope except where Docs Viewer currently imports them by mistake. |
 | Public site JS | `assets/js/work.js`, `assets/js/moment.js`, `assets/js/site-nav.js`, `assets/js/theme-toggle.js` | Consuming site/shared public site | Leave in `assets/js/`; this directory should become public site/shared JS after Docs Viewer moves out. |
@@ -170,7 +170,7 @@ The file-move implementation slice should move or introduce only:
 
 - `docs-viewer/runtime/js/` for the Docs Viewer runtime modules
 - `docs-viewer/static/css/` for Docs Viewer-owned CSS
-- `assets/docs-viewer/data/` for browser config and Docs Viewer UI text
+- `docs-viewer/config/defaults/` and `docs-viewer/config/ui-text/` for browser config defaults and Docs Viewer UI text
 - include path updates needed by `_includes/docs_viewer_shell.html` and route pages
 
 The next implementation slice should not move:
@@ -208,11 +208,11 @@ This slice is mostly mechanical, but it should leave the live routes working fro
 
 Tasks:
 
-- create `docs-viewer/runtime/js/`, `docs-viewer/static/css/`, and `assets/docs-viewer/data/` (done)
+- create `docs-viewer/runtime/js/`, `docs-viewer/static/css/`, `docs-viewer/config/defaults/`, and `docs-viewer/config/ui-text/` (done)
 - move existing `assets/js/docs-viewer*.js` modules into `docs-viewer/runtime/js/` (done)
 - move `assets/css/docs-viewer-management.css` into `docs-viewer/static/css/` (done)
 - add a Docs Viewer-owned public CSS file under `docs-viewer/static/css/` only if a small extracted stylesheet is needed to keep includes coherent before the full CSS extraction slice (not needed in this slice)
-- move or copy Docs Viewer UI text needed by the current runtime into `assets/docs-viewer/data/`, while leaving any Studio-only source in place until callers are switched (done for viewer UI text)
+- move Docs Viewer UI text needed by the current runtime into `docs-viewer/config/ui-text/` (done)
 - update `_includes/docs_viewer_shell.html`, route pages, and module imports to load from the new Docs Viewer paths (done through the shared include)
 - keep generated docs payloads under `assets/data/docs/scopes/` and docs-search payloads under `assets/data/search/` for compatibility (done)
 - do not move broad Studio, Catalogue, tag, export, media, or public-site files in this slice (done)

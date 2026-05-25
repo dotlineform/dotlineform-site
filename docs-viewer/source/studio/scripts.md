@@ -43,11 +43,12 @@ The current script surface is organized by owner:
 - `studio/app/server/studio/` owns non-domain-specific Studio runtime services such as audit, backup-retention, and Data Sharing dispatch services.
 - `studio/checks/` owns standalone audits and verification commands.
 - `studio/services/media/` owns media derivation and remote media publishing commands.
-- top-level `scripts/` is reserved for stable wrappers that delegate into Studio/Docs Viewer owners.
+- top-level `scripts/` is reserved for stable wrappers that delegate into Studio/Docs Viewer owners when a wrapper is still intentionally supported.
 
 Top-level survivors are intentional:
 
-- `build_docs.rb` and `build_search.rb` are stable operational wrappers over domain-owned implementations.
+- Docs Viewer docs/search rebuilds use `./docs-viewer/build/build_docs.rb` and `./docs-viewer/build/build_search.rb` directly.
+- Catalogue search uses `./studio/services/catalogue/search/build_search.rb` directly.
 - `make_srcset_images.sh`, when present, is the stable shell wrapper for the media implementation.
 - shared infrastructure modules now live under `studio/shared/`.
 - shared Ruby/Jekyll helpers now live under `studio/shared/ruby/` or the owning Docs Viewer build path.

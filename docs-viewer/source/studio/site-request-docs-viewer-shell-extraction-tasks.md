@@ -3,11 +3,16 @@ doc_id: site-request-docs-viewer-shell-extraction-tasks
 title: Docs Viewer Shell Extraction Tasks
 added_date: 2026-05-24
 last_updated: 2026-05-25
-ui_status: draft
+ui_status: done
 parent_id: site-request-docs-viewer-shell-extraction
 sort_order: 10021
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # Docs Viewer Shell Extraction Tasks
 
 This is the tracker for implementing [Docs Viewer Shell Extraction Request](/docs/?scope=studio&mode=manage&doc=site-request-docs-viewer-shell-extraction).
@@ -16,6 +21,12 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### just done
 
+- Completed `DVSE-023` by closing out the parent request, task tracker, portable request outcome, structured docs-log source entry, and current owning docs that still contained stale extracted-service ownership wording.
+- Marked the parent request and this tracker complete.
+- Added close-out summary, final moved-path summary, verification results, generated payload status, and remaining known risk to the parent request.
+- Updated the active Portable Docs Viewer request so it no longer describes the extracted Docs Viewer boundary as a future move from `studio/docs-viewer/`.
+- Added structured docs-log source entry `change-2026-05-25-completed-docs-viewer-shell-extraction`.
+- Generated Docs Viewer docs/search payloads and generated docs-log projections were intentionally not rebuilt during close-out.
 - Completed `DVSE-022` with the agreed final verification set for the extracted Docs Viewer shell boundary.
 - `quick` passed: `var/test-runs/docs-viewer-shell-final-quick/summary.md`.
 - The first sandboxed `docs-viewer-smoke` run reproduced the expected localhost bind restriction after the temporary Jekyll build passed; the elevated rerun passed all 7 checks, including the standalone Docs Viewer manage shell, public `/library/` and `/analysis/` read-only smoke, Docs Viewer browser module smokes, management modal, action workflow modules, and Docs HTML import modules. Summary: `var/test-runs/docs-viewer-shell-final-docs-viewer-smoke-elevated/summary.md`.
@@ -110,7 +121,12 @@ This is the tracker for implementing [Docs Viewer Shell Extraction Request](/doc
 
 ### steer for next task
 
-- Start with `DVSE-022`, the agreed final verification set.
+- No remaining sequential task in this tracker.
+- Treat the extracted Docs Viewer boundary as current state: `docs-viewer/` owns source docs, runtime, CSS, config defaults, UI text, build scripts, standalone service, management dispatcher, generated reads, import/export, live rebuild, and Docs Viewer-owned tests.
+- Keep Local Studio as a peer integration that links to the configured Docs Viewer service; do not reintroduce Local Studio hosting for `/docs/`, `/docs-viewer/runtime/`, `/docs-viewer/static/`, or `/studio/api/docs/...`.
+- Keep public `/library/` and `/analysis/` read-only routes Jekyll-hosted and host-owned while using Docs Viewer runtime/config/build contracts.
+- Keep generated docs/search payload locations stable under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/`.
+- Future portability work should continue from [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer), not from this archived extraction tracker.
 - Keep the table sequential: only begin the next non-deferred ID after the current one is `done`.
 - If a task uncovers a new dependency, risk, or unresolved ownership question, add a new task row before continuing rather than widening the active task.
 - Bunch work into coherent slices that reduce repeated verification, but do not combine tasks when the second task depends on evidence from the first.
@@ -179,4 +195,4 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | DVSE-020 | done | Update command docs, local setup docs, Docs Viewer portable setup, runtime boundary docs, source organisation docs, config docs, and script docs to describe the extracted boundary, service config, route ownership, runner behavior, standalone Docs Viewer service ownership, and retired current-state assumptions. |
 | DVSE-021 | done | Delete old Studio-owned Docs Viewer source locations after references are updated; confirm removed paths are not retained through import aliases, copied files, static mount shims, or dual-read fallback logic. |
 | DVSE-022 | done | Run the agreed final verification set: quick profile, Docs Viewer smoke profile, focused Local Studio integration smokes, public Jekyll build, public scope checks, syntax/import checks, and any changed-doc link/path checks. |
-| DVSE-023 | planned | Close out the parent request and this tracker: update statuses, summarize moved paths, record verification results and generated payload status, create structured docs-log entries, copy durable decisions/contracts into permanent owning docs, and note remaining risks before these request docs are archived. |
+| DVSE-023 | done | Close out the parent request and this tracker: update statuses, summarize moved paths, record verification results and generated payload status, create structured docs-log entries, copy durable decisions/contracts into permanent owning docs, and note remaining risks before these request docs are archived. |

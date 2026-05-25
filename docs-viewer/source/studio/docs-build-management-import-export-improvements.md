@@ -2,7 +2,7 @@
 doc_id: docs-build-management-import-export-improvements
 title: Docs Build Management Import Export Improvements
 added_date: 2026-05-19
-last_updated: 2026-05-19
+last_updated: 2026-05-25
 ui_status: done
 parent_id: studio-python-ruby-script-inventory
 sort_order: 1000
@@ -20,7 +20,7 @@ The preferred shape is two implementation slices plus one closeout slice.
 The Docs path crosses language and ownership boundaries:
 
 - Ruby owns `docs-viewer/build/build_docs.rb` and docs search builders.
-- Python owns `docs-viewer/services/docs_management_server.py`, source mutation planners, generated reads, import/export adapters, live rebuild orchestration, and docs-management response shaping.
+- Python owns `docs-viewer/services/docs_viewer_service.py`, `docs-viewer/services/docs_management_service.py`, source mutation planners, generated reads, import/export adapters, live rebuild orchestration, and docs-management response shaping.
 - The live watcher and docs-management service both coordinate docs payload rebuilds and docs search updates.
 - Semantic references add derived per-doc and per-target relationship artifacts, which makes affected-doc rebuild optimization useful but dependency-sensitive.
 

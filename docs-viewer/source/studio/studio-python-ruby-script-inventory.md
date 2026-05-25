@@ -131,7 +131,8 @@ Relevant files:
 - `docs-viewer/services/docs_export.py`
 - `docs-viewer/services/docs_import.py`
 - `docs-viewer/services/docs_management_mutations.py`
-- `docs-viewer/services/docs_management_server.py`
+- `docs-viewer/services/docs_management_service.py`
+- `docs-viewer/services/docs_viewer_service.py`
 - `docs-viewer/services/docs_live_rebuild_watcher.py`
 - `docs-viewer/build/build_search.rb`
 
@@ -146,7 +147,7 @@ As Library and Studio docs grow, the diagnostics added to rebuild responses and 
 
 Current guardrails and watch points:
 
-- source config, generated reads, mutations, import/export adapters, and rebuild orchestration already have current Python owners; avoid moving that behavior back into `docs_management_server.py`
+- source config, generated reads, mutations, import/export adapters, and rebuild orchestration already have current Python owners; avoid moving that behavior back into the HTTP service layer
 - the `build_docs.rb --only-doc-ids` contract is intentionally same-scope only, caller-owned for affected ids, and backed by full fallback when generated output or dependency data is incomplete
 - rebuild diagnostics already expose source files scanned, docs emitted, item payloads changed, references changed, search records touched, and elapsed time in rebuild responses or logs
 - resolver-data changes outside docs source, such as catalogue title or route changes, remain full-scope until a future change defines explicit affected-id rules for them
@@ -195,7 +196,8 @@ Immediate work signal: medium for maintainability, high for performance when med
 Relevant files:
 
 - `studio/services/catalogue/catalogue_write_server.py`
-- `docs-viewer/services/docs_management_server.py`
+- `docs-viewer/services/docs_viewer_service.py`
+- `docs-viewer/services/docs_management_service.py`
 - `studio/app/server/studio/studio_audit_api.py`
 - `studio/app/server/studio/audit_runner.py`
 - `scripts/script_logging.py`

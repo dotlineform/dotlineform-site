@@ -2,20 +2,61 @@
 doc_id: site-request-docs-viewer-shell-extraction
 title: Docs Viewer Shell Extraction Request
 added_date: 2026-05-23
-last_updated: 2026-05-24
-ui_status: in-progress
-parent_id: change-requests
+last_updated: 2026-05-25
+ui_status: done
+parent_id: archive
 sort_order: 10020
 viewable: true
 ---
+
+This document is archived and is no longer maintained.
+
+---
+
 # Docs Viewer Shell Extraction Request
 
 Status:
 
-- in progress
+- complete: implementation and final verification are tracked in [Docs Viewer Shell Extraction Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-tasks)
+- completion log: `change-2026-05-25-completed-docs-viewer-shell-extraction`
 - related to, and narrower than, the active [Portable Docs Viewer Request](/docs/?scope=studio&doc=site-request-portable-docs-viewer)
-- should follow Studio source-tree reorganization rather than run alongside it
-- implementation tasks are tracked in [Docs Viewer Shell Extraction Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-tasks)
+
+## Completion Summary
+
+The extraction is complete for the v1 local service boundary.
+Reusable Docs Viewer source, runtime modules, CSS, config defaults, UI text, build scripts, local services, management workflows, generated-read helpers, live rebuild helpers, and Docs Viewer-owned tests now live under the tracked `docs-viewer/` boundary.
+Local Studio is no longer a Docs Viewer shell/API host; it links to the configured Docs Viewer peer service from `var/local/site.env`.
+
+Final shape:
+
+- `docs-viewer/source/<scope>/`: Docs Viewer-owned source Markdown
+- `docs-viewer/runtime/js/`: reusable browser runtime, reports, management, search, router, bookmark, import, and scope lifecycle modules
+- `docs-viewer/static/css/`: Docs Viewer base, viewer, report, and management CSS
+- `docs-viewer/config/`: scope registry, defaults, UI text, generated-data contract, and local service defaults/schema
+- `docs-viewer/build/`: Docs Viewer docs and search builders
+- `docs-viewer/services/`: standalone service, management dispatcher, write workflows, generated reads, import/export, Data Sharing adapter, broken-links checks, and live rebuild watcher
+- `docs-viewer/shell/`: standalone `/docs/` manage shell template
+- `docs-viewer/bin/docs-viewer`: independent Docs Viewer service launcher
+- `docs-viewer/tests/`: Docs Viewer-owned Python and browser smoke coverage
+
+Host-owned integration remains outside that boundary:
+
+- public `/library/` and `/analysis/` pages remain Jekyll-hosted read-only routes
+- generated docs/search payloads remain under `assets/data/docs/scopes/<scope>/` and `assets/data/search/<scope>/`
+- `_includes/docs_viewer_readonly_route.html` remains the minimal public route adapter
+- Local Studio navigation and Data Sharing routes point to the configured Docs Viewer service instead of hosting `/docs/`
+- `bin/local-all` starts public preview, Local Studio, and Docs Viewer as independent child services
+
+Final verification passed:
+
+- `quick`: `var/test-runs/docs-viewer-shell-final-quick/summary.md`
+- elevated `docs-viewer-smoke`: `var/test-runs/docs-viewer-shell-final-docs-viewer-smoke-elevated/summary.md`
+- elevated `studio-smoke`: `var/test-runs/docs-viewer-shell-final-studio-smoke/summary.md`
+- focused Local Studio Docs Viewer boundary, navigation adapter, Data Sharing route, and Data Sharing review smokes
+- focused syntax/import checks for Docs Viewer JavaScript, Docs Viewer Ruby builders, Docs Viewer services/tests, and Local Studio integration
+
+Generated Docs Viewer docs/search payloads were not rebuilt manually during close-out.
+The known pre-existing Analysis semantic-reference warning for `work:00638002` remains unrelated to this extraction.
 
 ## Summary
 
@@ -248,3 +289,7 @@ The shell extraction should make the CSS base explicit:
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
 - [Studio Source Tree Reorganization Request](/docs/?scope=studio&doc=site-request-studio-source-tree-reorganization)
 - [Studio Local Vanilla Web App Request](/docs/?scope=studio&doc=site-request-studio-local-vanilla-web-app)
+
+## Change Log Entries
+
+- `change-2026-05-25-completed-docs-viewer-shell-extraction`
