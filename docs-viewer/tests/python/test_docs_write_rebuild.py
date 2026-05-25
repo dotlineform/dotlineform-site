@@ -385,6 +385,7 @@ def test_rebuild_all_docs_outputs_preserves_command_sequence() -> None:
         ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "studio", "--write"],
         ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "library", "--write"],
         ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "analysis", "--write"],
+        ["/tmp/bundle", "exec", "ruby", "docs-viewer/build/build_search.rb", "--scope", "archive", "--write"],
     ]
 
 

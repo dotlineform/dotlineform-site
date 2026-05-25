@@ -374,7 +374,7 @@ def default_source_doc_text(title: str, default_doc_id: str) -> str:
             f"last_updated: {today}",
             "ui_status: draft",
             "published: true",
-            "hidden: false",
+            "viewable: true",
             "---",
             f"# {title}",
             "",

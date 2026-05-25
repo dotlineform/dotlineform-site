@@ -4,7 +4,7 @@ title: Committed Manage-Mode Scope Storage Request
 added_date: 2026-05-25
 last_updated: 2026-05-25
 ui_status: done
-parent_id: archive
+parent_id: change-requests
 sort_order: 93000
 viewable: true
 ---
@@ -12,7 +12,7 @@ viewable: true
 
 Status:
 
-- in progress
+- completed
 
 ## Summary
 

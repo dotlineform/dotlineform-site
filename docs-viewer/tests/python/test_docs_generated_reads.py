@@ -7,7 +7,6 @@ import json
 import sys
 import tempfile
 from pathlib import Path
-from types import SimpleNamespace
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -23,7 +22,37 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
     path.write_text(json.dumps(payload), encoding="utf-8")
 
 
+def scope_config(scope_id: str, output: str, search_output: str) -> dict[str, object]:
+    return {
+        "scope_id": scope_id,
+        "source": f"docs-viewer/source/{scope_id}",
+        "media_path_prefix": f"docs/{scope_id}",
+        "output": output,
+        "search_output": search_output,
+        "viewer_base_url": "/docs/" if output.startswith("docs-viewer/") else f"/{scope_id}/",
+        "include_scope_param": output.startswith("docs-viewer/"),
+        "default_doc_id": scope_id,
+    }
+
+
+def write_scope_config(root: Path, extra_scopes: list[dict[str, object]] | None = None) -> None:
+    scopes = [
+        scope_config("studio", "docs-viewer/generated/docs/studio", "docs-viewer/generated/search/studio/index.json"),
+        scope_config("library", "assets/data/docs/scopes/library", "assets/data/search/library/index.json"),
+        scope_config("analysis", "assets/data/docs/scopes/analysis", "assets/data/search/analysis/index.json"),
+    ]
+    scopes.extend(extra_scopes or [])
+    write_json(
+        root / "docs-viewer/config/scopes/docs_scopes.json",
+        {
+            "schema_version": "docs_scopes_v1",
+            "scopes": scopes,
+        },
+    )
+
+
 def write_generated_docs(root: Path) -> None:
+    write_scope_config(root)
     docs = [
         {
             "scope": "studio",
@@ -191,61 +220,59 @@ def test_generated_reference_target_rejects_unsafe_path_parts() -> None:
 
 
 def test_generated_doc_paths_use_scope_config_output() -> None:
-    original_configs = generated_reads.DOCS_SCOPE_CONFIGS
-    generated_reads.DOCS_SCOPE_CONFIGS = {
-        **original_configs,
-        "research": SimpleNamespace(
-            output=Path("custom/generated/research"),
-            search_output=Path("custom/generated/search/research/index.json"),
-        ),
-    }
-    try:
-        with tempfile.TemporaryDirectory() as temp_path:
-            repo_root = Path(temp_path)
-            docs = [
-                {
-                    "doc_id": "research",
-                    "content_url": "/custom/generated/research/by-id/research.json",
-                }
-            ]
-            write_json(repo_root / "custom/generated/research/index.json", {"docs": docs})
-            write_json(repo_root / "custom/generated/research/by-id/research.json", {"doc_id": "research"})
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_config(
+            repo_root,
+            [
+                scope_config(
+                    "research",
+                    "custom/generated/research",
+                    "custom/generated/search/research/index.json",
+                )
+            ],
+        )
+        docs = [
+            {
+                "doc_id": "research",
+                "content_url": "/custom/generated/research/by-id/research.json",
+            }
+        ]
+        write_json(repo_root / "custom/generated/research/index.json", {"docs": docs})
+        write_json(repo_root / "custom/generated/research/by-id/research.json", {"doc_id": "research"})
 
-            assert (
-                generated_reads.generated_docs_index_path(repo_root, "research")
-                == repo_root / "custom/generated/research/index.json"
-            )
-            payload = generated_reads.read_generated_doc_payload(repo_root, "research", "research")
-    finally:
-        generated_reads.DOCS_SCOPE_CONFIGS = original_configs
+        assert (
+            generated_reads.generated_docs_index_path(repo_root, "research")
+            == repo_root / "custom/generated/research/index.json"
+        )
+        payload = generated_reads.read_generated_doc_payload(repo_root, "research", "research")
 
     assert payload["doc_id"] == "research"
 
 
 def test_generated_search_path_uses_scope_config_search_output() -> None:
-    original_configs = generated_reads.DOCS_SCOPE_CONFIGS
-    generated_reads.DOCS_SCOPE_CONFIGS = {
-        **original_configs,
-        "research": SimpleNamespace(
-            output=Path("custom/generated/research"),
-            search_output=Path("custom/generated/search/research/index.json"),
-        ),
-    }
-    try:
-        with tempfile.TemporaryDirectory() as temp_path:
-            repo_root = Path(temp_path)
-            write_json(
-                repo_root / "custom/generated/search/research/index.json",
-                {"entries": [{"doc_id": "research"}]},
-            )
+    with tempfile.TemporaryDirectory() as temp_path:
+        repo_root = Path(temp_path)
+        write_scope_config(
+            repo_root,
+            [
+                scope_config(
+                    "research",
+                    "custom/generated/research",
+                    "custom/generated/search/research/index.json",
+                )
+            ],
+        )
+        write_json(
+            repo_root / "custom/generated/search/research/index.json",
+            {"entries": [{"doc_id": "research"}]},
+        )
 
-            assert (
-                generated_reads.generated_search_index_path(repo_root, "research")
-                == repo_root / "custom/generated/search/research/index.json"
-            )
-            payload = generated_reads.read_generated_search_index(repo_root, "research")
-    finally:
-        generated_reads.DOCS_SCOPE_CONFIGS = original_configs
+        assert (
+            generated_reads.generated_search_index_path(repo_root, "research")
+            == repo_root / "custom/generated/search/research/index.json"
+        )
+        payload = generated_reads.read_generated_search_index(repo_root, "research")
 
     assert payload["entries"][0]["doc_id"] == "research"
 

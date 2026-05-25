@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict
 from urllib.parse import urlparse
 
-from docs_scope_config import DOCS_SCOPE_CONFIGS
+from docs_scope_config import DocsScopeConfig, load_docs_scope_configs
 
 
 SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
@@ -26,10 +26,15 @@ DOCS_LOG_PROJECTIONS = {
 }
 
 
-def generated_docs_output_root(repo_root: Path, scope: str) -> Path:
-    config = DOCS_SCOPE_CONFIGS.get(scope)
+def generated_scope_config(repo_root: Path, scope: str) -> DocsScopeConfig:
+    config = load_docs_scope_configs(repo_root).get(scope)
     if config is None:
         raise ValueError(f"unsupported docs scope: {scope}")
+    return config
+
+
+def generated_docs_output_root(repo_root: Path, scope: str) -> Path:
+    config = generated_scope_config(repo_root, scope)
     return repo_root / config.output
 
 
@@ -44,9 +49,7 @@ def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path
 
 
 def generated_search_index_path(repo_root: Path, scope: str) -> Path:
-    config = DOCS_SCOPE_CONFIGS.get(scope)
-    if config is None:
-        raise ValueError(f"unsupported docs scope: {scope}")
+    config = generated_scope_config(repo_root, scope)
     return repo_root / config.search_output
 
 
@@ -134,7 +137,7 @@ def read_generated_doc_payload(repo_root: Path, scope: str, doc_id: str) -> Dict
     if record is None:
         raise FileNotFoundError(f"generated doc payload for {doc_id} not found")
 
-    expected_path = (DOCS_SCOPE_CONFIGS[scope].output / "by-id" / f"{doc_id}.json").as_posix()
+    expected_path = (generated_scope_config(repo_root, scope).output / "by-id" / f"{doc_id}.json").as_posix()
     expected_url = f"/{expected_path}"
     content_url = str(record.get("content_url") or "").strip()
     if content_url and urlparse(content_url).path != expected_url:

@@ -76,6 +76,8 @@ export function initDocsViewerConfigController(context) {
       if (seen.has(config.scopeId)) return false;
       seen.add(config.scopeId);
       return true;
+    }).sort(function (left, right) {
+      return left.scopeId.localeCompare(right.scopeId);
     });
     if (!scopes.length) {
       throw new Error("Docs Viewer config does not define any scopes.");
@@ -163,7 +165,12 @@ export function initDocsViewerConfigController(context) {
     renderScopeOptions();
   }
 
-  function loadDocsViewerConfig() {
+  function loadDocsViewerConfig(options) {
+    var settings = options || {};
+    if (settings.force) {
+      state.docsViewerConfigLoaded = false;
+      state.docsViewerConfigRequestPromise = null;
+    }
     if (state.docsViewerConfigLoaded) return Promise.resolve(state.docsViewerConfig);
     if (state.docsViewerConfigRequestPromise) return state.docsViewerConfigRequestPromise;
     if (!context.docsViewerConfigUrl) {
@@ -174,7 +181,7 @@ export function initDocsViewerConfigController(context) {
       context.docsViewerConfigUrl,
       "Failed to load Docs Viewer config",
       "",
-      context.dataRequestOptions()
+      context.dataRequestOptions(settings.reloadNonce ? { reloadNonce: settings.reloadNonce } : {})
     )
       .then(function (payload) {
         var config = normalizeBrowserConfig(payload);
@@ -274,7 +281,12 @@ export function initDocsViewerConfigController(context) {
     }
   }
 
-  function loadViewerConfig() {
+  function loadViewerConfig(options) {
+    var settings = options || {};
+    if (settings.force) {
+      state.viewerConfigLoaded = false;
+      state.viewerConfigRequestPromise = null;
+    }
     if (state.viewerConfigLoaded) return Promise.resolve(null);
     if (state.viewerConfigRequestPromise) return state.viewerConfigRequestPromise;
     if (!context.docsViewerConfigUrl) {
@@ -283,7 +295,7 @@ export function initDocsViewerConfigController(context) {
     }
 
     state.viewerConfigRequestPromise = Promise.all([
-      loadDocsViewerConfig(),
+      loadDocsViewerConfig(settings),
       loadDocsViewerText()
     ])
       .then(function (results) {
@@ -303,6 +315,13 @@ export function initDocsViewerConfigController(context) {
         state.viewerConfigRequestPromise = null;
       });
     return state.viewerConfigRequestPromise;
+  }
+
+  function reloadDocsViewerConfig() {
+    return loadViewerConfig({
+      force: true,
+      reloadNonce: String(Date.now())
+    });
   }
 
   function loadDocsViewerText() {
@@ -328,6 +347,7 @@ export function initDocsViewerConfigController(context) {
     handleScopeChange: handleScopeChange,
     loadDocsViewerConfig: loadDocsViewerConfig,
     loadViewerConfig: loadViewerConfig,
+    reloadDocsViewerConfig: reloadDocsViewerConfig,
     routeScopeFromUrl: routeScopeFromUrl
   };
 }

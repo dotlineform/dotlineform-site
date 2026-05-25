@@ -639,6 +639,7 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
             source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
             manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
             default_doc_exists = (repo_root / "docs-viewer/source/research/research.md").exists()
+            default_doc_text = (repo_root / "docs-viewer/source/research/research.md").read_text(encoding="utf-8")
             route_text = (repo_root / "research/index.md").read_text(encoding="utf-8")
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
@@ -649,6 +650,8 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert payload["build_commands"][0]["status"] == "completed"
     assert calls == [(repo_root, "research", {"include_search": True})]
     assert default_doc_exists is True
+    assert "viewable: true" in default_doc_text
+    assert "hidden:" not in default_doc_text
     assert "permalink: /research/" in route_text
     assert "docs_viewer_readonly_route.html" in route_text
     assert "docs_viewer_management_route.html" not in route_text
@@ -687,6 +690,7 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
             )
             source_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
             manifest_payload = json.loads((repo_root / "docs-viewer/config/scopes/docs_scope_manifest.json").read_text(encoding="utf-8"))
+            default_doc_text = (repo_root / "docs-viewer/source/notes/notes.md").read_text(encoding="utf-8")
             route_exists = (repo_root / "notes/index.md").exists()
     finally:
         docs_management_service.write_rebuild.rebuild_scope_outputs = original_rebuild
@@ -694,6 +698,8 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     assert payload["ok"] is True
     assert payload["urls"]["public"] == ""
     assert route_exists is False
+    assert "viewable: true" in default_doc_text
+    assert "hidden:" not in default_doc_text
     assert source_payload["scopes"][1]["viewer_base_url"] == "/docs/"
     assert source_payload["scopes"][1]["include_scope_param"] is True
     assert source_payload["scopes"][1]["output"] == "docs-viewer/generated/docs/notes"

@@ -496,6 +496,7 @@ import {
       setStatus: setStatus,
       state: state,
       markdownDocLink: markdownDocLink,
+      reloadDocsViewerConfig: function () { return configController.reloadDocsViewerConfig(); },
       viewerScope: function () { return viewerScope; }
     };
   }

@@ -5,7 +5,7 @@ added_date: 2026-05-25
 last_updated: 2026-05-25
 ui_status: draft
 published: true
-hidden: false
+viewable: true
 ---
 # archive
 

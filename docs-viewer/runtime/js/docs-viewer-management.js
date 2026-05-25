@@ -530,7 +530,17 @@ export function initDocsViewerManagement(context) {
 
   function scopeLifecycleCallbacks() {
     return {
-      onApplied: refreshManagementCapabilities,
+      onApplied: function () {
+        var reloadConfig = typeof context.reloadDocsViewerConfig === "function"
+          ? context.reloadDocsViewerConfig()
+          : Promise.resolve(null);
+        refreshManagementCapabilities();
+        Promise.resolve(reloadConfig)
+          .then(refreshManagementCapabilities)
+          .catch(function () {
+            refreshManagementCapabilities();
+          });
+      },
       render: renderManagementUi,
       setBusy: setManagementBusy,
       setMessage: setManagementMessage

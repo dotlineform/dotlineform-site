@@ -32,6 +32,66 @@ def click_modal_primary(page: Page, timeout_ms: int) -> None:
     )
 
 
+def scope_options(page: Page) -> list[str]:
+    return page.eval_on_selector_all(
+        "#docsViewerScopeSelect option",
+        """options => options.map(option => option.value)""",
+    )
+
+
+def assert_scope_options_alpha(page: Page) -> None:
+    options = scope_options(page)
+    if options != sorted(options):
+        raise AssertionError(f"scope dropdown options are not alpha-ordered: {options!r}")
+
+
+def wait_for_scope_option(page: Page, scope_id: str, timeout_ms: int) -> None:
+    page.wait_for_function(
+        """scopeId => Array.from(document.querySelectorAll("#docsViewerScopeSelect option"))
+            .some(option => option.value === scopeId)""",
+        arg=scope_id,
+        timeout=timeout_ms,
+    )
+
+
+def page_diagnostics(page: Page) -> dict[str, object]:
+    return page.evaluate(
+        """async () => {
+            const root = document.querySelector("#docsViewerRoot");
+            const content = document.querySelector("#docsViewerContent");
+            const status = document.querySelector("#docsViewerStatus");
+            let indexText = "";
+            let payloadText = "";
+            if (root?.dataset.indexUrl) {
+                try {
+                    const response = await fetch(root.dataset.indexUrl, { cache: "no-store" });
+                    const body = await response.text();
+                    indexText = String(response.status) + " " + body.slice(0, 500);
+                    const payload = JSON.parse(body);
+                    const contentUrl = payload?.docs?.[0]?.content_url;
+                    if (contentUrl) {
+                        const payloadResponse = await fetch(contentUrl, { cache: "no-store" });
+                        payloadText = String(payloadResponse.status) + " " + (await payloadResponse.text()).slice(0, 500);
+                    }
+                } catch (error) {
+                    indexText = String(error?.message || error);
+                }
+            }
+            return {
+                url: window.location.href,
+                rootDataset: root ? Object.assign({}, root.dataset) : null,
+                contentHidden: content ? content.hidden : null,
+                contentText: content ? content.textContent.trim().slice(0, 300) : "",
+                statusText: status ? status.textContent.trim() : "",
+                navText: document.querySelector("#docsViewerNav")?.textContent.trim().slice(0, 300) || "",
+                indexText,
+                payloadText,
+                scopeOptions: Array.from(document.querySelectorAll("#docsViewerScopeSelect option")).map(option => option.value),
+            };
+        }"""
+    )
+
+
 def wait_for_modal_title(page: Page, expected: str, timeout_ms: int) -> None:
     page.wait_for_selector('[data-role="docs-viewer-management-modal"]', timeout=timeout_ms)
     page.wait_for_function(
@@ -56,8 +116,10 @@ def main(argv: list[str] | None = None) -> int:
                 browser = playwright.chromium.launch(headless=True)
                 page = browser.new_page()
                 errors: list[str] = []
+                console_errors: list[str] = []
                 posts: list[str] = []
                 page.on("pageerror", lambda exc: errors.append(str(exc)))
+                page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
                 page.on(
                     "request",
                     lambda request: posts.append(request.url)
@@ -68,6 +130,7 @@ def main(argv: list[str] | None = None) -> int:
                 page.goto(f"{base_url}/docs/?scope=studio&doc=root-doc&mode=manage", wait_until="domcontentloaded")
                 wait_for_doc(page, "root-doc", args.timeout_ms)
                 wait_for_management_ready(page, args.timeout_ms)
+                assert_scope_options_alpha(page)
 
                 open_actions_menu(page, args.timeout_ms)
                 page.locator("#docsViewerManageNewScopeButton").click()
@@ -82,6 +145,17 @@ def main(argv: list[str] | None = None) -> int:
                 click_modal_primary(page, args.timeout_ms)
                 wait_for_modal_title(page, "Scope created", args.timeout_ms)
                 click_modal_primary(page, args.timeout_ms)
+                wait_for_scope_option(page, "uiscope", args.timeout_ms)
+                wait_for_management_ready(page, args.timeout_ms)
+                assert_scope_options_alpha(page)
+                page.locator("#docsViewerScopeSelect").select_option("uiscope")
+                try:
+                    wait_for_doc(page, "uiscope", args.timeout_ms)
+                except Exception as exc:
+                    raise AssertionError(
+                        "created scope did not load default doc: "
+                        f"{page_diagnostics(page)!r}; page errors: {errors!r}; console errors: {console_errors!r}"
+                    ) from exc
                 wait_for_management_ready(page, args.timeout_ms)
 
                 open_actions_menu(page, args.timeout_ms)

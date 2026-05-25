@@ -8,9 +8,9 @@ from typing import Any
 import docs_generated_reads
 import docs_import_source_service as import_source_service
 import docs_management_routes as routes
+from docs_scope_config import load_docs_scope_configs
 import docs_source_config_report
 import docs_source_config_settings
-import docs_source_model as source_model
 from studio import data_sharing_routes, data_sharing_service
 from docs_management_capabilities_service import capabilities_payload
 from docs_management_data_sharing_service import DATA_SHARING_HANDLERS
@@ -20,12 +20,20 @@ def docs_api_query_value(params: dict[str, list[str]], key: str) -> str:
     return (params.get(key) or [""])[0]
 
 
+def normalize_scope(repo_root: Path, value: Any) -> str:
+    scope = str(value or "").strip().lower()
+    configs = load_docs_scope_configs(repo_root)
+    if scope not in configs:
+        raise ValueError(f"scope must be one of: {', '.join(sorted(configs))}")
+    return scope
+
+
 def docs_generated_read_payload(repo_root: Path, path: str, params: dict[str, list[str]]) -> dict[str, object]:
     if path == routes.GENERATED_DOCS_LOG_PATH:
         projection = docs_api_query_value(params, "projection") or "search-index"
         return docs_generated_reads.read_generated_docs_log_projection(repo_root, projection)
 
-    scope = source_model.normalize_scope(docs_api_query_value(params, "scope"))
+    scope = normalize_scope(repo_root, docs_api_query_value(params, "scope"))
 
     if path in {routes.GENERATED_INDEX_PATH, routes.GENERATED_INDEX_ALT_PATH}:
         return docs_generated_reads.read_generated_docs_index(repo_root, scope)
@@ -83,5 +91,5 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         )
 
     if docs_api_query_value(params, "scope"):
-        source_model.normalize_scope(docs_api_query_value(params, "scope"))
+        normalize_scope(repo_root, docs_api_query_value(params, "scope"))
     raise FileNotFoundError("Not found")

@@ -199,6 +199,48 @@ def write_browser_config(target_root: Path) -> None:
     )
 
 
+def refresh_browser_config_from_scope_config(target_root: Path) -> None:
+    scope_payload = json.loads((target_root / "docs-viewer/config/scopes/docs_scopes.json").read_text(encoding="utf-8"))
+    scopes = [scope for scope in scope_payload.get("scopes", []) if isinstance(scope, dict)]
+    docs_viewer_settings = scope_payload.get("docs_viewer")
+    if isinstance(docs_viewer_settings, dict):
+        docs_viewer_settings = json.loads(json.dumps(docs_viewer_settings))
+        statuses_by_scope = docs_viewer_settings.get("ui_statuses_by_scope")
+        if isinstance(statuses_by_scope, dict):
+            scope_ids = {str(scope.get("scope_id") or "") for scope in scopes}
+            docs_viewer_settings["ui_statuses_by_scope"] = {
+                scope_id: value for scope_id, value in statuses_by_scope.items() if scope_id in scope_ids
+            }
+    else:
+        docs_viewer_settings = None
+    payload: dict[str, Any] = {
+        "schema_version": "docs_viewer_config_v1",
+        "default_scope_id": str(scopes[0].get("scope_id") or "") if scopes else "",
+        "scopes": [
+            {
+                "scope_id": str(scope.get("scope_id") or ""),
+                "viewer_base_url": str(scope.get("viewer_base_url") or "/docs/"),
+                "include_scope_param": scope.get("include_scope_param") is True,
+                "default_doc_id": str(scope.get("default_doc_id") or ""),
+                "media_path_prefix": str(scope.get("media_path_prefix") or ""),
+                "index_url": f"/{str(scope.get('output') or '').strip('/')}/index.json",
+                "search_index_url": f"/{str(scope.get('search_output') or '').strip('/')}",
+                "search": {
+                    "domain": "docs_viewer",
+                    "schema": f"search_index_{scope.get('scope_id')}_v1",
+                    "index_url": f"/{str(scope.get('search_output') or '').strip('/')}",
+                    "targeted_policy": "record_update",
+                    "targeted_operations": ["create", "update", "delete"],
+                },
+            }
+            for scope in scopes
+        ],
+    }
+    if docs_viewer_settings is not None:
+        payload["docs_viewer"] = docs_viewer_settings
+    write_json(target_root / "docs-viewer/config/defaults/docs-viewer-config.json", payload)
+
+
 def create_fixture_repo(target_root: Path) -> None:
     copy_scripts_fixture(target_root)
     (target_root / "_config.yml").write_text("title: docs workflow fixture\n", encoding="utf-8")
@@ -306,6 +348,7 @@ def patch_rebuilds(repo_root: Path) -> None:
         docs_doc_ids: list[str] | None = None,
     ) -> dict[str, Any]:
         materialize_fixture_generated_docs(_repo_root, scope)
+        refresh_browser_config_from_scope_config(_repo_root)
         return {
             "ok": True,
             "fixture_rebuild": True,

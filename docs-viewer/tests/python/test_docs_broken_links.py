@@ -62,8 +62,10 @@ def make_repo(content_html: str) -> tempfile.TemporaryDirectory[str]:
             ]
         },
     )
-    write_json(repo_root / "assets/data/docs/scopes/library/index.json", {"docs": []})
-    write_json(repo_root / "assets/data/docs/scopes/analysis/index.json", {"docs": []})
+    for scope, output_dir in docs_broken_links.SCOPE_OUTPUT_DIRS.items():
+        if scope == "studio":
+            continue
+        write_json(repo_root / output_dir / "index.json", {"docs": []})
     write_doc_payload(repo_root, "studio", "source", content_html)
     return temp_dir
 
