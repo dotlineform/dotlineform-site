@@ -17,6 +17,38 @@ please start with task 1
 
 ---
 
+Studio home page
+
+catalogue
+- drafts - `studio/catalogue-status/?mode=manage`
+- series editor: `/studio/catalogue-series/`
+- work editor: `/studio/catalogue-work/`
+- work detail editor - `/studio/catalogue-work-detail/?mode=manage`
+- bulk add work - `/studio/bulk-add-work/?mode=manage`
+- moment editor - `/studio/catalogue-moment/?mode=manage`
+- list of works - `/studio/studio-works/?mode=manage&sort=cat&dir=asc`
+- project state - `/studio/project-state/?mode=manage`
+
+analytics
+- series tags - `/studio/analytics/series-tags/`
+- tag registry - `/studio/analytics/tag-registry/`
+- tag aliases - `/studio/analytics/tag-aliases/`
+- tag groups - `/studio/analytics/tag-groups/`
+
+data sharing
+- prepare package - `/studio/data-sharing/prepare/?mode=manage&scope=library`
+- returned package - `/studio/data-sharing/review/?mode=manage&scope=library`
+
+admin
+- studio audits - `/studio/audits/?mode=manage`
+- thumbnail tests - `/studio/thumbnail-quality/?mode=manage`
+- UI demos - `/studio/ui-catalogue/demos/`
+- studio activity - `/studio/activity/?mode=manage`
+- field registry - `/studio/catalogue-field-registry/?mode=manage`
+
+
+---
+
 servers:
 
 - `bin/local-all` - Studio, Jekyll site, Docs Viewer, docs watcher

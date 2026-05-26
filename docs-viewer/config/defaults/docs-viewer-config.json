@@ -161,6 +161,48 @@
           "label": "Draft",
           "emoji": "📝"
         }
+      ],
+      "archive": [
+        {
+          "ui_status": "draft",
+          "label": "Draft",
+          "emoji": "📝"
+        },
+        {
+          "ui_status": "done",
+          "label": "Done",
+          "emoji": "✅"
+        },
+        {
+          "ui_status": "urgent",
+          "label": "Urgent",
+          "emoji": "❗"
+        },
+        {
+          "ui_status": "review",
+          "label": "Review",
+          "emoji": "👀"
+        },
+        {
+          "ui_status": "in-progress",
+          "label": "In progress",
+          "emoji": "🔄"
+        },
+        {
+          "ui_status": "paused",
+          "label": "Paused",
+          "emoji": "⏸️"
+        },
+        {
+          "ui_status": "deferred",
+          "label": "Deferred",
+          "emoji": "😴"
+        },
+        {
+          "ui_status": "report",
+          "label": "Report",
+          "emoji": "📊"
+        }
       ]
     }
   }
