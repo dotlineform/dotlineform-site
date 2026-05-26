@@ -254,7 +254,7 @@ Immediate work signal: medium.
 | `docs-viewer/build/build_docs.rb` | 1,576 | high | medium | medium | Central Ruby docs builder. Targeted payload input and diagnostics are implemented; future risk is dependency-rule drift across builder, watcher, and management callers. |
 | `studio/checks/audit_site_consistency.py` | 1,358 | medium | medium | medium | Broad audit surface. Grouping matters more than splitting by line count. |
 | `docs-viewer/services/docs_export.py` | 1,250 | medium | medium | medium | Export adapter grows with Data Sharing requirements. Keep profile/config behavior explicit. |
-| `studio/services/analytics/tags_data_sharing_adapter.py` | 1,249 | medium | medium | low | Data Sharing apply paths should remain adapter-owned and directly tested. |
+| `data-sharing/data_sharing/adapters/tags/adapter.py` | 1,277 | medium | medium | low | Data Sharing apply paths remain adapter-owned and directly tested while delegating tag validation and writes to Analytics helpers. |
 | `studio/services/catalogue/catalogue_build_media.py` | 1,184 | medium | medium | high | Local media planning/execution is a concrete performance improvement candidate. |
 | `docs-viewer/services/docs_import.py` | 1,182 | medium | medium | medium | Returned-package parsing and preview writing should stay separated from source-apply services. |
 

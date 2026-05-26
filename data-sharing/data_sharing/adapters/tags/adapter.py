@@ -24,7 +24,7 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 from analytics import tag_alias_mutations, tag_assignment_service, tag_registry_mutations, tag_source_model, tag_write_transactions
-from studio import data_sharing_routes, data_sharing_service
+from data_sharing.services.dispatch import DataSharingAdapterHandlers
 from studio.data_sharing_adapters import AdapterResolution, safe_relative_path
 from studio_activity import append_studio_activity, normalize_activity_context_from_contract, studio_activity_entry
 
@@ -34,6 +34,8 @@ LogEvent = Callable[[Path, str, Dict[str, Any]], None]
 SUPPORTED_EXTENSIONS = {".json", ".jsonl"}
 TAG_WRITE_SOURCE_REFS = [{"kind": "log", "path": "var/docs/logs/docs_management_service.log"}]
 SUPPORTED_PREPARE_FORMATS = {"json"}
+PREPARE_ACTIVITY_ENDPOINT = "/data-sharing/prepare"
+APPLY_ACTIVITY_ENDPOINT = "/data-sharing/apply"
 TAG_PREPARE_PROFILES: Dict[str, Dict[str, Any]] = {
     "tag-registry": {"family": "registry", "label": "Tag registry"},
     "tag-aliases": {"family": "aliases", "label": "Tag aliases"},
@@ -72,14 +74,12 @@ def relative_path(repo_root: Path, path: Path) -> str:
         return path.as_posix()
 
 
-def require_tags_adapter(adapter: AdapterResolution) -> AdapterResolution:
+def require_tags_adapter(adapter: Optional[AdapterResolution]) -> AdapterResolution:
+    if adapter is None:
+        raise ValueError("tags adapter resolution is required")
     if str(adapter.adapter.get("module") or "").strip() != "analytics.tags":
         raise ValueError(f"adapter {adapter.adapter_id!r} is not implemented by the Analytics tags service")
     return adapter
-
-
-def resolve_tags_adapter(repo_root: Path, data_domain: Any, operation: str) -> AdapterResolution:
-    return require_tags_adapter(data_sharing_service.resolve_for_service(repo_root, data_domain, operation))
 
 
 def adapter_source_path(repo_root: Path, adapter: AdapterResolution, key: str) -> Path:
@@ -469,7 +469,7 @@ def attach_prepare_activity(
         activity_context = normalize_activity_context_from_contract(
             repo_root,
             raw_context,
-            endpoint=data_sharing_routes.PREPARE_PATH,
+            endpoint=PREPARE_ACTIVITY_ENDPOINT,
             record_id=f"{payload.get('data_domain')}:{payload.get('config_id')}",
             record_id_field="export_id",
         )
@@ -500,7 +500,7 @@ def prepare_package(
     adapter: Optional[AdapterResolution] = None,
     dependencies: Optional[TagsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
-    adapter = require_tags_adapter(adapter or resolve_tags_adapter(repo_root, body.get("data_domain"), "prepare"))
+    adapter = require_tags_adapter(adapter)
     config_id = normalize_text(body.get("config_id"))
     profiles = prepare_profiles(adapter)
     profile = profiles.get(config_id)
@@ -740,7 +740,7 @@ def review_returned_package(
     operation = str(body.get("operation") or "review").strip()
     if operation != "review":
         raise ValueError("operation must be review")
-    adapter = require_tags_adapter(adapter or resolve_tags_adapter(repo_root, body.get("data_domain"), "review"))
+    adapter = require_tags_adapter(adapter)
     staged_filename = normalize_text(body.get("staged_filename") or body.get("file"))
     package = load_returned_package(repo_root, adapter, staged_filename)
     now_utc = utc_now()
@@ -918,7 +918,7 @@ def attach_activity(
         activity_context = normalize_activity_context_from_contract(
             repo_root,
             raw_context,
-            endpoint=data_sharing_routes.APPLY_PATH,
+            endpoint=APPLY_ACTIVITY_ENDPOINT,
             record_id=payload.get("staged_filename"),
             record_id_field="staged_filename",
         )
@@ -1161,7 +1161,7 @@ def apply_returned_changes(
     operation = str(body.get("operation") or "").strip()
     if operation != "apply":
         raise ValueError("operation must be apply")
-    adapter = require_tags_adapter(adapter or resolve_tags_adapter(repo_root, body.get("data_domain"), "apply"))
+    adapter = require_tags_adapter(adapter)
     apply_action = normalize_text(body.get("apply_action"))
     if apply_action not in {"registry_apply", "aliases_apply", "assignments_apply"}:
         raise ValueError("apply_action must be registry_apply, aliases_apply, or assignments_apply")
@@ -1204,7 +1204,7 @@ def list_returned_packages(
     adapter: Optional[AdapterResolution] = None,
     dependencies: Optional[TagsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
-    adapter = require_tags_adapter(adapter or resolve_tags_adapter(repo_root, data_domain, "list_returned"))
+    adapter = require_tags_adapter(adapter)
     staging_root = resolve_staging_root(repo_root, adapter)
     files: list[Dict[str, Any]] = []
     if staging_root.exists():
@@ -1235,7 +1235,7 @@ def list_returned_packages(
 
 def handlers_for(
     dependencies_factory: Callable[[], TagsDataSharingDependencies],
-) -> data_sharing_service.DataSharingAdapterHandlers:
+) -> DataSharingAdapterHandlers:
     def selectable_records_handler(repo_root: Path, data_domain: Any, adapter: AdapterResolution) -> Dict[str, Any]:
         del repo_root, data_domain
         adapter = require_tags_adapter(adapter)
@@ -1267,7 +1267,7 @@ def handlers_for(
     def prepare_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: AdapterResolution) -> Dict[str, Any]:
         return prepare_package(repo_root, body, dry_run, adapter, dependencies_factory())
 
-    return data_sharing_service.DataSharingAdapterHandlers(
+    return DataSharingAdapterHandlers(
         module="analytics.tags",
         selectable_records=selectable_records_handler,
         prepare=prepare_handler,

@@ -22,7 +22,7 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 import docs_activity  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
 from data_sharing.adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
-from analytics import tags_data_sharing_adapter  # noqa: E402
+from data_sharing.adapters.tags import adapter as tags_data_sharing_adapter  # noqa: E402
 from docs_management_context import log_event, make_backup_bundle  # noqa: E402
 from studio import data_sharing_service  # noqa: E402
 

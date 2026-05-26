@@ -14,7 +14,8 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from analytics import tags_data_sharing_adapter as adapter  # noqa: E402
+from data_sharing.adapters.tags import adapter  # noqa: E402
+from studio import data_sharing_service  # noqa: E402
 
 
 def write_json(path: Path, payload: object) -> None:
@@ -277,12 +278,21 @@ def dependencies() -> adapter.TagsDataSharingDependencies:
     return adapter.TagsDataSharingDependencies(log_event=log_event)
 
 
+def resolve_tags_adapter(root: Path, operation: str = "prepare"):
+    return data_sharing_service.resolve_for_service(root, "tags", operation)
+
+
 def test_list_returned_packages_finds_json_files() -> None:
     with make_repo() as temp:
         root = Path(temp)
         write_json(root / "var/studio/data-sharing/tags/import-staging/registry.json", {"import_registry": {"tags": []}})
 
-        payload = adapter.list_returned_packages(root, "tags", dependencies=dependencies())
+        payload = adapter.list_returned_packages(
+            root,
+            "tags",
+            adapter=resolve_tags_adapter(root, "list_returned"),
+            dependencies=dependencies(),
+        )
 
     assert payload["ok"] is True
     assert [item["filename"] for item in payload["files"]] == ["registry.json"]
@@ -296,6 +306,7 @@ def test_prepare_registry_package_dry_run_does_not_write() -> None:
             root,
             {"data_domain": "tags", "config_id": "tag-registry", "target_format": "json"},
             dry_run=True,
+            adapter=resolve_tags_adapter(root, "prepare"),
             dependencies=dependencies(),
         )
 
@@ -306,6 +317,27 @@ def test_prepare_registry_package_dry_run_does_not_write() -> None:
     assert payload["tag_family"] == "registry"
     assert payload["counts"]["tags"] == 3
     assert not output_path.exists()
+
+
+def test_tags_handlers_dispatch_through_data_sharing_workflow() -> None:
+    with make_repo() as temp:
+        root = Path(temp)
+        handlers = {"analytics.tags": adapter.handlers_for(dependencies)}
+
+        selectable = data_sharing_service.selectable_records(root, "tags", handlers)
+        payload = data_sharing_service.prepare_package(
+            root,
+            {"data_domain": "tags", "config_id": "tag-registry", "target_format": "json"},
+            True,
+            handlers,
+        )
+
+    assert selectable["ok"] is True
+    assert selectable["adapter_id"] == "analytics-tags"
+    assert selectable["source"]["source"] == "profile_only"
+    assert payload["ok"] is True
+    assert payload["adapter_id"] == "analytics-tags"
+    assert payload["tag_family"] == "registry"
 
 
 def test_prepare_bundle_package_writes_under_outbound_root_and_activity() -> None:
@@ -329,6 +361,7 @@ def test_prepare_bundle_package_writes_under_outbound_root_and_activity() -> Non
                 },
             },
             dry_run=False,
+            adapter=resolve_tags_adapter(root, "prepare"),
             dependencies=dependencies(),
         )
         output_path = root / payload["output_file"]
@@ -365,6 +398,7 @@ def test_registry_review_and_confirmed_apply_use_backups() -> None:
             root,
             {"data_domain": "tags", "operation": "review", "staged_filename": "registry.json"},
             dry_run=True,
+            adapter=resolve_tags_adapter(root, "review"),
             dependencies=dependencies(),
         )
         preflight = adapter.apply_returned_changes(
@@ -378,6 +412,7 @@ def test_registry_review_and_confirmed_apply_use_backups() -> None:
                 "confirm": False,
             },
             dry_run=False,
+            adapter=resolve_tags_adapter(root, "apply"),
             dependencies=dependencies(),
         )
         applied = adapter.apply_returned_changes(
@@ -391,6 +426,7 @@ def test_registry_review_and_confirmed_apply_use_backups() -> None:
                 "confirm": True,
             },
             dry_run=False,
+            adapter=resolve_tags_adapter(root, "apply"),
             dependencies=dependencies(),
         )
         registry = read_json(root / "studio/data/canonical/analytics/tag-registry.json")
@@ -424,6 +460,7 @@ def test_aliases_review_and_preflight_validate_without_writing() -> None:
             root,
             {"data_domain": "tags", "operation": "review", "staged_filename": "aliases.json"},
             dry_run=True,
+            adapter=resolve_tags_adapter(root, "review"),
             dependencies=dependencies(),
         )
         preflight = adapter.apply_returned_changes(
@@ -437,6 +474,7 @@ def test_aliases_review_and_preflight_validate_without_writing() -> None:
                 "confirm": False,
             },
             dry_run=False,
+            adapter=resolve_tags_adapter(root, "apply"),
             dependencies=dependencies(),
         )
         aliases = read_json(root / "studio/data/canonical/analytics/tag-aliases.json")
@@ -483,6 +521,7 @@ def test_assignments_review_reports_applicable_conflict_invalid_and_missing() ->
             root,
             {"data_domain": "tags", "operation": "review", "staged_filename": "assignments.json"},
             dry_run=True,
+            adapter=resolve_tags_adapter(root, "review"),
             dependencies=dependencies(),
         )
 
@@ -529,6 +568,7 @@ def test_assignments_confirmed_apply_writes_backup_and_activity_groups() -> None
                 "confirm": False,
             },
             dry_run=False,
+            adapter=resolve_tags_adapter(root, "apply"),
             dependencies=dependencies(),
         )
         applied = adapter.apply_returned_changes(
@@ -551,6 +591,7 @@ def test_assignments_confirmed_apply_writes_backup_and_activity_groups() -> None
                 },
             },
             dry_run=False,
+            adapter=resolve_tags_adapter(root, "apply"),
             dependencies=dependencies(),
         )
         assignments = read_json(root / "studio/data/canonical/analytics/tag-assignments.json")
@@ -570,6 +611,7 @@ def main() -> None:
     tests = [
         test_list_returned_packages_finds_json_files,
         test_prepare_registry_package_dry_run_does_not_write,
+        test_tags_handlers_dispatch_through_data_sharing_workflow,
         test_prepare_bundle_package_writes_under_outbound_root_and_activity,
         test_registry_review_and_confirmed_apply_use_backups,
         test_aliases_review_and_preflight_validate_without_writing,

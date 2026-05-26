@@ -27,5 +27,6 @@ When used directly, add `data-sharing/` to `PYTHONPATH` or `sys.path` and import
 
 The source-controlled registry, schemas, and Library sharing profiles live under
 `data-sharing/config/`.
-Current workflow behavior still lives in the pre-migration Studio and Docs Viewer modules.
-Follow-up SDSA tasks move adapters, workflows, Studio endpoints, artifact roots, and tests into this boundary in order.
+Current shared workflow dispatch and the implemented documents and tags adapters live under
+`data-sharing/data_sharing/`.
+Studio still owns the local API, browser routes, and adapter resolver gateway; Docs Viewer still supplies reusable docs-domain helpers for document workflows.

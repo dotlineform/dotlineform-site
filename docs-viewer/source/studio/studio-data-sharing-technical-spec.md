@@ -260,7 +260,7 @@ Implemented apply actions:
 - `aliases_apply`
 - `assignments_apply`
 
-The tags adapter is resolved through the same Data Sharing registry and workflow dispatcher as the documents adapter.
+The tags adapter implementation lives at `data-sharing/data_sharing/adapters/tags/adapter.py` and is resolved through the same Data Sharing registry and workflow dispatcher as the documents adapter.
 It should not depend on Docs Viewer service availability.
 
 ## Activity

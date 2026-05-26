@@ -111,7 +111,7 @@ The dashboard, prepare, and review shells are hosted by the local Studio app ser
 The old Jekyll route files under `studio/data-sharing/` are retired; the browser modules and CSS contracts remain Studio-owned assets.
 The documents adapter implementation lives at `data-sharing/data_sharing/adapters/documents/adapter.py` and owns the implemented Library config set, selectable document records, field mapping, returned-package review, summary apply, and hierarchy apply behavior through reusable docs-domain helpers.
 Those helpers are split by responsibility under the `docs-viewer/services/docs_data_sharing/` package.
-The Analytics tags adapter owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior through existing Analytics tag planners and backup/write helpers.
+The Analytics tags adapter implementation lives at `data-sharing/data_sharing/adapters/tags/adapter.py` and owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior through existing Analytics tag planners and backup/write helpers.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
 The headless `data-sharing/` workflow modules own shared operation dispatch; the Studio server keeps a compatibility gateway only to provide the current Studio adapter resolver and HTTP activity timing.
 Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.

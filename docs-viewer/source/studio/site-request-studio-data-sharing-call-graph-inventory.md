@@ -10,8 +10,8 @@ viewable: true
 ---
 # Studio Data Sharing Call Graph Inventory
 
-This inventory records the current Data Sharing implementation before the architecture move in [Studio Data Sharing Architecture Request](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture).
-It is intentionally current-state focused: later tasks should move code toward the target boundary rather than preserve these paths through compatibility shims.
+This inventory started as the current Data Sharing implementation before the architecture move in [Studio Data Sharing Architecture Request](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture).
+It is kept current for moved ownership boundaries; implementation tasks should move code toward the target boundary rather than preserve older paths through compatibility shims.
 
 ## Summary
 
@@ -23,9 +23,9 @@ Current Data Sharing route ownership is split:
 - Browser Data Sharing health, generated-docs index, prepare, returned-package listing, review, and apply calls use those Docs Viewer URLs.
 - Docs Viewer hosts the `/data-sharing/...` HTTP endpoints and delegates to Studio's shared dispatch modules.
 - Studio's shared dispatch modules resolve adapters from `studio/data/config/data-sharing/data-sharing-adapters.json`.
-- The documents adapter lives in `docs-viewer/services/`.
-- The tags adapter lives in `studio/services/analytics/`.
-- No tracked top-level `data-sharing/` subsystem exists yet.
+- The documents adapter lives in `data-sharing/data_sharing/adapters/documents/` and calls docs-domain helpers in `docs-viewer/services/docs_data_sharing/`.
+- The tags adapter lives in `data-sharing/data_sharing/adapters/tags/` and calls Analytics tag helpers for validation, backups, writes, and activity.
+- The tracked top-level `data-sharing/` subsystem owns shared workflow dispatch, adapter implementations, and config.
 
 The current browser-to-write path is:
 
@@ -35,7 +35,7 @@ Studio page
 -> DOCS_VIEWER_BASE_URL /data-sharing/...
 -> docs-viewer/services/docs_viewer_service.py
 -> docs-viewer/services/docs_management_*_service.py
--> studio/app/server/studio/data_sharing_service.py
+-> data-sharing/data_sharing/workflows/*
 -> adapter handler from docs_management_data_sharing_service.py
 -> documents or tags adapter
 -> domain helper writes, backups, rebuilds, and activity
@@ -164,10 +164,10 @@ Shared dispatch modules currently live under `studio/app/server/studio/`:
 
 Handler registration currently lives in `docs-viewer/services/docs_management_data_sharing_service.py`:
 
-- module `documents` -> `docs-viewer/services/documents_data_sharing_adapter.py`
-- module `analytics.tags` -> `studio/services/analytics/tags_data_sharing_adapter.py`
+- module `documents` -> `data-sharing/data_sharing/adapters/documents/adapter.py`
+- module `analytics.tags` -> `data-sharing/data_sharing/adapters/tags/adapter.py`
 
-This means the shared dispatch code is Studio-owned, but the concrete handler map is assembled by the Docs Viewer service.
+The shared workflow dispatch is Data Sharing-owned. The Docs Viewer and Studio services still assemble concrete handler maps for their current local API entry points.
 
 ## Config Reads
 
@@ -186,10 +186,10 @@ Browser config reads:
 
 Server config reads:
 
-- `data_sharing_adapters.py` reads `studio/data/config/data-sharing/data-sharing-adapters.json`.
-- `docs_export.py` defaults to `studio/data/config/data-sharing/library-export-configs.json`.
-- `documents_data_sharing_adapter.py` passes `adapter.config_path("sharing_profiles_path")` into `docs_export.build_export`.
-- `tags_data_sharing_adapter.py` derives profiles from adapter capability metadata and path contracts.
+- `data_sharing_adapters.py` reads `data-sharing/config/adapters.json`.
+- `docs_data_sharing.package` reads the configured Library sharing profiles from `data-sharing/config/library-export-configs.json`.
+- The documents adapter passes `adapter.config_path("sharing_profiles_path")` into docs-domain package helpers.
+- The tags adapter derives profiles from adapter capability metadata and path contracts.
 
 Migration pressure points:
 
@@ -201,20 +201,17 @@ Migration pressure points:
 
 Current module:
 
-- `docs-viewer/services/documents_data_sharing_adapter.py`
+- `data-sharing/data_sharing/adapters/documents/adapter.py`
 
 Imports and dependencies:
 
-- `docs_export.build_export`
-- `docs_export.parse_doc_ids`
-- `docs_import.list_staged_import_files`
-- `docs_import.parse_staged_import`
-- `docs_import.render_markdown_previews`
-- `docs_import.scope_title`
-- `docs_management_mutations.normalize_summary`
+- `docs_data_sharing.apply`
+- `docs_data_sharing.package`
+- `docs_data_sharing.review`
+- `docs_data_sharing.write`
 - `docs_source_model`
 - `studio.data_sharing_adapters.AdapterResolution`
-- `studio.data_sharing_service`
+- `data_sharing.services.dispatch.DataSharingAdapterHandlers`
 
 Dependency injection comes from `DocumentsDataSharingDependencies`:
 
@@ -250,7 +247,7 @@ The document adapter is the main place where docs-domain helper boundaries need 
 
 Current module:
 
-- `studio/services/analytics/tags_data_sharing_adapter.py`
+- `data-sharing/data_sharing/adapters/tags/adapter.py`
 
 Imports and dependencies:
 
@@ -264,7 +261,7 @@ Imports and dependencies:
 - `studio_activity.studio_activity_entry`
 - `studio.data_sharing_adapters.AdapterResolution`
 - `studio.data_sharing_adapters.safe_relative_path`
-- `studio.data_sharing_service`
+- `data_sharing.services.dispatch.DataSharingAdapterHandlers`
 
 Dependency injection comes from `TagsDataSharingDependencies`:
 
@@ -287,7 +284,7 @@ Tags workflow roots currently resolve from the adapter registry:
 - source root: `assets/studio/data`
 - backup root: `var/studio/data-sharing/tags/backups`
 
-The tags adapter already avoids Docs Viewer domain logic, but handler registration still depends on the Docs Viewer service assembly.
+The tags adapter avoids Docs Viewer domain logic and receives adapter resolution through the same Data Sharing workflow dispatch contract as the documents adapter.
 
 ## Docs Export And Import Helpers
 
@@ -364,5 +361,5 @@ Use this call graph inventory to drive the next tasks:
 - Add an adapter selectable-record operation before removing generated-docs-index selection from the prepare page.
 - Move shared workflow dispatch out of `studio/app/server/studio/`.
 - Keep docs-domain helper calls direct, but extract them away from Docs Viewer HTTP wrappers.
-- Move documents and tags adapters to the same adapter boundary.
+- Keep documents and tags adapters at the same `data-sharing/` adapter boundary.
 - Update runtime config tests and browser smokes as endpoint ownership changes.
