@@ -3,7 +3,7 @@ doc_id: site-request-studio-data-sharing-architecture
 title: Studio Data Sharing Architecture Request
 added_date: 2026-05-26
 last_updated: 2026-05-26
-ui_status: in-progress
+ui_status: done
 parent_id: change-requests
 sort_order: 12000
 viewable: true
@@ -12,8 +12,8 @@ viewable: true
 
 Status:
 
-- in progress
-- see [Studio Data Sharing Architecture Tasks](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks)
+- done
+- implementation and final verification are recorded in [Studio Data Sharing Architecture Tasks](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks)
 
 ## Summary
 
@@ -168,6 +168,31 @@ Work through that table in order and keep this request document focused on the t
 - Documents and tags adapters are both resolved through the Data Sharing adapter registry.
 - Runtime package, staging, and review artifacts are written under `var/studio/data-sharing/<domain>/...`; old `var/studio/export-import/...` roots are not kept through compatibility reads.
 - The stable Data Sharing docs describe adapters as Data Sharing-owned, with domain-specific helper dependencies where needed.
+
+## Closeout
+
+SDSA-016 completed the final verification pass on 2026-05-26.
+The architecture request is implemented: Studio owns the Data Sharing UI and same-origin API, `data-sharing/` owns headless dispatch/config/adapters/path contracts, and Docs Viewer remains the owner of docs-domain helpers without hosting Data Sharing HTTP endpoints.
+
+Final Codex-run verification:
+
+- `$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_data_sharing_subsystem_scaffold.py studio/tests/python/test_studio_data_sharing_api.py studio/tests/python/test_data_sharing_adapters.py studio/tests/python/test_data_sharing_service.py docs-viewer/tests/python/test_docs_import_service.py studio/tests/python/test_tags_data_sharing_adapter.py` passed: 63 tests.
+- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_prepare_modules.py --site-root .` passed.
+- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_review_workflow_modules.py --site-root .` passed.
+- `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_data_sharing_routes.py` passed.
+- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_prepare.py --local-app --mock-data-sharing-api` passed.
+- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_prepare.py --local-app --block-data-sharing-api` passed.
+- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_review.py --local-app --mock-data-sharing-api` passed.
+- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_review.py --local-app --block-data-sharing-api` passed.
+
+During final verification, the full prepare/review browser smokes timed out in static `--site-root .` mode because the now Local-Studio-owned route roots stayed hidden there.
+The same mocked and blocked API checks passed in `--local-app` mode, which is the target runtime host for these routes.
+
+Follow-on work:
+
+- archive this request according to the current change-request practice when ready
+- treat future catalogue or non-tag Analytics sharing as new adapter work under the same `data-sharing/` boundary
+- keep portable Docs Viewer packaging decisions in a separate request
 
 ## Verification Matrix
 
