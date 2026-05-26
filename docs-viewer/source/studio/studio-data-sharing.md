@@ -19,6 +19,32 @@ It defaults to the Library data domain and exposes Tags as a named workflow scop
 
 The durable architecture contract is recorded in [Studio Data Sharing Technical Spec](/docs/?scope=studio&doc=studio-data-sharing-technical-spec).
 
+## Target Boundary
+
+Studio owns the Data Sharing pages and the same-origin local API used by those pages.
+The browser modules should call Studio-hosted endpoints, not `DOCS_VIEWER_BASE_URL`, for service health, adapter selectable records, package preparation, returned-package listing, review, and confirmed apply.
+Docs Viewer URLs remain valid for navigation and page/document implementation links only.
+
+The headless Data Sharing subsystem owns shared workflow code, adapter registry/config loading, schemas, package I/O, path contracts, operation dispatch, and domain adapters.
+That subsystem lives under `data-sharing/` and must not host servers, UI routes, browser modules, or Studio shell behavior.
+Studio calls it from local API handlers.
+
+Domain adapters own the records a prepare workflow can select.
+The prepare page asks the active adapter for selectable records instead of reading a generic generated-docs index from Studio shell code.
+For Library documents, that selectable-record response can still be backed by Docs Viewer generated data and docs-domain helpers; the shared Studio shell should not hard-code that implementation detail.
+
+Document source writes remain docs-aware.
+The documents adapter calls reusable docs-domain helpers for generated reads, simplified HTML/package creation, returned JSON review, Markdown/front matter updates, backups, and docs/search rebuild follow-through.
+Those helpers are callable without routing through Docs Viewer HTTP endpoints.
+
+Runtime packages, returned-package staging, and review artifacts use:
+
+```text
+var/studio/data-sharing/<domain>/
+```
+
+Disposable packages under old `var/studio/export-import/...` roots are not part of the target compatibility contract.
+
 ## Current Scope
 
 Library is the implemented documents data domain.
@@ -27,18 +53,17 @@ The page scope selector presents this as Analytics; the internal data domain rem
 
 The prepare page:
 
-- loads enabled Library sharing profiles from `studio/data/config/data-sharing/library-export-configs.json`
-- loads enabled Analytics tag sharing profiles from `studio/data/config/data-sharing/data-sharing-adapters.json`
-- reads the generated Library docs index through the configured Docs Viewer service
-- renders a selectable hierarchical document list in Docs Viewer order
+- loads enabled Library and Analytics tag sharing profiles from the Data Sharing config boundary
+- requests adapter-owned selectable records from the Studio Data Sharing API
+- renders the returned records using the active adapter's selection model
 - supports JSON and JSONL target formats according to each profile
-- posts the selected profile, format, and document ids to the configured Docs Viewer service
+- posts the selected profile, format, and record ids to the Studio Data Sharing API
 - can prepare tag registry, tag aliases, tag assignments, or a combined tags bundle
-- displays the output package path, counts, warnings, and errors returned by the service
+- displays the output package path, counts, warnings, and errors returned by the adapter workflow
 
 The review page:
 
-- lists returned Library `.json` and `.jsonl` package files from the configured staging root
+- lists returned `.json` and `.jsonl` package files from the active adapter staging root
 - generates Markdown review artifacts for the selected package
 - displays parsed records, warnings, and review rows
 - can apply selected summary or hierarchy changes after confirmation
@@ -47,38 +72,40 @@ The review page:
 - reports tag assignment applicable rows, conflicts, missing series, and invalid work rows
 - can apply selected tag registry, alias, or applicable assignment rows after confirmation
 
-The configured Docs Viewer service uses neutral Data Sharing endpoints:
+The target Studio API uses same-origin Data Sharing endpoints:
 
-- `GET <DOCS_VIEWER_BASE_URL>/data-sharing/returned-packages`
-- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare`
-- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/review`
-- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/apply`
+- `GET /studio/api/data-sharing/health`
+- `GET /studio/api/data-sharing/selectable-records`
+- `GET /studio/api/data-sharing/returned-packages`
+- `POST /studio/api/data-sharing/prepare`
+- `POST /studio/api/data-sharing/review`
+- `POST /studio/api/data-sharing/apply`
 
 ## Runtime
 
 The page shells load:
 
-- `assets/studio/js/data-sharing-prepare.js`
-- `assets/studio/js/data-sharing-prepare-render.js`
-- `assets/studio/js/data-sharing-prepare-service.js`
-- `assets/studio/js/data-sharing-prepare-workflow.js`
-- `assets/studio/js/data-sharing-review.js`
-- `assets/studio/js/data-sharing-adapters.js`
-- `studio/data/config/data-sharing/data-sharing-adapters.json`
-- `studio/data/config/data-sharing/library-export-configs.json`
+- `studio/app/frontend/js/data-sharing-prepare.js`
+- `studio/app/frontend/js/data-sharing-prepare-render.js`
+- `studio/app/frontend/js/data-sharing-prepare-service.js`
+- `studio/app/frontend/js/data-sharing-prepare-workflow.js`
+- `studio/app/frontend/js/data-sharing-review.js`
+- `studio/app/frontend/js/data-sharing-adapters.js`
 - `studio/app/server/studio/data_sharing_routes.py`
 - `studio/app/server/studio/data_sharing_service.py`
-- `docs-viewer/services/documents_data_sharing_adapter.py`
-- `studio/services/analytics/tags_data_sharing_adapter.py`
+- `data-sharing/config/adapters.json`
+- `data-sharing/config/library-export-configs.json`
+- `data-sharing/adapters/documents/`
+- `data-sharing/adapters/tags/`
 
 The dashboard, prepare, and review shells are hosted by the local Studio app server.
 The old Jekyll route files under `studio/data-sharing/` are retired; the browser modules and CSS contracts remain Studio-owned assets.
-The documents adapter wrapper owns the implemented Library config set, source index, document tree selection, field mapping, returned-package review, summary apply, and hierarchy apply behavior.
-The Analytics tags adapter owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior, using existing Analytics tag planners and backup/write helpers.
+The documents adapter owns the implemented Library config set, selectable document records, field mapping, returned-package review, summary apply, and hierarchy apply behavior through reusable docs-domain helpers.
+The Analytics tags adapter owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior through existing Analytics tag planners and backup/write helpers.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
 Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.
-The Docs Viewer service hosts the loopback HTTP process and supplies backup, log, generated-read, and rebuild dependencies.
-Shared adapter dispatch still uses the Studio Data Sharing service modules behind an explicit Docs Viewer adapter boundary.
+The Studio app server hosts the loopback HTTP process for Data Sharing.
+Docs Viewer supplies docs-domain helper behavior for document workflows, but does not own the Data Sharing HTTP endpoints.
 
 ## Activity
 

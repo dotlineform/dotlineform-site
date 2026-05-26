@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T17:31:28Z",
+  "generated_at": "2026-05-26T17:40:07Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -21,7 +21,7 @@
       "source_path": "site-request-studio-data-sharing-architecture-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-architecture-tasks.json",
-      "content_text_length": 6614,
+      "content_text_length": 6822,
       "ui_status": "in-progress"
     },
     {
@@ -269,7 +269,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 4975
+      "content_text_length": 6494
     },
     {
       "scope": "studio",
@@ -606,7 +606,7 @@
       "source_path": "studio-data-sharing-technical-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 7361
+      "content_text_length": 9489
     },
     {
       "scope": "studio",
@@ -891,7 +891,7 @@
       "source_path": "config-data-sharing-adapters.md",
       "viewer_url": "/docs/?scope=studio&doc=config-data-sharing-adapters",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-adapters.json",
-      "content_text_length": 3561
+      "content_text_length": 4666
     },
     {
       "scope": "studio",

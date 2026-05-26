@@ -16,12 +16,13 @@ This is the tracker for implementing [Studio Data Sharing Architecture Request](
 
 ### just done
 
+- Completed SDSA-001 by updating the stable Data Sharing docs with the target Studio API, headless `data-sharing/` subsystem, adapter-owned selectable records, reusable docs-domain helpers, and `var/studio/data-sharing/<domain>/...` artifact roots.
 - Created this task tracker from the architecture request.
 - Folded the settled open-question decisions back into the parent request so it reads as the design target.
 
 ### steer for next task
 
-- Start with SDSA-001: update the stable Data Sharing docs so they describe the target boundary before code moves begin.
+- Start with SDSA-002: inventory the current Data Sharing call graph before moving code.
 - Keep the implementation aligned with the parent request: Studio owns the UI and local API, `data-sharing/` owns headless workflow and adapters, and docs-domain helpers remain callable without Docs Viewer HTTP.
 - Do not build compatibility reads for disposable `var/studio/export-import/...` packages.
 
@@ -51,7 +52,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 
 | ID | status | action |
 | --- | --- | --- |
-| SDSA-001 | planned | Update `studio-data-sharing.md`, `studio-data-sharing-technical-spec.md`, and `config-data-sharing-adapters.md` with the target boundary: Studio same-origin API, headless `data-sharing/`, adapter-owned selectable records, reusable docs-domain helpers, and `var/studio/data-sharing/<domain>/...` artifact roots. |
+| SDSA-001 | done | Update `studio-data-sharing.md`, `studio-data-sharing-technical-spec.md`, and `config-data-sharing-adapters.md` with the target boundary: Studio same-origin API, headless `data-sharing/`, adapter-owned selectable records, reusable docs-domain helpers, and `var/studio/data-sharing/<domain>/...` artifact roots. |
 | SDSA-002 | planned | Inventory the current Data Sharing call graph: browser modules, runtime config, Studio transport, Studio dispatch modules, Docs Viewer service endpoints, documents adapter, tags adapter, docs export/import helpers, backup/rebuild hooks, config reads, and tests. |
 | SDSA-003 | planned | Create the top-level headless `data-sharing/` subsystem for workflow code, adapter code, registry/config loading, schemas, path contracts, package I/O, and operation dispatch. Confirm it contains no servers, UI routes, or browser modules. |
 | SDSA-004 | planned | Move Data Sharing adapter registry, schemas, and sharing profile config to the target `data-sharing/` ownership boundary. Update Studio and adapter readers directly, without old-path compatibility shims. |

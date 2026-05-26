@@ -20,37 +20,79 @@ Older import/export names remain only in archived request docs, historical chang
 - `/studio/data-sharing/review/?mode=manage`
 
 The page shells are Studio-owned.
-They call a loopback local service, render shared lifecycle states, and use adapter metadata to decide which domains, sharing profiles, review rows, and apply actions are available.
+They call a same-origin Studio local API, render shared lifecycle states, and use adapter metadata to decide which domains, sharing profiles, selectable records, review rows, and apply actions are available.
 
 ## Local Service Contract
 
-The Docs Viewer service hosts the HTTP process because the documents adapter depends on Docs Viewer generated-data reads, backups, and rebuild follow-through.
-Neutral route constants and shared dispatch still live under `studio/app/server/studio/` behind the Docs Viewer adapter boundary.
+Studio owns the Data Sharing HTTP process.
+The local API is same-origin with the Studio pages and delegates headless work to the Data Sharing subsystem.
+Docs Viewer service endpoints are not part of the durable Data Sharing route contract.
 
 Endpoints:
 
-- `GET <DOCS_VIEWER_BASE_URL>/data-sharing/returned-packages`
-- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare`
-- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/review`
-- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/apply`
+- `GET /studio/api/data-sharing/health`
+- `GET /studio/api/data-sharing/selectable-records`
+- `GET /studio/api/data-sharing/returned-packages`
+- `POST /studio/api/data-sharing/prepare`
+- `POST /studio/api/data-sharing/review`
+- `POST /studio/api/data-sharing/apply`
 
-The shared service layer owns:
+Studio API handlers own:
+
+- same-origin request routing and local-origin enforcement
+- route readiness, unavailable-service payloads, and browser-facing status responses
+- passing request payloads to the headless Data Sharing dispatcher
+- activity append timing after successful package creation or confirmed writes
+
+The headless `data-sharing/` subsystem owns:
 
 - adapter registry loading and validation
 - adapter resolution by `data_domain` and canonical `operation`
-- local-service request dispatch
+- operation dispatch for `prepare`, `list_returned`, `review`, and `apply`
+- selectable-record dispatch for prepare workflows
+- package I/O and returned JSON handling
 - common path safety checks for package roots, staging roots, review roots, source roots, and backup roots
 - common dry-run and confirmation gates
-- activity append timing after successful adapter operations
+- shared path contracts and schemas
 
 Domain adapters own source parsing, validation, review row semantics, write planning, backups, and writes for their data model.
+They may call reusable domain helpers, but the shared Studio shell and local API do not implement domain write logic directly.
+
+## Headless Subsystem
+
+Target tracked layout:
+
+```text
+data-sharing/
+  config/
+    adapters.json
+    adapters.schema.json
+    library-export-configs.json
+  adapters/
+    documents/
+    tags/
+  services/
+    registry.py
+    dispatch.py
+    paths.py
+    package_io.py
+  workflows/
+    prepare.py
+    list_returned.py
+    review.py
+    apply.py
+```
+
+`data-sharing/` must stay headless.
+It must not contain servers, route views, browser modules, Studio shell state, or page rendering.
+Studio imports it from local API handlers.
 
 ## Adapter Registry
 
-The source-controlled registry is:
+The target source-controlled registry is:
 
-- `studio/data/config/data-sharing/data-sharing-adapters.json`
-- `studio/data/config/data-sharing/data-sharing-adapters.schema.json`
+- `data-sharing/config/adapters.json`
+- `data-sharing/config/adapters.schema.json`
 
 Registry operation names are limited to:
 
@@ -77,6 +119,25 @@ Selection models are:
 - `none`
 
 The registry must reject duplicate domain-operation dispatch, unsafe relative paths, unknown operation names, and invalid status values before a request reaches adapter code.
+
+## Selectable Record Contract
+
+Prepare pages receive selectable records from the active adapter.
+The Studio shell must not fetch a generic generated-docs index as its durable selection source.
+
+Minimum shared selectable-record fields:
+
+- `id`
+- `title`
+- `type`
+- `meta`
+- `selectable`
+- `children`
+- `issues`
+
+Adapters may include domain-specific fields when their render module understands them.
+The documents adapter can return a hierarchy ordered from Docs Viewer generated data.
+Tags or future catalogue adapters can return flat records, grouped records, file-only choices, or no selection according to their capability metadata.
 
 ## Review Row Contract
 
@@ -109,12 +170,12 @@ Current domain:
 
 The documents adapter owns:
 
-- Library sharing profile loading from `studio/data/config/data-sharing/library-export-configs.json`
+- Library sharing profile loading from `data-sharing/config/library-export-configs.json`
 - generated Docs Viewer index and payload reads
-- document tree selection and field mapping
-- outbound package generation through `docs-viewer/services/docs_export.py`
+- selectable document records and field mapping
+- outbound package generation through reusable docs-domain helpers
 - returned Library `.json` and `.jsonl` package listing
-- staged package parsing and Markdown review generation through `docs-viewer/services/docs_import.py`
+- staged package parsing and Markdown review generation through reusable docs-domain helpers
 - summary and hierarchy apply planning
 - `docs-viewer/source/library/` writes, docs/search rebuild follow-through, and document activity metadata
 
@@ -128,6 +189,8 @@ Library workflow roots:
 
 The documents adapter is the optional companion a portable Docs Viewer install can ship when it wants Library or other Docs Viewer corpus Data Sharing behavior.
 It does not own the shared Data Sharing registry or non-document adapters.
+Docs-domain helpers remain under the Docs Viewer ownership boundary unless a later implementation deliberately creates a new package boundary.
+They must be callable without Docs Viewer HTTP or UI/service wrapper modules.
 
 ## Analytics Tags Adapter
 
@@ -174,6 +237,9 @@ Implemented apply actions:
 - `aliases_apply`
 - `assignments_apply`
 
+The tags adapter is resolved through the same Data Sharing registry and workflow dispatcher as the documents adapter.
+It should not depend on Docs Viewer service availability.
+
 ## Activity
 
 Data Sharing write operations append Studio Activity rows only after successful writes or package creation.
@@ -207,8 +273,9 @@ Data Sharing should remain separable from Docs Viewer core.
 Portable packages can be thought of as:
 
 - Docs Viewer core: read-only viewer, generated docs data, search, and optional local docs management
-- documents data sharing adapter: document package preparation, returned-package review, and document apply behavior for Docs Viewer corpora
-- Studio Data Sharing module: shared shell, adapter registry, local service dispatch, lifecycle, status, confirmation, and result presentation contracts
+- Data Sharing subsystem: headless registry, adapter config, package contracts, workflow dispatch, path contracts, package I/O, and adapters
+- documents data sharing adapter: document selectable records, package preparation, returned-package review, and document apply behavior for Docs Viewer corpora through reusable docs-domain helpers
+- Studio Data Sharing module: pages, browser modules, same-origin local API, lifecycle, status, confirmation, and result presentation contracts
 - Analytics tags adapter: tag registry, alias, assignment, validation, review, package, apply, backup, and activity behavior
 
 The shared shell must not learn document parsing, tag policy, catalogue relationship validation, or source-write semantics beyond the metadata needed to route, confirm, and present adapter results.
