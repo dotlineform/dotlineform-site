@@ -16,6 +16,7 @@ This is the tracker for implementing [Studio Data Sharing Architecture Request](
 
 ### just done
 
+- Completed SDSA-015 by updating the stable Studio Data Sharing docs with architecture traceability for moved modules, Studio endpoint ownership, docs-domain helper boundaries, artifact roots, verification evidence, generated Docs Viewer payload status, and remaining close-out risk. Added structured docs-log entry `change-2026-05-26-completed-studio-data-sharing-architecture-boundary`. Codex did not manually rebuild Docs Viewer generated payloads; local docs-watcher output from source doc changes is expected.
 - Completed SDSA-014 by aligning focused tests and smokes with the Studio-owned Data Sharing API boundary. Studio API tests now cover returned-package listing, review, and apply dispatch through registered handlers; Docs Management route tests assert no `/data-sharing/...` publication; prepare/review smokes now use only `--mock-data-sharing-api` and `--block-data-sharing-api` flags; mocked, blocked, and route-level Data Sharing smokes passed against `/studio/api/data-sharing/...`.
 - Completed SDSA-013 by removing Data Sharing endpoint publication from `app.runtime.services.docs`, retiring the Docs Viewer `/data-sharing/...` HTTP bridge, and updating focused tests to assert that Docs Management routes no longer publish Data Sharing endpoints. Docs Viewer links remain for nav and `doc_href`; Data Sharing browser calls now rely on `app.runtime.services.data_sharing`.
 - Completed SDSA-012 by switching `studio-transport.js` Data Sharing defaults and runtime overrides to `app.runtime.services.data_sharing` same-origin `/studio/api/data-sharing/...` endpoints. The prepare/review pages now use Studio Data Sharing API unavailable-state copy, and focused smokes mock or block Studio API paths instead of Docs Viewer service paths.
@@ -35,7 +36,7 @@ This is the tracker for implementing [Studio Data Sharing Architecture Request](
 
 ### steer for next task
 
-- Start with SDSA-015: update owning docs and add a structured docs-log entry describing moved modules, endpoint ownership, helper boundaries, artifact roots, verification results, generated payload status, and remaining risks.
+- Start with SDSA-016: run the final verification set appropriate to the changed files, then close out the parent request and this tracker by updating statuses, recording verification evidence, and noting any follow-on work before archival.
 - Keep the implementation aligned with the parent request: Studio owns the UI and local API, `data-sharing/` owns headless workflow and adapters, and docs-domain helpers remain callable without Docs Viewer HTTP.
 - Do not build compatibility reads for disposable `var/studio/export-import/...` packages.
 
@@ -80,5 +81,5 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | SDSA-012 | done | Update `studio-transport.js` and related frontend modules so Data Sharing uses Studio-owned same-origin endpoints and no longer depends on `DOCS_VIEWER_BASE_URL`. |
 | SDSA-013 | done | Remove Data Sharing endpoint publication from `app.runtime.services.docs` and remove the temporary Docs Viewer service endpoint helpers once Studio endpoints are live. Keep Docs Viewer links for nav and `doc_href` only. |
 | SDSA-014 | done | Update focused tests and smokes for the new service boundary, adapter resolution, selectable-record contract, document prepare/review/apply flows, tags prepare/review/apply flows, artifact roots, and unavailable-service states. |
-| SDSA-015 | planned | Update owning docs and add a structured docs-log entry describing moved modules, endpoint ownership, helper boundaries, artifact roots, verification results, generated payload status, and remaining risks. |
+| SDSA-015 | done | Update owning docs and add a structured docs-log entry describing moved modules, endpoint ownership, helper boundaries, artifact roots, verification results, generated payload status, and remaining risks. |
 | SDSA-016 | planned | Run the final verification set appropriate to the changed files, then close out the parent request and this tracker by updating statuses, recording verification evidence, and noting any follow-on work before archival. |

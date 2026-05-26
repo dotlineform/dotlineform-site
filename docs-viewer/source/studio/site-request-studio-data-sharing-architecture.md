@@ -189,3 +189,7 @@ Work through that table in order and keep this request document focused on the t
 - [Data Sharing Adapters](/docs/?scope=studio&doc=config-data-sharing-adapters)
 - [Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)
 - [Local Studio Server Architecture](/docs/?scope=studio&doc=local-studio-server-architecture)
+
+## Change Log Entries
+
+- `change-2026-05-26-completed-studio-data-sharing-architecture-boundary`

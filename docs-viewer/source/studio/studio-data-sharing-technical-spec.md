@@ -265,6 +265,21 @@ Implemented apply actions:
 The tags adapter implementation lives at `data-sharing/data_sharing/adapters/tags/adapter.py` and is resolved through the same Data Sharing registry and workflow dispatcher as the documents adapter.
 It should not depend on Docs Viewer service availability.
 
+## Moved Modules
+
+The implemented architecture moved Data Sharing-owned code and config out of Studio and Docs Viewer service wrappers:
+
+- adapter registry, schemas, path contracts, package I/O, and dispatch now live under `data-sharing/`
+- documents adapter code lives at `data-sharing/data_sharing/adapters/documents/adapter.py`
+- Analytics tags adapter code lives at `data-sharing/data_sharing/adapters/tags/adapter.py`
+- shared operation dispatch lives at `data-sharing/data_sharing/services/dispatch.py`
+- workflow entry points live under `data-sharing/data_sharing/workflows/`
+- documents-domain helper responsibilities live under `docs-viewer/services/docs_data_sharing/`
+- Studio local HTTP endpoints live under `studio/app/server/studio/studio_data_sharing_api.py`
+
+Do not reintroduce Data Sharing HTTP endpoints into Docs Viewer service modules.
+Do not add browser, server, or route shell code under `data-sharing/`.
+
 ## Activity
 
 Data Sharing write operations append Studio Activity rows only after successful writes or package creation.
@@ -317,3 +332,6 @@ Focused checks for Data Sharing changes:
 - `studio/tests/smoke/data_sharing_review.py`
 
 Use broader `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` profiles only when a change touches runtime behavior, route readiness, generated docs/search contracts, or shared Studio service behavior.
+
+The SDSA-014 slice recorded focused API tests and mock/block/route smokes against the Studio-owned `/studio/api/data-sharing/...` boundary.
+Codex did not run a manual Docs Viewer generated payload rebuild during SDSA-015; local docs-watcher output, when present, is normal follow-through from the edited source docs.

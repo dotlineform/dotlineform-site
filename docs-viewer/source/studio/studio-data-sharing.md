@@ -119,6 +119,19 @@ Document-specific apply variants such as `summary_apply` and `hierarchy_apply` a
 The Studio app server hosts the loopback HTTP process for Data Sharing.
 Docs Viewer supplies docs-domain helper behavior for document workflows, but does not own the Data Sharing HTTP endpoints.
 
+## Architecture Trace
+
+The 2026-05 architecture slice moved the durable Data Sharing boundary to:
+
+- Studio-owned pages and `/studio/api/data-sharing/...` endpoints
+- `data-sharing/` owned registry/config, path contracts, package I/O, workflow dispatch, and documents/tags adapters
+- Docs Viewer-owned docs-domain helpers under `docs-viewer/services/docs_data_sharing/`
+- runtime artifacts under `var/studio/data-sharing/<domain>/exports/`, `import-staging/`, and `import-preview/`
+
+The stable runtime no longer publishes Data Sharing endpoints from Docs Viewer service config.
+Generated Docs Viewer payloads are not the source of this documentation slice; source docs and structured docs-log records are updated first.
+Codex did not run a manual Docs Viewer payload rebuild for this slice, but the local docs watcher may regenerate the affected Studio JSON payloads after these source docs change.
+
 ## Activity
 
 Successful write runs attach Studio Activity context with:
@@ -141,3 +154,6 @@ The retained smoke entry points are:
 - `studio/tests/python/test_data_sharing_service.py`
 - `docs-viewer/tests/python/test_docs_import_service.py`
 - `studio/tests/python/test_tags_data_sharing_adapter.py`
+
+The architecture request tracker records the latest focused evidence for Studio API dispatch, Docs Management non-publication of Data Sharing endpoints, mock/block prepare and review smokes, route-level Data Sharing smokes, adapter path validation, and documents/tags adapter behavior.
+Remaining close-out risk belongs to the final request verification pass: rerun the focused checks after the documentation/log slice and then close or archive the request.

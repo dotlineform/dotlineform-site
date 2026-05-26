@@ -1,0 +1,53 @@
+{
+  "id": "change-2026-05-26-completed-studio-data-sharing-architecture-boundary",
+  "date": "2026-05-26",
+  "title": "Completed Studio Data Sharing Architecture Boundary",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio",
+    "data-sharing",
+    "docs-viewer",
+    "library",
+    "workflow"
+  ],
+  "summary": "Completed the Studio Data Sharing architecture boundary by moving shared workflow dispatch, registry/config, path contracts, and documents/tags adapters under the headless data-sharing subsystem while keeping Studio as the owner of Data Sharing pages and same-origin API endpoints.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-studio-data-sharing-architecture-tasks.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "studio-api",
+    "adapter-registry",
+    "documents-adapter",
+    "tags-adapter",
+    "artifact-roots"
+  ],
+  "change_request_doc_id": "site-request-studio-data-sharing-architecture",
+  "related_docs": [
+    "studio-data-sharing",
+    "studio-data-sharing-technical-spec",
+    "config-data-sharing-adapters",
+    "site-request-studio-data-sharing-architecture",
+    "site-request-studio-data-sharing-architecture-tasks"
+  ],
+  "related_files": [
+    "data-sharing/README.md",
+    "data-sharing/config/adapters.json",
+    "data-sharing/data_sharing/services/dispatch.py",
+    "data-sharing/data_sharing/adapters/documents/adapter.py",
+    "data-sharing/data_sharing/adapters/tags/adapter.py",
+    "docs-viewer/services/docs_data_sharing/package.py",
+    "docs-viewer/services/docs_data_sharing/review.py",
+    "docs-viewer/services/docs_data_sharing/apply.py",
+    "docs-viewer/services/docs_data_sharing/write.py",
+    "studio/app/server/studio/studio_data_sharing_api.py",
+    "studio/app/server/studio/data_sharing_service.py",
+    "docs-viewer/source/studio/site-request-studio-data-sharing-architecture-tasks.md"
+  ],
+  "effect": "Data Sharing no longer depends on Docs Viewer HTTP endpoints for prepare, returned-package listing, review, or apply; document workflows still use docs-aware helper modules for generated reads, source writes, backups, and rebuild follow-through, and runtime artifacts now use var/studio/data-sharing/<domain>/ roots without old export-import compatibility reads.",
+  "verification": [
+    "SDSA-014 recorded focused Studio API tests plus Docs Management non-publication assertions plus prepare/review mock and block smokes plus route-level Data Sharing smokes against /studio/api/data-sharing/...",
+    "SDSA-015 is a docs/log slice; Codex did not manually rebuild Docs Viewer generated doc/search payloads and local docs-watcher output from source doc changes is expected."
+  ]
+}

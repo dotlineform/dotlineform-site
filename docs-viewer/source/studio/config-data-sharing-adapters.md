@@ -124,3 +124,12 @@ Do not add registry paths or adapter fallback reads that preserve those roots.
 - `studio/app/server/studio/` owns the same-origin `/studio/api/data-sharing/...` endpoints and local-origin enforcement.
 - `studio/app/frontend/js/studio-transport.js` should use Studio-owned same-origin Data Sharing endpoints.
 - Docs Viewer service modules may expose Docs Viewer-owned import or management behavior, but they do not own the Data Sharing API boundary.
+
+## Architecture Status
+
+The active registry/config boundary is the top-level `data-sharing/config/` directory.
+Studio API handlers resolve adapters through the Data Sharing workflow dispatcher, and the documents and tags adapters are both Data Sharing-owned modules.
+Docs-domain helpers and Analytics tag helpers remain reusable domain helpers; they are not Data Sharing API hosts.
+
+Current runtime packages, returned-package staging, and review artifacts are expected under `var/studio/data-sharing/<data_domain>/...`.
+Old `var/studio/export-import/...` roots are disposable history and should not be restored through compatibility reads.
