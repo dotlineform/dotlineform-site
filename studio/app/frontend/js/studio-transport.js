@@ -47,17 +47,6 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
 
 const DEFAULT_DOCS_VIEWER_BASE_URL = "http://127.0.0.1:8776";
 
-const DOCS_MANAGEMENT_ENDPOINTS = {
-  health: `${DEFAULT_DOCS_VIEWER_BASE_URL}/health`,
-  generatedIndex: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/generated/index`,
-  generatedSearch: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/generated/search`,
-  importSource: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/import-source`,
-  importSourceFiles: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/import-source-files`,
-  importHtml: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/import-html`,
-  importHtmlFiles: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/import-html-files`,
-  openSource: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/open-source`
-};
-
 const DATA_SHARING_ENDPOINTS = {
   health: `${DEFAULT_DOCS_VIEWER_BASE_URL}/health`,
   generatedIndex: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/generated/index`,
@@ -100,7 +89,6 @@ export {
   BULK_ADD_WORK_ENDPOINTS,
   CATALOGUE_READ_ENDPOINTS,
   DATA_SHARING_ENDPOINTS,
-  DOCS_MANAGEMENT_ENDPOINTS,
   CATALOGUE_WRITE_ENDPOINTS,
   PROJECT_STATE_ENDPOINTS,
   THUMBNAIL_QUALITY_ENDPOINTS
@@ -113,16 +101,6 @@ export function configureStudioTransport(config) {
   if (!docs || typeof docs !== "object") return;
 
   const configured = normalizeDocsEndpoints(docs);
-  Object.assign(DOCS_MANAGEMENT_ENDPOINTS, {
-    health: configured.health || DOCS_MANAGEMENT_ENDPOINTS.health,
-    generatedIndex: configured.generated_index || DOCS_MANAGEMENT_ENDPOINTS.generatedIndex,
-    generatedSearch: configured.generated_search || DOCS_MANAGEMENT_ENDPOINTS.generatedSearch,
-    importSource: configured.import_source || DOCS_MANAGEMENT_ENDPOINTS.importSource,
-    importSourceFiles: configured.import_source_files || DOCS_MANAGEMENT_ENDPOINTS.importSourceFiles,
-    importHtml: configured.import_html || DOCS_MANAGEMENT_ENDPOINTS.importHtml,
-    importHtmlFiles: configured.import_html_files || DOCS_MANAGEMENT_ENDPOINTS.importHtmlFiles,
-    openSource: configured.open_source || DOCS_MANAGEMENT_ENDPOINTS.openSource
-  });
   Object.assign(DATA_SHARING_ENDPOINTS, {
     health: configured.health || DATA_SHARING_ENDPOINTS.health,
     generatedIndex: configured.generated_index || DATA_SHARING_ENDPOINTS.generatedIndex,
@@ -158,10 +136,6 @@ export async function probeStudioHealth(timeoutMs = 500, options = {}) {
 
 export async function probeCatalogueHealth(timeoutMs = 500) {
   return probeHealth(CATALOGUE_WRITE_ENDPOINTS.health, timeoutMs);
-}
-
-export async function probeDocsManagementHealth(timeoutMs = 500) {
-  return probeHealth(DOCS_MANAGEMENT_ENDPOINTS.health, timeoutMs);
 }
 
 export async function probeDataSharingHealth(timeoutMs = 500) {

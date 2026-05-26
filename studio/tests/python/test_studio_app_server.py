@@ -49,9 +49,15 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["routes"]["runtime_config"] == "/studio/runtime-config.json"
     assert runtime["sites"]["public_preview"]["base"] == "http://127.0.0.1:4000"
     assert runtime["sites"]["production"]["base"] == "https://dotlineform.com"
-    assert payload["paths"]["routes"]["docs_page"] == f"{docs_base_url}/docs/"
-    assert payload["paths"]["routes"]["docs_html_import"] == f"{docs_base_url}/docs/?mode=manage&import=1"
-    assert any(view["id"] == "docs" and view["path"] == f"{docs_base_url}/docs/?mode=manage" for view in runtime["views"])
+    assert "docs_page" not in payload["paths"]["routes"]
+    assert "docs_html_import" not in payload["paths"]["routes"]
+    assert any(
+        view["id"] == "docs"
+        and view["path"] == f"{docs_base_url}/docs/?mode=manage"
+        and view["doc_href"] == f"{docs_base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage"
+        and "script" not in view
+        for view in runtime["views"]
+    )
     assert not any(view["id"] in {"studio_catalogue", "studio_analytics", "data_sharing"} for view in runtime["views"])
     assert any(view["id"] == "tag_registry" and view["path"] == "/studio/analytics/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/studio/analytics/tag-aliases/" for view in runtime["views"])
@@ -91,18 +97,20 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["analytics"]["promote_tag_alias"] == "/studio/api/analytics/promote-tag-alias"
     assert runtime["services"]["docs"]["base"] == docs_base_url
     assert runtime["services"]["docs"]["health"] == f"{docs_base_url}/health"
-    assert runtime["services"]["docs"]["capabilities"] == f"{docs_base_url}/capabilities"
     assert runtime["services"]["docs"]["generated_index"] == f"{docs_base_url}/docs/generated/index"
-    assert runtime["services"]["docs"]["generated_search"] == f"{docs_base_url}/docs/generated/search"
-    assert runtime["services"]["docs"]["import_source"] == f"{docs_base_url}/docs/import-source"
-    assert runtime["services"]["docs"]["import_source_files"] == f"{docs_base_url}/docs/import-source-files"
-    assert runtime["services"]["docs"]["import_html"] == f"{docs_base_url}/docs/import-html"
-    assert runtime["services"]["docs"]["import_html_files"] == f"{docs_base_url}/docs/import-html-files"
-    assert runtime["services"]["docs"]["open_source"] == f"{docs_base_url}/docs/open-source"
     assert runtime["services"]["docs"]["data_sharing_prepare"] == f"{docs_base_url}/data-sharing/prepare"
     assert runtime["services"]["docs"]["data_sharing_returned_packages"] == f"{docs_base_url}/data-sharing/returned-packages"
     assert runtime["services"]["docs"]["data_sharing_review"] == f"{docs_base_url}/data-sharing/review"
     assert runtime["services"]["docs"]["data_sharing_apply"] == f"{docs_base_url}/data-sharing/apply"
+    assert set(runtime["services"]["docs"]) == {
+        "base",
+        "health",
+        "generated_index",
+        "data_sharing_prepare",
+        "data_sharing_returned_packages",
+        "data_sharing_review",
+        "data_sharing_apply",
+    }
     assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
     assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"

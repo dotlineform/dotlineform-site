@@ -8,13 +8,11 @@ from pathlib import Path
 
 try:
     from studio_docs_viewer_integration import (
-        apply_docs_viewer_route_overrides,
         docs_viewer_manage_url,
         docs_viewer_service_endpoints,
     )
 except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
     from .studio_docs_viewer_integration import (
-        apply_docs_viewer_route_overrides,
         docs_viewer_manage_url,
         docs_viewer_service_endpoints,
     )
@@ -26,7 +24,6 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "title": "Docs",
         "path": "/docs/?mode=manage",
         "doc_href": "/docs/?scope=studio&doc=docs-viewer&mode=manage",
-        "script": "/docs-viewer/runtime/js/docs-viewer.js",
     },
     "tag_groups": {
         "label": "tag groups",
@@ -273,14 +270,7 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
     "docs": {
         "base": "",
         "health": "",
-        "capabilities": "",
         "generated_index": "",
-        "generated_search": "",
-        "import_source": "",
-        "import_source_files": "",
-        "import_html": "",
-        "import_html_files": "",
-        "open_source": "",
         "data_sharing_prepare": "",
         "data_sharing_returned_packages": "",
         "data_sharing_review": "",
@@ -397,7 +387,6 @@ def runtime_config(repo_root: Path, version: str) -> dict[str, object]:
         raise RuntimeError(f"Could not read Studio config: {config_path}") from error
     if not isinstance(payload, dict):
         raise RuntimeError(f"Studio config must be a JSON object: {config_path}")
-    payload = apply_docs_viewer_route_overrides(repo_root, payload)
     try:
         pipeline_payload = json.loads(pipeline_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):

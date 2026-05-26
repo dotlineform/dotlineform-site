@@ -3,7 +3,7 @@ doc_id: studio-doc-viewer-dependencies
 title: Studio Docs Viewer Dependencies
 added_date: 2026-05-25
 last_updated: 2026-05-26
-ui_status: draft
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 10024
 viewable: true
@@ -62,44 +62,45 @@ Docs Viewer management itself:
 
 ## Cleanup Tasks
 
-1. Remove the configured Docs Viewer import route from Studio config.
+1. Completed: remove the configured Docs Viewer import route from Studio config.
    `paths.routes.docs_html_import` appears to be a Studio config/test artifact, while Docs Viewer owns `/docs/?mode=manage&import=1`.
-   Remove it from:
+   Removed from:
    - `studio/app/frontend/config/studio-config.json`
    - `studio/app/frontend/js/studio-config.js`
    - `studio/app/server/studio/studio_docs_viewer_integration.py`
    - `studio/tests/python/test_studio_app_server.py`
 
-2. Decide whether `paths.routes.docs_page` is still needed.
+2. Completed: remove `paths.routes.docs_page`.
    Active navigation uses `runtime.views["docs"].path`, and current references suggest `docs_page` is also config/test-only.
-   If no active browser route uses it, remove it from Studio config and tests.
+   It was removed from Studio config and tests.
 
-3. Remove the inert Docs Viewer script entry from the Studio view registry.
+3. Completed: remove the inert Docs Viewer script entry from the Studio view registry.
    `STUDIO_VIEWS["docs"]["script"]` still points to `/docs-viewer/runtime/js/docs-viewer.js`, but Local Studio should not render the Docs Viewer page.
-   Keep the Docs view as a navigation target only.
+   The Docs view is now a navigation target only.
 
-4. Reduce `studio_docs_viewer_integration.py` to link helpers.
-   Keep:
+4. Partially completed: reduce `studio_docs_viewer_integration.py` to link helpers.
+   Kept:
    - `docs_viewer_base_url`
    - `validate_docs_viewer_base_url`
    - `docs_viewer_url`
    - `docs_viewer_manage_url`
    - doc-link and nav-link rewriting
 
-   Remove service endpoint construction that is not needed for links after Data Sharing endpoint ownership is resolved.
+   Removed import-route and broad Docs Viewer management endpoint construction.
+   The remaining `docs_viewer_service_endpoints()` function exposes only the endpoints current Data Sharing still consumes; remove it after the Data Sharing architecture request lands.
 
-5. Remove frontend Docs Viewer service transport once Data Sharing no longer needs it.
-   `studio/app/frontend/js/studio-transport.js` currently exposes `DOCS_MANAGEMENT_ENDPOINTS`, `probeDocsManagementHealth()`, and Docs Viewer endpoint fallback mutation through `configureStudioTransport()`.
-   These should disappear when Studio no longer consumes Docs Viewer APIs.
+5. Partially completed: remove frontend Docs Viewer service transport.
+   Removed `DOCS_MANAGEMENT_ENDPOINTS`, `probeDocsManagementHealth()`, and non-Data-Sharing endpoint fallback mutation.
+   `DATA_SHARING_ENDPOINTS` still points at the configured Docs Viewer service until [Studio Data Sharing Architecture Request](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture) replaces it with same-origin Studio endpoints.
 
-6. Update runtime config tests to assert the intended boundary.
-   The focused server test should assert:
+6. Completed: update runtime config tests to assert the intended boundary.
+   The focused server test now asserts:
    - Docs nav view points to the configured Docs Viewer manage URL
    - page `doc_href` links point to configured Docs Viewer URLs
    - no `docs_html_import` route is present in Studio config
-   - `app.runtime.services.docs` is absent or contains only link-neutral data after Data Sharing endpoint migration
+   - `app.runtime.services.docs` contains only the temporary Data Sharing service contract
 
-7. Keep Data Sharing out of this cleanup slice.
+7. Ongoing: keep Data Sharing out of this cleanup slice.
    Remove Data Sharing endpoint assertions from this note only after [Studio Data Sharing Architecture Request](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture) lands or defines the replacement same-origin Studio endpoints.
 
 ## Verification
