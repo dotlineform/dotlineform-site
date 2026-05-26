@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_archive_v1",
     "scope": "archive",
-    "version": "blake2b-d1132a95c996fd86531309ee47737cfb",
-    "generated_at_utc": "2026-05-26T20:54:14Z",
-    "count": 148
+    "version": "blake2b-fe91cb8647a628a9778de16e401eedf0",
+    "generated_at_utc": "2026-05-26T22:14:02Z",
+    "count": 149
   },
   "entries": [
     {
@@ -2647,6 +2647,28 @@
         "50"
       ],
       "search_text": "search-change-log-guidance search change log guidance search change log guidance 2026-05-11 12:50 2026 05 11 12 50"
+    },
+    {
+      "id": "studio-doc-viewer-dependencies",
+      "kind": "doc",
+      "title": "Studio Docs Viewer Dependencies",
+      "href": "/docs/?scope=archive&doc=studio-doc-viewer-dependencies",
+      "last_updated": "2026-05-26",
+      "display_meta": "2026-05-26",
+      "search_terms": [
+        "studio-doc-viewer-dependencies",
+        "studio",
+        "doc",
+        "viewer",
+        "dependencies",
+        "studio docs viewer dependencies",
+        "docs",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "studio-doc-viewer-dependencies studio doc viewer dependencies studio docs viewer dependencies docs 2026-05-26 2026 05 26"
     },
     {
       "id": "site-request-studio-source-tree-reorganization-tasks",

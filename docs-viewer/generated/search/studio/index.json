@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a0e9bb02bec9cf8be937e080431c4896",
-    "generated_at_utc": "2026-05-26T22:10:52Z",
-    "count": 193
+    "version": "blake2b-847d575c28d962941304a96cbcdbe0b5",
+    "generated_at_utc": "2026-05-26T22:14:01Z",
+    "count": 192
   },
   "entries": [
     {
@@ -3643,33 +3643,6 @@
         "35"
       ],
       "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-09 22:35 2026 05 09 22 35"
-    },
-    {
-      "id": "studio-doc-viewer-dependencies",
-      "kind": "doc",
-      "title": "Studio Docs Viewer Dependencies",
-      "href": "/docs/?scope=studio&doc=studio-doc-viewer-dependencies",
-      "last_updated": "2026-05-26",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-26 • Change Requests",
-      "search_terms": [
-        "studio-doc-viewer-dependencies",
-        "studio",
-        "doc",
-        "viewer",
-        "dependencies",
-        "studio docs viewer dependencies",
-        "docs",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-26",
-        "2026",
-        "05",
-        "26"
-      ],
-      "search_text": "studio-doc-viewer-dependencies studio doc viewer dependencies studio docs viewer dependencies docs change requests change requests 2026-05-26 2026 05 26"
     },
     {
       "id": "tiered-dimension-policy",

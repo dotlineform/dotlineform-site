@@ -3,7 +3,7 @@ doc_id: site-request-studio-javascript-app-shell
 title: Studio JavaScript App Shell Request
 added_date: 2026-05-26
 last_updated: 2026-05-26
-ui_status: draft
+ui_status: paused
 parent_id: change-requests
 sort_order: 12000
 viewable: true
@@ -12,7 +12,7 @@ viewable: true
 
 Status:
 
-- proposed
+- proposed, paused because doing docs viewer first, then revisit this.
 
 ## Summary
 

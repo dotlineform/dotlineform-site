@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T20:55:02Z",
+  "generated_at": "2026-05-26T22:14:02Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -1505,6 +1505,22 @@
       "viewer_url": "/docs/?scope=archive&doc=search-change-log-guidance",
       "content_url": "/docs-viewer/generated/docs/archive/by-id/search-change-log-guidance.json",
       "content_text_length": 7693
+    },
+    {
+      "scope": "archive",
+      "doc_id": "studio-doc-viewer-dependencies",
+      "title": "Studio Docs Viewer Dependencies",
+      "added_date": "2026-05-25",
+      "last_updated": "2026-05-26",
+      "parent_id": "",
+      "sort_order": 10000,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "studio-doc-viewer-dependencies.md",
+      "viewer_url": "/docs/?scope=archive&doc=studio-doc-viewer-dependencies",
+      "content_url": "/docs-viewer/generated/docs/archive/by-id/studio-doc-viewer-dependencies.json",
+      "content_text_length": 5533,
+      "ui_status": "done"
     },
     {
       "scope": "archive",
