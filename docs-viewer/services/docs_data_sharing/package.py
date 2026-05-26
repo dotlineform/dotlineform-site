@@ -112,4 +112,3 @@ def list_returned_document_packages(repo_root: Path, *, scope: str, staging_root
         "staging_root": staging_root.as_posix(),
         "files": list_staged_import_files(repo_root, normalized_scope, staging_root=staging_root),
     }
-

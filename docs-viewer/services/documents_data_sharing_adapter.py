@@ -19,18 +19,18 @@ from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
 ensure_studio_python_paths(__file__)
 
-from docs_data_sharing_apply import (  # noqa: E402
+from docs_data_sharing.apply import (  # noqa: E402
     DocumentsApplyIdentity,
     apply_hierarchy_updates,
     apply_summary_updates,
 )
-from docs_data_sharing_package import (  # noqa: E402
+from docs_data_sharing.package import (  # noqa: E402
     build_document_package,
     list_returned_document_packages,
     selectable_document_records,
 )
-from docs_data_sharing_review import review_returned_document_package  # noqa: E402
-from docs_data_sharing_write import (  # noqa: E402
+from docs_data_sharing.review import review_returned_document_package  # noqa: E402
+from docs_data_sharing.write import (  # noqa: E402
     DocsDataSharingWriteDependencies,
     MakeBackupBundle,
     PerformSourceWriteAndRebuild,

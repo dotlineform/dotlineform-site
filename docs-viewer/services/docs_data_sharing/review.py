@@ -152,4 +152,3 @@ def review_returned_document_package(
     )
     report["review_rows"] = build_review_rows(report, normalized_scope)
     return report
-

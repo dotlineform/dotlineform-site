@@ -59,4 +59,3 @@ def write_document_updates_with_rebuild(
         "backup_dir": relative_path(repo_root, backup_dir),
         "rebuild": rebuild,
     }
-

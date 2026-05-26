@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T18:33:28Z",
+  "generated_at": "2026-05-26T18:40:05Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -21,7 +21,7 @@
       "source_path": "site-request-studio-data-sharing-architecture-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-architecture-tasks.json",
-      "content_text_length": 9718,
+      "content_text_length": 9764,
       "ui_status": "in-progress"
     },
     {
@@ -285,7 +285,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 7556
+      "content_text_length": 7462
     },
     {
       "scope": "studio",

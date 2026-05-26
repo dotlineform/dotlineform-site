@@ -10,7 +10,7 @@ from typing import Any, Dict
 
 from docs_import import parse_staged_import
 import docs_source_model as source_model
-from docs_data_sharing_write import DocsDataSharingWriteDependencies, relative_path, write_document_updates_with_rebuild
+from docs_data_sharing.write import DocsDataSharingWriteDependencies, relative_path, write_document_updates_with_rebuild
 
 
 @dataclass(frozen=True)
@@ -335,4 +335,3 @@ def apply_hierarchy_updates(
     suffix = " without writing" if not confirmed or dry_run else ""
     payload["summary_text"] = f"{action} {len(updates)} {identity.adapter_label} hierarchy change(s){suffix}."
     return payload
-
