@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T14:57:19Z",
+  "generated_at": "2026-05-26T16:12:30Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -36,36 +36,6 @@
       "viewer_url": "/docs/?scope=tmp&doc=studio",
       "content_url": "/docs-viewer/generated/docs/tmp/by-id/studio.json",
       "content_text_length": 3635
-    },
-    {
-      "scope": "tmp",
-      "doc_id": "spa",
-      "title": "SPA",
-      "added_date": "2026-05-22",
-      "last_updated": "2026-05-22",
-      "parent_id": "",
-      "sort_order": 300,
-      "hidden": true,
-      "viewable": false,
-      "source_path": "spa.md",
-      "viewer_url": "/docs/?scope=tmp&doc=spa",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/spa.json",
-      "content_text_length": 19415
-    },
-    {
-      "scope": "tmp",
-      "doc_id": "risk",
-      "title": "risk mitigation",
-      "added_date": "2026-05-21",
-      "last_updated": "2026-05-21",
-      "parent_id": "",
-      "sort_order": 400,
-      "hidden": true,
-      "viewable": false,
-      "source_path": "risk.md",
-      "viewer_url": "/docs/?scope=tmp&doc=risk",
-      "content_url": "/docs-viewer/generated/docs/tmp/by-id/risk.json",
-      "content_text_length": 3703
     },
     {
       "scope": "tmp",
