@@ -24,9 +24,17 @@ def test_subsystem_root_and_core_modules_are_importable() -> None:
     dispatch = import_subsystem_module("data_sharing.services.dispatch")
     paths = import_subsystem_module("data_sharing.services.paths")
     registry = import_subsystem_module("data_sharing.services.registry")
+    prepare = import_subsystem_module("data_sharing.workflows.prepare")
+    list_returned = import_subsystem_module("data_sharing.workflows.list_returned")
+    review = import_subsystem_module("data_sharing.workflows.review")
+    apply = import_subsystem_module("data_sharing.workflows.apply")
 
     assert package.SUBSYSTEM_ROOT == SUBSYSTEM_ROOT
     assert dispatch.CANONICAL_OPERATIONS == ("prepare", "list_returned", "review", "apply")
+    assert prepare.OPERATION == "prepare"
+    assert list_returned.OPERATION == "list_returned"
+    assert review.OPERATION == "review"
+    assert apply.OPERATION == "apply"
     assert paths.domain_artifact_root("Library").as_posix() == "var/studio/data-sharing/library"
     assert registry.ADAPTER_REGISTRY_REL_PATH.as_posix() == "data-sharing/config/adapters.json"
     assert registry.LIBRARY_EXPORT_CONFIG_SCHEMA_REL_PATH.as_posix() == "data-sharing/config/library-export-configs.schema.json"

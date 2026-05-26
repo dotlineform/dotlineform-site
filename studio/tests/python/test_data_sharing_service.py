@@ -7,6 +7,7 @@ import json
 import sys
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -16,6 +17,8 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from studio import data_sharing_routes, data_sharing_service  # noqa: E402
 from studio import data_sharing_adapters  # noqa: E402
+from data_sharing.services.dispatch import DataSharingAdapterHandlers  # noqa: E402
+from data_sharing.workflows.prepare import prepare_package as data_sharing_prepare_package  # noqa: E402
 
 
 def test_neutral_data_sharing_routes_use_data_sharing_namespace() -> None:
@@ -50,6 +53,37 @@ def test_gateway_dispatches_active_documents_adapter() -> None:
     assert payload == {"ok": True, "adapter_id": "documents", "operation": "prepare"}
     assert calls[0]["adapter_id"] == "documents"
     assert calls[0]["dry_run"] is True
+
+
+def test_headless_prepare_workflow_uses_injected_resolver_and_handlers() -> None:
+    calls: list[dict[str, object]] = []
+
+    def fake_resolver(repo_root, data_domain, operation):
+        calls.append({"repo_root": repo_root, "data_domain": data_domain, "operation": operation, "kind": "resolve"})
+        return SimpleNamespace(
+            adapter={"module": "documents"},
+            adapter_id="documents",
+            operation=operation,
+        )
+
+    def fake_prepare(repo_root, body, dry_run, adapter):
+        calls.append({"repo_root": repo_root, "body": body, "dry_run": dry_run, "adapter_id": adapter.adapter_id, "kind": "prepare"})
+        return {"ok": True, "adapter_id": adapter.adapter_id, "operation": adapter.operation}
+
+    payload = data_sharing_prepare_package(
+        REPO_ROOT,
+        {"data_domain": "library", "config_id": "library-document-summaries"},
+        True,
+        {"documents": DataSharingAdapterHandlers(module="documents", prepare=fake_prepare)},
+        fake_resolver,
+    )
+
+    assert payload == {"ok": True, "adapter_id": "documents", "operation": "prepare"}
+    assert calls[0]["kind"] == "resolve"
+    assert calls[0]["data_domain"] == "library"
+    assert calls[0]["operation"] == "prepare"
+    assert calls[1]["kind"] == "prepare"
+    assert calls[1]["dry_run"] is True
 
 
 def test_gateway_fails_active_adapter_without_registered_handler() -> None:

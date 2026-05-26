@@ -16,6 +16,7 @@ This is the tracker for implementing [Studio Data Sharing Architecture Request](
 
 ### just done
 
+- Completed SDSA-007 by moving shared operation dispatch and adapter handler selection into `data-sharing/data_sharing/services/dispatch.py`, exposing headless workflow entry points for prepare, list-returned, review, and apply, and narrowing `studio/app/server/studio/data_sharing_service.py` to a compatibility gateway that supplies the current Studio adapter resolver.
 - Completed SDSA-006 by adding selectable-record dispatch to the Data Sharing adapter handler contract, moving Library document selectable-record shaping into the documents adapter, returning a profile-only empty selectable-record payload for the tags adapter, and updating the prepare page to load document selection from `/studio/api/data-sharing/selectable-records` instead of the generic generated-docs-index endpoint.
 - Completed SDSA-005 by adding Studio-owned same-origin `/studio/api/data-sharing/...` endpoints for health, selectable records, returned-package listing, prepare, review, and apply. Local Studio runtime config now publishes these endpoints under `app.runtime.services.data_sharing`, and the Local Studio Data Sharing route smoke verifies health/selectable-record API availability.
 - Completed SDSA-004 by moving the Data Sharing adapter registry, schemas, and Library sharing profiles from `studio/data/config/data-sharing/` to `data-sharing/config/`. Updated Studio browser config paths, JS fallbacks, server adapter resolution, docs export defaults, fixture tests, and current docs to use the new config boundary directly without old-path compatibility reads.
@@ -27,7 +28,7 @@ This is the tracker for implementing [Studio Data Sharing Architecture Request](
 
 ### steer for next task
 
-- Start with SDSA-007: move shared prepare, list-returned, review, and apply workflow dispatch into `data-sharing/`, preserving the current browser response contracts where they remain valid.
+- Start with SDSA-008: define and implement docs-domain helper modules for package generation, returned-package review, apply planning, source writes, backups, and rebuild follow-through so the documents adapter can call those helpers directly without Docs Viewer HTTP or UI/service wrappers.
 - Keep the implementation aligned with the parent request: Studio owns the UI and local API, `data-sharing/` owns headless workflow and adapters, and docs-domain helpers remain callable without Docs Viewer HTTP.
 - Do not build compatibility reads for disposable `var/studio/export-import/...` packages.
 
@@ -64,7 +65,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | SDSA-004 | done | Move Data Sharing adapter registry, schemas, and sharing profile config to the target `data-sharing/` ownership boundary. Update Studio and adapter readers directly, without old-path compatibility shims. |
 | SDSA-005 | done | Define and implement Studio-owned same-origin Data Sharing API endpoints for health, adapter selectable records, prepare, returned-package listing, review, and apply. |
 | SDSA-006 | done | Add the adapter selectable-record contract and update the prepare page so document selection comes from the active adapter response rather than a generic generated-docs-index read. |
-| SDSA-007 | planned | Move shared prepare, list-returned, review, and apply workflow dispatch into `data-sharing/`, preserving existing response contracts where they remain valid. |
+| SDSA-007 | done | Move shared prepare, list-returned, review, and apply workflow dispatch into `data-sharing/`, preserving existing response contracts where they remain valid. |
 | SDSA-008 | planned | Define and implement the target docs-domain helper modules for document package generation, returned-package review, summary/hierarchy apply planning, source writes, backups, and docs/search rebuild follow-through. These helpers must be callable without Docs Viewer HTTP or UI/service wrapper modules. |
 | SDSA-009 | planned | Move the documents adapter to the `data-sharing/` adapter boundary and have it call the docs-domain helpers directly for generated reads, package creation, review, apply, backups, and rebuilds. |
 | SDSA-010 | planned | Move or update the tags adapter so it is resolved through the same `data-sharing/` adapter registry and workflow dispatch while preserving Analytics tag validation, backup, write, and activity behavior. |

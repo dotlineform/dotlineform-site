@@ -97,6 +97,11 @@ The page shells load:
 - `studio/app/frontend/js/data-sharing-adapters.js`
 - `studio/app/server/studio/data_sharing_routes.py`
 - `studio/app/server/studio/data_sharing_service.py`
+- `data-sharing/data_sharing/services/dispatch.py`
+- `data-sharing/data_sharing/workflows/prepare.py`
+- `data-sharing/data_sharing/workflows/list_returned.py`
+- `data-sharing/data_sharing/workflows/review.py`
+- `data-sharing/data_sharing/workflows/apply.py`
 - `data-sharing/config/adapters.json`
 - `data-sharing/config/library-export-configs.json`
 - `data-sharing/data_sharing/adapters/documents/`
@@ -107,6 +112,7 @@ The old Jekyll route files under `studio/data-sharing/` are retired; the browser
 The documents adapter owns the implemented Library config set, selectable document records, field mapping, returned-package review, summary apply, and hierarchy apply behavior through reusable docs-domain helpers.
 The Analytics tags adapter owns tag registry, alias, and assignment package preparation, returned-package review, and apply behavior through existing Analytics tag planners and backup/write helpers.
 The shared adapter registry uses canonical Data Sharing operation names: `prepare`, `list_returned`, `review`, and `apply`.
+The headless `data-sharing/` workflow modules own shared operation dispatch; the Studio server keeps a compatibility gateway only to provide the current Studio adapter resolver and HTTP activity timing.
 Document-specific apply variants such as `summary_apply` and `hierarchy_apply` are apply actions, not top-level registry operations.
 The Studio app server hosts the loopback HTTP process for Data Sharing.
 Docs Viewer supplies docs-domain helper behavior for document workflows, but does not own the Data Sharing HTTP endpoints.

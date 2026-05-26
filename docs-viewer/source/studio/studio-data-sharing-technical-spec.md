@@ -48,7 +48,9 @@ Current implementation:
 
 - `studio/app/server/studio/studio_data_sharing_api.py` owns the Local Studio endpoint dispatch surface.
 - Runtime config publishes endpoint URLs under `app.runtime.services.data_sharing`.
-- Prepare, returned-package listing, review, and apply currently delegate to the existing Data Sharing adapter handlers while later slices move workflow dispatch and adapters into `data-sharing/`.
+- `data-sharing/data_sharing/services/dispatch.py` owns handler selection and shared operation dispatch for `prepare`, `list_returned`, `review`, and `apply`.
+- `data-sharing/data_sharing/workflows/prepare.py`, `list_returned.py`, `review.py`, and `apply.py` expose the headless workflow entry points.
+- `studio/app/server/studio/data_sharing_service.py` remains as a Studio compatibility gateway that supplies the current Studio adapter resolver to the headless workflow dispatchers.
 - `GET /studio/api/data-sharing/selectable-records` returns the active adapter's selection model and an adapter-owned record list; the documents adapter currently derives that list from generated Docs Viewer data without going through Docs Viewer HTTP.
 
 The headless `data-sharing/` subsystem owns:

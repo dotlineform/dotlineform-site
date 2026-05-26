@@ -1,5 +1,24 @@
 """Review workflow ownership boundary."""
 
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Any
+
+from data_sharing.services.dispatch import AdapterResolver, DataSharingAdapterHandlers
+from data_sharing.services.dispatch import review_returned_package as dispatch_review_returned_package
+
 OPERATION = "review"
 
-__all__ = ["OPERATION"]
+
+def review_returned_package(
+    repo_root: Path,
+    body: dict[str, Any],
+    dry_run: bool,
+    handlers: dict[str, DataSharingAdapterHandlers],
+    resolve_adapter: AdapterResolver,
+) -> dict[str, Any]:
+    return dispatch_review_returned_package(repo_root, body, dry_run, handlers, resolve_adapter)
+
+
+__all__ = ["OPERATION", "review_returned_package"]

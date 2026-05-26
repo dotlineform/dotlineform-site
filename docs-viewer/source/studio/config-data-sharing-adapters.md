@@ -112,7 +112,8 @@ Do not add registry paths or adapter fallback reads that preserve those roots.
 
 - `data-sharing/data_sharing/services/registry.py` owns registry/config path constants for the moved config boundary.
 - `studio/app/server/studio/data_sharing_adapters.py` still performs the current adapter validation and resolution during the transition.
-- `data-sharing/data_sharing/services/dispatch.py` defines the canonical operation boundary that follow-up workflow dispatch moves will use.
+- `data-sharing/data_sharing/services/dispatch.py` owns canonical operation dispatch and adapter handler selection for prepare, list-returned, review, and apply workflows.
+- `data-sharing/data_sharing/workflows/prepare.py`, `list_returned.py`, `review.py`, and `apply.py` expose the headless workflow entry points used by the Studio compatibility gateway.
 - `studio/app/server/studio/` owns the same-origin `/studio/api/data-sharing/...` endpoints and local-origin enforcement.
 - `studio/app/frontend/js/studio-transport.js` should use Studio-owned same-origin Data Sharing endpoints.
 - Docs Viewer service modules may expose Docs Viewer-owned import or management behavior, but they do not own the Data Sharing API boundary.
