@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T17:45:40Z",
+  "generated_at": "2026-05-26T17:54:12Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -21,7 +21,7 @@
       "source_path": "site-request-studio-data-sharing-architecture-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-architecture-tasks.json",
-      "content_text_length": 7056,
+      "content_text_length": 7536,
       "ui_status": "in-progress"
     },
     {
