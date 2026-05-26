@@ -53,6 +53,8 @@
 ## Studio Documentation and Search
 
 - Docs source is flat under `docs-viewer/source/<scope>/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than source folders.
+- scope `studio` contains live development and maintenance documents.
+- scope `archive` is not maintained and should not be retrospectively edited.
 - The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not source Markdown directly.
 - Do not rebuild doc payloads.
 - When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&mode=manage&doc=<doc_id>`.
