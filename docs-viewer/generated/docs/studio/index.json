@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T14:28:00Z",
+  "generated_at": "2026-05-26T14:41:41Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -55,17 +55,17 @@
     },
     {
       "scope": "studio",
-      "doc_id": "_tmp-spa",
+      "doc_id": "spa",
       "title": "SPA",
       "added_date": "2026-05-22",
       "last_updated": "2026-05-22",
-      "parent_id": "_tmp",
+      "parent_id": "",
       "sort_order": 350,
       "hidden": true,
       "viewable": false,
       "source_path": "_tmp_spa.md",
-      "viewer_url": "/docs/?scope=studio&doc=_tmp-spa",
-      "content_url": "/docs-viewer/generated/docs/studio/by-id/_tmp-spa.json",
+      "viewer_url": "/docs/?scope=studio&doc=spa",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/spa.json",
       "content_text_length": 19415
     },
     {

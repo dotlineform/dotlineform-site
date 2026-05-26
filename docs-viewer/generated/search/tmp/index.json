@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "search_index_tmp_v1",
+    "scope": "tmp",
+    "version": "blake2b-17311d3ea3da5b232ea117d70437a614",
+    "generated_at_utc": "2026-05-26T14:35:16Z",
+    "count": 1
+  },
+  "entries": [
+    {
+      "id": "tmp",
+      "kind": "doc",
+      "title": "tmp",
+      "href": "/docs/?scope=tmp&doc=tmp",
+      "last_updated": "2026-05-26",
+      "display_meta": "2026-05-26",
+      "search_terms": [
+        "tmp",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "tmp 2026-05-26 2026 05 26"
+    }
+  ]
+}
