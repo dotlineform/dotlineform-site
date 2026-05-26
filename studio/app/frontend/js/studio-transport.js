@@ -45,16 +45,13 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   health: "/studio/api/catalogue/health"
 });
 
-const DEFAULT_DOCS_VIEWER_BASE_URL = "http://127.0.0.1:8776";
-
 const DATA_SHARING_ENDPOINTS = {
-  health: `${DEFAULT_DOCS_VIEWER_BASE_URL}/health`,
-  generatedIndex: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/generated/index`,
+  health: "/studio/api/data-sharing/health",
   selectableRecords: "/studio/api/data-sharing/selectable-records",
-  prepare: `${DEFAULT_DOCS_VIEWER_BASE_URL}/data-sharing/prepare`,
-  returnedPackages: `${DEFAULT_DOCS_VIEWER_BASE_URL}/data-sharing/returned-packages`,
-  review: `${DEFAULT_DOCS_VIEWER_BASE_URL}/data-sharing/review`,
-  apply: `${DEFAULT_DOCS_VIEWER_BASE_URL}/data-sharing/apply`
+  prepare: "/studio/api/data-sharing/prepare",
+  returnedPackages: "/studio/api/data-sharing/returned-packages",
+  review: "/studio/api/data-sharing/review",
+  apply: "/studio/api/data-sharing/apply"
 };
 
 const AUDIT_API_ENDPOINTS = Object.freeze({
@@ -102,27 +99,20 @@ export function configureStudioTransport(config) {
   const dataSharing = services && typeof services.data_sharing === "object" ? services.data_sharing : null;
   if (dataSharing) {
     const configuredDataSharing = normalizeServiceEndpoints(dataSharing);
-    DATA_SHARING_ENDPOINTS.selectableRecords = configuredDataSharing.selectable_records
-      || DATA_SHARING_ENDPOINTS.selectableRecords;
+    Object.assign(DATA_SHARING_ENDPOINTS, {
+      health: configuredDataSharing.health || DATA_SHARING_ENDPOINTS.health,
+      selectableRecords: configuredDataSharing.selectable_records || DATA_SHARING_ENDPOINTS.selectableRecords,
+      prepare: configuredDataSharing.prepare || DATA_SHARING_ENDPOINTS.prepare,
+      returnedPackages: configuredDataSharing.returned_packages || DATA_SHARING_ENDPOINTS.returnedPackages,
+      review: configuredDataSharing.review || DATA_SHARING_ENDPOINTS.review,
+      apply: configuredDataSharing.apply || DATA_SHARING_ENDPOINTS.apply
+    });
   }
-
-  const docs = services && typeof services.docs === "object" ? services.docs : null;
-  if (!docs) return;
-
-  const configured = normalizeServiceEndpoints(docs);
-  Object.assign(DATA_SHARING_ENDPOINTS, {
-    health: configured.health || DATA_SHARING_ENDPOINTS.health,
-    generatedIndex: configured.generated_index || DATA_SHARING_ENDPOINTS.generatedIndex,
-    prepare: configured.data_sharing_prepare || DATA_SHARING_ENDPOINTS.prepare,
-    returnedPackages: configured.data_sharing_returned_packages || DATA_SHARING_ENDPOINTS.returnedPackages,
-    review: configured.data_sharing_review || DATA_SHARING_ENDPOINTS.review,
-    apply: configured.data_sharing_apply || DATA_SHARING_ENDPOINTS.apply
-  });
 }
 
-function normalizeServiceEndpoints(docs) {
+function normalizeServiceEndpoints(service) {
   const normalized = {};
-  for (const [key, value] of Object.entries(docs || {})) {
+  for (const [key, value] of Object.entries(service || {})) {
     if (typeof value === "string" && value.trim()) {
       normalized[key] = value.trim();
     }

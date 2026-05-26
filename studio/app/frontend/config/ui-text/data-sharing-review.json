@@ -12,7 +12,7 @@
   "apply_hierarchy_button": "Apply hierarchy",
   "apply_hierarchy_title": "Update selected document parent ids from the staged file.",
   "apply_unsupported_title": "{scope_label} source apply actions are not implemented yet.",
-  "service_unavailable": "Docs Viewer service unavailable. Start docs-viewer/bin/docs-viewer to review {scope_label} returned packages.",
+  "service_unavailable": "Studio Data Sharing API unavailable. Restart Local Studio to review {scope_label} returned packages.",
   "loading": "loading Data Sharing...",
   "idle_status": "Select a staged {scope_label} data file and generate previews.",
   "running_status": "Reviewing returned package...",

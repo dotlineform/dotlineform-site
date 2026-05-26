@@ -100,7 +100,13 @@ Under that root, Library currently uses:
 - `import-staging/`
 - `import-preview/`
 
-Future folder changes should update this config instead of adding route-level folder decisions.
+The registry validator enforces this shape for every data domain:
+
+- `paths.outbound_package_root`: `var/studio/data-sharing/<data_domain>/exports`
+- `paths.returned_package_staging_root`: `var/studio/data-sharing/<data_domain>/import-staging`
+- `paths.review_output_root`: `var/studio/data-sharing/<data_domain>/import-preview`
+
+Future folder changes should update the shared path contract deliberately instead of adding route-level folder decisions.
 
 The active tags prepare/review/apply workflow uses the same folder shape under `var/studio/data-sharing/tags/`.
 Tags package preparation writes outbound packages under `var/studio/data-sharing/tags/exports/`.

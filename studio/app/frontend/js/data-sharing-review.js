@@ -329,7 +329,7 @@ async function init() {
         getStudioText(
           state.config,
           "data_sharing_review.service_unavailable",
-          "Docs Viewer service unavailable. Start docs-viewer/bin/docs-viewer to review {scope_label} returned packages.",
+          "Studio Data Sharing API unavailable. Restart Local Studio to review {scope_label} returned packages.",
           { scope_label: dataSharingReviewScopeLabel(state) }
         )
       );

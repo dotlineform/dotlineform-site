@@ -210,6 +210,8 @@ Library workflow roots:
 - source root: `docs-viewer/source/library/`
 - backup root: `var/docs/backups/`
 
+The adapter registry validates the first three roots against `var/studio/data-sharing/<data_domain>/...`; adapters should not add fallback reads for old disposable `var/studio/export-import/...` packages.
+
 The documents adapter is Data Sharing-owned adapter code that a portable Docs Viewer install can ship when it wants Library or other Docs Viewer corpus Data Sharing behavior.
 It does not own the shared Data Sharing registry or non-document adapters.
 Docs-domain helpers remain under the Docs Viewer ownership boundary unless a later implementation deliberately creates a new package boundary.

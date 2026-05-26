@@ -28,13 +28,16 @@ def start_server() -> tuple[StudioAppServer, str]:
     return server, f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def generated_docs_index() -> dict[str, object]:
+def selectable_records_payload() -> dict[str, object]:
     return {
         "ok": True,
-        "docs": [
+        "adapter_id": "documents",
+        "selection_model": "documents",
+        "records": [
             {
                 "doc_id": "library",
                 "title": "Library",
+                "published": True,
                 "viewable": True,
                 "content_text_length": 120,
                 "summary": "Library root.",
@@ -43,6 +46,7 @@ def generated_docs_index() -> dict[str, object]:
                 "doc_id": "alpha",
                 "parent_id": "library",
                 "title": "Alpha",
+                "published": True,
                 "viewable": True,
                 "content_text_length": 80,
                 "summary": "Alpha summary.",
@@ -131,36 +135,36 @@ def review_payload() -> dict[str, object]:
     }
 
 
-def install_mock_docs_api(page) -> list[dict[str, object]]:
+def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
     calls: list[dict[str, object]] = []
 
     def handle(route) -> None:
         request = route.request
         parsed = urlparse(request.url)
-        docs_paths = {
-            "/health",
-            "/docs/generated/index",
-            "/data-sharing/prepare",
-            "/data-sharing/returned-packages",
-            "/data-sharing/review",
+        data_sharing_paths = {
+            "/studio/api/data-sharing/health",
+            "/studio/api/data-sharing/selectable-records",
+            "/studio/api/data-sharing/prepare",
+            "/studio/api/data-sharing/returned-packages",
+            "/studio/api/data-sharing/review",
         }
-        if parsed.path not in docs_paths:
+        if parsed.path not in data_sharing_paths:
             route.continue_()
             return
         calls.append({"method": request.method, "path": parsed.path})
         payload: dict[str, object]
-        if parsed.path == "/health":
-            payload = {"ok": True, "service": "docs_viewer", "dry_run": False}
-        elif parsed.path == "/docs/generated/index":
-            payload = generated_docs_index()
-        elif parsed.path == "/data-sharing/prepare":
+        if parsed.path == "/studio/api/data-sharing/health":
+            payload = {"ok": True, "service": "studio_data_sharing", "dry_run": False}
+        elif parsed.path == "/studio/api/data-sharing/selectable-records":
+            payload = selectable_records_payload()
+        elif parsed.path == "/studio/api/data-sharing/prepare":
             payload = prepare_payload()
-        elif parsed.path == "/data-sharing/returned-packages":
+        elif parsed.path == "/studio/api/data-sharing/returned-packages":
             payload = returned_packages_payload()
-        elif parsed.path == "/data-sharing/review":
+        elif parsed.path == "/studio/api/data-sharing/review":
             payload = review_payload()
         else:
-            payload = {"ok": False, "error": f"Unexpected Docs API route: {parsed.path}"}
+            payload = {"ok": False, "error": f"Unexpected Data Sharing API route: {parsed.path}"}
         route.fulfill(status=200, content_type="application/json", body=json.dumps(payload))
 
     page.route("**/*", handle)
@@ -251,24 +255,25 @@ def main(argv: list[str] | None = None) -> int:
             page_errors: list[str] = []
             page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
             page.on("pageerror", lambda error: page_errors.append(str(error)))
-            docs_api_calls = install_mock_docs_api(page)
+            data_sharing_api_calls = install_mock_data_sharing_api(page)
 
             assert_prepare(page, base_url)
             assert_review(page, base_url)
             browser.close()
 
         required_paths = {
-            "/health",
-            "/data-sharing/prepare",
-            "/data-sharing/returned-packages",
-            "/data-sharing/review",
+            "/studio/api/data-sharing/health",
+            "/studio/api/data-sharing/selectable-records",
+            "/studio/api/data-sharing/prepare",
+            "/studio/api/data-sharing/returned-packages",
+            "/studio/api/data-sharing/review",
         }
-        seen_paths = {str(call["path"]) for call in docs_api_calls}
+        seen_paths = {str(call["path"]) for call in data_sharing_api_calls}
         missing_paths = required_paths.difference(seen_paths)
         if missing_paths:
-            raise AssertionError(f"missing local Docs API calls: {sorted(missing_paths)!r}; calls={docs_api_calls!r}")
+            raise AssertionError(f"missing Studio Data Sharing API calls: {sorted(missing_paths)!r}; calls={data_sharing_api_calls!r}")
         if "/docs/generated/index" in seen_paths:
-            raise AssertionError(f"prepare page still read the generic generated docs index: {docs_api_calls!r}")
+            raise AssertionError(f"prepare page still read the generic generated docs index: {data_sharing_api_calls!r}")
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:

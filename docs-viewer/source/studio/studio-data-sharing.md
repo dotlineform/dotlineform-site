@@ -43,6 +43,7 @@ Runtime packages, returned-package staging, and review artifacts use:
 var/studio/data-sharing/<domain>/
 ```
 
+The adapter registry validates the domain-specific `exports/`, `import-staging/`, and `import-preview/` roots so active adapters cannot silently fall back to older package folders.
 Disposable packages under old `var/studio/export-import/...` roots are not part of the target compatibility contract.
 
 ## Current Scope

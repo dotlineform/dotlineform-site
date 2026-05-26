@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T18:56:29Z",
+  "generated_at": "2026-05-26T19:10:27Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -21,7 +21,7 @@
       "source_path": "site-request-studio-data-sharing-architecture-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-architecture-tasks.json",
-      "content_text_length": 10589,
+      "content_text_length": 11251,
       "ui_status": "in-progress"
     },
     {
@@ -37,7 +37,7 @@
       "source_path": "site-request-studio-data-sharing-call-graph-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-call-graph-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-call-graph-inventory.json",
-      "content_text_length": 17213,
+      "content_text_length": 18050,
       "ui_status": "in-progress"
     },
     {
@@ -285,7 +285,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 7625
+      "content_text_length": 7802
     },
     {
       "scope": "studio",
@@ -485,7 +485,7 @@
       "source_path": "scripts-docs-export.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-export",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-export.json",
-      "content_text_length": 7954
+      "content_text_length": 7937
     },
     {
       "scope": "studio",
@@ -607,7 +607,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 9350
+      "content_text_length": 9341
     },
     {
       "scope": "studio",
@@ -622,7 +622,7 @@
       "source_path": "studio-data-sharing-technical-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 11162
+      "content_text_length": 11364
     },
     {
       "scope": "studio",
@@ -907,7 +907,7 @@
       "source_path": "config-data-sharing-adapters.md",
       "viewer_url": "/docs/?scope=studio&doc=config-data-sharing-adapters",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-adapters.json",
-      "content_text_length": 5002
+      "content_text_length": 5341
     },
     {
       "scope": "studio",
@@ -2310,7 +2310,7 @@
       "source_path": "scripts-docs-import.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-import",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-import.json",
-      "content_text_length": 7634
+      "content_text_length": 7612
     },
     {
       "scope": "studio",

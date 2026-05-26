@@ -13,6 +13,12 @@ REGISTRY_REL_PATH = Path("data-sharing/config/adapters.json")
 SCHEMA_VERSION = "data_sharing_adapters_v2"
 CANONICAL_OPERATIONS = {"prepare", "list_returned", "review", "apply"}
 STATUS_VALUES = {"active", "planned", "stub", "disabled"}
+RUNTIME_ARTIFACT_ROOT = Path("var/studio/data-sharing")
+RUNTIME_PATH_KEYS = {
+    "outbound_package_root": "exports",
+    "returned_package_staging_root": "import-staging",
+    "review_output_root": "import-preview",
+}
 
 
 def normalize_id(value: Any) -> str:
@@ -84,6 +90,17 @@ def _validate_optional_path_object(value: Any, *, field: str) -> dict[str, Any]:
     payload = _require_object(value, field=field)
     _validate_path_collection(payload, field=field)
     return payload
+
+
+def _validate_runtime_artifact_roots(paths: dict[str, Any], *, data_domain: str, field: str) -> None:
+    domain_root = RUNTIME_ARTIFACT_ROOT / data_domain
+    for key, leaf in RUNTIME_PATH_KEYS.items():
+        actual = safe_relative_path(paths.get(key), field=f"{field}.{key}")
+        expected = domain_root / leaf
+        if actual != expected:
+            raise ValueError(
+                f"adapter config field {field}.{key} must be {expected.as_posix()}"
+            )
 
 
 @dataclass(frozen=True)
@@ -173,7 +190,12 @@ def validate_registry(payload: dict[str, Any]) -> None:
                 raise ValueError(
                     f"adapter config field adapters[{index}].data_domains.{domain_id}.selection_model is unsupported"
                 )
-            _validate_optional_path_object(domain.get("paths"), field=f"adapters[{index}].data_domains.{domain_id}.paths")
+            paths = _validate_optional_path_object(domain.get("paths"), field=f"adapters[{index}].data_domains.{domain_id}.paths")
+            _validate_runtime_artifact_roots(
+                paths,
+                data_domain=domain_id,
+                field=f"adapters[{index}].data_domains.{domain_id}.paths",
+            )
             _validate_optional_path_object(
                 domain.get("source_write_targets", {}),
                 field=f"adapters[{index}].data_domains.{domain_id}.source_write_targets",

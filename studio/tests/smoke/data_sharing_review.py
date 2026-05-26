@@ -97,7 +97,7 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     if not list_exists:
         raise AssertionError("preview list shell is missing")
     if expect_unavailable_service and not preview_disabled:
-        raise AssertionError("preview button should be disabled when docs-management service is unavailable")
+        raise AssertionError("preview button should be disabled when the Studio Data Sharing API is unavailable")
     if any(not disabled for disabled in apply_action_disabled):
         raise AssertionError("apply actions should stay disabled until review rows are selected")
     return {
@@ -133,23 +133,23 @@ def click_apply_action(page, selector: str) -> None:
     page.locator(selector).click()
 
 
-def install_mock_docs_service(page) -> list[dict[str, object]]:
+def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
     apply_requests: list[dict[str, object]] = []
 
     def handle(route):
         parsed = urlparse(route.request.url)
-        docs_paths = {
-            "/health",
-            "/data-sharing/returned-packages",
-            "/data-sharing/review",
-            "/data-sharing/apply",
+        data_sharing_paths = {
+            "/studio/api/data-sharing/health",
+            "/studio/api/data-sharing/returned-packages",
+            "/studio/api/data-sharing/review",
+            "/studio/api/data-sharing/apply",
         }
-        if parsed.path not in docs_paths:
+        if parsed.path not in data_sharing_paths:
             route.continue_()
             return
-        if parsed.path == "/health":
+        if parsed.path == "/studio/api/data-sharing/health":
             payload = {"ok": True}
-        elif parsed.path == "/data-sharing/returned-packages":
+        elif parsed.path == "/studio/api/data-sharing/returned-packages":
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -164,7 +164,7 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
                     }
                 ],
             }
-        elif parsed.path == "/data-sharing/review":
+        elif parsed.path == "/studio/api/data-sharing/review":
             payload = {
                 "ok": True,
                 "scope": "library",
@@ -281,7 +281,7 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
                     },
                 ],
             }
-        elif parsed.path == "/data-sharing/apply":
+        elif parsed.path == "/studio/api/data-sharing/apply":
             request_body = {}
             try:
                 post_data_json = route.request.post_data_json
@@ -366,9 +366,14 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
     return apply_requests
 
 
-def block_docs_service(route) -> None:
+def block_data_sharing_api(route) -> None:
     parsed = urlparse(route.request.url)
-    if parsed.path in {"/health", "/data-sharing/returned-packages", "/data-sharing/review", "/data-sharing/apply"}:
+    if parsed.path in {
+        "/studio/api/data-sharing/health",
+        "/studio/api/data-sharing/returned-packages",
+        "/studio/api/data-sharing/review",
+        "/studio/api/data-sharing/apply",
+    }:
         route.abort()
         return
     route.continue_()
@@ -638,6 +643,8 @@ def main() -> int:
     parser.add_argument("--local-app", action="store_true", help="Serve the local Studio app on a temporary local HTTP server.")
     parser.add_argument("--block-docs-service", action="store_true")
     parser.add_argument("--mock-docs-service", action="store_true")
+    parser.add_argument("--block-data-sharing-api", action="store_true")
+    parser.add_argument("--mock-data-sharing-api", action="store_true")
     parser.add_argument("--route-path", default="/studio/data-sharing/review/?mode=manage")
     parser.add_argument("--expect-unsupported", default="")
     parser.add_argument("--timeout-ms", type=int, default=15000)
@@ -657,19 +664,21 @@ def main() -> int:
             try:
                 page = browser.new_page()
                 apply_requests: list[dict[str, object]] = []
-                if args.block_docs_service:
-                    page.route("**/*", block_docs_service)
-                elif args.mock_docs_service:
-                    apply_requests = install_mock_docs_service(page)
+                block_api = args.block_docs_service or args.block_data_sharing_api
+                mock_api = args.mock_docs_service or args.mock_data_sharing_api
+                if block_api:
+                    page.route("**/*", block_data_sharing_api)
+                elif mock_api:
+                    apply_requests = install_mock_data_sharing_api(page)
                 page.goto(route_url(base_url, args.route_path), wait_until="domcontentloaded")
                 attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
                 assert_ready_contract(attrs)
-                if args.block_docs_service and attrs["service"] != "unavailable":
+                if block_api and attrs["service"] != "unavailable":
                     raise AssertionError(f"expected unavailable service state: {attrs!r}")
-                content = assert_route_content(page, args.block_docs_service)
+                content = assert_route_content(page, block_api)
                 if args.expect_unsupported:
                     content["unsupported_adapter"] = assert_unsupported_adapter_state(page, args.expect_unsupported)
-                if args.mock_docs_service:
+                if mock_api:
                     content["mock_preview"] = assert_mock_preview_flow(page, apply_requests)
                 print(json.dumps({"route": attrs, "content": content}, sort_keys=True))
             finally:

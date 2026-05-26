@@ -79,26 +79,26 @@ def capability(operation: str, status: str = "active") -> dict[str, object]:
     return payload
 
 
-def domain_payload(status: str = "active") -> dict[str, object]:
+def domain_payload(status: str = "active", data_domain: str = "library") -> dict[str, object]:
     return {
         "label": "Library",
-        "scope": "library",
+        "scope": data_domain,
         "status": status,
         "selection_model": "documents",
         "paths": {
-            "outbound_package_root": "var/studio/data-sharing/library/exports",
-            "returned_package_staging_root": "var/studio/data-sharing/library/import-staging",
-            "review_output_root": "var/studio/data-sharing/library/import-preview",
-            "source_root": "docs-viewer/source/library",
+            "outbound_package_root": f"var/studio/data-sharing/{data_domain}/exports",
+            "returned_package_staging_root": f"var/studio/data-sharing/{data_domain}/import-staging",
+            "review_output_root": f"var/studio/data-sharing/{data_domain}/import-preview",
+            "source_root": f"docs-viewer/source/{data_domain}",
             "backup_root": "var/docs/backups",
         },
         "source_write_targets": {
-            "documents": "docs-viewer/source/library",
+            "documents": f"docs-viewer/source/{data_domain}",
         },
         "sources": {
-            "docs_index": "assets/data/docs/scopes/library/index.json",
-            "docs_payload_root": "assets/data/docs/scopes/library/by-id",
-            "source_root": "docs-viewer/source/library",
+            "docs_index": f"assets/data/docs/scopes/{data_domain}/index.json",
+            "docs_payload_root": f"assets/data/docs/scopes/{data_domain}/by-id",
+            "source_root": f"docs-viewer/source/{data_domain}",
         },
         "config": {
             "sharing_profiles_path": "data-sharing/config/library-export-configs.json",
@@ -125,7 +125,7 @@ def adapter_payload(
             "package": f"{adapter_id}-package",
         },
         "data_domains": {
-            data_domain: domain or domain_payload(status="active"),
+            data_domain: domain or domain_payload(status="active", data_domain=data_domain),
         },
         "capabilities": capabilities or [capability("prepare")],
     }
@@ -157,7 +157,7 @@ def registry_payload() -> dict[str, object]:
                 status="stub",
                 data_domain="tags",
                 domain={
-                    **domain_payload(status="stub"),
+                    **domain_payload(status="stub", data_domain="tags"),
                     "label": "Tags",
                     "scope": "tags",
                     "selection_model": "records",
@@ -247,6 +247,19 @@ def test_registry_rejects_unsafe_paths() -> None:
     )
 
 
+def test_registry_rejects_non_standard_runtime_artifact_roots() -> None:
+    payload = registry_payload()
+    payload["adapters"][0]["data_domains"]["library"]["paths"]["returned_package_staging_root"] = (
+        "var/studio/export-import/library/import-staging"
+    )
+    repo_root = write_registry(payload)
+
+    expect_value_error(
+        lambda: adapters.load_registry(repo_root),
+        "must be var/studio/data-sharing/library/import-staging",
+    )
+
+
 def test_registry_distinguishes_non_active_capability_statuses() -> None:
     for status in ("planned", "stub", "disabled"):
         payload = registry_payload()
@@ -278,6 +291,11 @@ def test_repo_registry_loads_and_resolves_documents_and_tags() -> None:
     assert operations == {"prepare", "list_returned", "review", "apply"}
     document_resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="library", operation="apply")
     tags_resolution = adapters.resolve_adapter(REPO_ROOT, data_domain="tags", operation="review", require_active=False)
+    for resolution in (document_resolution, tags_resolution):
+        domain_root = f"var/studio/data-sharing/{resolution.data_domain}"
+        assert resolution.path("outbound_package_root").as_posix() == f"{domain_root}/exports"
+        assert resolution.path("returned_package_staging_root").as_posix() == f"{domain_root}/import-staging"
+        assert resolution.path("review_output_root").as_posix() == f"{domain_root}/import-preview"
     assert document_resolution.capability["apply_actions"][0]["id"] == "summary_apply"
     assert tags_resolution.adapter_id == "analytics-tags"
 

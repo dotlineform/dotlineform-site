@@ -192,6 +192,19 @@ function updateStatus(state) {
     state.runButton.disabled = true;
     return;
   }
+  if (!state.serviceAvailable) {
+    setStatus(
+      state.statusNode,
+      "error",
+      getStudioText(
+        state.config,
+        "data_sharing_prepare.service_unavailable",
+        "Studio Data Sharing API unavailable. Restart Local Studio to prepare packages."
+      )
+    );
+    state.runButton.disabled = true;
+    return;
+  }
   if (usesPrepareDocumentSelection(state.prepareCapability) && state.docsIndexError) {
     setStatus(
       state.statusNode,
@@ -201,19 +214,6 @@ function updateStatus(state) {
         "data_sharing_prepare.docs_index_unavailable",
         "No generated {scope_label} data index is available for this sharing profile.",
         { scope_label: scopeTitle(state) }
-      )
-    );
-    state.runButton.disabled = true;
-    return;
-  }
-  if (!state.serviceAvailable) {
-    setStatus(
-      state.statusNode,
-      "error",
-      getStudioText(
-        state.config,
-        "data_sharing_prepare.service_unavailable",
-        "Docs Viewer service unavailable. Start docs-viewer/bin/docs-viewer to prepare packages."
       )
     );
     state.runButton.disabled = true;
@@ -365,7 +365,7 @@ async function init() {
       workflowActive: workflowDomainIsActive(state.workflowScopes, state.scope),
       exportConfigCount: state.exportConfigs.length,
       loadJson,
-      onError: (error) => console.warn("data_sharing_prepare: docs index load failed", state.scope, error)
+      onError: (error) => console.warn("data_sharing_prepare: selectable records load failed", state.scope, error)
     });
     state.docsIndexError = docsState.docsIndexError;
     state.docs = docsState.docs;
@@ -386,7 +386,7 @@ async function init() {
     state.runButton.title = getStudioText(
       state.config,
       "data_sharing_prepare.run_disabled_title",
-      "Requires the local Docs Viewer service."
+      "Requires the Studio Data Sharing API."
     );
 
     renderDataSharingPrepareConfigSelect(state);

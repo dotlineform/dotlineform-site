@@ -220,6 +220,6 @@ Warnings report non-blocking context:
 
 The static sharing profile schema remains documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
 
-The Studio page runs the same documents package engine through the configured Docs Viewer service endpoint `POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare`.
+The Studio page runs the same documents package engine through the Studio-owned same-origin endpoint `POST /studio/api/data-sharing/prepare`.
 The local service first resolves `data_domain` and `operation` through `data-sharing/config/adapters.json`, then dispatches to the documents adapter, writes under the adapter-declared export root, and returns the same report shape used by the CLI.
 The response is annotated with `data_domain`, `adapter_id`, and service summary text, but it does not include `rebuild` or `rebuild.diagnostics` because package preparation does not mutate source docs or generated docs/search payloads.

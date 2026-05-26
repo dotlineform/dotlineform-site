@@ -8,11 +8,17 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
+import sys
 from threading import Thread
 from urllib.parse import urlparse
 
 from playwright.sync_api import sync_playwright
 
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(REPO_ROOT))
+
+from studio.app.server.studio.studio_app_server import StudioAppServer  # noqa: E402
 
 ROOT_SELECTOR = "#dataSharingPrepareRoot"
 EXPECTED_CONFIG_IDS = {
@@ -33,6 +39,13 @@ def start_static_server(site_root: Path) -> tuple[ThreadingHTTPServer, str]:
         raise FileNotFoundError(f"site root does not exist: {resolved_root}")
     handler = partial(QuietStaticHandler, directory=str(resolved_root))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    return server, f"http://127.0.0.1:{server.server_address[1]}"
+
+
+def start_local_app_server() -> tuple[StudioAppServer, str]:
+    server = StudioAppServer(("127.0.0.1", 0), REPO_ROOT)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server, f"http://127.0.0.1:{server.server_address[1]}"
@@ -111,32 +124,24 @@ def prepare_result_payload() -> dict[str, object]:
     }
 
 
-def install_mock_docs_service(page) -> list[dict[str, object]]:
+def install_mock_data_sharing_api(page) -> list[dict[str, object]]:
     prepare_requests: list[dict[str, object]] = []
 
     def handle(route):
         request = route.request
         parsed = urlparse(request.url)
         if parsed.path not in {
-            "/health",
-            "/docs/generated/index",
+            "/studio/api/data-sharing/health",
             "/studio/api/data-sharing/selectable-records",
-            "/data-sharing/prepare",
+            "/studio/api/data-sharing/prepare",
         }:
             route.continue_()
             return
-        if parsed.path == "/health":
+        if parsed.path == "/studio/api/data-sharing/health":
             route.fulfill(
                 status=200,
                 content_type="application/json",
-                body=json.dumps({"ok": True, "service": "docs_viewer", "dry_run": True}),
-            )
-            return
-        if parsed.path == "/docs/generated/index":
-            route.fulfill(
-                status=200,
-                content_type="application/json",
-                body=json.dumps(generated_docs_index()),
+                body=json.dumps({"ok": True, "service": "studio_data_sharing", "dry_run": True}),
             )
             return
         if parsed.path == "/studio/api/data-sharing/selectable-records":
@@ -146,7 +151,7 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
                 body=json.dumps(selectable_records_payload()),
             )
             return
-        if parsed.path == "/data-sharing/prepare":
+        if parsed.path == "/studio/api/data-sharing/prepare":
             post_data_json = request.post_data_json
             prepare_requests.append(post_data_json() if callable(post_data_json) else post_data_json)
             route.fulfill(
@@ -158,16 +163,20 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
         route.fulfill(
             status=404,
             content_type="application/json",
-            body=json.dumps({"ok": False, "error": "Unexpected mock docs-management route"}),
+            body=json.dumps({"ok": False, "error": "Unexpected mock Data Sharing API route"}),
         )
 
     page.route("**/*", handle)
     return prepare_requests
 
 
-def block_docs_service(route) -> None:
+def block_data_sharing_api(route) -> None:
     parsed = urlparse(route.request.url)
-    if parsed.path in {"/health", "/docs/generated/index", "/data-sharing/prepare"}:
+    if parsed.path in {
+        "/studio/api/data-sharing/health",
+        "/studio/api/data-sharing/selectable-records",
+        "/studio/api/data-sharing/prepare",
+    }:
         route.abort()
         return
     route.continue_()
@@ -193,7 +202,7 @@ def wait_for_studio_route_ready(page, root_selector: str, timeout_ms: int) -> di
     )
 
 
-def assert_ready_contract(attrs: dict[str, str]) -> None:
+def assert_ready_contract(attrs: dict[str, str], expect_unavailable_service: bool = False) -> None:
     if attrs["route"] != "data-sharing-prepare":
         raise AssertionError(f"unexpected route attribute: {attrs['route']!r}")
     if attrs["ready"] != "true":
@@ -204,7 +213,7 @@ def assert_ready_contract(attrs: dict[str, str]) -> None:
         raise AssertionError(f"unexpected route mode: {attrs['mode']!r}")
     if attrs["service"] not in {"available", "unavailable"}:
         raise AssertionError(f"unexpected service state: {attrs['service']!r}")
-    if attrs["recordLoaded"] != "true":
+    if not expect_unavailable_service and attrs["recordLoaded"] != "true":
         raise AssertionError(f"Library docs did not load before ready: {attrs!r}")
 
 
@@ -221,11 +230,23 @@ def assert_route_content(page, expect_unavailable_service: bool) -> dict[str, ob
     doc_ids = page.locator("[data-data-sharing-prepare-doc]").evaluate_all(
         "rows => rows.map(row => row.getAttribute('data-data-sharing-prepare-doc'))"
     )
-    if not doc_ids:
+    if not doc_ids and not expect_unavailable_service:
         raise AssertionError("Data Sharing prepare document list is empty")
     run_disabled = page.locator("#dataSharingPrepareRun").evaluate("button => button.disabled")
-    if expect_unavailable_service and not run_disabled:
-        raise AssertionError("run button should be disabled when docs-management service is unavailable")
+    if expect_unavailable_service:
+        if not run_disabled:
+            raise AssertionError("run button should be disabled when the Studio Data Sharing API is unavailable")
+        status_text = page.locator("#dataSharingPrepareStatus").inner_text(timeout=5000)
+        if "Studio Data Sharing API unavailable" not in status_text:
+            raise AssertionError(f"unexpected unavailable status text: {status_text!r}")
+        return {
+            "config_ids": sorted(config_ids),
+            "doc_count": len(doc_ids),
+            "filters": {},
+            "formats": {},
+            "run_disabled": bool(run_disabled),
+            "status": status_text,
+        }
 
     format_result = assert_format_controls(page)
     filter_result = assert_filter_flow(page, len(doc_ids))
@@ -429,42 +450,55 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", default="http://127.0.0.1:4000")
     parser.add_argument("--site-root", help="Serve a built site root on a temporary local HTTP server.")
+    parser.add_argument("--local-app", action="store_true", help="Serve the local Studio app on a temporary local HTTP server.")
     parser.add_argument("--block-docs-service", action="store_true")
     parser.add_argument("--mock-docs-service", action="store_true")
+    parser.add_argument("--block-data-sharing-api", action="store_true")
+    parser.add_argument("--mock-data-sharing-api", action="store_true")
     parser.add_argument("--timeout-ms", type=int, default=15000)
     args = parser.parse_args()
 
-    server = None
+    static_server = None
+    local_app_server = None
     base_url = args.base_url
-    if args.site_root:
-        server, base_url = start_static_server(Path(args.site_root))
+    if args.local_app:
+        local_app_server, base_url = start_local_app_server()
+    elif args.site_root:
+        static_server, base_url = start_static_server(Path(args.site_root))
 
-    with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=True)
-        try:
-            page = browser.new_page()
-            prepare_requests: list[dict[str, object]] = []
-            if args.mock_docs_service:
-                prepare_requests = install_mock_docs_service(page)
-            elif args.block_docs_service:
-                page.route("**/*", block_docs_service)
-            page.goto(route_url(base_url, "/studio/data-sharing/prepare/?mode=manage"), wait_until="domcontentloaded")
-            attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
-            assert_ready_contract(attrs)
-            if args.block_docs_service and attrs["service"] != "unavailable":
-                raise AssertionError(f"expected unavailable service state: {attrs!r}")
-            content = assert_route_content(page, args.block_docs_service)
-            modal = None
-            if args.mock_docs_service:
-                if attrs["service"] != "available":
-                    raise AssertionError(f"expected available mock service state: {attrs!r}")
-                modal = assert_prepare_result_modal(page, prepare_requests, args.timeout_ms)
-            print(json.dumps({"route": attrs, "content": content, "modal": modal}, sort_keys=True))
-        finally:
-            browser.close()
-            if server is not None:
-                server.shutdown()
-                server.server_close()
+    try:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            try:
+                page = browser.new_page()
+                prepare_requests: list[dict[str, object]] = []
+                block_api = args.block_docs_service or args.block_data_sharing_api
+                mock_api = args.mock_docs_service or args.mock_data_sharing_api
+                if mock_api:
+                    prepare_requests = install_mock_data_sharing_api(page)
+                elif block_api:
+                    page.route("**/*", block_data_sharing_api)
+                page.goto(route_url(base_url, "/studio/data-sharing/prepare/?mode=manage"), wait_until="domcontentloaded")
+                attrs = wait_for_studio_route_ready(page, ROOT_SELECTOR, args.timeout_ms)
+                assert_ready_contract(attrs, block_api)
+                if block_api and attrs["service"] != "unavailable":
+                    raise AssertionError(f"expected unavailable service state: {attrs!r}")
+                content = assert_route_content(page, block_api)
+                modal = None
+                if mock_api:
+                    if attrs["service"] != "available":
+                        raise AssertionError(f"expected available mock service state: {attrs!r}")
+                    modal = assert_prepare_result_modal(page, prepare_requests, args.timeout_ms)
+                print(json.dumps({"route": attrs, "content": content, "modal": modal}, sort_keys=True))
+            finally:
+                browser.close()
+    finally:
+        if static_server is not None:
+            static_server.shutdown()
+            static_server.server_close()
+        if local_app_server is not None:
+            local_app_server.shutdown()
+            local_app_server.server_close()
     return 0
 
 

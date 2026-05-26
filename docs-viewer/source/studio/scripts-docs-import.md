@@ -21,7 +21,7 @@ $HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py
 It reads local JSON or JSONL files manually copied under the Library returned-package staging root and returns a structured JSON report.
 It does not mutate source Markdown, generated docs payloads, share packages, or config files.
 When `--write-previews` is passed, it writes Markdown review artifacts under the Library review output root.
-The same engine is used by the documents adapter when `/studio/data-sharing/review/?mode=manage` calls `POST <DOCS_VIEWER_BASE_URL>/data-sharing/review`.
+The same engine is used by the documents adapter when `/studio/data-sharing/review/?mode=manage` calls `POST /studio/api/data-sharing/review`.
 
 Current input path:
 
@@ -106,7 +106,7 @@ The script prints a JSON report with:
 - `preview_files`
 - `preview_written`
 
-The Data Sharing review endpoint returns this same report shape from `POST <DOCS_VIEWER_BASE_URL>/data-sharing/review` after documents-adapter dispatch.
+The Data Sharing review endpoint returns this same report shape from `POST /studio/api/data-sharing/review` after documents-adapter dispatch.
 
 `counts` includes:
 

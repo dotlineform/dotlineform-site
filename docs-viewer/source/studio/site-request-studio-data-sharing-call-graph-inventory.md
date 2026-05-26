@@ -15,14 +15,14 @@ It is kept current for moved ownership boundaries; implementation tasks should m
 
 ## Summary
 
-Current Data Sharing route ownership is split:
+Current Data Sharing route ownership is split, with browser traffic now on the Studio-owned local API:
 
 - Studio owns the page shells at `/studio/data-sharing/prepare/?mode=manage` and `/studio/data-sharing/review/?mode=manage`.
-- Studio browser modules load adapter config directly from `studio/data/config/data-sharing/`.
-- Studio runtime config publishes Docs Viewer service URLs under `app.runtime.services.docs`.
-- Browser Data Sharing health, generated-docs index, prepare, returned-package listing, review, and apply calls use those Docs Viewer URLs.
-- Docs Viewer hosts the `/data-sharing/...` HTTP endpoints and delegates to Studio's shared dispatch modules.
-- Studio's shared dispatch modules resolve adapters from `studio/data/config/data-sharing/data-sharing-adapters.json`.
+- Studio browser modules load adapter config directly from `data-sharing/config/`.
+- Studio runtime config publishes same-origin Data Sharing URLs under `app.runtime.services.data_sharing`.
+- Browser Data Sharing health, selectable-record, prepare, returned-package listing, review, and apply calls use `/studio/api/data-sharing/...`.
+- Docs Viewer still hosts transitional `/data-sharing/...` HTTP endpoints for SDSA-013 cleanup, but Studio browser modules no longer use them.
+- Studio's dispatch compatibility module resolves adapters from `data-sharing/config/adapters.json`.
 - The documents adapter lives in `data-sharing/data_sharing/adapters/documents/` and calls docs-domain helpers in `docs-viewer/services/docs_data_sharing/`.
 - The tags adapter lives in `data-sharing/data_sharing/adapters/tags/` and calls Analytics tag helpers for validation, backups, writes, and activity.
 - The tracked top-level `data-sharing/` subsystem owns shared workflow dispatch, adapter implementations, and config.
@@ -32,11 +32,11 @@ The current browser-to-write path is:
 ```text
 Studio page
 -> studio/app/frontend/js/studio-transport.js
--> DOCS_VIEWER_BASE_URL /data-sharing/...
--> docs-viewer/services/docs_viewer_service.py
--> docs-viewer/services/docs_management_*_service.py
+-> /studio/api/data-sharing/...
+-> studio/app/server/studio/studio_app_server.py
+-> studio/app/server/studio/studio_data_sharing_api.py
 -> data-sharing/data_sharing/workflows/*
--> adapter handler from docs_management_data_sharing_service.py
+-> adapter handler from studio_data_sharing_api.py
 -> documents or tags adapter
 -> domain helper writes, backups, rebuilds, and activity
 ```
@@ -63,12 +63,10 @@ Shared browser helpers:
 Prepare boot flow:
 
 1. `data-sharing-prepare.js` loads Studio config and calls `configureStudioTransport`.
-2. It loads the adapter registry from `paths.data.studio.data_sharing_adapters`, falling back to `/studio/data/config/data-sharing/data-sharing-adapters.json`.
+2. It loads the adapter registry from `paths.data.studio.data_sharing_adapters`, falling back to `/data-sharing/config/adapters.json`.
 3. It derives scopes and prepare capability metadata with `data-sharing-adapters.js`.
-4. If capability profiles are not embedded, it loads Library export config from `paths.data.studio.library_export_configs`, falling back to `/studio/data/config/data-sharing/library-export-configs.json`.
-5. `data-sharing-prepare-docs.js` loads selectable documents by reading either:
-   - `DATA_SHARING_ENDPOINTS.generatedIndex` with `scope=<scope>` when Docs Viewer service health passes, or
-   - the static generated docs index path from Studio config when service health fails.
+4. If capability profiles are not embedded, it loads Library export config from `paths.data.studio.library_export_configs`, falling back to `/data-sharing/config/library-export-configs.json`.
+5. `data-sharing-prepare-docs.js` loads selectable records from `DATA_SHARING_ENDPOINTS.selectableRecords` with `data_domain=<scope>` when the Studio Data Sharing API health probe passes.
 6. `data-sharing-prepare-service.js` posts prepare requests to `DATA_SHARING_ENDPOINTS.prepare`.
 
 Review boot flow:
@@ -83,23 +81,24 @@ Review boot flow:
 
 Migration pressure points:
 
-- `studio-transport.js` defaults Data Sharing endpoints to `http://127.0.0.1:8776`.
-- `configureStudioTransport` rewrites Data Sharing endpoints from `app.runtime.services.docs`.
-- Prepare-page document selection is built from a generated docs index, not from an adapter-owned selectable-record response.
-- User-facing unavailable-service copy still names Docs Viewer service startup.
+- `app.runtime.services.docs` still publishes old Data Sharing endpoint keys for SDSA-013 cleanup.
+- Docs Viewer still mounts transitional `/data-sharing/...` endpoints for SDSA-013 cleanup.
+- Some CLI and smoke-test aliases still use old `--mock-docs-service` / `--block-docs-service` names for compatibility with existing verification commands.
 
 ## Runtime Config
 
 `studio/app/server/studio/studio_app_config.py` exposes:
 
 - Studio page views for `data_sharing_prepare` and `data_sharing_review`.
-- `app.runtime.services.docs`, populated by `docs_viewer_service_endpoints(repo_root)`.
-- Docs Viewer-derived Data Sharing endpoint keys:
-  - `data_sharing_prepare`
-  - `data_sharing_returned_packages`
-  - `data_sharing_review`
-  - `data_sharing_apply`
-- `generated_index`, also under `app.runtime.services.docs`.
+- `app.runtime.services.data_sharing`, populated by `studio_data_sharing_api.service_endpoints()`.
+- Studio Data Sharing endpoint keys:
+  - `health`
+  - `selectable_records`
+  - `returned_packages`
+  - `prepare`
+  - `review`
+  - `apply`
+- `app.runtime.services.docs`, populated by `docs_viewer_service_endpoints(repo_root)`, which still carries old Data Sharing endpoint keys until SDSA-013 removes that publication.
 
 `studio/app/server/studio/studio_docs_viewer_integration.py` resolves `DOCS_VIEWER_BASE_URL` from `var/local/site.env` or environment, validates that it is an HTTP loopback URL, and publishes:
 
@@ -110,12 +109,23 @@ Migration pressure points:
 - `<base>/data-sharing/review`
 - `<base>/data-sharing/apply`
 
-Current tests assert this publication in `studio/tests/python/test_studio_app_server.py`.
-Future runtime config tests need to invert that contract so Data Sharing endpoints no longer live under `app.runtime.services.docs`.
+Current tests still assert this legacy Docs Viewer publication in `studio/tests/python/test_studio_app_server.py`.
+SDSA-013 needs to invert that contract so Data Sharing endpoints no longer live under `app.runtime.services.docs`.
 
 ## Service Endpoints
 
-Endpoint constants live in `studio/app/server/studio/data_sharing_routes.py`:
+Studio API endpoint constants live in `studio/app/server/studio/studio_data_sharing_api.py`:
+
+- `GET /studio/api/data-sharing/health`
+- `GET /studio/api/data-sharing/selectable-records`
+- `GET /studio/api/data-sharing/returned-packages`
+- `POST /studio/api/data-sharing/prepare`
+- `POST /studio/api/data-sharing/review`
+- `POST /studio/api/data-sharing/apply`
+
+`studio/app/server/studio/studio_app_server.py` routes same-origin API requests to `studio_data_sharing_api.data_sharing_get_payload` and `studio_data_sharing_api.data_sharing_post_response`.
+
+Legacy neutral endpoint constants still live in `studio/app/server/studio/data_sharing_routes.py`:
 
 - `GET /data-sharing/returned-packages`
 - `POST /data-sharing/prepare`
@@ -126,15 +136,17 @@ Docs Viewer mounts those constants in `docs-viewer/services/docs_viewer_service.
 GET requests dispatch through `docs_management_read_service.docs_management_get_payload`.
 POST requests dispatch through `docs_management_service.docs_management_post_response`.
 
-Current dispatch:
+Current Studio dispatch:
 
-- `GET /data-sharing/returned-packages` -> `data_sharing_service.list_returned_packages(...)`
-- `POST /data-sharing/prepare` -> `data_sharing_service.prepare_package(...)` and `docs_activity.maybe_attach_docs_export_activity(...)`
-- `POST /data-sharing/review` -> `data_sharing_service.review_returned_package(...)`
-- `POST /data-sharing/apply` -> `data_sharing_service.apply_returned_changes(...)` and `docs_activity.maybe_attach_documents_import_apply_activity(...)`
+- `GET /studio/api/data-sharing/health` -> Studio API health payload
+- `GET /studio/api/data-sharing/selectable-records` -> `data_sharing_service.selectable_records(...)`
+- `GET /studio/api/data-sharing/returned-packages` -> `data_sharing_service.list_returned_packages(...)`
+- `POST /studio/api/data-sharing/prepare` -> `data_sharing_service.prepare_package(...)` and `docs_activity.maybe_attach_docs_export_activity(...)`
+- `POST /studio/api/data-sharing/review` -> `data_sharing_service.review_returned_package(...)`
+- `POST /studio/api/data-sharing/apply` -> `data_sharing_service.apply_returned_changes(...)` and `docs_activity.maybe_attach_documents_import_apply_activity(...)`
 
-Docs Viewer local-origin enforcement and CORS still guard the POST and OPTIONS paths.
-Studio does not currently expose same-origin `/studio/api/data-sharing/...` endpoints.
+Studio local-origin enforcement guards `/studio/api/data-sharing/...` POST and OPTIONS paths with the other Studio write APIs.
+Docs Viewer local-origin enforcement and CORS still guard the transitional `/data-sharing/...` POST and OPTIONS paths until SDSA-013 removes them.
 
 ## Dispatch And Registry
 
@@ -146,7 +158,7 @@ Shared dispatch modules currently live under `studio/app/server/studio/`:
 
 `data_sharing_adapters.py` owns:
 
-- registry path `studio/data/config/data-sharing/data-sharing-adapters.json`
+- registry path `data-sharing/config/adapters.json`
 - schema version `data_sharing_adapters_v2`
 - canonical operations: `prepare`, `list_returned`, `review`, `apply`
 - allowed capability statuses: `active`, `planned`, `stub`, `disabled`
@@ -167,20 +179,21 @@ Handler registration currently lives in `docs-viewer/services/docs_management_da
 - module `documents` -> `data-sharing/data_sharing/adapters/documents/adapter.py`
 - module `analytics.tags` -> `data-sharing/data_sharing/adapters/tags/adapter.py`
 
+Handler registration for the Studio same-origin API lives in `studio/app/server/studio/studio_data_sharing_api.py` with the same module mapping.
 The shared workflow dispatch is Data Sharing-owned. The Docs Viewer and Studio services still assemble concrete handler maps for their current local API entry points.
 
 ## Config Reads
 
 Current config files:
 
-- `studio/data/config/data-sharing/data-sharing-adapters.json`
-- `studio/data/config/data-sharing/data-sharing-adapters.schema.json`
-- `studio/data/config/data-sharing/library-export-configs.json`
+- `data-sharing/config/adapters.json`
+- `data-sharing/config/adapters.schema.json`
+- `data-sharing/config/library-export-configs.json`
 
 Browser config reads:
 
-- `studio/app/frontend/config/studio-config.json` maps `paths.data.studio.data_sharing_adapters` to `/studio/data/config/data-sharing/data-sharing-adapters.json`.
-- The same config maps `paths.data.studio.library_export_configs` to `/studio/data/config/data-sharing/library-export-configs.json`.
+- `studio/app/frontend/config/studio-config.json` maps `paths.data.studio.data_sharing_adapters` to `/data-sharing/config/adapters.json`.
+- The same config maps `paths.data.studio.library_export_configs` to `/data-sharing/config/library-export-configs.json`.
 - Prepare and review pages fetch the adapter registry directly.
 - Prepare fetches Library export config directly when capability profiles are not embedded.
 
@@ -193,9 +206,8 @@ Server config reads:
 
 Migration pressure points:
 
-- Registry/config ownership needs to move before both browser and server readers can converge on `data-sharing/config/`.
-- Browser modules should stop reading registry/config files as endpoint ownership signals.
-- Library profile config path appears in source config, tests, and fixture builders.
+- Browser modules still read the adapter registry and Library export profile config directly for page metadata. That is acceptable for this slice, but these reads must not be used as endpoint ownership signals.
+- Some fixture builders and historical docs may still mention old `studio/data/config/data-sharing/` paths; current code should resolve through `data-sharing/config/`.
 
 ## Documents Adapter
 
@@ -290,7 +302,7 @@ The tags adapter avoids Docs Viewer domain logic and receives adapter resolution
 
 `docs-viewer/services/docs_export.py` currently owns document outbound package generation:
 
-- default config path `studio/data/config/data-sharing/library-export-configs.json`
+- default config path `data-sharing/config/library-export-configs.json`
 - output root `var/studio/data-sharing`
 - generated docs index and payload reads
 - config validation
@@ -317,12 +329,12 @@ The tags adapter avoids Docs Viewer domain logic and receives adapter resolution
 - full-scope fallback behavior where needed
 
 `docs-viewer/services/docs_management_context.py` owns docs backup bundles and event logging used by the documents adapter.
-`docs-viewer/services/docs_activity.py` attaches document export/apply activity after Docs Viewer service dispatch returns a successful payload.
+`docs-viewer/services/docs_activity.py` attaches document export/apply activity after Studio or transitional Docs Viewer service dispatch returns a successful payload.
 
 Migration pressure points:
 
-- `docs_export.py`, `docs_import.py`, backup, activity, and rebuild helpers are callable modules, but they are still grouped around Docs Viewer service concerns.
-- The target implementation should separate docs-domain helper modules from Docs Viewer HTTP/service wrapper modules before moving the documents adapter.
+- Documents package, review, apply planning, source write, backup, and rebuild behavior is now reachable through docs-domain helper modules under `docs-viewer/services/docs_data_sharing/`.
+- Some lower-level CLI modules still live under Docs Viewer because the Library source and generated payloads remain docs-domain data.
 
 ## Test Coverage
 
@@ -330,36 +342,30 @@ Focused Python coverage:
 
 - `studio/tests/python/test_data_sharing_adapters.py` validates registry schema, canonical operations, active/stub status behavior, safe paths, repo registry loading, and document/tags resolution.
 - `studio/tests/python/test_data_sharing_service.py` validates neutral `/data-sharing/...` path constants and shared handler dispatch.
-- `studio/tests/python/test_studio_app_server.py` currently asserts Data Sharing endpoints are published under `runtime.services.docs`.
+- `studio/tests/python/test_studio_app_server.py` currently asserts Data Sharing endpoints are published under both `runtime.services.data_sharing` and the legacy `runtime.services.docs` location.
 - `docs-viewer/tests/python/test_docs_export.py` covers Library export config validation, document selection, deterministic output, format overrides, and output paths under `var/studio/data-sharing/library/exports`.
 - `docs-viewer/tests/python/test_docs_import_service.py` directly exercises documents adapter prepare/list/review/apply helpers, backup creation, source writes, and hierarchy/summary apply planning.
 - `studio/tests/python/test_tags_data_sharing_adapter.py` covers tags package preparation, returned package listing, review, apply, backups, and activity grouping.
 
 Smoke coverage:
 
-- `studio/tests/smoke/local_studio_app_data_sharing_routes.py` serves Studio and mocks Docs Viewer `/health`, `/docs/generated/index`, and `/data-sharing/...` calls.
-- `studio/tests/smoke/data_sharing_prepare.py` mocks `/health`, `/docs/generated/index`, and `/data-sharing/prepare`.
-- `studio/tests/smoke/data_sharing_review.py` mocks `/health`, `/data-sharing/returned-packages`, `/data-sharing/review`, and `/data-sharing/apply`.
-- `studio/tests/smoke/data_sharing_prepare_modules.py` imports prepare workflow/render/service browser modules and intercepts `**/data-sharing/prepare`.
+- `studio/tests/smoke/local_studio_app_data_sharing_routes.py` serves Studio and mocks `/studio/api/data-sharing/...` calls for health, selectable records, prepare, returned-package listing, and review.
+- `studio/tests/smoke/data_sharing_prepare.py` mocks or blocks `/studio/api/data-sharing/health`, `/studio/api/data-sharing/selectable-records`, and `/studio/api/data-sharing/prepare`.
+- `studio/tests/smoke/data_sharing_review.py` mocks or blocks `/studio/api/data-sharing/health`, `/studio/api/data-sharing/returned-packages`, `/studio/api/data-sharing/review`, and `/studio/api/data-sharing/apply`.
+- `studio/tests/smoke/data_sharing_prepare_modules.py` imports prepare workflow/render/service browser modules and intercepts `**/studio/api/data-sharing/prepare`.
 - `studio/tests/smoke/data_sharing_review_workflow_modules.py` imports review workflow modules and validates apply action projection and selection behavior.
 
 Coverage gaps for the target architecture:
 
-- No test currently asserts same-origin `/studio/api/data-sharing/...` endpoints.
-- No adapter-owned selectable-record API test exists.
-- Existing runtime config tests assert the old Docs Viewer publication contract.
-- Existing browser smokes mock Docs Viewer endpoints rather than Studio Data Sharing endpoints.
-- Existing documents adapter tests still build fixture registry/config paths under `studio/data/config/data-sharing/`.
+- Runtime config tests still need SDSA-013 assertions that Data Sharing endpoints no longer publish under `app.runtime.services.docs`.
+- Docs Viewer transitional `/data-sharing/...` endpoints still need removal or deliberate retention tests after SDSA-013 decides the cleanup shape.
 
 ## Migration Checklist From Inventory
 
 Use this call graph inventory to drive the next tasks:
 
-- Create `data-sharing/` as a headless package before moving registry/config and adapters.
-- Move registry/config readers from `studio/data/config/data-sharing/` to `data-sharing/config/` without old-path compatibility reads.
-- Add Studio-owned `/studio/api/data-sharing/...` endpoints before changing browser transport.
-- Add an adapter selectable-record operation before removing generated-docs-index selection from the prepare page.
-- Move shared workflow dispatch out of `studio/app/server/studio/`.
-- Keep docs-domain helper calls direct, but extract them away from Docs Viewer HTTP wrappers.
+- Remove Data Sharing endpoint publication from `app.runtime.services.docs` now that browser transport uses `app.runtime.services.data_sharing`.
+- Remove or explicitly retire transitional Docs Viewer `/data-sharing/...` service helpers if no non-browser caller needs them.
+- Keep browser smokes on same-origin `/studio/api/data-sharing/...` paths.
 - Keep documents and tags adapters at the same `data-sharing/` adapter boundary.
-- Update runtime config tests and browser smokes as endpoint ownership changes.
+- Update final runtime config tests and docs-log evidence as endpoint cleanup lands.
