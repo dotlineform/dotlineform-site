@@ -5,7 +5,7 @@
   "added_date": "2026-05-25",
   "last_updated": "2026-05-26",
   "parent_id": "change-requests",
-  "sort_order": 10024,
+  "sort_order": 10000,
   "hidden": false,
   "viewable": true,
   "source_path": "studio-doc-viewer-dependencies.md",

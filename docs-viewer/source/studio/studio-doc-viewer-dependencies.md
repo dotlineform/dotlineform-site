@@ -5,7 +5,7 @@ added_date: 2026-05-25
 last_updated: 2026-05-26
 ui_status: paused
 parent_id: change-requests
-sort_order: 10024
+sort_order: 10000
 viewable: true
 ---
 # Studio Docs Viewer Dependencies

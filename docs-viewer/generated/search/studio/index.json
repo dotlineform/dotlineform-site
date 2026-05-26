@@ -2,11 +2,38 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cf336b17fab7051ff1203196bde74427",
-    "generated_at_utc": "2026-05-26T17:22:14Z",
-    "count": 192
+    "version": "blake2b-a56df5f51446e3c96d5914414c74aa72",
+    "generated_at_utc": "2026-05-26T17:31:28Z",
+    "count": 193
   },
   "entries": [
+    {
+      "id": "site-request-studio-data-sharing-architecture-tasks",
+      "kind": "doc",
+      "title": "Studio Data Sharing Architecture Tasks",
+      "href": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks",
+      "last_updated": "2026-05-26",
+      "parent_id": "site-request-studio-data-sharing-architecture",
+      "parent_title": "Studio Data Sharing Architecture Request",
+      "display_meta": "2026-05-26 • Studio Data Sharing Architecture Request",
+      "search_terms": [
+        "site-request-studio-data-sharing-architecture-tasks",
+        "site",
+        "request",
+        "studio",
+        "data",
+        "sharing",
+        "architecture",
+        "tasks",
+        "studio data sharing architecture tasks",
+        "studio data sharing architecture request",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "site-request-studio-data-sharing-architecture-tasks site request studio data sharing architecture tasks studio data sharing architecture tasks studio data sharing architecture request 2026-05-26 2026 05 26"
+    },
     {
       "id": "data-models-catalogue",
       "kind": "doc",
@@ -3645,31 +3672,6 @@
       "search_text": "scripts-studio-backup-retention scripts studio backup retention studio backup retention 2026-05-09 22:35 2026 05 09 22 35"
     },
     {
-      "id": "tiered-dimension-policy",
-      "kind": "doc",
-      "title": "Tiered Dimension Policy",
-      "href": "/docs/?scope=studio&doc=tiered-dimension-policy",
-      "last_updated": "2026-05-06 20:54",
-      "parent_id": "analytics",
-      "parent_title": "Analytics",
-      "display_meta": "2026-05-06 20:54 • Analytics",
-      "search_terms": [
-        "tiered-dimension-policy",
-        "tiered",
-        "dimension",
-        "policy",
-        "tiered dimension policy",
-        "analytics",
-        "2026-05-06 20:54",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "54"
-      ],
-      "search_text": "tiered-dimension-policy tiered dimension policy tiered dimension policy analytics 2026-05-06 20:54 2026 05 06 20 54"
-    },
-    {
       "id": "studio-doc-viewer-dependencies",
       "kind": "doc",
       "title": "Studio Docs Viewer Dependencies",
@@ -3697,32 +3699,58 @@
       "search_text": "studio-doc-viewer-dependencies studio doc viewer dependencies studio docs viewer dependencies docs change requests change requests 2026-05-26 2026 05 26"
     },
     {
-      "id": "site-request-studio-data-sharing-architecture",
+      "id": "tiered-dimension-policy",
       "kind": "doc",
-      "title": "Studio Data Sharing Architecture Request",
-      "href": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture",
-      "last_updated": "2026-05-26",
+      "title": "Tiered Dimension Policy",
+      "href": "/docs/?scope=studio&doc=tiered-dimension-policy",
+      "last_updated": "2026-05-06 20:54",
+      "parent_id": "analytics",
+      "parent_title": "Analytics",
+      "display_meta": "2026-05-06 20:54 • Analytics",
+      "search_terms": [
+        "tiered-dimension-policy",
+        "tiered",
+        "dimension",
+        "policy",
+        "tiered dimension policy",
+        "analytics",
+        "2026-05-06 20:54",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "54"
+      ],
+      "search_text": "tiered-dimension-policy tiered dimension policy tiered dimension policy analytics 2026-05-06 20:54 2026 05 06 20 54"
+    },
+    {
+      "id": "site-request-docs-viewer-workspace-mount-architecture",
+      "kind": "doc",
+      "title": "Docs Viewer Workspace Mount Architecture Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture",
+      "last_updated": "2026-05-25",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-26 • Change Requests",
+      "display_meta": "2026-05-25 • Change Requests",
       "search_terms": [
-        "site-request-studio-data-sharing-architecture",
+        "site-request-docs-viewer-workspace-mount-architecture",
         "site",
         "request",
-        "studio",
-        "data",
-        "sharing",
+        "docs",
+        "viewer",
+        "workspace",
+        "mount",
         "architecture",
-        "studio data sharing architecture request",
+        "docs viewer workspace mount architecture request",
         "change requests",
         "change",
         "requests",
-        "2026-05-26",
+        "2026-05-25",
         "2026",
         "05",
-        "26"
+        "25"
       ],
-      "search_text": "site-request-studio-data-sharing-architecture site request studio data sharing architecture studio data sharing architecture request change requests change requests 2026-05-26 2026 05 26"
+      "search_text": "site-request-docs-viewer-workspace-mount-architecture site request docs viewer workspace mount architecture docs viewer workspace mount architecture request change requests change requests 2026-05-25 2026 05 25"
     },
     {
       "id": "search-incremental-orchestration-plan",
@@ -3929,6 +3957,34 @@
         "45"
       ],
       "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-12 18:45 2026 05 12 18 45"
+    },
+    {
+      "id": "site-request-studio-data-sharing-architecture",
+      "kind": "doc",
+      "title": "Studio Data Sharing Architecture Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture",
+      "last_updated": "2026-05-26",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-26 • Change Requests",
+      "search_terms": [
+        "site-request-studio-data-sharing-architecture",
+        "site",
+        "request",
+        "studio",
+        "data",
+        "sharing",
+        "architecture",
+        "studio data sharing architecture request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "site-request-studio-data-sharing-architecture site request studio data sharing architecture studio data sharing architecture request change requests change requests 2026-05-26 2026 05 26"
     },
     {
       "id": "source-tree-ownership",
@@ -4609,35 +4665,6 @@
         "25"
       ],
       "search_text": "config-docs-viewer config docs viewer docs viewer config docs viewer 2026-05-25 2026 05 25"
-    },
-    {
-      "id": "site-request-docs-viewer-workspace-mount-architecture",
-      "kind": "doc",
-      "title": "Docs Viewer Workspace Mount Architecture Request",
-      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-workspace-mount-architecture",
-      "last_updated": "2026-05-25",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-25 • Change Requests",
-      "search_terms": [
-        "site-request-docs-viewer-workspace-mount-architecture",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "workspace",
-        "mount",
-        "architecture",
-        "docs viewer workspace mount architecture request",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-25",
-        "2026",
-        "05",
-        "25"
-      ],
-      "search_text": "site-request-docs-viewer-workspace-mount-architecture site request docs viewer workspace mount architecture docs viewer workspace mount architecture request change requests change requests 2026-05-25 2026 05 25"
     }
   ]
 }

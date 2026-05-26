@@ -5,7 +5,7 @@ added_date: 2026-05-26
 last_updated: 2026-05-26
 ui_status: in-progress
 parent_id: change-requests
-sort_order: 10025
+sort_order: 12000
 viewable: true
 ---
 # Studio Data Sharing Architecture Request
@@ -13,6 +13,7 @@ viewable: true
 Status:
 
 - in progress
+- see [Studio Data Sharing Architecture Tasks](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks)
 
 ## Summary
 
@@ -25,8 +26,8 @@ The target direction is:
 - a top-level, headless `data-sharing/` subsystem owns workflow code, adapter code, schemas, registry/config files, and package contract code.
 - `data-sharing/` does not host servers, UI routes, browser modules, or Studio shell behavior.
 - Domain adapters live under `data-sharing/`, even when they target documents, tags, catalogue records, or other domain schemas.
-- Domain read/write engines remain domain-aware and reusable. The documents adapter should call docs-domain helpers for generated reads, simplified HTML/package creation, returned JSON review, source Markdown/front matter updates, backups, and rebuild follow-through.
-- Runtime package/staging/review artifacts stay under the existing configured `var/` roots during the first migration. Existing `var/studio/export-import/library/...` or `var/studio/data-sharing/...` roots should not be renamed as part of the boundary cleanup unless a later path migration is explicitly scoped.
+- Domain read/write engines remain domain-aware and reusable. The documents adapter calls explicit docs-domain helper modules for generated reads, selectable-record discovery, simplified HTML/package creation, returned JSON review, source Markdown/front matter updates, backups, and rebuild follow-through.
+- Runtime package/staging/review artifacts move directly to `var/studio/data-sharing/<domain>/...`. Existing disposable packages under `var/studio/export-import/...` do not need compatibility reads or migration support.
 
 The desired document workflow is:
 
@@ -76,6 +77,7 @@ The top-level `data-sharing/` subsystem owns:
 - adapter registry loading and validation
 - export/sharing profile config
 - operation dispatch for `prepare`, `list_returned`, `review`, and `apply`
+- adapter-owned selectable-record contracts for prepare workflows
 - returned-package staging roots, review roots, and package lifecycle policy
 - external LLM package shape and returned JSON handling
 - shared prepare/review/apply orchestration code
@@ -112,12 +114,17 @@ data-sharing/
 ```
 
 Adapters may be domain-specific, but their service boundary is Studio's Data Sharing API rather than a peer local app.
+The shared Studio shell asks the active adapter for selectable records instead of assuming the current Library generated-index shape is the durable prepare-page contract.
+Future document adapters can therefore provide different selection inputs, filters, payload fields, and eligibility rules without creating a generic Studio docs-read endpoint.
 
 Domains own reusable data engines:
 
-- documents: generated/published docs reads, simplified HTML export, source Markdown/front matter parsing and update helpers, docs backups, docs/search rebuild follow-through
+- documents: generated/published docs reads, selectable-record discovery, simplified HTML export, source Markdown/front matter parsing and update helpers, docs backups, docs/search rebuild follow-through
 - tags: tag registry, aliases, assignments, validation, and write helpers
 - catalogue: work, series, detail, or moment schemas and write helpers when those domains become Data Sharing targets
+
+Reusable docs-domain helper code stays under `docs-viewer/services/` unless the implementation plan deliberately creates a new package boundary.
+The target state is explicit domain-oriented modules for document package, review, apply, backup, and rebuild helpers, callable by both Docs Viewer and Studio Data Sharing without going through Docs Viewer HTTP or UI/service wrapper modules.
 
 Docs Viewer owns:
 
@@ -128,24 +135,13 @@ Docs Viewer owns:
 - route links opened from Studio nav and page implementation links
 
 Runtime artifacts remain outside tracked subsystem code.
-The first migration should preserve existing configured roots such as:
+The first migration should standardize active package, staging, and review outputs under:
 
 ```text
-var/studio/export-import/library/
 var/studio/data-sharing/<domain>/
 ```
 
-Path cleanup can be a later task.
-It should not block the architecture cleanup or force migration of already staged packages.
-
-## Open Design Questions
-
-- Which docs-domain helper functions should be renamed or extracted during the Studio API move, and which should remain wrapped until a later cleanup slice?
-  - Recommendation: define and implement the target docs-domain helper boundary in this slice. Reusable document package, review, apply, backup, and rebuild helpers should have explicit domain-oriented module names and should be callable by both Docs Viewer and Studio Data Sharing without going through Docs Viewer HTTP or UI/service wrapper modules. Keep the code under `docs-viewer/services/` unless the implementation plan deliberately creates a new package boundary, but do not leave wrapper-only or "extract later" cleanup as the intended end state.
-- Should Studio Data Sharing expose a same-origin generated-docs-index endpoint, or should prepare-page document selection be served through the documents adapter response?
-  - Recommendation: serve prepare-page document selection through the documents adapter rather than adding a generic same-origin generated-docs-index endpoint. Future document adapters are likely to need different selection inputs, filters, payload fields, and eligibility rules, so the shared Studio shell should ask the active adapter for its selectable records instead of assuming the current Library generated-index shape is the durable contract.
-- Should runtime package, staging, and review artifacts move directly to `var/studio/data-sharing/<domain>/...`?
-  - Recommendation: yes. Treat `var/studio/data-sharing/<domain>/...` as the immediate target convention for this slice. Existing disposable packages under `var/studio/export-import/...` do not need compatibility reads or migration support.
+Existing disposable packages under `var/studio/export-import/...` do not block the move and should not receive compatibility reads.
 
 ## Non-Goals
 
@@ -154,23 +150,12 @@ It should not block the architecture cleanup or force migration of already stage
 - Do not remove Data Sharing's document workflow.
 - Do not solve portable Docs Viewer packaging in this request.
 - Do not change the external LLM provider contract unless required by the service-boundary move.
-- Do not rename or migrate existing `var/` artifact roots in the first architecture slice unless required to keep existing workflows working.
+- Do not preserve old `var/studio/export-import/...` package roots through compatibility reads or migration code.
 
 ## Implementation Tasks
 
-1. Document the target boundary in `studio-data-sharing.md`, `studio-data-sharing-technical-spec.md`, and `config-data-sharing-adapters.md`.
-2. Inventory the current document Data Sharing call graph: browser modules, Studio dispatch modules, Docs Viewer service wrappers, docs export/import helpers, backup/rebuild hooks, and tests.
-3. Create the top-level headless `data-sharing/` subsystem for tracked workflow code, adapter code, schemas, registry/config files, and package contract helpers.
-4. Move Data Sharing adapter registry/config files out of `studio/data/config/data-sharing/` only if the migration can preserve browser/API loading behavior cleanly; otherwise create compatibility reads first and move configs in a later slice.
-5. Define same-origin Studio Data Sharing API endpoints for health, generated docs index reads as needed, prepare, returned-package listing, review, and apply.
-6. Move or wrap the documents adapter so Studio's Data Sharing API can call `data-sharing/` code directly without `DOCS_VIEWER_BASE_URL`.
-7. Extract or clearly name reusable docs-domain helpers for simplified HTML/package preparation, returned JSON review, summary apply, hierarchy apply, source writes, backups, and rebuild follow-through.
-8. Preserve existing configured artifact roots, including any current `var/studio/export-import/library/...` or `var/studio/data-sharing/<domain>/...` roots, unless a separate path migration is explicitly scoped.
-9. Keep existing browser response contracts where practical so UI changes are limited to endpoint configuration and service availability behavior.
-10. Update `studio-transport.js` so Data Sharing endpoints are Studio-owned same-origin endpoints rather than configured Docs Viewer service endpoints.
-11. Remove document Data Sharing endpoints from `app.runtime.services.docs` after the Studio endpoints are live.
-12. Update tests for the new service boundary, including unavailable-service states, document prepare/review/apply flows, and tags prepare/review/apply flows.
-13. Update docs and add a structured docs-log entry when the architecture change lands.
+The implementation tracker is [Studio Data Sharing Architecture Tasks](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks).
+Work through that table in order and keep this request document focused on the target architecture.
 
 ## Acceptance Criteria
 
@@ -181,7 +166,7 @@ It should not block the architecture cleanup or force migration of already stage
 - Document source writes remain docs-aware, validated, backed up, and followed by the required rebuild behavior.
 - `DOCS_VIEWER_BASE_URL` is not used by Studio Data Sharing browser modules or Studio Data Sharing service dispatch.
 - Documents and tags adapters are both resolved through the Data Sharing adapter registry.
-- Existing runtime artifact roots continue to work; no staged packages are invalidated by the boundary cleanup.
+- Runtime package, staging, and review artifacts are written under `var/studio/data-sharing/<domain>/...`; old `var/studio/export-import/...` roots are not kept through compatibility reads.
 - The stable Data Sharing docs describe adapters as Data Sharing-owned, with domain-specific helper dependencies where needed.
 
 ## Verification Matrix
@@ -192,7 +177,7 @@ It should not block the architecture cleanup or force migration of already stage
 | Headless subsystem | import/syntax tests for `data-sharing/` modules and registry/config loading | Confirm no UI routes or servers are introduced under `data-sharing/` |
 | Documents adapter | document prepare/review/apply tests with fixture source docs and returned packages | Prepare a Library package, stage a returned JSON file, review it, and apply selected rows |
 | Tags adapter | existing tags adapter pytest and smoke checks | Prepare/review/apply a tags returned package |
-| Artifact roots | path-contract tests for existing configured roots | Confirm existing staged/exported packages remain discoverable |
+| Artifact roots | path-contract tests for `var/studio/data-sharing/<domain>/...` roots | Confirm new prepare/review artifacts are written under `var/studio/data-sharing/<domain>/...` |
 | Runtime config | runtime config test asserts no Data Sharing endpoints under `app.runtime.services.docs` | Inspect `/studio/runtime-config.json` |
 | Link boundary | runtime config test asserts Docs nav and `doc_href` links still point to configured Docs Viewer URLs | Open Studio nav Docs link and a page `i` link |
 
