@@ -3,7 +3,8 @@ doc_id: design-backlog
 title: Design Backlog
 added_date: 2026-04-19
 last_updated: "2026-05-06 20:49"
-sort_order: 21000
+parent_id: dev-workflows
+sort_order: 10000
 viewable: true
 ---
 # Design Backlog

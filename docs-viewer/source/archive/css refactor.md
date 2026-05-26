@@ -3,7 +3,9 @@ doc_id: css-refactor
 title: CSS Refactor
 added_date: 2026-04-19
 last_updated: "2026-05-06 20:00"
-sort_order: 85000
+parent_id: dev-workflows
+sort_order: 11000
+viewable: true
 ---
 This doc is deprecated. Please refer to [UI](/docs/?scope=studio&doc=ui) and [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue).
 

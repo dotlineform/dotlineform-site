@@ -4,7 +4,8 @@ title: Docs HTML Import Spec
 added_date: 2026-04-23
 last_updated: 2026-05-03
 ui_status: done
-sort_order: 59000
+parent_id: docs-viewer
+sort_order: 18000
 ---
 # Docs HTML Import Spec
 

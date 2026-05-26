@@ -8,4 +8,6 @@ sort_order: 100
 ---
 # archive
 
-Use this scope for completed change requests and deprecated guidance. Documents here will not be maintained.
+- Use this scope for completed change requests and deprecated guidance.
+- Documents here will not be maintained.
+- They should not be retrospectively edited

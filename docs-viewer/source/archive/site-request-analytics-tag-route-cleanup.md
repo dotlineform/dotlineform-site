@@ -4,7 +4,8 @@ title: Analytics Tag Route Cleanup Request
 added_date: 2026-05-09
 last_updated: "2026-05-13 13:28"
 ui_status: done
-sort_order: 34000
+parent_id: studio
+sort_order: 17000
 viewable: true
 ---
 # Analytics Tag Route Cleanup Request

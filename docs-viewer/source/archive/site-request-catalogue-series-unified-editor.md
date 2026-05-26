@@ -4,7 +4,8 @@ title: Catalogue Series Unified Editor
 added_date: 2026-04-29
 last_updated: 2026-05-02
 ui_status: done
-sort_order: 55000
+parent_id: catalogue
+sort_order: 23000
 ---
 # Catalogue Series Unified Editor Request
 

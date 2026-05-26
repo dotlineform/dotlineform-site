@@ -11,6 +11,18 @@ sort_order: 100
 
 
 
+---
+
+
+semantic [work_id]-[detail_id] link
+need more
+
+---
+
+markdown editor
+- but not a conventional one, this will be focussed on converting words to semantic references.
+- to do this, need an info panel to show current tags
+
 
 
 ---

@@ -4,7 +4,9 @@ title: Docs Viewer Management
 added_date: 2026-04-22
 last_updated: 2026-05-22
 ui_status: done
-sort_order: 54000
+parent_id: docs-viewer
+sort_order: 16000
+viewable: true
 ---
 # Docs Viewer Management
 

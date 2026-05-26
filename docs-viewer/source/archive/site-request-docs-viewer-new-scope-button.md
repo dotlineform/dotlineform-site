@@ -4,7 +4,8 @@ title: Docs Viewer New Scope Button Request
 added_date: 2026-05-14
 last_updated: 2026-05-15
 ui_status: done
-sort_order: 70000
+parent_id: docs-viewer
+sort_order: 20000
 viewable: true
 ---
 # Docs Viewer New Scope Button Request

@@ -3,7 +3,9 @@ doc_id: studio-ui-framework-review-coverage
 title: Studio UI Framework Review And Coverage
 added_date: 2026-05-19
 last_updated: 2026-05-19
-sort_order: 84000
+parent_id: studio
+sort_order: 16000
+viewable: true
 ---
 This doc is deprecated. Please refer to [UI](/docs/?scope=studio&doc=ui) and [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue).
 

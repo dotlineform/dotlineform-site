@@ -4,7 +4,8 @@ title: JavaScript And Browser Config Structural Review Request
 added_date: 2026-05-10
 last_updated: "2026-05-10 19:10"
 ui_status: done
-sort_order: 67000
+parent_id: dev-workflows
+sort_order: 16000
 viewable: true
 ---
 # JavaScript And Browser Config Structural Review Request

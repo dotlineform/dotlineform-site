@@ -4,7 +4,8 @@ title: Script Structural Review Request
 added_date: 2026-05-08
 last_updated: "2026-05-09 21:45"
 ui_status: done
-sort_order: 63000
+parent_id: dev-workflows
+sort_order: 8000
 viewable: true
 ---
 # Script Structural Review Request

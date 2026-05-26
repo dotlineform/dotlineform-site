@@ -3,7 +3,9 @@ doc_id: new-pipeline-web-system-spec
 title: Web System Specification
 added_date: 2026-04-17
 last_updated: "2026-05-09 21:28"
-sort_order: 11000
+parent_id: studio
+sort_order: 18000
+viewable: true
 ---
 # Web System Specification
 

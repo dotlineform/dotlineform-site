@@ -3,7 +3,8 @@ doc_id: site-change-log
 title: Site Change Log
 added_date: 2026-04-24
 last_updated: 2026-05-19
-sort_order: 81000
+parent_id: dev-workflows
+sort_order: 5000
 ---
 # Site Change Log
 

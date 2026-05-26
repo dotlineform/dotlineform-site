@@ -4,7 +4,8 @@ title: JavaScript Maintenance Risk Mitigation
 added_date: 2026-05-21
 last_updated: 2026-05-21
 ui_status: done
-sort_order: 87000
+parent_id: dev-workflows
+sort_order: 9000
 viewable: true
 ---
 This document is archived and is no longer maintained.

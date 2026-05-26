@@ -3,7 +3,8 @@ doc_id: search-change-log-guidance
 title: Search Change Log Guidance
 added_date: 2026-03-31
 last_updated: "2026-05-11 12:50"
-sort_order: 75000
+parent_id: search
+sort_order: 10000
 ---
 This guidance has been deprecated. Logs are now in `_docs_logs/` and the change log process is described in [Development Workflow](/docs/?scope=studio&doc=development-workflow)
 

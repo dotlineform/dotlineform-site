@@ -4,7 +4,8 @@ title: Change Log Entry Model Request
 added_date: 2026-05-19
 last_updated: 2026-05-19
 ui_status: done
-sort_order: 74000
+parent_id: dev-workflows
+sort_order: 6000
 viewable: true
 ---
 # Change Log Entry Model Request

@@ -4,7 +4,8 @@ title: Docs Viewer Index Drag Undo
 added_date: 2026-04-25
 last_updated: 2026-05-11
 ui_status: done
-sort_order: 61000
+parent_id: docs-viewer
+sort_order: 19000
 ---
 # Docs Viewer Index Drag Undo Task
 

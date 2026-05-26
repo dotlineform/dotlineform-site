@@ -4,7 +4,8 @@ title: Docs Import Source Registry And Media Support Request
 added_date: 2026-05-07
 last_updated: "2026-05-12 10:25"
 ui_status: done
-sort_order: 46000
+parent_id: docs-viewer
+sort_order: 17000
 ---
 # Docs Import Source Registry And Media Support Request
 

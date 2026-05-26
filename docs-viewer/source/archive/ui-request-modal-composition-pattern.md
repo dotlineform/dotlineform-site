@@ -4,7 +4,8 @@ title: Modal Composition Pattern Request
 added_date: 2026-05-10
 last_updated: 2026-05-15
 ui_status: done
-sort_order: 69000
+parent_id: dev-workflows
+sort_order: 14000
 viewable: true
 ---
 # Modal Composition Pattern Request

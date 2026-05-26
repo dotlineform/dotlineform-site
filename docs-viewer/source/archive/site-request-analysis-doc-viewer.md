@@ -4,7 +4,8 @@ title: Analysis Docs Viewer Request
 added_date: 2026-04-26
 last_updated: 2026-05-02
 ui_status: done
-sort_order: 45000
+parent_id: docs-viewer
+sort_order: 21000
 ---
 # Analysis Docs Viewer Request
 

@@ -4,7 +4,9 @@ title: Catalogue Source And Registry Drift Verification Request
 added_date: 2026-05-02
 last_updated: 2026-05-03
 ui_status: done
-sort_order: 52000
+parent_id: catalogue
+sort_order: 22000
+viewable: true
 ---
 # Catalogue Source And Registry Drift Verification Request
 

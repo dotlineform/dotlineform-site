@@ -4,7 +4,9 @@ title: Compatibility Cleanup
 added_date: 2026-05-01
 last_updated: 2026-05-02
 ui_status: done
-sort_order: 50000
+parent_id: catalogue
+sort_order: 25000
+viewable: true
 ---
 # Compatibility Cleanup
 

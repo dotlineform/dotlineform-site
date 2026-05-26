@@ -10,5 +10,5 @@
   "viewable": true,
   "source_path": "archive.md",
   "viewer_url": "/docs/?scope=archive&doc=archive",
-  "content_html": "<h1 id=\"archive\">archive</h1>\n\n<p>Use this scope for completed change requests and deprecated guidance. Documents here will not be maintained.</p>\n"
+  "content_html": "<h1 id=\"archive\">archive</h1>\n\n<ul>\n  <li>Use this scope for completed change requests and deprecated guidance.</li>\n  <li>Documents here will not be maintained.</li>\n  <li>They should not be retrospectively edited</li>\n</ul>\n"
 }

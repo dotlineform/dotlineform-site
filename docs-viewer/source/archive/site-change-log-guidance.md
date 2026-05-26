@@ -3,7 +3,8 @@ doc_id: site-change-log-guidance
 title: Site Change Log Guidance
 added_date: 2026-03-31
 last_updated: "2026-05-06 20:58"
-sort_order: 80000
+parent_id: dev-workflows
+sort_order: 4000
 ---
 This log has been deprecated. Logs are now in `_docs_logs/` and the change log process is described in [Development Workflow](/docs/?scope=studio&doc=development-workflow)
 

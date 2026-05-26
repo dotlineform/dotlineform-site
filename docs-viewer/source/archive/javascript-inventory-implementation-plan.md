@@ -4,7 +4,8 @@ title: JavaScript Inventory Implementation Plan
 added_date: 2026-05-21
 last_updated: 2026-05-21
 ui_status: done
-sort_order: 88000
+parent_id: dev-workflows
+sort_order: 12000
 viewable: true
 ---
 This document is archived and is no longer maintained.

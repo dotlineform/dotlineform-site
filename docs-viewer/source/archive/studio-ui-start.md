@@ -3,7 +3,9 @@ doc_id: studio-ui-start
 title: UI Start
 added_date: 2026-04-21
 last_updated: 2026-05-15
-sort_order: 86000
+parent_id: dev-workflows
+sort_order: 13000
+viewable: true
 ---
 This doc is deprecated. Please refer to [UI](/docs/?scope=studio&doc=ui) and [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue).
 
