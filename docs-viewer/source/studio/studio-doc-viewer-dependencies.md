@@ -3,41 +3,42 @@ doc_id: studio-doc-viewer-dependencies
 title: Studio Docs Viewer Dependencies
 added_date: 2026-05-25
 last_updated: 2026-05-26
-ui_status: paused
+ui_status: done
 parent_id: change-requests
 sort_order: 10000
 viewable: true
 ---
 # Studio Docs Viewer Dependencies
 
-status: cleanup tasks done apart from data sharing which is a separate request
+status: done
 
-This is a review note and cleanup task list, not a change request.
-It records the remaining narrow places where Local Studio should know about the standalone Docs Viewer service after Data Sharing architecture work is split out.
-
-Data Sharing service ownership is intentionally out of scope here.
-That architecture decision is tracked by [Studio Data Sharing Architecture Request](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture).
+This was a review note and cleanup task list, not a change request.
+It is complete: Local Studio no longer models Docs Viewer as a runtime service.
+Docs Viewer remains a separate application; Studio only carries plain external Docs Viewer links in user-facing config.
 
 ## Target Boundary
 
-Studio should depend on Docs Viewer only for links:
+Studio depends on Docs Viewer only for links:
 
 - the top navigation Docs link
-- Studio page implementation/document links rendered as `doc_href`
+- Studio page implementation/document links rendered with `data-studio-doc-view`
 
-Studio should not publish or consume Docs Viewer service API endpoints for generated reads, import operations, source opening, capabilities, or Data Sharing workflows as part of this cleanup.
-The Data Sharing endpoint removal depends on the separate architecture request.
+Studio does not publish or consume Docs Viewer service API endpoints for generated reads, import operations, source opening, capabilities, or Data Sharing workflows.
+Data Sharing uses the Studio-owned `/studio/api/data-sharing/...` boundary and adapter registry instead of Docs Viewer HTTP.
 
 ## Current Link Boundary
 
-The Studio-side link owner is `studio/app/server/studio/studio_docs_viewer_integration.py`.
-It validates `DOCS_VIEWER_BASE_URL` as loopback HTTP with an explicit port, then builds manage-mode Docs Viewer URLs such as `/docs/?scope=studio&doc=...&mode=manage`.
+Docs Viewer links are plain config plus browser-side URL construction.
+The user-facing config lives in `studio/app/frontend/config/studio-config.json` under `external_links.docs_viewer`.
+The default link shape is base URL plus `/docs/` plus query params such as `scope`, `doc`, and `mode`.
+Per-page documentation targets live in `external_links.docs_viewer.doc_ids`, keyed by Studio view ID.
 
-`studio/app/server/studio/studio_app_config.py` publishes these link values through `/studio/runtime-config.json`:
+`studio/app/server/studio/studio_app_config.py` publishes view metadata through `/studio/runtime-config.json`:
 
-- `app.runtime.views[]`: Studio navigation targets and page implementation doc links
-- `STUDIO_VIEWS["docs"].path`: the configured Docs Viewer manage route for top navigation
-- `STUDIO_VIEWS[*].doc_href`: configured Docs Viewer links for Studio page documentation
+- `app.runtime.views[]`: Studio navigation targets
+- `STUDIO_VIEWS["docs"].path`: the plain Docs Viewer target path for top navigation
+- `external_links.docs_viewer.doc_ids`: user-facing Studio page documentation targets
+- `external_links.docs_viewer`: the configured external Docs Viewer base and default link policy
 
 ## Active Studio Link Locations
 
@@ -45,16 +46,16 @@ Top navigation:
 
 - `studio/app/server/studio/studio_app_config.py`: `STUDIO_TOP_NAV_VIEW_IDS` includes `docs`
 - `studio/app/server/studio/studio_app_views.py`: `studio_nav()` renders the configured Docs Viewer link
-- `studio/app/frontend/js/studio-navigation.js`: runtime view navigation can route to the configured Docs Viewer URL
+- `studio/app/frontend/js/studio-navigation.js`: builds the external Docs Viewer URL from `external_links.docs_viewer`
 
 Page implementation links:
 
-- `studio/app/server/studio/studio_app_config.py`: `STUDIO_VIEWS[*].doc_href` records the Studio page documentation target
-- `studio_app_config.studio_views()` rewrites `/docs/?...` `doc_href` values to the configured Docs Viewer service URL
-- `studio/app/server/studio/studio_app_views.py`: `studio_route_view()` renders the `i` link for normal Studio pages
-- `studio/app/server/studio/studio_ui_catalogue_views.py`: UI Catalogue demo pages also render configured `doc_href` links
+- `studio/app/frontend/config/studio-config.json`: `external_links.docs_viewer.doc_ids` records the Studio page documentation target per view
+- `studio/app/server/studio/studio_app_views.py`: `studio_route_view()` renders the `i` link with `data-studio-doc-view`
+- `studio/app/server/studio/studio_ui_catalogue_views.py`: UI Catalogue demo pages also render `data-studio-doc-view`
+- `studio/app/frontend/js/studio-navigation.js`: resolves `data-studio-doc-view` through `external_links.docs_viewer.doc_ids` and rewrites `/docs/...` anchors to the configured external Docs Viewer base when Studio navigation initializes
 
-The current page doc-link inventory comes from `STUDIO_VIEWS` and includes the Studio landing/dashboard routes, Analytics tag routes, Data Sharing routes, Project State, Thumbnail Quality, Bulk Add Work, Activity, Catalogue Drafts, Studio Works, Catalogue editors, and UI Catalogue demo pages.
+The current page doc-link inventory comes from `external_links.docs_viewer.doc_ids` and includes the Studio landing/dashboard routes, Analytics tag routes, Data Sharing routes, Project State, Thumbnail Quality, Bulk Add Work, Activity, Catalogue Drafts, Studio Works, Catalogue editors, and UI Catalogue demo pages.
 
 Docs Viewer management itself:
 
@@ -77,19 +78,11 @@ Docs Viewer management itself:
    It was removed from Studio config and tests.
 
 3. Completed: remove the inert Docs Viewer script entry from the Studio view registry.
-   `STUDIO_VIEWS["docs"]["script"]` still points to `/docs-viewer/runtime/js/docs-viewer.js`, but Local Studio should not render the Docs Viewer page.
    The Docs view is now a navigation target only.
 
-4. Partially completed: reduce `studio_docs_viewer_integration.py` to link helpers.
-   Kept:
-   - `docs_viewer_base_url`
-   - `validate_docs_viewer_base_url`
-   - `docs_viewer_url`
-   - `docs_viewer_manage_url`
-   - doc-link and nav-link rewriting
-
-   Removed import-route and broad Docs Viewer management endpoint construction.
-   `docs_viewer_service_endpoints()` now exposes only Docs Viewer base, health, and generated-index reads; Data Sharing endpoint publication lives under `app.runtime.services.data_sharing`.
+4. Completed: remove the Python Docs Viewer integration helper.
+   `studio/app/server/studio/studio_docs_viewer_integration.py` was removed.
+   Studio no longer validates Docs Viewer URLs, shapes Docs Viewer service endpoints, or rewrites Docs Viewer links in Python.
 
 5. Completed: remove frontend Docs Viewer service transport.
    Removed `DOCS_MANAGEMENT_ENDPOINTS`, `probeDocsManagementHealth()`, and non-Data-Sharing endpoint fallback mutation.
@@ -97,10 +90,12 @@ Docs Viewer management itself:
 
 6. Completed: update runtime config tests to assert the intended boundary.
    The focused server test now asserts:
-   - Docs nav view points to the configured Docs Viewer manage URL
-   - page `doc_href` links point to configured Docs Viewer URLs
+   - Docs nav view uses a plain `/docs/?mode=manage` target
+   - runtime views do not publish `doc_href`
+   - page doc IDs come from `external_links.docs_viewer.doc_ids`
    - no `docs_html_import` route is present in Studio config
-   - `app.runtime.services.docs` contains only Docs Viewer base, health, and generated-index reads
+   - `app.runtime.services.docs` is not published
+   - `external_links.docs_viewer` carries the Docs Viewer base URL and link policy
    - `app.runtime.services.data_sharing` contains the replacement same-origin Studio endpoints
 
 7. Completed: keep Data Sharing transport on the Studio API boundary.
@@ -111,11 +106,9 @@ Docs Viewer management itself:
 Focused checks for the link-only cleanup:
 
 ```bash
-rg -n "docs_html_import|DOCS_MANAGEMENT_ENDPOINTS|app.runtime.services.docs|services.docs|DOCS_VIEWER_BASE_URL" studio
+rg -n "docs_html_import|DOCS_MANAGEMENT_ENDPOINTS|app.runtime.services.docs|services.docs|DOCS_VIEWER_BASE_URL|studio_docs_viewer_integration" studio
 $HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_studio_app_server.py
 ```
-
-Data Sharing smoke checks belong to the separate architecture request if endpoint ownership changes in the same implementation batch.
 
 ## Related Docs
 

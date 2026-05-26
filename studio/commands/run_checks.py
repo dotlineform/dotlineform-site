@@ -98,7 +98,6 @@ PROFILE_COMMANDS: dict[str, tuple[CheckCommand, ...]] = {
                 "studio/app/server/studio/studio_backup_retention.py",
                 "studio/app/server/studio/studio_app_config.py",
                 "studio/app/server/studio/studio_app_views.py",
-                "studio/app/server/studio/studio_docs_viewer_integration.py",
                 "studio/app/server/studio/studio_app_server.py",
                 "studio/checks/audit_studio_ready_state.py",
                 "studio/checks/verify_activity_contract.py",

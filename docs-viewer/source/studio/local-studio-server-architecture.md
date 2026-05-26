@@ -18,7 +18,8 @@ Studio currently uses the local Studio app server as the normal HTTP owner for S
 Public Jekyll preview/build is explicit through `bin/public-site-preview` and `bin/public-site-build`.
 
 Analytics tag APIs, Studio Data Sharing APIs, Studio audit APIs, Project State report API, Thumbnail Quality preview API, catalogue reads, workbook import, catalogue editor mutations, and migrated Studio route shells are owned by the local Studio app server.
-Docs Viewer management, generated reads, and Docs source opening are owned by the standalone Docs Viewer service configured through `DOCS_VIEWER_BASE_URL`.
+Docs Viewer management, generated reads, and Docs source opening are owned by the standalone Docs Viewer service.
+Local Studio links to Docs Viewer through plain external-link config; it does not publish Docs Viewer service endpoints.
 The old standalone tag write server has been retired.
 The old standalone Docs management server has been retired.
 The old standalone catalogue write server has been retired.
@@ -36,8 +37,7 @@ Focused domain modules own write policy, validation, backups, activity rows, and
 Current boundaries:
 
 - `studio/app/server/studio/studio_app_server.py` owns the local HTTP process and request dispatch.
-- `studio/app/server/studio/studio_app_config.py` owns browser runtime config and service endpoint paths.
-- `studio/app/server/studio/studio_docs_viewer_integration.py` owns configured Docs Viewer peer-service links and endpoint shaping.
+- `studio/app/server/studio/studio_app_config.py` owns browser runtime config, service endpoint paths, and plain Docs Viewer link assembly from `external_links.docs_viewer`.
 - `studio/app/server/studio/studio_app_views.py` owns migrated Studio route shell rendering.
 - `studio/app/server/studio/studio_catalogue_api.py` owns `/studio/api/catalogue/...` adapter routing for catalogue reads, writes, reports, import, and thumbnail-quality refresh.
 - `studio/services/catalogue/catalogue_write_service.py` dispatches catalogue mutation/build/import routes to focused catalogue workflow modules.
@@ -60,7 +60,6 @@ Current structure:
 ```text
 studio/app/server/studio/studio_app_server.py
 studio/app/server/studio/studio_app_config.py
-studio/app/server/studio/studio_docs_viewer_integration.py
 studio/app/server/studio/studio_app_views.py
 studio/app/server/studio/studio_catalogue_api.py
 studio/app/server/studio/studio_analytics_api.py
@@ -91,12 +90,12 @@ GET  /studio/api/audits/<workflow>
 POST /studio/api/audits/<workflow>
 ```
 
-Docs Viewer routes are served by the configured Docs Viewer service, not Local Studio:
+Docs Viewer routes are served by the external Docs Viewer app, not Local Studio:
 
 ```text
-GET  <DOCS_VIEWER_BASE_URL>/docs/
-GET  <DOCS_VIEWER_BASE_URL>/docs/<workflow>
-POST <DOCS_VIEWER_BASE_URL>/docs/<workflow>
+GET  <docs_viewer.base_url>/docs/
+GET  <docs_viewer.base_url>/docs/<workflow>
+POST <docs_viewer.base_url>/docs/<workflow>
 ```
 
 ## Write Policy

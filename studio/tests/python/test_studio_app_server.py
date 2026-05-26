@@ -23,7 +23,6 @@ from studio.app.server.studio.studio_app_server import StudioAppRequestHandler, 
 from studio.app.server.studio.studio_app_views import studio_home_view, studio_route_view  # noqa: E402
 from studio.app.server.studio import studio_catalogue_api  # noqa: E402
 from studio.app.server.studio.studio_catalogue_api import catalogue_get_payload, catalogue_post_response  # noqa: E402
-from studio.app.server.studio.studio_docs_viewer_integration import docs_viewer_base_url  # noqa: E402
 from studio.app.server.studio.studio_ui_catalogue_views import ui_catalogue_demo_view  # noqa: E402
 
 
@@ -42,7 +41,6 @@ def test_runtime_config_exposes_adapter_contract() -> None:
             else:
                 os.environ[key] = value
     runtime = payload["app"]["runtime"]
-    docs_base_url = docs_viewer_base_url(REPO_ROOT)
 
     assert runtime["host"] == "local-studio-app"
     assert runtime["asset_version"] == "test-version"
@@ -53,11 +51,12 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "docs_html_import" not in payload["paths"]["routes"]
     assert any(
         view["id"] == "docs"
-        and view["path"] == f"{docs_base_url}/docs/?mode=manage"
-        and view["doc_href"] == f"{docs_base_url}/docs/?scope=studio&doc=docs-viewer&mode=manage"
+        and view["path"] == "/docs/?mode=manage"
+        and "doc_href" not in view
         and "script" not in view
         for view in runtime["views"]
     )
+    assert not any("doc_href" in view for view in runtime["views"])
     assert not any(view["id"] in {"studio_catalogue", "studio_analytics", "data_sharing"} for view in runtime["views"])
     assert any(view["id"] == "tag_registry" and view["path"] == "/studio/analytics/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/studio/analytics/tag-aliases/" for view in runtime["views"])
@@ -102,10 +101,16 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["data_sharing"]["prepare"] == "/studio/api/data-sharing/prepare"
     assert runtime["services"]["data_sharing"]["review"] == "/studio/api/data-sharing/review"
     assert runtime["services"]["data_sharing"]["apply"] == "/studio/api/data-sharing/apply"
-    assert runtime["services"]["docs"]["base"] == docs_base_url
-    assert runtime["services"]["docs"]["health"] == f"{docs_base_url}/health"
-    assert runtime["services"]["docs"]["generated_index"] == f"{docs_base_url}/docs/generated/index"
-    assert set(runtime["services"]["docs"]) == {"base", "health", "generated_index"}
+    assert "docs" not in runtime["services"]
+    docs_viewer_links = payload["external_links"]["docs_viewer"]
+    assert docs_viewer_links["base_url"] == "http://127.0.0.1:8776"
+    assert docs_viewer_links["docs_path"] == "/docs/"
+    assert docs_viewer_links["default_mode"] == "manage"
+    assert docs_viewer_links["doc_scope"] == "studio"
+    assert docs_viewer_links["doc_ids"]["docs"] == "docs-viewer"
+    assert docs_viewer_links["doc_ids"]["tag_groups"] == "tag-groups"
+    assert docs_viewer_links["doc_ids"]["catalogue_work_editor"] == "catalogue-work-editor"
+    assert docs_viewer_links["doc_ids"]["data_sharing_prepare"] == "studio-data-sharing"
     assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
     assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"

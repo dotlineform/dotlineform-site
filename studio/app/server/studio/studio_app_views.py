@@ -142,8 +142,8 @@ def studio_home_column_links() -> str:
 def studio_route_view(version: str, view_id: str, body_html: str) -> str:
     view = studio_views(REPO_ROOT)[view_id]
     escaped_version = html.escape(version, quote=True)
+    escaped_view_id = html.escape(view_id, quote=True)
     title = html.escape(view["title"])
-    doc_href = html.escape(view["doc_href"], quote=True)
     script = html.escape(view["script"], quote=True)
     return f"""<!doctype html>
 <html lang="en">
@@ -164,7 +164,8 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
         <h2>{title}</h2>
         <a
           class="studioLayout__docLink"
-          href="{doc_href}"
+          href="/docs/"
+          data-studio-doc-view="{escaped_view_id}"
           target="_blank"
           rel="noopener noreferrer"
           title="Open Studio page implementation notes"
@@ -270,11 +271,7 @@ def series_tags_view(version: str) -> str:
 
 
 def series_tag_editor_view(version: str, repo_root: Path) -> str:
-    view = studio_views(repo_root)["series_tag_editor"]
     escaped_version = html.escape(version, quote=True)
-    title = html.escape(view["title"])
-    doc_href = html.escape(view["doc_href"], quote=True)
-    script = html.escape(view["script"], quote=True)
     pipeline = load_pipeline(repo_root)
     variants = pipeline.get("variants") if isinstance(pipeline.get("variants"), dict) else {}
     primary_variants = variants.get("primary") if isinstance(variants.get("primary"), dict) else {}

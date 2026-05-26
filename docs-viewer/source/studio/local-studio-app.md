@@ -26,10 +26,11 @@ $HOME/miniconda3/bin/python3 studio/app/server/studio/studio_app_server.py --por
 Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it when `8765` is already in use.
 HTTP access logging is quiet by default so normal browser use does not flood the terminal.
 Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to `studio_app_server.py`, when detailed request logging is needed.
-Docs Viewer management is handled by the standalone Docs Viewer service configured through `DOCS_VIEWER_BASE_URL` in `var/local/site.env`.
-Active Local Studio browser routes use runtime-configured Docs Viewer service URLs for Docs links, generated reads, and the Data Sharing endpoints that have not yet moved to the Studio same-origin API.
+Docs Viewer management is handled by the standalone Docs Viewer service.
+Active Local Studio browser routes use plain external Docs Viewer links from `external_links.docs_viewer` in `studio/app/frontend/config/studio-config.json`.
+Per-page Docs Viewer doc IDs live in `external_links.docs_viewer.doc_ids` so user-guidance targets can be changed without editing Python.
 Data Sharing prepare-page selectable records are read from `/studio/api/data-sharing/selectable-records`.
-Local Studio renders those peer-service links without probing service availability; when the Docs Viewer service is stopped, the links and service calls fail normally.
+Local Studio renders Docs Viewer links without probing service availability; when the Docs Viewer service is stopped, the links fail like normal external links.
 Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
 `bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
 Local Studio route shells load Studio-owned CSS from `/studio/app/assets/css/studio.css`.
@@ -167,7 +168,8 @@ Local app views declare the runtime config endpoint with `meta[name="dlf-studio-
 The endpoint exposes the local app runtime contract for migrated views:
 
 - view ids, labels, paths, docs links, home-list entries, and shell top-navigation groups
-- local service endpoints such as the configured Docs Viewer service base URL and `/studio/api/analytics`
+- local service endpoints such as `/studio/api/analytics`
+- plain external link config such as `external_links.docs_viewer`
 - generated data, search, and UI-text paths from the checked-in Studio config
 - media and thumbnail bases used by Studio previews
 - pipeline variant metadata from `_data/pipeline.json`
@@ -183,7 +185,7 @@ Studio-to-public-content links use an explicit second boundary because Studio an
 The contract is:
 
 - Studio app routes open on the local Studio app server
-- Docs management routes open on the configured Docs Viewer service
+- Docs management routes open through the configured Docs Viewer external link
 - public content routes such as `/works/...`, `/series/...`, `/library/`, and `/analysis/` open against the local Jekyll preview when it is running
 - production `https://dotlineform.com` links are used only for explicit live-site actions
 
@@ -194,14 +196,15 @@ Those links open on the configured public preview host during local Studio sessi
 The catalogue helper requires the configured public-site base for public links instead of generating Studio-host-relative public URLs.
 Editor-to-editor links remain local Studio routes.
 The local `/docs/` route is no longer hosted by Local Studio.
-The runtime config exposes the configured Docs Viewer service base URL for the top-level `docs` view, page implementation links, generated reads, transitional Data Sharing operation endpoints, and the Docs source-file opening endpoint.
-It also exposes Studio-owned Data Sharing endpoints under `app.runtime.services.data_sharing`.
-`studio/app/server/studio/studio_docs_viewer_integration.py` owns this link and endpoint shaping.
+The runtime config exposes the plain Docs Viewer link target for the top-level `docs` view.
+Page implementation links render with `data-studio-doc-view`; the browser resolves those targets from the configured `external_links.docs_viewer.doc_ids` map.
+The browser builds external Docs Viewer URLs from `external_links.docs_viewer`.
+Studio-owned Data Sharing endpoints live under `app.runtime.services.data_sharing`.
 The main management API workflow routes are covered through a fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the standalone Docs Viewer service without touching real docs.
 Docs Viewer fixture smokes cover `/docs/` manage-mode workflows through the Docs Viewer service UI: create, metadata edit, settings save, archive, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.
 Public `/library/` and `/analysis/` are covered by a separate read-only smoke against the public Jekyll build.
 That check verifies management CSS, management controls, management base URLs, and Studio-only assets are absent.
-The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_docs_viewer_integration.py` owns configured peer-service Docs Viewer links, `studio_app_views.py` owns shared HTML shells, `studio_catalogue_views.py` owns catalogue route shells, `studio_analytics_api.py` owns Analytics tag APIs, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
+The app server is split by ownership: `studio_app_server.py` owns request dispatch and process startup, `studio_app_config.py` owns local runtime/view config, `studio_app_views.py` owns shared HTML shells, `studio_catalogue_views.py` owns catalogue route shells, `studio_analytics_api.py` owns Analytics tag APIs, `studio_audit_api.py` owns the Studio audit API adapter, and `studio_catalogue_api.py` owns the Catalogue API adapter.
 New route families should follow that module-boundary pattern rather than expanding the server entrypoint.
 
 Current focused checks:

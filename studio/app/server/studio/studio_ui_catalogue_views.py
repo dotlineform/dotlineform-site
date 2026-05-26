@@ -46,8 +46,8 @@ RAW_CAPTURE_RE = re.compile(r"{{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*}}")
 def ui_catalogue_demo_view(version: str, repo_root: Path, view_id: str) -> str:
     view = studio_views(repo_root)[view_id]
     escaped_version = html.escape(version, quote=True)
+    escaped_view_id = html.escape(view_id, quote=True)
     title = html.escape(view["title"])
-    doc_href = html.escape(view["doc_href"], quote=True)
     active_nav_id = view_id if view.get("nav", "true") != "false" else "ui_catalogue_demos"
     body = render_ui_catalogue_demo_body(repo_root, version, view_id)
     return f"""<!doctype html>
@@ -70,7 +70,8 @@ def ui_catalogue_demo_view(version: str, repo_root: Path, view_id: str) -> str:
         <h2>{title}</h2>
         <a
           class="studioLayout__docLink"
-          href="{doc_href}"
+          href="/docs/"
+          data-studio-doc-view="{escaped_view_id}"
           target="_blank"
           rel="noopener noreferrer"
           title="Open UI Catalogue implementation notes"

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-db12bdba3f4db78e0b56944af39a0bd6",
-    "generated_at_utc": "2026-05-26T20:13:49Z",
-    "count": 191
+    "version": "blake2b-a0e9bb02bec9cf8be937e080431c4896",
+    "generated_at_utc": "2026-05-26T22:10:52Z",
+    "count": 193
   },
   "entries": [
     {
@@ -3930,6 +3930,63 @@
         "45"
       ],
       "search_text": "scripts-build-catalogue-json scripts build catalogue json scoped json catalogue build scoped 2026-05-12 18:45 2026 05 12 18 45"
+    },
+    {
+      "id": "site-request-studio-javascript-app-shell",
+      "kind": "doc",
+      "title": "Studio JavaScript App Shell Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-javascript-app-shell",
+      "last_updated": "2026-05-26",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-26 • Change Requests",
+      "search_terms": [
+        "site-request-studio-javascript-app-shell",
+        "site",
+        "request",
+        "studio",
+        "javascript",
+        "app",
+        "shell",
+        "studio javascript app shell request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "site-request-studio-javascript-app-shell site request studio javascript app shell studio javascript app shell request change requests change requests 2026-05-26 2026 05 26"
+    },
+    {
+      "id": "site-request-docs-viewer-javascript-app-shell",
+      "kind": "doc",
+      "title": "Docs Viewer JavaScript App Shell Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
+      "last_updated": "2026-05-26",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-26 • Change Requests",
+      "search_terms": [
+        "site-request-docs-viewer-javascript-app-shell",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "javascript",
+        "app",
+        "shell",
+        "docs viewer javascript app shell request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "site-request-docs-viewer-javascript-app-shell site request docs viewer javascript app shell docs viewer javascript app shell request change requests change requests 2026-05-26 2026 05 26"
     },
     {
       "id": "source-tree-ownership",

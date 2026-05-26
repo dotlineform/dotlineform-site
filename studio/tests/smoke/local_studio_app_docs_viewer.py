@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 import urllib.error
 import urllib.request
@@ -47,9 +48,25 @@ def main(argv: list[str] | None = None) -> int:
         with urllib.request.urlopen(f"{base_url}/studio/", timeout=10) as response:
             body = response.read().decode("utf-8")
         if "/docs/?mode=manage" not in body:
-            raise AssertionError("Local Studio should still render the configured Docs link for peer-service navigation")
+            raise AssertionError("Local Studio should still render the plain Docs Viewer link target")
         if "docsViewerRoot" in body:
             raise AssertionError("Local Studio home unexpectedly contains Docs Viewer shell markup")
+
+        with urllib.request.urlopen(f"{base_url}/studio/runtime-config.json", timeout=10) as response:
+            runtime_config = json.loads(response.read().decode("utf-8"))
+        if "docs" in runtime_config["app"]["runtime"]["services"]:
+            raise AssertionError("Local Studio unexpectedly exposed Docs Viewer service endpoints")
+        docs_viewer_links = runtime_config.get("external_links", {}).get("docs_viewer", {})
+        if docs_viewer_links.get("base_url") != "http://127.0.0.1:8776":
+            raise AssertionError("Local Studio did not expose the configured Docs Viewer external link")
+        if docs_viewer_links.get("docs_path") != "/docs/":
+            raise AssertionError("Local Studio did not expose the configured Docs Viewer path")
+        if docs_viewer_links.get("default_mode") != "manage":
+            raise AssertionError("Local Studio did not expose the configured Docs Viewer mode")
+        if docs_viewer_links.get("doc_scope") != "studio":
+            raise AssertionError("Local Studio did not expose the configured Docs Viewer doc scope")
+        if docs_viewer_links.get("doc_ids", {}).get("docs") != "docs-viewer":
+            raise AssertionError("Local Studio did not expose the configured Docs Viewer external link")
 
         print(f"local Studio Docs Viewer boundary OK: {base_url}/studio/")
         return 0

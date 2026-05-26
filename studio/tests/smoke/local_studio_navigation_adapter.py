@@ -42,11 +42,16 @@ def main(argv: list[str] | None = None) -> int:
                     const publicLinks = await import("/studio/app/frontend/js/catalogue-public-links.js");
                     const configMod = await import("/studio/app/frontend/js/studio-config.js");
                     const config = await (await fetch("/studio/runtime-config.json")).json();
+                    mod.updateDocsViewerLinks(config, document);
+                    const services = mod.getStudioServices(config);
+                    const externalLinks = mod.getStudioExternalLinks(config);
                     const url = mod.buildStudioViewUrl(config, "tag-groups", {
                         scope: "studio",
                         empty: "",
                         zero: 0
                     });
+                    const docsViewUrl = mod.buildStudioViewUrl(config, "docs");
+                    const docsDocUrl = mod.buildDocsViewerDocUrl(config, "docs");
                     const workEditorUrl = configMod.buildStudioRouteUrl(config, "catalogue_work_editor", {
                         work: "00001",
                         empty: "",
@@ -91,6 +96,11 @@ def main(argv: list[str] | None = None) -> int:
                     const topNavTitle = document.querySelector(".site-title a")?.textContent.trim();
                     const topNavHomeHref = document.querySelector(".site-title a")?.getAttribute("href");
                     const homeReady = document.querySelector("#studioHomeRoot")?.getAttribute("data-studio-ready");
+                    const docsLink = document.createElement("a");
+                    docsLink.setAttribute("href", "/docs/");
+                    docsLink.setAttribute("data-studio-doc-view", "tag_groups");
+                    document.body.append(docsLink);
+                    mod.updateDocsViewerLinks(config, document);
 
                     let delegatedModalDetail = null;
                     document.addEventListener(mod.STUDIO_MODAL_EVENT, (event) => {
@@ -104,11 +114,14 @@ def main(argv: list[str] | None = None) -> int:
                     button.click();
 
                     return {
-                        serviceBase: mod.getStudioServices(config).docs.base,
-                        docsHealth: mod.getStudioServices(config).docs.health,
+                        hasDocsService: Object.prototype.hasOwnProperty.call(services, "docs"),
+                        docsExternalLink: externalLinks.docs_viewer,
                         publicPreviewBase: mod.getStudioSiteBase(config, "public_preview"),
                         productionBase: mod.getStudioSiteBase(config, "production"),
-                        docsView: mod.getStudioView(config, "docs").path,
+                        docsViewPath: mod.getStudioView(config, "docs").path,
+                        docsViewUrl,
+                        docsDocUrl,
+                        rewrittenDocsHref: docsLink.getAttribute("href"),
                         dataPath: config.app.runtime.data_paths.ui_text.tag_groups,
                         mediaThumbWorks: config.app.runtime.media.thumbs.works,
                         pipelineThumbSuffix: config.app.runtime.pipeline.variants.thumb.suffix,
@@ -135,16 +148,30 @@ def main(argv: list[str] | None = None) -> int:
             browser.close()
 
         expected_url = "/studio/analytics/tag-groups/?scope=studio&zero=0"
-        if not str(result["serviceBase"]).startswith("http://127.0.0.1:"):
-            raise AssertionError(f"unexpected Docs service base: {result['serviceBase']!r}")
-        if result["docsHealth"] != f"{result['serviceBase']}/health":
-            raise AssertionError(f"unexpected Docs health endpoint: {result['docsHealth']!r}")
+        if result["hasDocsService"]:
+            raise AssertionError("runtime services unexpectedly exposed a Docs Viewer service")
+        if result["docsExternalLink"]["base_url"] != "http://127.0.0.1:8776":
+            raise AssertionError(f"unexpected Docs external link base: {result['docsExternalLink']!r}")
+        if result["docsExternalLink"]["docs_path"] != "/docs/":
+            raise AssertionError(f"unexpected Docs external link path: {result['docsExternalLink']!r}")
+        if result["docsExternalLink"]["default_mode"] != "manage":
+            raise AssertionError(f"unexpected Docs external link mode: {result['docsExternalLink']!r}")
+        if result["docsExternalLink"]["doc_scope"] != "studio":
+            raise AssertionError(f"unexpected Docs external link scope: {result['docsExternalLink']!r}")
+        if result["docsExternalLink"]["doc_ids"]["tag_groups"] != "tag-groups":
+            raise AssertionError(f"unexpected Docs external link config: {result['docsExternalLink']!r}")
         if result["publicPreviewBase"] != "http://127.0.0.1:4000":
             raise AssertionError(f"unexpected public preview base: {result['publicPreviewBase']!r}")
         if result["productionBase"] != "https://dotlineform.com":
             raise AssertionError(f"unexpected production base: {result['productionBase']!r}")
-        if result["docsView"] != f"{result['serviceBase']}/docs/?mode=manage":
-            raise AssertionError(f"unexpected Docs view path: {result['docsView']!r}")
+        if result["docsViewPath"] != "/docs/?mode=manage":
+            raise AssertionError(f"unexpected Docs view path: {result['docsViewPath']!r}")
+        if result["docsViewUrl"] != "http://127.0.0.1:8776/docs/?mode=manage":
+            raise AssertionError(f"unexpected Docs view URL: {result['docsViewUrl']!r}")
+        if result["docsDocUrl"] != "http://127.0.0.1:8776/docs/?scope=studio&doc=docs-viewer&mode=manage":
+            raise AssertionError(f"unexpected Docs doc URL: {result['docsDocUrl']!r}")
+        if result["rewrittenDocsHref"] != "http://127.0.0.1:8776/docs/?scope=studio&doc=tag-groups&mode=manage":
+            raise AssertionError(f"unexpected rewritten Docs link: {result['rewrittenDocsHref']!r}")
         expected_top_nav = ["docs"]
         if result["runtimePrimaryNav"] != expected_top_nav:
             raise AssertionError(f"unexpected runtime primary nav: {result['runtimePrimaryNav']!r}")
