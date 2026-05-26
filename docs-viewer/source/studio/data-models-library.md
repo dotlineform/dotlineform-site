@@ -2,7 +2,7 @@
 doc_id: data-models-library
 title: Library Scope
 added_date: 2026-03-31
-last_updated: 2026-05-11
+last_updated: 2026-05-26
 parent_id: docs-viewer-scopes
 sort_order: 1000
 viewable: true
@@ -33,11 +33,11 @@ Current source and generated artifacts:
 - Library docs search:
   - `assets/data/search/library/index.json`
 - Library export configs:
-  - `assets/studio/data/library_export_configs.json`
-  - `assets/studio/data/library_export_configs.schema.json`
+  - `studio/data/config/data-sharing/library-export-configs.json`
+  - `studio/data/config/data-sharing/library-export-configs.schema.json`
 - export/import adapter dispatch:
-  - `assets/studio/data/data_sharing_adapters.json`
-  - `assets/studio/data/data_sharing_adapters.schema.json`
+  - `studio/data/config/data-sharing/data-sharing-adapters.json`
+  - `studio/data/config/data-sharing/data-sharing-adapters.schema.json`
 - local generated export artifacts:
   - `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.json`
   - `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.jsonl`
@@ -64,11 +64,11 @@ Current design:
 - same front-matter model as the Studio docs scope
 - same Markdown-or-raw-HTML authoring model
 - separate source root so Library can grow without being folded into Studio docs
-- Library import/create defaults new docs to `published: true`, `viewable: false` so they are generated for manage-mode review without appearing on the public/default `/library/` route
+- Library import/create defaults new docs to `viewable: false` so they are generated for manage-mode review without appearing on the public/default `/library/` route
 - Docs Viewer management writes new `added_date` and changed `last_updated` values with minute precision, while existing date-only Library docs remain valid
 - optional `summary` front matter stores a concise plain-text document summary; the shared Docs Viewer metadata editor can maintain it, blank values remove the field, and whitespace is normalized to one paragraph
 - optional `ui_status` front matter stores a Docs Viewer status key that is carried into generated docs payloads and interpreted against scope-specific viewer config
-- Library export configs are defined separately from source docs by `assets/studio/data/library_export_configs.json` and `assets/studio/data/library_export_configs.schema.json`; v1 export configs should read Library Docs Viewer source/generated fields without mutating them
+- Library export configs are defined separately from source docs by `studio/data/config/data-sharing/library-export-configs.json` and `studio/data/config/data-sharing/library-export-configs.schema.json`; v1 export configs should read Library Docs Viewer source/generated fields without mutating them
 
 Current implementation note:
 
@@ -88,7 +88,7 @@ Purpose:
 Current content families:
 
 - one row per generated Library doc
-- identity, added/update dates, optional `summary`, optional `ui_status`, ordering, `published`, `viewable`, viewer URL, per-doc content URL, and `content_text_length`
+- identity, added/update dates, optional `summary`, optional `ui_status`, ordering, `viewable`, viewer URL, per-doc content URL, and `content_text_length`
 - `viewer_options` for scope-level display behavior such as hiding document-view updated dates
 
 Current site mapping:
@@ -120,7 +120,7 @@ Current site mapping:
 
 Purpose:
 
-- search-owned flattened index for published Library docs
+- search-owned flattened index for public-viewable Library docs
 
 Current content families:
 
@@ -140,8 +140,8 @@ Library export configs are source-controlled Studio data, but export files thems
 
 Config files:
 
-- `assets/studio/data/library_export_configs.json`
-- `assets/studio/data/library_export_configs.schema.json`
+- `studio/data/config/data-sharing/library-export-configs.json`
+- `studio/data/config/data-sharing/library-export-configs.schema.json`
 
 Generated output:
 
@@ -230,7 +230,6 @@ Current enforcement:
 
 - duplicate `doc_id` values are rejected by the docs builder before Library docs data is written
 - unresolved Library `parent_id` references are allowed for imported hierarchy staging and are emitted as root-level generated relationships
-- `published: false` docs are excluded before Library docs data is generated
 - `viewable: false` docs remain in generated docs data for manage-mode review, but are excluded from Library search and public/default viewer discovery
 - `archive` and its descendants remain generated; public/default Library tree discovery and Library search include only docs whose own `viewable` value permits it
 

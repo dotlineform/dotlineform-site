@@ -42,7 +42,6 @@ def capability_scope_docs(repo_root: Path, scope: str, root: Path) -> list[Any]:
                 ui_status=source_model.normalize_ui_status(front_matter.get("ui_status")),
                 parent_id=str(front_matter.get("parent_id") or "").strip(),
                 sort_order=sort_order,
-                published=source_model.doc_is_published(front_matter),
                 hidden=hidden,
                 viewable=not hidden,
             )

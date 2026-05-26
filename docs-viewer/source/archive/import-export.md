@@ -4,8 +4,6 @@ title: Import/Export Historical Notes
 added_date: "2026-05-06 18:39"
 last_updated: "2026-05-13 18:15"
 sort_order: 14000
-published: true
-viewable: true
 ---
 # Import/Export Historical Notes
 

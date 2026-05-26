@@ -49,7 +49,6 @@ def make_doc(
         ui_status="",
         parent_id=parent_id,
         sort_order=sort_order,
-        published=True,
         hidden=False,
         viewable=True,
     )
@@ -66,8 +65,7 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
                     "title: \"Quoted Title\"",
                     "parent_id: \"\"",
                     "sort_order: 20",
-                    "published: false",
-                    "hidden: true",
+                    "viewable: false",
                     "summary: \"\"",
                     "---",
                     "# Sample",
@@ -83,13 +81,11 @@ def test_front_matter_parses_and_formats_supported_scalar_values() -> None:
     assert front_matter["title"] == "Quoted Title"
     assert front_matter["parent_id"] == ""
     assert front_matter["sort_order"] == 20
-    assert front_matter["published"] is False
-    assert front_matter["hidden"] is True
+    assert front_matter["viewable"] is False
     assert front_matter["summary"] == ""
     assert "parent_id: \"\"" in formatted
     assert "sort_order: 20" in formatted
-    assert "published: false" in formatted
-    assert "hidden: true" in formatted
+    assert "viewable: false" in formatted
 
 
 def test_load_scope_docs_rejects_duplicate_doc_ids() -> None:

@@ -382,8 +382,6 @@ def default_source_doc_text(title: str, default_doc_id: str) -> str:
             f"added_date: {today}",
             f"last_updated: {today}",
             "ui_status: draft",
-            "published: true",
-            "viewable: true",
             "---",
             f"# {title}",
             "",

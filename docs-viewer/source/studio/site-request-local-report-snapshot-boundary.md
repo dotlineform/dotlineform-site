@@ -12,7 +12,7 @@ viewable: true
 
 Status:
 
-- in progress
+- implemented
 
 ## Summary
 
@@ -25,8 +25,8 @@ The current examples are:
 - `docs-viewer/source/studio/audit-latest.md`
 - `docs-viewer/source/studio/css-audit-latest.md`
 
-These files are generated operational output, not authored documentation.
-They are currently kept out of generated Docs Viewer payloads with `published: false`, but that makes the Docs Viewer source folder carry two different responsibilities and keeps an obsolete source-schema field alive:
+These files were generated operational output, not authored documentation.
+They were kept out of generated Docs Viewer payloads with an older source-schema field, but that made the Docs Viewer source folder carry two different responsibilities:
 
 - authored docs and draft docs
 - latest-run report snapshots
@@ -35,36 +35,28 @@ The implementation should move latest-run report snapshots to a local operationa
 
 ## Background
 
-The docs source model now has two overlapping front matter fields:
+The docs source model now has one visibility field:
 
-- `published`
 - `viewable`
 
-`published` is the older pipeline-inclusion field.
-`published: false` means the source Markdown is excluded before Docs Viewer JSON/search payloads are generated.
-`published: true` is now redundant for normal docs because absence of `published` already defaults to inclusion.
-
-`viewable` was added later to solve a different problem: generated docs that should exist in Docs Viewer manage mode but stay hidden from public/default discovery.
+`viewable` controls generated docs that should exist in Docs Viewer manage mode but stay hidden from public/default discovery.
 `viewable: false` is useful when a doc is still part of the generated Docs Viewer corpus and should be reviewable in manage mode.
 
-The confusion comes from `published` meaning two different things:
-
-- in the Docs Viewer builder, `published` means included in generated JSON
-- to a user, published means publicly viewable or discoverable
+The confusion came from using a pipeline-inclusion field where users expect publication to mean publicly viewable or discoverable.
 
 That distinction matters here.
 Generated latest report snapshots are not draft docs that need manage-mode review.
 They are local run output.
-Using `published: false` for them works mechanically, but it is a weak ownership signal.
+Keeping those snapshots in Docs Viewer source was a weak ownership signal.
 
 The stronger rule is:
 
 - if a Markdown file is not intended to become publishable documentation, it should not live in Docs Viewer source
 - if an authored document belongs in Docs Viewer source but is not ready for public/default discovery, use `viewable: false`
-- if an authored document is ready, omit both `published` and `viewable` unless a non-default viewability state is needed
+- if an authored document is ready, omit `viewable` unless a non-default viewability state is needed
 
 Therefore the implementation should retire `published` from documents that remain in Docs Viewer source.
-The builder may keep compatibility reads for old `published` fields during migration, but new and retained source docs should not use that field.
+The builder and write paths no longer read or write the retired field.
 
 Relevant current docs:
 
@@ -77,7 +69,7 @@ Relevant current docs:
 Project State:
 
 - `studio/services/catalogue/project_state_report.py` writes `docs-viewer/source/studio/project-state.md` by default.
-- [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report) documents that path and describes the generated document as a local artifact with `published: false`.
+- [Project State Report](/docs/?scope=studio&doc=scripts-project-state-report) documented that old source path and now documents the local report path.
 - `/studio/project-state/?mode=manage` reports the same output path in the UI.
 
 Site Consistency Audit:
@@ -112,14 +104,14 @@ var/studio/reports/css-audit-latest.md
 This keeps report snapshots with other local working output, backups, staging, and run summaries.
 It also avoids making Docs Viewer source cleanup depend on whether a generated report happens to be Markdown.
 
-Also remove `published` front matter from remaining Docs Viewer source docs.
-For existing `published: false` docs, classify each file:
+Also remove the retired field from remaining Docs Viewer source docs.
+For existing hidden docs, classify each file:
 
 - move generated or non-publishable operational output out of Docs Viewer source
 - convert publishable-but-not-ready docs to `viewable: false`
 - archive or move notes that are not intended to become publishable documentation
 
-For existing `published: true` docs, remove the redundant field.
+For existing explicitly included docs, remove the redundant field.
 
 ## Implementation Notes
 
@@ -135,10 +127,10 @@ Expected changes:
 - update script docs that currently advertise Docs Viewer source output paths
 - remove or stop regenerating the old `docs-viewer/source/studio/*-latest.md` report snapshots
 - decide whether any old generated snapshots should be deleted in the implementation slice or left for a separate cleanup commit
-- update docs-management create/import/write paths that currently write `published: true`
-- update builder/source-shape docs that currently recommend `published: false`
-- remove redundant `published: true` front matter from Docs Viewer source docs
-- convert retained authored `published: false` docs to `viewable: false` only when they are genuinely publishable-but-not-ready
+- update docs-management create/import/write paths that currently write the retired field
+- update builder/source-shape docs that currently recommend the retired field
+- remove redundant inclusion front matter from Docs Viewer source docs
+- convert retained authored hidden docs to `viewable: false` only when they are genuinely publishable-but-not-ready
 
 ## Acceptance Criteria
 
@@ -146,10 +138,10 @@ Expected changes:
 - Project State, Site Consistency Audit, and CSS Token Audit docs name the new report output paths
 - Project State UI reports or opens the new report path correctly
 - `docs-viewer/source/studio/` no longer contains generated latest-run report snapshots after the cleanup
-- retained Docs Viewer source docs do not declare `published`
+- retained Docs Viewer source docs do not declare the retired inclusion field
 - `viewable: false` remains the mechanism for generated-but-hidden/manage-reviewable docs
-- docs-management create/import/write paths stop adding `published: true`
-- docs that are not intended to become publishable documentation are moved out of Docs Viewer source rather than hidden with `published: false`
+- docs-management create/import/write paths stop adding the retired inclusion field
+- docs that are not intended to become publishable documentation are moved out of Docs Viewer source rather than hidden in source
 - targeted checks cover updated script defaults and any UI path assumptions
 
 ## Risks
@@ -157,8 +149,7 @@ Expected changes:
 - local workflows or habits may still look for the old Docs Viewer source paths
 - scripts or tests may have hidden hardcoded references to `audit-latest.md`, `css-audit-latest.md`, or `project-state.md`
 - deleting tracked report snapshots could remove historical context if the latest reports have been used as durable records rather than ephemeral output
-- some existing `published: false` authored notes may need a deliberate decision: convert to `viewable: false`, move to a non-viewer planning area, or archive
-- builder compatibility should not be removed before all source docs and write paths stop emitting `published`
+- some existing hidden authored notes may need a deliberate decision: keep as `viewable: false`, move to a non-viewer planning area, or archive
 
 ## Verification Plan
 

@@ -48,7 +48,6 @@ def generated_docs_index() -> dict[str, object]:
             {
                 "doc_id": "modal-parent",
                 "title": "Modal parent",
-                "published": True,
                 "viewable": True,
                 "content_text_length": 120,
                 "summary": "Parent summary.",
@@ -57,7 +56,6 @@ def generated_docs_index() -> dict[str, object]:
                 "doc_id": "modal-empty-child",
                 "parent_id": "modal-parent",
                 "title": "Modal empty child",
-                "published": True,
                 "viewable": True,
                 "content_text_length": 0,
                 "summary": "",
@@ -66,7 +64,6 @@ def generated_docs_index() -> dict[str, object]:
                 "doc_id": "modal-hidden-child",
                 "parent_id": "modal-parent",
                 "title": "Modal hidden child",
-                "published": True,
                 "viewable": False,
                 "content_text_length": 45,
                 "summary": "Hidden summary.",
@@ -90,7 +87,7 @@ def prepare_result_payload() -> dict[str, object]:
         "output_files": [
             "var/studio/data-sharing/library/exports/modal-smoke.json",
         ],
-        "warnings": ["Skipped 1 unpublished document."],
+        "warnings": ["Skipped 1 non-viewable document."],
         "summary_text": "Package prepared.",
     }
 
@@ -369,7 +366,7 @@ def assert_prepare_result_modal(page, prepare_requests: list[dict[str, object]],
         raise AssertionError(f"prepare result modal did not render the packaged count: {modal_state!r}")
     if modal_state["fileList"] != "modal-smoke.json" or not modal_state["readonlyFiles"]:
         raise AssertionError(f"prepare result modal file list mismatch: {modal_state!r}")
-    if modal_state["issues"] != ["Skipped 1 unpublished document."]:
+    if modal_state["issues"] != ["Skipped 1 non-viewable document."]:
         raise AssertionError(f"prepare result modal warnings mismatch: {modal_state!r}")
     if modal_state["activeRole"] != "modal-cancel":
         raise AssertionError(f"prepare result modal did not focus the close action: {modal_state!r}")

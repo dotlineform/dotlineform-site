@@ -5,7 +5,6 @@ added_date: "2026-05-16 09:45"
 last_updated: "2026-05-16 15:31"
 parent_id: ""
 sort_order: 140
-published: true
 hidden: false
 ---
 # Coincidence Salience Worksheet

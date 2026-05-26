@@ -6,7 +6,6 @@
   "last_updated": "2026-05-19",
   "parent_id": "servers",
   "sort_order": 4000,
-  "published": true,
   "hidden": false,
   "viewable": true,
   "source_path": "scripts-catalogue-write-server.md",

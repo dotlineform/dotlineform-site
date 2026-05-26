@@ -105,7 +105,6 @@ KNOWN_RECORD_FIELDS = {
     "last_updated",
     "hidden",
     "viewable",
-    "published",
 }
 
 
@@ -483,7 +482,7 @@ def normalize_record(row: dict[str, Any], record_index: int, line: int | None) -
     for key in ["summary", "current_summary"]:
         if key in row:
             normalized["metadata"][key] = str(row.get(key) or "")
-    for key in ["hidden", "viewable", "published"]:
+    for key in ["hidden", "viewable"]:
         if key in row:
             normalized["metadata"][key] = row.get(key)
     if "headings" in row:
@@ -569,7 +568,6 @@ def add_current_library_report(
 
         current_state: dict[str, Any] = {
             "exists": bool(current_doc),
-            "published": None,
             "hidden": None,
             "viewable": None,
             "payload_exists": False,
@@ -577,7 +575,6 @@ def add_current_library_report(
             "parent_payload_exists": None,
         }
         if current_doc:
-            current_state["published"] = current_doc.get("published")
             current_state["hidden"] = current_doc.get("hidden")
             current_state["viewable"] = current_doc.get("viewable")
             current_state["payload_exists"] = doc_id in payload_ids
@@ -591,17 +588,6 @@ def add_current_library_report(
                     "warning",
                     "unknown_doc_id",
                     f"record doc_id is not in the current {scope_title(scope)} index: {doc_id}",
-                    record_index=record_index,
-                    line=line,
-                    doc_id=doc_id,
-                )
-            )
-        elif current_doc.get("published") is False:
-            issues.append(
-                issue(
-                    "warning",
-                    "current_doc_unpublished",
-                    f"record exists in the current {scope_title(scope)} index but is unpublished: {doc_id}",
                     record_index=record_index,
                     line=line,
                     doc_id=doc_id,
@@ -629,17 +615,6 @@ def add_current_library_report(
                         "warning",
                         "missing_parent_id",
                         f"parent_id is not in the current {scope_title(scope)} index or staged records: {parent_id}",
-                        record_index=record_index,
-                        line=line,
-                        doc_id=doc_id,
-                    )
-                )
-            elif parent_doc and parent_doc.get("published") is False:
-                issues.append(
-                    issue(
-                        "warning",
-                        "parent_unpublished",
-                        f"parent_id points to an unpublished current Library record: {parent_id}",
                         record_index=record_index,
                         line=line,
                         doc_id=doc_id,

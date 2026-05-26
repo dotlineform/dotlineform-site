@@ -6,7 +6,6 @@
   "last_updated": "2026-05-21",
   "parent_id": "audit",
   "sort_order": 6000,
-  "published": true,
   "hidden": false,
   "viewable": true,
   "source_path": "studio-javascript-payload-inventory.md",

@@ -4,7 +4,7 @@ title: Implementation Plan
 added_date: 2026-03-28
 last_updated: "2026-05-09 16:00"
 sort_order: 22000
-published: false
+viewable: false
 ---
 **Phase 1 Task List**
 

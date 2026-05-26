@@ -88,9 +88,9 @@ def imported_source_text_for_create(preview: Dict[str, Any], docs: list[ScopeDoc
         "last_updated": timestamp,
         "parent_id": "",
         "sort_order": next_sort_order(docs, ""),
-        "published": True,
-        "hidden": default_hidden_for_scope(scope),
     }
+    if not default_viewable_for_scope(scope):
+        front_matter["viewable"] = False
     return format_source(front_matter, imported_body_markdown(preview))
 
 
@@ -103,9 +103,10 @@ def imported_source_text_for_overwrite(preview: Dict[str, Any], target: ScopeDoc
     front_matter["added_date"] = str(front_matter.get("added_date") or front_matter.get("last_updated") or timestamp).strip()
     front_matter["last_updated"] = timestamp
     front_matter["parent_id"] = target.parent_id
-    front_matter.setdefault("published", True)
-    front_matter.setdefault("hidden", target.hidden)
     front_matter.pop("viewable", None)
+    front_matter.pop("hidden", None)
+    if not target.viewable:
+        front_matter["viewable"] = False
     if target.sort_order is None:
         front_matter.pop("sort_order", None)
     else:
@@ -473,7 +474,6 @@ def handle_import_source(
                 "title": preview["title"],
                 "parent_id": collision_doc.parent_id,
                 "sort_order": collision_doc.sort_order,
-                "published": True,
                 "viewable": collision_doc.viewable,
             },
             "collision": collision,
@@ -567,7 +567,6 @@ def handle_import_source(
             "title": preview["title"],
             "parent_id": "",
             "sort_order": next_sort_order(docs, ""),
-            "published": True,
             "hidden": default_hidden_for_scope(scope),
             "viewable": default_viewable_for_scope(scope),
         },

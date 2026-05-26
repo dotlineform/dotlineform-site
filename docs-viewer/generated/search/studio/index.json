@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a9e39f8db7802c187425e35ed999c650",
-    "generated_at_utc": "2026-05-26T12:07:33Z",
+    "version": "blake2b-ff49b483ebdbb67efe4e57fe2b33d574",
+    "generated_at_utc": "2026-05-26T12:38:42Z",
     "count": 191
   },
   "entries": [
@@ -134,10 +134,10 @@
       "kind": "doc",
       "title": "Library Scope",
       "href": "/docs/?scope=studio&doc=data-models-library",
-      "last_updated": "2026-05-11",
+      "last_updated": "2026-05-26",
       "parent_id": "docs-viewer-scopes",
       "parent_title": "Scopes",
-      "display_meta": "2026-05-11 • Scopes",
+      "display_meta": "2026-05-26 • Scopes",
       "search_terms": [
         "data-models-library",
         "data",
@@ -146,12 +146,12 @@
         "library scope",
         "scope",
         "scopes",
-        "2026-05-11",
+        "2026-05-26",
         "2026",
         "05",
-        "11"
+        "26"
       ],
-      "search_text": "data-models-library data models library library scope scope scopes 2026-05-11 2026 05 11"
+      "search_text": "data-models-library data models library library scope scope scopes 2026-05-26 2026 05 26"
     },
     {
       "id": "llm-dimension",
@@ -349,10 +349,10 @@
       "kind": "doc",
       "title": "Studio Data Sharing",
       "href": "/docs/?scope=studio&doc=studio-data-sharing",
-      "last_updated": "2026-05-13 17:17",
+      "last_updated": "2026-05-26",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-05-13 17:17 • Data Sharing",
+      "display_meta": "2026-05-26 • Data Sharing",
       "search_terms": [
         "studio-data-sharing",
         "studio",
@@ -360,13 +360,12 @@
         "sharing",
         "studio data sharing",
         "data sharing",
-        "2026-05-13 17:17",
+        "2026-05-26",
         "2026",
         "05",
-        "13",
-        "17"
+        "26"
       ],
-      "search_text": "studio-data-sharing studio data sharing studio data sharing data sharing 2026-05-13 17:17 2026 05 13 17"
+      "search_text": "studio-data-sharing studio data sharing studio data sharing data sharing 2026-05-26 2026 05 26"
     },
     {
       "id": "data-models-studio",
@@ -641,10 +640,10 @@
       "kind": "doc",
       "title": "Documents Package Preparation Script",
       "href": "/docs/?scope=studio&doc=scripts-docs-export",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-26",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-19 • Docs Viewer",
+      "display_meta": "2026-05-26 • Docs Viewer",
       "search_terms": [
         "scripts-docs-export",
         "scripts",
@@ -657,12 +656,12 @@
         "script",
         "docs viewer",
         "viewer",
-        "2026-05-19",
+        "2026-05-26",
         "2026",
         "05",
-        "19"
+        "26"
       ],
-      "search_text": "scripts-docs-export scripts docs export documents package preparation script documents package preparation script docs viewer viewer 2026-05-19 2026 05 19"
+      "search_text": "scripts-docs-export scripts docs export documents package preparation script documents package preparation script docs viewer viewer 2026-05-26 2026 05 26"
     },
     {
       "id": "generic-llm-helper-pattern",
@@ -788,16 +787,16 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-05-25",
-      "display_meta": "2026-05-25",
+      "last_updated": "2026-05-26",
+      "display_meta": "2026-05-26",
       "search_terms": [
         "studio",
-        "2026-05-25",
+        "2026-05-26",
         "2026",
         "05",
-        "25"
+        "26"
       ],
-      "search_text": "studio 2026-05-25 2026 05 25"
+      "search_text": "studio 2026-05-26 2026 05 26"
     },
     {
       "id": "site-request-studio-audits-page",
@@ -831,34 +830,32 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-05-11 17:50",
+      "last_updated": "2026-05-26",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-05-11 17:50 • Config",
+      "display_meta": "2026-05-26 • Config",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-05-11 17:50",
+        "2026-05-26",
         "2026",
         "05",
-        "11",
-        "17",
-        "50"
+        "26"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-05-11 17:50 2026 05 11 17 50"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-05-26 2026 05 26"
     },
     {
       "id": "studio-data-sharing-technical-spec",
       "kind": "doc",
       "title": "Studio Data Sharing Technical Spec",
       "href": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
-      "last_updated": "2026-05-13 17:17",
+      "last_updated": "2026-05-26",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-05-13 17:17 • Data Sharing",
+      "display_meta": "2026-05-26 • Data Sharing",
       "search_terms": [
         "studio-data-sharing-technical-spec",
         "studio",
@@ -868,13 +865,12 @@
         "spec",
         "studio data sharing technical spec",
         "data sharing",
-        "2026-05-13 17:17",
+        "2026-05-26",
         "2026",
         "05",
-        "13",
-        "17"
+        "26"
       ],
-      "search_text": "studio-data-sharing-technical-spec studio data sharing technical spec studio data sharing technical spec data sharing 2026-05-13 17:17 2026 05 13 17"
+      "search_text": "studio-data-sharing-technical-spec studio data sharing technical spec studio data sharing technical spec data sharing 2026-05-26 2026 05 26"
     },
     {
       "id": "scripts-audit-studio-ready-state",
@@ -1299,10 +1295,10 @@
       "kind": "doc",
       "title": "Data Sharing Adapters",
       "href": "/docs/?scope=studio&doc=config-data-sharing-adapters",
-      "last_updated": "2026-05-13 18:15",
+      "last_updated": "2026-05-26",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-05-13 18:15 • Data Sharing",
+      "display_meta": "2026-05-26 • Data Sharing",
       "search_terms": [
         "config-data-sharing-adapters",
         "config",
@@ -1311,14 +1307,12 @@
         "adapters",
         "data sharing adapters",
         "data sharing",
-        "2026-05-13 18:15",
+        "2026-05-26",
         "2026",
         "05",
-        "13",
-        "18",
-        "15"
+        "26"
       ],
-      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters data sharing 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "config-data-sharing-adapters config data sharing adapters data sharing adapters data sharing 2026-05-26 2026 05 26"
     },
     {
       "id": "docs-viewer-portable-setup",
@@ -1349,10 +1343,10 @@
       "kind": "doc",
       "title": "JSON Schema Adoption Request",
       "href": "/docs/?scope=studio&doc=site-request-json-schema-adoption",
-      "last_updated": "2026-05-03 14:35",
+      "last_updated": "2026-05-26",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-03 14:35 • Change Requests",
+      "display_meta": "2026-05-26 • Change Requests",
       "search_terms": [
         "site-request-json-schema-adoption",
         "site",
@@ -1364,14 +1358,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-03 14:35",
+        "2026-05-26",
         "2026",
         "05",
-        "03",
-        "14",
-        "35"
+        "26"
       ],
-      "search_text": "site-request-json-schema-adoption site request json schema adoption json schema adoption request change requests change requests 2026-05-03 14:35 2026 05 03 14 35"
+      "search_text": "site-request-json-schema-adoption site request json schema adoption json schema adoption request change requests change requests 2026-05-26 2026 05 26"
     },
     {
       "id": "ui-primitive-list",
@@ -1822,10 +1814,10 @@
       "kind": "doc",
       "title": "Library Export Configs",
       "href": "/docs/?scope=studio&doc=config-library-export-configs",
-      "last_updated": "2026-05-06 21:14",
+      "last_updated": "2026-05-26",
       "parent_id": "data-sharing",
       "parent_title": "Data Sharing",
-      "display_meta": "2026-05-06 21:14 • Data Sharing",
+      "display_meta": "2026-05-26 • Data Sharing",
       "search_terms": [
         "config-library-export-configs",
         "config",
@@ -1836,14 +1828,12 @@
         "data sharing",
         "data",
         "sharing",
-        "2026-05-06 21:14",
+        "2026-05-26",
         "2026",
         "05",
-        "06",
-        "21",
-        "14"
+        "26"
       ],
-      "search_text": "config-library-export-configs config library export configs library export configs data sharing data sharing 2026-05-06 21:14 2026 05 06 21 14"
+      "search_text": "config-library-export-configs config library export configs library export configs data sharing data sharing 2026-05-26 2026 05 26"
     },
     {
       "id": "ui-primitive-panel",
@@ -4011,18 +4001,16 @@
       "kind": "doc",
       "title": "Config",
       "href": "/docs/?scope=studio&doc=config",
-      "last_updated": "2026-05-13 18:15",
-      "display_meta": "2026-05-13 18:15",
+      "last_updated": "2026-05-26",
+      "display_meta": "2026-05-26",
       "search_terms": [
         "config",
-        "2026-05-13 18:15",
+        "2026-05-26",
         "2026",
         "05",
-        "13",
-        "18",
-        "15"
+        "26"
       ],
-      "search_text": "config 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "config 2026-05-26 2026 05 26"
     },
     {
       "id": "config-pipeline-json",
@@ -4236,10 +4224,10 @@
       "kind": "doc",
       "title": "Docs Management Service Data Sharing",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing",
-      "last_updated": "2026-05-19",
+      "last_updated": "2026-05-26",
       "parent_id": "scripts-docs-management-server",
       "parent_title": "Docs Management Service",
-      "display_meta": "2026-05-19 • Docs Management Service",
+      "display_meta": "2026-05-26 • Docs Management Service",
       "search_terms": [
         "scripts-docs-management-server-data-sharing",
         "scripts",
@@ -4251,12 +4239,12 @@
         "docs management service data sharing",
         "service",
         "docs management service",
-        "2026-05-19",
+        "2026-05-26",
         "2026",
         "05",
-        "19"
+        "26"
       ],
-      "search_text": "scripts-docs-management-server-data-sharing scripts docs management server data sharing docs management service data sharing service docs management service 2026-05-19 2026 05 19"
+      "search_text": "scripts-docs-management-server-data-sharing scripts docs management server data sharing docs management service data sharing service docs management service 2026-05-26 2026 05 26"
     },
     {
       "id": "scripts-docs-management-server-write-actions",
@@ -4556,10 +4544,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-26",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-25 • Docs Viewer",
+      "display_meta": "2026-05-26 • Docs Viewer",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -4568,12 +4556,12 @@
         "docs viewer builder",
         "viewer",
         "docs viewer",
-        "2026-05-25",
+        "2026-05-26",
         "2026",
         "05",
-        "25"
+        "26"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-25 2026 05 25"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer docs viewer 2026-05-26 2026 05 26"
     },
     {
       "id": "config-docs-viewer",

@@ -53,7 +53,6 @@ SUPPORTED_FIELD_SOURCES = {
     "last_updated",
     "hidden",
     "viewable",
-    "published",
 }
 SUPPORTED_TARGET_FORMATS = {"json", "jsonl"}
 SUPPORTED_RECORD_SHAPES = {"envelope", "document_rows"}
@@ -64,7 +63,6 @@ SKIPPED_REASON_LABELS = {
     "max_documents": "exceeded the configured maximum document count",
     "non_viewable": "are not viewable",
     "unknown_doc_id": "were not found",
-    "unpublished": "are unpublished",
 }
 
 
@@ -463,7 +461,7 @@ def validate_export_config(config: dict[str, Any]) -> tuple[list[str], list[str]
     selection_mode = normalize_text(selection.get("mode"))
     if selection_mode not in SUPPORTED_SELECTION_MODES:
         errors.append(f"config {config_id}: unsupported selection.mode {selection_mode!r}")
-    for key in ["include_descendants", "include_non_viewable", "exclude_archived", "exclude_unpublished"]:
+    for key in ["include_descendants", "include_non_viewable", "exclude_archived"]:
         if not isinstance(selection.get(key), bool):
             errors.append(f"config {config_id}: selection.{key} must be true or false")
 
@@ -633,9 +631,6 @@ def selected_docs(
         if doc_id in archive_ids:
             skipped.append({"doc_id": doc_id, "reason": "archived"})
             continue
-        if selection.get("exclude_unpublished") and doc.get("published") is False:
-            skipped.append({"doc_id": doc_id, "reason": "unpublished"})
-            continue
         if not selection.get("include_non_viewable") and doc.get("viewable") is False:
             skipped.append({"doc_id": doc_id, "reason": "non_viewable"})
             continue
@@ -784,7 +779,7 @@ def ancestor_chain(context: ExportContext, doc: dict[str, Any]) -> list[dict[str
 
 def source_value(context: ExportContext, doc: dict[str, Any], source: str) -> Any:
     doc_id = normalize_text(doc.get("doc_id"))
-    if source in {"doc_id", "title", "parent_id", "summary", "last_updated", "hidden", "viewable", "published"}:
+    if source in {"doc_id", "title", "parent_id", "summary", "last_updated", "hidden", "viewable"}:
         return doc.get(source)
     if source == "current_summary":
         return doc.get("summary", "")

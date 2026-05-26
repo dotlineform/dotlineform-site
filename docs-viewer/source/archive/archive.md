@@ -4,8 +4,6 @@ title: archive
 added_date: 2026-05-25
 last_updated: 2026-05-25
 parent_id: ""
-published: true
-viewable: true
 sort_order: 100
 ---
 # archive

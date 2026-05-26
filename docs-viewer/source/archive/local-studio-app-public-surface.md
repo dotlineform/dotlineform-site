@@ -4,8 +4,6 @@ title: Public Published Surface
 added_date: 2026-05-22
 last_updated: 2026-05-23
 sort_order: 90000
-published: true
-viewable: true
 ---
 This document is now archived and is no longer maintained.
 

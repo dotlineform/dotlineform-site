@@ -74,9 +74,9 @@ Current behavior:
 - serves a read-only Docs Viewer source-config report payload to manage-mode report surfaces
 - serves a source-config settings contract and allowlisted settings write endpoint for manage-mode settings controls
 - creates, archives, and deletes source docs under the current scope root
-- creates Studio docs as `published: true`, `viewable: true`
-- creates Analysis docs as `published: true`, `viewable: false`
-- creates Library docs as `published: true`, `viewable: false`
+- creates Studio docs without `viewable` unless a hidden state is needed
+- creates Analysis docs as `viewable: false`
+- creates Library docs as `viewable: false`
 - writes new or changed docs with minute-precision `added_date` and `last_updated` values in `YYYY-MM-DD HH:MM` form while preserving existing date-only values
 - rebuilds scope-owned docs payloads after successful writes, using targeted docs payload ids when the mutation planner can provide an explicit safe set
 - runs targeted docs-search updates after successful writes when affected doc ids are explicit

@@ -2,7 +2,7 @@
 doc_id: config
 title: Config
 added_date: 2026-03-31
-last_updated: "2026-05-13 18:15"
+last_updated: 2026-05-26
 parent_id: ""
 sort_order: 14000
 ---
@@ -20,10 +20,10 @@ Checked-in configuration artifacts that the current site and build scripts load 
 - Docs Viewer UI text in `docs-viewer/config/ui-text/ui-text.json`
 - dedicated `/catalogue/search/` runtime policy in `assets/data/search/policy.json`
 - build-owned search source-family config in `scripts/search/build_config.json`
-- Library sharing profile config patterns in `assets/studio/data/library_export_configs.json`
-- Library sharing profile config schema in `assets/studio/data/library_export_configs.schema.json`
-- Data Sharing adapter dispatch in `assets/studio/data/data_sharing_adapters.json`
-- Data Sharing adapter schema in `assets/studio/data/data_sharing_adapters.schema.json`
+- Library sharing profile config patterns in `studio/data/config/data-sharing/library-export-configs.json`
+- Library sharing profile config schema in `studio/data/config/data-sharing/library-export-configs.schema.json`
+- Data Sharing adapter dispatch in `studio/data/config/data-sharing/data-sharing-adapters.json`
+- Data Sharing adapter schema in `studio/data/config/data-sharing/data-sharing-adapters.schema.json`
 
 Key documents:
 

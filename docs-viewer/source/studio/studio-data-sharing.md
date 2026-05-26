@@ -2,7 +2,7 @@
 doc_id: studio-data-sharing
 title: Studio Data Sharing
 added_date: 2026-05-06
-last_updated: "2026-05-13 17:17"
+last_updated: 2026-05-26
 parent_id: data-sharing
 sort_order: 1000
 viewable: true
@@ -27,8 +27,8 @@ The page scope selector presents this as Analytics; the internal data domain rem
 
 The prepare page:
 
-- loads enabled Library sharing profiles from `assets/studio/data/library_export_configs.json`
-- loads enabled Analytics tag sharing profiles from `assets/studio/data/data_sharing_adapters.json`
+- loads enabled Library sharing profiles from `studio/data/config/data-sharing/library-export-configs.json`
+- loads enabled Analytics tag sharing profiles from `studio/data/config/data-sharing/data-sharing-adapters.json`
 - reads the generated Library docs index through the configured Docs Viewer service
 - renders a selectable hierarchical document list in Docs Viewer order
 - supports JSON and JSONL target formats according to each profile
@@ -64,8 +64,8 @@ The page shells load:
 - `assets/studio/js/data-sharing-prepare-workflow.js`
 - `assets/studio/js/data-sharing-review.js`
 - `assets/studio/js/data-sharing-adapters.js`
-- `assets/studio/data/data_sharing_adapters.json`
-- `assets/studio/data/library_export_configs.json`
+- `studio/data/config/data-sharing/data-sharing-adapters.json`
+- `studio/data/config/data-sharing/library-export-configs.json`
 - `studio/app/server/studio/data_sharing_routes.py`
 - `studio/app/server/studio/data_sharing_service.py`
 - `docs-viewer/services/documents_data_sharing_adapter.py`

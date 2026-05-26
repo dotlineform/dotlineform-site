@@ -53,7 +53,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "archive",
             "title": "Archive",
-            "published": True,
             "viewable": False,
         },
         scope="archive",
@@ -64,7 +63,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "archive",
             "title": "Archive",
-            "published": True,
             "viewable": False,
         },
     )
@@ -75,7 +73,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "child",
             "title": "Child",
             "parent_id": "archive",
-            "published": True,
             "viewable": True,
         },
     )
@@ -85,7 +82,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         {
             "doc_id": "other",
             "title": "Other",
-            "published": True,
             "viewable": True,
         },
     )
@@ -158,7 +154,6 @@ def write_generated_docs(root: Path) -> None:
             "scope": "studio",
             "doc_id": "archive",
             "title": "Archive",
-            "published": True,
             "viewable": False,
             "content_url": "/docs-viewer/generated/docs/studio/by-id/archive.json",
         },
@@ -166,7 +161,6 @@ def write_generated_docs(root: Path) -> None:
             "scope": "studio",
             "doc_id": "child",
             "title": "Child",
-            "published": True,
             "viewable": True,
             "content_url": "/docs-viewer/generated/docs/studio/by-id/child.json",
         },
@@ -661,7 +655,8 @@ def test_scope_create_apply_writes_allowlisted_files_and_runs_rebuild() -> None:
     assert payload["build_commands"][0]["status"] == "completed"
     assert calls == [(repo_root, "research", {"include_search": True})]
     assert default_doc_exists is True
-    assert "viewable: true" in default_doc_text
+    assert "viewable:" not in default_doc_text
+    assert "published:" not in default_doc_text
     assert "hidden:" not in default_doc_text
     assert "permalink: /research/" in route_text
     assert "docs_viewer_readonly_route.html" in route_text
@@ -709,7 +704,8 @@ def test_scope_create_apply_skips_public_route_for_local_scopes() -> None:
     assert payload["ok"] is True
     assert payload["urls"]["public"] == ""
     assert route_exists is False
-    assert "viewable: true" in default_doc_text
+    assert "viewable:" not in default_doc_text
+    assert "published:" not in default_doc_text
     assert "hidden:" not in default_doc_text
     assert source_payload["scopes"][1]["viewer_base_url"] == "/docs/"
     assert source_payload["scopes"][1]["include_scope_param"] is True

@@ -104,7 +104,7 @@ The watcher treats these Markdown changes as rebuild triggers:
 It does this by comparing the current `.md` file set, file mtimes, and file sizes on each poll.
 Studio and Library watch only root-level `.md` files. Analysis watches nested `.md` files under `docs-viewer/source/analysis/`.
 
-For targeted docs payloads and targeted search, it also keeps a parsed per-scope source snapshot from the last successful watcher rebuild. The snapshot maps filenames to front-matter-derived values including `doc_id`, `title`, `parent_id`, `published`, and `viewable`. The watcher does not assume filename equals `doc_id`.
+For targeted docs payloads and targeted search, it also keeps a parsed per-scope source snapshot from the last successful watcher rebuild. The snapshot maps filenames to front-matter-derived values including `doc_id`, `title`, `parent_id`, and `viewable`. The watcher does not assume filename equals `doc_id`.
 
 Targeted affected-id rules:
 

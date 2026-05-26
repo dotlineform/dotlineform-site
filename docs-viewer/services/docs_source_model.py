@@ -34,7 +34,6 @@ class ScopeDoc:
     ui_status: str
     parent_id: str
     sort_order: Optional[int]
-    published: bool
     hidden: bool
     viewable: bool
 
@@ -119,7 +118,6 @@ def format_source(front_matter: Dict[str, Any], body: str) -> str:
         "ui_status",
         "parent_id",
         "sort_order",
-        "published",
         "hidden",
         "viewable",
     ]
@@ -147,10 +145,6 @@ def write_text_atomic(path: Path, text: str) -> None:
                 temp_path.unlink()
             except OSError:
                 pass
-
-
-def doc_is_published(front_matter: Dict[str, Any]) -> bool:
-    return front_matter_boolean(front_matter, "published", True)
 
 
 def doc_is_viewable(front_matter: Dict[str, Any]) -> bool:
@@ -231,7 +225,6 @@ def load_scope_docs(repo_root: Path, scope: str) -> list[ScopeDoc]:
                 ui_status=ui_status,
                 parent_id=parent_id,
                 sort_order=sort_order,
-                published=doc_is_published(front_matter),
                 hidden=hidden,
                 viewable=not hidden,
             )

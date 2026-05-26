@@ -16,10 +16,6 @@ The immediate use case is Library growth.
 Many Library docs may be imported before their final parent-child structure is known.
 If every imported doc is immediately viewable, the public `/library/` viewer can become a long, unsorted root-level list.
 
-The terminology matters because `published` already has a pipeline meaning in the docs system.
-It means the source Markdown is included in the generated docs-viewer artifacts.
-It should not also mean public/default visibility.
-
 The desired workflow is:
 
 - import or create Library docs as generated but not publicly viewable
@@ -35,47 +31,40 @@ The first implementation is now in place for the shared Docs Viewer, docs builde
 Docs source files already support a binary front-matter field:
 
 ```yaml
-published: false
+viewable: false
 ```
 
-Current behavior treats unpublished docs as excluded from generated docs/search outputs.
-Some Studio docs already use this field for local audit outputs that should not appear in the viewer.
-
-This means `published: false` is a pipeline inclusion flag today.
-It is not suitable as the public visibility flag for generated-but-hidden Library docs.
+Docs Viewer source no longer uses a separate `published` front-matter field.
+Every Markdown source doc in a configured scope is included in generated docs payloads.
+Use `viewable: false` when a generated doc should be reviewable in manage mode but hidden from public/default discovery.
 
 There is no docs `status` field.
 The docs builder and management flow now support `viewable`.
 
 The docs-management flow can still use `archive` as a conventional tree location for archived docs, but `archive` is not a publication state or a special visibility mechanism.
 
-## Decision: Keep `published`, Add `viewable`
+## Decision: Use `viewable`
 
-The first visibility workflow should preserve the existing `published: true | false` source field and add a separate `viewable: true | false` source field.
+The current visibility workflow uses `viewable: true | false` as the source field.
 
 Direction:
 
-- `published: true` means the source doc is included in generated docs-viewer JSON artifacts
-- `published: false` means the source doc is excluded from generated docs-viewer JSON artifacts
 - `viewable: true` means visible in the public/default viewer
 - `viewable: false` means generated and reviewable in manage mode, but hidden from public/default discovery
-- absence of `published` should continue to default to `true` for existing docs
 - absence of `viewable` should default to `true` for existing docs
 - `archive` can be used as an ordinary parent folder, not as a status value
 - no `status` field should be added yet
 
 Reasons:
 
-- the immediate problem is public/default visibility for generated docs, not pipeline inclusion
-- `published` already has clear builder semantics and should not be overloaded
+- the immediate problem is public/default visibility for generated docs
+- removing the older `published` source field avoids two overlapping visibility concepts
 - `viewable` names the user-facing behavior more directly than `published`
 - a separate `status` field creates precedence questions before there is a concrete need
 - richer states such as `deprecated` should wait until there is display, search, and workflow behavior for them
 
 Avoided ambiguity:
 
-- `published: false` but expected to open in manage mode
-- `published: true` but expected to be hidden from public navigation
 - `status: draft` plus `viewable: true`
 - `status: archived` versus parent `archive`
 - `deprecated` but still visible in search
@@ -85,19 +74,11 @@ Recommended working states:
 
 ```yaml
 # Normal public/default doc.
-published: true
-viewable: true
 ```
 
 ```yaml
 # Generated and manageable, but hidden from public/default discovery.
-published: true
 viewable: false
-```
-
-```yaml
-# Source-only working note, excluded from generated docs artifacts.
-published: false
 ```
 
 ## One Index Artifact
@@ -107,7 +88,7 @@ The preferred design is one generated docs index per scope.
 Direction:
 
 - keep `assets/data/docs/scopes/<scope>/index.json` as the single docs index artifact
-- include `published: true` and `viewable: true | false` on each index row
+- include `viewable: true | false` on each index row
 - do not create a separate manage-only hidden-doc index
 - let the Docs Viewer filter rows based on route/mode state
 
@@ -130,7 +111,7 @@ Non-viewable docs should have generated per-doc payloads if manage mode can open
 
 Direction:
 
-- generate `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json` for every `published: true` doc
+- generate `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json` for every source doc
 - keep non-viewable payloads reachable only through manage-mode viewer behavior
 - do not expose non-viewable docs through public/default search initially
 
@@ -209,17 +190,14 @@ Initial non-goal:
 
 ## Builder Requirements
 
-The docs builder should keep excluding `published: false` docs, but include `viewable` metadata for generated docs.
+The docs builder should include every configured Markdown source doc and carry `viewable` metadata into generated docs.
 
 Required behavior:
 
-- parse `published` from source front matter
 - parse `viewable` from source front matter
-- default missing `published` to `true`
 - default missing `viewable` to `true`
-- skip `published: false` docs before generated artifact creation, as today
-- include `published: true` and `viewable: true | false` in generated index rows for generated docs
-- generate per-doc payloads for every `published: true` doc
+- include `viewable: true | false` in generated index rows for generated docs
+- generate per-doc payloads for every source doc
 - validate `parent_id` references across the generated source set
 - preserve deterministic sorting
 
@@ -259,9 +237,9 @@ Library import and create flows should probably default new docs to generated bu
 
 Recommended defaults:
 
-- Library imports: `published: true`, `viewable: false`
-- Library new docs in manage mode: `published: true`, `viewable: false`
-- Studio docs new docs: `published: true`, `viewable: true`
+- Library imports: `viewable: false`
+- Library new docs in manage mode: `viewable: false`
+- Studio docs new docs: omit `viewable` unless a hidden state is needed
 
 Reasons:
 
@@ -275,7 +253,7 @@ Open decision:
 
 ## Data Model Notes
 
-`published` should remain a boolean source-field for pipeline inclusion.
+The old `published` source field is retired; generated inclusion now follows configured source membership.
 `viewable` should be added as a boolean source-field for public/default viewer visibility.
 
 Generated docs index row should include:
@@ -284,7 +262,6 @@ Generated docs index row should include:
 {
   "doc_id": "...",
   "title": "...",
-  "published": true,
   "viewable": false
 }
 ```
@@ -317,8 +294,8 @@ The system should not treat `archive` as equivalent to `viewable: false`.
 ### Phase 1. Schema and builder contract
 
 - parse and emit `viewable`
-- include `published` and `viewable` in docs index rows
-- generate per-doc payloads for all `published: true` docs
+- include `viewable` in docs index rows
+- generate per-doc payloads for all source docs
 - update docs data-model docs
 - update docs builder docs
 - keep viewer filtering viewable-only by default
@@ -353,7 +330,7 @@ The viewer keeps one selected-doc button, prompts for required ancestor and opti
 
 ### Phase 5. Import/create defaults
 
-- make Library import/create default to `published: true`, `viewable: false`
+- make Library import/create default to `viewable: false`
 - consider UI option for immediate viewability
 - document scope-specific defaults
 
@@ -372,8 +349,8 @@ The immediate-viewability option remains deferred.
 
 ## Resolved Decisions
 
-- Library docs created through import/create should default to `published: true`, `viewable: false`.
-- Studio docs should default to `published: true`, `viewable: true`.
+- Library docs created through import/create should default to `viewable: false`.
+- Studio docs should omit `viewable` by default.
 - Public/default direct URLs to non-viewable docs should behave like missing docs and fall back to the scope default doc.
 - Manage mode should always show viewable docs; the draft toggle should add non-viewable docs rather than replacing the tree.
 - `draft` is acceptable UI language for `viewable: false`, but the schema and generated data should use `viewable`.

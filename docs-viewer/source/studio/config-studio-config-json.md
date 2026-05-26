@@ -2,7 +2,7 @@
 doc_id: config-studio-config-json
 title: Studio Config JSON
 added_date: 2026-04-24
-last_updated: "2026-05-11 17:50"
+last_updated: 2026-05-26
 parent_id: config
 sort_order: 2000
 viewable: true
@@ -66,7 +66,7 @@ It also feeds shared path resolution used by:
 
 - `assets/studio/js/studio-data.js`
 
-The active data-domain list and capability status come from `assets/studio/data/data_sharing_adapters.json`.
+The active data-domain list and capability status come from `studio/data/config/data-sharing/data-sharing-adapters.json`.
 Per-domain export configs and import apply contracts still live in the owning workflow docs and service code.
 
 ## When it is read
@@ -127,7 +127,7 @@ The package preparation page reads:
 The Library sharing profile config file owns document package pattern definitions.
 `studio_config.json` only owns browser-facing route, payload, and scoped UI-copy lookup for the Studio page.
 The page runs package preparation through the configured Docs Viewer service endpoint `POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare`, which is exposed through Local Studio runtime config and applied by `studio/app/frontend/js/studio-transport.js`.
-Adapter dispatch belongs in `assets/studio/data/data_sharing_adapters.json`.
+Adapter dispatch belongs in `studio/data/config/data-sharing/data-sharing-adapters.json`.
 Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.
 The scoped data-sharing-prepare payload keys `format_label`, `format_json`, `format_jsonl`, `format_required`, and `result_format_label` control output-format selector and result-modal copy.
 The scoped data-sharing-prepare payload keys `filter_show_all`, `filter_no_content`, and `filter_not_viewable` control the list-filter pill labels.
@@ -146,7 +146,7 @@ The returned package review page reads:
 
 The scoped data-sharing-review payload owns browser-facing labels, status messages, selection copy, preview/apply result modal titles and count labels, the preview `results` reopen button, summary-apply confirmation modal copy, and hierarchy-apply confirmation modal copy.
 The Docs Viewer service transport endpoints for returned-package listing, review generation, and apply are exposed through Local Studio runtime config and applied by `studio/app/frontend/js/studio-transport.js`.
-Adapter dispatch belongs in `assets/studio/data/data_sharing_adapters.json`.
+Adapter dispatch belongs in `studio/data/config/data-sharing/data-sharing-adapters.json`.
 Future-domain availability also belongs in that adapter registry; `studio_config.json` only provides fallback unavailable-state copy.
 Returned-package parsing rules, sharing-profile matching, output formats, and source-write validation do not belong in `studio_config.json`; they belong in the Data Sharing adapters and local service.
 

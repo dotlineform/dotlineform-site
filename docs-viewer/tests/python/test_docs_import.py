@@ -35,14 +35,13 @@ def make_repo() -> tempfile.TemporaryDirectory:
     write_current_index(
         root,
         [
-            {"doc_id": "library", "title": "Library", "parent_id": "", "published": True, "viewable": True},
-            {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "published": True, "viewable": True},
-            {"doc_id": "beta", "title": "Beta", "parent_id": "library", "published": True, "viewable": True},
+            {"doc_id": "library", "title": "Library", "parent_id": "", "viewable": True},
+            {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "viewable": True},
+            {"doc_id": "beta", "title": "Beta", "parent_id": "library", "viewable": True},
             {
                 "doc_id": "missing-title",
                 "title": "Missing Title",
                 "parent_id": "library",
-                "published": True,
                 "viewable": True,
             },
         ],
@@ -212,28 +211,26 @@ def test_current_library_lookup_adds_record_level_warnings() -> None:
         write_current_index(
             root,
             [
-                {"doc_id": "library", "title": "Library", "parent_id": "", "published": True, "viewable": True},
+                {"doc_id": "library", "title": "Library", "parent_id": "", "viewable": True},
                 {
-                    "doc_id": "unpublished-parent",
-                    "title": "Unpublished Parent",
+                    "doc_id": "non-viewable-parent",
+                    "title": "Non-viewable Parent",
                     "parent_id": "library",
-                    "published": False,
                     "viewable": False,
                 },
                 {
                     "doc_id": "no-payload",
                     "title": "No Payload",
                     "parent_id": "library",
-                    "published": True,
                     "viewable": True,
                 },
             ],
-            payload_ids=["library", "unpublished-parent"],
+            payload_ids=["library", "non-viewable-parent"],
         )
         payload = [
             {"doc_id": "unknown-doc", "title": "Unknown Doc", "parent_id": "missing-parent"},
-            {"doc_id": "unpublished-parent", "title": "Unpublished Parent", "parent_id": "library"},
-            {"doc_id": "no-payload", "title": "No Payload", "parent_id": "unpublished-parent"},
+            {"doc_id": "non-viewable-parent", "title": "Non-viewable Parent", "parent_id": "library"},
+            {"doc_id": "no-payload", "title": "No Payload", "parent_id": "non-viewable-parent"},
         ]
         write_staged(root, "lookup.json", json.dumps(payload))
         report = parse(root, "lookup.json")
@@ -245,16 +242,13 @@ def test_current_library_lookup_adds_record_level_warnings() -> None:
         "doc_count": 3,
         "payload_count": 2,
     }
-    assert report["counts"] == {"records": 3, "parsed_records": 3, "malformed_records": 0, "warnings": 5, "errors": 0}
+    assert report["counts"] == {"records": 3, "parsed_records": 3, "malformed_records": 0, "warnings": 3, "errors": 0}
     assert [item["code"] for item in report["issues"]] == [
         "unknown_doc_id",
         "missing_parent_id",
-        "current_doc_unpublished",
         "current_payload_missing",
-        "parent_unpublished",
     ]
     assert report["records"][0]["current_library"]["exists"] is False
-    assert report["records"][1]["current_library"]["published"] is False
     assert report["records"][2]["current_library"]["payload_exists"] is False
 
 

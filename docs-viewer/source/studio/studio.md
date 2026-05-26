@@ -2,7 +2,7 @@
 doc_id: studio
 title: Studio
 added_date: 2026-04-23
-last_updated: 2026-05-25
+last_updated: 2026-05-26
 parent_id: ""
 sort_order: 2000
 ---
@@ -22,7 +22,7 @@ The current Studio shell is organized around active admin entry points:
 Document management and Docs Import are inside the standalone Docs Viewer service's `/docs/` manage-mode.
 Local Studio keeps Docs as a navigation integration point, but does not serve the Docs Viewer shell or Docs Viewer runtime/static/config files.
 
-Sharing profile definitions live in `assets/studio/data/library_export_configs.json`, not in route code or `studio_config.json`.
+Sharing profile definitions live in `studio/data/config/data-sharing/library-export-configs.json`, not in route code or `studio_config.json`.
 
 ## Route Ready State
 

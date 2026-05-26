@@ -23,7 +23,6 @@
         "include_descendants": true,
         "include_non_viewable": true,
         "exclude_archived": false,
-        "exclude_unpublished": true,
         "supports_missing_summary_only": false,
         "default_missing_summary_only": false
       },
@@ -135,7 +134,6 @@
         "include_descendants": true,
         "include_non_viewable": true,
         "exclude_archived": false,
-        "exclude_unpublished": true,
         "supports_missing_summary_only": true,
         "default_missing_summary_only": true
       },
@@ -222,7 +220,6 @@
         "include_descendants": true,
         "include_non_viewable": true,
         "exclude_archived": false,
-        "exclude_unpublished": true,
         "supports_missing_summary_only": false,
         "default_missing_summary_only": false
       },

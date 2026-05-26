@@ -4,7 +4,7 @@ title: Pipeline Config Refactor Plan
 added_date: 2026-03-29
 last_updated: "2026-05-09 16:00"
 sort_order: 3000
-published: false
+viewable: false
 ---
 # Pipeline Config Refactor Plan
 

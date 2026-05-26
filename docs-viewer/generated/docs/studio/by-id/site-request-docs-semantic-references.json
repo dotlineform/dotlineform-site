@@ -6,7 +6,6 @@
   "last_updated": "2026-05-19",
   "parent_id": "change-requests",
   "sort_order": 9000,
-  "published": true,
   "hidden": false,
   "viewable": true,
   "source_path": "site-request-docs-semantic-references.md",

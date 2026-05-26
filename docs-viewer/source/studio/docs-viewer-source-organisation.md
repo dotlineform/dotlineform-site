@@ -77,7 +77,7 @@ Within the Studio source root, top-level parent docs group documentation by impl
 - `studio`
 - `user-guide`
 
-Unpublished working docs and historical notes also live in the same flat root and stay out of the published viewer through `published: false`.
+Working docs and historical notes that should stay out of public/default discovery use `viewable: false`.
 
 Examples:
 
@@ -133,7 +133,7 @@ The docs builder writes scope-owned viewer data under:
 At a high level, each scope currently has:
 
 - one generated docs index for the tree
-- one generated per-doc payload for each published source doc
+- one generated per-doc payload for each included source doc
 
 This is why the shared runtime can stay generic: it consumes the same kind of scope-owned output for each docs scope.
 

@@ -53,7 +53,6 @@ BASE_CONFIG = {
                 "include_descendants": True,
                 "include_non_viewable": True,
                 "exclude_archived": False,
-                "exclude_unpublished": True,
                 "supports_missing_summary_only": True,
                 "default_missing_summary_only": True,
             },
@@ -89,7 +88,6 @@ INDEX_PAYLOAD = {
             "parent_id": "",
             "summary": "",
             "last_updated": "2026-05-03 10:00",
-            "published": True,
             "viewable": True,
         },
         {
@@ -98,7 +96,6 @@ INDEX_PAYLOAD = {
             "parent_id": "library",
             "summary": "Existing summary.",
             "last_updated": "2026-05-03 10:01",
-            "published": True,
             "viewable": True,
         },
         {
@@ -107,7 +104,6 @@ INDEX_PAYLOAD = {
             "parent_id": "",
             "summary": "",
             "last_updated": "2026-05-03 10:02",
-            "published": True,
             "viewable": False,
         },
     ],

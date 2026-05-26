@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T20:25:27Z",
+  "generated_at": "2026-05-26T12:22:28Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -275,6 +275,22 @@
     },
     {
       "scope": "archive",
+      "doc_id": "moments-json",
+      "title": "Moments JSON Migration Plan",
+      "added_date": "2026-03-29",
+      "last_updated": "2026-03-29",
+      "parent_id": "",
+      "sort_order": 2000,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "moments-json-migration-plan.md",
+      "viewer_url": "/docs/?scope=archive&doc=moments-json",
+      "content_url": "/docs-viewer/generated/docs/archive/by-id/moments-json.json",
+      "content_text_length": 16163
+    },
+    {
+      "scope": "archive",
       "doc_id": "site-request-studio-record-hash-simplification",
       "title": "Studio Record Hash Simplification Analysis",
       "added_date": "2026-04-30",
@@ -321,6 +337,22 @@
       "viewer_url": "/docs/?scope=archive&doc=site-request-field-aware-build-scoping-inventory",
       "content_url": "/docs-viewer/generated/docs/archive/by-id/site-request-field-aware-build-scoping-inventory.json",
       "content_text_length": 30764
+    },
+    {
+      "scope": "archive",
+      "doc_id": "pipeline-config",
+      "title": "Pipeline Config Refactor Plan",
+      "added_date": "2026-03-29",
+      "last_updated": "2026-05-09 16:00",
+      "parent_id": "",
+      "sort_order": 3000,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "pipeline-config-refactor-plan.md",
+      "viewer_url": "/docs/?scope=archive&doc=pipeline-config",
+      "content_url": "/docs-viewer/generated/docs/archive/by-id/pipeline-config.json",
+      "content_text_length": 11420
     },
     {
       "scope": "archive",
@@ -425,6 +457,22 @@
     },
     {
       "scope": "archive",
+      "doc_id": "studio-search-v1",
+      "title": "Studio Search V1",
+      "added_date": "2026-03-29",
+      "last_updated": "2026-03-29",
+      "parent_id": "",
+      "sort_order": 5000,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "search-v1.md",
+      "viewer_url": "/docs/?scope=archive&doc=studio-search-v1",
+      "content_url": "/docs-viewer/generated/docs/archive/by-id/studio-search-v1.json",
+      "content_text_length": 11933
+    },
+    {
+      "scope": "archive",
       "doc_id": "scripts-main-pipeline",
       "title": "Build Catalogue",
       "added_date": "2026-04-18",
@@ -472,6 +520,22 @@
       "content_url": "/docs-viewer/generated/docs/archive/by-id/site-request-js-payload-runtime-cleanup-inventory.json",
       "content_text_length": 4525,
       "ui_status": "done"
+    },
+    {
+      "scope": "archive",
+      "doc_id": "studio-search-v1-implementation-plan",
+      "title": "Search V1 Implementation Plan",
+      "added_date": "2026-03-29",
+      "last_updated": "2026-03-29",
+      "parent_id": "",
+      "sort_order": 7000,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "search-v1-implementation-plan.md",
+      "viewer_url": "/docs/?scope=archive&doc=studio-search-v1-implementation-plan",
+      "content_url": "/docs-viewer/generated/docs/archive/by-id/studio-search-v1-implementation-plan.json",
+      "content_text_length": 6768
     },
     {
       "scope": "archive",
@@ -866,6 +930,38 @@
       "viewer_url": "/docs/?scope=archive&doc=new-pipeline-refine-search",
       "content_url": "/docs-viewer/generated/docs/archive/by-id/new-pipeline-refine-search.json",
       "content_text_length": 2096
+    },
+    {
+      "scope": "archive",
+      "doc_id": "regression-checklist",
+      "title": "Studio Regression Checklist",
+      "added_date": "2026-03-28",
+      "last_updated": "2026-05-09 16:00",
+      "parent_id": "",
+      "sort_order": 21000,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "regression-checklist.md",
+      "viewer_url": "/docs/?scope=archive&doc=regression-checklist",
+      "content_url": "/docs-viewer/generated/docs/archive/by-id/regression-checklist.json",
+      "content_text_length": 5691
+    },
+    {
+      "scope": "archive",
+      "doc_id": "studio-plan",
+      "title": "Implementation Plan",
+      "added_date": "2026-03-28",
+      "last_updated": "2026-05-09 16:00",
+      "parent_id": "",
+      "sort_order": 22000,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "studio-plan.md",
+      "viewer_url": "/docs/?scope=archive&doc=studio-plan",
+      "content_url": "/docs-viewer/generated/docs/archive/by-id/studio-plan.json",
+      "content_text_length": 4831
     },
     {
       "scope": "archive",
@@ -1727,6 +1823,38 @@
       "content_url": "/docs-viewer/generated/docs/archive/by-id/site-request-docs-viewer-new-scope-button.json",
       "content_text_length": 16856,
       "ui_status": "done"
+    },
+    {
+      "scope": "archive",
+      "doc_id": "offline-tag-assignments-implementation-breakdown",
+      "title": "Offline Tag Assignments Implementation Breakdown",
+      "added_date": "2026-03-28",
+      "last_updated": "2026-05-09 21:45",
+      "parent_id": "",
+      "sort_order": 71000,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "offline-tag-assignments-implementation-breakdown.md",
+      "viewer_url": "/docs/?scope=archive&doc=offline-tag-assignments-implementation-breakdown",
+      "content_url": "/docs-viewer/generated/docs/archive/by-id/offline-tag-assignments-implementation-breakdown.json",
+      "content_text_length": 5997
+    },
+    {
+      "scope": "archive",
+      "doc_id": "offline-tag-assignments-product-spec",
+      "title": "Offline Tag Assignments Product Spec",
+      "added_date": "2026-03-28",
+      "last_updated": "2026-03-28",
+      "parent_id": "",
+      "sort_order": 72000,
+      "published": true,
+      "hidden": true,
+      "viewable": false,
+      "source_path": "offline-tag-assignments-product-spec.md",
+      "viewer_url": "/docs/?scope=archive&doc=offline-tag-assignments-product-spec",
+      "content_url": "/docs-viewer/generated/docs/archive/by-id/offline-tag-assignments-product-spec.json",
+      "content_text_length": 4935
     },
     {
       "scope": "archive",

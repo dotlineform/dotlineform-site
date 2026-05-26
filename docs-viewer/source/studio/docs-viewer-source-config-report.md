@@ -6,8 +6,6 @@ last_updated: 2026-05-14
 ui_status: report
 parent_id: docs-viewer
 sort_order: 9000
-published: true
-viewable: true
 viewer_report: source_config
 viewer_report_access: manage
 ---

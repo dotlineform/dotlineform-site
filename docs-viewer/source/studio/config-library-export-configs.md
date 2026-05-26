@@ -2,7 +2,7 @@
 doc_id: config-library-export-configs
 title: Library Export Configs
 added_date: "2026-05-03 14:15"
-last_updated: "2026-05-06 21:14"
+last_updated: 2026-05-26
 parent_id: data-sharing
 sort_order: 4000
 viewable: true
@@ -11,18 +11,18 @@ viewable: true
 
 Config file:
 
-- `assets/studio/data/library_export_configs.json`
+- `studio/data/config/data-sharing/library-export-configs.json`
 
 Schema file:
 
-- `assets/studio/data/library_export_configs.schema.json`
+- `studio/data/config/data-sharing/library-export-configs.schema.json`
 
 ## Scope
 
-`library_export_configs.json` defines saved sharing profiles for the Library package-preparation workflow.
+`library-export-configs.json` defines saved sharing profiles for the Library package-preparation workflow.
 
 The first active data domain is Library.
-The schema keeps the scope field as an array so the same export engine can later support other document-backed scopes, but non-Library domains must still be enabled through `assets/studio/data/data_sharing_adapters.json`.
+The schema keeps the scope field as an array so the same export engine can later support other document-backed scopes, but non-Library domains must still be enabled through `studio/data/config/data-sharing/data-sharing-adapters.json`.
 
 The config is source-controlled project configuration.
 The Studio UI lists existing configs and uses them to drive selection behavior, but it should not create or edit config definitions in v1.
@@ -30,7 +30,7 @@ Running configs from Studio uses the local Data Sharing package-preparation endp
 
 ## Usage Model
 
-To add or change an export pattern, edit `assets/studio/data/library_export_configs.json` and keep it aligned with `assets/studio/data/library_export_configs.schema.json`.
+To add or change an export pattern, edit `studio/data/config/data-sharing/library-export-configs.json` and keep it aligned with `studio/data/config/data-sharing/library-export-configs.schema.json`.
 The Studio UI reads enabled configs for the Library scope and presents them as runnable export patterns; it does not persist config edits.
 
 Each config controls:
@@ -39,7 +39,6 @@ Each config controls:
 - whether the user selects explicit docs or the exporter uses all matching docs
 - whether selected parent docs include descendants
 - whether generated but non-viewable docs are included
-- whether unpublished docs are excluded
 - whether summary configs default to missing-summary-only filtering
 - which source/generated fields are written to each output record
 - whether body content is converted to plain text and how images/SVGs are represented
@@ -60,7 +59,7 @@ The first config file defines three enabled Library export patterns:
   JSONL document rows for exporting multiple selected document bodies in one file, including explicitly declared parent, ancestor, and child relationship metadata
 
 These configs are Library-only for v1.
-They include generated but non-viewable docs and exclude unpublished docs. `archive` is treated like any other generated Library doc.
+They include generated but non-viewable docs. `archive` is treated like any other generated Library doc.
 Catalogue and Analytics do not use these configs unless a future adapter explicitly chooses a compatible document-backed export model.
 
 ## Top-Level Shape
@@ -146,14 +145,13 @@ The first export engine is documented in [Docs Export](/docs/?scope=studio&doc=s
 - `all_matching`
   the exporter includes every document matching the config filters
 
-Selection also defines whether the run includes descendants, non-viewable docs, archived docs, and unpublished docs.
+Selection also defines whether the run includes descendants, non-viewable docs, and archived docs.
 The initial Library export patterns use explicit document selection; Select all in Studio or `--all` in the CLI remains available when a whole-corpus export is intentional.
 
 V1 Library exports should normally use:
 
 - `include_non_viewable: true`
 - `exclude_archived: false`
-- `exclude_unpublished: true`
 
 `supports_missing_summary_only` and `default_missing_summary_only` are config-level flags for summary-focused exports.
 
@@ -208,7 +206,6 @@ Supported source fields are:
 - `source_text`
 - `last_updated`
 - `viewable`
-- `published`
 
 Each field mapping requires:
 

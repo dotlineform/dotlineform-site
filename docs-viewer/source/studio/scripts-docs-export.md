@@ -2,7 +2,7 @@
 doc_id: scripts-docs-export
 title: Documents Package Preparation Script
 added_date: "2026-05-03 15:05"
-last_updated: "2026-05-19"
+last_updated: 2026-05-26
 parent_id: docs-viewer
 sort_order: 2000
 ---
@@ -23,7 +23,7 @@ It does not mutate source Markdown, generated docs payloads, or config files.
 
 Current input paths:
 
-- `assets/studio/data/library_export_configs.json`
+- `studio/data/config/data-sharing/library-export-configs.json`
 - `assets/data/docs/scopes/<scope>/index.json`
 - `assets/data/docs/scopes/<scope>/by-id/<doc_id>.json`
 
@@ -42,7 +42,7 @@ It is intentionally source-read-only: the only write it performs is the generate
 
 Inputs:
 
-- a sharing profile id from `assets/studio/data/library_export_configs.json`
+- a sharing profile id from `studio/data/config/data-sharing/library-export-configs.json`
 - a Docs Viewer scope, currently Library in v1
 - explicit document ids or `--all`
 - an optional `--format json|jsonl` override when the selected profile declares that format in `target.supported_formats`
@@ -71,7 +71,6 @@ Implemented now:
 - supports all-matching profiles
 - expands selected descendants when the profile requests it
 - excludes archived docs when the profile requests it
-- excludes unpublished docs when the profile requests it
 - includes generated but non-viewable docs when the profile requests it
 - supports missing-summary filtering for profiles that allow it
 - maps supported document fields into configured output paths
@@ -222,5 +221,5 @@ Warnings report non-blocking context:
 The static sharing profile schema remains documented in [Library Export Configs](/docs/?scope=studio&doc=config-library-export-configs).
 
 The Studio page runs the same documents package engine through the configured Docs Viewer service endpoint `POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare`.
-The local service first resolves `data_domain` and `operation` through `assets/studio/data/data_sharing_adapters.json`, then dispatches to the documents adapter, writes under the adapter-declared export root, and returns the same report shape used by the CLI.
+The local service first resolves `data_domain` and `operation` through `studio/data/config/data-sharing/data-sharing-adapters.json`, then dispatches to the documents adapter, writes under the adapter-declared export root, and returns the same report shape used by the CLI.
 The response is annotated with `data_domain`, `adapter_id`, and service summary text, but it does not include `rebuild` or `rebuild.diagnostics` because package preparation does not mutate source docs or generated docs/search payloads.

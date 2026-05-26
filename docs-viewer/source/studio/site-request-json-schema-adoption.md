@@ -2,7 +2,7 @@
 doc_id: site-request-json-schema-adoption
 title: JSON Schema Adoption Request
 added_date: "2026-05-03 14:35"
-last_updated: "2026-05-03 14:35"
+last_updated: 2026-05-26
 ui_status: deferred
 parent_id: change-requests
 sort_order: 3000
@@ -23,8 +23,8 @@ The goal is to use schemas where a config file is hand-edited, structurally mean
 
 The first successful example is the Library export config schema:
 
-- `assets/studio/data/library_export_configs.schema.json`
-- `assets/studio/data/library_export_configs.json`
+- `studio/data/config/data-sharing/library-export-configs.schema.json`
+- `studio/data/config/data-sharing/library-export-configs.json`
 
 That pattern may be useful elsewhere, especially for compact control/config contracts such as search policy and the catalogue field registry.
 

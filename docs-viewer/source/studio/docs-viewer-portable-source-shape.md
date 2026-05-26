@@ -27,7 +27,6 @@ Important fields:
 - `sort_order`: numeric sibling ordering
 - `summary`: optional short summary
 - `ui_status`: optional viewer status pill
-- `published`: `false` removes the doc from generated viewer data
 - `viewable`: `false` keeps the doc generated but hidden from read-only public views
 - `last_updated`: display/search metadata
 - `added_date`: recently-added metadata

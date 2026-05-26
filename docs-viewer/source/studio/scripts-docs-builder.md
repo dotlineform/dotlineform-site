@@ -2,7 +2,7 @@
 doc_id: scripts-docs-builder
 title: Docs Viewer Builder
 added_date: 2026-04-23
-last_updated: 2026-05-25
+last_updated: 2026-05-26
 parent_id: docs-viewer
 sort_order: 20000
 ---
@@ -25,7 +25,7 @@ Source location:
 - `docs-viewer/source/analysis/`
 - `docs-viewer/source/library/`
 
-Published viewer route:
+Viewer route:
 
 - Studio docs: `/docs/`
 - Analysis docs: `/analysis/`
@@ -55,7 +55,7 @@ The `search_output` field owns the generated docs-search index path.
 ## What The Builder Does
 
 - reads Markdown source docs from each configured scope source root
-- reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, optional `summary`, optional `ui_status`, `parent_id`, optional `sort_order`, optional `published`, and optional `viewable`
+- reads front matter metadata such as `doc_id`, `title`, `added_date`, `last_updated`, optional `summary`, optional `ui_status`, `parent_id`, optional `sort_order`, and optional `viewable`
 - renders each Markdown body to HTML using the local Jekyll Markdown stack
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
 - resolves <code>&#91;&#91;media:...&#93;&#93;</code> tokens in doc bodies against `_config.yml` `media_base` before rendering
@@ -70,14 +70,13 @@ The `search_output` field owns the generated docs-search index path.
 - writes incrementally: unchanged payloads and unchanged Docs Viewer browser config are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
 - supports targeted same-scope payload rebuilds through `--only-doc-ids` when an orchestration layer has already proven the affected ids are safe
 
-## Publishing Rules
+## Source Inclusion And Viewability
 
-- every root-level `.md` file in `docs-viewer/source/studio/` is published by default
-- every root-level `.md` file in `docs-viewer/source/library/` is published by default
-- every `.md` file under `docs-viewer/source/analysis/` is published by default, including nested docs
+- every root-level `.md` file in `docs-viewer/source/studio/` is included in generated docs payloads
+- every root-level `.md` file in `docs-viewer/source/library/` is included in generated docs payloads
+- every `.md` file under `docs-viewer/source/analysis/` is included in generated docs payloads, including nested docs
 - nested Markdown docs are rejected for Studio and Library so their flat source-layout contract stays explicit
 - nested Markdown docs are allowed for Analysis, but viewer organisation still comes from `doc_id`, `parent_id`, and `sort_order`
-- add front matter with `published: false` to keep a Markdown file in either source root without generating it into docs-viewer JSON
 - add front matter with `viewable: false` to generate a doc but keep it hidden from public/default tree, search, and recently-added views
 - `archive` is treated as an ordinary doc id and parent folder; visibility comes from `viewable`, not from a structural system-folder rule
 - docs can contain ordinary Markdown, raw HTML, or a mix of both
@@ -105,8 +104,6 @@ The `search_output` field owns the generated docs-search index path.
   empty string for a top-level doc
 - `sort_order`
   optional integer for stable ordering inside the index tree
-- `published`
-  optional boolean; set `false` to exclude the file from generated docs output
 - `viewable`
   optional boolean; set `false` to keep a generated doc hidden from public/default Docs Viewer discovery
 

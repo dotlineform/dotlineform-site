@@ -23,9 +23,9 @@ Request behavior:
 - `scope` must be one of the configured scope ids in `docs-viewer/config/scopes/docs_scopes.json`
 - `title` defaults to `New Doc` when omitted or blank
 - new docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
-- new Studio docs write `published: true`, `viewable: true`
-- new Analysis docs write `published: true`, `viewable: false`
-- new Library docs write `published: true`, `viewable: false`
+- new Studio docs omit `viewable` unless a hidden state is needed
+- new Analysis docs write `viewable: false`
+- new Library docs write `viewable: false`
 - `doc_id` and filename stem are generated from the title and made unique with `-2`, `-3`, and so on
 - `after_doc_id`, when present, inserts the new doc after the referenced doc and reuses that doc's `parent_id`
 - `parent_id`, when present without `after_doc_id`, must resolve inside the same scope
@@ -88,9 +88,9 @@ Import behavior:
 - keeps `replacement_title` as a compatibility fallback for older callers
 - creates a new Markdown source doc immediately when the generated import target does not collide
 - new imported docs write `added_date` and `last_updated` to the current minute in `YYYY-MM-DD HH:MM` form
-- new Studio imports write `published: true`, `viewable: true`
-- new Analysis imports write `published: true`, `viewable: false`
-- new Library imports write `published: true`, `viewable: false`
+- new Studio imports omit `viewable` unless a hidden state is needed
+- new Analysis imports write `viewable: false`
+- new Library imports write `viewable: false`
 - preserves blank `parent_id` and appends the new imported doc at the end of the root-level `sort_order`
 - reports `media_plan` for standalone image and file-media imports, including the expected media path and generated media token
 - reports `media_plans` for extracted inline raster images, including staged filenames, expected media paths, generated media tokens, MIME type, and decoded byte sizes
@@ -98,7 +98,7 @@ Import behavior:
 - asks browser callers to provide `replacement_doc_id` for normal collision recovery
 - requires both `overwrite_doc_id` and `confirm_overwrite: true` before overwriting an existing doc through the low-level overwrite path
 - the Studio filename-conflict modal uses `overwrite_doc_id` plus `confirm_overwrite: true` for its explicit Replace action
-- preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `published`/`viewable` state
+- preserves the overwritten doc's `doc_id`, filename, `added_date`, `parent_id`, `sort_order`, and existing `viewable` state
 - refreshes the overwritten doc's `last_updated` to the current minute
 - creates an import-specific backup before overwrite using a light-touch same-day replacement rule
 - writes decoded inline raster media files only during create or overwrite, not during preview-only responses

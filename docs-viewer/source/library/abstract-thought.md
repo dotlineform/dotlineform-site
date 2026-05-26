@@ -6,8 +6,6 @@ last_updated: "2026-05-07 22:13"
 summary: Our abstract thoughts are implemented in and constrained by physical and chemical processes in the brain, but they are organized at higher levels of description where concepts like representation, inference, and meaning become the natural explanatory tools.
 parent_id: ""
 sort_order: 70
-published: true
-viewable: true
 ---
 # Abstract Thought and Physical / Chemical Processes
 

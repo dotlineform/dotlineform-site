@@ -63,7 +63,7 @@ Purpose:
 Current content families:
 
 - one row per generated Analysis doc
-- identity, added/update dates, optional `summary`, optional `ui_status`, ordering, `published`, `viewable`, viewer URL, and per-doc content URL
+- identity, added/update dates, optional `summary`, optional `ui_status`, ordering, `viewable`, viewer URL, and per-doc content URL
 - `viewer_options` using the shared docs-scope option shape
 
 Current site mapping:
@@ -113,7 +113,6 @@ Current dependencies:
 Current enforcement:
 
 - duplicate `doc_id` values and invalid `parent_id` references are rejected by the docs builder before Analysis docs data is written
-- `published: false` docs are excluded before Analysis docs data is generated
 - `viewable: false` docs remain in generated docs data for manage-mode review, but are excluded from Analysis search and public/default viewer discovery
 
 ## Practical Update Rule

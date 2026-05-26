@@ -5,8 +5,6 @@ added_date: "2026-05-13 21:41"
 last_updated: "2026-05-13 21:41"
 parent_id: docs-viewer
 sort_order: 6000
-published: true
-viewable: true
 ---
 # Doc UI Status
 

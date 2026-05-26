@@ -34,7 +34,6 @@ def generated_docs_index() -> dict[str, object]:
             {
                 "doc_id": "library",
                 "title": "Library",
-                "published": True,
                 "viewable": True,
                 "content_text_length": 120,
                 "summary": "Library root.",
@@ -43,7 +42,6 @@ def generated_docs_index() -> dict[str, object]:
                 "doc_id": "alpha",
                 "parent_id": "library",
                 "title": "Alpha",
-                "published": True,
                 "viewable": True,
                 "content_text_length": 80,
                 "summary": "Alpha summary.",

@@ -2,7 +2,7 @@
 doc_id: studio-data-sharing-technical-spec
 title: Studio Data Sharing Technical Spec
 added_date: "2026-05-13 18:15"
-last_updated: "2026-05-13 17:17"
+last_updated: 2026-05-26
 parent_id: data-sharing
 sort_order: 2000
 viewable: true
@@ -49,8 +49,8 @@ Domain adapters own source parsing, validation, review row semantics, write plan
 
 The source-controlled registry is:
 
-- `assets/studio/data/data_sharing_adapters.json`
-- `assets/studio/data/data_sharing_adapters.schema.json`
+- `studio/data/config/data-sharing/data-sharing-adapters.json`
+- `studio/data/config/data-sharing/data-sharing-adapters.schema.json`
 
 Registry operation names are limited to:
 
@@ -109,7 +109,7 @@ Current domain:
 
 The documents adapter owns:
 
-- Library sharing profile loading from `assets/studio/data/library_export_configs.json`
+- Library sharing profile loading from `studio/data/config/data-sharing/library-export-configs.json`
 - generated Docs Viewer index and payload reads
 - document tree selection and field mapping
 - outbound package generation through `docs-viewer/services/docs_export.py`

@@ -88,9 +88,8 @@ Metadata-update behavior:
 
 Viewability-update behavior:
 
-- updates only the source doc's `viewable`, `published`, and `last_updated` front matter
+- updates only the source doc's `viewable` and `last_updated` front matter
 - preserves `doc_id`, title, parent, sort order, body content, and `added_date`
-- writes `published: true` alongside `viewable` so the doc stays in generated docs payloads
 - the single-doc endpoint is preserved for callers that already use `doc_id`
 - the bulk endpoint accepts explicit `doc_ids`; `include_descendants: true` expands each requested doc to include its descendants from canonical docs source data
 - no-op requests write no files, create no backup, and do not rebuild docs/search

@@ -5,8 +5,6 @@ added_date: "2026-05-22 08:06"
 last_updated: 2026-05-25
 parent_id: studio
 sort_order: 11000
-published: true
-viewable: true
 ---
 # Local Studio App
 

@@ -227,7 +227,6 @@ Watcher behavior:
   - `doc_id`
   - `title`
   - `parent_id`
-  - `published`
   - `viewable`
 - file added:
   - parse the new file

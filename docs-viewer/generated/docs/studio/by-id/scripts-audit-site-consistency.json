@@ -6,7 +6,6 @@
   "last_updated": "2026-05-26",
   "parent_id": "audit",
   "sort_order": 7000,
-  "published": true,
   "hidden": false,
   "viewable": true,
   "source_path": "scripts-audit-site-consistency.md",

@@ -77,8 +77,8 @@ def make_repo() -> tempfile.TemporaryDirectory:
     index_path = root / "assets/data/docs/scopes/library/index.json"
     index_path.parent.mkdir(parents=True, exist_ok=True)
     docs = [
-        {"doc_id": "library", "title": "Library", "parent_id": "", "published": True, "viewable": True},
-        {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "published": True, "viewable": True},
+        {"doc_id": "library", "title": "Library", "parent_id": "", "viewable": True},
+        {"doc_id": "alpha", "title": "Alpha", "parent_id": "library", "viewable": True},
     ]
     index_path.write_text(json.dumps({"docs": docs}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     payload_root = root / "assets/data/docs/scopes/library/by-id"
@@ -115,7 +115,6 @@ def make_repo() -> tempfile.TemporaryDirectory:
                             "include_descendants": False,
                             "include_non_viewable": True,
                             "exclude_archived": False,
-                            "exclude_unpublished": True,
                             "supports_missing_summary_only": False,
                             "default_missing_summary_only": False,
                         },

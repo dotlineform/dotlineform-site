@@ -2,7 +2,7 @@
 doc_id: config-data-sharing-adapters
 title: Data Sharing Adapters
 added_date: "2026-05-06 11:35"
-last_updated: "2026-05-13 18:15"
+last_updated: 2026-05-26
 parent_id: data-sharing
 sort_order: 3000
 viewable: true
@@ -11,10 +11,10 @@ viewable: true
 
 Config files:
 
-- `assets/studio/data/data_sharing_adapters.json`
-- `assets/studio/data/data_sharing_adapters.schema.json`
+- `studio/data/config/data-sharing/data-sharing-adapters.json`
+- `studio/data/config/data-sharing/data-sharing-adapters.schema.json`
 
-`data_sharing_adapters.json` is the source-controlled dispatch registry for Studio Data Sharing workflows.
+`data-sharing-adapters.json` is the source-controlled dispatch registry for Studio Data Sharing workflows.
 Requests provide a `data_domain` and canonical `operation`.
 The registry maps that pair to exactly one adapter id.
 

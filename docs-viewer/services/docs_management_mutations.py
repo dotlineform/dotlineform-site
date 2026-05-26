@@ -125,9 +125,9 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
         "last_updated": timestamp,
         "parent_id": parent_id,
         "sort_order": sort_order,
-        "published": True,
-        "hidden": source_model.default_hidden_for_scope(scope),
     }
+    if not source_model.default_viewable_for_scope(scope):
+        front_matter["viewable"] = False
     hidden = source_model.default_hidden_for_scope(scope)
     source_text = source_model.format_source(front_matter, f"# {title}\n")
     path = relative_path(repo_root, target_path)
@@ -144,7 +144,6 @@ def plan_create(repo_root: Path, body: Dict[str, Any]) -> ManagementMutationPlan
                 "title": title,
                 "parent_id": parent_id,
                 "sort_order": sort_order,
-                "published": True,
                 "hidden": hidden,
                 "viewable": not hidden,
             },
@@ -449,7 +448,13 @@ def plan_viewability_update(
         source_writes=tuple(
             SourceWrite(
                 target.path,
-                source_model.rewrite_doc_source(target, {"published": True, "viewable": next_viewable, "hidden": None}),
+                source_model.rewrite_doc_source(
+                    target,
+                    {
+                        "viewable": False if not next_viewable else None,
+                        "hidden": None,
+                    },
+                ),
             )
             for target in changed_targets
         ),

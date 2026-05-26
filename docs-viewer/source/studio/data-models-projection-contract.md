@@ -5,8 +5,6 @@ added_date: 2026-05-23
 last_updated: 2026-05-24
 parent_id: data-models
 sort_order: 1500
-published: true
-viewable: true
 ---
 # Projection Contract
 
@@ -61,7 +59,6 @@ That does not make the tag registry, aliases, assignments, or full Studio lookup
 
 Docs source files are the canonical authored content.
 Generated Docs Viewer payloads are projections of that source.
-`published: false` excludes a source doc before payload generation.
 `viewable: false` can remain generated for manage-mode review while staying hidden from public/default tree discovery and search.
 
 The public site may publish Library and Analysis Docs Viewer payloads and search.
@@ -142,7 +139,7 @@ Existing enforcement is split across several checks and builders:
 - public build surface audit checks that public output excludes Studio routes, Studio assets, Studio docs payloads/search, and canonical catalogue source
 - after a public build, run `$HOME/miniconda3/bin/python3 studio/checks/audit_public_build_surface.py --site-root /tmp/dlf-jekyll-build` to check the published surface directly
 - catalogue build planners and validators decide which public catalogue projections are refreshed from source edits
-- docs builder excludes unpublished docs and emits viewable/manage-mode metadata according to each scope contract
+- docs builder emits viewable/manage-mode metadata according to each scope contract
 - search builders own scope-specific flattened search projections
 - site consistency and field-registry checks catch selected catalogue/source relationship drift
 

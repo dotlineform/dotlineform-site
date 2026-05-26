@@ -63,7 +63,7 @@ Implemented now:
 - is callable through the documents Data Sharing adapter for returned-package listing and review generation
 - is exposed through the `/studio/data-sharing/review/?mode=manage` page for local returned-package review
 - reports missing `doc_id`, missing title, duplicate `doc_id`, non-object records, invalid JSON/JSONL, unsupported extensions, unsupported shapes, and unsafe staged paths
-- reports unknown current `doc_id`, unpublished current records, missing current payloads, missing parents, unpublished parents, and parent records with missing payloads
+- reports unknown current `doc_id`, missing current payloads, missing parents, and parent records with missing payloads
 
 ## Commands
 

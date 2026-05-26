@@ -6,8 +6,6 @@ last_updated: 2026-05-19
 ui_status: urgent
 parent_id: audit
 sort_order: 3000
-published: true
-viewable: true
 ---
 # Studio Document Inventory
 

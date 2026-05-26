@@ -47,7 +47,6 @@ DocRecord = Struct.new(
   :ui_status,
   :parent_id,
   :sort_order,
-  :published,
   :hidden,
   :viewable,
   :source_path,
@@ -230,7 +229,6 @@ class DocsDataBuilder
     all_paths.filter_map do |path|
       relative_path = path.relative_path_from(@source_dir).to_s
       front_matter, body_markdown = parse_source(path)
-      next if unpublished_doc?(front_matter)
 
       stem = path.basename(".md").to_s
       doc_id = (front_matter["doc_id"] || stem).to_s
@@ -241,7 +239,6 @@ class DocsDataBuilder
       summary = normalize_summary(front_matter["summary"])
       ui_status = normalize_ui_status(front_matter["ui_status"])
       sort_order = normalize_sort_order(front_matter["sort_order"])
-      published = true
       hidden = hidden_front_matter_value(front_matter)
       viewable = !hidden
       viewer_report = normalize_optional_string(front_matter["viewer_report"])
@@ -259,7 +256,6 @@ class DocsDataBuilder
         ui_status: ui_status,
         parent_id: parent_id,
         sort_order: sort_order,
-        published: published,
         hidden: hidden,
         viewable: viewable,
         source_path: relative_path,
@@ -300,10 +296,6 @@ class DocsDataBuilder
     message = "problem with front-matter on doc #{display_path}"
     message += " at #{location}" unless location.empty?
     "#{message}: #{detail}"
-  end
-
-  def unpublished_doc?(front_matter)
-    !boolean_front_matter_value(front_matter, "published", true)
   end
 
   def boolean_front_matter_value(front_matter, key, default)
@@ -397,7 +389,6 @@ class DocsDataBuilder
       "last_updated" => doc.last_updated,
       "parent_id" => effective_parent_id(doc, docs),
       "sort_order" => doc.sort_order,
-      "published" => doc.published,
       "hidden" => doc.hidden,
       "viewable" => doc.viewable,
       "source_path" => doc.source_path,
@@ -424,7 +415,6 @@ class DocsDataBuilder
       "last_updated" => doc.last_updated,
       "parent_id" => effective_parent_id(doc, docs),
       "sort_order" => doc.sort_order,
-      "published" => doc.published,
       "hidden" => doc.hidden,
       "viewable" => doc.viewable,
       "source_path" => doc.source_path,

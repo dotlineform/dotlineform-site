@@ -43,7 +43,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "archive",
             "title": "Archive",
             "sort_order": 10,
-            "published": True,
             "viewable": False,
         },
         scope="archive",
@@ -55,7 +54,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "archive",
             "title": "Archive",
             "sort_order": 90,
-            "published": True,
             "viewable": False,
         },
     )
@@ -66,7 +64,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "doc_id": "parent",
             "title": "Parent",
             "sort_order": 10,
-            "published": True,
             "viewable": True,
         },
         "See /docs/?scope=studio&doc=target-child and target-child.md\n",
@@ -79,7 +76,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "title": "Child",
             "parent_id": "parent",
             "sort_order": 10,
-            "published": True,
             "viewable": True,
         },
     )
@@ -93,7 +89,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "sort_order": 20,
             "summary": "old summary",
             "ui_status": "ready",
-            "published": True,
             "viewable": True,
         },
     )
@@ -105,7 +100,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "title": "Target Child",
             "parent_id": "target",
             "sort_order": 10,
-            "published": True,
             "viewable": True,
         },
     )
@@ -117,7 +111,6 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
             "title": "Sibling",
             "last_updated": "2026-05-02 11:00",
             "sort_order": 30,
-            "published": True,
             "viewable": False,
         },
     )
@@ -345,7 +338,6 @@ def test_archive_plan_moves_archive_children_without_moving_archive_doc() -> Non
                 "title": "Archived Child",
                 "parent_id": "archive",
                 "sort_order": 10,
-                "published": True,
                 "viewable": True,
             },
         )

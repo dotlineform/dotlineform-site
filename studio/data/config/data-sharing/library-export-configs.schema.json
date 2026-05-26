@@ -133,8 +133,7 @@
         "mode",
         "include_descendants",
         "include_non_viewable",
-        "exclude_archived",
-        "exclude_unpublished"
+        "exclude_archived"
       ],
       "properties": {
         "mode": {
@@ -147,9 +146,6 @@
           "type": "boolean"
         },
         "exclude_archived": {
-          "type": "boolean"
-        },
-        "exclude_unpublished": {
           "type": "boolean"
         },
         "supports_missing_summary_only": {
@@ -235,15 +231,14 @@
             "ancestor_titles",
             "child_ids",
             "child_titles",
-            "summary",
-            "current_summary",
-            "headings",
-            "source_text",
-            "last_updated",
-            "viewable",
-            "published"
-          ]
-        },
+        "summary",
+        "current_summary",
+        "headings",
+        "source_text",
+        "last_updated",
+        "viewable"
+      ]
+    },
         "output_path": {
           "$ref": "#/$defs/path"
         },

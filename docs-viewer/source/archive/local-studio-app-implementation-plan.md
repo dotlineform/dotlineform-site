@@ -5,8 +5,6 @@ added_date: 2026-05-22
 last_updated: 2026-05-24
 ui_status: done
 sort_order: 89000
-published: true
-viewable: true
 ---
 This document is archived and is no longer maintained.
 

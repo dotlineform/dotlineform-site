@@ -223,7 +223,6 @@ Current content families:
   - optional `ui_status`
   - `parent_id`
   - `sort_order`
-  - optional `published`
   - optional `viewable`
 - Markdown or raw HTML body content
 
@@ -241,7 +240,7 @@ Purpose:
 Current content families:
 
 - one row per generated Studio doc
-- identity, title, added/update dates, optional `summary`, optional `ui_status`, ordering, `published`, `viewable`, source path, viewer URL, and per-doc content URL
+- identity, title, added/update dates, optional `summary`, optional `ui_status`, ordering, `viewable`, source path, viewer URL, and per-doc content URL
 - `viewer_options` for scope-level display behavior such as keeping document-view updated dates visible
 
 Current site mapping:
@@ -297,7 +296,6 @@ Current site mapping:
 Why it is derived from the docs index rather than the source Markdown directly:
 
 - the canonical generated Studio docs corpus is the generated docs index, not every source file under `docs-viewer/source/studio/`
-- this keeps `published: false` source docs out of the generated corpus automatically
 - docs with `viewable: false` can have generated payloads for manage mode, but are filtered out of public/default docs search
 
 Current writer:
