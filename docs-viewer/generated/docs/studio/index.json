@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T14:56:46Z",
+  "generated_at": "2026-05-26T17:21:43Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -379,6 +379,21 @@
       "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-primitive-button.json",
       "content_text_length": 2044
+    },
+    {
+      "scope": "studio",
+      "doc_id": "tasks-template",
+      "title": "Tasks Template",
+      "added_date": "2026-05-26",
+      "last_updated": "2026-05-26",
+      "parent_id": "dev-home",
+      "sort_order": 1880,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "tasks-template.md",
+      "viewer_url": "/docs/?scope=studio&doc=tasks-template",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/tasks-template.json",
+      "content_text_length": 3304
     },
     {
       "scope": "studio",
@@ -2355,8 +2370,8 @@
       "source_path": "site-request-studio-data-sharing-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-architecture.json",
-      "content_text_length": 10920,
-      "ui_status": "proposed"
+      "content_text_length": 11578,
+      "ui_status": "in-progress"
     },
     {
       "scope": "studio",

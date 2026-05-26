@@ -3,7 +3,7 @@ doc_id: site-request-studio-data-sharing-architecture
 title: Studio Data Sharing Architecture Request
 added_date: 2026-05-26
 last_updated: 2026-05-26
-ui_status: proposed
+ui_status: in-progress
 parent_id: change-requests
 sort_order: 10025
 viewable: true
@@ -12,8 +12,7 @@ viewable: true
 
 Status:
 
-- proposed
-- split out from [Studio Docs Viewer Dependencies](/docs/?scope=studio&doc=studio-doc-viewer-dependencies)
+- in progress
 
 ## Summary
 
@@ -32,8 +31,10 @@ The target direction is:
 The desired document workflow is:
 
 ```text
-docs-domain read/export helpers -> data-sharing workflow -> Studio API -> external LLM
-external LLM -> Studio API -> data-sharing workflow -> docs-domain review/apply helpers
+docs-domain read/export helpers -> data-sharing workflow
+-> Studio API -> external LLM
+-> external LLM -> Studio API
+-> data-sharing workflow -> docs-domain review/apply helpers
 ```
 
 This keeps document writes in docs-aware code while avoiding this shape:
@@ -139,12 +140,12 @@ It should not block the architecture cleanup or force migration of already stage
 
 ## Open Design Questions
 
-- Where should the reusable docs-domain helpers live so they are clearly not Docs Viewer UI code but can still be used by Docs Viewer and Studio Data Sharing?
-- Should existing `docs-viewer/services/docs_export.py` and `docs-viewer/services/docs_import.py` be split into reusable domain helpers plus service/UI wrappers, or only wrapped by the Studio documents adapter at first?
-- Which current Data Sharing routes should become same-origin Studio endpoints, and which response contracts can remain unchanged for the browser modules?
-- Should the documents adapter keep the current `documents` adapter id and `library` data domain during the move?
-- How should rebuild follow-through be triggered after source writes without coupling Studio Data Sharing to a running Docs Viewer service?
-- Should active configured artifact roots remain `var/studio/data-sharing/<domain>/`, move back toward the existing `var/studio/export-import/<domain>/` convention, or support both during a transition?
+- Which docs-domain helper functions should be renamed or extracted during the Studio API move, and which should remain wrapped until a later cleanup slice?
+  - Recommendation: define and implement the target docs-domain helper boundary in this slice. Reusable document package, review, apply, backup, and rebuild helpers should have explicit domain-oriented module names and should be callable by both Docs Viewer and Studio Data Sharing without going through Docs Viewer HTTP or UI/service wrapper modules. Keep the code under `docs-viewer/services/` unless the implementation plan deliberately creates a new package boundary, but do not leave wrapper-only or "extract later" cleanup as the intended end state.
+- Should Studio Data Sharing expose a same-origin generated-docs-index endpoint, or should prepare-page document selection be served through the documents adapter response?
+  - Recommendation: serve prepare-page document selection through the documents adapter rather than adding a generic same-origin generated-docs-index endpoint. Future document adapters are likely to need different selection inputs, filters, payload fields, and eligibility rules, so the shared Studio shell should ask the active adapter for its selectable records instead of assuming the current Library generated-index shape is the durable contract.
+- Should runtime package, staging, and review artifacts move directly to `var/studio/data-sharing/<domain>/...`?
+  - Recommendation: yes. Treat `var/studio/data-sharing/<domain>/...` as the immediate target convention for this slice. Existing disposable packages under `var/studio/export-import/...` do not need compatibility reads or migration support.
 
 ## Non-Goals
 

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-5e430f59c777337f256347e849e7f570",
-    "generated_at_utc": "2026-05-26T13:59:41Z",
-    "count": 191
+    "version": "blake2b-cf336b17fab7051ff1203196bde74427",
+    "generated_at_utc": "2026-05-26T17:22:14Z",
+    "count": 192
   },
   "entries": [
     {
@@ -558,6 +558,30 @@
         "15"
       ],
       "search_text": "ui-primitive-button ui primitive button button primitive ui catalogue catalogue 2026-05-15 2026 05 15"
+    },
+    {
+      "id": "tasks-template",
+      "kind": "doc",
+      "title": "Tasks Template",
+      "href": "/docs/?scope=studio&doc=tasks-template",
+      "last_updated": "2026-05-26",
+      "parent_id": "dev-home",
+      "parent_title": "Dev Home",
+      "display_meta": "2026-05-26 • Dev Home",
+      "search_terms": [
+        "tasks-template",
+        "tasks",
+        "template",
+        "tasks template",
+        "dev home",
+        "dev",
+        "home",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "tasks-template tasks template tasks template dev home dev home 2026-05-26 2026 05 26"
     },
     {
       "id": "data-models-analysis",

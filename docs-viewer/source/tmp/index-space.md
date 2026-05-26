@@ -1,13 +1,11 @@
 ---
-doc_id: "index-space"
+doc_id: index-space
 title: index workspace
 added_date: 2026-05-21
-last_updated: "2026-05-21"
+last_updated: 2026-05-21
 parent_id: ""
 sort_order: 600
-viewable: false
 ---
-
 # Codex discussion
 
 here is a potential upcoming requirement for docs viewer. it is still rough. what is the blast radius for this request as it stands, and does it have any relationship with any of the risk mitigation work identified?

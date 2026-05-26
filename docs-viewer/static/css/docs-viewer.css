@@ -614,6 +614,32 @@
   overflow-wrap: anywhere;
 }
 
+.docsViewer__content pre{
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.docsViewer__content table{
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  margin: var(--docs-viewer-space-3) 0 var(--docs-viewer-space-4);
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.docsViewer__content th,
+.docsViewer__content td{
+  padding: 10px;
+  border: 1px solid var(--docs-viewer-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.docsViewer__content th{
+  background: var(--docs-viewer-panel-2);
+}
+
 .docsViewer__panelStatus{
   max-width: var(--docs-viewer-measure);
   margin: 0 0 0.85rem;

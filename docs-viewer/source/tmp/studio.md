@@ -1,13 +1,11 @@
 ---
-doc_id: "studio"
+doc_id: studio
 title: tmp studio
 added_date: 2026-05-24
-last_updated: "2026-05-24"
+last_updated: 2026-05-24
 parent_id: ""
 sort_order: 200
-viewable: false
 ---
-
 I reviewed [site-request-studio-source-tree-reorganization.md](/Users/dlf/Developer/dotlineform/dotlineform-site/_docs/site-request-studio-source-tree-reorganization.md:1). The spec is directionally solid, but it would benefit from a few sharper decisions before implementation.
 
 **Clarification Areas**

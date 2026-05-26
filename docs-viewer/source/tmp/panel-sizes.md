@@ -1,11 +1,10 @@
 ---
-doc_id: "panel-sizes"
+doc_id: panel-sizes
 title: panel sizes
 added_date: 2026-05-20
 last_updated: "2026-05-20 19:37"
 parent_id: ""
 sort_order: 500
-viewable: false
 ---
 # panel sizes
 
