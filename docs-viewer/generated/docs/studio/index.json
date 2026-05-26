@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T11:47:05Z",
+  "generated_at": "2026-05-26T12:08:49Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1465,7 +1465,7 @@
       "source_path": "scripts-catalogue-write-server-endpoints.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server-endpoints",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-write-server-endpoints.json",
-      "content_text_length": 11779
+      "content_text_length": 11989
     },
     {
       "scope": "studio",
@@ -1793,7 +1793,7 @@
       "doc_id": "project-state-page",
       "title": "Project State Page",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-26",
       "parent_id": "catalogue",
       "sort_order": 6000,
       "published": true,
@@ -1802,7 +1802,7 @@
       "source_path": "project-state-page.md",
       "viewer_url": "/docs/?scope=studio&doc=project-state-page",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/project-state-page.json",
-      "content_text_length": 2641
+      "content_text_length": 2623
     },
     {
       "scope": "studio",
@@ -1947,7 +1947,7 @@
       "source_path": "css-audit-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=css-audit-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/css-audit-spec.json",
-      "content_text_length": 2733
+      "content_text_length": 2775
     },
     {
       "scope": "studio",
@@ -2019,7 +2019,7 @@
       "doc_id": "scripts-audit-site-consistency",
       "title": "Site Consistency Audit",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 22:35",
+      "last_updated": "2026-05-26",
       "parent_id": "audit",
       "sort_order": 7000,
       "published": true,
@@ -2028,7 +2028,7 @@
       "source_path": "scripts-audit-site-consistency.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-site-consistency.json",
-      "content_text_length": 4038
+      "content_text_length": 4132
     },
     {
       "scope": "studio",
@@ -2086,7 +2086,7 @@
       "doc_id": "scripts-css-token-audit",
       "title": "CSS Token Audit",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-09 22:35",
+      "last_updated": "2026-05-26",
       "parent_id": "ui",
       "sort_order": 8000,
       "published": true,
@@ -2095,7 +2095,7 @@
       "source_path": "scripts-css-token-audit.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-css-token-audit",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-css-token-audit.json",
-      "content_text_length": 847
+      "content_text_length": 818
     },
     {
       "scope": "studio",
@@ -2450,7 +2450,7 @@
       "doc_id": "site-request-local-report-snapshot-boundary",
       "title": "Local Report Snapshot Boundary",
       "added_date": "2026-05-25",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-26",
       "parent_id": "change-requests",
       "sort_order": 9500,
       "published": true,
@@ -2459,7 +2459,7 @@
       "source_path": "site-request-local-report-snapshot-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-local-report-snapshot-boundary",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-local-report-snapshot-boundary.json",
-      "content_text_length": 7294,
+      "content_text_length": 7298,
       "ui_status": "urgent"
     },
     {
@@ -2476,7 +2476,7 @@
       "source_path": "scripts-catalogue-source.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-source",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-catalogue-source.json",
-      "content_text_length": 4495
+      "content_text_length": 4491
     },
     {
       "scope": "studio",
@@ -2564,7 +2564,7 @@
       "doc_id": "studio-doc-viewer-dependencies",
       "title": "Studio Docs Viewer Dependencies",
       "added_date": "2026-05-25",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-26",
       "parent_id": "change-requests",
       "sort_order": 10024,
       "published": true,
@@ -2573,7 +2573,7 @@
       "source_path": "studio-doc-viewer-dependencies.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-doc-viewer-dependencies",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-doc-viewer-dependencies.json",
-      "content_text_length": 6452,
+      "content_text_length": 6470,
       "ui_status": "draft"
     },
     {
@@ -2613,7 +2613,7 @@
       "doc_id": "scripts-project-state-report",
       "title": "Project State Report",
       "added_date": "2026-04-27",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-26",
       "parent_id": "catalogue",
       "sort_order": 11000,
       "published": true,
@@ -2622,7 +2622,7 @@
       "source_path": "scripts-project-state-report.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-project-state-report",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-project-state-report.json",
-      "content_text_length": 2717
+      "content_text_length": 2897
     },
     {
       "scope": "studio",

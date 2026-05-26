@@ -2,7 +2,7 @@
 doc_id: studio-doc-viewer-dependencies
 title: Studio Docs Viewer Dependencies
 added_date: 2026-05-25
-last_updated: 2026-05-25
+last_updated: 2026-05-26
 ui_status: draft
 parent_id: change-requests
 sort_order: 10024
@@ -75,8 +75,8 @@ Project State:
 - route: `/studio/project-state/?mode=manage`
 - page controller: `studio/app/frontend/js/project-state.js`
 - Local Studio endpoint used for report generation: `/studio/api/catalogue/project-state-report`
-- Docs Viewer endpoints used: `/health`, `/docs/open-source`
-- The route can run the report when the Catalogue service is available, but the Open Markdown action depends on the Docs Viewer service.
+- Local Studio endpoint used for local report opening: `/studio/api/catalogue/project-state-open-report`
+- The route can run the report and open the latest Markdown snapshot when the Catalogue service is available.
 
 Docs Viewer management itself:
 

@@ -318,6 +318,7 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "moment_preview": "/studio/api/catalogue/moment/preview",
         "save_moment": "/studio/api/catalogue/moment/save",
         "project_state_report": "/studio/api/catalogue/project-state-report",
+        "project_state_open_report": "/studio/api/catalogue/project-state-open-report",
         "thumbnail_quality_preview": "/studio/api/catalogue/thumbnail-quality-preview",
     },
 }

@@ -7,7 +7,7 @@ import {
   configureStudioTransport,
   postJson,
   probeProjectStateCatalogueHealth,
-  probeProjectStateDocsHealth
+  probeProjectStateCatalogueOpenHealth
 } from "./studio-transport.js";
 import {
   initializeStudioRouteState
@@ -50,7 +50,7 @@ function projectStateRouteOptions() {
   return {
     route: "project-state",
     mode: (state) => state.summary ? "summary" : "idle",
-    serviceAvailable: (state) => state.catalogueServerAvailable || state.docsServerAvailable,
+    serviceAvailable: (state) => state.catalogueServerAvailable,
     isBusy: (state) => state.isBusy,
     recordLoaded: (state) => Boolean(state.summary)
   };
@@ -94,7 +94,7 @@ function updateState(state) {
   });
   state.includeSubfoldersNode.disabled = state.isBusy;
   applyOperationalRunButtonState(state.openButton, state, {
-    serviceAvailable: (routeState) => routeState.docsServerAvailable,
+    serviceAvailable: (routeState) => routeState.reportOpenAvailable,
     isBusy: (routeState) => routeState.isBusy
   });
   renderSummary(state);
@@ -150,9 +150,7 @@ async function runReport(state) {
 async function openReportSource(state) {
   setTextWithState(state.warningNode, "");
   try {
-    await postJson(PROJECT_STATE_ENDPOINTS.openSource, {
-      scope: "studio",
-      doc_id: "project-state",
+    await postJson(PROJECT_STATE_ENDPOINTS.openReport, {
       editor: "vscode"
     });
   } catch (error) {
@@ -216,15 +214,15 @@ async function init() {
     const config = await loadStudioConfigWithText("project_state");
     configureStudioTransport(config);
     const catalogueServerAvailable = Boolean(await probeProjectStateCatalogueHealth());
-    const docsServerAvailable = Boolean(await probeProjectStateDocsHealth());
+    const reportOpenAvailable = Boolean(await probeProjectStateCatalogueOpenHealth());
     const state = {
       config,
       root,
       catalogueServerAvailable,
-      docsServerAvailable,
+      reportOpenAvailable,
       isBusy: false,
       summary: null,
-      outputPath: "docs-viewer/source/studio/project-state.md",
+      outputPath: "var/studio/reports/project-state.md",
       sourceRoot: "$DOTLINEFORM_PROJECTS_BASE_DIR/projects",
       statusNode,
       warningNode,
@@ -256,14 +254,6 @@ async function init() {
         unavailableState: "warn"
       });
     }
-    if (!docsServerAvailable) {
-      renderOperationalServiceStatus(warningNode, state, {
-        serviceAvailable: (routeState) => routeState.docsServerAvailable,
-        unavailableText: () => t(state, "docs_server_unavailable_hint", "Docs Viewer service unavailable. Opening the Markdown file is disabled."),
-        unavailableState: "warn"
-      });
-    }
-
     runButton.addEventListener("click", () => {
       runReport(state).catch((error) => console.warn("project_state: unexpected report failure", error));
     });
@@ -282,7 +272,7 @@ async function init() {
     const fallbackState = {
       root,
       catalogueServerAvailable: false,
-      docsServerAvailable: false,
+      reportOpenAvailable: false,
       isBusy: false,
       summary: null
     };

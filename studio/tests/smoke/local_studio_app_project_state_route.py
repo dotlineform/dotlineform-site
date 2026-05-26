@@ -42,10 +42,8 @@ def main(argv: list[str] | None = None) -> int:
         catalogue_service = runtime_config.get("app", {}).get("runtime", {}).get("services", {}).get("catalogue", {})
         if catalogue_service.get("project_state_report") != "/studio/api/catalogue/project-state-report":
             raise AssertionError(f"runtime config missing local project-state API: {catalogue_service!r}")
-        docs_service = runtime_config.get("app", {}).get("runtime", {}).get("services", {}).get("docs", {})
-        docs_health_url = docs_service.get("health")
-        if not docs_health_url:
-            raise AssertionError(f"runtime config missing Docs Viewer health endpoint: {docs_service!r}")
+        if catalogue_service.get("project_state_open_report") != "/studio/api/catalogue/project-state-open-report":
+            raise AssertionError(f"runtime config missing local project-state open API: {catalogue_service!r}")
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
@@ -62,11 +60,6 @@ def main(argv: list[str] | None = None) -> int:
                 else None,
             )
             page.route("http://127.0.0.1:8788/**", lambda route: route.abort())
-            page.route(
-                docs_health_url,
-                lambda route: route.fulfill(status=200, content_type="application/json", body=json.dumps({"ok": True})),
-            )
-
             page.goto(f"{base_url}/studio/project-state/?mode=manage", wait_until="domcontentloaded")
             root = page.locator("#projectStateRoot")
             expect(root).to_be_visible(timeout=10_000)

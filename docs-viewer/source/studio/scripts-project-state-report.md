@@ -2,7 +2,7 @@
 doc_id: scripts-project-state-report
 title: Project State Report
 added_date: 2026-04-27
-last_updated: "2026-05-09 21:28"
+last_updated: "2026-05-26"
 parent_id: catalogue
 sort_order: 11000
 ---
@@ -16,14 +16,14 @@ $HOME/miniconda3/bin/python3 studio/services/catalogue/project_state_report.py
 
 ## Purpose
 
-This script reports source project folders and primary source images that are not represented by `assets/studio/data/catalogue/works.json`.
+This script reports source project folders and primary source images that are not represented by `studio/data/canonical/catalogue/works.json`.
 
 It is meant to replace ad hoc catalogue/source-folder comparisons when deciding what still needs to be imported.
 
 ## Inputs
 
-- `assets/studio/data/catalogue/works.json`
-- `assets/studio/data/catalogue/work_details.json`, only to identify `details_subfolder` paths to skip
+- `studio/data/canonical/catalogue/works.json`
+- `studio/data/canonical/catalogue/work_details.json`, only to identify detail subfolder paths to skip
 - `DOTLINEFORM_PROJECTS_BASE_DIR` from `var/local/site.env`, resolving to a folder that contains `projects/`
 
 Do not pass `--projects-base-dir` during normal local runs. Set `DOTLINEFORM_PROJECTS_BASE_DIR` in `var/local/site.env` instead.
@@ -52,10 +52,11 @@ $HOME/miniconda3/bin/python3 studio/services/catalogue/project_state_report.py -
 The write target is:
 
 ```text
-docs-viewer/source/studio/project-state.md
+var/studio/reports/project-state.md
 ```
 
-The generated document has `published: false`, so it is a local project-state artifact rather than a published Studio docs page.
+The generated Markdown is a local operational report snapshot.
+It is not Docs Viewer source and does not use Docs Viewer front matter.
 
 ## Scan Boundary
 
@@ -75,6 +76,7 @@ With `--include-subfolders`, the report also includes `/projects/<project_folder
 `/studio/project-state/?mode=manage` runs the same report builder through `POST /studio/api/catalogue/project-state-report` on the local Studio app server.
 The page's `include sub-folders` checkbox sends `include_subfolders: true`; the default request sends `false`.
 The local app adapter reads `DOTLINEFORM_PROJECTS_BASE_DIR` through the served repo's local environment contract, then reuses the script's report builder and Studio activity logging behavior.
+The page opens the latest report through `POST /studio/api/catalogue/project-state-open-report`, which is restricted to the Project State report under `var/studio/reports/`.
 
 ## Related References
 

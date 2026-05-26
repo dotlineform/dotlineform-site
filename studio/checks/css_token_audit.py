@@ -184,7 +184,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--md-out",
-        default="docs-viewer/source/studio/css-audit-latest.md",
+        default="var/studio/reports/css-audit-latest.md",
         help="Markdown output path",
     )
     return parser.parse_args()
@@ -196,7 +196,8 @@ def main() -> int:
     audits = [audit_file(path) for path in files]
     report = render_report(audits, files)
     out_path = Path(args.md_out)
-    out_path.write_text(report)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(report, encoding="utf-8")
     print(f"Wrote {out_path}")
     return 0
 

@@ -60,6 +60,7 @@ from catalogue.project_state_report import (  # noqa: E402
     DEFAULT_OUTPUT_REL_PATH,
     PROJECTS_BASE_DIR_ENV_NAME,
     build_project_state_report,
+    open_project_state_report,
     resolve_projects_base_dir,
 )
 from catalogue.series_ids import normalize_series_id  # noqa: E402
@@ -116,6 +117,7 @@ def catalogue_get_payload(repo_root: Path, api_path: str, query: Mapping[str, li
                 "import-preview",
                 "import-apply",
                 "project-state-report",
+                "project-state-open-report",
                 "thumbnail-quality-preview",
             ],
         }
@@ -133,6 +135,8 @@ def catalogue_post_response(
 ) -> tuple[HTTPStatus, dict[str, Any]]:
     if api_path == "/project-state-report":
         return HTTPStatus.OK, project_state_report_payload(repo_root, body, dry_run=dry_run)
+    if api_path == "/project-state-open-report":
+        return HTTPStatus.OK, open_project_state_report_payload(repo_root, body, dry_run=dry_run)
     if api_path == "/thumbnail-quality-preview":
         return HTTPStatus.OK, thumbnail_quality_preview_payload(repo_root, dry_run=dry_run)
     if api_path == "/import-preview":
@@ -382,6 +386,26 @@ def project_state_report_payload(
             ],
         )
         activity.increment_studio_activity_count(payload, 1)
+    return payload
+
+
+def open_project_state_report_payload(
+    repo_root: Path,
+    body: Mapping[str, Any],
+    *,
+    dry_run: bool = False,
+) -> dict[str, Any]:
+    editor = str(body.get("editor") or "default").strip().lower()
+    payload = open_project_state_report(repo_root, editor=editor, dry_run=dry_run)
+    log_event(
+        repo_root,
+        "project_state_open_report",
+        {
+            "path": payload["path"],
+            "editor": payload["editor"],
+            "dry_run": dry_run,
+        },
+    )
     return payload
 
 

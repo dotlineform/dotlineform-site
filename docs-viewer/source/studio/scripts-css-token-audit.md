@@ -2,7 +2,7 @@
 doc_id: scripts-css-token-audit
 title: CSS Token Audit
 added_date: 2026-03-31
-last_updated: "2026-05-09 22:35"
+last_updated: "2026-05-26"
 parent_id: ui
 sort_order: 8000
 viewable: true
@@ -12,19 +12,19 @@ viewable: true
 Script:
 
 ```bash
-python3 $HOME/miniconda3/bin/python3 studio/checks/css_token_audit.py
+$HOME/miniconda3/bin/python3 studio/checks/css_token_audit.py
 ```
 
 ## Optional Flags
 
-- `--md-out docs-viewer/source/studio/css-audit-latest.md`: override Markdown output path
+- `--md-out var/studio/reports/css-audit-latest.md`: override Markdown output path
 - `assets/css/main.css assets/studio/css/studio.css`: optional file-list override
 
 ## Behavior
 
 - scans CSS for `font-size` declarations and color literals
 - reports repeated raw typography values and direct color literals
-- writes the current snapshot to `docs-viewer/source/studio/css-audit-latest.md`
+- writes the current snapshot to `var/studio/reports/css-audit-latest.md`
 
 ## Source And Target Artifacts
 
@@ -37,7 +37,7 @@ Source artifacts:
 
 Target artifact:
 
-- Markdown audit snapshot at `docs-viewer/source/studio/css-audit-latest.md` by default
+- Markdown audit snapshot at `var/studio/reports/css-audit-latest.md` by default
 - or the path passed through `--md-out`
 
 ## Related References

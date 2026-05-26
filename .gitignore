@@ -44,6 +44,7 @@ studio/workflows/change-requests/reports/*.json
 var/studio/activity/
 var/studio/backups/
 var/studio/catalogue/backups/
+var/studio/reports/
 var/docs/
 
 # staging

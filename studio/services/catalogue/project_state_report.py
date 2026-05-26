@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -33,7 +34,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
-DEFAULT_OUTPUT_REL_PATH = Path("docs-viewer/source/studio/project-state.md")
+DEFAULT_OUTPUT_REL_PATH = Path("var/studio/reports/project-state.md")
 IMAGE_EXTENSIONS = {
     ".avif",
     ".gif",
@@ -50,10 +51,6 @@ OUT_OF_SCOPE_DIR_NAMES = {"details"}
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-
-def today_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 
 def detect_repo_root(start: Path | None = None) -> Path:
@@ -237,10 +234,8 @@ def build_project_state_report(
     generated_at_utc = utc_now()
     output = output_path or (repo_root / DEFAULT_OUTPUT_REL_PATH)
     output = output.resolve()
-    added_date = existing_added_date(output) or today_iso()
     markdown = render_report_markdown(
         generated_at_utc=generated_at_utc,
-        added_date=added_date,
         include_subfolders=include_subfolders,
         source_folders=source_folders,
         project_folders=project_folders,
@@ -256,9 +251,12 @@ def build_project_state_report(
     )
 
     if write:
-        expected_root = (repo_root / "docs-viewer/source/studio").resolve()
-        if output.parent != expected_root:
-            raise ValueError("Project-state report writes are restricted to docs-viewer/source/studio/.")
+        expected_root = (repo_root / "var/studio/reports").resolve()
+        try:
+            output.relative_to(expected_root)
+        except ValueError as error:
+            raise ValueError("Project-state report writes are restricted to var/studio/reports/.") from error
+        output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(markdown, encoding="utf-8")
 
     return {
@@ -294,7 +292,6 @@ def build_project_state_report(
 def render_report_markdown(
     *,
     generated_at_utc: str,
-    added_date: str,
     include_subfolders: bool,
     source_folders: set[str],
     project_folders: set[str],
@@ -313,15 +310,6 @@ def render_report_markdown(
     if include_subfolders:
         scan_scope = "direct source folders, subfolders, and each scanned folder's direct images"
     lines = [
-        "---",
-        "doc_id: project-state",
-        'title: "Project State"',
-        f"added_date: {added_date}",
-        f"last_updated: {today_iso()}",
-        "published: false",
-        'parent_id: ""',
-        "sort_order: 999",
-        "---",
         "# Project State",
         "",
         f"Generated at `{generated_at_utc}`.",
@@ -403,18 +391,6 @@ def render_report_markdown(
     return "\n".join(lines)
 
 
-def existing_added_date(path: Path) -> str:
-    if not path.exists():
-        return ""
-    try:
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if line.startswith("added_date:"):
-                return line.split(":", 1)[1].strip().strip('"')
-    except OSError:
-        return ""
-    return ""
-
-
 def group_images_by_folder(image_paths: Iterable[str]) -> Dict[str, list[str]]:
     grouped: Dict[str, list[str]] = {}
     for image_path in image_paths:
@@ -441,6 +417,44 @@ def format_folder_list(values: Iterable[str], images_by_folder: Mapping[str, lis
         suffix = f" ({count} top-level image{'s' if count != 1 else ''})" if count else ""
         lines.append(f"- `{value}`{suffix}")
     return lines
+
+
+def open_project_state_report(repo_root: Path, editor: str = "default", dry_run: bool = False) -> Dict[str, Any]:
+    repo_root = repo_root.resolve()
+    report_path = (repo_root / DEFAULT_OUTPUT_REL_PATH).resolve()
+    try:
+        report_path.relative_to((repo_root / "var/studio/reports").resolve())
+    except ValueError as error:
+        raise ValueError("Project-state report opens are restricted to var/studio/reports/.") from error
+    if not report_path.exists():
+        raise FileNotFoundError(f"Project-state report not found: {DEFAULT_OUTPUT_REL_PATH.as_posix()}")
+
+    normalized_editor = str(editor or "default").strip().lower()
+    if normalized_editor not in {"default", "vscode"}:
+        raise ValueError("editor must be `default` or `vscode`")
+    command = ["open", str(report_path)]
+    if normalized_editor == "vscode":
+        command = ["open", "-a", "Visual Studio Code", str(report_path)]
+
+    if not dry_run:
+        completed = subprocess.run(
+            command,
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if completed.returncode != 0:
+            detail = completed.stderr.strip() or completed.stdout.strip() or f"exit {completed.returncode}"
+            raise RuntimeError(f"open project-state report failed: {detail}")
+
+    return {
+        "ok": True,
+        "path": DEFAULT_OUTPUT_REL_PATH.as_posix(),
+        "editor": normalized_editor,
+        "dry_run": dry_run,
+        "summary_text": "Opened project-state report.",
+    }
 
 
 def parse_args() -> argparse.Namespace:

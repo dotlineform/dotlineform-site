@@ -22,6 +22,8 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 for path in (
+    REPO_ROOT,
+    REPO_ROOT / "studio" / "shared" / "python",
     REPO_ROOT / "studio" / "services",
     REPO_ROOT / "scripts",
 ):
@@ -1142,11 +1144,6 @@ def render_markdown_report(report: Dict[str, Any], flag_rows: List[Dict[str, str
     return "\n".join(lines).rstrip() + "\n"
 
 
-def prepend_unpublished_front_matter(markdown: str) -> str:
-    body = markdown.lstrip("\n")
-    return f"---\npublished: false\n---\n\n{body}"
-
-
 def main() -> None:
     t0 = time.time()
     ap = argparse.ArgumentParser()
@@ -1166,7 +1163,7 @@ def main() -> None:
     ap.add_argument("--work-ids", default="", help="Comma-separated work_ids/ranges scope (e.g. 66-74,38-40)")
     ap.add_argument("--strict", action="store_true", help="Exit non-zero when errors are found")
     ap.add_argument("--json-out", default="", help="Optional path to write JSON report")
-    ap.add_argument("--md-out", default="docs-viewer/source/studio/audit-latest.md", help="Path to write Markdown report (overwrites on each run)")
+    ap.add_argument("--md-out", default="var/studio/reports/audit-latest.md", help="Path to write Markdown report (overwrites on each run)")
     ap.add_argument("--max-samples", type=int, default=20, help="Max sample findings per check")
     ap.add_argument("--orphans-media", action="store_true", help="Include orphan media-file scan in the orphans check")
     args = ap.parse_args()
@@ -1320,7 +1317,7 @@ def main() -> None:
         "work_ids": "",
         "strict": False,
         "json_out": "",
-        "md_out": "docs-viewer/source/studio/audit-latest.md",
+        "md_out": "var/studio/reports/audit-latest.md",
         "max_samples": 20,
         "orphans_media": False,
     }
@@ -1349,8 +1346,6 @@ def main() -> None:
     md_out = Path(args.md_out).expanduser()
     md_out.parent.mkdir(parents=True, exist_ok=True)
     markdown_report = render_markdown_report(report, flag_rows)
-    if md_out.name == "audit-latest.md":
-        markdown_report = prepend_unpublished_front_matter(markdown_report)
     md_out.write_text(markdown_report, encoding="utf-8")
     print(f"Wrote Markdown report: {md_out}")
 

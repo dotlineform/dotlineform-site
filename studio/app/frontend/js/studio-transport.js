@@ -39,6 +39,7 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   previewMoment: "/studio/api/catalogue/moment/preview",
   saveMoment: "/studio/api/catalogue/moment/save",
   projectStateReport: "/studio/api/catalogue/project-state-report",
+  projectStateOpenReport: "/studio/api/catalogue/project-state-open-report",
   thumbnailQualityPreview: "/studio/api/catalogue/thumbnail-quality-preview",
   read: "/studio/api/catalogue/read",
   health: "/studio/api/catalogue/health"
@@ -74,9 +75,8 @@ const AUDIT_API_ENDPOINTS = Object.freeze({
 
 const PROJECT_STATE_ENDPOINTS = {
   catalogueHealth: "/studio/api/catalogue/health",
-  docsHealth: `${DEFAULT_DOCS_VIEWER_BASE_URL}/health`,
   report: "/studio/api/catalogue/project-state-report",
-  openSource: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/open-source`
+  openReport: "/studio/api/catalogue/project-state-open-report"
 };
 
 const THUMBNAIL_QUALITY_ENDPOINTS = Object.freeze({
@@ -132,8 +132,7 @@ export function configureStudioTransport(config) {
     apply: configured.data_sharing_apply || DATA_SHARING_ENDPOINTS.apply
   });
   Object.assign(PROJECT_STATE_ENDPOINTS, {
-    docsHealth: configured.health || PROJECT_STATE_ENDPOINTS.docsHealth,
-    openSource: configured.open_source || PROJECT_STATE_ENDPOINTS.openSource
+    openReport: CATALOGUE_WRITE_ENDPOINTS.projectStateOpenReport
   });
 }
 
@@ -180,8 +179,8 @@ export async function probeProjectStateCatalogueHealth(timeoutMs = 500) {
   return probeHealth(PROJECT_STATE_ENDPOINTS.catalogueHealth, timeoutMs);
 }
 
-export async function probeProjectStateDocsHealth(timeoutMs = 500) {
-  return probeHealth(PROJECT_STATE_ENDPOINTS.docsHealth, timeoutMs);
+export async function probeProjectStateCatalogueOpenHealth(timeoutMs = 500) {
+  return probeHealth(PROJECT_STATE_ENDPOINTS.catalogueHealth, timeoutMs);
 }
 
 export async function probeThumbnailQualityCatalogueHealth(timeoutMs = 500) {

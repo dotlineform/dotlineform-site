@@ -68,7 +68,9 @@ Reads are allowlisted by key. They do not expose arbitrary repository paths. The
 }
 ```
 
-It runs `$HOME/miniconda3/bin/python3 studio/services/catalogue/project_state_report.py` through its shared Python entrypoint. It writes `docs-viewer/source/studio/project-state.md` unless the server was started with `--dry-run`, and returns summary counts plus the report path. `include_subfolders` defaults to `false`; default mode counts every direct `/projects/<project_folder>` folder. When true, the report also includes `/projects/<project_folder>/<sub-folder>` directories while still skipping detail folders.
+It runs `$HOME/miniconda3/bin/python3 studio/services/catalogue/project_state_report.py` through its shared Python entrypoint. It writes `var/studio/reports/project-state.md` unless the server was started with `--dry-run`, and returns summary counts plus the report path. `include_subfolders` defaults to `false`; default mode counts every direct `/projects/<project_folder>` folder. When true, the report also includes `/projects/<project_folder>/<sub-folder>` directories while still skipping detail folders.
+
+`POST /studio/api/catalogue/project-state-open-report` opens the latest local Project State Markdown snapshot. It is restricted to `var/studio/reports/project-state.md` and accepts `editor: "default"` or `editor: "vscode"`.
 When the request includes valid Studio activity context from `/studio/project-state/`, a non-dry-run write also appends one unified Studio activity row with script purpose `generate-report`, summary counts, and the report path.
 
 `POST /catalogue/bulk-save` expects:

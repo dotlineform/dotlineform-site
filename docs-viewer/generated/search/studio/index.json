@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6f929eed4d7cfe48f151a84952518aab",
-    "generated_at_utc": "2026-05-25T21:37:45Z",
+    "version": "blake2b-a9e39f8db7802c187425e35ed999c650",
+    "generated_at_utc": "2026-05-26T12:07:33Z",
     "count": 191
   },
   "entries": [
@@ -2551,10 +2551,10 @@
       "kind": "doc",
       "title": "Project State Page",
       "href": "/docs/?scope=studio&doc=project-state-page",
-      "last_updated": "2026-05-22",
+      "last_updated": "2026-05-26",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-22 • Catalogue",
+      "display_meta": "2026-05-26 • Catalogue",
       "search_terms": [
         "project-state-page",
         "project",
@@ -2562,12 +2562,12 @@
         "page",
         "project state page",
         "catalogue",
-        "2026-05-22",
+        "2026-05-26",
         "2026",
         "05",
-        "22"
+        "26"
       ],
-      "search_text": "project-state-page project state page project state page catalogue 2026-05-22 2026 05 22"
+      "search_text": "project-state-page project state page project state page catalogue 2026-05-26 2026 05 26"
     },
     {
       "id": "site-request-r2-media-upload-automation",
@@ -2884,10 +2884,10 @@
       "kind": "doc",
       "title": "Site Consistency Audit",
       "href": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
-      "last_updated": "2026-05-09 22:35",
+      "last_updated": "2026-05-26",
       "parent_id": "audit",
       "parent_title": "Audit",
-      "display_meta": "2026-05-09 22:35 • Audit",
+      "display_meta": "2026-05-26 • Audit",
       "search_terms": [
         "scripts-audit-site-consistency",
         "scripts",
@@ -2895,14 +2895,12 @@
         "site",
         "consistency",
         "site consistency audit",
-        "2026-05-09 22:35",
+        "2026-05-26",
         "2026",
         "05",
-        "09",
-        "22",
-        "35"
+        "26"
       ],
-      "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit 2026-05-26 2026 05 26"
     },
     {
       "id": "site-request-studio-activity-follow-ups",
@@ -2987,10 +2985,10 @@
       "kind": "doc",
       "title": "CSS Token Audit",
       "href": "/docs/?scope=studio&doc=scripts-css-token-audit",
-      "last_updated": "2026-05-09 22:35",
+      "last_updated": "2026-05-26",
       "parent_id": "ui",
       "parent_title": "UI",
-      "display_meta": "2026-05-09 22:35 • UI",
+      "display_meta": "2026-05-26 • UI",
       "search_terms": [
         "scripts-css-token-audit",
         "scripts",
@@ -2999,14 +2997,12 @@
         "audit",
         "css token audit",
         "ui",
-        "2026-05-09 22:35",
+        "2026-05-26",
         "2026",
         "05",
-        "09",
-        "22",
-        "35"
+        "26"
       ],
-      "search_text": "scripts-css-token-audit scripts css token audit css token audit ui 2026-05-09 22:35 2026 05 09 22 35"
+      "search_text": "scripts-css-token-audit scripts css token audit css token audit ui 2026-05-26 2026 05 26"
     },
     {
       "id": "dimension-visualisation-projection",
@@ -3517,10 +3513,10 @@
       "kind": "doc",
       "title": "Local Report Snapshot Boundary",
       "href": "/docs/?scope=studio&doc=site-request-local-report-snapshot-boundary",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-26",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-25 • Change Requests",
+      "display_meta": "2026-05-26 • Change Requests",
       "search_terms": [
         "site-request-local-report-snapshot-boundary",
         "site",
@@ -3533,12 +3529,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-25",
+        "2026-05-26",
         "2026",
         "05",
-        "25"
+        "26"
       ],
-      "search_text": "site-request-local-report-snapshot-boundary site request local report snapshot boundary local report snapshot boundary change requests change requests 2026-05-25 2026 05 25"
+      "search_text": "site-request-local-report-snapshot-boundary site request local report snapshot boundary local report snapshot boundary change requests change requests 2026-05-26 2026 05 26"
     },
     {
       "id": "scripts-catalogue-source",
@@ -3692,10 +3688,10 @@
       "kind": "doc",
       "title": "Studio Docs Viewer Dependencies",
       "href": "/docs/?scope=studio&doc=studio-doc-viewer-dependencies",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-26",
       "parent_id": "change-requests",
       "parent_title": "Change Requests",
-      "display_meta": "2026-05-25 • Change Requests",
+      "display_meta": "2026-05-26 • Change Requests",
       "search_terms": [
         "studio-doc-viewer-dependencies",
         "studio",
@@ -3707,12 +3703,12 @@
         "change requests",
         "change",
         "requests",
-        "2026-05-25",
+        "2026-05-26",
         "2026",
         "05",
-        "25"
+        "26"
       ],
-      "search_text": "studio-doc-viewer-dependencies studio doc viewer dependencies studio docs viewer dependencies docs change requests change requests 2026-05-25 2026 05 25"
+      "search_text": "studio-doc-viewer-dependencies studio doc viewer dependencies studio docs viewer dependencies docs change requests change requests 2026-05-26 2026 05 26"
     },
     {
       "id": "search-incremental-orchestration-plan",
@@ -3766,10 +3762,10 @@
       "kind": "doc",
       "title": "Project State Report",
       "href": "/docs/?scope=studio&doc=scripts-project-state-report",
-      "last_updated": "2026-05-09 21:28",
+      "last_updated": "2026-05-26",
       "parent_id": "catalogue",
       "parent_title": "Catalogue",
-      "display_meta": "2026-05-09 21:28 • Catalogue",
+      "display_meta": "2026-05-26 • Catalogue",
       "search_terms": [
         "scripts-project-state-report",
         "scripts",
@@ -3778,14 +3774,12 @@
         "report",
         "project state report",
         "catalogue",
-        "2026-05-09 21:28",
+        "2026-05-26",
         "2026",
         "05",
-        "09",
-        "21",
-        "28"
+        "26"
       ],
-      "search_text": "scripts-project-state-report scripts project state report project state report catalogue 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "scripts-project-state-report scripts project state report project state report catalogue 2026-05-26 2026 05 26"
     },
     {
       "id": "docs-viewer-source-organisation",

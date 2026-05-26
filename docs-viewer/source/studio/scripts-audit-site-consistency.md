@@ -2,7 +2,7 @@
 doc_id: scripts-audit-site-consistency
 title: Site Consistency Audit
 added_date: 2026-03-31
-last_updated: "2026-05-09 22:35"
+last_updated: "2026-05-26"
 parent_id: audit
 sort_order: 7000
 viewable: true
@@ -28,7 +28,7 @@ $HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py \
   --checks cross_refs,schema,json_schema,links,media,orphans \
   --series-ids collected-1989-1998 \
   --json-out /tmp/site-audit.json \
-  --md-out docs-viewer/source/studio/audit-latest.md \
+  --md-out var/studio/reports/audit-latest.md \
   --strict
 ```
 
@@ -85,7 +85,7 @@ $HOME/miniconda3/bin/python3 studio/checks/audit_site_consistency.py \
   --orphans-media
 ```
 
-Markdown report defaults to `docs-viewer/source/studio/audit-latest.md`.
+Markdown report defaults to `var/studio/reports/audit-latest.md`.
 
 ## Source And Target Artifacts
 
@@ -108,6 +108,8 @@ Target artifacts:
 - terminal report
 - optional JSON report via `--json-out`
 - optional Markdown report via `--md-out`
+
+Default Markdown output is a local operational snapshot under `var/studio/reports/`, not Docs Viewer source.
 
 ## Known Limits
 

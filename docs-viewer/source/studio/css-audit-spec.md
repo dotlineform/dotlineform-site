@@ -81,14 +81,14 @@ Each finding is labeled:
 - `--check-only` (repeat/comma-separated)
 - `--strict` (fail on errors)
 - `--json-out` optional
-- `--md-out` default `docs/css-audit-latest.md`
+- `--md-out` default `var/studio/reports/css-audit-latest.md`
 - `--max-samples` default `20`
 - `--specificity-threshold` default `0,3,0`
 - `--ignore-file` optional (`docs/css-audit-ignore.txt`)
 
 ## Output
 
-Markdown report (default): `docs/css-audit-latest.md`
+Markdown report (default): `var/studio/reports/css-audit-latest.md`
 
 Top section:
 
@@ -131,7 +131,7 @@ Map to:
 ## Acceptance Criteria (v1)
 
 - Runs with current local Python environment.
-- Writes stable report to `docs/css-audit-latest.md`.
+- Writes stable report to `var/studio/reports/css-audit-latest.md`.
 - Findings include confidence labels.
 - Noise is manageable via ignore file support.
 - Report includes actionable recommendations, not only raw findings.

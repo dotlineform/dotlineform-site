@@ -130,6 +130,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["catalogue"]["moment_preview"] == "/studio/api/catalogue/moment/preview"
     assert runtime["services"]["catalogue"]["save_moment"] == "/studio/api/catalogue/moment/save"
     assert runtime["services"]["catalogue"]["project_state_report"] == "/studio/api/catalogue/project-state-report"
+    assert runtime["services"]["catalogue"]["project_state_open_report"] == "/studio/api/catalogue/project-state-open-report"
     assert runtime["services"]["catalogue"]["thumbnail_quality_preview"] == "/studio/api/catalogue/thumbnail-quality-preview"
     assert "tag_groups" not in runtime["data_paths"]["studio"]
     assert "tag_registry" not in runtime["data_paths"]["studio"]
@@ -294,6 +295,30 @@ def test_catalogue_project_state_route_uses_fixture_source(monkeypatch) -> None:
         assert payload["written"] is False
         assert payload["summary"]["source_folder_count"] == 1
         assert payload["summary"]["unrepresented_image_count"] == 1
+
+        write_status, write_payload = catalogue_post_response(
+            repo_root,
+            "/project-state-report",
+            {"include_subfolders": False},
+            dry_run=False,
+        )
+        report_path = repo_root / "var/studio/reports/project-state.md"
+        assert write_status == HTTPStatus.OK
+        assert write_payload["ok"] is True
+        assert write_payload["output_path"] == "var/studio/reports/project-state.md"
+        assert report_path.exists()
+        assert "published:" not in report_path.read_text(encoding="utf-8")
+
+        open_status, open_payload = catalogue_post_response(
+            repo_root,
+            "/project-state-open-report",
+            {"editor": "vscode"},
+            dry_run=True,
+        )
+        assert open_status == HTTPStatus.OK
+        assert open_payload["ok"] is True
+        assert open_payload["path"] == "var/studio/reports/project-state.md"
+        assert open_payload["editor"] == "vscode"
 
 
 def test_catalogue_thumbnail_quality_route_uses_fixture_source(monkeypatch) -> None:

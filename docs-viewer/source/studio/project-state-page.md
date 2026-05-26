@@ -2,7 +2,7 @@
 doc_id: project-state-page
 title: Project State Page
 added_date: 2026-04-27
-last_updated: "2026-05-22"
+last_updated: "2026-05-26"
 parent_id: catalogue
 sort_order: 6000
 ---
@@ -12,14 +12,13 @@ Route:
 
 - `/studio/project-state/?mode=manage`
 
-This page runs the project-state report and writes `docs-viewer/source/studio/project-state.md`.
+This page runs the project-state report and writes `var/studio/reports/project-state.md`.
 The route shell is served by the local Studio app, not by a Jekyll Studio page.
-The browser module uses Local Studio for report generation and the configured Docs Viewer service for source-file opening:
+The browser module uses Local Studio for both report generation and local report opening:
 
 - `GET /studio/api/catalogue/health`
 - `POST /studio/api/catalogue/project-state-report`
-- `GET <DOCS_VIEWER_BASE_URL>/health`
-- `POST <DOCS_VIEWER_BASE_URL>/docs/open-source`
+- `POST /studio/api/catalogue/project-state-open-report`
 
 ## Current Scope
 
@@ -37,7 +36,9 @@ The report currently includes:
 - catalogue folders and primary image references that no longer resolve to scanned source files
 - work records missing `project_folder` or `project_filename`
 
-The page shows the output path and summary counts after a successful run. The Markdown file is intentionally `published: false`; use the page's file-open command to inspect the source document locally.
+The page shows the output path and summary counts after a successful run.
+The Markdown report is a local operational snapshot under `var/studio/reports/`, not Docs Viewer source.
+Use the page's file-open command to inspect the latest local snapshot.
 Successful report generation also appends one unified Studio activity row for `run project-state report` with the output path and summary counts.
 
 The `include sub-folders` checkbox is off by default. When unchecked, the report scans every direct `/projects/<project_folder>` directory. Image mismatch sections still inspect only direct image files inside those folders. When checked, the report also includes `/projects/<project_folder>/<sub-folder>` directories, while still skipping detail folders.
