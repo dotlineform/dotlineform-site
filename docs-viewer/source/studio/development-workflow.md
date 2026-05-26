@@ -68,6 +68,7 @@ They are planning and close-out artifacts, not the durable implementation log.
 Prefer existing repo boundaries:
 
 - Extend shared modules and primitives before creating one-off route-local patterns.
+- Prefer a package or directory namespace over a growing set of same-level helper modules when a helper surface has multiple responsibilities, is likely to grow, or is becoming an explicit architecture boundary.
 - Keep UI shell, validation, data mutation, and generated-output behavior separate.
 - Keep config ownership in checked-in config docs and loader modules.
 - Keep generated data flowing from source records through scripts; do not edit generated payloads as source.
