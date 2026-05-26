@@ -20,10 +20,10 @@ Checked-in configuration artifacts that the current site and build scripts load 
 - Docs Viewer UI text in `docs-viewer/config/ui-text/ui-text.json`
 - dedicated `/catalogue/search/` runtime policy in `assets/data/search/policy.json`
 - build-owned search source-family config in `scripts/search/build_config.json`
-- Library sharing profile config patterns in `studio/data/config/data-sharing/library-export-configs.json`
-- Library sharing profile config schema in `studio/data/config/data-sharing/library-export-configs.schema.json`
-- Data Sharing adapter dispatch in `studio/data/config/data-sharing/data-sharing-adapters.json`
-- Data Sharing adapter schema in `studio/data/config/data-sharing/data-sharing-adapters.schema.json`
+- Library sharing profile config patterns in `data-sharing/config/library-export-configs.json`
+- Library sharing profile config schema in `data-sharing/config/library-export-configs.schema.json`
+- Data Sharing adapter dispatch in `data-sharing/config/adapters.json`
+- Data Sharing adapter schema in `data-sharing/config/adapters.schema.json`
 
 Key documents:
 

@@ -11,18 +11,18 @@ viewable: true
 
 Config file:
 
-- `studio/data/config/data-sharing/library-export-configs.json`
+- `data-sharing/config/library-export-configs.json`
 
 Schema file:
 
-- `studio/data/config/data-sharing/library-export-configs.schema.json`
+- `data-sharing/config/library-export-configs.schema.json`
 
 ## Scope
 
 `library-export-configs.json` defines saved sharing profiles for the Library package-preparation workflow.
 
 The first active data domain is Library.
-The schema keeps the scope field as an array so the same export engine can later support other document-backed scopes, but non-Library domains must still be enabled through `studio/data/config/data-sharing/data-sharing-adapters.json`.
+The schema keeps the scope field as an array so the same export engine can later support other document-backed scopes, but non-Library domains must still be enabled through `data-sharing/config/adapters.json`.
 
 The config is source-controlled project configuration.
 The Studio UI lists existing configs and uses them to drive selection behavior, but it should not create or edit config definitions in v1.
@@ -30,7 +30,7 @@ Running configs from Studio uses the local Data Sharing package-preparation endp
 
 ## Usage Model
 
-To add or change an export pattern, edit `studio/data/config/data-sharing/library-export-configs.json` and keep it aligned with `studio/data/config/data-sharing/library-export-configs.schema.json`.
+To add or change an export pattern, edit `data-sharing/config/library-export-configs.json` and keep it aligned with `data-sharing/config/library-export-configs.schema.json`.
 The Studio UI reads enabled configs for the Library scope and presents them as runnable export patterns; it does not persist config edits.
 
 Each config controls:

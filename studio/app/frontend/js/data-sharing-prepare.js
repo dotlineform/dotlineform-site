@@ -130,7 +130,7 @@ function updateScopeUrl(scope, domains = WORKFLOW_SCOPES) {
 
 async function loadAdapterRegistry(config) {
   const registryPath = getStudioDataPath(config, "data_sharing_adapters")
-    || "/studio/data/config/data-sharing/data-sharing-adapters.json";
+    || "/data-sharing/config/adapters.json";
   return loadJson(registryPath);
 }
 
@@ -352,7 +352,7 @@ async function init() {
         ? { configs: capabilityProfiles }
         : await loadJson(
           getStudioDataPath(state.config, "library_export_configs")
-            || "/studio/data/config/data-sharing/library-export-configs.json"
+            || "/data-sharing/config/library-export-configs.json"
         );
       state.exportConfigs = enabledPrepareConfigsForScope(exportConfigPayload, state.scope);
     }

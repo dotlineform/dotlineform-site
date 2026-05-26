@@ -16,6 +16,7 @@ This is the tracker for implementing [Studio Data Sharing Architecture Request](
 
 ### just done
 
+- Completed SDSA-004 by moving the Data Sharing adapter registry, schemas, and Library sharing profiles from `studio/data/config/data-sharing/` to `data-sharing/config/`. Updated Studio browser config paths, JS fallbacks, server adapter resolution, docs export defaults, fixture tests, and current docs to use the new config boundary directly without old-path compatibility reads.
 - Completed SDSA-003 by adding the top-level `data-sharing/` subsystem scaffold, including the importable `data_sharing` Python package roots for adapters, config, schemas, services, workflows, path contracts, package I/O, registry constants, and operation constants. Added a focused scaffold check confirming the package imports, expected roots exist, and no server/UI/browser files live under `data-sharing/`.
 - Completed SDSA-002 by adding [Studio Data Sharing Call Graph Inventory](/docs/?scope=studio&doc=site-request-studio-data-sharing-call-graph-inventory), covering browser modules, runtime config, transport, service dispatch, adapters, helper dependencies, path roots, and tests.
 - Completed SDSA-001 by updating the stable Data Sharing docs with the target Studio API, headless `data-sharing/` subsystem, adapter-owned selectable records, reusable docs-domain helpers, and `var/studio/data-sharing/<domain>/...` artifact roots.
@@ -24,14 +25,15 @@ This is the tracker for implementing [Studio Data Sharing Architecture Request](
 
 ### steer for next task
 
-- Start with SDSA-004: move Data Sharing adapter registry, schemas, and sharing profile config to the target `data-sharing/` ownership boundary, and update direct readers without old-path compatibility shims.
+- Start with SDSA-005: define and implement Studio-owned same-origin Data Sharing API endpoints for health, adapter selectable records, prepare, returned-package listing, review, and apply.
 - Keep the implementation aligned with the parent request: Studio owns the UI and local API, `data-sharing/` owns headless workflow and adapters, and docs-domain helpers remain callable without Docs Viewer HTTP.
 - Do not build compatibility reads for disposable `var/studio/export-import/...` packages.
 
 ### baseline verification set
 
 - Focused Python tests: `$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_data_sharing_adapters.py studio/tests/python/test_data_sharing_service.py docs-viewer/tests/python/test_docs_import_service.py studio/tests/python/test_tags_data_sharing_adapter.py`.
-- Focused Data Sharing smokes: `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_prepare.py --site-root .` and `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_review.py --site-root .` when route behavior changes.
+- Focused Data Sharing route smoke: `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_data_sharing_routes.py` when Local Studio route behavior, runtime config paths, or Data Sharing browser config paths change.
+- Focused static/module smokes: `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_prepare_modules.py --site-root .` and `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_review_workflow_modules.py --site-root .` when prepare/review browser workflow modules change.
 - Runtime config tests that assert Studio no longer publishes Data Sharing endpoints under `app.runtime.services.docs`.
 - Syntax/import checks for changed Python modules under `data-sharing/`, `studio/app/server/studio/`, `docs-viewer/services/`, and `studio/services/analytics/`.
 - Browser checks for prepare/review pages when frontend endpoint or selectable-record behavior changes.
@@ -57,7 +59,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | SDSA-001 | done | Update `studio-data-sharing.md`, `studio-data-sharing-technical-spec.md`, and `config-data-sharing-adapters.md` with the target boundary: Studio same-origin API, headless `data-sharing/`, adapter-owned selectable records, reusable docs-domain helpers, and `var/studio/data-sharing/<domain>/...` artifact roots. |
 | SDSA-002 | done | Inventory the current Data Sharing call graph: browser modules, runtime config, Studio transport, Studio dispatch modules, Docs Viewer service endpoints, documents adapter, tags adapter, docs export/import helpers, backup/rebuild hooks, config reads, and tests. |
 | SDSA-003 | done | Create the top-level headless `data-sharing/` subsystem for workflow code, adapter code, registry/config loading, schemas, path contracts, package I/O, and operation dispatch. Confirm it contains no servers, UI routes, or browser modules. |
-| SDSA-004 | planned | Move Data Sharing adapter registry, schemas, and sharing profile config to the target `data-sharing/` ownership boundary. Update Studio and adapter readers directly, without old-path compatibility shims. |
+| SDSA-004 | done | Move Data Sharing adapter registry, schemas, and sharing profile config to the target `data-sharing/` ownership boundary. Update Studio and adapter readers directly, without old-path compatibility shims. |
 | SDSA-005 | planned | Define and implement Studio-owned same-origin Data Sharing API endpoints for health, adapter selectable records, prepare, returned-package listing, review, and apply. |
 | SDSA-006 | planned | Add the adapter selectable-record contract and update the prepare page so document selection comes from the active adapter response rather than a generic generated-docs-index read. |
 | SDSA-007 | planned | Move shared prepare, list-returned, review, and apply workflow dispatch into `data-sharing/`, preserving existing response contracts where they remain valid. |

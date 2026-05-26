@@ -95,8 +95,8 @@ The page shells load:
 - `studio/app/server/studio/data_sharing_service.py`
 - `data-sharing/config/adapters.json`
 - `data-sharing/config/library-export-configs.json`
-- `data-sharing/adapters/documents/`
-- `data-sharing/adapters/tags/`
+- `data-sharing/data_sharing/adapters/documents/`
+- `data-sharing/data_sharing/adapters/tags/`
 
 The dashboard, prepare, and review shells are hosted by the local Studio app server.
 The old Jekyll route files under `studio/data-sharing/` are retired; the browser modules and CSS contracts remain Studio-owned assets.

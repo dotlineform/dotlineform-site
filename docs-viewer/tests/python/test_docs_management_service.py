@@ -86,7 +86,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
         },
     )
     write_json(
-        repo_root / "studio/data/config/data-sharing/data-sharing-adapters.json",
+        repo_root / "data-sharing/config/adapters.json",
         {
             "schema_version": "data_sharing_adapters_v2",
             "dispatch": [
@@ -121,7 +121,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
                                 "source_root": "docs-viewer/source/library",
                             },
                             "config": {
-                                "sharing_profiles_path": "studio/data/config/data-sharing/library-export-configs.json",
+                                "sharing_profiles_path": "data-sharing/config/library-export-configs.json",
                             },
                         }
                     },

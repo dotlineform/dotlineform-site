@@ -33,11 +33,11 @@ Current source and generated artifacts:
 - Library docs search:
   - `assets/data/search/library/index.json`
 - Library export configs:
-  - `studio/data/config/data-sharing/library-export-configs.json`
-  - `studio/data/config/data-sharing/library-export-configs.schema.json`
+  - `data-sharing/config/library-export-configs.json`
+  - `data-sharing/config/library-export-configs.schema.json`
 - export/import adapter dispatch:
-  - `studio/data/config/data-sharing/data-sharing-adapters.json`
-  - `studio/data/config/data-sharing/data-sharing-adapters.schema.json`
+  - `data-sharing/config/adapters.json`
+  - `data-sharing/config/adapters.schema.json`
 - local generated export artifacts:
   - `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.json`
   - `var/studio/data-sharing/library/exports/<export_id>-<timestamp>.jsonl`
@@ -68,7 +68,7 @@ Current design:
 - Docs Viewer management writes new `added_date` and changed `last_updated` values with minute precision, while existing date-only Library docs remain valid
 - optional `summary` front matter stores a concise plain-text document summary; the shared Docs Viewer metadata editor can maintain it, blank values remove the field, and whitespace is normalized to one paragraph
 - optional `ui_status` front matter stores a Docs Viewer status key that is carried into generated docs payloads and interpreted against scope-specific viewer config
-- Library export configs are defined separately from source docs by `studio/data/config/data-sharing/library-export-configs.json` and `studio/data/config/data-sharing/library-export-configs.schema.json`; v1 export configs should read Library Docs Viewer source/generated fields without mutating them
+- Library export configs are defined separately from source docs by `data-sharing/config/library-export-configs.json` and `data-sharing/config/library-export-configs.schema.json`; v1 export configs should read Library Docs Viewer source/generated fields without mutating them
 
 Current implementation note:
 
@@ -140,8 +140,8 @@ Library export configs are source-controlled Studio data, but export files thems
 
 Config files:
 
-- `studio/data/config/data-sharing/library-export-configs.json`
-- `studio/data/config/data-sharing/library-export-configs.schema.json`
+- `data-sharing/config/library-export-configs.json`
+- `data-sharing/config/library-export-configs.schema.json`
 
 Generated output:
 

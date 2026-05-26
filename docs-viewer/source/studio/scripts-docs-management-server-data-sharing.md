@@ -23,7 +23,7 @@ sort_order: 15300
 
 Prepare behavior:
 
-- `data_domain` must resolve the `prepare` operation through `studio/data/config/data-sharing/data-sharing-adapters.json`; the first implemented domain is `library`
+- `data_domain` must resolve the `prepare` operation through `data-sharing/config/adapters.json`; the first implemented domain is `library`
 - stub adapters and planned capabilities fail closed before the endpoint runs document-specific package preparation behavior
 - `config_id` must resolve in the adapter-declared sharing profile config file
 - `target_format` may be `json`, `jsonl`, or omitted; omitted uses the config's default `target.format`
@@ -53,7 +53,7 @@ Runtime role:
 
 Import file listing behavior:
 
-- `data_domain` must resolve exactly one adapter with `list_returned` capability through `studio/data/config/data-sharing/data-sharing-adapters.json`
+- `data_domain` must resolve exactly one adapter with `list_returned` capability through `data-sharing/config/adapters.json`
 - the first implementation maps `data_domain=library` to the `documents` adapter
 - stub adapters and planned capabilities fail closed before the endpoint runs document-specific import behavior
 - lists staged `.json` and `.jsonl` files under the adapter-declared staging root

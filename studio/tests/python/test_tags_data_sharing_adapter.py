@@ -216,7 +216,7 @@ def make_repo() -> tempfile.TemporaryDirectory[str]:
     temp_dir: tempfile.TemporaryDirectory[str] = tempfile.TemporaryDirectory()
     root = Path(temp_dir.name)
     (root / "_config.yml").write_text("title: Test\n", encoding="utf-8")
-    write_json(root / "studio/data/config/data-sharing/data-sharing-adapters.json", make_registry_payload())
+    write_json(root / "data-sharing/config/adapters.json", make_registry_payload())
     write_json(
         root / "studio/data/canonical/analytics/tag-registry.json",
         {

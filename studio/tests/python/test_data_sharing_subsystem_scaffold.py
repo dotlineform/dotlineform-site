@@ -29,6 +29,7 @@ def test_subsystem_root_and_core_modules_are_importable() -> None:
     assert dispatch.CANONICAL_OPERATIONS == ("prepare", "list_returned", "review", "apply")
     assert paths.domain_artifact_root("Library").as_posix() == "var/studio/data-sharing/library"
     assert registry.ADAPTER_REGISTRY_REL_PATH.as_posix() == "data-sharing/config/adapters.json"
+    assert registry.LIBRARY_EXPORT_CONFIG_SCHEMA_REL_PATH.as_posix() == "data-sharing/config/library-export-configs.schema.json"
 
 
 def test_subsystem_contains_expected_headless_ownership_roots() -> None:
@@ -44,6 +45,17 @@ def test_subsystem_contains_expected_headless_ownership_roots() -> None:
         SUBSYSTEM_ROOT / "schemas",
     ]
     missing = [path.relative_to(REPO_ROOT).as_posix() for path in expected if not path.exists()]
+    assert missing == []
+
+
+def test_subsystem_config_files_live_under_data_sharing_boundary() -> None:
+    expected = [
+        SUBSYSTEM_ROOT / "config" / "adapters.json",
+        SUBSYSTEM_ROOT / "config" / "adapters.schema.json",
+        SUBSYSTEM_ROOT / "config" / "library-export-configs.json",
+        SUBSYSTEM_ROOT / "config" / "library-export-configs.schema.json",
+    ]
+    missing = [path.relative_to(REPO_ROOT).as_posix() for path in expected if not path.is_file()]
     assert missing == []
 
 
@@ -75,6 +87,7 @@ def test_subsystem_has_no_server_ui_or_browser_files() -> None:
 def main() -> None:
     test_subsystem_root_and_core_modules_are_importable()
     test_subsystem_contains_expected_headless_ownership_roots()
+    test_subsystem_config_files_live_under_data_sharing_boundary()
     test_subsystem_has_no_server_ui_or_browser_files()
 
 

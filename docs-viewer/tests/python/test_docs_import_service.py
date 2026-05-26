@@ -88,7 +88,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
             json.dumps({"doc_id": doc["doc_id"], "title": doc["title"]}, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
-    config_path = root / "studio/data/config/data-sharing/library-export-configs.json"
+    config_path = root / "data-sharing/config/library-export-configs.json"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(
         json.dumps(
@@ -144,7 +144,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
         + "\n",
         encoding="utf-8",
     )
-    adapter_path = root / "studio/data/config/data-sharing/data-sharing-adapters.json"
+    adapter_path = root / "data-sharing/config/adapters.json"
     adapter_path.write_text(
         json.dumps(
             {
@@ -184,7 +184,7 @@ def make_repo() -> tempfile.TemporaryDirectory:
                                     "source_root": "docs-viewer/source/library",
                                 },
                                 "config": {
-                                    "sharing_profiles_path": "studio/data/config/data-sharing/library-export-configs.json",
+                                    "sharing_profiles_path": "data-sharing/config/library-export-configs.json",
                                 },
                             }
                         },

@@ -14,6 +14,7 @@ Config files:
 - `data-sharing/config/adapters.json`
 - `data-sharing/config/adapters.schema.json`
 - `data-sharing/config/library-export-configs.json`
+- `data-sharing/config/library-export-configs.schema.json`
 
 `adapters.json` is the source-controlled dispatch registry for Data Sharing workflows.
 Requests provide a `data_domain` and canonical `operation`.
@@ -41,7 +42,7 @@ The Studio Data Sharing scope selector presents that domain as Analytics because
 The tags adapter is active for `prepare`, `list_returned`, `review`, and `apply`.
 Tags `prepare` exposes source-derived package profiles for tag registry, tag aliases, tag assignments, and combined tags bundles.
 
-Adapters are Data Sharing-owned modules under the target `data-sharing/adapters/` boundary.
+Adapters are Data Sharing-owned modules under the target `data-sharing/data_sharing/adapters/` boundary.
 They can call domain helpers for reads, validation, backups, writes, and rebuild follow-through.
 The documents adapter calls docs-domain helpers; the tags adapter calls Analytics tag helpers.
 Neither adapter should require Data Sharing browser modules to know those helper boundaries.
@@ -109,8 +110,9 @@ Do not add registry paths or adapter fallback reads that preserve those roots.
 
 ## Related Runtime
 
-- `data-sharing/services/registry.py` validates duplicate dispatch, canonical operation names, status values, and safe relative paths before resolving adapters.
-- `data-sharing/services/dispatch.py` uses the resolved adapter before running selectable-record, package preparation, returned-package listing, review, or apply behavior.
+- `data-sharing/data_sharing/services/registry.py` owns registry/config path constants for the moved config boundary.
+- `studio/app/server/studio/data_sharing_adapters.py` still performs the current adapter validation and resolution during the transition.
+- `data-sharing/data_sharing/services/dispatch.py` defines the canonical operation boundary that follow-up workflow dispatch moves will use.
 - `studio/app/server/studio/` owns the same-origin `/studio/api/data-sharing/...` endpoints and local-origin enforcement.
 - `studio/app/frontend/js/studio-transport.js` should use Studio-owned same-origin Data Sharing endpoints.
 - Docs Viewer service modules may expose Docs Viewer-owned import or management behavior, but they do not own the Data Sharing API boundary.

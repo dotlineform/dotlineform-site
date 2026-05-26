@@ -46,8 +46,8 @@ const DEFAULT_STUDIO_CONFIG = {
         "catalogue_lookup_work_detail_base": "/studio/data/generated/catalogue-lookup/work_details/",
         "catalogue_lookup_series_base": "/studio/data/generated/catalogue-lookup/series/",
         "catalogue_field_registry": "/studio/data/config/catalogue/catalogue-field-registry.json",
-        "data_sharing_adapters": "/studio/data/config/data-sharing/data-sharing-adapters.json",
-        "library_export_configs": "/studio/data/config/data-sharing/library-export-configs.json",
+        "data_sharing_adapters": "/data-sharing/config/adapters.json",
+        "library_export_configs": "/data-sharing/config/library-export-configs.json",
         "thumbnail_quality_preview": "/studio/data/generated/thumbnail-quality/thumbnail-quality-preview.json"
       },
       "site": {

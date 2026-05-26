@@ -144,6 +144,8 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert "tag_registry" not in runtime["data_paths"]["studio"]
     assert "tag_aliases" not in runtime["data_paths"]["studio"]
     assert "tag_assignments" not in runtime["data_paths"]["studio"]
+    assert runtime["data_paths"]["studio"]["data_sharing_adapters"] == "/data-sharing/config/adapters.json"
+    assert runtime["data_paths"]["studio"]["library_export_configs"] == "/data-sharing/config/library-export-configs.json"
     assert runtime["data_paths"]["ui_text"]["tag_groups"] == "/studio/app/frontend/config/ui-text/tag-groups.json"
     assert runtime["media"]["thumbs"]["works"] == "/assets/works/img"
     assert runtime["pipeline"]["variants"]["thumb"]["suffix"] == "thumb"
@@ -173,6 +175,8 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/studio/app/assets/css/studio.css") is True
     assert allowed("/studio/ui-catalogue/assets/js/ui-catalogue-demo.js") is True
     assert allowed("/docs-viewer/generated/docs/studio/index.json") is True
+    assert allowed("/data-sharing/config/adapters.json") is True
+    assert allowed("/data-sharing/config/library-export-configs.json") is True
     assert allowed("/assets/works/img/00001.jpg") is True
     assert allowed("/assets/js/work.js") is True
     assert allowed("/studio/data/generated/thumbnail-quality/img/01-00420-current.webp") is True
@@ -188,6 +192,7 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/docs-viewer/runtime/js/docs-viewer.js") is False
     assert allowed("/docs-viewer/static/css/docs-viewer-base.css") is False
     assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is False
+    assert allowed("/data-sharing/data_sharing/services/registry.py") is False
 
 
 def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:

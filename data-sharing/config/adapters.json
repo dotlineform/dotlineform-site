@@ -73,7 +73,7 @@
             "source_root": "docs-viewer/source/library"
           },
           "config": {
-            "sharing_profiles_path": "studio/data/config/data-sharing/library-export-configs.json"
+            "sharing_profiles_path": "data-sharing/config/library-export-configs.json"
           }
         }
       },

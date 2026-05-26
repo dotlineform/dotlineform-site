@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T17:54:12Z",
+  "generated_at": "2026-05-26T18:02:33Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -21,7 +21,7 @@
       "source_path": "site-request-studio-data-sharing-architecture-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-architecture-tasks.json",
-      "content_text_length": 7536,
+      "content_text_length": 8165,
       "ui_status": "in-progress"
     },
     {
@@ -148,7 +148,7 @@
       "source_path": "data-models-library.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-library",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/data-models-library.json",
-      "content_text_length": 10085
+      "content_text_length": 9963
     },
     {
       "scope": "studio",
@@ -285,7 +285,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 6494
+      "content_text_length": 6520
     },
     {
       "scope": "studio",
@@ -485,7 +485,7 @@
       "source_path": "scripts-docs-export.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-export",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-export.json",
-      "content_text_length": 8003
+      "content_text_length": 7954
     },
     {
       "scope": "studio",
@@ -576,7 +576,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio.json",
-      "content_text_length": 4595
+      "content_text_length": 4583
     },
     {
       "scope": "studio",
@@ -607,7 +607,7 @@
       "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-studio-config-json.json",
-      "content_text_length": 9425
+      "content_text_length": 9350
     },
     {
       "scope": "studio",
@@ -622,7 +622,7 @@
       "source_path": "studio-data-sharing-technical-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 9489
+      "content_text_length": 9549
     },
     {
       "scope": "studio",
@@ -907,7 +907,7 @@
       "source_path": "config-data-sharing-adapters.md",
       "viewer_url": "/docs/?scope=studio&doc=config-data-sharing-adapters",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-data-sharing-adapters.json",
-      "content_text_length": 4666
+      "content_text_length": 4794
     },
     {
       "scope": "studio",
@@ -1226,7 +1226,7 @@
       "source_path": "config-library-export-configs.md",
       "viewer_url": "/docs/?scope=studio&doc=config-library-export-configs",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config-library-export-configs.json",
-      "content_text_length": 9600
+      "content_text_length": 9527
     },
     {
       "scope": "studio",
@@ -2629,7 +2629,7 @@
       "source_path": "config.md",
       "viewer_url": "/docs/?scope=studio&doc=config",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/config.json",
-      "content_text_length": 1643
+      "content_text_length": 1569
     },
     {
       "scope": "studio",
@@ -2764,7 +2764,7 @@
       "source_path": "scripts-docs-management-server-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-data-sharing.json",
-      "content_text_length": 8732
+      "content_text_length": 8682
     },
     {
       "scope": "studio",

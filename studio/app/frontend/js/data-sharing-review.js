@@ -83,7 +83,7 @@ async function loadJson(path) {
 
 async function loadAdapterRegistry(config) {
   const registryPath = getStudioDataPath(config, "data_sharing_adapters")
-    || "/studio/data/config/data-sharing/data-sharing-adapters.json";
+    || "/data-sharing/config/adapters.json";
   return loadJson(registryPath);
 }
 

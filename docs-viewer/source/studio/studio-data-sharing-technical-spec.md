@@ -68,19 +68,22 @@ data-sharing/
     adapters.json
     adapters.schema.json
     library-export-configs.json
-  adapters/
-    documents/
-    tags/
-  services/
-    registry.py
-    dispatch.py
-    paths.py
-    package_io.py
-  workflows/
-    prepare.py
-    list_returned.py
-    review.py
-    apply.py
+    library-export-configs.schema.json
+  data_sharing/
+    adapters/
+      documents/
+      tags/
+      catalogue/
+    services/
+      registry.py
+      dispatch.py
+      paths.py
+      package_io.py
+    workflows/
+      prepare.py
+      list_returned.py
+      review.py
+      apply.py
 ```
 
 `data-sharing/` must stay headless.

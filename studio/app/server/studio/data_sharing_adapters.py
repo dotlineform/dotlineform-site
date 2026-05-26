@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 
-REGISTRY_REL_PATH = Path("studio/data/config/data-sharing/data-sharing-adapters.json")
+REGISTRY_REL_PATH = Path("data-sharing/config/adapters.json")
 SCHEMA_VERSION = "data_sharing_adapters_v2"
 CANONICAL_OPERATIONS = {"prepare", "list_returned", "review", "apply"}
 STATUS_VALUES = {"active", "planned", "stub", "disabled"}

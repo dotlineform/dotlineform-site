@@ -25,5 +25,7 @@ Domain helpers, such as docs source read/write helpers, stay domain-aware and re
 The importable Python package lives under `data-sharing/data_sharing/`.
 When used directly, add `data-sharing/` to `PYTHONPATH` or `sys.path` and import `data_sharing`.
 
-Current runtime behavior still lives in the pre-migration Studio and Docs Viewer modules.
-Follow-up SDSA tasks move registry/config, adapters, workflows, Studio endpoints, artifact roots, and tests into this boundary in order.
+The source-controlled registry, schemas, and Library sharing profiles live under
+`data-sharing/config/`.
+Current workflow behavior still lives in the pre-migration Studio and Docs Viewer modules.
+Follow-up SDSA tasks move adapters, workflows, Studio endpoints, artifact roots, and tests into this boundary in order.

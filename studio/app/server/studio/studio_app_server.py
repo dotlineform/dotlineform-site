@@ -71,6 +71,7 @@ STATIC_PREFIXES = (
     "/assets/work_details/",
     "/assets/works/",
     "/docs-viewer/generated/",
+    "/data-sharing/config/",
     "/studio/data/generated/thumbnail-quality/img/",
     "/studio/app/frontend/js/",
     "/studio/app/frontend/config/",

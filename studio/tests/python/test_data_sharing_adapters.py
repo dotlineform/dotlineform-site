@@ -101,7 +101,7 @@ def domain_payload(status: str = "active") -> dict[str, object]:
             "source_root": "docs-viewer/source/library",
         },
         "config": {
-            "sharing_profiles_path": "studio/data/config/data-sharing/library-export-configs.json",
+            "sharing_profiles_path": "data-sharing/config/library-export-configs.json",
         },
     }
 
@@ -197,7 +197,7 @@ def test_active_documents_adapter_resolves_with_v2_metadata() -> None:
     assert resolution.adapter_id == "documents"
     assert resolution.scope == "library"
     assert resolution.path("outbound_package_root").as_posix() == "var/studio/data-sharing/library/exports"
-    assert resolution.config_path("sharing_profiles_path").as_posix() == "studio/data/config/data-sharing/library-export-configs.json"
+    assert resolution.config_path("sharing_profiles_path").as_posix() == "data-sharing/config/library-export-configs.json"
     assert resolution.capability["selection_model"] == "documents"
     assert resolution.capability["output_formats"] == ["json"]
 
