@@ -4,7 +4,9 @@ title: Catalogue Work Detail Unified Editor Request
 added_date: 2026-04-28
 last_updated: 2026-05-02
 ui_status: done
-sort_order: 56000
+parent_id: catalogue
+sort_order: 12000
+viewable: true
 ---
 # Catalogue Work Detail Unified Editor Request
 

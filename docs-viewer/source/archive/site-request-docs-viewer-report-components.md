@@ -4,7 +4,8 @@ title: Docs Viewer Report Components Request
 added_date: 2026-05-12
 last_updated: "2026-05-13 11:14"
 ui_status: done
-sort_order: 32000
+parent_id: docs-viewer
+sort_order: 5000
 viewable: true
 ---
 # Docs Viewer Report Components Request

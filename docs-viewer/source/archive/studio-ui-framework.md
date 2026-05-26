@@ -3,7 +3,9 @@ doc_id: studio-ui-framework
 title: Studio UI Framework
 added_date: 2026-04-21
 last_updated: 2026-05-19
-sort_order: 82000
+parent_id: studio
+sort_order: 7000
+viewable: true
 ---
 # Studio UI Framework
 

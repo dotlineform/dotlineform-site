@@ -4,7 +4,8 @@ title: Docs Build Incremental Request
 added_date: 2026-04-22
 last_updated: "2026-05-13 20:31"
 ui_status: done
-sort_order: 35000
+parent_id: docs-viewer
+sort_order: 6000
 viewable: true
 ---
 # Docs Build Incremental Request

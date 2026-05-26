@@ -4,7 +4,8 @@ title: Catalogue Moment Editor Request
 added_date: 2026-04-27
 last_updated: "2026-05-10 23:43"
 ui_status: done
-sort_order: 49000
+parent_id: catalogue
+sort_order: 18000
 ---
 # Catalogue Moment Editor Request
 

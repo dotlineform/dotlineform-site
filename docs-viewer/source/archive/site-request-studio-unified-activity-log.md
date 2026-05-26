@@ -4,7 +4,8 @@ title: Studio Unified Activity Log Request
 added_date: 2026-05-08
 last_updated: "2026-05-08 20:20"
 ui_status: done
-sort_order: 64000
+parent_id: studio
+sort_order: 11000
 viewable: true
 ---
 # Studio Unified Activity Log Request

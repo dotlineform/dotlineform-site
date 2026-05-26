@@ -3,7 +3,9 @@ doc_id: local-studio-app-public-surface
 title: Public Published Surface
 added_date: 2026-05-22
 last_updated: 2026-05-23
-sort_order: 90000
+parent_id: studio
+sort_order: 10000
+viewable: true
 ---
 This document is now archived and is no longer maintained.
 

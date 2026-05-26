@@ -4,7 +4,9 @@ title: Work-Owned Files And Links Request
 added_date: 2026-04-27
 last_updated: 2026-05-02
 ui_status: done
-sort_order: 40000
+parent_id: catalogue
+sort_order: 14000
+viewable: true
 ---
 # Work-Owned Files And Links Request
 

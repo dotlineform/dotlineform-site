@@ -4,7 +4,9 @@ title: Local Docs Data Server Reads Request
 added_date: "2026-05-03 21:56"
 last_updated: 2026-05-11
 ui_status: done
-sort_order: 36000
+parent_id: docs-viewer
+sort_order: 9000
+viewable: true
 ---
 # Local Docs Data Server Reads Request
 

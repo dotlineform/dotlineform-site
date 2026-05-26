@@ -4,7 +4,9 @@ title: Catalogue Unified Editor Cleanup Request
 added_date: 2026-04-29
 last_updated: 2026-05-03
 ui_status: done
-sort_order: 58000
+parent_id: catalogue
+sort_order: 13000
+viewable: true
 ---
 # Catalogue Unified Editor Cleanup Request
 

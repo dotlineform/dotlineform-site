@@ -4,7 +4,8 @@ title: Catalogue Lookup Invalidation Request
 added_date: 2026-04-22
 last_updated: 2026-05-13
 ui_status: done
-sort_order: 66000
+parent_id: catalogue
+sort_order: 15000
 viewable: true
 ---
 # Catalogue Lookup Invalidation Request

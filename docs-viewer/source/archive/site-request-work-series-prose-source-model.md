@@ -4,7 +4,8 @@ title: Work And Series Prose Source Model Request
 added_date: 2026-04-26
 last_updated: 2026-05-02
 ui_status: done
-sort_order: 42000
+parent_id: catalogue
+sort_order: 20000
 ---
 # Work And Series Prose Source Model Request
 

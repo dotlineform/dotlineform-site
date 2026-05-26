@@ -4,7 +4,9 @@ title: Docs Viewer Favourites Spec
 added_date: 2026-04-19
 last_updated: "2026-05-09 16:00"
 ui_status: done
-sort_order: 47000
+parent_id: docs-viewer
+sort_order: 7000
+viewable: true
 ---
 # Docs Viewer Favourites Spec
 

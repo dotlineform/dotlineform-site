@@ -4,7 +4,8 @@ title: Docs Viewer Config And Settings Request
 added_date: 2026-05-11
 last_updated: "2026-05-14 14:45"
 ui_status: done
-sort_order: 37000
+parent_id: docs-viewer
+sort_order: 14000
 viewable: true
 ---
 # Docs Viewer Config And Settings Request

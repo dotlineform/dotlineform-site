@@ -4,7 +4,9 @@ title: Catalogue Media And Detail Section Schema Request
 added_date: 2026-04-30
 last_updated: 2026-05-02
 ui_status: done
-sort_order: 43000
+parent_id: catalogue
+sort_order: 16000
+viewable: true
 ---
 # Catalogue Media And Detail Section Schema Request
 

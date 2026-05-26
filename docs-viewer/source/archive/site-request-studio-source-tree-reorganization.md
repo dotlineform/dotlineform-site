@@ -4,7 +4,8 @@ title: Studio Source Tree Reorganization Request
 added_date: 2026-05-23
 last_updated: 2026-05-24
 ui_status: done
-sort_order: 92000
+parent_id: studio
+sort_order: 5000
 viewable: true
 ---
 This document is archived and is no longer maintained.

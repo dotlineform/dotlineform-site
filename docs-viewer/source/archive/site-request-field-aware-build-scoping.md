@@ -4,7 +4,9 @@ title: Field-Aware Catalogue Build Scoping
 added_date: 2026-04-27
 last_updated: 2026-05-02
 ui_status: done
-sort_order: 48000
+parent_id: catalogue
+sort_order: 17000
+viewable: true
 ---
 # Field-Aware Catalogue Build Scoping Request
 

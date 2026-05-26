@@ -3,7 +3,8 @@ doc_id: search-result-shaping
 title: Search Result Shaping
 added_date: 2026-03-31
 last_updated: "2026-05-06 20:49"
-sort_order: 29000
+parent_id: search
+sort_order: 9000
 ---
 # Search Result Shaping
 

@@ -4,7 +4,8 @@ title: Docs Viewer Router Extraction Request
 added_date: 2026-05-14
 last_updated: 2026-05-14
 ui_status: done
-sort_order: 68000
+parent_id: docs-viewer
+sort_order: 10000
 viewable: true
 ---
 # Docs Viewer Router Extraction Request

@@ -4,7 +4,9 @@ title: Local Studio App Implementation Plan
 added_date: 2026-05-22
 last_updated: 2026-05-24
 ui_status: done
-sort_order: 89000
+parent_id: studio
+sort_order: 12000
+viewable: true
 ---
 This document is archived and is no longer maintained.
 

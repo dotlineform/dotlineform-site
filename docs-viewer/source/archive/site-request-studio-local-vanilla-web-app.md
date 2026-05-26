@@ -4,7 +4,8 @@ title: Studio Local Vanilla Web App Request
 added_date: 2026-05-22
 last_updated: 2026-05-23
 ui_status: done
-sort_order: 91000
+parent_id: studio
+sort_order: 6000
 viewable: true
 ---
 This document is archived and is no longer maintained.

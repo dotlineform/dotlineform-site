@@ -4,7 +4,8 @@ title: Docs Markdown Package Import Request
 added_date: 2026-05-17
 last_updated: 2026-05-18
 ui_status: done
-sort_order: 73000
+parent_id: docs-viewer
+sort_order: 12000
 viewable: true
 ---
 # Docs Markdown Package Import Request

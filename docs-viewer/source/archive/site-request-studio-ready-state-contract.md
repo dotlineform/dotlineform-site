@@ -4,7 +4,8 @@ title: Studio Ready State Contract Request
 added_date: 2026-05-01
 last_updated: 2026-05-15
 ui_status: done
-sort_order: 41000
+parent_id: studio
+sort_order: 14000
 ---
 # Studio Ready State Contract Request
 

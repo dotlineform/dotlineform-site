@@ -4,7 +4,8 @@ title: UI Status Emoji
 added_date: 2026-05-02
 last_updated: "2026-05-11 17:50"
 ui_status: done
-sort_order: 38000
+parent_id: docs-viewer
+sort_order: 15000
 ---
 # UI Status Emoji
 

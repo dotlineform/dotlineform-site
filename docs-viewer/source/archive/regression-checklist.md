@@ -3,7 +3,9 @@ doc_id: regression-checklist
 title: Studio Regression Checklist
 added_date: 2026-03-28
 last_updated: "2026-05-09 16:00"
-sort_order: 21000
+parent_id: studio
+sort_order: 8000
+viewable: true
 ---
 # Studio Regression Checklist
 

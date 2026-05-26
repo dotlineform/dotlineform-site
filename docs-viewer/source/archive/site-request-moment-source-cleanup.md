@@ -4,7 +4,8 @@ title: Moment Source Cleanup
 added_date: 2026-05-01
 last_updated: "2026-05-11 13:03"
 ui_status: done
-sort_order: 51000
+parent_id: catalogue
+sort_order: 21000
 viewable: true
 ---
 # Moment Source Cleanup

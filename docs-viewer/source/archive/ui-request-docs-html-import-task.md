@@ -4,7 +4,9 @@ title: Docs HTML Import Task
 added_date: 2026-04-23
 last_updated: 2026-05-03
 ui_status: done
-sort_order: 60000
+parent_id: docs-viewer
+sort_order: 11000
+viewable: true
 ---
 # Docs HTML Import Task
 

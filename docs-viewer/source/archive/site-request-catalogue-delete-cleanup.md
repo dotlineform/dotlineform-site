@@ -4,7 +4,8 @@ title: Catalogue Delete Cleanup Request
 added_date: 2026-04-27
 last_updated: "2026-05-08 00:00"
 ui_status: done
-sort_order: 44000
+parent_id: catalogue
+sort_order: 19000
 ---
 # Catalogue Delete Cleanup Request
 

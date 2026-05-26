@@ -4,7 +4,9 @@ title: Moments Prose Source Model Request
 added_date: 2026-04-27
 last_updated: 2026-05-02
 ui_status: done
-sort_order: 39000
+parent_id: catalogue
+sort_order: 11000
+viewable: true
 ---
 # Moments Prose Source Model Request
 
