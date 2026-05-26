@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T14:09:56Z",
+  "generated_at": "2026-05-26T14:15:20Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -2399,8 +2399,8 @@
       "source_path": "studio-doc-viewer-dependencies.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-doc-viewer-dependencies",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-doc-viewer-dependencies.json",
-      "content_text_length": 5687,
-      "ui_status": "in-progress"
+      "content_text_length": 5766,
+      "ui_status": "paused"
     },
     {
       "scope": "studio",

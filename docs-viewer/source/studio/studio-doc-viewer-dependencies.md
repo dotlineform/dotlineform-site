@@ -3,12 +3,14 @@ doc_id: studio-doc-viewer-dependencies
 title: Studio Docs Viewer Dependencies
 added_date: 2026-05-25
 last_updated: 2026-05-26
-ui_status: in-progress
+ui_status: paused
 parent_id: change-requests
 sort_order: 10024
 viewable: true
 ---
 # Studio Docs Viewer Dependencies
+
+status: cleanup tasks done apart from data sharing which is a separate request
 
 This is a review note and cleanup task list, not a change request.
 It records the remaining narrow places where Local Studio should know about the standalone Docs Viewer service after Data Sharing architecture work is split out.
