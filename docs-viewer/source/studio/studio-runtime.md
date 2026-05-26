@@ -56,7 +56,7 @@ Operational Studio route shells are hosted by the local app, and remaining Studi
 ## Studio Pages
 
 Operational Studio route shells are hosted by the local app.
-Active local shells include `/studio/`, `/docs/`, `/studio/catalogue/`, `/studio/analytics/`, analytics tag routes, Data Sharing routes, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, and the four catalogue editor routes.
+Active local shells include `/studio/`, `/docs/`, analytics tag routes, Data Sharing prepare/review routes, operational Studio routes, Studio Works, Catalogue Field Registry, Catalogue Drafts, and the four catalogue editor routes.
 
 Remaining Jekyll route inventory:
 
@@ -95,8 +95,6 @@ Shared Studio runtime and wiring currently live in:
   provides local-write endpoint definitions, health probing, and shared JSON POST transport
 - `assets/studio/js/studio-route-state.js`
   provides the shared route-root `data-studio-ready` and `data-studio-busy` helpers used by adopted Studio pages for browser smoke tests and future automation
-- `assets/studio/js/studio-dashboard.js`
-  hydrates lightweight dashboard metrics for the new domain landing pages
 - `assets/studio/js/studio-audits.js`
   powers `/studio/audits/` by probing the local app audit API, listing allowlisted audits, running selected audits, and rendering structured findings
 - `assets/studio/js/docs-rebuild-button.js`
@@ -208,7 +206,7 @@ Optional route detail attributes:
 
 `assets/studio/js/studio-route-state.js` owns the helper functions for setting these attributes and dispatching the optional `studio:ready` event. The current route inventory and implementation rules are documented in [Studio Ready State](/docs/?scope=studio&doc=studio-ready-state).
 
-Dashboard routes use `assets/studio/js/studio-dashboard.js` to set `data-studio-busy="true"` while metric hydration runs, then mark the route ready after the metric reads settle. Static landing and reference routes use `assets/studio/js/studio-static-route.js` to mark the page ready after DOM load with `data-studio-mode="landing"` or `data-studio-mode="reference"`. These static route attributes are intentionally small framework markers for future route development.
+Static landing and reference routes use `assets/studio/js/studio-static-route.js` to mark the page ready after DOM load with `data-studio-mode="landing"` or `data-studio-mode="reference"`. These static route attributes are intentionally small framework markers for future route development.
 
 ## Relation to `/docs/`
 

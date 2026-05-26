@@ -4,8 +4,6 @@ const DEFAULT_STUDIO_CONFIG = {
   "paths": {
     "routes": {
       "studio_home": "/studio/",
-      "studio_catalogue": "/studio/catalogue/?mode=manage",
-      "studio_analytics": "/studio/analytics/?mode=manage",
       "studio_works": "/studio/studio-works/?mode=manage",
       "studio_audits": "/studio/audits/?mode=manage",
       "search": "/catalogue/search/",
@@ -15,7 +13,6 @@ const DEFAULT_STUDIO_CONFIG = {
       "project_state": "/studio/project-state/?mode=manage",
       "thumbnail_quality": "/studio/thumbnail-quality/?mode=manage",
       "docs_html_import": "http://127.0.0.1:8776/docs/?mode=manage&import=1",
-      "data_sharing": "/studio/data-sharing/?mode=manage",
       "data_sharing_prepare": "/studio/data-sharing/prepare/?mode=manage",
       "data_sharing_review": "/studio/data-sharing/review/?mode=manage",
       "catalogue_status": "/studio/catalogue-status/?mode=manage",

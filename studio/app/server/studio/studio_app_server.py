@@ -30,7 +30,6 @@ if str(STUDIO_DIR) not in sys.path:
 
 from studio_app_config import asset_version, runtime_config  # noqa: E402
 from studio_catalogue_views import (  # noqa: E402
-    catalogue_dashboard_view,
     catalogue_field_registry_view,
     catalogue_moment_view,
     catalogue_series_view,
@@ -43,13 +42,11 @@ from studio_ui_catalogue_views import UI_CATALOGUE_DEMO_ROUTES, ui_catalogue_dem
 from studio_app_views import (  # noqa: E402
     activity_view,
     bulk_add_work_view,
-    data_sharing_dashboard_view,
     data_sharing_prepare_view,
     data_sharing_review_view,
     project_state_view,
     series_tags_view,
     series_tag_editor_view,
-    studio_analytics_view,
     studio_audits_view,
     studio_home_view,
     tag_aliases_view,
@@ -153,12 +150,6 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
         if path in {"/studio/analytics/series-tag-editor", "/studio/analytics/series-tag-editor/"}:
             self.send_html(series_tag_editor_view(self.version, self.repo_root))
             return
-        if path in {"/studio/catalogue", "/studio/catalogue/"}:
-            self.send_html(catalogue_dashboard_view(self.version))
-            return
-        if path in {"/studio/analytics", "/studio/analytics/"}:
-            self.send_html(studio_analytics_view(self.version))
-            return
         if path in {"/studio/audits", "/studio/audits/"}:
             self.send_html(studio_audits_view(self.version))
             return
@@ -173,9 +164,6 @@ class StudioAppRequestHandler(BaseHTTPRequestHandler):
             return
         if path in {"/studio/activity", "/studio/activity/"}:
             self.send_html(activity_view(self.version))
-            return
-        if path in {"/studio/data-sharing", "/studio/data-sharing/"}:
-            self.send_html(data_sharing_dashboard_view(self.version))
             return
         if path in {"/studio/data-sharing/prepare", "/studio/data-sharing/prepare/"}:
             self.send_html(data_sharing_prepare_view(self.version))

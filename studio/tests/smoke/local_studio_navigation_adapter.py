@@ -145,14 +145,14 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected production base: {result['productionBase']!r}")
         if result["docsView"] != f"{result['serviceBase']}/docs/?mode=manage":
             raise AssertionError(f"unexpected Docs view path: {result['docsView']!r}")
-        expected_top_nav = ["docs", "studio_catalogue", "studio_analytics", "data_sharing"]
+        expected_top_nav = ["docs"]
         if result["runtimePrimaryNav"] != expected_top_nav:
             raise AssertionError(f"unexpected runtime primary nav: {result['runtimePrimaryNav']!r}")
         top_nav_ids = [link["viewId"] for link in result["topNavLinks"]]
         top_nav_labels = [link["label"] for link in result["topNavLinks"]]
         if top_nav_ids != expected_top_nav:
             raise AssertionError(f"unexpected top nav ids: {result['topNavLinks']!r}")
-        if top_nav_labels != ["docs", "catalogue", "analytics", "data sharing"]:
+        if top_nav_labels != ["docs"]:
             raise AssertionError(f"unexpected top nav labels: {result['topNavLinks']!r}")
         if result["topNavTitle"] != "dotlineform studio" or result["topNavHomeHref"] != "/studio/":
             raise AssertionError(f"unexpected top nav home link: {result['topNavTitle']!r} {result['topNavHomeHref']!r}")

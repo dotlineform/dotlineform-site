@@ -11,7 +11,6 @@ viewable: true
 
 Routes:
 
-- `/studio/data-sharing/?mode=manage`
 - `/studio/data-sharing/prepare/?mode=manage`
 - `/studio/data-sharing/review/?mode=manage`
 

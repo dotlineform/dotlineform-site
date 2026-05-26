@@ -121,22 +121,8 @@ Use this only for static or reference shells. If a static page gains async data,
 
 ## Dashboard Routes
 
-Dashboard routes use:
-
-- `assets/studio/js/studio-dashboard.js`
-
-Their route roots declare:
-
-- `data-studio-dashboard-route="<route-id>"`
-- `data-studio-ready="false"`
-- `data-studio-busy="false"`
-
-`studio-dashboard.js` initializes the root, sets busy while lightweight metric hydration runs, waits for metric reads with `Promise.allSettled`, then marks the route ready. Dashboard readiness means the dashboard shell and metric hydration have settled; it is not a broader route-specific QA guarantee.
-
-Current dashboard routes:
-
-- `/studio/catalogue/?mode=manage` with `#studioCatalogueDashboardRoot`
-- `/studio/analytics/?mode=manage` with `#studioAnalyticsDashboardRoot`
+Studio no longer has standalone dashboard route shells.
+The former Catalogue, Analytics, and Data Sharing dashboards were retired in favor of the grouped `/studio/` home links and page-local metrics.
 
 ## Current Route Inventory
 
@@ -165,10 +151,7 @@ Route-specific Studio roots:
 Static Studio roots:
 
 - `/studio/` with `#studioHomeRoot`
-- `/studio/data-sharing/?mode=manage` with `#studioDataSharingDashboardRoot`
 The legacy UI catalogue reference routes have been retired. Isolated UI Catalogue demo routes now use `data-ui-catalogue-demo-ready` instead of the production `data-studio-ready` contract.
-
-Dashboard Studio roots:
 
 
 Docs Viewer ready root:

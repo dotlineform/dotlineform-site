@@ -16,7 +16,6 @@ Older import/export names remain only in archived request docs, historical chang
 
 ## Routes
 
-- `/studio/data-sharing/?mode=manage`
 - `/studio/data-sharing/prepare/?mode=manage`
 - `/studio/data-sharing/review/?mode=manage`
 

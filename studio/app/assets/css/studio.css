@@ -434,6 +434,10 @@ html[data-theme="dark"] {
   margin-top: 1rem;
 }
 
+#studioHomeRoot .studio__content {
+  margin-top: 0;
+}
+
 .studioHomeLinks {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -441,6 +445,7 @@ html[data-theme="dark"] {
   align-items: start;
   width: min(100%, 58rem);
   margin: 0 auto;
+  padding-top: clamp(1.5rem, 5vw, 3rem);
 }
 
 .studioHomeLinks__column {

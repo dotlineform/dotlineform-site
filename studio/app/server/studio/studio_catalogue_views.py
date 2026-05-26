@@ -54,57 +54,6 @@ def catalogue_field_registry_view(version: str) -> str:
     return studio_route_view(version, "catalogue_field_registry", body)
 
 
-def catalogue_dashboard_view(version: str) -> str:
-    body = """<div
-          class="studioDashboard"
-          id="studioCatalogueDashboardRoot"
-          data-studio-dashboard-route="studio-catalogue"
-          data-studio-ready="false"
-          data-studio-busy="false"
-        >
-          <section class="studioDashboard__metrics" aria-label="Catalogue metrics">
-            <article class="studioMetricCard">
-              <p class="studioMetricCard__value" data-studio-metric="series-count">--</p>
-              <p class="studioMetricCard__label">series</p>
-            </article>
-            <article class="studioMetricCard">
-              <p class="studioMetricCard__value" data-studio-metric="works-count">--</p>
-              <p class="studioMetricCard__label">works</p>
-            </article>
-            <article class="studioMetricCard">
-              <p class="studioMetricCard__value" data-studio-metric="work-details-count">--</p>
-              <p class="studioMetricCard__label">work details</p>
-            </article>
-            <article class="studioMetricCard">
-              <p class="studioMetricCard__value" data-studio-metric="moments-count">--</p>
-              <p class="studioMetricCard__label">moments</p>
-            </article>
-          </section>
-
-          <section class="catalogueDashboardRoutes" aria-label="Catalogue links">
-            <section class="catalogueDashboardColumn">
-              <h3>Edit</h3>
-              <ul class="catalogueDashboardPills">
-                <li><a href="/studio/catalogue-series/?mode=manage">series</a></li>
-                <li><a href="/studio/catalogue-work/?mode=manage">works</a></li>
-                <li><a href="/studio/catalogue-work-detail/?mode=manage">work details</a></li>
-                <li><a href="/studio/bulk-add-work/?mode=manage">bulk add</a></li>
-                <li><a href="/studio/catalogue-moment/?mode=manage">moments</a></li>
-              </ul>
-            </section>
-            <section class="catalogueDashboardColumn">
-              <h3>Review</h3>
-              <ul class="catalogueDashboardPills">
-                <li><a href="/studio/catalogue-status/?mode=manage">drafts</a></li>
-                <li><a href="/studio/studio-works/?mode=manage">works</a></li>
-                <li><a href="/studio/project-state/?mode=manage">projects</a></li>
-              </ul>
-            </section>
-          </section>
-        </div>"""
-    return studio_route_view(version, "studio_catalogue", body)
-
-
 def catalogue_status_view(version: str) -> str:
     body = """<div
           class="tagStudioPage catalogueStatusPage"

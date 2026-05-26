@@ -41,13 +41,12 @@ Do not use this pattern for:
 
 The pattern combines labeled columns with stacked pill links.
 
-The live pattern has three layers:
+The live pattern uses route-owned class names that follow the same structure as the demo:
 
-- `catalogueDashboardRoutes` for the column wrapper
-- `catalogueDashboardColumn` for each labeled group
-- `catalogueDashboardPills` for the compact route links
+- a column wrapper
+- one labeled group per column
+- compact pill anchors in each group
 
-Use `catalogueDashboardRoutes--three` when a dashboard needs three peer route groups.
 Additional column counts should be explicit in the owning route or shared CSS rather than inferred from content length.
 
 The links are ordinary anchors styled as pills.
@@ -74,14 +73,15 @@ Current demo implementation lives in:
 
 Current live pages use:
 
-- `catalogueDashboardRoutes`
-- `catalogueDashboardColumn`
-- `catalogueDashboardPills`
+- `studioHomeLinks`
+- `studioHomeLinks__column`
+- `studioHomeLinks__pills`
+- `studioHomeLinks__pill`
 
 Keep link labels short enough to fit the pill treatment.
 If labels need supporting copy, move to a different pattern rather than stretching this one into a card grid.
 
-The UI Catalogue demo uses `uiCatalogueDemoColumnLinks*` classes. Treat those as demo-only pattern names, then map the structure into `catalogueDashboard*` or another owning live namespace.
+The UI Catalogue demo uses `uiCatalogueDemoColumnLinks*` classes. Treat those as demo-only pattern names, then map the structure into an owning live namespace such as `studioHomeLinks*`.
 
 ## Migration Notes
 

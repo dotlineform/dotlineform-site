@@ -28,20 +28,6 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "doc_href": "/docs/?scope=studio&doc=docs-viewer&mode=manage",
         "script": "/docs-viewer/runtime/js/docs-viewer.js",
     },
-    "studio_catalogue": {
-        "label": "catalogue",
-        "title": "Catalogue Dashboard",
-        "path": "/studio/catalogue/?mode=manage",
-        "doc_href": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan&mode=manage",
-        "script": "/studio/app/frontend/js/studio-dashboard.js",
-    },
-    "studio_analytics": {
-        "label": "analytics",
-        "title": "Analytics Dashboard",
-        "path": "/studio/analytics/?mode=manage",
-        "doc_href": "/docs/?scope=studio&doc=tag-groups&mode=manage",
-        "script": "/studio/app/frontend/js/studio-dashboard.js",
-    },
     "tag_groups": {
         "label": "tag groups",
         "title": "Tag Groups",
@@ -112,13 +98,6 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
         "path": "/studio/activity/?mode=manage",
         "doc_href": "/docs/?scope=studio&doc=studio-activity&mode=manage",
         "script": "/studio/app/frontend/js/activity-log.js",
-    },
-    "data_sharing": {
-        "label": "data sharing",
-        "title": "Data Sharing",
-        "path": "/studio/data-sharing/?mode=manage",
-        "doc_href": "/docs/?scope=studio&doc=studio-data-sharing&mode=manage",
-        "script": "/studio/app/frontend/js/studio-static-route.js",
     },
     "data_sharing_prepare": {
         "label": "prepare share",
@@ -250,9 +229,6 @@ STUDIO_VIEWS: dict[str, dict[str, str]] = {
 
 STUDIO_TOP_NAV_VIEW_IDS: tuple[str, ...] = (
     "docs",
-    "studio_catalogue",
-    "studio_analytics",
-    "data_sharing",
 )
 
 STUDIO_MEDIA: dict[str, object] = {

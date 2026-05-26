@@ -83,7 +83,6 @@ The normal acceptable target remains 4 or lower; no current row uses a category 
 | 44 | `assets/studio/js/data-sharing-review-apply.js` | Data sharing | 2 | 1 | 1 | 1 | 5 | Data sharing review apply orchestration helper. |
 | 45 | `assets/studio/js/series-tag-editor-page.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Tag route runtime. |
 | 46 | `assets/studio/js/studio-config.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Studio config loader/accessor. |
-| 47 | `assets/studio/js/studio-dashboard.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Browser runtime support module. |
 | 48 | `assets/studio/js/studio-modal.js` | Studio routes and shared runtime | 2 | 1 | 1 | 1 | 5 | Shared Studio modal primitive. |
 | 49 | `assets/studio/js/tag-aliases-service.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag service/write orchestration helper. |
 | 50 | `assets/studio/js/tag-groups.js` | Tag routes | 2 | 1 | 1 | 1 | 5 | Tag route runtime. |

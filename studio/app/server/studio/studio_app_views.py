@@ -15,25 +15,7 @@ except ModuleNotFoundError:  # pragma: no cover - supports package-style imports
 REPO_ROOT = Path(__file__).resolve().parents[4]
 
 
-STUDIO_TOP_NAV_ACTIVE_VIEW_IDS: dict[str, str] = {
-    "tag_groups": "studio_analytics",
-    "tag_registry": "studio_analytics",
-    "tag_aliases": "studio_analytics",
-    "series_tags": "studio_analytics",
-    "series_tag_editor": "studio_analytics",
-    "data_sharing_prepare": "data_sharing",
-    "data_sharing_review": "data_sharing",
-    "project_state": "studio_catalogue",
-    "thumbnail_quality": "studio_catalogue",
-    "bulk_add_work": "studio_catalogue",
-    "catalogue_field_registry": "studio_catalogue",
-    "catalogue_status": "studio_catalogue",
-    "studio_works": "studio_catalogue",
-    "catalogue_series_editor": "studio_catalogue",
-    "catalogue_work_editor": "studio_catalogue",
-    "catalogue_work_detail_editor": "studio_catalogue",
-    "catalogue_moment_editor": "studio_catalogue",
-}
+STUDIO_TOP_NAV_ACTIVE_VIEW_IDS: dict[str, str] = {}
 
 
 STUDIO_HOME_LINK_COLUMNS: tuple[dict[str, object], ...] = (
@@ -201,54 +183,6 @@ def studio_route_view(version: str, view_id: str, body_html: str) -> str:
 </body>
 </html>
 """
-
-
-def studio_analytics_view(version: str) -> str:
-    body = """<div
-          class="studioDashboard"
-          id="studioAnalyticsDashboardRoot"
-          data-studio-dashboard-route="studio-analytics"
-          data-studio-ready="false"
-          data-studio-busy="false"
-        >
-          <section class="studioDashboard__metrics" aria-label="Analytics metrics">
-            <article class="studioMetricCard">
-              <p class="studioMetricCard__value" data-studio-metric="tag-count">--</p>
-              <p class="studioMetricCard__label">tags</p>
-            </article>
-            <article class="studioMetricCard">
-              <p class="studioMetricCard__value" data-studio-metric="tag-group-count">--</p>
-              <p class="studioMetricCard__label">groups</p>
-            </article>
-            <article class="studioMetricCard">
-              <p class="studioMetricCard__value" data-studio-metric="series-count">--</p>
-              <p class="studioMetricCard__label">series</p>
-            </article>
-            <article class="studioMetricCard">
-              <p class="studioMetricCard__value" data-studio-metric="works-count">--</p>
-              <p class="studioMetricCard__label">works</p>
-            </article>
-          </section>
-
-          <section class="catalogueDashboardRoutes" aria-label="Analytics links">
-            <section class="catalogueDashboardColumn">
-              <h3>Tags</h3>
-              <ul class="catalogueDashboardPills">
-                <li><a href="/studio/analytics/tag-groups/">tag groups</a></li>
-                <li><a href="/studio/analytics/tag-registry/">registry</a></li>
-                <li><a href="/studio/analytics/tag-aliases/">aliases</a></li>
-              </ul>
-            </section>
-            <section class="catalogueDashboardColumn">
-              <h3>Assignments</h3>
-              <ul class="catalogueDashboardPills">
-                <li><a href="/studio/analytics/series-tags/">series tags</a></li>
-                <li><a href="/studio/analytics/series-tag-editor/">tag editor</a></li>
-              </ul>
-            </section>
-          </section>
-        </div>"""
-    return studio_route_view(version, "studio_analytics", body)
 
 
 def tag_groups_view(version: str) -> str:
@@ -662,27 +596,6 @@ def activity_view(version: str) -> str:
     return studio_route_view(version, "activity", body)
 
 
-def data_sharing_dashboard_view(version: str) -> str:
-    body = """<div
-          class="studioDashboard"
-          id="studioDataSharingDashboardRoot"
-          data-studio-static-route="studio-data-sharing"
-          data-studio-ready="false"
-          data-studio-busy="false"
-        >
-          <section class="catalogueDashboardRoutes" aria-label="Data Sharing links">
-            <section class="catalogueDashboardColumn">
-              <h3>Share</h3>
-              <ul class="catalogueDashboardPills">
-                <li><a href="/studio/data-sharing/prepare/?mode=manage&scope=library">prepare package</a></li>
-                <li><a href="/studio/data-sharing/review/?mode=manage&scope=library">review returned package</a></li>
-              </ul>
-            </section>
-          </section>
-        </div>"""
-    return studio_route_view(version, "data_sharing", body)
-
-
 def data_sharing_prepare_view(version: str) -> str:
     body = """<div
           class="tagStudioPage dataSharingPreparePage"
@@ -825,7 +738,6 @@ def studio_home_view(version: str) -> str:
   {studio_header()}
   <main class="container">
     <div class="studio" id="studioHomeRoot" data-studio-ready="true" data-studio-busy="false">
-      <div class="studio__headerRow"><h2>Studio</h2></div>
       <div class="studio__content">
         <section class="studioHomeLinks" aria-label="Studio home links">
           {links}

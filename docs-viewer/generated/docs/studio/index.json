@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T11:32:16Z",
+  "generated_at": "2026-05-26T11:47:05Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -333,7 +333,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 4957
+      "content_text_length": 4923
     },
     {
       "scope": "studio",
@@ -627,7 +627,7 @@
       "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio.json",
-      "content_text_length": 4720
+      "content_text_length": 4582
     },
     {
       "scope": "studio",
@@ -676,7 +676,7 @@
       "source_path": "studio-data-sharing-technical-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 7356
+      "content_text_length": 7322
     },
     {
       "scope": "studio",
@@ -692,7 +692,7 @@
       "source_path": "scripts-audit-studio-ready-state.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-studio-ready-state",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-audit-studio-ready-state.json",
-      "content_text_length": 1803
+      "content_text_length": 1688
     },
     {
       "scope": "studio",
@@ -708,7 +708,7 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-runtime.json",
-      "content_text_length": 15084
+      "content_text_length": 14773
     },
     {
       "scope": "studio",
@@ -1159,7 +1159,7 @@
       "source_path": "ui-audits.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-audits",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-audits.json",
-      "content_text_length": 2724
+      "content_text_length": 2721
     },
     {
       "scope": "studio",
@@ -1401,7 +1401,7 @@
       "source_path": "studio-ready-state.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ready-state",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-ready-state.json",
-      "content_text_length": 8171
+      "content_text_length": 7638
     },
     {
       "scope": "studio",
@@ -1931,7 +1931,7 @@
       "source_path": "ui-pattern-column-links.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-pattern-column-links",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/ui-pattern-column-links.json",
-      "content_text_length": 2589
+      "content_text_length": 2502
     },
     {
       "scope": "studio",
@@ -2061,7 +2061,7 @@
       "source_path": "javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/javascript-inventory.json",
-      "content_text_length": 26537,
+      "content_text_length": 26422,
       "ui_status": "review"
     },
     {
@@ -2606,7 +2606,7 @@
       "source_path": "local-studio-app.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-app",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-app.json",
-      "content_text_length": 18402
+      "content_text_length": 17440
     },
     {
       "scope": "studio",

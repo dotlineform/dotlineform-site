@@ -39,8 +39,6 @@ They no longer depend on public `assets/css/main.css` for Studio base typography
 Current mounted views:
 
 - `/studio/`
-- `/studio/catalogue/?mode=manage`
-- `/studio/analytics/?mode=manage`
 - `/studio/analytics/tag-groups/`
 - `/studio/analytics/tag-registry/`
 - `/studio/analytics/tag-aliases/`
@@ -51,7 +49,6 @@ Current mounted views:
 - `/studio/thumbnail-quality/?mode=manage`
 - `/studio/bulk-add-work/?mode=manage`
 - `/studio/activity/?mode=manage`
-- `/studio/data-sharing/?mode=manage`
 - `/studio/data-sharing/prepare/?mode=manage`
 - `/studio/data-sharing/review/?mode=manage`
 - `/studio/catalogue-field-registry/?mode=manage`
@@ -66,13 +63,8 @@ The local app owns `/studio/`.
 Studio home navigation is a local-app owned grouped column-links layout, not Jekyll/Liquid page data.
 The local home exposes four centered columns for Catalogue, Analytics, Data Sharing, and Admin links, using static route targets so labels, order, and query-string defaults stay deliberate.
 The shared Studio top navigation is separate from that home link list.
-Every local Studio shell, including `/studio/`, shows the same compact top row: `dotlineform studio` on the left, with `docs`, `catalogue`, `analytics`, and `data sharing` plus the light/dark toggle right-aligned.
-The Catalogue dashboard route shell is hosted by the local app at `/studio/catalogue/?mode=manage`.
-It reuses the existing dashboard metric module and grouped Catalogue link layout with manage-mode links to the migrated local Catalogue routes.
-The old Jekyll `/studio/catalogue/` shell has been retired.
-The Analytics dashboard route shell is hosted by the local app at `/studio/analytics/?mode=manage`.
-It reuses the existing dashboard metric module and links to the local Analytics tag routes.
-The old Jekyll `/studio/analytics/` shell was already retired; the local app now owns the root Analytics entry point.
+Every local Studio shell, including `/studio/`, shows the same compact top row: `dotlineform studio` on the left, with `docs` plus the light/dark toggle right-aligned.
+The former Catalogue, Analytics, and Data Sharing dashboard pages are retired; their links now live on the `/studio/` home page, and metrics belong on the individual pages where they are relevant.
 
 Current app endpoints:
 
@@ -138,8 +130,6 @@ The Studio Audits route shell is also hosted by the local app at `/studio/audits
 It reuses `studio/app/frontend/js/studio-audits.js` and now calls `/studio/api/audits/...` on the local app server.
 `studio/app/server/studio/studio_audit_api.py` adapts the allowlisted audit functions from `studio/app/server/studio/audit_runner.py`, so normal Studio sessions no longer need a separate audit sibling service.
 The old Jekyll `/studio/audits/` shell has been retired.
-The Catalogue dashboard is hosted by the local app at `/studio/catalogue/?mode=manage`.
-It reuses `studio/app/frontend/js/studio-dashboard.js`, local index data, and local-app catalogue read keys for source-backed dashboard counts.
 The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
 It reuses `studio/app/frontend/js/project-state.js`, calls Local Studio for catalogue report generation, and calls the configured Docs Viewer service for source-file opening.
 `studio/app/server/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` adapter and reuses `studio/services/catalogue/project_state_report.py`.
@@ -149,7 +139,7 @@ It reuses `studio/app/frontend/js/thumbnail-quality.js`, checked-in preview JSON
 The refresh adapter reuses `studio/services/media/build_thumbnail_quality_preview.py`.
 The old Jekyll `/studio/thumbnail-quality/` shell has been retired.
 The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-work/?mode=manage`.
-The Data Sharing dashboard, package preparation, and returned-package review route shells are hosted by the local app at `/studio/data-sharing/?mode=manage`, `/studio/data-sharing/prepare/?mode=manage`, and `/studio/data-sharing/review/?mode=manage`.
+The Data Sharing package preparation and returned-package review route shells are hosted by the local app at `/studio/data-sharing/prepare/?mode=manage` and `/studio/data-sharing/review/?mode=manage`.
 They reuse the existing Data Sharing browser modules and now call document package endpoints on the configured Docs Viewer service.
 The old Jekyll route files under `studio/data-sharing/` have been retired.
 It reuses `studio/app/frontend/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply` endpoints.
@@ -217,8 +207,6 @@ Current focused checks:
 
 - `studio/tests/python/test_studio_app_server.py`
 - `studio/tests/smoke/local_studio_navigation_adapter.py`
-- `studio/tests/smoke/local_studio_app_analytics_dashboard_route.py`
-- `studio/tests/smoke/local_studio_app_catalogue_dashboard_route.py`
 - `studio/tests/smoke/local_studio_app_tag_groups.py`
 - `studio/tests/smoke/local_studio_app_tag_routes.py`
 - `studio/tests/smoke/local_studio_app_audits_route.py`

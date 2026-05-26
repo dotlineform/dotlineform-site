@@ -174,7 +174,6 @@ def assert_runtime_views(base_url: str) -> None:
     views = runtime_config.get("app", {}).get("runtime", {}).get("views", [])
     by_id = {view.get("id"): view for view in views if isinstance(view, dict)}
     expected = {
-        "data_sharing": "/studio/data-sharing/?mode=manage",
         "data_sharing_prepare": "/studio/data-sharing/prepare/?mode=manage",
         "data_sharing_review": "/studio/data-sharing/review/?mode=manage",
     }
@@ -182,20 +181,8 @@ def assert_runtime_views(base_url: str) -> None:
         view = by_id.get(view_id)
         if not view or view.get("path") != path:
             raise AssertionError(f"runtime config missing {view_id}: {views!r}")
-
-
-def assert_dashboard(page, base_url: str) -> None:
-    page.goto(f"{base_url}/studio/data-sharing/?mode=manage", wait_until="domcontentloaded")
-    root = page.locator("#studioDataSharingDashboardRoot")
-    expect(root).to_be_visible(timeout=10_000)
-    expect(root).to_have_attribute("data-studio-ready", "true", timeout=10_000)
-    expect(root).to_have_attribute("data-studio-route", "studio-data-sharing", timeout=10_000)
-    prepare_href = page.locator("#studioDataSharingDashboardRoot a", has_text="prepare package").get_attribute("href")
-    review_href = page.locator("#studioDataSharingDashboardRoot a", has_text="review returned package").get_attribute("href")
-    if prepare_href != "/studio/data-sharing/prepare/?mode=manage&scope=library":
-        raise AssertionError(f"unexpected prepare href: {prepare_href!r}")
-    if review_href != "/studio/data-sharing/review/?mode=manage&scope=library":
-        raise AssertionError(f"unexpected review href: {review_href!r}")
+    if "data_sharing" in by_id:
+        raise AssertionError(f"runtime config still exposes retired data sharing dashboard: {views!r}")
 
 
 def assert_prepare(page, base_url: str) -> None:
@@ -244,7 +231,6 @@ def main(argv: list[str] | None = None) -> int:
             page.on("pageerror", lambda error: page_errors.append(str(error)))
             docs_api_calls = install_mock_docs_api(page)
 
-            assert_dashboard(page, base_url)
             assert_prepare(page, base_url)
             assert_review(page, base_url)
             browser.close()
@@ -264,7 +250,7 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:
             raise AssertionError(f"page errors: {page_errors}")
-        print(f"local Studio Data Sharing routes OK: {base_url}/studio/data-sharing/?mode=manage")
+        print(f"local Studio Data Sharing routes OK: {base_url}/studio/data-sharing/prepare/?mode=manage")
         return 0
     finally:
         server.shutdown()

@@ -52,8 +52,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert payload["paths"]["routes"]["docs_page"] == f"{docs_base_url}/docs/"
     assert payload["paths"]["routes"]["docs_html_import"] == f"{docs_base_url}/docs/?mode=manage&import=1"
     assert any(view["id"] == "docs" and view["path"] == f"{docs_base_url}/docs/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "studio_catalogue" and view["path"] == "/studio/catalogue/?mode=manage" for view in runtime["views"])
-    assert any(view["id"] == "studio_analytics" and view["path"] == "/studio/analytics/?mode=manage" for view in runtime["views"])
+    assert not any(view["id"] in {"studio_catalogue", "studio_analytics", "data_sharing"} for view in runtime["views"])
     assert any(view["id"] == "tag_registry" and view["path"] == "/studio/analytics/tag-registry/" for view in runtime["views"])
     assert any(view["id"] == "tag_aliases" and view["path"] == "/studio/analytics/tag-aliases/" for view in runtime["views"])
     assert any(view["id"] == "series_tags" and view["path"] == "/studio/analytics/series-tags/" for view in runtime["views"])
@@ -70,6 +69,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert any(view["id"] == "catalogue_work_editor" and view["path"] == "/studio/catalogue-work/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_work_detail_editor" and view["path"] == "/studio/catalogue-work-detail/?mode=manage" for view in runtime["views"])
     assert any(view["id"] == "catalogue_moment_editor" and view["path"] == "/studio/catalogue-moment/?mode=manage" for view in runtime["views"])
+    assert runtime["navigation"]["primary"] == ["docs"]
     assert "series_tag_editor" not in runtime["navigation"]["primary"]
     assert runtime["services"]["analytics"]["tag_groups"] == "/studio/api/analytics/tag-groups"
     assert runtime["services"]["analytics"]["tag_registry"] == "/studio/api/analytics/tag-registry"
@@ -184,7 +184,7 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
 def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
     html_shells = [
         studio_home_view("test-version"),
-        studio_route_view("test-version", "studio_analytics", "<p>Analytics</p>"),
+        studio_route_view("test-version", "tag_groups", "<p>Tag groups</p>"),
         ui_catalogue_demo_view("test-version", REPO_ROOT, "ui_catalogue_demos"),
     ]
 

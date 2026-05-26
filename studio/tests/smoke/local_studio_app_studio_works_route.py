@@ -85,9 +85,6 @@ def main(argv: list[str] | None = None) -> int:
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
             if not str(doc_link).endswith("/docs/?scope=studio&doc=studio-works&mode=manage"):
                 raise AssertionError(f"studio-works doc link is not manage-mode: {doc_link!r}")
-            nav_link = page.locator('.site-nav [data-studio-navigate="studio_catalogue"]').get_attribute("href")
-            if nav_link != "/studio/catalogue/?mode=manage":
-                raise AssertionError(f"studio-works parent nav link is not manage-mode: {nav_link!r}")
             if page.locator('.site-nav [data-studio-navigate="studio_works"]').count():
                 raise AssertionError("studio-works should not appear as a top-nav item")
             if len(data_requests) < 3:

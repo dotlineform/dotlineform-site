@@ -26,12 +26,11 @@ Sharing profile definitions live in `assets/studio/data/library_export_configs.j
 
 ## Route Ready State
 
-Studio landing and dashboard routes expose the shared route-ready contract:
+Studio landing and operational routes expose the shared route-ready contract:
 
 - `/studio/` uses `#studioHomeRoot` with `data-studio-mode="landing"` and static ready state
-- `/studio/catalogue/?mode=manage` and `/studio/analytics/?mode=manage` use dashboard roots with `data-studio-mode="dashboard"`
-- dashboard routes set `data-studio-busy="true"` while lightweight metric hydration runs, then mark ready after metric reads settle
-- these routes are framework markers for future dashboard behavior; they do not imply a formal dashboard test suite
+- retired Catalogue, Analytics, and Data Sharing dashboard entry points should stay retired; their links live on the `/studio/` home page
+- page-local metrics should live on the individual workflow pages where they are relevant
 
 ## Key Documents
 

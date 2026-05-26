@@ -80,9 +80,6 @@ def main(argv: list[str] | None = None) -> int:
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
             if not str(doc_link).endswith("/docs/?scope=studio&doc=project-state-page&mode=manage"):
                 raise AssertionError(f"project-state doc link is not manage-mode: {doc_link!r}")
-            nav_link = page.locator('.site-nav [data-studio-navigate="studio_catalogue"]').get_attribute("href")
-            if nav_link != "/studio/catalogue/?mode=manage":
-                raise AssertionError(f"project-state parent nav link is not manage-mode: {nav_link!r}")
             if page.locator('.site-nav [data-studio-navigate="project_state"]').count():
                 raise AssertionError("project-state should not appear as a top-nav item")
             if legacy_catalogue_service_requests:

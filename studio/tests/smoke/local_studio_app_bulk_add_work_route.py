@@ -79,9 +79,6 @@ def main(argv: list[str] | None = None) -> int:
             doc_link = page.locator(".studioLayout__docLink").get_attribute("href")
             if not str(doc_link).endswith("/docs/?scope=studio&doc=bulk-add-work&mode=manage"):
                 raise AssertionError(f"bulk-add-work doc link is not manage-mode: {doc_link!r}")
-            nav_link = page.locator('.site-nav [data-studio-navigate="studio_catalogue"]').get_attribute("href")
-            if nav_link != "/studio/catalogue/?mode=manage":
-                raise AssertionError(f"bulk-add-work parent nav link is not manage-mode: {nav_link!r}")
             if page.locator('.site-nav [data-studio-navigate="bulk_add_work"]').count():
                 raise AssertionError("bulk-add-work should not appear as a top-nav item")
             if not local_catalogue_requests:
