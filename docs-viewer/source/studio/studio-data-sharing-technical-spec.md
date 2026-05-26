@@ -191,6 +191,13 @@ The documents adapter owns:
 - summary and hierarchy apply planning
 - `docs-viewer/source/library/` writes, docs/search rebuild follow-through, and document activity metadata
 
+Current docs-domain helper modules:
+
+- `docs-viewer/services/docs_data_sharing_package.py`: selectable document records, package generation, and returned-package listing
+- `docs-viewer/services/docs_data_sharing_review.py`: staged package parsing, Markdown preview generation, and review-row shaping
+- `docs-viewer/services/docs_data_sharing_apply.py`: summary and hierarchy apply planning and result payload shaping
+- `docs-viewer/services/docs_data_sharing_write.py`: source writes, backups, and docs/search rebuild follow-through
+
 Library workflow roots:
 
 - outbound packages: `var/studio/data-sharing/library/exports/`

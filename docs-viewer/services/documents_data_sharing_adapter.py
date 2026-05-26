@@ -17,21 +17,30 @@ for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
 
 from studio.shared.python.studio_python_paths import ensure_studio_python_paths
 
-REPO_ROOT = ensure_studio_python_paths(__file__)
-SCRIPTS_DIR = REPO_ROOT / "scripts"
+ensure_studio_python_paths(__file__)
 
-from docs_export import build_export, parse_doc_ids as parse_export_doc_ids
-import docs_generated_reads
-from docs_import import list_staged_import_files, parse_staged_import, render_markdown_previews, scope_title
-import docs_management_mutations as mutations
-import docs_source_model as source_model
-from studio.data_sharing_adapters import AdapterResolution
-from studio import data_sharing_service
+from docs_data_sharing_apply import (  # noqa: E402
+    DocumentsApplyIdentity,
+    apply_hierarchy_updates,
+    apply_summary_updates,
+)
+from docs_data_sharing_package import (  # noqa: E402
+    build_document_package,
+    list_returned_document_packages,
+    selectable_document_records,
+)
+from docs_data_sharing_review import review_returned_document_package  # noqa: E402
+from docs_data_sharing_write import (  # noqa: E402
+    DocsDataSharingWriteDependencies,
+    MakeBackupBundle,
+    PerformSourceWriteAndRebuild,
+)
+import docs_source_model as source_model  # noqa: E402
+from studio.data_sharing_adapters import AdapterResolution  # noqa: E402
+from studio import data_sharing_service  # noqa: E402
 
 
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
-MakeBackupBundle = Callable[[Path, str, str, list[source_model.ScopeDoc], Optional[Dict[str, Any]]], Path]
-PerformSourceWriteAndRebuild = Callable[..., Dict[str, Any]]
 
 
 @dataclass(frozen=True)
@@ -40,16 +49,11 @@ class DocumentsDataSharingDependencies:
     make_backup_bundle: MakeBackupBundle
     perform_source_write_and_rebuild: PerformSourceWriteAndRebuild
 
-
-def normalize_summary(value: Any) -> str:
-    return mutations.normalize_summary(value)
-
-
-def relative_path(repo_root: Path, path: Path) -> str:
-    try:
-        return path.resolve().relative_to(repo_root.resolve()).as_posix()
-    except ValueError:
-        return path.as_posix()
+    def write_dependencies(self) -> DocsDataSharingWriteDependencies:
+        return DocsDataSharingWriteDependencies(
+            make_backup_bundle=self.make_backup_bundle,
+            perform_source_write_and_rebuild=self.perform_source_write_and_rebuild,
+        )
 
 
 def resolve_documents_adapter(repo_root: Path, data_domain: Any, operation: str) -> AdapterResolution:
@@ -67,6 +71,12 @@ def selection_model(adapter: AdapterResolution) -> str:
     return str(adapter.capability.get("selection_model") or adapter.domain.get("selection_model") or "").strip()
 
 
+def attach_adapter_context(report: Dict[str, Any], adapter: AdapterResolution) -> Dict[str, Any]:
+    report["data_domain"] = adapter.data_domain
+    report["adapter_id"] = adapter.adapter_id
+    return report
+
+
 def selectable_records(
     repo_root: Path,
     data_domain: Any,
@@ -75,59 +85,12 @@ def selectable_records(
 ) -> Dict[str, Any]:
     del dependencies
     adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, data_domain, "prepare"))
-    scope = source_model.normalize_scope(adapter.scope)
-    index_payload = docs_generated_reads.read_generated_docs_index(repo_root, scope)
-    docs = index_payload.get("docs")
-    if not isinstance(docs, list):
-        raise RuntimeError(f"generated docs index for {scope} is missing docs")
-    records = [document_selectable_record(item) for item in docs if isinstance(item, dict)]
-    return {
-        "ok": True,
-        "data_domain": adapter.data_domain,
-        "adapter_id": adapter.adapter_id,
-        "scope": scope,
-        "selection_model": selection_model(adapter),
-        "records": records,
-        "docs": records,
-        "source": {
-            "kind": "adapter",
-            "module": "documents",
-            "source": "generated_docs_index",
-            "scope": scope,
-        },
-    }
-
-
-def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
-    doc_id = str(doc.get("doc_id") or "").strip()
-    title = str(doc.get("title") or doc_id).strip()
-    viewable = bool(doc.get("viewable", True))
-    hidden = bool(doc.get("hidden", False))
-    published = doc.get("published") is not False
-    selectable = bool(doc_id and published and viewable and not hidden)
-    issues: list[Dict[str, str]] = []
-    if not published:
-        issues.append({"level": "warning", "message": "Document is not published."})
-    if not viewable:
-        issues.append({"level": "warning", "message": "Document is not viewable."})
-    if hidden:
-        issues.append({"level": "warning", "message": "Document is hidden."})
-    return {
-        "id": doc_id,
-        "doc_id": doc_id,
-        "title": title,
-        "type": "document",
-        "meta": doc_id,
-        "parent_id": str(doc.get("parent_id") or "").strip(),
-        "published": published,
-        "viewable": viewable,
-        "hidden": hidden,
-        "selectable": selectable,
-        "children": [],
-        "issues": issues,
-        "content_text_length": int(doc.get("content_text_length") or 0),
-        "summary": str(doc.get("summary") or ""),
-    }
+    report = selectable_document_records(
+        repo_root,
+        scope=adapter.scope,
+        selection_model=selection_model(adapter),
+    )
+    return attach_adapter_context(report, adapter)
 
 
 def prepare_package(
@@ -138,37 +101,21 @@ def prepare_package(
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
     adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, body.get("data_domain"), "prepare"))
-    scope = source_model.normalize_scope(adapter.scope)
     config_id = str(body.get("config_id") or "").strip()
-    if not config_id:
-        raise ValueError("config_id is required")
-
-    raw_doc_ids = body.get("doc_ids", [])
-    if raw_doc_ids is None:
-        raw_doc_ids = []
-    if not isinstance(raw_doc_ids, list):
-        raise ValueError("doc_ids must be a list")
-    doc_ids = parse_export_doc_ids([str(doc_id or "") for doc_id in raw_doc_ids])
-    select_all = bool(body.get("select_all"))
-    missing_summary_only = body.get("missing_summary_only")
-    if missing_summary_only is not None and not isinstance(missing_summary_only, bool):
-        raise ValueError("missing_summary_only must be true, false, or null")
     target_format = str(body.get("target_format") or "").strip()
-
-    report = build_export(
-        repo_root=repo_root,
+    report = build_document_package(
+        repo_root,
+        scope=adapter.scope,
         config_id=config_id,
-        scope=scope,
-        selected_doc_ids=doc_ids,
-        select_all=select_all,
-        missing_summary_only=missing_summary_only,
-        write=not dry_run,
+        raw_doc_ids=body.get("doc_ids", []),
+        select_all=bool(body.get("select_all")),
+        missing_summary_only=body.get("missing_summary_only"),
+        dry_run=dry_run,
         config_path=adapter.config_path("sharing_profiles_path").as_posix(),
-        target_format=target_format or None,
+        target_format=target_format,
         output_root=adapter.path("outbound_package_root"),
     )
-    report["data_domain"] = adapter.data_domain
-    report["adapter_id"] = adapter.adapter_id
+    report = attach_adapter_context(report, adapter)
     if dependencies is not None:
         dependencies.log_event(
             repo_root,
@@ -176,7 +123,7 @@ def prepare_package(
             {
                 "data_domain": adapter.data_domain,
                 "adapter_id": adapter.adapter_id,
-                "scope": scope,
+                "scope": report.get("scope", source_model.normalize_scope(adapter.scope)),
                 "config_id": config_id,
                 "dry_run": dry_run,
                 "target_format": report.get("target_format", ""),
@@ -209,9 +156,12 @@ def list_returned_packages(
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
     adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, data_domain, "list_returned"))
-    scope = source_model.normalize_scope(adapter.scope)
-    staging_root = adapter.path("returned_package_staging_root")
-    files = list_staged_import_files(repo_root, scope, staging_root=staging_root)
+    report = list_returned_document_packages(
+        repo_root,
+        scope=adapter.scope,
+        staging_root=adapter.path("returned_package_staging_root"),
+    )
+    report = attach_adapter_context(report, adapter)
     if dependencies is not None:
         dependencies.log_event(
             repo_root,
@@ -219,132 +169,11 @@ def list_returned_packages(
             {
                 "data_domain": adapter.data_domain,
                 "adapter_id": adapter.adapter_id,
-                "scope": scope,
-                "count": len(files),
+                "scope": report.get("scope", source_model.normalize_scope(adapter.scope)),
+                "count": len(report.get("files", [])),
             },
         )
-    return {
-        "ok": True,
-        "data_domain": adapter.data_domain,
-        "adapter_id": adapter.adapter_id,
-        "scope": scope,
-        "staging_root": staging_root.as_posix(),
-        "files": files,
-    }
-
-
-def normalize_text(value: Any) -> str:
-    return str(value or "").strip()
-
-
-def record_issue_map(report: Dict[str, Any]) -> dict[int, list[Dict[str, Any]]]:
-    issues_by_record: dict[int, list[Dict[str, Any]]] = {}
-    for issue in report.get("issues", []):
-        if not isinstance(issue, dict) or not isinstance(issue.get("record_index"), int):
-            continue
-        issues_by_record.setdefault(int(issue["record_index"]), []).append(issue)
-    return issues_by_record
-
-
-def duplicate_doc_ids(records: list[Dict[str, Any]]) -> set[str]:
-    counts: dict[str, int] = {}
-    for record in records:
-        doc_id = normalize_text(record.get("doc_id"))
-        if doc_id:
-            counts[doc_id] = counts.get(doc_id, 0) + 1
-    return {doc_id for doc_id, count in counts.items() if count > 1}
-
-
-def ordered_document_records(records: list[Dict[str, Any]]) -> list[tuple[Dict[str, Any], int]]:
-    ids = {normalize_text(record.get("doc_id")) for record in records if normalize_text(record.get("doc_id"))}
-    children_by_parent: dict[str, list[Dict[str, Any]]] = {}
-    for record in records:
-        doc_id = normalize_text(record.get("doc_id"))
-        parent_id = normalize_text(record.get("parent_id"))
-        parent_key = parent_id if parent_id and parent_id != doc_id else ""
-        children_by_parent.setdefault(parent_key, []).append(record)
-
-    roots = [
-        record
-        for record in records
-        if not normalize_text(record.get("parent_id"))
-        or normalize_text(record.get("parent_id")) not in ids
-        or normalize_text(record.get("parent_id")) == normalize_text(record.get("doc_id"))
-    ]
-    ordered: list[tuple[Dict[str, Any], int]] = []
-    rendered: set[int] = set()
-
-    def visit(record: Dict[str, Any], depth: int, active_doc_ids: set[str]) -> None:
-        identity = id(record)
-        if identity in rendered:
-            return
-        rendered.add(identity)
-        ordered.append((record, depth))
-        doc_id = normalize_text(record.get("doc_id"))
-        if not doc_id or doc_id in active_doc_ids:
-            return
-        next_active = set(active_doc_ids)
-        next_active.add(doc_id)
-        for child in children_by_parent.get(doc_id, []):
-            visit(child, depth + 1, next_active)
-
-    for record in roots:
-        visit(record, 0, set())
-    for record in records:
-        visit(record, 0, set())
-    return ordered
-
-
-def review_row_meta(scope: str, record: Dict[str, Any], duplicates: set[str]) -> str:
-    doc_id = normalize_text(record.get("doc_id"))
-    current_library = record.get("current_library") if isinstance(record.get("current_library"), dict) else {}
-    parts = [doc_id or "missing doc_id"]
-    if doc_id in duplicates:
-        parts.append("duplicate doc_id")
-    if current_library.get("exists") is False:
-        parts.append(f"not in current {scope_title(scope)}")
-    return " · ".join(parts)
-
-
-def build_review_rows(report: Dict[str, Any], scope: str) -> list[Dict[str, Any]]:
-    records = [record for record in report.get("records", []) if isinstance(record, dict)]
-    issues_by_record = record_issue_map(report)
-    duplicates = duplicate_doc_ids(records)
-    rows: list[Dict[str, Any]] = []
-    for index, item in enumerate(report.get("preview_files", [])):
-        if not isinstance(item, dict) or normalize_text(item.get("kind")) != "relationship_tree":
-            continue
-        path = normalize_text(item.get("path"))
-        rows.append(
-            {
-                "id": path or f"relationship-tree-{index + 1}",
-                "type": "relationship_tree",
-                "title": "Relationship tree",
-                "meta": f"{int(item.get('record_count') or 0)} records",
-                "record_index": None,
-                "selectable": False,
-                "record_groups": {"files": [path]} if path else {},
-                "issues": [],
-                "depth": 0,
-            }
-        )
-    for record, depth in ordered_document_records(records):
-        record_index = int(record.get("record_index")) if isinstance(record.get("record_index"), int) else len(rows)
-        doc_id = normalize_text(record.get("doc_id"))
-        rows.append(
-            {
-                "id": f"{doc_id or 'missing-doc-id'}-record-{record_index + 1}",
-                "type": "document",
-                "title": normalize_text(record.get("title")) or "missing title",
-                "meta": review_row_meta(scope, record, duplicates),
-                "record_index": record_index,
-                "selectable": True,
-                "record_groups": {"documents": [doc_id]} if doc_id else {},
-                "issues": issues_by_record.get(record_index, []),
-                "depth": depth,
-            }
-        )
-    return rows
+    return report
 
 
 def review_returned_package(
@@ -358,27 +187,17 @@ def review_returned_package(
     if operation != "review":
         raise ValueError("operation must be review")
     adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, body.get("data_domain"), "review"))
-    scope = source_model.normalize_scope(adapter.scope)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
-    if not staged_filename:
-        raise ValueError("staged_filename is required")
-
-    report = parse_staged_import(
-        repo_root=repo_root,
-        scope=scope,
-        staged_file=staged_filename,
+    report = review_returned_document_package(
+        repo_root,
+        scope=adapter.scope,
+        staged_filename=staged_filename,
+        dry_run=dry_run,
         staging_root=adapter.path("returned_package_staging_root"),
-    )
-    report = render_markdown_previews(
-        repo_root=repo_root,
-        scope=scope,
-        report=report,
-        write=not dry_run,
         preview_root=adapter.path("review_output_root"),
     )
-    report["data_domain"] = adapter.data_domain
-    report["adapter_id"] = adapter.adapter_id
-    report["review_rows"] = build_review_rows(report, scope)
+    report = attach_adapter_context(report, adapter)
+    scope = source_model.normalize_scope(adapter.scope)
     if dependencies is not None:
         dependencies.log_event(
             repo_root,
@@ -414,358 +233,6 @@ def review_returned_package(
     return report
 
 
-def selected_record_indices(value: Any) -> list[int]:
-    if not isinstance(value, list):
-        raise ValueError("record_indices must be a list")
-    selected: list[int] = []
-    seen: set[int] = set()
-    for item in value:
-        if isinstance(item, bool):
-            raise ValueError("record_indices must contain integers")
-        try:
-            index = int(item)
-        except (TypeError, ValueError) as exc:
-            raise ValueError("record_indices must contain integers") from exc
-        if index < 0:
-            raise ValueError("record_indices must contain zero or positive integers")
-        if index not in seen:
-            selected.append(index)
-            seen.add(index)
-    return selected
-
-
-def summary_from_record(record: Dict[str, Any]) -> tuple[str, bool]:
-    metadata = record.get("metadata") if isinstance(record.get("metadata"), dict) else {}
-    if "summary" not in metadata:
-        return "", False
-    return normalize_summary(metadata.get("summary")), True
-
-
-def imported_parent_id(record: Dict[str, Any]) -> str:
-    return str(record.get("parent_id") or "").strip()
-
-
-def selected_records(
-    report: Dict[str, Any],
-    selected_indices: list[int],
-) -> tuple[list[Dict[str, Any]], list[Dict[str, Any]], list[tuple[int, Dict[str, Any], str]]]:
-    records_by_index = {
-        int(record.get("record_index")): record
-        for record in report.get("records", [])
-        if isinstance(record, dict) and isinstance(record.get("record_index"), int)
-    }
-    selected_rows: list[Dict[str, Any]] = []
-    skipped: list[Dict[str, Any]] = []
-    selected: list[tuple[int, Dict[str, Any], str]] = []
-    seen_doc_ids: set[str] = set()
-
-    for record_index in selected_indices:
-        record = records_by_index.get(record_index)
-        if not record:
-            skipped.append({"record_index": record_index, "reason": "missing_record", "message": "selected record is not present in staged file"})
-            continue
-        doc_id = str(record.get("doc_id") or "").strip()
-        selected_rows.append({"record_index": record_index, "doc_id": doc_id})
-        if not doc_id:
-            skipped.append({"record_index": record_index, "reason": "missing_doc_id", "message": "selected record has no doc_id"})
-            continue
-        if doc_id in seen_doc_ids:
-            skipped.append({"record_index": record_index, "doc_id": doc_id, "reason": "duplicate_doc_id", "message": "selected doc_id was already planned"})
-            continue
-        seen_doc_ids.add(doc_id)
-        selected.append((record_index, record, doc_id))
-
-    return selected_rows, skipped, selected
-
-
-def apply_summary_updates(
-    repo_root: Path,
-    body: Dict[str, Any],
-    dry_run: bool,
-    adapter: AdapterResolution,
-    dependencies: DocumentsDataSharingDependencies,
-) -> Dict[str, Any]:
-    scope = source_model.normalize_scope(adapter.scope)
-    staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
-    if not staged_filename:
-        raise ValueError("staged_filename is required")
-    selected_indices = selected_record_indices(body.get("record_indices", []))
-    if not selected_indices:
-        raise ValueError("record_indices must include at least one selected record")
-    confirmed = bool(body.get("confirm"))
-
-    report = parse_staged_import(
-        repo_root=repo_root,
-        scope=scope,
-        staged_file=staged_filename,
-        staging_root=adapter.path("returned_package_staging_root"),
-    )
-    docs = source_model.load_scope_docs(repo_root, scope)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    selected_rows, skipped, selected = selected_records(report, selected_indices)
-    errors: list[Dict[str, Any]] = []
-    warnings: list[Dict[str, Any]] = []
-    updates: list[Dict[str, Any]] = []
-    rewrite_docs: list[source_model.ScopeDoc] = []
-    rewritten_sources: dict[str, str] = {}
-
-    for record_index, record, doc_id in selected:
-        target = docs_by_id.get(doc_id)
-        if target is None:
-            errors.append({"record_index": record_index, "doc_id": doc_id, "reason": "missing_target_doc", "message": f"target Library source doc does not exist: {doc_id}"})
-            continue
-        summary, has_summary = summary_from_record(record)
-        if not has_summary or not summary:
-            skipped.append({"record_index": record_index, "doc_id": doc_id, "reason": "missing_summary", "message": "selected record has no proposed summary"})
-            continue
-        current_summary = normalize_summary(target.front_matter.get("summary"))
-        if summary == current_summary:
-            skipped.append({"record_index": record_index, "doc_id": doc_id, "reason": "unchanged", "message": "proposed summary matches current source summary"})
-            continue
-
-        timestamp = source_model.current_doc_timestamp()
-        updated_front_matter = dict(target.front_matter)
-        updated_front_matter["added_date"] = str(
-            updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
-        ).strip()
-        updated_front_matter["summary"] = summary
-        rewritten_sources[doc_id] = source_model.format_source(updated_front_matter, target.body)
-        rewrite_docs.append(target)
-        updates.append(
-            {
-                "record_index": record_index,
-                "doc_id": doc_id,
-                "path": relative_path(repo_root, target.path),
-                "from_summary": current_summary,
-                "to_summary": summary,
-            }
-        )
-
-    warning_count = len(warnings) + len(skipped)
-    error_count = len(errors)
-    ok = bool(report.get("ok")) and error_count == 0
-    backup_dir = None
-    rebuild = None
-    if ok and confirmed and updates and not dry_run:
-        backup_dir = dependencies.make_backup_bundle(
-            repo_root,
-            scope,
-            "documents-summary-apply",
-            rewrite_docs,
-            {
-                "staged_filename": staged_filename,
-                "record_indices": selected_indices,
-                "updated_doc_ids": [item["doc_id"] for item in updates],
-            },
-        )
-        rebuild = dependencies.perform_source_write_and_rebuild(
-            repo_root,
-            scope,
-            [doc.path for doc in rewrite_docs],
-            lambda: [source_model.write_text_atomic(doc.path, rewritten_sources[doc.doc_id]) for doc in rewrite_docs],
-            suppression_reason="docs-import-summary-apply",
-            docs_doc_ids=[item["doc_id"] for item in updates],
-            search_doc_ids=[item["doc_id"] for item in updates],
-        )
-
-    payload: Dict[str, Any] = {
-        "ok": ok,
-        "data_domain": adapter.data_domain,
-        "adapter_id": adapter.adapter_id,
-        "scope": scope,
-        "staged_filename": staged_filename,
-        "operation": "summary_apply",
-        "confirmed": confirmed,
-        "dry_run": dry_run,
-        "input_ok": bool(report.get("ok")),
-        "detected_import_type": report.get("detected_import_type", ""),
-        "selected_records": selected_rows,
-        "updates": updates,
-        "skipped": skipped,
-        "errors": errors,
-        "warnings": warnings,
-        "counts": {
-            "selected": len(selected_indices),
-            "updates": len(updates),
-            "skipped": len(skipped),
-            "errors": error_count,
-            "warnings": warning_count,
-        },
-        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
-        "rebuild": rebuild,
-        "summary_apply_written": bool(ok and confirmed and updates and not dry_run),
-        "requires_confirmation": bool(ok and updates and not confirmed),
-    }
-    action = "Validated" if not confirmed or dry_run else "Updated"
-    suffix = " without writing" if not confirmed or dry_run else ""
-    payload["summary_text"] = f"{action} {len(updates)} {adapter.label} summary update(s){suffix}."
-    dependencies.log_event(
-        repo_root,
-        "docs-import-summary-apply",
-        {
-            "data_domain": adapter.data_domain,
-            "adapter_id": adapter.adapter_id,
-            "scope": scope,
-            "staged_filename": staged_filename,
-            "dry_run": dry_run,
-            "confirmed": confirmed,
-            "updates": len(updates),
-            "skipped": len(skipped),
-            "errors": error_count,
-            "written": bool(payload["summary_apply_written"]),
-        },
-    )
-    return payload
-
-
-def apply_hierarchy_updates(
-    repo_root: Path,
-    body: Dict[str, Any],
-    dry_run: bool,
-    adapter: AdapterResolution,
-    dependencies: DocumentsDataSharingDependencies,
-) -> Dict[str, Any]:
-    scope = source_model.normalize_scope(adapter.scope)
-    staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
-    if not staged_filename:
-        raise ValueError("staged_filename is required")
-    selected_indices = selected_record_indices(body.get("record_indices", []))
-    if not selected_indices:
-        raise ValueError("record_indices must include at least one selected record")
-    confirmed = bool(body.get("confirm"))
-
-    report = parse_staged_import(
-        repo_root=repo_root,
-        scope=scope,
-        staged_file=staged_filename,
-        staging_root=adapter.path("returned_package_staging_root"),
-    )
-    docs = source_model.load_scope_docs(repo_root, scope)
-    docs_by_id = {doc.doc_id: doc for doc in docs}
-    selected_rows, skipped, selected = selected_records(report, selected_indices)
-    errors: list[Dict[str, Any]] = []
-    warnings: list[Dict[str, Any]] = []
-    updates: list[Dict[str, Any]] = []
-    unchanged: list[Dict[str, Any]] = []
-    rewrite_docs: list[source_model.ScopeDoc] = []
-    rewritten_sources: dict[str, str] = {}
-
-    for record_index, record, doc_id in selected:
-        target = docs_by_id.get(doc_id)
-        if target is None:
-            errors.append({"record_index": record_index, "doc_id": doc_id, "reason": "missing_target_doc", "message": f"target Library source doc does not exist: {doc_id}"})
-            continue
-        parent_id = imported_parent_id(record)
-        if parent_id == doc_id:
-            skipped.append({"record_index": record_index, "doc_id": doc_id, "reason": "self_parent_id", "message": "selected record parent_id points to itself"})
-            continue
-        if parent_id and parent_id not in docs_by_id:
-            warnings.append({"record_index": record_index, "doc_id": doc_id, "parent_id": parent_id, "reason": "unknown_parent_id", "message": f"parent_id is not a current Library source doc and will render at root level: {parent_id}"})
-        if parent_id == target.parent_id:
-            unchanged.append({"record_index": record_index, "doc_id": doc_id, "parent_id": parent_id, "message": "proposed parent_id matches current source parent_id"})
-            continue
-
-        timestamp = source_model.current_doc_timestamp()
-        updated_front_matter = dict(target.front_matter)
-        updated_front_matter["added_date"] = str(
-            updated_front_matter.get("added_date") or updated_front_matter.get("last_updated") or timestamp
-        ).strip()
-        updated_front_matter["parent_id"] = parent_id
-        rewritten_sources[doc_id] = source_model.format_source(updated_front_matter, target.body)
-        rewrite_docs.append(target)
-        updates.append(
-            {
-                "record_index": record_index,
-                "doc_id": doc_id,
-                "path": relative_path(repo_root, target.path),
-                "from_parent_id": target.parent_id,
-                "to_parent_id": parent_id,
-                "sort_order": target.sort_order,
-            }
-        )
-
-    warning_count = len(warnings) + len(skipped)
-    error_count = len(errors)
-    ok = bool(report.get("ok")) and error_count == 0
-    backup_dir = None
-    rebuild = None
-    if ok and confirmed and updates and not dry_run:
-        backup_dir = dependencies.make_backup_bundle(
-            repo_root,
-            scope,
-            "documents-hierarchy-apply",
-            rewrite_docs,
-            {
-                "staged_filename": staged_filename,
-                "record_indices": selected_indices,
-                "updated_doc_ids": [item["doc_id"] for item in updates],
-            },
-        )
-        rebuild = dependencies.perform_source_write_and_rebuild(
-            repo_root,
-            scope,
-            [doc.path for doc in rewrite_docs],
-            lambda: [source_model.write_text_atomic(doc.path, rewritten_sources[doc.doc_id]) for doc in rewrite_docs],
-            suppression_reason="docs-import-hierarchy-apply",
-            docs_doc_ids=[item["doc_id"] for item in updates],
-            search_doc_ids=[item["doc_id"] for item in updates],
-        )
-
-    payload: Dict[str, Any] = {
-        "ok": ok,
-        "data_domain": adapter.data_domain,
-        "adapter_id": adapter.adapter_id,
-        "scope": scope,
-        "staged_filename": staged_filename,
-        "operation": "hierarchy_apply",
-        "confirmed": confirmed,
-        "dry_run": dry_run,
-        "input_ok": bool(report.get("ok")),
-        "detected_import_type": report.get("detected_import_type", ""),
-        "selected_records": selected_rows,
-        "updates": updates,
-        "unchanged": unchanged,
-        "skipped": skipped,
-        "errors": errors,
-        "warnings": warnings,
-        "counts": {
-            "selected": len(selected_indices),
-            "changed": len(updates),
-            "updates": len(updates),
-            "unchanged": len(unchanged),
-            "skipped": len(skipped),
-            "errors": error_count,
-            "warnings": warning_count,
-        },
-        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
-        "rebuild": rebuild,
-        "hierarchy_apply_written": bool(ok and confirmed and updates and not dry_run),
-        "requires_confirmation": bool(ok and updates and not confirmed),
-    }
-    action = "Validated" if not confirmed or dry_run else "Updated"
-    suffix = " without writing" if not confirmed or dry_run else ""
-    payload["summary_text"] = f"{action} {len(updates)} {adapter.label} hierarchy change(s){suffix}."
-    dependencies.log_event(
-        repo_root,
-        "docs-import-hierarchy-apply",
-        {
-            "data_domain": adapter.data_domain,
-            "adapter_id": adapter.adapter_id,
-            "scope": scope,
-            "staged_filename": staged_filename,
-            "dry_run": dry_run,
-            "confirmed": confirmed,
-            "changed": len(updates),
-            "unchanged": len(unchanged),
-            "skipped": len(skipped),
-            "warnings": len(warnings),
-            "errors": error_count,
-            "written": bool(payload["hierarchy_apply_written"]),
-        },
-    )
-    return payload
-
-
 def apply_returned_changes(
     repo_root: Path,
     body: Dict[str, Any],
@@ -782,9 +249,59 @@ def apply_returned_changes(
     if dependencies is None:
         raise ValueError("documents apply requires service dependencies")
     adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, body.get("data_domain"), operation))
+    scope = source_model.normalize_scope(adapter.scope)
+    staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
+    confirmed = bool(body.get("confirm"))
+    identity = DocumentsApplyIdentity(
+        data_domain=adapter.data_domain,
+        adapter_id=adapter.adapter_id,
+        adapter_label=adapter.label,
+    )
+    common_args = {
+        "scope": scope,
+        "staged_filename": staged_filename,
+        "record_indices": body.get("record_indices", []),
+        "confirmed": confirmed,
+        "dry_run": dry_run,
+        "staging_root": adapter.path("returned_package_staging_root"),
+        "identity": identity,
+        "dependencies": dependencies.write_dependencies(),
+    }
     if apply_action == "summary_apply":
-        return apply_summary_updates(repo_root, body, dry_run, adapter, dependencies)
-    return apply_hierarchy_updates(repo_root, body, dry_run, adapter, dependencies)
+        payload = apply_summary_updates(repo_root, **common_args)
+        log_event_name = "docs-import-summary-apply"
+        log_details = {
+            "updates": len(payload.get("updates", [])),
+            "skipped": len(payload.get("skipped", [])),
+            "errors": int(payload.get("counts", {}).get("errors") or 0),
+            "written": bool(payload.get("summary_apply_written")),
+        }
+    else:
+        payload = apply_hierarchy_updates(repo_root, **common_args)
+        log_event_name = "docs-import-hierarchy-apply"
+        log_details = {
+            "changed": len(payload.get("updates", [])),
+            "unchanged": len(payload.get("unchanged", [])),
+            "skipped": len(payload.get("skipped", [])),
+            "warnings": len(payload.get("warnings", [])),
+            "errors": int(payload.get("counts", {}).get("errors") or 0),
+            "written": bool(payload.get("hierarchy_apply_written")),
+        }
+
+    dependencies.log_event(
+        repo_root,
+        log_event_name,
+        {
+            "data_domain": adapter.data_domain,
+            "adapter_id": adapter.adapter_id,
+            "scope": scope,
+            "staged_filename": staged_filename,
+            "dry_run": dry_run,
+            "confirmed": confirmed,
+            **log_details,
+        },
+    )
+    return payload
 
 
 def handlers_for(
