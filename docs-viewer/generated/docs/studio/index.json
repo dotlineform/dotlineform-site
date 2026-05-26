@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T17:40:07Z",
+  "generated_at": "2026-05-26T17:45:40Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -21,7 +21,23 @@
       "source_path": "site-request-studio-data-sharing-architecture-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-architecture-tasks.json",
-      "content_text_length": 6822,
+      "content_text_length": 7056,
+      "ui_status": "in-progress"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-studio-data-sharing-call-graph-inventory",
+      "title": "Studio Data Sharing Call Graph Inventory",
+      "added_date": "2026-05-26",
+      "last_updated": "2026-05-26",
+      "parent_id": "site-request-studio-data-sharing-architecture",
+      "sort_order": 110,
+      "hidden": false,
+      "viewable": true,
+      "source_path": "site-request-studio-data-sharing-call-graph-inventory.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-call-graph-inventory",
+      "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-call-graph-inventory.json",
+      "content_text_length": 16952,
       "ui_status": "in-progress"
     },
     {

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-a56df5f51446e3c96d5914414c74aa72",
-    "generated_at_utc": "2026-05-26T17:31:28Z",
-    "count": 193
+    "version": "blake2b-6373541b1999229857fb6976128e8f72",
+    "generated_at_utc": "2026-05-26T17:45:40Z",
+    "count": 194
   },
   "entries": [
     {
@@ -33,6 +33,35 @@
         "26"
       ],
       "search_text": "site-request-studio-data-sharing-architecture-tasks site request studio data sharing architecture tasks studio data sharing architecture tasks studio data sharing architecture request 2026-05-26 2026 05 26"
+    },
+    {
+      "id": "site-request-studio-data-sharing-call-graph-inventory",
+      "kind": "doc",
+      "title": "Studio Data Sharing Call Graph Inventory",
+      "href": "/docs/?scope=studio&doc=site-request-studio-data-sharing-call-graph-inventory",
+      "last_updated": "2026-05-26",
+      "parent_id": "site-request-studio-data-sharing-architecture",
+      "parent_title": "Studio Data Sharing Architecture Request",
+      "display_meta": "2026-05-26 • Studio Data Sharing Architecture Request",
+      "search_terms": [
+        "site-request-studio-data-sharing-call-graph-inventory",
+        "site",
+        "request",
+        "studio",
+        "data",
+        "sharing",
+        "call",
+        "graph",
+        "inventory",
+        "studio data sharing call graph inventory",
+        "studio data sharing architecture request",
+        "architecture",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "site-request-studio-data-sharing-call-graph-inventory site request studio data sharing call graph inventory studio data sharing call graph inventory studio data sharing architecture request architecture 2026-05-26 2026 05 26"
     },
     {
       "id": "data-models-catalogue",
