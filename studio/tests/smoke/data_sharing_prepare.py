@@ -447,10 +447,16 @@ def assert_prepare_result_modal(page, prepare_requests: list[dict[str, object]],
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--base-url", default="http://127.0.0.1:4000")
-    parser.add_argument("--site-root", help="Serve a built site root on a temporary local HTTP server.")
-    parser.add_argument("--local-app", action="store_true", help="Serve the local Studio app on a temporary local HTTP server.")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Smoke-check the Local Studio Data Sharing prepare route. "
+            "By default, this starts a temporary Local Studio app server."
+        )
+    )
+    host_group = parser.add_mutually_exclusive_group()
+    host_group.add_argument("--base-url", help="Use an already running Local Studio base URL.")
+    host_group.add_argument("--site-root", help="Serve a built static site root on a temporary local HTTP server.")
+    host_group.add_argument("--local-app", action="store_true", help="Serve the local Studio app on a temporary local HTTP server.")
     parser.add_argument("--block-data-sharing-api", action="store_true")
     parser.add_argument("--mock-data-sharing-api", action="store_true")
     parser.add_argument("--timeout-ms", type=int, default=15000)
@@ -458,8 +464,8 @@ def main() -> int:
 
     static_server = None
     local_app_server = None
-    base_url = args.base_url
-    if args.local_app:
+    base_url = args.base_url or ""
+    if args.local_app or (not base_url and not args.site_root):
         local_app_server, base_url = start_local_app_server()
     elif args.site_root:
         static_server, base_url = start_static_server(Path(args.site_root))

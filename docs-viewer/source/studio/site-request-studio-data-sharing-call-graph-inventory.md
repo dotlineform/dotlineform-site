@@ -332,8 +332,8 @@ Focused Python coverage:
 Smoke coverage:
 
 - `studio/tests/smoke/local_studio_app_data_sharing_routes.py` serves Studio and mocks `/studio/api/data-sharing/...` calls for health, selectable records, prepare, returned-package listing, and review.
-- `studio/tests/smoke/data_sharing_prepare.py` mocks or blocks `/studio/api/data-sharing/health`, `/studio/api/data-sharing/selectable-records`, and `/studio/api/data-sharing/prepare`.
-- `studio/tests/smoke/data_sharing_review.py` mocks or blocks `/studio/api/data-sharing/health`, `/studio/api/data-sharing/returned-packages`, `/studio/api/data-sharing/review`, and `/studio/api/data-sharing/apply`.
+- `studio/tests/smoke/data_sharing_prepare.py` starts a temporary Local Studio app by default and mocks or blocks `/studio/api/data-sharing/health`, `/studio/api/data-sharing/selectable-records`, and `/studio/api/data-sharing/prepare`.
+- `studio/tests/smoke/data_sharing_review.py` starts a temporary Local Studio app by default and mocks or blocks `/studio/api/data-sharing/health`, `/studio/api/data-sharing/returned-packages`, `/studio/api/data-sharing/review`, and `/studio/api/data-sharing/apply`.
 - `studio/tests/smoke/data_sharing_prepare_modules.py` imports prepare workflow/render/service browser modules and intercepts `**/studio/api/data-sharing/prepare`.
 - `studio/tests/smoke/data_sharing_review_workflow_modules.py` imports review workflow modules and validates apply action projection and selection behavior.
 

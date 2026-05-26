@@ -180,13 +180,13 @@ Final Codex-run verification:
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_prepare_modules.py --site-root .` passed.
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_review_workflow_modules.py --site-root .` passed.
 - `$HOME/miniconda3/bin/python3 studio/tests/smoke/local_studio_app_data_sharing_routes.py` passed.
-- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_prepare.py --local-app --mock-data-sharing-api` passed.
-- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_prepare.py --local-app --block-data-sharing-api` passed.
-- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_review.py --local-app --mock-data-sharing-api` passed.
-- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_review.py --local-app --block-data-sharing-api` passed.
+- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_prepare.py --mock-data-sharing-api` passed after the smoke default was updated to start a temporary Local Studio app.
+- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_prepare.py --block-data-sharing-api` passed after the smoke default was updated to start a temporary Local Studio app.
+- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_review.py --mock-data-sharing-api` passed after the smoke default was updated to start a temporary Local Studio app.
+- `$HOME/miniconda3/bin/python3 studio/tests/smoke/data_sharing_review.py --block-data-sharing-api` passed after the smoke default was updated to start a temporary Local Studio app.
 
 During final verification, the full prepare/review browser smokes timed out in static `--site-root .` mode because the now Local-Studio-owned route roots stayed hidden there.
-The same mocked and blocked API checks passed in `--local-app` mode, which is the target runtime host for these routes.
+The same mocked and blocked API checks passed in the Local Studio host, which is now the default for these smoke entrypoints.
 
 Follow-on work:
 

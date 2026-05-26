@@ -149,8 +149,8 @@ Selection changes, filter changes, review-only previews, and unavailable-service
 The retained smoke entry points are:
 
 - `studio/tests/smoke/local_studio_app_data_sharing_routes.py`
-- `studio/tests/smoke/data_sharing_prepare.py`
-- `studio/tests/smoke/data_sharing_review.py`
+- `studio/tests/smoke/data_sharing_prepare.py`; starts a temporary Local Studio app by default
+- `studio/tests/smoke/data_sharing_review.py`; starts a temporary Local Studio app by default
 - `studio/tests/python/test_data_sharing_service.py`
 - `docs-viewer/tests/python/test_docs_import_service.py`
 - `studio/tests/python/test_tags_data_sharing_adapter.py`

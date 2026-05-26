@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T19:47:56Z",
+  "generated_at": "2026-05-26T20:03:09Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -21,7 +21,7 @@
       "source_path": "site-request-studio-data-sharing-architecture-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-architecture-tasks.json",
-      "content_text_length": 12992,
+      "content_text_length": 13065,
       "ui_status": "done"
     },
     {
@@ -37,7 +37,7 @@
       "source_path": "site-request-studio-data-sharing-call-graph-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-call-graph-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-call-graph-inventory.json",
-      "content_text_length": 16688,
+      "content_text_length": 16790,
       "ui_status": "in-progress"
     },
     {
@@ -285,7 +285,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 8981
+      "content_text_length": 9079
     },
     {
       "scope": "studio",
@@ -622,7 +622,7 @@
       "source_path": "studio-data-sharing-technical-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 12571
+      "content_text_length": 12868
     },
     {
       "scope": "studio",
@@ -2553,7 +2553,7 @@
       "source_path": "site-request-studio-data-sharing-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-architecture.json",
-      "content_text_length": 11120,
+      "content_text_length": 11376,
       "ui_status": "done"
     },
     {
@@ -2794,7 +2794,7 @@
       "source_path": "scripts-docs-management-server-operations.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-operations",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-operations.json",
-      "content_text_length": 3911
+      "content_text_length": 4025
     },
     {
       "scope": "studio",

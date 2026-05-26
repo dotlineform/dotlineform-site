@@ -328,10 +328,11 @@ Focused checks for Data Sharing changes:
 - `studio/tests/python/test_data_sharing_service.py`
 - `docs-viewer/tests/python/test_docs_import_service.py`
 - `studio/tests/python/test_tags_data_sharing_adapter.py`
-- `studio/tests/smoke/data_sharing_prepare.py`
-- `studio/tests/smoke/data_sharing_review.py`
+- `studio/tests/smoke/data_sharing_prepare.py`, which starts a temporary Local Studio app by default
+- `studio/tests/smoke/data_sharing_review.py`, which starts a temporary Local Studio app by default
 
 Use broader `$HOME/miniconda3/bin/python3 studio/commands/run_checks.py` profiles only when a change touches runtime behavior, route readiness, generated docs/search contracts, or shared Studio service behavior.
 
 The SDSA-014 slice recorded focused API tests and mock/block/route smokes against the Studio-owned `/studio/api/data-sharing/...` boundary.
 Codex did not run a manual Docs Viewer generated payload rebuild during SDSA-015; local docs-watcher output, when present, is normal follow-through from the edited source docs.
+After SDSA-016 closeout, the full prepare/review browser smoke entrypoints default to the Local Studio app host because Data Sharing route shells are no longer static Jekyll route files.

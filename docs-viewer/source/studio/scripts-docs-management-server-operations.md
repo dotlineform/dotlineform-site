@@ -51,10 +51,10 @@ Export/import adapter behavior is covered by focused checks:
 - `docs-viewer/tests/python/test_docs_import_service.py` verifies Library import staged-file listing, preview dry-run/write behavior, summary apply, hierarchy apply, backups, and confirmation gates.
 - `studio/tests/python/test_data_sharing_adapters.py` verifies active adapter resolution and future stub rejection.
 - `docs-viewer/tests/python/test_docs_activity.py` verifies Docs Management Studio Activity helper suppression, record groups, source refs, and warning status behavior.
-- `studio/tests/smoke/data_sharing_review.py` verifies the Studio import route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state.
+- `studio/tests/smoke/data_sharing_review.py` verifies the Studio Data Sharing review route, preview/apply UI flow with mocked service responses, unavailable-service state, and disabled future-adapter state. It starts a temporary Local Studio app by default.
 
 The `docs` profile runs the parser, service, and adapter checks.
-The `studio-smoke` profile builds a temporary site and runs the Studio import route smokes.
+The `studio-smoke` profile builds a temporary site for module checks and runs Studio Data Sharing route smokes against the Local Studio host.
 
 ## Related References
 
