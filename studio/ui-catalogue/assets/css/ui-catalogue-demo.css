@@ -130,9 +130,19 @@
 .uiCatalogueDemoColumnLinks__pills {
   display: grid;
   gap: 0.5rem;
+  justify-items: start;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.uiCatalogueDemoRoot .uiCatalogueDemoColumnLinks__pills {
+  margin: 0;
+  padding: 0;
+}
+
+.uiCatalogueDemoRoot .uiCatalogueDemoColumnLinks__pills > li {
+  margin: 0;
 }
 
 .uiCatalogueDemoColumnLinks__pill {
@@ -152,10 +162,11 @@
   background: var(--ui-demo-surface);
 }
 
-.uiCatalogueDemoColumnLinks__pill:hover,
-.uiCatalogueDemoColumnLinks__pill:focus-visible {
+.uiCatalogueDemoRoot .uiCatalogueDemoColumnLinks__pill:hover,
+.uiCatalogueDemoRoot .uiCatalogueDemoColumnLinks__pill:focus-visible {
   border-color: var(--ui-demo-line-strong);
   color: inherit;
+  text-decoration: none;
 }
 
 .uiCatalogueDemoPanel {

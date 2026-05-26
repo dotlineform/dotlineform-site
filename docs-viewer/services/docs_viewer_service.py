@@ -256,6 +256,16 @@ def render_manage_page(repo_root: Path, config: DocsViewerServiceConfig, version
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="dlf-asset-version" content="{escaped_version}">
   <title>Docs Viewer</title>
+  <script>
+    (function () {{
+      try {{
+        var theme = localStorage.getItem("theme");
+        document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+      }} catch (error) {{
+        document.documentElement.setAttribute("data-theme", "light");
+      }}
+    }})();
+  </script>
 </head>
 <body class="docs-viewer-service">
   <main class="docs-viewer-service__main">

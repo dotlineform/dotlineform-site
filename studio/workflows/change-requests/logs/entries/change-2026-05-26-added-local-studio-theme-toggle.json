@@ -1,0 +1,29 @@
+{
+  "id": "change-2026-05-26-added-local-studio-theme-toggle",
+  "date": "2026-05-26",
+  "title": "Added Local Studio Theme Toggle",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio-ui",
+    "studio"
+  ],
+  "summary": "Added a right-aligned light/dark toggle to the Local Studio top navigation row, with an early theme boot script and Studio-owned toggle module that persists the selected theme in browser storage.",
+  "source": {
+    "file": "docs-viewer/source/studio/local-studio-app.md"
+  },
+  "subjects": [
+    "local-studio-app",
+    "theme-toggle"
+  ],
+  "related_docs": [
+    "local-studio-app",
+    "studio-runtime"
+  ],
+  "related_files": [
+    "studio/app/server/studio/studio_app_views.py",
+    "studio/app/assets/css/studio.css",
+    "studio/app/frontend/js/studio-theme.js",
+    "studio/app/frontend/js/studio-navigation.js"
+  ]
+}

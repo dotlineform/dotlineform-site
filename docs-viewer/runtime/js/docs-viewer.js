@@ -118,6 +118,20 @@ import {
   var bookmarkController = null;
   var documentController = null;
 
+  if (allowManagement) {
+    import("./docs-viewer-theme.js").then(function (module) {
+      if (module && typeof module.initDocsViewerThemeToggle === "function") {
+        module.initDocsViewerThemeToggle({
+          root: root,
+          document: document,
+          storage: window.localStorage
+        });
+      }
+    }).catch(function (error) {
+      console.warn("docs_viewer: theme toggle failed to initialize", error);
+    });
+  }
+
   var state = {
     allDocs: [],
     allDocsById: new Map(),

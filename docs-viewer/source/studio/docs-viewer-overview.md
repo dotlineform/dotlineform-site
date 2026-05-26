@@ -182,6 +182,7 @@ Current manage-mode draft behavior:
 - public/default tree rendering includes only docs whose generated index row is not `viewable: false`
 - manage mode always includes non-viewable docs in the tree
 - manage mode preserves the source hierarchy when non-viewable docs are included; children are not automatically changed when a parent is non-viewable
+- the manage toolbar includes a right-aligned light/dark toggle that stores the selected theme in browser storage and applies it to the standalone `/docs/` shell
 - the manage toolbar has a `show viewable` checkbox, checked by default, that keeps viewable docs visible for context
 - unchecking `show viewable` gives a focused non-viewable/draft review tree
 - manage-mode direct links to a viewable doc auto-enable `show viewable` so links can land on the target

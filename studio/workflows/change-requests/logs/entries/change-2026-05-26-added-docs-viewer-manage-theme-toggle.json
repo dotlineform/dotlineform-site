@@ -1,0 +1,29 @@
+{
+  "id": "change-2026-05-26-added-docs-viewer-manage-theme-toggle",
+  "date": "2026-05-26",
+  "title": "Added Docs Viewer Manage Theme Toggle",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "studio-ui"
+  ],
+  "summary": "Added a local manage-mode light/dark toggle to the Docs Viewer toolbar, with management-only CSS and a lazy-loaded theme controller so public read-only viewers keep inheriting the public site theme.",
+  "source": {
+    "file": "docs-viewer/source/studio/docs-viewer-overview.md"
+  },
+  "subjects": [
+    "local-manage-mode",
+    "theme-toggle"
+  ],
+  "related_docs": [
+    "docs-viewer-overview",
+    "docs-viewer-runtime-boundary"
+  ],
+  "related_files": [
+    "docs-viewer/runtime/js/docs-viewer-theme.js",
+    "docs-viewer/static/css/docs-viewer-management.css",
+    "docs-viewer/shell/docs-viewer-shell.html",
+    "_includes/docs_viewer_shell.html"
+  ]
+}

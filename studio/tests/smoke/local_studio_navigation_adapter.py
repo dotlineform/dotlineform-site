@@ -78,6 +78,7 @@ def main(argv: list[str] | None = None) -> int:
                     }, { once: true });
                     const modalEvent = mod.openModal("Confirm Delete", { doc_id: "docs-viewer" });
                     const homeLinks = [...document.querySelectorAll(".studioLinkList__item")].map((link) => ({
+                        label: link.textContent.trim(),
                         viewId: link.getAttribute("data-studio-navigate"),
                         href: link.getAttribute("href")
                     }));
@@ -181,11 +182,21 @@ def main(argv: list[str] | None = None) -> int:
             raise AssertionError(f"unexpected openModal detail: {result['openModalDetail']!r}")
         if result["modalDefaultPrevented"]:
             raise AssertionError("openModal event was unexpectedly prevented")
-        home_link_ids = {link["viewId"] for link in result["homeLinks"]}
-        if "series_tag_editor" in home_link_ids:
+        home_link_hrefs = {link["href"] for link in result["homeLinks"]}
+        home_link_labels = [link["label"] for link in result["homeLinks"]]
+        if "/studio/analytics/series-tag-editor/" in home_link_hrefs:
             raise AssertionError(f"Studio home exposed hidden editor link: {result['homeLinks']!r}")
-        if {"docs", "tag_groups", "activity"} - home_link_ids:
+        expected_home_hrefs = {
+            "/studio/catalogue-status/?mode=manage",
+            "/studio/analytics/tag-groups/",
+            "/studio/activity/?mode=manage",
+            "/studio/data-sharing/prepare/?mode=manage&scope=library",
+            "/studio/ui-catalogue/demos/",
+        }
+        if expected_home_hrefs - home_link_hrefs:
             raise AssertionError(f"Studio home missing expected links: {result['homeLinks']!r}")
+        if home_link_labels[:4] != ["drafts", "series editor", "work editor", "work detail editor"]:
+            raise AssertionError(f"Studio home has unexpected first links: {result['homeLinks']!r}")
         if result["homeReady"] != "true":
             raise AssertionError(f"Studio home did not expose ready state: {result['homeReady']!r}")
         if result["delegatedModalDetail"]["name"] != "rename":

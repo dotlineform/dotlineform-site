@@ -1,0 +1,29 @@
+{
+  "id": "change-2026-05-26-grouped-studio-home-column-links",
+  "date": "2026-05-26",
+  "title": "Grouped Studio Home Column Links",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "studio-ui",
+    "studio"
+  ],
+  "summary": "Replaced the Local Studio home page's flat generated link list with a four-column column-links layout for Catalogue, Analytics, Data Sharing, and Admin route groups.",
+  "source": {
+    "file": "docs-viewer/source/studio/local-studio-app.md"
+  },
+  "subjects": [
+    "local-studio-app",
+    "home-navigation",
+    "column-links"
+  ],
+  "related_docs": [
+    "local-studio-app",
+    "ui-pattern-column-links"
+  ],
+  "related_files": [
+    "studio/app/server/studio/studio_app_views.py",
+    "studio/app/assets/css/studio.css",
+    "docs-viewer/source/studio/local-studio-app.md"
+  ]
+}

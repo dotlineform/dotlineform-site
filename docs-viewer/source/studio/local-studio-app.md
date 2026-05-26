@@ -63,10 +63,10 @@ Current mounted views:
 - `/studio/catalogue-moment/?mode=manage`
 
 The local app owns `/studio/`.
-Studio home navigation comes from the local runtime view registry rather than Jekyll/Liquid page data.
-The local home intentionally exposes a plain navigation list for active local views and filters out internal non-nav views such as the per-series tag editor.
+Studio home navigation is a local-app owned grouped column-links layout, not Jekyll/Liquid page data.
+The local home exposes four centered columns for Catalogue, Analytics, Data Sharing, and Admin links, using static route targets so labels, order, and query-string defaults stay deliberate.
 The shared Studio top navigation is separate from that home link list.
-Every local Studio shell, including `/studio/`, shows the same compact top row: `dotlineform studio` on the left, with `docs`, `catalogue`, `analytics`, and `data sharing` right-aligned.
+Every local Studio shell, including `/studio/`, shows the same compact top row: `dotlineform studio` on the left, with `docs`, `catalogue`, `analytics`, and `data sharing` plus the light/dark toggle right-aligned.
 The Catalogue dashboard route shell is hosted by the local app at `/studio/catalogue/?mode=manage`.
 It reuses the existing dashboard metric module and grouped Catalogue link layout with manage-mode links to the migrated local Catalogue routes.
 The old Jekyll `/studio/catalogue/` shell has been retired.

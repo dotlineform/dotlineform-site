@@ -8,10 +8,10 @@ from pathlib import Path
 
 try:
     from studio_app_config import studio_views
-    from studio_app_views import studio_header
+    from studio_app_views import studio_header, studio_theme_boot_script
 except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
     from .studio_app_config import studio_views
-    from .studio_app_views import studio_header
+    from .studio_app_views import studio_header, studio_theme_boot_script
 
 
 UI_CATALOGUE_DEMO_SOURCES: dict[str, str] = {
@@ -58,6 +58,7 @@ def ui_catalogue_demo_view(version: str, repo_root: Path, view_id: str) -> str:
   <meta name="dlf-asset-version" content="{escaped_version}">
   <meta name="dlf-studio-config-url" content="/studio/runtime-config.json">
   <title>{title} | dotlineform Studio</title>
+  {studio_theme_boot_script()}
   <link rel="stylesheet" href="/studio/app/assets/css/studio.css?v={escaped_version}">
   <link rel="stylesheet" href="/studio/ui-catalogue/assets/css/ui-catalogue-demo.css?v={escaped_version}">
 </head>

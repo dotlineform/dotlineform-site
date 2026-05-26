@@ -45,7 +45,8 @@
   color: var(--docs-viewer-text, var(--docs-viewer-base-text));
 }
 
-body.docs-viewer-shell{
+body.docs-viewer-shell,
+body.docs-viewer-service{
   font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
   line-height: var(--line-loose, 1.7);
   color: var(--text, #111);
@@ -53,7 +54,8 @@ body.docs-viewer-shell{
   margin: 0;
 }
 
-.docs-viewer-shell .docsViewerShell__container{
+.docs-viewer-shell .docsViewerShell__container,
+.docs-viewer-service .docs-viewer-service__main{
   max-width: var(--docs-viewer-container, var(--container, 980px));
   margin: 0 auto;
   padding: var(--docs-viewer-space-6, var(--space-6, 28px)) 18px var(--docs-viewer-space-7, var(--space-7, 60px));

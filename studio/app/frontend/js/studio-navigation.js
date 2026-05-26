@@ -1,4 +1,5 @@
 import { loadStudioConfig } from "./studio-config.js";
+import { initStudioThemeToggle } from "./studio-theme.js";
 
 export const STUDIO_MODAL_EVENT = "studio:open-modal";
 
@@ -186,6 +187,7 @@ function ensureTrailingSlash(value) {
 }
 
 if (typeof document !== "undefined") {
+  initStudioThemeToggle();
   attachStudioNavigation().catch((error) => {
     console.warn("studio_navigation: unavailable", error);
   });
