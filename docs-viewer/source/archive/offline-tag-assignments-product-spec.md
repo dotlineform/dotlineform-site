@@ -4,7 +4,6 @@ title: Offline Tag Assignments Product Spec
 added_date: 2026-03-28
 last_updated: 2026-03-28
 sort_order: 72000
-viewable: false
 ---
 # Offline Tag Assignments Product Spec
 

@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-ff49b483ebdbb67efe4e57fe2b33d574",
-    "generated_at_utc": "2026-05-26T12:38:42Z",
-    "count": 191
+    "version": "blake2b-70b54480326fd7f4c18525c84d74b50e",
+    "generated_at_utc": "2026-05-26T13:01:25Z",
+    "count": 190
   },
   "entries": [
     {
@@ -3497,34 +3497,6 @@
         "15"
       ],
       "search_text": "ui-catalogue ui catalogue ui catalogue 2026-05-15 2026 05 15"
-    },
-    {
-      "id": "site-request-local-report-snapshot-boundary",
-      "kind": "doc",
-      "title": "Local Report Snapshot Boundary",
-      "href": "/docs/?scope=studio&doc=site-request-local-report-snapshot-boundary",
-      "last_updated": "2026-05-26",
-      "parent_id": "change-requests",
-      "parent_title": "Change Requests",
-      "display_meta": "2026-05-26 • Change Requests",
-      "search_terms": [
-        "site-request-local-report-snapshot-boundary",
-        "site",
-        "request",
-        "local",
-        "report",
-        "snapshot",
-        "boundary",
-        "local report snapshot boundary",
-        "change requests",
-        "change",
-        "requests",
-        "2026-05-26",
-        "2026",
-        "05",
-        "26"
-      ],
-      "search_text": "site-request-local-report-snapshot-boundary site request local report snapshot boundary local report snapshot boundary change requests change requests 2026-05-26 2026 05 26"
     },
     {
       "id": "scripts-catalogue-source",

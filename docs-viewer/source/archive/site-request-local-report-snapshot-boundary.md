@@ -3,8 +3,7 @@ doc_id: site-request-local-report-snapshot-boundary
 title: Local Report Snapshot Boundary
 added_date: 2026-05-25
 last_updated: 2026-05-26
-ui_status: urgent
-parent_id: change-requests
+ui_status: done
 sort_order: 9500
 viewable: true
 ---

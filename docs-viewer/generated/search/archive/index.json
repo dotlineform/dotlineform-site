@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_archive_v1",
     "scope": "archive",
-    "version": "blake2b-016a42f28b539cea67dbcd2854cd8956",
-    "generated_at_utc": "2026-05-25T20:25:28Z",
-    "count": 123
+    "version": "blake2b-20f9ba44e7623edee1aec7dcb91a752f",
+    "generated_at_utc": "2026-05-26T13:01:26Z",
+    "count": 142
   },
   "entries": [
     {
@@ -281,6 +281,30 @@
       "search_text": "modal-responsibility-extraction-plan modal responsibility extraction plan modal responsibility extraction plan modal composition pattern request composition pattern request 2026-05-15 2026 05 15"
     },
     {
+      "id": "multiple-content-domains-brief",
+      "kind": "doc",
+      "title": "Multiple Content Domains - Brief",
+      "href": "/docs/?scope=archive&doc=multiple-content-domains-brief",
+      "last_updated": "2026-03-29",
+      "parent_id": "multiple-content-domains",
+      "parent_title": "Multiple Content Domains",
+      "display_meta": "2026-03-29 • Multiple Content Domains",
+      "search_terms": [
+        "multiple-content-domains-brief",
+        "multiple",
+        "content",
+        "domains",
+        "brief",
+        "multiple content domains - brief",
+        "multiple content domains",
+        "2026-03-29",
+        "2026",
+        "03",
+        "29"
+      ],
+      "search_text": "multiple-content-domains-brief multiple content domains brief multiple content domains - brief multiple content domains 2026-03-29 2026 03 29"
+    },
+    {
       "id": "site-request-route-anchor-collection-stubs",
       "kind": "doc",
       "title": "Route-Anchor Collection Stubs Spec",
@@ -478,6 +502,27 @@
       "search_text": "modal-composition-migration-tracker modal composition migration tracker modal composition migration tracker modal composition pattern request pattern request 2026-05-15 2026 05 15"
     },
     {
+      "id": "moments-json",
+      "kind": "doc",
+      "title": "Moments JSON Migration Plan",
+      "href": "/docs/?scope=archive&doc=moments-json",
+      "last_updated": "2026-03-29",
+      "display_meta": "2026-03-29",
+      "search_terms": [
+        "moments-json",
+        "moments",
+        "json",
+        "moments json migration plan",
+        "migration",
+        "plan",
+        "2026-03-29",
+        "2026",
+        "03",
+        "29"
+      ],
+      "search_text": "moments-json moments json moments json migration plan migration plan 2026-03-29 2026 03 29"
+    },
+    {
       "id": "site-request-studio-record-hash-simplification",
       "kind": "doc",
       "title": "Studio Record Hash Simplification Analysis",
@@ -572,6 +617,29 @@
         "01"
       ],
       "search_text": "site-request-field-aware-build-scoping-inventory site request field aware build scoping inventory field-aware build scoping inventory field-aware catalogue build scoping catalogue 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "pipeline-config",
+      "kind": "doc",
+      "title": "Pipeline Config Refactor Plan",
+      "href": "/docs/?scope=archive&doc=pipeline-config",
+      "last_updated": "2026-05-09 16:00",
+      "display_meta": "2026-05-09 16:00",
+      "search_terms": [
+        "pipeline-config",
+        "pipeline",
+        "config",
+        "pipeline config refactor plan",
+        "refactor",
+        "plan",
+        "2026-05-09 16:00",
+        "2026",
+        "05",
+        "09",
+        "16",
+        "00"
+      ],
+      "search_text": "pipeline-config pipeline config pipeline config refactor plan refactor plan 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "site-request-script-structural-review-tag-write-server",
@@ -756,6 +824,26 @@
       "search_text": "site-request-js-config-structural-review-public-runtime-extraction site request js config structural review public runtime extraction public runtime extraction slice slice javascript and browser config structural review request javascript and browser 2026-05-10 17:25 2026 05 10 17 25"
     },
     {
+      "id": "studio-search-v1",
+      "kind": "doc",
+      "title": "Studio Search V1",
+      "href": "/docs/?scope=archive&doc=studio-search-v1",
+      "last_updated": "2026-03-29",
+      "display_meta": "2026-03-29",
+      "search_terms": [
+        "studio-search-v1",
+        "studio",
+        "search",
+        "v1",
+        "studio search v1",
+        "2026-03-29",
+        "2026",
+        "03",
+        "29"
+      ],
+      "search_text": "studio-search-v1 studio search v1 studio search v1 2026-03-29 2026 03 29"
+    },
+    {
       "id": "scripts-main-pipeline",
       "kind": "doc",
       "title": "Build Catalogue",
@@ -848,6 +936,28 @@
         "35"
       ],
       "search_text": "site-request-js-payload-runtime-cleanup-inventory site request js payload runtime cleanup inventory javascript payload and runtime cleanup inventory javascript and javascript and browser config structural review request browser config structural review 2026-05-11 00:35 2026 05 11 00 35"
+    },
+    {
+      "id": "studio-search-v1-implementation-plan",
+      "kind": "doc",
+      "title": "Search V1 Implementation Plan",
+      "href": "/docs/?scope=archive&doc=studio-search-v1-implementation-plan",
+      "last_updated": "2026-03-29",
+      "display_meta": "2026-03-29",
+      "search_terms": [
+        "studio-search-v1-implementation-plan",
+        "studio",
+        "search",
+        "v1",
+        "implementation",
+        "plan",
+        "search v1 implementation plan",
+        "2026-03-29",
+        "2026",
+        "03",
+        "29"
+      ],
+      "search_text": "studio-search-v1-implementation-plan studio search v1 implementation plan search v1 implementation plan 2026-03-29 2026 03 29"
     },
     {
       "id": "site-request-catalogue-js-runtime-consistency",
@@ -965,6 +1075,29 @@
       "search_text": "site-request-js-payload-runtime-cleanup site request js payload runtime cleanup javascript payload and runtime cleanup request javascript and javascript and browser config structural review request browser config structural review 2026-05-10 21:19 2026 05 10 21 19"
     },
     {
+      "id": "site-request-local-report-snapshot-boundary",
+      "kind": "doc",
+      "title": "Local Report Snapshot Boundary",
+      "href": "/docs/?scope=archive&doc=site-request-local-report-snapshot-boundary",
+      "last_updated": "2026-05-26",
+      "display_meta": "2026-05-26",
+      "search_terms": [
+        "site-request-local-report-snapshot-boundary",
+        "site",
+        "request",
+        "local",
+        "report",
+        "snapshot",
+        "boundary",
+        "local report snapshot boundary",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "site-request-local-report-snapshot-boundary site request local report snapshot boundary local report snapshot boundary 2026-05-26 2026 05 26"
+    },
+    {
       "id": "scripts-copy-draft-media",
       "kind": "doc",
       "title": "Copy Draft Media",
@@ -984,6 +1117,30 @@
         "01"
       ],
       "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "search-result-shaping-json",
+      "kind": "doc",
+      "title": "Search Result Shaping draft JSON",
+      "href": "/docs/?scope=archive&doc=search-result-shaping-json",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "search-result-shaping-json",
+        "search",
+        "result",
+        "shaping",
+        "json",
+        "search result shaping draft json",
+        "draft",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "search-result-shaping-json search result shaping json search result shaping draft json draft 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "site-request-studio-source-tree-reorganization-tasks",
@@ -1409,6 +1566,31 @@
       "search_text": "new-pipeline-refine-analytics new pipeline refine analytics analytics plan plan 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
+      "id": "search-result-shaping-json-slimmer",
+      "kind": "doc",
+      "title": "Search Result Shaping draft slimmer JSON",
+      "href": "/docs/?scope=archive&doc=search-result-shaping-json-slimmer",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "search-result-shaping-json-slimmer",
+        "search",
+        "result",
+        "shaping",
+        "json",
+        "slimmer",
+        "search result shaping draft slimmer json",
+        "draft",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "search-result-shaping-json-slimmer search result shaping json slimmer search result shaping draft slimmer json draft 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
       "id": "new-pipeline-studio-ui-polish",
       "kind": "doc",
       "title": "Studio UI Polish",
@@ -1451,6 +1633,93 @@
         "11"
       ],
       "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan 2026-05-11 2026 05 11"
+    },
+    {
+      "id": "design-backlog",
+      "kind": "doc",
+      "title": "Design Backlog",
+      "href": "/docs/?scope=archive&doc=design-backlog",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "design-backlog",
+        "design",
+        "backlog",
+        "design backlog",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "design-backlog design backlog design backlog 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
+      "id": "regression-checklist",
+      "kind": "doc",
+      "title": "Studio Regression Checklist",
+      "href": "/docs/?scope=archive&doc=regression-checklist",
+      "last_updated": "2026-05-09 16:00",
+      "display_meta": "2026-05-09 16:00",
+      "search_terms": [
+        "regression-checklist",
+        "regression",
+        "checklist",
+        "studio regression checklist",
+        "studio",
+        "2026-05-09 16:00",
+        "2026",
+        "05",
+        "09",
+        "16",
+        "00"
+      ],
+      "search_text": "regression-checklist regression checklist studio regression checklist studio 2026-05-09 16:00 2026 05 09 16 00"
+    },
+    {
+      "id": "studio-plan",
+      "kind": "doc",
+      "title": "Implementation Plan",
+      "href": "/docs/?scope=archive&doc=studio-plan",
+      "last_updated": "2026-05-09 16:00",
+      "display_meta": "2026-05-09 16:00",
+      "search_terms": [
+        "studio-plan",
+        "studio",
+        "plan",
+        "implementation plan",
+        "implementation",
+        "2026-05-09 16:00",
+        "2026",
+        "05",
+        "09",
+        "16",
+        "00"
+      ],
+      "search_text": "studio-plan studio plan implementation plan implementation 2026-05-09 16:00 2026 05 09 16 00"
+    },
+    {
+      "id": "multiple-content-domains",
+      "kind": "doc",
+      "title": "Multiple Content Domains",
+      "href": "/docs/?scope=archive&doc=multiple-content-domains",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "multiple-content-domains",
+        "multiple",
+        "content",
+        "domains",
+        "multiple content domains",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "multiple-content-domains multiple content domains multiple content domains 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "new-pipeline",
@@ -1496,6 +1765,28 @@
       "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
+      "id": "search-config-architecture",
+      "kind": "doc",
+      "title": "Search Config Architecture",
+      "href": "/docs/?scope=archive&doc=search-config-architecture",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "search-config-architecture",
+        "search",
+        "config",
+        "architecture",
+        "search config architecture",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "search-config-architecture search config architecture search config architecture 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
       "id": "library-export",
       "kind": "doc",
       "title": "Library Export v1",
@@ -1516,6 +1807,29 @@
         "12"
       ],
       "search_text": "library-export library export library export v1 v1 2026-05-06 18:12 2026 05 06 18 12"
+    },
+    {
+      "id": "search-config-implementation-note",
+      "kind": "doc",
+      "title": "Search Config Implementation Note",
+      "href": "/docs/?scope=archive&doc=search-config-implementation-note",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "search-config-implementation-note",
+        "search",
+        "config",
+        "implementation",
+        "note",
+        "search config implementation note",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "search-config-implementation-note search config implementation note search config implementation note 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "library-import",
@@ -1540,6 +1854,29 @@
       "search_text": "library-import library import library import v1 v1 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
+      "id": "search-pipeline-target-architecture",
+      "kind": "doc",
+      "title": "Search Pipeline Target Architecture",
+      "href": "/docs/?scope=archive&doc=search-pipeline-target-architecture",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "search-pipeline-target-architecture",
+        "search",
+        "pipeline",
+        "target",
+        "architecture",
+        "search pipeline target architecture",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "search-pipeline-target-architecture search pipeline target architecture search pipeline target architecture 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
       "id": "library-export-ui",
       "kind": "doc",
       "title": "Library Export - UI refinements",
@@ -1561,6 +1898,30 @@
         "12"
       ],
       "search_text": "library-export-ui library export ui library export - ui refinements refinements 2026-05-06 18:12 2026 05 06 18 12"
+    },
+    {
+      "id": "series-id-and-slug-migration",
+      "kind": "doc",
+      "title": "Series ID Migration",
+      "href": "/docs/?scope=archive&doc=series-id-and-slug-migration",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "series-id-and-slug-migration",
+        "series",
+        "id",
+        "and",
+        "slug",
+        "migration",
+        "series id migration",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "series-id-and-slug-migration series id and slug migration series id migration 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "site-request-studio-import-export-module",
@@ -1612,6 +1973,28 @@
         "12"
       ],
       "search_text": "library-import-export-v2 library import export v2 library export/import v2 2026-05-06 18:12 2026 05 06 18 12"
+    },
+    {
+      "id": "search-result-shaping",
+      "kind": "doc",
+      "title": "Search Result Shaping",
+      "href": "/docs/?scope=archive&doc=search-result-shaping",
+      "last_updated": "2026-05-06 20:49",
+      "display_meta": "2026-05-06 20:49",
+      "search_terms": [
+        "search-result-shaping",
+        "search",
+        "result",
+        "shaping",
+        "search result shaping",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "search-result-shaping search result shaping search result shaping 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "library-import-ui",
@@ -2665,6 +3048,52 @@
         "15"
       ],
       "search_text": "site-request-docs-viewer-new-scope-button site request docs viewer new scope button docs viewer new scope button request 2026-05-15 2026 05 15"
+    },
+    {
+      "id": "offline-tag-assignments-implementation-breakdown",
+      "kind": "doc",
+      "title": "Offline Tag Assignments Implementation Breakdown",
+      "href": "/docs/?scope=archive&doc=offline-tag-assignments-implementation-breakdown",
+      "last_updated": "2026-05-09 21:45",
+      "display_meta": "2026-05-09 21:45",
+      "search_terms": [
+        "offline-tag-assignments-implementation-breakdown",
+        "offline",
+        "tag",
+        "assignments",
+        "implementation",
+        "breakdown",
+        "offline tag assignments implementation breakdown",
+        "2026-05-09 21:45",
+        "2026",
+        "05",
+        "09",
+        "21",
+        "45"
+      ],
+      "search_text": "offline-tag-assignments-implementation-breakdown offline tag assignments implementation breakdown offline tag assignments implementation breakdown 2026-05-09 21:45 2026 05 09 21 45"
+    },
+    {
+      "id": "offline-tag-assignments-product-spec",
+      "kind": "doc",
+      "title": "Offline Tag Assignments Product Spec",
+      "href": "/docs/?scope=archive&doc=offline-tag-assignments-product-spec",
+      "last_updated": "2026-03-28",
+      "display_meta": "2026-03-28",
+      "search_terms": [
+        "offline-tag-assignments-product-spec",
+        "offline",
+        "tag",
+        "assignments",
+        "product",
+        "spec",
+        "offline tag assignments product spec",
+        "2026-03-28",
+        "2026",
+        "03",
+        "28"
+      ],
+      "search_text": "offline-tag-assignments-product-spec offline tag assignments product spec offline tag assignments product spec 2026-03-28 2026 03 28"
     },
     {
       "id": "site-request-docs-markdown-package-import",
