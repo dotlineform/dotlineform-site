@@ -1,38 +1,39 @@
 ---
 doc_id: project-state
-title: Project State
+title: "Project State"
 added_date: 2026-04-27
-last_updated: "2026-05-06 20:49"
-parent_id: ""
-sort_order: 33000
+last_updated: 2026-05-26
 published: false
+parent_id: ""
+sort_order: 999
 ---
 # Project State
 
-Generated at `2026-04-27T22:05:56Z`.
+Generated at `2026-05-26T11:50:41Z`.
 
-This report compares source image candidates under `$DOTLINEFORM_PROJECTS_BASE_DIR/projects` with primary work image references in `assets/studio/data/catalogue/works.json`.
+This report compares source image candidates under `$DOTLINEFORM_PROJECTS_BASE_DIR/projects` with primary work image references in `studio/data/canonical/catalogue/works.json`.
 
 Scan mode: direct source folders and their direct images.
 
-Work details are intentionally out of scope. Known `details_subfolder` paths from `assets/studio/data/catalogue/work_details.json` are skipped so detail images do not appear as unimported primary work images.
+Work details are intentionally out of scope. Known detail subfolders from `studio/data/canonical/catalogue/work_details.json` are skipped so detail images do not appear as unimported primary work images.
 
 ## Summary
 
 - include subfolders: false
-- source folders scanned: 208
+- source folders scanned: 206
 - catalogue project folders: 145
-- source folders not in `works.json`: 63
+- source folders not in `works.json`: 62
 - source images scanned: 3464
-- primary work images in `works.json`: 1940
+- primary work images in `works.json`: 1939
 - source images in represented folders but not in `works.json`: 49
-- top-level source images inside folders not in `works.json`: 1486
-- catalogue project folders with no scanned source folder: 0
+- top-level source images inside folders not in `works.json`: 1487
+- catalogue project folders with no scanned source folder: 1
 - primary work image references with no scanned source file: 11
 - work records missing `project_folder` or `project_filename`: 0
 
 ## Source Folders Not In Works JSON
 
+- `100 grasping hands` (1 top-level image)
 - `3 symbols (book)`
 - `3 symbols (cards)` (45 top-level images)
 - `a drawing with a heart in it` (1 top-level image)
@@ -65,9 +66,7 @@ Work details are intentionally out of scope. Known `details_subfolder` paths fro
 - `gena` (1 top-level image)
 - `green`
 - `home is where the light is`
-- `I Ching`
 - `impermance` (7 top-level images)
-- `ink engine`
 - `join the dots` (1 top-level image)
 - `living memory`
 - `lotus pond` (10 top-level images)
@@ -182,7 +181,7 @@ Work details are intentionally out of scope. Known `details_subfolder` paths fro
 
 ## Catalogue Folders Missing From Source Scan
 
-None.
+- `wa/ink`
 
 ## Work Records Missing Source Fields
 
