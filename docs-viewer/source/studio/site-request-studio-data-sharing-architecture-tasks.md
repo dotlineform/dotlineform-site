@@ -16,6 +16,7 @@ This is the tracker for implementing [Studio Data Sharing Architecture Request](
 
 ### just done
 
+- Completed SDSA-005 by adding Studio-owned same-origin `/studio/api/data-sharing/...` endpoints for health, selectable records, returned-package listing, prepare, review, and apply. Local Studio runtime config now publishes these endpoints under `app.runtime.services.data_sharing`, and the Local Studio Data Sharing route smoke verifies health/selectable-record API availability.
 - Completed SDSA-004 by moving the Data Sharing adapter registry, schemas, and Library sharing profiles from `studio/data/config/data-sharing/` to `data-sharing/config/`. Updated Studio browser config paths, JS fallbacks, server adapter resolution, docs export defaults, fixture tests, and current docs to use the new config boundary directly without old-path compatibility reads.
 - Completed SDSA-003 by adding the top-level `data-sharing/` subsystem scaffold, including the importable `data_sharing` Python package roots for adapters, config, schemas, services, workflows, path contracts, package I/O, registry constants, and operation constants. Added a focused scaffold check confirming the package imports, expected roots exist, and no server/UI/browser files live under `data-sharing/`.
 - Completed SDSA-002 by adding [Studio Data Sharing Call Graph Inventory](/docs/?scope=studio&doc=site-request-studio-data-sharing-call-graph-inventory), covering browser modules, runtime config, transport, service dispatch, adapters, helper dependencies, path roots, and tests.
@@ -25,7 +26,7 @@ This is the tracker for implementing [Studio Data Sharing Architecture Request](
 
 ### steer for next task
 
-- Start with SDSA-005: define and implement Studio-owned same-origin Data Sharing API endpoints for health, adapter selectable records, prepare, returned-package listing, review, and apply.
+- Start with SDSA-006: add the adapter selectable-record contract to the prepare page so document selection comes from the active adapter response rather than a generic generated-docs-index read.
 - Keep the implementation aligned with the parent request: Studio owns the UI and local API, `data-sharing/` owns headless workflow and adapters, and docs-domain helpers remain callable without Docs Viewer HTTP.
 - Do not build compatibility reads for disposable `var/studio/export-import/...` packages.
 
@@ -60,7 +61,7 @@ Work through the table by ID order. A `deferred` row is intentionally out of the
 | SDSA-002 | done | Inventory the current Data Sharing call graph: browser modules, runtime config, Studio transport, Studio dispatch modules, Docs Viewer service endpoints, documents adapter, tags adapter, docs export/import helpers, backup/rebuild hooks, config reads, and tests. |
 | SDSA-003 | done | Create the top-level headless `data-sharing/` subsystem for workflow code, adapter code, registry/config loading, schemas, path contracts, package I/O, and operation dispatch. Confirm it contains no servers, UI routes, or browser modules. |
 | SDSA-004 | done | Move Data Sharing adapter registry, schemas, and sharing profile config to the target `data-sharing/` ownership boundary. Update Studio and adapter readers directly, without old-path compatibility shims. |
-| SDSA-005 | planned | Define and implement Studio-owned same-origin Data Sharing API endpoints for health, adapter selectable records, prepare, returned-package listing, review, and apply. |
+| SDSA-005 | done | Define and implement Studio-owned same-origin Data Sharing API endpoints for health, adapter selectable records, prepare, returned-package listing, review, and apply. |
 | SDSA-006 | planned | Add the adapter selectable-record contract and update the prepare page so document selection comes from the active adapter response rather than a generic generated-docs-index read. |
 | SDSA-007 | planned | Move shared prepare, list-returned, review, and apply workflow dispatch into `data-sharing/`, preserving existing response contracts where they remain valid. |
 | SDSA-008 | planned | Define and implement the target docs-domain helper modules for document package generation, returned-package review, summary/hierarchy apply planning, source writes, backups, and docs/search rebuild follow-through. These helpers must be callable without Docs Viewer HTTP or UI/service wrapper modules. |

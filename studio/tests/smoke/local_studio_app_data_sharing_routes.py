@@ -7,6 +7,7 @@ import argparse
 import json
 import sys
 import urllib.request
+from http import HTTPStatus
 from pathlib import Path
 from threading import Thread
 from urllib.parse import urlparse
@@ -181,6 +182,28 @@ def assert_runtime_views(base_url: str) -> None:
             raise AssertionError(f"runtime config missing {view_id}: {views!r}")
     if "data_sharing" in by_id:
         raise AssertionError(f"runtime config still exposes retired data sharing dashboard: {views!r}")
+    services = runtime_config.get("app", {}).get("runtime", {}).get("services", {})
+    data_sharing = services.get("data_sharing", {}) if isinstance(services, dict) else {}
+    if data_sharing.get("health") != "/studio/api/data-sharing/health":
+        raise AssertionError(f"runtime config missing Studio Data Sharing API endpoints: {data_sharing!r}")
+
+
+def read_json_url(url: str) -> dict[str, object]:
+    with urllib.request.urlopen(url, timeout=10) as response:
+        if response.status != HTTPStatus.OK:
+            raise AssertionError(f"unexpected status for {url}: {response.status}")
+        return json.loads(response.read().decode("utf-8"))
+
+
+def assert_data_sharing_api(base_url: str) -> None:
+    health = read_json_url(f"{base_url}/studio/api/data-sharing/health")
+    if health.get("service") != "studio_data_sharing":
+        raise AssertionError(f"unexpected Data Sharing health payload: {health!r}")
+    records = read_json_url(f"{base_url}/studio/api/data-sharing/selectable-records?data_domain=library")
+    if records.get("adapter_id") != "documents" or records.get("selection_model") != "documents":
+        raise AssertionError(f"unexpected selectable-record payload: {records!r}")
+    if not records.get("records"):
+        raise AssertionError(f"selectable-record payload is empty: {records!r}")
 
 
 def assert_prepare(page, base_url: str) -> None:
@@ -220,6 +243,7 @@ def main(argv: list[str] | None = None) -> int:
     server, base_url = start_server()
     try:
         assert_runtime_views(base_url)
+        assert_data_sharing_api(base_url)
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             page = browser.new_page()

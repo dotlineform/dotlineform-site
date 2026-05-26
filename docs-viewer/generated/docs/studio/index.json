@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T18:02:33Z",
+  "generated_at": "2026-05-26T18:11:02Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -21,7 +21,7 @@
       "source_path": "site-request-studio-data-sharing-architecture-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-architecture-tasks.json",
-      "content_text_length": 8165,
+      "content_text_length": 8545,
       "ui_status": "in-progress"
     },
     {
@@ -171,7 +171,7 @@
       "doc_id": "local-studio-server-architecture",
       "title": "Local Studio Server Architecture",
       "added_date": "2026-04-17",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-26",
       "parent_id": "servers",
       "sort_order": 1000,
       "hidden": false,
@@ -179,7 +179,7 @@
       "source_path": "local-studio-server-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/local-studio-server-architecture.json",
-      "content_text_length": 8208
+      "content_text_length": 8796
     },
     {
       "scope": "studio",
@@ -285,7 +285,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 6520
+      "content_text_length": 6779
     },
     {
       "scope": "studio",
@@ -622,7 +622,7 @@
       "source_path": "studio-data-sharing-technical-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 9549
+      "content_text_length": 10198
     },
     {
       "scope": "studio",
@@ -2370,7 +2370,7 @@
       "source_path": "studio-doc-viewer-dependencies.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-doc-viewer-dependencies",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-doc-viewer-dependencies.json",
-      "content_text_length": 5766,
+      "content_text_length": 5947,
       "ui_status": "paused"
     },
     {

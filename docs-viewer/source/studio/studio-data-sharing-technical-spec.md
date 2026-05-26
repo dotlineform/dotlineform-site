@@ -44,6 +44,13 @@ Studio API handlers own:
 - passing request payloads to the headless Data Sharing dispatcher
 - activity append timing after successful package creation or confirmed writes
 
+Current implementation:
+
+- `studio/app/server/studio/studio_data_sharing_api.py` owns the Local Studio endpoint dispatch surface.
+- Runtime config publishes endpoint URLs under `app.runtime.services.data_sharing`.
+- Prepare, returned-package listing, review, and apply currently delegate to the existing Data Sharing adapter handlers while later slices move workflow dispatch and adapters into `data-sharing/`.
+- `GET /studio/api/data-sharing/selectable-records` returns the active adapter's selection model and an adapter-owned record list; the documents adapter currently derives that list from generated Docs Viewer data without going through Docs Viewer HTTP.
+
 The headless `data-sharing/` subsystem owns:
 
 - adapter registry loading and validation

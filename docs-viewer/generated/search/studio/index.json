@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-6373541b1999229857fb6976128e8f72",
-    "generated_at_utc": "2026-05-26T17:45:40Z",
+    "version": "blake2b-a030e4a98e976592f9ace7b6bd39b419",
+    "generated_at_utc": "2026-05-26T18:11:02Z",
     "count": 194
   },
   "entries": [
@@ -237,10 +237,10 @@
       "kind": "doc",
       "title": "Local Studio Server Architecture",
       "href": "/docs/?scope=studio&doc=local-studio-server-architecture",
-      "last_updated": "2026-05-23",
+      "last_updated": "2026-05-26",
       "parent_id": "servers",
       "parent_title": "Servers",
-      "display_meta": "2026-05-23 • Servers",
+      "display_meta": "2026-05-26 • Servers",
       "search_terms": [
         "local-studio-server-architecture",
         "local",
@@ -249,12 +249,12 @@
         "architecture",
         "local studio server architecture",
         "servers",
-        "2026-05-23",
+        "2026-05-26",
         "2026",
         "05",
-        "23"
+        "26"
       ],
-      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-05-23 2026 05 23"
+      "search_text": "local-studio-server-architecture local studio server architecture local studio server architecture servers 2026-05-26 2026 05 26"
     },
     {
       "id": "docs-viewer-overview",

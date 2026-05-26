@@ -72,7 +72,7 @@ The review page:
 - reports tag assignment applicable rows, conflicts, missing series, and invalid work rows
 - can apply selected tag registry, alias, or applicable assignment rows after confirmation
 
-The target Studio API uses same-origin Data Sharing endpoints:
+The Studio API exposes same-origin Data Sharing endpoints:
 
 - `GET /studio/api/data-sharing/health`
 - `GET /studio/api/data-sharing/selectable-records`
@@ -80,6 +80,9 @@ The target Studio API uses same-origin Data Sharing endpoints:
 - `POST /studio/api/data-sharing/prepare`
 - `POST /studio/api/data-sharing/review`
 - `POST /studio/api/data-sharing/apply`
+
+These endpoints are published in Local Studio runtime config under `app.runtime.services.data_sharing`.
+During the transition, the browser transport still uses the older Docs Viewer endpoint keys until the frontend endpoint slice moves it to this same-origin API.
 
 ## Runtime
 

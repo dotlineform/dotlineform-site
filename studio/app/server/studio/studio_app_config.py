@@ -7,11 +7,13 @@ import os
 from pathlib import Path
 
 try:
+    from studio_data_sharing_api import service_endpoints as data_sharing_service_endpoints
     from studio_docs_viewer_integration import (
         docs_viewer_manage_url,
         docs_viewer_service_endpoints,
     )
 except ModuleNotFoundError:  # pragma: no cover - supports package-style imports in tests/tools.
+    from .studio_data_sharing_api import service_endpoints as data_sharing_service_endpoints
     from .studio_docs_viewer_integration import (
         docs_viewer_manage_url,
         docs_viewer_service_endpoints,
@@ -276,6 +278,7 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "data_sharing_review": "",
         "data_sharing_apply": "",
     },
+    "data_sharing": {},
     "audits": {
         "base": "/studio/api/audits",
         "health": "/studio/api/audits/health",
@@ -342,6 +345,7 @@ def studio_views(repo_root: Path) -> dict[str, dict[str, str]]:
 def studio_service_endpoints(repo_root: Path) -> dict[str, object]:
     endpoints = {service: dict(values) for service, values in STUDIO_SERVICE_ENDPOINTS.items()}
     endpoints["docs"] = docs_viewer_service_endpoints(repo_root)
+    endpoints["data_sharing"] = data_sharing_service_endpoints()
     return endpoints
 
 

@@ -95,6 +95,13 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["analytics"]["mutate_tag"] == "/studio/api/analytics/mutate-tag"
     assert runtime["services"]["analytics"]["promote_tag_alias_preview"] == "/studio/api/analytics/promote-tag-alias-preview"
     assert runtime["services"]["analytics"]["promote_tag_alias"] == "/studio/api/analytics/promote-tag-alias"
+    assert runtime["services"]["data_sharing"]["base"] == "/studio/api/data-sharing"
+    assert runtime["services"]["data_sharing"]["health"] == "/studio/api/data-sharing/health"
+    assert runtime["services"]["data_sharing"]["selectable_records"] == "/studio/api/data-sharing/selectable-records"
+    assert runtime["services"]["data_sharing"]["returned_packages"] == "/studio/api/data-sharing/returned-packages"
+    assert runtime["services"]["data_sharing"]["prepare"] == "/studio/api/data-sharing/prepare"
+    assert runtime["services"]["data_sharing"]["review"] == "/studio/api/data-sharing/review"
+    assert runtime["services"]["data_sharing"]["apply"] == "/studio/api/data-sharing/apply"
     assert runtime["services"]["docs"]["base"] == docs_base_url
     assert runtime["services"]["docs"]["health"] == f"{docs_base_url}/health"
     assert runtime["services"]["docs"]["generated_index"] == f"{docs_base_url}/docs/generated/index"

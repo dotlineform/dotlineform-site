@@ -2,7 +2,7 @@
 doc_id: local-studio-server-architecture
 title: Local Studio Server Architecture
 added_date: 2026-04-17
-last_updated: "2026-05-23"
+last_updated: 2026-05-26
 parent_id: servers
 sort_order: 1000
 ---
@@ -17,8 +17,8 @@ Studio currently uses the local Studio app server as the normal HTTP owner for S
 
 Public Jekyll preview/build is explicit through `bin/public-site-preview` and `bin/public-site-build`.
 
-Analytics tag APIs, Studio audit APIs, Project State report API, Thumbnail Quality preview API, catalogue reads, workbook import, catalogue editor mutations, and migrated Studio route shells are owned by the local Studio app server.
-Docs Viewer management, generated reads, Docs source opening, and document Data Sharing endpoints are owned by the standalone Docs Viewer service configured through `DOCS_VIEWER_BASE_URL`.
+Analytics tag APIs, Studio Data Sharing APIs, Studio audit APIs, Project State report API, Thumbnail Quality preview API, catalogue reads, workbook import, catalogue editor mutations, and migrated Studio route shells are owned by the local Studio app server.
+Docs Viewer management, generated reads, and Docs source opening are owned by the standalone Docs Viewer service configured through `DOCS_VIEWER_BASE_URL`.
 The old standalone tag write server has been retired.
 The old standalone Docs management server has been retired.
 The old standalone catalogue write server has been retired.
@@ -42,6 +42,7 @@ Current boundaries:
 - `studio/app/server/studio/studio_catalogue_api.py` owns `/studio/api/catalogue/...` adapter routing for catalogue reads, writes, reports, import, and thumbnail-quality refresh.
 - `studio/services/catalogue/catalogue_write_service.py` dispatches catalogue mutation/build/import routes to focused catalogue workflow modules.
 - `studio/app/server/studio/studio_analytics_api.py` owns `/studio/api/analytics/...` for active tag read/write workflows.
+- `studio/app/server/studio/studio_data_sharing_api.py` owns `/studio/api/data-sharing/...` for Data Sharing health, selectable records, package preparation, returned-package listing, review, and apply.
 - `studio/app/server/studio/studio_audit_api.py` owns `/studio/api/audits/...` and keeps audit execution allowlisted.
 
 Some migration work remains, but it is no longer about moving endpoint ownership off sibling localhost services.
@@ -63,6 +64,7 @@ studio/app/server/studio/studio_docs_viewer_integration.py
 studio/app/server/studio/studio_app_views.py
 studio/app/server/studio/studio_catalogue_api.py
 studio/app/server/studio/studio_analytics_api.py
+studio/app/server/studio/studio_data_sharing_api.py
 studio/app/server/studio/studio_audit_api.py
 studio/services/catalogue/catalogue_write_service.py
 docs-viewer/services/docs_viewer_service.py
@@ -81,6 +83,10 @@ GET  /studio/api/catalogue/read
 POST /studio/api/catalogue/<workflow>
 GET  /studio/api/analytics/<workflow>
 POST /studio/api/analytics/<workflow>
+GET  /studio/api/data-sharing/health
+GET  /studio/api/data-sharing/selectable-records
+GET  /studio/api/data-sharing/returned-packages
+POST /studio/api/data-sharing/<workflow>
 GET  /studio/api/audits/<workflow>
 POST /studio/api/audits/<workflow>
 ```
@@ -91,8 +97,6 @@ Docs Viewer routes are served by the configured Docs Viewer service, not Local S
 GET  <DOCS_VIEWER_BASE_URL>/docs/
 GET  <DOCS_VIEWER_BASE_URL>/docs/<workflow>
 POST <DOCS_VIEWER_BASE_URL>/docs/<workflow>
-GET  <DOCS_VIEWER_BASE_URL>/data-sharing/<workflow>
-POST <DOCS_VIEWER_BASE_URL>/data-sharing/<workflow>
 ```
 
 ## Write Policy
@@ -113,6 +117,7 @@ Catalogue routes write only through explicit service allowlists:
 - focused generated/public outputs when a scoped build, publication, delete, import, Project State, or Thumbnail Quality workflow explicitly owns them
 
 Docs routes write only through the Docs Viewer service and its management mutation/import/rebuild services.
+Data Sharing document writes are exposed through the Local Studio Data Sharing API and remain docs-aware by delegating to document-domain helpers for validation, backups, source writes, and rebuild follow-through.
 
 Audit routes run only allowlisted local checks.
 
@@ -154,6 +159,7 @@ Implemented:
 - Docs management and Data Sharing use local Studio Docs APIs
 - active analytics tag writes use local Studio analytics APIs
 - Studio audit APIs are mounted in the local app
+- Studio Data Sharing API endpoints are mounted in the local app
 - catalogue reads, workbook import, editor writes, build, publication, delete, prose import, moment import, Project State, and Thumbnail Quality workflows use local Studio catalogue APIs
 - catalogue handler-owned behavior has been extracted into callable service functions
 - the standalone tag write, Docs management, and catalogue write servers have been retired
