@@ -13,7 +13,6 @@ if str(DOCS_SERVICES_DIR) not in sys.path:
     sys.path.insert(0, str(DOCS_SERVICES_DIR))
 
 import docs_management_routes as routes  # noqa: E402
-from studio import data_sharing_routes  # noqa: E402
 
 
 def assert_equal(actual, expected, label: str) -> None:
@@ -37,11 +36,12 @@ def test_post_routes_are_unique() -> None:
 
 def test_options_routes_are_get_and_post_routes() -> None:
     assert_equal(set(routes.OPTIONS_PATHS), {*routes.GET_PATHS, *routes.POST_PATHS}, "OPTIONS_PATHS")
-    assert_equal(
-        set(data_sharing_routes.OPTIONS_PATHS),
-        {*data_sharing_routes.GET_PATHS, *data_sharing_routes.POST_PATHS},
-        "data sharing OPTIONS_PATHS",
-    )
+
+
+def test_docs_management_routes_do_not_publish_data_sharing_endpoints() -> None:
+    paths = (*routes.GET_PATHS, *routes.POST_PATHS, *routes.OPTIONS_PATHS)
+    if any(path.startswith("/data-sharing/") for path in paths):
+        raise AssertionError("Docs Management routes must not publish Data Sharing endpoints")
 
 
 def main() -> None:

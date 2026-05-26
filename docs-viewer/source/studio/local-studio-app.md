@@ -2,7 +2,7 @@
 doc_id: local-studio-app
 title: Local Studio App
 added_date: "2026-05-22 08:06"
-last_updated: 2026-05-25
+last_updated: 2026-05-26
 parent_id: studio
 sort_order: 11000
 ---
@@ -140,7 +140,7 @@ The old Jekyll `/studio/thumbnail-quality/` shell has been retired.
 The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-work/?mode=manage`.
 The Data Sharing package preparation and returned-package review route shells are hosted by the local app at `/studio/data-sharing/prepare/?mode=manage` and `/studio/data-sharing/review/?mode=manage`.
 They reuse the existing Data Sharing browser modules.
-The prepare page calls the Studio Data Sharing API for adapter-owned selectable records; the remaining package operation calls still use the configured Docs Viewer service during the transition.
+The prepare and review pages call the Studio Data Sharing API for service health, adapter-owned selectable records, package preparation, returned-package listing, review, and confirmed apply.
 The old Jekyll route files under `studio/data-sharing/` have been retired.
 It reuses `studio/app/frontend/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply` endpoints.
 The old Jekyll `/studio/bulk-add-work/` shell has been retired.

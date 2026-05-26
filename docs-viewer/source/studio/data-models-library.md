@@ -160,7 +160,7 @@ Current consumers:
 
 - `/studio/data-sharing/prepare/?mode=manage`
 - `GET /studio/api/data-sharing/selectable-records` on the Local Studio app server
-- `POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare` on the Docs Viewer service
+- `POST /studio/api/data-sharing/prepare` on the Local Studio app server
 - `docs-viewer/services/docs_export.py`
 
 Current limits:
@@ -193,16 +193,16 @@ Current model:
 - Markdown preview files are generated only when `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py --write-previews` is used
 - summary and full-content imports write one preview file per parsed document
 - relationship imports write one whole-tree preview file per staged relationships file
-- summary apply can update selected source `summary` values through the Docs Viewer service after preflight and confirmation
-- hierarchy apply can update selected source `parent_id` values through the Docs Viewer service after preflight and confirmation; current `sort_order` values are preserved
+- summary apply can update selected source `summary` values through the Studio Data Sharing API after preflight and confirmation
+- hierarchy apply can update selected source `parent_id` values through the Studio Data Sharing API after preflight and confirmation; current `sort_order` values are preserved
 - hierarchy apply allows unresolved imported `parent_id` values as warnings; generated Library docs data treats those unresolved parents as root-level relationships
 
 Current consumers:
 
 - `$HOME/miniconda3/bin/python3 docs-viewer/services/docs_import.py`
-- `GET <DOCS_VIEWER_BASE_URL>/docs/import/files`
-- `POST <DOCS_VIEWER_BASE_URL>/docs/import/preview`
-- `POST <DOCS_VIEWER_BASE_URL>/docs/import/apply`
+- `GET /studio/api/data-sharing/returned-packages`
+- `POST /studio/api/data-sharing/review`
+- `POST /studio/api/data-sharing/apply`
 - `/studio/data-sharing/review/?mode=manage`
 
 Current limits:

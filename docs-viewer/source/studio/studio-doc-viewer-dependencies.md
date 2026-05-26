@@ -89,22 +89,22 @@ Docs Viewer management itself:
    - doc-link and nav-link rewriting
 
    Removed import-route and broad Docs Viewer management endpoint construction.
-   The remaining `docs_viewer_service_endpoints()` function exposes the endpoints current Data Sharing browser transport still consumes; remove the Data Sharing keys after the frontend moves to the same-origin Studio endpoints.
+   `docs_viewer_service_endpoints()` now exposes only Docs Viewer base, health, and generated-index reads; Data Sharing endpoint publication lives under `app.runtime.services.data_sharing`.
 
-5. Partially completed: remove frontend Docs Viewer service transport.
+5. Completed: remove frontend Docs Viewer service transport.
    Removed `DOCS_MANAGEMENT_ENDPOINTS`, `probeDocsManagementHealth()`, and non-Data-Sharing endpoint fallback mutation.
-   `DATA_SHARING_ENDPOINTS` still points at the configured Docs Viewer service until the frontend endpoint slice moves it to the same-origin Studio endpoints now published under `app.runtime.services.data_sharing`.
+   `DATA_SHARING_ENDPOINTS` now resolves through `app.runtime.services.data_sharing`.
 
 6. Completed: update runtime config tests to assert the intended boundary.
    The focused server test now asserts:
    - Docs nav view points to the configured Docs Viewer manage URL
    - page `doc_href` links point to configured Docs Viewer URLs
    - no `docs_html_import` route is present in Studio config
-   - `app.runtime.services.docs` contains only the temporary Data Sharing browser transport contract
+   - `app.runtime.services.docs` contains only Docs Viewer base, health, and generated-index reads
    - `app.runtime.services.data_sharing` contains the replacement same-origin Studio endpoints
 
-7. Ongoing: keep Data Sharing frontend transport out of this cleanup slice.
-   Remove Data Sharing endpoint assertions from this note after the frontend moves from `app.runtime.services.docs` to `app.runtime.services.data_sharing`.
+7. Completed: keep Data Sharing transport on the Studio API boundary.
+   Data Sharing endpoint assertions now live on `app.runtime.services.data_sharing`; the Docs Viewer runtime service namespace no longer carries them.
 
 ## Verification
 

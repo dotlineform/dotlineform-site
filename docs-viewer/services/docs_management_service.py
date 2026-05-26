@@ -29,8 +29,6 @@ import docs_source_config_report  # noqa: E402
 import docs_source_config_settings  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
-from data_sharing.adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
-from studio import data_sharing_routes, data_sharing_service  # noqa: E402
 from docs_management_broken_links_service import handle_broken_links  # noqa: E402
 from docs_management_capabilities_service import capabilities_payload  # noqa: E402
 from docs_management_context import (  # noqa: E402
@@ -49,11 +47,6 @@ from docs_management_context import (  # noqa: E402
     relative_path,
     utc_now,
     viewer_url_for,
-)
-from docs_management_data_sharing_service import (  # noqa: E402
-    DATA_SHARING_HANDLERS,
-    documents_data_sharing_dependencies,
-    tags_data_sharing_dependencies,
 )
 from docs_management_import_service import handle_import_source, import_source_dependencies  # noqa: E402
 from docs_management_mutation_service import (  # noqa: E402
@@ -115,21 +108,10 @@ def docs_management_post_response(
             )
         payload["dry_run"] = dry_run
         return HTTPStatus.OK, payload
-    if path == data_sharing_routes.PREPARE_PATH:
-        payload = data_sharing_service.prepare_package(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
-        docs_activity.maybe_attach_docs_export_activity(repo_root, body, payload, dry_run)
-        return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
     if path in {routes.IMPORT_SOURCE_PATH, routes.IMPORT_HTML_PATH}:
         payload = handle_import_source(repo_root, body, dry_run)
         docs_activity.maybe_attach_import_source_activity(repo_root, body, payload, dry_run)
         return HTTPStatus.OK, payload
-    if path == data_sharing_routes.REVIEW_PATH:
-        payload = data_sharing_service.review_returned_package(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
-        return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
-    if path == data_sharing_routes.APPLY_PATH:
-        payload = data_sharing_service.apply_returned_changes(repo_root, body, dry_run, DATA_SHARING_HANDLERS)
-        docs_activity.maybe_attach_documents_import_apply_activity(repo_root, body, payload, dry_run)
-        return HTTPStatus.OK if payload.get("ok") else HTTPStatus.BAD_REQUEST, payload
     if path == routes.UPDATE_METADATA_PATH:
         return HTTPStatus.OK, handle_update_metadata(repo_root, body, dry_run)
     if path == routes.UPDATE_VIEWABILITY_PATH:

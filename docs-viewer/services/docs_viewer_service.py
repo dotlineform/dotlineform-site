@@ -33,7 +33,6 @@ if str(SERVICE_DIR) not in sys.path:
 
 import docs_management_routes as routes  # noqa: E402
 import docs_management_service as docs_service  # noqa: E402
-from studio import data_sharing_routes  # noqa: E402
 
 
 ENABLED_VALUES = {"1", "on", "true", "yes"}
@@ -347,7 +346,7 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
         if path in GENERATED_READ_PATHS and not self.config.generated_reads_enabled:
             self.send_json({"ok": False, "error": "Generated reads are disabled"}, HTTPStatus.FORBIDDEN)
             return
-        if path in routes.GET_PATHS or path in data_sharing_routes.GET_PATHS:
+        if path in routes.GET_PATHS:
             self.send_docs_api_json(path, query)
             return
         if self.is_allowed_static_path(path):
@@ -359,7 +358,7 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if path not in routes.POST_PATHS and path not in data_sharing_routes.POST_PATHS:
+        if path not in routes.POST_PATHS:
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
         if not self.config.management_enabled:
@@ -373,7 +372,7 @@ class DocsViewerRequestHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self) -> None:
         request = urlsplit(self.path)
         path = unquote(request.path)
-        if path not in routes.OPTIONS_PATHS and path not in data_sharing_routes.OPTIONS_PATHS:
+        if path not in routes.OPTIONS_PATHS:
             self.send_error(HTTPStatus.NOT_FOUND, "Not found")
             return
         if not self.origin_allowed_for_local_api():

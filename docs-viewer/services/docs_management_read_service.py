@@ -11,9 +11,7 @@ import docs_management_routes as routes
 from docs_scope_config import load_docs_scope_configs
 import docs_source_config_report
 import docs_source_config_settings
-from studio import data_sharing_routes, data_sharing_service
 from docs_management_capabilities_service import capabilities_payload
-from docs_management_data_sharing_service import DATA_SHARING_HANDLERS
 
 
 def docs_api_query_value(params: dict[str, list[str]], key: str) -> str:
@@ -83,13 +81,6 @@ def docs_management_get_payload(repo_root: Path, path: str, params: dict[str, li
         )
     if path in {routes.IMPORT_SOURCE_FILES_PATH, routes.IMPORT_HTML_FILES_PATH}:
         return import_source_service.handle_import_source_files(repo_root)
-    if path == data_sharing_routes.RETURNED_PACKAGES_PATH:
-        return data_sharing_service.list_returned_packages(
-            repo_root,
-            docs_api_query_value(params, "data_domain"),
-            DATA_SHARING_HANDLERS,
-        )
-
     if docs_api_query_value(params, "scope"):
         normalize_scope(repo_root, docs_api_query_value(params, "scope"))
     raise FileNotFoundError("Not found")

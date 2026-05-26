@@ -101,6 +101,7 @@ exclude:
   - logs
   - docs/
   - data-sharing/README.md
+  - data-sharing/config/
   - data-sharing/data_sharing/
   - data-sharing/schemas/
   - studio/app/

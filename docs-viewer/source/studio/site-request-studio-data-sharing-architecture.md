@@ -57,7 +57,7 @@ Studio Data Sharing pages currently call configured Docs Viewer endpoints for:
 - returned-package review
 - confirmed apply
 
-This made sense while the document workflow lived closest to Docs Viewer. It now creates a confusing ownership boundary: Studio owns the Data Sharing UI and shared adapter registry, but the runtime service endpoint for document workflows is the Docs Viewer service.
+This made sense while the document workflow lived closest to Docs Viewer. It created a confusing ownership boundary: Studio owned the Data Sharing UI and shared adapter registry, but the runtime service endpoint for document workflows was the Docs Viewer service.
 
 That dependency should not be resolved in the narrower Studio/Docs Viewer link cleanup. It needs a separate architecture slice because it affects service ownership, adapter placement, document write safety, tests, and docs.
 

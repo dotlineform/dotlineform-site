@@ -273,10 +273,6 @@ STUDIO_SERVICE_ENDPOINTS: dict[str, object] = {
         "base": "",
         "health": "",
         "generated_index": "",
-        "data_sharing_prepare": "",
-        "data_sharing_returned_packages": "",
-        "data_sharing_review": "",
-        "data_sharing_apply": "",
     },
     "data_sharing": {},
     "audits": {

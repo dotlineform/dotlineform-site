@@ -64,8 +64,4 @@ def docs_viewer_service_endpoints(repo_root: Path) -> dict[str, str]:
         "base": base,
         "health": f"{base}/health",
         "generated_index": f"{base}/docs/generated/index",
-        "data_sharing_prepare": f"{base}/data-sharing/prepare",
-        "data_sharing_returned_packages": f"{base}/data-sharing/returned-packages",
-        "data_sharing_review": f"{base}/data-sharing/review",
-        "data_sharing_apply": f"{base}/data-sharing/apply",
     }

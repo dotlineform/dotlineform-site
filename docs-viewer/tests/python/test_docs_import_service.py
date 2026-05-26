@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import sys
 import tempfile
@@ -12,68 +11,62 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_DIR = REPO_ROOT / "docs-viewer" / "services"
-DOCS_MANAGEMENT_PATH = DOCS_DIR / "docs_management_service.py"
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+if str(DOCS_DIR) not in sys.path:
+    sys.path.insert(0, str(DOCS_DIR))
 
 
-def load_docs_management_module():
-    if str(DOCS_DIR) not in sys.path:
-        sys.path.insert(0, str(DOCS_DIR))
-    spec = importlib.util.spec_from_file_location("docs_management_service", DOCS_MANAGEMENT_PATH)
-    if spec is None or spec.loader is None:
-        raise RuntimeError("Could not load docs_management_service.py")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-docs_management = load_docs_management_module()
-documents_data_sharing_adapter = docs_management.documents_data_sharing_adapter
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_html_import  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
+import docs_write_rebuild as write_rebuild  # noqa: E402
+from docs_management_import_service import import_source_dependencies  # noqa: E402
+from studio.app.server.studio import studio_data_sharing_api  # noqa: E402
+
+documents_data_sharing_adapter = studio_data_sharing_api.documents_data_sharing_adapter
 
 
 def handle_documents_import_files(root: Path, data_domain: str) -> dict[str, object]:
-    adapter = docs_management.data_sharing_service.resolve_for_service(root, data_domain, "list_returned")
+    adapter = studio_data_sharing_api.data_sharing_service.resolve_for_service(root, data_domain, "list_returned")
     return documents_data_sharing_adapter.list_returned_packages(
         root,
         data_domain,
         adapter=adapter,
-        dependencies=docs_management.documents_data_sharing_dependencies(),
+        dependencies=studio_data_sharing_api.documents_data_sharing_dependencies(),
     )
 
 
 def handle_documents_import_preview(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    adapter = docs_management.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "review")
+    adapter = studio_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "review")
     return documents_data_sharing_adapter.review_returned_package(
         root,
         body,
         dry_run,
         adapter=adapter,
-        dependencies=docs_management.documents_data_sharing_dependencies(),
+        dependencies=studio_data_sharing_api.documents_data_sharing_dependencies(),
     )
 
 
 def handle_documents_import_apply(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    adapter = docs_management.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "apply")
+    adapter = studio_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "apply")
     return documents_data_sharing_adapter.apply_returned_changes(
         root,
         body,
         dry_run,
         adapter=adapter,
-        dependencies=docs_management.documents_data_sharing_dependencies(),
+        dependencies=studio_data_sharing_api.documents_data_sharing_dependencies(),
     )
 
 
 def handle_docs_export(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
-    adapter = docs_management.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "prepare")
+    adapter = studio_data_sharing_api.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "prepare")
     return documents_data_sharing_adapter.prepare_package(
         root,
         body,
         dry_run,
         adapter=adapter,
-        dependencies=docs_management.documents_data_sharing_dependencies(),
+        dependencies=studio_data_sharing_api.documents_data_sharing_dependencies(),
     )
 
 
@@ -335,7 +328,7 @@ def write_library_doc(root: Path, filename: str, front_matter: dict[str, object]
 
 
 def stub_rebuild():
-    original = docs_management.write_rebuild.perform_source_write_and_rebuild
+    original = write_rebuild.perform_source_write_and_rebuild
 
     def fake_rebuild(repo_root, scope, changed_paths, write_operation, **kwargs):
         write_operation()
@@ -356,7 +349,7 @@ def stub_rebuild():
             },
         }
 
-    docs_management.write_rebuild.perform_source_write_and_rebuild = fake_rebuild
+    write_rebuild.perform_source_write_and_rebuild = fake_rebuild
     return original
 
 
@@ -365,7 +358,7 @@ def handle_import_source(root: Path, body: dict[str, object], dry_run: bool) -> 
         root,
         body,
         dry_run,
-        docs_management.import_source_dependencies(),
+        import_source_dependencies(),
     )
 
 
@@ -508,7 +501,7 @@ def test_html_import_create_uses_staged_filename_for_doc_id_and_path() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_path = root / "docs-viewer/source/library/compact-name.md"
@@ -577,7 +570,7 @@ def test_html_import_copies_role_marked_interactive_assets() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/worksheet.md").read_text(encoding="utf-8")
@@ -633,7 +626,7 @@ def test_html_import_reports_role_marked_interactive_assets_in_preview_only() ->
             )
             files = import_source_service.handle_import_source_files(root)["files"]
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         asset_exists = (root / "assets/docs/interactive/library/worksheet-widget.html").exists()
@@ -684,7 +677,7 @@ def test_html_import_confirms_existing_role_marked_interactive_asset_target() ->
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/worksheet.md").read_text(encoding="utf-8")
@@ -749,7 +742,7 @@ def test_markdown_import_create_wraps_body_with_generated_front_matter() -> None
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_path = root / "docs-viewer/source/library/markdown-note.md"
@@ -787,7 +780,7 @@ def test_text_import_autolinks_plain_urls() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/plain-note.md").read_text(encoding="utf-8")
@@ -827,7 +820,7 @@ def test_svg_import_strips_unsafe_content() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/diagram.md").read_text(encoding="utf-8")
@@ -861,7 +854,7 @@ def test_image_import_creates_media_path_plan_wrapper() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/reference-image.md").read_text(encoding="utf-8")
@@ -909,7 +902,7 @@ def test_html_import_extracts_inline_png_to_staged_media_plan() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/inline-diagram.md").read_text(encoding="utf-8")
@@ -950,7 +943,7 @@ def test_markdown_import_extracts_inline_png_with_incremented_filename() -> None
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/inline-note.md").read_text(encoding="utf-8")
@@ -989,7 +982,7 @@ def test_inline_media_write_skips_invalid_data_urls_before_valid_images() -> Non
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/mixed-inline.md").read_text(encoding="utf-8")
@@ -1023,7 +1016,7 @@ def test_file_media_import_creates_file_media_path_plan_wrapper() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/reference-file.md").read_text(encoding="utf-8")
@@ -1072,7 +1065,7 @@ Some text.
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_text = (root / "docs-viewer/source/library/my-note.md").read_text(encoding="utf-8")
@@ -1142,7 +1135,7 @@ def test_markdown_package_import_reports_unresolved_and_unsupported_links() -> N
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
     warnings = payload["import_preview"]["warnings"]
@@ -1182,7 +1175,7 @@ def test_import_collision_prompts_for_replacement_doc_id() -> None:
                 dry_run=False,
             )
         finally:
-            docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+            write_rebuild.perform_source_write_and_rebuild = original_rebuild
             validation_globals["validate_markdown_with_jekyll"] = original_validation
 
         source_path = root / "docs-viewer/source/library/reference-file-2.md"
@@ -1255,7 +1248,7 @@ def test_library_import_summary_apply_creates_backup_and_writes_source() -> None
             backup_exists = backup_dir.exists()
             backup_source_exists = (backup_dir / "alpha.md").exists()
     finally:
-        docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+        write_rebuild.perform_source_write_and_rebuild = original_rebuild
 
     assert payload["ok"] is True
     assert payload["summary_apply_written"] is True
@@ -1360,7 +1353,7 @@ def test_library_import_hierarchy_apply_creates_backup_and_preserves_sort_order(
             backup_dir = root / payload["backup_dir"]
             manifest = json.loads((backup_dir / "manifest.json").read_text(encoding="utf-8"))
     finally:
-        docs_management.write_rebuild.perform_source_write_and_rebuild = original_rebuild
+        write_rebuild.perform_source_write_and_rebuild = original_rebuild
 
     assert payload["ok"] is True
     assert payload["hierarchy_apply_written"] is True

@@ -23,6 +23,7 @@ The registry is owned by the headless `data-sharing/` subsystem, not by Studio r
 
 Studio reads this config through its same-origin Data Sharing API.
 Browser modules must not infer endpoint ownership or selectable-record behavior from the config file path.
+Local Studio may serve `data-sharing/config/` directly through its static allowlist for browser config reads, but public Jekyll builds exclude the directory because the configs are Studio/Data Sharing runtime inputs rather than public site assets.
 
 ## Current Mapping
 

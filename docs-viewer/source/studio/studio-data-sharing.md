@@ -83,8 +83,7 @@ The Studio API exposes same-origin Data Sharing endpoints:
 - `POST /studio/api/data-sharing/apply`
 
 These endpoints are published in Local Studio runtime config under `app.runtime.services.data_sharing`.
-During the transition, the prepare page already reads selectable records from the same-origin Studio API.
-The remaining health, prepare, returned-package, review, and apply browser calls still use the older Docs Viewer endpoint keys until the frontend endpoint slice moves them to this same-origin API.
+Docs Viewer service endpoints are not published under `app.runtime.services.docs` for Data Sharing.
 
 ## Runtime
 
@@ -98,6 +97,7 @@ The page shells load:
 - `studio/app/frontend/js/data-sharing-adapters.js`
 - `studio/app/server/studio/data_sharing_routes.py`
 - `studio/app/server/studio/data_sharing_service.py`
+- `studio/app/server/studio/studio_data_sharing_api.py`
 - `data-sharing/data_sharing/services/dispatch.py`
 - `data-sharing/data_sharing/workflows/prepare.py`
 - `data-sharing/data_sharing/workflows/list_returned.py`

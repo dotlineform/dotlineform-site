@@ -2,7 +2,7 @@
 doc_id: docs-viewer-portable-files
 title: Docs Viewer Portable File Manifest
 added_date: 2026-05-19
-last_updated: 2026-05-25
+last_updated: 2026-05-26
 parent_id: docs-viewer-portable-setup
 sort_order: 3100
 ---
@@ -181,7 +181,6 @@ For local manage mode, copy the Docs Viewer service support:
 - `docs-viewer/services/docs_management_capabilities_service.py`
 - `docs-viewer/services/docs_management_mutation_service.py`
 - `docs-viewer/services/docs_management_import_service.py`
-- `docs-viewer/services/docs_management_data_sharing_service.py`
 - `docs-viewer/services/docs_management_source_service.py`
 - `docs-viewer/services/docs_management_broken_links_service.py`
 - `docs-viewer/services/docs_scope_config.py`

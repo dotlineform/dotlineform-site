@@ -81,8 +81,8 @@ Review boot flow:
 
 Migration pressure points:
 
-- `app.runtime.services.docs` still publishes old Data Sharing endpoint keys for SDSA-013 cleanup.
-- Docs Viewer still mounts transitional `/data-sharing/...` endpoints for SDSA-013 cleanup.
+- SDSA-013 removed old Data Sharing endpoint keys from `app.runtime.services.docs`.
+- SDSA-013 removed the transitional Docs Viewer `/data-sharing/...` HTTP endpoints.
 - Some CLI and smoke-test aliases still use old `--mock-docs-service` / `--block-docs-service` names for compatibility with existing verification commands.
 
 ## Runtime Config
@@ -98,19 +98,14 @@ Migration pressure points:
   - `prepare`
   - `review`
   - `apply`
-- `app.runtime.services.docs`, populated by `docs_viewer_service_endpoints(repo_root)`, which still carries old Data Sharing endpoint keys until SDSA-013 removes that publication.
+- `app.runtime.services.docs`, populated by `docs_viewer_service_endpoints(repo_root)`, for Docs Viewer base, health, and generated-index reads only.
 
 `studio/app/server/studio/studio_docs_viewer_integration.py` resolves `DOCS_VIEWER_BASE_URL` from `var/local/site.env` or environment, validates that it is an HTTP loopback URL, and publishes:
 
 - `<base>/health`
 - `<base>/docs/generated/index`
-- `<base>/data-sharing/prepare`
-- `<base>/data-sharing/returned-packages`
-- `<base>/data-sharing/review`
-- `<base>/data-sharing/apply`
 
-Current tests still assert this legacy Docs Viewer publication in `studio/tests/python/test_studio_app_server.py`.
-SDSA-013 needs to invert that contract so Data Sharing endpoints no longer live under `app.runtime.services.docs`.
+Current tests assert that Data Sharing endpoints no longer live under `app.runtime.services.docs`.
 
 ## Service Endpoints
 
@@ -125,17 +120,6 @@ Studio API endpoint constants live in `studio/app/server/studio/studio_data_shar
 
 `studio/app/server/studio/studio_app_server.py` routes same-origin API requests to `studio_data_sharing_api.data_sharing_get_payload` and `studio_data_sharing_api.data_sharing_post_response`.
 
-Legacy neutral endpoint constants still live in `studio/app/server/studio/data_sharing_routes.py`:
-
-- `GET /data-sharing/returned-packages`
-- `POST /data-sharing/prepare`
-- `POST /data-sharing/review`
-- `POST /data-sharing/apply`
-
-Docs Viewer mounts those constants in `docs-viewer/services/docs_viewer_service.py`.
-GET requests dispatch through `docs_management_read_service.docs_management_get_payload`.
-POST requests dispatch through `docs_management_service.docs_management_post_response`.
-
 Current Studio dispatch:
 
 - `GET /studio/api/data-sharing/health` -> Studio API health payload
@@ -146,7 +130,6 @@ Current Studio dispatch:
 - `POST /studio/api/data-sharing/apply` -> `data_sharing_service.apply_returned_changes(...)` and `docs_activity.maybe_attach_documents_import_apply_activity(...)`
 
 Studio local-origin enforcement guards `/studio/api/data-sharing/...` POST and OPTIONS paths with the other Studio write APIs.
-Docs Viewer local-origin enforcement and CORS still guard the transitional `/data-sharing/...` POST and OPTIONS paths until SDSA-013 removes them.
 
 ## Dispatch And Registry
 
@@ -174,13 +157,12 @@ Shared dispatch modules currently live under `studio/app/server/studio/`:
 - `review_returned_package`
 - `apply_returned_changes`
 
-Handler registration currently lives in `docs-viewer/services/docs_management_data_sharing_service.py`:
+Handler registration lives in `studio/app/server/studio/studio_data_sharing_api.py`:
 
 - module `documents` -> `data-sharing/data_sharing/adapters/documents/adapter.py`
 - module `analytics.tags` -> `data-sharing/data_sharing/adapters/tags/adapter.py`
 
-Handler registration for the Studio same-origin API lives in `studio/app/server/studio/studio_data_sharing_api.py` with the same module mapping.
-The shared workflow dispatch is Data Sharing-owned. The Docs Viewer and Studio services still assemble concrete handler maps for their current local API entry points.
+The shared workflow dispatch is Data Sharing-owned. The Studio service assembles the concrete handler map for the local API entry point.
 
 ## Config Reads
 
@@ -231,7 +213,7 @@ Dependency injection comes from `DocumentsDataSharingDependencies`:
 - `make_backup_bundle`
 - `perform_source_write_and_rebuild`
 
-Those are assembled by `docs_management_data_sharing_service.documents_data_sharing_dependencies()` using:
+Those are assembled by `studio_data_sharing_api.documents_data_sharing_dependencies()` using:
 
 - `docs_management_context.log_event`
 - `docs_management_context.make_backup_bundle`
@@ -357,15 +339,15 @@ Smoke coverage:
 
 Coverage gaps for the target architecture:
 
-- Runtime config tests still need SDSA-013 assertions that Data Sharing endpoints no longer publish under `app.runtime.services.docs`.
-- Docs Viewer transitional `/data-sharing/...` endpoints still need removal or deliberate retention tests after SDSA-013 decides the cleanup shape.
+- SDSA-013 added runtime config assertions that Data Sharing endpoints no longer publish under `app.runtime.services.docs`.
+- SDSA-013 added a Docs Management route assertion that `/data-sharing/...` endpoints are not published by Docs Viewer.
 
 ## Migration Checklist From Inventory
 
 Use this call graph inventory to drive the next tasks:
 
-- Remove Data Sharing endpoint publication from `app.runtime.services.docs` now that browser transport uses `app.runtime.services.data_sharing`.
-- Remove or explicitly retire transitional Docs Viewer `/data-sharing/...` service helpers if no non-browser caller needs them.
+- Keep Data Sharing endpoint publication out of `app.runtime.services.docs`.
+- Keep transitional Docs Viewer `/data-sharing/...` service helpers retired.
 - Keep browser smokes on same-origin `/studio/api/data-sharing/...` paths.
 - Keep documents and tags adapters at the same `data-sharing/` adapter boundary.
-- Update final runtime config tests and docs-log evidence as endpoint cleanup lands.
+- Update docs-log evidence as endpoint cleanup lands.

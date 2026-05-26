@@ -105,19 +105,7 @@ def test_runtime_config_exposes_adapter_contract() -> None:
     assert runtime["services"]["docs"]["base"] == docs_base_url
     assert runtime["services"]["docs"]["health"] == f"{docs_base_url}/health"
     assert runtime["services"]["docs"]["generated_index"] == f"{docs_base_url}/docs/generated/index"
-    assert runtime["services"]["docs"]["data_sharing_prepare"] == f"{docs_base_url}/data-sharing/prepare"
-    assert runtime["services"]["docs"]["data_sharing_returned_packages"] == f"{docs_base_url}/data-sharing/returned-packages"
-    assert runtime["services"]["docs"]["data_sharing_review"] == f"{docs_base_url}/data-sharing/review"
-    assert runtime["services"]["docs"]["data_sharing_apply"] == f"{docs_base_url}/data-sharing/apply"
-    assert set(runtime["services"]["docs"]) == {
-        "base",
-        "health",
-        "generated_index",
-        "data_sharing_prepare",
-        "data_sharing_returned_packages",
-        "data_sharing_review",
-        "data_sharing_apply",
-    }
+    assert set(runtime["services"]["docs"]) == {"base", "health", "generated_index"}
     assert runtime["services"]["audits"]["base"] == "/studio/api/audits"
     assert runtime["services"]["audits"]["audits"] == "/studio/api/audits/audits"
     assert runtime["services"]["audits"]["run"] == "/studio/api/audits/audits/run"
@@ -200,6 +188,23 @@ def test_static_path_policy_serves_new_studio_paths_without_legacy_source_roots(
     assert allowed("/docs-viewer/static/css/docs-viewer-base.css") is False
     assert allowed("/docs-viewer/config/defaults/docs-viewer-config.json") is False
     assert allowed("/data-sharing/data_sharing/services/registry.py") is False
+
+
+def test_public_jekyll_build_excludes_data_sharing_config_while_studio_serves_it() -> None:
+    excludes: set[str] = set()
+    in_exclude = False
+    for line in (REPO_ROOT / "_config.yml").read_text(encoding="utf-8").splitlines():
+        if line == "exclude:":
+            in_exclude = True
+            continue
+        if in_exclude and line and not line.startswith("  "):
+            break
+        if in_exclude and line.startswith("  - "):
+            excludes.add(line.removeprefix("  - ").strip())
+
+    assert "data-sharing/config/" in excludes
+    assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/adapters.json") is True
+    assert StudioAppRequestHandler.is_allowed_static_path(object(), "/data-sharing/config/library-export-configs.json") is True
 
 
 def test_local_studio_shells_load_studio_css_without_public_main_css() -> None:
