@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T18:42:46Z",
+  "generated_at": "2026-05-26T18:50:09Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -21,7 +21,7 @@
       "source_path": "site-request-studio-data-sharing-architecture-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-studio-data-sharing-architecture-tasks.json",
-      "content_text_length": 9764,
+      "content_text_length": 10118,
       "ui_status": "in-progress"
     },
     {
@@ -117,7 +117,7 @@
       "source_path": "docs-build-management-import-export-improvements.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-build-management-import-export-improvements",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-build-management-import-export-improvements.json",
-      "content_text_length": 11965,
+      "content_text_length": 12006,
       "ui_status": "done"
     },
     {
@@ -285,7 +285,7 @@
       "source_path": "studio-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing.json",
-      "content_text_length": 7462
+      "content_text_length": 7546
     },
     {
       "scope": "studio",
@@ -622,7 +622,7 @@
       "source_path": "studio-data-sharing-technical-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-data-sharing-technical-spec",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/studio-data-sharing-technical-spec.json",
-      "content_text_length": 10990
+      "content_text_length": 11083
     },
     {
       "scope": "studio",
@@ -2734,7 +2734,7 @@
       "source_path": "scripts-docs-management-server-generated-reads.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-generated-reads",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-generated-reads.json",
-      "content_text_length": 10156
+      "content_text_length": 10134
     },
     {
       "scope": "studio",
@@ -2764,7 +2764,7 @@
       "source_path": "scripts-docs-management-server-data-sharing.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-management-server-data-sharing",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/scripts-docs-management-server-data-sharing.json",
-      "content_text_length": 8682
+      "content_text_length": 8667
     },
     {
       "scope": "studio",

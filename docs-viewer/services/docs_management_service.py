@@ -29,7 +29,7 @@ import docs_source_config_report  # noqa: E402
 import docs_source_config_settings  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 import docs_write_rebuild as write_rebuild  # noqa: E402
-import documents_data_sharing_adapter  # noqa: E402
+from data_sharing.adapters.documents import adapter as documents_data_sharing_adapter  # noqa: E402
 from studio import data_sharing_routes, data_sharing_service  # noqa: E402
 from docs_management_broken_links_service import handle_broken_links  # noqa: E402
 from docs_management_capabilities_service import capabilities_payload  # noqa: E402

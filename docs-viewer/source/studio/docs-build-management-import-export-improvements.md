@@ -152,7 +152,8 @@ Implementation scope:
   - `docs-viewer/services/docs_import.py`
   - `docs-viewer/services/docs_export.py`
   - `docs-viewer/services/docs_import_source_service.py`
-  - `docs-viewer/services/documents_data_sharing_adapter.py`
+  - `data-sharing/data_sharing/adapters/documents/adapter.py`
+  - `docs-viewer/services/docs_data_sharing/`
   - `studio/app/server/studio/data_sharing_service.py`
 - ensure Docs management service remains a transport/orchestration layer for Data Sharing and Docs Viewer management endpoints
 - update existing technical docs with final behavior:

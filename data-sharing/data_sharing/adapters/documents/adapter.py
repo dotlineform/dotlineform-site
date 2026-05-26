@@ -11,13 +11,12 @@ from typing import Any, Callable, Dict, Optional
 _BOOTSTRAP_START = Path(__file__).resolve()
 for _candidate in (_BOOTSTRAP_START.parent, *_BOOTSTRAP_START.parents):
     if (_candidate / "_config.yml").exists():
-        if str(_candidate) not in sys.path:
-            sys.path.insert(0, str(_candidate))
+        _docs_services_root = _candidate / "docs-viewer" / "services"
+        _data_sharing_root = _candidate / "data-sharing"
+        for _path in (_docs_services_root, _data_sharing_root):
+            if str(_path) not in sys.path:
+                sys.path.insert(0, str(_path))
         break
-
-from studio.shared.python.studio_python_paths import ensure_studio_python_paths
-
-ensure_studio_python_paths(__file__)
 
 from docs_data_sharing.apply import (  # noqa: E402
     DocumentsApplyIdentity,
@@ -36,8 +35,7 @@ from docs_data_sharing.write import (  # noqa: E402
     PerformSourceWriteAndRebuild,
 )
 import docs_source_model as source_model  # noqa: E402
-from studio.data_sharing_adapters import AdapterResolution  # noqa: E402
-from studio import data_sharing_service  # noqa: E402
+from data_sharing.services.dispatch import DataSharingAdapterHandlers  # noqa: E402
 
 
 LogEvent = Callable[[Path, str, Dict[str, Any]], None]
@@ -56,22 +54,19 @@ class DocumentsDataSharingDependencies:
         )
 
 
-def resolve_documents_adapter(repo_root: Path, data_domain: Any, operation: str) -> AdapterResolution:
-    adapter = data_sharing_service.resolve_for_service(repo_root, data_domain, operation)
-    return require_documents_adapter(adapter)
-
-
-def require_documents_adapter(adapter: AdapterResolution) -> AdapterResolution:
+def require_documents_adapter(adapter: Any) -> Any:
+    if adapter is None:
+        raise ValueError("documents adapter resolution is required")
     if str(adapter.adapter.get("module") or "").strip() != "documents":
         raise ValueError(f"adapter {adapter.adapter_id!r} is not implemented by the documents service")
     return adapter
 
 
-def selection_model(adapter: AdapterResolution) -> str:
+def selection_model(adapter: Any) -> str:
     return str(adapter.capability.get("selection_model") or adapter.domain.get("selection_model") or "").strip()
 
 
-def attach_adapter_context(report: Dict[str, Any], adapter: AdapterResolution) -> Dict[str, Any]:
+def attach_adapter_context(report: Dict[str, Any], adapter: Any) -> Dict[str, Any]:
     report["data_domain"] = adapter.data_domain
     report["adapter_id"] = adapter.adapter_id
     return report
@@ -80,11 +75,11 @@ def attach_adapter_context(report: Dict[str, Any], adapter: AdapterResolution) -
 def selectable_records(
     repo_root: Path,
     data_domain: Any,
-    adapter: Optional[AdapterResolution] = None,
+    adapter: Optional[Any] = None,
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
     del dependencies
-    adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, data_domain, "prepare"))
+    adapter = require_documents_adapter(adapter)
     report = selectable_document_records(
         repo_root,
         scope=adapter.scope,
@@ -97,10 +92,10 @@ def prepare_package(
     repo_root: Path,
     body: Dict[str, Any],
     dry_run: bool,
-    adapter: Optional[AdapterResolution] = None,
+    adapter: Optional[Any] = None,
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
-    adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, body.get("data_domain"), "prepare"))
+    adapter = require_documents_adapter(adapter)
     config_id = str(body.get("config_id") or "").strip()
     target_format = str(body.get("target_format") or "").strip()
     report = build_document_package(
@@ -152,10 +147,10 @@ def prepare_package(
 def list_returned_packages(
     repo_root: Path,
     data_domain: Any,
-    adapter: Optional[AdapterResolution] = None,
+    adapter: Optional[Any] = None,
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
-    adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, data_domain, "list_returned"))
+    adapter = require_documents_adapter(adapter)
     report = list_returned_document_packages(
         repo_root,
         scope=adapter.scope,
@@ -180,13 +175,13 @@ def review_returned_package(
     repo_root: Path,
     body: Dict[str, Any],
     dry_run: bool,
-    adapter: Optional[AdapterResolution] = None,
+    adapter: Optional[Any] = None,
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
     operation = str(body.get("operation") or "review").strip()
     if operation != "review":
         raise ValueError("operation must be review")
-    adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, body.get("data_domain"), "review"))
+    adapter = require_documents_adapter(adapter)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     report = review_returned_document_package(
         repo_root,
@@ -237,7 +232,7 @@ def apply_returned_changes(
     repo_root: Path,
     body: Dict[str, Any],
     dry_run: bool,
-    adapter: Optional[AdapterResolution] = None,
+    adapter: Optional[Any] = None,
     dependencies: Optional[DocumentsDataSharingDependencies] = None,
 ) -> Dict[str, Any]:
     operation = str(body.get("operation") or "").strip()
@@ -248,7 +243,7 @@ def apply_returned_changes(
         raise ValueError("apply_action must be summary_apply or hierarchy_apply")
     if dependencies is None:
         raise ValueError("documents apply requires service dependencies")
-    adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, body.get("data_domain"), operation))
+    adapter = require_documents_adapter(adapter)
     scope = source_model.normalize_scope(adapter.scope)
     staged_filename = str(body.get("staged_filename") or body.get("file") or "").strip()
     confirmed = bool(body.get("confirm"))
@@ -306,23 +301,23 @@ def apply_returned_changes(
 
 def handlers_for(
     dependencies_factory: Callable[[], DocumentsDataSharingDependencies],
-) -> data_sharing_service.DataSharingAdapterHandlers:
-    def selectable_records_handler(repo_root: Path, data_domain: Any, adapter: AdapterResolution) -> Dict[str, Any]:
+) -> DataSharingAdapterHandlers:
+    def selectable_records_handler(repo_root: Path, data_domain: Any, adapter: Any) -> Dict[str, Any]:
         return selectable_records(repo_root, data_domain, adapter, dependencies_factory())
 
-    def prepare_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: AdapterResolution) -> Dict[str, Any]:
+    def prepare_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: Any) -> Dict[str, Any]:
         return prepare_package(repo_root, body, dry_run, adapter, dependencies_factory())
 
-    def list_handler(repo_root: Path, data_domain: Any, adapter: AdapterResolution) -> Dict[str, Any]:
+    def list_handler(repo_root: Path, data_domain: Any, adapter: Any) -> Dict[str, Any]:
         return list_returned_packages(repo_root, data_domain, adapter, dependencies_factory())
 
-    def review_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: AdapterResolution) -> Dict[str, Any]:
+    def review_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: Any) -> Dict[str, Any]:
         return review_returned_package(repo_root, body, dry_run, adapter, dependencies_factory())
 
-    def apply_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: AdapterResolution) -> Dict[str, Any]:
+    def apply_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: Any) -> Dict[str, Any]:
         return apply_returned_changes(repo_root, body, dry_run, adapter, dependencies_factory())
 
-    return data_sharing_service.DataSharingAdapterHandlers(
+    return DataSharingAdapterHandlers(
         module="documents",
         selectable_records=selectable_records_handler,
         prepare=prepare_handler,

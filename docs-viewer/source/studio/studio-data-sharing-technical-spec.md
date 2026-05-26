@@ -180,6 +180,10 @@ Current domain:
 
 - `data_domain: "library"`
 
+Implementation module:
+
+- `data-sharing/data_sharing/adapters/documents/adapter.py`
+
 The documents adapter owns:
 
 - Library sharing profile loading from `data-sharing/config/library-export-configs.json`
@@ -206,7 +210,7 @@ Library workflow roots:
 - source root: `docs-viewer/source/library/`
 - backup root: `var/docs/backups/`
 
-The documents adapter is the optional companion a portable Docs Viewer install can ship when it wants Library or other Docs Viewer corpus Data Sharing behavior.
+The documents adapter is Data Sharing-owned adapter code that a portable Docs Viewer install can ship when it wants Library or other Docs Viewer corpus Data Sharing behavior.
 It does not own the shared Data Sharing registry or non-document adapters.
 Docs-domain helpers remain under the Docs Viewer ownership boundary unless a later implementation deliberately creates a new package boundary.
 They must be callable without Docs Viewer HTTP or UI/service wrapper modules.

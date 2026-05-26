@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from analytics import tags_data_sharing_adapter
-import documents_data_sharing_adapter
+from data_sharing.adapters.documents import adapter as documents_data_sharing_adapter
 import docs_write_rebuild as write_rebuild
 from docs_management_context import log_event, make_backup_bundle
 

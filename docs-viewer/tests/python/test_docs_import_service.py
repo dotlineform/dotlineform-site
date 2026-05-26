@@ -28,43 +28,51 @@ def load_docs_management_module():
 
 
 docs_management = load_docs_management_module()
-documents_data_sharing_adapter = sys.modules["documents_data_sharing_adapter"]
+documents_data_sharing_adapter = docs_management.documents_data_sharing_adapter
 import docs_import_source_service as import_source_service  # noqa: E402
 import docs_html_import  # noqa: E402
 import docs_source_model as source_model  # noqa: E402
 
 
 def handle_documents_import_files(root: Path, data_domain: str) -> dict[str, object]:
+    adapter = docs_management.data_sharing_service.resolve_for_service(root, data_domain, "list_returned")
     return documents_data_sharing_adapter.list_returned_packages(
         root,
         data_domain,
+        adapter=adapter,
         dependencies=docs_management.documents_data_sharing_dependencies(),
     )
 
 
 def handle_documents_import_preview(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
+    adapter = docs_management.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "review")
     return documents_data_sharing_adapter.review_returned_package(
         root,
         body,
         dry_run,
+        adapter=adapter,
         dependencies=docs_management.documents_data_sharing_dependencies(),
     )
 
 
 def handle_documents_import_apply(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
+    adapter = docs_management.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "apply")
     return documents_data_sharing_adapter.apply_returned_changes(
         root,
         body,
         dry_run,
+        adapter=adapter,
         dependencies=docs_management.documents_data_sharing_dependencies(),
     )
 
 
 def handle_docs_export(root: Path, body: dict[str, object], dry_run: bool) -> dict[str, object]:
+    adapter = docs_management.data_sharing_service.resolve_for_service(root, body.get("data_domain"), "prepare")
     return documents_data_sharing_adapter.prepare_package(
         root,
         body,
         dry_run,
+        adapter=adapter,
         dependencies=docs_management.documents_data_sharing_dependencies(),
     )
 

@@ -29,6 +29,7 @@ def load_docs_management_module(module_name: str, module_path: Path):
 
 docs_management_service = load_docs_management_module("docs_management_service", DOCS_MANAGEMENT_SERVICE_PATH)
 docs_management_mutations = sys.modules["docs_management_mutations"]
+docs_data_sharing_package = sys.modules["docs_data_sharing.package"]
 docs_scope_config = sys.modules["docs_scope_config"]
 docs_source_model = sys.modules["docs_source_model"]
 
@@ -1023,7 +1024,7 @@ def test_source_config_settings_warns_when_generated_projection_is_stale() -> No
 
 def test_docs_export_request_passes_target_format() -> None:
     calls: list[dict[str, object]] = []
-    original_build_export = docs_management_service.documents_data_sharing_adapter.build_export
+    original_build_export = docs_data_sharing_package.build_export
 
     def fake_build_export(**kwargs):
         calls.append(kwargs)
@@ -1036,10 +1037,11 @@ def test_docs_export_request_passes_target_format() -> None:
             "issue_counts": {"errors": 0, "warnings": 0},
         }
 
-    docs_management_service.documents_data_sharing_adapter.build_export = fake_build_export
+    docs_data_sharing_package.build_export = fake_build_export
     try:
         with make_repo() as temp_path:
             repo_root = Path(temp_path)
+            adapter = docs_management_service.data_sharing_service.resolve_for_service(repo_root, "library", "prepare")
             result = docs_management_service.documents_data_sharing_adapter.prepare_package(
                 repo_root,
                 {
@@ -1051,10 +1053,11 @@ def test_docs_export_request_passes_target_format() -> None:
                     "target_format": "json",
                 },
                 dry_run=True,
+                adapter=adapter,
                 dependencies=docs_management_service.documents_data_sharing_dependencies(),
             )
     finally:
-        docs_management_service.documents_data_sharing_adapter.build_export = original_build_export
+        docs_data_sharing_package.build_export = original_build_export
 
     assert result["ok"] is True
     assert result["target_format"] == "json"
