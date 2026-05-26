@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-70b54480326fd7f4c18525c84d74b50e",
-    "generated_at_utc": "2026-05-26T13:01:25Z",
-    "count": 190
+    "version": "blake2b-5e430f59c777337f256347e849e7f570",
+    "generated_at_utc": "2026-05-26T13:59:41Z",
+    "count": 191
   },
   "entries": [
     {
@@ -3671,6 +3671,34 @@
         "26"
       ],
       "search_text": "studio-doc-viewer-dependencies studio doc viewer dependencies studio docs viewer dependencies docs change requests change requests 2026-05-26 2026 05 26"
+    },
+    {
+      "id": "site-request-studio-data-sharing-architecture",
+      "kind": "doc",
+      "title": "Studio Data Sharing Architecture Request",
+      "href": "/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture",
+      "last_updated": "2026-05-26",
+      "parent_id": "change-requests",
+      "parent_title": "Change Requests",
+      "display_meta": "2026-05-26 • Change Requests",
+      "search_terms": [
+        "site-request-studio-data-sharing-architecture",
+        "site",
+        "request",
+        "studio",
+        "data",
+        "sharing",
+        "architecture",
+        "studio data sharing architecture request",
+        "change requests",
+        "change",
+        "requests",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "site-request-studio-data-sharing-architecture site request studio data sharing architecture studio data sharing architecture request change requests change requests 2026-05-26 2026 05 26"
     },
     {
       "id": "search-incremental-orchestration-plan",

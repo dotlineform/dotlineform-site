@@ -10,35 +10,34 @@ viewable: true
 ---
 # Studio Docs Viewer Dependencies
 
-This is a review note, not a change request.
-It records the current places where Local Studio depends on the standalone Docs Viewer service so future cleanup or operational work can start from an explicit map.
+This is a review note and cleanup task list, not a change request.
+It records the remaining narrow places where Local Studio should know about the standalone Docs Viewer service after Data Sharing architecture work is split out.
 
-Studio no longer hosts the Docs Viewer shell or proxies `/studio/api/docs/...`.
-It now connects to Docs Viewer as a peer local service using `DOCS_VIEWER_BASE_URL` from `var/local/site.env`, with a default of `http://127.0.0.1:8776`.
+Data Sharing service ownership is intentionally out of scope here.
+That architecture decision is tracked by [Studio Data Sharing Architecture Request](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture).
 
-## Current Dependency Boundary
+## Target Boundary
 
-The Studio-side integration owner is `studio/app/server/studio/studio_docs_viewer_integration.py`.
-It validates the Docs Viewer service base URL as loopback HTTP with an explicit port, then builds:
+Studio should depend on Docs Viewer only for links:
 
-- manage-mode viewer URLs such as `/docs/?scope=studio&doc=...&mode=manage`
-- top-level Docs Viewer links for Studio navigation
-- generated data read endpoints
-- source-file opening endpoints
-- Data Sharing document endpoints
-- health and capabilities endpoints
+- the top navigation Docs link
+- Studio page implementation/document links rendered as `doc_href`
 
-`studio/app/server/studio/studio_app_config.py` publishes these values through `/studio/runtime-config.json`:
+Studio should not publish or consume Docs Viewer service API endpoints for generated reads, import operations, source opening, capabilities, or Data Sharing workflows as part of this cleanup.
+The Data Sharing endpoint removal depends on the separate architecture request.
+
+## Current Link Boundary
+
+The Studio-side link owner is `studio/app/server/studio/studio_docs_viewer_integration.py`.
+It validates `DOCS_VIEWER_BASE_URL` as loopback HTTP with an explicit port, then builds manage-mode Docs Viewer URLs such as `/docs/?scope=studio&doc=...&mode=manage`.
+
+`studio/app/server/studio/studio_app_config.py` publishes these link values through `/studio/runtime-config.json`:
 
 - `app.runtime.views[]`: Studio navigation targets and page implementation doc links
-- `app.runtime.services.docs`: the configured Docs Viewer service endpoints
-- `paths.routes.docs_page`: the configured Docs Viewer manage route
-- `paths.routes.docs_html_import`: the configured Docs Viewer import route
+- `STUDIO_VIEWS["docs"].path`: the configured Docs Viewer manage route for top navigation
+- `STUDIO_VIEWS[*].doc_href`: configured Docs Viewer links for Studio page documentation
 
-Browser modules apply those runtime endpoints through `studio/app/frontend/js/studio-transport.js`.
-If a route has not loaded runtime config yet, the browser fallback points at `http://127.0.0.1:8776`.
-
-## Studio Page Locations
+## Active Studio Link Locations
 
 Top navigation:
 
@@ -55,80 +54,64 @@ Page implementation links:
 
 The current page doc-link inventory comes from `STUDIO_VIEWS` and includes the Studio landing/dashboard routes, Analytics tag routes, Data Sharing routes, Project State, Thumbnail Quality, Bulk Add Work, Activity, Catalogue Drafts, Studio Works, Catalogue editors, and UI Catalogue demo pages.
 
-Data Sharing Prepare:
-
-- route: `/studio/data-sharing/prepare/?mode=manage`
-- page controller: `studio/app/frontend/js/data-sharing-prepare.js`
-- generated docs index reader: `studio/app/frontend/js/data-sharing-prepare-docs.js`
-- package prepare POST: `studio/app/frontend/js/data-sharing-prepare-service.js`
-- Docs Viewer endpoints used: `/health`, `/docs/generated/index`, `/data-sharing/prepare`
-
-Data Sharing Review:
-
-- route: `/studio/data-sharing/review/?mode=manage`
-- page controller: `studio/app/frontend/js/data-sharing-review.js`
-- apply workflow: `studio/app/frontend/js/data-sharing-review-apply.js`
-- Docs Viewer endpoints used: `/health`, `/data-sharing/returned-packages`, `/data-sharing/review`, `/data-sharing/apply`
-
-Project State:
-
-- route: `/studio/project-state/?mode=manage`
-- page controller: `studio/app/frontend/js/project-state.js`
-- Local Studio endpoint used for report generation: `/studio/api/catalogue/project-state-report`
-- Local Studio endpoint used for local report opening: `/studio/api/catalogue/project-state-open-report`
-- The route can run the report and open the latest Markdown snapshot when the Catalogue service is available.
-
 Docs Viewer management itself:
 
 - route: configured Docs Viewer service `/docs/?mode=manage`
 - owner: `docs-viewer/services/docs_viewer_service.py`
 - Local Studio only links to this route; it does not render or serve it.
 
-## Service Endpoints Studio Knows About
+## Cleanup Tasks
 
-`app.runtime.services.docs` currently advertises:
+1. Remove the configured Docs Viewer import route from Studio config.
+   `paths.routes.docs_html_import` appears to be a Studio config/test artifact, while Docs Viewer owns `/docs/?mode=manage&import=1`.
+   Remove it from:
+   - `studio/app/frontend/config/studio-config.json`
+   - `studio/app/frontend/js/studio-config.js`
+   - `studio/app/server/studio/studio_docs_viewer_integration.py`
+   - `studio/tests/python/test_studio_app_server.py`
 
-- `base`
-- `health`
-- `capabilities`
-- `generated_index`
-- `generated_search`
-- `import_source`
-- `import_source_files`
-- `import_html`
-- `import_html_files`
-- `open_source`
-- `data_sharing_prepare`
-- `data_sharing_returned_packages`
-- `data_sharing_review`
-- `data_sharing_apply`
+2. Decide whether `paths.routes.docs_page` is still needed.
+   Active navigation uses `runtime.views["docs"].path`, and current references suggest `docs_page` is also config/test-only.
+   If no active browser route uses it, remove it from Studio config and tests.
 
-Not every Studio route uses every endpoint.
-The broad list exists so shared Studio browser modules can use one runtime service contract.
+3. Remove the inert Docs Viewer script entry from the Studio view registry.
+   `STUDIO_VIEWS["docs"]["script"]` still points to `/docs-viewer/runtime/js/docs-viewer.js`, but Local Studio should not render the Docs Viewer page.
+   Keep the Docs view as a navigation target only.
 
-## Review Issues
+4. Reduce `studio_docs_viewer_integration.py` to link helpers.
+   Keep:
+   - `docs_viewer_base_url`
+   - `validate_docs_viewer_base_url`
+   - `docs_viewer_url`
+   - `docs_viewer_manage_url`
+   - doc-link and nav-link rewriting
 
-1. The all-services runner exists, but route copy and smoke coverage should stay aligned with it.
-   Studio has several useful links and actions that require Docs Viewer to be running; `bin/local-all` starts Live Preview, Local Studio, and Docs Viewer together for that workflow.
+   Remove service endpoint construction that is not needed for links after Data Sharing endpoint ownership is resolved.
 
-2. Browser fallback endpoints can hide runtime-config mistakes.
-   `studio-transport.js` falls back to `http://127.0.0.1:8776` if runtime config is unavailable or not applied.
-   This keeps local defaults practical, but a non-default `DOCS_VIEWER_BASE_URL` depends on each route loading config and calling `configureStudioTransport()` before probing or posting.
+5. Remove frontend Docs Viewer service transport once Data Sharing no longer needs it.
+   `studio/app/frontend/js/studio-transport.js` currently exposes `DOCS_MANAGEMENT_ENDPOINTS`, `probeDocsManagementHealth()`, and Docs Viewer endpoint fallback mutation through `configureStudioTransport()`.
+   These should disappear when Studio no longer consumes Docs Viewer APIs.
 
-3. The dependency names still mix old and new language.
-   Frontend constants such as `DOCS_MANAGEMENT_ENDPOINTS` still describe Docs Viewer endpoints as "management" endpoints.
-   That is understandable historically, but future cleanup should keep the distinction clear: Studio consumes the Docs Viewer service; Docs Viewer owns management.
+6. Update runtime config tests to assert the intended boundary.
+   The focused server test should assert:
+   - Docs nav view points to the configured Docs Viewer manage URL
+   - page `doc_href` links point to configured Docs Viewer URLs
+   - no `docs_html_import` route is present in Studio config
+   - `app.runtime.services.docs` is absent or contains only link-neutral data after Data Sharing endpoint migration
 
-4. `STUDIO_VIEWS["docs"]["script"]` still names the Docs Viewer runtime module even though Local Studio should not render the Docs Viewer page.
-   This appears inert because the Docs view is now a peer-service navigation target, but it is a small contract smell in the Studio view registry.
+7. Keep Data Sharing out of this cleanup slice.
+   Remove Data Sharing endpoint assertions from this note only after [Studio Data Sharing Architecture Request](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture) lands or defines the replacement same-origin Studio endpoints.
 
-5. Data Sharing is intentionally cross-boundary.
-   Studio owns the visible Data Sharing route shells and adapter registry UI, while Docs Viewer owns document package endpoints and source writes.
-   This is workable, but changes to Data Sharing should keep the adapter boundary explicit so document writes do not drift back into Studio-hosted Docs Viewer routes.
+## Verification
 
-6. Service unavailability is route-specific.
-   Docs navigation links fail normally when the service is stopped; Data Sharing document workflows show unavailable-service states; Project State no longer depends on Docs Viewer for local report opening.
-   This is reasonable, but user-facing copy and smoke coverage need to stay aligned as the start-all workflow lands.
+Focused checks for the link-only cleanup:
+
+```bash
+rg -n "docs_html_import|DOCS_MANAGEMENT_ENDPOINTS|app.runtime.services.docs|services.docs|DOCS_VIEWER_BASE_URL" studio
+$HOME/miniconda3/bin/python3 -m pytest studio/tests/python/test_studio_app_server.py
+```
+
+Data Sharing smoke checks belong to the separate architecture request if endpoint ownership changes in the same implementation batch.
 
 ## Related Docs
 
@@ -136,5 +119,6 @@ The broad list exists so shared Studio browser modules can use one runtime servi
 - [Local Studio Server Architecture](/docs/?scope=studio&doc=local-studio-server-architecture)
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
 - [Studio Data Sharing](/docs/?scope=studio&doc=studio-data-sharing)
+- [Studio Data Sharing Architecture Request](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture)
 - [Project State Page](/docs/?scope=studio&doc=project-state-page)
 - [Docs Viewer Shell Extraction Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-shell-extraction-tasks)
