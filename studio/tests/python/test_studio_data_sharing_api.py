@@ -255,6 +255,71 @@ def test_prepare_endpoint_dispatches_through_registered_handlers(monkeypatch) ->
     assert calls[0]["dry_run"] is True
 
 
+def test_returned_packages_endpoint_dispatches_through_registered_handlers(monkeypatch) -> None:
+    calls: list[dict[str, object]] = []
+
+    def fake_list_returned(repo_root, data_domain, adapter):
+        calls.append({"repo_root": repo_root, "data_domain": data_domain, "adapter_id": adapter.adapter_id})
+        return {"ok": True, "adapter_id": adapter.adapter_id, "operation": adapter.operation, "files": []}
+
+    handlers = {
+        "documents": studio_data_sharing_api.data_sharing_service.DataSharingAdapterHandlers(
+            module="documents",
+            list_returned=fake_list_returned,
+        )
+    }
+    monkeypatch.setattr(studio_data_sharing_api, "DATA_SHARING_HANDLERS", handlers)
+
+    payload = studio_data_sharing_api.data_sharing_get_payload(
+        REPO_ROOT,
+        "/returned-packages",
+        {"data_domain": ["library"]},
+    )
+
+    assert payload == {"ok": True, "adapter_id": "documents", "operation": "list_returned", "files": []}
+    assert calls[0]["data_domain"] == "library"
+
+
+def test_review_and_apply_endpoints_dispatch_through_registered_handlers(monkeypatch) -> None:
+    calls: list[dict[str, object]] = []
+
+    def fake_review(repo_root, body, dry_run, adapter):
+        calls.append({"kind": "review", "repo_root": repo_root, "body": body, "dry_run": dry_run, "adapter_id": adapter.adapter_id})
+        return {"ok": True, "adapter_id": adapter.adapter_id, "operation": adapter.operation, "review_rows": []}
+
+    def fake_apply(repo_root, body, dry_run, adapter):
+        calls.append({"kind": "apply", "repo_root": repo_root, "body": body, "dry_run": dry_run, "adapter_id": adapter.adapter_id})
+        return {"ok": True, "adapter_id": adapter.adapter_id, "operation": adapter.operation, "applied_count": 0}
+
+    handlers = {
+        "documents": studio_data_sharing_api.data_sharing_service.DataSharingAdapterHandlers(
+            module="documents",
+            review=fake_review,
+            apply=fake_apply,
+        )
+    }
+    monkeypatch.setattr(studio_data_sharing_api, "DATA_SHARING_HANDLERS", handlers)
+
+    review_status, review_payload = studio_data_sharing_api.data_sharing_post_response(
+        REPO_ROOT,
+        "/review",
+        {"data_domain": "library", "staged_filename": "summaries.jsonl"},
+        dry_run=True,
+    )
+    apply_status, apply_payload = studio_data_sharing_api.data_sharing_post_response(
+        REPO_ROOT,
+        "/apply",
+        {"data_domain": "library", "operation": "apply", "apply_action": "summary_apply", "staged_filename": "summaries.jsonl"},
+        dry_run=True,
+    )
+
+    assert review_status == HTTPStatus.OK
+    assert review_payload == {"ok": True, "adapter_id": "documents", "operation": "review", "review_rows": []}
+    assert apply_status == HTTPStatus.OK
+    assert apply_payload == {"ok": True, "adapter_id": "documents", "operation": "apply", "applied_count": 0}
+    assert [(call["kind"], call["dry_run"]) for call in calls] == [("review", True), ("apply", True)]
+
+
 def test_unknown_endpoint_fails_closed() -> None:
     with pytest.raises(FileNotFoundError):
         studio_data_sharing_api.data_sharing_get_payload(REPO_ROOT, "/missing", {})

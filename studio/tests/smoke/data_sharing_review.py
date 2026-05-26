@@ -641,8 +641,6 @@ def main() -> int:
     parser.add_argument("--base-url", default="http://127.0.0.1:4000")
     parser.add_argument("--site-root", help="Serve a built site root on a temporary local HTTP server.")
     parser.add_argument("--local-app", action="store_true", help="Serve the local Studio app on a temporary local HTTP server.")
-    parser.add_argument("--block-docs-service", action="store_true")
-    parser.add_argument("--mock-docs-service", action="store_true")
     parser.add_argument("--block-data-sharing-api", action="store_true")
     parser.add_argument("--mock-data-sharing-api", action="store_true")
     parser.add_argument("--route-path", default="/studio/data-sharing/review/?mode=manage")
@@ -664,8 +662,8 @@ def main() -> int:
             try:
                 page = browser.new_page()
                 apply_requests: list[dict[str, object]] = []
-                block_api = args.block_docs_service or args.block_data_sharing_api
-                mock_api = args.mock_docs_service or args.mock_data_sharing_api
+                block_api = args.block_data_sharing_api
+                mock_api = args.mock_data_sharing_api
                 if block_api:
                     page.route("**/*", block_data_sharing_api)
                 elif mock_api:

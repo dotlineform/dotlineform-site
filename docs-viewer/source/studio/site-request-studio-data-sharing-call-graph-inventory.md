@@ -83,7 +83,7 @@ Migration pressure points:
 
 - SDSA-013 removed old Data Sharing endpoint keys from `app.runtime.services.docs`.
 - SDSA-013 removed the transitional Docs Viewer `/data-sharing/...` HTTP endpoints.
-- Some CLI and smoke-test aliases still use old `--mock-docs-service` / `--block-docs-service` names for compatibility with existing verification commands.
+- SDSA-014 removed the old `--mock-docs-service` and `--block-docs-service` Data Sharing smoke aliases.
 
 ## Runtime Config
 
