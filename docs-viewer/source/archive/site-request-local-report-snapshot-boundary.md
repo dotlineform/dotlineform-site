@@ -4,7 +4,8 @@ title: Local Report Snapshot Boundary
 added_date: 2026-05-25
 last_updated: 2026-05-26
 ui_status: done
-sort_order: 9500
+parent_id: docs-viewer
+sort_order: 2000
 viewable: true
 ---
 # Local Report Snapshot Boundary

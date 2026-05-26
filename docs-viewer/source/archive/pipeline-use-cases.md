@@ -3,7 +3,8 @@ doc_id: pipeline-use-cases
 title: Pipeline Use Cases
 added_date: 2026-04-18
 last_updated: 2026-05-01
-sort_order: 4000
+parent_id: catalogue
+sort_order: 3500
 ---
 # Deprecated: Pipeline Use Cases
 

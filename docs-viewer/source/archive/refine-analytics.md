@@ -3,7 +3,8 @@ doc_id: new-pipeline-refine-analytics
 title: Analytics Plan
 added_date: 2026-04-18
 last_updated: "2026-05-09 16:00"
-sort_order: 18000
+parent_id: studio
+sort_order: 2000
 ---
 # Analytics Plan
 

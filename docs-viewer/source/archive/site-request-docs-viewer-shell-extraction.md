@@ -4,7 +4,8 @@ title: Docs Viewer Shell Extraction Request
 added_date: 2026-05-23
 last_updated: 2026-05-25
 ui_status: done
-sort_order: 10020
+parent_id: docs-viewer
+sort_order: 1000
 viewable: true
 ---
 This document is archived and is no longer maintained.

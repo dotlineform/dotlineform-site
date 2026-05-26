@@ -3,7 +3,8 @@ doc_id: scripts-main-pipeline
 title: Build Catalogue
 added_date: 2026-04-18
 last_updated: "2026-05-09 21:28"
-sort_order: 6000
+parent_id: catalogue
+sort_order: 3250
 ---
 # Deprecated: Build Catalogue
 

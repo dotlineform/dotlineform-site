@@ -3,7 +3,8 @@ doc_id: studio-search-v1
 title: Studio Search V1
 added_date: 2026-03-29
 last_updated: 2026-03-29
-sort_order: 5000
+parent_id: search
+sort_order: 2000
 ---
 # Studio Search V1
 

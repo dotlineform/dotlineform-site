@@ -3,7 +3,8 @@ doc_id: search-config-architecture
 title: Search Config Architecture
 added_date: 2026-03-30
 last_updated: "2026-05-06 20:49"
-sort_order: 24000
+parent_id: search
+sort_order: 6000
 viewable: true
 ---
 # Search Config Architecture

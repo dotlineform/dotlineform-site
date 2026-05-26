@@ -3,7 +3,8 @@ doc_id: new-pipeline-implementation-plan
 title: Implementation Plan
 added_date: 2026-04-18
 last_updated: 2026-05-01
-sort_order: 12000
+parent_id: catalogue
+sort_order: 5000
 ---
 # Implementation Plan
 

@@ -4,10 +4,14 @@ title: Studio Data Sharing Architecture Request
 added_date: 2026-05-26
 last_updated: 2026-05-26
 ui_status: done
-parent_id: change-requests
-sort_order: 12000
+parent_id: data-sharing
+sort_order: 4000
 viewable: true
 ---
+This document is archived and is no longer maintained.
+
+---
+
 # Studio Data Sharing Architecture Request
 
 Status:

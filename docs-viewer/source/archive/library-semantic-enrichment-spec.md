@@ -3,7 +3,8 @@ doc_id: library-semantic-enrichment-spec
 title: Library Semantic Enrichment Spec
 added_date: 2026-04-24
 last_updated: "2026-05-06 18:12"
-sort_order: 24000
+parent_id: data-sharing
+sort_order: 7000
 ---
 # Library Semantic Enrichment Spec
 

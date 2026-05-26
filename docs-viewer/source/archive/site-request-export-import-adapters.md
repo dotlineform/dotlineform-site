@@ -4,7 +4,8 @@ title: Export Import Adapter Boundary Request
 added_date: 2026-05-05
 last_updated: "2026-05-13 18:15"
 ui_status: done
-sort_order: 9000
+parent_id: data-sharing
+sort_order: 2000
 ---
 # Export Import Adapter Boundary Request
 

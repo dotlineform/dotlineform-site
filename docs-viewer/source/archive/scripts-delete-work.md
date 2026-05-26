@@ -3,7 +3,8 @@ doc_id: scripts-delete-work
 title: Delete Work
 added_date: 2026-04-18
 last_updated: 2026-05-01
-sort_order: 16000
+parent_id: catalogue
+sort_order: 7000
 ---
 # Deprecated: Delete Work
 

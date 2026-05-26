@@ -1,0 +1,14 @@
+{
+  "scope": "archive",
+  "doc_id": "studio",
+  "title": "Studio",
+  "added_date": "2026-05-26 21:24",
+  "last_updated": "2026-05-26 21:24",
+  "parent_id": "",
+  "sort_order": 887,
+  "hidden": false,
+  "viewable": true,
+  "source_path": "studio.md",
+  "viewer_url": "/docs/?scope=archive&doc=studio",
+  "content_html": "<h1 id=\"studio\">Studio</h1>\n"
+}

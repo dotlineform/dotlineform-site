@@ -3,7 +3,8 @@ doc_id: search-config-implementation-note
 title: Search Config Implementation Note
 added_date: 2026-03-30
 last_updated: "2026-05-06 20:49"
-sort_order: 25000
+parent_id: search
+sort_order: 1500
 viewable: true
 ---
 # Search Config Implementation Note

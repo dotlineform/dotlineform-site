@@ -8,6 +8,12 @@ parent_id: site-request-studio-data-sharing-architecture
 sort_order: 110
 viewable: true
 ---
+This document is archived and is no longer maintained.
+
+Historical inventory for SDSA-002; superseded by the closed architecture request and stable Data Sharing docs.
+
+---
+
 # Studio Data Sharing Call Graph Inventory
 
 This inventory started as the current Data Sharing implementation before the architecture move in [Studio Data Sharing Architecture Request](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture).

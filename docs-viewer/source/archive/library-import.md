@@ -4,7 +4,8 @@ title: Library Import v1
 added_date: 2026-05-03
 last_updated: "2026-05-06 18:12"
 ui_status: done
-sort_order: 26000
+parent_id: docs-viewer
+sort_order: 3000
 ---
 # Library Import v1
 

@@ -3,7 +3,8 @@ doc_id: search-result-shaping-json-slimmer
 title: Search Result Shaping draft slimmer JSON
 added_date: 2026-03-30
 last_updated: "2026-05-06 20:49"
-sort_order: 18000
+parent_id: search
+sort_order: 4000
 viewable: true
 ---
 ## Slimmer JSON

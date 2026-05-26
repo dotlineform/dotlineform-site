@@ -3,7 +3,8 @@ doc_id: scripts-copy-draft-media
 title: Copy Draft Media
 added_date: 2026-04-18
 last_updated: 2026-05-01
-sort_order: 10000
+parent_id: catalogue
+sort_order: 4000
 ---
 # Deprecated: Copy Draft Media
 

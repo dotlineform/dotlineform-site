@@ -3,7 +3,8 @@ doc_id: scripts-generate-work-pages
 title: Generate Work Pages
 added_date: 2026-04-19
 last_updated: "2026-05-09 21:28"
-sort_order: 13000
+parent_id: catalogue
+sort_order: 6000
 ---
 # Deprecated: Generate Work Pages
 

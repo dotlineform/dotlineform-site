@@ -3,7 +3,8 @@ doc_id: new-pipeline-studio-ui-polish
 title: Studio UI Polish
 added_date: 2026-04-19
 last_updated: 2026-04-19
-sort_order: 19000
+parent_id: studio
+sort_order: 4000
 ---
 # Studio UI Polish
 

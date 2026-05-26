@@ -3,7 +3,8 @@ doc_id: new-pipeline-source-model
 title: Source Model
 added_date: 2026-04-17
 last_updated: 2026-05-02
-sort_order: 8000
+parent_id: catalogue
+sort_order: 3125
 ---
 # Source Model
 

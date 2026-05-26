@@ -3,7 +3,8 @@ doc_id: new-pipeline-refine-search
 title: Search Plan
 added_date: 2026-04-18
 last_updated: 2026-05-11
-sort_order: 20000
+parent_id: search
+sort_order: 5000
 ---
 # Search Plan
 

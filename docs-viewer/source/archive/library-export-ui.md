@@ -4,7 +4,8 @@ title: Library Export - UI refinements
 added_date: 2026-05-04
 last_updated: "2026-05-06 18:12"
 ui_status: done
-sort_order: 27000
+parent_id: data-sharing
+sort_order: 6000
 ---
 # Library Export - UI Refinements
 

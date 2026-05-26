@@ -3,6 +3,7 @@ doc_id: new-pipeline-current-pipeline-map
 title: Current Pipeline Map
 added_date: 2026-04-17
 last_updated: "2026-05-09 21:28"
+parent_id: catalogue
 sort_order: 1000
 ---
 # Current Pipeline Map

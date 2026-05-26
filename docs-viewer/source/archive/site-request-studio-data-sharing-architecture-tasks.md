@@ -8,6 +8,10 @@ parent_id: site-request-studio-data-sharing-architecture
 sort_order: 100
 viewable: true
 ---
+This document is archived and is no longer maintained.
+
+---
+
 # Studio Data Sharing Architecture Tasks
 
 This is the tracker for implementing [Studio Data Sharing Architecture Request](/docs/?scope=studio&doc=site-request-studio-data-sharing-architecture).

@@ -3,8 +3,8 @@ doc_id: site-request-committed-manage-mode-scope-storage
 title: Committed Manage-Mode Scope Storage Request
 added_date: 2026-05-25
 last_updated: 2026-05-25
-parent_id: ""
-sort_order: 1000
+parent_id: docs-viewer
+sort_order: 4000
 viewable: true
 ---
 # Committed Manage-Mode Scope Storage Request

@@ -3,6 +3,7 @@ doc_id: moments-json
 title: Moments JSON Migration Plan
 added_date: 2026-03-29
 last_updated: 2026-03-29
+parent_id: catalogue
 sort_order: 2000
 ---
 # Moments JSON Migration Plan

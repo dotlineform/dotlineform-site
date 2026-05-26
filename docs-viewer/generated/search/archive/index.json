@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_archive_v1",
     "scope": "archive",
-    "version": "blake2b-20f9ba44e7623edee1aec7dcb91a752f",
-    "generated_at_utc": "2026-05-26T13:01:26Z",
-    "count": 142
+    "version": "blake2b-9d41f25602625e9c98f796b0e08fea9f",
+    "generated_at_utc": "2026-05-26T20:30:06Z",
+    "count": 148
   },
   "entries": [
     {
@@ -22,6 +22,157 @@
         "25"
       ],
       "search_text": "archive 2026-05-25 2026 05 25"
+    },
+    {
+      "id": "site-request-studio-data-sharing-architecture-tasks",
+      "kind": "doc",
+      "title": "Studio Data Sharing Architecture Tasks",
+      "href": "/docs/?scope=archive&doc=site-request-studio-data-sharing-architecture-tasks",
+      "last_updated": "2026-05-26",
+      "parent_id": "site-request-studio-data-sharing-architecture",
+      "parent_title": "Studio Data Sharing Architecture Request",
+      "display_meta": "2026-05-26 • Studio Data Sharing Architecture Request",
+      "search_terms": [
+        "site-request-studio-data-sharing-architecture-tasks",
+        "site",
+        "request",
+        "studio",
+        "data",
+        "sharing",
+        "architecture",
+        "tasks",
+        "studio data sharing architecture tasks",
+        "studio data sharing architecture request",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "site-request-studio-data-sharing-architecture-tasks site request studio data sharing architecture tasks studio data sharing architecture tasks studio data sharing architecture request 2026-05-26 2026 05 26"
+    },
+    {
+      "id": "site-request-studio-data-sharing-call-graph-inventory",
+      "kind": "doc",
+      "title": "Studio Data Sharing Call Graph Inventory",
+      "href": "/docs/?scope=archive&doc=site-request-studio-data-sharing-call-graph-inventory",
+      "last_updated": "2026-05-26",
+      "parent_id": "site-request-studio-data-sharing-architecture",
+      "parent_title": "Studio Data Sharing Architecture Request",
+      "display_meta": "2026-05-26 • Studio Data Sharing Architecture Request",
+      "search_terms": [
+        "site-request-studio-data-sharing-call-graph-inventory",
+        "site",
+        "request",
+        "studio",
+        "data",
+        "sharing",
+        "call",
+        "graph",
+        "inventory",
+        "studio data sharing call graph inventory",
+        "studio data sharing architecture request",
+        "architecture",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "site-request-studio-data-sharing-call-graph-inventory site request studio data sharing call graph inventory studio data sharing call graph inventory studio data sharing architecture request architecture 2026-05-26 2026 05 26"
+    },
+    {
+      "id": "catalogue",
+      "kind": "doc",
+      "title": "Catalogue",
+      "href": "/docs/?scope=archive&doc=catalogue",
+      "last_updated": "2026-05-26 21:18",
+      "display_meta": "2026-05-26 21:18",
+      "search_terms": [
+        "catalogue",
+        "2026-05-26 21:18",
+        "2026",
+        "05",
+        "26",
+        "21",
+        "18"
+      ],
+      "search_text": "catalogue 2026-05-26 21:18 2026 05 26 21 18"
+    },
+    {
+      "id": "data-sharing",
+      "kind": "doc",
+      "title": "Data Sharing",
+      "href": "/docs/?scope=archive&doc=data-sharing",
+      "last_updated": "2026-05-26 21:14",
+      "display_meta": "2026-05-26 21:14",
+      "search_terms": [
+        "data-sharing",
+        "data",
+        "sharing",
+        "data sharing",
+        "2026-05-26 21:14",
+        "2026",
+        "05",
+        "26",
+        "21",
+        "14"
+      ],
+      "search_text": "data-sharing data sharing data sharing 2026-05-26 21:14 2026 05 26 21 14"
+    },
+    {
+      "id": "docs-viewer",
+      "kind": "doc",
+      "title": "Docs Viewer",
+      "href": "/docs/?scope=archive&doc=docs-viewer",
+      "last_updated": "2026-05-26 21:22",
+      "display_meta": "2026-05-26 21:22",
+      "search_terms": [
+        "docs-viewer",
+        "docs",
+        "viewer",
+        "docs viewer",
+        "2026-05-26 21:22",
+        "2026",
+        "05",
+        "26",
+        "21",
+        "22"
+      ],
+      "search_text": "docs-viewer docs viewer docs viewer 2026-05-26 21:22 2026 05 26 21 22"
+    },
+    {
+      "id": "search",
+      "kind": "doc",
+      "title": "Search",
+      "href": "/docs/?scope=archive&doc=search",
+      "last_updated": "2026-05-26 21:21",
+      "display_meta": "2026-05-26 21:21",
+      "search_terms": [
+        "search",
+        "2026-05-26 21:21",
+        "2026",
+        "05",
+        "26",
+        "21"
+      ],
+      "search_text": "search 2026-05-26 21:21 2026 05 26 21"
+    },
+    {
+      "id": "studio",
+      "kind": "doc",
+      "title": "Studio",
+      "href": "/docs/?scope=archive&doc=studio",
+      "last_updated": "2026-05-26 21:24",
+      "display_meta": "2026-05-26 21:24",
+      "search_terms": [
+        "studio",
+        "2026-05-26 21:24",
+        "2026",
+        "05",
+        "26",
+        "21",
+        "24"
+      ],
+      "search_text": "studio 2026-05-26 21:24 2026 05 26 21 24"
     },
     {
       "id": "site-request-studio-unified-activity-log-inventory",
@@ -120,36 +271,14 @@
       "search_text": "site-request-script-structural-review-catalogue-write-server site request script structural review catalogue write server catalogue write server slices slices script structural review request 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
-      "id": "site-request-committed-manage-mode-scope-storage",
-      "kind": "doc",
-      "title": "Committed Manage-Mode Scope Storage Request",
-      "href": "/docs/?scope=archive&doc=site-request-committed-manage-mode-scope-storage",
-      "last_updated": "2026-05-25",
-      "display_meta": "2026-05-25",
-      "search_terms": [
-        "site-request-committed-manage-mode-scope-storage",
-        "site",
-        "request",
-        "committed",
-        "manage",
-        "mode",
-        "scope",
-        "storage",
-        "committed manage-mode scope storage request",
-        "2026-05-25",
-        "2026",
-        "05",
-        "25"
-      ],
-      "search_text": "site-request-committed-manage-mode-scope-storage site request committed manage mode scope storage committed manage-mode scope storage request 2026-05-25 2026 05 25"
-    },
-    {
       "id": "new-pipeline-current-pipeline-map",
       "kind": "doc",
       "title": "Current Pipeline Map",
       "href": "/docs/?scope=archive&doc=new-pipeline-current-pipeline-map",
       "last_updated": "2026-05-09 21:28",
-      "display_meta": "2026-05-09 21:28",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-09 21:28 • Catalogue",
       "search_terms": [
         "new-pipeline-current-pipeline-map",
         "new",
@@ -157,6 +286,7 @@
         "current",
         "map",
         "current pipeline map",
+        "catalogue",
         "2026-05-09 21:28",
         "2026",
         "05",
@@ -164,7 +294,7 @@
         "21",
         "28"
       ],
-      "search_text": "new-pipeline-current-pipeline-map new pipeline current map current pipeline map 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "new-pipeline-current-pipeline-map new pipeline current map current pipeline map catalogue 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
       "id": "site-request-js-config-structural-review-docs-viewer-inventory",
@@ -200,6 +330,62 @@
         "45"
       ],
       "search_text": "site-request-js-config-structural-review-docs-viewer-inventory site request js config structural review docs viewer inventory docs viewer function inventory function docs viewer boundary spec slice boundary spec slice 2026-05-10 14:45 2026 05 10 14 45"
+    },
+    {
+      "id": "site-request-docs-viewer-shell-extraction",
+      "kind": "doc",
+      "title": "Docs Viewer Shell Extraction Request",
+      "href": "/docs/?scope=archive&doc=site-request-docs-viewer-shell-extraction",
+      "last_updated": "2026-05-25",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-25 • Docs Viewer",
+      "search_terms": [
+        "site-request-docs-viewer-shell-extraction",
+        "site",
+        "request",
+        "docs",
+        "viewer",
+        "shell",
+        "extraction",
+        "docs viewer shell extraction request",
+        "docs viewer",
+        "2026-05-25",
+        "2026",
+        "05",
+        "25"
+      ],
+      "search_text": "site-request-docs-viewer-shell-extraction site request docs viewer shell extraction docs viewer shell extraction request docs viewer 2026-05-25 2026 05 25"
+    },
+    {
+      "id": "site-request-import-export-system-review",
+      "kind": "doc",
+      "title": "Import/Export System Review Request",
+      "href": "/docs/?scope=archive&doc=site-request-import-export-system-review",
+      "last_updated": "2026-05-13 11:48",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-13 11:48 • Data Sharing",
+      "search_terms": [
+        "site-request-import-export-system-review",
+        "site",
+        "request",
+        "import",
+        "export",
+        "system",
+        "review",
+        "import/export system review request",
+        "data sharing",
+        "data",
+        "sharing",
+        "2026-05-13 11:48",
+        "2026",
+        "05",
+        "13",
+        "11",
+        "48"
+      ],
+      "search_text": "site-request-import-export-system-review site request import export system review import/export system review request data sharing data sharing 2026-05-13 11:48 2026 05 13 11 48"
     },
     {
       "id": "site-request-catalogue-compatibility-cleanup-inventory",
@@ -281,30 +467,6 @@
       "search_text": "modal-responsibility-extraction-plan modal responsibility extraction plan modal responsibility extraction plan modal composition pattern request composition pattern request 2026-05-15 2026 05 15"
     },
     {
-      "id": "multiple-content-domains-brief",
-      "kind": "doc",
-      "title": "Multiple Content Domains - Brief",
-      "href": "/docs/?scope=archive&doc=multiple-content-domains-brief",
-      "last_updated": "2026-03-29",
-      "parent_id": "multiple-content-domains",
-      "parent_title": "Multiple Content Domains",
-      "display_meta": "2026-03-29 • Multiple Content Domains",
-      "search_terms": [
-        "multiple-content-domains-brief",
-        "multiple",
-        "content",
-        "domains",
-        "brief",
-        "multiple content domains - brief",
-        "multiple content domains",
-        "2026-03-29",
-        "2026",
-        "03",
-        "29"
-      ],
-      "search_text": "multiple-content-domains-brief multiple content domains brief multiple content domains - brief multiple content domains 2026-03-29 2026 03 29"
-    },
-    {
       "id": "site-request-route-anchor-collection-stubs",
       "kind": "doc",
       "title": "Route-Anchor Collection Stubs Spec",
@@ -335,6 +497,54 @@
         "30"
       ],
       "search_text": "site-request-route-anchor-collection-stubs site request route anchor collection stubs route-anchor collection stubs spec spec field-aware catalogue build scoping field aware catalogue build scoping 2026-04-30 2026 04 30"
+    },
+    {
+      "id": "studio-search-v1-implementation-plan",
+      "kind": "doc",
+      "title": "Search V1 Implementation Plan",
+      "href": "/docs/?scope=archive&doc=studio-search-v1-implementation-plan",
+      "last_updated": "2026-03-29",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-03-29 • Search",
+      "search_terms": [
+        "studio-search-v1-implementation-plan",
+        "studio",
+        "search",
+        "v1",
+        "implementation",
+        "plan",
+        "search v1 implementation plan",
+        "2026-03-29",
+        "2026",
+        "03",
+        "29"
+      ],
+      "search_text": "studio-search-v1-implementation-plan studio search v1 implementation plan search v1 implementation plan 2026-03-29 2026 03 29"
+    },
+    {
+      "id": "new-pipeline-studio-implementation-plan",
+      "kind": "doc",
+      "title": "Studio Implementation Plan",
+      "href": "/docs/?scope=archive&doc=new-pipeline-studio-implementation-plan",
+      "last_updated": "2026-05-01",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-01 • Studio",
+      "search_terms": [
+        "new-pipeline-studio-implementation-plan",
+        "new",
+        "pipeline",
+        "studio",
+        "implementation",
+        "plan",
+        "studio implementation plan",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "new-pipeline-studio-implementation-plan new pipeline studio implementation plan studio implementation plan 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-js-config-structural-review-module-versioning",
@@ -371,6 +581,58 @@
         "07"
       ],
       "search_text": "site-request-js-config-structural-review-module-versioning site request js config structural review module versioning studio module asset versioning slice studio asset slice javascript and browser config structural review request javascript and browser 2026-05-10 14:07 2026 05 10 14 07"
+    },
+    {
+      "id": "search-config-implementation-note",
+      "kind": "doc",
+      "title": "Search Config Implementation Note",
+      "href": "/docs/?scope=archive&doc=search-config-implementation-note",
+      "last_updated": "2026-05-06 20:49",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-05-06 20:49 • Search",
+      "search_terms": [
+        "search-config-implementation-note",
+        "search",
+        "config",
+        "implementation",
+        "note",
+        "search config implementation note",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "search-config-implementation-note search config implementation note search config implementation note 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
+      "id": "new-pipeline-refine-analytics",
+      "kind": "doc",
+      "title": "Analytics Plan",
+      "href": "/docs/?scope=archive&doc=new-pipeline-refine-analytics",
+      "last_updated": "2026-05-09 16:00",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-09 16:00 • Studio",
+      "search_terms": [
+        "new-pipeline-refine-analytics",
+        "new",
+        "pipeline",
+        "refine",
+        "analytics",
+        "analytics plan",
+        "plan",
+        "studio",
+        "2026-05-09 16:00",
+        "2026",
+        "05",
+        "09",
+        "16",
+        "00"
+      ],
+      "search_text": "new-pipeline-refine-analytics new pipeline refine analytics analytics plan plan studio 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
       "id": "site-request-script-structural-review-docs-management-server",
@@ -476,6 +738,65 @@
       "search_text": "site-request-js-config-structural-review-docs-viewer-extraction-plan site request js config structural review docs viewer extraction plan docs viewer extraction plan docs viewer boundary spec slice boundary spec slice 2026-05-10 15:18 2026 05 10 15 18"
     },
     {
+      "id": "site-request-export-import-adapters",
+      "kind": "doc",
+      "title": "Export Import Adapter Boundary Request",
+      "href": "/docs/?scope=archive&doc=site-request-export-import-adapters",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-13 18:15 • Data Sharing",
+      "search_terms": [
+        "site-request-export-import-adapters",
+        "site",
+        "request",
+        "export",
+        "import",
+        "adapters",
+        "export import adapter boundary request",
+        "adapter",
+        "boundary",
+        "data sharing",
+        "data",
+        "sharing",
+        "2026-05-13 18:15",
+        "2026",
+        "05",
+        "13",
+        "18",
+        "15"
+      ],
+      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary data sharing data sharing 2026-05-13 18:15 2026 05 13 18 15"
+    },
+    {
+      "id": "site-request-local-report-snapshot-boundary",
+      "kind": "doc",
+      "title": "Local Report Snapshot Boundary",
+      "href": "/docs/?scope=archive&doc=site-request-local-report-snapshot-boundary",
+      "last_updated": "2026-05-26",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-26 • Docs Viewer",
+      "search_terms": [
+        "site-request-local-report-snapshot-boundary",
+        "site",
+        "request",
+        "local",
+        "report",
+        "snapshot",
+        "boundary",
+        "local report snapshot boundary",
+        "docs viewer",
+        "docs",
+        "viewer",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "site-request-local-report-snapshot-boundary site request local report snapshot boundary local report snapshot boundary docs viewer docs viewer 2026-05-26 2026 05 26"
+    },
+    {
       "id": "modal-composition-migration-tracker",
       "kind": "doc",
       "title": "Modal Composition Migration Tracker",
@@ -507,7 +828,9 @@
       "title": "Moments JSON Migration Plan",
       "href": "/docs/?scope=archive&doc=moments-json",
       "last_updated": "2026-03-29",
-      "display_meta": "2026-03-29",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-03-29 • Catalogue",
       "search_terms": [
         "moments-json",
         "moments",
@@ -515,12 +838,13 @@
         "moments json migration plan",
         "migration",
         "plan",
+        "catalogue",
         "2026-03-29",
         "2026",
         "03",
         "29"
       ],
-      "search_text": "moments-json moments json moments json migration plan migration plan 2026-03-29 2026 03 29"
+      "search_text": "moments-json moments json moments json migration plan migration plan catalogue 2026-03-29 2026 03 29"
     },
     {
       "id": "site-request-studio-record-hash-simplification",
@@ -553,6 +877,28 @@
         "30"
       ],
       "search_text": "site-request-studio-record-hash-simplification site request studio record hash simplification studio record hash simplification analysis analysis field-aware catalogue build scoping field aware catalogue build scoping 2026-04-30 2026 04 30"
+    },
+    {
+      "id": "studio-search-v1",
+      "kind": "doc",
+      "title": "Studio Search V1",
+      "href": "/docs/?scope=archive&doc=studio-search-v1",
+      "last_updated": "2026-03-29",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-03-29 • Search",
+      "search_terms": [
+        "studio-search-v1",
+        "studio",
+        "search",
+        "v1",
+        "studio search v1",
+        "2026-03-29",
+        "2026",
+        "03",
+        "29"
+      ],
+      "search_text": "studio-search-v1 studio search v1 studio search v1 2026-03-29 2026 03 29"
     },
     {
       "id": "site-request-js-config-structural-review-catalogue-editor-boundary",
@@ -619,12 +965,69 @@
       "search_text": "site-request-field-aware-build-scoping-inventory site request field aware build scoping inventory field-aware build scoping inventory field-aware catalogue build scoping catalogue 2026-05-01 2026 05 01"
     },
     {
+      "id": "import-export",
+      "kind": "doc",
+      "title": "Import/Export Historical Notes",
+      "href": "/docs/?scope=archive&doc=import-export",
+      "last_updated": "2026-05-13 18:15",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-13 18:15 • Data Sharing",
+      "search_terms": [
+        "import-export",
+        "import",
+        "export",
+        "import/export historical notes",
+        "historical",
+        "notes",
+        "data sharing",
+        "data",
+        "sharing",
+        "2026-05-13 18:15",
+        "2026",
+        "05",
+        "13",
+        "18",
+        "15"
+      ],
+      "search_text": "import-export import export import/export historical notes historical notes data sharing data sharing 2026-05-13 18:15 2026 05 13 18 15"
+    },
+    {
+      "id": "library-import",
+      "kind": "doc",
+      "title": "Library Import v1",
+      "href": "/docs/?scope=archive&doc=library-import",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-06 18:12 • Docs Viewer",
+      "search_terms": [
+        "library-import",
+        "library",
+        "import",
+        "library import v1",
+        "v1",
+        "docs viewer",
+        "docs",
+        "viewer",
+        "2026-05-06 18:12",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "12"
+      ],
+      "search_text": "library-import library import library import v1 v1 docs viewer docs viewer 2026-05-06 18:12 2026 05 06 18 12"
+    },
+    {
       "id": "pipeline-config",
       "kind": "doc",
       "title": "Pipeline Config Refactor Plan",
       "href": "/docs/?scope=archive&doc=pipeline-config",
       "last_updated": "2026-05-09 16:00",
-      "display_meta": "2026-05-09 16:00",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-09 16:00 • Catalogue",
       "search_terms": [
         "pipeline-config",
         "pipeline",
@@ -632,6 +1035,7 @@
         "pipeline config refactor plan",
         "refactor",
         "plan",
+        "catalogue",
         "2026-05-09 16:00",
         "2026",
         "05",
@@ -639,7 +1043,59 @@
         "16",
         "00"
       ],
-      "search_text": "pipeline-config pipeline config pipeline config refactor plan refactor plan 2026-05-09 16:00 2026 05 09 16 00"
+      "search_text": "pipeline-config pipeline config pipeline config refactor plan refactor plan catalogue 2026-05-09 16:00 2026 05 09 16 00"
+    },
+    {
+      "id": "search-result-shaping-json",
+      "kind": "doc",
+      "title": "Search Result Shaping draft JSON",
+      "href": "/docs/?scope=archive&doc=search-result-shaping-json",
+      "last_updated": "2026-05-06 20:49",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-05-06 20:49 • Search",
+      "search_terms": [
+        "search-result-shaping-json",
+        "search",
+        "result",
+        "shaping",
+        "json",
+        "search result shaping draft json",
+        "draft",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "search-result-shaping-json search result shaping json search result shaping draft json draft 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
+      "id": "new-pipeline-studio-e2e-checklist",
+      "kind": "doc",
+      "title": "Studio E2E Checklist",
+      "href": "/docs/?scope=archive&doc=new-pipeline-studio-e2e-checklist",
+      "last_updated": "2026-05-09 21:28",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-05-09 21:28 • Studio",
+      "search_terms": [
+        "new-pipeline-studio-e2e-checklist",
+        "new",
+        "pipeline",
+        "studio",
+        "e2e",
+        "checklist",
+        "studio e2e checklist",
+        "2026-05-09 21:28",
+        "2026",
+        "05",
+        "09",
+        "21",
+        "28"
+      ],
+      "search_text": "new-pipeline-studio-e2e-checklist new pipeline studio e2e checklist studio e2e checklist 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
       "id": "site-request-script-structural-review-tag-write-server",
@@ -671,6 +1127,108 @@
         "45"
       ],
       "search_text": "site-request-script-structural-review-tag-write-server site request script structural review tag write server tag write server slices slices script structural review request 2026-05-09 21:45 2026 05 09 21 45"
+    },
+    {
+      "id": "new-pipeline-source-model",
+      "kind": "doc",
+      "title": "Source Model",
+      "href": "/docs/?scope=archive&doc=new-pipeline-source-model",
+      "last_updated": "2026-05-02",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-02 • Catalogue",
+      "search_terms": [
+        "new-pipeline-source-model",
+        "new",
+        "pipeline",
+        "source",
+        "model",
+        "source model",
+        "catalogue",
+        "2026-05-02",
+        "2026",
+        "05",
+        "02"
+      ],
+      "search_text": "new-pipeline-source-model new pipeline source model source model catalogue 2026-05-02 2026 05 02"
+    },
+    {
+      "id": "scripts-main-pipeline",
+      "kind": "doc",
+      "title": "Build Catalogue",
+      "href": "/docs/?scope=archive&doc=scripts-main-pipeline",
+      "last_updated": "2026-05-09 21:28",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-09 21:28 • Catalogue",
+      "search_terms": [
+        "scripts-main-pipeline",
+        "scripts",
+        "main",
+        "pipeline",
+        "build catalogue",
+        "build",
+        "catalogue",
+        "2026-05-09 21:28",
+        "2026",
+        "05",
+        "09",
+        "21",
+        "28"
+      ],
+      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue 2026-05-09 21:28 2026 05 09 21 28"
+    },
+    {
+      "id": "pipeline-use-cases",
+      "kind": "doc",
+      "title": "Pipeline Use Cases",
+      "href": "/docs/?scope=archive&doc=pipeline-use-cases",
+      "last_updated": "2026-05-01",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-01 • Catalogue",
+      "search_terms": [
+        "pipeline-use-cases",
+        "pipeline",
+        "use",
+        "cases",
+        "pipeline use cases",
+        "catalogue",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "pipeline-use-cases pipeline use cases pipeline use cases catalogue 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "site-request-committed-manage-mode-scope-storage",
+      "kind": "doc",
+      "title": "Committed Manage-Mode Scope Storage Request",
+      "href": "/docs/?scope=archive&doc=site-request-committed-manage-mode-scope-storage",
+      "last_updated": "2026-05-25",
+      "parent_id": "docs-viewer",
+      "parent_title": "Docs Viewer",
+      "display_meta": "2026-05-25 • Docs Viewer",
+      "search_terms": [
+        "site-request-committed-manage-mode-scope-storage",
+        "site",
+        "request",
+        "committed",
+        "manage",
+        "mode",
+        "scope",
+        "storage",
+        "committed manage-mode scope storage request",
+        "docs viewer",
+        "docs",
+        "viewer",
+        "2026-05-25",
+        "2026",
+        "05",
+        "25"
+      ],
+      "search_text": "site-request-committed-manage-mode-scope-storage site request committed manage mode scope storage committed manage-mode scope storage request docs viewer docs viewer 2026-05-25 2026 05 25"
     },
     {
       "id": "site-request-js-config-structural-review-config-ownership",
@@ -707,6 +1265,30 @@
       "search_text": "site-request-js-config-structural-review-config-ownership site request js config structural review ownership config ownership cleanup slice cleanup slice javascript and browser config structural review request javascript and browser 2026-05-10 17:08 2026 05 10 17 08"
     },
     {
+      "id": "scripts-copy-draft-media",
+      "kind": "doc",
+      "title": "Copy Draft Media",
+      "href": "/docs/?scope=archive&doc=scripts-copy-draft-media",
+      "last_updated": "2026-05-01",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-01 • Catalogue",
+      "search_terms": [
+        "scripts-copy-draft-media",
+        "scripts",
+        "copy",
+        "draft",
+        "media",
+        "copy draft media",
+        "catalogue",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media catalogue 2026-05-01 2026 05 01"
+    },
+    {
       "id": "site-request-script-structural-review-generate-work-pages",
       "kind": "doc",
       "title": "Generate Work Pages Slices",
@@ -738,24 +1320,81 @@
       "search_text": "site-request-script-structural-review-generate-work-pages site request script structural review generate work pages generate work pages slices slices script structural review request 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
-      "id": "pipeline-use-cases",
+      "id": "search-result-shaping-json-slimmer",
       "kind": "doc",
-      "title": "Pipeline Use Cases",
-      "href": "/docs/?scope=archive&doc=pipeline-use-cases",
-      "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
+      "title": "Search Result Shaping draft slimmer JSON",
+      "href": "/docs/?scope=archive&doc=search-result-shaping-json-slimmer",
+      "last_updated": "2026-05-06 20:49",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-05-06 20:49 • Search",
       "search_terms": [
-        "pipeline-use-cases",
-        "pipeline",
-        "use",
-        "cases",
-        "pipeline use cases",
-        "2026-05-01",
+        "search-result-shaping-json-slimmer",
+        "search",
+        "result",
+        "shaping",
+        "json",
+        "slimmer",
+        "search result shaping draft slimmer json",
+        "draft",
+        "2026-05-06 20:49",
         "2026",
         "05",
-        "01"
+        "06",
+        "20",
+        "49"
       ],
-      "search_text": "pipeline-use-cases pipeline use cases pipeline use cases 2026-05-01 2026 05 01"
+      "search_text": "search-result-shaping-json-slimmer search result shaping json slimmer search result shaping draft slimmer json draft 2026-05-06 20:49 2026 05 06 20 49"
+    },
+    {
+      "id": "site-request-studio-data-sharing-architecture",
+      "kind": "doc",
+      "title": "Studio Data Sharing Architecture Request",
+      "href": "/docs/?scope=archive&doc=site-request-studio-data-sharing-architecture",
+      "last_updated": "2026-05-26",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-26 • Data Sharing",
+      "search_terms": [
+        "site-request-studio-data-sharing-architecture",
+        "site",
+        "request",
+        "studio",
+        "data",
+        "sharing",
+        "architecture",
+        "studio data sharing architecture request",
+        "data sharing",
+        "2026-05-26",
+        "2026",
+        "05",
+        "26"
+      ],
+      "search_text": "site-request-studio-data-sharing-architecture site request studio data sharing architecture studio data sharing architecture request data sharing 2026-05-26 2026 05 26"
+    },
+    {
+      "id": "new-pipeline-studio-ui-polish",
+      "kind": "doc",
+      "title": "Studio UI Polish",
+      "href": "/docs/?scope=archive&doc=new-pipeline-studio-ui-polish",
+      "last_updated": "2026-04-19",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-04-19 • Studio",
+      "search_terms": [
+        "new-pipeline-studio-ui-polish",
+        "new",
+        "pipeline",
+        "studio",
+        "ui",
+        "polish",
+        "studio ui polish",
+        "2026-04-19",
+        "2026",
+        "04",
+        "19"
+      ],
+      "search_text": "new-pipeline-studio-ui-polish new pipeline studio ui polish studio ui polish 2026-04-19 2026 04 19"
     },
     {
       "id": "site-request-script-structural-review-catalogue-json-build",
@@ -787,6 +1426,57 @@
         "28"
       ],
       "search_text": "site-request-script-structural-review-catalogue-json-build site request script structural review catalogue json build catalogue json build slices slices script structural review request 2026-05-09 21:28 2026 05 09 21 28"
+    },
+    {
+      "id": "new-pipeline-implementation-plan",
+      "kind": "doc",
+      "title": "Implementation Plan",
+      "href": "/docs/?scope=archive&doc=new-pipeline-implementation-plan",
+      "last_updated": "2026-05-01",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-01 • Catalogue",
+      "search_terms": [
+        "new-pipeline-implementation-plan",
+        "new",
+        "pipeline",
+        "implementation",
+        "plan",
+        "implementation plan",
+        "catalogue",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "new-pipeline-implementation-plan new pipeline implementation plan implementation plan catalogue 2026-05-01 2026 05 01"
+    },
+    {
+      "id": "library-export",
+      "kind": "doc",
+      "title": "Library Export v1",
+      "href": "/docs/?scope=archive&doc=library-export",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-06 18:12 • Data Sharing",
+      "search_terms": [
+        "library-export",
+        "library",
+        "export",
+        "library export v1",
+        "v1",
+        "data sharing",
+        "data",
+        "sharing",
+        "2026-05-06 18:12",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "12"
+      ],
+      "search_text": "library-export library export library export v1 v1 data sharing data sharing 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
       "id": "site-request-js-config-structural-review-public-runtime-extraction",
@@ -824,39 +1514,45 @@
       "search_text": "site-request-js-config-structural-review-public-runtime-extraction site request js config structural review public runtime extraction public runtime extraction slice slice javascript and browser config structural review request javascript and browser 2026-05-10 17:25 2026 05 10 17 25"
     },
     {
-      "id": "studio-search-v1",
+      "id": "new-pipeline-refine-search",
       "kind": "doc",
-      "title": "Studio Search V1",
-      "href": "/docs/?scope=archive&doc=studio-search-v1",
-      "last_updated": "2026-03-29",
-      "display_meta": "2026-03-29",
+      "title": "Search Plan",
+      "href": "/docs/?scope=archive&doc=new-pipeline-refine-search",
+      "last_updated": "2026-05-11",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-05-11 • Search",
       "search_terms": [
-        "studio-search-v1",
-        "studio",
+        "new-pipeline-refine-search",
+        "new",
+        "pipeline",
+        "refine",
         "search",
-        "v1",
-        "studio search v1",
-        "2026-03-29",
+        "search plan",
+        "plan",
+        "2026-05-11",
         "2026",
-        "03",
-        "29"
+        "05",
+        "11"
       ],
-      "search_text": "studio-search-v1 studio search v1 studio search v1 2026-03-29 2026 03 29"
+      "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan 2026-05-11 2026 05 11"
     },
     {
-      "id": "scripts-main-pipeline",
+      "id": "scripts-generate-work-pages",
       "kind": "doc",
-      "title": "Build Catalogue",
-      "href": "/docs/?scope=archive&doc=scripts-main-pipeline",
+      "title": "Generate Work Pages",
+      "href": "/docs/?scope=archive&doc=scripts-generate-work-pages",
       "last_updated": "2026-05-09 21:28",
-      "display_meta": "2026-05-09 21:28",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-09 21:28 • Catalogue",
       "search_terms": [
-        "scripts-main-pipeline",
+        "scripts-generate-work-pages",
         "scripts",
-        "main",
-        "pipeline",
-        "build catalogue",
-        "build",
+        "generate",
+        "work",
+        "pages",
+        "generate work pages",
         "catalogue",
         "2026-05-09 21:28",
         "2026",
@@ -865,7 +1561,59 @@
         "21",
         "28"
       ],
-      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue 2026-05-09 21:28 2026 05 09 21 28"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages catalogue 2026-05-09 21:28 2026 05 09 21 28"
+    },
+    {
+      "id": "library-export-ui",
+      "kind": "doc",
+      "title": "Library Export - UI refinements",
+      "href": "/docs/?scope=archive&doc=library-export-ui",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-06 18:12 • Data Sharing",
+      "search_terms": [
+        "library-export-ui",
+        "library",
+        "export",
+        "ui",
+        "library export - ui refinements",
+        "refinements",
+        "data sharing",
+        "data",
+        "sharing",
+        "2026-05-06 18:12",
+        "2026",
+        "05",
+        "06",
+        "18",
+        "12"
+      ],
+      "search_text": "library-export-ui library export ui library export - ui refinements refinements data sharing data sharing 2026-05-06 18:12 2026 05 06 18 12"
+    },
+    {
+      "id": "search-config-architecture",
+      "kind": "doc",
+      "title": "Search Config Architecture",
+      "href": "/docs/?scope=archive&doc=search-config-architecture",
+      "last_updated": "2026-05-06 20:49",
+      "parent_id": "search",
+      "parent_title": "Search",
+      "display_meta": "2026-05-06 20:49 • Search",
+      "search_terms": [
+        "search-config-architecture",
+        "search",
+        "config",
+        "architecture",
+        "search config architecture",
+        "2026-05-06 20:49",
+        "2026",
+        "05",
+        "06",
+        "20",
+        "49"
+      ],
+      "search_text": "search-config-architecture search config architecture search config architecture 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "site-request-js-config-structural-review-search-performance-instrumentation",
@@ -903,6 +1651,29 @@
       "search_text": "site-request-js-config-structural-review-search-performance-instrumentation site request js config structural review search performance instrumentation search performance instrumentation slice slice javascript and browser config structural review request javascript and browser 2026-05-10 17:35 2026 05 10 17 35"
     },
     {
+      "id": "scripts-delete-work",
+      "kind": "doc",
+      "title": "Delete Work",
+      "href": "/docs/?scope=archive&doc=scripts-delete-work",
+      "last_updated": "2026-05-01",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-01 • Catalogue",
+      "search_terms": [
+        "scripts-delete-work",
+        "scripts",
+        "delete",
+        "work",
+        "delete work",
+        "catalogue",
+        "2026-05-01",
+        "2026",
+        "05",
+        "01"
+      ],
+      "search_text": "scripts-delete-work scripts delete work delete work catalogue 2026-05-01 2026 05 01"
+    },
+    {
       "id": "site-request-js-payload-runtime-cleanup-inventory",
       "kind": "doc",
       "title": "JavaScript Payload And Runtime Cleanup Inventory",
@@ -938,26 +1709,32 @@
       "search_text": "site-request-js-payload-runtime-cleanup-inventory site request js payload runtime cleanup inventory javascript payload and runtime cleanup inventory javascript and javascript and browser config structural review request browser config structural review 2026-05-11 00:35 2026 05 11 00 35"
     },
     {
-      "id": "studio-search-v1-implementation-plan",
+      "id": "library-semantic-enrichment-spec",
       "kind": "doc",
-      "title": "Search V1 Implementation Plan",
-      "href": "/docs/?scope=archive&doc=studio-search-v1-implementation-plan",
-      "last_updated": "2026-03-29",
-      "display_meta": "2026-03-29",
+      "title": "Library Semantic Enrichment Spec",
+      "href": "/docs/?scope=archive&doc=library-semantic-enrichment-spec",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-06 18:12 • Data Sharing",
       "search_terms": [
-        "studio-search-v1-implementation-plan",
-        "studio",
-        "search",
-        "v1",
-        "implementation",
-        "plan",
-        "search v1 implementation plan",
-        "2026-03-29",
+        "library-semantic-enrichment-spec",
+        "library",
+        "semantic",
+        "enrichment",
+        "spec",
+        "library semantic enrichment spec",
+        "data sharing",
+        "data",
+        "sharing",
+        "2026-05-06 18:12",
         "2026",
-        "03",
-        "29"
+        "05",
+        "06",
+        "18",
+        "12"
       ],
-      "search_text": "studio-search-v1-implementation-plan studio search v1 implementation plan search v1 implementation plan 2026-03-29 2026 03 29"
+      "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec data sharing data sharing 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
       "id": "site-request-catalogue-js-runtime-consistency",
@@ -994,51 +1771,54 @@
       "search_text": "site-request-catalogue-js-runtime-consistency site request catalogue js runtime consistency catalogue javascript runtime consistency request javascript javascript and browser config structural review request and browser config structural review 2026-05-11 00:39 2026 05 11 00 39"
     },
     {
-      "id": "new-pipeline-source-model",
+      "id": "library-import-export-v2",
       "kind": "doc",
-      "title": "Source Model",
-      "href": "/docs/?scope=archive&doc=new-pipeline-source-model",
-      "last_updated": "2026-05-02",
-      "display_meta": "2026-05-02",
+      "title": "Library Export/Import v2",
+      "href": "/docs/?scope=archive&doc=library-import-export-v2",
+      "last_updated": "2026-05-06 18:12",
+      "parent_id": "data-sharing",
+      "parent_title": "Data Sharing",
+      "display_meta": "2026-05-06 18:12 • Data Sharing",
       "search_terms": [
-        "new-pipeline-source-model",
-        "new",
-        "pipeline",
-        "source",
-        "model",
-        "source model",
-        "2026-05-02",
+        "library-import-export-v2",
+        "library",
+        "import",
+        "export",
+        "v2",
+        "library export/import v2",
+        "data sharing",
+        "data",
+        "sharing",
+        "2026-05-06 18:12",
         "2026",
         "05",
-        "02"
+        "06",
+        "18",
+        "12"
       ],
-      "search_text": "new-pipeline-source-model new pipeline source model source model 2026-05-02 2026 05 02"
+      "search_text": "library-import-export-v2 library import export v2 library export/import v2 data sharing data sharing 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
-      "id": "site-request-export-import-adapters",
+      "id": "new-pipeline",
       "kind": "doc",
-      "title": "Export Import Adapter Boundary Request",
-      "href": "/docs/?scope=archive&doc=site-request-export-import-adapters",
-      "last_updated": "2026-05-13 18:15",
-      "display_meta": "2026-05-13 18:15",
+      "title": "New Catalogue Pipeline",
+      "href": "/docs/?scope=archive&doc=new-pipeline",
+      "last_updated": "2026-05-01",
+      "parent_id": "catalogue",
+      "parent_title": "Catalogue",
+      "display_meta": "2026-05-01 • Catalogue",
       "search_terms": [
-        "site-request-export-import-adapters",
-        "site",
-        "request",
-        "export",
-        "import",
-        "adapters",
-        "export import adapter boundary request",
-        "adapter",
-        "boundary",
-        "2026-05-13 18:15",
+        "new-pipeline",
+        "new",
+        "pipeline",
+        "new catalogue pipeline",
+        "catalogue",
+        "2026-05-01",
         "2026",
         "05",
-        "13",
-        "18",
-        "15"
+        "01"
       ],
-      "search_text": "site-request-export-import-adapters site request export import adapters export import adapter boundary request adapter boundary 2026-05-13 18:15 2026 05 13 18 15"
+      "search_text": "new-pipeline new pipeline new catalogue pipeline catalogue 2026-05-01 2026 05 01"
     },
     {
       "id": "site-request-js-payload-runtime-cleanup",
@@ -1073,74 +1853,6 @@
         "19"
       ],
       "search_text": "site-request-js-payload-runtime-cleanup site request js payload runtime cleanup javascript payload and runtime cleanup request javascript and javascript and browser config structural review request browser config structural review 2026-05-10 21:19 2026 05 10 21 19"
-    },
-    {
-      "id": "site-request-local-report-snapshot-boundary",
-      "kind": "doc",
-      "title": "Local Report Snapshot Boundary",
-      "href": "/docs/?scope=archive&doc=site-request-local-report-snapshot-boundary",
-      "last_updated": "2026-05-26",
-      "display_meta": "2026-05-26",
-      "search_terms": [
-        "site-request-local-report-snapshot-boundary",
-        "site",
-        "request",
-        "local",
-        "report",
-        "snapshot",
-        "boundary",
-        "local report snapshot boundary",
-        "2026-05-26",
-        "2026",
-        "05",
-        "26"
-      ],
-      "search_text": "site-request-local-report-snapshot-boundary site request local report snapshot boundary local report snapshot boundary 2026-05-26 2026 05 26"
-    },
-    {
-      "id": "scripts-copy-draft-media",
-      "kind": "doc",
-      "title": "Copy Draft Media",
-      "href": "/docs/?scope=archive&doc=scripts-copy-draft-media",
-      "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
-      "search_terms": [
-        "scripts-copy-draft-media",
-        "scripts",
-        "copy",
-        "draft",
-        "media",
-        "copy draft media",
-        "2026-05-01",
-        "2026",
-        "05",
-        "01"
-      ],
-      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media 2026-05-01 2026 05 01"
-    },
-    {
-      "id": "search-result-shaping-json",
-      "kind": "doc",
-      "title": "Search Result Shaping draft JSON",
-      "href": "/docs/?scope=archive&doc=search-result-shaping-json",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
-      "search_terms": [
-        "search-result-shaping-json",
-        "search",
-        "result",
-        "shaping",
-        "json",
-        "search result shaping draft json",
-        "draft",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "search-result-shaping-json search result shaping json search result shaping draft json draft 2026-05-06 20:49 2026 05 06 20 49"
     },
     {
       "id": "site-request-studio-source-tree-reorganization-tasks",
@@ -1222,29 +1934,6 @@
         "24"
       ],
       "search_text": "site-request-studio-source-tree-reorganization-layout site request studio source tree reorganization layout studio source tree reorganization layout studio source tree reorganization request 2026-05-24 2026 05 24"
-    },
-    {
-      "id": "site-request-docs-viewer-shell-extraction",
-      "kind": "doc",
-      "title": "Docs Viewer Shell Extraction Request",
-      "href": "/docs/?scope=archive&doc=site-request-docs-viewer-shell-extraction",
-      "last_updated": "2026-05-25",
-      "display_meta": "2026-05-25",
-      "search_terms": [
-        "site-request-docs-viewer-shell-extraction",
-        "site",
-        "request",
-        "docs",
-        "viewer",
-        "shell",
-        "extraction",
-        "docs viewer shell extraction request",
-        "2026-05-25",
-        "2026",
-        "05",
-        "25"
-      ],
-      "search_text": "site-request-docs-viewer-shell-extraction site request docs viewer shell extraction docs viewer shell extraction request 2026-05-25 2026 05 25"
     },
     {
       "id": "site-request-docs-viewer-shell-extraction-tasks",
@@ -1409,232 +2098,6 @@
       "search_text": "new-pipeline-web-system-spec new pipeline web system spec web system specification specification 2026-05-09 21:28 2026 05 09 21 28"
     },
     {
-      "id": "new-pipeline-implementation-plan",
-      "kind": "doc",
-      "title": "Implementation Plan",
-      "href": "/docs/?scope=archive&doc=new-pipeline-implementation-plan",
-      "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
-      "search_terms": [
-        "new-pipeline-implementation-plan",
-        "new",
-        "pipeline",
-        "implementation",
-        "plan",
-        "implementation plan",
-        "2026-05-01",
-        "2026",
-        "05",
-        "01"
-      ],
-      "search_text": "new-pipeline-implementation-plan new pipeline implementation plan implementation plan 2026-05-01 2026 05 01"
-    },
-    {
-      "id": "scripts-generate-work-pages",
-      "kind": "doc",
-      "title": "Generate Work Pages",
-      "href": "/docs/?scope=archive&doc=scripts-generate-work-pages",
-      "last_updated": "2026-05-09 21:28",
-      "display_meta": "2026-05-09 21:28",
-      "search_terms": [
-        "scripts-generate-work-pages",
-        "scripts",
-        "generate",
-        "work",
-        "pages",
-        "generate work pages",
-        "2026-05-09 21:28",
-        "2026",
-        "05",
-        "09",
-        "21",
-        "28"
-      ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages 2026-05-09 21:28 2026 05 09 21 28"
-    },
-    {
-      "id": "import-export",
-      "kind": "doc",
-      "title": "Import/Export Historical Notes",
-      "href": "/docs/?scope=archive&doc=import-export",
-      "last_updated": "2026-05-13 18:15",
-      "display_meta": "2026-05-13 18:15",
-      "search_terms": [
-        "import-export",
-        "import",
-        "export",
-        "import/export historical notes",
-        "historical",
-        "notes",
-        "2026-05-13 18:15",
-        "2026",
-        "05",
-        "13",
-        "18",
-        "15"
-      ],
-      "search_text": "import-export import export import/export historical notes historical notes 2026-05-13 18:15 2026 05 13 18 15"
-    },
-    {
-      "id": "new-pipeline-studio-implementation-plan",
-      "kind": "doc",
-      "title": "Studio Implementation Plan",
-      "href": "/docs/?scope=archive&doc=new-pipeline-studio-implementation-plan",
-      "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
-      "search_terms": [
-        "new-pipeline-studio-implementation-plan",
-        "new",
-        "pipeline",
-        "studio",
-        "implementation",
-        "plan",
-        "studio implementation plan",
-        "2026-05-01",
-        "2026",
-        "05",
-        "01"
-      ],
-      "search_text": "new-pipeline-studio-implementation-plan new pipeline studio implementation plan studio implementation plan 2026-05-01 2026 05 01"
-    },
-    {
-      "id": "scripts-delete-work",
-      "kind": "doc",
-      "title": "Delete Work",
-      "href": "/docs/?scope=archive&doc=scripts-delete-work",
-      "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
-      "search_terms": [
-        "scripts-delete-work",
-        "scripts",
-        "delete",
-        "work",
-        "delete work",
-        "2026-05-01",
-        "2026",
-        "05",
-        "01"
-      ],
-      "search_text": "scripts-delete-work scripts delete work delete work 2026-05-01 2026 05 01"
-    },
-    {
-      "id": "new-pipeline-studio-e2e-checklist",
-      "kind": "doc",
-      "title": "Studio E2E Checklist",
-      "href": "/docs/?scope=archive&doc=new-pipeline-studio-e2e-checklist",
-      "last_updated": "2026-05-09 21:28",
-      "display_meta": "2026-05-09 21:28",
-      "search_terms": [
-        "new-pipeline-studio-e2e-checklist",
-        "new",
-        "pipeline",
-        "studio",
-        "e2e",
-        "checklist",
-        "studio e2e checklist",
-        "2026-05-09 21:28",
-        "2026",
-        "05",
-        "09",
-        "21",
-        "28"
-      ],
-      "search_text": "new-pipeline-studio-e2e-checklist new pipeline studio e2e checklist studio e2e checklist 2026-05-09 21:28 2026 05 09 21 28"
-    },
-    {
-      "id": "new-pipeline-refine-analytics",
-      "kind": "doc",
-      "title": "Analytics Plan",
-      "href": "/docs/?scope=archive&doc=new-pipeline-refine-analytics",
-      "last_updated": "2026-05-09 16:00",
-      "display_meta": "2026-05-09 16:00",
-      "search_terms": [
-        "new-pipeline-refine-analytics",
-        "new",
-        "pipeline",
-        "refine",
-        "analytics",
-        "analytics plan",
-        "plan",
-        "2026-05-09 16:00",
-        "2026",
-        "05",
-        "09",
-        "16",
-        "00"
-      ],
-      "search_text": "new-pipeline-refine-analytics new pipeline refine analytics analytics plan plan 2026-05-09 16:00 2026 05 09 16 00"
-    },
-    {
-      "id": "search-result-shaping-json-slimmer",
-      "kind": "doc",
-      "title": "Search Result Shaping draft slimmer JSON",
-      "href": "/docs/?scope=archive&doc=search-result-shaping-json-slimmer",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
-      "search_terms": [
-        "search-result-shaping-json-slimmer",
-        "search",
-        "result",
-        "shaping",
-        "json",
-        "slimmer",
-        "search result shaping draft slimmer json",
-        "draft",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "search-result-shaping-json-slimmer search result shaping json slimmer search result shaping draft slimmer json draft 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
-      "id": "new-pipeline-studio-ui-polish",
-      "kind": "doc",
-      "title": "Studio UI Polish",
-      "href": "/docs/?scope=archive&doc=new-pipeline-studio-ui-polish",
-      "last_updated": "2026-04-19",
-      "display_meta": "2026-04-19",
-      "search_terms": [
-        "new-pipeline-studio-ui-polish",
-        "new",
-        "pipeline",
-        "studio",
-        "ui",
-        "polish",
-        "studio ui polish",
-        "2026-04-19",
-        "2026",
-        "04",
-        "19"
-      ],
-      "search_text": "new-pipeline-studio-ui-polish new pipeline studio ui polish studio ui polish 2026-04-19 2026 04 19"
-    },
-    {
-      "id": "new-pipeline-refine-search",
-      "kind": "doc",
-      "title": "Search Plan",
-      "href": "/docs/?scope=archive&doc=new-pipeline-refine-search",
-      "last_updated": "2026-05-11",
-      "display_meta": "2026-05-11",
-      "search_terms": [
-        "new-pipeline-refine-search",
-        "new",
-        "pipeline",
-        "refine",
-        "search",
-        "search plan",
-        "plan",
-        "2026-05-11",
-        "2026",
-        "05",
-        "11"
-      ],
-      "search_text": "new-pipeline-refine-search new pipeline refine search search plan plan 2026-05-11 2026 05 11"
-    },
-    {
       "id": "design-backlog",
       "kind": "doc",
       "title": "Design Backlog",
@@ -1700,160 +2163,6 @@
       "search_text": "studio-plan studio plan implementation plan implementation 2026-05-09 16:00 2026 05 09 16 00"
     },
     {
-      "id": "multiple-content-domains",
-      "kind": "doc",
-      "title": "Multiple Content Domains",
-      "href": "/docs/?scope=archive&doc=multiple-content-domains",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
-      "search_terms": [
-        "multiple-content-domains",
-        "multiple",
-        "content",
-        "domains",
-        "multiple content domains",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "multiple-content-domains multiple content domains multiple content domains 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
-      "id": "new-pipeline",
-      "kind": "doc",
-      "title": "New Catalogue Pipeline",
-      "href": "/docs/?scope=archive&doc=new-pipeline",
-      "last_updated": "2026-05-01",
-      "display_meta": "2026-05-01",
-      "search_terms": [
-        "new-pipeline",
-        "new",
-        "pipeline",
-        "new catalogue pipeline",
-        "catalogue",
-        "2026-05-01",
-        "2026",
-        "05",
-        "01"
-      ],
-      "search_text": "new-pipeline new pipeline new catalogue pipeline catalogue 2026-05-01 2026 05 01"
-    },
-    {
-      "id": "library-semantic-enrichment-spec",
-      "kind": "doc",
-      "title": "Library Semantic Enrichment Spec",
-      "href": "/docs/?scope=archive&doc=library-semantic-enrichment-spec",
-      "last_updated": "2026-05-06 18:12",
-      "display_meta": "2026-05-06 18:12",
-      "search_terms": [
-        "library-semantic-enrichment-spec",
-        "library",
-        "semantic",
-        "enrichment",
-        "spec",
-        "library semantic enrichment spec",
-        "2026-05-06 18:12",
-        "2026",
-        "05",
-        "06",
-        "18",
-        "12"
-      ],
-      "search_text": "library-semantic-enrichment-spec library semantic enrichment spec library semantic enrichment spec 2026-05-06 18:12 2026 05 06 18 12"
-    },
-    {
-      "id": "search-config-architecture",
-      "kind": "doc",
-      "title": "Search Config Architecture",
-      "href": "/docs/?scope=archive&doc=search-config-architecture",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
-      "search_terms": [
-        "search-config-architecture",
-        "search",
-        "config",
-        "architecture",
-        "search config architecture",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "search-config-architecture search config architecture search config architecture 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
-      "id": "library-export",
-      "kind": "doc",
-      "title": "Library Export v1",
-      "href": "/docs/?scope=archive&doc=library-export",
-      "last_updated": "2026-05-06 18:12",
-      "display_meta": "2026-05-06 18:12",
-      "search_terms": [
-        "library-export",
-        "library",
-        "export",
-        "library export v1",
-        "v1",
-        "2026-05-06 18:12",
-        "2026",
-        "05",
-        "06",
-        "18",
-        "12"
-      ],
-      "search_text": "library-export library export library export v1 v1 2026-05-06 18:12 2026 05 06 18 12"
-    },
-    {
-      "id": "search-config-implementation-note",
-      "kind": "doc",
-      "title": "Search Config Implementation Note",
-      "href": "/docs/?scope=archive&doc=search-config-implementation-note",
-      "last_updated": "2026-05-06 20:49",
-      "display_meta": "2026-05-06 20:49",
-      "search_terms": [
-        "search-config-implementation-note",
-        "search",
-        "config",
-        "implementation",
-        "note",
-        "search config implementation note",
-        "2026-05-06 20:49",
-        "2026",
-        "05",
-        "06",
-        "20",
-        "49"
-      ],
-      "search_text": "search-config-implementation-note search config implementation note search config implementation note 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
-      "id": "library-import",
-      "kind": "doc",
-      "title": "Library Import v1",
-      "href": "/docs/?scope=archive&doc=library-import",
-      "last_updated": "2026-05-06 18:12",
-      "display_meta": "2026-05-06 18:12",
-      "search_terms": [
-        "library-import",
-        "library",
-        "import",
-        "library import v1",
-        "v1",
-        "2026-05-06 18:12",
-        "2026",
-        "05",
-        "06",
-        "18",
-        "12"
-      ],
-      "search_text": "library-import library import library import v1 v1 2026-05-06 18:12 2026 05 06 18 12"
-    },
-    {
       "id": "search-pipeline-target-architecture",
       "kind": "doc",
       "title": "Search Pipeline Target Architecture",
@@ -1875,29 +2184,6 @@
         "49"
       ],
       "search_text": "search-pipeline-target-architecture search pipeline target architecture search pipeline target architecture 2026-05-06 20:49 2026 05 06 20 49"
-    },
-    {
-      "id": "library-export-ui",
-      "kind": "doc",
-      "title": "Library Export - UI refinements",
-      "href": "/docs/?scope=archive&doc=library-export-ui",
-      "last_updated": "2026-05-06 18:12",
-      "display_meta": "2026-05-06 18:12",
-      "search_terms": [
-        "library-export-ui",
-        "library",
-        "export",
-        "ui",
-        "library export - ui refinements",
-        "refinements",
-        "2026-05-06 18:12",
-        "2026",
-        "05",
-        "06",
-        "18",
-        "12"
-      ],
-      "search_text": "library-export-ui library export ui library export - ui refinements refinements 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
       "id": "series-id-and-slug-migration",
@@ -1950,29 +2236,6 @@
         "15"
       ],
       "search_text": "site-request-studio-import-export-module site request studio import export module studio data sharing module implementation request data sharing implementation 2026-05-13 18:15 2026 05 13 18 15"
-    },
-    {
-      "id": "library-import-export-v2",
-      "kind": "doc",
-      "title": "Library Export/Import v2",
-      "href": "/docs/?scope=archive&doc=library-import-export-v2",
-      "last_updated": "2026-05-06 18:12",
-      "display_meta": "2026-05-06 18:12",
-      "search_terms": [
-        "library-import-export-v2",
-        "library",
-        "import",
-        "export",
-        "v2",
-        "library export/import v2",
-        "2026-05-06 18:12",
-        "2026",
-        "05",
-        "06",
-        "18",
-        "12"
-      ],
-      "search_text": "library-import-export-v2 library import export v2 library export/import v2 2026-05-06 18:12 2026 05 06 18 12"
     },
     {
       "id": "search-result-shaping",
@@ -2068,31 +2331,6 @@
         "14"
       ],
       "search_text": "site-request-docs-viewer-report-components site request docs viewer report components docs viewer report components request 2026-05-13 11:14 2026 05 13 11 14"
-    },
-    {
-      "id": "site-request-import-export-system-review",
-      "kind": "doc",
-      "title": "Import/Export System Review Request",
-      "href": "/docs/?scope=archive&doc=site-request-import-export-system-review",
-      "last_updated": "2026-05-13 11:48",
-      "display_meta": "2026-05-13 11:48",
-      "search_terms": [
-        "site-request-import-export-system-review",
-        "site",
-        "request",
-        "import",
-        "export",
-        "system",
-        "review",
-        "import/export system review request",
-        "2026-05-13 11:48",
-        "2026",
-        "05",
-        "13",
-        "11",
-        "48"
-      ],
-      "search_text": "site-request-import-export-system-review site request import export system review import/export system review request 2026-05-13 11:48 2026 05 13 11 48"
     },
     {
       "id": "site-request-analytics-tag-route-cleanup",
