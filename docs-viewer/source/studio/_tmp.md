@@ -9,8 +9,6 @@ viewable: false
 ---
 # tmp
 
-we are working on site-request-committed-manage-mode-scope-storage.md
-please start with task 1
 
 
 
