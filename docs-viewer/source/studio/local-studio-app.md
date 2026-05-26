@@ -27,7 +27,7 @@ Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it wh
 HTTP access logging is quiet by default so normal browser use does not flood the terminal.
 Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to `studio_app_server.py`, when detailed request logging is needed.
 Docs Viewer management is handled by the standalone Docs Viewer service configured through `DOCS_VIEWER_BASE_URL` in `var/local/site.env`.
-Active Local Studio browser routes use runtime-configured Docs Viewer service URLs for Docs links, generated reads, source-file opening, and Data Sharing document endpoints.
+Active Local Studio browser routes use runtime-configured Docs Viewer service URLs for Docs links, generated reads, and Data Sharing document endpoints.
 Local Studio renders those peer-service links without probing service availability; when the Docs Viewer service is stopped, the links and service calls fail normally.
 Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
 `bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
@@ -129,8 +129,8 @@ It reuses `studio/app/frontend/js/studio-audits.js` and now calls `/studio/api/a
 `studio/app/server/studio/studio_audit_api.py` adapts the allowlisted audit functions from `studio/app/server/studio/audit_runner.py`, so normal Studio sessions no longer need a separate audit sibling service.
 The old Jekyll `/studio/audits/` shell has been retired.
 The Project State route shell is hosted by the local app at `/studio/project-state/?mode=manage`.
-It reuses `studio/app/frontend/js/project-state.js`, calls Local Studio for catalogue report generation, and calls the configured Docs Viewer service for source-file opening.
-`studio/app/server/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` adapter and reuses `studio/services/catalogue/project_state_report.py`.
+It reuses `studio/app/frontend/js/project-state.js` and calls Local Studio for both catalogue report generation and local report opening.
+`studio/app/server/studio/studio_catalogue_api.py` owns the narrow `POST /studio/api/catalogue/project-state-report` and `POST /studio/api/catalogue/project-state-open-report` adapters and reuses `studio/services/catalogue/project_state_report.py`.
 The old Jekyll `/studio/project-state/` shell has been retired.
 The Thumbnail Quality route shell is hosted by the local app at `/studio/thumbnail-quality/?mode=manage`.
 It reuses `studio/app/frontend/js/thumbnail-quality.js`, checked-in preview JSON/image data under `studio/data/generated/thumbnail-quality/`, and `POST /studio/api/catalogue/thumbnail-quality-preview` for refresh.
@@ -192,7 +192,7 @@ Those links open on the configured public preview host during local Studio sessi
 The catalogue helper requires the configured public-site base for public links instead of generating Studio-host-relative public URLs.
 Editor-to-editor links remain local Studio routes.
 The local `/docs/` route is no longer hosted by Local Studio.
-The runtime config exposes the configured Docs Viewer service base URL for the top-level `docs` view, page implementation links, generated reads, Data Sharing document endpoints, and source-file opening.
+The runtime config exposes the configured Docs Viewer service base URL for the top-level `docs` view, page implementation links, generated reads, Data Sharing document endpoints, and the Docs source-file opening endpoint.
 `studio/app/server/studio/studio_docs_viewer_integration.py` owns this link and endpoint shaping.
 The main management API workflow routes are covered through a fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the standalone Docs Viewer service without touching real docs.
 Docs Viewer fixture smokes cover `/docs/` manage-mode workflows through the Docs Viewer service UI: create, metadata edit, settings save, archive, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.

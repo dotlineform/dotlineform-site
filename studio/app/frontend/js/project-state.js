@@ -4,7 +4,6 @@ import {
 } from "./studio-config.js";
 import {
   PROJECT_STATE_ENDPOINTS,
-  configureStudioTransport,
   postJson,
   probeProjectStateCatalogueHealth,
   probeProjectStateCatalogueOpenHealth
@@ -212,7 +211,6 @@ async function init() {
 
   try {
     const config = await loadStudioConfigWithText("project_state");
-    configureStudioTransport(config);
     const catalogueServerAvailable = Boolean(await probeProjectStateCatalogueHealth());
     const reportOpenAvailable = Boolean(await probeProjectStateCatalogueOpenHealth());
     const state = {

@@ -73,11 +73,11 @@ const AUDIT_API_ENDPOINTS = Object.freeze({
   run: "/studio/api/audits/audits/run"
 });
 
-const PROJECT_STATE_ENDPOINTS = {
+const PROJECT_STATE_ENDPOINTS = Object.freeze({
   catalogueHealth: "/studio/api/catalogue/health",
   report: "/studio/api/catalogue/project-state-report",
   openReport: "/studio/api/catalogue/project-state-open-report"
-};
+});
 
 const THUMBNAIL_QUALITY_ENDPOINTS = Object.freeze({
   catalogueHealth: "/studio/api/catalogue/health",
@@ -130,9 +130,6 @@ export function configureStudioTransport(config) {
     returnedPackages: configured.data_sharing_returned_packages || DATA_SHARING_ENDPOINTS.returnedPackages,
     review: configured.data_sharing_review || DATA_SHARING_ENDPOINTS.review,
     apply: configured.data_sharing_apply || DATA_SHARING_ENDPOINTS.apply
-  });
-  Object.assign(PROJECT_STATE_ENDPOINTS, {
-    openReport: CATALOGUE_WRITE_ENDPOINTS.projectStateOpenReport
   });
 }
 

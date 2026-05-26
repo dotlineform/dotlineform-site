@@ -127,7 +127,7 @@ The broad list exists so shared Studio browser modules can use one runtime servi
    This is workable, but changes to Data Sharing should keep the adapter boundary explicit so document writes do not drift back into Studio-hosted Docs Viewer routes.
 
 6. Service unavailability is route-specific.
-   Docs navigation links fail normally when the service is stopped; Data Sharing document workflows show unavailable-service states; Project State only disables source opening.
+   Docs navigation links fail normally when the service is stopped; Data Sharing document workflows show unavailable-service states; Project State no longer depends on Docs Viewer for local report opening.
    This is reasonable, but user-facing copy and smoke coverage need to stay aligned as the start-all workflow lands.
 
 ## Related Docs

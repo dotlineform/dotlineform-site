@@ -50,7 +50,7 @@ The page root `#projectStateRoot` exposes the shared Studio route-ready contract
 - `data-studio-ready` is `false` during initial config and local service checks, then `true` after the initial disabled or interactive state is rendered
 - `data-studio-busy` is `true` while the report is running
 - `data-studio-mode` is `idle` before a report and `summary` after summary counts are loaded
-- `data-studio-service` is `available` when either the local catalogue report API or configured Docs Viewer service is available, and `unavailable` when both are unavailable
+- `data-studio-service` is `available` when the local catalogue report API is available, and `unavailable` when it is unavailable
 - `data-studio-record-loaded` is `true` when report summary data is loaded
 
 ## Related References
