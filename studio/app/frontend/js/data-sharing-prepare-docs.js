@@ -1,7 +1,4 @@
 import {
-  getDocsScopeDataPath
-} from "./studio-config.js";
-import {
   DATA_SHARING_ENDPOINTS
 } from "./studio-transport.js";
 import {
@@ -10,9 +7,7 @@ import {
 
 export async function loadDataSharingPrepareDocsState(options = {}) {
   const {
-    config,
     scope,
-    serviceAvailable,
     prepareCapability,
     workflowActive,
     exportConfigCount,
@@ -20,7 +15,7 @@ export async function loadDataSharingPrepareDocsState(options = {}) {
     onError
   } = options;
 
-  let docsIndexPayload = { docs: [] };
+  let selectableRecordsPayload = { records: [] };
   let docsIndexError = false;
 
   if (
@@ -28,25 +23,24 @@ export async function loadDataSharingPrepareDocsState(options = {}) {
     && workflowActive
     && Number(exportConfigCount || 0) > 0
   ) {
-    const docsIndexPath = getDocsScopeDataPath(config, scope, "index")
-      || `/assets/data/docs/scopes/${encodeURIComponent(scope)}/index.json`;
-    const docsIndexReadPath = serviceAvailable ? docsGeneratedIndexUrl(scope) : docsIndexPath;
     try {
-      docsIndexPayload = await loadJson(docsIndexReadPath);
+      selectableRecordsPayload = await loadJson(selectableRecordsUrl(scope));
     } catch (error) {
       docsIndexError = true;
-      if (typeof onError === "function") onError(error, { scope, path: docsIndexReadPath });
+      if (typeof onError === "function") onError(error, { scope, path: selectableRecordsUrl(scope) });
     }
   }
 
   return {
     docsIndexError,
-    ...buildVisibleDocs(docsIndexPayload)
+    ...buildVisibleDocs(selectableRecordsPayload)
   };
 }
 
 export function buildVisibleDocs(indexPayload) {
-  const sourceDocs = Array.isArray(indexPayload?.docs) ? indexPayload.docs : [];
+  const sourceDocs = Array.isArray(indexPayload?.records)
+    ? indexPayload.records
+    : (Array.isArray(indexPayload?.docs) ? indexPayload.docs : []);
   const docs = sourceDocs.filter((doc) => {
     const docId = normalizeText(doc?.doc_id);
     if (!docId) return false;
@@ -87,9 +81,9 @@ export function buildVisibleDocs(indexPayload) {
   return { docs: orderedDocs, childrenByParent, depthById };
 }
 
-function docsGeneratedIndexUrl(scope) {
-  const url = new URL(DATA_SHARING_ENDPOINTS.generatedIndex, window.location.origin);
-  url.searchParams.set("scope", scope);
+function selectableRecordsUrl(scope) {
+  const url = new URL(DATA_SHARING_ENDPOINTS.selectableRecords, window.location.origin);
+  url.searchParams.set("data_domain", scope);
   return url.href;
 }
 

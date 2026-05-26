@@ -96,7 +96,7 @@ Current site mapping:
 - the nav/tree layer on `/library/`
 - public/default `/library/` hides docs with `viewable: false`; `/docs/?scope=library&mode=manage` can show those generated docs for local management
 - Library document view does not display the `last_updated` metadata row; recently-added still uses `added_date`, and search still uses `last_updated`
-- `/studio/data-sharing/prepare/?mode=manage` uses `content_text_length` to filter docs whose rendered body has no text after plain-text extraction and title stripping
+- `/studio/data-sharing/prepare/?mode=manage` receives adapter-owned selectable records from `/studio/api/data-sharing/selectable-records` and uses `content_text_length` to filter docs whose rendered body has no text after plain-text extraction and title stripping
 
 ### `assets/data/docs/scopes/library/by-id/<doc_id>.json`
 
@@ -159,6 +159,7 @@ Current model:
 Current consumers:
 
 - `/studio/data-sharing/prepare/?mode=manage`
+- `GET /studio/api/data-sharing/selectable-records` on the Local Studio app server
 - `POST <DOCS_VIEWER_BASE_URL>/data-sharing/prepare` on the Docs Viewer service
 - `docs-viewer/services/docs_export.py`
 

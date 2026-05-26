@@ -1236,6 +1236,25 @@ def list_returned_packages(
 def handlers_for(
     dependencies_factory: Callable[[], TagsDataSharingDependencies],
 ) -> data_sharing_service.DataSharingAdapterHandlers:
+    def selectable_records_handler(repo_root: Path, data_domain: Any, adapter: AdapterResolution) -> Dict[str, Any]:
+        del repo_root, data_domain
+        adapter = require_tags_adapter(adapter)
+        return {
+            "ok": True,
+            "data_domain": adapter.data_domain,
+            "adapter_id": adapter.adapter_id,
+            "scope": adapter.scope,
+            "selection_model": str(adapter.capability.get("selection_model") or adapter.domain.get("selection_model") or "").strip(),
+            "records": [],
+            "docs": [],
+            "source": {
+                "kind": "adapter",
+                "module": "analytics.tags",
+                "source": "profile_only",
+                "scope": adapter.scope,
+            },
+        }
+
     def list_handler(repo_root: Path, data_domain: Any, adapter: AdapterResolution) -> Dict[str, Any]:
         return list_returned_packages(repo_root, data_domain, adapter, dependencies_factory())
 
@@ -1250,6 +1269,7 @@ def handlers_for(
 
     return data_sharing_service.DataSharingAdapterHandlers(
         module="analytics.tags",
+        selectable_records=selectable_records_handler,
         prepare=prepare_handler,
         list_returned=list_handler,
         review=review_handler,

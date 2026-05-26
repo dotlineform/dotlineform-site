@@ -216,7 +216,12 @@ def test_selectable_records_returns_documents_without_docs_viewer_http() -> None
     assert payload["ok"] is True
     assert payload["adapter_id"] == "documents"
     assert payload["selection_model"] == "documents"
-    assert payload["source"] == {"kind": "generated_docs_index", "scope": "library"}
+    assert payload["source"] == {
+        "kind": "adapter",
+        "module": "documents",
+        "source": "generated_docs_index",
+        "scope": "library",
+    }
     assert payload["records"][0]["id"] == "library"
     assert payload["records"][0]["selectable"] is True
     assert payload["records"][1]["id"] == "hidden-doc"

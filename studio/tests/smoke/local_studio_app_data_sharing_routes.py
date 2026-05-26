@@ -259,7 +259,6 @@ def main(argv: list[str] | None = None) -> int:
 
         required_paths = {
             "/health",
-            "/docs/generated/index",
             "/data-sharing/prepare",
             "/data-sharing/returned-packages",
             "/data-sharing/review",
@@ -268,6 +267,8 @@ def main(argv: list[str] | None = None) -> int:
         missing_paths = required_paths.difference(seen_paths)
         if missing_paths:
             raise AssertionError(f"missing local Docs API calls: {sorted(missing_paths)!r}; calls={docs_api_calls!r}")
+        if "/docs/generated/index" in seen_paths:
+            raise AssertionError(f"prepare page still read the generic generated docs index: {docs_api_calls!r}")
         if console_errors:
             raise AssertionError(f"console errors: {console_errors}")
         if page_errors:

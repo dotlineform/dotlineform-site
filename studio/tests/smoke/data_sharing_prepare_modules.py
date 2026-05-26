@@ -45,6 +45,7 @@ def install_fixture(page: Page) -> None:
               </main>
             `;
             const workflow = await import('/studio/app/frontend/js/data-sharing-prepare-workflow.js');
+            const docs = await import('/studio/app/frontend/js/data-sharing-prepare-docs.js');
             const render = await import('/studio/app/frontend/js/data-sharing-prepare-render.js');
             const service = await import('/studio/app/frontend/js/data-sharing-prepare-service.js');
             const docCapability = {
@@ -106,6 +107,7 @@ def install_fixture(page: Page) -> None:
             state.missingSummaryOnly.checked = true;
             window.__dataSharingPrepareModuleSmoke = {
                 workflow,
+                docs,
                 render,
                 service,
                 state,
@@ -240,6 +242,64 @@ def assert_package_state_projection(page: Page) -> None:
         raise AssertionError(f"invalid format validation changed: {result!r}")
     if result["missingSelection"]["ok"] is not False or result["missingSelection"]["statusMessage"] != "Select at least one document.":
         raise AssertionError(f"missing selection validation changed: {result!r}")
+
+
+def assert_selectable_records_loading(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const smoke = window.__dataSharingPrepareModuleSmoke;
+            const { docs, state } = smoke;
+            const requested = [];
+            const loaded = await docs.loadDataSharingPrepareDocsState({
+                config: state.config,
+                scope: 'library',
+                serviceAvailable: true,
+                prepareCapability: state.prepareCapability,
+                workflowActive: true,
+                exportConfigCount: 1,
+                loadJson: async (path) => {
+                    requested.push(path);
+                    return {
+                        ok: true,
+                        records: [
+                            {
+                                doc_id: 'parent',
+                                title: 'Parent',
+                                viewable: true,
+                                content_text_length: 10,
+                                summary: 'Summary.'
+                            },
+                            {
+                                doc_id: 'child',
+                                parent_id: 'parent',
+                                title: 'Child',
+                                viewable: false,
+                                content_text_length: 0,
+                                summary: ''
+                            }
+                        ]
+                    };
+                }
+            });
+            return {
+                requested,
+                docIds: loaded.docs.map((doc) => doc.doc_id),
+                childDepth: loaded.depthById.get('child'),
+                childParentCount: loaded.childrenByParent.get('parent')?.length || 0,
+                docsIndexError: loaded.docsIndexError
+            };
+        }"""
+    )
+    if len(result["requested"]) != 1:
+        raise AssertionError(f"selectable-records loader should make one request: {result!r}")
+    if "/studio/api/data-sharing/selectable-records" not in result["requested"][0]:
+        raise AssertionError(f"prepare docs loader did not use the Studio selectable-records API: {result!r}")
+    if "data_domain=library" not in result["requested"][0]:
+        raise AssertionError(f"selectable-records loader did not pass data_domain: {result!r}")
+    if result["docIds"] != ["parent", "child"] or result["childDepth"] != 1 or result["childParentCount"] != 1:
+        raise AssertionError(f"selectable records were not projected into document hierarchy state: {result!r}")
+    if result["docsIndexError"] is not False:
+        raise AssertionError(f"selectable-records loader reported an unexpected error: {result!r}")
 
 
 def assert_result_rendering(page: Page) -> None:
@@ -394,6 +454,7 @@ def main() -> int:
             page.goto(route_url(base_url, "/"), wait_until="domcontentloaded")
             install_fixture(page)
             assert_package_state_projection(page)
+            assert_selectable_records_loading(page)
             assert_result_rendering(page)
             assert_fallback_write_behavior(page)
         finally:

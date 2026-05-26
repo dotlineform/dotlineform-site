@@ -20,7 +20,7 @@
   "service_unavailable": "Docs Viewer service unavailable. Start docs-viewer/bin/docs-viewer to prepare packages.",
   "scope_unsupported": "{scope_label} package preparation is not implemented yet.",
   "no_config": "No enabled {scope_label} sharing profiles found.",
-  "docs_index_unavailable": "No generated {scope_label} data index is available for this sharing profile.",
+  "docs_index_unavailable": "No selectable {scope_label} records are available for this sharing profile.",
   "load_failed": "Failed to load {scope_label} package data.",
   "empty_state": "No matching {scope_label} documents.",
   "profile_only_empty_state": "This profile packages the selected data family.",

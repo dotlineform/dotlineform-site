@@ -50,6 +50,7 @@ const DEFAULT_DOCS_VIEWER_BASE_URL = "http://127.0.0.1:8776";
 const DATA_SHARING_ENDPOINTS = {
   health: `${DEFAULT_DOCS_VIEWER_BASE_URL}/health`,
   generatedIndex: `${DEFAULT_DOCS_VIEWER_BASE_URL}/docs/generated/index`,
+  selectableRecords: "/studio/api/data-sharing/selectable-records",
   prepare: `${DEFAULT_DOCS_VIEWER_BASE_URL}/data-sharing/prepare`,
   returnedPackages: `${DEFAULT_DOCS_VIEWER_BASE_URL}/data-sharing/returned-packages`,
   review: `${DEFAULT_DOCS_VIEWER_BASE_URL}/data-sharing/review`,
@@ -95,12 +96,20 @@ export {
 };
 
 export function configureStudioTransport(config) {
-  const docs = config && config.app && config.app.runtime && config.app.runtime.services
-    ? config.app.runtime.services.docs
-    : null;
-  if (!docs || typeof docs !== "object") return;
+  const services = config && config.app && config.app.runtime && config.app.runtime.services
+    ? config.app.runtime.services
+    : {};
+  const dataSharing = services && typeof services.data_sharing === "object" ? services.data_sharing : null;
+  if (dataSharing) {
+    const configuredDataSharing = normalizeServiceEndpoints(dataSharing);
+    DATA_SHARING_ENDPOINTS.selectableRecords = configuredDataSharing.selectable_records
+      || DATA_SHARING_ENDPOINTS.selectableRecords;
+  }
 
-  const configured = normalizeDocsEndpoints(docs);
+  const docs = services && typeof services.docs === "object" ? services.docs : null;
+  if (!docs) return;
+
+  const configured = normalizeServiceEndpoints(docs);
   Object.assign(DATA_SHARING_ENDPOINTS, {
     health: configured.health || DATA_SHARING_ENDPOINTS.health,
     generatedIndex: configured.generated_index || DATA_SHARING_ENDPOINTS.generatedIndex,
@@ -111,7 +120,7 @@ export function configureStudioTransport(config) {
   });
 }
 
-function normalizeDocsEndpoints(docs) {
+function normalizeServiceEndpoints(docs) {
   const normalized = {};
   for (const [key, value] of Object.entries(docs || {})) {
     if (typeof value === "string" && value.trim()) {

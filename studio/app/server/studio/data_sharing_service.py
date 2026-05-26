@@ -10,6 +10,7 @@ from typing import Any, Callable
 from studio.data_sharing_adapters import AdapterResolution, resolve_adapter
 
 
+SelectableRecordsHandler = Callable[[Path, Any, AdapterResolution], dict[str, Any]]
 PrepareHandler = Callable[[Path, dict[str, Any], bool, AdapterResolution], dict[str, Any]]
 ListReturnedHandler = Callable[[Path, Any, AdapterResolution], dict[str, Any]]
 ReviewHandler = Callable[[Path, dict[str, Any], bool, AdapterResolution], dict[str, Any]]
@@ -19,6 +20,7 @@ ApplyHandler = Callable[[Path, dict[str, Any], bool, AdapterResolution], dict[st
 @dataclass(frozen=True)
 class DataSharingAdapterHandlers:
     module: str
+    selectable_records: SelectableRecordsHandler | None = None
     prepare: PrepareHandler | None = None
     list_returned: ListReturnedHandler | None = None
     review: ReviewHandler | None = None
@@ -46,6 +48,16 @@ def handler_for(
 
 def resolve_for_service(repo_root: Path, data_domain: Any, operation: str) -> AdapterResolution:
     return resolve_adapter(repo_root, data_domain=data_domain, operation=operation)
+
+
+def selectable_records(
+    repo_root: Path,
+    data_domain: Any,
+    handlers: dict[str, DataSharingAdapterHandlers],
+) -> dict[str, Any]:
+    adapter = resolve_for_service(repo_root, data_domain, "prepare")
+    handler = handler_for(handlers, adapter, "selectable_records")
+    return handler(repo_root, data_domain, adapter)
 
 
 def prepare_package(

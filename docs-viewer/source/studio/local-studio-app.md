@@ -27,7 +27,8 @@ Use `STUDIO_APP_ENABLED=0` to skip it, or `STUDIO_APP_PORT=<port>` to move it wh
 HTTP access logging is quiet by default so normal browser use does not flood the terminal.
 Set `STUDIO_APP_ACCESS_LOG=1` for `bin/local-studio`, or pass `--access-log` to `studio_app_server.py`, when detailed request logging is needed.
 Docs Viewer management is handled by the standalone Docs Viewer service configured through `DOCS_VIEWER_BASE_URL` in `var/local/site.env`.
-Active Local Studio browser routes use runtime-configured Docs Viewer service URLs for Docs links, generated reads, and Data Sharing document endpoints.
+Active Local Studio browser routes use runtime-configured Docs Viewer service URLs for Docs links, generated reads, and the Data Sharing endpoints that have not yet moved to the Studio same-origin API.
+Data Sharing prepare-page selectable records are read from `/studio/api/data-sharing/selectable-records`.
 Local Studio renders those peer-service links without probing service availability; when the Docs Viewer service is stopped, the links and service calls fail normally.
 Public-site preview and public builds now have explicit commands: `bin/public-site-preview` and `bin/public-site-build`.
 `bin/public-site-preview` uses `_config.yml` by default and does not start Studio services.
@@ -138,7 +139,8 @@ The refresh adapter reuses `studio/services/media/build_thumbnail_quality_previe
 The old Jekyll `/studio/thumbnail-quality/` shell has been retired.
 The Bulk Add Work route shell is hosted by the local app at `/studio/bulk-add-work/?mode=manage`.
 The Data Sharing package preparation and returned-package review route shells are hosted by the local app at `/studio/data-sharing/prepare/?mode=manage` and `/studio/data-sharing/review/?mode=manage`.
-They reuse the existing Data Sharing browser modules and now call document package endpoints on the configured Docs Viewer service.
+They reuse the existing Data Sharing browser modules.
+The prepare page calls the Studio Data Sharing API for adapter-owned selectable records; the remaining package operation calls still use the configured Docs Viewer service during the transition.
 The old Jekyll route files under `studio/data-sharing/` have been retired.
 It reuses `studio/app/frontend/js/bulk-add-work.js`, the existing workflow helper module, the configured workbook path from `_data/pipeline.json`, and local-app `POST /studio/api/catalogue/import-preview` and `POST /studio/api/catalogue/import-apply` endpoints.
 The old Jekyll `/studio/bulk-add-work/` shell has been retired.
@@ -192,7 +194,8 @@ Those links open on the configured public preview host during local Studio sessi
 The catalogue helper requires the configured public-site base for public links instead of generating Studio-host-relative public URLs.
 Editor-to-editor links remain local Studio routes.
 The local `/docs/` route is no longer hosted by Local Studio.
-The runtime config exposes the configured Docs Viewer service base URL for the top-level `docs` view, page implementation links, generated reads, Data Sharing document endpoints, and the Docs source-file opening endpoint.
+The runtime config exposes the configured Docs Viewer service base URL for the top-level `docs` view, page implementation links, generated reads, transitional Data Sharing operation endpoints, and the Docs source-file opening endpoint.
+It also exposes Studio-owned Data Sharing endpoints under `app.runtime.services.data_sharing`.
 `studio/app/server/studio/studio_docs_viewer_integration.py` owns this link and endpoint shaping.
 The main management API workflow routes are covered through a fixture repo smoke that exercises create, metadata edit, move, archive, delete, source-config settings, import listing, rebuild, and scope lifecycle paths through the standalone Docs Viewer service without touching real docs.
 Docs Viewer fixture smokes cover `/docs/` manage-mode workflows through the Docs Viewer service UI: create, metadata edit, settings save, archive, delete preview/apply, staged import, drag/drop move, scope create/delete, and generated data reloads after each source mutation.

@@ -21,6 +21,7 @@ REPO_ROOT = ensure_studio_python_paths(__file__)
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 
 from docs_export import build_export, parse_doc_ids as parse_export_doc_ids
+import docs_generated_reads
 from docs_import import list_staged_import_files, parse_staged_import, render_markdown_previews, scope_title
 import docs_management_mutations as mutations
 import docs_source_model as source_model
@@ -60,6 +61,73 @@ def require_documents_adapter(adapter: AdapterResolution) -> AdapterResolution:
     if str(adapter.adapter.get("module") or "").strip() != "documents":
         raise ValueError(f"adapter {adapter.adapter_id!r} is not implemented by the documents service")
     return adapter
+
+
+def selection_model(adapter: AdapterResolution) -> str:
+    return str(adapter.capability.get("selection_model") or adapter.domain.get("selection_model") or "").strip()
+
+
+def selectable_records(
+    repo_root: Path,
+    data_domain: Any,
+    adapter: Optional[AdapterResolution] = None,
+    dependencies: Optional[DocumentsDataSharingDependencies] = None,
+) -> Dict[str, Any]:
+    del dependencies
+    adapter = require_documents_adapter(adapter or resolve_documents_adapter(repo_root, data_domain, "prepare"))
+    scope = source_model.normalize_scope(adapter.scope)
+    index_payload = docs_generated_reads.read_generated_docs_index(repo_root, scope)
+    docs = index_payload.get("docs")
+    if not isinstance(docs, list):
+        raise RuntimeError(f"generated docs index for {scope} is missing docs")
+    records = [document_selectable_record(item) for item in docs if isinstance(item, dict)]
+    return {
+        "ok": True,
+        "data_domain": adapter.data_domain,
+        "adapter_id": adapter.adapter_id,
+        "scope": scope,
+        "selection_model": selection_model(adapter),
+        "records": records,
+        "docs": records,
+        "source": {
+            "kind": "adapter",
+            "module": "documents",
+            "source": "generated_docs_index",
+            "scope": scope,
+        },
+    }
+
+
+def document_selectable_record(doc: Dict[str, Any]) -> Dict[str, Any]:
+    doc_id = str(doc.get("doc_id") or "").strip()
+    title = str(doc.get("title") or doc_id).strip()
+    viewable = bool(doc.get("viewable", True))
+    hidden = bool(doc.get("hidden", False))
+    published = doc.get("published") is not False
+    selectable = bool(doc_id and published and viewable and not hidden)
+    issues: list[Dict[str, str]] = []
+    if not published:
+        issues.append({"level": "warning", "message": "Document is not published."})
+    if not viewable:
+        issues.append({"level": "warning", "message": "Document is not viewable."})
+    if hidden:
+        issues.append({"level": "warning", "message": "Document is hidden."})
+    return {
+        "id": doc_id,
+        "doc_id": doc_id,
+        "title": title,
+        "type": "document",
+        "meta": doc_id,
+        "parent_id": str(doc.get("parent_id") or "").strip(),
+        "published": published,
+        "viewable": viewable,
+        "hidden": hidden,
+        "selectable": selectable,
+        "children": [],
+        "issues": issues,
+        "content_text_length": int(doc.get("content_text_length") or 0),
+        "summary": str(doc.get("summary") or ""),
+    }
 
 
 def prepare_package(
@@ -722,6 +790,9 @@ def apply_returned_changes(
 def handlers_for(
     dependencies_factory: Callable[[], DocumentsDataSharingDependencies],
 ) -> data_sharing_service.DataSharingAdapterHandlers:
+    def selectable_records_handler(repo_root: Path, data_domain: Any, adapter: AdapterResolution) -> Dict[str, Any]:
+        return selectable_records(repo_root, data_domain, adapter, dependencies_factory())
+
     def prepare_handler(repo_root: Path, body: Dict[str, Any], dry_run: bool, adapter: AdapterResolution) -> Dict[str, Any]:
         return prepare_package(repo_root, body, dry_run, adapter, dependencies_factory())
 
@@ -736,6 +807,7 @@ def handlers_for(
 
     return data_sharing_service.DataSharingAdapterHandlers(
         module="documents",
+        selectable_records=selectable_records_handler,
         prepare=prepare_handler,
         list_returned=list_handler,
         review=review_handler,

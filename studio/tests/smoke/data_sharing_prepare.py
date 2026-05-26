@@ -72,6 +72,25 @@ def generated_docs_index() -> dict[str, object]:
     }
 
 
+def selectable_records_payload() -> dict[str, object]:
+    docs = generated_docs_index()["docs"]
+    return {
+        "ok": True,
+        "data_domain": "library",
+        "adapter_id": "documents",
+        "scope": "library",
+        "selection_model": "documents",
+        "records": docs,
+        "docs": docs,
+        "source": {
+            "kind": "adapter",
+            "module": "documents",
+            "source": "generated_docs_index",
+            "scope": "library",
+        },
+    }
+
+
 def prepare_result_payload() -> dict[str, object]:
     return {
         "ok": True,
@@ -98,7 +117,12 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
     def handle(route):
         request = route.request
         parsed = urlparse(request.url)
-        if parsed.path not in {"/health", "/docs/generated/index", "/data-sharing/prepare"}:
+        if parsed.path not in {
+            "/health",
+            "/docs/generated/index",
+            "/studio/api/data-sharing/selectable-records",
+            "/data-sharing/prepare",
+        }:
             route.continue_()
             return
         if parsed.path == "/health":
@@ -113,6 +137,13 @@ def install_mock_docs_service(page) -> list[dict[str, object]]:
                 status=200,
                 content_type="application/json",
                 body=json.dumps(generated_docs_index()),
+            )
+            return
+        if parsed.path == "/studio/api/data-sharing/selectable-records":
+            route.fulfill(
+                status=200,
+                content_type="application/json",
+                body=json.dumps(selectable_records_payload()),
             )
             return
         if parsed.path == "/data-sharing/prepare":
