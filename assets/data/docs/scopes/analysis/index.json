@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T17:54:54Z",
+  "generated_at": "2026-05-26T12:41:53Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [],
@@ -14,7 +14,6 @@
       "last_updated": "2026-04-26",
       "parent_id": "",
       "sort_order": 10,
-      "published": true,
       "hidden": false,
       "viewable": true,
       "source_path": "analysis.md",
@@ -30,7 +29,6 @@
       "last_updated": "2026-05-18 18:07",
       "parent_id": "",
       "sort_order": 1010,
-      "published": true,
       "hidden": true,
       "viewable": false,
       "source_path": "3-symbols.md",
@@ -46,7 +44,6 @@
       "last_updated": "2026-05-18",
       "parent_id": "",
       "sort_order": 100000,
-      "published": true,
       "hidden": true,
       "viewable": false,
       "source_path": "archive.md",

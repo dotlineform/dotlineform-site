@@ -6,7 +6,6 @@
   "last_updated": "2026-05-15",
   "parent_id": "ui-request-modal-composition-pattern",
   "sort_order": 2000,
-  "published": true,
   "hidden": false,
   "viewable": true,
   "source_path": "modal-composition-migration-tracker.md",
