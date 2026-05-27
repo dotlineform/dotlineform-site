@@ -287,7 +287,11 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
                 includeScopeParam: false
             }, { window });
             return {
+                routeConfigSource: route.routeConfig.source,
+                routeType: route.routeConfig.routeType,
                 allowManagement: route.access.allowManagement,
+                canLoadManagementUi: route.access.canLoadManagementUi,
+                backendReachability: route.access.backendReachability,
                 allowScopeQuery: route.access.allowScopeQuery,
                 managementRequested: route.access.managementRequested,
                 importRequested: route.access.importRequested,
@@ -317,7 +321,11 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
         }"""
     )
     if result != {
+        "routeConfigSource": "dataset",
+        "routeType": "manage",
         "allowManagement": True,
+        "canLoadManagementUi": True,
+        "backendReachability": "unknown",
         "allowScopeQuery": True,
         "managementRequested": True,
         "importRequested": True,
@@ -345,6 +353,100 @@ def assert_route_context_and_shell_refs(page: Page) -> None:
         },
     }:
         raise AssertionError(f"route context or shell refs contract failed: {result!r}")
+
+
+def assert_route_config_explicit_and_access_projection(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const context = await import('/docs-viewer/runtime/js/docs-viewer-app-context.js');
+            const routeConfig = await import('/docs-viewer/runtime/js/docs-viewer-route-config.js');
+            const access = await import('/docs-viewer/runtime/js/docs-viewer-access.js');
+            window.history.replaceState({}, '', '/library/?mode=manage&import=1');
+            document.body.innerHTML = `
+                <section
+                  id="docsViewerRoot"
+                  data-allow-management="true"
+                  data-allow-scope-query="true"
+                  data-viewer-base-url="/legacy/"
+                  data-viewer-scope="legacy"
+                ></section>
+            `;
+            const root = document.getElementById('docsViewerRoot');
+            const explicitRouteConfig = {
+                schema_version: 'docs_viewer_route_config_v1',
+                route_id: 'library-public',
+                route_type: 'public',
+                default_scope_id: 'library',
+                default_doc_id: 'library',
+                include_scope_param: false,
+                allow_scope_query: false,
+                viewer_base_url: '/library/',
+                generated_base_url: '',
+                docs_paths: {
+                    index_url: '/assets/data/docs/scopes/library/index.json',
+                    search_index_url: '/assets/data/search/library/index.json'
+                },
+                config_urls: {
+                    docs_viewer: '/docs-viewer/config/defaults/docs-viewer-public-config.json',
+                    ui_text: '/docs-viewer/config/ui-text/ui-text.json',
+                    report_registry: '/assets/data/docs/reports.json'
+                },
+                access: {
+                    allow_management: false,
+                    allow_scope_query: false,
+                    management_base_url: '',
+                    management_mode_value: 'manage'
+                },
+                panels: {
+                    index: { enabled: true, default_state: 'normal' },
+                    document: { enabled: true, default_view: 'document' },
+                    info: { enabled: false, default_view: '' }
+                },
+                hosted_views: {
+                    records: [
+                        { id: 'extra-public', label: 'Extra', panel: 'document', access: 'public', availability: 'available' }
+                    ]
+                }
+            };
+            const resolved = routeConfig.resolveDocsViewerRouteConfig({ root, routeConfig: explicitRouteConfig });
+            const route = context.createDocsViewerRouteContext({ root, window, assetVersion: 'smoke', routeConfig: explicitRouteConfig });
+            const projected = access.createDocsViewerAccessProjection({
+                routeConfig: resolved,
+                search: window.location.search
+            });
+            return {
+                source: resolved.source,
+                routeId: resolved.routeId,
+                routeType: resolved.routeType,
+                defaultScopeId: resolved.defaultScopeId,
+                legacyIgnored: route.viewerBaseUrl,
+                indexUrl: route.indexUrl,
+                allowManagement: projected.allowManagement,
+                canLoadManagementUi: projected.canLoadManagementUi,
+                publicReadOnly: projected.publicReadOnly,
+                requestedMode: projected.requestedMode,
+                managementRequested: projected.managementRequested,
+                importRequested: projected.importRequested,
+                hostedViewCount: resolved.hostedViews.records.length
+            };
+        }"""
+    )
+    if result != {
+        "source": "explicit",
+        "routeId": "library-public",
+        "routeType": "public",
+        "defaultScopeId": "library",
+        "legacyIgnored": "/library/",
+        "indexUrl": "/assets/data/docs/scopes/library/index.json?v=smoke",
+        "allowManagement": False,
+        "canLoadManagementUi": False,
+        "publicReadOnly": True,
+        "requestedMode": "",
+        "managementRequested": False,
+        "importRequested": False,
+        "hostedViewCount": 1,
+    }:
+        raise AssertionError(f"explicit route config/access projection failed: {result!r}")
 
 
 def assert_index_panel_shell_render(page: Page) -> None:
@@ -744,6 +846,106 @@ def assert_panel_layout_contract(page: Page) -> None:
         raise AssertionError(f"panel layout contract failed: {result!r}")
 
 
+def assert_view_state_and_hosted_view_contract(page: Page) -> None:
+    result = page.evaluate(
+        """async () => {
+            const viewStateModule = await import('/docs-viewer/runtime/js/docs-viewer-view-state.js');
+            const hostedViews = await import('/docs-viewer/runtime/js/docs-viewer-hosted-views.js');
+            const access = await import('/docs-viewer/runtime/js/docs-viewer-access.js');
+            const publicAccess = access.createDocsViewerAccessProjection({
+                routeConfig: {
+                    routeType: 'public',
+                    access: {
+                        allowManagement: false,
+                        allowScopeQuery: false,
+                        managementModeValue: 'manage'
+                    }
+                },
+                search: ''
+            });
+            const registry = hostedViews.registerDocsViewerHostedViews(
+                hostedViews.createDocsViewerHostedViewRegistry({ accessProjection: publicAccess }),
+                hostedViews.createDocsViewerCompatibilityHostedViews().concat([
+                    { id: 'manage-source', label: 'Source', panel: 'document', access: 'manage', availability: 'available' },
+                    { id: 'disabled-info', label: 'Info', panel: 'info', access: 'public', availability: 'disabled' }
+                ])
+            );
+            const state = viewStateModule.createDocsViewerViewState({
+                routeId: 'library-public',
+                indexPanelState: 'expanded',
+                panels: {
+                    index: { enabled: true, defaultState: 'normal' },
+                    document: { enabled: true, defaultView: 'document-host' },
+                    info: { enabled: false, defaultView: 'metadata-info' }
+                }
+            });
+            const projected = viewStateModule.projectDocsViewerViewState(state, {
+                indexProjection: { activeState: 'expanded', documentPaneVisible: false }
+            });
+            const updated = viewStateModule.updateDocsViewerViewState(state, {
+                indexPanelState: 'normal',
+                documentViewId: 'search-results',
+                infoMounted: true
+            });
+            const updatedProjection = viewStateModule.projectDocsViewerViewState(updated, {
+                indexProjection: { activeState: 'normal', documentPaneVisible: true }
+            });
+            return {
+                projected,
+                updatedProjection,
+                documentHost: registry.resolve('document-host'),
+                missing: registry.resolve('not-registered'),
+                manageSource: registry.resolve('manage-source'),
+                disabledInfo: registry.resolve('disabled-info'),
+                metadataInfo: registry.resolve('metadata-info'),
+                registeredIds: registry.list().map((view) => `${view.id}:${view.available ? 'yes' : view.unavailableReason}`).sort()
+            };
+        }"""
+    )
+    if result["projected"] != {
+        "index": {
+            "panel": "index",
+            "visible": True,
+            "mounted": True,
+            "state": "expanded",
+            "activeViewId": "index-tree",
+        },
+        "document": {
+            "panel": "document",
+            "visible": False,
+            "mounted": True,
+            "activeViewId": "document-host",
+        },
+        "info": {
+            "panel": "info",
+            "visible": False,
+            "mounted": False,
+            "activeViewId": "metadata-info",
+        },
+    }:
+        raise AssertionError(f"view state expanded projection failed: {result!r}")
+    if result["updatedProjection"]["document"]["visible"] is not True:
+        raise AssertionError(f"view state did not restore document panel: {result!r}")
+    if result["updatedProjection"]["document"]["activeViewId"] != "search-results":
+        raise AssertionError(f"view state did not update active document view: {result!r}")
+    if result["documentHost"]["available"] is not True or result["documentHost"]["registered"] is not True:
+        raise AssertionError(f"document hosted view should resolve as available: {result!r}")
+    if result["missing"] != {
+        "id": "not-registered",
+        "view": None,
+        "registered": False,
+        "available": False,
+        "reason": "missing",
+    }:
+        raise AssertionError(f"missing hosted view should be graceful: {result!r}")
+    if result["manageSource"]["reason"] != "access" or result["disabledInfo"]["reason"] != "disabled":
+        raise AssertionError(f"hosted view access/disabled states failed: {result!r}")
+    if result["metadataInfo"]["reason"] != "disabled":
+        raise AssertionError(f"compat metadata info view should remain disabled: {result!r}")
+    if "metadata-info:disabled" not in result["registeredIds"] or "index-tree:yes" not in result["registeredIds"]:
+        raise AssertionError(f"hosted view registry listing lost compatibility views: {result!r}")
+
+
 def assert_render_is_idempotent(page: Page) -> None:
     result = page.evaluate(
         """async () => {
@@ -819,12 +1021,14 @@ def main() -> int:
             assert_management_actions_render(page)
             assert_management_actions_omitted(page)
             assert_route_context_and_shell_refs(page)
+            assert_route_config_explicit_and_access_projection(page)
             assert_index_panel_shell_render(page)
             assert_index_panel_projection(page)
             assert_document_shell_render(page)
             assert_document_shell_management_shape(page)
             assert_document_shell_projection(page)
             assert_panel_layout_contract(page)
+            assert_view_state_and_hosted_view_contract(page)
             assert_render_is_idempotent(page)
 
             browser.close()

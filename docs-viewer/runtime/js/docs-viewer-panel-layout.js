@@ -11,6 +11,11 @@ import {
   renderDocsViewerAppShellDocumentState,
   renderDocsViewerAppShellIndexPanelState
 } from "./docs-viewer-app-shell.js";
+import {
+  createDocsViewerViewState,
+  projectDocsViewerViewState,
+  updateDocsViewerViewState
+} from "./docs-viewer-view-state.js";
 
 function normalizeScope(scope) {
   return String(scope || "").trim() || "docs";
@@ -27,6 +32,11 @@ export function createDocsViewerPanelLayout(options) {
   var storageKey = buildIndexPanelStorageKey(storageScope);
   var legacyStorageKey = buildLegacySidebarStorageKey(storageScope);
   var indexPanelState = readStoredIndexPanelState();
+  var viewState = createDocsViewerViewState({
+    indexPanelState: indexPanelState,
+    panels: settings.panels,
+    routeId: settings.routeId
+  });
 
   function readStoredIndexPanelState() {
     return readIndexPanelState({
@@ -49,6 +59,9 @@ export function createDocsViewerPanelLayout(options) {
     storageKey = buildIndexPanelStorageKey(storageScope);
     legacyStorageKey = buildLegacySidebarStorageKey(storageScope);
     indexPanelState = readStoredIndexPanelState();
+    viewState = updateDocsViewerViewState(viewState, {
+      indexPanelState: indexPanelState
+    });
     return indexPanelState;
   }
 
@@ -56,12 +69,23 @@ export function createDocsViewerPanelLayout(options) {
     var projection = projectIndexPanelState(indexPanelState, {
       available: indexPanelAvailable()
     });
+    viewState = updateDocsViewerViewState(viewState, {
+      indexPanelState: projection.activeState
+    });
     renderDocsViewerAppShellIndexPanelState({
       root: root,
       refs: indexPanelRefs,
       projection: projection
     });
     return projection;
+  }
+
+  function projectViewState() {
+    return projectDocsViewerViewState(viewState, {
+      indexProjection: projectIndexPanelState(indexPanelState, {
+        available: indexPanelAvailable()
+      })
+    });
   }
 
   function toggleIndexPanelState() {
@@ -91,6 +115,7 @@ export function createDocsViewerPanelLayout(options) {
     expandIndexPanelState: expandIndexPanelState,
     indexPanelState: function () { return indexPanelState; },
     projectDocumentShell: projectDocumentShell,
+    projectViewState: projectViewState,
     renderIndexPanelState: renderIndexPanelState,
     setStorageScope: setStorageScope,
     toggleIndexPanelState: toggleIndexPanelState

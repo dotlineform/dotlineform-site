@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b25250ba2761ebf7a6431fd6d7948b3a",
-    "generated_at_utc": "2026-05-27T17:49:26Z",
+    "version": "blake2b-11edfd5687f6dcf15b8164d88c5ba998",
+    "generated_at_utc": "2026-05-27T18:09:20Z",
     "count": 201
   },
   "entries": [
@@ -4230,10 +4230,10 @@
       "kind": "doc",
       "title": "Docs Viewer Runtime Boundary",
       "href": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-27",
       "parent_id": "docs-viewer",
       "parent_title": "Docs Viewer",
-      "display_meta": "2026-05-25 • Docs Viewer",
+      "display_meta": "2026-05-27 • Docs Viewer",
       "search_terms": [
         "docs-viewer-runtime-boundary",
         "docs",
@@ -4242,12 +4242,12 @@
         "boundary",
         "docs viewer runtime boundary",
         "docs viewer",
-        "2026-05-25",
+        "2026-05-27",
         "2026",
         "05",
-        "25"
+        "27"
       ],
-      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-25 2026 05 25"
+      "search_text": "docs-viewer-runtime-boundary docs viewer runtime boundary docs viewer runtime boundary docs viewer 2026-05-27 2026 05 27"
     },
     {
       "id": "servers",

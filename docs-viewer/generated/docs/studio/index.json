@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T17:49:58Z",
+  "generated_at": "2026-05-27T18:09:51Z",
   "viewer_options": {
     "non_loadable_doc_ids": [],
     "manage_only_tree_root_ids": [
@@ -1436,7 +1436,7 @@
       "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer.json",
-      "content_text_length": 6646
+      "content_text_length": 6915
     },
     {
       "scope": "studio",
@@ -1921,7 +1921,7 @@
       "source_path": "docs-viewer-javascript-inventory.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-javascript-inventory",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-javascript-inventory.json",
-      "content_text_length": 12722,
+      "content_text_length": 15400,
       "ui_status": "review"
     },
     {
@@ -2616,7 +2616,7 @@
       "source_path": "site-request-docs-viewer-app-shell-route-config-view-foundation-tasks.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-route-config-view-foundation-tasks",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-app-shell-route-config-view-foundation-tasks.json",
-      "content_text_length": 10710,
+      "content_text_length": 14270,
       "ui_status": "planned"
     },
     {
@@ -2687,7 +2687,7 @@
       "doc_id": "docs-viewer-runtime-boundary",
       "title": "Docs Viewer Runtime Boundary",
       "added_date": "2026-03-31",
-      "last_updated": "2026-05-25",
+      "last_updated": "2026-05-27",
       "parent_id": "docs-viewer",
       "sort_order": 13000,
       "hidden": false,
@@ -2695,7 +2695,7 @@
       "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/docs-viewer-runtime-boundary.json",
-      "content_text_length": 8188
+      "content_text_length": 9731
     },
     {
       "scope": "studio",
@@ -2725,7 +2725,7 @@
       "source_path": "site-request-docs-viewer-multi-panel-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-multi-panel-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-multi-panel-app-shell.json",
-      "content_text_length": 23157,
+      "content_text_length": 24295,
       "ui_status": "draft"
     },
     {
@@ -2786,7 +2786,7 @@
       "source_path": "site-request-docs-viewer-javascript-app-shell.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-viewer-javascript-app-shell",
       "content_url": "/docs-viewer/generated/docs/studio/by-id/site-request-docs-viewer-javascript-app-shell.json",
-      "content_text_length": 33188,
+      "content_text_length": 35582,
       "ui_status": "in-progress"
     },
     {

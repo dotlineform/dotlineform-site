@@ -2,7 +2,7 @@
 doc_id: docs-viewer-runtime-boundary
 title: Docs Viewer Runtime Boundary
 added_date: 2026-03-31
-last_updated: 2026-05-25
+last_updated: 2026-05-27
 parent_id: docs-viewer
 sort_order: 13000
 ---
@@ -34,6 +34,11 @@ Current route-shell examples:
 Current shared implementation:
 
 - `docs-viewer/runtime/js/docs-viewer.js` as the shared entry controller
+- `docs-viewer/runtime/js/docs-viewer-app-context.js` and `docs-viewer/runtime/js/docs-viewer-route-config.js` for route context, route config shape, migration data-attribute fallback, and route/scope projection imported by the entry and config controllers
+- `docs-viewer/runtime/js/docs-viewer-access.js` for static public/manage/manage-local access projection imported by route context and hosted-view helpers
+- `docs-viewer/runtime/js/docs-viewer-app-shell.js` and its renderer children for JavaScript-owned shell composition before the entry controller wires route behavior
+- `docs-viewer/runtime/js/docs-viewer-panel-layout.js` and `docs-viewer/runtime/js/docs-viewer-view-state.js` for current compatibility panel projection and the index/document/info view-state skeleton
+- `docs-viewer/runtime/js/docs-viewer-hosted-views.js` for minimal hosted-view registration, access/availability checks, built-in compatibility records, and graceful absence
 - `docs-viewer/runtime/js/docs-viewer-management.js` as the management-mode controller loaded only by management-enabled viewer shells
 - `docs-viewer/runtime/js/docs-viewer-management-render.js` for management-only markup helpers imported by the management controller
 - `docs-viewer/runtime/js/docs-viewer-management-client.js` for Docs Viewer service transport helpers used by the management controller
@@ -79,6 +84,13 @@ Current route capability boundary:
 - local `bin/local-studio` links to the configured Docs Viewer service but does not serve Docs Viewer management, generated reads, or Docs Viewer assets
 - a `mode=manage` query on a public viewer route is normalized away by the shared runtime because those routes cannot perform local writes on the static public site
 - canonical internal docs links stay read-only-safe and omit `mode=manage`; the management-capable `/docs/` shell preserves manage mode at runtime only when the current session is already in manage mode
+
+Current app-shell route handoff boundary:
+
+- route config is the preferred durable route/app shape for new app-shell work
+- the current repo still emits `#docsViewerRoot` data attributes as migration input at boot, because scope config is loaded asynchronously from existing browser-safe config assets
+- scope-specific generated docs and search paths remain owned by `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json`
+- backend reachability and write availability are not browser-side route-config authority; they remain in the local management capability flow
 
 ## What should stay scope-specific
 

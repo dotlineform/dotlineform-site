@@ -26,14 +26,20 @@ This slice should align with [Docs Viewer Multi-Panel App Shell Request](/docs/?
 - Added `docs-viewer/runtime/js/docs-viewer-panel-layout.js` for the compatibility index/document/search/recent projection handoff.
 - Kept `docs-viewer/runtime/js/docs-viewer.js` as the compatibility entrypoint and route boot/controller orchestration layer.
 - Confirmed public read-only routes and the local management route still boot through the shared app shell.
+- Completed this route config and view foundation slice.
+- Added `docs-viewer/runtime/js/docs-viewer-route-config.js` as the narrow route-config resolver and scope projection helper.
+- Added `docs-viewer/runtime/js/docs-viewer-access.js` for explicit public/manage/manage-local access projection without moving backend capability checks out of the existing management flow.
+- Added `docs-viewer/runtime/js/docs-viewer-view-state.js` and extended `docs-viewer/runtime/js/docs-viewer-panel-layout.js` so the current two-panel behavior projects from an index/document/info state skeleton.
+- Added `docs-viewer/runtime/js/docs-viewer-hosted-views.js` for minimal hosted-view registration, access checks, lifecycle method shape, built-in compatibility view records, and graceful absence.
+- Kept route shell data attributes as migration compatibility; new app-shell work should consume the route config/access/view-state/hosted-view helpers instead of reading broad shell state directly.
 
 ### steer for next task
 
-- Defer the specific info panel until the app-shell foundation is less transitional.
-- Move toward a route config record as the durable route/app handoff rather than depending on route data attributes as the long-term contract.
-- Keep access and capability projection small: static route intent, public/manage gates, backend reachability, and future module access defaults.
-- Add a panel/view state skeleton that can project the current two-panel behavior without requiring a visible info panel.
-- Add a minimal hosted-view registration shape with graceful absence for unavailable modules.
+- The specific info panel remains deferred; the next slice can consume the new route/access/view/hosted-view contracts when it is ready to implement visible content.
+- Route config is now a focused resolver/projection API. The current repo still uses the existing shell data attributes as migration input before scope config is loaded, while scope-specific generated/search paths continue to come from the browser-safe Docs Viewer config asset.
+- Access projection is intentionally small: static route intent, public/manage gates, backend reachability status defaults, and future hosted-view access defaults. Backend reachability and write availability remain with the lazy management capability flow.
+- Panel/view state can represent index, document, and info slots while projecting today's two-panel behavior. The info slot is disabled/unmounted by default.
+- Hosted-view registration now exists for ordinary repo JavaScript modules. Missing, disabled, or access-blocked views resolve gracefully instead of failing route boot.
 - Keep document payload loading, Markdown rendering, generated report rendering, search/recent result rendering, bookmark storage, management command behavior, metadata/import modal internals, and backend writes in their existing owners.
 
 ### baseline verification set
@@ -80,24 +86,53 @@ Allowed statuses are `planned`, `in progress`, `done`, and `deferred`.
 
 | ID | status | action |
 | --- | --- | --- |
-| 1 | planned | Inventory the current route config inputs and consumers: `#docsViewerRoot` data attributes, `docs-viewer/config/defaults/docs-viewer-config.json`, `docs-viewer/config/defaults/docs-viewer-public-config.json`, scope config records, route shells, `docs-viewer-app-context.js`, `docs-viewer-config-controller.js`, router helpers, management modules, public route tests, and service shell generation. Deliverable: short implementation note in this tracker or closeout summary identifying the route fields to make durable now and the fields to leave as migration compatibility. |
-| 2 | planned | Define the route config handoff shape for this slice. Keep it narrow: route id/type, default scope/doc, scope-query allowance, viewer base URL, generated docs/search paths, UI/config/report URLs, static access defaults, panel defaults, and optional hosted-view availability metadata only where current code can consume it. |
-| 3 | planned | Decide where the route config record lives for the current repo and how it is loaded. Prefer using existing browser-safe config assets or generated config projection before adding new service endpoints. Preserve current route data attributes as migration compatibility only where needed. |
-| 4 | planned | Extend `docs-viewer-app-context.js` or a focused child module to resolve the current route context from the route config record, with fallback to existing `#docsViewerRoot` attributes during migration. Preserve existing `/docs/`, `/library/`, and `/analysis/` URL behavior. |
-| 5 | planned | Define an access/capability projection helper for public, manage, and manage-local decisions. Keep backend reachability and write availability in the existing management capability flow; do not add browser-side write authority or per-click permission checks. |
-| 6 | planned | Wire `docs-viewer-app-shell.js` and `docs-viewer.js` to consume the route config/access projection while keeping `docs-viewer.js` as boot orchestration. Do not move document payload fetching, search/recent rendering, report rendering, bookmark storage, or management writes in this pass. |
-| 7 | planned | Define a panel/view state skeleton that can represent index, document, and info panel slots while projecting the current two-panel behavior. Keep info hidden/unmounted by default and do not add info-panel UI content. |
-| 8 | planned | Decide whether `docs-viewer-panel-layout.js` remains the owner or should delegate to a new focused panel/view state module. Avoid cosmetic extraction; choose the boundary that lets later info-panel work consume explicit state without reading broad route state. |
-| 9 | planned | Add a minimal hosted-view registration shape for ordinary repo JavaScript modules: id, label, panel, access, availability, load, mount, update, unmount, and dispose. Implement graceful absence for unavailable or disabled modules without failing route boot. |
-| 10 | planned | Register only current built-in compatibility views needed to preserve behavior, such as index tree and document/search/recent/report host placeholders. Do not implement read-only metadata info view, source editor, semantic-reference views, panel toolbar UI, or third-party visualization modules. |
-| 11 | planned | Preserve current index behavior: collapsed/normal/expanded state, legacy sidebar storage migration, desktop availability, tree rendering in `docs-viewer-sidebar.js`, active doc projection, and expanded-index document-pane hiding. |
-| 12 | planned | Preserve current document/search/recent/report behavior: selected document projection, document pane visibility, results status, more-results clearing, hash scrolling, search route activation, recent mode activation, and generated report mounting. |
-| 13 | planned | Preserve public read-only behavior for `/library/` and `/analysis/`: route boot, document payload rendering, hash navigation, search/recent behavior, reports, bookmarks, and absence of management-only UI/JS. |
-| 14 | planned | Preserve local `/docs/` management behavior: manage-mode detection, management capability messages, status pills, bookmark toggle, metadata edit flow, report rendering, browser history behavior, and management action gating. |
-| 15 | planned | Add or update focused module smoke coverage for route config resolution, fallback data-attribute compatibility, access projection, panel/view state projection, hosted-view registration, graceful absence, public omission of manage-only modules, and compatibility with existing app-shell refs. |
-| 16 | planned | Run the targeted verification set for changed JS, app-shell modules, route/public behavior, management behavior, and generated config/build behavior. Record skipped checks and why. |
-| 17 | planned | Update owning docs after implementation. At minimum update this tracker, the app-shell request, the multi-panel request, Docs Viewer runtime docs, and Docs Viewer JavaScript inventory notes if `docs-viewer.js` ownership or risk materially changes. |
-| 18 | planned | Create a structured docs-log entry when the slice is complete and record the entry id in this tracker. |
+| 1 | done | Inventory the current route config inputs and consumers: `#docsViewerRoot` data attributes, `docs-viewer/config/defaults/docs-viewer-config.json`, `docs-viewer/config/defaults/docs-viewer-public-config.json`, scope config records, route shells, `docs-viewer-app-context.js`, `docs-viewer-config-controller.js`, router helpers, management modules, public route tests, and service shell generation. Deliverable: current durable fields are route id/type, default scope/doc, scope query allowance, viewer base URL, generated docs/search paths, config/UI/report URLs, static access defaults, panel defaults, and hosted-view availability metadata. Migration compatibility remains the shell data attributes used before browser config is loaded. |
+| 2 | done | Defined the route config handoff shape in `docs-viewer-route-config.js`: route id/type, default scope/doc, scope-query allowance, viewer base URL, generated docs/search paths, UI/config/report URLs, static access defaults, panel defaults, and optional hosted-view availability metadata. |
+| 3 | done | Kept the current repo on existing browser-safe config assets and route shell attributes during migration. Scope-specific records continue to load from `docs-viewer/config/defaults/*.json`; no new service endpoint or JSON script-tag route model was added. |
+| 4 | done | Extended route context through `docs-viewer-route-config.js` plus `docs-viewer-app-context.js`, preserving data-attribute fallback and current `/docs/`, `/library/`, and `/analysis/` URL behavior. |
+| 5 | done | Added `docs-viewer-access.js` for public, manage, and manage-local access projection while leaving backend reachability and write availability with the existing management capability flow. |
+| 6 | done | Wired `docs-viewer-app-shell.js` and `docs-viewer.js` to consume route config/access projection while keeping `docs-viewer.js` as boot orchestration. Document payload fetching, search/recent rendering, report rendering, bookmark storage, and management writes stayed in their existing owners. |
+| 7 | done | Added `docs-viewer-view-state.js` with an index/document/info panel skeleton that projects the current two-panel behavior. Info remains disabled/unmounted and no info-panel UI content was added. |
+| 8 | done | Kept `docs-viewer-panel-layout.js` as the compatibility layout owner and delegated broader state shape to `docs-viewer-view-state.js`, giving later info-panel work explicit state without reading broad route state. |
+| 9 | done | Added `docs-viewer-hosted-views.js` with id, label, panel, access, availability, load, mount, update, unmount, and dispose shape plus graceful absence for missing, disabled, or access-blocked views. |
+| 10 | done | Registered only built-in compatibility records for index tree, document host, search results, recent results, report host, and a disabled metadata-info placeholder. Read-only metadata info, source editor, semantic-reference views, panel toolbar UI, and third-party visualization modules remain deferred. |
+| 11 | done | Preserved current index behavior: collapsed/normal/expanded state, legacy sidebar storage migration, desktop availability, tree rendering in `docs-viewer-sidebar.js`, active doc projection, and expanded-index document-pane hiding. |
+| 12 | done | Preserved current document/search/recent/report behavior: selected document projection, document pane visibility, results status, more-results clearing, hash scrolling, search route activation, recent mode activation, and generated report mounting. |
+| 13 | done | Preserved public read-only behavior for `/library/` and `/analysis/`, verified by the focused public read-only smoke. |
+| 14 | done | Preserved local `/docs/` management behavior, verified by the focused Docs Viewer service manage smoke. |
+| 15 | done | Extended `docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py` for route config resolution, data-attribute compatibility, access projection, panel/view state projection, hosted-view registration, graceful absence, public omission of manage-only modules, and app-shell refs compatibility. |
+| 16 | done | Ran targeted verification for changed JS, app-shell modules, route/public behavior, management behavior, service shell generation, and Jekyll build. No baseline check was skipped except management modal smoke, which was not required because modal-visible refs and metadata/status modal state were not touched. |
+| 17 | done | Updated this tracker, the app-shell request, the multi-panel request, Docs Viewer runtime docs, and Docs Viewer JavaScript inventory notes. |
+| 18 | done | Created structured docs-log entry `change-2026-05-27-added-docs-viewer-route-config-and-hosted-view-foundation`. |
+
+## Implementation Notes
+
+Route config inputs and consumers are now split into two layers:
+
+- `docs-viewer-route-config.js` defines the durable route config shape and resolves the current app-shell context. In this repo, it uses `#docsViewerRoot` data attributes as migration input at boot and exposes an explicit record API for generated/config-driven handoff work.
+- `docs-viewer-config-controller.js` still owns browser-safe scope config loading from `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json`. Scope application now projects through `routeConfigScopeProjection()` instead of rebuilding route globals locally.
+
+Fields made durable now: route id/type, default scope/doc, include-scope and scope-query flags, viewer base URL, generated docs/search paths, Docs Viewer config/UI text/report registry URLs, static access defaults, panel defaults, and hosted-view availability metadata.
+
+Fields left as migration compatibility: the individual `#docsViewerRoot` data attributes emitted by `_includes/docs_viewer_shell.html` and `docs-viewer/shell/docs-viewer-shell.html`.
+They remain necessary boot input until route config is generated as a browser-safe config projection, but new app-shell code should consume `routeContext.routeConfig`, `routeContext.access`, `docs-viewer-view-state.js`, and `docs-viewer-hosted-views.js` rather than reading route attributes directly.
+
+## Verification
+
+- `node --check docs-viewer/runtime/js/docs-viewer.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-shell.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-app-context.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-panel-layout.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-access.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-route-config.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-view-state.js`
+- `node --check docs-viewer/runtime/js/docs-viewer-hosted-views.js`
+- `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/services/docs_viewer_service.py`
+- `$HOME/miniconda3/bin/python3 -m py_compile docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .`
+- `$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build`
+- `PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py`
 
 The closeout for this slice should confirm:
 

@@ -3,6 +3,9 @@ import {
   fetchJsonWithRetry
 } from "./docs-viewer-data.js";
 import {
+  routeConfigScopeProjection
+} from "./docs-viewer-route-config.js";
+import {
   escapeHtml
 } from "./docs-viewer-render.js";
 
@@ -153,23 +156,18 @@ export function initDocsViewerConfigController(context) {
     if (!config) {
       throw new Error("Unknown docs scope: " + scope);
     }
-    var viewerBaseUrl = context.allowScopeQuery ? (context.routeViewerBaseUrl || window.location.pathname) : config.viewerBaseUrl;
-    var includeScopeParam = context.allowScopeQuery ? true : config.includeScopeParam;
-    context.applyRouteGlobals({
-      defaultRouteDocId: config.defaultDocId,
-      includeScopeParam: includeScopeParam,
-      indexUrl: appendAssetVersion(config.indexUrl),
-      searchIndexUrl: appendAssetVersion(config.searchIndexUrl),
-      viewerBaseUrl: viewerBaseUrl,
-      viewerPathname: new URL(viewerBaseUrl, window.location.origin).pathname,
-      viewerScope: scope
+    var routeProjection = routeConfigScopeProjection(config, {
+      allowScopeQuery: context.allowScopeQuery,
+      routeViewerBaseUrl: context.routeViewerBaseUrl,
+      window: window
     });
+    context.applyRouteGlobals(routeProjection);
     root.dataset.viewerScope = scope;
     root.dataset.indexUrl = config.indexUrl;
     root.dataset.searchIndexUrl = config.searchIndexUrl;
     root.dataset.defaultDocId = config.defaultDocId;
-    root.dataset.viewerBaseUrl = viewerBaseUrl;
-    root.dataset.includeScopeParam = includeScopeParam ? "true" : "false";
+    root.dataset.viewerBaseUrl = routeProjection.viewerBaseUrl;
+    root.dataset.includeScopeParam = routeProjection.includeScopeParam ? "true" : "false";
     renderScopeOptions();
   }
 

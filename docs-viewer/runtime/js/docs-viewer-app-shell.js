@@ -17,8 +17,16 @@ import {
   createDocsViewerRouteContext
 } from "./docs-viewer-app-context.js";
 
-function managementAllowed(root) {
-  return createDocsViewerRouteContext({ root: root }).access.allowManagement;
+function routeContextFor(settings) {
+  return settings.routeContext || createDocsViewerRouteContext({
+    root: settings.root,
+    routeConfig: settings.routeConfig,
+    window: settings.window
+  });
+}
+
+function managementAllowed(routeContext) {
+  return Boolean(routeContext && routeContext.access && routeContext.access.canLoadManagementUi);
 }
 
 function headerControlsMount(root) {
@@ -35,6 +43,7 @@ export function initDocsViewerAppShell(options) {
   var settings = options || {};
   var root = settings.root;
   var documentRef = settings.document || document;
+  var routeContext = routeContextFor(settings);
   var headerControls = renderDocsViewerHeaderControls({
     document: documentRef,
     root: root,
@@ -56,16 +65,18 @@ export function initDocsViewerAppShell(options) {
       headerControls: headerControls,
       documentShell: documentShell,
       indexPanel: indexPanel,
+      routeContext: routeContext,
       managementActions: null
     });
   }
 
   mount.replaceChildren();
-  if (!managementAllowed(root)) {
+  if (!managementAllowed(routeContext)) {
     return Promise.resolve({
       headerControls: headerControls,
       documentShell: documentShell,
       indexPanel: indexPanel,
+      routeContext: routeContext,
       managementActions: null
     });
   }
@@ -80,6 +91,7 @@ export function initDocsViewerAppShell(options) {
         headerControls: headerControls,
         documentShell: documentShell,
         indexPanel: indexPanel,
+        routeContext: routeContext,
         managementActions: row
       };
     })
@@ -89,6 +101,7 @@ export function initDocsViewerAppShell(options) {
         headerControls: headerControls,
         documentShell: documentShell,
         indexPanel: indexPanel,
+        routeContext: routeContext,
         managementActions: null
       };
     });

@@ -44,6 +44,11 @@ import {
   createDocsViewerPanelLayout
 } from "./docs-viewer-panel-layout.js";
 import {
+  createDocsViewerCompatibilityHostedViews,
+  createDocsViewerHostedViewRegistry,
+  registerDocsViewerHostedViews
+} from "./docs-viewer-hosted-views.js";
+import {
   applyViewerRoute,
   buildViewerUrl,
   buildViewerUrlForScope,
@@ -61,9 +66,17 @@ import {
 (function () {
   var root = document.getElementById("docsViewerRoot");
   if (!root) return;
+  var assetVersion = readAssetVersion(document);
+  var routeContext = createDocsViewerRouteContext({
+    root: root,
+    window: window,
+    assetVersion: assetVersion,
+    managementModeValue: "manage"
+  });
   var appShellReady = initDocsViewerAppShell({
     root: root,
-    document: document
+    document: document,
+    routeContext: routeContext
   });
 
   var appShellRefs = getDocsViewerAppShellRefs({
@@ -91,13 +104,6 @@ import {
   var results = documentShellRefs.results;
   var more = documentShellRefs.more;
 
-  var assetVersion = readAssetVersion(document);
-  var routeContext = createDocsViewerRouteContext({
-    root: root,
-    window: window,
-    assetVersion: assetVersion,
-    managementModeValue: "manage"
-  });
   var allowManagement = routeContext.access.allowManagement;
   var allowScopeQuery = routeContext.access.allowScopeQuery;
   var docsViewerConfigUrl = routeContext.docsViewerConfigUrl;
@@ -128,10 +134,16 @@ import {
   var UI_STATUS_EMOJI_MAX_LENGTH = 8;
   var SIDEBAR_COLLAPSE_MEDIA = "(min-width: 821px)";
   var bookmarkScope = routeContext.bookmarkScope;
+  var hostedViewRegistry = registerDocsViewerHostedViews(
+    createDocsViewerHostedViewRegistry({ accessProjection: routeContext.access }),
+    createDocsViewerCompatibilityHostedViews().concat(routeContext.routeConfig.hostedViews.records)
+  );
   var panelLayout = createDocsViewerPanelLayout({
     root: root,
     storage: window.localStorage,
     storageScope: bookmarkScope,
+    panels: routeContext.routeConfig.panels,
+    routeId: routeContext.routeConfig.routeId,
     indexPanelRefs: indexPanelRefs,
     documentShellRefs: documentShellRefs,
     indexPanelAvailable: sidebarCollapseAvailable
@@ -321,6 +333,8 @@ import {
     showUpdatedDate: true,
     indexPanelState: panelLayout.indexPanelState()
   };
+  state.hostedViews = hostedViewRegistry;
+  state.viewState = panelLayout.projectViewState();
   var sidebarRenderer = initDocsViewerSidebarRenderer({
     canDragCurrentDoc: canDragCurrentDoc,
     meta: meta,

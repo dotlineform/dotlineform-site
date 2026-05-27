@@ -154,6 +154,13 @@ The new context helper normalizes current route data and public/manage access fl
 The panel layout helper centralizes the current compatibility projection for index collapsed/normal/expanded state and document/search/recent/results-status visibility.
 It still does not implement the broader `panels.index/document/info` state model, toolbar controls, info panel visibility, hosted-view registration, or module lifecycle described in this request.
 
+2026-05-27 implementation note: the route config and view foundation slice added `docs-viewer/runtime/js/docs-viewer-route-config.js`, `docs-viewer/runtime/js/docs-viewer-access.js`, `docs-viewer/runtime/js/docs-viewer-view-state.js`, and `docs-viewer/runtime/js/docs-viewer-hosted-views.js`.
+The route config helper defines the durable route/app handoff shape and keeps existing shell data attributes as migration input until a generated/browser-safe route projection exists.
+The access helper projects static public/manage/manage-local access without moving backend capability checks out of the management flow.
+The view-state helper can represent index, document, and info slots, and the panel layout helper projects that skeleton through the current two-panel behavior with info disabled/unmounted.
+The hosted-view helper defines ordinary repo JavaScript view records, built-in compatibility view placeholders, access/availability checks, lifecycle method names, and graceful absence.
+It still does not implement visible info-panel content, panel toolbar UI, source editor, semantic-reference views, or third-party visualization modules.
+
 ## Panel Toolbar Model
 
 Each panel should have small shared chrome:
