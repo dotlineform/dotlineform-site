@@ -1312,7 +1312,22 @@ def assert_info_panel_shell_and_metadata_lifecycle(page: Page) -> None:
             });
             const registry = hostedViews.registerDocsViewerHostedViews(
                 hostedViews.createDocsViewerHostedViewRegistry({ accessProjection: publicAccess }),
-                hostedViews.createDocsViewerCompatibilityHostedViews()
+                hostedViews.createDocsViewerCompatibilityHostedViews().concat([
+                    {
+                        id: 'details-info',
+                        label: 'Details',
+                        panel: 'info',
+                        access: 'public',
+                        availability: 'available',
+                        load: () => Promise.resolve({
+                            mount: ({ mount }) => { mount.textContent = 'Details view'; },
+                            update: ({ mount }) => { mount.textContent = 'Details updated'; },
+                            unmount: ({ mount }) => { mount.replaceChildren(); }
+                        })
+                    },
+                    { id: 'disabled-info', label: 'Disabled', panel: 'info', access: 'public', availability: 'disabled' },
+                    { id: 'manage-info', label: 'Manage', panel: 'info', access: 'manage', availability: 'available' }
+                ])
             );
             const host = infoHost.createDocsViewerInfoPanelHost({
                 refs,
@@ -1345,11 +1360,33 @@ def assert_info_panel_shell_and_metadata_lifecycle(page: Page) -> None:
                 rootState: root.dataset.infoPanelState,
                 rootLayout: root.dataset.viewerLayout,
                 activeViewId: refs.panel.dataset.activeViewId,
+                toolbarHidden: refs.toolbar.hidden,
+                toolbarButtons: Array.from(refs.toolbar.querySelectorAll('[data-info-panel-view]')).map((button) => ({
+                    id: button.dataset.infoPanelView,
+                    pressed: button.getAttribute('aria-pressed'),
+                    disabled: button.disabled,
+                    text: button.textContent
+                })),
                 title: refs.body.querySelector('.docsViewer__metadataInfoTitle')?.textContent || '',
                 routeText: Array.from(refs.body.querySelectorAll('.docsViewer__metadataInfoRow')).find((row) => row.querySelector('dt')?.textContent === 'Route')?.querySelector('a')?.textContent || '',
                 rowLabels: Array.from(refs.body.querySelectorAll('.docsViewer__metadataInfoTerm')).map((node) => node.textContent)
             };
+            await host.open('details-info', context);
+            const switchedProjection = {
+                activeViewId: refs.panel.dataset.activeViewId,
+                bodyText: refs.body.textContent,
+                toolbarButtons: Array.from(refs.toolbar.querySelectorAll('[data-info-panel-view]')).map((button) => ({
+                    id: button.dataset.infoPanelView,
+                    pressed: button.getAttribute('aria-pressed'),
+                    disabled: button.disabled
+                }))
+            };
             await host.update(Object.assign({}, context, {
+                selectedDoc: Object.assign({}, context.selectedDoc, { summary: '' }),
+                statusLabel: ''
+            }));
+            const switchedUpdateText = refs.body.textContent;
+            await host.open('metadata-info', Object.assign({}, context, {
                 selectedDoc: Object.assign({}, context.selectedDoc, { summary: '' }),
                 statusLabel: ''
             }));
@@ -1370,7 +1407,7 @@ def assert_info_panel_shell_and_metadata_lifecycle(page: Page) -> None:
             await host.close();
             await host.open('metadata-info', { selectedDoc: null, viewerScope: 'studio' });
             const emptyText = refs.body.textContent.trim();
-            return { openProjection, missingSummary, closedProjection, missingProjection, emptyText };
+            return { openProjection, switchedProjection, switchedUpdateText, missingSummary, closedProjection, missingProjection, emptyText };
         }"""
     )
     if result["openProjection"] != {
@@ -1380,11 +1417,31 @@ def assert_info_panel_shell_and_metadata_lifecycle(page: Page) -> None:
         "rootState": "open",
         "rootLayout": "index-document-info",
         "activeViewId": "metadata-info",
+        "toolbarHidden": False,
+        "toolbarButtons": [
+            {"id": "metadata-info", "pressed": "true", "disabled": False, "text": "Metadata info"},
+            {"id": "details-info", "pressed": "false", "disabled": False, "text": "Details"},
+            {"id": "disabled-info", "pressed": "false", "disabled": True, "text": "Disabled"},
+            {"id": "manage-info", "pressed": "false", "disabled": True, "text": "Manage"},
+        ],
         "title": "Example Doc",
         "routeText": "/docs/?scope=studio&doc=example",
         "rowLabels": ["Scope", "Summary", "Parent path", "Added", "Updated", "UI status", "Visibility", "Route"],
     }:
         raise AssertionError(f"info panel metadata open projection failed: {result!r}")
+    if result["switchedProjection"] != {
+        "activeViewId": "details-info",
+        "bodyText": "Details view",
+        "toolbarButtons": [
+            {"id": "metadata-info", "pressed": "false", "disabled": False},
+            {"id": "details-info", "pressed": "true", "disabled": False},
+            {"id": "disabled-info", "pressed": "false", "disabled": True},
+            {"id": "manage-info", "pressed": "false", "disabled": True},
+        ],
+    }:
+        raise AssertionError(f"info panel hosted-view switching failed: {result!r}")
+    if result["switchedUpdateText"] != "Details updated":
+        raise AssertionError(f"switched info view did not receive update: {result!r}")
     if result["missingSummary"] != "No summary":
         raise AssertionError(f"metadata view did not tolerate missing summary: {result!r}")
     if result["closedProjection"] != {
@@ -1681,7 +1738,9 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
                 manageSource: registry.resolve('manage-source'),
                 disabledInfo: registry.resolve('disabled-info'),
                 metadataInfo: registry.resolve('metadata-info'),
-                registeredIds: registry.list().map((view) => `${view.id}:${view.available ? 'yes' : view.unavailableReason}`).sort()
+                registeredIds: registry.list().map((view) => `${view.id}:${view.available ? 'yes' : view.unavailableReason}`).sort(),
+                infoViewIds: hostedViews.listDocsViewerHostedViewsForPanel(registry, 'info').map((view) => `${view.id}:${view.available ? 'yes' : view.unavailableReason}`).sort(),
+                documentViewIds: registry.listByPanel('document').map((view) => view.id).sort()
             };
         }"""
     )
@@ -1727,6 +1786,10 @@ def assert_view_state_and_hosted_view_contract(page: Page) -> None:
         raise AssertionError(f"compat metadata info view should be public and available: {result!r}")
     if "metadata-info:yes" not in result["registeredIds"] or "index-tree:yes" not in result["registeredIds"]:
         raise AssertionError(f"hosted view registry listing lost compatibility views: {result!r}")
+    if result["infoViewIds"] != ["disabled-info:disabled", "metadata-info:yes"]:
+        raise AssertionError(f"hosted view panel listing changed: {result!r}")
+    if "document-host" not in result["documentViewIds"] or "search-results" not in result["documentViewIds"]:
+        raise AssertionError(f"document hosted view panel listing changed: {result!r}")
 
 
 def assert_route_workflow_contract(page: Page, base_url: str) -> None:

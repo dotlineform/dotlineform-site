@@ -14,9 +14,9 @@ Status:
 
 - in progress
 
-- **App-shell migration foundation:** ~96% there
-- **Full JavaScript App Shell Request goals:** ~75% there
-- **Current priority:** finish panel toolbar/view switching before adding source editor, semantic-reference views, activity views, third-party visualization modules, or plugin-style extension work.
+- **App-shell migration foundation:** ~97% there
+- **Full JavaScript App Shell Request goals:** ~76-78% there
+- **Current priority:** prove the portable public fixture before adding source editor, semantic-reference views, activity views, third-party visualization modules, or plugin-style extension work.
 
 What is now in good shape:
 
@@ -30,12 +30,13 @@ What is now in good shape:
 - Route/document workflow ownership has moved into `docs-viewer/runtime/js/docs-viewer-route-workflow.js`, with URL/query helpers, current-doc resolution, index/payload load orchestration, canonical route correction, route-link handling, and popstate coordination outside the compatibility runtime.
 - Search/recent route callback bundling now belongs to `docs-viewer/runtime/js/docs-viewer-search-controller.js`, including explicit controller-owned callbacks for route application, history writes, current-doc resolution, result URLs, and default-doc fallback.
 - Bookmark route callback bundling now belongs to `docs-viewer/runtime/js/docs-viewer-bookmarks.js`, including explicit controller-owned callbacks for search-debounce cancellation and document-load handoff.
+- The info panel now has a minimal hosted-view toolbar and view-switching contract. `metadata-info` remains the default public-safe info view, and disabled/access-blocked/missing views are handled through explicit hosted-view states.
 - Public read-only and manage-mode separation is tested and still working.
 - Management-only JS remains gated from public routes.
 
 What is still incomplete against the broader request:
 
-- Multi-panel architecture is still incomplete: `index/document/info` state, metadata info, and hosted-view lifecycle exist, but there is no toolbar/view-switching model or broader panel-module UI lifecycle.
+- Multi-panel architecture is still incomplete: `index/document/info` state, metadata info, hosted-view lifecycle, and minimal info-panel toolbar switching exist, but there is no source/editor view, semantic-reference view, activity view, visualization module, or plugin lifecycle.
 - Route shells are route-context thin and no longer carry management modal/context-menu markup.
 - `docs-viewer/runtime/js/docs-viewer-app-runtime.js` still owns compatibility wiring for app state, controller construction, config handoff, visibility rules, panel/info handoff, generated-data capability checks, and management-controller loading.
 - Portable setup docs and proof fixture still need the cleaner “same app, two contexts” story backed by a repeatable fixture.
@@ -438,6 +439,8 @@ Recommended completion sequence:
    Add the minimal panel toolbar/view-switching contract only after the boot and route workflow are no longer centered in `docs-viewer.js`.
    This slice should generalize from the existing `metadata-info` view without adding source editing, semantic references, activity views, third-party visualization modules, or plugin architecture.
    Acceptance: hosted views can be switched, disabled, and access-gated through route config/view records; the metadata view remains public-safe; future source/editor views have a clear place to attach.
+   Task tracker: [Docs Viewer App Shell Panel Toolbar View Switching Tasks](/docs/?scope=studio&doc=site-request-docs-viewer-app-shell-panel-toolbar-view-switching-tasks).
+   Implemented 2026-05-27: `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` renders the info toolbar, `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` projects info hosted-view options, and `docs-viewer/runtime/js/docs-viewer-hosted-views.js` exposes panel-specific view listing with disabled/access-blocked states.
 
 6. Portable fixture proof.
    Add or update a repeatable public fixture that proves the route-config registry, shell mounts, runtime assets, generated docs/search payloads, UI text, and public read-only behavior can work outside dotlineform incidental routes.

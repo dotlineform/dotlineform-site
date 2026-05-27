@@ -1,3 +1,7 @@
+import {
+  listDocsViewerHostedViewsForPanel
+} from "./docs-viewer-hosted-views.js";
+
 function cleanString(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -21,12 +25,25 @@ export function createDocsViewerInfoPanelHost(options = {}) {
   let mounted = false;
   let open = false;
 
+  function viewOptions() {
+    return listDocsViewerHostedViewsForPanel(registry, "info").map(function (view) {
+      return {
+        id: view.id,
+        label: view.label,
+        available: Boolean(view.available),
+        unavailableReason: view.unavailableReason || ""
+      };
+    });
+  }
+
   function projectPanel(projection) {
     project(Object.assign({
       activeViewId: activeViewId,
       label: "Document metadata",
+      showToolbar: false,
       statusHidden: true,
       title: "Info",
+      viewOptions: viewOptions(),
       visible: open
     }, projection || {}));
   }
@@ -154,6 +171,7 @@ export function createDocsViewerInfoPanelHost(options = {}) {
     dispose: dispose,
     isOpen: function () { return open; },
     open: openView,
-    update: update
+    update: update,
+    viewOptions: viewOptions
   };
 }

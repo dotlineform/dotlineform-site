@@ -79,12 +79,32 @@ export function createDocsViewerHostedViewRegistry(options) {
     });
   }
 
+  function listByPanel(panel) {
+    var targetPanel = cleanString(panel);
+    return list().filter(function (view) {
+      return view.panel === targetPanel;
+    });
+  }
+
   return {
     get: function (id) { return views.get(cleanString(id)) || null; },
     list: list,
+    listByPanel: listByPanel,
     register: register,
     resolve: resolve
   };
+}
+
+export function listDocsViewerHostedViewsForPanel(registry, panel) {
+  if (!registry) return [];
+  if (typeof registry.listByPanel === "function") return registry.listByPanel(panel);
+  if (typeof registry.list === "function") {
+    var targetPanel = cleanString(panel);
+    return registry.list().filter(function (view) {
+      return view.panel === targetPanel;
+    });
+  }
+  return [];
 }
 
 export function createDocsViewerCompatibilityHostedViews() {

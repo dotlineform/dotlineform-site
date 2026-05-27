@@ -729,8 +729,9 @@ export function startDocsViewerRuntime(options) {
   }
 
   function metadataInfoAvailable() {
-    var resolved = hostedViewRegistry.resolve("metadata-info");
-    return Boolean(resolved.available && resolved.view);
+    return infoPanelHost.viewOptions().some(function (view) {
+      return view.available;
+    });
   }
 
   function renderInfoToggleState() {
@@ -752,9 +753,10 @@ export function startDocsViewerRuntime(options) {
     }
   }
 
-  function openMetadataInfoPanel() {
+  function openInfoPanelView(viewId) {
     if (!currentSelectedDoc()) return;
-    infoPanelHost.open("metadata-info", infoPanelContext()).then(function () {
+    var targetViewId = String(viewId || "").trim() || infoPanelHost.activeViewId() || "metadata-info";
+    infoPanelHost.open(targetViewId, infoPanelContext()).then(function () {
       renderInfoToggleState();
     });
   }
@@ -1081,7 +1083,7 @@ export function startDocsViewerRuntime(options) {
         if (infoPanelHost.isOpen()) {
           closeInfoPanel();
         } else {
-          openMetadataInfoPanel();
+          openInfoPanelView("metadata-info");
         }
       });
     }
@@ -1089,6 +1091,14 @@ export function startDocsViewerRuntime(options) {
     if (infoPanelRefs.closeButton) {
       infoPanelRefs.closeButton.addEventListener("click", function () {
         closeInfoPanel();
+      });
+    }
+
+    if (infoPanelRefs.toolbar) {
+      infoPanelRefs.toolbar.addEventListener("click", function (event) {
+        var button = event.target.closest("[data-info-panel-view]");
+        if (!button || button.disabled) return;
+        openInfoPanelView(button.dataset.infoPanelView);
       });
     }
 

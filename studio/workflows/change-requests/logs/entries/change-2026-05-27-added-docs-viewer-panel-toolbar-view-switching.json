@@ -1,0 +1,52 @@
+{
+  "id": "change-2026-05-27-added-docs-viewer-panel-toolbar-view-switching",
+  "date": "2026-05-27",
+  "title": "Added Docs Viewer Panel Toolbar View Switching",
+  "status": "implemented",
+  "type": "implementation",
+  "domains": [
+    "docs-viewer",
+    "runtime",
+    "studio-ui"
+  ],
+  "summary": "Added a minimal info-panel hosted-view toolbar and view-switching contract for Docs Viewer, backed by panel-specific hosted-view listing, info view option projection, and focused app-runtime handoff.",
+  "source": {
+    "file": "docs-viewer/source/studio/site-request-docs-viewer-app-shell-panel-toolbar-view-switching-tasks.md",
+    "archive": "change-request"
+  },
+  "subjects": [
+    "app-shell",
+    "panel-toolbar",
+    "hosted-views",
+    "info-panel",
+    "runtime"
+  ],
+  "change_request_doc_id": "site-request-docs-viewer-app-shell-panel-toolbar-view-switching-tasks",
+  "related_docs": [
+    "docs-viewer",
+    "docs-viewer-overview",
+    "docs-viewer-runtime-boundary",
+    "docs-viewer-javascript-inventory",
+    "site-request-docs-viewer-javascript-app-shell",
+    "site-request-docs-viewer-app-shell-panel-toolbar-view-switching-tasks"
+  ],
+  "related_files": [
+    "docs-viewer/runtime/js/docs-viewer-app-runtime.js",
+    "docs-viewer/runtime/js/docs-viewer-hosted-views.js",
+    "docs-viewer/runtime/js/docs-viewer-info-panel-host.js",
+    "docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js",
+    "docs-viewer/runtime/js/docs-viewer-panel-layout.js",
+    "docs-viewer/runtime/js/docs-viewer-view-state.js",
+    "docs-viewer/static/css/docs-viewer.css",
+    "docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py"
+  ],
+  "effect": "The info panel can now show switchable hosted-view options while preserving the existing public-safe metadata view and graceful missing/disabled/access-blocked states. The change gives future source/editor, semantic-reference, activity, and visualization views a clear panel attachment point without adding those feature layers or backend write behavior.",
+  "verification": [
+    "node --check docs-viewer/runtime/js/docs-viewer.js docs-viewer/runtime/js/docs-viewer-app-boot.js docs-viewer/runtime/js/docs-viewer-app-runtime.js docs-viewer/runtime/js/docs-viewer-panel-layout.js docs-viewer/runtime/js/docs-viewer-view-state.js docs-viewer/runtime/js/docs-viewer-hosted-views.js docs-viewer/runtime/js/docs-viewer-info-panel-host.js docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js docs-viewer/runtime/js/docs-viewer-document-shell-renderer.js docs-viewer/runtime/js/docs-viewer-document-controller.js",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_app_shell_modules.py --site-root .",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_management_modal.py --site-root .",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/docs_viewer_service_manage.py",
+    "$HOME/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build",
+    "PYTHONDONTWRITEBYTECODE=1 $HOME/miniconda3/bin/python3 docs-viewer/tests/smoke/public_docs_viewer_readonly.py --site-root /tmp/dlf-jekyll-build"
+  ]
+}

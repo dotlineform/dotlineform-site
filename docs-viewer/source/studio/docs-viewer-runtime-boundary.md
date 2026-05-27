@@ -42,9 +42,9 @@ Current shared implementation:
 - `docs-viewer/runtime/js/docs-viewer-app-shell.js` and its renderer children for JavaScript-owned shell composition before the entry controller wires route behavior
 - `docs-viewer/runtime/js/docs-viewer-management-shell-renderer.js` for management-only context menu, metadata modal, import modal, settings modal, and import host refs rendered only when route access allows management UI
 - `docs-viewer/runtime/js/docs-viewer-panel-layout.js` and `docs-viewer/runtime/js/docs-viewer-view-state.js` for current compatibility panel projection and the index/document/info view-state skeleton
-- `docs-viewer/runtime/js/docs-viewer-hosted-views.js` for minimal hosted-view registration, access/availability checks, built-in compatibility records, and graceful absence
+- `docs-viewer/runtime/js/docs-viewer-hosted-views.js` for minimal hosted-view registration, panel-specific listing, access/availability checks, built-in compatibility records, and graceful absence
 - `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js` for app-shell-owned info-panel chrome and projection attributes
-- `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` for info-panel hosted-view load, mount, update, unmount, close, and graceful absence behavior
+- `docs-viewer/runtime/js/docs-viewer-info-panel-host.js` for info-panel hosted-view option projection, load, mount, update, unmount, close, and graceful absence behavior
 - `docs-viewer/runtime/js/docs-viewer-view-context.js` for explicit selected-document hosted-view context projection shared by metadata and planned future info views
 - `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js` for the first read-only public-safe metadata hosted view
 - `docs-viewer/runtime/js/docs-viewer-management.js` as the management-mode controller loaded only by management-enabled viewer shells
@@ -105,6 +105,7 @@ Current app-shell route handoff boundary:
 - scope-specific generated docs and search paths remain owned by `docs-viewer/config/defaults/docs-viewer-config.json` and `docs-viewer/config/defaults/docs-viewer-public-config.json`
 - backend reachability and write availability are not browser-side route-config authority; they remain in the local management capability flow
 - the first info-panel hosted view is read-only and public-safe; source paths, local filesystem actions, editable metadata saves, semantic references, and activity history remain outside the info-panel metadata view contract
+- info-panel hosted views can be listed and switched through the app-shell toolbar; disabled, unavailable, missing, and access-blocked views stay graceful and do not create write authority
 
 ## What should stay scope-specific
 

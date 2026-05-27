@@ -117,6 +117,7 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 - Current risk score: 6 after the route/document workflow extraction.
 - 2026-05-27 owner note: URL/query helpers, current-doc resolution, route application, index-load orchestration, payload-load orchestration, missing/error handoff, route-link handling, and popstate coordination moved to `docs-viewer/runtime/js/docs-viewer-route-workflow.js`.
 - 2026-05-27 owner note: search/recent route callback bundling moved behind `createDocsViewerSearchRouteCallbacks(...)` in `docs-viewer/runtime/js/docs-viewer-search-controller.js`; bookmark route callback bundling moved behind `createDocsViewerBookmarkRouteCallbacks(...)` in `docs-viewer/runtime/js/docs-viewer-bookmarks.js`.
+- 2026-05-27 owner note: info-panel toolbar click handoff now opens the selected info hosted view through `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`; toolbar rendering and view option projection stay in focused panel/hosted-view modules.
 - This module now remains the runtime wiring owner for app state, controller construction, config handoff, visibility rules, explicit focused-controller callback handoff, generated-data capability checks, panel/info updates, and lazy management loading.
 - Next risk-reduction slices should focus on broader panel-layout ownership, management lazy-boundary hardening, or generated-payload loading, not restore route/document/search/bookmark workflow behavior here.
 
@@ -211,19 +212,22 @@ Measured on 2026-05-21 from [Javascript Inventory](/docs/?scope=studio&doc=javas
 ### `docs-viewer/runtime/js/docs-viewer-hosted-views.js`
 
 - Added 2026-05-27 as the focused hosted-view registration shape for ordinary repo JavaScript modules.
-- Keep this module limited to records, lifecycle method names, built-in compatibility view records, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering or panel state.
+- 2026-05-27 owner note: panel-specific listing moved into this module through `listByPanel(...)` and `listDocsViewerHostedViewsForPanel(...)` so toolbars can consume the same available/disabled/unavailable/access-blocked state as direct registry resolution.
+- Keep this module limited to records, lifecycle method names, built-in compatibility view records, panel-specific listing, access/availability checks, and graceful absence. The `metadata-info` record may load the focused metadata hosted-view module, but the registry should not own rendering or panel state.
 - Do not turn it into a plugin system, dependency loader, panel toolbar renderer, or third-party visualization owner.
 
 ### `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`
 
 - Added 2026-05-27 as the focused renderer for info-panel shell chrome.
-- Keep this module limited to rendering the info-panel container, accessible title/label, close control, hosted-view mount, status node, and projection attributes.
+- 2026-05-27 owner note: minimal info-panel toolbar rendering and projection moved here. It renders view buttons from projected hosted-view options and marks disabled/access-blocked views as unavailable without owning lifecycle or route state.
+- Keep this module limited to rendering the info-panel container, accessible title/label, close control, toolbar, hosted-view mount, status node, and projection attributes.
 - Do not move hosted-view lifecycle, metadata rendering, source editing, panel toolbar selection, or management actions into it.
 
 ### `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`
 
 - Added 2026-05-27 as the focused lifecycle owner for info-panel hosted views.
-- Keep this module limited to resolving a registered view, loading it, mounting/updating/unmounting it in the assigned info-panel body, closing the panel, and reporting graceful absence.
+- 2026-05-27 owner note: info hosted-view option projection moved here. The host now exposes `viewOptions()` and includes info view options in panel projection so the renderer can show available, disabled, unavailable, and access-blocked states.
+- Keep this module limited to resolving/listing registered info views, loading them, mounting/updating/unmounting them in the assigned info-panel body, closing the panel, and reporting graceful absence.
 - Do not add route-state mutation, URL history behavior, metadata field rendering, backend writes, or plugin discovery to it.
 
 ### `docs-viewer/runtime/js/docs-viewer-metadata-info-view.js`

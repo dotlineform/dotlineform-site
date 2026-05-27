@@ -3,7 +3,7 @@ doc_id: site-request-docs-viewer-app-shell-search-recent-bookmark-tasks
 title: Docs Viewer App Shell Search Recent Bookmark Tasks
 added_date: 2026-05-27
 last_updated: 2026-05-27
-ui_status: planned
+ui_status: done
 parent_id: site-request-docs-viewer-javascript-app-shell
 sort_order: 12170
 viewable: true

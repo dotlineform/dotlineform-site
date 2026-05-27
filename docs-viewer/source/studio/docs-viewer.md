@@ -29,6 +29,7 @@ The current implementation uses:
 - route/document workflow ownership in `docs-viewer/runtime/js/docs-viewer-route-workflow.js` for URL/query helpers, current-doc resolution, route application, document index load orchestration, document payload load orchestration, canonical URL correction, route-link handling, and popstate coordination
 - search/recent controller ownership in `docs-viewer/runtime/js/docs-viewer-search-controller.js` for search index loading, result/recent rendering, debounce and more-results behavior, route callback consumption, and pane projection requests
 - bookmark controller ownership in `docs-viewer/runtime/js/docs-viewer-bookmarks.js` for bookmark loading, list/toggle rendering, selected-document bookmark UI projection, edit state, bookmark events, and route callback consumption
+- hosted-view registry and info-panel switching in `docs-viewer/runtime/js/docs-viewer-hosted-views.js`, `docs-viewer/runtime/js/docs-viewer-info-panel-host.js`, and `docs-viewer/runtime/js/docs-viewer-info-panel-renderer.js`
 - document pane, payload rendering, and report mount handoff in `docs-viewer/runtime/js/docs-viewer-document-controller.js`
 - pure tree and visibility helpers in `docs-viewer/runtime/js/docs-viewer-tree.js`
 - pure inline-search and recently-added helpers in `docs-viewer/runtime/js/docs-viewer-search.js`
